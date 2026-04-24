@@ -1,0 +1,37 @@
+# Data — PDFs are 20GB+, never commit
+data/
+
+# Model weights
+*.pt
+*.onnx
+*.engine
+*.mlpackage
+weights/
+
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Label Studio
+.label-studio/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

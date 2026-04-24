@@ -1,0 +1,29 @@
+<View>
+  <Header value="Traffic Control Symbol Labeling — draw tight bounding boxes"/>
+  <Header value="If unsure between two classes, use SIGN_GENERIC (key r)"/>
+
+  <Image name="image" value="$image"/>
+
+  <RectangleLabels name="label" toName="image" strokeWidth="2" opacity="0.5">
+    <Label value="CONE"                      background="#FF6B00" hotkey="1"/>
+    <Label value="DRUM"                      background="#FFD600" hotkey="2"/>
+    <Label value="TUBULAR_MARKER"            background="#00897B" hotkey="3"/>
+    <Label value="BARRICADE_TYPE_II"         background="#F44336" hotkey="4"/>
+    <Label value="BARRICADE_TYPE_III"        background="#E53935" hotkey="5"/>
+    <Label value="LONGITUDINAL_CHANNELIZER"  background="#43A047" hotkey="6"/>
+    <Label value="CHANNELIZER_OPTIONAL"      background="#FFC107" hotkey="y"/>
+    <Label value="ARROW_BOARD"               background="#8E24AA" hotkey="7"/>
+    <Label value="PCMS"                      background="#1E88E5" hotkey="8"/>
+    <Label value="TRUCK_MOUNTED_ATTENUATOR"  background="#795548" hotkey="9"/>
+    <Label value="TEMPORARY_BARRIER"         background="#546E7A" hotkey="q"/>
+    <Label value="FLAGGER_STATION"           background="#C62828" hotkey="w"/>
+    <Label value="TEMPORARY_SIGNAL"          background="#FFA000" hotkey="e"/>
+    <Label value="SIGN_GENERIC"              background="#757575" hotkey="r"/>
+    <Label value="DETOUR_MARKER"             background="#0277BD" hotkey="t"/>
+  </RectangleLabels>
+
+  <Choices name="ambiguous" toName="image" choice="single" showInline="true">
+    <Header value="Flag this image if annotations are uncertain"/>
+    <Choice value="ambiguous" hotkey="-"/>
+  </Choices>
+</View>
