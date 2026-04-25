@@ -1,14 +1,15 @@
 """Plan-sheet renderer — compose a single MUTCD/CDOT MOT plan sheet.
 
 Pure-reportlab implementation: road geometry, device symbols, dimension
-callouts, title block, legend, and notes are all drawn directly on a
+callouts, title block, legend, and notes are drawn directly on a
 landscape 11×17 (tabloid) canvas using geometric primitives.  No SVG or
 sprite assets in V1; sign and channelizer glyphs are simple shapes.
 
 Convention: LEFT side of the plan view is upstream (high station, where
-drivers first encounter the advance-warning signs); RIGHT side is
-downstream (low/negative station, END ROAD WORK).  Traffic flows left
-to right on the page.
+drivers first encounter the work zone); RIGHT side is downstream.  The
+plan view is fitted to show the merging taper, buffer, work zone, and
+downstream taper.  Advance warning signs sit further upstream, off the
+left edge of the plan view, and are documented in the notes panel.
 
 Authoritative sources:
   - CDOT M&S Standard Plan S-630-1 (typical sheet layout)
@@ -17,7 +18,6 @@ Authoritative sources:
 
 from __future__ import annotations
 
-from collections import Counter
 from collections.abc import Callable
 from datetime import date
 
@@ -50,14 +50,16 @@ PLAN_Y_CENTER: float = (PLAN_TOP + PLAN_BOTTOM) / 2.0
 # X scale is fitted per-layout to span the full plan view width.
 PTS_PER_OFFSET_FT: float = 2.5
 
-# Visual palette
-ROAD_FILL = colors.Color(0.32, 0.32, 0.34)
-SHOULDER_FILL = colors.Color(0.58, 0.58, 0.58)
-MEDIAN_FILL = colors.Color(0.65, 0.72, 0.55)
-LANE_LINE = colors.white
-DIM_LINE = colors.Color(0.20, 0.25, 0.55)
-TITLE_BORDER = colors.black
+# Road palette
+LANE_FILL = colors.HexColor("#B0B0B0")
+SHOULDER_OPEN_FILL = colors.HexColor("#D0D0D0")
+SHOULDER_CLOSED_FILL = colors.HexColor("#E8D0D0")
+EDGE_LINE = colors.white
+LANE_STRIPE = colors.white
+MEDIAN_EDGE = colors.HexColor("#FFD700")
+ROAD_BORDER = colors.black
 
+# Symbol palette
 CONE_ORANGE = colors.Color(1.00, 0.50, 0.00)
 DRUM_ORANGE = colors.Color(0.95, 0.45, 0.00)
 DRUM_STRIPE = colors.white
@@ -67,6 +69,13 @@ ARROW_FILL = colors.Color(1.00, 0.85, 0.00)
 ARROW_GLYPH = colors.black
 FLAG_RED = colors.red
 
+DIM_LINE = colors.Color(0.20, 0.25, 0.55)
+TITLE_BORDER = colors.black
+
+_TABLE_CATEGORIES: frozenset[str] = frozenset(
+    {"urban_low", "urban_high", "rural", "expressway", "freeway"}
+)
+
 
 # ---------------------------------------------------------------------------
 # Coordinate transforms
@@ -75,13 +84,24 @@ FLAG_RED = colors.red
 
 def _fit_horizontal_scale(
     placements: list[DevicePlacement],
-    s_max_extra_ft: float = 100.0,
-    s_min_extra_ft: float = 100.0,
+    params: ScenarioParams,
+    shoulder_width_ft: float,
 ) -> tuple[float, float, float]:
-    """Return (pts_per_station_ft, station_min, station_max) with padding."""
-    stations = [p.station_ft for p in placements]
-    s_min = min(stations) - s_min_extra_ft
-    s_max = max(stations) + s_max_extra_ft
+    """Fit the plan-view horizontal scale to the work-zone-and-taper area.
+
+    Stations upstream of ``taper_start`` (i.e., the advance warning signs)
+    are clipped from the plan view and surfaced in the notes table
+    instead, so the merging taper, buffer, and work zone read clearly at
+    the chosen scale (typically ~1" = 100 ft for a 55 mph layout).
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
+    buf_len = buffer_space(speed)
+    taper_start = wz_len + buf_len + taper_len
+
+    s_min = min(p.station_ft for p in placements) - 50.0
+    s_max = taper_start + 100.0
     pts_per_ft = (PLAN_RIGHT - PLAN_LEFT) / (s_max - s_min)
     return pts_per_ft, s_min, s_max
 
@@ -115,51 +135,73 @@ def _draw_road(
     lane_h = lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
 
-    right_lane_top = PLAN_Y_CENTER + 2 * lane_h
-    right_shldr_top = right_lane_top + shoulder_h
-    left_lane_bot = PLAN_Y_CENTER - 2 * lane_h
-    left_shldr_bot = left_lane_bot - shoulder_h
+    y_center = PLAN_Y_CENTER
+    y_right_lane_top = y_center + 2 * lane_h
+    y_right_shldr_top = y_right_lane_top + shoulder_h
+    y_left_lane_bot = y_center - 2 * lane_h
+    y_left_shldr_bot = y_left_lane_bot - shoulder_h
 
-    # Shoulders
-    c.setFillColor(SHOULDER_FILL)
-    c.rect(x_left, right_lane_top, width, shoulder_h, fill=1, stroke=0)
-    c.rect(x_left, left_shldr_bot, width, shoulder_h, fill=1, stroke=0)
+    # Closed (right) shoulder — pinkish-gray to flag the closure
+    c.setFillColor(SHOULDER_CLOSED_FILL)
+    c.rect(x_left, y_right_lane_top, width, shoulder_h, fill=1, stroke=0)
+    # Open (left) shoulder — neutral light gray
+    c.setFillColor(SHOULDER_OPEN_FILL)
+    c.rect(x_left, y_left_shldr_bot, width, shoulder_h, fill=1, stroke=0)
 
-    # Travel lanes
-    c.setFillColor(ROAD_FILL)
-    c.rect(x_left, PLAN_Y_CENTER, width, 2 * lane_h, fill=1, stroke=0)
-    c.rect(x_left, left_lane_bot, width, 2 * lane_h, fill=1, stroke=0)
+    # Travel lanes (medium gray); leave a 4-pt white gap at the centerline
+    # to suggest the median (V1 layout has zero-width median in the data
+    # convention so this is purely visual).
+    c.setFillColor(LANE_FILL)
+    c.rect(x_left, y_center + 2, width, 2 * lane_h - 2, fill=1, stroke=0)
+    c.rect(x_left, y_left_lane_bot, width, 2 * lane_h - 2, fill=1, stroke=0)
 
-    # Median strip (V1 zero-width median; draw a thin visual band)
-    median_h = 4.0
-    c.setFillColor(MEDIAN_FILL)
-    c.rect(x_left, PLAN_Y_CENTER - median_h / 2, width, median_h, fill=1, stroke=0)
+    # Median yellow edge lines bracketing the gap
+    c.setStrokeColor(MEDIAN_EDGE)
+    c.setLineWidth(2.0)
+    c.line(x_left, y_center + 2, x_right, y_center + 2)
+    c.line(x_left, y_center - 2, x_right, y_center - 2)
 
-    # Edge and shoulder lines
-    c.setStrokeColor(LANE_LINE)
-    c.setLineWidth(1.0)
-    c.line(x_left, right_shldr_top, x_right, right_shldr_top)
-    c.line(x_left, left_shldr_bot, x_right, left_shldr_bot)
-    c.line(x_left, right_lane_top, x_right, right_lane_top)
-    c.line(x_left, left_lane_bot, x_right, left_lane_bot)
+    # Outer travel-lane edges (white solid, 2 pt) at ±lane_width*2
+    c.setStrokeColor(EDGE_LINE)
+    c.setLineWidth(2.0)
+    c.line(x_left, y_right_lane_top, x_right, y_right_lane_top)
+    c.line(x_left, y_left_lane_bot, x_right, y_left_lane_bot)
 
-    # Lane stripes (dashed) at ±12 ft
-    c.setDash(6, 6)
-    c.line(x_left, PLAN_Y_CENTER + lane_h, x_right, PLAN_Y_CENTER + lane_h)
-    c.line(x_left, PLAN_Y_CENTER - lane_h, x_right, PLAN_Y_CENTER - lane_h)
+    # Lane stripes between same-direction lanes (white dashed, 2 pt)
+    c.setLineWidth(2.0)
+    c.setDash(12, 8)
+    c.line(x_left, y_center + lane_h, x_right, y_center + lane_h)
+    c.line(x_left, y_center - lane_h, x_right, y_center - lane_h)
     c.setDash()
+
+    # Shoulder outer edges (white solid, 1 pt)
+    c.setLineWidth(1.0)
+    c.line(x_left, y_right_shldr_top, x_right, y_right_shldr_top)
+    c.line(x_left, y_left_shldr_bot, x_right, y_left_shldr_bot)
+
+    # Black corridor outline (0.5 pt) so the road pops from the page
+    c.setStrokeColor(ROAD_BORDER)
+    c.setLineWidth(0.5)
+    c.rect(
+        x_left,
+        y_left_shldr_bot,
+        width,
+        y_right_shldr_top - y_left_shldr_bot,
+        fill=0,
+        stroke=1,
+    )
 
 
 # ---------------------------------------------------------------------------
-# Device glyphs
+# Device glyphs (V1: simple geometric primitives, no sprite PNGs)
 # ---------------------------------------------------------------------------
 
 
 def _draw_cone(c: canvas.Canvas, x: float, y: float) -> None:
-    h, w = 6.0, 4.0
+    h, w = 10.0, 8.0
     c.setFillColor(CONE_ORANGE)
     c.setStrokeColor(colors.black)
-    c.setLineWidth(0.4)
+    c.setLineWidth(0.5)
     p = c.beginPath()
     p.moveTo(x - w / 2, y - h / 2)
     p.lineTo(x + w / 2, y - h / 2)
@@ -169,41 +211,57 @@ def _draw_cone(c: canvas.Canvas, x: float, y: float) -> None:
 
 
 def _draw_drum(c: canvas.Canvas, x: float, y: float) -> None:
-    h, w = 8.0, 5.0
+    h, w = 14.0, 10.0
     c.setStrokeColor(colors.black)
-    c.setLineWidth(0.4)
+    c.setLineWidth(0.5)
     c.setFillColor(DRUM_ORANGE)
     c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
     c.setFillColor(DRUM_STRIPE)
-    c.rect(x - w / 2, y - 1.0, w, 2.0, fill=1, stroke=0)
+    c.rect(x - w / 2, y + 1.5, w, 2.0, fill=1, stroke=0)
+    c.rect(x - w / 2, y - 3.5, w, 2.0, fill=1, stroke=0)
 
 
 def _draw_sign(c: canvas.Canvas, x: float, y: float) -> None:
-    s = 8.0
+    """Diamond-orient sign (rotated square) — matches MUTCD warning convention."""
+    s = 7.0  # half-diagonal → 14 pt diagonal
     c.setFillColor(SIGN_FILL)
     c.setStrokeColor(SIGN_BORDER)
-    c.setLineWidth(0.6)
-    c.rect(x - s / 2, y - s / 2, s, s, fill=1, stroke=1)
+    c.setLineWidth(0.8)
+    p = c.beginPath()
+    p.moveTo(x, y + s)
+    p.lineTo(x + s, y)
+    p.lineTo(x, y - s)
+    p.lineTo(x - s, y)
+    p.close()
+    c.drawPath(p, stroke=1, fill=1)
 
 
 def _draw_arrow_board(c: canvas.Canvas, x: float, y: float) -> None:
-    w, h = 14.0, 7.0
+    w, h = 20.0, 12.0
     c.setFillColor(ARROW_FILL)
     c.setStrokeColor(colors.black)
-    c.setLineWidth(0.6)
+    c.setLineWidth(0.7)
     c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
-    # right-pointing arrow glyph
+    # Black right-pointing arrow inside
+    c.setFillColor(ARROW_GLYPH)
     c.setStrokeColor(ARROW_GLYPH)
-    c.setLineWidth(1.2)
-    c.line(x - 4, y, x + 4, y)
-    c.line(x + 4, y, x + 1, y + 2)
-    c.line(x + 4, y, x + 1, y - 2)
+    c.setLineWidth(0.5)
+    p = c.beginPath()
+    p.moveTo(x - 6, y - 2)
+    p.lineTo(x + 2, y - 2)
+    p.lineTo(x + 2, y - 4)
+    p.lineTo(x + 7, y)
+    p.lineTo(x + 2, y + 4)
+    p.lineTo(x + 2, y + 2)
+    p.lineTo(x - 6, y + 2)
+    p.close()
+    c.drawPath(p, stroke=0, fill=1)
 
 
 def _draw_flagger(c: canvas.Canvas, x: float, y: float) -> None:
-    s = 5.0
+    s = 6.0  # half-length → 12 pt total
     c.setStrokeColor(FLAG_RED)
-    c.setLineWidth(1.4)
+    c.setLineWidth(3.0)
     c.line(x - s, y - s, x + s, y + s)
     c.line(x - s, y + s, x + s, y - s)
 
@@ -227,17 +285,17 @@ _DEVICE_GLYPHS: dict[DeviceType, Callable[[canvas.Canvas, float, float], None]] 
 }
 
 _DEVICE_DISPLAY_NAMES: dict[DeviceType, str] = {
-    DeviceType.CONE: "Cone",
-    DeviceType.DRUM: "Drum",
-    DeviceType.SIGN_GENERIC: "Sign",
+    DeviceType.CONE: "Traffic Cone (36-inch)",
+    DeviceType.DRUM: "Channelizing Drum",
+    DeviceType.SIGN_GENERIC: "Warning / Construction Sign",
     DeviceType.ARROW_BOARD: "Arrow Board",
     DeviceType.FLAGGER_STATION: "Flagger Station",
     DeviceType.TUBULAR_MARKER: "Tubular Marker",
     DeviceType.BARRICADE_TYPE_II: "Type II Barricade",
     DeviceType.BARRICADE_TYPE_III: "Type III Barricade",
     DeviceType.LONGITUDINAL_CHANNELIZER: "Longitudinal Channelizer",
-    DeviceType.PCMS: "PCMS",
-    DeviceType.TRUCK_MOUNTED_ATTENUATOR: "TMA",
+    DeviceType.PCMS: "Portable Changeable Message Sign",
+    DeviceType.TRUCK_MOUNTED_ATTENUATOR: "Truck-Mounted Attenuator (TMA)",
     DeviceType.TEMPORARY_BARRIER: "Temporary Barrier",
     DeviceType.TEMPORARY_SIGNAL: "Temporary Signal",
     DeviceType.DETOUR_MARKER: "Detour Marker",
@@ -252,10 +310,19 @@ def _draw_devices(
     s_max: float,
 ) -> None:
     for p in placements:
+        # Advance warning signs sit above s_max (further upstream).  They
+        # are listed in the notes table rather than drawn on the plan view.
+        if p.station_ft > s_max:
+            continue
         x = _x_of(p.station_ft, pts_per_ft, s_max)
         y = _y_of(p.offset_ft)
         glyph = _DEVICE_GLYPHS.get(p.device_type, _draw_sign)
         glyph(c, x, y)
+        # Sign code label, 4 pt above the symbol.
+        if p.device_type == DeviceType.SIGN_GENERIC and p.label:
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica", 6)
+            c.drawCentredString(x, y + 11, p.label)
 
 
 # ---------------------------------------------------------------------------
@@ -270,7 +337,6 @@ def _draw_dim(
     y: float,
     label: str,
 ) -> None:
-    """Horizontal dimension line with tick marks at each end and a centred label."""
     c.setStrokeColor(DIM_LINE)
     c.setLineWidth(0.5)
     c.line(x1, y, x2, y)
@@ -297,13 +363,12 @@ def _draw_direction_arrow(c: canvas.Canvas) -> None:
 
 def _draw_landmarks(
     c: canvas.Canvas,
-    placements: list[DevicePlacement],
     params: ScenarioParams,
     pts_per_ft: float,
     s_max: float,
     shoulder_width_ft: float,
 ) -> None:
-    """Draw dimension callouts for taper, buffer, work zone, and advance signs."""
+    """Dimension callouts for taper, buffer, and work zone (visible portion only)."""
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
@@ -314,62 +379,27 @@ def _draw_landmarks(
     taper_end = wz_start + buf_len
     taper_start = taper_end + taper_len
 
-    table_categories = {"urban_low", "urban_high", "rural", "expressway", "freeway"}
-    rt = params.road_type if params.road_type in table_categories else None
-    abc = advance_warning_spacing(speed, rt)
-    a = abc["A"]
-    b = abc["B"]
-    c_dist = abc["C"]
-    sign_a = taper_start + a
-    sign_b = sign_a + b
-    sign_c = sign_b + c_dist
+    y_top = PLAN_Y_CENTER + (34 + 12) * PTS_PER_OFFSET_FT  # above the closed shoulder
 
-    y_top = PLAN_Y_CENTER + (34 + 18) * PTS_PER_OFFSET_FT  # above the road
-    y_mid = PLAN_Y_CENTER + (34 + 8) * PTS_PER_OFFSET_FT  # just above shoulder
-
-    # Advance warning sign distances (top row of dims)
-    _draw_dim(
-        c,
-        _x_of(sign_c, pts_per_ft, s_max),
-        _x_of(sign_b, pts_per_ft, s_max),
-        y_top,
-        f"C = {c_dist:.0f} ft",
-    )
-    _draw_dim(
-        c,
-        _x_of(sign_b, pts_per_ft, s_max),
-        _x_of(sign_a, pts_per_ft, s_max),
-        y_top,
-        f"B = {b:.0f} ft",
-    )
-    _draw_dim(
-        c,
-        _x_of(sign_a, pts_per_ft, s_max),
-        _x_of(taper_start, pts_per_ft, s_max),
-        y_top,
-        f"A = {a:.0f} ft",
-    )
-
-    # Taper / buffer / work-zone (mid row, just above the road)
     _draw_dim(
         c,
         _x_of(taper_start, pts_per_ft, s_max),
         _x_of(taper_end, pts_per_ft, s_max),
-        y_mid,
+        y_top,
         f"L/3 = {taper_len:.0f} ft",
     )
     _draw_dim(
         c,
         _x_of(taper_end, pts_per_ft, s_max),
         _x_of(wz_start, pts_per_ft, s_max),
-        y_mid,
+        y_top,
         f"BUFFER = {buf_len:.0f} ft",
     )
     _draw_dim(
         c,
         _x_of(wz_start, pts_per_ft, s_max),
         _x_of(wz_end, pts_per_ft, s_max),
-        y_mid,
+        y_top,
         f"WORK ZONE = {wz_len:.0f} ft",
     )
 
@@ -415,13 +445,8 @@ def _draw_legend(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
 ) -> None:
-    types_used = sorted(
-        {p.device_type for p in placements},
-        key=lambda dt: dt.value,
-    )
+    types_used = sorted({p.device_type for p in placements}, key=lambda dt: dt.value)
 
-    x_start = MARGIN + 8
-    y_top = FOOTER_H - 10
     width = (PAGE_W - 2 * MARGIN) / 2 - 16
     height = FOOTER_H - 16
 
@@ -431,16 +456,16 @@ def _draw_legend(
 
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(x_start, y_top, "LEGEND")
+    c.drawString(MARGIN + 8, FOOTER_H - 8, "LEGEND")
 
     c.setFont("Helvetica", 9)
-    row_h = 14
-    y = y_top - 18
+    row_h = 20
+    y = FOOTER_H - 28
     for dt in types_used:
         glyph = _DEVICE_GLYPHS.get(dt, _draw_sign)
-        glyph(c, x_start + 8, y + 2)
+        glyph(c, MARGIN + 18, y + 4)
         c.setFillColor(colors.black)
-        c.drawString(x_start + 22, y, _DEVICE_DISPLAY_NAMES.get(dt, dt.value))
+        c.drawString(MARGIN + 36, y, _DEVICE_DISPLAY_NAMES.get(dt, dt.value))
         y -= row_h
         if y < MARGIN + 12:
             break
@@ -461,25 +486,38 @@ def _draw_notes(
 
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(x_box + 8, FOOTER_H - 10, "NOTES")
+    c.drawString(x_box + 8, FOOTER_H - 8, "NOTES")
 
-    taper_len = shoulder_taper_length(params.speed_mph, shoulder_width_ft)
-    buf_len = buffer_space(params.speed_mph)
+    speed = params.speed_mph
+    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
+    buf_len = buffer_space(speed)
 
-    notes = (
-        f"Speed limit: {params.speed_mph} mph",
+    rt = params.road_type if params.road_type in _TABLE_CATEGORIES else None
+    abc = advance_warning_spacing(speed, rt)
+    sign_a_dist = abc["A"]
+    sign_b_dist = abc["A"] + abc["B"]
+    sign_c_dist = abc["A"] + abc["B"] + abc["C"]
+
+    notes = [
+        f"Speed limit: {speed} mph",
         f"Closure type: {params.closure_type}",
         f"Work zone length: {params.work_zone_length_ft:.0f} ft",
         f"Shoulder taper (L/3): {taper_len:.0f} ft",
         f"Buffer space: {buf_len:.0f} ft",
-        "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6",
+        "",
+        "Advance warning signs (upstream of taper):",
+        f"  W20-1 ROAD WORK AHEAD at {sign_c_dist:.0f} ft",
+        f"  W20-2 ROAD WORK XXX FT at {sign_b_dist:.0f} ft",
+        f"  W21-5aR RIGHT SHOULDER CLOSED AHEAD at {sign_a_dist:.0f} ft",
+        "",
+        "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6.",
         "Generated by MHT Tool — verify before use.",
-    )
-    c.setFont("Helvetica", 9)
-    y = FOOTER_H - 28
+    ]
+    c.setFont("Helvetica", 8)
+    y = FOOTER_H - 22
     for line in notes:
         c.drawString(x_box + 8, y, line)
-        y -= 14
+        y -= 10
 
 
 # ---------------------------------------------------------------------------
@@ -499,20 +537,18 @@ def render_plan_sheet(
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
-    Returns the path written.  The horizontal scale is auto-fitted so
-    the entire layout — advance warning signs through downstream taper
-    — appears on a single 11×17 sheet; vertical (offset) is exaggerated
-    by ``PTS_PER_OFFSET_FT`` for readability.
+    Returns the path written.  The horizontal scale is fitted to the
+    work-zone-and-taper region so the merging taper is readable;
+    advance warning signs are documented in the notes panel.
     """
     c = canvas.Canvas(output_path, pagesize=(PAGE_W, PAGE_H))
 
-    pts_per_ft, s_min, s_max = _fit_horizontal_scale(placements)
-    inches_per_ft = pts_per_ft / 72.0
-    ft_per_inch = 1.0 / inches_per_ft if inches_per_ft else 0.0
+    pts_per_ft, s_min, s_max = _fit_horizontal_scale(placements, params, shoulder_width_ft)
+    ft_per_inch = 72.0 / pts_per_ft if pts_per_ft else 0.0
     scale_label = f'1" = {ft_per_inch:.0f} ft (horizontal); offset exaggerated'
 
     _draw_road(c, pts_per_ft, s_min, s_max, params.lane_width_ft, shoulder_width_ft)
-    _draw_landmarks(c, placements, params, pts_per_ft, s_max, shoulder_width_ft)
+    _draw_landmarks(c, params, pts_per_ft, s_max, shoulder_width_ft)
     _draw_devices(c, placements, pts_per_ft, s_max)
     _draw_direction_arrow(c)
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
@@ -526,6 +562,7 @@ def render_plan_sheet(
 
 if __name__ == "__main__":
     import os
+    from collections import Counter
 
     from src.generation.layout import generate_shoulder_closure_divided
 
@@ -540,7 +577,7 @@ if __name__ == "__main__":
         jurisdiction="CDOT",
     )
     placements = generate_shoulder_closure_divided(params)
-    out = render_plan_sheet(placements, params, "test_plan.pdf")
+    out = render_plan_sheet(placements, params, "test_plan_v2.pdf")
 
     size_bytes = os.path.getsize(out)
     print(f"Wrote {out} ({size_bytes} bytes)")
@@ -549,4 +586,4 @@ if __name__ == "__main__":
     for dt, n in sorted(counts.items(), key=lambda kv: kv[0].value):
         print(f"  {dt.value:25s} {n}")
     print()
-    print("Open test_plan.pdf to visually inspect.")
+    print("Open test_plan_v2.pdf to visually inspect.")
