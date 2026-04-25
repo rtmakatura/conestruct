@@ -20,6 +20,7 @@ from src.rules.spacing import (
     co_construction_plaques,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    shoulder_taper_length,
     taper_length,
 )
 from src.rules.tables import COLORADO_OVERRIDES
@@ -91,6 +92,7 @@ class ScenarioParams:
     road_type: str  # "urban_low" | "urban_high" | "rural" | "expressway" | "divided_highway"
     work_zone_length_ft: float
     lane_width_ft: float = 12.0
+    shoulder_width_ft: float = 10.0
     is_night: bool = False
     is_divided: bool = False
     jurisdiction: str = "CDOT"
@@ -210,9 +212,12 @@ def validate_taper_length(
 ) -> list[Violation]:
     """Compare actual taper span to the formula length.  Source: MUTCD 11th Ed. §6C.08.
 
-    Uses ``spacing.taper_length(speed, lane_width)`` as the expected
-    length.  Tolerances ``TAPER_LENGTH_TOLERANCE_LOW`` and
-    ``TAPER_LENGTH_TOLERANCE_HIGH`` account for field rounding.
+    Lane closures use ``spacing.taper_length(speed, lane_width)``;
+    shoulder closures use ``spacing.shoulder_taper_length(speed,
+    shoulder_width)`` — per §6C.08, the shoulder taper is one-third of
+    the full merging taper length.  Tolerances
+    ``TAPER_LENGTH_TOLERANCE_LOW`` and ``TAPER_LENGTH_TOLERANCE_HIGH``
+    account for field rounding.
     """
     if params.closure_type == "mobile":
         return []
@@ -224,7 +229,10 @@ def validate_taper_length(
 
     stations = [placements[i].station_ft for i in taper]
     actual = max(stations) - min(stations)
-    expected = taper_length(params.speed_mph, params.lane_width_ft)
+    if params.closure_type == "shoulder":
+        expected = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
+    else:
+        expected = taper_length(params.speed_mph, params.lane_width_ft)
 
     if actual < TAPER_LENGTH_TOLERANCE_LOW * expected:
         return [
@@ -280,6 +288,12 @@ def validate_channelizer_spacing(
 
     for k in range(1, len(chans)):
         i_prev, i_cur = chans[k - 1], chans[k]
+        # Skip pairs touching the downstream taper (station < 0 by our
+        # coordinate convention).  Downstream tapers have their own
+        # length rule (50–100 ft per lane, §6C.08) and aren't subject to
+        # the in-taper / on-tangent spacing limits.
+        if placements[i_prev].station_ft < 0 or placements[i_cur].station_ft < 0:
+            continue
         prev_in_taper = i_prev in taper_set
         cur_in_taper = i_cur in taper_set
         # Skip pairs that straddle a zone boundary (taper ↔ tangent).  The
