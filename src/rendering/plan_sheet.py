@@ -7,6 +7,10 @@ sprite assets in V1; sign and channelizer glyphs are simple shapes.
 
 Convention: LEFT side of the plan view is upstream (high station, where
 drivers first encounter the work zone); RIGHT side is downstream.  The
+work side (positive ``offset_ft``, where the right-shoulder closure
+lives) is drawn at the BOTTOM of the page so the direction-of-travel
+arrow sits next to the closed carriageway — this matches CDOT S-630-1
+where the work side is always the near side of the plan view.  The
 plan view is fitted to show the merging taper, buffer, work zone, and
 downstream taper.  Advance warning signs sit further upstream, off the
 left edge of the plan view, and are documented in the notes panel.
@@ -112,7 +116,9 @@ def _x_of(station_ft: float, pts_per_ft: float, s_max: float) -> float:
 
 
 def _y_of(offset_ft: float) -> float:
-    return PLAN_Y_CENTER + offset_ft * PTS_PER_OFFSET_FT
+    """Map road offset to page y.  Positive offset (work side) → BOTTOM of
+    page; negative offset (opposing side) → TOP of page (CDOT S-630-1)."""
+    return PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT
 
 
 # ---------------------------------------------------------------------------
@@ -135,25 +141,30 @@ def _draw_road(
     lane_h = lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
 
+    # After the Y-flip, positive offset_ft → lower page y.  The closed
+    # (work-side) carriageway is therefore at the BOTTOM of the page; the
+    # opposing carriageway is at the TOP.
     y_center = PLAN_Y_CENTER
-    y_right_lane_top = y_center + 2 * lane_h
-    y_right_shldr_top = y_right_lane_top + shoulder_h
-    y_left_lane_bot = y_center - 2 * lane_h
-    y_left_shldr_bot = y_left_lane_bot - shoulder_h
+    y_closed_lane_inner = y_center - 2 * lane_h  # top edge of closed-side lanes
+    y_closed_shldr_outer = y_closed_lane_inner - shoulder_h  # bottom of page
+    y_open_lane_inner = y_center + 2 * lane_h  # bottom edge of open-side lanes
+    y_open_shldr_outer = y_open_lane_inner + shoulder_h  # top of page
 
-    # Closed (right) shoulder — pinkish-gray to flag the closure
+    # Closed (right) shoulder — bottom of page; pinkish-gray to flag closure
     c.setFillColor(SHOULDER_CLOSED_FILL)
-    c.rect(x_left, y_right_lane_top, width, shoulder_h, fill=1, stroke=0)
-    # Open (left) shoulder — neutral light gray
+    c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
+    # Open (left) shoulder — top of page; neutral light gray
     c.setFillColor(SHOULDER_OPEN_FILL)
-    c.rect(x_left, y_left_shldr_bot, width, shoulder_h, fill=1, stroke=0)
+    c.rect(x_left, y_open_lane_inner, width, shoulder_h, fill=1, stroke=0)
 
     # Travel lanes (medium gray); leave a 4-pt white gap at the centerline
     # to suggest the median (V1 layout has zero-width median in the data
     # convention so this is purely visual).
     c.setFillColor(LANE_FILL)
+    # Closed-side carriageway (lower half of road)
+    c.rect(x_left, y_closed_lane_inner, width, 2 * lane_h - 2, fill=1, stroke=0)
+    # Open-side carriageway (upper half of road)
     c.rect(x_left, y_center + 2, width, 2 * lane_h - 2, fill=1, stroke=0)
-    c.rect(x_left, y_left_lane_bot, width, 2 * lane_h - 2, fill=1, stroke=0)
 
     # Median yellow edge lines bracketing the gap
     c.setStrokeColor(MEDIAN_EDGE)
@@ -164,29 +175,29 @@ def _draw_road(
     # Outer travel-lane edges (white solid, 2 pt) at ±lane_width*2
     c.setStrokeColor(EDGE_LINE)
     c.setLineWidth(2.0)
-    c.line(x_left, y_right_lane_top, x_right, y_right_lane_top)
-    c.line(x_left, y_left_lane_bot, x_right, y_left_lane_bot)
+    c.line(x_left, y_closed_lane_inner, x_right, y_closed_lane_inner)
+    c.line(x_left, y_open_lane_inner, x_right, y_open_lane_inner)
 
-    # Lane stripes between same-direction lanes (white dashed, 2 pt)
+    # Lane stripes between same-direction lanes (white dashed, 2 pt) at ±lane_width_ft
     c.setLineWidth(2.0)
     c.setDash(12, 8)
-    c.line(x_left, y_center + lane_h, x_right, y_center + lane_h)
-    c.line(x_left, y_center - lane_h, x_right, y_center - lane_h)
+    c.line(x_left, _y_of(lane_width_ft), x_right, _y_of(lane_width_ft))
+    c.line(x_left, _y_of(-lane_width_ft), x_right, _y_of(-lane_width_ft))
     c.setDash()
 
     # Shoulder outer edges (white solid, 1 pt)
     c.setLineWidth(1.0)
-    c.line(x_left, y_right_shldr_top, x_right, y_right_shldr_top)
-    c.line(x_left, y_left_shldr_bot, x_right, y_left_shldr_bot)
+    c.line(x_left, y_closed_shldr_outer, x_right, y_closed_shldr_outer)
+    c.line(x_left, y_open_shldr_outer, x_right, y_open_shldr_outer)
 
     # Black corridor outline (0.5 pt) so the road pops from the page
     c.setStrokeColor(ROAD_BORDER)
     c.setLineWidth(0.5)
     c.rect(
         x_left,
-        y_left_shldr_bot,
+        y_closed_shldr_outer,
         width,
-        y_right_shldr_top - y_left_shldr_bot,
+        y_open_shldr_outer - y_closed_shldr_outer,
         fill=0,
         stroke=1,
     )
@@ -318,11 +329,16 @@ def _draw_devices(
         y = _y_of(p.offset_ft)
         glyph = _DEVICE_GLYPHS.get(p.device_type, _draw_sign)
         glyph(c, x, y)
-        # Sign code label, 4 pt above the symbol.
+        # Sign code label, placed on the OUTSIDE of the road (away from the
+        # centerline) so it lands on the lighter shoulder fill rather than
+        # the darker travel-lane fill.  After the Y-flip, "outside" for a
+        # positive-offset sign is below the symbol on page; for a negative-
+        # offset sign it is above.
         if p.device_type == DeviceType.SIGN_GENERIC and p.label:
             c.setFillColor(colors.black)
             c.setFont("Helvetica", 6)
-            c.drawCentredString(x, y + 11, p.label)
+            label_dy = -11 if p.offset_ft > 0 else 11
+            c.drawCentredString(x, y + label_dy, p.label)
 
 
 # ---------------------------------------------------------------------------
@@ -348,6 +364,7 @@ def _draw_dim(
 
 
 def _draw_direction_arrow(c: canvas.Canvas) -> None:
+    """Direction-of-travel arrow on the work-side carriageway (page bottom)."""
     y = PLAN_Y_CENTER - 34 * PTS_PER_OFFSET_FT - 28
     x1 = PLAN_LEFT + 60
     x2 = PLAN_LEFT + 200
@@ -359,6 +376,25 @@ def _draw_direction_arrow(c: canvas.Canvas) -> None:
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 8)
     c.drawString(x1, y + 6, "DIRECTION OF TRAVEL")
+
+
+def _draw_opposing_arrow(c: canvas.Canvas) -> None:
+    """Left-pointing arrow on the opposing carriageway (page top) so the
+    direction of each carriageway is unambiguous on the plan view."""
+    # Sit above the open shoulder and clear of the dimension callouts
+    # (which live at PLAN_Y_CENTER + 46*PTS_PER_OFFSET_FT).
+    y = PLAN_Y_CENTER + (34 + 24) * PTS_PER_OFFSET_FT
+    x1 = PLAN_LEFT + 60
+    x2 = PLAN_LEFT + 200
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(1.0)
+    c.line(x1, y, x2, y)
+    # Arrow head pointing LEFT at x1
+    c.line(x1, y, x1 + 7, y + 4)
+    c.line(x1, y, x1 + 7, y - 4)
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica", 6)
+    c.drawString(x1, y + 4, "OPPOSING TRAFFIC")
 
 
 def _draw_landmarks(
@@ -379,7 +415,7 @@ def _draw_landmarks(
     taper_end = wz_start + buf_len
     taper_start = taper_end + taper_len
 
-    y_top = PLAN_Y_CENTER + (34 + 12) * PTS_PER_OFFSET_FT  # above the closed shoulder
+    y_top = PLAN_Y_CENTER + (34 + 12) * PTS_PER_OFFSET_FT  # above the open shoulder (top of page)
 
     _draw_dim(
         c,
@@ -551,6 +587,7 @@ def render_plan_sheet(
     _draw_landmarks(c, params, pts_per_ft, s_max, shoulder_width_ft)
     _draw_devices(c, placements, pts_per_ft, s_max)
     _draw_direction_arrow(c)
+    _draw_opposing_arrow(c)
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
     _draw_legend(c, placements)
     _draw_notes(c, params, shoulder_width_ft)
