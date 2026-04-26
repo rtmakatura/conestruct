@@ -412,6 +412,213 @@ def generate_lane_closure_divided(
     return placements
 
 
+def generate_flagger_alternating_2lane(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 8.0,
+) -> list[DevicePlacement]:
+    """Generate a CDOT S-630-1 flagger-controlled alternating-traffic layout.
+
+    Hard-coded for a 2-lane undivided highway (one lane each direction)
+    with the right (work-side) lane closed.  Both directions of travel
+    share the open opposing lane, controlled by a flagger at each end.
+    Posted speeds in the 35–55 mph range.
+
+    Geometry (positive offsets = right of centerline, work side):
+      * 0  ..  +lane_width_ft         — closed right lane
+      * 0  ..  -lane_width_ft         — open left lane (opposing direction)
+      * outer shoulders symmetric on either side
+
+    Two sets of advance warning signs and two flagger stations are
+    placed: one set for the right-direction approach (positive offset,
+    upstream of the merging taper) and one for the opposing approach
+    (negative offset, downstream of the work zone).
+
+    TODO: confirm exact CDOT S-630-1 Case number for one-lane two-way
+    flagger operation; cases 6/7 of the 19-page set are likely matches.
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    # Lateral landmarks
+    lane_edge_right = params.lane_width_ft  # right edge of closed right lane
+    lane_edge_left = -params.lane_width_ft  # outer edge of opposing lane
+    sign_offset_right = lane_edge_right + 4.0
+    sign_offset_left = lane_edge_left - 4.0
+    flagger_offset_right = lane_edge_right + 6.0
+    flagger_offset_left = lane_edge_left - 6.0
+
+    # Longitudinal landmarks: full merging taper L (this is a travel-lane
+    # closure, not a shoulder closure) per MUTCD §6C.08.
+    taper_len = taper_length(speed, params.lane_width_ft)
+    buf_len = buffer_space(speed)
+    ds_taper_len = downstream_taper_length(1)
+
+    wz_end_station = 0.0
+    wz_start_station = wz_len
+    taper_end_station = wz_start_station + buf_len
+    taper_start_station = taper_end_station + taper_len
+
+    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+    spacing_abc = advance_warning_spacing(speed, rt)
+    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+
+    placements: list[DevicePlacement] = []
+
+    # 1. Right-direction (upstream-approach) advance warning signs
+    sign_a_station_r = taper_start_station + a_dist
+    sign_b_station_r = sign_a_station_r + b_dist
+    sign_c_station_r = sign_b_station_r + c_dist
+    advance_signs_right = (
+        ("W20-4", sign_a_station_r),  # BE PREPARED TO STOP
+        ("W20-7", sign_b_station_r),  # FLAGGER AHEAD
+        ("W20-1", sign_c_station_r),  # ROAD WORK AHEAD
+    )
+    for label, station in advance_signs_right:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label=label,
+            )
+        )
+
+    # 2. Flagger station #1 — upstream end of the merging taper
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.FLAGGER_STATION,
+            station_ft=taper_start_station + 30.0,
+            offset_ft=flagger_offset_right,
+            label="FLAGGER_1",
+        )
+    )
+
+    # 3. Merging taper drums — push right-lane traffic across the
+    # centerline into the opposing lane.  Offset transitions from the
+    # right lane edge (+lane_width) to the centerline (0).
+    in_taper_spacing = device_spacing_in_taper(speed)
+    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_intervals = n_taper_devices - 1
+    for k in range(n_taper_devices):
+        t = k / n_taper_intervals
+        station = taper_start_station - t * taper_len
+        offset = lane_edge_right - t * lane_edge_right  # lane_edge to 0
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.DRUM,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
+    # 4. Buffer space — intentionally empty.
+
+    # 5. Work-zone tangent cones along the centerline, delineating the
+    # boundary between the open opposing lane and the closed work lane.
+    # ``num_devices_on_tangent`` returns the interval count, so add one for
+    # the device count to keep spacing inside the 10 % channelizer tolerance.
+    n_tangent = max(3, num_devices_on_tangent(wz_len, speed) + 1)
+    n_tangent_intervals = n_tangent - 1
+    tangent_spacing = wz_len / n_tangent_intervals
+    for k in range(n_tangent):
+        station = wz_end_station + k * tangent_spacing
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=0.0,
+            )
+        )
+
+    # 6. CONSTRUCTION ZONE plaques (G20-5P) inside the work zone,
+    # right side only (undivided road — no mirror requirement).
+    total_zone_length = sign_c_station_r
+    n_plaques = co_construction_plaques(total_zone_length)
+    for k in range(n_plaques):
+        station = (k + 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label="G20-5P",
+            )
+        )
+
+    # 7. Opposing-direction advance warning signs (negative stations,
+    # left side of road — facing traffic approaching from downstream).
+    sign_a_station_l = -ds_taper_len - 30.0 - a_dist
+    sign_b_station_l = sign_a_station_l - b_dist
+    sign_c_station_l = sign_b_station_l - c_dist
+    advance_signs_left = (
+        ("W20-4", sign_a_station_l),
+        ("W20-7", sign_b_station_l),
+        ("W20-1", sign_c_station_l),
+    )
+    for label, station in advance_signs_left:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_left,
+                label=label,
+            )
+        )
+
+    # 8. Flagger station #2 — just downstream of the downstream taper end,
+    # facing opposing traffic before they enter the work area.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.FLAGGER_STATION,
+            station_ft=-ds_taper_len - 30.0,
+            offset_ft=flagger_offset_left,
+            label="FLAGGER_2",
+        )
+    )
+
+    # 9. Downstream taper cones — transition right-direction traffic from
+    # the centerline back to the right lane edge after the work zone.
+    n_ds_cones = 2
+    for k in range(n_ds_cones):
+        t = (k + 1) / n_ds_cones
+        station = wz_end_station - t * ds_taper_len
+        offset = t * lane_edge_right
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
+    # 10. END ROAD WORK signs (G20-2) — one per direction.  The
+    # right-direction sign sits past the downstream taper; the
+    # opposing-direction sign sits past the upstream end of the work zone.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=-ds_taper_len - 100.0,
+            offset_ft=sign_offset_right,
+            label="G20-2",
+        )
+    )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=wz_start_station + 100.0,
+            offset_ft=sign_offset_left,
+            label="G20-2",
+        )
+    )
+
+    # ``shoulder_width_ft`` is currently a layout-only nicety (used for
+    # visual scaling on the rendered plan) and not consumed by device
+    # placement; reserved for future shoulder/edge channelization.
+    _ = shoulder_width_ft
+
+    return placements
+
+
 def _print_smoke_test(
     title: str,
     placements: list[DevicePlacement],
@@ -467,3 +674,17 @@ if __name__ == "__main__":
     )
     lane_placements = generate_lane_closure_divided(lane_params)
     _print_smoke_test("Lane Closure Scenario", lane_placements, lane_params)
+
+    flagger_params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=1,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        is_divided=False,
+        is_night=False,
+        jurisdiction="CDOT",
+    )
+    flagger_placements = generate_flagger_alternating_2lane(flagger_params)
+    _print_smoke_test("Flagger Alternating 2-Lane Scenario", flagger_placements, flagger_params)

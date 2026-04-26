@@ -68,6 +68,7 @@ def build_audit_trail(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     is_lane = params.closure_type == "lane"
+    is_flagger = is_lane and not params.is_divided
     offset_ft = params.lane_width_ft if is_lane else shoulder_width_ft
     offset_label = "lane width" if is_lane else "shoulder width"
 
@@ -93,7 +94,13 @@ def build_audit_trail(
             "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the "
             "full merging taper length L."
         )
-        cdot_reference = "CDOT S-630-1 Case 3 (right-lane closure on divided highway)"
+        if is_flagger:
+            cdot_reference = (
+                "CDOT S-630-1 flagger-controlled one-lane two-way operation "
+                "(TODO: verify exact Case # in 19-page set)"
+            )
+        else:
+            cdot_reference = "CDOT S-630-1 Case 3 (right-lane closure on divided highway)"
     else:
         L_required = L_third
         L_required_label = "L/3 (shoulder taper)"
@@ -190,7 +197,10 @@ def build_audit_trail(
     sign_b_station = sign_a_station + b_ft
     sign_c_station = sign_b_station + c_ft
 
-    if is_lane:
+    if is_flagger:
+        # Flagger-controlled alternating-traffic series (MUTCD §6E).
+        sign_codes = {"A": "W20-4", "B": "W20-7", "C": "W20-1"}
+    elif is_lane:
         sign_codes = {"A": "W4-2R", "B": "W20-5B", "C": "W20-1"}
     else:
         sign_codes = {"A": "W21-5aR", "B": "W20-2", "C": "W20-1"}
@@ -323,7 +333,20 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 6. S-630-1 case reference
     # ------------------------------------------------------------------
-    if is_lane:
+    if is_flagger:
+        # TODO: confirm exact Case number against the 19-page S-630-1 set;
+        # one-lane two-way flagger operations are commonly Cases 6/7.
+        case_label = (
+            "Flagger-controlled one-lane two-way operation "
+            "(TODO: verify Case # in 19-page S-630-1 set)"
+        )
+        case_narrative = (
+            "This scenario matches the CDOT Standard Plan S-630-1 "
+            "flagger-controlled alternating-traffic case: a 2-lane "
+            "undivided highway with one lane closed and traffic alternating "
+            "through the opposing lane under flagger control."
+        )
+    elif is_lane:
         # TODO: confirm exact Case number against the 19-page S-630-1 set;
         # right-lane closures on divided highways are commonly Case 3, but
         # the print revision in use should be verified before sealing.
@@ -351,6 +374,40 @@ def build_audit_trail(
         ),
     }
 
+    # ------------------------------------------------------------------
+    # 7. Flagger placement (only meaningful when flaggers are present)
+    # ------------------------------------------------------------------
+    flagger_placements = [p for p in placements if p.device_type == DeviceType.FLAGGER_STATION]
+    flagger_rows = [
+        {
+            "Label": p.label or f"FLAGGER_{i + 1}",
+            "Station (ft)": f"{p.station_ft:,.0f}",
+            "Offset (ft)": f"{p.offset_ft:+.1f}",
+            "Side": "right shoulder" if p.offset_ft > 0 else "left shoulder",
+        }
+        for i, p in enumerate(flagger_placements)
+    ]
+    flagger_section = {
+        "applicable": is_flagger or len(flagger_placements) > 0,
+        "count": len(flagger_placements),
+        "required": 2 if is_flagger else 0,
+        "table": flagger_rows,
+        "source": (
+            "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary "
+            "Traffic Control Zones — Flagger Control) and Sec 6C.13 "
+            "(One-Lane, Two-Way Traffic Control)."
+        ),
+        "narrative": (
+            "Two flagger stations are required for alternating one-way "
+            "operations: one upstream of the merging taper to stop "
+            "right-direction traffic, one past the downstream taper end to "
+            "stop opposing traffic.  Flagger stations should be visible to "
+            "approaching drivers from the full advance-warning distance."
+        )
+        if is_flagger
+        else "Not applicable for this scenario.",
+    }
+
     return {
         "taper": taper_section,
         "buffer": buffer_section,
@@ -358,4 +415,5 @@ def build_audit_trail(
         "advance": advance_section,
         "colorado": co_section,
         "case": case_section,
+        "flagger": flagger_section,
     }

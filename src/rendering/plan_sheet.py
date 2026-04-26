@@ -51,6 +51,20 @@ def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> 
     return shoulder_taper_length(params.speed_mph, shoulder_width_ft)
 
 
+def _road_y_extent(params: ScenarioParams, shoulder_width_ft: float) -> tuple[float, float]:
+    """Return (y_road_top, y_road_bottom) on the page for the rendered road.
+
+    Divided highways are drawn with two lanes per direction and a
+    zero-width median; undivided highways are drawn with a single lane
+    each direction and a yellow centerline.
+    """
+    lane_h = params.lane_width_ft * PTS_PER_OFFSET_FT
+    shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
+    half_lanes = 2 if params.is_divided else 1
+    half_road = half_lanes * lane_h + shoulder_h
+    return PLAN_Y_CENTER + half_road, PLAN_Y_CENTER - half_road
+
+
 # 11" x 17" tabloid landscape (long side horizontal)
 PAGE_W: float = 17 * 72.0  # 1224 pt
 PAGE_H: float = 11 * 72.0  # 792 pt
@@ -149,6 +163,7 @@ def _draw_road(
     lane_width_ft: float,
     shoulder_width_ft: float,
     closure_type: str = "shoulder",
+    is_divided: bool = True,
 ) -> None:
     x_left = _x_of(s_max, pts_per_ft, s_max)
     x_right = _x_of(s_min, pts_per_ft, s_max)
@@ -161,12 +176,58 @@ def _draw_road(
     # (work-side) carriageway is therefore at the BOTTOM of the page; the
     # opposing carriageway is at the TOP.
     y_center = PLAN_Y_CENTER
-    y_closed_lane_inner = y_center - 2 * lane_h  # top edge of closed-side lanes
+    half_lanes = 2 if is_divided else 1
+    y_closed_lane_inner = y_center - half_lanes * lane_h  # top edge of closed-side lanes
     y_closed_shldr_outer = y_closed_lane_inner - shoulder_h  # bottom of page
-    y_open_lane_inner = y_center + 2 * lane_h  # bottom edge of open-side lanes
+    y_open_lane_inner = y_center + half_lanes * lane_h  # bottom edge of open-side lanes
     y_open_shldr_outer = y_open_lane_inner + shoulder_h  # top of page
 
     is_lane_closure = closure_type == "lane"
+
+    if not is_divided:
+        # 2-lane undivided road: single lane each direction with a yellow
+        # centerline.  No median gap; the closed right lane is painted
+        # pink to flag it as the work-side lane.
+        c.setFillColor(SHOULDER_OPEN_FILL)
+        c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
+        c.rect(x_left, y_open_lane_inner, width, shoulder_h, fill=1, stroke=0)
+
+        c.setFillColor(SHOULDER_CLOSED_FILL if is_lane_closure else LANE_FILL)
+        c.rect(x_left, y_closed_lane_inner, width, lane_h, fill=1, stroke=0)
+        c.setFillColor(LANE_FILL)
+        c.rect(x_left, y_center, width, lane_h, fill=1, stroke=0)
+
+        # Yellow dashed centerline (no-passing in a real work zone, but
+        # dashed reads cleaner on the schematic).
+        c.setStrokeColor(MEDIAN_EDGE)
+        c.setLineWidth(2.0)
+        c.setDash(12, 8)
+        c.line(x_left, y_center, x_right, y_center)
+        c.setDash()
+
+        # Outer edge lines (white solid)
+        c.setStrokeColor(EDGE_LINE)
+        c.setLineWidth(2.0)
+        c.line(x_left, y_closed_lane_inner, x_right, y_closed_lane_inner)
+        c.line(x_left, y_open_lane_inner, x_right, y_open_lane_inner)
+
+        # Shoulder outer edges (white thin)
+        c.setLineWidth(1.0)
+        c.line(x_left, y_closed_shldr_outer, x_right, y_closed_shldr_outer)
+        c.line(x_left, y_open_shldr_outer, x_right, y_open_shldr_outer)
+
+        # Black corridor outline
+        c.setStrokeColor(ROAD_BORDER)
+        c.setLineWidth(0.5)
+        c.rect(
+            x_left,
+            y_closed_shldr_outer,
+            width,
+            y_open_shldr_outer - y_closed_shldr_outer,
+            fill=0,
+            stroke=1,
+        )
+        return
 
     # Outer shoulders — for a shoulder closure the work-side shoulder is
     # painted pink; for a lane closure both shoulders stay neutral gray.
@@ -415,9 +476,8 @@ def _draw_dim(
     c.drawCentredString((x1 + x2) / 2, y + 5, label)
 
 
-def _draw_direction_arrow(c: canvas.Canvas) -> None:
+def _draw_direction_arrow(c: canvas.Canvas, y: float) -> None:
     """Direction-of-travel arrow on the work-side carriageway (page bottom)."""
-    y = PLAN_Y_CENTER - 34 * PTS_PER_OFFSET_FT - 28
     x1 = PLAN_LEFT + 60
     x2 = PLAN_LEFT + 200
     c.setStrokeColor(colors.black)
@@ -430,12 +490,9 @@ def _draw_direction_arrow(c: canvas.Canvas) -> None:
     c.drawString(x1, y + 6, "DIRECTION OF TRAVEL")
 
 
-def _draw_opposing_arrow(c: canvas.Canvas) -> None:
+def _draw_opposing_arrow(c: canvas.Canvas, y: float) -> None:
     """Left-pointing arrow on the opposing carriageway (page top) so the
     direction of each carriageway is unambiguous on the plan view."""
-    # Sit above the open shoulder and clear of the dimension callouts
-    # (which live at PLAN_Y_CENTER + 46*PTS_PER_OFFSET_FT).
-    y = PLAN_Y_CENTER + (34 + 24) * PTS_PER_OFFSET_FT
     x1 = PLAN_LEFT + 60
     x2 = PLAN_LEFT + 200
     c.setStrokeColor(colors.black)
@@ -467,7 +524,8 @@ def _draw_landmarks(
     taper_end = wz_start + buf_len
     taper_start = taper_end + taper_len
 
-    y_top = PLAN_Y_CENTER + (34 + 12) * PTS_PER_OFFSET_FT  # above the open shoulder (top of page)
+    y_road_top, _ = _road_y_extent(params, shoulder_width_ft)
+    y_top = y_road_top + 12 * PTS_PER_OFFSET_FT  # above the open shoulder
 
     _draw_dim(
         c,
@@ -518,6 +576,8 @@ def _draw_title_block(
 
     if project_name:
         project_label = project_name
+    elif params.closure_type == "lane" and not params.is_divided:
+        project_label = "FLAGGER ALTERNATING TRAFFIC — 2-LANE UNDIVIDED"
     elif params.closure_type == "lane":
         project_label = "RIGHT-LANE CLOSURE — DIVIDED HIGHWAY"
     else:
@@ -592,8 +652,12 @@ def _draw_notes(
     sign_c_dist = abc["A"] + abc["B"] + abc["C"]
 
     is_lane = params.closure_type == "lane"
+    is_flagger = is_lane and not params.is_divided
     taper_label = "Lane taper (L)" if is_lane else "Shoulder taper (L/3)"
-    if is_lane:
+    if is_flagger:
+        sign_a_line = f"  W20-4 BE PREPARED TO STOP at {sign_a_dist:.0f} ft"
+        sign_b_line = f"  W20-7 FLAGGER AHEAD at {sign_b_dist:.0f} ft"
+    elif is_lane:
         sign_a_line = f"  W4-2R RIGHT LANE ENDS at {sign_a_dist:.0f} ft"
         sign_b_line = f"  W20-5B RIGHT LANE CLOSED AHEAD at {sign_b_dist:.0f} ft"
     else:
@@ -657,11 +721,13 @@ def render_plan_sheet(
         params.lane_width_ft,
         shoulder_width_ft,
         closure_type=params.closure_type,
+        is_divided=params.is_divided,
     )
     _draw_landmarks(c, params, pts_per_ft, s_max, shoulder_width_ft)
     _draw_devices(c, placements, pts_per_ft, s_max)
-    _draw_direction_arrow(c)
-    _draw_opposing_arrow(c)
+    y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
+    _draw_direction_arrow(c, y=y_road_bottom - 18)
+    _draw_opposing_arrow(c, y=y_road_top + 14)
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
     _draw_legend(c, placements)
     _draw_notes(c, params, shoulder_width_ft)

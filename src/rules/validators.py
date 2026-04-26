@@ -616,8 +616,13 @@ def validate_flagger_stations(
     non-divided roads, or by a single-lane closure on a two-lane,
     two-way road.
     """
+    # ``num_lanes`` is interpreted permissively: 1 (the per-direction count
+    # for a 2-lane two-way road) and 2 (the total-lane count for the same
+    # road) both describe the alternating-flow case.  Multi-lane undivided
+    # facilities (num_lanes >= 3) handle a single-lane closure without
+    # alternating flow and are excluded here.
     needs_flaggers = (params.closure_type == "full_road" and not params.is_divided) or (
-        params.closure_type == "lane" and params.num_lanes == 2 and not params.is_divided
+        params.closure_type == "lane" and params.num_lanes <= 2 and not params.is_divided
     )
     if not needs_flaggers:
         return []

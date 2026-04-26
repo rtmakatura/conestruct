@@ -23,6 +23,7 @@ import streamlit as st  # noqa: E402
 from src.api.audit import build_audit_trail  # noqa: E402
 from src.export.device_list import export_device_list  # noqa: E402
 from src.generation.layout import (  # noqa: E402
+    generate_flagger_alternating_2lane,
     generate_lane_closure_divided,
     generate_shoulder_closure_divided,
 )
@@ -81,12 +82,16 @@ def _device_breakdown_df(placements) -> pd.DataFrame:
 
 
 if generate_button:
-    supported = closure_type in ("shoulder", "lane") and road_type == "divided_highway"
+    is_flagger_scenario = closure_type == "lane" and num_lanes == 1 and not is_divided
+    is_divided_scenario = closure_type in ("shoulder", "lane") and road_type == "divided_highway"
+    supported = is_divided_scenario or is_flagger_scenario
     if not supported:
         st.warning(
-            "V1 supports shoulder closure and lane closure on divided "
-            "highways only. Other scenarios coming soon. Generating with "
-            "shoulder closure defaults."
+            "V1 supports: (1) shoulder or lane closure on a divided "
+            "highway, and (2) flagger-controlled alternating traffic on a "
+            "2-lane undivided road (lane closure with 1 lane per direction "
+            "and divided highway unchecked). Other scenarios coming soon. "
+            "Generating with shoulder closure defaults."
         )
 
     params = ScenarioParams(
@@ -102,7 +107,9 @@ if generate_button:
     )
 
     try:
-        if closure_type == "lane" and road_type == "divided_highway":
+        if is_flagger_scenario:
+            placements = generate_flagger_alternating_2lane(params)
+        elif closure_type == "lane" and road_type == "divided_highway":
             placements = generate_lane_closure_divided(params)
         else:
             placements = generate_shoulder_closure_divided(params)
@@ -235,6 +242,16 @@ if generate_button:
                 st.write(f"{icon} **{check['label']}** ({check['citation']}) — {check['detail']}")
             for item in co["info_items"]:
                 st.write(f"ℹ️ **{item['label']}** ({item['citation']}) — {item['detail']}")
+
+        fl = audit["flagger"]
+        if fl["applicable"]:
+            with st.expander(
+                f"Flagger Placement ({fl['count']} placed, {fl['required']} required)"
+            ):
+                if fl["table"]:
+                    st.table(fl["table"])
+                st.write(fl["narrative"])
+                st.write(f"**Source:** {fl['source']}")
 
         cs = audit["case"]
         with st.expander(f"S-630-1 Case Reference ({cs['case']})"):
