@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #e8710a;
+  --orange-deep: #c45f08;
+  --orange-soft: #fce9d6;
+  --navy: #1b2838;
+  --navy-soft: #2a3b50;
+  --blue: #2d9cdb;
+  --green: #27ae60;
+  --green-soft: #ddf1e5;
+  --red: #eb5757;
+  --red-soft: #fbe0e0;
+  --beige: #f5f0eb;
+  --beige-deep: #ece4d9;
+  --paper: #faf6f0;
+  --line: #d9cfc1;
+  --line-soft: #e5dccd;
+  --ink: #1b2838;
+  --ink-mute: #5c6b7e;
+  --ink-faint: #8a95a4;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  line-height: 1.6;
+}
+
+@layer components {
+  /* Blueprint page background */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-light {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-fine {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .blueprint-grid-faint {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Eyebrow: orange mono uppercase, prefixed by 24x1px tick */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--orange);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--orange);
+    display: inline-block;
+  }
+
+  /* Primary CTA: orange button with shadowed double-stroke */
+  .btn-primary {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px 28px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.005em;
+    box-shadow:
+      0 1px 0 var(--orange-deep),
+      0 0 0 1px var(--orange-deep);
+    transition: transform 0.08s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  /* Range slider: orange square thumbs, 2px track */
+  .range-orange {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  .range-orange::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-moz-range-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    margin-top: -7px;
+    border-radius: 0;
+  }
+  .range-orange::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    border-radius: 0;
+  }
+}
