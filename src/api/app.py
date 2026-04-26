@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import sys
 import tempfile
+import urllib.parse
 from collections import Counter
 from pathlib import Path
 
@@ -17,9 +18,11 @@ _PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
+import httpx  # noqa: E402
 import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
 
+from src._dotenv import load_dotenv  # noqa: E402
 from src.api.audit import build_audit_trail  # noqa: E402
 from src.export.device_list import export_device_list  # noqa: E402
 from src.generation.layout import (  # noqa: E402
@@ -30,6 +33,8 @@ from src.generation.layout import (  # noqa: E402
 from src.narrative.crew_narrative import generate_crew_narrative  # noqa: E402
 from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
 from src.rules.validators import ScenarioParams, validate_layout  # noqa: E402
+
+load_dotenv()
 
 st.set_page_config(page_title="MHT Generator", layout="wide")
 
@@ -67,6 +72,55 @@ work_zone_length_ft = st.sidebar.number_input(
 is_divided = st.sidebar.checkbox("Divided highway", value=True)
 is_night = st.sidebar.checkbox("Night operation", value=False)
 project_name = st.sidebar.text_input("Project name (optional)", value="")
+
+st.sidebar.divider()
+st.sidebar.header("Location (optional)")
+
+site_address = st.sidebar.text_input(
+    "Street address or intersection",
+    value="",
+    placeholder="e.g., US-85 & Bromley Ln, Brighton, CO",
+)
+site_lat = st.sidebar.number_input(
+    "Latitude", value=0.0, format="%.6f", help="Leave at 0 to skip aerial embed"
+)
+site_lng = st.sidebar.number_input(
+    "Longitude", value=0.0, format="%.6f", help="Leave at 0 to skip aerial embed"
+)
+
+_mapbox_token = os.environ.get("MAPBOX_TOKEN", "")
+_location_provided = bool(site_address) or site_lat != 0.0 or site_lng != 0.0
+if _location_provided and not _mapbox_token:
+    st.sidebar.warning("Set MAPBOX_TOKEN in .env to enable aerial imagery")
+
+
+def _geocode_address(address: str, token: str) -> tuple[float, float] | None:
+    """Resolve a street address to (lat, lng) via the Mapbox Geocoding API.
+
+    Returns ``None`` on any failure (network error, empty result, bad token).
+    """
+    query = urllib.parse.quote(address, safe="")
+    url = f"https://api.mapbox.com/geocoding/v5/mapbox.places/{query}.json"
+    try:
+        r = httpx.get(url, params={"access_token": token, "limit": 1}, timeout=10.0)
+        r.raise_for_status()
+        feats = r.json().get("features", [])
+        if not feats:
+            return None
+        lng, lat = feats[0]["center"]
+        return float(lat), float(lng)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[mapbox] geocoding failed: {type(exc).__name__}: {exc}")
+        return None
+
+
+if site_address and site_lat == 0.0 and site_lng == 0.0 and _mapbox_token:
+    resolved = _geocode_address(site_address, _mapbox_token)
+    if resolved is not None:
+        site_lat, site_lng = resolved
+        st.sidebar.caption(f"Resolved: {site_lat:.6f}, {site_lng:.6f}")
+    else:
+        st.sidebar.caption("Could not resolve address — leaving coordinates at 0.")
 
 generate_button = st.sidebar.button(
     "Generate MHT Package", type="primary", use_container_width=True
@@ -134,6 +188,9 @@ if generate_button:
             params,
             output_path=pdf_path,
             project_name=project_name,
+            site_lat=site_lat if (site_lat or site_lng) else None,
+            site_lng=site_lng if (site_lat or site_lng) else None,
+            site_address=site_address,
         )
         export_device_list(placements, params, output_path=xlsx_path)
         generate_crew_narrative(placements, params, output_path=md_path)

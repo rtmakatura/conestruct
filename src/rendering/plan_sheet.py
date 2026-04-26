@@ -22,12 +22,17 @@ Authoritative sources:
 
 from __future__ import annotations
 
+import os
+import tempfile
 from collections.abc import Callable
 from datetime import date
+from pathlib import Path
 
+import httpx
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
+from src._dotenv import load_dotenv
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -36,6 +41,8 @@ from src.rules.spacing import (
     taper_length,
 )
 from src.rules.validators import DevicePlacement, ScenarioParams
+
+load_dotenv()
 
 
 def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> float:
@@ -687,6 +694,67 @@ def _draw_notes(
 
 
 # ---------------------------------------------------------------------------
+# Mapbox aerial embed (optional)
+# ---------------------------------------------------------------------------
+
+
+def _fetch_mapbox_aerial(lat: float, lng: float, token: str) -> Path | None:
+    """Fetch a Mapbox satellite tile centered on (lat, lng).  Returns the
+    path to a temporary PNG, or ``None`` if the call fails for any reason
+    (network error, bad token, rate limit).  Errors are logged to stdout
+    rather than raised — the aerial is an optional enhancement, not a
+    required component of the plan sheet.
+    """
+    url = f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{lng},{lat},16,0/400x300@2x"
+    try:
+        r = httpx.get(url, params={"access_token": token}, timeout=15.0)
+        r.raise_for_status()
+        fd, tmp_path = tempfile.mkstemp(suffix=".png", prefix="mht_aerial_")
+        with os.fdopen(fd, "wb") as f:
+            f.write(r.content)
+        return Path(tmp_path)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[mapbox] static image fetch failed: {type(exc).__name__}: {exc}")
+        return None
+
+
+def _draw_aerial_embed(
+    c: canvas.Canvas,
+    png_path: Path,
+    lat: float,
+    lng: float,
+    site_address: str,
+) -> None:
+    img_w, img_h = 216.0, 162.0  # 3" x 2.25"
+    img_x = PLAN_RIGHT - 8.0 - img_w
+    img_y = PLAN_BOTTOM + 14.0  # leaves room for the caption below
+
+    c.drawImage(
+        str(png_path),
+        img_x,
+        img_y,
+        width=img_w,
+        height=img_h,
+        preserveAspectRatio=True,
+    )
+
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.5)
+    c.setFillColor(colors.black, alpha=0)
+    c.rect(img_x, img_y, img_w, img_h, fill=0, stroke=1)
+
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 6)
+    c.drawString(img_x, img_y + img_h + 4.0, "AERIAL CONTEXT (NOT TO SCALE)")
+
+    caption = f"SITE: {lat:.4f}, {lng:.4f}"
+    if site_address:
+        caption += f"  ({site_address})"
+    c.setFont("Helvetica", 6)
+    c.drawString(img_x, img_y - 7.0, caption)
+
+
+# ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 
@@ -700,6 +768,9 @@ def render_plan_sheet(
     sheet_number: str = "1",
     total_sheets: str = "1",
     shoulder_width_ft: float = 10.0,
+    site_lat: float | None = None,
+    site_lng: float | None = None,
+    site_address: str = "",
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -731,6 +802,15 @@ def render_plan_sheet(
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
     _draw_legend(c, placements)
     _draw_notes(c, params, shoulder_width_ft)
+
+    if site_lat is not None and site_lng is not None and (site_lat or site_lng):
+        token = os.environ.get("MAPBOX_TOKEN", "")
+        if not token:
+            print("MAPBOX_TOKEN not set — skipping aerial embed")
+        else:
+            png = _fetch_mapbox_aerial(site_lat, site_lng, token)
+            if png is not None:
+                _draw_aerial_embed(c, png, site_lat, site_lng, site_address)
 
     c.showPage()
     c.save()
