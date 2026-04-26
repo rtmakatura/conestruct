@@ -33,8 +33,23 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     shoulder_taper_length,
+    taper_length,
 )
 from src.rules.validators import DevicePlacement, ScenarioParams
+
+
+def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> float:
+    """Plan-side taper length used for fitting the scale and dimension callouts.
+
+    Lane closures use the full merging taper L (MUTCD §6C.08); shoulder
+    closures use L/3 (§6C.08(B)).  Mirrors the branching in
+    ``src.generation.layout`` so the rendered plan view fits whichever
+    layout the engine produced.
+    """
+    if params.closure_type == "lane":
+        return taper_length(params.speed_mph, params.lane_width_ft)
+    return shoulder_taper_length(params.speed_mph, shoulder_width_ft)
+
 
 # 11" x 17" tabloid landscape (long side horizontal)
 PAGE_W: float = 17 * 72.0  # 1224 pt
@@ -100,7 +115,7 @@ def _fit_horizontal_scale(
     """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
-    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
+    taper_len = _required_taper_length(params, shoulder_width_ft)
     buf_len = buffer_space(speed)
     taper_start = wz_len + buf_len + taper_len
 
@@ -133,6 +148,7 @@ def _draw_road(
     s_max: float,
     lane_width_ft: float,
     shoulder_width_ft: float,
+    closure_type: str = "shoulder",
 ) -> None:
     x_left = _x_of(s_max, pts_per_ft, s_max)
     x_right = _x_of(s_min, pts_per_ft, s_max)
@@ -150,10 +166,12 @@ def _draw_road(
     y_open_lane_inner = y_center + 2 * lane_h  # bottom edge of open-side lanes
     y_open_shldr_outer = y_open_lane_inner + shoulder_h  # top of page
 
-    # Closed (right) shoulder — bottom of page; pinkish-gray to flag closure
-    c.setFillColor(SHOULDER_CLOSED_FILL)
+    is_lane_closure = closure_type == "lane"
+
+    # Outer shoulders — for a shoulder closure the work-side shoulder is
+    # painted pink; for a lane closure both shoulders stay neutral gray.
+    c.setFillColor(SHOULDER_CLOSED_FILL if not is_lane_closure else SHOULDER_OPEN_FILL)
     c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
-    # Open (left) shoulder — top of page; neutral light gray
     c.setFillColor(SHOULDER_OPEN_FILL)
     c.rect(x_left, y_open_lane_inner, width, shoulder_h, fill=1, stroke=0)
 
@@ -161,9 +179,30 @@ def _draw_road(
     # to suggest the median (V1 layout has zero-width median in the data
     # convention so this is purely visual).
     c.setFillColor(LANE_FILL)
-    # Closed-side carriageway (lower half of road)
-    c.rect(x_left, y_closed_lane_inner, width, 2 * lane_h - 2, fill=1, stroke=0)
+    # Closed-side carriageway (lower half of road).  For a lane closure,
+    # paint the right travel lane (the one closest to the work-side
+    # shoulder, page-bottom) pink to flag it as closed and leave the
+    # inner lane neutral gray.
+    if is_lane_closure:
+        right_lane_h = lane_h
+        # Outer (closed) lane: from shoulder edge up by one lane height.
+        c.setFillColor(SHOULDER_CLOSED_FILL)
+        c.rect(x_left, y_closed_lane_inner, width, right_lane_h, fill=1, stroke=0)
+        # Inner (open) lane on the closed-side carriageway: above the
+        # closed lane, butting against the centerline.
+        c.setFillColor(LANE_FILL)
+        c.rect(
+            x_left,
+            y_closed_lane_inner + right_lane_h,
+            width,
+            lane_h - 2,
+            fill=1,
+            stroke=0,
+        )
+    else:
+        c.rect(x_left, y_closed_lane_inner, width, 2 * lane_h - 2, fill=1, stroke=0)
     # Open-side carriageway (upper half of road)
+    c.setFillColor(LANE_FILL)
     c.rect(x_left, y_center + 2, width, 2 * lane_h - 2, fill=1, stroke=0)
 
     # Median yellow edge lines bracketing the gap
@@ -247,24 +286,33 @@ def _draw_sign(c: canvas.Canvas, x: float, y: float) -> None:
     c.drawPath(p, stroke=1, fill=1)
 
 
-def _draw_arrow_board(c: canvas.Canvas, x: float, y: float) -> None:
+def _draw_arrow_board(c: canvas.Canvas, x: float, y: float, direction: str = "right") -> None:
     w, h = 20.0, 12.0
     c.setFillColor(ARROW_FILL)
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.7)
     c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
-    # Black right-pointing arrow inside
+    # Black arrow inside; ``direction`` is one of {"right", "left"}.
     c.setFillColor(ARROW_GLYPH)
     c.setStrokeColor(ARROW_GLYPH)
     c.setLineWidth(0.5)
     p = c.beginPath()
-    p.moveTo(x - 6, y - 2)
-    p.lineTo(x + 2, y - 2)
-    p.lineTo(x + 2, y - 4)
-    p.lineTo(x + 7, y)
-    p.lineTo(x + 2, y + 4)
-    p.lineTo(x + 2, y + 2)
-    p.lineTo(x - 6, y + 2)
+    if direction == "left":
+        p.moveTo(x + 6, y - 2)
+        p.lineTo(x - 2, y - 2)
+        p.lineTo(x - 2, y - 4)
+        p.lineTo(x - 7, y)
+        p.lineTo(x - 2, y + 4)
+        p.lineTo(x - 2, y + 2)
+        p.lineTo(x + 6, y + 2)
+    else:
+        p.moveTo(x - 6, y - 2)
+        p.lineTo(x + 2, y - 2)
+        p.lineTo(x + 2, y - 4)
+        p.lineTo(x + 7, y)
+        p.lineTo(x + 2, y + 4)
+        p.lineTo(x + 2, y + 2)
+        p.lineTo(x - 6, y + 2)
     p.close()
     c.drawPath(p, stroke=0, fill=1)
 
@@ -327,8 +375,12 @@ def _draw_devices(
             continue
         x = _x_of(p.station_ft, pts_per_ft, s_max)
         y = _y_of(p.offset_ft)
-        glyph = _DEVICE_GLYPHS.get(p.device_type, _draw_sign)
-        glyph(c, x, y)
+        if p.device_type == DeviceType.ARROW_BOARD:
+            direction = "left" if p.label == "LEFT_ARROW" else "right"
+            _draw_arrow_board(c, x, y, direction=direction)
+        else:
+            glyph = _DEVICE_GLYPHS.get(p.device_type, _draw_sign)
+            glyph(c, x, y)
         # Sign code label, placed on the OUTSIDE of the road (away from the
         # centerline) so it lands on the lighter shoulder fill rather than
         # the darker travel-lane fill.  After the Y-flip, "outside" for a
@@ -405,10 +457,10 @@ def _draw_landmarks(
     shoulder_width_ft: float,
 ) -> None:
     """Dimension callouts for taper, buffer, and work zone (visible portion only)."""
-    speed = params.speed_mph
     wz_len = params.work_zone_length_ft
-    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
-    buf_len = buffer_space(speed)
+    taper_len = _required_taper_length(params, shoulder_width_ft)
+    buf_len = buffer_space(params.speed_mph)
+    taper_label = "L" if params.closure_type == "lane" else "L/3"
 
     wz_end = 0.0
     wz_start = wz_len
@@ -422,7 +474,7 @@ def _draw_landmarks(
         _x_of(taper_start, pts_per_ft, s_max),
         _x_of(taper_end, pts_per_ft, s_max),
         y_top,
-        f"L/3 = {taper_len:.0f} ft",
+        f"{taper_label} = {taper_len:.0f} ft",
     )
     _draw_dim(
         c,
@@ -464,7 +516,12 @@ def _draw_title_block(
     c.setFont("Helvetica-Bold", 14)
     c.drawString(MARGIN + 8, PAGE_H - 30, title)
 
-    project_label = project_name or "SHOULDER CLOSURE — DIVIDED HIGHWAY"
+    if project_name:
+        project_label = project_name
+    elif params.closure_type == "lane":
+        project_label = "RIGHT-LANE CLOSURE — DIVIDED HIGHWAY"
+    else:
+        project_label = "SHOULDER CLOSURE — DIVIDED HIGHWAY"
     c.setFont("Helvetica-Bold", 12)
     c.drawCentredString(PAGE_W / 2, PAGE_H - 30, project_label)
 
@@ -525,7 +582,7 @@ def _draw_notes(
     c.drawString(x_box + 8, FOOTER_H - 8, "NOTES")
 
     speed = params.speed_mph
-    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
+    taper_len = _required_taper_length(params, shoulder_width_ft)
     buf_len = buffer_space(speed)
 
     rt = params.road_type if params.road_type in _TABLE_CATEGORIES else None
@@ -534,17 +591,26 @@ def _draw_notes(
     sign_b_dist = abc["A"] + abc["B"]
     sign_c_dist = abc["A"] + abc["B"] + abc["C"]
 
+    is_lane = params.closure_type == "lane"
+    taper_label = "Lane taper (L)" if is_lane else "Shoulder taper (L/3)"
+    if is_lane:
+        sign_a_line = f"  W4-2R RIGHT LANE ENDS at {sign_a_dist:.0f} ft"
+        sign_b_line = f"  W20-5B RIGHT LANE CLOSED AHEAD at {sign_b_dist:.0f} ft"
+    else:
+        sign_a_line = f"  W21-5aR RIGHT SHOULDER CLOSED AHEAD at {sign_a_dist:.0f} ft"
+        sign_b_line = f"  W20-2 ROAD WORK XXX FT at {sign_b_dist:.0f} ft"
+
     notes = [
         f"Speed limit: {speed} mph",
         f"Closure type: {params.closure_type}",
         f"Work zone length: {params.work_zone_length_ft:.0f} ft",
-        f"Shoulder taper (L/3): {taper_len:.0f} ft",
+        f"{taper_label}: {taper_len:.0f} ft",
         f"Buffer space: {buf_len:.0f} ft",
         "",
         "Advance warning signs (upstream of taper):",
         f"  W20-1 ROAD WORK AHEAD at {sign_c_dist:.0f} ft",
-        f"  W20-2 ROAD WORK XXX FT at {sign_b_dist:.0f} ft",
-        f"  W21-5aR RIGHT SHOULDER CLOSED AHEAD at {sign_a_dist:.0f} ft",
+        sign_b_line,
+        sign_a_line,
         "",
         "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6.",
         "Generated by MHT Tool — verify before use.",
@@ -583,7 +649,15 @@ def render_plan_sheet(
     ft_per_inch = 72.0 / pts_per_ft if pts_per_ft else 0.0
     scale_label = f'1" = {ft_per_inch:.0f} ft (horizontal); offset exaggerated'
 
-    _draw_road(c, pts_per_ft, s_min, s_max, params.lane_width_ft, shoulder_width_ft)
+    _draw_road(
+        c,
+        pts_per_ft,
+        s_min,
+        s_max,
+        params.lane_width_ft,
+        shoulder_width_ft,
+        closure_type=params.closure_type,
+    )
     _draw_landmarks(c, params, pts_per_ft, s_max, shoulder_width_ft)
     _draw_devices(c, placements, pts_per_ft, s_max)
     _draw_direction_arrow(c)

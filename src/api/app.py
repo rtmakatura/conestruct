@@ -22,7 +22,10 @@ import streamlit as st  # noqa: E402
 
 from src.api.audit import build_audit_trail  # noqa: E402
 from src.export.device_list import export_device_list  # noqa: E402
-from src.generation.layout import generate_shoulder_closure_divided  # noqa: E402
+from src.generation.layout import (  # noqa: E402
+    generate_lane_closure_divided,
+    generate_shoulder_closure_divided,
+)
 from src.narrative.crew_narrative import generate_crew_narrative  # noqa: E402
 from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
 from src.rules.validators import ScenarioParams, validate_layout  # noqa: E402
@@ -78,11 +81,12 @@ def _device_breakdown_df(placements) -> pd.DataFrame:
 
 
 if generate_button:
-    if closure_type != "shoulder" or road_type != "divided_highway":
+    supported = closure_type in ("shoulder", "lane") and road_type == "divided_highway"
+    if not supported:
         st.warning(
-            "V1 supports shoulder closure on divided highways only. "
-            "Other scenarios coming soon. Generating with shoulder closure "
-            "defaults."
+            "V1 supports shoulder closure and lane closure on divided "
+            "highways only. Other scenarios coming soon. Generating with "
+            "shoulder closure defaults."
         )
 
     params = ScenarioParams(
@@ -98,7 +102,10 @@ if generate_button:
     )
 
     try:
-        placements = generate_shoulder_closure_divided(params)
+        if closure_type == "lane" and road_type == "divided_highway":
+            placements = generate_lane_closure_divided(params)
+        else:
+            placements = generate_shoulder_closure_divided(params)
         violations = validate_layout(placements, params)
         errors = [v for v in violations if v.severity == "error"]
         warnings = [v for v in violations if v.severity == "warning"]
@@ -177,9 +184,12 @@ if generate_button:
         )
 
         t = audit["taper"]
-        with st.expander(f"Taper Length Calculation (L/3 = {t['L_third_ft']:.1f} ft)"):
+        with st.expander(
+            f"Taper Length Calculation ({t['L_required_label']} = {t['L_required_ft']:.1f} ft)"
+        ):
             st.write(
-                f"**Inputs:** speed = {t['speed_mph']} mph, offset = {t['shoulder_width_ft']:g} ft"
+                f"**Inputs:** speed = {t['speed_mph']} mph, "
+                f"{t['offset_label']} = {t['offset_ft']:g} ft"
             )
             st.write(f"**Formula selection:** {t['formula_choice']}")
             st.latex(t["formula_latex"])

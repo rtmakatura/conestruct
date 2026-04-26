@@ -52,9 +52,24 @@ def build_audit_trail(
     params: ScenarioParams,
     shoulder_width_ft: float = 10.0,
 ) -> dict[str, Any]:
-    """Recompute every audit-trail intermediate the verification UI needs."""
+    """Recompute every audit-trail intermediate the verification UI needs.
+
+    Branches on ``params.closure_type``:
+
+    * ``"shoulder"`` — taper offset is the closed shoulder width and the
+      required taper run is L/3 (MUTCD §6C.08(B)).
+    * ``"lane"`` — taper offset is one lane width and the required taper
+      run is the full merging taper L (MUTCD §6C.08).
+
+    Falls back to the shoulder-closure presentation for any other value
+    so the verification panel keeps rendering until other scenarios are
+    implemented.
+    """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
+    is_lane = params.closure_type == "lane"
+    offset_ft = params.lane_width_ft if is_lane else shoulder_width_ft
+    offset_label = "lane width" if is_lane else "shoulder width"
 
     # ------------------------------------------------------------------
     # 1. Taper length
@@ -63,26 +78,49 @@ def build_audit_trail(
     if speed >= threshold:
         formula_choice = f"Speed {speed} mph >= {threshold} mph threshold -> using L = W x S"
         formula_latex = r"L = W \times S"
-        L_full = float(shoulder_width_ft * speed)
+        L_full = float(offset_ft * speed)
     else:
         formula_choice = f"Speed {speed} mph < {threshold} mph threshold -> using L = W x S^2 / 60"
         formula_latex = r"L = \frac{W \times S^2}{60}"
-        L_full = taper_length(speed, shoulder_width_ft)
-    L_third = shoulder_taper_length(speed, shoulder_width_ft)
+        L_full = taper_length(speed, offset_ft)
+    L_third = shoulder_taper_length(speed, offset_ft)
+
+    if is_lane:
+        L_required = L_full
+        L_required_label = "L (full merging taper)"
+        L_required_calc_text = f"Required: L = {L_full:g} ft (full taper for lane closure)"
+        source_text = (
+            "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the "
+            "full merging taper length L."
+        )
+        cdot_reference = "CDOT S-630-1 Case 3 (right-lane closure on divided highway)"
+    else:
+        L_required = L_third
+        L_required_label = "L/3 (shoulder taper)"
+        L_required_calc_text = f"L/3 = {L_full:g} / 3 = {L_third:.1f} ft"
+        source_text = (
+            "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B)."
+        )
+        cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
 
     taper_section = {
         "speed_mph": speed,
-        "shoulder_width_ft": shoulder_width_ft,
+        "closure_type": params.closure_type,
+        "offset_label": offset_label,
+        "offset_ft": offset_ft,
+        # Backwards-compatible field for existing UI references; for lane
+        # closures this stores the closed lane width.
+        "shoulder_width_ft": offset_ft,
         "formula_choice": formula_choice,
         "formula_latex": formula_latex,
-        "L_calc_text": f"L = {shoulder_width_ft:g} x {speed} = {L_full:g} ft",
+        "L_calc_text": f"L = {offset_ft:g} x {speed} = {L_full:g} ft",
         "L_full_ft": L_full,
-        "L_third_calc_text": f"L/3 = {L_full:g} / 3 = {L_third:.1f} ft",
-        "L_third_ft": L_third,
-        "source": (
-            "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B)."
-        ),
-        "cdot_reference": "CDOT S-630-1 Case 11",
+        "L_third_calc_text": L_required_calc_text,
+        "L_third_ft": L_required,
+        "L_required_ft": L_required,
+        "L_required_label": L_required_label,
+        "source": source_text,
+        "cdot_reference": cdot_reference,
     }
 
     # ------------------------------------------------------------------
@@ -101,7 +139,7 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     in_taper = device_spacing_in_taper(speed)
     on_tan = device_spacing_on_tangent(speed)
-    raw_taper_drums = L_third / in_taper
+    raw_taper_drums = L_required / in_taper
     n_taper_drums_required = max(2, math.ceil(raw_taper_drums))
     raw_tangent_cones = wz_len / on_tan
     n_tangent_cones_required = max(2, math.ceil(raw_tangent_cones))
@@ -109,6 +147,7 @@ def build_audit_trail(
     actual_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
     actual_cones = sum(1 for p in placements if p.device_type == DeviceType.CONE)
 
+    taper_label = "L" if is_lane else "L/3"
     spacing_section = {
         "speed_mph": speed,
         "in_taper_text": (
@@ -120,7 +159,7 @@ def build_audit_trail(
             "(MUTCD Sec 6C.09: spacing equals 2x speed in feet)"
         ),
         "taper_count_text": (
-            f"L/3 = {L_third:.1f} ft / {in_taper:g} ft spacing = "
+            f"{taper_label} = {L_required:.1f} ft / {in_taper:g} ft spacing = "
             f"{raw_taper_drums:.2f}, rounded up = {n_taper_drums_required} drums"
         ),
         "tangent_count_text": (
@@ -146,27 +185,32 @@ def build_audit_trail(
     resolved_category = _resolve_road_category(speed, params.road_type)
 
     taper_end_station = wz_len + buf
-    taper_start_station = taper_end_station + L_third
+    taper_start_station = taper_end_station + L_required
     sign_a_station = taper_start_station + a_ft
     sign_b_station = sign_a_station + b_ft
     sign_c_station = sign_b_station + c_ft
 
+    if is_lane:
+        sign_codes = {"A": "W4-2R", "B": "W20-5B", "C": "W20-1"}
+    else:
+        sign_codes = {"A": "W21-5aR", "B": "W20-2", "C": "W20-1"}
+
     sign_table_rows = [
         {
             "Position": "C (furthest)",
-            "Code": "W20-1",
+            "Code": sign_codes["C"],
             "Station (ft)": f"{sign_c_station:,.0f}",
             "Distance from Taper (ft)": f"{a_ft + b_ft + c_ft:,.0f} upstream",
         },
         {
             "Position": "B (middle)",
-            "Code": "W20-2",
+            "Code": sign_codes["B"],
             "Station (ft)": f"{sign_b_station:,.0f}",
             "Distance from Taper (ft)": f"{a_ft + b_ft:,.0f} upstream",
         },
         {
             "Position": "A (nearest)",
-            "Code": "W21-5aR",
+            "Code": sign_codes["A"],
             "Station (ft)": f"{sign_a_station:,.0f}",
             "Distance from Taper (ft)": f"{a_ft:,.0f} upstream",
         },
@@ -279,19 +323,31 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 6. S-630-1 case reference
     # ------------------------------------------------------------------
+    if is_lane:
+        # TODO: confirm exact Case number against the 19-page S-630-1 set;
+        # right-lane closures on divided highways are commonly Case 3, but
+        # the print revision in use should be verified before sealing.
+        case_label = "Case 3: Right-lane closure on divided highway (TODO: verify)"
+        case_narrative = (
+            "This scenario matches CDOT Standard Plan S-630-1, Case 3: "
+            "right-lane closure on a divided highway."
+        )
+    else:
+        case_label = "Case 11: Shoulder closure on divided highway"
+        case_narrative = (
+            "This scenario matches CDOT Standard Plan S-630-1, Case 11: "
+            "shoulder closure on a divided highway."
+        )
     case_section = {
-        "case": "Case 11: Shoulder closure on divided highway",
+        "case": case_label,
         "url": (
             "https://www.codot.gov/safety/traffic-safety/assets/"
             "s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
         ),
-        "narrative": (
-            "This scenario matches CDOT Standard Plan S-630-1, Case 11: "
-            "Shoulder closure on divided highway."
-        ),
+        "narrative": case_narrative,
         "narrative_2": (
-            f"The generated plan follows the same device layout as "
-            f"Case 11 with spacing computed for {speed} mph."
+            f"The generated plan follows the same device layout as the "
+            f"reference case with spacing computed for {speed} mph."
         ),
     }
 

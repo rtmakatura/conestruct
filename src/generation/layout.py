@@ -1,13 +1,13 @@
-"""Hard-coded scenario generator: CDOT S-630-1 right-shoulder closure on a divided highway.
+"""Hard-coded scenario generators: CDOT S-630-1 right-shoulder and right-lane closures.
 
-This module is a Phase 3 milestone — a single function that emits a
-complete, MUTCD-compliant device layout for one specific scenario.  It
-will be replaced in Phase 4 by a generic layout engine that consumes
+This module is a Phase 3 milestone — concrete functions that emit
+complete, MUTCD-compliant device layouts for the two V1 scenarios.
+It will be replaced in Phase 4 by a generic layout engine that consumes
 the rule pack and the road geometry to lay out arbitrary closures.
 
 Authoritative sources:
   - MUTCD 11th Edition, Part 6 (Temporary Traffic Control)
-  - CDOT M&S Standard Plan S-630-1 (Right Shoulder Closure)
+  - CDOT M&S Standard Plan S-630-1 (Right Shoulder Closure / Right Lane Closure)
   - Colorado Supplement to MUTCD (effective 2026-01-18)
 """
 
@@ -24,6 +24,7 @@ from src.rules.spacing import (
     downstream_taper_length,
     num_devices_on_tangent,
     shoulder_taper_length,
+    taper_length,
 )
 from src.rules.validators import DevicePlacement, ScenarioParams
 
@@ -124,12 +125,15 @@ def generate_shoulder_closure_divided(
             )
         )
 
-    # 3. Arrow board at the upstream start of the taper
+    # 3. Arrow board at the upstream start of the taper.
+    # Right-arrow mode for shoulder closure (caution/right-shift indication
+    # next to the closed shoulder); lane closures use LEFT_ARROW instead.
     placements.append(
         DevicePlacement(
             device_type=DeviceType.ARROW_BOARD,
             station_ft=taper_start_station,
             offset_ft=arrow_board_offset,
+            label="RIGHT_ARROW",
         )
     )
 
@@ -215,23 +219,209 @@ def generate_shoulder_closure_divided(
     return placements
 
 
-if __name__ == "__main__":
+def generate_lane_closure_divided(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 10.0,
+) -> list[DevicePlacement]:
+    """Generate a complete CDOT S-630-1 right-lane closure layout.
+
+    Hard-coded for a 4-lane divided highway with the right (outer)
+    travel lane closed at posted speeds in the 45–65 mph range.  All
+    longitudinal positions flow from the spacing functions in
+    ``src.rules.spacing``, so the layout flexes with ``params.speed_mph``.
+    Lateral positions assume two ``params.lane_width_ft`` lanes per
+    direction plus an outer shoulder of ``shoulder_width_ft``.
+
+    Geometry (work-side carriageway, positive offsets):
+      * 0 .. lane_width_ft        — open left lane
+      * lane_width_ft .. 2*lane_width_ft — closed right lane
+      * 2*lane_width_ft .. + shoulder    — outer shoulder (open)
+
+    The merging taper drums run from the right edge of the right lane
+    (lane_edge_offset) DOWN to the lane line (lane_line_offset), so the
+    full taper length L (not L/3) is required by MUTCD §6C.08.
+
+    TODO (V1.1): add a shifting taper upstream of the merging taper for
+    cases where geometry requires drivers to first shift laterally before
+    encountering the lane drop.  V1 places the merging taper directly.
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    # Lateral landmarks (positive = right of centerline, work side)
+    lane_line_offset = params.lane_width_ft  # boundary between open and closed lanes
+    lane_edge_offset = 2.0 * params.lane_width_ft  # right edge of the closed right lane
+    shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
+    arrow_board_offset = lane_line_offset + params.lane_width_ft / 2.0  # mid-closed-lane
+    sign_offset_right = lane_edge_offset + 4.0
+    sign_offset_left = -sign_offset_right
+
+    # Longitudinal landmarks: full merging taper L (not L/3) since this
+    # is a travel-lane closure rather than a shoulder closure.
+    taper_len = taper_length(speed, params.lane_width_ft)
+    buf_len = buffer_space(speed)
+
+    wz_end_station = 0.0
+    wz_start_station = wz_len
+    taper_end_station = wz_start_station + buf_len
+    taper_start_station = taper_end_station + taper_len
+
+    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+    spacing_abc = advance_warning_spacing(speed, rt)
+    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+
+    sign_a_station = taper_start_station + a_dist
+    sign_b_station = sign_a_station + b_dist
+    sign_c_station = sign_b_station + c_dist
+
+    placements: list[DevicePlacement] = []
+
+    # 1. Advance warning signs — lane closure series
+    advance_signs = (
+        ("W4-2R", sign_a_station),  # RIGHT LANE ENDS (merge arrow)
+        ("W20-5B", sign_b_station),  # RIGHT LANE CLOSED AHEAD
+        ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+    )
+    for label, station in advance_signs:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label=label,
+            )
+        )
+        if params.is_divided:
+            placements.append(
+                DevicePlacement(
+                    device_type=DeviceType.SIGN_GENERIC,
+                    station_ft=station,
+                    offset_ft=sign_offset_left,
+                    label=label,
+                )
+            )
+
+    # 2. Merging taper (drums) — full length L from lane edge to lane line
+    in_taper_spacing = device_spacing_in_taper(speed)
+    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_intervals = n_taper_devices - 1
+    for k in range(n_taper_devices):
+        t = k / n_taper_intervals  # 0 at taper_start (upstream), 1 at buffer_end
+        station = taper_start_station - t * taper_len
+        offset = lane_edge_offset - t * (lane_edge_offset - lane_line_offset)
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.DRUM,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
+    # 3. Arrow board at the upstream start of the taper, LEFT arrow mode
+    # so drivers in the closed lane merge LEFT into the open lane.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.ARROW_BOARD,
+            station_ft=taper_start_station,
+            offset_ft=arrow_board_offset,
+            label="LEFT_ARROW",
+        )
+    )
+
+    # 4. Buffer space — intentionally empty.
+
+    # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals
+    total_zone_length = sign_c_station
+    n_plaques = co_construction_plaques(total_zone_length)
+    for k in range(n_plaques):
+        station = (k + 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label="G20-5P",
+            )
+        )
+        if params.is_divided:
+            placements.append(
+                DevicePlacement(
+                    device_type=DeviceType.SIGN_GENERIC,
+                    station_ft=station,
+                    offset_ft=sign_offset_left,
+                    label="G20-5P",
+                )
+            )
+
+    # 6. Work-zone tangent (cones) — along the lane line between the
+    # open left lane and the closed right lane.
+    n_tangent = max(2, num_devices_on_tangent(wz_len, speed))
+    n_tangent_intervals = n_tangent - 1
+    tangent_spacing = wz_len / n_tangent_intervals
+    for k in range(n_tangent):
+        station = wz_end_station + k * tangent_spacing
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=lane_line_offset,
+            )
+        )
+
+    # 7. Downstream taper — cones angle from the lane line back out to
+    # the right lane edge so the lane reopens cleanly.
+    ds_taper_len = downstream_taper_length(1)
+    n_ds_cones = 2
+    for k in range(n_ds_cones):
+        t = (k + 1) / n_ds_cones
+        station = wz_end_station - t * ds_taper_len
+        offset = lane_line_offset + t * (lane_edge_offset - lane_line_offset)
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
+    # 8. END ROAD WORK sign (G20-2)
+    end_sign_station = (wz_end_station - ds_taper_len) - 100.0
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=end_sign_station,
+            offset_ft=sign_offset_right,
+            label="G20-2",
+        )
+    )
+    if params.is_divided:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=end_sign_station,
+                offset_ft=sign_offset_left,
+                label="G20-2",
+            )
+        )
+
+    # ``shoulder_edge_offset`` is computed for completeness (notes/legend
+    # may reference the road's overall lateral extent) but is not used
+    # for any device placement in a lane-only closure.
+    _ = shoulder_edge_offset
+
+    return placements
+
+
+def _print_smoke_test(
+    title: str,
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> None:
     from collections import Counter
 
     from src.rules.validators import validate_layout
 
-    params = ScenarioParams(
-        speed_mph=55,
-        num_lanes=2,
-        closure_type="shoulder",
-        road_type="divided_highway",
-        work_zone_length_ft=800.0,
-        lane_width_ft=12.0,
-        is_divided=True,
-        jurisdiction="CDOT",
-    )
-    placements = generate_shoulder_closure_divided(params)
-
+    print(f"\n--- {title} ---")
     print(f"Total devices: {len(placements)}")
     print()
     print("Breakdown by DeviceType:")
@@ -249,3 +439,31 @@ if __name__ == "__main__":
         loc = f" @ idx {v.device_index}" if v.device_index is not None else ""
         print(f"  [{v.severity.upper():>7s}] {v.rule_id} ({v.mutcd_section}){loc}")
         print(f"          {v.message}")
+
+
+if __name__ == "__main__":
+    shoulder_params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="divided_highway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    shoulder_placements = generate_shoulder_closure_divided(shoulder_params)
+    _print_smoke_test("Shoulder Closure Scenario", shoulder_placements, shoulder_params)
+
+    lane_params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="divided_highway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    lane_placements = generate_lane_closure_divided(lane_params)
+    _print_smoke_test("Lane Closure Scenario", lane_placements, lane_params)
