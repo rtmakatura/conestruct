@@ -27,17 +27,17 @@ export function Nav() {
         >
           Sample plan
         </a>
-        <a
-          href="#"
+        <Link
+          href="/app"
           className="text-sm font-medium text-navy hover:text-orange"
         >
           Sign in
-        </a>
+        </Link>
         <Link
-          href="/app"
+          href="/try"
           className="font-sans text-[13px] font-semibold bg-navy text-paper px-4 py-2.5 cursor-pointer tracking-[0.01em] hover:bg-orange transition-colors"
         >
-          Try the generator →
+          Try the demo →
         </Link>
       </div>
     </nav>

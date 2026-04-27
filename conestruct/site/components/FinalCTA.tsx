@@ -26,11 +26,11 @@ export function FinalCTA() {
             your supervisor can stamp.
           </p>
           <Link
-            href="/app"
+            href="/try"
             className="btn-primary mt-9"
             style={{ padding: "18px 32px", fontSize: 16 }}
           >
-            Try the generator
+            Try the demo
             <span className="font-mono">→</span>
           </Link>
         </div>

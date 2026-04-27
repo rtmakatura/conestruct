@@ -5,9 +5,9 @@ import { SheetMeta } from "@/components/SheetMeta";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Generator — coming soon · Conestruct",
+  title: "Closed beta · Conestruct",
   description:
-    "The Conestruct MHT generator is coming online soon. Drop your email and we'll let you know when it's live.",
+    "Try the Conestruct MHT generator demo today. Stamped-ready PDF, Excel device list, and crew-narrative downloads are in closed beta — request early access.",
 };
 
 const SPEC_ROWS: Array<[string, string]> = [
@@ -31,28 +31,26 @@ export default function AppPlaceholder() {
               0X · GENERATOR · CLOSED BETA
             </div>
             <h1 className="font-sans font-bold text-[40px] md:text-[56px] leading-[1.02] tracking-tightest text-navy mb-6 [text-wrap:balance]">
-              The generator is{" "}
-              <span className="text-orange">coming online.</span>
+              Real downloads are{" "}
+              <span className="text-orange">in closed beta.</span>
             </h1>
             <p className="text-[18px] leading-[1.55] text-ink-mute mb-9 max-w-[480px] [text-wrap:pretty]">
-              Final TCS review and Colorado Supplement validation are in
-              progress. Drop your email and we&rsquo;ll send you a key the day
-              it ships.
+              The interactive demo is live — try every calculation and see
+              every citation. Stamped-ready PDF, Excel device list, and crew
+              narrative downloads ship to closed-beta users first. Drop your
+              email for a key.
             </p>
             <div className="flex flex-wrap items-center gap-5">
+              <Link href="/try" className="btn-primary">
+                Try the demo
+                <span className="font-mono">→</span>
+              </Link>
               <a
-                className="btn-primary"
+                className="font-mono text-[11px] uppercase tracking-[0.08em] text-navy hover:text-orange"
                 href="mailto:rtmakatura1@gmail.com?subject=Conestruct%20early%20access&body=Add%20me%20to%20the%20generator%20waitlist."
               >
-                Request early access
-                <span className="font-mono">→</span>
+                Request early access →
               </a>
-              <Link
-                href="/"
-                className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-faint hover:text-orange"
-              >
-                ← Back to landing
-              </Link>
             </div>
           </div>
 

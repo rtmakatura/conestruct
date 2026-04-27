@@ -97,12 +97,12 @@ export function Hero() {
           device list and crew narrative.
         </p>
         <div className="flex items-center gap-5">
-          <Link href="/app" className="btn-primary">
-            Try the generator
+          <Link href="/try" className="btn-primary">
+            Try the demo
             <span className="font-mono">→</span>
           </Link>
           <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-faint">
-            Free · No card · ~90 sec
+            Free · No signup · ~90 sec
           </span>
         </div>
       </div>
