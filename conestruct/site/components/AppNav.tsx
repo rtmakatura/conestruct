@@ -1,4 +1,10 @@
 import Link from "next/link";
+import {
+  OrganizationSwitcher,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 interface Props {
   caseId: string;
@@ -33,12 +39,25 @@ export function AppNav({ caseId }: Props) {
           <span className="w-1.5 h-1.5 bg-[color:var(--green)] inline-block mr-2 animate-pulse" />
           MUTCD 2023 · CDOT
         </span>
-        <Link
-          href="/app"
-          className="flex items-center px-5 border-l border-[color:var(--rule)] font-sans font-medium text-[13px] text-[color:var(--ink-on-dark)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
-        >
-          Sign in
-        </Link>
+        <SignedOut>
+          <Link
+            href="/sign-in"
+            className="flex items-center px-5 border-l border-[color:var(--rule)] font-sans font-medium text-[13px] text-[color:var(--ink-on-dark)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
+          >
+            Sign in
+          </Link>
+        </SignedOut>
+        <SignedIn>
+          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+            <OrganizationSwitcher
+              hidePersonal
+              afterSelectOrganizationUrl="/app"
+            />
+          </div>
+          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+            <UserButton />
+          </div>
+        </SignedIn>
       </div>
     </nav>
   );

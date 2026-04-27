@@ -28,7 +28,7 @@ export function Nav() {
           Sample plan
         </a>
         <Link
-          href="/app"
+          href="/sign-in"
           className="text-sm font-medium text-navy hover:text-orange"
         >
           Sign in
