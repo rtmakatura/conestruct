@@ -15,16 +15,16 @@ export function AuditTrail({ params, results, generated }: Props) {
   const r = (n: number | string) => (generated ? String(n) : "—");
 
   return (
-    <section className="mt-10">
-      <div className="flex items-baseline justify-between mb-5 pb-3 border-b border-line">
-        <h2 className="text-[22px] font-bold tracking-[-0.01em] text-navy m-0">
-          Verification & audit trail
+    <section className="mt-9">
+      <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
+        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
+          Verification &amp; audit trail
         </h2>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">
-          <span className="text-orange">03</span> · SHOW THE WORK
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
+          <span className="text-[color:var(--cyan)]">03</span> · SHOW THE WORK
         </span>
       </div>
-      <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-faint mb-4">
+      <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] mb-4 max-w-[620px]">
         Every calculation is traced to its MUTCD or Colorado Supplement source.
         Verify before stamping.
       </div>
@@ -220,7 +220,7 @@ export function AuditTrail({ params, results, generated }: Props) {
               href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-blue hover:underline"
+              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
             >
               ↗ Open S-630-1 PDF on CDOT.gov
             </a>

@@ -25,18 +25,16 @@ export function GeneratorSidebar({
   onGenerate,
 }: Props) {
   return (
-    <aside className="bg-white border-r border-line px-7 pt-7 pb-10 md:sticky md:top-[60px] md:self-start md:h-[calc(100vh-60px)] md:overflow-y-auto max-md:border-r-0 max-md:border-b">
-      {/* Sidebar head */}
-      <div className="flex justify-between items-baseline mb-6 pb-4 border-b border-line">
-        <h2 className="text-[18px] font-bold text-navy m-0 tracking-[-0.01em]">
+    <aside className="bg-[color:var(--canvas-tint)] border-r border-[color:var(--rule)] md:sticky md:top-[52px] md:self-start md:h-[calc(100vh-52px)] md:overflow-y-auto max-md:border-r-0 max-md:border-b">
+      <div className="flex justify-between items-baseline px-6 pt-6 pb-3">
+        <h2 className="text-[15px] font-semibold text-white m-0 tracking-[-0.005em]">
           Scenario
         </h2>
-        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-orange">
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--cyan)]">
           01 · INPUT
         </span>
       </div>
 
-      {/* Group A — Roadway */}
       <FieldGroup label="Roadway" ix="A">
         <Field>
           <label className="field-label-row">
@@ -60,7 +58,9 @@ export function GeneratorSidebar({
         <Field>
           <div className="field-label-row">
             <span>Speed limit</span>
-            <span className="field-val">{params.speed} mph</span>
+            <span className="field-val text-[color:var(--cyan)]">
+              {params.speed} mph
+            </span>
           </div>
           <input
             type="range"
@@ -71,7 +71,7 @@ export function GeneratorSidebar({
             onChange={(e) => setParam("speed", +e.target.value)}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] tracking-[0.06em] text-ink-faint mt-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
             MUTCD: ≥45 mph uses L=W·S
           </div>
         </Field>
@@ -97,7 +97,9 @@ export function GeneratorSidebar({
         <Field>
           <div className="field-label-row">
             <span>Lane width</span>
-            <span className="field-val">{params.laneWidth} ft</span>
+            <span className="field-val text-[color:var(--cyan)]">
+              {params.laneWidth} ft
+            </span>
           </div>
           <input
             type="range"
@@ -111,7 +113,6 @@ export function GeneratorSidebar({
         </Field>
       </FieldGroup>
 
-      {/* Group B — Closure */}
       <FieldGroup label="Closure" ix="B">
         <Field>
           <div className="field-label-row">
@@ -154,7 +155,7 @@ export function GeneratorSidebar({
         </button>
         <button
           type="button"
-          className={`check-row w-full ${params.night ? "on" : ""}`}
+          className={`check-row ${params.night ? "on" : ""}`}
           onClick={() => setParam("night", !params.night)}
         >
           <span className="check-box" />
@@ -163,7 +164,6 @@ export function GeneratorSidebar({
         </button>
       </FieldGroup>
 
-      {/* Group C — Location */}
       <FieldGroup label="Location" ix="C · OPT">
         <Field>
           <div className="field-label-row">
@@ -219,27 +219,29 @@ export function GeneratorSidebar({
         </Field>
       </FieldGroup>
 
-      <button
-        type="button"
-        className="generate-btn"
-        onClick={onGenerate}
-        disabled={generating}
-      >
-        {generating ? (
-          <>
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
-            Generating MHT…
-          </>
-        ) : (
-          <>
-            Generate MHT package
-            <span className="font-mono">→</span>
-          </>
-        )}
-      </button>
+      <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
+        <button
+          type="button"
+          className="generate-btn"
+          onClick={onGenerate}
+          disabled={generating}
+        >
+          {generating ? (
+            <>
+              <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
+              Generating MHT…
+            </>
+          ) : (
+            <>
+              Generate MHT package
+              <span className="font-mono">→</span>
+            </>
+          )}
+        </button>
 
-      <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint text-center">
-        Output requires TCS review
+        <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] text-center">
+          Output requires TCS review
+        </div>
       </div>
     </aside>
   );
@@ -255,16 +257,16 @@ function FieldGroup({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-6">
-      <div className="flex justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint mb-3 pb-1.5 border-b border-dashed border-line">
+    <div>
+      <div className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         <span>{label}</span>
-        <span className="text-orange">{ix}</span>
+        <span className="text-[color:var(--cyan)]">{ix}</span>
       </div>
-      {children}
+      <div className="px-6 py-5">{children}</div>
     </div>
   );
 }
 
 function Field({ children }: { children: React.ReactNode }) {
-  return <div className="mb-3.5">{children}</div>;
+  return <div className="mb-3.5 last:mb-0">{children}</div>;
 }

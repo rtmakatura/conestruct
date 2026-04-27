@@ -56,13 +56,13 @@ export function DeviceBreakdown({ results }: Props) {
   }
 
   return (
-    <section className="mt-10">
-      <div className="flex items-baseline justify-between mb-5 pb-3 border-b border-line">
-        <h2 className="text-[22px] font-bold tracking-[-0.01em] text-navy m-0">
+    <section className="mt-9">
+      <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
+        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
           Plan details
         </h2>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">
-          <span className="text-orange">04</span> · BREAKDOWN
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
+          <span className="text-[color:var(--cyan)]">04</span> · BREAKDOWN
         </span>
       </div>
       <table className="device-table">

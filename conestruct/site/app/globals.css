@@ -633,3 +633,425 @@ body {
     cursor: wait;
   }
 }
+
+/* ─── Workbench (dark generator app) overrides ───
+   Scope: any descendant of `.workbench`. The landing page stays untouched.
+   Locks the slate palette (no runtime toggle). */
+.workbench {
+  /* dark canvas */
+  --canvas: #14202e;
+  --canvas-tint: #1b2838;
+  --rule: #28384b;
+  --rule-soft: #1f2d3f;
+
+  /* slate cards */
+  --paper: #243447;
+  --paper-deep: #1e2d3f;
+  --paper-line: #3a4d66;
+  --paper-line-soft: #2e4058;
+
+  /* on-paper ink (slate-tuned) */
+  --ink: #eaf0f7;
+  --ink-mute: #a8b5c6;
+  --ink-faint: #7e8da1;
+  --heading-on-paper: #ffffff;
+  --match-bg: rgba(232, 113, 10, 0.18);
+  --match-ink: #ffd9b0;
+
+  /* on-canvas ink */
+  --ink-on-dark: #c8d1dd;
+  --ink-on-dark-faint: #6e7c8e;
+
+  /* lifted brand for punch on dark */
+  --orange: #ff8a2e;
+  --orange-deep: #e8710a;
+  --orange-soft: rgba(232, 113, 10, 0.18);
+  --green: #5bd68a;
+  --green-soft: rgba(39, 174, 96, 0.22);
+  --red: #ff7a7a;
+  --red-soft: rgba(235, 87, 87, 0.22);
+
+  /* interactive accent */
+  --cyan: #2d9cdb;
+  --cyan-deep: #1f7bb0;
+  --cyan-glow: rgba(45, 156, 219, 0.18);
+
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+}
+
+/* technical-drawing frame around the entire app shell */
+.workbench-frame {
+  position: fixed;
+  inset: 8px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+  z-index: 60;
+}
+.workbench-frame .ftick {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--orange);
+}
+.workbench-frame .ftick.tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.tr {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.bl {
+  bottom: -1px;
+  left: -1px;
+  border-right: none;
+  border-top: none;
+}
+.workbench-frame .ftick.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Lanes / chips: cyan active, divided cells */
+.workbench .chip-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  flex-wrap: nowrap;
+}
+.workbench .chip {
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  border: none;
+  border-right: 1px solid var(--rule);
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 6px;
+}
+.workbench .chip:last-child {
+  border-right: none;
+}
+.workbench .chip:hover {
+  background: var(--rule);
+  color: white;
+  border-color: var(--rule);
+}
+.workbench .chip.on {
+  background: var(--cyan);
+  color: white;
+  border-color: var(--cyan-deep);
+  box-shadow: inset 0 0 0 1px var(--cyan-deep);
+}
+
+/* Check rows: cyan on, rule borders */
+.workbench .check-row {
+  border-top-color: var(--rule);
+  width: 100%;
+  background: transparent;
+  text-align: left;
+}
+.workbench .check-row:last-of-type {
+  border-bottom-color: var(--rule);
+}
+.workbench .check-box {
+  background: var(--canvas);
+  border-color: var(--rule);
+  width: 14px;
+  height: 14px;
+}
+.workbench .check-row.on .check-box {
+  background: var(--cyan);
+  border-color: var(--cyan-deep);
+}
+.workbench .check-row .check-lbl {
+  color: var(--ink-on-dark);
+}
+.workbench .check-row.on .check-lbl {
+  color: white;
+}
+.workbench .check-row .check-desc {
+  color: var(--ink-on-dark-faint);
+}
+
+/* Inputs / select: dark canvas + cyan focus */
+.workbench .field-label-row {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .field-label-row .field-val {
+  color: white;
+}
+.workbench .field-input {
+  background-color: var(--canvas);
+  border-color: var(--rule);
+  color: white;
+}
+.workbench .field-input::placeholder {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .field-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px var(--cyan-glow);
+}
+.workbench .field-select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23C8D1DD' fill='none' stroke-width='1.2'/></svg>");
+}
+
+/* Range slider: cyan square thumb, rule track */
+.workbench .range-orange::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-moz-range-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--cyan);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--cyan);
+  margin-top: -6px;
+}
+.workbench .range-orange::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--cyan);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+
+/* Status bar */
+.workbench .status-bar {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.workbench .status-bar .indicator {
+  background: var(--ink-on-dark-faint);
+}
+.workbench .status-bar.idle {
+  border-left-color: var(--rule);
+}
+.workbench .status-bar.warn {
+  border-left-color: var(--cyan);
+}
+.workbench .status-bar.warn .indicator {
+  background: var(--cyan);
+}
+.workbench .status-bar.pass {
+  border-left-color: var(--green);
+}
+.workbench .status-bar.pass .indicator {
+  background: var(--green);
+}
+.workbench .status-bar .pill,
+.workbench .status-bar .pill.pass {
+  background: var(--green-soft);
+  color: var(--green);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin-left: auto;
+}
+
+/* Output cards: slate paper on dark canvas */
+.workbench .output-card {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .output-card .corner {
+  border-color: var(--orange);
+}
+.workbench .output-card h3 {
+  color: var(--heading-on-paper);
+}
+
+/* Audit accordion */
+.workbench .audit-list {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .audit-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--paper-line-soft);
+}
+.workbench .audit-item:last-child {
+  border-bottom: none;
+}
+.workbench .audit-head {
+  color: var(--ink);
+}
+.workbench .audit-head:hover {
+  background: var(--paper-deep);
+}
+.workbench .audit-item.open .audit-head {
+  background: var(--paper-deep);
+}
+.workbench .audit-head .num {
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.workbench .audit-head .title {
+  color: var(--heading-on-paper);
+}
+.workbench .audit-head .result {
+  color: var(--orange);
+}
+.workbench .audit-head .cite {
+  color: var(--ink-faint);
+}
+.workbench .audit-head .chev {
+  color: var(--ink-faint);
+}
+.workbench .audit-item.open .audit-head .chev {
+  color: var(--ink);
+}
+
+.workbench .audit-body {
+  background: var(--paper-deep);
+  color: var(--ink);
+  border-top-color: var(--paper-line);
+}
+.workbench .audit-body p {
+  color: var(--ink);
+}
+.workbench .audit-body .formula {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--heading-on-paper);
+}
+.workbench .audit-body .formula .var {
+  color: var(--orange);
+}
+.workbench .audit-body .formula .res {
+  color: var(--green);
+}
+.workbench .audit-body .formula .op {
+  color: var(--ink-mute);
+}
+.workbench .audit-body .citation {
+  color: var(--ink-faint);
+}
+.workbench .audit-body .citation .check {
+  background: var(--green);
+  color: white;
+}
+.workbench .audit-body table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+}
+.workbench .audit-body table th,
+.workbench .audit-body table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .audit-body table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .audit-body table td.match {
+  background: var(--match-bg);
+  color: var(--match-ink);
+  font-weight: 600;
+}
+
+/* Compliance check list */
+.workbench .check-list-item {
+  border-bottom-color: var(--paper-line);
+}
+.workbench .check-list-item .check-list-lbl {
+  color: var(--heading-on-paper);
+}
+.workbench .check-list-item .check-list-src {
+  color: var(--ink-faint);
+}
+.workbench .check-list-item .ck {
+  background: var(--green-soft);
+  color: var(--green);
+}
+.workbench .check-list-item .ck.warn {
+  background: var(--orange-soft);
+  color: var(--orange);
+}
+.workbench .check-list-item .ck.fail {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+/* Device breakdown table */
+.workbench .device-table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .device-table th,
+.workbench .device-table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .device-table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .device-table td.num {
+  color: var(--orange);
+}
+
+/* Empty state */
+.workbench .empty-state {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--rule);
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.workbench .empty-state .big {
+  color: white;
+}
+.workbench .empty-state .arrow {
+  color: var(--cyan);
+}
+
+/* Generate button: orange + soft glow on dark */
+.workbench .generate-btn {
+  box-shadow:
+    0 1px 0 var(--orange-deep),
+    0 0 0 1px var(--orange-deep),
+    0 0 24px -8px rgba(232, 113, 10, 0.6);
+}
+.workbench .generate-btn:disabled {
+  background: var(--rule);
+  color: var(--ink-on-dark-faint);
+  box-shadow: none;
+}

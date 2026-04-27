@@ -36,11 +36,18 @@ export function GeneratorShell() {
   const generated = status === "done";
 
   return (
-    <>
-      <AppNav />
+    <div className="workbench min-h-screen">
+      <div className="workbench-frame" aria-hidden>
+        <span className="ftick tl" />
+        <span className="ftick tr" />
+        <span className="ftick bl" />
+        <span className="ftick br" />
+      </div>
+
+      <AppNav caseId={results.caseId} />
       <AppSheetMeta project={params.project} address={params.address} />
 
-      <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] min-h-[calc(100vh-60px)]">
+      <div className="grid grid-cols-1 md:grid-cols-[360px_1fr]">
         <GeneratorSidebar
           params={params}
           setParam={setParam}
@@ -50,11 +57,13 @@ export function GeneratorShell() {
 
         <main className="px-10 pt-8 pb-20 max-w-[1100px] max-md:px-6 max-md:pt-6">
           <div className="mb-7">
-            <div className="eyebrow mb-3">02 · MHT GENERATOR · COLORADO</div>
-            <h1 className="text-[36px] font-bold tracking-tighter text-navy m-0 mb-2 leading-[1.05]">
+            <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--cyan)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--cyan)] before:inline-block">
+              02 · GENERATOR
+            </div>
+            <h1 className="text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]">
               Method of Handling Traffic — plan generator
             </h1>
-            <p className="text-ink-mute text-[15px] m-0 max-w-[620px]">
+            <p className="text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]">
               Generate a CDOT-compliant MHT package: PDF plan sheet, device
               list, and crew instructions. Every dimension cited to MUTCD or
               the Colorado Supplement.
@@ -69,6 +78,6 @@ export function GeneratorShell() {
       </div>
 
       <AppFooter />
-    </>
+    </div>
   );
 }
