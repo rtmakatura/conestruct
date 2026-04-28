@@ -1,12 +1,13 @@
 interface Props {
   project: string;
   address: string;
+  cdotSheet: string;
 }
 
-export function AppSheetMeta({ project, address }: Props) {
+export function AppSheetMeta({ project, address, cdotSheet }: Props) {
   const items: Array<[string, string]> = [
     ["SHT", "01 / 01"],
-    ["MHT", "S-630-1"],
+    ["MHT", cdotSheet],
     ["PROJECT", project ? project.toUpperCase() : "UNTITLED"],
     ["ISSUED", "2026-04-27"],
     ["BY", `TCS · ${address ? address.toUpperCase() : "NO LOCATION"}`],

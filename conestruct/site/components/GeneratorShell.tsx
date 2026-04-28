@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import {
   compute,
-  DEFAULT_PARAMS,
-  type ScenarioParams,
-} from "@/lib/compute";
+  DEFAULT_SCENARIO,
+  type Scenario,
+} from "@/lib/scenarios";
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
@@ -19,37 +19,30 @@ type Mode = "sandbox" | "workbench";
 
 interface Props {
   mode?: Mode;
-  initialParams?: ScenarioParams;
+  initialScenario?: Scenario;
   initialPlanId?: string | null;
   initialPlanName?: string | null;
 }
 
 export function GeneratorShell({
   mode = "workbench",
-  initialParams,
+  initialScenario,
   initialPlanId = null,
   initialPlanName = null,
 }: Props = {}) {
-  const [params, setParams] = useState<ScenarioParams>(
-    initialParams ?? DEFAULT_PARAMS,
+  const [scenario, setScenario] = useState<Scenario>(
+    initialScenario ?? DEFAULT_SCENARIO,
   );
   const [status, setStatus] = useState<Status>("done");
   const [planId, setPlanId] = useState<string | null>(initialPlanId);
   const [planName, setPlanName] = useState<string | null>(initialPlanName);
-
-  const setParam = <K extends keyof ScenarioParams>(
-    key: K,
-    value: ScenarioParams[K],
-  ) => {
-    setParams((p) => ({ ...p, [key]: value }));
-  };
 
   const onSaved = (id: string, name: string) => {
     setPlanId(id);
     setPlanName(name);
   };
 
-  const results = useMemo(() => compute(params), [params]);
+  const results = useMemo(() => compute(scenario), [scenario]);
 
   const onGenerate = () => {
     setStatus("generating");
@@ -69,18 +62,23 @@ export function GeneratorShell({
 
       <AppNav
         mode={mode}
-        caseId={results.caseId}
-        params={params}
+        ta={results.ta}
+        cdotSheet={results.cdotSheet}
+        scenario={scenario}
         planId={planId}
         planName={planName}
         onSaved={onSaved}
       />
-      <AppSheetMeta project={params.project} address={params.address} />
+      <AppSheetMeta
+        project={scenario.meta.project}
+        address={scenario.meta.address}
+        cdotSheet={results.cdotSheet}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-[360px_1fr]">
         <GeneratorSidebar
-          params={params}
-          setParam={setParam}
+          scenario={scenario}
+          setScenario={setScenario}
           generating={status === "generating"}
           onGenerate={onGenerate}
         />
@@ -112,7 +110,11 @@ export function GeneratorShell({
 
           <StatusBar status={status} />
           <OutputCards results={results} generated={generated} />
-          <AuditTrail params={params} results={results} generated={generated} />
+          <AuditTrail
+            scenario={scenario}
+            results={results}
+            generated={generated}
+          />
           {generated && <DeviceBreakdown results={results} />}
         </main>
       </div>

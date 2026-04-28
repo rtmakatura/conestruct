@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
-import type { ScenarioParams } from "@/lib/compute";
+import type { Scenario } from "@/lib/scenarios";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 interface Props {
-  params: ScenarioParams;
+  scenario: Scenario;
   planId: string | null;
   planName: string | null;
   onSaved: (id: string, name: string) => void;
@@ -20,7 +20,7 @@ interface MeResponse {
   currentTermsVersion: string;
 }
 
-export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
+export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
@@ -76,7 +76,7 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           name,
-          data: params,
+          data: scenario,
           acceptedTerms: ackChecked,
           acceptedTermsVersion: me?.currentTermsVersion ?? null,
         }),
@@ -100,7 +100,7 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
       const res = await fetch(`/api/plans/${planId}`, {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name: planName, data: params }),
+        body: JSON.stringify({ name: planName, data: scenario }),
       });
       if (!res.ok) {
         setStatus("error");
@@ -119,7 +119,7 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
     if (planId) {
       doUpdate();
     } else {
-      setNameDraft(params.project || "Untitled plan");
+      setNameDraft(scenario.meta.project || "Untitled plan");
       setPopoverOpen(true);
     }
   };

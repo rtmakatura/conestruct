@@ -5,7 +5,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import type { ScenarioParams } from "@/lib/compute";
+import type { Scenario } from "@/lib/scenarios";
 import {
   PlanSaveButton,
   PlanSignInToSaveButton,
@@ -13,14 +13,15 @@ import {
 
 interface Props {
   mode: "sandbox" | "workbench";
-  caseId: string;
-  params: ScenarioParams;
+  ta: string;
+  cdotSheet: string;
+  scenario: Scenario;
   planId: string | null;
   planName: string | null;
   onSaved: (id: string, name: string) => void;
 }
 
-export function AppNav({ mode, caseId, params, planId, planName, onSaved }: Props) {
+export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSaved }: Props) {
   const isSandbox = mode === "sandbox";
   return (
     <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[52px] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
@@ -60,8 +61,10 @@ export function AppNav({ mode, caseId, params, planId, planName, onSaved }: Prop
             <span className="text-[color:var(--cyan)]">{planName ?? "New MHT"}</span>
           </span>
         )}
-        <span className="hidden lg:flex items-center px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          CASE: <span className="text-[color:var(--orange)] ml-1.5">{caseId}</span>
+        <span className="hidden lg:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+          <span className="text-[color:var(--orange)]">{ta}</span>
+          <span>·</span>
+          <span>{cdotSheet}</span>
         </span>
       </div>
       <div className="flex items-stretch">
@@ -74,7 +77,7 @@ export function AppNav({ mode, caseId, params, planId, planName, onSaved }: Prop
         </SignedOut>
         <SignedIn>
           <PlanSaveButton
-            params={params}
+            scenario={scenario}
             planId={planId}
             planName={planName}
             onSaved={onSaved}

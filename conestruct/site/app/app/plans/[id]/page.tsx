@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { getDb, plans } from "@/db";
 import { GeneratorShell } from "@/components/GeneratorShell";
-import type { ScenarioParams } from "@/lib/compute";
+import { toScenario } from "@/lib/scenarios";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -30,7 +30,7 @@ export default async function PlanPage({
   return (
     <GeneratorShell
       mode="workbench"
-      initialParams={row.data as ScenarioParams}
+      initialScenario={toScenario(row.data)}
       initialPlanId={row.id}
       initialPlanName={row.name}
     />

@@ -1,29 +1,39 @@
 "use client";
 
 import {
-  CLOSURE_TYPES,
-  ROAD_TYPES,
-  type ScenarioParams,
-} from "@/lib/compute";
-
-type Setter = <K extends keyof ScenarioParams>(
-  key: K,
-  value: ScenarioParams[K],
-) => void;
+  carryMeta,
+  defaultFor,
+  SCENARIO_KINDS,
+  type Scenario,
+  type ScenarioKind,
+  type ScenarioMeta,
+} from "@/lib/scenarios";
+import { Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
+import { ShoulderForm } from "./ShoulderForm";
+import { FlaggerForm } from "./FlaggerForm";
 
 interface Props {
-  params: ScenarioParams;
-  setParam: Setter;
+  scenario: Scenario;
+  setScenario: (next: Scenario) => void;
   generating: boolean;
   onGenerate: () => void;
 }
 
 export function GeneratorSidebar({
-  params,
-  setParam,
+  scenario,
+  setScenario,
   generating,
   onGenerate,
 }: Props) {
+  const onKindChange = (kind: ScenarioKind) => {
+    if (kind === scenario.kind) return;
+    setScenario(carryMeta(scenario, defaultFor(kind)));
+  };
+
+  const setMeta = (meta: ScenarioMeta) => {
+    setScenario({ ...scenario, meta } as Scenario);
+  };
+
   return (
     <aside className="bg-[color:var(--canvas-tint)] border-r border-[color:var(--rule)] md:sticky md:top-[52px] md:self-start md:h-[calc(100vh-52px)] md:overflow-y-auto max-md:border-r-0 max-md:border-b">
       <div className="flex justify-between items-baseline px-6 pt-6 pb-3">
@@ -35,189 +45,16 @@ export function GeneratorSidebar({
         </span>
       </div>
 
-      <FieldGroup label="Roadway" ix="A">
-        <Field>
-          <label className="field-label-row">
-            <span>Road type</span>
-          </label>
-          <select
-            className="field-input field-select"
-            value={params.roadType}
-            onChange={(e) =>
-              setParam("roadType", e.target.value as ScenarioParams["roadType"])
-            }
-          >
-            {ROAD_TYPES.map((r) => (
-              <option key={r.v} value={r.v}>
-                {r.l}
-              </option>
-            ))}
-          </select>
-        </Field>
+      <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
-        <Field>
-          <div className="field-label-row">
-            <span>Speed limit</span>
-            <span className="field-val text-[color:var(--cyan)]">
-              {params.speed} mph
-            </span>
-          </div>
-          <input
-            type="range"
-            min="25"
-            max="75"
-            step="5"
-            value={params.speed}
-            onChange={(e) => setParam("speed", +e.target.value)}
-            className="range-orange w-full my-1.5"
-          />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
-            MUTCD: ≥45 mph uses L=W·S
-          </div>
-        </Field>
+      {scenario.kind === "shoulder" && (
+        <ShoulderForm scenario={scenario} setScenario={setScenario} />
+      )}
+      {scenario.kind === "flagger_lane_closure" && (
+        <FlaggerForm scenario={scenario} setScenario={setScenario} />
+      )}
 
-        <Field>
-          <div className="field-label-row">
-            <span>Lanes per direction</span>
-          </div>
-          <div className="chip-row">
-            {[1, 2, 3, 4].map((n) => (
-              <button
-                key={n}
-                type="button"
-                className={`chip ${params.lanes === n ? "on" : ""}`}
-                onClick={() => setParam("lanes", n)}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-        </Field>
-
-        <Field>
-          <div className="field-label-row">
-            <span>Lane width</span>
-            <span className="field-val text-[color:var(--cyan)]">
-              {params.laneWidth} ft
-            </span>
-          </div>
-          <input
-            type="range"
-            min="9"
-            max="14"
-            step="0.5"
-            value={params.laneWidth}
-            onChange={(e) => setParam("laneWidth", +e.target.value)}
-            className="range-orange w-full my-1.5"
-          />
-        </Field>
-      </FieldGroup>
-
-      <FieldGroup label="Closure" ix="B">
-        <Field>
-          <div className="field-label-row">
-            <span>Closure type</span>
-          </div>
-          <div className="chip-row">
-            {CLOSURE_TYPES.map((c) => (
-              <button
-                key={c.v}
-                type="button"
-                className={`chip ${params.closure === c.v ? "on" : ""}`}
-                onClick={() => setParam("closure", c.v)}
-              >
-                {c.l}
-              </button>
-            ))}
-          </div>
-        </Field>
-
-        <Field>
-          <div className="field-label-row">
-            <span>Work zone length (ft)</span>
-          </div>
-          <input
-            type="number"
-            className="field-input"
-            value={params.workLen}
-            onChange={(e) => setParam("workLen", +e.target.value || 0)}
-          />
-        </Field>
-
-        <button
-          type="button"
-          className={`check-row ${params.divided ? "on" : ""}`}
-          onClick={() => setParam("divided", !params.divided)}
-        >
-          <span className="check-box" />
-          <span className="check-lbl">Divided highway</span>
-          <span className="check-desc">Median present</span>
-        </button>
-        <button
-          type="button"
-          className={`check-row ${params.night ? "on" : ""}`}
-          onClick={() => setParam("night", !params.night)}
-        >
-          <span className="check-box" />
-          <span className="check-lbl">Night operation</span>
-          <span className="check-desc">+ retroreflective</span>
-        </button>
-      </FieldGroup>
-
-      <FieldGroup label="Location" ix="C · OPT">
-        <Field>
-          <div className="field-label-row">
-            <span>Address / intersection</span>
-          </div>
-          <input
-            type="text"
-            className="field-input"
-            value={params.address}
-            placeholder="US-85 & Bromley Ln, Brighton, CO"
-            onChange={(e) => setParam("address", e.target.value)}
-          />
-        </Field>
-
-        <div className="grid grid-cols-2 gap-2.5 mb-3.5">
-          <div>
-            <div className="field-label-row">
-              <span>Latitude</span>
-            </div>
-            <input
-              type="number"
-              step="0.000001"
-              className="field-input"
-              value={params.lat}
-              onChange={(e) => setParam("lat", +e.target.value || 0)}
-            />
-          </div>
-          <div>
-            <div className="field-label-row">
-              <span>Longitude</span>
-            </div>
-            <input
-              type="number"
-              step="0.000001"
-              className="field-input"
-              value={params.lng}
-              onChange={(e) => setParam("lng", +e.target.value || 0)}
-            />
-          </div>
-        </div>
-
-        <Field>
-          <div className="field-label-row">
-            <span>Project name</span>
-          </div>
-          <input
-            type="text"
-            className="field-input"
-            value={params.project}
-            placeholder="I-25 MM 184 Resurfacing"
-            onChange={(e) => setParam("project", e.target.value)}
-          />
-        </Field>
-      </FieldGroup>
+      <LocationGroup meta={scenario.meta} setMeta={setMeta} />
 
       <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
         <button
@@ -247,26 +84,109 @@ export function GeneratorSidebar({
   );
 }
 
-function FieldGroup({
-  label,
-  ix,
-  children,
+function ScenarioPicker({
+  value,
+  onChange,
 }: {
-  label: string;
-  ix: string;
-  children: React.ReactNode;
+  value: ScenarioKind;
+  onChange: (v: ScenarioKind) => void;
 }) {
   return (
-    <div>
-      <div className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        <span>{label}</span>
-        <span className="text-[color:var(--cyan)]">{ix}</span>
+    <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
+      <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+        <span>Scenario type</span>
+        <span className="text-[color:var(--cyan)]">SELECT</span>
       </div>
-      <div className="px-6 py-5">{children}</div>
+      <div className="px-6 pb-5 pt-2 flex flex-col gap-2">
+        {SCENARIO_KINDS.map((k) => {
+          const active = value === k.v;
+          return (
+            <button
+              key={k.v}
+              type="button"
+              onClick={() => onChange(k.v)}
+              className={[
+                "flex items-baseline justify-between text-left px-3 py-2.5 border transition-colors",
+                active
+                  ? "border-[color:var(--cyan)] bg-[color:var(--canvas-tint)]"
+                  : "border-[color:var(--rule)] hover:border-[color:var(--ink-on-dark-faint)]",
+              ].join(" ")}
+            >
+              <span
+                className={[
+                  "text-[13px] font-medium",
+                  active ? "text-white" : "text-[color:var(--ink-on-dark)]",
+                ].join(" ")}
+              >
+                {k.l}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+                {k.sub}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-function Field({ children }: { children: React.ReactNode }) {
-  return <div className="mb-3.5 last:mb-0">{children}</div>;
+function LocationGroup({
+  meta,
+  setMeta,
+}: {
+  meta: ScenarioMeta;
+  setMeta: (m: ScenarioMeta) => void;
+}) {
+  const set = <K extends keyof ScenarioMeta>(key: K, value: ScenarioMeta[K]) =>
+    setMeta({ ...meta, [key]: value });
+
+  return (
+    <FieldGroup label="Location" ix="· OPT">
+      <Field>
+        <LabelRow>Address / intersection</LabelRow>
+        <input
+          type="text"
+          className="field-input"
+          value={meta.address}
+          placeholder="US-85 & Bromley Ln, Brighton, CO"
+          onChange={(e) => set("address", e.target.value)}
+        />
+      </Field>
+
+      <div className="grid grid-cols-2 gap-2.5 mb-3.5">
+        <div>
+          <LabelRow>Latitude</LabelRow>
+          <input
+            type="number"
+            step="0.000001"
+            className="field-input"
+            value={meta.lat}
+            onChange={(e) => set("lat", +e.target.value || 0)}
+          />
+        </div>
+        <div>
+          <LabelRow>Longitude</LabelRow>
+          <input
+            type="number"
+            step="0.000001"
+            className="field-input"
+            value={meta.lng}
+            onChange={(e) => set("lng", +e.target.value || 0)}
+          />
+        </div>
+      </div>
+
+      <Field>
+        <LabelRow>Project name</LabelRow>
+        <input
+          type="text"
+          className="field-input"
+          value={meta.project}
+          placeholder="I-25 MM 184 Resurfacing"
+          onChange={(e) => set("project", e.target.value)}
+        />
+      </Field>
+    </FieldGroup>
+  );
 }

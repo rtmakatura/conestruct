@@ -1,18 +1,40 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { ScenarioParams, ScenarioResults } from "@/lib/compute";
+import type {
+  FlaggerLaneClosureScenario,
+  FlaggerResult,
+  Scenario,
+  ScenarioResult,
+  ShoulderResult,
+  ShoulderScenario,
+} from "@/lib/scenarios";
 
 interface Props {
-  params: ScenarioParams;
-  results: ScenarioResults;
+  scenario: Scenario;
+  results: ScenarioResult;
   generated: boolean;
 }
 
-export function AuditTrail({ params, results, generated }: Props) {
+interface ItemSpec {
+  title: string;
+  result: string;
+  cite: string;
+  body: ReactNode;
+}
+
+export function AuditTrail({ scenario, results, generated }: Props) {
   const [openIdx, setOpenIdx] = useState<number>(0);
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
+
+  const items: ItemSpec[] =
+    scenario.kind === "shoulder" && results.kind === "shoulder"
+      ? buildShoulderItems(scenario, results, generated, r)
+      : scenario.kind === "flagger_lane_closure" &&
+          results.kind === "flagger_lane_closure"
+        ? buildFlaggerItems(scenario, results, generated, r)
+        : [];
 
   return (
     <section className="mt-9">
@@ -34,205 +56,421 @@ export function AuditTrail({ params, results, generated }: Props) {
       </div>
 
       <div className="audit-list">
-        <AuditItem
-          num="01"
-          title="Taper length calculation"
-          result={`L = ${r(results.L)}${generated ? " ft" : ""}`}
-          cite="MUTCD § 6C.08"
-          open={openIdx === 0}
-          onClick={() => toggle(0)}
-        >
-          <p>
-            For speed limits ≥ 45 mph, MUTCD Equation 6C-1 specifies the merging
-            taper length as the lane width × speed limit. For lower speeds, the
-            formula scales with the square of the speed.
-          </p>
-          <div className="formula">
-            <span className="var">L</span>
-            <span className="op">=</span>
-            <span className="var">W</span>
-            <span className="op">×</span>
-            <span className="var">S</span>
-            <span className="op">=</span>
-            <span>{params.laneWidth}</span>
-            <span className="op">×</span>
-            <span>{params.speed}</span>
-            <span className="op">=</span>
-            <span className="res">{r(results.L)} ft</span>
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD 2023 EDITION · CHAPTER 6C · TABLE 6C-3
-          </div>
-        </AuditItem>
+        {items.map((item, i) => (
+          <AuditItem
+            key={item.title}
+            num={String(i + 1).padStart(2, "0")}
+            title={item.title}
+            result={item.result}
+            cite={item.cite}
+            open={openIdx === i}
+            onClick={() => toggle(i)}
+          >
+            {item.body}
+          </AuditItem>
+        ))}
+      </div>
+    </section>
+  );
+}
 
-        <AuditItem
-          num="02"
-          title="Buffer space calculation"
-          result={`B = ${r(results.B)}${generated ? " ft" : ""}`}
-          cite="MUTCD TABLE 6C-2"
-          open={openIdx === 1}
-          onClick={() => toggle(1)}
-        >
+function buildShoulderItems(
+  scenario: ShoulderScenario,
+  results: ShoulderResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  return [
+    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
+    bufferItem(scenario.speed, results.B, r),
+    spacingItem(
+      scenario.workLen,
+      results.spacing,
+      results.cones,
+      results.taperCones,
+      results.tangentCones,
+      results.drums,
+      generated,
+      r,
+    ),
+    {
+      title: "Advance warning sign set",
+      result: generated ? `${results.signs} signs / side` : "—",
+      cite: "MUTCD TABLE 6C-1",
+      body: (
+        <>
           <p>
-            Buffer space is the longitudinal clear distance between traffic and
-            workers, sized for stopping sight distance at the posted speed.
+            Sign set for shoulder work per MUTCD § 6G.02. Short-duration jobs
+            (&lt;1h) may use minimum signing; long-term work uses the full
+            advance / termination set.
           </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Speed</th>
-                <th>Buffer (ft)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[55, 60, 65, 70, 75].map((s) => (
-                <tr key={s}>
-                  <td className={params.speed === s ? "match" : ""}>{s} mph</td>
-                  <td className={params.speed === s ? "match" : ""}>
-                    {{ 55: 495, 60: 570, 65: 645, 70: 730, 75: 820 }[s]}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD TABLE 6C-2 · STOPPING SIGHT DISTANCE
-          </div>
-        </AuditItem>
-
-        <AuditItem
-          num="03"
-          title="Channelizing device spacing"
-          result={
-            generated
-              ? `${results.cones} cones · ${results.spacing} ft o.c.`
-              : "—"
-          }
-          cite="MUTCD § 6F.65"
-          open={openIdx === 2}
-          onClick={() => toggle(2)}
-        >
-          <p>
-            In tapers and tangents, channelizing devices are spaced approximately
-            equal to the speed limit in feet on-center.
-          </p>
-          <div className="formula">
-            <span>spacing</span>
-            <span className="op">≈</span>
-            <span className="var">S</span>
-            <span className="op">=</span>
-            <span className="res">{r(results.spacing)} ft o.c.</span>
-          </div>
-          <p>
-            Taper:{" "}
-            <strong>{generated ? results.taperCones : "—"} cones</strong> ·
-            Tangent ({params.workLen} ft):{" "}
-            <strong>{generated ? results.tangentCones : "—"} cones</strong>
-            {generated && results.drums > 0 && (
-              <>
-                {" "}
-                · Drums (night): <strong>{results.drums}</strong>
-              </>
-            )}
-          </p>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6F.65 · CHANNELIZING DEVICES
-          </div>
-        </AuditItem>
-
-        <AuditItem
-          num="04"
-          title="Advance warning sign placement"
-          result={generated ? `${results.signs} signs / side` : "—"}
-          cite="MUTCD TABLE 6C-1"
-          open={openIdx === 3}
-          onClick={() => toggle(3)}
-        >
           <table>
             <thead>
               <tr>
                 <th>Sign</th>
                 <th>Code</th>
-                <th>Distance</th>
+                <th>Used</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Road work ahead</td>
                 <td>W20-1</td>
-                <td>1500 ft</td>
+                <td>{results.signs >= 1 ? "✓" : "—"}</td>
               </tr>
               <tr>
-                <td>Right lane closed ahead</td>
-                <td>W20-5R</td>
-                <td>1000 ft</td>
+                <td>Shoulder work</td>
+                <td>W21-5</td>
+                <td>{results.signs >= 2 ? "✓" : "—"}</td>
               </tr>
               <tr>
-                <td>Merge right</td>
-                <td>W4-2R</td>
-                <td>500 ft</td>
+                <td>End road work</td>
+                <td>G20-2</td>
+                <td>{results.signs >= 3 ? "✓" : "—"}</td>
               </tr>
             </tbody>
           </table>
           <div className="citation">
             <span className="check">✓</span>
-            MUTCD TABLE 6C-1 · ADVANCE WARNING DISTANCE
+            MUTCD § 6G.02 · DURATION-BASED SIGNING
           </div>
-        </AuditItem>
-
-        <AuditItem
-          num="05"
-          title="Colorado supplement requirements"
-          result="ALL CHECKS PASS"
-          cite="CDOT S-630-1"
-          open={openIdx === 4}
-          onClick={() => toggle(4)}
-        >
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-1",
+      body: (
+        <>
           <div className="check-list">
-            <CheckRow label="Type III barricade at terminus (S-630-1 §4.2)" />
-            <CheckRow label="Retroreflective device sheeting Type IX" />
-            <CheckRow label="Speed reduction sign per CDOT § 630.07" />
-            <CheckRow
-              label="Flagger spacing exceeds 1500 ft — review"
-              tone="warn"
-              tag="WARN"
-            />
+            <CheckRow label="Shoulder work per S-630-1 (TA-2 equivalent)" />
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+            <CheckRow label="Cones placed at speed-limit spacing" />
+            {scenario.duration === "long" && (
+              <CheckRow label="End road work sign present (G20-2)" />
+            )}
           </div>
           <div className="citation">
             <span className="check">✓</span>
             CDOT S-630-1 · COLORADO SUPPLEMENT
           </div>
-        </AuditItem>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
 
-        <AuditItem
-          num="06"
-          title="S-630-1 case reference"
-          result={r(results.caseId)}
-          cite="CDOT S-630-1"
-          open={openIdx === 5}
-          onClick={() => toggle(5)}
-        >
+function buildFlaggerItems(
+  scenario: FlaggerLaneClosureScenario,
+  results: FlaggerResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  const flaggerSummary = generated
+    ? scenario.afad
+      ? `${results.afadDevices} AFAD`
+      : `${results.flaggerStations} flagger`
+    : "—";
+
+  return [
+    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
+    bufferItem(scenario.speed, results.B, r),
+    spacingItem(
+      scenario.workLen,
+      results.spacing,
+      results.cones,
+      results.taperCones,
+      results.tangentCones,
+      results.drums,
+      generated,
+      r,
+    ),
+    {
+      title: "Flagger station sight distance",
+      result: generated ? `${results.sightDistance} ft` : "—",
+      cite: "MUTCD § 6E.06",
+      body: (
+        <>
           <p>
-            Matched against CDOT Standard Plan S-630-1, the official Colorado
-            supplement to MUTCD Part 6.
+            Each flagger station must have a clear sight distance of at least
+            the stopping sight distance for the posted speed (MUTCD Table
+            6E-1), so approaching drivers can stop on the open lane.
           </p>
+          <div className="formula">
+            <span>SSD</span>
+            <span className="op">@</span>
+            <span className="var">{scenario.speed}</span>
+            <span className="op">mph</span>
+            <span className="op">=</span>
+            <span className="res">{r(results.sightDistance)} ft</span>
+          </div>
           <p>
-            <a
-              href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
-              target="_blank"
-              rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
-            >
-              ↗ Open S-630-1 PDF on CDOT.gov
-            </a>
+            Stations:{" "}
+            <strong>
+              {flaggerSummary}
+              {scenario.afad ? "" : " station(s)"}
+            </strong>
+            {results.pilotCarVehicles > 0 && (
+              <> · Pilot car: <strong>1 vehicle</strong></>
+            )}
           </p>
-        </AuditItem>
-      </div>
-    </section>
-  );
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD TABLE 6E-1 · STOPPING SIGHT DISTANCE
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Advance warning sign set",
+      result: generated ? `${results.signs} signs (both ways)` : "—",
+      cite: "MUTCD TABLE 6C-1",
+      body: (
+        <>
+          <p>
+            TA-10 sign set, posted in both directions of travel. Short-duration
+            jobs use the minimum (W20-1 + W20-7); long-term work adds W20-4
+            and W3-4.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Sign</th>
+                <th>Code</th>
+                <th>Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Road work ahead</td>
+                <td>W20-1</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>One lane road ahead</td>
+                <td>W20-4</td>
+                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
+              </tr>
+              <tr>
+                <td>Be prepared to stop</td>
+                <td>W3-4</td>
+                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
+              </tr>
+              <tr>
+                <td>{scenario.afad ? "AFAD ahead" : "Flagger ahead"}</td>
+                <td>{scenario.afad ? "W20-7a" : "W20-7"}</td>
+                <td>✓</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6G.02 · DURATION-BASED SIGNING
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-2",
+      body: (
+        <>
+          <div className="check-list">
+            <CheckRow label="2-lane 2-way flagger control per S-630-2 (TA-10 equivalent)" />
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+            <CheckRow label="Cones placed at speed-limit spacing" />
+            {scenario.workLen > 1500 && !scenario.pilotCar && (
+              <CheckRow
+                label="Work zone >1500 ft — pilot car recommended (MUTCD § 6E)"
+                tone="warn"
+                tag="WARN"
+              />
+            )}
+            {scenario.afad && (
+              <CheckRow label="AFAD operator certified per state requirements" />
+            )}
+            {scenario.pedestrianAccess && (
+              <CheckRow label="ADA-compliant pedestrian detour signed (R9-3a / R9-9)" />
+            )}
+          </div>
+          <div className="citation">
+            <span className="check">✓</span>
+            CDOT S-630-2 · COLORADO SUPPLEMENT
+          </div>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
+
+function taperItem(
+  laneWidth: number,
+  speed: number,
+  L: number,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec {
+  return {
+    title: "Taper length calculation",
+    result: `L = ${r(L)}${generated ? " ft" : ""}`,
+    cite: "MUTCD § 6C.08",
+    body: (
+      <>
+        <p>
+          For speed limits ≥ 45 mph, MUTCD Equation 6C-1 specifies the merging
+          taper length as the lane width × speed limit. For lower speeds, the
+          formula scales with the square of the speed.
+        </p>
+        <div className="formula">
+          <span className="var">L</span>
+          <span className="op">=</span>
+          <span className="var">W</span>
+          <span className="op">×</span>
+          <span className="var">S</span>
+          <span className="op">=</span>
+          <span>{laneWidth}</span>
+          <span className="op">×</span>
+          <span>{speed}</span>
+          <span className="op">=</span>
+          <span className="res">{r(L)} ft</span>
+        </div>
+        <div className="citation">
+          <span className="check">✓</span>
+          MUTCD 2023 EDITION · CHAPTER 6C · TABLE 6C-3
+        </div>
+      </>
+    ),
+  };
+}
+
+function bufferItem(
+  speed: number,
+  B: number,
+  r: (n: number | string) => string,
+): ItemSpec {
+  return {
+    title: "Buffer space calculation",
+    result: `B = ${r(B)} ft`,
+    cite: "MUTCD TABLE 6C-2",
+    body: (
+      <>
+        <p>
+          Buffer space is the longitudinal clear distance between traffic and
+          workers, sized for stopping sight distance at the posted speed.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Speed</th>
+              <th>Buffer (ft)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              [25, 155],
+              [35, 250],
+              [45, 360],
+              [55, 495],
+              [65, 645],
+              [75, 820],
+            ].map(([s, b]) => (
+              <tr key={s}>
+                <td className={speed === s ? "match" : ""}>{s} mph</td>
+                <td className={speed === s ? "match" : ""}>{b}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="citation">
+          <span className="check">✓</span>
+          MUTCD TABLE 6C-2 · STOPPING SIGHT DISTANCE
+        </div>
+      </>
+    ),
+  };
+}
+
+function spacingItem(
+  workLen: number,
+  spacing: number,
+  cones: number,
+  taperCones: number,
+  tangentCones: number,
+  drums: number,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec {
+  return {
+    title: "Channelizing device spacing",
+    result: generated ? `${cones} cones · ${spacing} ft o.c.` : "—",
+    cite: "MUTCD § 6F.65",
+    body: (
+      <>
+        <p>
+          In tapers and tangents, channelizing devices are spaced approximately
+          equal to the speed limit in feet on-center.
+        </p>
+        <div className="formula">
+          <span>spacing</span>
+          <span className="op">≈</span>
+          <span className="var">S</span>
+          <span className="op">=</span>
+          <span className="res">{r(spacing)} ft o.c.</span>
+        </div>
+        <p>
+          Taper:{" "}
+          <strong>{generated ? taperCones : "—"} cones</strong> · Tangent (
+          {workLen} ft):{" "}
+          <strong>{generated ? tangentCones : "—"} cones</strong>
+          {generated && drums > 0 && (
+            <>
+              {" "}
+              · Drums (night): <strong>{drums}</strong>
+            </>
+          )}
+        </p>
+        <div className="citation">
+          <span className="check">✓</span>
+          MUTCD § 6F.65 · CHANNELIZING DEVICES
+        </div>
+      </>
+    ),
+  };
+}
+
+function referenceItem(ta: string, cdotSheet: string, caseId: string): ItemSpec {
+  return {
+    title: `${ta} · ${cdotSheet} reference`,
+    result: caseId,
+    cite: `CDOT ${cdotSheet}`,
+    body: (
+      <>
+        <p>
+          Plan matched against MUTCD Typical Application <strong>{ta}</strong>{" "}
+          and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
+          Colorado supplement to MUTCD Part 6.
+        </p>
+        <p>
+          <a
+            href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+          >
+            ↗ Open {cdotSheet} PDF on CDOT.gov
+          </a>
+        </p>
+      </>
+    ),
+  };
 }
 
 interface ItemProps {

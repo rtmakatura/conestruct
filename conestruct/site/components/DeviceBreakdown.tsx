@@ -1,60 +1,10 @@
-import type { ScenarioResults } from "@/lib/compute";
+import type { ScenarioResult } from "@/lib/scenarios";
 
 interface Props {
-  results: ScenarioResults;
-}
-
-interface Row {
-  device: string;
-  code: string;
-  fn: string;
-  qty: number;
+  results: ScenarioResult;
 }
 
 export function DeviceBreakdown({ results }: Props) {
-  const rows: Row[] = [
-    {
-      device: 'Traffic cone (28")',
-      code: "—",
-      fn: "Channelizing",
-      qty: results.cones,
-    },
-  ];
-  if (results.drums > 0) {
-    rows.push({
-      device: "Drum",
-      code: "—",
-      fn: "Channelizing (night)",
-      qty: results.drums,
-    });
-  }
-  rows.push({
-    device: "Road work ahead",
-    code: "W20-1",
-    fn: "Advance warning",
-    qty: results.signs >= 1 ? 2 : 0,
-  });
-  rows.push({
-    device: "Right lane closed",
-    code: "W20-5R",
-    fn: "Advance warning",
-    qty: results.signs >= 2 ? 2 : 0,
-  });
-  rows.push({
-    device: "Merge right",
-    code: "W4-2R",
-    fn: "Advance warning",
-    qty: results.signs >= 3 ? 2 : 0,
-  });
-  if (results.arrowBoards > 0) {
-    rows.push({
-      device: "Type C arrow board",
-      code: "—",
-      fn: "Active warning",
-      qty: results.arrowBoards,
-    });
-  }
-
   return (
     <section className="mt-9">
       <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
@@ -75,7 +25,7 @@ export function DeviceBreakdown({ results }: Props) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {results.devices.map((row) => (
             <tr key={`${row.device}-${row.code}`}>
               <td>{row.device}</td>
               <td>{row.code}</td>

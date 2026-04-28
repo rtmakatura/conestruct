@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { ScenarioResults } from "@/lib/compute";
+import type { ScenarioResult } from "@/lib/scenarios";
 
 interface Props {
-  results: ScenarioResults;
+  results: ScenarioResult;
   generated: boolean;
 }
 
@@ -24,7 +24,7 @@ export function OutputCards({ results, generated }: Props) {
         ix="A"
         n="01"
         title="Plan sheet"
-        meta={`PDF · 11×17 LANDSCAPE · ${results.caseId.toUpperCase()}`}
+        meta={`PDF · 11×17 · ${results.ta} · ${results.cdotSheet}`}
         statLbl="Devices"
         statVal={results.totalDevices}
         ctaLabel="Sign up to download PDF"
