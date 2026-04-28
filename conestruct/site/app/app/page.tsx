@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { desc, eq } from "drizzle-orm";
 import { getDb, plans, users } from "@/db";
+import { PlanRow } from "@/components/PlanRow";
 
 export const metadata: Metadata = {
   title: "Plans · Conestruct",
@@ -115,29 +116,18 @@ export default async function AppPage() {
                 <th className="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] w-[240px]">
                   Created by
                 </th>
+                <th aria-hidden className="w-[80px]" />
               </tr>
             </thead>
             <tbody>
               {rows.map((row) => (
-                <tr
+                <PlanRow
                   key={row.id}
-                  className="border-b border-[color:var(--rule)] hover:bg-[color:var(--canvas-tint)] transition-colors"
-                >
-                  <td className="py-3 px-4">
-                    <Link
-                      href={`/app/plans/${row.id}`}
-                      className="text-white hover:text-[color:var(--cyan)] font-medium text-[14px]"
-                    >
-                      {row.name}
-                    </Link>
-                  </td>
-                  <td className="py-3 px-4 text-[color:var(--ink-on-dark-faint)] text-[13px] font-mono">
-                    {formatRelative(row.updatedAt)}
-                  </td>
-                  <td className="py-3 px-4 text-[color:var(--ink-on-dark-faint)] text-[13px]">
-                    {row.createdByName ?? row.createdByEmail}
-                  </td>
-                </tr>
+                  id={row.id}
+                  name={row.name}
+                  updatedLabel={formatRelative(row.updatedAt)}
+                  createdByLabel={row.createdByName ?? row.createdByEmail}
+                />
               ))}
             </tbody>
           </table>
