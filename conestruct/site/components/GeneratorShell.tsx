@@ -95,6 +95,16 @@ export function GeneratorShell({
             </p>
           </div>
 
+          <div className="mb-7 pl-4 py-3 border-l-2 border-[color:var(--orange)]">
+            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-1">
+              Draft — not a sealed plan
+            </div>
+            <div className="text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]">
+              Output is engineering reference. Requires review and seal by a
+              licensed Professional Engineer prior to field use.
+            </div>
+          </div>
+
           <StatusBar status={status} />
           <OutputCards results={results} generated={generated} />
           <AuditTrail params={params} results={results} generated={generated} />

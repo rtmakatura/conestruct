@@ -28,6 +28,10 @@ export function AuditTrail({ params, results, generated }: Props) {
         Every calculation is traced to its MUTCD or Colorado Supplement source.
         Verify before stamping.
       </div>
+      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-5 max-w-[620px] leading-relaxed">
+        Scope: federal MUTCD + Colorado Supplement. Other jurisdictions may
+        impose additional requirements not yet captured.
+      </div>
 
       <div className="audit-list">
         <AuditItem
