@@ -41,11 +41,11 @@ export function Nav() {
             href="/app"
             className="text-sm font-medium text-navy hover:text-orange"
           >
-            Go to app →
+            Workbench →
           </Link>
         </SignedIn>
         <Link
-          href="/try"
+          href="/sandbox"
           className="font-sans text-[13px] font-semibold bg-navy text-paper px-4 py-2.5 cursor-pointer tracking-[0.01em] hover:bg-orange transition-colors"
         >
           Try the demo →

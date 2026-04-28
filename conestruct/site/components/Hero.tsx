@@ -97,7 +97,7 @@ export function Hero() {
           device list and crew narrative.
         </p>
         <div className="flex items-center gap-5">
-          <Link href="/try" className="btn-primary">
+          <Link href="/sandbox" className="btn-primary">
             Try the demo
             <span className="font-mono">→</span>
           </Link>

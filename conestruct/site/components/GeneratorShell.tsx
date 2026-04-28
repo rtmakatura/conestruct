@@ -15,13 +15,17 @@ import { AuditTrail } from "./AuditTrail";
 import { DeviceBreakdown } from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
 
+type Mode = "sandbox" | "workbench";
+
 interface Props {
+  mode?: Mode;
   initialParams?: ScenarioParams;
   initialPlanId?: string | null;
   initialPlanName?: string | null;
 }
 
 export function GeneratorShell({
+  mode = "workbench",
   initialParams,
   initialPlanId = null,
   initialPlanName = null,
@@ -64,6 +68,7 @@ export function GeneratorShell({
       </div>
 
       <AppNav
+        mode={mode}
         caseId={results.caseId}
         params={params}
         planId={planId}

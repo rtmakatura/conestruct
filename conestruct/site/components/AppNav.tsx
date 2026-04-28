@@ -12,6 +12,7 @@ import {
 } from "./PlanSaveButton";
 
 interface Props {
+  mode: "sandbox" | "workbench";
   caseId: string;
   params: ScenarioParams;
   planId: string | null;
@@ -19,7 +20,8 @@ interface Props {
   onSaved: (id: string, name: string) => void;
 }
 
-export function AppNav({ caseId, params, planId, planName, onSaved }: Props) {
+export function AppNav({ mode, caseId, params, planId, planName, onSaved }: Props) {
+  const isSandbox = mode === "sandbox";
   return (
     <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[52px] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
       <div className="flex items-stretch">
@@ -34,20 +36,30 @@ export function AppNav({ caseId, params, planId, planName, onSaved }: Props) {
             v0.4
           </span>
         </Link>
-        <SignedIn>
-          <Link
-            href="/app"
-            className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
-          >
-            <span>←</span>
-            <span>My plans</span>
-          </Link>
-        </SignedIn>
-        <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span>Generator</span>
-          <span>/</span>
-          <span className="text-[color:var(--cyan)]">New MHT</span>
-        </span>
+        {!isSandbox && (
+          <SignedIn>
+            <Link
+              href="/app"
+              className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
+            >
+              <span>←</span>
+              <span>My plans</span>
+            </Link>
+          </SignedIn>
+        )}
+        {isSandbox ? (
+          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em]">
+            <span className="text-[color:var(--orange)]">Sandbox</span>
+            <span className="text-[color:var(--ink-on-dark-faint)]">/</span>
+            <span className="text-[color:var(--ink-on-dark-faint)]">Public demo</span>
+          </span>
+        ) : (
+          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+            <span>Workbench</span>
+            <span>/</span>
+            <span className="text-[color:var(--cyan)]">{planName ?? "New MHT"}</span>
+          </span>
+        )}
         <span className="hidden lg:flex items-center px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
           CASE: <span className="text-[color:var(--orange)] ml-1.5">{caseId}</span>
         </span>

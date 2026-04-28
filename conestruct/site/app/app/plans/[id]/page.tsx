@@ -29,6 +29,7 @@ export default async function PlanPage({
 
   return (
     <GeneratorShell
+      mode="workbench"
       initialParams={row.data as ScenarioParams}
       initialPlanId={row.id}
       initialPlanName={row.name}

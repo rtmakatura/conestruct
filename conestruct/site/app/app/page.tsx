@@ -83,7 +83,7 @@ export default async function AppPage() {
           </h1>
         </div>
         <Link
-          href="/try"
+          href="/app/plans/new"
           className="px-4 py-2 border border-[color:var(--cyan)] text-[color:var(--cyan)] font-sans text-[13px] hover:bg-[color:var(--cyan)] hover:text-[color:var(--canvas)] transition-colors whitespace-nowrap"
         >
           + New plan
@@ -97,10 +97,10 @@ export default async function AppPage() {
               No plans yet — start one in the workbench.
             </p>
             <Link
-              href="/try"
+              href="/app/plans/new"
               className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--cyan)] hover:text-white"
             >
-              Open the workbench →
+              Start a new plan →
             </Link>
           </div>
         ) : (
