@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { Webhook } from "svix";
 import type { WebhookEvent } from "@clerk/nextjs/server";
-import { db, users, companies } from "@/db";
+import { getDb, users, companies } from "@/db";
 
 export async function POST(req: Request) {
   const secret = process.env.CLERK_WEBHOOK_SECRET;
@@ -31,6 +31,8 @@ export async function POST(req: Request) {
   } catch {
     return new Response("Invalid signature", { status: 400 });
   }
+
+  const db = getDb();
 
   switch (evt.type) {
     case "user.created":
