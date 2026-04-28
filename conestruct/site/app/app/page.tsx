@@ -1,89 +1,148 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Nav } from "@/components/Nav";
-import { SheetMeta } from "@/components/SheetMeta";
-import { Footer } from "@/components/Footer";
+import { auth } from "@clerk/nextjs/server";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { desc, eq } from "drizzle-orm";
+import { getDb, plans, users } from "@/db";
 
 export const metadata: Metadata = {
-  title: "Closed beta · Conestruct",
-  description:
-    "Try the Conestruct MHT generator demo today. Stamped-ready PDF, Excel device list, and crew-narrative downloads are in closed beta — request early access.",
+  title: "Plans · Conestruct",
+  description: "Your saved traffic-control plans.",
 };
 
-const SPEC_ROWS: Array<[string, string]> = [
-  ["VERSION", "v0.5 · CLOSED BETA"],
-  ["SCOPE", "COLORADO · MUTCD 2023 · CDOT S-630-1"],
-  ["SCENARIOS", "SHOULDER · LANE · FULL CLOSURE · FLAGGER · MOBILE"],
-  ["OUTPUTS", "PDF · XLSX · MARKDOWN"],
-  ["EARLY ACCESS", "TCS-LED · COLORADO-FIRST"],
-];
+function formatRelative(date: Date): string {
+  const diff = Date.now() - date.getTime();
+  if (diff < 60_000) return "just now";
+  const min = Math.floor(diff / 60_000);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.floor(hr / 24);
+  if (day < 7) return `${day}d ago`;
+  return date.toLocaleDateString();
+}
 
-export default function AppPlaceholder() {
+export default async function AppPage() {
+  const { orgId } = await auth();
+  if (!orgId) return null;
+
+  const db = getDb();
+  const rows = await db
+    .select({
+      id: plans.id,
+      name: plans.name,
+      updatedAt: plans.updatedAt,
+      createdByName: users.name,
+      createdByEmail: users.email,
+    })
+    .from(plans)
+    .innerJoin(users, eq(plans.createdByUserId, users.id))
+    .where(eq(plans.companyId, orgId))
+    .orderBy(desc(plans.updatedAt));
+
   return (
-    <>
-      <div className="max-w-page mx-auto px-6 md:px-12">
-        <Nav />
-        <SheetMeta />
-
-        <section className="py-24 md:py-32 grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-16 items-start">
-          <div>
-            <div className="eyebrow mb-6">
-              0X · GENERATOR · CLOSED BETA
-            </div>
-            <h1 className="font-sans font-bold text-[40px] md:text-[56px] leading-[1.02] tracking-tightest text-navy mb-6 [text-wrap:balance]">
-              Real downloads are{" "}
-              <span className="text-orange">in closed beta.</span>
-            </h1>
-            <p className="text-[18px] leading-[1.55] text-ink-mute mb-9 max-w-[480px] [text-wrap:pretty]">
-              The interactive demo is live — try every calculation and see
-              every citation. Stamped-ready PDF, Excel device list, and crew
-              narrative downloads ship to closed-beta users first. Drop your
-              email for a key.
-            </p>
-            <div className="flex flex-wrap items-center gap-5">
-              <Link href="/try" className="btn-primary">
-                Try the demo
-                <span className="font-mono">→</span>
-              </Link>
-              <a
-                className="font-mono text-[11px] uppercase tracking-[0.08em] text-navy hover:text-orange"
-                href="mailto:rtmakatura1@gmail.com?subject=Conestruct%20early%20access&body=Add%20me%20to%20the%20generator%20waitlist."
-              >
-                Request early access →
-              </a>
-            </div>
+    <div className="workbench min-h-screen">
+      <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[52px] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
+        <div className="flex items-stretch">
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--cyan)] transition-colors"
+          >
+            <span>
+              conestruct<span className="text-[color:var(--orange)]">.</span>
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-[color:var(--ink-on-dark-faint)]">
+              v0.4
+            </span>
+          </Link>
+          <span className="hidden md:flex items-center px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+            Plans
+          </span>
+        </div>
+        <div className="flex items-stretch">
+          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+            <OrganizationSwitcher
+              hidePersonal
+              afterSelectOrganizationUrl="/app"
+            />
           </div>
-
-          {/* Spec card */}
-          <div className="relative bg-white border border-line p-8 mt-2">
-            <span className="absolute -top-px -left-px w-3.5 h-3.5 border-[1.5px] border-orange border-r-0 border-b-0" />
-            <span className="absolute -top-px -right-px w-3.5 h-3.5 border-[1.5px] border-orange border-l-0 border-b-0" />
-            <span className="absolute -bottom-px -left-px w-3.5 h-3.5 border-[1.5px] border-orange border-r-0 border-t-0" />
-            <span className="absolute -bottom-px -right-px w-3.5 h-3.5 border-[1.5px] border-orange border-l-0 border-t-0" />
-
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint mb-4">
-              <span className="text-orange">REL</span> · WHAT&rsquo;S SHIPPING
-            </div>
-            <div className="border-t border-line">
-              {SPEC_ROWS.map(([k, v]) => (
-                <div
-                  key={k}
-                  className="flex justify-between py-3 border-b border-line-soft font-mono text-[11px] uppercase tracking-[0.08em]"
-                >
-                  <span className="text-ink-faint">{k}</span>
-                  <span className="text-navy font-medium text-right">{v}</span>
-                </div>
-              ))}
-            </div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-faint mt-4">
-              Output requires TCS review · Not a substitute for licensed
-              judgment
-            </div>
+          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+            <UserButton />
           </div>
-        </section>
+        </div>
+      </nav>
 
-        <Footer />
+      <div className="px-10 pt-10 pb-6 max-md:px-6 flex items-end justify-between gap-4">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--cyan)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--cyan)] before:inline-block">
+            01 · PLANS
+          </div>
+          <h1 className="text-[28px] font-bold tracking-tighter text-white m-0 leading-[1.1]">
+            Your saved plans
+          </h1>
+        </div>
+        <Link
+          href="/try"
+          className="px-4 py-2 border border-[color:var(--cyan)] text-[color:var(--cyan)] font-sans text-[13px] hover:bg-[color:var(--cyan)] hover:text-[color:var(--canvas)] transition-colors whitespace-nowrap"
+        >
+          + New plan
+        </Link>
       </div>
-    </>
+
+      <div className="px-10 pb-20 max-md:px-6">
+        {rows.length === 0 ? (
+          <div className="border border-[color:var(--rule)] p-12 text-center">
+            <p className="text-[color:var(--ink-on-dark-faint)] mb-4">
+              No plans yet — start one in the workbench.
+            </p>
+            <Link
+              href="/try"
+              className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--cyan)] hover:text-white"
+            >
+              Open the workbench →
+            </Link>
+          </div>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-y border-[color:var(--rule)]">
+                <th className="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+                  Name
+                </th>
+                <th className="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] w-[160px]">
+                  Updated
+                </th>
+                <th className="text-left py-3 px-4 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] w-[240px]">
+                  Created by
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-[color:var(--rule)] hover:bg-[color:var(--canvas-tint)] transition-colors"
+                >
+                  <td className="py-3 px-4">
+                    <Link
+                      href={`/app/plans/${row.id}`}
+                      className="text-white hover:text-[color:var(--cyan)] font-medium text-[14px]"
+                    >
+                      {row.name}
+                    </Link>
+                  </td>
+                  <td className="py-3 px-4 text-[color:var(--ink-on-dark-faint)] text-[13px] font-mono">
+                    {formatRelative(row.updatedAt)}
+                  </td>
+                  <td className="py-3 px-4 text-[color:var(--ink-on-dark-faint)] text-[13px]">
+                    {row.createdByName ?? row.createdByEmail}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
   );
 }

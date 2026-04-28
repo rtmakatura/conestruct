@@ -5,12 +5,21 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import type { ScenarioParams } from "@/lib/compute";
+import {
+  PlanSaveButton,
+  PlanSignInToSaveButton,
+} from "./PlanSaveButton";
 
 interface Props {
   caseId: string;
+  params: ScenarioParams;
+  planId: string | null;
+  planName: string | null;
+  onSaved: (id: string, name: string) => void;
 }
 
-export function AppNav({ caseId }: Props) {
+export function AppNav({ caseId, params, planId, planName, onSaved }: Props) {
   return (
     <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[52px] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
       <div className="flex items-stretch">
@@ -25,6 +34,15 @@ export function AppNav({ caseId }: Props) {
             v0.4
           </span>
         </Link>
+        <SignedIn>
+          <Link
+            href="/app"
+            className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
+          >
+            <span>←</span>
+            <span>My plans</span>
+          </Link>
+        </SignedIn>
         <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
           <span>Generator</span>
           <span>/</span>
@@ -40,14 +58,15 @@ export function AppNav({ caseId }: Props) {
           MUTCD 2023 · CDOT
         </span>
         <SignedOut>
-          <Link
-            href="/sign-in"
-            className="flex items-center px-5 border-l border-[color:var(--rule)] font-sans font-medium text-[13px] text-[color:var(--ink-on-dark)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
-          >
-            Sign in
-          </Link>
+          <PlanSignInToSaveButton />
         </SignedOut>
         <SignedIn>
+          <PlanSaveButton
+            params={params}
+            planId={planId}
+            planName={planName}
+            onSaved={onSaved}
+          />
           <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
             <OrganizationSwitcher
               hidePersonal

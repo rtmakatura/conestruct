@@ -15,15 +15,34 @@ import { AuditTrail } from "./AuditTrail";
 import { DeviceBreakdown } from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
 
-export function GeneratorShell() {
-  const [params, setParams] = useState<ScenarioParams>(DEFAULT_PARAMS);
+interface Props {
+  initialParams?: ScenarioParams;
+  initialPlanId?: string | null;
+  initialPlanName?: string | null;
+}
+
+export function GeneratorShell({
+  initialParams,
+  initialPlanId = null,
+  initialPlanName = null,
+}: Props = {}) {
+  const [params, setParams] = useState<ScenarioParams>(
+    initialParams ?? DEFAULT_PARAMS,
+  );
   const [status, setStatus] = useState<Status>("done");
+  const [planId, setPlanId] = useState<string | null>(initialPlanId);
+  const [planName, setPlanName] = useState<string | null>(initialPlanName);
 
   const setParam = <K extends keyof ScenarioParams>(
     key: K,
     value: ScenarioParams[K],
   ) => {
     setParams((p) => ({ ...p, [key]: value }));
+  };
+
+  const onSaved = (id: string, name: string) => {
+    setPlanId(id);
+    setPlanName(name);
   };
 
   const results = useMemo(() => compute(params), [params]);
@@ -44,7 +63,13 @@ export function GeneratorShell() {
         <span className="ftick br" />
       </div>
 
-      <AppNav caseId={results.caseId} />
+      <AppNav
+        caseId={results.caseId}
+        params={params}
+        planId={planId}
+        planName={planName}
+        onSaved={onSaved}
+      />
       <AppSheetMeta project={params.project} address={params.address} />
 
       <div className="grid grid-cols-1 md:grid-cols-[360px_1fr]">
