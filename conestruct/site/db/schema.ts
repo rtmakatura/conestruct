@@ -11,6 +11,8 @@ export const users = pgTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
   name: text("name"),
+  acceptedTermsAt: timestamp("accepted_terms_at", { withTimezone: true }),
+  acceptedTermsVersion: text("accepted_terms_version"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
 import type { ScenarioParams } from "@/lib/compute";
 
@@ -13,10 +14,18 @@ interface Props {
   onSaved: (id: string, name: string) => void;
 }
 
+interface MeResponse {
+  acceptedTerms: boolean;
+  acceptedTermsVersion: string | null;
+  currentTermsVersion: string;
+}
+
 export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
+  const [me, setMe] = useState<MeResponse | null>(null);
+  const [ackChecked, setAckChecked] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,6 +47,22 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
   }, [popoverOpen]);
 
   useEffect(() => {
+    if (!popoverOpen) return;
+    let cancelled = false;
+    fetch("/api/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: MeResponse | null) => {
+        if (cancelled) return;
+        setMe(data);
+        setAckChecked(!!data?.acceptedTerms);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [popoverOpen]);
+
+  useEffect(() => {
     if (status !== "saved" && status !== "error") return;
     const t = setTimeout(() => setStatus("idle"), status === "saved" ? 2500 : 3500);
     return () => clearTimeout(t);
@@ -49,7 +74,12 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
       const res = await fetch("/api/plans", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, data: params }),
+        body: JSON.stringify({
+          name,
+          data: params,
+          acceptedTerms: ackChecked,
+          acceptedTermsVersion: me?.currentTermsVersion ?? null,
+        }),
       });
       if (!res.ok) {
         setStatus("error");
@@ -98,9 +128,13 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
     e.preventDefault();
     const trimmed = nameDraft.trim();
     if (!trimmed) return;
+    if (ackRequired && !ackChecked) return;
     setPopoverOpen(false);
     doCreate(trimmed);
   };
+
+  const ackRequired = me ? !me.acceptedTerms : false;
+  const canSubmit = !!nameDraft.trim() && (!ackRequired || ackChecked);
 
   const label = (() => {
     if (status === "saving") return "Saving…";
@@ -122,7 +156,7 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
       {popoverOpen && (
         <div
           ref={popoverRef}
-          className="absolute right-0 top-full mt-px w-[320px] z-40 border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] p-4 shadow-xl"
+          className="absolute right-0 top-full mt-px w-[340px] z-40 border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] p-4 shadow-xl"
         >
           <form onSubmit={onConfirm}>
             <label className="block font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] mb-2">
@@ -135,6 +169,37 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
               onChange={(e) => setNameDraft(e.target.value)}
               className="w-full bg-[color:var(--canvas)] border border-[color:var(--rule)] px-3 py-2 text-[13px] text-white outline-none focus:border-[color:var(--cyan)]"
             />
+            {ackRequired && (
+              <label className="flex items-start gap-2 mt-3 text-[12px] text-[color:var(--ink-on-dark-faint)] leading-snug cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={ackChecked}
+                  onChange={(e) => setAckChecked(e.target.checked)}
+                  className="mt-0.5 accent-[color:var(--orange)]"
+                />
+                <span>
+                  I understand outputs are engineering reference, not sealed
+                  plans, and require review by a licensed Professional Engineer
+                  before field use. I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    target="_blank"
+                    className="text-[color:var(--cyan)] hover:underline"
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    target="_blank"
+                    className="text-[color:var(--cyan)] hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
+              </label>
+            )}
             <div className="flex justify-end gap-2 mt-3">
               <button
                 type="button"
@@ -145,7 +210,7 @@ export function PlanSaveButton({ params, planId, planName, onSaved }: Props) {
               </button>
               <button
                 type="submit"
-                disabled={!nameDraft.trim()}
+                disabled={!canSubmit}
                 className="px-3 py-1.5 font-sans text-[12px] bg-[color:var(--cyan)] text-[color:var(--canvas)] disabled:opacity-50 hover:bg-white"
               >
                 Save
