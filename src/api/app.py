@@ -25,6 +25,7 @@ import streamlit as st  # noqa: E402
 from src._dotenv import load_dotenv  # noqa: E402
 from src.api.audit import build_audit_trail  # noqa: E402
 from src.export.device_list import export_device_list  # noqa: E402
+from src.export.quote_generator import QuoteBreakdown, generate_quote  # noqa: E402
 from src.generation.layout import (  # noqa: E402
     generate_flagger_alternating_2lane,
     generate_lane_closure_divided,
@@ -114,6 +115,24 @@ def _geocode_address(address: str, token: str) -> tuple[float, float] | None:
         return None
 
 
+with st.sidebar.expander("Quote Settings"):
+    include_quote = st.checkbox("Generate pricing quote", value=False)
+    if include_quote:
+        project_duration = st.number_input(
+            "Project duration (days)", value=1, min_value=1, max_value=365
+        )
+        num_flaggers = st.number_input("Number of flaggers", value=0, min_value=0, max_value=20)
+        delivery_distance = st.number_input(
+            "Delivery distance one-way (miles)", value=20.0, min_value=0.0, step=5.0
+        )
+        permit_fee = st.number_input("Permit fees ($)", value=0.0, min_value=0.0, step=50.0)
+    else:
+        project_duration = 1
+        num_flaggers = 0
+        delivery_distance = 20.0
+        permit_fee = 0.0
+
+
 if site_address and site_lat == 0.0 and site_lng == 0.0 and _mapbox_token:
     resolved = _geocode_address(site_address, _mapbox_token)
     if resolved is not None:
@@ -195,6 +214,23 @@ if generate_button:
         export_device_list(placements, params, output_path=xlsx_path)
         generate_crew_narrative(placements, params, output_path=md_path)
 
+        quote_bytes: bytes | None = None
+        quote_breakdown: QuoteBreakdown | None = None
+        if include_quote:
+            quote_path = os.path.join(tmpdir, "quote.xlsx")
+            _, quote_breakdown = generate_quote(
+                placements,
+                params,
+                output_path=quote_path,
+                project_name=project_name or "Untitled Project",
+                project_duration_days=int(project_duration),
+                num_flaggers=int(num_flaggers),
+                delivery_distance_miles=float(delivery_distance),
+                permit_fee=float(permit_fee),
+            )
+            with open(quote_path, "rb") as f:
+                quote_bytes = f.read()
+
         with open(pdf_path, "rb") as f:
             pdf_bytes = f.read()
         with open(xlsx_path, "rb") as f:
@@ -205,7 +241,10 @@ if generate_button:
 
         unique_type_count = len({p.device_type for p in placements})
 
-        col1, col2, col3 = st.columns(3)
+        if include_quote and quote_bytes is not None and quote_breakdown is not None:
+            col1, col2, col3, col4 = st.columns(4)
+        else:
+            col1, col2, col3 = st.columns(3)
 
         with col1:
             st.subheader("Plan Sheet")
@@ -238,6 +277,113 @@ if generate_button:
                 mime="text/markdown",
                 use_container_width=True,
             )
+
+        if include_quote and quote_bytes is not None and quote_breakdown is not None:
+            with col4:
+                st.subheader("Quote")
+                st.download_button(
+                    "Download Quote",
+                    data=quote_bytes,
+                    file_name="quote.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True,
+                )
+                st.metric("Total Estimate", f"${quote_breakdown.total:,.0f}")
+
+        if include_quote and quote_breakdown is not None:
+            st.divider()
+            st.subheader("Quote Breakdown")
+            st.caption(
+                "Click any category to drill into the line items that make up "
+                "the cost. The downloaded workbook holds the same numbers."
+            )
+
+            qb = quote_breakdown
+            with st.expander(f"Equipment Rental — ${qb.equipment_total:,.2f}"):
+                if qb.equipment_lines:
+                    eq_df = pd.DataFrame(
+                        {
+                            "Item": [line.item_number for line in qb.equipment_lines],
+                            "Device Type": [line.device_type for line in qb.equipment_lines],
+                            "Label": [line.label for line in qb.equipment_lines],
+                            "Description": [line.description for line in qb.equipment_lines],
+                            "Qty": [line.qty for line in qb.equipment_lines],
+                            "Unit": [line.unit for line in qb.equipment_lines],
+                            "Daily Rate": [
+                                f"${line.daily_rate:,.2f}" for line in qb.equipment_lines
+                            ],
+                            "Days": [line.days for line in qb.equipment_lines],
+                            "Extended": [f"${line.extended:,.2f}" for line in qb.equipment_lines],
+                            "Notes": [line.note for line in qb.equipment_lines],
+                        }
+                    )
+                    st.dataframe(eq_df, use_container_width=True, hide_index=True)
+                else:
+                    st.write("No equipment placed.")
+
+            with st.expander(f"Labor — ${qb.labor_total:,.2f}"):
+                lab_df = pd.DataFrame(
+                    {
+                        "Role": [line.role for line in qb.labor_lines],
+                        "Personnel": [line.personnel for line in qb.labor_lines],
+                        "Hours/Day": [line.hours_per_day for line in qb.labor_lines],
+                        "Days": [line.days for line in qb.labor_lines],
+                        "Rate ($/hr)": [f"${line.rate:,.2f}" for line in qb.labor_lines],
+                        "Extended": [f"${line.extended:,.2f}" for line in qb.labor_lines],
+                    }
+                )
+                st.dataframe(lab_df, use_container_width=True, hide_index=True)
+                if qb.is_night:
+                    st.caption(
+                        f"Night differential applied: all labor lines × "
+                        f"{qb.night_multiplier:.1f}x."
+                    )
+                st.caption(
+                    "Standard shift: 10 hours including mobilization. "
+                    "Overtime billed at 1.5x after 8 hours per Colorado labor law."
+                )
+
+            with st.expander(f"Delivery & Logistics — ${qb.delivery_total:,.2f}"):
+                del_df = pd.DataFrame(
+                    {
+                        "Item": [line.item for line in qb.delivery_lines],
+                        "Trips": [line.trips for line in qb.delivery_lines],
+                        "Distance (mi)": [line.distance_miles for line in qb.delivery_lines],
+                        "Rate ($/mi)": [
+                            f"${line.rate_per_mile:,.2f}" for line in qb.delivery_lines
+                        ],
+                        "Min Charge": [
+                            f"${line.min_trip_charge:,.2f}" for line in qb.delivery_lines
+                        ],
+                        "Extended": [f"${line.extended:,.2f}" for line in qb.delivery_lines],
+                    }
+                )
+                st.dataframe(del_df, use_container_width=True, hide_index=True)
+
+            with st.expander(f"Permits & Admin — ${qb.permit_fee:,.2f}"):
+                if qb.permit_fee > 0:
+                    st.write(f"Permit fee: **${qb.permit_fee:,.2f}**")
+                else:
+                    st.write("No permit fee entered.")
+
+            with st.expander(
+                f"Markup — ${qb.overhead + qb.profit:,.2f} "
+                f"(overhead {qb.overhead_pct * 100:.0f}%, profit {qb.profit_pct * 100:.0f}%)"
+            ):
+                markup_df = pd.DataFrame(
+                    [
+                        ("Subtotal (pre-markup)", f"${qb.subtotal:,.2f}"),
+                        (f"Overhead ({qb.overhead_pct * 100:.0f}%)", f"${qb.overhead:,.2f}"),
+                        (f"Profit ({qb.profit_pct * 100:.0f}%)", f"${qb.profit:,.2f}"),
+                        ("TOTAL ESTIMATE", f"${qb.total:,.2f}"),
+                    ],
+                    columns=["", "Amount"],
+                )
+                st.dataframe(markup_df, use_container_width=True, hide_index=True)
+                st.caption(
+                    "Profit is calculated on subtotal + overhead, the standard "
+                    "Colorado vendor convention."
+                )
 
         audit = build_audit_trail(placements, params)
 
