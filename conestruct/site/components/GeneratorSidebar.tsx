@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import {
   carryMeta,
   defaultFor,
@@ -156,6 +157,12 @@ function ScenarioPicker({
   );
 }
 
+type GeocodeStatus =
+  | { state: "idle" }
+  | { state: "resolving" }
+  | { state: "resolved"; lat: number; lng: number }
+  | { state: "error"; message: string };
+
 function LocationGroup({
   meta,
   setMeta,
@@ -165,6 +172,64 @@ function LocationGroup({
 }) {
   const set = <K extends keyof ScenarioMeta>(key: K, value: ScenarioMeta[K]) =>
     setMeta({ ...meta, [key]: value });
+
+  const [geo, setGeo] = useState<GeocodeStatus>({ state: "idle" });
+  // Latest meta in a ref so the resolver can spread current state instead of
+  // the stale closure value from when the effect was scheduled.
+  const metaRef = useRef(meta);
+  metaRef.current = meta;
+
+  useEffect(() => {
+    // Auto-geocode when address has content but lat/lng haven't been set
+    // manually. Mirrors the Streamlit Mapbox flow.
+    const address = meta.address.trim();
+    if (!address || meta.lat || meta.lng) {
+      setGeo((prev) => (prev.state === "idle" ? prev : { state: "idle" }));
+      return;
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setGeo({ state: "resolving" });
+      try {
+        const r = await fetch("/api/geocode", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ address }),
+          signal: controller.signal,
+        });
+        if (!r.ok) {
+          if (r.status === 503) {
+            setGeo({ state: "error", message: "Geocoding not configured" });
+          } else if (r.status === 404) {
+            setGeo({ state: "error", message: "No match for that address" });
+          } else {
+            setGeo({ state: "error", message: `Geocoding failed (${r.status})` });
+          }
+          return;
+        }
+        const { lat, lng } = (await r.json()) as { lat: number; lng: number };
+        // Re-check the latest meta — user may have typed a lat/lng manually
+        // while the request was in flight; don't clobber that.
+        const cur = metaRef.current;
+        if (cur.lat || cur.lng) {
+          setGeo({ state: "idle" });
+          return;
+        }
+        setMeta({ ...cur, lat, lng });
+        setGeo({ state: "resolved", lat, lng });
+      } catch (err) {
+        if ((err as Error).name === "AbortError") return;
+        setGeo({ state: "error", message: (err as Error).message });
+      }
+    }, 600);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+    // setMeta is stable (passed from parent useState), so omitting it from
+    // deps is safe and avoids re-firing when callers create new closures.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meta.address, meta.lat, meta.lng]);
 
   return (
     <FieldGroup label="Location" ix="· OPT">
@@ -177,6 +242,19 @@ function LocationGroup({
           placeholder="US-85 & Bromley Ln, Brighton, CO"
           onChange={(e) => set("address", e.target.value)}
         />
+        {geo.state !== "idle" && (
+          <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+            {geo.state === "resolving" && (
+              <span>Resolving address…</span>
+            )}
+            {geo.state === "resolved" && (
+              <span className="text-[color:var(--cyan)]">
+                Resolved: {geo.lat.toFixed(6)}, {geo.lng.toFixed(6)}
+              </span>
+            )}
+            {geo.state === "error" && <span>{geo.message}</span>}
+          </div>
+        )}
       </Field>
 
       <div className="grid grid-cols-2 gap-2.5 mb-3.5">
