@@ -196,6 +196,7 @@ def _format_distance(distance_ft: float) -> str:
 def build_narrative_context(
     placements: list[DevicePlacement],
     params: ScenarioParams,
+    site_adjustments: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -310,6 +311,7 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        "site_adjustments": site_adjustments or [],
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }
 
@@ -380,6 +382,7 @@ def generate_crew_narrative(
     params: ScenarioParams,
     output_path: str = "crew_narrative.md",
     use_llm: bool = False,
+    site_adjustments: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -393,7 +396,7 @@ def generate_crew_narrative(
     Returns:
         The output path that was written.
     """
-    context = build_narrative_context(placements, params)
+    context = build_narrative_context(placements, params, site_adjustments=site_adjustments)
     markdown = _render_template(context)
     if use_llm:
         markdown = _refine_with_llm(markdown)

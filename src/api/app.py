@@ -33,6 +33,8 @@ from src.generation.layout import (  # noqa: E402
 )
 from src.narrative.crew_narrative import generate_crew_narrative  # noqa: E402
 from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
+from src.rules.site_adjustments import apply_site_adjustments  # noqa: E402
+from src.rules.site_detection import detect_site_conditions  # noqa: E402
 from src.rules.validators import ScenarioParams, validate_layout  # noqa: E402
 
 load_dotenv()
@@ -141,6 +143,87 @@ if site_address and site_lat == 0.0 and site_lng == 0.0 and _mapbox_token:
     else:
         st.sidebar.caption("Could not resolve address — leaving coordinates at 0.")
 
+# Adjustment-flag → human label. Keys match apply_site_adjustments() flags so
+# the checkbox dict can be passed straight through to the rules layer.
+_SITE_CONDITION_LABELS: dict[str, str] = {
+    "limited_sight_distance": "Limited sight distance (curve, hill crest)",
+    "adjacent_intersection": "Intersection within or adjacent to work zone",
+    "driveways_present": "Driveways present within work zone",
+    "pedestrian_facility": "Pedestrian sidewalks present",
+    "bicycle_facility": "Bike lane / cycleway present",
+    "school_zone": "School within proximity",
+}
+
+# Map detection categories from site_detection.detect_site_conditions() into
+# the adjustment-flag keys above. Categories with no rule-engine action
+# (railroad_crossings, hospitals) are surfaced in the audit expander but do
+# not auto-check anything. limited_sight_distance and driveways_present have
+# no detection counterpart yet — they remain manual-only.
+_DETECTION_TO_FLAG: dict[str, str] = {
+    "intersections": "adjacent_intersection",
+    "sidewalks": "pedestrian_facility",
+    "bike_facilities": "bicycle_facility",
+    "schools": "school_zone",
+}
+
+with st.sidebar.expander("Site Conditions"):
+    detection_radius_m = st.number_input(
+        "Scan radius (m)", value=500, min_value=100, max_value=2000, step=100
+    )
+    has_coords = bool(site_lat) and bool(site_lng)
+    detect_clicked = st.button(
+        "Detect Site Conditions",
+        disabled=not has_coords,
+        help="Requires latitude and longitude. Queries OpenStreetMap (Overpass API).",
+        use_container_width=True,
+    )
+    if detect_clicked:
+        with st.spinner("Scanning area via OpenStreetMap…"):
+            result = detect_site_conditions(site_lat, site_lng, radius_m=float(detection_radius_m))
+        st.session_state["site_detection"] = {
+            "lat": site_lat,
+            "lng": site_lng,
+            "radius_m": float(detection_radius_m),
+            "result": result,
+        }
+        # Seed checkbox state so detection results pre-fill the manual flags.
+        # Without this, Streamlit's widget state (keyed) wins over the value=
+        # arg on the next rerun, and prefill is silently ignored.
+        if "error" not in result:
+            for det_key, flag_key in _DETECTION_TO_FLAG.items():
+                st.session_state[f"site_cond_{flag_key}"] = bool(
+                    result.get(det_key, {}).get("detected")
+                )
+
+    detection = st.session_state.get("site_detection")
+    if detection and "result" in detection:
+        result = detection["result"]
+        if "error" in result:
+            st.warning(f"Detection failed: {result['error']}. Using manual input only.")
+        else:
+            st.caption("Auto-detected from OpenStreetMap:")
+            any_detected = False
+            for det_key, flag_key in _DETECTION_TO_FLAG.items():
+                bucket = result.get(det_key, {})
+                if bucket.get("detected"):
+                    any_detected = True
+                    label = _SITE_CONDITION_LABELS.get(flag_key, flag_key)
+                    nearest = bucket.get("nearest_distance_m")
+                    nearest_txt = f", nearest ~{nearest:.0f} m" if nearest else ""
+                    sample = bucket["details"][0] if bucket.get("details") else "unnamed"
+                    st.write(f"✅ **{label}** — {bucket['count']} found{nearest_txt} ({sample})")
+            if not any_detected:
+                st.write("No flagged features detected within scan radius.")
+            st.caption("Manual overrides:")
+
+    site_conditions: dict[str, bool] = {}
+    detection_result = (detection or {}).get("result") or {}
+    flag_to_detection = {flag: det for det, flag in _DETECTION_TO_FLAG.items()}
+    for flag_key, label in _SITE_CONDITION_LABELS.items():
+        det_key = flag_to_detection.get(flag_key)
+        prefill = bool(det_key and detection_result.get(det_key, {}).get("detected"))
+        site_conditions[flag_key] = st.checkbox(label, value=prefill, key=f"site_cond_{flag_key}")
+
 generate_button = st.sidebar.button(
     "Generate MHT Package", type="primary", use_container_width=True
 )
@@ -186,6 +269,7 @@ if generate_button:
             placements = generate_lane_closure_divided(params)
         else:
             placements = generate_shoulder_closure_divided(params)
+        placements, site_adj = apply_site_adjustments(placements, params, site_conditions)
         violations = validate_layout(placements, params)
         errors = [v for v in violations if v.severity == "error"]
         warnings = [v for v in violations if v.severity == "warning"]
@@ -212,7 +296,7 @@ if generate_button:
             site_address=site_address,
         )
         export_device_list(placements, params, output_path=xlsx_path)
-        generate_crew_narrative(placements, params, output_path=md_path)
+        generate_crew_narrative(placements, params, output_path=md_path, site_adjustments=site_adj)
 
         quote_bytes: bytes | None = None
         quote_breakdown: QuoteBreakdown | None = None
@@ -461,6 +545,46 @@ if generate_button:
             st.write(cs["narrative"])
             st.write(f"Download the official CDOT S-630-1 PDF to compare: [link]({cs['url']})")
             st.write(cs["narrative_2"])
+
+        if site_adj:
+            adj_total = sum(a.get("devices_added", 0) for a in site_adj)
+            with st.expander(f"Site Adjustments ({adj_total} devices added)"):
+                for adj in site_adj:
+                    st.write(f"**{adj['flag']}** — {adj['action']}")
+                    st.caption(adj["rule"])
+
+        detection_state = st.session_state.get("site_detection")
+        if detection_state and "result" in detection_state:
+            det_result = detection_state["result"]
+            detected_keys = [
+                k for k, v in det_result.items() if isinstance(v, dict) and v.get("detected")
+            ]
+            with st.expander(f"Site Condition Detection ({len(detected_keys)} flagged)"):
+                st.write(
+                    f"**Scanned:** lat {detection_state['lat']:.6f}, "
+                    f"lng {detection_state['lng']:.6f}, "
+                    f"radius {detection_state['radius_m']:.0f} m"
+                )
+                if "error" in det_result:
+                    st.write(f"❌ Detection failed: {det_result['error']}")
+                elif not detected_keys:
+                    st.write("No flagged features within scan radius.")
+                else:
+                    for key in detected_keys:
+                        bucket = det_result[key]
+                        label = _SITE_CONDITION_LABELS.get(key, key)
+                        nearest = bucket.get("nearest_distance_m")
+                        nearest_txt = f" (nearest ~{nearest:.0f} m)" if nearest else ""
+                        st.write(
+                            f"✅ **{label}** — {bucket.get('count', 0)} feature(s)" f"{nearest_txt}"
+                        )
+                        for detail in bucket.get("details", [])[:3]:
+                            st.write(f"  - {detail}")
+                st.write("**Source:** OpenStreetMap via Overpass API")
+                st.caption(
+                    "Auto-detection is approximate. OSM coverage varies by area; "
+                    "verify site conditions with field inspection before field use."
+                )
 
         st.divider()
         st.subheader("Plan Details")
