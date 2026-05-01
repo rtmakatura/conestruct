@@ -11,6 +11,11 @@ import {
 import { Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
 import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
+import { LaneClosureForm } from "./LaneClosureForm";
+import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
+import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
+import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
+import { SiteConditionsField } from "./SiteConditionsField";
 
 interface Props {
   scenario: Scenario;
@@ -53,8 +58,28 @@ export function GeneratorSidebar({
       {scenario.kind === "flagger_lane_closure" && (
         <FlaggerForm scenario={scenario} setScenario={setScenario} />
       )}
+      {scenario.kind === "lane_closure_divided" && (
+        <LaneClosureForm scenario={scenario} setScenario={setScenario} />
+      )}
+      {scenario.kind === "work_beyond_shoulder" && (
+        <WorkBeyondShoulderForm
+          scenario={scenario}
+          setScenario={setScenario}
+        />
+      )}
+      {scenario.kind === "mobile_op_2lane" && (
+        <MobileOp2LaneForm scenario={scenario} setScenario={setScenario} />
+      )}
+      {scenario.kind === "mobile_op_multilane" && (
+        <MobileOpMultilaneForm
+          scenario={scenario}
+          setScenario={setScenario}
+        />
+      )}
 
       <LocationGroup meta={scenario.meta} setMeta={setMeta} />
+
+      <SiteConditionsField meta={scenario.meta} setMeta={setMeta} />
 
       <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
         <button

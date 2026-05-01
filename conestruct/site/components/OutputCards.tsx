@@ -1,20 +1,36 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import type { ScenarioResult } from "@/lib/scenarios";
+import type { Scenario, ScenarioResult } from "@/lib/scenarios";
+
+type RenderKind = "pdf" | "xlsx" | "markdown";
+
+interface PublicMode {
+  kind: "public";
+  scenario: Scenario;
+}
+interface SavedMode {
+  kind: "saved";
+  planId: string | null;
+}
+type Mode = PublicMode | SavedMode;
 
 interface Props {
   results: ScenarioResult;
   generated: boolean;
+  mode: Mode;
 }
 
 const SIGNUP_HREF = "/app";
 
-export function OutputCards({ results, generated }: Props) {
+export function OutputCards({ results, generated, mode }: Props) {
   if (!generated) {
     return (
       <div className="empty-state">
         <span className="big">No package yet</span>
         Describe the work zone <span className="arrow">→</span> press generate
-        <span className="arrow">→</span> sign up to download
+        <span className="arrow">→</span> download the package
       </div>
     );
   }
@@ -27,7 +43,8 @@ export function OutputCards({ results, generated }: Props) {
         meta={`PDF · 11×17 · ${results.ta} · ${results.cdotSheet}`}
         statLbl="Devices"
         statVal={results.totalDevices}
-        ctaLabel="Sign up to download PDF"
+        kind="pdf"
+        mode={mode}
       />
       <OutputCard
         ix="B"
@@ -36,7 +53,8 @@ export function OutputCards({ results, generated }: Props) {
         meta="XLSX · CDOT BID-READY"
         statLbl="Unique types"
         statVal={results.uniqueTypes}
-        ctaLabel="Sign up to download XLSX"
+        kind="xlsx"
+        mode={mode}
       />
       <OutputCard
         ix="C"
@@ -45,7 +63,8 @@ export function OutputCards({ results, generated }: Props) {
         meta="MARKDOWN · SETUP + TAKEDOWN"
         statLbl="Steps"
         statVal={results.steps}
-        ctaLabel="Sign up to download .md"
+        kind="markdown"
+        mode={mode}
       />
     </div>
   );
@@ -58,10 +77,82 @@ interface CardProps {
   meta: string;
   statLbl: string;
   statVal: number;
-  ctaLabel: string;
+  kind: RenderKind;
+  mode: Mode;
 }
 
-function OutputCard({ ix, n, title, meta, statLbl, statVal, ctaLabel }: CardProps) {
+const LABELS: Record<RenderKind, string> = {
+  pdf: "Download PDF",
+  xlsx: "Download XLSX",
+  markdown: "Download .md",
+};
+
+const SIGNUP_LABELS: Record<RenderKind, string> = {
+  pdf: "Sign up to download PDF",
+  xlsx: "Sign up to download XLSX",
+  markdown: "Sign up to download .md",
+};
+
+const EXT: Record<RenderKind, string> = {
+  pdf: "pdf",
+  xlsx: "xlsx",
+  markdown: "md",
+};
+
+function safeFilename(name: string | undefined, ext: string): string {
+  const cleaned = (name ?? "")
+    .trim()
+    .replace(/[^a-zA-Z0-9 _-]+/g, "_")
+    .replace(/\s+/g, "_");
+  return `${cleaned || "plan"}.${ext}`;
+}
+
+function OutputCard({
+  ix,
+  n,
+  title,
+  meta,
+  statLbl,
+  statVal,
+  kind,
+  mode,
+}: CardProps) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const ctaLabel =
+    mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[kind] : LABELS[kind];
+
+  const onPublicDownload = async () => {
+    if (mode.kind !== "public") return;
+    setBusy(true);
+    setErr(null);
+    try {
+      const res = await fetch(`/api/render/${kind}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scenario: mode.scenario }),
+      });
+      if (!res.ok) {
+        setErr(`Render failed (${res.status})`);
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = safeFilename(mode.scenario.meta?.project, EXT[kind]);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setErr("Network error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="output-card">
       <span className="corner tl" />
@@ -83,13 +174,34 @@ function OutputCard({ ix, n, title, meta, statLbl, statVal, ctaLabel }: CardProp
           {statVal}
         </span>
       </div>
-      <Link
-        href={SIGNUP_HREF}
-        className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
-      >
-        {ctaLabel}
-        <span className="font-mono">↓</span>
-      </Link>
+      {mode.kind === "public" ? (
+        <button
+          type="button"
+          onClick={onPublicDownload}
+          disabled={busy}
+          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors disabled:opacity-60"
+        >
+          {busy ? "Rendering…" : err ?? ctaLabel}
+          <span className="font-mono">↓</span>
+        </button>
+      ) : mode.planId ? (
+        <a
+          href={`/api/plans/${mode.planId}/${kind}`}
+          download
+          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
+        >
+          {ctaLabel}
+          <span className="font-mono">↓</span>
+        </a>
+      ) : (
+        <Link
+          href={SIGNUP_HREF}
+          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
+        >
+          {ctaLabel}
+          <span className="font-mono">↓</span>
+        </Link>
+      )}
     </div>
   );
 }

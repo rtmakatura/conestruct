@@ -11,6 +11,7 @@ import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { StatusBar, type Status } from "./StatusBar";
 import { OutputCards } from "./OutputCards";
+import { QuotePanel } from "./QuotePanel";
 import { AuditTrail } from "./AuditTrail";
 import { DeviceBreakdown } from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
@@ -109,7 +110,24 @@ export function GeneratorShell({
           </div>
 
           <StatusBar status={status} />
-          <OutputCards results={results} generated={generated} />
+          <OutputCards
+            results={results}
+            generated={generated}
+            mode={
+              mode === "sandbox"
+                ? { kind: "public", scenario }
+                : { kind: "saved", planId }
+            }
+          />
+          {generated && (
+            <QuotePanel
+              mode={
+                mode === "sandbox"
+                  ? { kind: "public", scenario }
+                  : { kind: "saved", planId }
+              }
+            />
+          )}
           <AuditTrail
             scenario={scenario}
             results={results}

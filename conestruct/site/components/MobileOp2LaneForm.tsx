@@ -1,39 +1,32 @@
 "use client";
 
 import {
-  FLAGGER_WORK_TYPES,
-  type Duration,
-  type FlaggerLaneClosureScenario,
-  type FlaggerRoadType,
-  type FlaggerWorkType,
+  MOBILE_WORK_TYPES,
+  type MobileOp2LaneScenario,
+  type MobileRoadType2Lane,
+  type MobileWorkType,
 } from "@/lib/scenarios";
 import {
-  ChipRow,
   CheckRow,
   Field,
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
 
-const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
+const ROAD_TYPES: Array<{ v: MobileRoadType2Lane; l: string }> = [
   { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
   { v: "urban_arterial", l: "Urban arterial" },
 ];
 
-const DURATIONS: Array<{ v: Duration; l: string }> = [
-  { v: "short", l: "Short (<1h)" },
-  { v: "long", l: "Long-term" },
-];
-
 interface Props {
-  scenario: FlaggerLaneClosureScenario;
-  setScenario: (next: FlaggerLaneClosureScenario) => void;
+  scenario: MobileOp2LaneScenario;
+  setScenario: (next: MobileOp2LaneScenario) => void;
 }
 
-export function FlaggerForm({ scenario, setScenario }: Props) {
-  const set = <K extends keyof FlaggerLaneClosureScenario>(
+export function MobileOp2LaneForm({ scenario, setScenario }: Props) {
+  const set = <K extends keyof MobileOp2LaneScenario>(
     key: K,
-    value: FlaggerLaneClosureScenario[K],
+    value: MobileOp2LaneScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
 
   return (
@@ -45,7 +38,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
-              set("roadType", e.target.value as FlaggerRoadType)
+              set("roadType", e.target.value as MobileRoadType2Lane)
             }
           >
             {ROAD_TYPES.map((r) => (
@@ -55,7 +48,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-10 applies to 2-lane 2-way roadways only
+            TA-35 — slow-moving op, no static taper
           </div>
         </Field>
 
@@ -70,9 +63,6 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             onChange={(e) => set("speed", +e.target.value)}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
-            MUTCD: ≥45 mph uses L=W·S
-          </div>
         </Field>
 
         <Field>
@@ -89,17 +79,17 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" ix="B">
+      <FieldGroup label="Operation" ix="B">
         <Field>
           <LabelRow>Work type</LabelRow>
           <select
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
-              set("workType", e.target.value as FlaggerWorkType)
+              set("workType", e.target.value as MobileWorkType)
             }
           >
-            {FLAGGER_WORK_TYPES.map((w) => (
+            {MOBILE_WORK_TYPES.map((w) => (
               <option key={w.v} value={w.v}>
                 {w.l}
               </option>
@@ -108,27 +98,16 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow>Duration</LabelRow>
-          <ChipRow
-            options={DURATIONS}
-            value={scenario.duration}
-            onChange={(v) => set("duration", v)}
-          />
-        </Field>
-
-        <Field>
-          <LabelRow>Work zone length (ft)</LabelRow>
+          <LabelRow>Shadow trailing distance (ft)</LabelRow>
           <input
             type="number"
             className="field-input"
             value={scenario.workLen}
             onChange={(e) => set("workLen", +e.target.value || 0)}
           />
-          {scenario.workLen > 1500 && !scenario.pilotCar && (
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5">
-              ⚠ &gt;1500 ft — MUTCD § 6E recommends pilot car
-            </div>
-          )}
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+            Typical: 100–300 ft behind work truck
+          </div>
         </Field>
 
         <CheckRow
@@ -139,24 +118,14 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Flagger" ix="C">
+      <FieldGroup label="Protection" ix="C">
         <CheckRow
-          on={scenario.afad}
-          label="Use AFAD"
-          desc="Automated paddle"
-          onToggle={() => set("afad", !scenario.afad)}
-        />
-        <CheckRow
-          on={scenario.pilotCar}
-          label="Pilot car"
-          desc="Convoy lead vehicle"
-          onToggle={() => set("pilotCar", !scenario.pilotCar)}
-        />
-        <CheckRow
-          on={scenario.pedestrianAccess}
-          label="Pedestrian detour"
-          desc="ADA route required"
-          onToggle={() => set("pedestrianAccess", !scenario.pedestrianAccess)}
+          on={scenario.arrowBoardOnShadow}
+          label="Arrow board on shadow"
+          desc="Caution mode (4-corner flash)"
+          onToggle={() =>
+            set("arrowBoardOnShadow", !scenario.arrowBoardOnShadow)
+          }
         />
       </FieldGroup>
     </>

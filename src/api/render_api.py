@@ -1,0 +1,348 @@
+"""FastAPI service that renders MHT plan packages from a Scenario JSON.
+
+Three endpoints, one body shape, three file types out:
+
+  POST /render/pdf       -> application/pdf
+  POST /render/xlsx      -> application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+  POST /render/markdown  -> text/markdown
+
+Each endpoint runs the same pipeline:
+    scenario_to_call -> generator -> renderer -> bytes.
+
+Auth: ``Authorization: Bearer ${RENDER_API_SECRET}`` header.  The secret
+is shared between this service (deployed on Modal) and the Next.js API
+routes that proxy to it.
+"""
+
+from __future__ import annotations
+
+import os
+import tempfile
+from collections.abc import Awaitable, Callable
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse, Response
+from pydantic import BaseModel, Field
+
+from src.api.schemas import (
+    LaneClosureDividedScenario,
+    MobileOp2LaneScenario,
+    MobileOpMultilaneScenario,
+    Scenario,
+    ShoulderScenario,
+    WorkBeyondShoulderScenario,
+    scenario_to_call,
+)
+from src.export.device_list import export_device_list
+from src.export.quote_generator import generate_quote
+from src.narrative.crew_narrative import generate_crew_narrative
+from src.rendering.plan_sheet import render_plan_sheet
+from src.rules.site_adjustments import apply_site_adjustments
+from src.rules.site_detection import detect_site_conditions
+
+ENV_SECRET_VAR = "RENDER_API_SECRET"
+
+app = FastAPI(title="Conestruct render service", version="0.1.0")
+
+
+@app.middleware("http")
+async def require_bearer_secret(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
+    """Reject any request without a matching Bearer token.
+
+    The /healthz path is exempt so Modal can probe the container.
+    """
+    if request.url.path == "/healthz":
+        return await call_next(request)
+
+    expected = os.environ.get(ENV_SECRET_VAR)
+    if not expected:
+        # Fail closed: never run an unauthenticated render service.
+        return Response(
+            content="render service is not configured",
+            status_code=503,
+        )
+    header = request.headers.get("authorization", "")
+    if not header.startswith("Bearer ") or header[len("Bearer ") :] != expected:
+        return Response(content="unauthorized", status_code=401)
+    return await call_next(request)
+
+
+@app.get("/healthz")
+def healthz() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+def _shoulder_width_for(scenario: Scenario) -> float:
+    if isinstance(scenario, ShoulderScenario):
+        return 10.0 if scenario.divided else 8.0
+    if isinstance(scenario, LaneClosureDividedScenario):
+        return 10.0
+    if isinstance(scenario, MobileOpMultilaneScenario):
+        return 10.0
+    if isinstance(scenario, WorkBeyondShoulderScenario):
+        return 10.0 if scenario.roadType in ("rural_divided", "freeway") else 8.0
+    if isinstance(scenario, MobileOp2LaneScenario):
+        return 8.0
+    return 8.0
+
+
+def _safe_filename(scenario: Scenario, ext: str) -> str:
+    base = (scenario.meta.project or "plan").strip()
+    cleaned = "".join(c if c.isalnum() or c in (" ", "-", "_") else "_" for c in base)
+    cleaned = cleaned.strip().replace(" ", "_") or "plan"
+    return f"{cleaned}.{ext}"
+
+
+def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict]]:
+    """Run the generator and apply site-condition adjustments.
+
+    Returns ``(placements, params, adjustment_records)``.  Adjustment
+    records describe each flag that fired and the MUTCD section behind
+    it; the markdown narrative consumes them, the other render paths
+    discard them but still benefit from the modified placements.
+    """
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    placements, records = apply_site_adjustments(
+        placements, params, scenario.meta.siteConditions or {}
+    )
+    return placements, params, records
+
+
+def _render_with(
+    scenario: Scenario,
+    suffix: str,
+    write: Callable[[Path, list, object, list[dict]], Path],
+) -> bytes:
+    """Run scenario_to_call, invoke ``write``, return the file bytes.
+
+    ``write(path, placements, params, adjustments)`` writes the artifact
+    at ``path`` and returns the same path.  Cleanup happens regardless
+    of outcome.
+    """
+    placements, params, adjustments = _placements_for(scenario)
+
+    fd, raw_path = tempfile.mkstemp(suffix=suffix)
+    os.close(fd)
+    path = Path(raw_path)
+    try:
+        write(path, placements, params, adjustments)
+        return path.read_bytes()
+    finally:
+        path.unlink(missing_ok=True)
+
+
+@app.post("/render/pdf")
+def render_pdf(scenario: Scenario) -> Response:
+    """Render the MHT plan-sheet PDF for a scenario."""
+    try:
+        shoulder_width = _shoulder_width_for(scenario)
+        body = _render_with(
+            scenario,
+            ".pdf",
+            lambda path, placements, params, _adj: Path(
+                render_plan_sheet(
+                    placements,
+                    params,
+                    output_path=str(path),
+                    project_name=scenario.meta.project,
+                    site_lat=scenario.meta.lat or None,
+                    site_lng=scenario.meta.lng or None,
+                    site_address=scenario.meta.address,
+                    shoulder_width_ft=shoulder_width,
+                )
+            ),
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "pdf")}"'
+        },
+    )
+
+
+@app.post("/render/xlsx")
+def render_xlsx(scenario: Scenario) -> Response:
+    try:
+        body = _render_with(
+            scenario,
+            ".xlsx",
+            lambda path, placements, params, _adj: Path(
+                export_device_list(placements, params, output_path=str(path))
+            ),
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "xlsx")}"'
+        },
+    )
+
+
+@app.post("/render/markdown")
+def render_markdown(scenario: Scenario) -> Response:
+    try:
+        body = _render_with(
+            scenario,
+            ".md",
+            lambda path, placements, params, adj: Path(
+                generate_crew_narrative(
+                    placements,
+                    params,
+                    output_path=str(path),
+                    site_adjustments=adj,
+                )
+            ),
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="text/markdown; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "md")}"'},
+    )
+
+
+class DetectSiteRequest(BaseModel):
+    lat: float = Field(ge=-90.0, le=90.0)
+    lng: float = Field(ge=-180.0, le=180.0)
+    radius_m: float = Field(default=500.0, ge=50.0, le=2000.0)
+
+
+@app.post("/render/detect-site")
+def render_detect_site(req: DetectSiteRequest) -> JSONResponse:
+    """Query OpenStreetMap for site conditions near (lat, lng).
+
+    Returns the bucketed dict from ``detect_site_conditions``. On any
+    upstream failure the returned dict carries an ``error`` key and all
+    buckets are empty — the UI must still work without auto-detection.
+    """
+    result = detect_site_conditions(req.lat, req.lng, radius_m=req.radius_m)
+    return JSONResponse(result)
+
+
+class QuoteSettings(BaseModel):
+    project_duration_days: int = Field(default=1, ge=1, le=365)
+    num_flaggers: int = Field(default=0, ge=0, le=20)
+    delivery_distance_miles: float = Field(default=20.0, ge=0.0, le=500.0)
+    permit_fee: float = Field(default=0.0, ge=0.0, le=100_000.0)
+
+
+class QuoteRequest(BaseModel):
+    scenario: Scenario
+    settings: QuoteSettings = Field(default_factory=QuoteSettings)
+
+
+def _run_quote(req: QuoteRequest):
+    placements, params, _adjustments = _placements_for(req.scenario)
+
+    fd, raw_path = tempfile.mkstemp(suffix=".xlsx")
+    os.close(fd)
+    path = Path(raw_path)
+    try:
+        _, breakdown = generate_quote(
+            placements,
+            params,
+            output_path=str(path),
+            project_name=req.scenario.meta.project or "Untitled Project",
+            project_duration_days=req.settings.project_duration_days,
+            num_flaggers=req.settings.num_flaggers,
+            delivery_distance_miles=req.settings.delivery_distance_miles,
+            permit_fee=req.settings.permit_fee,
+        )
+        return path.read_bytes(), breakdown
+    finally:
+        path.unlink(missing_ok=True)
+
+
+@app.post("/render/quote")
+def render_quote(req: QuoteRequest) -> Response:
+    try:
+        body, _ = _run_quote(req)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{_safe_filename(req.scenario, "xlsx")}"'
+            )
+        },
+    )
+
+
+@app.post("/render/quote-breakdown")
+def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
+    try:
+        _, breakdown = _run_quote(req)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return JSONResponse(
+        {
+            "equipment_lines": [
+                {
+                    "item_number": line.item_number,
+                    "device_type": line.device_type,
+                    "label": line.label,
+                    "description": line.description,
+                    "qty": line.qty,
+                    "unit": line.unit,
+                    "daily_rate": line.daily_rate,
+                    "days": line.days,
+                    "extended": line.extended,
+                    "note": line.note,
+                }
+                for line in breakdown.equipment_lines
+            ],
+            "labor_lines": [
+                {
+                    "role": line.role,
+                    "personnel": line.personnel,
+                    "hours_per_day": line.hours_per_day,
+                    "days": line.days,
+                    "rate": line.rate,
+                    "extended": line.extended,
+                }
+                for line in breakdown.labor_lines
+            ],
+            "delivery_lines": [
+                {
+                    "item": line.item,
+                    "trips": line.trips,
+                    "distance_miles": line.distance_miles,
+                    "rate_per_mile": line.rate_per_mile,
+                    "min_trip_charge": line.min_trip_charge,
+                    "extended": line.extended,
+                }
+                for line in breakdown.delivery_lines
+            ],
+            "permit_fee": breakdown.permit_fee,
+            "is_night": breakdown.is_night,
+            "night_multiplier": breakdown.night_multiplier,
+            "overhead_pct": breakdown.overhead_pct,
+            "profit_pct": breakdown.profit_pct,
+            "equipment_total": breakdown.equipment_total,
+            "labor_total": breakdown.labor_total,
+            "delivery_total": breakdown.delivery_total,
+            "subtotal": breakdown.subtotal,
+            "overhead": breakdown.overhead,
+            "profit": breakdown.profit,
+            "total": breakdown.total,
+        }
+    )

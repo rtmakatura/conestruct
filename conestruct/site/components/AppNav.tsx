@@ -6,6 +6,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import type { Scenario } from "@/lib/scenarios";
+import { AUTH_UI_ENABLED } from "@/lib/feature-flags";
 import {
   PlanSaveButton,
   PlanSignInToSaveButton,
@@ -37,7 +38,7 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
             v0.4
           </span>
         </Link>
-        {!isSandbox && (
+        {AUTH_UI_ENABLED && !isSandbox && (
           <SignedIn>
             <Link
               href="/app"
@@ -48,11 +49,11 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
             </Link>
           </SignedIn>
         )}
-        {isSandbox ? (
+        {isSandbox || !AUTH_UI_ENABLED ? (
           <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em]">
-            <span className="text-[color:var(--orange)]">Sandbox</span>
+            <span className="text-[color:var(--orange)]">Demo</span>
             <span className="text-[color:var(--ink-on-dark-faint)]">/</span>
-            <span className="text-[color:var(--ink-on-dark-faint)]">Public demo</span>
+            <span className="text-[color:var(--ink-on-dark-faint)]">MUTCD plan generator</span>
           </span>
         ) : (
           <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
@@ -72,26 +73,30 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
           <span className="w-1.5 h-1.5 bg-[color:var(--green)] inline-block mr-2 animate-pulse" />
           MUTCD 2023 · CDOT
         </span>
-        <SignedOut>
-          <PlanSignInToSaveButton />
-        </SignedOut>
-        <SignedIn>
-          <PlanSaveButton
-            scenario={scenario}
-            planId={planId}
-            planName={planName}
-            onSaved={onSaved}
-          />
-          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
-            <OrganizationSwitcher
-              hidePersonal
-              afterSelectOrganizationUrl="/app"
-            />
-          </div>
-          <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
-            <UserButton />
-          </div>
-        </SignedIn>
+        {AUTH_UI_ENABLED && (
+          <>
+            <SignedOut>
+              <PlanSignInToSaveButton />
+            </SignedOut>
+            <SignedIn>
+              <PlanSaveButton
+                scenario={scenario}
+                planId={planId}
+                planName={planName}
+                onSaved={onSaved}
+              />
+              <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+                <OrganizationSwitcher
+                  hidePersonal
+                  afterSelectOrganizationUrl="/app"
+                />
+              </div>
+              <div className="flex items-center px-3 border-l border-[color:var(--rule)]">
+                <UserButton />
+              </div>
+            </SignedIn>
+          </>
+        )}
       </div>
     </nav>
   );

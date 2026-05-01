@@ -35,7 +35,14 @@ export function isLegacyParams(value: unknown): value is LegacyScenarioParams {
 export function isScenario(value: unknown): value is Scenario {
   if (typeof value !== "object" || value === null) return false;
   const v = value as Record<string, unknown>;
-  return v.kind === "shoulder" || v.kind === "flagger_lane_closure";
+  return (
+    v.kind === "shoulder" ||
+    v.kind === "flagger_lane_closure" ||
+    v.kind === "lane_closure_divided" ||
+    v.kind === "work_beyond_shoulder" ||
+    v.kind === "mobile_op_2lane" ||
+    v.kind === "mobile_op_multilane"
+  );
 }
 
 function metaFromLegacy(p: LegacyScenarioParams): ScenarioMeta {

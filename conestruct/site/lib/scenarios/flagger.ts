@@ -60,10 +60,10 @@ export function computeFlagger(
   // perform the active-warning role.
   const arrowBoards = 0;
 
-  // Flagger stations: AFAD replaces both flaggers; otherwise the user's
-  // flaggerCount stands. Most short, mutual-visibility zones can use 1;
-  // most jobs use 2 (one per direction).
-  const flaggerStations = s.afad ? 0 : s.flaggerCount;
+  // Flagger stations: AFAD replaces both flaggers; otherwise two stations
+  // (one each direction). Single-flagger sight-distance method (§6C.13)
+  // is a v1.1 feature — needs a sight-distance input + PE certification.
+  const flaggerStations = s.afad ? 0 : 2;
   const afadDevices = s.afad ? 2 : 0;
   const pilotCarVehicles = s.pilotCar ? 1 : 0;
 
@@ -211,7 +211,6 @@ export const DEFAULT_FLAGGER: FlaggerLaneClosureScenario = {
   duration: "long",
   workLen: 400,
   night: false,
-  flaggerCount: 2,
   pilotCar: false,
   afad: false,
   pedestrianAccess: false,

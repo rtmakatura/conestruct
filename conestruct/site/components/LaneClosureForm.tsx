@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  FLAGGER_WORK_TYPES,
+  LANE_CLOSURE_WORK_TYPES,
   type Duration,
-  type FlaggerLaneClosureScenario,
-  type FlaggerRoadType,
-  type FlaggerWorkType,
+  type LaneClosureDividedScenario,
+  type LaneClosureRoadType,
+  type LaneClosureWorkType,
 } from "@/lib/scenarios";
 import {
   ChipRow,
@@ -15,9 +15,9 @@ import {
   LabelRow,
 } from "./GeneratorFormPrimitives";
 
-const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
-  { v: "urban_arterial", l: "Urban arterial" },
+const ROAD_TYPES: Array<{ v: LaneClosureRoadType; l: string }> = [
+  { v: "freeway", l: "Freeway / interstate" },
+  { v: "rural_divided", l: "Rural — divided hwy" },
 ];
 
 const DURATIONS: Array<{ v: Duration; l: string }> = [
@@ -26,14 +26,14 @@ const DURATIONS: Array<{ v: Duration; l: string }> = [
 ];
 
 interface Props {
-  scenario: FlaggerLaneClosureScenario;
-  setScenario: (next: FlaggerLaneClosureScenario) => void;
+  scenario: LaneClosureDividedScenario;
+  setScenario: (next: LaneClosureDividedScenario) => void;
 }
 
-export function FlaggerForm({ scenario, setScenario }: Props) {
-  const set = <K extends keyof FlaggerLaneClosureScenario>(
+export function LaneClosureForm({ scenario, setScenario }: Props) {
+  const set = <K extends keyof LaneClosureDividedScenario>(
     key: K,
-    value: FlaggerLaneClosureScenario[K],
+    value: LaneClosureDividedScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
 
   return (
@@ -45,7 +45,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
-              set("roadType", e.target.value as FlaggerRoadType)
+              set("roadType", e.target.value as LaneClosureRoadType)
             }
           >
             {ROAD_TYPES.map((r) => (
@@ -55,7 +55,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-10 applies to 2-lane 2-way roadways only
+            TA-19 — divided highway, right lane closed
           </div>
         </Field>
 
@@ -63,8 +63,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
           <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
           <input
             type="range"
-            min="25"
-            max="55"
+            min="45"
+            max="75"
             step="5"
             value={scenario.speed}
             onChange={(e) => set("speed", +e.target.value)}
@@ -79,7 +79,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
           <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
           <input
             type="range"
-            min="9"
+            min="10"
             max="14"
             step="0.5"
             value={scenario.laneWidth}
@@ -96,10 +96,10 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
-              set("workType", e.target.value as FlaggerWorkType)
+              set("workType", e.target.value as LaneClosureWorkType)
             }
           >
-            {FLAGGER_WORK_TYPES.map((w) => (
+            {LANE_CLOSURE_WORK_TYPES.map((w) => (
               <option key={w.v} value={w.v}>
                 {w.l}
               </option>
@@ -124,11 +124,6 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             value={scenario.workLen}
             onChange={(e) => set("workLen", +e.target.value || 0)}
           />
-          {scenario.workLen > 1500 && !scenario.pilotCar && (
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5">
-              ⚠ &gt;1500 ft — MUTCD § 6E recommends pilot car
-            </div>
-          )}
         </Field>
 
         <CheckRow
@@ -139,25 +134,20 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Flagger" ix="C">
+      <FieldGroup label="Protection" ix="C">
         <CheckRow
-          on={scenario.afad}
-          label="Use AFAD"
-          desc="Automated paddle"
-          onToggle={() => set("afad", !scenario.afad)}
+          on={scenario.truckMountedAttenuator}
+          label="Truck-mounted attenuator"
+          desc="Recommended ≥45 mph"
+          onToggle={() =>
+            set("truckMountedAttenuator", !scenario.truckMountedAttenuator)
+          }
         />
-        <CheckRow
-          on={scenario.pilotCar}
-          label="Pilot car"
-          desc="Convoy lead vehicle"
-          onToggle={() => set("pilotCar", !scenario.pilotCar)}
-        />
-        <CheckRow
-          on={scenario.pedestrianAccess}
-          label="Pedestrian detour"
-          desc="ADA route required"
-          onToggle={() => set("pedestrianAccess", !scenario.pedestrianAccess)}
-        />
+        {scenario.speed >= 45 && !scenario.truckMountedAttenuator && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5 px-1">
+            ⚠ TMA strongly recommended at this speed (CDOT M-630)
+          </div>
+        )}
       </FieldGroup>
     </>
   );

@@ -4,11 +4,63 @@ import { useState, type ReactNode } from "react";
 import type {
   FlaggerLaneClosureScenario,
   FlaggerResult,
+  LaneClosureDividedScenario,
+  LaneClosureResult,
+  MobileOp2LaneResult,
+  MobileOp2LaneScenario,
+  MobileOpMultilaneResult,
+  MobileOpMultilaneScenario,
   Scenario,
   ScenarioResult,
   ShoulderResult,
   ShoulderScenario,
+  SiteConditionFlag,
+  SiteConditions,
+  WorkBeyondShoulderResult,
+  WorkBeyondShoulderScenario,
 } from "@/lib/scenarios";
+
+const SITE_ADJUSTMENT_DETAIL: Record<
+  SiteConditionFlag,
+  { label: string; rule: string; action: string }
+> = {
+  limited_sight_distance: {
+    label: "Limited sight distance",
+    rule: "MUTCD § 6C.04",
+    action:
+      "Advance warning signs moved 50% farther upstream to compensate for restricted sight lines.",
+  },
+  adjacent_intersection: {
+    label: "Intersection within work zone",
+    rule: "MUTCD § 6C.10",
+    action:
+      "Two W20-1 ROAD WORK AHEAD signs added facing cross-street approaches.",
+  },
+  driveways_present: {
+    label: "Driveways present",
+    rule: "MUTCD § 6C.09",
+    action:
+      "Maintain access gaps in channelization. Do not place devices across driveway entrances (advisory only).",
+  },
+  pedestrian_facility: {
+    label: "Pedestrian sidewalks present",
+    rule: "MUTCD § 6D.01",
+    action:
+      "4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added at the upstream and downstream ends.",
+  },
+  bicycle_facility: {
+    label: "Bike lane / cycleway present",
+    rule: "MUTCD § 9C.101",
+    action:
+      "2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends.",
+  },
+  school_zone: {
+    label: "School zone nearby",
+    rule: "MUTCD § 7B.08",
+    action:
+      "2 S1-1 SCHOOL signs added upstream of the standard advance warning set.",
+  },
+};
 
 interface Props {
   scenario: Scenario;
@@ -28,13 +80,39 @@ export function AuditTrail({ scenario, results, generated }: Props) {
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  const items: ItemSpec[] =
-    scenario.kind === "shoulder" && results.kind === "shoulder"
-      ? buildShoulderItems(scenario, results, generated, r)
-      : scenario.kind === "flagger_lane_closure" &&
-          results.kind === "flagger_lane_closure"
-        ? buildFlaggerItems(scenario, results, generated, r)
-        : [];
+  const items: ItemSpec[] = (() => {
+    let scenarioItems: ItemSpec[] = [];
+    if (scenario.kind === "shoulder" && results.kind === "shoulder") {
+      scenarioItems = buildShoulderItems(scenario, results, generated, r);
+    } else if (
+      scenario.kind === "flagger_lane_closure" &&
+      results.kind === "flagger_lane_closure"
+    ) {
+      scenarioItems = buildFlaggerItems(scenario, results, generated, r);
+    } else if (
+      scenario.kind === "lane_closure_divided" &&
+      results.kind === "lane_closure_divided"
+    ) {
+      scenarioItems = buildLaneClosureItems(scenario, results, generated, r);
+    } else if (
+      scenario.kind === "work_beyond_shoulder" &&
+      results.kind === "work_beyond_shoulder"
+    ) {
+      scenarioItems = buildWorkBeyondShoulderItems(scenario, results, generated, r);
+    } else if (
+      scenario.kind === "mobile_op_2lane" &&
+      results.kind === "mobile_op_2lane"
+    ) {
+      scenarioItems = buildMobileOp2LaneItems(scenario, results, generated, r);
+    } else if (
+      scenario.kind === "mobile_op_multilane" &&
+      results.kind === "mobile_op_multilane"
+    ) {
+      scenarioItems = buildMobileOpMultilaneItems(scenario, results, generated, r);
+    }
+    const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions);
+    return siteItem ? [...scenarioItems, siteItem] : scenarioItems;
+  })();
 
   return (
     <section className="mt-9">
@@ -311,6 +389,435 @@ function buildFlaggerItems(
   ];
 }
 
+function buildLaneClosureItems(
+  scenario: LaneClosureDividedScenario,
+  results: LaneClosureResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  return [
+    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
+    bufferItem(scenario.speed, results.B, r),
+    spacingItem(
+      scenario.workLen,
+      results.spacing,
+      results.cones,
+      results.taperCones,
+      results.tangentCones,
+      results.drums,
+      generated,
+      r,
+    ),
+    {
+      title: "Arrow board placement",
+      result: generated ? `${results.arrowBoards} unit · LEFT arrow` : "—",
+      cite: "MUTCD § 6F.61",
+      body: (
+        <>
+          <p>
+            A Type C arrow board is required for lane closures on multi-lane
+            roadways at speeds ≥ 40 mph (MUTCD § 6F.61). Mounted at the
+            upstream start of the merging taper, set to LEFT-arrow mode so
+            drivers in the closed lane merge into the open lane.
+          </p>
+          <p>
+            Truck-mounted attenuator (TMA):{" "}
+            <strong>
+              {scenario.truckMountedAttenuator
+                ? `${results.tmaCount} unit (recommended)`
+                : "Not deployed"}
+            </strong>
+            {!scenario.truckMountedAttenuator && scenario.speed >= 45 && (
+              <>
+                {" "}
+                — CDOT M-630 strongly recommends a TMA at this speed.
+              </>
+            )}
+          </p>
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6F.61 · ARROW BOARDS
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Advance warning sign set",
+      result: generated ? `${results.signs} signs (both ways)` : "—",
+      cite: "MUTCD TABLE 6C-1",
+      body: (
+        <>
+          <p>
+            TA-19 sign set, mirrored on both sides of the divided highway.
+            Long-term work adds CONSTRUCTION ZONE plaques (G20-5P) inside
+            the work zone.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Sign</th>
+                <th>Code</th>
+                <th>Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Road work ahead</td>
+                <td>W20-1</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Right lane closed ahead</td>
+                <td>W20-5R</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Right lane ends</td>
+                <td>W4-2R</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>End road work</td>
+                <td>G20-2</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Construction zone plaque</td>
+                <td>G20-5P</td>
+                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6G.02 · DURATION-BASED SIGNING
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-3",
+      body: (
+        <>
+          <div className="check-list">
+            <CheckRow label="Right-lane closure on divided highway per S-630-3 (TA-19 equivalent)" />
+            <CheckRow label="Arrow board (Type C) at upstream taper, LEFT-arrow mode" />
+            {scenario.truckMountedAttenuator ? (
+              <CheckRow label="Truck-mounted attenuator deployed upstream" />
+            ) : scenario.speed >= 45 ? (
+              <CheckRow
+                label="TMA strongly recommended ≥ 45 mph (CDOT M-630)"
+                tone="warn"
+                tag="WARN"
+              />
+            ) : null}
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+            <CheckRow label="Drums placed at speed-limit spacing in merging taper" />
+            <CheckRow label="Mirror signs posted on median side of divided highway" />
+          </div>
+          <div className="citation">
+            <span className="check">✓</span>
+            CDOT S-630-3 · COLORADO SUPPLEMENT
+          </div>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
+
+function buildWorkBeyondShoulderItems(
+  scenario: WorkBeyondShoulderScenario,
+  results: WorkBeyondShoulderResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  return [
+    {
+      title: "Signing scope (no devices on roadway)",
+      result: generated ? `${results.signs} sign(s)` : "—",
+      cite: "MUTCD § 6G.04",
+      body: (
+        <>
+          <p>
+            Work beyond the shoulder occurs entirely outside the travelway
+            and roadway shoulder. Per MUTCD § 6G.04, only minimal advance
+            signing is required — no taper, no buffer, no channelizing
+            devices on the road itself.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Sign</th>
+                <th>Code</th>
+                <th>Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Shoulder work</td>
+                <td>W21-5</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>End road work</td>
+                <td>G20-2</td>
+                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6G.04 · WORK OUTSIDE SHOULDER
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Worker exposure check",
+      result: "OFF-ROADWAY",
+      cite: "MUTCD § 6D.01",
+      body: (
+        <>
+          <p>
+            Workers operate beyond the roadway shoulder, with the shoulder
+            itself acting as a buffer. No worker-on-pavement exposure;
+            roadway traffic is unaffected.
+          </p>
+          {scenario.speed >= 55 && (
+            <p>
+              <strong>High-speed adjacent traffic ({scenario.speed} mph):</strong>{" "}
+              consider PCMS upstream if work materially affects sight lines
+              or driver attention (chip seal trucks, large equipment, etc.).
+            </p>
+          )}
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6D.01 · WORKER PROTECTION
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-1",
+      body: (
+        <>
+          <div className="check-list">
+            <CheckRow label="Off-roadway work — no MHT footprint on the travelway" />
+            <CheckRow label="W21-5 advance sign placed at MUTCD Table 6C-1 distance" />
+            {scenario.duration === "long" && (
+              <CheckRow label="G20-2 END ROAD WORK termination sign present" />
+            )}
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+          </div>
+          <div className="citation">
+            <span className="check">✓</span>
+            CDOT S-630-1 · COLORADO SUPPLEMENT
+          </div>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
+
+function buildMobileOp2LaneItems(
+  scenario: MobileOp2LaneScenario,
+  results: MobileOp2LaneResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  return [
+    {
+      title: "Mobile operation profile",
+      result: generated ? `${results.totalDevices} devices · moving` : "—",
+      cite: "MUTCD § 6G.05",
+      body: (
+        <>
+          <p>
+            Slow-moving operation with no static taper. The shadow vehicle
+            trails the work truck at <strong>{scenario.workLen} ft</strong>;
+            protection moves with the work. Per MUTCD § 6G.05, mobile ops on
+            two-lane roads use a vehicle-mounted W21-1A sign and an optional
+            arrow board on the shadow.
+          </p>
+          <p>
+            Active warning:{" "}
+            <strong>
+              {scenario.arrowBoardOnShadow
+                ? "Arrow board on shadow (caution mode)"
+                : "Vehicle-mounted W21-1A only"}
+            </strong>
+          </p>
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6G.05 · MOBILE OPERATIONS
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Shadow vehicle protection",
+      result: generated ? `${results.shadowVehicles} shadow · ${results.tmaCount} TMA` : "—",
+      cite: "MUTCD § 6F.55",
+      body: (
+        <>
+          <p>
+            One shadow vehicle with a truck-mounted attenuator (NCHRP 350
+            / MASH-rated) provides upstream protection. Trailing distance
+            of <strong>{scenario.workLen} ft</strong> gives following
+            traffic a sight cue without losing crash-cushion proximity.
+          </p>
+          {scenario.speed >= 45 && (
+            <p>
+              <strong>High-speed two-lane ({scenario.speed} mph):</strong>{" "}
+              shoulder use for evasive maneuvers may be limited — keep
+              shadow-to-truck spacing tight (≤ 200 ft) and brief drivers
+              on emergency-stop coordination.
+            </p>
+          )}
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-1",
+      body: (
+        <>
+          <div className="check-list">
+            <CheckRow label="Mobile two-lane op per S-630-1 (TA-35 equivalent)" />
+            <CheckRow label="W21-1A WORKERS AHEAD on shadow vehicle" />
+            <CheckRow label="Shadow vehicle equipped with NCHRP 350 / MASH TMA" />
+            {scenario.arrowBoardOnShadow ? (
+              <CheckRow label="Arrow board on shadow in caution mode (4-corner flash)" />
+            ) : (
+              <CheckRow
+                label="Arrow board recommended; not deployed in this plan"
+                tone="warn"
+                tag="WARN"
+              />
+            )}
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+          </div>
+          <div className="citation">
+            <span className="check">✓</span>
+            CDOT S-630-1 · COLORADO SUPPLEMENT
+          </div>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
+
+function buildMobileOpMultilaneItems(
+  scenario: MobileOpMultilaneScenario,
+  results: MobileOpMultilaneResult,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  return [
+    {
+      title: "Mobile operation profile",
+      result: generated ? `${results.totalDevices} devices · moving` : "—",
+      cite: "MUTCD § 6G.06",
+      body: (
+        <>
+          <p>
+            Slow-moving operation on multi-lane carriageway. Shadow vehicle
+            trails the work truck at <strong>{scenario.workLen} ft</strong>{" "}
+            with mandatory TMA + arrow board (LEFT-arrow mode for right-lane
+            mobile op).
+          </p>
+          {scenario.secondTMA && (
+            <p>
+              Second TMA deployed approximately <strong>1000 ft</strong>{" "}
+              upstream of the shadow for additional protection — recommended
+              at speeds ≥ 55 mph (CDOT M-630).
+            </p>
+          )}
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6G.06 · MULTI-LANE MOBILE OPS
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Shadow vehicle + arrow board",
+      result: generated ? `${results.tmaCount} TMA · ${results.arrowBoards} board` : "—",
+      cite: "MUTCD § 6F.55 / § 6F.61",
+      body: (
+        <>
+          <p>
+            Shadow vehicle with NCHRP 350 / MASH-rated TMA provides
+            crash-cushion protection. Arrow board (Type C) on the shadow
+            indicates merge direction at posted distance — <strong>LEFT</strong>{" "}
+            arrow for the right-lane operation.
+          </p>
+          {scenario.speed >= 55 && !scenario.secondTMA && (
+            <p>
+              <strong>⚠ Speed ≥ 55 mph without upstream second TMA:</strong>{" "}
+              CDOT M-630 strongly recommends a second TMA upstream for
+              high-speed mobile ops to absorb high-energy hits.
+            </p>
+          )}
+          <div className="citation">
+            <span className="check">✓</span>
+            MUTCD § 6F.55 · TRUCK-MOUNTED ATTENUATORS
+          </div>
+        </>
+      ),
+    },
+    {
+      title: "Colorado supplement requirements",
+      result: "ALL CHECKS PASS",
+      cite: "CDOT S-630-3",
+      body: (
+        <>
+          <div className="check-list">
+            <CheckRow label="Multi-lane mobile op per S-630-3 (TA-26 equivalent)" />
+            <CheckRow label="Shadow vehicle equipped with NCHRP 350 / MASH TMA" />
+            <CheckRow label="Arrow board (Type C) on shadow in LEFT-arrow mode" />
+            {scenario.secondTMA ? (
+              <CheckRow label="Second TMA upstream of shadow" />
+            ) : scenario.speed >= 55 ? (
+              <CheckRow
+                label="Second TMA strongly recommended ≥ 55 mph"
+                tone="warn"
+                tag="WARN"
+              />
+            ) : null}
+            {scenario.night && (
+              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
+            )}
+          </div>
+          <div className="citation">
+            <span className="check">✓</span>
+            CDOT S-630-3 · COLORADO SUPPLEMENT
+          </div>
+        </>
+      ),
+    },
+    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+  ];
+}
+
 function taperItem(
   laneWidth: number,
   speed: number,
@@ -440,6 +947,47 @@ function spacingItem(
         <div className="citation">
           <span className="check">✓</span>
           MUTCD § 6F.65 · CHANNELIZING DEVICES
+        </div>
+      </>
+    ),
+  };
+}
+
+function siteAdjustmentsItem(
+  flags: SiteConditions | undefined,
+): ItemSpec | null {
+  const checked = (Object.keys(SITE_ADJUSTMENT_DETAIL) as SiteConditionFlag[])
+    .filter((k) => flags?.[k]);
+  if (checked.length === 0) return null;
+  return {
+    title: "Site adjustments",
+    result: `${checked.length} flag${checked.length === 1 ? "" : "s"}`,
+    cite: "MUTCD § 6C / § 6D",
+    body: (
+      <>
+        <p>
+          Site-condition flags from the sidebar layered onto the baseline
+          MUTCD/CDOT layout. Each adjustment is traced to its source rule;
+          the rendered PDF, device list, and crew narrative reflect every
+          item below.
+        </p>
+        <div className="check-list">
+          {checked.map((k) => {
+            const d = SITE_ADJUSTMENT_DETAIL[k];
+            return (
+              <div className="check-list-item" key={k}>
+                <span className="ck">✓</span>
+                <span className="check-list-lbl">
+                  <strong>{d.label}</strong> — {d.action}
+                </span>
+                <span className="check-list-src">{d.rule}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="citation">
+          <span className="check">✓</span>
+          AUTO-DETECTION SOURCE · OPENSTREETMAP (OVERPASS API)
         </div>
       </>
     ),
