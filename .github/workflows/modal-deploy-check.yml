@@ -1,0 +1,92 @@
+name: Modal deploy check
+
+# Detect when a push to main touches the Python render service and
+# remind the operator to run `modal deploy modal_app.py` — Vercel
+# auto-deploys the Next.js site on every push, but Modal does not.
+# This workflow opens a GitHub issue listing the changed Python files;
+# close the issue once you've run the deploy and confirmed the live
+# render endpoint is updated.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Python diff
+        id: diff
+        shell: bash
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+          # First push to a fresh branch can have a zero-SHA "before".
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            BEFORE="$(git rev-parse "$AFTER^" 2>/dev/null || echo "$AFTER")"
+          fi
+
+          CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" -- \
+            'src/**/*.py' 'modal_app.py' 'pyproject.toml' 'uv.lock' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "needs_deploy=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "needs_deploy=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "files<<EOF"
+              echo "$CHANGED"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open Modal-deploy reminder issue
+        if: steps.diff.outputs.needs_deploy == 'true'
+        uses: actions/github-script@v7
+        env:
+          CHANGED_FILES: ${{ steps.diff.outputs.files }}
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        with:
+          script: |
+            const sha = process.env.COMMIT_SHA;
+            const shortSha = sha.slice(0, 7);
+            const fileList = process.env.CHANGED_FILES
+              .split('\n').filter(Boolean).map(f => `- \`${f}\``).join('\n');
+
+            const title = `Modal deploy needed for ${shortSha}`;
+            const body = [
+              `Commit [${shortSha}](${process.env.COMMIT_URL}) touched the Python`,
+              `render service.  The Next.js site auto-deploys via Vercel, but the`,
+              `Modal-hosted render API does **not** — run the deploy locally:`,
+              ``,
+              '```bash',
+              'modal deploy modal_app.py',
+              '```',
+              ``,
+              `**Changed files:**`,
+              fileList,
+              ``,
+              `**Commit message:**`,
+              '> ' + (process.env.COMMIT_MESSAGE || '').split('\n').join('\n> '),
+              ``,
+              `Close this issue once Modal has been redeployed and conestruct.com`,
+              `is serving the new render code.`,
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['modal-deploy-needed'],
+            });

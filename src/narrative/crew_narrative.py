@@ -17,7 +17,6 @@ Authoritative sources:
 
 from __future__ import annotations
 
-import math
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -30,7 +29,8 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     device_spacing_in_taper,
-    num_devices_on_tangent,
+    device_spacing_on_tangent,
+    pick_device_count,
     shoulder_taper_length,
 )
 from src.rules.validators import DevicePlacement, ScenarioParams
@@ -223,10 +223,10 @@ def build_narrative_context(
     spacing_abc = advance_warning_spacing(speed, rt)
 
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
     actual_taper_spacing = taper_len / (n_taper_devices - 1)
 
-    n_tangent = max(2, num_devices_on_tangent(wz_len, speed))
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
     tangent_spacing = wz_len / (n_tangent - 1)
 
     # Extracted directly from the placement list so counts always match the

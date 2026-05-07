@@ -200,6 +200,65 @@ def num_devices_on_tangent(tangent_length_ft: float, speed_mph: int) -> int:
     return math.ceil(tangent_length_ft / device_spacing_on_tangent(speed_mph))
 
 
+def pick_device_count(
+    length_ft: float,
+    target_spacing_ft: float,
+    *,
+    min_count: int = 2,
+    tolerance: float = 0.10,
+) -> int:
+    """Pick the device count that places interval spacing nearest target.
+
+    For ``count`` devices spaced uniformly along ``length_ft``, interval
+    spacing is ``length_ft / (count - 1)``.  This helper compares the
+    floor and ceil interval-count candidates around the exact ratio
+    ``length_ft / target_spacing_ft`` and returns the device count whose
+    interval spacing best matches ``target_spacing_ft``:
+
+      * If both candidates land inside ``[target * (1 - tolerance),
+        target * (1 + tolerance)]``, the one with smaller absolute
+        deviation from target wins.
+      * If only one candidate lands inside, it wins.
+      * If neither lands inside, the candidate with smaller absolute
+        deviation from target wins (the choice between two flawed
+        options).
+
+    Useful for laying out channelizers on a tangent (target =
+    on-tangent spacing) or within a merging taper (target = in-taper
+    spacing) where the validator's ``±tolerance`` window gives the
+    designer room to round in either direction.  The returned count is
+    floored at ``min_count`` so callers can guarantee a minimum device
+    population (e.g. for taper-extraction disambiguation).
+
+    Raises:
+        ValueError: ``length_ft`` or ``target_spacing_ft`` is non-positive.
+    """
+    if length_ft <= 0 or target_spacing_ft <= 0:
+        raise ValueError(
+            "length_ft and target_spacing_ft must be positive; "
+            f"got length_ft={length_ft}, target_spacing_ft={target_spacing_ft}"
+        )
+
+    exact_intervals = length_ft / target_spacing_ft
+    floor_intervals = max(1, math.floor(exact_intervals))
+    ceil_intervals = max(1, math.ceil(exact_intervals))
+
+    tol_lo = target_spacing_ft * (1 - tolerance)
+    tol_hi = target_spacing_ft * (1 + tolerance)
+
+    candidates: list[tuple[bool, float, int]] = []
+    for intervals in {floor_intervals, ceil_intervals}:
+        spacing = length_ft / intervals
+        in_tolerance = tol_lo <= spacing <= tol_hi
+        deviation = abs(spacing - target_spacing_ft)
+        # ``not in_tolerance`` sorts True > False, so in-tolerance picks first.
+        candidates.append((not in_tolerance, deviation, intervals))
+
+    candidates.sort()
+    best_intervals = candidates[0][2]
+    return max(min_count, best_intervals + 1)
+
+
 # ---------------------------------------------------------------------------
 # Colorado Supplement helpers
 # ---------------------------------------------------------------------------

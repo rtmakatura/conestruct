@@ -56,9 +56,26 @@ MIN_ADVANCE_WARNING_SIGNS: int = 3
 # Minimum number of flagger stations for alternating one-way operations.
 MIN_FLAGGER_STATIONS: int = 2
 
+# Sign labels that may sit upstream of the taper but are *not* part of
+# the Table 6B-1 advance-warning sequence — they are instructional or
+# regulatory signs that travel with the flagger station, work-zone
+# boundary, or pedestrian-access detour.  Excluded from the A/B/C
+# spacing analysis in ``validate_advance_warning_signs``.
+_NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
+    {
+        "G20-4",  # PILOT CAR FOLLOW ME — co-located with flagger station
+        "R9-9",  # SIDEWALK CLOSED — USE OTHER SIDE — at work-zone boundary
+    }
+)
+
 # Lateral offset delta (ft) below which a channelizer pair is treated as
-# tangent (constant offset) rather than taper (changing offset).
-TAPER_OFFSET_DELTA_THRESHOLD_FT: float = 1.0
+# tangent (constant offset) rather than taper (changing offset).  V1
+# generators place tangent channelizers at exactly constant offsets, so
+# the threshold only needs to reject floating-point round-off — anything
+# above 0.1 ft is intentional lateral progression.  Set higher than that
+# and fine-grained tapers (e.g., 12 ft of lateral travel over 12 drum
+# intervals = exactly 1.0 ft per step) get misclassified as tangent.
+TAPER_OFFSET_DELTA_THRESHOLD_FT: float = 0.1
 
 
 # ---------------------------------------------------------------------------
@@ -88,7 +105,7 @@ class ScenarioParams:
 
     speed_mph: int
     num_lanes: int
-    closure_type: str  # "lane" | "shoulder" | "full_road" | "mobile"
+    closure_type: str  # "lane" | "shoulder" | "full_road" | "mobile" | "off_road"
     road_type: str  # "urban_low" | "urban_high" | "rural" | "expressway" | "divided_highway"
     work_zone_length_ft: float
     lane_width_ft: float = 12.0
@@ -184,9 +201,11 @@ def validate_taper_present(
     """Verify a merging taper exists.  Source: MUTCD 11th Ed. §6C.08.
 
     Mobile operations are exempt — they use a shadow vehicle and TMA in
-    place of a fixed channelizing taper.
+    place of a fixed channelizing taper.  Off-road work (MUTCD §6G.04)
+    is also exempt since the work occurs beyond the shoulder and the
+    travel lanes are unaffected.
     """
-    if params.closure_type == "mobile":
+    if params.closure_type in ("mobile", "off_road"):
         return []
 
     taper = _extract_taper_indices(placements)
@@ -354,7 +373,12 @@ def validate_advance_warning_signs(
         return []
 
     taper_upstream = max(placements[i].station_ft for i in taper)
-    sign_idx = [i for i in _sign_indices(placements) if placements[i].station_ft > taper_upstream]
+    sign_idx = [
+        i
+        for i in _sign_indices(placements)
+        if placements[i].station_ft > taper_upstream
+        and (placements[i].label or "").upper() not in _NON_ADVANCE_WARNING_SIGN_LABELS
+    ]
 
     # Cluster signs whose stations are within
     # CO_BOTH_SIDES_STATION_TOLERANCE_FT of each other so a sign and its
@@ -473,10 +497,26 @@ def validate_arrow_board_present(
 
     Source: MUTCD 11th Ed. §6F.63 (Arrow Boards).
 
-    Skipped for mobile and full-road closures.  Severity is warning
-    because some jurisdictions accept a PCMS in place of an arrow board.
+    Skipped for mobile, full-road, and off-road closures.  Also skipped
+    when flagger stations or AFAD-labeled portable signals are present,
+    since alternating-flow control stops drivers at the flagger station
+    and there is no merging taper for the arrow board to indicate.
+    Severity is warning because some jurisdictions accept a PCMS in
+    place of an arrow board.
     """
-    if params.closure_type in ("mobile", "full_road"):
+    if params.closure_type in ("mobile", "full_road", "off_road"):
+        return []
+
+    has_flagger = any(
+        p.device_type == DeviceType.FLAGGER_STATION
+        or (
+            p.device_type == DeviceType.TEMPORARY_SIGNAL
+            and p.label is not None
+            and p.label.upper().startswith("AFAD")
+        )
+        for p in placements
+    )
+    if has_flagger:
         return []
 
     arrow_indices = [i for i, p in enumerate(placements) if p.device_type == DeviceType.ARROW_BOARD]
@@ -527,16 +567,21 @@ def validate_co_signs_both_sides(
 ) -> list[Violation]:
     """Colorado: signs required on both sides of the roadway.
 
-    Source: CO Supplement §6C.04(A).  Triggered when ``params.is_divided``
-    is True or when ``params.road_type`` is in
-    ``COLORADO_OVERRIDES.both_sides_signage_required_on``.  Each sign on
-    one side must have a mirror at approximately the same station on the
-    opposite side, within ``CO_BOTH_SIDES_STATION_TOLERANCE_FT``.
+    Source: CO Supplement §6C.04(A).  Triggered when ``params.road_type``
+    is in ``COLORADO_OVERRIDES.both_sides_signage_required_on`` AND the
+    road is not divided.  Each sign on one side must have a mirror at
+    approximately the same station on the opposite side, within
+    ``CO_BOTH_SIDES_STATION_TOLERANCE_FT``.
+
+    Divided highways are exempt: opposing carriageways are physically
+    separated by the median, so opposing traffic does not encounter the
+    work zone and does not require advance warning signage.  See
+    ``validate_no_opposing_carriageway_signs`` for the corresponding
+    prohibition on signing the opposite carriageway.
     """
-    triggers = (
-        params.is_divided or params.road_type in COLORADO_OVERRIDES.both_sides_signage_required_on
-    )
-    if not triggers:
+    if params.is_divided:
+        return []
+    if params.road_type not in COLORADO_OVERRIDES.both_sides_signage_required_on:
         return []
 
     sign_idx = _sign_indices(placements)
@@ -569,6 +614,295 @@ def validate_co_signs_both_sides(
     return out
 
 
+def validate_no_opposing_carriageway_signs(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Reject work-zone signs placed on the opposite carriageway of a divided highway.
+
+    Source: CDOT S-630-1 typical sheet.  On a divided highway with a
+    one-side closure (right shoulder or right lane), the median
+    physically isolates opposing traffic from the closure — the
+    opposite carriageway should not be signed.  Mirroring signs across
+    the median orders them backwards for opposing drivers (END before
+    BEGIN) and creates spurious work-zone presence where there is none.
+
+    Applies to one-side closures (right shoulder or right lane) on
+    divided highways.
+    """
+    if not params.is_divided:
+        return []
+    if params.closure_type not in ("shoulder", "lane"):
+        return []
+
+    out: list[Violation] = []
+    for i, p in enumerate(placements):
+        if not DEVICE_CATALOG[p.device_type].is_sign:
+            continue
+        if p.offset_ft >= 0:
+            continue
+        out.append(
+            Violation(
+                rule_id="OPPOSING_CARRIAGEWAY_SIGN",
+                severity="error",
+                message=(
+                    f"Sign at station {p.station_ft:.0f} ft "
+                    f"(offset {p.offset_ft:+.1f} ft) is on the opposite "
+                    "carriageway of a divided highway; opposing traffic is "
+                    "separated by the median and does not require work-zone "
+                    "signage."
+                ),
+                mutcd_section="CDOT S-630-1",
+                device_index=i,
+            )
+        )
+    return out
+
+
+def validate_begin_end_road_work_pair(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Verify G20-1 BEGIN ROAD WORK accompanies G20-2 END ROAD WORK.
+
+    Source: MUTCD 11th Ed. §6F.55 / CDOT S-630-1 typical sheet.  The two
+    guide signs are bookends of the work zone; END without BEGIN is
+    asymmetric and disorients drivers.  Mobile and off-road operations
+    are exempt because they have no fixed work area to bookend.
+
+    Applies to fixed-area closures (shoulder or lane).  Mobile and
+    off-road operations are exempt because they have no fixed work
+    area to bookend.
+    """
+    if params.closure_type not in ("shoulder", "lane"):
+        return []
+
+    has_begin = any(
+        p.device_type == DeviceType.SIGN_GENERIC
+        and p.label is not None
+        and p.label.upper() == "G20-1"
+        for p in placements
+    )
+    has_end = any(
+        p.device_type == DeviceType.SIGN_GENERIC
+        and p.label is not None
+        and p.label.upper() == "G20-2"
+        for p in placements
+    )
+    if has_end and not has_begin:
+        return [
+            Violation(
+                rule_id="MISSING_BEGIN_ROAD_WORK",
+                severity="error",
+                message=(
+                    "G20-2 END ROAD WORK is present but G20-1 BEGIN ROAD WORK "
+                    "is missing — the two guide signs must bookend the work zone."
+                ),
+                mutcd_section="6F.55",
+                device_index=None,
+            )
+        ]
+    return []
+
+
+def validate_flagger_advance_sign_sequence(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Verify flagger advance-sign codes appear at the correct A/B/C positions.
+
+    Source: MUTCD 11th Ed. §6E.05 / TA-10.  When a flagger station (or
+    AFAD) is present, drivers should encounter the sign sequence:
+    C (farthest upstream) ROAD WORK AHEAD (W20-1) → B (middle) BE
+    PREPARED TO STOP (W3-4) → A (closest to flagger) FLAGGER (W20-7;
+    or W20-7a for AFAD).  Spacing is checked elsewhere
+    (``validate_advance_warning_signs``); this rule pins the *labels*
+    to their positions so a regenerated layout cannot silently
+    re-introduce the old "BE PREPARED TO STOP at A" inversion or the
+    W20-4 typo.
+
+    Only fires when at least one flagger station / AFAD is present and
+    we have at least 3 advance-warning sign clusters upstream of the
+    taper.  Otherwise the sign-count rule in
+    ``validate_advance_warning_signs`` handles the missing-sign case.
+    """
+    has_flagger = any(
+        p.device_type == DeviceType.FLAGGER_STATION
+        or (
+            p.device_type == DeviceType.TEMPORARY_SIGNAL
+            and p.label is not None
+            and p.label.upper().startswith("AFAD")
+        )
+        for p in placements
+    )
+    if not has_flagger:
+        return []
+
+    taper = _extract_taper_indices(placements)
+    if not taper:
+        return []
+    taper_upstream = max(placements[i].station_ft for i in taper)
+
+    sign_idx = [
+        i
+        for i in _sign_indices(placements)
+        if placements[i].station_ft > taper_upstream
+        and (placements[i].label or "").upper() not in _NON_ADVANCE_WARNING_SIGN_LABELS
+    ]
+    sign_idx_sorted = sorted(sign_idx, key=lambda i: placements[i].station_ft)
+    clusters: list[list[int]] = []
+    for i in sign_idx_sorted:
+        if (
+            clusters
+            and placements[i].station_ft - placements[clusters[-1][-1]].station_ft
+            <= CO_BOTH_SIDES_STATION_TOLERANCE_FT
+        ):
+            clusters[-1].append(i)
+        else:
+            clusters.append([i])
+
+    if len(clusters) < 3:
+        return []
+
+    out: list[Violation] = []
+    expected_a = {"W20-7", "W20-7A"}  # FLAGGER (or W20-7a AFAD AHEAD)
+    expected_b = {"W3-4"}
+    expected_c = {"W20-1"}
+
+    def cluster_labels(cluster: list[int]) -> set[str]:
+        return {(placements[i].label or "").upper() for i in cluster}
+
+    a_labels = cluster_labels(clusters[0])
+    b_labels = cluster_labels(clusters[1])
+    c_labels = cluster_labels(clusters[2])
+
+    if not (a_labels & expected_a):
+        out.append(
+            Violation(
+                rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
+                severity="error",
+                message=(
+                    "Position A (closest to flagger) must include FLAGGER "
+                    f"(W20-7 or W20-7a); found {sorted(a_labels)!r}.  "
+                    "MUTCD §6E.05 places FLAGGER at the last advance station "
+                    "before the stop point."
+                ),
+                mutcd_section="6E.05",
+                device_index=clusters[0][0],
+            )
+        )
+    if not (b_labels & expected_b):
+        out.append(
+            Violation(
+                rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
+                severity="error",
+                message=(
+                    "Position B (middle) must include BE PREPARED TO STOP "
+                    f"(W3-4); found {sorted(b_labels)!r}.  Note W20-4 is "
+                    "ONE LANE ROAD AHEAD, not BE PREPARED TO STOP — "
+                    "the BE PREPARED TO STOP code is W3-4."
+                ),
+                mutcd_section="6E.05",
+                device_index=clusters[1][0],
+            )
+        )
+    if not (c_labels & expected_c):
+        out.append(
+            Violation(
+                rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
+                severity="error",
+                message=(
+                    "Position C (farthest upstream) must include "
+                    f"ROAD WORK AHEAD (W20-1); found {sorted(c_labels)!r}."
+                ),
+                mutcd_section="6E.05",
+                device_index=clusters[2][0],
+            )
+        )
+    return out
+
+
+def validate_mobile_shadow_vehicle(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Mobile operations require a shadow vehicle with TMA.
+
+    Source: MUTCD 11th Ed. §6G.05 / CDOT M&S S-630-1.  A mobile work
+    crew without a shadow vehicle has no rear-end impact protection
+    and no signal to drivers that the work truck is moving slowly.
+    The shadow is identified by a TRUCK_MOUNTED_ATTENUATOR placement
+    whose label starts with "SHADOW" (the work truck has label
+    "WORK_TRUCK").
+    """
+    if params.closure_type != "mobile":
+        return []
+    has_shadow = any(
+        p.device_type == DeviceType.TRUCK_MOUNTED_ATTENUATOR
+        and p.label is not None
+        and p.label.upper().startswith("SHADOW")
+        for p in placements
+    )
+    if not has_shadow:
+        return [
+            Violation(
+                rule_id="MISSING_SHADOW_VEHICLE",
+                severity="error",
+                message=(
+                    "Mobile operation has no shadow vehicle (TMA labeled "
+                    "SHADOW_TMA).  §6G.05 requires a trailing shadow with "
+                    "rear-impact attenuator at the work-truck speed."
+                ),
+                mutcd_section="6G.05",
+                device_index=None,
+            )
+        ]
+    return []
+
+
+def validate_mobile_advance_warning(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Mobile operations require at least one upstream advance warning sign.
+
+    Source: MUTCD 11th Ed. §6C.05.  Even a moving work zone needs
+    drivers to know they're approaching it; the shadow vehicle's
+    beacon/arrow board is the close-range cue but does not substitute
+    for a roadside sign read at advance distance.
+
+    Counts SIGN_GENERIC placements upstream of the work truck (station
+    > 0 in the mobile-snapshot coordinate system).  Severity is error —
+    the canonical layout emits two signs and a regression to zero
+    should not pass silently.
+
+    Scoped to 2-lane (undivided) mobile ops for V1.  Multi-lane mobile
+    (TA-26) has separate signing requirements under §6G.06 that have
+    not been reviewed yet; widen this rule when that scenario lands.
+    """
+    if params.closure_type != "mobile" or params.is_divided:
+        return []
+    advance_signs = [
+        p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.station_ft > 0
+    ]
+    if not advance_signs:
+        return [
+            Violation(
+                rule_id="MISSING_MOBILE_ADVANCE_SIGN",
+                severity="error",
+                message=(
+                    "Mobile operation has no advance warning sign upstream "
+                    "of the work truck.  §6C.05 requires at least one "
+                    "roadside sign so drivers see the work zone before "
+                    "reaching the shadow vehicle."
+                ),
+                mutcd_section="6C.05",
+                device_index=None,
+            )
+        ]
+    return []
+
+
 def validate_co_construction_plaques(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -579,7 +913,14 @@ def validate_co_construction_plaques(
     SIGN_GENERIC placements (label ``G20-5P`` or ``R2-6P``) and
     compares to ``co_construction_plaques(zone_length)``.  Position is
     not enforced — only count.
+
+    Mobile and off-road operations are exempt: mobile work zones move
+    with the operation and have no fixed work area to plaque, and
+    off-road work (MUTCD §6G.04) keeps the travel lanes open with no
+    work zone to delimit.
     """
+    if params.closure_type in ("mobile", "off_road"):
+        return []
     required = co_construction_plaques(params.work_zone_length_ft)
     plaque_count = sum(
         1
@@ -615,6 +956,10 @@ def validate_flagger_stations(
     Source: MUTCD 11th Ed. §6C.13.  Triggered by full-road closures on
     non-divided roads, or by a single-lane closure on a two-lane,
     two-way road.
+
+    AFAD-labeled ``TEMPORARY_SIGNAL`` placements count as flagger
+    stations — MUTCD §6E.04 treats AFADs as a permitted substitution
+    for human flaggers in alternating-flow control.
     """
     # ``num_lanes`` is interpreted permissively: 1 (the per-direction count
     # for a 2-lane two-way road) and 2 (the total-lane count for the same
@@ -627,7 +972,16 @@ def validate_flagger_stations(
     if not needs_flaggers:
         return []
 
-    flagger_count = sum(1 for p in placements if p.device_type == DeviceType.FLAGGER_STATION)
+    flagger_count = sum(
+        1
+        for p in placements
+        if p.device_type == DeviceType.FLAGGER_STATION
+        or (
+            p.device_type == DeviceType.TEMPORARY_SIGNAL
+            and p.label is not None
+            and p.label.upper().startswith("AFAD")
+        )
+    )
     if flagger_count < MIN_FLAGGER_STATIONS:
         return [
             Violation(
@@ -635,8 +989,8 @@ def validate_flagger_stations(
                 severity="error",
                 message=(
                     "Alternating one-way flow requires at least "
-                    f"{MIN_FLAGGER_STATIONS} flagger stations; found "
-                    f"{flagger_count}."
+                    f"{MIN_FLAGGER_STATIONS} flagger stations (or AFADs); "
+                    f"found {flagger_count}."
                 ),
                 mutcd_section="6C.13",
                 device_index=None,
@@ -668,6 +1022,11 @@ def validate_layout(
     out.extend(validate_buffer_space(placements, params))
     out.extend(validate_arrow_board_present(placements, params))
     out.extend(validate_co_signs_both_sides(placements, params))
+    out.extend(validate_no_opposing_carriageway_signs(placements, params))
+    out.extend(validate_begin_end_road_work_pair(placements, params))
+    out.extend(validate_flagger_advance_sign_sequence(placements, params))
+    out.extend(validate_mobile_shadow_vehicle(placements, params))
+    out.extend(validate_mobile_advance_warning(placements, params))
     out.extend(validate_co_construction_plaques(placements, params))
     out.extend(validate_flagger_stations(placements, params))
     return out

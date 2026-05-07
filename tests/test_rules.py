@@ -26,6 +26,7 @@ from src.rules.spacing import (
     downstream_taper_length,
     num_devices_in_taper,
     num_devices_on_tangent,
+    pick_device_count,
     shifting_taper_length,
     shoulder_taper_length,
     taper_length,
@@ -195,6 +196,48 @@ def test_device_counts_on_tangent() -> None:
     assert num_devices_on_tangent(1000, 65) == 8
 
 
+def test_pick_device_count_both_in_tolerance() -> None:
+    """Both floor and ceil interval counts fit ±10 %; picker takes closer-to-target."""
+    # 1000 ft, target 90 → exact 11.11
+    # floor=11 intervals → 90.9 ft (in [81, 99], deviation 0.9)
+    # ceil=12 intervals  → 83.3 ft (in [81, 99], deviation 6.7)
+    # closer-to-target wins → 11 intervals → 12 devices
+    assert pick_device_count(1000, 90) == 12
+
+
+def test_pick_device_count_only_one_in_tolerance() -> None:
+    """Picks the in-tolerance candidate when its sibling falls outside ±10 %."""
+    # 800 ft, target 90 → exact 8.89
+    # floor=8  → 100 ft (out of [81, 99])
+    # ceil=9   → 88.9 ft (in tolerance)
+    assert pick_device_count(800, 90) == 10
+
+
+def test_pick_device_count_neither_in_tolerance() -> None:
+    """Picks closer-to-target when neither candidate is in tolerance."""
+    # 150 ft, target 45 → exact 3.33
+    # floor=3 → 50 ft  (deviation 5.0)  out of [40.5, 49.5]
+    # ceil=4  → 37.5 ft (deviation 7.5) out
+    # closer wins → 3 intervals → 4 devices
+    assert pick_device_count(150, 45) == 4
+
+
+def test_pick_device_count_min_count_floor() -> None:
+    """Returned count never falls below ``min_count``."""
+    # tiny length picks a small count, but min_count=4 floors it
+    assert pick_device_count(50, 45, min_count=4) == 4
+
+
+def test_pick_device_count_invalid_inputs() -> None:
+    """Non-positive length or spacing raises."""
+    with pytest.raises(ValueError):
+        pick_device_count(0, 45)
+    with pytest.raises(ValueError):
+        pick_device_count(100, 0)
+    with pytest.raises(ValueError):
+        pick_device_count(-10, 45)
+
+
 def test_co_speed_reduction_signs() -> None:
     """ceil(delta / 15) = number of stepped speed-reduction signs."""
     assert co_speed_reduction_signs(65, 45) == 2  # ceil(20/15)
@@ -330,7 +373,9 @@ def _textbook_layout() -> list[DevicePlacement]:
         )
     )
 
-    # Advance warning signs A/B/C with left-side mirrors.
+    # Advance warning signs A/B/C on the work-side carriageway only —
+    # divided highway, so opposing traffic is separated by the median
+    # and is not signed for this work zone.
     for n in range(3):
         station = 1900.0 + n * 500.0  # 1900, 2400, 2900
         placements.append(
@@ -341,30 +386,14 @@ def _textbook_layout() -> list[DevicePlacement]:
                 label="W20-1",
             )
         )
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=station,
-                offset_ft=-24.0,
-                label="W20-1",
-            )
-        )
 
-    # Two G20-5P plaques in the work zone, mirrored.
+    # Two G20-5P plaques in the work zone, work-side only.
     for station in (100.0, 400.0):
         placements.append(
             DevicePlacement(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=24.0,
-                label="G20-5P",
-            )
-        )
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=station,
-                offset_ft=-24.0,
                 label="G20-5P",
             )
         )
@@ -446,13 +475,28 @@ def test_missing_arrow_board() -> None:
 
 
 def test_co_signs_one_side_only() -> None:
-    """Removing left-side mirror signs fires CO_SIGN_BOTH_SIDES errors."""
+    """Removing left-side mirror signs fires CO_SIGN_BOTH_SIDES on a one-way street.
+
+    The both-sides rule applies on undivided facilities listed in
+    ``COLORADO_OVERRIDES.both_sides_signage_required_on``.  Divided
+    highways are exempt because the median provides physical separation
+    from opposing traffic.
+    """
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=4,
+        lane_width_ft=12.0,
+        closure_type="lane",
+        road_type="one_way_street",
+        work_zone_length_ft=500.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
     placements = [
         p
         for p in _textbook_layout()
         if not (DEVICE_CATALOG[p.device_type].is_sign and p.offset_ft < 0)
     ]
-    params = _simple_lane_closure_params()
     violations = validate_layout(placements, params)
     co_errors = [
         v for v in violations if v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error"
@@ -513,4 +557,507 @@ def test_flagger_not_required_for_divided() -> None:
     flagger_violations = [v for v in violations if "FLAGGER" in v.rule_id]
     assert not flagger_violations, (
         f"Did not expect FLAGGER violations, got: " f"{[v.rule_id for v in flagger_violations]}"
+    )
+
+
+def _shoulder_divided_params() -> ScenarioParams:
+    """Canonical TA-2 params for the new divided-highway shoulder validators."""
+    return ScenarioParams(
+        speed_mph=65,
+        num_lanes=4,
+        closure_type="shoulder",
+        road_type="expressway",
+        work_zone_length_ft=5000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+
+def test_no_opposing_carriageway_signs_clean() -> None:
+    """The canonical TA-2 generator output has no opposing-carriageway signs."""
+    from src.generation.layout import generate_shoulder_closure_divided
+
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params)
+    violations = validate_layout(placements, params)
+    opposing = [v for v in violations if v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN"]
+    assert not opposing, (
+        "Generator should not place signs on the opposite carriageway: "
+        f"{[v.message for v in opposing]}"
+    )
+
+
+def test_opposing_carriageway_sign_fires() -> None:
+    """A sign at negative offset on a divided shoulder closure fires the rule."""
+    from src.generation.layout import generate_shoulder_closure_divided
+
+    params = _shoulder_divided_params()
+    placements = list(generate_shoulder_closure_divided(params))
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=2000.0,
+            offset_ft=-28.0,
+            label="W20-1",
+        )
+    )
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN" and v.severity == "error" for v in violations
+    ), f"Expected OPPOSING_CARRIAGEWAY_SIGN, got: {[v.rule_id for v in violations]}"
+
+
+def test_begin_road_work_required_with_end() -> None:
+    """Removing G20-1 from a layout that has G20-2 fires MISSING_BEGIN_ROAD_WORK."""
+    from src.generation.layout import generate_shoulder_closure_divided
+
+    params = _shoulder_divided_params()
+    placements = [
+        p
+        for p in generate_shoulder_closure_divided(params)
+        if not (p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-1")
+    ]
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "MISSING_BEGIN_ROAD_WORK" and v.severity == "error" for v in violations
+    ), f"Expected MISSING_BEGIN_ROAD_WORK, got: {[v.rule_id for v in violations]}"
+
+
+def test_begin_road_work_present_in_canonical_layout() -> None:
+    """The canonical TA-2 generator output includes G20-1 BEGIN ROAD WORK."""
+    from src.generation.layout import generate_shoulder_closure_divided
+
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params)
+    has_begin = any(
+        p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-1" for p in placements
+    )
+    assert has_begin, "Expected G20-1 BEGIN ROAD WORK in the canonical TA-2 layout"
+
+
+def test_w20_2_label_substitutes_distance() -> None:
+    """Rendered notes substitute the actual distance into the W20-2 line.
+
+    Regression for the literal "ROAD WORK XXX FT" placeholder that
+    leaked through to the generated PDF.
+    """
+    import os
+    import tempfile
+
+    import pypdfium2 as pdfium
+
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params)
+
+    fd, path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        render_plan_sheet(placements, params, output_path=path, shoulder_width_ft=10.0)
+        pdf = pdfium.PdfDocument(path)
+        try:
+            text = pdf[0].get_textpage().get_text_range()
+        finally:
+            pdf.close()
+    finally:
+        os.unlink(path)
+
+    assert (
+        "ROAD WORK XXX FT" not in text
+    ), "Rendered PDF still contains the literal 'ROAD WORK XXX FT' placeholder"
+    assert "ROAD WORK 2500 FT" in text, (
+        "Expected the substituted W20-2 distance 'ROAD WORK 2500 FT' in the rendered PDF; "
+        f"found notes text: {text!r}"
+    )
+    assert (
+        "NEXT XXX FT" not in text
+    ), "Rendered PDF still contains the literal 'NEXT XXX FT' placeholder for G20-1"
+    assert "NEXT 5000 FT" in text, (
+        "Expected the substituted G20-1 distance 'NEXT 5000 FT' in the rendered PDF; "
+        f"found notes text: {text!r}"
+    )
+    for header in ("PARAMETERS", "SIGN SCHEDULE", "ADVANCE WARNING SIGNS"):
+        assert header in text, (
+            f"Expected sub-section header {header!r} in the rendered notes panel; "
+            f"found text: {text!r}"
+        )
+    for column in ("CODE", "DESCRIPTION", "DISTANCE"):
+        assert column in text, (
+            f"Expected column header {column!r} in the rendered notes panel; "
+            f"found text: {text!r}"
+        )
+
+
+def _lane_divided_params() -> ScenarioParams:
+    """Canonical TA-19 params for the divided-highway lane-closure validators."""
+    return ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="expressway",
+        work_zone_length_ft=5000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+
+def test_lane_closure_no_opposing_carriageway_signs_clean() -> None:
+    """The canonical TA-19 generator output has no opposing-carriageway signs."""
+    from src.generation.layout import generate_lane_closure_divided
+
+    params = _lane_divided_params()
+    placements = generate_lane_closure_divided(params)
+    violations = validate_layout(placements, params)
+    opposing = [v for v in violations if v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN"]
+    assert not opposing, (
+        "Generator should not place signs on the opposite carriageway: "
+        f"{[v.message for v in opposing]}"
+    )
+
+
+def test_lane_closure_opposing_carriageway_sign_fires() -> None:
+    """A sign at negative offset on a divided lane closure fires the rule."""
+    from src.generation.layout import generate_lane_closure_divided
+
+    params = _lane_divided_params()
+    placements = list(generate_lane_closure_divided(params))
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=2000.0,
+            offset_ft=-28.0,
+            label="W20-1",
+        )
+    )
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN" and v.severity == "error" for v in violations
+    ), f"Expected OPPOSING_CARRIAGEWAY_SIGN, got: {[v.rule_id for v in violations]}"
+
+
+def test_lane_closure_begin_road_work_required_with_end() -> None:
+    """Removing G20-1 from a TA-19 layout that has G20-2 fires MISSING_BEGIN_ROAD_WORK."""
+    from src.generation.layout import generate_lane_closure_divided
+
+    params = _lane_divided_params()
+    placements = [
+        p
+        for p in generate_lane_closure_divided(params)
+        if not (p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-1")
+    ]
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "MISSING_BEGIN_ROAD_WORK" and v.severity == "error" for v in violations
+    ), f"Expected MISSING_BEGIN_ROAD_WORK, got: {[v.rule_id for v in violations]}"
+
+
+def test_lane_closure_begin_road_work_present_in_canonical_layout() -> None:
+    """The canonical TA-19 generator output includes G20-1 BEGIN ROAD WORK."""
+    from src.generation.layout import generate_lane_closure_divided
+
+    params = _lane_divided_params()
+    placements = generate_lane_closure_divided(params)
+    has_begin = any(
+        p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-1" for p in placements
+    )
+    assert has_begin, "Expected G20-1 BEGIN ROAD WORK in the canonical TA-19 layout"
+
+
+def test_lane_closure_uses_w20_5r_not_w20_5b() -> None:
+    """Regression: B-position advance sign label is the real MUTCD W20-5R, not the typo W20-5B."""
+    from src.generation.layout import generate_lane_closure_divided
+
+    params = _lane_divided_params()
+    placements = generate_lane_closure_divided(params)
+    labels = {p.label for p in placements if p.label is not None}
+    assert "W20-5B" not in labels, "W20-5B is not a real MUTCD code; expected W20-5R"
+    assert (
+        "W20-5R" in labels
+    ), f"Expected RIGHT LANE CLOSED AHEAD label W20-5R in TA-19 layout; got labels: {labels!r}"
+
+
+def _flagger_params() -> ScenarioParams:
+    """Canonical TA-10 params for the flagger-controlled validators."""
+    return ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+
+
+def test_flagger_uses_w3_4_not_w20_4() -> None:
+    """Regression: BE PREPARED TO STOP code is W3-4, not the typo W20-4 (= ONE LANE ROAD AHEAD)."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = generate_flagger_alternating_2lane(params)
+    labels = {p.label for p in placements if p.label is not None}
+    assert "W20-4" not in labels, "W20-4 is ONE LANE ROAD AHEAD, not BE PREPARED TO STOP — use W3-4"
+    assert (
+        "W3-4" in labels
+    ), f"Expected BE PREPARED TO STOP label W3-4 in TA-10 layout; got labels: {labels!r}"
+
+
+def test_flagger_pilot_car_uses_g20_4_not_w20_1a() -> None:
+    """Regression: PILOT CAR FOLLOW ME is G20-4 (guide), not W20-1A (warning)."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = generate_flagger_alternating_2lane(params, pilot_car=True)
+    labels = {p.label for p in placements if p.label is not None}
+    assert "W20-1A" not in labels, "W20-1A is not a real MUTCD code; PILOT CAR FOLLOW ME is G20-4"
+    assert (
+        "G20-4" in labels
+    ), f"Expected G20-4 PILOT CAR FOLLOW ME in pilot_car=True layout; got labels: {labels!r}"
+
+
+def test_flagger_advance_sign_order_canonical_layout() -> None:
+    """Canonical TA-10 output: FLAGGER (W20-7) at A and BE PREPARED TO STOP (W3-4) at B.
+
+    Walking signs from upstream → downstream (highest station first), the
+    first sign cluster the driver sees should be ROAD WORK AHEAD (W20-1),
+    then BE PREPARED TO STOP (W3-4), then FLAGGER (W20-7) closest to the
+    flagger station.
+    """
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = generate_flagger_alternating_2lane(params)
+    # Look at right-direction advance signs only (positive offset, station > 1500ft)
+    right_advance = sorted(
+        [
+            p
+            for p in placements
+            if p.device_type == DeviceType.SIGN_GENERIC
+            and p.offset_ft > 0
+            and p.station_ft > 1500.0
+            and (p.label or "") in {"W20-1", "W3-4", "W20-7", "W20-7a"}
+        ],
+        key=lambda p: -p.station_ft,  # most upstream first
+    )
+    labels = [p.label for p in right_advance]
+    assert labels == [
+        "W20-1",
+        "W3-4",
+        "W20-7",
+    ], f"Expected advance sign order [C,B,A] = [W20-1, W3-4, W20-7]; got {labels}"
+
+
+def test_flagger_advance_sign_order_validator_fires_when_reversed() -> None:
+    """Reverting to the old A=W20-4, B=W20-7 order fires FLAGGER_ADVANCE_SIGN_ORDER."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = list(generate_flagger_alternating_2lane(params))
+    # Rewrite the right-direction advance signs to the broken pre-fix order.
+    out: list[DevicePlacement] = []
+    for p in placements:
+        if (
+            p.device_type == DeviceType.SIGN_GENERIC
+            and p.offset_ft > 0
+            and p.station_ft > 1500.0
+            and p.label in {"W20-7", "W3-4"}
+        ):
+            new_label = "W20-4" if p.label == "W3-4" else "W20-7"
+            # Swap so W20-7 is at position B (middle) and the bogus
+            # W20-4 ends up at A (closest to flagger) — the old bug.
+            out.append(
+                DevicePlacement(
+                    device_type=p.device_type,
+                    station_ft=p.station_ft,
+                    offset_ft=p.offset_ft,
+                    label=new_label,
+                )
+            )
+        else:
+            out.append(p)
+    violations = validate_layout(out, params)
+    assert any(
+        v.rule_id == "FLAGGER_ADVANCE_SIGN_ORDER" and v.severity == "error" for v in violations
+    ), f"Expected FLAGGER_ADVANCE_SIGN_ORDER, got: {[v.rule_id for v in violations]}"
+
+
+def test_flagger_advance_sign_order_validator_clean_on_canonical() -> None:
+    """The canonical TA-10 layout produces no FLAGGER_ADVANCE_SIGN_ORDER violations."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = generate_flagger_alternating_2lane(params)
+    violations = validate_layout(placements, params)
+    bad = [v for v in violations if v.rule_id == "FLAGGER_ADVANCE_SIGN_ORDER"]
+    assert not bad, (
+        f"Canonical TA-10 layout should not fire FLAGGER_ADVANCE_SIGN_ORDER: "
+        f"{[v.message for v in bad]}"
+    )
+
+
+def test_flagger_advance_sign_order_validator_accepts_afad() -> None:
+    """AFAD layouts (W20-7a at position A) also pass the order validator."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = generate_flagger_alternating_2lane(params, afad=True)
+    violations = validate_layout(placements, params)
+    bad = [v for v in violations if v.rule_id == "FLAGGER_ADVANCE_SIGN_ORDER"]
+    assert not bad, (
+        f"AFAD layout (W20-7a at A) should not fire FLAGGER_ADVANCE_SIGN_ORDER: "
+        f"{[v.message for v in bad]}"
+    )
+
+
+def _mobile_2lane_params(speed: int = 45) -> ScenarioParams:
+    """Canonical TA-35 params for the 2-lane mobile-op validators."""
+    return ScenarioParams(
+        speed_mph=speed,
+        num_lanes=2,
+        closure_type="mobile",
+        road_type="rural",
+        work_zone_length_ft=100.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+
+
+def test_mobile_uses_w21_1a_lowercase_not_uppercase() -> None:
+    """Regression: WORKERS sign code is W21-1a (lowercase suffix per MUTCD), not W21-1A."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = generate_mobile_op_2lane(params)
+    labels = {p.label for p in placements if p.label is not None}
+    assert "W21-1A" not in labels, (
+        "MUTCD suffix convention is lowercase ('W20-7a', 'W3-4', 'W21-1a'); "
+        "uppercase 'W21-1A' is the typo"
+    )
+    assert (
+        "W21-1a" in labels
+    ), f"Expected WORKERS label W21-1a in TA-35 layout; got labels: {labels!r}"
+
+
+def test_mobile_emits_road_work_ahead_advance_sign() -> None:
+    """The canonical TA-35 layout includes W20-1 ROAD WORK AHEAD upstream."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = generate_mobile_op_2lane(params)
+    has_road_work_ahead = any(
+        p.device_type == DeviceType.SIGN_GENERIC and p.label == "W20-1" for p in placements
+    )
+    assert has_road_work_ahead, (
+        "MUTCD §6C.05 calls for ROAD WORK AHEAD (W20-1) upstream of any work area, "
+        "including mobile ops"
+    )
+
+
+def test_mobile_advance_sign_distance_uses_table_6b1() -> None:
+    """The W21-1a WORKERS advance distance comes from Table 6B-1, not a hardcode.
+
+    Regression: pre-fix the generator used a hardcoded ``shadow_station + 500.0``
+    which only matched Table 6B-1 at one speed/road bucket.
+    """
+    from src.generation.layout import generate_mobile_op_2lane
+
+    # Pick two road categories with different Table 6B-1 A-distances.
+    # urban_low has A=100; rural has A=500 in MUTCD Table 6B-1.
+    placements_urban = generate_mobile_op_2lane(
+        ScenarioParams(
+            speed_mph=30,
+            num_lanes=2,
+            closure_type="mobile",
+            road_type="urban_low",
+            work_zone_length_ft=100.0,
+            lane_width_ft=12.0,
+            shoulder_width_ft=8.0,
+            is_divided=False,
+            jurisdiction="CDOT",
+        )
+    )
+    placements_rural = generate_mobile_op_2lane(_mobile_2lane_params(speed=45))
+
+    def workers_station(placements: list[DevicePlacement]) -> float:
+        for p in placements:
+            if p.label == "W21-1a":
+                return p.station_ft
+        raise AssertionError("W21-1a not found")
+
+    s_urban = workers_station(placements_urban)
+    s_rural = workers_station(placements_rural)
+    assert s_rural > s_urban, (
+        f"Rural Table 6B-1 A-distance should exceed urban_low; "
+        f"got urban_low={s_urban:.0f}, rural={s_rural:.0f}"
+    )
+
+
+def test_mobile_shadow_vehicle_required() -> None:
+    """A mobile layout without a SHADOW_TMA fires MISSING_SHADOW_VEHICLE."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = [
+        p
+        for p in generate_mobile_op_2lane(params)
+        if not (
+            p.device_type == DeviceType.TRUCK_MOUNTED_ATTENUATOR
+            and (p.label or "").upper().startswith("SHADOW")
+        )
+    ]
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "MISSING_SHADOW_VEHICLE" and v.severity == "error" for v in violations
+    ), f"Expected MISSING_SHADOW_VEHICLE, got: {[v.rule_id for v in violations]}"
+
+
+def test_mobile_shadow_vehicle_present_in_canonical_layout() -> None:
+    """The canonical TA-35 generator output includes a SHADOW_TMA."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = generate_mobile_op_2lane(params)
+    violations = validate_layout(placements, params)
+    bad = [v for v in violations if v.rule_id == "MISSING_SHADOW_VEHICLE"]
+    assert not bad, (
+        f"Canonical TA-35 layout should not fire MISSING_SHADOW_VEHICLE: "
+        f"{[v.message for v in bad]}"
+    )
+
+
+def test_mobile_advance_sign_required_when_missing() -> None:
+    """A mobile layout without any upstream signs fires MISSING_MOBILE_ADVANCE_SIGN."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = [
+        p for p in generate_mobile_op_2lane(params) if p.device_type != DeviceType.SIGN_GENERIC
+    ]
+    violations = validate_layout(placements, params)
+    assert any(
+        v.rule_id == "MISSING_MOBILE_ADVANCE_SIGN" and v.severity == "error" for v in violations
+    ), f"Expected MISSING_MOBILE_ADVANCE_SIGN, got: {[v.rule_id for v in violations]}"
+
+
+def test_mobile_validators_clean_on_canonical() -> None:
+    """The canonical TA-35 layout has no errors."""
+    from src.generation.layout import generate_mobile_op_2lane
+
+    params = _mobile_2lane_params()
+    placements = generate_mobile_op_2lane(params)
+    violations = validate_layout(placements, params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert not errors, (
+        f"Canonical TA-35 layout should not produce error-level violations: "
+        f"{[(v.rule_id, v.message) for v in errors]}"
     )

@@ -198,10 +198,13 @@ def build_audit_trail(
     sign_c_station = sign_b_station + c_ft
 
     if is_flagger:
-        # Flagger-controlled alternating-traffic series (MUTCD §6E).
-        sign_codes = {"A": "W20-4", "B": "W20-7", "C": "W20-1"}
+        # Flagger-controlled alternating-traffic series (MUTCD §6E.05 / TA-10).
+        # FLAGGER (W20-7) sits at A — closest to the flagger station — so the
+        # most specific cue is freshest as the driver reaches the stop.
+        # W3-4 (not W20-4 = ONE LANE ROAD AHEAD) is BE PREPARED TO STOP.
+        sign_codes = {"A": "W20-7", "B": "W3-4", "C": "W20-1"}
     elif is_lane:
-        sign_codes = {"A": "W4-2R", "B": "W20-5B", "C": "W20-1"}
+        sign_codes = {"A": "W4-2R", "B": "W20-5R", "C": "W20-1"}
     else:
         sign_codes = {"A": "W21-5aR", "B": "W20-2", "C": "W20-1"}
 

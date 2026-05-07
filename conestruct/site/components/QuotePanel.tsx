@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
 } from "@/lib/quote-settings";
 import type { Scenario } from "@/lib/scenarios";
+
+type DeliveryStatus =
+  | { state: "idle" }
+  | { state: "resolving" }
+  | { state: "auto"; miles: number }
+  | { state: "manual" }
+  | { state: "error" };
 
 interface PublicMode {
   kind: "public";
@@ -101,6 +108,50 @@ export function QuotePanel({ mode }: Props) {
   const [busy, setBusy] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [delivery, setDelivery] = useState<DeliveryStatus>({ state: "idle" });
+
+  // Latest settings in a ref so the async distance handler can write back to
+  // the current settings object instead of a stale closure value.
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+
+  const lat = mode.kind === "public" ? mode.scenario.meta.lat : 0;
+  const lng = mode.kind === "public" ? mode.scenario.meta.lng : 0;
+
+  useEffect(() => {
+    if (mode.kind !== "public") return;
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    if (lat === 0 && lng === 0) return;
+
+    const controller = new AbortController();
+    setDelivery({ state: "resolving" });
+    (async () => {
+      try {
+        const r = await fetch("/api/distance", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ lat, lng }),
+          signal: controller.signal,
+        });
+        if (!r.ok) {
+          setDelivery({ state: "error" });
+          return;
+        }
+        const { miles } = (await r.json()) as { miles: number };
+        setSettings({
+          ...settingsRef.current,
+          delivery_distance_miles: miles,
+        });
+        setDelivery({ state: "auto", miles });
+      } catch (e) {
+        if ((e as Error).name === "AbortError") return;
+        setDelivery({ state: "error" });
+      }
+    })();
+    return () => controller.abort();
+    // mode.kind is stable for the panel's lifetime; lat/lng drive re-fetch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lat, lng]);
 
   const onPreview = async () => {
     if (mode.kind !== "public") return;
@@ -194,9 +245,11 @@ export function QuotePanel({ mode }: Props) {
           min={0}
           max={500}
           step={5}
-          onChange={(v) =>
-            setSettings({ ...settings, delivery_distance_miles: v })
-          }
+          onChange={(v) => {
+            setSettings({ ...settings, delivery_distance_miles: v });
+            setDelivery({ state: "manual" });
+          }}
+          caption={deliveryCaption(delivery)}
         />
         <NumberField
           label="Permit fee ($)"
@@ -446,6 +499,7 @@ function NumberField({
   max,
   step,
   onChange,
+  caption,
 }: {
   label: string;
   value: number;
@@ -453,6 +507,7 @@ function NumberField({
   max: number;
   step: number;
   onChange: (v: number) => void;
+  caption?: { text: string; tone: "muted" | "accent" };
 }) {
   return (
     <label className="flex flex-col gap-1">
@@ -471,8 +526,35 @@ function NumberField({
         }}
         className="bg-transparent border border-[color:var(--paper-line)] text-[13px] font-mono px-2.5 py-2 outline-none focus:border-[color:var(--canvas)]"
       />
+      {caption && (
+        <span
+          className={`font-mono text-[10px] uppercase tracking-[0.08em] ${
+            caption.tone === "accent"
+              ? "text-[color:var(--orange)]"
+              : "text-[color:var(--ink-faint)]"
+          }`}
+        >
+          {caption.text}
+        </span>
+      )}
     </label>
   );
+}
+
+function deliveryCaption(
+  s: DeliveryStatus,
+): { text: string; tone: "muted" | "accent" } | undefined {
+  switch (s.state) {
+    case "resolving":
+      return { text: "Resolving distance from HQ…", tone: "muted" };
+    case "auto":
+      return { text: `Auto · ${s.miles} mi from HQ`, tone: "accent" };
+    case "error":
+      return { text: "Auto-detect failed — enter manually", tone: "muted" };
+    case "manual":
+    case "idle":
+      return undefined;
+  }
 }
 
 function BreakdownGroup({

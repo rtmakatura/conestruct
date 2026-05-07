@@ -13,16 +13,15 @@ Authoritative sources:
 
 from __future__ import annotations
 
-import math
-
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
     device_spacing_in_taper,
+    device_spacing_on_tangent,
     downstream_taper_length,
-    num_devices_on_tangent,
+    pick_device_count,
     shoulder_taper_length,
     taper_length,
 )
@@ -84,7 +83,11 @@ def generate_shoulder_closure_divided(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Advance warning signs
+    # 1. Advance warning signs.  Divided highways have separated
+    # carriageways: the median isolates opposing traffic from the work
+    # area, so signs are placed only on the work-direction carriageway
+    # (no opposite-side mirroring).  CDOT S-630-1 typical sheet.
+    _ = sign_offset_left  # kept for symmetry with undivided layouts
     advance_signs = (
         ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
         ("W20-2", sign_b_station),  # ROAD WORK xxx FT
@@ -99,19 +102,10 @@ def generate_shoulder_closure_divided(
                 label=label,
             )
         )
-        if params.is_divided:
-            placements.append(
-                DevicePlacement(
-                    device_type=DeviceType.SIGN_GENERIC,
-                    station_ft=station,
-                    offset_ft=sign_offset_left,
-                    label=label,
-                )
-            )
 
     # 2. Shoulder taper (drums)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals  # 0 at taper_start, 1 at buffer_end
@@ -155,18 +149,11 @@ def generate_shoulder_closure_divided(
                 label="G20-5P",
             )
         )
-        if params.is_divided:
-            placements.append(
-                DevicePlacement(
-                    device_type=DeviceType.SIGN_GENERIC,
-                    station_ft=station,
-                    offset_ft=sign_offset_left,
-                    label="G20-5P",
-                )
-            )
 
-    # 6. Work-zone tangent (cones)
-    n_tangent = max(2, num_devices_on_tangent(wz_len, speed))
+    # 6. Work-zone tangent (cones).  ``pick_device_count`` chooses the
+    # interval count whose spacing best matches the on-tangent target,
+    # preferring counts that land in the validator's ±10 % tolerance.
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -196,6 +183,172 @@ def generate_shoulder_closure_divided(
             )
         )
 
+    # 8. END ROAD WORK sign (G20-2) past the downstream taper.
+    end_sign_station = (wz_end_station - ds_taper_len) - 100.0
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=end_sign_station,
+            offset_ft=sign_offset_right,
+            label="G20-2",
+        )
+    )
+
+    # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
+    # zone, just past the buffer.  Pairs with G20-2 as bookends per
+    # MUTCD §6F.55 — END without BEGIN is asymmetric and disorients
+    # drivers approaching the work area.
+    begin_sign_station = wz_start_station + 100.0
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=begin_sign_station,
+            offset_ft=sign_offset_right,
+            label="G20-1",
+        )
+    )
+
+    return placements
+
+
+def generate_shoulder_closure_undivided(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 8.0,
+) -> list[DevicePlacement]:
+    """Generate a CDOT S-630-1 right-shoulder closure on a 2-lane undivided road.
+
+    Hard-coded for a 2-lane two-way road (one lane each direction) with
+    the right (work-side) shoulder closed.  Opposing traffic keeps its
+    full lane and is not signed — MUTCD does not require both-sides
+    advance warning for shoulder-only closures on undivided roads.
+
+    Coordinates follow the project convention: ``station_ft = 0`` at the
+    downstream end of the work zone, increasing upstream against
+    traffic; ``offset_ft = 0`` at the road centerline, positive values
+    to the right when facing upstream in the work direction.
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    # Lateral landmarks — single lane in the work direction
+    lane_edge_offset = params.lane_width_ft  # right edge of work-side lane
+    shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
+    arrow_board_offset = lane_edge_offset + shoulder_width_ft / 2.0
+    sign_offset_right = lane_edge_offset + 4.0
+
+    # Longitudinal landmarks
+    taper_len = shoulder_taper_length(speed, shoulder_width_ft)
+    buf_len = buffer_space(speed)
+
+    wz_end_station = 0.0
+    wz_start_station = wz_len
+    taper_end_station = wz_start_station + buf_len
+    taper_start_station = taper_end_station + taper_len
+
+    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+    spacing_abc = advance_warning_spacing(speed, rt)
+    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+
+    sign_a_station = taper_start_station + a_dist
+    sign_b_station = sign_a_station + b_dist
+    sign_c_station = sign_b_station + c_dist
+
+    placements: list[DevicePlacement] = []
+
+    # 1. Advance warning signs (work-direction approach only)
+    advance_signs = (
+        ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
+        ("W20-2", sign_b_station),  # ROAD WORK xxx FT
+        ("W20-1", sign_c_station),  # ROAD WORK AHEAD
+    )
+    for label, station in advance_signs:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label=label,
+            )
+        )
+
+    # 2. Shoulder taper (drums) — L/3 length per §6C.08.
+    # Floor at 4 drums so the upstream taper run is strictly longer than
+    # the 3-element downstream "taper + first tangent cone" run; otherwise
+    # validate_taper_length picks the wrong taper at low speeds with an
+    # 8-ft shoulder (formula gives 3 drums, ties with downstream).
+    in_taper_spacing = device_spacing_in_taper(speed)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=4)
+    n_taper_intervals = n_taper_devices - 1
+    for k in range(n_taper_devices):
+        t = k / n_taper_intervals  # 0 at taper_start, 1 at buffer_end
+        station = taper_start_station - t * taper_len
+        offset = shoulder_edge_offset - t * (shoulder_edge_offset - lane_edge_offset)
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.DRUM,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
+    # 3. Arrow board at the upstream start of the taper (right-arrow).
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.ARROW_BOARD,
+            station_ft=taper_start_station,
+            offset_ft=arrow_board_offset,
+            label="RIGHT_ARROW",
+        )
+    )
+
+    # 4. Buffer space — intentionally empty.
+
+    # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals.
+    total_zone_length = sign_c_station
+    n_plaques = co_construction_plaques(total_zone_length)
+    for k in range(n_plaques):
+        station = (k + 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_right,
+                label="G20-5P",
+            )
+        )
+
+    # 6. Work-zone tangent (cones).  ``pick_device_count`` chooses the
+    # interval count whose spacing best matches the on-tangent target,
+    # preferring counts that land in the validator's ±10 % tolerance.
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
+    n_tangent_intervals = n_tangent - 1
+    tangent_spacing = wz_len / n_tangent_intervals
+    for k in range(n_tangent):
+        station = wz_end_station + k * tangent_spacing
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=lane_edge_offset,
+            )
+        )
+
+    # 7. Downstream taper — short (2 cones) so the merging taper upstream
+    # is unambiguously the longest monotonic-offset run.
+    ds_taper_len = downstream_taper_length(1)
+    n_ds_cones = 2
+    for k in range(n_ds_cones):
+        t = (k + 1) / n_ds_cones
+        station = wz_end_station - t * ds_taper_len
+        offset = lane_edge_offset + t * (shoulder_edge_offset - lane_edge_offset)
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=station,
+                offset_ft=offset,
+            )
+        )
+
     # 8. END ROAD WORK sign (G20-2)
     end_sign_station = (wz_end_station - ds_taper_len) - 100.0
     placements.append(
@@ -206,15 +359,18 @@ def generate_shoulder_closure_divided(
             label="G20-2",
         )
     )
-    if params.is_divided:
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=end_sign_station,
-                offset_ft=sign_offset_left,
-                label="G20-2",
-            )
+
+    # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
+    # zone, just past the buffer.  Pairs with G20-2 per MUTCD §6F.55.
+    begin_sign_station = wz_start_station + 100.0
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=begin_sign_station,
+            offset_ft=sign_offset_right,
+            label="G20-1",
         )
+    )
 
     return placements
 
@@ -276,10 +432,13 @@ def generate_lane_closure_divided(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Advance warning signs — lane closure series
+    # 1. Advance warning signs — lane closure series.  Divided highways
+    # have separated carriageways, so signs go on the work-direction
+    # carriageway only (no opposite-side mirroring).
+    _ = sign_offset_left  # kept for symmetry with undivided layouts
     advance_signs = (
         ("W4-2R", sign_a_station),  # RIGHT LANE ENDS (merge arrow)
-        ("W20-5B", sign_b_station),  # RIGHT LANE CLOSED AHEAD
+        ("W20-5R", sign_b_station),  # RIGHT LANE CLOSED AHEAD
         ("W20-1", sign_c_station),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs:
@@ -291,19 +450,10 @@ def generate_lane_closure_divided(
                 label=label,
             )
         )
-        if params.is_divided:
-            placements.append(
-                DevicePlacement(
-                    device_type=DeviceType.SIGN_GENERIC,
-                    station_ft=station,
-                    offset_ft=sign_offset_left,
-                    label=label,
-                )
-            )
 
     # 2. Merging taper (drums) — full length L from lane edge to lane line
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals  # 0 at taper_start (upstream), 1 at buffer_end
@@ -343,19 +493,11 @@ def generate_lane_closure_divided(
                 label="G20-5P",
             )
         )
-        if params.is_divided:
-            placements.append(
-                DevicePlacement(
-                    device_type=DeviceType.SIGN_GENERIC,
-                    station_ft=station,
-                    offset_ft=sign_offset_left,
-                    label="G20-5P",
-                )
-            )
 
     # 6. Work-zone tangent (cones) — along the lane line between the
-    # open left lane and the closed right lane.
-    n_tangent = max(2, num_devices_on_tangent(wz_len, speed))
+    # open left lane and the closed right lane.  ``pick_device_count``
+    # chooses the interval count whose spacing best matches target.
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -384,7 +526,7 @@ def generate_lane_closure_divided(
             )
         )
 
-    # 8. END ROAD WORK sign (G20-2)
+    # 8. END ROAD WORK sign (G20-2) past the downstream taper
     end_sign_station = (wz_end_station - ds_taper_len) - 100.0
     placements.append(
         DevicePlacement(
@@ -394,15 +536,20 @@ def generate_lane_closure_divided(
             label="G20-2",
         )
     )
-    if params.is_divided:
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=end_sign_station,
-                offset_ft=sign_offset_left,
-                label="G20-2",
-            )
+
+    # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
+    # zone, just past the buffer.  Pairs with G20-2 as bookends per
+    # MUTCD §6F.55 — END without BEGIN is asymmetric and disorients
+    # drivers approaching the work area.
+    begin_sign_station = wz_start_station + 100.0
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=begin_sign_station,
+            offset_ft=sign_offset_right,
+            label="G20-1",
         )
+    )
 
     # ``shoulder_edge_offset`` is computed for completeness (notes/legend
     # may reference the road's overall lateral extent) but is not used
@@ -415,6 +562,10 @@ def generate_lane_closure_divided(
 def generate_flagger_alternating_2lane(
     params: ScenarioParams,
     shoulder_width_ft: float = 8.0,
+    *,
+    afad: bool = False,
+    pilot_car: bool = False,
+    pedestrian_access: bool = False,
 ) -> list[DevicePlacement]:
     """Generate a CDOT S-630-1 flagger-controlled alternating-traffic layout.
 
@@ -433,6 +584,17 @@ def generate_flagger_alternating_2lane(
     upstream of the merging taper) and one for the opposing approach
     (negative offset, downstream of the work zone).
 
+    Optional flags:
+      ``afad``: substitute Automated Flagger Assistance Devices
+        (TEMPORARY_SIGNAL with label "AFAD") for the human flagger
+        stations and swap the W20-7 advance signs for W20-7a.
+      ``pilot_car``: add G20-4 ("PILOT CAR FOLLOW ME") at each flagger
+        station; the pilot vehicle itself is field equipment listed in
+        the narrative, not a placed device.
+      ``pedestrian_access``: add R9-9 ("SIDEWALK CLOSED — USE OTHER
+        SIDE") at the upstream and downstream ends of the work zone on
+        the work-side shoulder.
+
     TODO: confirm exact CDOT S-630-1 Case number for one-lane two-way
     flagger operation; cases 6/7 of the 19-page set are likely matches.
     """
@@ -446,6 +608,14 @@ def generate_flagger_alternating_2lane(
     sign_offset_left = lane_edge_left - 4.0
     flagger_offset_right = lane_edge_right + 6.0
     flagger_offset_left = lane_edge_left - 6.0
+    pedestrian_sign_offset = lane_edge_right + shoulder_width_ft  # outer shoulder edge
+
+    # AFAD substitution: same DeviceType used for portable signals; the
+    # "AFAD" label distinguishes it for the renderer and the validator.
+    flagger_device = DeviceType.TEMPORARY_SIGNAL if afad else DeviceType.FLAGGER_STATION
+    flagger_ahead_label = "W20-7a" if afad else "W20-7"
+    flagger_label_1 = "AFAD_1" if afad else "FLAGGER_1"
+    flagger_label_2 = "AFAD_2" if afad else "FLAGGER_2"
 
     # Longitudinal landmarks: full merging taper L (this is a travel-lane
     # closure, not a shoulder closure) per MUTCD §6C.08.
@@ -464,13 +634,17 @@ def generate_flagger_alternating_2lane(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Right-direction (upstream-approach) advance warning signs
+    # 1. Right-direction (upstream-approach) advance warning signs.
+    # MUTCD §6E.05 / TA-10: drivers encounter ROAD WORK AHEAD (C) first,
+    # then BE PREPARED TO STOP (B), then FLAGGER (A) closest to the flagger
+    # station so the most specific cue is the freshest in mind at the stop.
+    # Note W3-4 (not W20-4 = ONE LANE ROAD AHEAD) is the BE PREPARED TO STOP code.
     sign_a_station_r = taper_start_station + a_dist
     sign_b_station_r = sign_a_station_r + b_dist
     sign_c_station_r = sign_b_station_r + c_dist
     advance_signs_right = (
-        ("W20-4", sign_a_station_r),  # BE PREPARED TO STOP
-        ("W20-7", sign_b_station_r),  # FLAGGER AHEAD
+        (flagger_ahead_label, sign_a_station_r),  # FLAGGER AHEAD or AFAD AHEAD
+        ("W3-4", sign_b_station_r),  # BE PREPARED TO STOP
         ("W20-1", sign_c_station_r),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_right:
@@ -484,20 +658,34 @@ def generate_flagger_alternating_2lane(
         )
 
     # 2. Flagger station #1 — upstream end of the merging taper
+    flagger_1_station = taper_start_station + 30.0
     placements.append(
         DevicePlacement(
-            device_type=DeviceType.FLAGGER_STATION,
-            station_ft=taper_start_station + 30.0,
+            device_type=flagger_device,
+            station_ft=flagger_1_station,
             offset_ft=flagger_offset_right,
-            label="FLAGGER_1",
+            label=flagger_label_1,
         )
     )
+    if pilot_car:
+        # G20-4 "PILOT CAR FOLLOW ME" co-located with the flagger so
+        # drivers see the requirement at the stop point.  G-series guide
+        # sign, not a W-series warning sign — earlier code emitted the
+        # spurious "W20-1A".
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=flagger_1_station,
+                offset_ft=sign_offset_right,
+                label="G20-4",
+            )
+        )
 
     # 3. Merging taper drums — push right-lane traffic across the
     # centerline into the opposing lane.  Offset transitions from the
     # right lane edge (+lane_width) to the centerline (0).
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = max(2, math.ceil(taper_len / in_taper_spacing))
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals
@@ -515,9 +703,10 @@ def generate_flagger_alternating_2lane(
 
     # 5. Work-zone tangent cones along the centerline, delineating the
     # boundary between the open opposing lane and the closed work lane.
-    # ``num_devices_on_tangent`` returns the interval count, so add one for
-    # the device count to keep spacing inside the 10 % channelizer tolerance.
-    n_tangent = max(3, num_devices_on_tangent(wz_len, speed) + 1)
+    # ``pick_device_count`` chooses the interval count whose spacing
+    # best matches target; min_count=3 floors the cone count so the
+    # centerline is unambiguously delineated even on short work zones.
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=3)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -551,9 +740,9 @@ def generate_flagger_alternating_2lane(
     sign_b_station_l = sign_a_station_l - b_dist
     sign_c_station_l = sign_b_station_l - c_dist
     advance_signs_left = (
-        ("W20-4", sign_a_station_l),
-        ("W20-7", sign_b_station_l),
-        ("W20-1", sign_c_station_l),
+        (flagger_ahead_label, sign_a_station_l),  # FLAGGER AHEAD closest to flagger #2
+        ("W3-4", sign_b_station_l),  # BE PREPARED TO STOP
+        ("W20-1", sign_c_station_l),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_left:
         placements.append(
@@ -567,14 +756,24 @@ def generate_flagger_alternating_2lane(
 
     # 8. Flagger station #2 — just downstream of the downstream taper end,
     # facing opposing traffic before they enter the work area.
+    flagger_2_station = -ds_taper_len - 30.0
     placements.append(
         DevicePlacement(
-            device_type=DeviceType.FLAGGER_STATION,
-            station_ft=-ds_taper_len - 30.0,
+            device_type=flagger_device,
+            station_ft=flagger_2_station,
             offset_ft=flagger_offset_left,
-            label="FLAGGER_2",
+            label=flagger_label_2,
         )
     )
+    if pilot_car:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=flagger_2_station,
+                offset_ft=sign_offset_left,
+                label="G20-4",
+            )
+        )
 
     # 9. Downstream taper cones — transition right-direction traffic from
     # the centerline back to the right lane edge after the work zone.
@@ -611,10 +810,245 @@ def generate_flagger_alternating_2lane(
         )
     )
 
-    # ``shoulder_width_ft`` is currently a layout-only nicety (used for
-    # visual scaling on the rendered plan) and not consumed by device
-    # placement; reserved for future shoulder/edge channelization.
-    _ = shoulder_width_ft
+    # 10a. BEGIN ROAD WORK signs (G20-1) — one per direction, paired with
+    # G20-2 per MUTCD §6F.55.  Right-direction sees BEGIN at the upstream
+    # end of the work zone; opposing direction sees it at the downstream end.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=wz_start_station + 100.0,
+            offset_ft=sign_offset_right,
+            label="G20-1",
+        )
+    )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=-ds_taper_len - 100.0,
+            offset_ft=sign_offset_left,
+            label="G20-1",
+        )
+    )
+
+    # 11. Pedestrian access signs — R9-9 "SIDEWALK CLOSED — USE OTHER
+    # SIDE" at the upstream and downstream ends of the work zone, on
+    # the work-side shoulder.  v1 does not emit detour-routing signs
+    # (R9-11a etc.) — those need sidewalk geometry the form does not
+    # capture yet.
+    if pedestrian_access:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=wz_start_station,
+                offset_ft=pedestrian_sign_offset,
+                label="R9-9",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=wz_end_station,
+                offset_ft=pedestrian_sign_offset,
+                label="R9-9",
+            )
+        )
+
+    return placements
+
+
+def generate_work_beyond_shoulder(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 10.0,
+) -> list[DevicePlacement]:
+    """Generate a TA-1 'Work Beyond the Shoulder' layout.
+
+    Per MUTCD § 6G.04, work occurring outside the roadway shoulder
+    requires only minimal advance signing — typically a single
+    W21-5 SHOULDER WORK sign upstream, plus G20-2 END ROAD WORK
+    downstream for long-duration work.  No taper, no buffer, no
+    channelizing devices on the road itself.
+
+    Coordinates: ``station_ft = 0`` at the downstream end of the work
+    area; positive upstream against traffic.  Single-direction layout
+    (no mirroring) since shoulder/setback work doesn't affect
+    opposing traffic.
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    lane_edge_offset = params.lane_width_ft
+    sign_offset_right = lane_edge_offset + shoulder_width_ft + 4.0
+
+    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+    spacing_abc = advance_warning_spacing(speed, rt)
+    a_dist = spacing_abc["A"]
+
+    wz_end_station = 0.0
+    wz_start_station = wz_len
+    sign_a_station = wz_start_station + a_dist
+
+    placements: list[DevicePlacement] = [
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=sign_a_station,
+            offset_ft=sign_offset_right,
+            label="W21-5",  # SHOULDER WORK
+        ),
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=wz_end_station - 100.0,
+            offset_ft=sign_offset_right,
+            label="G20-2",  # END ROAD WORK
+        ),
+    ]
+
+    return placements
+
+
+def generate_mobile_op_2lane(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 8.0,
+    *,
+    arrow_board_on_shadow: bool = True,
+) -> list[DevicePlacement]:
+    """Generate a TA-35 'Mobile Operation on a Two-Lane Road' layout.
+
+    Slow-moving operations (sweeping, striping, mowing, patching) where
+    the protection moves with the work.  A shadow vehicle trails the
+    work truck at ~100 ft, optionally equipped with a TMA + arrow board
+    in caution mode.  Per MUTCD § 6G.05.
+
+    Placements represent a snapshot at the current position; the work
+    truck is at station 0, shadow upstream of it.  No fixed devices on
+    the road — the layout is short-lived and follows the truck.
+    """
+    _ = shoulder_width_ft  # parameter kept for signature parity; mobile ops don't use shoulder
+    lane_edge_right = params.lane_width_ft
+    sign_offset = lane_edge_right + 4.0
+    truck_offset = lane_edge_right / 2.0  # mid-lane
+
+    # MUTCD §6G.05 typical: shadow trails the work truck at ~100 ft on
+    # 2-lane roads — close enough for drivers to read the pair as one
+    # moving group, far enough to absorb a rear-end impact.  This is
+    # independent of ``params.work_zone_length_ft``, which is a fixed-area
+    # concept that doesn't apply to mobile operations.
+    shadow_trailing = 100.0
+    work_truck_station = 0.0
+    shadow_station = work_truck_station + shadow_trailing
+
+    # Two advance warning signs upstream of the shadow vehicle, scaled
+    # to posted speed via Table 6B-1.  W21-1a WORKERS sits closest to the
+    # moving operation; W20-1 ROAD WORK AHEAD goes further upstream so
+    # drivers see general context first.
+    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+    spacing_abc = advance_warning_spacing(params.speed_mph, rt)
+    a_dist = spacing_abc["A"]
+    b_dist = spacing_abc["B"]
+    workers_sign_station = shadow_station + a_dist
+    roadwork_sign_station = workers_sign_station + b_dist
+
+    placements: list[DevicePlacement] = [
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=roadwork_sign_station,
+            offset_ft=sign_offset,
+            label="W20-1",  # ROAD WORK AHEAD
+        ),
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=workers_sign_station,
+            offset_ft=sign_offset,
+            label="W21-1a",  # WORKERS — MUTCD lowercase suffix convention
+        ),
+        DevicePlacement(
+            device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
+            station_ft=work_truck_station,
+            offset_ft=truck_offset,
+            label="WORK_TRUCK",
+        ),
+        DevicePlacement(
+            device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
+            station_ft=shadow_station,
+            offset_ft=truck_offset,
+            label="SHADOW_TMA",
+        ),
+    ]
+
+    if arrow_board_on_shadow:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.ARROW_BOARD,
+                station_ft=shadow_station,
+                offset_ft=truck_offset + 3.0,
+                label="CAUTION",  # 4-corner flash, not directional arrow
+            )
+        )
+
+    return placements
+
+
+def generate_mobile_op_multilane(
+    params: ScenarioParams,
+    shoulder_width_ft: float = 10.0,
+    *,
+    second_tma: bool = False,
+) -> list[DevicePlacement]:
+    """Generate a TA-26 'Mobile Operation on a Multi-Lane Road' layout.
+
+    Slow-moving operations on freeways and divided highways.  Shadow
+    vehicle with TMA + arrow board (mandatory at multi-lane speeds)
+    trails the work truck; a second TMA may be deployed further upstream
+    at posted speeds ≥ 55 mph or when crash worthiness is critical.
+    Per MUTCD § 6G.06.
+
+    Geometry assumes a 2-lane-per-direction work-side carriageway with
+    the right lane occupied by the moving operation.
+    """
+    lane_line_offset = params.lane_width_ft
+    closed_lane_center = 1.5 * params.lane_width_ft
+    sign_offset = 2.0 * params.lane_width_ft + 4.0
+
+    work_truck_station = 0.0
+    shadow_trailing = max(150.0, params.work_zone_length_ft)
+    shadow_station = work_truck_station + shadow_trailing
+    second_tma_station = shadow_station + 1000.0
+
+    placements: list[DevicePlacement] = [
+        DevicePlacement(
+            device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
+            station_ft=work_truck_station,
+            offset_ft=closed_lane_center,
+            label="WORK_TRUCK",
+        ),
+        DevicePlacement(
+            device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
+            station_ft=shadow_station,
+            offset_ft=closed_lane_center,
+            label="SHADOW_TMA",
+        ),
+        DevicePlacement(
+            device_type=DeviceType.ARROW_BOARD,
+            station_ft=shadow_station,
+            offset_ft=closed_lane_center + 2.0,
+            label="LEFT_ARROW",
+        ),
+    ]
+
+    if second_tma:
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
+                station_ft=second_tma_station,
+                offset_ft=closed_lane_center,
+                label="UPSTREAM_TMA",
+            )
+        )
+
+    # ``lane_line_offset`` and ``sign_offset`` are computed for layout
+    # legibility but mobile ops don't place advance roadside signs
+    # (the shadow's arrow board + TMA are the active warning).
+    _ = lane_line_offset
+    _ = sign_offset
 
     return placements
 

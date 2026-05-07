@@ -22,7 +22,7 @@ from src.rules.validators import DevicePlacement, ScenarioParams
 # limited_sight_distance. Pulled from the labels emitted by the layout
 # generators (layout.py) plus the W-codes called out in the spec.
 _ADVANCE_SIGN_LABELS: frozenset[str] = frozenset(
-    {"W20-1", "W20-2", "W21-5aR", "W20-5B", "W4-2R", "W20-7", "W20-4"}
+    {"W20-1", "W20-2", "W21-5aR", "W20-5R", "W4-2R", "W20-7", "W3-4"}
 )
 
 

@@ -90,6 +90,8 @@ export {
   workBeyondShoulderWorkLabel,
 };
 export { isLegacyParams, isScenario, migrateLegacy, toScenario } from "./legacy";
+export { applyClassification } from "./auto-apply";
+export type { AutoApplyDelta } from "./auto-apply";
 
 export function compute(s: Scenario): ScenarioResult {
   switch (s.kind) {
