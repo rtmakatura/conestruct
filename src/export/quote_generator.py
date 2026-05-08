@@ -20,6 +20,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
+from src.rules.sign_codes import description_for
 from src.rules.validators import DevicePlacement, ScenarioParams
 
 # ---------------------------------------------------------------------------
@@ -42,17 +43,6 @@ EQUIPMENT_DAILY_RATES: dict[DeviceType, float] = {
     DeviceType.SIGN_GENERIC: 4.00,
     DeviceType.DETOUR_MARKER: 4.00,
     DeviceType.CHANNELIZER_OPTIONAL: 2.00,
-}
-
-# Same minimal sign dictionary used by the device-list exporter; keeps the
-# two outputs aligned without coupling the modules.
-_SIGN_LABEL_NAMES: dict[str, str] = {
-    "W20-1": "ROAD WORK AHEAD",
-    "W20-2": "ROAD WORK XXX FT",
-    "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",
-    "G20-2": "END ROAD WORK",
-    "G20-5P": "WORK ZONE plaque",
-    "R2-6P": "FINES DOUBLE plaque",
 }
 
 _FLAGGER_NOTE = "See Labor Detail"
@@ -175,8 +165,8 @@ def _description_for(device_type: DeviceType, label: str | None) -> str:
     if device_type == DeviceType.SIGN_GENERIC:
         if label is None:
             return "Generic construction sign (unlabeled)"
-        human = _SIGN_LABEL_NAMES.get(label, "")
-        return f"{label} {human}".strip()
+        human = description_for(label)
+        return f"{label} {human}".strip() if human != label else label
     return DEVICE_CATALOG[device_type].description
 
 
@@ -677,7 +667,7 @@ if __name__ == "__main__":
         speed_mph=55,
         num_lanes=2,
         closure_type="shoulder",
-        road_type="divided_highway",
+        road_type="freeway",
         work_zone_length_ft=800.0,
         lane_width_ft=12.0,
         is_divided=True,

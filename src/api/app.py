@@ -62,7 +62,7 @@ closure_type = st.sidebar.selectbox(
 )
 road_type = st.sidebar.selectbox(
     "Road type",
-    ["urban_low", "urban_high", "rural", "expressway", "divided_highway"],
+    ["urban_low", "urban_high", "rural", "expressway", "freeway"],
     index=4,
 )
 work_zone_length_ft = st.sidebar.number_input(
@@ -239,7 +239,7 @@ def _device_breakdown_df(placements) -> pd.DataFrame:
 
 if generate_button:
     is_flagger_scenario = closure_type == "lane" and num_lanes == 1 and not is_divided
-    is_divided_scenario = closure_type in ("shoulder", "lane") and road_type == "divided_highway"
+    is_divided_scenario = closure_type in ("shoulder", "lane") and is_divided
     supported = is_divided_scenario or is_flagger_scenario
     if not supported:
         st.warning(
@@ -265,7 +265,7 @@ if generate_button:
     try:
         if is_flagger_scenario:
             placements = generate_flagger_alternating_2lane(params)
-        elif closure_type == "lane" and road_type == "divided_highway":
+        elif closure_type == "lane" and is_divided:
             placements = generate_lane_closure_divided(params)
         else:
             placements = generate_shoulder_closure_divided(params)

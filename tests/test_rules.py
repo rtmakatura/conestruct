@@ -163,12 +163,12 @@ def test_buffer_space_lookup() -> None:
 
 
 def test_advance_warning_auto_inference() -> None:
-    """Speed-based inference selects urban/rural; expressway needs explicit."""
+    """Speed-based inference selects urban/rural; 55+ mph requires explicit."""
     # 30 mph -> urban_low (A=B=C=100)
     assert advance_warning_spacing(30) == {"A": 100.0, "B": 100.0, "C": 100.0}
     # 40 mph -> urban_high (A=B=C=350)
     assert advance_warning_spacing(40) == {"A": 350.0, "B": 350.0, "C": 350.0}
-    # 50 mph -> rural (A=B=C=500)
+    # 45-54 mph band -> rural (A=B=C=500)
     assert advance_warning_spacing(50) == {"A": 500.0, "B": 500.0, "C": 500.0}
     # 60 mph with explicit expressway -> asymmetric 1000/1500/2640
     assert advance_warning_spacing(60, road_type="expressway") == {
@@ -176,8 +176,11 @@ def test_advance_warning_auto_inference() -> None:
         "B": 1500.0,
         "C": 2640.0,
     }
-    # 60 mph with no road_type -> rural (NOT expressway)
-    assert advance_warning_spacing(60) == {"A": 500.0, "B": 500.0, "C": 500.0}
+    # Bug Fix 6: 55+ mph with no road_type now raises rather than
+    # silently picking rural (which under-spec'd interstates by
+    # thousands of feet on the C sign).
+    with pytest.raises(ValueError, match="explicit road_type"):
+        advance_warning_spacing(60)
 
 
 def test_device_counts_in_taper() -> None:
@@ -214,12 +217,20 @@ def test_pick_device_count_only_one_in_tolerance() -> None:
 
 
 def test_pick_device_count_neither_in_tolerance() -> None:
-    """Picks closer-to-target when neither candidate is in tolerance."""
+    """Picks the safer (smaller-spacing) candidate when neither is in tolerance.
+
+    Bug Fix 4: when both floor- and ceil-interval candidates fall
+    outside the ±tolerance window, the picker now prefers the ceil
+    (= more devices, smaller spacing) so we never exceed the MUTCD
+    §6C.09 maximum.  Previously it took the candidate closest to
+    target by absolute deviation, which on shoulder-taper geometry
+    silently picked the over-the-max candidate.
+    """
     # 150 ft, target 45 → exact 3.33
-    # floor=3 → 50 ft  (deviation 5.0)  out of [40.5, 49.5]
-    # ceil=4  → 37.5 ft (deviation 7.5) out
-    # closer wins → 3 intervals → 4 devices
-    assert pick_device_count(150, 45) == 4
+    # floor=3 → 50 ft  (over the [40.5, 49.5] window — TOO_WIDE)
+    # ceil=4  → 37.5 ft (under the window — conservative)
+    # ceil wins → 4 intervals → 5 devices
+    assert pick_device_count(150, 45) == 5
 
 
 def test_pick_device_count_min_count_floor() -> None:
@@ -339,8 +350,8 @@ def _textbook_layout() -> list[DevicePlacement]:
         offsets stepping from +24 (downstream end) to 0 (upstream end)
       - 1 arrow board at the upstream end of the taper
       - 3 advance warning signs at A/B/C = 500 ft, mirrored on the
-        opposite side (is_divided=True)
-      - 2 G20-5P plaques in the work zone, mirrored
+        median-side shoulder per CO Supplement §6C.04(A)
+      - 2 G20-5P plaques in the work zone, mirrored on both sides
     """
     placements: list[DevicePlacement] = []
 
@@ -373,9 +384,8 @@ def _textbook_layout() -> list[DevicePlacement]:
         )
     )
 
-    # Advance warning signs A/B/C on the work-side carriageway only —
-    # divided highway, so opposing traffic is separated by the median
-    # and is not signed for this work zone.
+    # Advance warning signs A/B/C, mirrored on both sides of the
+    # divided roadway per CO Supplement §6C.04(A).
     for n in range(3):
         station = 1900.0 + n * 500.0  # 1900, 2400, 2900
         placements.append(
@@ -386,14 +396,30 @@ def _textbook_layout() -> list[DevicePlacement]:
                 label="W20-1",
             )
         )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=-24.0,
+                label="W20-1",
+            )
+        )
 
-    # Two G20-5P plaques in the work zone, work-side only.
+    # Two G20-5P plaques in the work zone, mirrored on both sides.
     for station in (100.0, 400.0):
         placements.append(
             DevicePlacement(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=24.0,
+                label="G20-5P",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=-24.0,
                 label="G20-5P",
             )
         )
@@ -475,23 +501,15 @@ def test_missing_arrow_board() -> None:
 
 
 def test_co_signs_one_side_only() -> None:
-    """Removing left-side mirror signs fires CO_SIGN_BOTH_SIDES on a one-way street.
+    """Stripping left-side mirrors fires CO_SIGN_BOTH_SIDES on a divided highway.
 
-    The both-sides rule applies on undivided facilities listed in
-    ``COLORADO_OVERRIDES.both_sides_signage_required_on``.  Divided
-    highways are exempt because the median provides physical separation
-    from opposing traffic.
+    Bug Fix 1 wired the both-sides rule to ``is_divided`` on the
+    canonical textbook layout.  Bug Fix 6 then removed the legacy
+    ``one_way_street``/``multi_lane_ramp`` road_type triggers (those
+    are not Table 6B-1 categories), so the divided-highway path is
+    now the sole live trigger and the regression check follows it.
     """
-    params = ScenarioParams(
-        speed_mph=45,
-        num_lanes=4,
-        lane_width_ft=12.0,
-        closure_type="lane",
-        road_type="one_way_street",
-        work_zone_length_ft=500.0,
-        is_divided=False,
-        jurisdiction="CDOT",
-    )
+    params = _simple_lane_closure_params()  # is_divided=True, road_type="rural"
     placements = [
         p
         for p in _textbook_layout()
@@ -575,38 +593,50 @@ def _shoulder_divided_params() -> ScenarioParams:
     )
 
 
-def test_no_opposing_carriageway_signs_clean() -> None:
-    """The canonical TA-2 generator output has no opposing-carriageway signs."""
+def test_shoulder_divided_signs_mirrored_both_sides() -> None:
+    """The canonical TA-2 generator output mirrors every sign on both sides.
+
+    CO Supplement §6C.04(A) requires signs on both sides of a divided
+    highway.  Each SIGN_GENERIC placement at +offset must have a
+    matching placement at -offset (same station, same label).
+    """
     from src.generation.layout import generate_shoulder_closure_divided
 
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params)
+    right_signs = [
+        p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft > 0
+    ]
+    left_signs = [
+        p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft < 0
+    ]
+    assert len(right_signs) == len(left_signs) > 0, (
+        f"Expected balanced left/right sign counts on a divided shoulder closure; "
+        f"got {len(right_signs)} right, {len(left_signs)} left."
+    )
+
     violations = validate_layout(placements, params)
-    opposing = [v for v in violations if v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN"]
-    assert not opposing, (
-        "Generator should not place signs on the opposite carriageway: "
-        f"{[v.message for v in opposing]}"
+    co_errors = [v for v in violations if v.rule_id == "CO_SIGN_BOTH_SIDES"]
+    assert not co_errors, (
+        "Canonical TA-2 generator output must not raise CO_SIGN_BOTH_SIDES: "
+        f"{[v.message for v in co_errors]}"
     )
 
 
-def test_opposing_carriageway_sign_fires() -> None:
-    """A sign at negative offset on a divided shoulder closure fires the rule."""
+def test_shoulder_divided_one_side_only_fires_error() -> None:
+    """Stripping the median-side mirrors fires CO_SIGN_BOTH_SIDES at error severity."""
     from src.generation.layout import generate_shoulder_closure_divided
 
     params = _shoulder_divided_params()
-    placements = list(generate_shoulder_closure_divided(params))
-    placements.append(
-        DevicePlacement(
-            device_type=DeviceType.SIGN_GENERIC,
-            station_ft=2000.0,
-            offset_ft=-28.0,
-            label="W20-1",
-        )
-    )
+    placements = [
+        p
+        for p in generate_shoulder_closure_divided(params)
+        if not (DEVICE_CATALOG[p.device_type].is_sign and p.offset_ft < 0)
+    ]
     violations = validate_layout(placements, params)
     assert any(
-        v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN" and v.severity == "error" for v in violations
-    ), f"Expected OPPOSING_CARRIAGEWAY_SIGN, got: {[v.rule_id for v in violations]}"
+        v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations
+    ), f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
 
 
 def test_begin_road_work_required_with_end() -> None:
@@ -707,38 +737,45 @@ def _lane_divided_params() -> ScenarioParams:
     )
 
 
-def test_lane_closure_no_opposing_carriageway_signs_clean() -> None:
-    """The canonical TA-19 generator output has no opposing-carriageway signs."""
+def test_lane_closure_signs_mirrored_both_sides() -> None:
+    """The canonical TA-19 generator output mirrors every sign on both sides."""
     from src.generation.layout import generate_lane_closure_divided
 
     params = _lane_divided_params()
     placements = generate_lane_closure_divided(params)
+    right_signs = [
+        p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft > 0
+    ]
+    left_signs = [
+        p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft < 0
+    ]
+    assert len(right_signs) == len(left_signs) > 0, (
+        f"Expected balanced left/right sign counts on a divided lane closure; "
+        f"got {len(right_signs)} right, {len(left_signs)} left."
+    )
+
     violations = validate_layout(placements, params)
-    opposing = [v for v in violations if v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN"]
-    assert not opposing, (
-        "Generator should not place signs on the opposite carriageway: "
-        f"{[v.message for v in opposing]}"
+    co_errors = [v for v in violations if v.rule_id == "CO_SIGN_BOTH_SIDES"]
+    assert not co_errors, (
+        "Canonical TA-19 generator output must not raise CO_SIGN_BOTH_SIDES: "
+        f"{[v.message for v in co_errors]}"
     )
 
 
-def test_lane_closure_opposing_carriageway_sign_fires() -> None:
-    """A sign at negative offset on a divided lane closure fires the rule."""
+def test_lane_closure_one_side_only_fires_error() -> None:
+    """Stripping the median-side mirrors fires CO_SIGN_BOTH_SIDES at error severity."""
     from src.generation.layout import generate_lane_closure_divided
 
     params = _lane_divided_params()
-    placements = list(generate_lane_closure_divided(params))
-    placements.append(
-        DevicePlacement(
-            device_type=DeviceType.SIGN_GENERIC,
-            station_ft=2000.0,
-            offset_ft=-28.0,
-            label="W20-1",
-        )
-    )
+    placements = [
+        p
+        for p in generate_lane_closure_divided(params)
+        if not (DEVICE_CATALOG[p.device_type].is_sign and p.offset_ft < 0)
+    ]
     violations = validate_layout(placements, params)
     assert any(
-        v.rule_id == "OPPOSING_CARRIAGEWAY_SIGN" and v.severity == "error" for v in violations
-    ), f"Expected OPPOSING_CARRIAGEWAY_SIGN, got: {[v.rule_id for v in violations]}"
+        v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations
+    ), f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
 
 
 def test_lane_closure_begin_road_work_required_with_end() -> None:
@@ -1061,3 +1098,69 @@ def test_mobile_validators_clean_on_canonical() -> None:
         f"Canonical TA-35 layout should not produce error-level violations: "
         f"{[(v.rule_id, v.message) for v in errors]}"
     )
+
+
+# ===========================================================================
+# Section 5 — sign_codes module (single source of truth for descriptions)
+# ===========================================================================
+
+
+def test_sign_codes_cover_every_label_emitted_by_canonical_generators() -> None:
+    """Every sign label produced by the V1 generators has a non-empty
+    description in the consolidated sign_codes module.
+
+    Regression for the parallel-dict drift that left codes like G20-1,
+    W20-5R, and W4-2R as bare codes in the device-list xlsx because
+    the exporter's local dict had never been updated to match the
+    plan-sheet renderer's dict.
+    """
+    from src.generation.layout import (
+        generate_flagger_alternating_2lane,
+        generate_lane_closure_divided,
+        generate_mobile_op_2lane,
+        generate_shoulder_closure_divided,
+    )
+    from src.rules.sign_codes import SIGN_DESCRIPTIONS, description_for
+
+    placements = (
+        list(generate_shoulder_closure_divided(_shoulder_divided_params()))
+        + list(generate_lane_closure_divided(_lane_divided_params()))
+        + list(generate_flagger_alternating_2lane(_flagger_params()))
+        + list(generate_mobile_op_2lane(_mobile_2lane_params()))
+    )
+    # Skip the synthetic non-MUTCD labels (RIGHT_ARROW, WORK_TRUCK,
+    # SHADOW_TMA, etc.) — they're internal glyph keys, not sign codes.
+    sign_codes_emitted = {
+        p.label
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC and p.label is not None
+    }
+
+    missing = sorted(c for c in sign_codes_emitted if c not in SIGN_DESCRIPTIONS)
+    assert not missing, (
+        f"Generators emit sign codes with no entry in SIGN_DESCRIPTIONS: {missing}. "
+        "Add them to src/rules/sign_codes.py."
+    )
+
+    for code in sign_codes_emitted:
+        desc = description_for(code)
+        assert desc and desc != code, (
+            f"description_for({code!r}) returned a fallback ({desc!r}); "
+            "every emitted code should have a real description."
+        )
+
+
+def test_description_for_falls_back_to_bare_code_for_unknown() -> None:
+    """Unknown codes round-trip as themselves so xlsx/PDF still render something."""
+    from src.rules.sign_codes import description_for
+
+    assert description_for("ZZ-99") == "ZZ-99"
+
+
+def test_description_for_keeps_xxx_placeholder_for_substitution() -> None:
+    """W20-2 and G20-1 carry parametric distances — the literal XXX must
+    survive the lookup so consumers can substitute the actual length."""
+    from src.rules.sign_codes import description_for
+
+    assert "XXX" in description_for("W20-2")
+    assert "XXX" in description_for("G20-1")

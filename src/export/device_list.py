@@ -18,6 +18,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
+from src.rules.sign_codes import description_for
 from src.rules.validators import DevicePlacement, ScenarioParams
 
 # Light-gray header fill from the V1 spec.
@@ -45,18 +46,6 @@ _DEVICE_LIST_HEADERS: tuple[str, ...] = (
     "Quantity",
     "Notes",
 )
-
-# Minimal sign-code → human-readable name map for the sign labels emitted
-# by the Phase 3 layout.  Lookup is best-effort; unknown labels fall back
-# to the bare code.  A complete MUTCD sign dictionary is Phase 4b work.
-_SIGN_LABEL_NAMES: dict[str, str] = {
-    "W20-1": "ROAD WORK AHEAD",
-    "W20-2": "ROAD WORK XXX FT",
-    "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",
-    "G20-2": "END ROAD WORK",
-    "G20-5P": "WORK ZONE plaque",
-    "R2-6P": "FINES DOUBLE plaque",
-}
 
 _SIGN_GENERIC_NOTE: str = (
     "Unit is EACH for V1; CDOT Spec 630 bills by SF — convert when sign sizes are known."
@@ -93,8 +82,8 @@ def _row_for(
             description = "Generic construction sign (unlabeled)"
             type_label = "SIGN_GENERIC (unlabeled)"
         else:
-            human = _SIGN_LABEL_NAMES.get(label, "")
-            description = f"{label} {human}".strip()
+            human = description_for(label)
+            description = f"{label} {human}".strip() if human != label else label
             type_label = "SIGN_GENERIC"
         unit = "EACH"  # V1 override; catalog says SF.
         notes = _SIGN_GENERIC_NOTE
@@ -198,7 +187,7 @@ if __name__ == "__main__":
         speed_mph=55,
         num_lanes=2,
         closure_type="shoulder",
-        road_type="divided_highway",
+        road_type="freeway",
         work_zone_length_ft=800.0,
         lane_width_ft=12.0,
         is_divided=True,

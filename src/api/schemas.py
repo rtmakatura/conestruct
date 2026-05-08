@@ -209,7 +209,21 @@ def _map_road_type(road_type: str, speed: int) -> str:
     otherwise ``urban_low``.  Both ``rural_*`` collapse to ``rural``;
     the divided/undivided distinction is carried separately by
     ``is_divided``.
+
+    Raises:
+        ValueError: ``road_type`` is the legacy descriptor
+            ``"divided_highway"`` (no longer a valid road_type — use
+            ``is_divided`` for median presence and pick a Table 6B-1
+            speed/access category), or any other unmapped value.
     """
+    if road_type == "divided_highway":
+        raise ValueError(
+            "'divided_highway' is not a valid road_type — divided-ness is "
+            "carried separately by ScenarioParams.is_divided.  Use one of "
+            "'rural_undivided', 'rural_divided', 'urban_arterial', "
+            "'freeway' on the TS side, which map to MUTCD Table 6B-1 "
+            "categories ('rural', 'urban_high', 'urban_low', 'freeway')."
+        )
     if road_type in ("rural_undivided", "rural_divided"):
         return "rural"
     if road_type == "urban_arterial":

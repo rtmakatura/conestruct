@@ -25,6 +25,7 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from src.rules.devices import DeviceType
+from src.rules.sign_codes import description_for
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -46,16 +47,6 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
 # get their own rows in the schedule and are excluded from the
 # advance-warning sign list.
 _PLAQUE_AND_END_LABELS: frozenset[str] = frozenset({"G20-5P", "G20-2", "R2-6P"})
-
-_SIGN_LABEL_NAMES: dict[str, str] = {
-    "W20-1": "ROAD WORK AHEAD",
-    "W20-2": "ROAD WORK XXX FT",
-    "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",
-    "W21-5aL": "LEFT SHOULDER CLOSED AHEAD",
-    "G20-2": "END ROAD WORK",
-    "G20-5P": "WORK ZONE",
-    "R2-6P": "FINES DOUBLE",
-}
 
 _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
     DeviceType.CONE: "Traffic Cone (36-inch)",
@@ -80,7 +71,6 @@ _ROAD_TYPE_HUMAN: dict[str, str] = {
     "rural": "Rural two-lane",
     "expressway": "Expressway",
     "freeway": "Freeway",
-    "divided_highway": "Divided highway",
 }
 
 
@@ -107,10 +97,11 @@ def _device_summary(placements: list[DevicePlacement]) -> list[dict[str, Any]]:
     if sign_counts:
         sign_rows = []
         for code, n in sorted(sign_counts.items()):
-            human = _SIGN_LABEL_NAMES.get(code, "")
+            human = description_for(code)
+            label = f"{code} {human}".strip() if human != code else code
             sign_rows.append(
                 {
-                    "label": f"{code} {human}".strip(),
+                    "label": label,
                     "count": n,
                 }
             )
@@ -177,10 +168,11 @@ def _advance_signs_from_placements(
             and p.offset_ft > 0
             and p.station_ft > taper_start_station
         ):
+            human = description_for(p.label)
             out.append(
                 {
                     "code": p.label,
-                    "description": _SIGN_LABEL_NAMES.get(p.label, ""),
+                    "description": "" if human == p.label else human,
                     "distance_ft": p.station_ft - taper_start_station,
                     "station_ft": p.station_ft,
                 }
@@ -257,14 +249,14 @@ def build_narrative_context(
     sign_schedule.append(
         {
             "code": "G20-5P",
-            "description": _SIGN_LABEL_NAMES["G20-5P"],
+            "description": description_for("G20-5P"),
             "distance": "Within work zone",
         }
     )
     sign_schedule.append(
         {
             "code": "G20-2",
-            "description": _SIGN_LABEL_NAMES["G20-2"],
+            "description": description_for("G20-2"),
             "distance": "Downstream of work zone",
         }
     )
@@ -413,7 +405,7 @@ if __name__ == "__main__":
         speed_mph=55,
         num_lanes=2,
         closure_type="shoulder",
-        road_type="divided_highway",
+        road_type="freeway",
         work_zone_length_ft=800.0,
         lane_width_ft=12.0,
         is_divided=True,

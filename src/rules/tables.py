@@ -208,8 +208,9 @@ class ColoradoOverrides:
 
     # Source: CO Supplement §6C.04(A) — advance warning signs must be
     # placed on both sides of the roadway on these road types.
+    # Divided highways are covered separately by ``ScenarioParams.is_divided``
+    # and are not listed here (divided-ness is not a road_type).
     both_sides_signage_required_on: tuple[str, ...] = (
-        "divided_highway",
         "multi_lane_ramp",
         "one_way_street",
     )

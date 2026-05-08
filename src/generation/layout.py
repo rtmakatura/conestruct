@@ -27,13 +27,6 @@ from src.rules.spacing import (
 )
 from src.rules.validators import DevicePlacement, ScenarioParams
 
-# Categories accepted by ``advance_warning_spacing`` directly; any other
-# value (e.g., the descriptive "divided_highway") is mapped to None so
-# the function falls back to its speed-based inference.
-_TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
-    {"urban_low", "urban_high", "rural", "expressway", "freeway"}
-)
-
 
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
@@ -73,8 +66,7 @@ def generate_shoulder_closure_divided(
     taper_start_station = taper_end_station + taper_len
 
     # Advance warning sign A/B/C (MUTCD Table 6B-1)
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(speed, rt)
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
     a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
 
     sign_a_station = taper_start_station + a_dist
@@ -83,11 +75,11 @@ def generate_shoulder_closure_divided(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Advance warning signs.  Divided highways have separated
-    # carriageways: the median isolates opposing traffic from the work
-    # area, so signs are placed only on the work-direction carriageway
-    # (no opposite-side mirroring).  CDOT S-630-1 typical sheet.
-    _ = sign_offset_left  # kept for symmetry with undivided layouts
+    # 1. Advance warning signs — mirrored on both sides of the divided
+    # roadway per CO Supplement §6C.04(A).  Each W-series sign is placed
+    # on the right shoulder (+offset) and the median side (-offset) at
+    # the same station so drivers in either lane see the same advance
+    # cues regardless of where they are in the carriageway.
     advance_signs = (
         ("W21-5aR", sign_a_station),  # RIGHT SHOULDER CLOSED AHEAD
         ("W20-2", sign_b_station),  # ROAD WORK xxx FT
@@ -99,6 +91,14 @@ def generate_shoulder_closure_divided(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=sign_offset_right,
+                label=label,
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_left,
                 label=label,
             )
         )
@@ -136,7 +136,8 @@ def generate_shoulder_closure_divided(
     # 5. CONSTRUCTION ZONE plaques (G20-5P).  Count is keyed to the total
     # signed length, but the plaques themselves stay inside the work zone
     # so they do not interleave with the advance-warning A/B/C cluster
-    # checked in ``validate_advance_warning_signs``.
+    # checked in ``validate_advance_warning_signs``.  Mirrored on both
+    # sides of the divided roadway per CO Supplement §6C.04(A).
     total_zone_length = sign_c_station
     n_plaques = co_construction_plaques(total_zone_length)
     for k in range(n_plaques):
@@ -146,6 +147,14 @@ def generate_shoulder_closure_divided(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=sign_offset_right,
+                label="G20-5P",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_left,
                 label="G20-5P",
             )
         )
@@ -183,7 +192,8 @@ def generate_shoulder_closure_divided(
             )
         )
 
-    # 8. END ROAD WORK sign (G20-2) past the downstream taper.
+    # 8. END ROAD WORK sign (G20-2) past the downstream taper, mirrored
+    # on both sides per CO Supplement §6C.04(A).
     end_sign_station = (wz_end_station - ds_taper_len) - 100.0
     placements.append(
         DevicePlacement(
@@ -193,17 +203,32 @@ def generate_shoulder_closure_divided(
             label="G20-2",
         )
     )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=end_sign_station,
+            offset_ft=sign_offset_left,
+            label="G20-2",
+        )
+    )
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
     # zone, just past the buffer.  Pairs with G20-2 as bookends per
-    # MUTCD §6F.55 — END without BEGIN is asymmetric and disorients
-    # drivers approaching the work area.
+    # MUTCD §6F.55.  Mirrored on both sides per CO Supplement §6C.04(A).
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
             device_type=DeviceType.SIGN_GENERIC,
             station_ft=begin_sign_station,
             offset_ft=sign_offset_right,
+            label="G20-1",
+        )
+    )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=begin_sign_station,
+            offset_ft=sign_offset_left,
             label="G20-1",
         )
     )
@@ -245,8 +270,7 @@ def generate_shoulder_closure_undivided(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(speed, rt)
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
     a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
 
     sign_a_station = taper_start_station + a_dist
@@ -422,8 +446,7 @@ def generate_lane_closure_divided(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(speed, rt)
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
     a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
 
     sign_a_station = taper_start_station + a_dist
@@ -432,10 +455,9 @@ def generate_lane_closure_divided(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Advance warning signs — lane closure series.  Divided highways
-    # have separated carriageways, so signs go on the work-direction
-    # carriageway only (no opposite-side mirroring).
-    _ = sign_offset_left  # kept for symmetry with undivided layouts
+    # 1. Advance warning signs — lane closure series.  Mirrored on both
+    # sides of the divided roadway per CO Supplement §6C.04(A) so drivers
+    # in either lane see the same advance cues.
     advance_signs = (
         ("W4-2R", sign_a_station),  # RIGHT LANE ENDS (merge arrow)
         ("W20-5R", sign_b_station),  # RIGHT LANE CLOSED AHEAD
@@ -447,6 +469,14 @@ def generate_lane_closure_divided(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=sign_offset_right,
+                label=label,
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_left,
                 label=label,
             )
         )
@@ -480,7 +510,8 @@ def generate_lane_closure_divided(
 
     # 4. Buffer space — intentionally empty.
 
-    # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals
+    # 5. CONSTRUCTION ZONE plaques (G20-5P) at half-mile intervals,
+    # mirrored on both sides per CO Supplement §6C.04(A).
     total_zone_length = sign_c_station
     n_plaques = co_construction_plaques(total_zone_length)
     for k in range(n_plaques):
@@ -490,6 +521,14 @@ def generate_lane_closure_divided(
                 device_type=DeviceType.SIGN_GENERIC,
                 station_ft=station,
                 offset_ft=sign_offset_right,
+                label="G20-5P",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset_left,
                 label="G20-5P",
             )
         )
@@ -526,7 +565,8 @@ def generate_lane_closure_divided(
             )
         )
 
-    # 8. END ROAD WORK sign (G20-2) past the downstream taper
+    # 8. END ROAD WORK sign (G20-2) past the downstream taper, mirrored
+    # on both sides per CO Supplement §6C.04(A).
     end_sign_station = (wz_end_station - ds_taper_len) - 100.0
     placements.append(
         DevicePlacement(
@@ -536,17 +576,32 @@ def generate_lane_closure_divided(
             label="G20-2",
         )
     )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=end_sign_station,
+            offset_ft=sign_offset_left,
+            label="G20-2",
+        )
+    )
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
     # zone, just past the buffer.  Pairs with G20-2 as bookends per
-    # MUTCD §6F.55 — END without BEGIN is asymmetric and disorients
-    # drivers approaching the work area.
+    # MUTCD §6F.55.  Mirrored on both sides per CO Supplement §6C.04(A).
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
             device_type=DeviceType.SIGN_GENERIC,
             station_ft=begin_sign_station,
             offset_ft=sign_offset_right,
+            label="G20-1",
+        )
+    )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=begin_sign_station,
+            offset_ft=sign_offset_left,
             label="G20-1",
         )
     )
@@ -628,8 +683,7 @@ def generate_flagger_alternating_2lane(
     taper_end_station = wz_start_station + buf_len
     taper_start_station = taper_end_station + taper_len
 
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(speed, rt)
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
     a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
 
     placements: list[DevicePlacement] = []
@@ -879,8 +933,7 @@ def generate_work_beyond_shoulder(
     lane_edge_offset = params.lane_width_ft
     sign_offset_right = lane_edge_offset + shoulder_width_ft + 4.0
 
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(speed, rt)
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
     a_dist = spacing_abc["A"]
 
     wz_end_station = 0.0
@@ -940,8 +993,7 @@ def generate_mobile_op_2lane(
     # to posted speed via Table 6B-1.  W21-1a WORKERS sits closest to the
     # moving operation; W20-1 ROAD WORK AHEAD goes further upstream so
     # drivers see general context first.
-    rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
-    spacing_abc = advance_warning_spacing(params.speed_mph, rt)
+    spacing_abc = advance_warning_spacing(params.speed_mph, params.road_type)
     a_dist = spacing_abc["A"]
     b_dist = spacing_abc["B"]
     workers_sign_station = shadow_station + a_dist
@@ -1087,7 +1139,7 @@ if __name__ == "__main__":
         speed_mph=55,
         num_lanes=2,
         closure_type="shoulder",
-        road_type="divided_highway",
+        road_type="freeway",
         work_zone_length_ft=800.0,
         lane_width_ft=12.0,
         is_divided=True,
@@ -1100,7 +1152,7 @@ if __name__ == "__main__":
         speed_mph=55,
         num_lanes=2,
         closure_type="lane",
-        road_type="divided_highway",
+        road_type="freeway",
         work_zone_length_ft=800.0,
         lane_width_ft=12.0,
         is_divided=True,

@@ -41,6 +41,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.per-file-ignores]
 "legacy/**" = ["E402", "SIM115"]
+"scripts/**" = ["E402"]  # bootstrap sys.path before importing src.*
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -110,6 +110,11 @@ def buffer_space(speed_mph: int) -> float:
 # ---------------------------------------------------------------------------
 
 
+VALID_ROAD_TYPES: frozenset[str] = frozenset(
+    {"urban_low", "urban_high", "rural", "expressway", "freeway"}
+)
+
+
 def advance_warning_spacing(
     speed_mph: int,
     road_type: str | None = None,
@@ -126,24 +131,49 @@ def advance_warning_spacing(
 
                 ≤ 35 mph        → ``urban_low``
                 36–44 mph       → ``urban_high``
-                ≥ 45 mph        → ``rural``
+                45–54 mph       → ``rural``
+                ≥ 55 mph        → must be passed explicitly
 
-            Auto-inference cannot distinguish rural from expressway or
-            freeway; callers operating on expressway or freeway routes
-            must pass ``road_type`` explicitly to get the asymmetric
-            1000/1500/2640 spacing.
+            High-speed facilities span three Table 6B-1 categories
+            (rural, expressway, freeway) with sharply different
+            advance-warning distances — rural caps out at 500 ft for
+            A/B/C while expressway/freeway use the asymmetric
+            1000/1500/2640 ft series.  Silent inference at 55+ mph
+            risks under-signing an interstate by thousands of feet, so
+            we reject ``None`` in that range and force the caller to
+            specify.
+
+            The legacy descriptor ``"divided_highway"`` is **not** a
+            valid road_type — divided-ness is carried separately by
+            ``ScenarioParams.is_divided``; passing it here raises
+            ``ValueError``.
+
+    Raises:
+        ValueError: ``road_type`` is ``None`` at 55+ mph, or is a
+            string not in :data:`VALID_ROAD_TYPES`.
     """
     if road_type is None:
         if speed_mph <= 35:
             road_type = "urban_low"
         elif speed_mph < 45:
             road_type = "urban_high"
-        else:
-            # NOTE: callers should pass ``road_type`` explicitly when the
-            # roadway is an expressway or freeway; auto-inference always
-            # selects "rural" for 45+ mph and so will under-spec the
-            # advance warning distances on those facilities.
+        elif speed_mph < 55:
             road_type = "rural"
+        else:
+            raise ValueError(
+                f"advance_warning_spacing requires an explicit road_type at "
+                f"{speed_mph} mph (auto-infer is unsafe at 55+ mph because "
+                "rural / expressway / freeway differ by thousands of feet "
+                "in Table 6B-1).  Pass one of 'rural', 'expressway', 'freeway'."
+            )
+
+    if road_type not in VALID_ROAD_TYPES:
+        raise ValueError(
+            f"Unknown road_type {road_type!r}; expected one of "
+            f"{sorted(VALID_ROAD_TYPES)!r}.  Note: 'divided_highway' is "
+            "not a road_type — divided-ness is a separate boolean "
+            "(ScenarioParams.is_divided)."
+        )
 
     for row in ADVANCE_WARNING_SIGN_SPACING:
         if row.road_category == road_type:
@@ -154,8 +184,8 @@ def advance_warning_spacing(
             }
 
     raise ValueError(
-        f"Unknown road_type {road_type!r}; expected one of "
-        "'urban_low', 'urban_high', 'rural', 'expressway', 'freeway'."
+        f"road_type {road_type!r} is valid but missing from "
+        "ADVANCE_WARNING_SIGN_SPACING table — table data may be incomplete."
     )
 
 
@@ -219,9 +249,15 @@ def pick_device_count(
         target * (1 + tolerance)]``, the one with smaller absolute
         deviation from target wins.
       * If only one candidate lands inside, it wins.
-      * If neither lands inside, the candidate with smaller absolute
-        deviation from target wins (the choice between two flawed
-        options).
+      * If **neither** lands inside, the candidate with the smaller
+        spacing (= more devices, ceil intervals) wins.  MUTCD §6C.09
+        specifies a maximum spacing only; tighter is conservative,
+        wider is unsafe — given a forced choice we must not exceed
+        the maximum.  This is the Bug Fix 4 behavior; the previous
+        version returned the candidate with smaller absolute deviation
+        from target, which on shoulder-taper geometries (e.g. L/3 =
+        183.33 ft at 55 mph) silently picked the over-the-max
+        candidate.
 
     Useful for laying out channelizers on a tangent (target =
     on-tangent spacing) or within a merging taper (target = in-taper
@@ -243,19 +279,29 @@ def pick_device_count(
     floor_intervals = max(1, math.floor(exact_intervals))
     ceil_intervals = max(1, math.ceil(exact_intervals))
 
-    tol_lo = target_spacing_ft * (1 - tolerance)
     tol_hi = target_spacing_ft * (1 + tolerance)
+    tol_lo = target_spacing_ft * (1 - tolerance)
 
-    candidates: list[tuple[bool, float, int]] = []
-    for intervals in {floor_intervals, ceil_intervals}:
-        spacing = length_ft / intervals
-        in_tolerance = tol_lo <= spacing <= tol_hi
-        deviation = abs(spacing - target_spacing_ft)
-        # ``not in_tolerance`` sorts True > False, so in-tolerance picks first.
-        candidates.append((not in_tolerance, deviation, intervals))
+    floor_spacing = length_ft / floor_intervals
+    ceil_spacing = length_ft / ceil_intervals
+    floor_in = tol_lo <= floor_spacing <= tol_hi
+    ceil_in = tol_lo <= ceil_spacing <= tol_hi
 
-    candidates.sort()
-    best_intervals = candidates[0][2]
+    if floor_in and ceil_in:
+        # Both fit; smaller deviation from target wins.
+        floor_dev = abs(floor_spacing - target_spacing_ft)
+        ceil_dev = abs(ceil_spacing - target_spacing_ft)
+        best_intervals = floor_intervals if floor_dev <= ceil_dev else ceil_intervals
+    elif floor_in:
+        best_intervals = floor_intervals
+    elif ceil_in:
+        best_intervals = ceil_intervals
+    else:
+        # Neither fits.  Choose the smaller-spacing (= more-device)
+        # candidate so we stay under the MUTCD §6C.09 maximum even when
+        # the geometry forces us out of the ±tolerance window.
+        best_intervals = ceil_intervals
+
     return max(min_count, best_intervals + 1)
 
 

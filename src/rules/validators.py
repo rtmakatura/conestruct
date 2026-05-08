@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
+    VALID_ROAD_TYPES,
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
@@ -23,7 +24,6 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.tables import COLORADO_OVERRIDES
 
 # ---------------------------------------------------------------------------
 # Tolerances and thresholds
@@ -106,7 +106,9 @@ class ScenarioParams:
     speed_mph: int
     num_lanes: int
     closure_type: str  # "lane" | "shoulder" | "full_road" | "mobile" | "off_road"
-    road_type: str  # "urban_low" | "urban_high" | "rural" | "expressway" | "divided_highway"
+    # Speed/access category from MUTCD Table 6B-1.  Divided-ness is
+    # carried separately by ``is_divided`` below — do not encode it here.
+    road_type: str  # "urban_low" | "urban_high" | "rural" | "expressway" | "freeway"
     work_zone_length_ft: float
     lane_width_ft: float = 12.0
     shoulder_width_ft: float = 10.0
@@ -338,21 +340,11 @@ def validate_channelizer_spacing(
                     device_index=i_cur,
                 )
             )
-        elif spacing < expected * (1 - tol):
-            out.append(
-                Violation(
-                    rule_id="CHANNELIZER_SPACING_TOO_TIGHT",
-                    severity="warning",
-                    message=(
-                        f"Channelizer spacing {spacing:.0f} ft is below "
-                        f"{(1 - tol):.0%} of the {zone_label} target "
-                        f"{expected:.0f} ft at {params.speed_mph} mph "
-                        "(uses more devices than required)."
-                    ),
-                    mutcd_section="6C.09",
-                    device_index=i_cur,
-                )
-            )
+        # NOTE: MUTCD §6C.09 specifies a *maximum* spacing, not a minimum.
+        # Tighter-than-target spacing is conservative (more devices, more
+        # delineation) and is not a code violation.  Bug Fix 4 dropped the
+        # TOO_TIGHT branch here; cost-vs-safety tradeoffs around extra
+        # devices belong in the quote, not the layout validator.
     return out
 
 
@@ -412,11 +404,10 @@ def validate_advance_warning_signs(
             )
         ]
 
-    # Use the scenario's road_type when it matches a Table 6B-1 category.
-    # "divided_highway" is descriptive only and falls back to inference.
-    table_categories = {"urban_low", "urban_high", "rural", "expressway", "freeway"}
-    rt = params.road_type if params.road_type in table_categories else None
-    distances = advance_warning_spacing(params.speed_mph, rt)
+    # Use the scenario's road_type directly — every value in
+    # ScenarioParams.road_type is now a Table 6B-1 category, so we
+    # don't need to nullify-and-infer.
+    distances = advance_warning_spacing(params.speed_mph, params.road_type)
 
     centroids = [sum(placements[i].station_ft for i in c) / len(c) for c in clusters]
     cluster_reps = [c[0] for c in clusters]
@@ -567,21 +558,22 @@ def validate_co_signs_both_sides(
 ) -> list[Violation]:
     """Colorado: signs required on both sides of the roadway.
 
-    Source: CO Supplement §6C.04(A).  Triggered when ``params.road_type``
-    is in ``COLORADO_OVERRIDES.both_sides_signage_required_on`` AND the
-    road is not divided.  Each sign on one side must have a mirror at
-    approximately the same station on the opposite side, within
+    Source: CO Supplement §6C.04(A).  Triggered when the road is
+    divided.  Each sign on one side must have a mirror at approximately
+    the same station on the opposite side (matching label), within
     ``CO_BOTH_SIDES_STATION_TOLERANCE_FT``.
 
-    Divided highways are exempt: opposing carriageways are physically
-    separated by the median, so opposing traffic does not encounter the
-    work zone and does not require advance warning signage.  See
-    ``validate_no_opposing_carriageway_signs`` for the corresponding
-    prohibition on signing the opposite carriageway.
+    Severity is ``error``: a divided-highway plan that signs only the
+    right shoulder is non-compliant and the UI must surface that
+    failure rather than passing the layout silently.
+
+    NOTE: §6C.04(A) also extends to one-way streets and multi-lane
+    ramps, but those facilities are not currently expressible through
+    ``ScenarioParams`` (they are not Table 6B-1 road categories).
+    Re-introduce them as separate ``ScenarioParams`` flags before
+    extending the trigger.
     """
-    if params.is_divided:
-        return []
-    if params.road_type not in COLORADO_OVERRIDES.both_sides_signage_required_on:
+    if not params.is_divided:
         return []
 
     sign_idx = _sign_indices(placements)
@@ -590,9 +582,14 @@ def validate_co_signs_both_sides(
 
     for i in sign_idx:
         p = placements[i]
+        if p.offset_ft == 0:
+            # Centerline-mounted signs (e.g. flagger PCMS) are inherently
+            # visible to both directions and don't need a mirror.
+            continue
         has_mirror = any(
             j != i
             and DEVICE_CATALOG[placements[j].device_type].is_sign
+            and (placements[j].label == p.label)
             and (placements[j].offset_ft * p.offset_ft) < 0
             and abs(placements[j].station_ft - p.station_ft) <= tol
             for j in sign_idx
@@ -603,59 +600,14 @@ def validate_co_signs_both_sides(
                     rule_id="CO_SIGN_BOTH_SIDES",
                     severity="error",
                     message=(
-                        f"Sign at station {p.station_ft:.0f} ft "
-                        f"(offset {p.offset_ft:+.1f} ft) has no mirror sign on "
-                        "the opposite side of the roadway."
+                        f"Sign {p.label!r} at station {p.station_ft:.0f} ft "
+                        f"(offset {p.offset_ft:+.1f} ft) has no mirror sign "
+                        "on the opposite side of the roadway."
                     ),
                     mutcd_section="CO Supplement §6C.04(A)",
                     device_index=i,
                 )
             )
-    return out
-
-
-def validate_no_opposing_carriageway_signs(
-    placements: list[DevicePlacement],
-    params: ScenarioParams,
-) -> list[Violation]:
-    """Reject work-zone signs placed on the opposite carriageway of a divided highway.
-
-    Source: CDOT S-630-1 typical sheet.  On a divided highway with a
-    one-side closure (right shoulder or right lane), the median
-    physically isolates opposing traffic from the closure — the
-    opposite carriageway should not be signed.  Mirroring signs across
-    the median orders them backwards for opposing drivers (END before
-    BEGIN) and creates spurious work-zone presence where there is none.
-
-    Applies to one-side closures (right shoulder or right lane) on
-    divided highways.
-    """
-    if not params.is_divided:
-        return []
-    if params.closure_type not in ("shoulder", "lane"):
-        return []
-
-    out: list[Violation] = []
-    for i, p in enumerate(placements):
-        if not DEVICE_CATALOG[p.device_type].is_sign:
-            continue
-        if p.offset_ft >= 0:
-            continue
-        out.append(
-            Violation(
-                rule_id="OPPOSING_CARRIAGEWAY_SIGN",
-                severity="error",
-                message=(
-                    f"Sign at station {p.station_ft:.0f} ft "
-                    f"(offset {p.offset_ft:+.1f} ft) is on the opposite "
-                    "carriageway of a divided highway; opposing traffic is "
-                    "separated by the median and does not require work-zone "
-                    "signage."
-                ),
-                mutcd_section="CDOT S-630-1",
-                device_index=i,
-            )
-        )
     return out
 
 
@@ -1013,7 +965,22 @@ def validate_layout(
     Returns the concatenated list of violations from all sub-validators,
     or an empty list if every check passes.  Order does not encode
     priority — sort by ``severity`` if needed.
+
+    Raises:
+        ValueError: ``params.road_type`` is not a Table 6B-1 category.
+            We fail fast rather than letting individual sub-validators
+            silently fall back to rural distances on a freeway plan
+            (Bug Fix 6).
     """
+    if params.road_type not in VALID_ROAD_TYPES:
+        raise ValueError(
+            f"ScenarioParams.road_type={params.road_type!r} is not a "
+            f"Table 6B-1 category; expected one of "
+            f"{sorted(VALID_ROAD_TYPES)!r}.  'divided_highway' was "
+            "removed in Bug Fix 6 — use is_divided=True with one of the "
+            "speed/access categories instead."
+        )
+
     out: list[Violation] = []
     out.extend(validate_taper_present(placements, params))
     out.extend(validate_taper_length(placements, params))
@@ -1022,7 +989,6 @@ def validate_layout(
     out.extend(validate_buffer_space(placements, params))
     out.extend(validate_arrow_board_present(placements, params))
     out.extend(validate_co_signs_both_sides(placements, params))
-    out.extend(validate_no_opposing_carriageway_signs(placements, params))
     out.extend(validate_begin_end_road_work_pair(placements, params))
     out.extend(validate_flagger_advance_sign_sequence(placements, params))
     out.extend(validate_mobile_shadow_vehicle(placements, params))
