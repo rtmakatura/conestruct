@@ -74,7 +74,21 @@ work_zone_length_ft = st.sidebar.number_input(
 )
 is_divided = st.sidebar.checkbox("Divided highway", value=True)
 is_night = st.sidebar.checkbox("Night operation", value=False)
-project_name = st.sidebar.text_input("Project name (optional)", value="")
+st.sidebar.divider()
+st.sidebar.header("Project Information")
+
+project_name = st.sidebar.text_input(
+    "Project name",
+    value="",
+    placeholder="e.g., I-25 NB MP 144.5–146",
+    help="Surfaced on the title block (top banner + lower-right block)",
+)
+location_description = st.sidebar.text_input(
+    "Location description",
+    value="",
+    placeholder="e.g., Colorado Springs",
+    help="Shown on the LOCATION row of the title block",
+)
 
 st.sidebar.divider()
 st.sidebar.header("Location (optional)")
@@ -90,6 +104,21 @@ site_lat = st.sidebar.number_input(
 site_lng = st.sidebar.number_input(
     "Longitude", value=0.0, format="%.6f", help="Leave at 0 to skip aerial embed"
 )
+bearing_deg_input = st.sidebar.number_input(
+    "Road bearing (° from N, optional)",
+    value=0.0,
+    min_value=0.0,
+    max_value=360.0,
+    step=5.0,
+    help=(
+        "Compass bearing of the road's direction of travel — rotates the "
+        "north arrow on the schematic. Leave at 0 to default to "
+        "'up = north' with a verify-bearing caveat."
+    ),
+)
+# 0.0 doubles as the "no bearing supplied" sentinel — matches the
+# pattern used for site_lat/site_lng above so the UI stays consistent.
+bearing_deg = bearing_deg_input if bearing_deg_input > 0.0 else None
 
 _mapbox_token = os.environ.get("MAPBOX_TOKEN", "")
 _location_provided = bool(site_address) or site_lat != 0.0 or site_lng != 0.0
@@ -260,6 +289,9 @@ if generate_button:
         is_night=is_night,
         is_divided=is_divided,
         jurisdiction="CDOT",
+        project_name=project_name or "Untitled Project",
+        location_description=location_description or site_address or "",
+        bearing_deg=bearing_deg,
     )
 
     try:

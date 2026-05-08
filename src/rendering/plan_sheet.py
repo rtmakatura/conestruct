@@ -34,6 +34,7 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.rules.devices import DeviceType
+from src.rules.sign_codes import description_for
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -61,14 +62,16 @@ def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> 
 def _road_y_extent(params: ScenarioParams, shoulder_width_ft: float) -> tuple[float, float]:
     """Return (y_road_top, y_road_bottom) on the page for the rendered road.
 
-    Divided highways are drawn with two lanes per direction and a
-    zero-width median; undivided highways are drawn with a single lane
-    each direction and a yellow centerline.
+    Divided highways are drawn with two lanes per direction separated by
+    a visible median band of ``MEDIAN_PTS`` height; undivided highways
+    are drawn with a single lane each direction and a yellow centerline.
     """
     lane_h = params.lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
     half_lanes = 2 if params.is_divided else 1
     half_road = half_lanes * lane_h + shoulder_h
+    if params.is_divided:
+        half_road += MEDIAN_PTS / 2.0
     return PLAN_Y_CENTER + half_road, PLAN_Y_CENTER - half_road
 
 
@@ -90,6 +93,12 @@ PLAN_Y_CENTER: float = (PLAN_TOP + PLAN_BOTTOM) / 2.0
 # X scale is fitted per-layout to span the full plan view width.
 PTS_PER_OFFSET_FT: float = 3.5
 
+# Visual median band height for divided highways.  The two carriageways
+# are pushed apart by this amount so the schematic conveys "two separate
+# travel directions" rather than one wide road.  Sized to comfortably
+# host a median-side sign glyph + numbered callout (~18 pt total).
+MEDIAN_PTS: float = 18.0
+
 # Road palette
 LANE_FILL = colors.HexColor("#B0B0B0")
 SHOULDER_OPEN_FILL = colors.HexColor("#D0D0D0")
@@ -97,6 +106,7 @@ SHOULDER_CLOSED_FILL = colors.HexColor("#E8D0D0")
 EDGE_LINE = colors.white
 LANE_STRIPE = colors.white
 MEDIAN_EDGE = colors.HexColor("#FFD700")
+MEDIAN_FILL = colors.HexColor("#C8D6C0")  # muted sage — reads as grass median
 ROAD_BORDER = colors.black
 
 # Symbol palette
@@ -190,9 +200,21 @@ def _make_x_mapping(
     }
 
 
-def _y_of(offset_ft: float) -> float:
+def _y_of(offset_ft: float, is_divided: bool = False) -> float:
     """Map road offset to page y.  Positive offset (work side) → BOTTOM of
-    page; negative offset (opposing side) → TOP of page (CDOT S-630-1)."""
+    page; negative offset (opposing side) → TOP of page (CDOT S-630-1).
+
+    On divided highways, the two carriageways are visually separated by
+    a median band of ``MEDIAN_PTS``.  The mapping shifts each side
+    outward by ``MEDIAN_PTS / 2`` so the geometry data convention
+    (offset=0 at the road centerline) lines up with the visible median
+    centerline on the page.  ``offset_ft = 0`` always renders at
+    ``PLAN_Y_CENTER`` regardless of divided-ness so the call is safe for
+    median-axis features (centerline labels, dimension band tics).
+    """
+    if is_divided and offset_ft != 0.0:
+        sign = 1.0 if offset_ft > 0 else -1.0
+        return PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT - sign * MEDIAN_PTS / 2.0
     return PLAN_Y_CENTER - offset_ft * PTS_PER_OFFSET_FT
 
 
@@ -217,13 +239,25 @@ def _draw_road(
 
     # After the Y-flip, positive offset_ft → lower page y.  The closed
     # (work-side) carriageway is therefore at the BOTTOM of the page; the
-    # opposing carriageway is at the TOP.
+    # opposing carriageway is at the TOP.  On divided highways the two
+    # carriageways are pushed apart by MEDIAN_PTS so a visible median
+    # band sits between them.
     y_center = PLAN_Y_CENTER
+    half_median = MEDIAN_PTS / 2.0 if is_divided else 0.0
     half_lanes = 2 if is_divided else 1
-    y_closed_lane_inner = y_center - half_lanes * lane_h  # top edge of closed-side lanes
-    y_closed_shldr_outer = y_closed_lane_inner - shoulder_h  # bottom of page
-    y_open_lane_inner = y_center + half_lanes * lane_h  # bottom edge of open-side lanes
-    y_open_shldr_outer = y_open_lane_inner + shoulder_h  # top of page
+    y_closed_lane_inner = y_center - half_median - half_lanes * lane_h  # top of closed lanes? no
+    # Note: y_closed_lane_inner is the OUTER (page-bottom) edge of the closed-side lane stack.
+    # We compute from the inner (median-facing) edge down through the lanes.
+    y_closed_lane_inner_edge = y_center - half_median  # median-facing edge of closed lanes
+    y_closed_lane_outer = y_closed_lane_inner_edge - half_lanes * lane_h  # outer (page-bottom) edge
+    y_closed_shldr_outer = y_closed_lane_outer - shoulder_h  # bottom of page
+    y_open_lane_inner_edge = y_center + half_median  # median-facing edge of open lanes
+    y_open_lane_outer = y_open_lane_inner_edge + half_lanes * lane_h  # outer (page-top) edge
+    y_open_shldr_outer = y_open_lane_outer + shoulder_h  # top of page
+
+    # Backwards-compatible aliases used below.
+    y_closed_lane_inner = y_closed_lane_outer  # boundary closed-lanes / closed-shoulder
+    y_open_lane_inner = y_open_lane_outer  # boundary open-lanes / open-shoulder
 
     is_lane_closure = closure_type == "lane"
 
@@ -272,60 +306,80 @@ def _draw_road(
         )
         return
 
-    # Outer shoulders — for a shoulder closure the work-side shoulder is
-    # painted pink; for a lane closure both shoulders stay neutral gray.
+    # ----- Divided highway: two distinct carriageways with a median band -----
+    #
+    # Page layout, top → bottom:
+    #   [opposing shoulder] [opposing lanes] [MEDIAN] [closed lanes] [closed shoulder]
+    #
+    # The work-side (closed) carriageway is at the page bottom and carries
+    # the closure (right shoulder painted pink for a shoulder closure, or
+    # right lane painted pink for a lane closure).  The opposing carriageway
+    # at the page top is a clean roadway with no closure indication.
+
+    # Work-side (closed) shoulder — pink for a shoulder closure, neutral for lane closure.
     c.setFillColor(SHOULDER_CLOSED_FILL if not is_lane_closure else SHOULDER_OPEN_FILL)
     c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
+    # Opposing shoulder — always neutral gray (no closure on this side).
     c.setFillColor(SHOULDER_OPEN_FILL)
-    c.rect(x_left, y_open_lane_inner, width, shoulder_h, fill=1, stroke=0)
+    c.rect(x_left, y_open_lane_outer, width, shoulder_h, fill=1, stroke=0)
 
-    # Travel lanes (medium gray); leave a 4-pt white gap at the centerline
-    # to suggest the median (V1 layout has zero-width median in the data
-    # convention so this is purely visual).
-    c.setFillColor(LANE_FILL)
-    # Closed-side carriageway (lower half of road).  For a lane closure,
-    # paint the right travel lane (the one closest to the work-side
-    # shoulder, page-bottom) pink to flag it as closed and leave the
-    # inner lane neutral gray.
+    # Closed-side travel lanes.  For a lane closure, paint the right
+    # (page-bottom-most) travel lane pink to flag it; the inner lane
+    # stays neutral gray.
+    closed_lanes_h = half_lanes * lane_h
     if is_lane_closure:
-        right_lane_h = lane_h
-        # Outer (closed) lane: from shoulder edge up by one lane height.
+        # Outer (closed) lane abutting the work-side shoulder.
         c.setFillColor(SHOULDER_CLOSED_FILL)
-        c.rect(x_left, y_closed_lane_inner, width, right_lane_h, fill=1, stroke=0)
-        # Inner (open) lane on the closed-side carriageway: above the
-        # closed lane, butting against the centerline.
+        c.rect(x_left, y_closed_lane_outer, width, lane_h, fill=1, stroke=0)
+        # Inner (open) lane on the closed-side carriageway, butting against
+        # the median.
         c.setFillColor(LANE_FILL)
         c.rect(
             x_left,
-            y_closed_lane_inner + right_lane_h,
+            y_closed_lane_outer + lane_h,
             width,
-            lane_h - 2,
+            lane_h,
             fill=1,
             stroke=0,
         )
     else:
-        c.rect(x_left, y_closed_lane_inner, width, 2 * lane_h - 2, fill=1, stroke=0)
-    # Open-side carriageway (upper half of road)
-    c.setFillColor(LANE_FILL)
-    c.rect(x_left, y_center + 2, width, 2 * lane_h - 2, fill=1, stroke=0)
+        c.setFillColor(LANE_FILL)
+        c.rect(x_left, y_closed_lane_outer, width, closed_lanes_h, fill=1, stroke=0)
 
-    # Median yellow edge lines bracketing the gap
+    # Opposing-side travel lanes — clean (no closure).
+    c.setFillColor(LANE_FILL)
+    c.rect(x_left, y_open_lane_inner_edge, width, closed_lanes_h, fill=1, stroke=0)
+
+    # ----- Median band -----
+    # Filled with a neutral grass/concrete color and overlaid with a 45°
+    # diagonal hatch so it visually reads as the median.  Yellow edge
+    # lines on either side mark the inner shoulder of each carriageway.
+    c.setFillColor(MEDIAN_FILL)
+    c.rect(x_left, y_closed_lane_inner_edge, width, MEDIAN_PTS, fill=1, stroke=0)
+    _draw_diagonal_hatch(
+        c,
+        x_left,
+        x_right,
+        y_closed_lane_inner_edge,
+        y_open_lane_inner_edge,
+        spacing=8.0,
+    )
     c.setStrokeColor(MEDIAN_EDGE)
     c.setLineWidth(2.0)
-    c.line(x_left, y_center + 2, x_right, y_center + 2)
-    c.line(x_left, y_center - 2, x_right, y_center - 2)
+    c.line(x_left, y_open_lane_inner_edge, x_right, y_open_lane_inner_edge)
+    c.line(x_left, y_closed_lane_inner_edge, x_right, y_closed_lane_inner_edge)
 
-    # Outer travel-lane edges (white solid, 2 pt) at ±lane_width*2
+    # Outer travel-lane edges (white solid, 2 pt)
     c.setStrokeColor(EDGE_LINE)
     c.setLineWidth(2.0)
-    c.line(x_left, y_closed_lane_inner, x_right, y_closed_lane_inner)
-    c.line(x_left, y_open_lane_inner, x_right, y_open_lane_inner)
+    c.line(x_left, y_closed_lane_outer, x_right, y_closed_lane_outer)
+    c.line(x_left, y_open_lane_outer, x_right, y_open_lane_outer)
 
     # Lane stripes between same-direction lanes (white dashed, 2 pt) at ±lane_width_ft
     c.setLineWidth(2.0)
     c.setDash(12, 8)
-    c.line(x_left, _y_of(lane_width_ft), x_right, _y_of(lane_width_ft))
-    c.line(x_left, _y_of(-lane_width_ft), x_right, _y_of(-lane_width_ft))
+    c.line(x_left, _y_of(lane_width_ft, True), x_right, _y_of(lane_width_ft, True))
+    c.line(x_left, _y_of(-lane_width_ft, True), x_right, _y_of(-lane_width_ft, True))
     c.setDash()
 
     # Shoulder outer edges (white solid, 1 pt)
@@ -344,6 +398,24 @@ def _draw_road(
         fill=0,
         stroke=1,
     )
+
+    # MEDIAN label — centered both vertically (in the band) and
+    # horizontally (across the page), at 7 pt in a muted gray so it
+    # labels the band without competing with the device glyphs.  No
+    # halo: the label sits on top of the diagonal hatch and inherits
+    # the band's neutral color, which reads as part of the geometry
+    # rather than as a floating callout.
+    label_text = "MEDIAN"
+    label_font = "Helvetica"
+    label_size = 7.0
+    label_x = (x_left + x_right) / 2.0
+    # Helvetica's visual center sits ~size/3 above the baseline; setting
+    # the baseline at y_center - size/3 puts the optical centerline of
+    # the text exactly on y_center (the middle of the median band).
+    label_y = y_center - label_size / 3.0
+    c.setFont(label_font, label_size)
+    c.setFillColor(colors.HexColor("#7A7A7A"))
+    c.drawCentredString(label_x, label_y, label_text)
 
 
 # ---------------------------------------------------------------------------
@@ -777,13 +849,13 @@ def _draw_strip(
 
 
 def _strip_y_range(
-    offset_inner_ft: float, offset_outer_ft: float, side: int
+    offset_inner_ft: float, offset_outer_ft: float, side: int, is_divided: bool = False
 ) -> tuple[float, float]:
     """Return (y_low, y_high) page coords for a facility strip at the
     given ft offsets.  ``side = +1`` for work side (page bottom),
     ``-1`` for opposing side (page top)."""
-    y_outer = _y_of(side * offset_outer_ft)
-    y_inner = _y_of(side * offset_inner_ft)
+    y_outer = _y_of(side * offset_outer_ft, is_divided)
+    y_inner = _y_of(side * offset_inner_ft, is_divided)
     return min(y_outer, y_inner), max(y_outer, y_inner)
 
 
@@ -814,7 +886,9 @@ def _draw_site_context(
 
     if flags["pedestrian_facility"]:
         for side in sides:
-            y_low, y_high = _strip_y_range(SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, side)
+            y_low, y_high = _strip_y_range(
+                SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, side, params.is_divided
+            )
             _draw_strip(c, PLAN_LEFT, PLAN_RIGHT, y_low, y_high, SIDEWALK_FILL, SIDEWALK_BORDER)
             # Closed segment within the work zone
             if side == 1:
@@ -823,18 +897,24 @@ def _draw_site_context(
         # work-zone hatching so it stays legible)
         c.setFillColor(colors.HexColor("#5A5A5A"))
         c.setFont("Helvetica-Oblique", 6)
-        y_low_w, y_high_w = _strip_y_range(SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, 1)
+        y_low_w, y_high_w = _strip_y_range(
+            SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, 1, params.is_divided
+        )
         c.drawString(PLAN_LEFT + 4, (y_low_w + y_high_w) / 2 - 2, "SIDEWALK")
 
     if flags["bicycle_facility"]:
         for side in sides:
-            y_low, y_high = _strip_y_range(BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, side)
+            y_low, y_high = _strip_y_range(
+                BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, side, params.is_divided
+            )
             _draw_strip(c, PLAN_LEFT, PLAN_RIGHT, y_low, y_high, BIKE_LANE_FILL, BIKE_LANE_BORDER)
             if side == 1:
                 _draw_diagonal_hatch(c, wz_x_left, wz_x_right, y_low, y_high)
         c.setFillColor(colors.HexColor("#3F6020"))
         c.setFont("Helvetica-Oblique", 6)
-        y_low_b, y_high_b = _strip_y_range(BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, 1)
+        y_low_b, y_high_b = _strip_y_range(
+            BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, 1, params.is_divided
+        )
         c.drawString(PLAN_LEFT + 4, (y_low_b + y_high_b) / 2 - 2, "BIKE LANE")
 
     if flags["adjacent_intersection"]:
@@ -887,28 +967,6 @@ def _draw_site_context(
         c.setFillColor(colors.black)
         c.setFont("Helvetica-Bold", 7)
         c.drawCentredString(x_school, y_school - 2, "SCHOOL")
-
-
-_MUTCD_DESCRIPTIONS: dict[str, str] = {
-    "W20-1": "ROAD WORK AHEAD",
-    "W20-2": "ROAD WORK XXX FT",
-    "W20-4": "ONE LANE ROAD AHEAD",
-    "W20-5R": "RIGHT LANE CLOSED AHEAD",
-    "W20-7": "FLAGGER AHEAD",
-    "W20-7a": "AFAD AHEAD",
-    "W3-4": "BE PREPARED TO STOP",
-    "W21-1a": "WORKERS",
-    "W21-5": "SHOULDER WORK",
-    "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",
-    "W4-2R": "RIGHT LANE ENDS",
-    "G20-1": "ROAD CONSTRUCTION (NEXT XXX FT)",
-    "G20-2": "END ROAD WORK",
-    "G20-4": "PILOT CAR FOLLOW ME",
-    "G20-5P": "CONSTRUCTION ZONE plaque",
-    "M4-9a": "BIKE DETOUR",
-    "R9-9": "SIDEWALK CLOSED — USE OTHER SIDE",
-    "S1-1": "SCHOOL",
-}
 
 
 def build_sign_schedule(
@@ -993,6 +1051,68 @@ def _deoverlap_items(
     return out
 
 
+# Bounding-box footprint for the overlap pass.  Conservative values: the
+# orange diamond (warning) is 14 pt across; the regulatory sign is
+# 11 × 12 pt; the inline numbered callout adds ~14 pt below/above each
+# sign.  Using a 16 × 24 box catches sign-on-sign overlaps including the
+# callout circle.
+SIGN_BOX_W: float = 16.0
+SIGN_BOX_H: float = 24.0
+
+
+def _deoverlap_signs_pairwise(
+    items: list[tuple[DevicePlacement, float, float]],
+    push_dy: float = 14.0,
+    max_iters: int = 6,
+) -> list[tuple[DevicePlacement, float, float]]:
+    """Second-pass collision avoidance for SIGN_GENERIC items.
+
+    The grid-based ``_deoverlap_items`` only catches near-coincident
+    placements; signs placed at slightly different stations (e.g. the
+    work-zone-end M4-9a 5 ft inside the upstream R9-9) still overlap
+    after that pass.  This routine walks pairs and bumps the second
+    sign vertically (away from the road centerline) until no pair of
+    sign bounding boxes overlap, capped at ``max_iters`` to prevent
+    pathological pile-ups in dense regulatory clusters.
+    """
+    out = list(items)
+    sign_indices = [
+        i for i, (p, _x, _y) in enumerate(out) if p.device_type == DeviceType.SIGN_GENERIC
+    ]
+    if len(sign_indices) < 2:
+        return out
+
+    def overlaps(a_x: float, a_y: float, b_x: float, b_y: float) -> bool:
+        return abs(a_x - b_x) < SIGN_BOX_W and abs(a_y - b_y) < SIGN_BOX_H
+
+    for _ in range(max_iters):
+        moved_any = False
+        # Sort by station-x so we walk left → right; on ties, by current y.
+        sign_indices.sort(key=lambda i: (out[i][1], out[i][2]))
+        for ai in range(len(sign_indices)):
+            for bi in range(ai + 1, len(sign_indices)):
+                ia = sign_indices[ai]
+                ib = sign_indices[bi]
+                pa, ax, ay = out[ia]
+                pb, bx, by = out[ib]
+                if abs(bx - ax) >= SIGN_BOX_W:
+                    # X-sorted; once we exceed the X box, no further
+                    # b-candidate will overlap pa either.
+                    break
+                if not overlaps(ax, ay, bx, by):
+                    continue
+                # Push pb away from the road centerline.  Direction
+                # follows the sign of its offset_ft; signs on the work
+                # side (offset >= 0) move to lower y, signs on the
+                # opposing/median side move to higher y.
+                push = -push_dy if pb.offset_ft >= 0 else push_dy
+                out[ib] = (pb, bx, by + push)
+                moved_any = True
+        if not moved_any:
+            return out
+    return out
+
+
 def _draw_devices(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
@@ -1017,23 +1137,55 @@ def _draw_devices(
     )
     y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
 
+    # Devices that get clamped to the road edge when their nominal offset
+    # would otherwise place them off the page or floating in white space.
+    # Signs (W/G/R/M codes) and Type III barricades are placed by the
+    # site-adjustments module at offsets just past the shoulder; without
+    # clamping the negative-offset mirror lands far above the roadway and
+    # reads as detached.
+    clampable_types = (
+        DeviceType.SIGN_GENERIC,
+        DeviceType.BARRICADE_TYPE_III,
+        DeviceType.BARRICADE_TYPE_II,
+    )
+
+    # Median-resident signs: on a divided highway, layout generators emit
+    # advance warning + downstream-end signs at sign_offset_left = -28 ft
+    # to satisfy CO Supplement §6C.04(A).  Geometrically those would land
+    # in the OPPOSING carriageway's lanes, which is wrong for a sign that
+    # serves work-direction drivers in the inside lane.  Snap negative-
+    # offset signs into the median band between the two carriageways so
+    # they sit visually just left of the work-side roadway.
+    median_sign_y = PLAN_Y_CENTER
+
     items: list[tuple[DevicePlacement, float, float]] = []
     for p in placements:
         if p.station_ft > station_max_visible:
             continue
         x = x_of(p.station_ft)
-        if p.device_type == DeviceType.SIGN_GENERIC and abs(p.offset_ft) > on_road_max:
-            # Clamp off-road signs proportionally so a sign at offset 36 ft
-            # sits closer to the shoulder than one at offset 50 ft (the
-            # intersection W20-1).
+        if (
+            params.is_divided
+            and p.device_type == DeviceType.SIGN_GENERIC
+            and p.offset_ft < 0
+            and abs(p.offset_ft) <= on_road_max + 4.0
+        ):
+            # Median-side sign on a divided highway — render in the median.
+            y = median_sign_y
+        elif p.device_type in clampable_types and abs(p.offset_ft) > on_road_max:
+            # Clamp off-road signs/barricades proportionally so a device at
+            # offset 36 ft sits closer to the shoulder than one at offset
+            # 50 ft (the intersection W20-1).  This keeps off-road
+            # placements visually attached to the road edge instead of
+            # floating in margin white space.
             overage = abs(p.offset_ft) - on_road_max
             clamp_dist = 7.0 + min(overage, 20.0) * 0.5
             y = y_road_bottom - clamp_dist if p.offset_ft > 0 else y_road_top + clamp_dist
         else:
-            y = _y_of(p.offset_ft)
+            y = _y_of(p.offset_ft, params.is_divided)
         items.append((p, x, y))
 
     items = _deoverlap_items(items)
+    items = _deoverlap_signs_pairwise(items)
 
     # Pass 1: glyphs first — each device drawn at its (possibly
     # de-overlapped) screen position.
@@ -1201,6 +1353,60 @@ def _draw_landmarks(
 # ---------------------------------------------------------------------------
 
 
+def _scenario_label(params: ScenarioParams) -> str:
+    """Default banner label derived from closure_type + is_divided when
+    the project_name field is left empty."""
+    if params.closure_type == "mobile":
+        return (
+            "MOBILE OPERATION — MULTI-LANE ROAD"
+            if params.is_divided
+            else "MOBILE OPERATION — 2-LANE ROAD"
+        )
+    if params.closure_type == "off_road":
+        return "WORK BEYOND THE SHOULDER"
+    if params.closure_type == "lane" and not params.is_divided:
+        return "FLAGGER ALTERNATING TRAFFIC — 2-LANE UNDIVIDED"
+    if params.closure_type == "lane":
+        return "RIGHT-LANE CLOSURE — DIVIDED HIGHWAY"
+    if params.is_divided:
+        return "SHOULDER CLOSURE — DIVIDED HIGHWAY"
+    return "SHOULDER CLOSURE — 2-LANE UNDIVIDED"
+
+
+def _mutcd_ta_reference(params: ScenarioParams) -> str:
+    """Best-effort MUTCD Typical Application reference for the scenario
+    in hand.  Maps closure_type + divided-ness to one of the standard
+    Part 6 TA diagrams; returns ``"—"`` for combinations the tool does
+    not yet support so the title block still renders without a stale
+    citation.
+    """
+    if params.closure_type == "off_road":
+        return "TA-1"
+    if params.closure_type == "shoulder":
+        return "TA-2"
+    if params.closure_type == "lane" and not params.is_divided:
+        return "TA-10"
+    if params.closure_type == "lane" and params.is_divided:
+        return "TA-19"
+    if params.closure_type == "mobile":
+        return "TA-35"
+    return "—"
+
+
+def _cdot_standard_reference(params: ScenarioParams) -> str:
+    """CDOT M&S Standard Plan number for the scenario.  S-630-1 covers
+    shoulder closures, S-630-2 covers two-lane lane-closure (flagger),
+    S-630-3 covers divided-highway lane closures.  Mobile and off-road
+    operations don't have a dedicated standard plan."""
+    if params.closure_type == "shoulder" or params.closure_type == "off_road":
+        return "S-630-1"
+    if params.closure_type == "lane" and not params.is_divided:
+        return "S-630-2"
+    if params.closure_type == "lane" and params.is_divided:
+        return "S-630-3"
+    return "—"
+
+
 def _draw_title_block(
     c: canvas.Canvas,
     title: str,
@@ -1210,44 +1416,362 @@ def _draw_title_block(
     params: ScenarioParams,
     scale_label: str,
 ) -> None:
+    """Top banner: METHOD OF HANDLING TRAFFIC, project, speed.
+
+    Segments are joined by em dashes and rendered as a single line.
+    The default placeholder ``"Untitled Project"`` is hidden so the
+    banner reads cleanly when no real project name is supplied; the
+    structured title block at the lower-right always carries the full
+    metadata regardless.
+    """
+    _ = sheet_number, total_sheets, scale_label  # surfaced in the bottom title block
     y0 = PAGE_H - TITLE_H
     c.setStrokeColor(TITLE_BORDER)
     c.setLineWidth(1.0)
     c.line(MARGIN, y0, PAGE_W - MARGIN, y0)
     c.line(MARGIN, PAGE_H - MARGIN, PAGE_W - MARGIN, PAGE_H - MARGIN)
 
+    show_project = bool(project_name) and project_name != "Untitled Project"
+
+    y = PAGE_H - 30
+    x = MARGIN + 8
+
+    # Title — bold 14pt
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 14)
-    c.drawString(MARGIN + 8, PAGE_H - 30, title)
+    c.drawString(x, y, title)
+    x += c.stringWidth(title, "Helvetica-Bold", 14)
 
-    if project_name:
-        project_label = project_name
-    elif params.closure_type == "mobile":
-        project_label = (
-            "MOBILE OPERATION — MULTI-LANE ROAD"
-            if params.is_divided
-            else "MOBILE OPERATION — 2-LANE ROAD"
+    # Project segment — only when the user supplied a real value.  Em
+    # dash separator is drawn at the title's bold weight so it visually
+    # belongs to the banner rather than to either neighbouring segment.
+    if show_project:
+        sep = "  —  "
+        c.setFont("Helvetica-Bold", 14)
+        c.drawString(x, y, sep)
+        x += c.stringWidth(sep, "Helvetica-Bold", 14)
+        c.setFont("Helvetica-Bold", 12)
+        c.setFillColor(colors.HexColor("#1A1A1A"))
+        c.drawString(x, y + 1.0, project_name)
+        x += c.stringWidth(project_name, "Helvetica-Bold", 12)
+
+    # Speed segment — always shown.
+    sep = "  —  "
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(colors.black)
+    c.drawString(x, y, sep)
+    x += c.stringWidth(sep, "Helvetica-Bold", 14)
+    speed_text = f"{params.speed_mph} MPH"
+    c.setFont("Helvetica", 11)
+    c.setFillColor(colors.HexColor("#444444"))
+    c.drawString(x, y + 1.5, speed_text)
+
+
+# ---------------------------------------------------------------------------
+# Structured title block (lower-right) and chrome (north arrow, sheet border)
+# ---------------------------------------------------------------------------
+
+
+# Three-box footer layout: LEGEND | NOTES & SIGN SCHEDULE | TITLE BLOCK,
+# each occupying ⅓ of the inner page width with a small gutter between.
+# Box origins are computed from MARGIN so the row aligns with the
+# outer sheet border at both ends.
+FOOTER_GUTTER: float = 12.0
+FOOTER_BOX_W: float = (PAGE_W - 2 * MARGIN - 2 * FOOTER_GUTTER) / 3.0
+FOOTER_BOX_H: float = FOOTER_H - 16.0
+LEGEND_BOX_X: float = MARGIN
+NOTES_BOX_X: float = MARGIN + FOOTER_BOX_W + FOOTER_GUTTER
+TITLE_BLOCK_X: float = MARGIN + 2 * (FOOTER_BOX_W + FOOTER_GUTTER)
+FOOTER_BOX_Y: float = MARGIN
+
+TITLE_BLOCK_PAD: float = 8.0
+TITLE_BLOCK_ROW_H: float = 11.0
+TITLE_BLOCK_SECTION_GAP: float = 4.0
+TITLE_BLOCK_VALUE_FONT_SIZE: float = 8.0
+
+
+def _wrap_to_width(
+    c: canvas.Canvas,
+    text: str,
+    font: str,
+    size: float,
+    max_w: float,
+    max_lines: int = 2,
+) -> list[str]:
+    """Word-wrap ``text`` to ≤ ``max_lines`` lines that each fit ``max_w``.
+
+    Greedy word packing: pack as many whole words as possible per line;
+    if the last permitted line still overflows, ellipsis-truncate it.
+    Single words wider than ``max_w`` get hard-truncated mid-word so
+    the title block never bleeds into the margin.
+    """
+    if max_lines < 1:
+        return []
+    if not text:
+        return [""]
+    if c.stringWidth(text, font, size) <= max_w:
+        return [text]
+
+    words = text.split(" ")
+    lines: list[str] = []
+    cur = ""
+    for word in words:
+        candidate = word if not cur else cur + " " + word
+        if c.stringWidth(candidate, font, size) <= max_w:
+            cur = candidate
+        else:
+            if cur:
+                lines.append(cur)
+                if len(lines) == max_lines:
+                    cur = word
+                    break
+            cur = word
+            # If a single word still overflows, hard-truncate.
+            if c.stringWidth(cur, font, size) > max_w:
+                cur = _truncate_to_width(c, cur, font, size, max_w)
+    if cur:
+        if len(lines) < max_lines:
+            lines.append(cur)
+        else:
+            # Pack the leftover into the last line, ellipsis-truncated.
+            tail = (lines[-1] + " " + cur) if lines[-1] else cur
+            lines[-1] = _truncate_to_width(c, tail, font, size, max_w)
+
+    if len(lines) > max_lines:
+        # Belt-and-suspenders: ensure we never exceed the cap.
+        lines = lines[:max_lines]
+        lines[-1] = _truncate_to_width(c, lines[-1], font, size, max_w)
+    return lines
+
+
+def _draw_structured_title_block(
+    c: canvas.Canvas,
+    params: ScenarioParams,
+    project_name: str,
+    location_description: str,
+    sheet_number: str,
+    total_sheets: str,
+    scale_label: str,
+    bearing_deg: float | None = None,
+) -> None:
+    """Boxed title block — third box of the equal-width footer row.
+
+    Engineering-plan conventions: PROJECT/LOCATION up top, MUTCD/CDOT
+    references in the middle, SCALE/DATE/SHEET below, and DRAWN BY /
+    STATUS at the foot.  Long values (project names, MHT-type labels,
+    location prose) wrap to a second line so the full classification
+    is preserved instead of being mid-word truncated.  The box itself
+    is sized to ``FOOTER_BOX_W × FOOTER_BOX_H`` so it lines up with
+    the LEGEND and NOTES boxes; rows render top-down with whitespace
+    slack accruing at the bottom of the box when content is short.
+
+    When ``bearing_deg`` is None the orientation caveat appears as an
+    ORIENTATION row in the STANDARDS section instead of as text under
+    the compass; this keeps the compass area on the schematic clean.
+    """
+    standards_rows: list[tuple[str, str]] = [
+        ("MHT TYPE", _scenario_label(params)),
+        ("MUTCD", _mutcd_ta_reference(params)),
+        ("CDOT", _cdot_standard_reference(params)),
+    ]
+    if bearing_deg is None:
+        standards_rows.append(("ORIENTATION", "Site bearing not provided"))
+
+    sections: list[tuple[str, list[tuple[str, str]]]] = [
+        (
+            "PROJECT",
+            [
+                ("PROJECT", project_name or "Untitled Project"),
+                ("LOCATION", location_description or "—"),
+            ],
+        ),
+        ("STANDARDS", standards_rows),
+        (
+            "SHEET",
+            [
+                ("SCALE", scale_label),
+                ("DATE", date.today().isoformat()),
+                ("SHEET", f"{sheet_number} OF {total_sheets}"),
+            ],
+        ),
+        (
+            "STATUS",
+            [
+                ("DRAWN BY", "MHT Tool (auto-generated)"),
+                ("STATUS", "DRAFT — Not for stamping"),
+            ],
+        ),
+    ]
+
+    w = FOOTER_BOX_W
+    h = FOOTER_BOX_H
+    x_box = TITLE_BLOCK_X
+    y_box = FOOTER_BOX_Y
+
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.6)
+    c.rect(x_box, y_box, w, h, fill=0, stroke=1)
+
+    # Wider value column — leverages the new 388-pt box width so almost
+    # everything fits on one line and the wrap pass only triggers for
+    # genuinely long project names.
+    label_col_w = 70.0
+    value_col_w = w - label_col_w - 2 * TITLE_BLOCK_PAD
+
+    # Pre-wrap values so the row count is known up front.
+    wrapped: list[tuple[str, str, list[str]]] = []
+    for section_name, rows in sections:
+        for label, value in rows:
+            font = "Helvetica-Bold" if label == "STATUS" else "Helvetica"
+            size = TITLE_BLOCK_VALUE_FONT_SIZE
+            lines = _wrap_to_width(c, value, font, size, value_col_w, max_lines=2)
+            wrapped.append((section_name, label, lines))
+
+    label_x = x_box + TITLE_BLOCK_PAD
+    value_x = x_box + TITLE_BLOCK_PAD + label_col_w
+
+    # Drawing cursor starts at the top of the box (+ pad) and walks down.
+    y = y_box + h - TITLE_BLOCK_PAD
+
+    current_section = wrapped[0][0]
+    for section_name, label, lines in wrapped:
+        if section_name != current_section:
+            # Inter-section divider rule.
+            c.setStrokeColor(colors.HexColor("#BBBBBB"))
+            c.setLineWidth(0.3)
+            c.line(
+                x_box + TITLE_BLOCK_PAD,
+                y - 0.5,
+                x_box + w - TITLE_BLOCK_PAD,
+                y - 0.5,
+            )
+            y -= TITLE_BLOCK_SECTION_GAP
+            current_section = section_name
+
+        # Label column on the first line of the row.
+        c.setFont("Helvetica-Bold", 7.0)
+        c.setFillColor(colors.HexColor("#666666"))
+        c.drawString(label_x, y - 7.5, label + ":")
+
+        # Value column — one rendered line per wrapped line.
+        for line in lines:
+            if label == "STATUS":
+                c.setFont("Helvetica-Bold", TITLE_BLOCK_VALUE_FONT_SIZE)
+                c.setFillColor(colors.HexColor("#B05010"))
+            elif label == "ORIENTATION":
+                c.setFont("Helvetica-Oblique", TITLE_BLOCK_VALUE_FONT_SIZE)
+                c.setFillColor(colors.HexColor("#666666"))
+            else:
+                c.setFont("Helvetica", TITLE_BLOCK_VALUE_FONT_SIZE)
+                c.setFillColor(colors.black)
+            c.drawString(value_x, y - 7.5, line)
+            y -= TITLE_BLOCK_ROW_H
+
+
+def _truncate_to_width(c: canvas.Canvas, text: str, font: str, size: float, max_w: float) -> str:
+    """Trim ``text`` with an ellipsis so its rendered width is ≤ ``max_w``.
+
+    Used as a last-resort fallback inside the wrapper when even a
+    single word can't fit the value column.  Most rows reach the
+    title block via ``_wrap_to_width`` instead, which packs whole
+    words across up to two lines before falling through here.
+    """
+    if c.stringWidth(text, font, size) <= max_w:
+        return text
+    ell = "…"
+    out = text
+    while out and c.stringWidth(out + ell, font, size) > max_w:
+        out = out[:-1]
+    return (out + ell) if out else ell
+
+
+def _draw_north_arrow(
+    c: canvas.Canvas,
+    x_center: float,
+    y_center: float,
+    bearing_deg: float | None,
+) -> None:
+    """North arrow + direction-of-travel caption, drawn at ``(x_center,
+    y_center)``.
+
+    Schematic convention (per the module docstring): the LEFT edge of
+    the plan view is upstream (high station), the RIGHT edge is
+    downstream.  Drivers therefore travel LEFT → RIGHT across the page
+    on the work-side carriageway, which is what the work-side lane
+    arrow rendered by ``_draw_road`` shows; the compass's "Direction
+    of travel" sub-arrow matches that convention and points right.
+
+    When ``bearing_deg`` is supplied the north symbol rotates to that
+    compass bearing (0 = north up, 90 = east right).  When None we
+    leave the arrow pointing page-up and surface the caveat as an
+    ORIENTATION row in the structured title block instead — keeping
+    the area around the compass clean.
+    """
+    import math
+
+    arrow_h = 26.0
+    arrow_w = 12.0
+
+    theta = 0.0 if bearing_deg is None else math.radians(bearing_deg)
+
+    cos_t = math.cos(theta)
+    sin_t = math.sin(theta)
+
+    def rot(dx: float, dy: float) -> tuple[float, float]:
+        # Standard 2D rotation: theta=0 keeps the arrow pointing up
+        # (page +y).  Positive bearing rotates clockwise (compass
+        # convention) — i.e. theta=90° rotates "up" to "right".
+        return (
+            x_center + dx * cos_t + dy * sin_t,
+            y_center - dx * sin_t + dy * cos_t,
         )
-    elif params.closure_type == "off_road":
-        project_label = "WORK BEYOND THE SHOULDER"
-    elif params.closure_type == "lane" and not params.is_divided:
-        project_label = "FLAGGER ALTERNATING TRAFFIC — 2-LANE UNDIVIDED"
-    elif params.closure_type == "lane":
-        project_label = "RIGHT-LANE CLOSURE — DIVIDED HIGHWAY"
-    elif params.is_divided:
-        project_label = "SHOULDER CLOSURE — DIVIDED HIGHWAY"
-    else:
-        project_label = "SHOULDER CLOSURE — 2-LANE UNDIVIDED"
-    c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(PAGE_W / 2, PAGE_H - 30, project_label)
 
-    c.setFont("Helvetica-Bold", 11)
-    c.drawRightString(PAGE_W - MARGIN - 8, PAGE_H - 30, f"SHEET {sheet_number} OF {total_sheets}")
+    # Arrow shaft
+    p_tail = rot(0.0, -arrow_h / 2.0)
+    p_tip = rot(0.0, arrow_h / 2.0)
+    p_head_l = rot(-arrow_w / 2.0, arrow_h / 2.0 - arrow_w * 0.9)
+    p_head_r = rot(arrow_w / 2.0, arrow_h / 2.0 - arrow_w * 0.9)
 
-    c.setFont("Helvetica", 9)
-    c.drawString(MARGIN + 8, PAGE_H - 52, f"SCALE: {scale_label}")
-    c.drawCentredString(PAGE_W / 2, PAGE_H - 52, f"DATE: {date.today().isoformat()}")
-    c.drawRightString(PAGE_W - MARGIN - 8, PAGE_H - 52, f"SPEED: {params.speed_mph} MPH")
+    c.setStrokeColor(colors.black)
+    c.setFillColor(colors.black)
+    c.setLineWidth(1.2)
+    c.line(p_tail[0], p_tail[1], p_tip[0], p_tip[1])
+    path = c.beginPath()
+    path.moveTo(p_tip[0], p_tip[1])
+    path.lineTo(p_head_l[0], p_head_l[1])
+    path.lineTo(p_head_r[0], p_head_r[1])
+    path.close()
+    c.drawPath(path, stroke=0, fill=1)
+
+    # "N" letter just outside the arrow tip, rotated with the symbol.
+    n_pos = rot(0.0, arrow_h / 2.0 + 7.0)
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 9)
+    c.drawCentredString(n_pos[0], n_pos[1] - 3.0, "N")
+
+    # Direction-of-travel caption + sub-arrow beneath the compass.
+    # The sub-arrow points RIGHT to match the LEFT → RIGHT work-side
+    # traffic convention used by ``_draw_road``'s lane arrows.
+    cap_y = y_center - arrow_h / 2.0 - 11.0
+    c.setFont("Helvetica", 6)
+    c.setFillColor(colors.HexColor("#404040"))
+    c.drawCentredString(x_center, cap_y, "Direction of travel")
+    c.setStrokeColor(colors.HexColor("#404040"))
+    c.setLineWidth(0.8)
+    sub_y = cap_y - 5.5
+    c.line(x_center - 14, sub_y, x_center + 14, sub_y)
+    # Arrowhead at the right end (downstream side of the work-side roadway).
+    c.line(x_center + 14, sub_y, x_center + 10, sub_y + 2.5)
+    c.line(x_center + 14, sub_y, x_center + 10, sub_y - 2.5)
+
+
+def _draw_sheet_border(c: canvas.Canvas) -> None:
+    """Thin black border 0.25" inside the page edge — matches typical
+    engineering-plan conventions and frames the sheet content."""
+    inset = 18.0  # 0.25 inch
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(1.0)
+    c.rect(inset, inset, PAGE_W - 2 * inset, PAGE_H - 2 * inset, fill=0, stroke=1)
 
 
 _SIGN_CATEGORY_LEGEND: dict[str, tuple[str, str]] = {
@@ -1315,14 +1839,34 @@ def _draw_context_icon(c: canvas.Canvas, x: float, y: float, kind: str) -> None:
         c.drawCentredString(x, y - 1.2, "SCHOOL")
 
 
+def _draw_median_icon(c: canvas.Canvas, x: float, y: float) -> None:
+    """Small legend icon for the median band on a divided highway."""
+    w, h = 16.0, 8.0
+    c.setFillColor(MEDIAN_FILL)
+    c.setStrokeColor(MEDIAN_EDGE)
+    c.setLineWidth(0.6)
+    c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
+    # Mini diagonal hatch for the median fill so it matches the sheet.
+    c.setStrokeColor(HATCH_GRAY)
+    c.setLineWidth(0.3)
+    for offset in (-4.0, 0.0, 4.0):
+        c.line(x + offset - h / 2, y - h / 2, x + offset + h / 2, y + h / 2)
+
+
 def _draw_legend(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
+    is_divided: bool = False,
+    scale_note: str = "",
 ) -> None:
     """Two-section legend: device-type icons (cone, drum, barricade, …)
     followed by sign-category icons keyed to the shape and color used on
     the plan view.  The category section explains why one sign appears
-    as an orange diamond and another as a white-with-red-border square."""
+    as an orange diamond and another as a white-with-red-border square.
+
+    On divided highways an extra ROAD GEOMETRY section calls out the
+    median band symbol and notes that left-side advance warning signs
+    are placed in the median (CO Supplement §6C.04(A))."""
     device_types_used = sorted(
         {p.device_type for p in placements if p.device_type != DeviceType.SIGN_GENERIC},
         key=lambda dt: dt.value,
@@ -1346,24 +1890,27 @@ def _draw_legend(
         if any(flags.get(flag) and flag_to_kind[flag] == kind for flag in flag_to_kind)
     ]
 
-    width = (PAGE_W - 2 * MARGIN) / 2 - 16
-    height = FOOTER_H - 16
+    box_x = LEGEND_BOX_X
+    box_y = FOOTER_BOX_Y
+    width = FOOTER_BOX_W
+    height = FOOTER_BOX_H
 
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)
-    c.rect(MARGIN, MARGIN, width, height, fill=0, stroke=1)
+    c.rect(box_x, box_y, width, height, fill=0, stroke=1)
 
+    title_y = box_y + height - 12.0
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(MARGIN + 8, FOOTER_H - 8, "LEGEND")
+    c.drawString(box_x + 8, title_y, "LEGEND")
 
-    row_h = 15
-    y = FOOTER_H - 22
-    glyph_x = MARGIN + 18
-    text_x = MARGIN + 36
+    row_h = 14
+    y = title_y - 14
+    glyph_x = box_x + 18
+    text_x = box_x + 36
 
     def _bail() -> bool:
-        return y < MARGIN + 10
+        return y < box_y + 10
 
     c.setFont("Helvetica", 8)
     for dt in device_types_used:
@@ -1379,7 +1926,7 @@ def _draw_legend(
         y -= 4  # divider gap between sections
         c.setFillColor(colors.black)
         c.setFont("Helvetica-Bold", 8)
-        c.drawString(MARGIN + 8, y, "SIGN CATEGORIES")
+        c.drawString(box_x + 8, y, "SIGN CATEGORIES")
         y -= row_h - 1
         c.setFont("Helvetica", 8)
         for cat in sign_cats_used:
@@ -1395,7 +1942,7 @@ def _draw_legend(
         y -= 4
         c.setFillColor(colors.black)
         c.setFont("Helvetica-Bold", 8)
-        c.drawString(MARGIN + 8, y, "SITE CONTEXT")
+        c.drawString(box_x + 8, y, "SITE CONTEXT")
         y -= row_h - 1
         c.setFont("Helvetica", 8)
         for kind in context_kinds_used:
@@ -1405,6 +1952,47 @@ def _draw_legend(
             y -= row_h
             if _bail():
                 return
+
+    if is_divided:
+        y -= 4
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 8)
+        c.drawString(box_x + 8, y, "ROAD GEOMETRY")
+        y -= row_h - 1
+        c.setFont("Helvetica", 8)
+        _draw_median_icon(c, glyph_x, y + 3)
+        c.setFillColor(colors.black)
+        c.drawString(text_x, y, "Median (separates carriageways)")
+        y -= row_h
+        if _bail():
+            return
+        c.setFont("Helvetica-Oblique", 7)
+        c.setFillColor(colors.HexColor("#404040"))
+        c.drawString(box_x + 8, y, "Left-side advance signs sit in the median")
+        y -= 9
+        if _bail():
+            return
+        c.drawString(box_x + 8, y, "per CO Supplement §6C.04(A).")
+        y -= row_h
+
+    # Scale-convention footnote — pinned to the bottom of the LEGEND
+    # box.  The structured title block carries only the bare ratio
+    # ("1\" = N ft") to keep that cell legible; the explanation of
+    # which region the ratio applies to lives here so a reader can
+    # always orient against the schematic without squinting at a
+    # truncated value cell.
+    if scale_note:
+        c.setFont("Helvetica-Oblique", 6.5)
+        c.setFillColor(colors.HexColor("#666666"))
+        legend_inner_w = width - 16
+        wrapped = _wrap_to_width(
+            c, scale_note, "Helvetica-Oblique", 6.5, legend_inner_w, max_lines=3
+        )
+        # Anchor inside the box's bottom edge so the footnote doesn't
+        # collide with the rows above and never escapes the box border.
+        note_y = box_y + 8 + (len(wrapped) - 1) * 9
+        for i, line in enumerate(wrapped):
+            c.drawString(box_x + 8, note_y - i * 9, line)
 
 
 def _draw_notes(
@@ -1420,17 +2008,20 @@ def _draw_notes(
     table (#, CODE, DESCRIPTION), and (3) a 3-column ADVANCE WARNING
     SIGNS table with right-aligned distances.  MUTCD codes are bolded.
     """
-    width = (PAGE_W - 2 * MARGIN) / 2 - 16
-    x_box = PAGE_W - MARGIN - width
-    height = FOOTER_H - 16
+    # Middle box of the three-equal-width footer row.
+    x_box = NOTES_BOX_X
+    box_y = FOOTER_BOX_Y
+    width = FOOTER_BOX_W
+    height = FOOTER_BOX_H
 
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)
-    c.rect(x_box, MARGIN, width, height, fill=0, stroke=1)
+    c.rect(x_box, box_y, width, height, fill=0, stroke=1)
 
+    title_y = box_y + height - 12.0
     c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(x_box + 8, FOOTER_H - 10, "NOTES & SIGN SCHEDULE")
+    c.drawString(x_box + 8, title_y, "NOTES & SIGN SCHEDULE")
 
     speed = params.speed_mph
     is_mobile = params.closure_type == "mobile"
@@ -1549,7 +2140,7 @@ def _draw_notes(
         c.line(x, y[0], x_right, y[0])
         y[0] -= 8
         for i, code in enumerate(schedule_order, start=1):
-            desc = _MUTCD_DESCRIPTIONS.get(code, "")
+            desc = description_for(code)
             # Substitute parametric placeholders.  G20-1 BEGIN ROAD WORK
             # carries the work-zone length on its face ("ROAD CONSTRUCTION
             # NEXT N FT"); rendering the literal "XXX" template leaks an
@@ -1591,9 +2182,26 @@ def _draw_notes(
     y[0] -= 4
     c.setFont("Helvetica-Oblique", 6.5)
     c.setFillColor(colors.HexColor("#666666"))
-    c.drawString(x, y[0], "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6.")
+    c.drawString(
+        x,
+        y[0],
+        (
+            "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6 "
+            "(effective 2026-01-18), Colorado Supplement."
+        ),
+    )
     y[0] -= 8
-    c.drawString(x, y[0], "Generated by MHT Tool — verify before use.")
+    c.setFont("Helvetica-Bold", 6.5)
+    c.setFillColor(colors.HexColor("#B05010"))
+    c.drawString(
+        x,
+        y[0],
+        "GENERATED BY CONESTRUCT — DRAFT FOR PE REVIEW. NOT A SEALED PLAN.",
+    )
+    y[0] -= 8
+    c.setFont("Helvetica-Oblique", 6.5)
+    c.setFillColor(colors.HexColor("#666666"))
+    c.drawString(x, y[0], "Verify all dimensions before use.")
 
 
 # ---------------------------------------------------------------------------
@@ -1680,7 +2288,23 @@ def render_plan_sheet(
     Returns the path written.  The horizontal scale is fitted to the
     work-zone-and-taper region so the merging taper is readable;
     advance warning signs are documented in the notes panel.
+
+    Project metadata (``project_name``, location, bearing) is sourced
+    from ``params`` when available; the kwarg ``project_name`` is kept
+    as a fallback for callers that haven't migrated to passing the
+    fields through ScenarioParams.
     """
+    # Prefer params-supplied metadata; fall back to the per-call kwargs
+    # (or the bare ``site_address`` for the LOCATION row) so older
+    # callers continue to work.
+    effective_project_name = (
+        getattr(params, "project_name", "") or project_name or "Untitled Project"
+    )
+    if effective_project_name == "Untitled Project" and project_name:
+        effective_project_name = project_name
+    location_description = getattr(params, "location_description", "") or site_address or ""
+    bearing_deg = getattr(params, "bearing_deg", None)
+
     c = canvas.Canvas(output_path, pagesize=(PAGE_W, PAGE_H))
 
     mapping = _make_x_mapping(placements, params, shoulder_width_ft)
@@ -1688,8 +2312,13 @@ def render_plan_sheet(
     pts_per_ft = mapping["pts_per_ft"]
     station_max_visible = mapping["station_max_visible"]
     ft_per_inch = 72.0 / pts_per_ft if pts_per_ft else 0.0
-    scale_label = (
-        f'1" = {ft_per_inch:.0f} ft (work zone + taper); ' "buffer compressed; offset exaggerated"
+    # Title block carries the bare ratio so it stays compact; the
+    # legend's footnote spells out the scale convention (which region
+    # the ratio applies to, what got compressed, what got exaggerated).
+    scale_short = f'1" = {ft_per_inch:.0f} ft'
+    scale_long = (
+        f"Scale {scale_short} applies to the work zone + taper. "
+        "Buffer compressed; lateral offset exaggerated."
     )
 
     schedule_order, code_to_num = build_sign_schedule(placements, station_max_visible)
@@ -1710,8 +2339,8 @@ def render_plan_sheet(
     # to the carriageway it describes that the semantics are unambiguous.
     half_lanes = 2 if params.is_divided else 1
     shoulder_outer_offset = half_lanes * params.lane_width_ft + shoulder_width_ft
-    arrow_y_work_side = _y_of(shoulder_outer_offset) - 14.0
-    arrow_y_open_side = _y_of(-shoulder_outer_offset) + 14.0
+    arrow_y_work_side = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
+    arrow_y_open_side = _y_of(-shoulder_outer_offset, params.is_divided) + 14.0
     arrow_x_left = PLAN_LEFT + 30.0
     arrow_x_right = PLAN_LEFT + 130.0
     _draw_lane_arrow(c, arrow_x_left, arrow_x_right, arrow_y_work_side, pointing_right=True)
@@ -1732,9 +2361,33 @@ def render_plan_sheet(
         shoulder_width_ft,
         code_to_num,
     )
-    _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
-    _draw_legend(c, placements)
+    _draw_title_block(
+        c, title, effective_project_name, sheet_number, total_sheets, params, scale_short
+    )
+    _draw_legend(c, placements, is_divided=params.is_divided, scale_note=scale_long)
     _draw_notes(c, params, shoulder_width_ft, schedule_order)
+    _draw_structured_title_block(
+        c,
+        params,
+        project_name=effective_project_name,
+        location_description=location_description,
+        sheet_number=sheet_number,
+        total_sheets=total_sheets,
+        scale_label=scale_short,
+        bearing_deg=bearing_deg,
+    )
+
+    # North-arrow rosette: pulled well inside the upper-right corner
+    # so it reads as part of the road area instead of hugging the
+    # sheet border.  ~60 pt inset from PLAN_RIGHT clears the page
+    # frame; ~36 pt below PLAN_TOP gives the dim band above the road
+    # room to breathe.
+    _draw_north_arrow(
+        c,
+        x_center=PLAN_RIGHT - 60.0,
+        y_center=PLAN_TOP - 36.0,
+        bearing_deg=bearing_deg,
+    )
 
     if site_lat is not None and site_lng is not None and (site_lat or site_lng):
         token = os.environ.get("MAPBOX_TOKEN", "")
@@ -1744,6 +2397,11 @@ def render_plan_sheet(
             png = _fetch_mapbox_aerial(site_lat, site_lng, token)
             if png is not None:
                 _draw_aerial_embed(c, png, site_lat, site_lng, site_address)
+
+    # Sheet border last so it sits above any device that strays into
+    # the page margin (devices clamp inside PLAN_TOP/PLAN_BOTTOM, but
+    # belt-and-suspenders for the off-road clamp logic).
+    _draw_sheet_border(c)
 
     c.showPage()
     c.save()

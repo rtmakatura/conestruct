@@ -72,6 +72,19 @@ export interface ScenarioMeta {
   address: string;
   lat: number;
   lng: number;
+  /**
+   * Engineering-style location text shown on the title block (e.g.
+   * "I-25 NB, MP 144.5–146, Colorado Springs"). Distinct from
+   * ``address`` which is geocodable; ``locationDescription`` is human
+   * prose for the LOCATION row of the schematic title block.
+   */
+  locationDescription?: string;
+  /**
+   * Road compass bearing (0 = N, 90 = E). Rotates the north arrow on
+   * the rendered schematic to match the site. Leave undefined for the
+   * default "↑ = North" orientation with a verify-bearing caveat.
+   */
+  bearingDeg?: number;
   siteConditions?: SiteConditions;
 }
 

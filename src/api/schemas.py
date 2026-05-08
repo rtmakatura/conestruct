@@ -41,6 +41,16 @@ class ScenarioMeta(BaseModel):
     address: str = ""
     lat: float = 0.0
     lng: float = 0.0
+    # Engineering-style location text shown on the title block (e.g.
+    # "I-25 NB, MP 144.5–146, Colorado Springs").  Distinct from
+    # ``address`` — that's a geocodable street address used for the
+    # aerial embed, while this is human-prose for the LOCATION row.
+    locationDescription: str = ""
+    # Road compass bearing (0 = N, 90 = E).  When provided, the north
+    # arrow on the schematic is rotated so the symbol points to true
+    # north relative to the page; otherwise the schematic falls back
+    # to "up = north" with a verify-bearing caveat.
+    bearingDeg: float | None = None
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)
@@ -233,6 +243,18 @@ def _map_road_type(road_type: str, speed: int) -> str:
     raise ValueError(f"unmapped road_type: {road_type!r}")
 
 
+def _meta_params(meta: ScenarioMeta) -> dict:
+    """Extract title-block metadata from a ScenarioMeta as kwargs for
+    ScenarioParams.  ``project_name`` defaults to "Untitled Project"
+    when the UI sends an empty string so the title block always carries
+    a non-empty PROJECT row."""
+    return {
+        "project_name": meta.project or "Untitled Project",
+        "location_description": meta.locationDescription or meta.address or "",
+        "bearing_deg": meta.bearingDeg,
+    }
+
+
 def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     """Translate a parsed Scenario into a generator invocation.
 
@@ -240,6 +262,8 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     ``placements = generator_fn(params, **kwargs)`` and feed the
     placements to the renderers along with ``params``.
     """
+    meta_kw = _meta_params(scenario.meta)
+
     if isinstance(scenario, ShoulderScenario):
         params = ScenarioParams(
             speed_mph=scenario.speed,
@@ -252,6 +276,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=scenario.divided,
             jurisdiction="CDOT",
+            **meta_kw,
         )
         generator = (
             generate_shoulder_closure_divided
@@ -273,6 +298,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",
+            **meta_kw,
         )
         kwargs = {
             "afad": scenario.afad,
@@ -297,6 +323,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=True,
             jurisdiction="CDOT",
+            **meta_kw,
         )
         return params, generate_lane_closure_divided, {}
 
@@ -315,6 +342,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=scenario.roadType in ("rural_divided", "freeway"),
             jurisdiction="CDOT",
+            **meta_kw,
         )
         return params, generate_work_beyond_shoulder, {}
 
@@ -333,6 +361,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",
+            **meta_kw,
         )
         return (
             params,
@@ -352,6 +381,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
         is_night=scenario.night,
         is_divided=True,
         jurisdiction="CDOT",
+        **meta_kw,
     )
     return (
         params,

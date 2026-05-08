@@ -115,6 +115,16 @@ class ScenarioParams:
     is_night: bool = False
     is_divided: bool = False
     jurisdiction: str = "CDOT"
+    # Project metadata — surfaced on the rendered title block.  These
+    # don't drive any validation logic, but live on ScenarioParams so
+    # they thread through the API/CLI/UI without a separate side
+    # channel.  ``bearing_deg`` is the road's compass bearing (0 = N,
+    # 90 = E) and rotates the north arrow on the schematic when
+    # supplied; None defaults to "up = north" with a verify-bearing
+    # caveat printed under the arrow.
+    project_name: str = "Untitled Project"
+    location_description: str = ""
+    bearing_deg: float | None = None
 
 
 @dataclass(frozen=True)
