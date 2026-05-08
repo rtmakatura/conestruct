@@ -485,6 +485,21 @@ function ClassifyBanner({
             {r.laneWidthFt} ft{" "}
             <span className="opacity-70">(class default)</span>
           </span>
+          {r.lanesPerDirection !== undefined && (
+            <>
+              <span>·</span>
+              <span>
+                {r.lanesPerDirection} lane
+                {r.lanesPerDirection === 1 ? "" : "s"}/dir
+              </span>
+            </>
+          )}
+          {r.speedLimitMph !== undefined && (
+            <>
+              <span>·</span>
+              <span>{r.speedLimitMph} mph</span>
+            </>
+          )}
           {r.raw.structure && (
             <>
               <span>·</span>
@@ -517,6 +532,24 @@ function ClassifyBanner({
             "Lane width (default)",
             delta.laneWidthApplied,
             delta.laneWidthApplicable,
+          )}
+          {fieldRow(
+            "Speed limit",
+            delta.speedApplied,
+            delta.speedApplicable,
+            delta.speedApplicable && !delta.speedApplied
+              ? "no maxspeed tag in OSM"
+              : undefined,
+          )}
+          {fieldRow(
+            "Lanes per direction",
+            delta.lanesApplied,
+            delta.lanesApplicable,
+            delta.lanesApplicable && !delta.lanesApplied
+              ? "no lanes tag in OSM"
+              : !delta.lanesApplicable
+                ? "field hard-coded for this scenario"
+                : undefined,
           )}
         </div>
       </div>
@@ -552,6 +585,14 @@ function ClassifyBanner({
             <span className="opacity-70">One-way · </span>
             {r.raw.oneway ? "yes (couplet hint)" : "no"}
           </div>
+          {(r.raw.osmLanesTag || r.raw.osmMaxspeedTag) && (
+            <div>
+              <span className="opacity-70">OSM tags · </span>
+              {r.raw.osmLanesTag && `lanes=${r.raw.osmLanesTag}`}
+              {r.raw.osmLanesTag && r.raw.osmMaxspeedTag && " · "}
+              {r.raw.osmMaxspeedTag && `maxspeed=${r.raw.osmMaxspeedTag}`}
+            </div>
+          )}
         </div>
       </div>
 
@@ -696,9 +737,9 @@ function LocationGroup({
             Resolving…
           </>
         ) : classify.state === "detected" ? (
-          <>Re-detect roadway →</>
+          <>Re-detect road properties →</>
         ) : (
-          <>Lock in location →</>
+          <>Detect road properties from address →</>
         )}
       </button>
       {!canLockIn && (
