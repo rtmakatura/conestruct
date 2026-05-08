@@ -511,15 +511,26 @@ function LocationGroup({
     meta.address.trim().length > 0 || meta.lat !== 0 || meta.lng !== 0;
 
   return (
-    <FieldGroup label="Project" ix="· OPT">
+    <FieldGroup label="Project Information" ix="· OPT">
       <Field>
         <LabelRow>Project name</LabelRow>
         <input
           type="text"
           className="field-input"
           value={meta.project}
-          placeholder="I-25 MM 184 Resurfacing"
+          placeholder="I-25 NB MP 184 Resurfacing"
           onChange={(e) => set("project", e.target.value)}
+        />
+      </Field>
+
+      <Field>
+        <LabelRow>Location description</LabelRow>
+        <input
+          type="text"
+          className="field-input"
+          value={meta.locationDescription ?? ""}
+          placeholder="I-25 NB, MP 144.5–146, Colorado Springs"
+          onChange={(e) => set("locationDescription", e.target.value)}
         />
       </Field>
 
@@ -567,6 +578,31 @@ function LocationGroup({
           />
         </div>
       </div>
+
+      <Field>
+        <LabelRow>Road bearing (° from N)</LabelRow>
+        <input
+          type="number"
+          step="5"
+          min="0"
+          max="360"
+          className="field-input"
+          value={meta.bearingDeg ?? ""}
+          placeholder="Leave blank for default ↑ = North"
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === "") {
+              set("bearingDeg", undefined as never);
+            } else {
+              const n = +raw;
+              set("bearingDeg", (Number.isFinite(n) ? n : undefined) as never);
+            }
+          }}
+        />
+        <div className="mt-1 font-mono text-[10px] text-[color:var(--ink-on-dark-faint)]">
+          Rotates the north arrow on the schematic to match site bearing.
+        </div>
+      </Field>
 
       <button
         type="button"
