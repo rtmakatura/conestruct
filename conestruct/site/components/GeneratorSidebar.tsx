@@ -242,12 +242,12 @@ export function GeneratorSidebar({
           {generating ? (
             <>
               <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
-              Generating MHT…
+              Building bundle…
             </>
           ) : (
             <>
-              Generate MHT package
-              <span className="font-mono">→</span>
+              Download MHT package (.zip)
+              <span className="font-mono">↓</span>
             </>
           )}
         </button>
