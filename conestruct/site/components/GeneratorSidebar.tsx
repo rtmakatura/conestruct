@@ -19,6 +19,7 @@ import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { SiteConditionsField } from "./SiteConditionsField";
+import { CorridorVerifyCard } from "./CorridorVerifyCard";
 
 type ClassifyStatus =
   | { state: "idle" }
@@ -48,6 +49,13 @@ export function GeneratorSidebar({
   const [classify, setClassify] = useState<ClassifyStatus>({ state: "idle" });
   const [geo, setGeo] = useState<GeocodeStatus>({ state: "idle" });
   const [lockingIn, setLockingIn] = useState(false);
+  // Corridor preview inputs.  These live in component state for v1 — the
+  // backend doesn't yet accept a corridor, so we don't persist them on
+  // ScenarioMeta.  ``workZoneFt`` defaults to the scenario's ``workLen``
+  // (already entered elsewhere); ``bearingDeg`` defaults to north until
+  // the operator picks a direction.
+  const [bearingDeg, setBearingDeg] = useState(0);
+  const [workZoneFt, setWorkZoneFt] = useState(scenario.workLen ?? 0);
 
   // Latest scenario in a ref so the async lock-in orchestrator reads the
   // current scenario without forcing the consumer to re-pass it on click.
@@ -177,6 +185,20 @@ export function GeneratorSidebar({
         lockingIn={lockingIn}
         onLockIn={onLockIn}
       />
+
+      {classify.state === "detected" && (
+        <div className="px-6 pb-5">
+          <CorridorVerifyCard
+            result={classify.result}
+            scenario={scenario}
+            setScenario={setScenario}
+            workZoneFt={workZoneFt}
+            setWorkZoneFt={setWorkZoneFt}
+            bearingDeg={bearingDeg}
+            setBearingDeg={setBearingDeg}
+          />
+        </div>
+      )}
 
       <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
