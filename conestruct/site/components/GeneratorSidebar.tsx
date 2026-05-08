@@ -5,6 +5,8 @@ import {
   applyClassification,
   carryMeta,
   defaultFor,
+  ENABLED_SCENARIO_KINDS,
+  isScenarioKindEnabled,
   SCENARIO_KINDS,
   type Scenario,
   type ScenarioKind,
@@ -200,6 +202,7 @@ export function GeneratorSidebar({
         </div>
       )}
 
+      <DisabledScenarioBanner kind={scenario.kind} />
       <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
       {scenario.kind === "shoulder" && (
@@ -264,6 +267,37 @@ function ScenarioPicker({
   value: ScenarioKind;
   onChange: (v: ScenarioKind) => void;
 }) {
+  // Only show kinds gated on by ENABLED_SCENARIO_KINDS. When a single
+  // kind is enabled the dropdown collapses to static text — no point
+  // rendering a one-button picker.
+  const enabledKinds = SCENARIO_KINDS.filter((k) => isScenarioKindEnabled(k.v));
+
+  if (enabledKinds.length <= 1) {
+    const only = enabledKinds[0];
+    if (!only) return null;
+    return (
+      <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
+        <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+          <span>Scenario type</span>
+          <span className="text-[color:var(--cyan)]">LOCKED</span>
+        </div>
+        <div className="px-6 pb-5 pt-2">
+          <div className="px-3 py-2.5 border border-[color:var(--cyan)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
+            <span className="text-[13px] font-medium text-white">
+              {only.l}
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+              {only.sub}
+            </span>
+          </div>
+          <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+            Additional scenarios coming soon
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
       <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
@@ -271,7 +305,7 @@ function ScenarioPicker({
         <span className="text-[color:var(--cyan)]">SELECT</span>
       </div>
       <div className="px-6 pb-5 pt-2 flex flex-col gap-2">
-        {SCENARIO_KINDS.map((k) => {
+        {enabledKinds.map((k) => {
           const active = value === k.v;
           return (
             <button
@@ -299,6 +333,30 @@ function ScenarioPicker({
             </button>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+// Surfaces a warning when a saved plan or URL-loaded scenario carries a
+// kind we have temporarily gated off.  The picker below collapses to
+// the enabled set, so without this banner the operator would just see
+// a stale form with no explanation.  Pre-fills the first enabled kind
+// so a single click migrates the plan into a supported state.
+function DisabledScenarioBanner({ kind }: { kind: ScenarioKind }) {
+  if (isScenarioKindEnabled(kind)) return null;
+  const currentLabel =
+    SCENARIO_KINDS.find((k) => k.v === kind)?.l ?? kind;
+  const enabledLabel =
+    SCENARIO_KINDS.find((k) => k.v === ENABLED_SCENARIO_KINDS[0])?.l ??
+    "shoulder closure";
+  return (
+    <div className="px-6 py-3 border-t border-b border-[color:var(--orange)] bg-[color:var(--canvas)]">
+      <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--orange)] mb-1">
+        Scenario disabled
+      </div>
+      <div className="text-[12px] text-[color:var(--ink-on-dark)] leading-snug">
+        {`"${currentLabel}" is temporarily disabled while we verify accuracy. ${enabledLabel} is currently available.`}
       </div>
     </div>
   );
