@@ -44,10 +44,60 @@ export function GeneratorShell({
   };
 
   const results = useMemo(() => compute(scenario), [scenario]);
+  // OutputCards stay visible from first paint (original behavior); the
+  // Generate button now performs a real bundled-zip download rather than
+  // gating visibility.
+  const [bundleError, setBundleError] = useState<string | null>(null);
 
-  const onGenerate = () => {
+  const safeFilename = (name: string | undefined): string => {
+    const cleaned = (name ?? "")
+      .trim()
+      .replace(/[^a-zA-Z0-9 _-]+/g, "_")
+      .replace(/\s+/g, "_");
+    return cleaned || "plan";
+  };
+
+  // Sandbox/public mode: build the deliverable zip on demand by hitting
+  // /api/render/bundle (which fans out to all four Modal renderers in
+  // parallel and zips the bytes server-side).  Saved/workbench mode just
+  // re-uses the existing per-file download links exposed in OutputCards.
+  const onGenerate = async () => {
+    if (status === "generating") return;
     setStatus("generating");
-    setTimeout(() => setStatus("done"), 1100);
+    setBundleError(null);
+
+    if (mode !== "sandbox") {
+      // Workbench mode: OutputCards already serves per-file downloads
+      // tied to the saved plan; nothing to bundle here.
+      setStatus("done");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/render/bundle", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scenario }),
+      });
+      if (!res.ok) {
+        setBundleError(`Bundle failed (${res.status})`);
+        setStatus("done");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${safeFilename(scenario.meta?.project)}_mht_package.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setBundleError("Network error while building bundle");
+    } finally {
+      setStatus("done");
+    }
   };
 
   const generated = status === "done";
@@ -110,6 +160,11 @@ export function GeneratorShell({
           </div>
 
           <StatusBar status={status} />
+          {bundleError && (
+            <div className="mb-5 px-4 py-3 border-l-2 border-[color:var(--orange)] font-mono text-[12px] text-[color:var(--orange)]">
+              {bundleError}
+            </div>
+          )}
           <OutputCards
             results={results}
             generated={generated}

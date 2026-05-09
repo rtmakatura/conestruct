@@ -119,6 +119,60 @@ export async function fetchQuoteBreakdown(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+type BundlePart = { kind: RenderKind; bytes: ArrayBuffer; contentType: string };
+
+async function fetchPartFromModal(
+  scenario: Scenario,
+  kind: RenderKind,
+  quoteSettings: QuoteSettings,
+): Promise<BundlePart> {
+  const url = process.env.MODAL_RENDER_URL!;
+  const secret = process.env.MODAL_RENDER_SECRET!;
+  const requestBody =
+    kind === "quote" ? { scenario, settings: quoteSettings } : scenario;
+  const upstream = await fetch(`${url.replace(/\/$/, "")}/render/${kind}`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${secret}`,
+    },
+    body: JSON.stringify(requestBody),
+  });
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    throw new Error(`render ${kind} upstream ${upstream.status}: ${detail}`);
+  }
+  const bytes = await upstream.arrayBuffer();
+  const contentType =
+    upstream.headers.get("content-type") ?? "application/octet-stream";
+  return { kind, bytes, contentType };
+}
+
+// Fetch every render kind in parallel and return the raw bytes plus a
+// content-type for each.  Lets the bundle route zip them without
+// touching streaming-body details.
+export async function fetchAllRenderParts(
+  scenario: Scenario,
+  quoteSettings: QuoteSettings,
+): Promise<BundlePart[]> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    throw new Error("Render service not configured");
+  }
+  const kinds: RenderKind[] = ["pdf", "xlsx", "markdown", "quote"];
+  return Promise.all(
+    kinds.map((kind) => fetchPartFromModal(scenario, kind, quoteSettings)),
+  );
+}
+
+export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
+  pdf: "plan_sheet.pdf",
+  xlsx: "device_list.xlsx",
+  markdown: "crew_narrative.md",
+  quote: "quote.xlsx",
+};
+
 export async function fetchSiteDetection(
   lat: number,
   lng: number,
