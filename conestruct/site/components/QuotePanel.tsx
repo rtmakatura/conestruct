@@ -6,7 +6,7 @@ import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
 } from "@/lib/quote-settings";
-import type { Scenario } from "@/lib/scenarios";
+import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 
 type DeliveryStatus =
   | { state: "idle" }
@@ -14,6 +14,8 @@ type DeliveryStatus =
   | { state: "auto"; miles: number }
   | { state: "manual" }
   | { state: "error" };
+
+type FlaggerSource = "auto" | "manual";
 
 interface PublicMode {
   kind: "public";
@@ -109,6 +111,7 @@ export function QuotePanel({ mode }: Props) {
   const [downloading, setDownloading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [delivery, setDelivery] = useState<DeliveryStatus>({ state: "idle" });
+  const [flaggerSource, setFlaggerSource] = useState<FlaggerSource>("auto");
 
   // Latest settings in a ref so the async distance handler can write back to
   // the current settings object instead of a stale closure value.
@@ -117,6 +120,25 @@ export function QuotePanel({ mode }: Props) {
 
   const lat = mode.kind === "public" ? mode.scenario.meta.lat : 0;
   const lng = mode.kind === "public" ? mode.scenario.meta.lng : 0;
+
+  // Auto-fill the flagger headcount from the layout (only flagger
+  // scenarios station flaggers; everything else returns 0).  Skip
+  // the sync once the user has typed their own value — the manual
+  // override stays in place until they switch scenarios.
+  const autoFlaggers =
+    mode.kind === "public" ? expectedFlaggerCount(mode.scenario) : 0;
+  const scenarioKind = mode.kind === "public" ? mode.scenario.kind : null;
+  useEffect(() => {
+    setFlaggerSource("auto");
+  }, [scenarioKind]);
+  useEffect(() => {
+    if (mode.kind !== "public") return;
+    if (flaggerSource === "manual") return;
+    if (settingsRef.current.num_flaggers === autoFlaggers) return;
+    setSettings({ ...settingsRef.current, num_flaggers: autoFlaggers });
+    // mode.kind is stable; autoFlaggers/flaggerSource drive the sync.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoFlaggers, flaggerSource]);
 
   useEffect(() => {
     if (mode.kind !== "public") return;
@@ -237,7 +259,11 @@ export function QuotePanel({ mode }: Props) {
           min={0}
           max={20}
           step={1}
-          onChange={(v) => setSettings({ ...settings, num_flaggers: v })}
+          onChange={(v) => {
+            setSettings({ ...settings, num_flaggers: v });
+            setFlaggerSource("manual");
+          }}
+          caption={flaggerCaption(flaggerSource, autoFlaggers)}
         />
         <NumberField
           label="Delivery (mi)"
@@ -555,6 +581,14 @@ function deliveryCaption(
     case "idle":
       return undefined;
   }
+}
+
+function flaggerCaption(
+  source: FlaggerSource,
+  auto: number,
+): { text: string; tone: "muted" | "accent" } | undefined {
+  if (source === "manual") return { text: "Manual override", tone: "muted" };
+  return { text: `Auto · ${auto} from layout`, tone: "accent" };
 }
 
 function BreakdownGroup({

@@ -256,3 +256,13 @@ export function asMobileOpMultilane(
 ): MobileOpMultilaneScenario | null {
   return s.kind === "mobile_op_multilane" ? s : null;
 }
+
+// Canonical flagger headcount the layout itself dictates.  Only the
+// flagger lane-closure scenario stations flaggers (two for manual
+// flagging, zero when AFAD replaces them); every other scenario kind
+// is unflaggered.  Pre-fills the Quote panel so a contractor doesn't
+// have to retype a number the layout already knows.
+export function expectedFlaggerCount(s: Scenario): number {
+  if (s.kind !== "flagger_lane_closure") return 0;
+  return s.afad ? 0 : 2;
+}
