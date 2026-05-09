@@ -45,32 +45,49 @@ export interface AutoApplyDelta {
   dividedApplicable: boolean;
   laneWidthApplied: boolean;
   laneWidthApplicable: boolean;
+  // Speed and lanes come from OpenStreetMap tags (when available).
+  // `*Applicable` is false when the scenario kind doesn't have the
+  // field (only ShoulderScenario carries `lanes` today); `*Applied`
+  // is false when the OSM way didn't carry the tag.
+  speedApplied: boolean;
+  speedApplicable: boolean;
+  lanesApplied: boolean;
+  lanesApplicable: boolean;
 }
 
 export function applyClassification(
   scenario: Scenario,
   c: RoadClassification,
 ): { scenario: Scenario; delta: AutoApplyDelta } {
-  // Defaults: every scenario kind has roadType + laneWidth fields, and only
-  // ShoulderScenario surfaces a separate `divided` boolean — the other
-  // kinds infer divided from their narrowed roadType union.
-  const delta: AutoApplyDelta = {
-    roadTypeApplied: false,
-    roadTypeApplicable: true,
-    dividedApplied: false,
-    dividedApplicable: false,
-    laneWidthApplied: true,
-    laneWidthApplicable: true,
-  };
+  // Speed is a field on every scenario kind, so the OSM `maxspeed` lookup
+  // is always applicable.  Lanes is only on ShoulderScenario for now —
+  // the other kinds hard-code lane counts in their compute() functions
+  // and need a follow-up refactor before they can accept an auto-applied
+  // value.  `*Applicable` reflects shape; `*Applied` reflects whether
+  // OSM actually carried the tag.
+  const speedApplicable = true;
+  const speedApplied = c.speedLimitMph !== undefined;
+  const speedPatch =
+    speedApplied && c.speedLimitMph !== undefined
+      ? { speed: c.speedLimitMph }
+      : {};
 
   switch (scenario.kind) {
     case "shoulder": {
+      const lanesApplicable = true;
+      const lanesApplied = c.lanesPerDirection !== undefined;
+      const lanesPatch =
+        lanesApplied && c.lanesPerDirection !== undefined
+          ? { lanes: c.lanesPerDirection }
+          : {};
       return {
         scenario: {
           ...scenario,
           roadType: c.roadType,
           divided: c.divided,
           laneWidth: c.laneWidthFt,
+          ...speedPatch,
+          ...lanesPatch,
         },
         delta: {
           roadTypeApplied: true,
@@ -79,11 +96,16 @@ export function applyClassification(
           dividedApplicable: true,
           laneWidthApplied: true,
           laneWidthApplicable: true,
+          speedApplied,
+          speedApplicable,
+          lanesApplied,
+          lanesApplicable,
         },
       };
     }
     case "flagger_lane_closure": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt };
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
       if (FLAGGER_TYPES.has(c.roadType as FlaggerRoadType)) {
         next.roadType = c.roadType as FlaggerRoadType;
         delta.roadTypeApplied = true;
@@ -91,7 +113,8 @@ export function applyClassification(
       return { scenario: next, delta };
     }
     case "lane_closure_divided": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt };
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
       if (LANE_CLOSURE_TYPES.has(c.roadType as LaneClosureRoadType)) {
         next.roadType = c.roadType as LaneClosureRoadType;
         delta.roadTypeApplied = true;
@@ -99,7 +122,8 @@ export function applyClassification(
       return { scenario: next, delta };
     }
     case "work_beyond_shoulder": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt };
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
       if (WORK_BEYOND_TYPES.has(c.roadType as RoadType)) {
         next.roadType = c.roadType as WorkBeyondShoulderRoadType;
         delta.roadTypeApplied = true;
@@ -107,7 +131,8 @@ export function applyClassification(
       return { scenario: next, delta };
     }
     case "mobile_op_2lane": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt };
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
       if (MOBILE_2LANE_TYPES.has(c.roadType as MobileRoadType2Lane)) {
         next.roadType = c.roadType as MobileRoadType2Lane;
         delta.roadTypeApplied = true;
@@ -115,7 +140,8 @@ export function applyClassification(
       return { scenario: next, delta };
     }
     case "mobile_op_multilane": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt };
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
       if (MOBILE_MULTILANE_TYPES.has(c.roadType as MobileRoadTypeMultilane)) {
         next.roadType = c.roadType as MobileRoadTypeMultilane;
         delta.roadTypeApplied = true;
@@ -123,4 +149,25 @@ export function applyClassification(
       return { scenario: next, delta };
     }
   }
+}
+
+// Default delta for the non-shoulder branches.  Lanes is "not applicable"
+// because the scenario kind has no `lanes` field — the lane-closure /
+// flagger / mobile generators currently hard-code their counts.
+function baseDelta(
+  speedApplied: boolean,
+  speedApplicable: boolean,
+): AutoApplyDelta {
+  return {
+    roadTypeApplied: false,
+    roadTypeApplicable: true,
+    dividedApplied: false,
+    dividedApplicable: false,
+    laneWidthApplied: true,
+    laneWidthApplicable: true,
+    speedApplied,
+    speedApplicable,
+    lanesApplied: false,
+    lanesApplicable: false,
+  };
 }

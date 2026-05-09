@@ -125,7 +125,9 @@ export function SiteConditionsField({ meta, setMeta }: Props) {
             : "Enter latitude and longitude above to enable auto-detection"
         }
       >
-        {detecting ? "Scanning OpenStreetMap…" : "Detect from location"}
+        {detecting
+          ? "Scanning OpenStreetMap…"
+          : "Detect nearby site conditions"}
       </button>
 
       {detectError && (
