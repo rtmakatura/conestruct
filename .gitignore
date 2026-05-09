@@ -35,3 +35,14 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local rendering artifacts at repo root — PDF/XLSX/PNG outputs from
+# scripts/render_test_pdfs.py and one-off render harnesses.  Scoped to
+# root with a leading slash so subdirectories that intentionally hold
+# such files (e.g. docs/) aren't affected.
+/*.pdf
+/*.xlsx
+/preview_zoom_*.png
+# Standalone TA-* render harnesses kept locally for visual debugging;
+# the canonical harness lives at scripts/render_test_pdfs.py.
+/render_ta*.py
