@@ -141,6 +141,16 @@ export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> 
   },
 ];
 
+// Gate which scenario kinds the UI offers and the API accepts. v1 ships
+// with shoulder only while we verify the other generators against
+// CDOT S-630 typical sheets — extending the array re-enables the rest
+// without touching any other code.
+export const ENABLED_SCENARIO_KINDS = ["shoulder"] as const satisfies readonly ScenarioKind[];
+
+export function isScenarioKindEnabled(kind: ScenarioKind): boolean {
+  return (ENABLED_SCENARIO_KINDS as readonly ScenarioKind[]).includes(kind);
+}
+
 export const SHOULDER_WORK_TYPES: Array<{ v: ShoulderWorkType; l: string }> = [
   { v: "utility_locate", l: "Utility locate" },
   { v: "survey", l: "Survey crew" },

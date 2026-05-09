@@ -43,7 +43,30 @@ from src.rules.site_detection import detect_site_conditions
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
 
+# Mirror of conestruct/site/lib/scenarios/index.ts ENABLED_SCENARIO_KINDS.
+# v1 ships with shoulder only while we verify the other generators against
+# CDOT S-630 typical sheets.  Adding a kind here re-enables it on the
+# server; the TS constant must match.
+ENABLED_SCENARIOS: frozenset[str] = frozenset({"shoulder"})
+
 app = FastAPI(title="Conestruct render service", version="0.1.0")
+
+
+def _ensure_scenario_enabled(scenario: Scenario) -> None:
+    """Reject scenario kinds we have temporarily gated off in v1.
+
+    Raised as 400 so the Next.js proxy can surface a clean message rather
+    than the bare 422 a Pydantic narrowing would produce if we removed
+    the kinds from the discriminated union outright.
+    """
+    if scenario.kind not in ENABLED_SCENARIOS:
+        enabled = ", ".join(sorted(ENABLED_SCENARIOS))
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"This scenario type is not yet available. Currently supported: {enabled} closure."
+            ),
+        )
 
 
 @app.middleware("http")
@@ -139,6 +162,7 @@ def _render_with(
 @app.post("/render/pdf")
 def render_pdf(scenario: Scenario) -> Response:
     """Render the MHT plan-sheet PDF for a scenario."""
+    _ensure_scenario_enabled(scenario)
     try:
         shoulder_width = _shoulder_width_for(scenario)
         body = _render_with(
@@ -171,6 +195,7 @@ def render_pdf(scenario: Scenario) -> Response:
 
 @app.post("/render/xlsx")
 def render_xlsx(scenario: Scenario) -> Response:
+    _ensure_scenario_enabled(scenario)
     try:
         body = _render_with(
             scenario,
@@ -193,6 +218,7 @@ def render_xlsx(scenario: Scenario) -> Response:
 
 @app.post("/render/markdown")
 def render_markdown(scenario: Scenario) -> Response:
+    _ensure_scenario_enabled(scenario)
     try:
         body = _render_with(
             scenario,
@@ -270,6 +296,7 @@ def _run_quote(req: QuoteRequest):
 
 @app.post("/render/quote")
 def render_quote(req: QuoteRequest) -> Response:
+    _ensure_scenario_enabled(req.scenario)
     try:
         body, _ = _run_quote(req)
     except Exception as exc:  # noqa: BLE001
@@ -288,6 +315,7 @@ def render_quote(req: QuoteRequest) -> Response:
 
 @app.post("/render/quote-breakdown")
 def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
+    _ensure_scenario_enabled(req.scenario)
     try:
         _, breakdown = _run_quote(req)
     except Exception as exc:  # noqa: BLE001
