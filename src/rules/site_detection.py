@@ -70,6 +70,10 @@ def _build_query(lat: float, lng: float, radius_m: float) -> str:
   node({around})["railway"="level_crossing"];
   node({around})["amenity"="hospital"];
   way({around})["amenity"="hospital"];
+  node({around})["highway"="motorway_junction"];
+  way({around})["highway"="motorway_link"];
+  way({around})["highway"="trunk_link"];
+  way({around})["bridge"="yes"];
 );
 out center tags;
 """
@@ -87,12 +91,32 @@ def _element_coord(el: dict[str, Any]) -> tuple[float, float] | None:
 def _label_for(el: dict[str, Any]) -> str:
     tags = el.get("tags") or {}
     name = tags.get("name")
+    # Motorway-junction nodes carry the exit number on a ``ref`` tag and
+    # the cross-street name on ``name``; surface both so the audit trail
+    # shows e.g. "Garden of the Gods Rd interchange (Exit 146)".
+    if tags.get("highway") == "motorway_junction":
+        ref = tags.get("ref")
+        if name and ref:
+            return f"{name} interchange (Exit {ref})"
+        if ref:
+            return f"Exit {ref}"
+        if name:
+            return f"{name} interchange"
     if name:
         return str(name)
     coord = _element_coord(el)
     if coord is not None:
         return f"unnamed at {coord[0]:.4f}, {coord[1]:.4f}"
     return "unnamed feature"
+
+
+def _junction_ref(el: dict[str, Any]) -> str | None:
+    """Exit number from a ``motorway_junction`` node, if present."""
+    tags = el.get("tags") or {}
+    if tags.get("highway") != "motorway_junction":
+        return None
+    ref = tags.get("ref")
+    return str(ref) if ref else None
 
 
 def _overpass_request_with_fallback(
@@ -137,14 +161,42 @@ def _empty(detail_msg: str = "") -> dict[str, Any]:
     return out
 
 
+# Highway tag values that indicate an interchange / ramp facility.  Used by
+# :func:`_categorize` to split the legacy ``intersections`` bucket into
+# ``intersections`` (at-grade signal/stop/uncontrolled crossings) and
+# ``interchanges`` (highway on/off-ramps where cross-traffic merges rather
+# than crosses at a stop bar).  See BUG FIX 3 for the cross-street vs.
+# ramp-signing rationale.
+_INTERCHANGE_HIGHWAY_TAGS: frozenset[str] = frozenset(
+    {"motorway", "trunk", "motorway_link", "trunk_link"}
+)
+
+
 def _categorize(el: dict[str, Any]) -> str | None:
-    """Map an OSM element to one of our site-condition buckets."""
+    """Map an OSM element to one of our site-condition buckets.
+
+    Splits the historical "any crossing/junction" bucket into two:
+
+    * ``intersections`` — at-grade signals, stop-controlled crossings,
+      uncontrolled crossings.  Cross-traffic enters via a stop bar.
+    * ``interchanges`` — highway on/off-ramps, motorway junction nodes
+      (exit numbers), and bridges (typically a structure carrying the
+      highway over a cross street, or vice versa).  Cross-traffic
+      enters via merging ramps and needs ramp-specific signing.
+    """
     tags = el.get("tags") or {}
-    if tags.get("highway") in {"traffic_signals", "crossing"}:
+    highway = tags.get("highway")
+    if highway == "motorway_junction":
+        return "interchanges"
+    if highway in _INTERCHANGE_HIGHWAY_TAGS:
+        return "interchanges"
+    if tags.get("bridge") == "yes":
+        return "interchanges"
+    if highway in {"traffic_signals", "crossing"}:
         return "intersections"
-    if tags.get("highway") == "footway" or tags.get("footway") == "sidewalk":
+    if highway == "footway" or tags.get("footway") == "sidewalk":
         return "sidewalks"
-    if tags.get("highway") == "cycleway" or "cycleway" in tags:
+    if highway == "cycleway" or "cycleway" in tags:
         return "bike_facilities"
     if tags.get("amenity") == "school":
         return "schools"
@@ -171,6 +223,7 @@ def detect_site_conditions(
     """
     buckets: dict[str, dict[str, Any]] = {
         "intersections": _empty(),
+        "interchanges": _empty(),
         "sidewalks": _empty(),
         "bike_facilities": _empty(),
         "schools": _empty(),
@@ -181,6 +234,10 @@ def detect_site_conditions(
             "details": "Road curvature analysis not implemented; assume straight.",
         },
     }
+    # Interchange exit numbers, deduplicated, populated only when a
+    # motorway_junction node carries a ``ref`` tag.  Surfaced to the UI
+    # so the audit trail can call out specific exits.
+    buckets["interchanges"]["junction_refs"] = []
 
     query = _build_query(lat, lng, radius_m)
     payload, error = _overpass_request_with_fallback(query)
@@ -207,6 +264,10 @@ def detect_site_conditions(
             label = f"{label} (~{distance:.0f} m)"
         if len(bucket["details"]) < 5:
             bucket["details"].append(label)
+        if bucket_name == "interchanges":
+            ref = _junction_ref(el)
+            if ref and ref not in bucket["junction_refs"]:
+                bucket["junction_refs"].append(ref)
 
     return buckets
 
@@ -242,6 +303,10 @@ def _build_bbox_query(bbox: tuple[float, float, float, float]) -> str:
   node({box})["railway"="level_crossing"];
   node({box})["amenity"="hospital"];
   way({box})["amenity"="hospital"];
+  node({box})["highway"="motorway_junction"];
+  way({box})["highway"="motorway_link"];
+  way({box})["highway"="trunk_link"];
+  way({box})["bridge"="yes"];
 );
 out center tags;
 """
@@ -277,6 +342,7 @@ def detect_along_corridor(
     """
     buckets: dict[str, dict[str, Any]] = {
         "intersections": _empty_corridor_bucket(),
+        "interchanges": _empty_corridor_bucket(),
         "sidewalks": _empty_corridor_bucket(),
         "bike_facilities": _empty_corridor_bucket(),
         "schools": _empty_corridor_bucket(),
@@ -287,6 +353,7 @@ def detect_along_corridor(
             "details": "Road curvature analysis not implemented; assume straight.",
         },
     }
+    buckets["interchanges"]["junction_refs"] = []
 
     bbox = corridor.corridor_bbox(lateral_buffer_m=lateral_buffer_m)
     query = _build_bbox_query(bbox)
@@ -345,6 +412,10 @@ def detect_along_corridor(
                 existing = bucket.get("nearest_distance_m")
                 if existing is None or anchor_dist_m < existing:
                     bucket["nearest_distance_m"] = anchor_dist_m
+            if bucket_name == "interchanges":
+                ref = _junction_ref(el)
+                if ref and ref not in bucket["junction_refs"]:
+                    bucket["junction_refs"].append(ref)
 
     return buckets
 

@@ -15,8 +15,12 @@ const FLAG_LABELS: Record<SiteConditionFlag, { label: string; desc: string }> =
       desc: "Curve, hill crest — moves advance signs 50% farther upstream.",
     },
     adjacent_intersection: {
-      label: "Intersection within work zone",
-      desc: "Adds 2 cross-street W20-1 ROAD WORK AHEAD signs.",
+      label: "Adjacent at-grade intersection",
+      desc: "Signal/stop/uncontrolled cross street — adds 2 W20-1 ROAD WORK AHEAD signs facing cross-street traffic.",
+    },
+    adjacent_interchange: {
+      label: "Adjacent interchange (highway ramps)",
+      desc: "Highway on/off-ramps within or adjacent to work zone — adds 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for upstream ramp signaling.",
     },
     driveways_present: {
       label: "Driveways present",
@@ -41,6 +45,7 @@ const FLAG_LABELS: Record<SiteConditionFlag, { label: string; desc: string }> =
 // (railroad_crossings, hospitals) are intentionally omitted.
 const DETECTION_TO_FLAG: Record<string, SiteConditionFlag> = {
   intersections: "adjacent_intersection",
+  interchanges: "adjacent_interchange",
   sidewalks: "pedestrian_facility",
   bike_facilities: "bicycle_facility",
   schools: "school_zone",

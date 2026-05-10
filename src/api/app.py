@@ -177,7 +177,8 @@ if site_address and site_lat == 0.0 and site_lng == 0.0 and _mapbox_token:
 # the checkbox dict can be passed straight through to the rules layer.
 _SITE_CONDITION_LABELS: dict[str, str] = {
     "limited_sight_distance": "Limited sight distance (curve, hill crest)",
-    "adjacent_intersection": "Intersection within or adjacent to work zone",
+    "adjacent_intersection": "Adjacent at-grade intersection (signal/stop/etc.)",
+    "adjacent_interchange": "Adjacent interchange (highway ramps)",
     "driveways_present": "Driveways present within work zone",
     "pedestrian_facility": "Pedestrian sidewalks present",
     "bicycle_facility": "Bike lane / cycleway present",
@@ -191,6 +192,7 @@ _SITE_CONDITION_LABELS: dict[str, str] = {
 # no detection counterpart yet — they remain manual-only.
 _DETECTION_TO_FLAG: dict[str, str] = {
     "intersections": "adjacent_intersection",
+    "interchanges": "adjacent_interchange",
     "sidewalks": "pedestrian_facility",
     "bike_facilities": "bicycle_facility",
     "schools": "school_zone",

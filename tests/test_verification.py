@@ -648,23 +648,25 @@ def test_site_adjustments_pedestrian_facility_adds_six() -> None:
     assert rec["devices_added"] == 6
 
 
-def test_site_adjustments_all_flags_add_twelve() -> None:
-    """All site flags True → total +12 devices over baseline.
+def test_site_adjustments_all_flags_add_fourteen() -> None:
+    """All site flags True → total +14 devices over baseline.
 
     Per ``site_adjustments.py`` adders:
       limited_sight_distance:  0 added (modifies in place)
       adjacent_intersection:   2 (W20-1 cross-street pair)
+      adjacent_interchange:    2 (W20-3 + PCMS upstream ramp signaling)
       driveways_present:       0 (advisory only)
       pedestrian_facility:     6 (4 barricades + 2 R9-9)
       bicycle_facility:        2 (M4-9a pair)
       school_zone:             2 (S1-1 pair)
-      Total added: 12.
+      Total added: 14.
 
-    Baseline 30 + 12 = 42.
+    Baseline 30 + 14 = 44.
     """
     flags = {
         "limited_sight_distance": True,
         "adjacent_intersection": True,
+        "adjacent_interchange": True,
         "driveways_present": True,
         "pedestrian_facility": True,
         "bicycle_facility": True,
@@ -673,11 +675,117 @@ def test_site_adjustments_all_flags_add_twelve() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=flags)
-    assert len(adjusted) == 42
-    # Six audit records, one per checked flag (driveways included even
+    assert len(adjusted) == 44
+    # Seven audit records, one per checked flag (driveways included even
     # though it adds nothing).
     flags_seen = {r["flag"] for r in records}
     assert flags_seen == set(flags.keys())
+
+
+def test_site_adjustments_intersection_only_adds_two() -> None:
+    """``adjacent_intersection=True`` alone adds the W20-1 cross-street pair.
+
+    Bug Fix 3 split the legacy ``adjacent_intersection`` flag into two —
+    this test pins the at-grade behavior (W20-1 facing cross-street
+    traffic) so a regression in the dispatcher fires here, not just in
+    the more general all-flags test.
+    """
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
+    adjusted, records = apply_site_adjustments(
+        placements, params, flags={"adjacent_intersection": True}
+    )
+    assert len(adjusted) == 32
+    rec = next(r for r in records if r["flag"] == "adjacent_intersection")
+    assert rec["devices_added"] == 2
+    assert "W20-1" in rec["action"]
+    # The two added devices are W20-1 SIGN_GENERIC at offsets ±50.
+    added_signs = [
+        p
+        for p in adjusted
+        if p.device_type == DeviceType.SIGN_GENERIC
+        and p.label == "W20-1"
+        and abs(p.offset_ft) > 40.0
+    ]
+    assert len(added_signs) == 2
+
+
+def test_site_adjustments_interchange_only_adds_w20_3_and_pcms() -> None:
+    """``adjacent_interchange=True`` adds 1 W20-3 sign + 1 PCMS — not W20-1.
+
+    Bug Fix 3: at-grade and interchange treatments must be distinct.  The
+    W20-3 LANE CLOSED AHEAD plus a PCMS for upstream ramp messaging is
+    correct for ramp-based cross-traffic; the W20-1 cross-street pair
+    (used by ``adjacent_intersection``) is not.
+    """
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
+    adjusted, records = apply_site_adjustments(
+        placements, params, flags={"adjacent_interchange": True}
+    )
+    assert len(adjusted) == 32
+
+    rec = next(r for r in records if r["flag"] == "adjacent_interchange")
+    assert rec["devices_added"] == 2
+    assert "W20-3" in rec["action"]
+    assert "PCMS" in rec["action"]
+    assert "6F.60" in rec["rule"]
+
+    # Exactly one W20-3 sign added at the work-zone midpoint.
+    w20_3 = [p for p in adjusted if p.device_type == DeviceType.SIGN_GENERIC and p.label == "W20-3"]
+    assert len(w20_3) == 1
+    assert w20_3[0].station_ft == pytest.approx(params.work_zone_length_ft / 2.0)
+
+    # Exactly one PCMS placement was added; its station is 200 ft past the
+    # upstream end of the work zone (where the gore signing belongs).
+    pcms = [p for p in adjusted if p.device_type == DeviceType.PCMS]
+    assert len(pcms) == 1
+    assert pcms[0].station_ft == pytest.approx(params.work_zone_length_ft + 200.0)
+
+    # Crucially: no W20-1 cross-street signs added (that's the at-grade
+    # treatment, and it must not fire when only the interchange flag is
+    # set — otherwise we'd be back in the bug we just fixed).
+    cross_street_w201 = [
+        p
+        for p in adjusted
+        if p.device_type == DeviceType.SIGN_GENERIC
+        and p.label == "W20-1"
+        and abs(p.offset_ft) > 40.0
+    ]
+    assert cross_street_w201 == []
+
+
+def test_site_adjustments_intersection_and_interchange_records_are_distinct() -> None:
+    """Both flags can fire simultaneously and produce two distinct records.
+
+    A frontage-road intersection near a freeway interchange is the
+    motivating real-world case: at-grade signing + ramp signing both
+    apply.  The audit trail must surface both rules separately so the
+    field crew installs both treatments.
+    """
+    params = _shoulder_divided_params()
+    placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
+    adjusted, records = apply_site_adjustments(
+        placements,
+        params,
+        flags={"adjacent_intersection": True, "adjacent_interchange": True},
+    )
+    # 30 baseline + 2 (intersection) + 2 (interchange) = 34.
+    assert len(adjusted) == 34
+
+    by_flag = {r["flag"]: r for r in records}
+    assert "adjacent_intersection" in by_flag
+    assert "adjacent_interchange" in by_flag
+
+    intersection_rec = by_flag["adjacent_intersection"]
+    interchange_rec = by_flag["adjacent_interchange"]
+    # Action text and rule citations must differ — that's what makes the
+    # audit trail useful.  If they collapse to the same string we've
+    # regressed on the split.
+    assert intersection_rec["action"] != interchange_rec["action"]
+    assert intersection_rec["rule"] != interchange_rec["rule"]
+    assert "W20-1" in intersection_rec["action"]
+    assert "W20-3" in interchange_rec["action"]
 
 
 # ===========================================================================
@@ -734,10 +842,9 @@ def test_shoulder_taper_strictly_less_than_full_taper() -> None:
         for offset in (8.0, 10.0, 12.0):
             full = taper_length(speed, offset)
             shoulder = shoulder_taper_length(speed, offset)
-            assert shoulder < full, (
-                f"shoulder taper {shoulder} ≥ full taper {full} "
-                f"at speed={speed} offset={offset}"
-            )
+            assert (
+                shoulder < full
+            ), f"shoulder taper {shoulder} ≥ full taper {full} at speed={speed} offset={offset}"
             # Bonus check: shoulder is exactly L/3.
             assert shoulder == pytest.approx(full / 3.0, abs=1e-6)
 

@@ -60,6 +60,7 @@ export type MobileWorkType =
 export type SiteConditionFlag =
   | "limited_sight_distance"
   | "adjacent_intersection"
+  | "adjacent_interchange"
   | "driveways_present"
   | "pedestrian_facility"
   | "bicycle_facility"

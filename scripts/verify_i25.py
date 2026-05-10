@@ -234,10 +234,15 @@ det = detect_site_conditions(LAT, LNG, radius_m=500.0)
 print(json.dumps(det, indent=2, default=str))
 
 
-# ---------- TEST 3: site adjustments (adjacent_intersection=True) ----------
-_section("TEST 3 — apply_site_adjustments(adjacent_intersection=True)")
+# ---------- TEST 3: site adjustments (adjacent_interchange=True) ----------
+# I-25 mainline near Garden of the Gods Rd is a freeway adjacent to Exit
+# 146 — the at-grade intersection treatment (W20-1 cross-street pair) is
+# the wrong response.  The interchange treatment (W20-3 + PCMS) is what
+# the corridor actually needs (Bug Fix 3).
+_section("TEST 3 — apply_site_adjustments(adjacent_interchange=True)")
 flags = {
-    "adjacent_intersection": True,
+    "adjacent_intersection": False,
+    "adjacent_interchange": True,
     "driveways_present": False,
     "pedestrian_facility": False,
     "bicycle_facility": False,
@@ -344,3 +349,49 @@ print(
 _section("TEST 5 — see TEST 1/road_type variants and raw spacing dump above")
 print("Compare audit['advance'].sign_table for road_type=freeway vs the raw")
 print("Table 6B-1 lookup ('freeway' at 55 mph -> A=1000 B=1500 C=2640).")
+
+
+# ---------- TEST 6: combined night + interchange PDF ----------
+# Bug Fix 3 visual verification: render a PDF with both is_night=True and
+# adjacent_interchange=True applied so a reviewer can see the W20-3 ramp
+# sign + PCMS alongside the warning lights and light plant from the night
+# adjustments.  Saved at the project root for inspection.
+_section("TEST 6 — combined night + adjacent_interchange PDF render")
+from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
+
+night_interchange_flags = {
+    "adjacent_intersection": False,
+    "adjacent_interchange": True,
+    "driveways_present": False,
+    "pedestrian_facility": False,
+    "bicycle_facility": False,
+    "limited_sight_distance": False,
+    "school_zone": False,
+}
+placements_combo, combo_site_records = apply_site_adjustments(
+    placements_night_raw, params_night, night_interchange_flags
+)
+placements_combo, combo_night_records = apply_night_adjustments(placements_combo, params_night)
+
+pdf_path = _ROOT / "test_pdf_i25_interchange_night.pdf"
+render_plan_sheet(
+    placements_combo,
+    params_night,
+    output_path=str(pdf_path),
+    project_name="I-25 NB MP 144.5 — Night + Interchange",
+    site_lat=LAT,
+    site_lng=LNG,
+    shoulder_width_ft=SHOULDER_WIDTH,
+)
+print(f"Wrote {pdf_path.name} — total devices {len(placements_combo)}")
+print("\nSite adjustment records (interchange):")
+for rec in combo_site_records:
+    print(f"  [{rec['flag']}] {rec['action']}")
+print("\nNight adjustment records:")
+for rec in combo_night_records:
+    print(f"  [{rec['flag']}] {rec['action']}")
+
+w20_3 = [p for p in placements_combo if p.label == "W20-3"]
+pcms = [p for p in placements_combo if p.device_type == DeviceType.PCMS]
+print(f"\nW20-3 LANE CLOSED AHEAD signs in placement list: {len(w20_3)}")
+print(f"PCMS placements in placement list: {len(pcms)}")

@@ -99,6 +99,53 @@ def _adjust_adjacent_intersection(
     return placements + new_signs, record
 
 
+def _adjust_adjacent_interchange(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> tuple[list[DevicePlacement], dict]:
+    """Add upstream-ramp signing for an adjacent highway interchange.
+
+    Interchange cross-traffic enters the corridor via merging on/off
+    ramps rather than a stop bar, so the at-grade ``W20-1`` cross-street
+    pair (handled by :func:`_adjust_adjacent_intersection`) is the wrong
+    treatment.  V1 emits a generic upstream-ramp warning + a PCMS for
+    advance messaging; the precise per-ramp layout depends on which
+    ramps exist (entrance vs exit, NB vs SB) and is left to the field
+    TCS until the corridor module knows ramp geometry.
+
+    Adds:
+      * 1 ``W20-3`` LANE CLOSED AHEAD sign at offset +50 ft (gore side
+        of an upstream entrance ramp), station at the work-zone midpoint.
+      * 1 PCMS at offset +50 ft, 200 ft upstream of the work zone start
+        (``work_zone_length_ft + 200``) for advance ramp messaging.
+    """
+    midpoint = params.work_zone_length_ft / 2.0
+    pcms_station = params.work_zone_length_ft + 200.0
+    new_devices = [
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=midpoint,
+            offset_ft=50.0,
+            label="W20-3",
+        ),
+        DevicePlacement(
+            device_type=DeviceType.PCMS,
+            station_ft=pcms_station,
+            offset_ft=50.0,
+        ),
+    ]
+    record = {
+        "flag": "adjacent_interchange",
+        "action": (
+            "Added 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for "
+            "upstream interchange ramp signaling."
+        ),
+        "devices_added": 2,
+        "rule": ("MUTCD §6C.10 + §6F.60 — work zone signing for interchanges and ramp areas"),
+    }
+    return placements + new_devices, record
+
+
 def _adjust_driveways_present() -> dict:
     """Advisory only — channelizer placement is hand-tuned in the field."""
     return {
@@ -225,6 +272,10 @@ def apply_site_adjustments(
 
     if flags.get("adjacent_intersection"):
         out, rec = _adjust_adjacent_intersection(out, params)
+        records.append(rec)
+
+    if flags.get("adjacent_interchange"):
+        out, rec = _adjust_adjacent_interchange(out, params)
         records.append(rec)
 
     if flags.get("driveways_present"):
