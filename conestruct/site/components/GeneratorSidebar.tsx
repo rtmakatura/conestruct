@@ -721,7 +721,9 @@ function LocationGroup({
           }}
         />
         <div className="mt-1 font-mono text-[10px] text-[color:var(--ink-on-dark-faint)]">
-          Rotates the north arrow on the schematic to match site bearing.
+          Compass direction the road runs, in degrees clockwise from north
+          (0 = N, 90 = E, 180 = S, 270 = W). E.g., a north-running stretch
+          of I-25 ≈ 0°. Leave blank to default to ↑ = North.
         </div>
       </Field>
 
@@ -739,7 +741,7 @@ function LocationGroup({
         ) : classify.state === "detected" ? (
           <>Re-detect road properties →</>
         ) : (
-          <>Detect road properties from address →</>
+          <>Detect road properties →</>
         )}
       </button>
       {!canLockIn && (

@@ -112,9 +112,9 @@ bearing_deg_input = st.sidebar.number_input(
     max_value=360.0,
     step=5.0,
     help=(
-        "Compass bearing of the road's direction of travel — rotates the "
-        "north arrow on the schematic. Leave at 0 to default to "
-        "'up = north' with a verify-bearing caveat."
+        "Compass direction the road runs, in degrees clockwise from "
+        "north (0 = N, 90 = E, 180 = S, 270 = W). E.g., a north-running "
+        "stretch of I-25 ≈ 0°. Leave at 0 to default to ↑ = North."
     ),
 )
 # 0.0 doubles as the "no bearing supplied" sentinel — matches the
