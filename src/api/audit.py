@@ -51,6 +51,8 @@ def build_audit_trail(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     shoulder_width_ft: float = 10.0,
+    site_lat: float | None = None,
+    site_lng: float | None = None,
 ) -> dict[str, Any]:
     """Recompute every audit-trail intermediate the verification UI needs.
 
@@ -411,6 +413,27 @@ def build_audit_trail(
         else "Not applicable for this scenario.",
     }
 
+    # ------------------------------------------------------------------
+    # 8. Corridor / aerial validation (best-effort OSM check)
+    # ------------------------------------------------------------------
+    # When the caller supplied site coords AND a corridor bearing, run a
+    # soft check against OSM ground truth: warns if the anchor isn't on
+    # a major road, or if the declared bearing diverges from the road's
+    # actual heading.  Skipped silently when coords/bearing are missing
+    # or Overpass is unreachable — never blocks the audit trail.
+    if (
+        site_lat is not None
+        and site_lng is not None
+        and getattr(params, "bearing_deg", None) is not None
+    ):
+        # Deferred import keeps the audit-trail module's import graph
+        # free of httpx/Overpass code unless this branch runs.
+        from src.rules.site_detection import validate_corridor_against_osm
+
+        corridor_validation = validate_corridor_against_osm(site_lat, site_lng, params.bearing_deg)
+    else:
+        corridor_validation = {"checked": False, "warnings": []}
+
     return {
         "taper": taper_section,
         "buffer": buffer_section,
@@ -419,4 +442,5 @@ def build_audit_trail(
         "colorado": co_section,
         "case": case_section,
         "flagger": flagger_section,
+        "corridor_validation": corridor_validation,
     }

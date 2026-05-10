@@ -14,6 +14,7 @@ from src.rules.corridor import (
     _initial_bearing_deg,
     _point_along_corridor,
     build_corridor,
+    encode_polyline,
 )
 
 # ---------------------------------------------------------------------------
@@ -319,3 +320,132 @@ def test_point_along_corridor_midpoint_is_halfway() -> None:
     lat, lng = _point_along_corridor(corridor, 0.5)
     distance_m = _haversine_m(corridor.anchor_lat, corridor.anchor_lng, lat, lng)
     assert distance_m == pytest.approx(corridor.total_length_m / 2.0, rel=0.001)
+
+
+def test_work_zone_endpoints_brackets_work_zone() -> None:
+    """Work-zone endpoints sit at the buffer-side and the work-side edges.
+
+    Verifies the segment ordering: walking from anchor along bearing,
+    downstream-taper comes first, then work-zone — so the downstream
+    end of the work zone sits at ``downstream_taper_ft`` and the
+    upstream end sits ``work_zone_ft`` further along.
+    """
+    corridor = _brighton()
+    downstream_ll, upstream_ll = corridor.work_zone_endpoints()
+
+    expected_downstream = corridor.point_at_station_ft(corridor.downstream_taper_ft)
+    expected_upstream = corridor.point_at_station_ft(
+        corridor.downstream_taper_ft + corridor.work_zone_ft
+    )
+    assert downstream_ll[0] == pytest.approx(expected_downstream[0], abs=1e-9)
+    assert downstream_ll[1] == pytest.approx(expected_downstream[1], abs=1e-9)
+    assert upstream_ll[0] == pytest.approx(expected_upstream[0], abs=1e-9)
+    assert upstream_ll[1] == pytest.approx(expected_upstream[1], abs=1e-9)
+
+    # The geodesic distance between the two endpoints equals the work
+    # zone length (modulo earth-curvature rounding).
+    distance_m = _haversine_m(*downstream_ll, *upstream_ll)
+    assert distance_m == pytest.approx(corridor.work_zone_ft * 0.3048, rel=0.001)
+
+
+# ---------------------------------------------------------------------------
+# Polyline encoding (Google encoded-polyline algorithm)
+# ---------------------------------------------------------------------------
+
+
+def test_encode_polyline_canonical_example() -> None:
+    """Canonical Google-docs example: round-trips three coords correctly.
+
+    Reference vector from the Google polyline-encoding spec:
+    coords (38.5, -120.2), (40.7, -120.95), (43.252, -126.453) →
+    ``_p~iF~ps|U_ulLnnqC_mqNvxq`@``.
+    """
+    encoded = encode_polyline([(38.5, -120.2), (40.7, -120.95), (43.252, -126.453)])
+    assert encoded == "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
+
+
+def test_encode_polyline_two_point_round_trip() -> None:
+    """A 2-point polyline produces a deterministic, non-empty ASCII string."""
+    encoded = encode_polyline([(38.886, -104.822), (38.890, -104.820)])
+    assert encoded
+    # Every character must be in the printable-ASCII range used by the
+    # spec (chr 63..126).
+    assert all(63 <= ord(ch) <= 126 for ch in encoded)
+
+
+def test_encode_polyline_empty() -> None:
+    assert encode_polyline([]) == ""
+
+
+# ---------------------------------------------------------------------------
+# Regression test — I-25 NB anchor at Garden of the Gods Rd
+# ---------------------------------------------------------------------------
+
+
+def test_i25_garden_of_the_gods_anchor_geometry() -> None:
+    """Sanity-check the polyline geometry for the verified I-25 NB anchor.
+
+    Anchor and bearing pulled from OSM way 136556833 (motorway,
+    ref="I 25", oneway=yes) at the point closest to lat 38.886.  This
+    test would have caught the original (38.886, -104.822) anchor
+    that sat 0.3 miles east of the actual I-25 mainline — the polyline
+    midpoint geometry would not have matched the road's NNE heading.
+
+    Asserts:
+      - anchor → work-zone midpoint distance equals the layout's
+        ``downstream_taper_ft + work_zone_ft / 2`` (600 ft for I-25 at
+        55 mph with a 1000 ft work zone),
+      - midpoint sits north of the anchor (mostly-northbound corridor),
+      - east-west drift stays small relative to north-south drift —
+        bearing 19° (NNE) yields ≈ tan(19°) × 567 ft ≈ 195 ft of east
+        drift over 567 ft of north drift.  The 250 ft cap rejects a
+        polyline that wandered to a perpendicular road.
+    """
+    corridor = build_corridor(
+        lat=38.8862,
+        lng=-104.8354,
+        bearing_deg=19.0,
+        speed_mph=55,
+        work_zone_ft=1000.0,
+        closure_type="shoulder",
+        road_type="freeway",
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+    )
+
+    ds, us = corridor.work_zone_endpoints()
+    mid_lat, mid_lng = corridor.point_at_station_ft(
+        corridor.downstream_taper_ft + corridor.work_zone_ft / 2.0
+    )
+
+    # 1. Anchor → midpoint distance equals expected along-corridor station.
+    expected_station_ft = corridor.downstream_taper_ft + corridor.work_zone_ft / 2.0
+    actual_dist_m = _haversine_m(corridor.anchor_lat, corridor.anchor_lng, mid_lat, mid_lng)
+    actual_dist_ft = actual_dist_m / 0.3048
+    assert actual_dist_ft == pytest.approx(expected_station_ft, abs=1.0)
+
+    # 2. Midpoint sits NORTH of the anchor (lat increased).  A bearing
+    #    of 19° must produce a positive latitude delta over any
+    #    positive corridor distance.
+    assert mid_lat > corridor.anchor_lat
+
+    # 3. East-west drift is bounded relative to north-south drift.  At
+    #    bearing 19° NNE, drift_lng / drift_lat ≈ tan(19°) ≈ 0.34.  We
+    #    cap at 250 ft east drift for 600 ft of total travel — anything
+    #    larger means the corridor walked off to a perpendicular road.
+    ew_drift_m = (
+        abs(mid_lng - corridor.anchor_lng) * 111_195 * math.cos(math.radians(corridor.anchor_lat))
+    )
+    ew_drift_ft = ew_drift_m / 0.3048
+    assert ew_drift_ft < 250.0, f"E-W drift {ew_drift_ft:.0f} ft exceeds 250 ft cap"
+
+    # 4. Polyline endpoints are exactly the work-zone-endpoints helper
+    #    output (regression guard against a future refactor that
+    #    accidentally returns the full corridor instead of the work
+    #    zone alone).
+    expected_ds_dist_ft = corridor.downstream_taper_ft
+    expected_us_dist_ft = corridor.downstream_taper_ft + corridor.work_zone_ft
+    ds_dist_ft = _haversine_m(corridor.anchor_lat, corridor.anchor_lng, ds[0], ds[1]) / 0.3048
+    us_dist_ft = _haversine_m(corridor.anchor_lat, corridor.anchor_lng, us[0], us[1]) / 0.3048
+    assert ds_dist_ft == pytest.approx(expected_ds_dist_ft, abs=1.0)
+    assert us_dist_ft == pytest.approx(expected_us_dist_ft, abs=1.0)

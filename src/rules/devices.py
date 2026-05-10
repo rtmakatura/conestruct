@@ -39,6 +39,10 @@ class DeviceType(StrEnum):
     SIGN_GENERIC = "SIGN_GENERIC"
     DETOUR_MARKER = "DETOUR_MARKER"
     CHANNELIZER_OPTIONAL = "CHANNELIZER_OPTIONAL"
+    # Nighttime visibility devices — added by apply_night_adjustments when
+    # params.is_night is True; never emitted by the layout generators.
+    WARNING_LIGHT_TYPE_C = "WARNING_LIGHT_TYPE_C"
+    PORTABLE_LIGHT_PLANT = "PORTABLE_LIGHT_PLANT"
 
 
 # ---------------------------------------------------------------------------
@@ -248,6 +252,28 @@ DEVICE_CATALOG: dict[DeviceType, DeviceSpec] = {
         cdot_pay_item=None,
         cdot_pay_item_number=None,
         is_channelizer=True,
+        is_sign=False,
+        is_drawn=True,
+        sprite_filename=None,
+    ),
+    DeviceType.WARNING_LIGHT_TYPE_C: DeviceSpec(
+        device_type=DeviceType.WARNING_LIGHT_TYPE_C,
+        description="Type C steady-burn warning light, attached to channelizing device",
+        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
+        cdot_pay_item=None,
+        cdot_pay_item_number=None,
+        is_channelizer=False,
+        is_sign=False,
+        is_drawn=True,
+        sprite_filename=None,
+    ),
+    DeviceType.PORTABLE_LIGHT_PLANT: DeviceSpec(
+        device_type=DeviceType.PORTABLE_LIGHT_PLANT,
+        description="Portable light plant for work area illumination",
+        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
+        cdot_pay_item=None,
+        cdot_pay_item_number=None,
+        is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,

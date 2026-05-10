@@ -63,6 +63,8 @@ _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
     DeviceType.TEMPORARY_SIGNAL: "Temporary Traffic Signal",
     DeviceType.DETOUR_MARKER: "Detour Marker",
     DeviceType.CHANNELIZER_OPTIONAL: "Optional Channelizer",
+    DeviceType.WARNING_LIGHT_TYPE_C: "Type C Steady-Burn Warning Light",
+    DeviceType.PORTABLE_LIGHT_PLANT: "Portable Light Plant",
 }
 
 _ROAD_TYPE_HUMAN: dict[str, str] = {
@@ -189,6 +191,7 @@ def build_narrative_context(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     site_adjustments: list[dict[str, Any]] | None = None,
+    night_adjustments: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -304,6 +307,7 @@ def build_narrative_context(
         "is_night": params.is_night,
         "is_divided": params.is_divided,
         "site_adjustments": site_adjustments or [],
+        "night_adjustments": night_adjustments or [],
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }
 
@@ -375,6 +379,7 @@ def generate_crew_narrative(
     output_path: str = "crew_narrative.md",
     use_llm: bool = False,
     site_adjustments: list[dict[str, Any]] | None = None,
+    night_adjustments: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -388,7 +393,12 @@ def generate_crew_narrative(
     Returns:
         The output path that was written.
     """
-    context = build_narrative_context(placements, params, site_adjustments=site_adjustments)
+    context = build_narrative_context(
+        placements,
+        params,
+        site_adjustments=site_adjustments,
+        night_adjustments=night_adjustments,
+    )
     markdown = _render_template(context)
     if use_llm:
         markdown = _refine_with_llm(markdown)

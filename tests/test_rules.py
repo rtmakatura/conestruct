@@ -273,8 +273,8 @@ def test_co_construction_plaques() -> None:
 
 
 def test_device_catalog_has_all_types() -> None:
-    """Catalog covers all 15 DeviceType members exactly once."""
-    assert len(DEVICE_CATALOG) == 15
+    """Catalog covers every DeviceType member exactly once."""
+    assert len(DEVICE_CATALOG) == len(DeviceType)
     assert set(DEVICE_CATALOG.keys()) == set(DeviceType)
 
 
@@ -299,7 +299,7 @@ def test_sign_classification() -> None:
 
 def test_all_devices_are_drawn() -> None:
     """Every taxonomy member is drawn; none are field-only."""
-    assert len(get_drawn_devices()) == 15
+    assert len(get_drawn_devices()) == len(DeviceType)
     assert len(get_field_only_devices()) == 0
 
 
@@ -466,9 +466,9 @@ def test_missing_advance_warning_signs() -> None:
         for v in violations
         if v.severity == "error" and ("ADVANCE" in v.rule_id or "SIGN" in v.rule_id)
     ]
-    assert advance_errors, (
-        f"Expected an advance-sign error, got: " f"{[(v.severity, v.rule_id) for v in violations]}"
-    )
+    assert (
+        advance_errors
+    ), f"Expected an advance-sign error, got: {[(v.severity, v.rule_id) for v in violations]}"
 
 
 def test_buffer_too_short() -> None:
@@ -519,10 +519,9 @@ def test_co_signs_one_side_only() -> None:
     co_errors = [
         v for v in violations if v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error"
     ]
-    assert co_errors, (
-        f"Expected CO_SIGN_BOTH_SIDES errors, got: "
-        f"{[(v.severity, v.rule_id) for v in violations]}"
-    )
+    assert (
+        co_errors
+    ), f"Expected CO_SIGN_BOTH_SIDES errors, got: {[(v.severity, v.rule_id) for v in violations]}"
 
 
 def test_mobile_skips_taper_check() -> None:
@@ -573,9 +572,9 @@ def test_flagger_not_required_for_divided() -> None:
     )
     violations = validate_layout([], params)
     flagger_violations = [v for v in violations if "FLAGGER" in v.rule_id]
-    assert not flagger_violations, (
-        f"Did not expect FLAGGER violations, got: " f"{[v.rule_id for v in flagger_violations]}"
-    )
+    assert (
+        not flagger_violations
+    ), f"Did not expect FLAGGER violations, got: {[v.rule_id for v in flagger_violations]}"
 
 
 def _shoulder_divided_params() -> ScenarioParams:
@@ -716,10 +715,9 @@ def test_w20_2_label_substitutes_distance() -> None:
             f"found text: {text!r}"
         )
     for column in ("CODE", "DESCRIPTION", "DISTANCE"):
-        assert column in text, (
-            f"Expected column header {column!r} in the rendered notes panel; "
-            f"found text: {text!r}"
-        )
+        assert (
+            column in text
+        ), f"Expected column header {column!r} in the rendered notes panel; found text: {text!r}"
 
 
 def _lane_divided_params() -> ScenarioParams:
@@ -1066,10 +1064,9 @@ def test_mobile_shadow_vehicle_present_in_canonical_layout() -> None:
     placements = generate_mobile_op_2lane(params)
     violations = validate_layout(placements, params)
     bad = [v for v in violations if v.rule_id == "MISSING_SHADOW_VEHICLE"]
-    assert not bad, (
-        f"Canonical TA-35 layout should not fire MISSING_SHADOW_VEHICLE: "
-        f"{[v.message for v in bad]}"
-    )
+    assert (
+        not bad
+    ), f"Canonical TA-35 layout should not fire MISSING_SHADOW_VEHICLE: {[v.message for v in bad]}"
 
 
 def test_mobile_advance_sign_required_when_missing() -> None:

@@ -43,6 +43,10 @@ EQUIPMENT_DAILY_RATES: dict[DeviceType, float] = {
     DeviceType.SIGN_GENERIC: 4.00,
     DeviceType.DETOUR_MARKER: 4.00,
     DeviceType.CHANNELIZER_OPTIONAL: 2.00,
+    # TODO: replace placeholder rates with CBC actual pricing once a
+    # nighttime contractor invoice is available.
+    DeviceType.WARNING_LIGHT_TYPE_C: 5.00,
+    DeviceType.PORTABLE_LIGHT_PLANT: 125.00,
 }
 
 _FLAGGER_NOTE = "See Labor Detail"

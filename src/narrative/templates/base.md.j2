@@ -75,3 +75,11 @@
 - **{{ adj.flag }}** — {{ adj.action }} _({{ adj.rule }})_
 {% endfor %}
 {% endif %}
+{% if night_adjustments %}
+
+## Night Operation Notes
+
+{% for adj in night_adjustments %}
+- **{{ adj.flag }}** — {{ adj.action }} _({{ adj.rule }})_
+{% endfor %}
+{% endif %}

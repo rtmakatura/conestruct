@@ -456,3 +456,155 @@ def detect_road_bearing(
     out["way_id"] = best_way.get("id")
     out["highway"] = tags.get("highway")
     return out
+
+
+# ---------------------------------------------------------------------------
+# Corridor-against-OSM validator
+# ---------------------------------------------------------------------------
+
+# Highway classes considered "major" for the no-road check.  These are the
+# road types where work-zone plans are typically deployed; a closure on
+# anything below tertiary is unusual enough that the planner should
+# double-check the anchor coordinates.
+_MAJOR_ROAD_CLASSES: frozenset[str] = frozenset(
+    {
+        "motorway",
+        "trunk",
+        "primary",
+        "secondary",
+        "motorway_link",
+        "trunk_link",
+        "primary_link",
+        "secondary_link",
+    }
+)
+
+# Search radius (m) when looking for the road at the anchor.  Anything
+# closer than this is "on the road"; anything farther means the anchor
+# is in a parking lot, off-ramp, or unrelated nearby terrain.
+_VALIDATION_SEARCH_RADIUS_M: float = 50.0
+
+# Minimum allowed angular agreement between the corridor's declared
+# bearing and the OSM road's bearing (or its reciprocal — divided
+# carriageways are tagged one-way and the closer-segment heuristic may
+# pick the opposing direction).
+_BEARING_CONFLICT_THRESHOLD_DEG: float = 15.0
+
+
+def _shortest_bearing_delta_deg(a: float, b: float) -> float:
+    """Smallest unsigned angle between two compass bearings, in [0, 180]."""
+    diff = (a - b) % 360.0
+    return min(diff, 360.0 - diff)
+
+
+def validate_corridor_against_osm(
+    anchor_lat: float,
+    anchor_lng: float,
+    corridor_bearing_deg: float | None,
+    search_radius_m: float = _VALIDATION_SEARCH_RADIUS_M,
+    bearing_threshold_deg: float = _BEARING_CONFLICT_THRESHOLD_DEG,
+) -> dict[str, Any]:
+    """Best-effort sanity check: corridor inputs vs. OSM ground truth.
+
+    Two checks fire when Overpass is reachable:
+
+      1. **No major road at anchor.**  If no motorway / trunk / primary /
+         secondary way (or any of their ``_link`` variants) lies within
+         ``search_radius_m`` of the anchor, the corridor's anchor is
+         probably wrong — emit a ``no_road_at_anchor`` warning.
+      2. **Bearing conflict.**  If a major road is found, compare its
+         bearing (and its reciprocal — divided-highway carriageways are
+         one-way and the closer-segment heuristic may report the opposing
+         travel direction) against ``corridor_bearing_deg``.  If neither
+         agrees within ``bearing_threshold_deg``, emit a
+         ``bearing_conflict`` warning.
+
+    Returns ``{"checked": bool, "warnings": list[dict]}`` so callers can
+    distinguish "OSM unavailable, skipped" from "OSM agreed, no
+    warnings".  Each warning is a dict with ``flag`` / ``level`` /
+    ``message`` plus context fields.
+
+    Network or Overpass failures are caught silently — this is a soft
+    check, never a render blocker.
+    """
+    out: dict[str, Any] = {"checked": False, "warnings": []}
+
+    if corridor_bearing_deg is None:
+        # Without a declared bearing we can't compute the conflict
+        # check, and the no-road check is itself less actionable —
+        # skip entirely so a future bearing-less render path doesn't
+        # noisily warn for every plan.
+        return out
+
+    try:
+        result = detect_road_bearing(anchor_lat, anchor_lng, radius_m=search_radius_m)
+    except Exception:  # noqa: BLE001
+        # Best-effort: any Overpass / network failure leaves
+        # ``checked = False`` so callers know we never got an answer.
+        return out
+
+    if "error" in result and result.get("bearing_deg") is None:
+        return out
+
+    out["checked"] = True
+
+    detected_highway = result.get("highway")
+    if detected_highway is None or detected_highway not in _MAJOR_ROAD_CLASSES:
+        # No major road within the radius — either nothing at all or a
+        # residential / service / tertiary road.  Either way the
+        # planner should re-verify coordinates.
+        nearby_class = (
+            f" (closest road within {search_radius_m:.0f} m: '{detected_highway}')"
+            if detected_highway
+            else ""
+        )
+        out["warnings"].append(
+            {
+                "flag": "no_road_at_anchor",
+                "level": "warning",
+                "message": (
+                    "No motorway/trunk/primary/secondary road detected at anchor "
+                    f"({anchor_lat:.5f}, {anchor_lng:.5f}) within {search_radius_m:.0f} m"
+                    f"{nearby_class}.  "
+                    "Verify coordinates correspond to the actual work zone."
+                ),
+                "anchor_lat": anchor_lat,
+                "anchor_lng": anchor_lng,
+                "detected_highway": detected_highway,
+                "search_radius_m": search_radius_m,
+            }
+        )
+        return out
+
+    detected_bearing = result.get("bearing_deg")
+    if detected_bearing is None:
+        return out
+
+    direct_delta = _shortest_bearing_delta_deg(corridor_bearing_deg, detected_bearing)
+    reciprocal_delta = _shortest_bearing_delta_deg(
+        corridor_bearing_deg, (detected_bearing + 180.0) % 360.0
+    )
+    delta = min(direct_delta, reciprocal_delta)
+    if delta > bearing_threshold_deg:
+        out["warnings"].append(
+            {
+                "flag": "bearing_conflict",
+                "level": "warning",
+                "message": (
+                    f"Corridor bearing {corridor_bearing_deg:.1f}° conflicts with "
+                    f"detected road bearing {detected_bearing:.1f}° at anchor "
+                    f"({anchor_lat:.5f}, {anchor_lng:.5f}).  Smallest angle "
+                    f"(incl. reciprocal): {delta:.1f}° > {bearing_threshold_deg:.0f}° "
+                    "threshold.  Aerial overlay may not follow road geometry."
+                ),
+                "anchor_lat": anchor_lat,
+                "anchor_lng": anchor_lng,
+                "corridor_bearing_deg": corridor_bearing_deg,
+                "detected_bearing_deg": detected_bearing,
+                "delta_deg": delta,
+                "detected_highway": detected_highway,
+                "detected_way_id": result.get("way_id"),
+            }
+        )
+
+    return out

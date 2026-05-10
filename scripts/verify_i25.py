@@ -18,6 +18,8 @@ if str(_ROOT) not in sys.path:
 from src.api.audit import build_audit_trail
 from src.export.quote_generator import generate_quote
 from src.generation.layout import generate_shoulder_closure_divided
+from src.rules.devices import DeviceType
+from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_site_conditions
 from src.rules.spacing import (
@@ -33,7 +35,15 @@ from src.rules.validators import ScenarioParams, validate_layout
 # --------------------------------------------------------------------------
 # Project parameters
 # --------------------------------------------------------------------------
-LAT, LNG = 38.886, -104.822
+# Anchor verified on the I-25 northbound mainline near Exit 146 (Garden of
+# the Gods Rd) in Colorado Springs.  Pulled from OSM way 136556833
+# (highway=motorway, ref="I 25", oneway=yes, lanes=3) — see the diagnostic
+# pass that traced the original (38.886, -104.822) anchor 0.3 miles east
+# of the actual roadway.  BEARING is the segment bearing OSM reports for
+# this NB way at this latitude; passing it through to the renderer
+# produces an aerial overlay that follows the actual carriageway.
+LAT, LNG = 38.8862, -104.8354
+BEARING_DEG = 19.0
 SPEED = 55
 NUM_LANES = 3
 WORK_LEN = 1000.0
@@ -100,6 +110,7 @@ def build_params(road_type: str, *, is_night: bool = False) -> ScenarioParams:
         is_night=is_night,
         is_divided=True,
         jurisdiction="CDOT",
+        bearing_deg=BEARING_DEG,
     )
 
 
@@ -115,7 +126,11 @@ print(f"Total devices: {len(placements_freeway)}")
 _print_breakdown("Breakdown — road_type=freeway", placements_freeway)
 
 audit_freeway = build_audit_trail(
-    placements_freeway, params_freeway, shoulder_width_ft=SHOULDER_WIDTH
+    placements_freeway,
+    params_freeway,
+    shoulder_width_ft=SHOULDER_WIDTH,
+    site_lat=LAT,
+    site_lng=LNG,
 )
 t = audit_freeway["taper"]
 b = audit_freeway["buffer"]
@@ -154,6 +169,16 @@ for chk in co["checks"]:
     print(f"  [{icon}] {chk['label']} ({chk['citation']}) — {chk['detail']}")
 for item in co.get("info_items", []):
     print(f"  [INFO] {item['label']} ({item['citation']}) — {item['detail']}")
+
+cv = audit_freeway.get("corridor_validation") or {}
+print("\nCorridor / aerial validation:")
+if not cv.get("checked"):
+    print("  (skipped — OSM unreachable or coords/bearing missing)")
+elif not cv.get("warnings"):
+    print(f"  PASS — anchor ({LAT}, {LNG}) on a major road, bearing matches OSM")
+else:
+    for w in cv["warnings"]:
+        print(f"  [WARN] {w['flag']}: {w['message']}")
 
 print("\nValidation:")
 _print_violations(viol_freeway)
@@ -231,11 +256,28 @@ _print_breakdown("Breakdown after adjustments", placements_adj)
 
 
 # ---------- TEST 4: night variant ----------
-_section("TEST 4 — night shift (is_night=True)")
+_section("TEST 4 — night shift (is_night=True, apply_night_adjustments)")
 params_night = build_params("freeway", is_night=True)
-placements_night = generate_shoulder_closure_divided(params_night, shoulder_width_ft=SHOULDER_WIDTH)
+placements_night_raw = generate_shoulder_closure_divided(
+    params_night, shoulder_width_ft=SHOULDER_WIDTH
+)
+placements_night, night_records = apply_night_adjustments(placements_night_raw, params_night)
+
 print(f"Day total: {len(placements_freeway)}")
-print(f"Night total: {len(placements_night)}")
+print(f"Night total (post-adjustments): {len(placements_night)}")
+
+n_taper_drums_night = sum(1 for p in placements_night_raw if p.device_type == DeviceType.DRUM)
+expected_night = len(placements_night_raw) + n_taper_drums_night + 1
+assert len(placements_night) == expected_night, (
+    f"Expected baseline ({len(placements_night_raw)}) + warning lights "
+    f"({n_taper_drums_night}) + 1 light plant = {expected_night}, "
+    f"got {len(placements_night)}"
+)
+print(
+    f"  expected = baseline ({len(placements_night_raw)}) + warning lights "
+    f"({n_taper_drums_night}) + 1 light plant = {expected_night}  PASS"
+)
+
 day_counts = _counts(placements_freeway)
 night_counts = _counts(placements_night)
 diffs = []
@@ -243,12 +285,15 @@ for key in set(day_counts) | set(night_counts):
     d, n = day_counts.get(key, 0), night_counts.get(key, 0)
     if d != n:
         diffs.append((key, d, n))
-if diffs:
-    print("Day → Night diffs:")
-    for (dt, lbl), d, n in diffs:
-        print(f"  {dt:<24} {lbl}: {d} → {n}")
-else:
-    print("No device-type or label differences day vs. night.")
+print("Day → Night diffs:")
+for (dt, lbl), d, n in sorted(diffs):
+    print(f"  {dt:<24} {lbl}: {d} → {n}")
+
+print(f"\nNight adjustment records ({len(night_records)}):")
+for r in night_records:
+    print(f"  [{r['flag']}] {r['action']}")
+    print(f"     rule: {r['rule']}")
+assert len(night_records) == 3, f"Expected 3 night adjustment records, got {len(night_records)}"
 
 # Quote diff
 import tempfile
@@ -281,9 +326,17 @@ print(
     f"labor ${qb_night.labor_total:,.0f}  total ${qb_night.total:,.0f}  "
     f"is_night={qb_night.is_night}  mult={qb_night.night_multiplier}"
 )
+expected_equipment_delta = n_taper_drums_night * 5.00 + 125.00
+actual_equipment_delta = qb_night.equipment_total - qb_day.equipment_total
+print(
+    f"Night equipment delta: +${actual_equipment_delta:,.2f}  "
+    f"(expected ~${expected_equipment_delta:.2f}: "
+    f"{n_taper_drums_night} warning lights @ $5 + 1 plant @ $125)"
+)
 print(
     f"Night labor delta: +${qb_night.labor_total - qb_day.labor_total:,.0f}  "
-    f"({(qb_night.labor_total / qb_day.labor_total - 1) * 100:.1f}% over day)"
+    f"({(qb_night.labor_total / qb_day.labor_total - 1) * 100:.1f}% over day, "
+    f"day flaggers=0 so labor delta is from non-flagger labor only)"
 )
 
 

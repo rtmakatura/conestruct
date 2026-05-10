@@ -212,6 +212,28 @@ class WorkCorridor:
         """Lat/lng of the end of the downstream taper (the anchor itself)."""
         return self.anchor_lat, self.anchor_lng
 
+    def work_zone_endpoints(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        """Lat/lng of the work zone's downstream and upstream endpoints.
+
+        Walking from the anchor along ``bearing_deg``, the segments
+        encountered in order are downstream-taper → work-zone →
+        buffer → taper → advance-warning.  The work zone therefore
+        sits between ``downstream_taper_ft`` and
+        ``downstream_taper_ft + work_zone_ft`` along the corridor.
+
+        Returns ``(downstream_endpoint, upstream_endpoint)`` —
+        respectively the buffer-side and the work-side edges of the
+        actual work area.  Used to draw a polyline overlay on the
+        aerial-context Mapbox tile so reviewers can locate the
+        closure on the satellite image.
+        """
+        downstream_station_ft = self.downstream_taper_ft
+        upstream_station_ft = self.downstream_taper_ft + self.work_zone_ft
+        return (
+            self.point_at_station_ft(downstream_station_ft),
+            self.point_at_station_ft(upstream_station_ft),
+        )
+
     def point_at_station_ft(self, station_ft: float) -> tuple[float, float]:
         """Lat/lng at ``station_ft`` along the corridor, measured from the anchor.
 
@@ -439,3 +461,48 @@ def _point_along_corridor(corridor: WorkCorridor, fraction: float) -> tuple[floa
     ``fraction = 1.0`` returns :meth:`WorkCorridor.upstream_point`.
     """
     return corridor.point_at_station_ft(fraction * corridor.total_length_ft)
+
+
+# ---------------------------------------------------------------------------
+# Polyline encoding (Google encoded-polyline algorithm)
+# ---------------------------------------------------------------------------
+
+
+def encode_polyline(coords: list[tuple[float, float]]) -> str:
+    """Encode a list of (lat, lng) pairs as a Google polyline string.
+
+    Implements the canonical algorithm used by Mapbox Static Images,
+    Google Directions, and other geospatial services.  Coordinates
+    are rounded to 5 decimal places (precision 5) per the standard;
+    the resulting string can be passed verbatim to
+    ``path-{w}+{c}-{a}({polyline})`` in a Mapbox Static URL.
+
+    The algorithm:
+      1. Take 5-decimal-precision integer (lat × 1e5, lng × 1e5).
+      2. Encode each as a difference from the previous coordinate.
+      3. Left-shift one bit, complement if negative.
+      4. Break into 5-bit chunks, low-order first.
+      5. OR each non-final chunk with 0x20 to mark continuation.
+      6. Add 63 to each chunk to land in the printable ASCII range.
+    """
+
+    def _encode_signed(v: int) -> str:
+        v = ~(v << 1) if v < 0 else (v << 1)
+        out_chunks: list[str] = []
+        while v >= 0x20:
+            out_chunks.append(chr((0x20 | (v & 0x1F)) + 63))
+            v >>= 5
+        out_chunks.append(chr(v + 63))
+        return "".join(out_chunks)
+
+    out: list[str] = []
+    prev_lat_e5 = 0
+    prev_lng_e5 = 0
+    for lat, lng in coords:
+        lat_e5 = int(round(lat * 1e5))
+        lng_e5 = int(round(lng * 1e5))
+        out.append(_encode_signed(lat_e5 - prev_lat_e5))
+        out.append(_encode_signed(lng_e5 - prev_lng_e5))
+        prev_lat_e5 = lat_e5
+        prev_lng_e5 = lng_e5
+    return "".join(out)

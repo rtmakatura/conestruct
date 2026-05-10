@@ -38,6 +38,7 @@ from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import generate_crew_narrative
 from src.rendering.plan_sheet import render_plan_sheet
+from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_site_conditions
 
@@ -120,40 +121,45 @@ def _safe_filename(scenario: Scenario, ext: str) -> str:
     return f"{cleaned}.{ext}"
 
 
-def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict]]:
-    """Run the generator and apply site-condition adjustments.
+def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[dict]]:
+    """Run the generator and apply site- and night-condition adjustments.
 
-    Returns ``(placements, params, adjustment_records)``.  Adjustment
-    records describe each flag that fired and the MUTCD section behind
-    it; the markdown narrative consumes them, the other render paths
-    discard them but still benefit from the modified placements.
+    Returns ``(placements, params, site_records, night_records)``.  The
+    record lists describe each flag that fired and the MUTCD section
+    behind it; the markdown narrative consumes both, the other render
+    paths discard them but still benefit from the modified placements.
+
+    Night adjustments fire after site adjustments so warning lights
+    decorate every taper drum — including any drums added by an earlier
+    site-adjustment step.
     """
     params, generator, kwargs = scenario_to_call(scenario)
     placements = generator(params, **kwargs)
-    placements, records = apply_site_adjustments(
+    placements, site_records = apply_site_adjustments(
         placements, params, scenario.meta.siteConditions or {}
     )
-    return placements, params, records
+    placements, night_records = apply_night_adjustments(placements, params)
+    return placements, params, site_records, night_records
 
 
 def _render_with(
     scenario: Scenario,
     suffix: str,
-    write: Callable[[Path, list, object, list[dict]], Path],
+    write: Callable[[Path, list, object, list[dict], list[dict]], Path],
 ) -> bytes:
     """Run scenario_to_call, invoke ``write``, return the file bytes.
 
-    ``write(path, placements, params, adjustments)`` writes the artifact
-    at ``path`` and returns the same path.  Cleanup happens regardless
-    of outcome.
+    ``write(path, placements, params, site_adj, night_adj)`` writes the
+    artifact at ``path`` and returns the same path.  Cleanup happens
+    regardless of outcome.
     """
-    placements, params, adjustments = _placements_for(scenario)
+    placements, params, site_adj, night_adj = _placements_for(scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=suffix)
     os.close(fd)
     path = Path(raw_path)
     try:
-        write(path, placements, params, adjustments)
+        write(path, placements, params, site_adj, night_adj)
         return path.read_bytes()
     finally:
         path.unlink(missing_ok=True)
@@ -168,7 +174,7 @@ def render_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, _adj: Path(
+            lambda path, placements, params, _site, _night: Path(
                 render_plan_sheet(
                     placements,
                     params,
@@ -200,7 +206,7 @@ def render_xlsx(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".xlsx",
-            lambda path, placements, params, _adj: Path(
+            lambda path, placements, params, _site, _night: Path(
                 export_device_list(placements, params, output_path=str(path))
             ),
         )
@@ -223,12 +229,13 @@ def render_markdown(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".md",
-            lambda path, placements, params, adj: Path(
+            lambda path, placements, params, site_adj, night_adj: Path(
                 generate_crew_narrative(
                     placements,
                     params,
                     output_path=str(path),
-                    site_adjustments=adj,
+                    site_adjustments=site_adj,
+                    night_adjustments=night_adj,
                 )
             ),
         )
@@ -273,7 +280,7 @@ class QuoteRequest(BaseModel):
 
 
 def _run_quote(req: QuoteRequest):
-    placements, params, _adjustments = _placements_for(req.scenario)
+    placements, params, _site_adj, _night_adj = _placements_for(req.scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=".xlsx")
     os.close(fd)

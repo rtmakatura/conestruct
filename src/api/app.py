@@ -33,6 +33,7 @@ from src.generation.layout import (  # noqa: E402
 )
 from src.narrative.crew_narrative import generate_crew_narrative  # noqa: E402
 from src.rendering.plan_sheet import render_plan_sheet  # noqa: E402
+from src.rules.night_adjustments import apply_night_adjustments  # noqa: E402
 from src.rules.site_adjustments import apply_site_adjustments  # noqa: E402
 from src.rules.site_detection import detect_site_conditions  # noqa: E402
 from src.rules.validators import ScenarioParams, validate_layout  # noqa: E402
@@ -302,6 +303,7 @@ if generate_button:
         else:
             placements = generate_shoulder_closure_divided(params)
         placements, site_adj = apply_site_adjustments(placements, params, site_conditions)
+        placements, night_adj = apply_night_adjustments(placements, params)
         violations = validate_layout(placements, params)
         errors = [v for v in violations if v.severity == "error"]
         warnings = [v for v in violations if v.severity == "warning"]
@@ -328,7 +330,13 @@ if generate_button:
             site_address=site_address,
         )
         export_device_list(placements, params, output_path=xlsx_path)
-        generate_crew_narrative(placements, params, output_path=md_path, site_adjustments=site_adj)
+        generate_crew_narrative(
+            placements,
+            params,
+            output_path=md_path,
+            site_adjustments=site_adj,
+            night_adjustments=night_adj,
+        )
 
         quote_bytes: bytes | None = None
         quote_breakdown: QuoteBreakdown | None = None
@@ -451,8 +459,7 @@ if generate_button:
                 st.dataframe(lab_df, use_container_width=True, hide_index=True)
                 if qb.is_night:
                     st.caption(
-                        f"Night differential applied: all labor lines × "
-                        f"{qb.night_multiplier:.1f}x."
+                        f"Night differential applied: all labor lines × {qb.night_multiplier:.1f}x."
                     )
                 st.caption(
                     "Standard shift: 10 hours including mobilization. "
@@ -501,7 +508,12 @@ if generate_button:
                     "Colorado vendor convention."
                 )
 
-        audit = build_audit_trail(placements, params)
+        audit = build_audit_trail(
+            placements,
+            params,
+            site_lat=site_lat if (site_lat or site_lng) else None,
+            site_lng=site_lng if (site_lat or site_lng) else None,
+        )
 
         st.subheader("Verification & Audit Trail")
         st.caption(
@@ -585,6 +597,23 @@ if generate_button:
                     st.write(f"**{adj['flag']}** — {adj['action']}")
                     st.caption(adj["rule"])
 
+        if night_adj:
+            night_total = sum(a.get("devices_added", 0) for a in night_adj)
+            with st.expander(f"Night Operation Adjustments ({night_total} devices added)"):
+                for adj in night_adj:
+                    st.write(f"**{adj['flag']}** — {adj['action']}")
+                    st.caption(adj["rule"])
+
+        cv = audit.get("corridor_validation") or {}
+        cv_warnings = cv.get("warnings") or []
+        if cv.get("checked") and cv_warnings:
+            with st.expander(
+                f"Corridor / Aerial Validation ({len(cv_warnings)} warning"
+                f"{'s' if len(cv_warnings) != 1 else ''})"
+            ):
+                for warning in cv_warnings:
+                    st.warning(f"**{warning['flag']}** — {warning['message']}")
+
         detection_state = st.session_state.get("site_detection")
         if detection_state and "result" in detection_state:
             det_result = detection_state["result"]
@@ -608,7 +637,7 @@ if generate_button:
                         nearest = bucket.get("nearest_distance_m")
                         nearest_txt = f" (nearest ~{nearest:.0f} m)" if nearest else ""
                         st.write(
-                            f"✅ **{label}** — {bucket.get('count', 0)} feature(s)" f"{nearest_txt}"
+                            f"✅ **{label}** — {bucket.get('count', 0)} feature(s){nearest_txt}"
                         )
                         for detail in bucket.get("details", [])[:3]:
                             st.write(f"  - {detail}")

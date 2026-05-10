@@ -27,12 +27,14 @@ import tempfile
 from collections.abc import Callable
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote as urllib_quote
 
 import httpx
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
+from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import description_for
 from src.rules.spacing import (
@@ -447,6 +449,153 @@ def _draw_drum(c: canvas.Canvas, x: float, y: float) -> None:
     c.rect(x - w / 2, y - 3.5, w, 2.0, fill=1, stroke=0)
 
 
+# Amber/yellow used for steady-burn warning lights and the rays of the
+# portable light plant.  Distinct from DRUM_ORANGE so the eye reads
+# "light" rather than "another channelizing device".
+WARNING_LIGHT_AMBER = colors.HexColor("#FFC800")
+
+
+def _draw_warning_light(c: canvas.Canvas, x: float, y: float) -> None:
+    """Type C steady-burn warning light — small amber disk perched atop a drum.
+
+    Co-located with the drum's (x, y) at the same station/offset.  The
+    glyph offsets ~7 pt above the centerline so the disk sits on the
+    drum's top edge rather than being hidden behind the drum body.  A
+    thin black rim plus a soft halo make it readable on the page even
+    when the drum's orange overlaps.
+    """
+    cx = x
+    cy = y + 8.0  # perch on top of the 14pt-tall drum (half-height = 7pt)
+    _draw_warning_light_disc(c, cx, cy)
+
+
+def _draw_warning_light_legend(c: canvas.Canvas, x: float, y: float) -> None:
+    """Centered legend variant of the warning light — no perch offset.
+
+    The on-plan glyph self-offsets +8pt so it sits on top of its host
+    drum.  In the LEGEND box that offset would push the bulb into the
+    row above; the legend variant draws the same disc centered on
+    (x, y) so it stays inside its own row.
+    """
+    _draw_warning_light_disc(c, x, y)
+
+
+def _draw_warning_light_disc(c: canvas.Canvas, cx: float, cy: float) -> None:
+    """Shared disc renderer used by both on-plan and legend variants."""
+    r = 1.7
+    # Soft halo so the disk reads as a glow, not a solid dot.
+    c.setFillColor(colors.HexColor("#FFE680"))
+    c.setStrokeColor(colors.HexColor("#FFE680"))
+    c.setLineWidth(0.3)
+    c.circle(cx, cy, r + 1.6, stroke=1, fill=1)
+    # Amber bulb itself with a thin dark rim.
+    c.setFillColor(WARNING_LIGHT_AMBER)
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.4)
+    c.circle(cx, cy, r, stroke=1, fill=1)
+
+
+def _draw_light_plant(c: canvas.Canvas, x: float, y: float) -> None:
+    """Portable light plant — small upright tower with rays emanating.
+
+    Visually prominent so it doesn't read as another channelizer; this
+    is one of the most expensive items on the BOM and the operator
+    should be able to spot it on the plan view at a glance.
+    """
+    # Trailer base (wide, low rectangle in dark gray).
+    base_w, base_h = 12.0, 3.0
+    c.setFillColor(colors.HexColor("#5A5A5A"))
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.5)
+    c.rect(x - base_w / 2, y - 9.0, base_w, base_h, fill=1, stroke=1)
+
+    # Mast (vertical line from trailer up to lamp head).
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.8)
+    c.line(x, y - 6.0, x, y + 4.0)
+
+    # Lamp head (yellow rectangle with black border at the top of the mast).
+    head_w, head_h = 8.0, 4.0
+    head_y = y + 4.0
+    c.setFillColor(WARNING_LIGHT_AMBER)
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.5)
+    c.rect(x - head_w / 2, head_y, head_w, head_h, fill=1, stroke=1)
+
+    # Rays — six short amber strokes radiating from the lamp head.
+    import math as _math
+
+    c.setStrokeColor(WARNING_LIGHT_AMBER)
+    c.setLineWidth(0.7)
+    cx = x
+    cy = head_y + head_h / 2.0
+    inner_r = 5.5
+    outer_r = 8.5
+    for deg in (-60, -30, 0, 30, 60, 90):
+        rad = _math.radians(deg)
+        x1 = cx + inner_r * _math.cos(rad)
+        y1 = cy + inner_r * _math.sin(rad)
+        x2 = cx + outer_r * _math.cos(rad)
+        y2 = cy + outer_r * _math.sin(rad)
+        c.line(x1, y1, x2, y2)
+
+
+def _draw_light_plant_legend(c: canvas.Canvas, x: float, y: float) -> None:
+    """Compact legend variant of the light plant — fits a 14-pt legend row.
+
+    Same idea (trailer + mast + lamp head + rays) but scaled down to
+    sit inside one row of the LEGEND box without colliding with the
+    next entry.  The on-plan glyph stays full-size; only the legend
+    representation shrinks.
+    """
+    import math as _math
+
+    # Trailer base.
+    base_w, base_h = 7.0, 1.6
+    c.setFillColor(colors.HexColor("#5A5A5A"))
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.4)
+    c.rect(x - base_w / 2, y - 4.5, base_w, base_h, fill=1, stroke=1)
+
+    # Mast.
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.6)
+    c.line(x, y - 3.0, x, y + 1.5)
+
+    # Lamp head.
+    head_w, head_h = 4.5, 2.0
+    head_y = y + 1.5
+    c.setFillColor(WARNING_LIGHT_AMBER)
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.4)
+    c.rect(x - head_w / 2, head_y, head_w, head_h, fill=1, stroke=1)
+
+    # Three short rays (top half only — keeps the glyph inside the row).
+    c.setStrokeColor(WARNING_LIGHT_AMBER)
+    c.setLineWidth(0.5)
+    cx = x
+    cy = head_y + head_h / 2.0
+    inner_r = 3.0
+    outer_r = 4.5
+    for deg in (-40, 0, 40):
+        rad = _math.radians(deg + 90.0)  # rotate so 0 deg points up
+        x1 = cx + inner_r * _math.cos(rad)
+        y1 = cy + inner_r * _math.sin(rad)
+        x2 = cx + outer_r * _math.cos(rad)
+        y2 = cy + outer_r * _math.sin(rad)
+        c.line(x1, y1, x2, y2)
+
+
+# Legend-only glyph overrides.  Devices in this dict draw a smaller
+# variant in the LEGEND box; on the plan view the regular glyph from
+# ``_DEVICE_GLYPHS`` is still used.  Falls back to ``_DEVICE_GLYPHS``
+# when a device isn't listed here.
+_DEVICE_LEGEND_GLYPHS: dict[DeviceType, Callable[[canvas.Canvas, float, float], None]] = {
+    DeviceType.PORTABLE_LIGHT_PLANT: _draw_light_plant_legend,
+    DeviceType.WARNING_LIGHT_TYPE_C: _draw_warning_light_legend,
+}
+
+
 SIGN_FILL_WARN = colors.HexColor("#F58220")  # MUTCD work-zone orange
 SIGN_FILL_GUIDE = colors.HexColor("#F58220")  # G20-x in temp work zones is orange
 SIGN_REG_BORDER = colors.HexColor("#C8102E")  # regulatory red border
@@ -661,6 +810,8 @@ _DEVICE_GLYPHS: dict[DeviceType, Callable[[canvas.Canvas, float, float], None]] 
     DeviceType.TEMPORARY_SIGNAL: _draw_sign,
     DeviceType.DETOUR_MARKER: _draw_sign,
     DeviceType.CHANNELIZER_OPTIONAL: _draw_cone,
+    DeviceType.WARNING_LIGHT_TYPE_C: _draw_warning_light,
+    DeviceType.PORTABLE_LIGHT_PLANT: _draw_light_plant,
 }
 
 _DEVICE_DISPLAY_NAMES: dict[DeviceType, str] = {
@@ -679,6 +830,8 @@ _DEVICE_DISPLAY_NAMES: dict[DeviceType, str] = {
     DeviceType.TEMPORARY_SIGNAL: "Temporary Signal",
     DeviceType.DETOUR_MARKER: "Detour Marker",
     DeviceType.CHANNELIZER_OPTIONAL: "Optional Channelizer",
+    DeviceType.WARNING_LIGHT_TYPE_C: "Type C Warning Light (steady)",
+    DeviceType.PORTABLE_LIGHT_PLANT: "Portable Light Plant",
 }
 
 
@@ -1158,7 +1311,18 @@ def _draw_devices(
     # they sit visually just left of the work-side roadway.
     median_sign_y = PLAN_Y_CENTER
 
+    # Lighting decorations (warning lights, light plants) render in a
+    # final pass at their original (x, y) so they stay visually attached
+    # to the drums they're paired with.  Routing them through the
+    # de-overlap groups would push warning lights away from their host
+    # drums and undo the "halo on the drum" intent.
+    lighting_types = (
+        DeviceType.WARNING_LIGHT_TYPE_C,
+        DeviceType.PORTABLE_LIGHT_PLANT,
+    )
+
     items: list[tuple[DevicePlacement, float, float]] = []
+    lighting_items: list[tuple[DevicePlacement, float, float]] = []
     for p in placements:
         if p.station_ft > station_max_visible:
             continue
@@ -1182,7 +1346,10 @@ def _draw_devices(
             y = y_road_bottom - clamp_dist if p.offset_ft > 0 else y_road_top + clamp_dist
         else:
             y = _y_of(p.offset_ft, params.is_divided)
-        items.append((p, x, y))
+        if p.device_type in lighting_types:
+            lighting_items.append((p, x, y))
+        else:
+            items.append((p, x, y))
 
     items = _deoverlap_items(items)
     items = _deoverlap_signs_pairwise(items)
@@ -1211,6 +1378,14 @@ def _draw_devices(
             continue
         cy = y - inline_offset if p.offset_ft >= 0 else y + inline_offset
         _draw_callout_circle(c, x, cy, n)
+
+    # Pass 3: lighting decorations on top of everything else.  Each
+    # glyph self-positions relative to (x, y) so warning lights perch
+    # above their host drum and light plants render with their tower
+    # geometry intact.
+    for p, x, y in lighting_items:
+        glyph = _DEVICE_GLYPHS.get(p.device_type, _draw_sign)
+        glyph(c, x, y)
 
 
 # ---------------------------------------------------------------------------
@@ -1553,6 +1728,7 @@ def _draw_structured_title_block(
     total_sheets: str,
     scale_label: str,
     bearing_deg: float | None = None,
+    aerial_page: str | None = None,
 ) -> None:
     """Boxed title block — third box of the equal-width footer row.
 
@@ -1592,6 +1768,7 @@ def _draw_structured_title_block(
                 ("SCALE", scale_label),
                 ("DATE", date.today().isoformat()),
                 ("SHEET", f"{sheet_number} OF {total_sheets}"),
+                *([("AERIAL", f"See page {aerial_page}")] if aerial_page else []),
             ],
         ),
         (
@@ -1904,7 +2081,12 @@ def _draw_legend(
     c.setFont("Helvetica-Bold", 10)
     c.drawString(box_x + 8, title_y, "LEGEND")
 
-    row_h = 14
+    # Bumped from 14 → 16 pt so 14-pt-tall glyphs (drums) and the
+    # warning-light + light-plant compact legend variants don't bleed
+    # into the row above.  Pairs with the centered _draw_*_legend
+    # variants in _DEVICE_LEGEND_GLYPHS that strip out per-glyph
+    # vertical offsets used on the plan view.
+    row_h = 16
     y = title_y - 14
     glyph_x = box_x + 18
     text_x = box_x + 36
@@ -1914,7 +2096,7 @@ def _draw_legend(
 
     c.setFont("Helvetica", 8)
     for dt in device_types_used:
-        glyph = _DEVICE_GLYPHS.get(dt, _draw_sign)
+        glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
         glyph(c, glyph_x, y + 3)
         c.setFillColor(colors.black)
         c.drawString(text_x, y, _DEVICE_DISPLAY_NAMES.get(dt, dt.value))
@@ -2209,14 +2391,140 @@ def _draw_notes(
 # ---------------------------------------------------------------------------
 
 
-def _fetch_mapbox_aerial(lat: float, lng: float, token: str) -> Path | None:
-    """Fetch a Mapbox satellite tile centered on (lat, lng).  Returns the
-    path to a temporary PNG, or ``None`` if the call fails for any reason
-    (network error, bad token, rate limit).  Errors are logged to stdout
-    rather than raised — the aerial is an optional enhancement, not a
-    required component of the plan sheet.
+# Overlay styling for the work-zone polyline drawn on the aerial.
+# Conestruct orange picked to contrast with satellite imagery while
+# staying brand-consistent.  Stroke width and opacity are tuned to
+# clearly mark the work zone extent without obscuring the underlying
+# road geometry.
+_AERIAL_OVERLAY_STROKE_W: int = 3
+_AERIAL_OVERLAY_COLOR: str = "e8710a"
+_AERIAL_OVERLAY_OPACITY: str = "0.7"
+
+# Image dimensions for the Mapbox Static request.  Used both for the
+# URL request size and for the per-pixel zoom calculation below.
+_AERIAL_IMG_W_PX: int = 600
+_AERIAL_IMG_H_PX: int = 450
+
+# Web Mercator constant: meters per pixel at zoom 0 at the equator.
+# Used to back-solve the integer zoom level that places the work-zone
+# polyline at roughly ``_AERIAL_TARGET_POLYLINE_FRACTION`` of the
+# image width — gives the reviewer enough surrounding road context to
+# locate the closure on the satellite.
+_AERIAL_METERS_PER_PIXEL_AT_ZOOM_0: float = 156543.03392
+_AERIAL_TARGET_POLYLINE_FRACTION: float = 0.40
+
+
+def _aerial_zoom_for_work_zone(corridor: WorkCorridor) -> int:
+    """Pick a static-tile zoom that frames the work zone with context.
+
+    Solves the Mercator pixel-size formula so the work-zone polyline
+    spans ``_AERIAL_TARGET_POLYLINE_FRACTION`` of the image width.
+    Clamped to [13, 20] — Mapbox satellite imagery has minimal detail
+    below 13 and aliases above 20.
     """
-    url = f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{lng},{lat},16,0/400x300@2x"
+    import math
+
+    work_zone_m = corridor.work_zone_ft * M_PER_FT
+    # We want target_fraction of the image width to equal work_zone_m,
+    # so image_width_m = work_zone_m / target_fraction.
+    image_width_m = max(1.0, work_zone_m / _AERIAL_TARGET_POLYLINE_FRACTION)
+    meters_per_pixel = image_width_m / _AERIAL_IMG_W_PX
+    midpoint = corridor.point_at_station_ft(
+        corridor.downstream_taper_ft + corridor.work_zone_ft / 2.0
+    )
+    cos_lat = math.cos(math.radians(midpoint[0]))
+    zoom_float = math.log2(_AERIAL_METERS_PER_PIXEL_AT_ZOOM_0 * cos_lat / meters_per_pixel)
+    return max(13, min(20, math.floor(zoom_float)))
+
+
+def _validate_corridor_bearing(corridor: WorkCorridor) -> None:
+    """Soft-check the corridor against OSM and echo any warnings to stdout.
+
+    Delegates to :func:`validate_corridor_against_osm` (which produces
+    structured records consumed by the audit trail) and prints each
+    warning to stdout so the render harness picks them up.  Never
+    raises — the aerial render proceeds either way.
+    """
+    # Deferred import keeps the rendering module's import graph free
+    # of httpx-driven Overpass code unless the aerial path runs.
+    from src.rules.site_detection import validate_corridor_against_osm
+
+    try:
+        validation = validate_corridor_against_osm(
+            corridor.anchor_lat, corridor.anchor_lng, corridor.bearing_deg
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(
+            "[corridor-validation] OSM bearing lookup unavailable: "
+            f"{type(exc).__name__}: {exc} — skipping check"
+        )
+        return
+
+    if not validation["checked"]:
+        return
+    for warning in validation["warnings"]:
+        print(f"[corridor-validation] {warning['level'].upper()}: {warning['message']}")
+
+
+def _fetch_mapbox_aerial(
+    lat: float,
+    lng: float,
+    token: str,
+    corridor: WorkCorridor | None = None,
+) -> Path | None:
+    """Fetch a Mapbox satellite tile, optionally with a work-zone overlay.
+
+    When ``corridor`` is supplied the URL carries a single overlay: a
+    2-vertex polyline tracing **only** the work-zone segment (between
+    ``corridor.work_zone_endpoints()``).  Advance warning, taper, and
+    buffer are not depicted — the closure region is the actionable
+    information for a reviewer.
+
+    A best-effort OSM bearing-conflict check runs alongside: if the
+    declared corridor bearing diverges from the road OSM reports at
+    the anchor by more than 15°, a stdout warning is emitted.  The
+    check is silent on success and never blocks rendering.
+
+    The viewport is a fixed center + computed zoom (instead of
+    ``auto``) so the polyline sits at roughly 40 % of the image width
+    with surrounding road context still visible.  Without a corridor
+    we fall back to the original fixed-zoom view centered on the pin
+    location.
+
+    Returns the path to a temporary PNG, or ``None`` if the call fails
+    for any reason (network error, bad token, rate limit).  Errors are
+    logged to stdout rather than raised — the aerial is an optional
+    enhancement, not a required component of the plan sheet.
+    """
+    if corridor is not None:
+        _validate_corridor_bearing(corridor)
+        downstream_ll, upstream_ll = corridor.work_zone_endpoints()
+        polyline = encode_polyline([downstream_ll, upstream_ll])
+        # urllib.parse.quote with safe="" so backslashes etc. in the
+        # polyline are percent-encoded; otherwise Mapbox will misparse
+        # the path overlay.
+        encoded_path = urllib_quote(polyline, safe="")
+        path_overlay = (
+            f"path-{_AERIAL_OVERLAY_STROKE_W}"
+            f"+{_AERIAL_OVERLAY_COLOR}-{_AERIAL_OVERLAY_OPACITY}"
+            f"({encoded_path})"
+        )
+        # Center the camera on the work-zone midpoint and pick a zoom
+        # that frames the work zone with surrounding context.
+        midpoint_lat, midpoint_lng = corridor.point_at_station_ft(
+            corridor.downstream_taper_ft + corridor.work_zone_ft / 2.0
+        )
+        zoom = _aerial_zoom_for_work_zone(corridor)
+        viewport = f"{midpoint_lng},{midpoint_lat},{zoom},0"
+        overlays = f"{path_overlay}/"
+    else:
+        viewport = f"{lng},{lat},16,0"
+        overlays = ""
+
+    url = (
+        f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/"
+        f"{overlays}{viewport}/{_AERIAL_IMG_W_PX}x{_AERIAL_IMG_H_PX}@2x"
+    )
     try:
         r = httpx.get(url, params={"access_token": token}, timeout=15.0)
         r.raise_for_status()
@@ -2229,40 +2537,218 @@ def _fetch_mapbox_aerial(lat: float, lng: float, token: str) -> Path | None:
         return None
 
 
-def _draw_aerial_embed(
+# Page 2 (aerial context) layout constants.  The page reuses the same
+# top banner as page 1 but otherwise has its own minimal chrome — the
+# aerial image dominates, with caption + corridor-details box + footer
+# stacked below.
+AERIAL_PAGE_IMAGE_FRAC: float = 0.80  # image bounding box width = 80% of page width
+AERIAL_PAGE_FOOTER_H: float = 36.0  # footer band height (above bottom margin)
+AERIAL_PAGE_TOP_GAP: float = 24.0  # vertical gap between subtitle and image
+AERIAL_PAGE_CAPTION_BLOCK_H: float = 50.0  # space reserved for caption + disclaimer
+AERIAL_PAGE_BELOW_IMAGE_GAP: float = 14.0  # gap between image bottom and caption top
+AERIAL_PAGE_DETAILS_BLOCK_H: float = 132.0  # corridor details panel height
+AERIAL_PAGE_DETAILS_GAP: float = 14.0  # gap between caption block and details box
+AERIAL_PAGE_DETAILS_FRAC: float = 0.50  # details box width = 50% of page width
+
+
+def _draw_corridor_details_box(
+    c: canvas.Canvas,
+    corridor: WorkCorridor,
+    box_x: float,
+    box_y: float,
+    box_w: float,
+    box_h: float,
+) -> None:
+    """Bordered metadata panel summarizing the corridor geometry.
+
+    Rows: anchor lat/lng, bearing (or "Not specified"), total length
+    (with miles), advance warning, taper, buffer, work zone,
+    downstream taper.  Styling mirrors page 1's structured title
+    block — 8 pt bold labels, 9 pt monospace values, thin border, a
+    horizontal divider beneath the title.
+    """
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.6)
+    c.rect(box_x, box_y, box_w, box_h, fill=0, stroke=1)
+
+    pad = 8.0
+    title_y = box_y + box_h - 14.0
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(box_x + pad, title_y, "CORRIDOR DETAILS")
+
+    # Divider rule beneath the title.
+    c.setStrokeColor(colors.HexColor("#BBBBBB"))
+    c.setLineWidth(0.4)
+    c.line(box_x + pad, title_y - 4.0, box_x + box_w - pad, title_y - 4.0)
+
+    # Build the rows.  Bearing is expressed as a 3-digit compass
+    # heading when known; falls back to "Not specified" so the panel
+    # always carries the same row count.
+    bearing_str = (
+        f"{corridor.bearing_deg:.0f} deg" if corridor.bearing_deg is not None else "Not specified"
+    )
+    total_ft = corridor.total_length_ft
+    total_mi = total_ft / 5280.0
+    rows: list[tuple[str, str]] = [
+        ("Anchor", f"{corridor.anchor_lat:.4f}, {corridor.anchor_lng:.4f}"),
+        ("Bearing", bearing_str),
+        ("Total corridor", f"{total_ft:,.0f} ft ({total_mi:.2f} mi)"),
+        ("Advance warning", f"{corridor.advance_warning_ft:,.0f} ft"),
+        ("Taper", f"{corridor.taper_ft:,.0f} ft"),
+        ("Buffer", f"{corridor.buffer_ft:,.0f} ft"),
+        ("Work zone", f"{corridor.work_zone_ft:,.0f} ft"),
+        ("Downstream", f"{corridor.downstream_taper_ft:,.0f} ft"),
+    ]
+
+    label_x = box_x + pad
+    value_x = box_x + pad + 110.0  # leaves the value column ~150 pt wide in a 50 % box
+    row_h = 12.0
+    y = title_y - 18.0
+    for label, value in rows:
+        c.setFillColor(colors.HexColor("#666666"))
+        c.setFont("Helvetica-Bold", 8)
+        c.drawString(label_x, y, label + ":")
+        c.setFillColor(colors.black)
+        c.setFont("Courier", 9)
+        c.drawString(value_x, y, value)
+        y -= row_h
+
+
+def _draw_aerial_page_footer(
+    c: canvas.Canvas,
+    sheet_number: str,
+    total_sheets: str,
+) -> None:
+    """Minimal page-2 footer: attribution on the left, page number on the right.
+
+    Mirrors page 1's footer text without rebuilding the three-box
+    LEGEND/NOTES/TITLE BLOCK structure — page 2's content is the
+    aerial alone.
+    """
+    y = MARGIN + 6.0
+    c.setFillColor(colors.HexColor("#555555"))
+    c.setFont("Helvetica-Oblique", 7.5)
+    c.drawString(
+        MARGIN + 4.0,
+        y,
+        "DRAFT FOR PE REVIEW — Generated by MHT Tool (Conestruct).  "
+        "Not a sealed engineering document.",
+    )
+    c.setFont("Helvetica-Bold", 8)
+    c.setFillColor(colors.HexColor("#1A1A1A"))
+    sheet_text = f"PAGE {sheet_number} OF {total_sheets}"
+    text_w = c.stringWidth(sheet_text, "Helvetica-Bold", 8)
+    c.drawString(PAGE_W - MARGIN - 4.0 - text_w, y, sheet_text)
+
+
+def _render_aerial_page(
     c: canvas.Canvas,
     png_path: Path,
+    params: ScenarioParams,
+    project_name: str,
+    location_description: str,
     lat: float,
     lng: float,
-    site_address: str,
+    sheet_number: str,
+    total_sheets: str,
+    title: str,
+    scale_label: str,
+    corridor: WorkCorridor | None = None,
 ) -> None:
-    img_w, img_h = 216.0, 162.0  # 3" x 2.25"
-    img_x = PLAN_RIGHT - 8.0 - img_w
-    img_y = PLAN_BOTTOM + 14.0  # leaves room for the caption below
+    """Render the dedicated aerial-context page (page 2 of 2).
+
+    Layout, top to bottom:
+
+      - Reused project banner (METHOD OF HANDLING TRAFFIC — name —
+        speed) so the page is identifiable on its own.
+      - "AERIAL CONTEXT" subtitle, centered.
+      - Mapbox satellite tile (with optional work-zone polyline
+        overlay), horizontally centered.  Aspect ratio preserved.
+      - Caption block: site coords, address, then the Mapbox
+        attribution / "for context only" disclaimer.  Wording is
+        upgraded to call out the orange overlay when a corridor is
+        provided.
+      - "CORRIDOR DETAILS" metadata panel (when a corridor is
+        provided) — fills the otherwise-empty space below the caption.
+      - Compact footer with the page number.
+    """
+    # 1. Top banner (reuse page 1's helper so the visual brand is
+    #    consistent across the two pages).
+    _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_label)
+
+    # 2. Subtitle "AERIAL CONTEXT" in the band just below the banner.
+    subtitle_y = PAGE_H - TITLE_H - 22.0
+    c.setFillColor(colors.HexColor("#1A1A1A"))
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(PAGE_W / 2.0, subtitle_y, "AERIAL CONTEXT")
+
+    # 3. Compute the vertical stack from the bottom up so we know how
+    #    much room the image gets.  The corridor-details panel is
+    #    optional — without a corridor, the image expands into the
+    #    space the panel would otherwise occupy.
+    has_details = corridor is not None
+    details_band_h = AERIAL_PAGE_DETAILS_BLOCK_H + AERIAL_PAGE_DETAILS_GAP if has_details else 0.0
+    caption_top = MARGIN + AERIAL_PAGE_FOOTER_H + details_band_h + AERIAL_PAGE_CAPTION_BLOCK_H
+    img_top = subtitle_y - AERIAL_PAGE_TOP_GAP
+    img_bottom = caption_top + AERIAL_PAGE_BELOW_IMAGE_GAP
+    img_box_h = max(0.0, img_top - img_bottom)
+    img_box_w = PAGE_W * AERIAL_PAGE_IMAGE_FRAC
+    img_x = (PAGE_W - img_box_w) / 2.0
+    img_y = img_bottom
 
     c.drawImage(
         str(png_path),
         img_x,
         img_y,
-        width=img_w,
-        height=img_h,
+        width=img_box_w,
+        height=img_box_h,
         preserveAspectRatio=True,
     )
-
     c.setStrokeColor(colors.black)
-    c.setLineWidth(0.5)
-    c.setFillColor(colors.black, alpha=0)
-    c.rect(img_x, img_y, img_w, img_h, fill=0, stroke=1)
+    c.setLineWidth(0.6)
+    c.rect(img_x, img_y, img_box_w, img_box_h, fill=0, stroke=1)
 
-    c.setFillColor(colors.black)
-    c.setFont("Helvetica-Bold", 6)
-    c.drawString(img_x, img_y + img_h + 4.0, "AERIAL CONTEXT (NOT TO SCALE)")
+    # 4. Caption block — site coords + address + disclaimer.  Anchored
+    #    to the image's left edge for a clean visual column.  The
+    #    disclaimer wording flips when an overlay is drawn so the
+    #    orange line on the satellite is explained inline.
+    caption_x = img_x
+    cap_y = img_y - AERIAL_PAGE_BELOW_IMAGE_GAP
+    c.setFillColor(colors.HexColor("#1A1A1A"))
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(caption_x, cap_y, f"SITE: {lat:.4f}, {lng:.4f}")
+    if location_description:
+        c.setFont("Helvetica", 9)
+        c.setFillColor(colors.HexColor("#333333"))
+        c.drawString(caption_x, cap_y - 14.0, location_description)
+    c.setFont("Helvetica-Oblique", 8)
+    c.setFillColor(colors.HexColor("#555555"))
+    if corridor is not None:
+        disclaimer = (
+            f"Work zone ({corridor.work_zone_ft:,.0f} ft) shown in orange.  "
+            "Advance warning, taper, and buffer not depicted.  "
+            "Mapbox satellite imagery — for context only.  "
+            "Not a survey product.  Verify all field conditions on site."
+        )
+    else:
+        disclaimer = (
+            "Mapbox satellite imagery.  For context only.  Not a survey product.  "
+            "Verify all field conditions on site."
+        )
+    c.drawString(caption_x, cap_y - 32.0, disclaimer)
 
-    caption = f"SITE: {lat:.4f}, {lng:.4f}"
-    if site_address:
-        caption += f"  ({site_address})"
-    c.setFont("Helvetica", 6)
-    c.drawString(img_x, img_y - 7.0, caption)
+    # 5. Corridor details box — optional.
+    if corridor is not None:
+        details_w = PAGE_W * AERIAL_PAGE_DETAILS_FRAC
+        details_x = (PAGE_W - details_w) / 2.0
+        details_y = MARGIN + AERIAL_PAGE_FOOTER_H
+        _draw_corridor_details_box(
+            c, corridor, details_x, details_y, details_w, AERIAL_PAGE_DETAILS_BLOCK_H
+        )
+
+    # 6. Footer.
+    _draw_aerial_page_footer(c, sheet_number, total_sheets)
 
 
 # ---------------------------------------------------------------------------
@@ -2306,6 +2792,114 @@ def render_plan_sheet(
     bearing_deg = getattr(params, "bearing_deg", None)
 
     c = canvas.Canvas(output_path, pagesize=(PAGE_W, PAGE_H))
+
+    # Decide upfront whether we'll add an aerial-context page.  If the
+    # fetch succeeds, the PDF becomes a 2-page document: page 1 is the
+    # schematic (full plan area, unchanged from the no-aerial layout)
+    # and page 2 is the dedicated aerial.  When coords are absent, no
+    # token is configured, or the fetch fails, we render a single-page
+    # PDF with the schematic alone.
+    #
+    # When the user supplies a bearing alongside the coords, we build
+    # a WorkCorridor so the aerial gets a polyline overlay tracing
+    # the work-zone segment plus a CORRIDOR DETAILS panel below the
+    # caption.  Without a bearing the aerial still renders (with a
+    # plain pin at the anchor) but loses the overlay and panel.
+    aerial_png: Path | None = None
+    aerial_corridor: WorkCorridor | None = None
+    bearing_deg = getattr(params, "bearing_deg", None)
+    if site_lat is not None and site_lng is not None and (site_lat or site_lng):
+        token = os.environ.get("MAPBOX_TOKEN", "")
+        if not token:
+            print("MAPBOX_TOKEN not set — skipping aerial page")
+        else:
+            if bearing_deg is not None:
+                try:
+                    aerial_corridor = build_corridor(
+                        lat=site_lat,
+                        lng=site_lng,
+                        bearing_deg=bearing_deg,
+                        speed_mph=params.speed_mph,
+                        work_zone_ft=params.work_zone_length_ft,
+                        closure_type=params.closure_type,
+                        road_type=params.road_type,
+                        lane_width_ft=params.lane_width_ft,
+                        shoulder_width_ft=params.shoulder_width_ft,
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    print(
+                        "[corridor] failed to build corridor for aerial overlay: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+                    aerial_corridor = None
+            aerial_png = _fetch_mapbox_aerial(site_lat, site_lng, token, corridor=aerial_corridor)
+
+    page1_total = "2" if aerial_png is not None else "1"
+
+    # ---- Page 1: schematic ------------------------------------------------
+    effective_project_name = (
+        getattr(params, "project_name", "") or project_name or "Untitled Project"
+    )
+    if effective_project_name == "Untitled Project" and project_name:
+        effective_project_name = project_name
+    location_description = getattr(params, "location_description", "") or site_address or ""
+
+    _render_schematic_page(
+        c,
+        placements,
+        params,
+        project_name=effective_project_name,
+        location_description=location_description,
+        sheet_number="1",
+        total_sheets=page1_total,
+        shoulder_width_ft=shoulder_width_ft,
+        title=title,
+        aerial_page="2" if aerial_png is not None else None,
+    )
+    _draw_sheet_border(c)
+    c.showPage()
+
+    # ---- Page 2: aerial context (optional) --------------------------------
+    if aerial_png is not None:
+        # Scale label is informational on page 2 (the aerial isn't to
+        # scale).  Reuse page 1's mapping just for the title-banner
+        # speed segment that's part of _draw_title_block.
+        scale_label = "N/A"
+        _render_aerial_page(
+            c,
+            aerial_png,
+            params,
+            project_name=effective_project_name,
+            location_description=location_description,
+            lat=site_lat or 0.0,
+            lng=site_lng or 0.0,
+            sheet_number="2",
+            total_sheets="2",
+            title=title,
+            scale_label=scale_label,
+            corridor=aerial_corridor,
+        )
+        _draw_sheet_border(c)
+        c.showPage()
+
+    c.save()
+    return output_path
+
+
+def _render_schematic_page(
+    c: canvas.Canvas,
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    project_name: str,
+    location_description: str,
+    sheet_number: str,
+    total_sheets: str,
+    shoulder_width_ft: float,
+    title: str,
+    aerial_page: str | None,
+) -> None:
+    """Render the schematic page (page 1)."""
+    bearing_deg = getattr(params, "bearing_deg", None)
 
     mapping = _make_x_mapping(placements, params, shoulder_width_ft)
     x_of = mapping["x_of"]
@@ -2361,20 +2955,19 @@ def render_plan_sheet(
         shoulder_width_ft,
         code_to_num,
     )
-    _draw_title_block(
-        c, title, effective_project_name, sheet_number, total_sheets, params, scale_short
-    )
+    _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_short)
     _draw_legend(c, placements, is_divided=params.is_divided, scale_note=scale_long)
     _draw_notes(c, params, shoulder_width_ft, schedule_order)
     _draw_structured_title_block(
         c,
         params,
-        project_name=effective_project_name,
+        project_name=project_name,
         location_description=location_description,
         sheet_number=sheet_number,
         total_sheets=total_sheets,
         scale_label=scale_short,
         bearing_deg=bearing_deg,
+        aerial_page=aerial_page,
     )
 
     # North-arrow rosette: pulled well inside the upper-right corner
@@ -2388,24 +2981,6 @@ def render_plan_sheet(
         y_center=PLAN_TOP - 36.0,
         bearing_deg=bearing_deg,
     )
-
-    if site_lat is not None and site_lng is not None and (site_lat or site_lng):
-        token = os.environ.get("MAPBOX_TOKEN", "")
-        if not token:
-            print("MAPBOX_TOKEN not set — skipping aerial embed")
-        else:
-            png = _fetch_mapbox_aerial(site_lat, site_lng, token)
-            if png is not None:
-                _draw_aerial_embed(c, png, site_lat, site_lng, site_address)
-
-    # Sheet border last so it sits above any device that strays into
-    # the page margin (devices clamp inside PLAN_TOP/PLAN_BOTTOM, but
-    # belt-and-suspenders for the off-road clamp logic).
-    _draw_sheet_border(c)
-
-    c.showPage()
-    c.save()
-    return output_path
 
 
 if __name__ == "__main__":
