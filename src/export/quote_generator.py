@@ -52,6 +52,23 @@ EQUIPMENT_DAILY_RATES: dict[DeviceType, float] = {
 _FLAGGER_NOTE = "See Labor Detail"
 _CHANNELIZER_OPTIONAL_NOTE = "Optional — quantities may be reduced per engineer discretion"
 
+_LEFT_ALIGN: Alignment = Alignment(horizontal="left", vertical="center")
+
+
+def _apply_left_align(sheet) -> None:
+    """Left-align every populated cell on ``sheet``.
+
+    Excel right-aligns numbers and left-aligns text by default; this
+    forces a consistent visual alignment across columns.  Bold/fill
+    on header cells is preserved (alignment is independent of font).
+    """
+    for row in sheet.iter_rows(
+        min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column
+    ):
+        for cell in row:
+            cell.alignment = _LEFT_ALIGN
+
+
 # Standard traffic-control shift length per Colorado field practice — 8 hr
 # work + 2 hr mobilization/demob = 10 hr billed.
 _FLAGGER_HOURS_PER_DAY: float = 10.0
@@ -652,6 +669,9 @@ def generate_quote(
     )
     _populate_delivery_sheet(delivery_sheet, delivery_lines)
     _populate_terms_sheet(terms_sheet)
+
+    for sheet in workbook.worksheets:
+        _apply_left_align(sheet)
 
     workbook.save(output_path)
     return output_path, breakdown

@@ -26,6 +26,22 @@ _HEADER_FILL: PatternFill = PatternFill(
     fill_type="solid", start_color="FFD9D9D9", end_color="FFD9D9D9"
 )
 _HEADER_FONT: Font = Font(bold=True)
+_LEFT_ALIGN: Alignment = Alignment(horizontal="left", vertical="center")
+
+
+def _apply_left_align(sheet) -> None:
+    """Left-align every populated cell on ``sheet``.
+
+    Excel right-aligns numbers and left-aligns text by default; this
+    forces a consistent visual alignment across columns.  Bold/fill
+    on header cells is preserved (alignment is independent of font).
+    """
+    for row in sheet.iter_rows(
+        min_row=1, max_row=sheet.max_row, min_col=1, max_col=sheet.max_column
+    ):
+        for cell in row:
+            cell.alignment = _LEFT_ALIGN
+
 
 _COLUMN_WIDTHS: dict[str, int] = {
     "A": 8,  # Item #
@@ -41,7 +57,7 @@ _DEVICE_LIST_HEADERS: tuple[str, ...] = (
     "Item #",
     "Device Type",
     "Description",
-    "CDOT Pay Item",
+    "CDOT Pay Item #",
     "Unit",
     "Quantity",
     "Notes",
@@ -49,6 +65,10 @@ _DEVICE_LIST_HEADERS: tuple[str, ...] = (
 
 _SIGN_GENERIC_NOTE: str = (
     "Unit is EACH for V1; CDOT Spec 630 bills by SF — convert when sign sizes are known."
+)
+_BARRICADE_TYPE_II_NOTE: str = (
+    "Unit is EACH for V1; CDOT Spec 630 bills Type I/II under Construction "
+    "Traffic Sign (Special) by SF — convert when panel dimensions are known."
 )
 _CHANNELIZER_OPTIONAL_NOTE: str = (
     "Optional — apply probability weight as appropriate per engineer discretion."
@@ -75,7 +95,7 @@ def _row_for(
 ) -> tuple[int, str, str, str, str, int, str]:
     """Build a single Device-List row tuple in column order."""
     spec = DEVICE_CATALOG[device_type]
-    pay_item = spec.cdot_pay_item or "TODO"
+    pay_item_number = spec.cdot_pay_item_number or "TODO"
 
     if device_type == DeviceType.SIGN_GENERIC:
         if label is None:
@@ -87,13 +107,18 @@ def _row_for(
             type_label = "SIGN_GENERIC"
         unit = "EACH"  # V1 override; catalog says SF.
         notes = _SIGN_GENERIC_NOTE
+    elif device_type == DeviceType.BARRICADE_TYPE_II:
+        description = spec.description
+        type_label = device_type.value
+        unit = "EACH"  # V1 override; catalog says SF per Table 630-7 footnote.
+        notes = _BARRICADE_TYPE_II_NOTE
     else:
         description = spec.description
         type_label = device_type.value
         unit = spec.unit
         notes = _CHANNELIZER_OPTIONAL_NOTE if device_type == DeviceType.CHANNELIZER_OPTIONAL else ""
 
-    return (item_number, type_label, description, pay_item, unit, quantity, notes)
+    return (item_number, type_label, description, pay_item_number, unit, quantity, notes)
 
 
 def _populate_device_list_sheet(
@@ -110,7 +135,6 @@ def _populate_device_list_sheet(
     for cell in header_row:
         cell.font = _HEADER_FONT
         cell.fill = _HEADER_FILL
-        cell.alignment = Alignment(horizontal="center", vertical="center")
 
     counts = Counter(_row_key(p) for p in placements)
     # Sort: device_type alphabetically by enum value, then label
@@ -154,7 +178,6 @@ def _populate_summary_sheet(
     for cell in header_row:
         cell.font = _HEADER_FONT
         cell.fill = _HEADER_FILL
-        cell.alignment = Alignment(horizontal="center", vertical="center")
 
     for label, value in rows:
         sheet.append((label, value))
@@ -174,6 +197,8 @@ def export_device_list(
     aggregated = _populate_device_list_sheet(device_sheet, placements)
     summary_sheet = workbook.create_sheet("Summary")
     _populate_summary_sheet(summary_sheet, placements, params, aggregated)
+    for sheet in workbook.worksheets:
+        _apply_left_align(sheet)
     workbook.save(output_path)
     return output_path
 

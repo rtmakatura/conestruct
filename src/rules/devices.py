@@ -6,9 +6,16 @@ a string enum (``DeviceType``) and a catalog of immutable specifications
 exporter, and the plan-sheet renderer — consume this module to ask
 "how does device X behave?" without re-encoding taxonomy details.
 
-Authoritative sources:
-  - ``skills/mutcd-symbols/SKILL.md`` (15-class taxonomy with physical specs)
-  - CDOT Standard Specifications Section 630 (pay item names, numbers, units)
+Authoritative sources for the CDOT pay-item fields:
+  - Pay item NAMES and units: CDOT 2023 Standard Specifications, Section 630
+    (Construction Zone Traffic Control), subsection 630.18 (Basis of Payment).
+  - Pay item NUMBERS: CDOT EEMA Master Item Code Book, Spec Year 05, dated
+    2024-02-09.  CDOT keeps the numeric ``630-XXXXX`` bid-item codes current
+    in EEMA independently of spec-book reissues; the codes apply to projects
+    bid under the 2023 spec book.
+
+See ``docs/cdot_pay_items.md`` for the full mapping reference, ambiguous
+mappings, and subsidiary-item handling.
 """
 
 from __future__ import annotations
@@ -58,16 +65,22 @@ class DeviceSpec:
         device_type: The enum member this spec describes.
         description: One-line plain-English description.
         unit: CDOT pay item unit (EACH, LF, SF, HOUR, ...).
-        cdot_pay_item: CDOT Section 630 pay item name, or None if not yet
-            verified against the Spec Book.
-        cdot_pay_item_number: CDOT pay item number (e.g., "630-80220"), or
-            None if not yet verified.
+        cdot_pay_item: CDOT Section 630.18 pay item name (verbatim wording
+            from the 2023 Spec Book), or None for subsidiary items.
+        cdot_pay_item_number: CDOT bid-item number from the EEMA Item Code
+            Book (e.g., "630-80380"), or the literal string "subsidiary"
+            for devices that have no standalone pay item.
         is_channelizer: True for devices placed at computed taper/tangent
             spacing (cone, drum, tubular marker, optional channelizer).
         is_sign: True for sign devices placed at advance warning positions.
         is_drawn: True if the device has a sprite on the plan sheet PDF.
         sprite_filename: Filename of the device sprite under ``assets/sprites/``,
             or None until sprites are extracted.
+        spec_reference: Section 630 subsection citation (e.g., "§630.18"),
+            or None if not applicable.
+        field_notes: Free-text notes about ambiguous mappings, subsidiary
+            relationships, or V1 simplifications.  None for direct mappings
+            with no caveats.
     """
 
     device_type: DeviceType
@@ -79,204 +92,294 @@ class DeviceSpec:
     is_sign: bool
     is_drawn: bool
     sprite_filename: str | None
+    spec_reference: str | None = None
+    field_notes: str | None = None
 
 
 # ---------------------------------------------------------------------------
 # Device catalog
 # ---------------------------------------------------------------------------
 
-# Source for unit assignments: CDOT Standard Specifications Section 630.
-# Pay item names and numbers are TODO until verified against the 2023 Spec Book.
-# Sprite filenames are None until sprites are extracted from the labeled
-# WSDOT dataset.
-
 DEVICE_CATALOG: dict[DeviceType, DeviceSpec] = {
     DeviceType.CONE: DeviceSpec(
         device_type=DeviceType.CONE,
         description="28- or 36-inch traffic cone with retroreflective bands",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Traffic Cone",
+        cdot_pay_item_number="630-80380",
         is_channelizer=True,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.05, §630.18",
     ),
     DeviceType.DRUM: DeviceSpec(
         device_type=DeviceType.DRUM,
         description="36-inch channelizing drum with alternating orange/white stripes",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Drum Channelizing Device",
+        cdot_pay_item_number="630-80360",
         is_channelizer=True,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.17, §630.18",
     ),
     DeviceType.TUBULAR_MARKER: DeviceSpec(
         device_type=DeviceType.TUBULAR_MARKER,
         description="36-inch flexible tubular marker (delineator) on a weighted base",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Tubular Marker",
+        cdot_pay_item_number="630-80384",
         is_channelizer=True,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.05, §630.18",
     ),
+    # Judgment call: CDOT does not separately enumerate Type I/II barricades —
+    # only Type 3 (630-80331 to 80338).  Per Table 630-7 footnote, Type 1 and
+    # Type 2 barricades are billed under "Construction Traffic Sign (Special)"
+    # (SF).  Unit is therefore SF, not EACH; placement count is converted at
+    # billing time once panel sizes are known.
     DeviceType.BARRICADE_TYPE_II: DeviceSpec(
         device_type=DeviceType.BARRICADE_TYPE_II,
         description="Type II barricade — two horizontal striped rails, 36–42 in tall",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="SF",
+        cdot_pay_item="Construction Traffic Sign (Special)",
+        cdot_pay_item_number="630-80344",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="Table 630-7 footnote, §630.18",
+        field_notes=(
+            "CDOT bills Type I/II barricades under Construction Traffic Sign "
+            "(Special) by SF (Table 630-7 footnote).  V1 placement count is "
+            "an integer count of barricades — convert to SF when panel "
+            "dimensions are known."
+        ),
     ),
+    # Judgment call: CDOT splits Type 3 barricades by length+mount (F=fixed,
+    # M=movable; A/B/C/D = 4/8/12/16-ft rail lengths) across 630-80331 to
+    # 630-80338.  Defaulting to F-B (8 ft fixed) as the most common selection
+    # for typical full-roadway closures.  Field engineer swaps to the correct
+    # variant per the project's MHT.  See docs/cdot_pay_items.md for the
+    # full list of alternatives.
     DeviceType.BARRICADE_TYPE_III: DeviceSpec(
         device_type=DeviceType.BARRICADE_TYPE_III,
         description="Type III barricade — three horizontal striped rails, full lane width",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Barricade (Type 3 F-B) (Temporary)",
+        cdot_pay_item_number="630-80332",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.18",
+        field_notes=(
+            "Defaults to F-B (8 ft fixed).  Alternates: F-A/F-C/F-D "
+            "(4/12/16 ft fixed, 630-80331/80333/80334), M-A/M-B/M-C/M-D "
+            "(movable, 630-80335 to 80338)."
+        ),
     ),
     DeviceType.LONGITUDINAL_CHANNELIZER: DeviceSpec(
         device_type=DeviceType.LONGITUDINAL_CHANNELIZER,
         description="Continuous longitudinal channelizing device (water-filled or plastic)",
-        unit="LF",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="LF",
+        cdot_pay_item="Portable Water Filled Barrier (Temporary)",
+        cdot_pay_item_number="630-80377",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.18",
     ),
+    # Judgment call: A/B/C are arrow-panel size tiers per Table 630-2
+    # (24x48 / 30x60 / 48x96).  Defaulting to C Type (freeway, 1-mile
+    # legibility) since V1's enabled scenarios are shoulder closures on
+    # freeways and expressways.  Switch to B Type (630-80357) when urban
+    # arterial scenarios are added.
     DeviceType.ARROW_BOARD: DeviceSpec(
         device_type=DeviceType.ARROW_BOARD,
         description="Trailer-mounted flashing arrow board (Type A, B, or C)",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Advance Warning Flashing or Sequencing Arrow Panel (C Type)",
+        cdot_pay_item_number="630-80358",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.03 Table 630-2, §630.18",
+        field_notes=(
+            "C Type defaults for freeway/expressway scenarios.  B Type "
+            "(630-80357) for urban arterials; A Type (630-80356) for "
+            "low-speed work."
+        ),
     ),
     DeviceType.PCMS: DeviceSpec(
         device_type=DeviceType.PCMS,
         description="Portable Changeable Message Sign (full-size or mPCMS)",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Portable Message Sign Panel",
+        cdot_pay_item_number="630-80355",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.02, §630.18",
     ),
     DeviceType.TRUCK_MOUNTED_ATTENUATOR: DeviceSpec(
         device_type=DeviceType.TRUCK_MOUNTED_ATTENUATOR,
         description="Shadow vehicle with NCHRP 350 / MASH-rated truck-mounted attenuator",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Impact Attenuator (Truck Mounted Attenuator) (Temporary)",
+        cdot_pay_item_number="630-85040",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.18",
     ),
     DeviceType.TEMPORARY_BARRIER: DeviceSpec(
         device_type=DeviceType.TEMPORARY_BARRIER,
         description="Temporary concrete or steel barrier (F-shape, Type 2, zipper, etc.)",
-        unit="LF",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="LF",
+        cdot_pay_item="Barrier (Temporary)",
+        cdot_pay_item_number="630-80370",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.08, §630.18",
+        field_notes=(
+            "Generic LF item.  Operation-specific variants exist: "
+            "630-80372 (Furnish and Install), 630-80373 (Remove), "
+            "630-80375 (Install Only)."
+        ),
     ),
     DeviceType.FLAGGER_STATION: DeviceSpec(
         device_type=DeviceType.FLAGGER_STATION,
         description="Flagger position with STOP/SLOW paddle and PPE",
-        unit="HOUR",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="HOUR",
+        cdot_pay_item="Flagging",
+        cdot_pay_item_number="630-00000",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.14, §630.18",
     ),
     DeviceType.TEMPORARY_SIGNAL: DeviceSpec(
         device_type=DeviceType.TEMPORARY_SIGNAL,
         description="Portable traffic signal (standard, compact, AFAD, or RDTS)",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Traffic Signal (Temporary)",
+        cdot_pay_item_number="630-86810",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.04, §630.18",
+        field_notes=(
+            "EACH variant.  LS (630-86801) and DAY (630-86802) variants "
+            "also exist for lump-sum or duration-based contracts."
+        ),
     ),
     DeviceType.SIGN_GENERIC: DeviceSpec(
         device_type=DeviceType.SIGN_GENERIC,
         description="Generic construction sign (W-, R-, or G-series); MUTCD code per scenario",
-        unit="SF",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="SF",
+        cdot_pay_item="Construction Traffic Sign (Special)",
+        cdot_pay_item_number="630-80344",
         is_channelizer=False,
         is_sign=True,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.02, §630.18",
+        field_notes=(
+            "Stocked panel sizes A/B/C (630-80341/80342/80343, EACH) "
+            "available when panel size is known.  V1 export overrides "
+            "unit to EACH at row-build time."
+        ),
     ),
+    # Judgment call: M4-9 series detour signs are typically <= 9 SF, which
+    # fits CDOT's Panel Size A (Table 630-7) at 630-80341 (EACH).  Alternative:
+    # 630-80344 (Special, SF) when an unusual layout is required.
     DeviceType.DETOUR_MARKER: DeviceSpec(
         device_type=DeviceType.DETOUR_MARKER,
         description="M4-9-series detour directional sign with arrow",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Construction Traffic Sign (Panel Size A)",
+        cdot_pay_item_number="630-80341",
         is_channelizer=False,
         is_sign=True,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="Table 630-7, §630.18",
     ),
+    # Judgment call: "Optional channelizer" is a tool-internal semantic
+    # (engineer's discretion); CDOT has no direct equivalent.  Mapping to
+    # "Channelizing Device (Fixed)" (630-80391) because §630.06 formally
+    # defines a 36-in fixed channelizing device that matches the typical
+    # field deployment.  Alternative: 630-80390 "Channelizing Device
+    # (Special)" when the contractor proposes a non-standard device.
     DeviceType.CHANNELIZER_OPTIONAL: DeviceSpec(
         device_type=DeviceType.CHANNELIZER_OPTIONAL,
         description="Generic optional-deployment channelizing device (contractor's choice)",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
-        cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        unit="EACH",
+        cdot_pay_item="Channelizing Device (Fixed)",
+        cdot_pay_item_number="630-80391",
         is_channelizer=True,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.06, §630.18",
     ),
+    # Subsidiary: §630.18 states "Cost of electrical power…for all temporary
+    # lighting or warning devices shown on the TCP will not be paid for
+    # separately but will be considered subsidiary to the item," and
+    # barricade warning lights are explicitly furnished as part of the
+    # barricade item.  No standalone Type C warning light pay item exists.
+    # Bundled-light variants 630-80363/80364 (Drum with Flashing/Steady-Burn
+    # Light) are separate items with the light packaged in.
     DeviceType.WARNING_LIGHT_TYPE_C: DeviceSpec(
         device_type=DeviceType.WARNING_LIGHT_TYPE_C,
         description="Type C steady-burn warning light, attached to channelizing device",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
+        unit="EACH",
         cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        cdot_pay_item_number="subsidiary",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.18",
+        field_notes=(
+            "Subsidiary to the channelizing device or barricade it attaches "
+            "to.  When a packaged item is preferred, use 630-80364 "
+            "(Drum Channelizing Device (With Light) (Steady Burn))."
+        ),
     ),
+    # Subsidiary: no Section 630 standalone pay item exists for portable
+    # light plants.  When separately compensated, billed under a project
+    # special provision ("Revision of Section 630, Portable Light Plant").
     DeviceType.PORTABLE_LIGHT_PLANT: DeviceSpec(
         device_type=DeviceType.PORTABLE_LIGHT_PLANT,
         description="Portable light plant for work area illumination",
-        unit="EACH",  # CDOT Sec 630 (TODO: confirm pay item name/number)
+        unit="EACH",
         cdot_pay_item=None,
-        cdot_pay_item_number=None,
+        cdot_pay_item_number="subsidiary",
         is_channelizer=False,
         is_sign=False,
         is_drawn=True,
         sprite_filename=None,
+        spec_reference="§630.18",
+        field_notes=(
+            "No standalone CDOT Section 630 item.  When separately paid, "
+            "billed via project special provision (Revision of Section 630, "
+            "Portable Light Plant); otherwise subsidiary to the parent "
+            "traffic control management item."
+        ),
     ),
 }
 

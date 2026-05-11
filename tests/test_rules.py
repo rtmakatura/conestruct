@@ -311,6 +311,50 @@ def test_device_units() -> None:
     assert DEVICE_CATALOG[DeviceType.SIGN_GENERIC].unit == "SF"
 
 
+def test_no_unverified_pay_items() -> None:
+    """Regression guard: every catalog entry has a verified pay item number.
+
+    No entry may carry the literal "TODO" or None for cdot_pay_item_number
+    after the 2026-05 CDOT Section 630 verification pass.  Subsidiary items
+    carry the literal "subsidiary" string and are explicitly allowed.
+    See ``docs/cdot_pay_items.md`` for the mapping and reasoning.
+    """
+    for device_type, spec in DEVICE_CATALOG.items():
+        assert (
+            spec.cdot_pay_item_number is not None
+        ), f"{device_type.value}: cdot_pay_item_number is None"
+        assert (
+            spec.cdot_pay_item_number != "TODO"
+        ), f"{device_type.value}: cdot_pay_item_number is still 'TODO'"
+
+
+def test_pay_item_number_format() -> None:
+    """Every non-subsidiary pay item number matches the CDOT 630-XXXXX format."""
+    import re
+
+    pattern = re.compile(r"^630-\d{5}$")
+    for device_type, spec in DEVICE_CATALOG.items():
+        number = spec.cdot_pay_item_number
+        if number == "subsidiary":
+            assert (
+                spec.cdot_pay_item is None
+            ), f"{device_type.value}: subsidiary items must have cdot_pay_item=None"
+            continue
+        assert pattern.match(
+            number or ""
+        ), f"{device_type.value}: pay item number {number!r} does not match 630-XXXXX format"
+
+
+def test_pay_item_name_present_when_not_subsidiary() -> None:
+    """Non-subsidiary entries must carry the verbatim CDOT §630.18 name."""
+    for device_type, spec in DEVICE_CATALOG.items():
+        if spec.cdot_pay_item_number == "subsidiary":
+            continue
+        assert (
+            spec.cdot_pay_item
+        ), f"{device_type.value}: non-subsidiary entry missing cdot_pay_item name"
+
+
 # ===========================================================================
 # Section 4 — Layout validators
 # ===========================================================================
