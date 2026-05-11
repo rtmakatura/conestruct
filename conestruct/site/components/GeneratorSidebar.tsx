@@ -22,6 +22,10 @@ import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { SiteConditionsField } from "./SiteConditionsField";
 import { CorridorVerifyCard } from "./CorridorVerifyCard";
+import {
+  LocationPickerModal,
+  type LocationPickerResult,
+} from "./LocationPickerModal";
 
 type ClassifyStatus =
   | { state: "idle" }
@@ -51,6 +55,7 @@ export function GeneratorSidebar({
   const [classify, setClassify] = useState<ClassifyStatus>({ state: "idle" });
   const [geo, setGeo] = useState<GeocodeStatus>({ state: "idle" });
   const [lockingIn, setLockingIn] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   // Corridor preview inputs.  These live in component state for v1 — the
   // backend doesn't yet accept a corridor, so we don't persist them on
   // ScenarioMeta.  ``workZoneFt`` defaults to the scenario's ``workLen``
@@ -168,7 +173,26 @@ export function GeneratorSidebar({
     setScenario({ ...scenario, meta } as Scenario);
   };
 
+  const onPickerSave = (r: LocationPickerResult) => {
+    const cur = scenarioRef.current;
+    setScenario({
+      ...cur,
+      meta: {
+        ...cur.meta,
+        address: r.address || cur.meta.address,
+        lat: r.lat,
+        lng: r.lng,
+        bearingDeg: r.bearingDeg,
+      },
+    } as Scenario);
+    // Surface that the resolved coords came from the picker so the
+    // existing "Resolved: ..." caption under the address field updates.
+    setGeo({ state: "resolved", lat: r.lat, lng: r.lng });
+    setPickerOpen(false);
+  };
+
   return (
+    <>
     <aside className="bg-[color:var(--canvas-tint)] border-r border-[color:var(--rule)] md:sticky md:top-[52px] md:self-start md:h-[calc(100vh-52px)] md:overflow-y-auto max-md:border-r-0 max-md:border-b">
       <div className="flex justify-between items-baseline px-6 pt-6 pb-3">
         <h2 className="text-[15px] font-semibold text-white m-0 tracking-[-0.005em]">
@@ -186,6 +210,7 @@ export function GeneratorSidebar({
         geo={geo}
         lockingIn={lockingIn}
         onLockIn={onLockIn}
+        onOpenPicker={() => setPickerOpen(true)}
       />
 
       {classify.state === "detected" && (
@@ -257,6 +282,20 @@ export function GeneratorSidebar({
         </div>
       </div>
     </aside>
+    {pickerOpen && (
+      <LocationPickerModal
+        open={pickerOpen}
+        initial={{
+          address: scenario.meta.address,
+          lat: scenario.meta.lat,
+          lng: scenario.meta.lng,
+          bearingDeg: scenario.meta.bearingDeg,
+        }}
+        onCancel={() => setPickerOpen(false)}
+        onSave={onPickerSave}
+      />
+    )}
+    </>
   );
 }
 
@@ -616,6 +655,7 @@ function LocationGroup({
   geo,
   lockingIn,
   onLockIn,
+  onOpenPicker,
 }: {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
@@ -623,6 +663,7 @@ function LocationGroup({
   geo: GeocodeStatus;
   lockingIn: boolean;
   onLockIn: () => void;
+  onOpenPicker: () => void;
 }) {
   const meta = scenario.meta;
   const set = <K extends keyof ScenarioMeta>(key: K, value: ScenarioMeta[K]) =>
@@ -657,13 +698,32 @@ function LocationGroup({
 
       <Field>
         <LabelRow>Address / intersection</LabelRow>
-        <input
-          type="text"
-          className="field-input"
-          value={meta.address}
-          placeholder="US-85 & Bromley Ln, Brighton, CO"
-          onChange={(e) => set("address", e.target.value)}
-        />
+        <div className="flex gap-2">
+          <input
+            type="text"
+            className="field-input flex-1"
+            value={meta.address}
+            placeholder="US-85 & Bromley Ln, Brighton, CO"
+            onChange={(e) => set("address", e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={onOpenPicker}
+            title="Pick location on a map"
+            className="border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 hover:bg-[color:var(--cyan)] hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap"
+          >
+            <svg width="11" height="13" viewBox="0 0 12 14" fill="none">
+              <path
+                d="M6 1C3.5 1 1.5 3 1.5 5.5C1.5 9 6 13 6 13C6 13 10.5 9 10.5 5.5C10.5 3 8.5 1 6 1Z"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+              />
+              <circle cx="6" cy="5.5" r="1.5" fill="currentColor" />
+            </svg>
+            Pick on Map
+          </button>
+        </div>
         {geo.state !== "idle" && (
           <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
             {geo.state === "resolving" && <span>Resolving address…</span>}
@@ -720,11 +780,6 @@ function LocationGroup({
             }
           }}
         />
-        <div className="mt-1 font-mono text-[10px] text-[color:var(--ink-on-dark-faint)]">
-          Compass direction the road runs, in degrees clockwise from north
-          (0 = N, 90 = E, 180 = S, 270 = W). E.g., a north-running stretch
-          of I-25 ≈ 0°. Leave blank to default to ↑ = North.
-        </div>
       </Field>
 
       <button

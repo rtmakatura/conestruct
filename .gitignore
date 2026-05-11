@@ -46,3 +46,5 @@ Thumbs.db
 # Standalone TA-* render harnesses kept locally for visual debugging;
 # the canonical harness lives at scripts/render_test_pdfs.py.
 /render_ta*.py
+# One-off Next.js harness scripts (e.g., verify_road_bearing.mjs).
+conestruct/site/scripts/
