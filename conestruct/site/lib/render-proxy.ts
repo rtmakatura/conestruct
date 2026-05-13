@@ -62,6 +62,15 @@ export async function renderScenarioToResponse(
   if (!upstream.ok) {
     const detail = await upstream.text().catch(() => "");
     console.error(`render upstream ${upstream.status}`, detail);
+    // 400 = validation error (e.g., work zone shorter than required taper).
+    // Pass the structured detail through so the UI can show the user *why*
+    // their config was rejected, instead of a generic "Render failed".
+    if (upstream.status === 400) {
+      return new Response(detail || "Invalid scenario", {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      });
+    }
     return new Response("Render failed", { status: 502 });
   }
 

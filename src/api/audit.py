@@ -29,7 +29,7 @@ from src.rules.tables import (
     COLORADO_OVERRIDES,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
 
 _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
@@ -434,6 +434,33 @@ def build_audit_trail(
     else:
         corridor_validation = {"checked": False, "warnings": []}
 
+    # ------------------------------------------------------------------
+    # 9. Geometry validation (work zone vs taper / buffer)
+    # ------------------------------------------------------------------
+    # Pre-generation sanity check.  When the work zone is shorter than
+    # the required taper, the layout is geometrically impossible; the
+    # render API blocks plan generation on this rule.  The buffer-vs-
+    # work-zone soft rule is informational.
+    geo_violations = validate_corridor_geometry(params)
+    geo_section = {
+        "speed_mph": speed,
+        "work_zone_ft": wz_len,
+        "taper_ft": L_required,
+        "taper_label": L_required_label,
+        "buffer_ft": buf,
+        "violations": [
+            {
+                "rule_id": v.rule_id,
+                "severity": v.severity,
+                "message": v.message,
+                "mutcd_section": v.mutcd_section,
+            }
+            for v in geo_violations
+        ],
+        "all_pass": all(v.severity != "error" for v in geo_violations),
+        "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+    }
+
     return {
         "taper": taper_section,
         "buffer": buffer_section,
@@ -443,4 +470,5 @@ def build_audit_trail(
         "case": case_section,
         "flagger": flagger_section,
         "corridor_validation": corridor_validation,
+        "geometry_validation": geo_section,
     }

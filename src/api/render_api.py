@@ -41,6 +41,7 @@ from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_site_conditions
+from src.rules.validators import validate_corridor_geometry
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
 
@@ -132,8 +133,37 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
     Night adjustments fire after site adjustments so warning lights
     decorate every taper drum — including any drums added by an earlier
     site-adjustment step.
+
+    Before invoking the generator, run :func:`validate_corridor_geometry`
+    against the scenario params.  A hard violation (e.g., a work zone
+    shorter than the merging taper at the posted speed) means no valid
+    layout exists; raise HTTP 400 so the user gets a clear error rather
+    than a nonsensical PDF.  Soft warnings pass through silently — the
+    audit trail surfaces them on the verification side.
     """
     params, generator, kwargs = scenario_to_call(scenario)
+    geo_violations = validate_corridor_geometry(params)
+    geo_errors = [v for v in geo_violations if v.severity == "error"]
+    if geo_errors:
+        # Surface every error message so the user sees the full picture
+        # if more than one geometry rule fires.  ``detail`` is structured
+        # so the Next.js proxy can render the rule_id + message cleanly.
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "geometry_validation_failed",
+                "message": " ".join(v.message for v in geo_errors),
+                "violations": [
+                    {
+                        "rule_id": v.rule_id,
+                        "severity": v.severity,
+                        "message": v.message,
+                        "mutcd_section": v.mutcd_section,
+                    }
+                    for v in geo_violations
+                ],
+            },
+        )
     placements = generator(params, **kwargs)
     placements, site_records = apply_site_adjustments(
         placements, params, scenario.meta.siteConditions or {}

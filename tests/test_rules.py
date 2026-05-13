@@ -39,6 +39,7 @@ from src.rules.tables import (
 from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
+    validate_corridor_geometry,
     validate_layout,
 )
 
@@ -1205,3 +1206,117 @@ def test_description_for_keeps_xxx_placeholder_for_substitution() -> None:
 
     assert "XXX" in description_for("W20-2")
     assert "XXX" in description_for("G20-1")
+
+
+# ===========================================================================
+# Section 5 — Corridor geometry validator (pre-generation sanity check)
+# ===========================================================================
+
+
+def _i25_mead_shoulder_params(work_zone_ft: float = 200.0) -> ScenarioParams:
+    """ScenarioParams matching the I-25 Mead demo test that surfaced the bug.
+
+    75 mph, freeway, divided, shoulder closure, 10 ft shoulder.  At this
+    speed shoulder taper L/3 = (10 × 75) / 3 = 250 ft and buffer = 820 ft,
+    so a 200 ft work zone trips both the hard taper rule and the soft
+    buffer rule.
+    """
+    return ScenarioParams(
+        speed_mph=75,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=work_zone_ft,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+
+def test_geometry_validator_blocks_work_zone_shorter_than_taper() -> None:
+    """The I-25 Mead demo case (200 ft work zone on 75 mph shoulder)
+    must fire WORK_ZONE_SHORTER_THAN_TAPER as a hard error."""
+    params = _i25_mead_shoulder_params(work_zone_ft=200.0)
+    violations = validate_corridor_geometry(params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert any(
+        v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER" for v in errors
+    ), f"Expected blocking error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    # Error message names the actual taper length so the user can act on it.
+    msg = next(v.message for v in errors if v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER")
+    assert "250 ft" in msg, msg
+    assert "75 mph" in msg, msg
+
+
+def test_geometry_validator_warns_work_zone_short_vs_buffer() -> None:
+    """200 ft work zone against an 820 ft buffer is well under buffer/2
+    → soft warning fires (not blocking)."""
+    params = _i25_mead_shoulder_params(work_zone_ft=200.0)
+    violations = validate_corridor_geometry(params)
+    warnings = [v for v in violations if v.severity == "warning"]
+    assert any(
+        v.rule_id == "WORK_ZONE_SHORT_VS_BUFFER" for v in warnings
+    ), f"Expected soft buffer warning, got: {[(v.severity, v.rule_id) for v in violations]}"
+
+
+def test_geometry_validator_passes_when_work_zone_matches_taper_exactly() -> None:
+    """A work zone exactly equal to the taper length is the boundary
+    case — must not fire the hard rule (clears the >=L floor)."""
+    params = _i25_mead_shoulder_params(work_zone_ft=250.0)
+    violations = validate_corridor_geometry(params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert errors == [], f"Boundary work zone fired error: {[v.rule_id for v in errors]}"
+
+
+def test_geometry_validator_passes_reasonable_corridor() -> None:
+    """Generous work zone (1500 ft on 75 mph shoulder) clears both rules.
+
+    Buffer at 75 mph = 820 ft → half is 410 ft, 1500 ft is well above.
+    """
+    params = _i25_mead_shoulder_params(work_zone_ft=1500.0)
+    violations = validate_corridor_geometry(params)
+    assert violations == [], "Reasonable corridor produced violations: " + ", ".join(
+        f"{v.severity} {v.rule_id}" for v in violations
+    )
+
+
+def test_geometry_validator_lane_closure_uses_full_taper() -> None:
+    """Lane closures use the full merging taper L, not L/3.
+
+    At 45 mph with 12 ft lanes: L = W × S = 540 ft.  A 400 ft work zone
+    is short of 540 → hard error fires citing the full taper.
+    """
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=4,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=400.0,
+        lane_width_ft=12.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    violations = validate_corridor_geometry(params)
+    errors = [v for v in violations if v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER"]
+    assert errors, "Lane-closure short work zone must trip the taper rule"
+    assert "540 ft" in errors[0].message
+    assert "merging taper" in errors[0].message.lower()
+
+
+def test_geometry_validator_exempts_mobile_and_off_road() -> None:
+    """Mobile (moving TMA) and off-road (work beyond shoulder) closures
+    don't have a fixed merging taper — geometry rules must not fire."""
+    for closure_type in ("mobile", "off_road"):
+        params = ScenarioParams(
+            speed_mph=75,
+            num_lanes=2,
+            closure_type=closure_type,
+            road_type="freeway",
+            work_zone_length_ft=50.0,  # absurdly short — would fail if checked
+            is_divided=True,
+            jurisdiction="CDOT",
+        )
+        violations = validate_corridor_geometry(params)
+        assert violations == [], f"closure_type={closure_type} should be exempt, got: " + ", ".join(
+            v.rule_id for v in violations
+        )

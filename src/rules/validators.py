@@ -962,6 +962,83 @@ def validate_flagger_stations(
 
 
 # ---------------------------------------------------------------------------
+# Pre-generation: corridor geometry sanity check
+# ---------------------------------------------------------------------------
+
+
+def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
+    """Pre-flight check: are the corridor dimensions physically reasonable?
+
+    Runs against ``ScenarioParams`` alone — no placements needed — so the
+    render pipeline can short-circuit a geometrically nonsensical request
+    before invoking the generator.
+
+    Hard rule (``WORK_ZONE_SHORTER_THAN_TAPER`` / error): the work zone
+    must be at least as long as the required merging taper.  A taper
+    longer than the work zone means traffic has fully transitioned into
+    the closed configuration before reaching the work area, which is
+    geometrically impossible to lay out — the closure would either
+    overlap the taper or extend past the actual work.  Surfaces as a
+    blocking error in the render API; the user must lengthen the work
+    zone or lower the speed.
+
+    Soft rule (``WORK_ZONE_SHORT_VS_BUFFER`` / warning): the work zone
+    should not be dwarfed by the buffer.  When the buffer is more than
+    twice the work zone, the corridor reads as a buffer with a tiny work
+    area inside, which is usually a sign that the user mis-typed the
+    length.  Does not block — just warns.
+
+    Mobile and off-road closures are exempt: they use a moving TMA or
+    operate beyond the shoulder respectively, so a fixed merging taper
+    is not part of the geometry.
+    """
+    if params.closure_type in ("mobile", "off_road"):
+        return []
+
+    if params.closure_type == "shoulder":
+        taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
+    else:
+        taper_ft = taper_length(params.speed_mph, params.lane_width_ft)
+    buffer_ft = buffer_space(params.speed_mph)
+    work_zone_ft = params.work_zone_length_ft
+
+    taper_label = (
+        "shoulder taper (L/3)" if params.closure_type == "shoulder" else "merging taper (L)"
+    )
+    out: list[Violation] = []
+    if work_zone_ft < taper_ft:
+        out.append(
+            Violation(
+                rule_id="WORK_ZONE_SHORTER_THAN_TAPER",
+                severity="error",
+                message=(
+                    f"Work zone length ({work_zone_ft:.0f} ft) is shorter than the "
+                    f"required {taper_label} of {taper_ft:.0f} ft at "
+                    f"{params.speed_mph} mph. Increase the work zone to at least "
+                    f"{taper_ft:.0f} ft, or reduce the speed limit."
+                ),
+                mutcd_section="6C.08",
+                device_index=None,
+            )
+        )
+    if work_zone_ft < buffer_ft / 2.0:
+        out.append(
+            Violation(
+                rule_id="WORK_ZONE_SHORT_VS_BUFFER",
+                severity="warning",
+                message=(
+                    f"Work zone ({work_zone_ft:.0f} ft) is unusually short relative "
+                    f"to the required buffer space ({buffer_ft:.0f} ft) at "
+                    f"{params.speed_mph} mph. Verify this matches the actual job."
+                ),
+                mutcd_section="6C.06",
+                device_index=None,
+            )
+        )
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Top-level entry point
 # ---------------------------------------------------------------------------
 

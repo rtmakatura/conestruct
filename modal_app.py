@@ -3,8 +3,13 @@
 Deploy:
     modal deploy modal_app.py
 
-Set the shared secret first:
+Required secrets (create once per Modal workspace):
     modal secret create conestruct-render-secret RENDER_API_SECRET=<long-random-string>
+    modal secret create mapbox-token MAPBOX_TOKEN=<mapbox-public-token>
+
+The Mapbox token enables the page-2 aerial map on the rendered PDF
+(:func:`src.rendering.plan_sheet._fetch_mapbox_aerial`).  Without it,
+the renderer silently falls back to a single-page schematic.
 
 After deploy, Modal prints the public URL.  Wire that into the Next.js
 side as ``MODAL_RENDER_URL`` along with the matching
@@ -45,7 +50,10 @@ app = modal.App("conestruct-render")
 
 @app.function(
     image=image,
-    secrets=[modal.Secret.from_name("conestruct-render-secret")],
+    secrets=[
+        modal.Secret.from_name("conestruct-render-secret"),
+        modal.Secret.from_name("mapbox-token"),
+    ],
     timeout=120,
 )
 @modal.asgi_app()
