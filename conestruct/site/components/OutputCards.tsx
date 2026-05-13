@@ -107,6 +107,30 @@ function safeFilename(name: string | undefined, ext: string): string {
   return `${cleaned || "plan"}.${ext}`;
 }
 
+// Pull a user-facing message out of a 400 response body.  The render
+// service raises HTTPException(400, detail={"error": ..., "message":
+// "...", "violations": [...]}); FastAPI serialises that as
+// {"detail": {...}}.  Some validators raise with a string detail, in
+// which case we fall back to that.  Anything we can't parse becomes
+// the safe default "Invalid scenario".
+async function extractValidationMessage(res: Response): Promise<string> {
+  try {
+    const body = (await res.json()) as {
+      detail?: { message?: unknown } | string;
+    };
+    if (body.detail && typeof body.detail === "object") {
+      const m = body.detail.message;
+      if (typeof m === "string" && m.length > 0) return m;
+    }
+    if (typeof body.detail === "string" && body.detail.length > 0) {
+      return body.detail;
+    }
+  } catch {
+    // Body wasn't JSON — fall through to default.
+  }
+  return "Invalid scenario";
+}
+
 function OutputCard({
   ix,
   n,
@@ -134,7 +158,16 @@ function OutputCard({
         body: JSON.stringify({ scenario: mode.scenario }),
       });
       if (!res.ok) {
-        setErr(`Render failed (${res.status})`);
+        // 400 = structured validation error from the render service
+        // (e.g., work zone shorter than required taper).  Pull the
+        // user-facing message out of detail.message instead of showing
+        // a generic "Render failed (400)" — the message names the
+        // specific taper length / speed limit the user must satisfy.
+        if (res.status === 400) {
+          setErr(await extractValidationMessage(res));
+        } else {
+          setErr(`Render failed (${res.status})`);
+        }
         return;
       }
       const blob = await res.blob();
@@ -175,15 +208,22 @@ function OutputCard({
         </span>
       </div>
       {mode.kind === "public" ? (
-        <button
-          type="button"
-          onClick={onPublicDownload}
-          disabled={busy}
-          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors disabled:opacity-60"
-        >
-          {busy ? "Rendering…" : err ?? ctaLabel}
-          <span className="font-mono">↓</span>
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={onPublicDownload}
+            disabled={busy}
+            className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors disabled:opacity-60"
+          >
+            {busy ? "Rendering…" : err ? "Try again" : ctaLabel}
+            <span className="font-mono">↓</span>
+          </button>
+          {err && (
+            <div className="mt-2 text-[12px] leading-snug text-[#b94343] font-sans">
+              {err}
+            </div>
+          )}
+        </>
       ) : mode.planId ? (
         <a
           href={`/api/plans/${mode.planId}/${kind}`}

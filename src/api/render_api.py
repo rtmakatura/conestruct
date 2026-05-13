@@ -217,6 +217,11 @@ def render_pdf(scenario: Scenario) -> Response:
                 )
             ),
         )
+    except HTTPException:
+        # validate_corridor_geometry and other upstream code paths raise
+        # HTTPException with meaningful status codes + structured detail.
+        # Let those pass through unchanged so the proxy sees the real 400.
+        raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
@@ -240,6 +245,8 @@ def render_xlsx(scenario: Scenario) -> Response:
                 export_device_list(placements, params, output_path=str(path))
             ),
         )
+    except HTTPException:
+        raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
@@ -269,6 +276,8 @@ def render_markdown(scenario: Scenario) -> Response:
                 )
             ),
         )
+    except HTTPException:
+        raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
@@ -336,6 +345,8 @@ def render_quote(req: QuoteRequest) -> Response:
     _ensure_scenario_enabled(req.scenario)
     try:
         body, _ = _run_quote(req)
+    except HTTPException:
+        raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
@@ -355,6 +366,8 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
     _ensure_scenario_enabled(req.scenario)
     try:
         _, breakdown = _run_quote(req)
+    except HTTPException:
+        raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
