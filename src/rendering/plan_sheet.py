@@ -1742,8 +1742,9 @@ def _draw_structured_title_block(
     slack accruing at the bottom of the box when content is short.
 
     When ``bearing_deg`` is None the orientation caveat appears as an
-    ORIENTATION row in the STANDARDS section instead of as text under
-    the compass; this keeps the compass area on the schematic clean.
+    ORIENTATION row in the STANDARDS section so reviewers see that the
+    site bearing wasn't supplied; when bearing is set the row is
+    omitted (the geographic direction is conveyed by page 2's aerial).
     """
     standards_rows: list[tuple[str, str]] = [
         ("MHT TYPE", _scenario_label(params)),
@@ -1862,84 +1863,49 @@ def _truncate_to_width(c: canvas.Canvas, text: str, font: str, size: float, max_
     return (out + ell) if out else ell
 
 
-def _draw_north_arrow(
+def _draw_aerial_north_arrow(
     c: canvas.Canvas,
     x_center: float,
     y_center: float,
-    bearing_deg: float | None,
 ) -> None:
-    """North arrow + direction-of-travel caption, drawn at ``(x_center,
-    y_center)``.
+    """Minimal north-arrow indicator for the page-2 aerial image.
 
-    Schematic convention (per the module docstring): the LEFT edge of
-    the plan view is upstream (high station), the RIGHT edge is
-    downstream.  Drivers therefore travel LEFT → RIGHT across the page
-    on the work-side carriageway, which is what the work-side lane
-    arrow rendered by ``_draw_road`` shows; the compass's "Direction
-    of travel" sub-arrow matches that convention and points right.
-
-    When ``bearing_deg`` is supplied the north symbol rotates to that
-    compass bearing (0 = north up, 90 = east right).  When None we
-    leave the arrow pointing page-up and surface the caveat as an
-    ORIENTATION row in the structured title block instead — keeping
-    the area around the compass clean.
+    Mapbox Static Images render with north oriented up, so no rotation
+    is needed.  A thin-bordered white plate sits behind the symbol so
+    the arrow stays legible against satellite imagery.  We deliberately
+    omit the schematic page's right-pointing "Direction of travel"
+    sub-arrow: travel direction on a north-up satellite depends on the
+    bearing and is already conveyed by the orange work-zone overlay.
     """
-    import math
+    arrow_h = 22.0
+    arrow_w = 10.0
+    plate_w = 22.0
+    plate_h = 40.0
+    plate_x = x_center - plate_w / 2.0
+    plate_y = y_center - arrow_h / 2.0 - 6.0
 
-    arrow_h = 26.0
-    arrow_w = 12.0
-
-    theta = 0.0 if bearing_deg is None else math.radians(bearing_deg)
-
-    cos_t = math.cos(theta)
-    sin_t = math.sin(theta)
-
-    def rot(dx: float, dy: float) -> tuple[float, float]:
-        # Standard 2D rotation: theta=0 keeps the arrow pointing up
-        # (page +y).  Positive bearing rotates clockwise (compass
-        # convention) — i.e. theta=90° rotates "up" to "right".
-        return (
-            x_center + dx * cos_t + dy * sin_t,
-            y_center - dx * sin_t + dy * cos_t,
-        )
-
-    # Arrow shaft
-    p_tail = rot(0.0, -arrow_h / 2.0)
-    p_tip = rot(0.0, arrow_h / 2.0)
-    p_head_l = rot(-arrow_w / 2.0, arrow_h / 2.0 - arrow_w * 0.9)
-    p_head_r = rot(arrow_w / 2.0, arrow_h / 2.0 - arrow_w * 0.9)
+    c.setFillColor(colors.HexColor("#FFFFFF"))
+    c.setStrokeColor(colors.HexColor("#1A1A1A"))
+    c.setLineWidth(0.6)
+    c.rect(plate_x, plate_y, plate_w, plate_h, fill=1, stroke=1)
 
     c.setStrokeColor(colors.black)
     c.setFillColor(colors.black)
     c.setLineWidth(1.2)
-    c.line(p_tail[0], p_tail[1], p_tip[0], p_tip[1])
+    y_tail = y_center - arrow_h / 2.0
+    y_tip = y_center + arrow_h / 2.0
+    c.line(x_center, y_tail, x_center, y_tip)
+    head_w = arrow_w
+    head_l = arrow_w * 0.9
     path = c.beginPath()
-    path.moveTo(p_tip[0], p_tip[1])
-    path.lineTo(p_head_l[0], p_head_l[1])
-    path.lineTo(p_head_r[0], p_head_r[1])
+    path.moveTo(x_center, y_tip)
+    path.lineTo(x_center - head_w / 2.0, y_tip - head_l)
+    path.lineTo(x_center + head_w / 2.0, y_tip - head_l)
     path.close()
     c.drawPath(path, stroke=0, fill=1)
 
-    # "N" letter just outside the arrow tip, rotated with the symbol.
-    n_pos = rot(0.0, arrow_h / 2.0 + 7.0)
-    c.setFillColor(colors.black)
     c.setFont("Helvetica-Bold", 9)
-    c.drawCentredString(n_pos[0], n_pos[1] - 3.0, "N")
-
-    # Direction-of-travel caption + sub-arrow beneath the compass.
-    # The sub-arrow points RIGHT to match the LEFT → RIGHT work-side
-    # traffic convention used by ``_draw_road``'s lane arrows.
-    cap_y = y_center - arrow_h / 2.0 - 11.0
-    c.setFont("Helvetica", 6)
-    c.setFillColor(colors.HexColor("#404040"))
-    c.drawCentredString(x_center, cap_y, "Direction of travel")
-    c.setStrokeColor(colors.HexColor("#404040"))
-    c.setLineWidth(0.8)
-    sub_y = cap_y - 5.5
-    c.line(x_center - 14, sub_y, x_center + 14, sub_y)
-    # Arrowhead at the right end (downstream side of the work-side roadway).
-    c.line(x_center + 14, sub_y, x_center + 10, sub_y + 2.5)
-    c.line(x_center + 14, sub_y, x_center + 10, sub_y - 2.5)
+    c.drawCentredString(x_center, y_tip + 4.0, "N")
 
 
 def _draw_sheet_border(c: canvas.Canvas) -> None:
@@ -2402,8 +2368,14 @@ _AERIAL_OVERLAY_OPACITY: str = "0.7"
 
 # Image dimensions for the Mapbox Static request.  Used both for the
 # URL request size and for the per-pixel zoom calculation below.
-_AERIAL_IMG_W_PX: int = 600
-_AERIAL_IMG_H_PX: int = 450
+#
+# The page-2 bordered container is 979.2 × 410 pt (≈ 2.39:1).  Asking
+# Mapbox for a matching-ratio tile means the image fills the container
+# edge-to-edge instead of being letterboxed with whitespace strips on
+# the sides.  1200 × 500 (2.40:1) matches within sub-pt tolerance and
+# stays under the 1280 px Mapbox Static Images API cap.
+_AERIAL_IMG_W_PX: int = 1200
+_AERIAL_IMG_H_PX: int = 500
 
 # Web Mercator constant: meters per pixel at zoom 0 at the equator.
 # Used to back-solve the integer zoom level that places the work-zone
@@ -2586,7 +2558,7 @@ def _draw_corridor_details_box(
     # heading when known; falls back to "Not specified" so the panel
     # always carries the same row count.
     bearing_str = (
-        f"{corridor.bearing_deg:.0f} deg" if corridor.bearing_deg is not None else "Not specified"
+        f"{corridor.bearing_deg:.0f}°" if corridor.bearing_deg is not None else "Not specified"
     )
     total_ft = corridor.total_length_ft
     total_mi = total_ft / 5280.0
@@ -2708,6 +2680,16 @@ def _render_aerial_page(
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)
     c.rect(img_x, img_y, img_box_w, img_box_h, fill=0, stroke=1)
+
+    # Page-2 north indicator — Mapbox always renders north-up, so the
+    # arrow points page-up with no rotation logic.  Sits inside the
+    # upper-right of the image bounds with a thin white backing plate
+    # for legibility against the satellite imagery.
+    _draw_aerial_north_arrow(
+        c,
+        x_center=img_x + img_box_w - 24.0,
+        y_center=img_y + img_box_h - 27.0,
+    )
 
     # 4. Caption block — site coords + address + disclaimer.  Anchored
     #    to the image's left edge for a clean visual column.  The
@@ -2970,17 +2952,11 @@ def _render_schematic_page(
         aerial_page=aerial_page,
     )
 
-    # North-arrow rosette: pulled well inside the upper-right corner
-    # so it reads as part of the road area instead of hugging the
-    # sheet border.  ~60 pt inset from PLAN_RIGHT clears the page
-    # frame; ~36 pt below PLAN_TOP gives the dim band above the road
-    # room to breathe.
-    _draw_north_arrow(
-        c,
-        x_center=PLAN_RIGHT - 60.0,
-        y_center=PLAN_TOP - 36.0,
-        bearing_deg=bearing_deg,
-    )
+    # No compass on page 1 — the schematic is a stylized layout where
+    # devices are placed by station/offset, not by geographic
+    # orientation, so a north arrow would imply a relationship that
+    # doesn't exist.  Page 2's aerial keeps its north indicator
+    # because that page IS geographic.
 
 
 if __name__ == "__main__":
