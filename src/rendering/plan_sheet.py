@@ -2382,8 +2382,14 @@ _AERIAL_IMG_H_PX: int = 500
 # polyline at roughly ``_AERIAL_TARGET_POLYLINE_FRACTION`` of the
 # image width — gives the reviewer enough surrounding road context to
 # locate the closure on the satellite.
+#
+# 0.20 (was 0.40) means the polyline occupies ~20% of the image width
+# and the rest is surrounding context.  Short work zones (< 500 ft)
+# need this wider view to surface interchange ramps, cross streets,
+# and nearby landmarks; at 0.40 they zoomed in past those features.
+# The integer clamp [13, 20] still prevents either extreme.
 _AERIAL_METERS_PER_PIXEL_AT_ZOOM_0: float = 156543.03392
-_AERIAL_TARGET_POLYLINE_FRACTION: float = 0.40
+_AERIAL_TARGET_POLYLINE_FRACTION: float = 0.20
 
 
 def _aerial_zoom_for_work_zone(corridor: WorkCorridor) -> int:
