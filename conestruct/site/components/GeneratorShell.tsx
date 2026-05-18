@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   compute,
   DEFAULT_SCENARIO,
@@ -13,7 +13,11 @@ import { StatusBar, type Status } from "./StatusBar";
 import { OutputCards } from "./OutputCards";
 import { QuotePanel } from "./QuotePanel";
 import { AuditTrail } from "./AuditTrail";
-import { DeviceBreakdown } from "./DeviceBreakdown";
+import {
+  DeviceBreakdown,
+  type DeviceBreakdownData,
+  type DeviceBreakdownState,
+} from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
 
 type Mode = "sandbox" | "workbench";
@@ -48,6 +52,58 @@ export function GeneratorShell({
   // Generate button now performs a real bundled-zip download rather than
   // gating visibility.
   const [bundleError, setBundleError] = useState<string | null>(null);
+
+  // Plan Details panel is server-driven: fetch the aggregated device list
+  // from /api/render/device-breakdown so the panel reads from the same
+  // placements list that feeds the PDF, XLSX, and crew narrative.  Refetch
+  // whenever the scenario changes; retryNonce lets the panel's Retry button
+  // re-trigger the effect on an error.
+  const [deviceBreakdown, setDeviceBreakdown] = useState<DeviceBreakdownState>({
+    state: "loading",
+  });
+  const [retryNonce, setRetryNonce] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setDeviceBreakdown({ state: "loading" });
+    (async () => {
+      try {
+        const res = await fetch("/api/render/device-breakdown", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ scenario }),
+          signal: controller.signal,
+        });
+        if (!res.ok) {
+          let detail = "";
+          try {
+            const body = await res.json();
+            detail =
+              typeof body?.detail?.message === "string"
+                ? body.detail.message
+                : typeof body?.detail === "string"
+                  ? body.detail
+                  : "";
+          } catch {
+            detail = await res.text().catch(() => "");
+          }
+          setDeviceBreakdown({
+            state: "error",
+            message: detail || `HTTP ${res.status}`,
+          });
+          return;
+        }
+        const data = (await res.json()) as DeviceBreakdownData;
+        setDeviceBreakdown({ state: "ready", data });
+      } catch (e) {
+        if ((e as Error).name === "AbortError") return;
+        setDeviceBreakdown({ state: "error", message: "Network error" });
+      }
+    })();
+    return () => controller.abort();
+  }, [scenario, retryNonce]);
+
+  const onRetryDeviceBreakdown = () => setRetryNonce((n) => n + 1);
 
   const safeFilename = (name: string | undefined): string => {
     const cleaned = (name ?? "")
@@ -173,6 +229,7 @@ export function GeneratorShell({
                 ? { kind: "public", scenario }
                 : { kind: "saved", planId }
             }
+            breakdown={deviceBreakdown}
           />
           {generated && (
             <QuotePanel
@@ -188,7 +245,12 @@ export function GeneratorShell({
             results={results}
             generated={generated}
           />
-          {generated && <DeviceBreakdown results={results} />}
+          {generated && (
+            <DeviceBreakdown
+              state={deviceBreakdown}
+              onRetry={onRetryDeviceBreakdown}
+            />
+          )}
         </main>
       </div>
 

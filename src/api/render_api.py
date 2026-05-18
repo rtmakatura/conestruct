@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import os
 import tempfile
+from collections import Counter
 from collections.abc import Awaitable, Callable
 from pathlib import Path
 
@@ -38,10 +39,13 @@ from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import generate_crew_narrative
 from src.rendering.plan_sheet import render_plan_sheet
+from src.rules.devices import DeviceType, cone_display_name
 from src.rules.night_adjustments import apply_night_adjustments
+from src.rules.sign_codes import description_for
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_site_conditions
-from src.rules.validators import validate_corridor_geometry
+from src.rules.spacing import advance_warning_spacing
+from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
 
@@ -356,6 +360,155 @@ def render_quote(req: QuoteRequest) -> Response:
                 f'attachment; filename="{_safe_filename(req.scenario, "xlsx")}"'
             )
         },
+    )
+
+
+# Display names + function categories for the /render/device-breakdown
+# response. Mirrors the legend label set in plan_sheet._DEVICE_DISPLAY_NAMES;
+# CONE is handled separately via cone_display_name() so the size adapts
+# to the posted speed (MUTCD §6F.65).
+_NON_SIGN_DISPLAY: dict[DeviceType, tuple[str, str]] = {
+    DeviceType.DRUM: ("Channelizing Drum", "Channelizing"),
+    DeviceType.TUBULAR_MARKER: ("Tubular Marker", "Channelizing"),
+    DeviceType.CHANNELIZER_OPTIONAL: ("Optional Channelizer", "Channelizing"),
+    DeviceType.LONGITUDINAL_CHANNELIZER: (
+        "Longitudinal Channelizer",
+        "Channelizing",
+    ),
+    DeviceType.BARRICADE_TYPE_II: ("Type II Barricade", "Closure"),
+    DeviceType.BARRICADE_TYPE_III: ("Type III Barricade", "Closure"),
+    DeviceType.TEMPORARY_BARRIER: ("Temporary Barrier", "Closure"),
+    DeviceType.ARROW_BOARD: ("Arrow Board", "Lane closure indication"),
+    DeviceType.PCMS: (
+        "Portable Changeable Message Sign",
+        "Lane closure indication",
+    ),
+    DeviceType.FLAGGER_STATION: ("Flagger Station", "Traffic control"),
+    DeviceType.TEMPORARY_SIGNAL: ("Temporary Signal", "Traffic control"),
+    DeviceType.TRUCK_MOUNTED_ATTENUATOR: (
+        "Truck-Mounted Attenuator (TMA)",
+        "Protection",
+    ),
+    DeviceType.WARNING_LIGHT_TYPE_C: (
+        "Type C Warning Light (steady)",
+        "Channelizing (night)",
+    ),
+    DeviceType.PORTABLE_LIGHT_PLANT: ("Portable Light Plant", "Illumination"),
+    DeviceType.DETOUR_MARKER: ("Detour Marker", "Guide"),
+}
+
+
+def _sign_description(code: str, params: ScenarioParams) -> str:
+    """Resolve a sign's description, substituting parametric placeholders.
+
+    Two MUTCD codes carry a distance on the sign face:
+
+      * **G20-1** ROAD CONSTRUCTION (NEXT XXX FT) — work zone length.
+      * **W20-2** ROAD WORK XXX FT — advance distance from the W20-2
+        sign back to the taper start (Table 6B-1 A+B).
+
+    Mirrors the substitution done in
+    :func:`src.rendering.plan_sheet._draw_notes` so the Plan Details
+    panel reads the same numbers as the PDF.
+    """
+    desc = description_for(code)
+    if code == "G20-1":
+        return desc.replace("XXX", f"{params.work_zone_length_ft:.0f}")
+    if code == "W20-2":
+        abc = advance_warning_spacing(params.speed_mph, params.road_type)
+        sign_b_dist = abc["A"] + abc["B"]
+        return desc.replace("XXX", f"{sign_b_dist:.0f}")
+    return desc
+
+
+def _sign_function_category(code: str) -> str:
+    """Bucket a MUTCD sign code into a function label for the panel.
+
+    G20-2 is the terminator; G20-4 (pilot car follow me) is operational
+    information; everything else in W-/G-series is an advance warning.
+    R-series are regulatory; M-/S-series are guide/route.
+    """
+    if code == "G20-2":
+        return "Termination"
+    if code == "G20-4":
+        return "Information"
+    if code.startswith(("W", "G")):
+        return "Advance warning"
+    if code.startswith("R"):
+        return "Regulatory"
+    if code.startswith(("M", "S")):
+        return "Guide"
+    return "Advance warning"
+
+
+def _build_device_breakdown(
+    placements: list[DevicePlacement], params: ScenarioParams
+) -> list[dict[str, object]]:
+    """Aggregate placements into panel-ready rows.
+
+    Signs are split by label so each MUTCD code gets its own row;
+    non-sign devices are merged by type.  CONE picks up the speed-aware
+    display name; everything else uses the static table above.
+    """
+    non_sign_counts: Counter[DeviceType] = Counter()
+    sign_counts: Counter[str] = Counter()
+    for p in placements:
+        if p.device_type == DeviceType.SIGN_GENERIC:
+            sign_counts[p.label or "(unlabeled)"] += 1
+        else:
+            non_sign_counts[p.device_type] += 1
+
+    rows: list[dict[str, object]] = []
+    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: kv[0].value):
+        if dt == DeviceType.CONE:
+            device_label = cone_display_name(params.speed_mph)
+            function_label = "Channelizing"
+        else:
+            device_label, function_label = _NON_SIGN_DISPLAY.get(dt, (dt.value, "Other"))
+        rows.append(
+            {
+                "device": device_label,
+                "code": "—",
+                "function": function_label,
+                "qty": n,
+            }
+        )
+
+    for code, n in sorted(sign_counts.items()):
+        rows.append(
+            {
+                "device": _sign_description(code, params),
+                "code": code,
+                "function": _sign_function_category(code),
+                "qty": n,
+            }
+        )
+    return rows
+
+
+@app.post("/render/device-breakdown")
+def render_device_breakdown(scenario: Scenario) -> JSONResponse:
+    """Return the aggregated device list that drives the Plan Details panel.
+
+    Same placement source as /render/pdf so the panel and the PDF cannot
+    drift.  Response shape: a flat list of ``{device, code, function, qty}``
+    rows plus running totals.
+    """
+    _ensure_scenario_enabled(scenario)
+    try:
+        placements, params, _site, _night = _placements_for(scenario)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    rows = _build_device_breakdown(placements, params)
+    return JSONResponse(
+        {
+            "devices": rows,
+            "total_devices": len(placements),
+            "unique_types": len(rows),
+        }
     )
 
 

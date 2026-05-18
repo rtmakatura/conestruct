@@ -24,7 +24,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.rules.devices import DeviceType
+from src.rules.devices import DeviceType, cone_display_name
 from src.rules.sign_codes import description_for
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -49,7 +49,6 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
 _PLAQUE_AND_END_LABELS: frozenset[str] = frozenset({"G20-5P", "G20-2", "R2-6P"})
 
 _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
-    DeviceType.CONE: "Traffic Cone (36-inch)",
     DeviceType.DRUM: "Channelizing Drum (36-inch)",
     DeviceType.TUBULAR_MARKER: "Tubular Marker (36-inch)",
     DeviceType.BARRICADE_TYPE_II: "Type II Barricade",
@@ -76,7 +75,7 @@ _ROAD_TYPE_HUMAN: dict[str, str] = {
 }
 
 
-def _device_summary(placements: list[DevicePlacement]) -> list[dict[str, Any]]:
+def _device_summary(placements: list[DevicePlacement], speed_mph: float) -> list[dict[str, Any]]:
     """Bullet-list aggregation: non-signs at top level, signs nested beneath one parent."""
     non_sign_counts: Counter[DeviceType] = Counter()
     sign_counts: Counter[str] = Counter()
@@ -88,9 +87,14 @@ def _device_summary(placements: list[DevicePlacement]) -> list[dict[str, Any]]:
 
     rows: list[dict[str, Any]] = []
     for dt, n in sorted(non_sign_counts.items(), key=lambda kv: kv[0].value):
+        label = (
+            cone_display_name(speed_mph)
+            if dt == DeviceType.CONE
+            else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
+        )
         rows.append(
             {
-                "label": _DEVICE_HUMAN_NAMES.get(dt, dt.value),
+                "label": label,
                 "count": n,
                 "children": [],
             }
@@ -278,7 +282,7 @@ def build_narrative_context(
     # and pulls the farthest sign (C) first.
     setup_order = sorted(advance_signs, key=lambda d: d["distance_ft"])
     takedown_order = sorted(advance_signs, key=lambda d: -d["distance_ft"])
-    device_summary = _device_summary(placements)
+    device_summary = _device_summary(placements, params.speed_mph)
 
     return {
         "params": params,

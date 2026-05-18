@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Scenario, ScenarioResult } from "@/lib/scenarios";
+import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
 type RenderKind = "pdf" | "xlsx" | "markdown";
 
@@ -20,11 +21,26 @@ interface Props {
   results: ScenarioResult;
   generated: boolean;
   mode: Mode;
+  breakdown: DeviceBreakdownState;
 }
 
 const SIGNUP_HREF = "/app";
 
-export function OutputCards({ results, generated, mode }: Props) {
+// Map a backend-pulled stat into the card's display value. While the
+// breakdown is loading, show an ellipsis (matches the panel's loading
+// state); on error, fall back to "—" so the card doesn't surface a stale
+// number — same principle as the Plan Details panel: no TS-derived
+// silent fallback.
+function statFromBreakdown(
+  breakdown: DeviceBreakdownState,
+  pick: (data: { total_devices: number; unique_types: number }) => number,
+): number | string {
+  if (breakdown.state === "ready") return pick(breakdown.data);
+  if (breakdown.state === "loading") return "…";
+  return "—";
+}
+
+export function OutputCards({ results, generated, mode, breakdown }: Props) {
   if (!generated) {
     return (
       <div className="empty-state">
@@ -42,7 +58,7 @@ export function OutputCards({ results, generated, mode }: Props) {
         title="Plan sheet"
         meta={`PDF · 11×17 · ${results.ta} · ${results.cdotSheet}`}
         statLbl="Devices"
-        statVal={results.totalDevices}
+        statVal={statFromBreakdown(breakdown, (d) => d.total_devices)}
         kind="pdf"
         mode={mode}
       />
@@ -52,7 +68,7 @@ export function OutputCards({ results, generated, mode }: Props) {
         title="Device list"
         meta="XLSX · CDOT BID-READY"
         statLbl="Unique types"
-        statVal={results.uniqueTypes}
+        statVal={statFromBreakdown(breakdown, (d) => d.unique_types)}
         kind="xlsx"
         mode={mode}
       />
@@ -76,7 +92,7 @@ interface CardProps {
   title: string;
   meta: string;
   statLbl: string;
-  statVal: number;
+  statVal: number | string;
   kind: RenderKind;
   mode: Mode;
 }

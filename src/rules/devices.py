@@ -97,6 +97,23 @@ class DeviceSpec:
 
 
 # ---------------------------------------------------------------------------
+# Display helpers
+# ---------------------------------------------------------------------------
+
+
+def cone_display_name(speed_mph: float) -> str:
+    """Return the size-appropriate cone label per MUTCD §6F.65.
+
+    36-inch cones are required at speeds ≥45 mph; 28-inch cones are
+    acceptable below that threshold. The catalog description above is
+    intentionally vague ("28- or 36-inch …") — rendering surfaces
+    (plan-sheet legend, crew narrative, device-breakdown panel) call
+    this helper to print the actual size for the posted speed.
+    """
+    return "Traffic Cone (36-inch)" if speed_mph >= 45 else "Traffic Cone (28-inch)"
+
+
+# ---------------------------------------------------------------------------
 # Device catalog
 # ---------------------------------------------------------------------------
 

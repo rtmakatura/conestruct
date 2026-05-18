@@ -128,6 +128,54 @@ export async function fetchQuoteBreakdown(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+export async function fetchDeviceBreakdown(
+  scenario: Scenario,
+): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(
+      `${url.replace(/\/$/, "")}/render/device-breakdown`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${secret}`,
+        },
+        body: JSON.stringify(scenario),
+      },
+    );
+  } catch (err) {
+    console.error("device breakdown fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(`device breakdown upstream ${upstream.status}`, detail);
+    if (upstream.status === 400) {
+      return new Response(detail || "Invalid scenario", {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    return new Response("Device breakdown failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  headers.set(
+    "content-type",
+    upstream.headers.get("content-type") ?? "application/json",
+  );
+  headers.set("cache-control", "private, no-store");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 type BundlePart = { kind: RenderKind; bytes: ArrayBuffer; contentType: string };
 
 async function fetchPartFromModal(

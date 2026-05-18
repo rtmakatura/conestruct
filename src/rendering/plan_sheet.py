@@ -35,7 +35,7 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
-from src.rules.devices import DeviceType
+from src.rules.devices import DeviceType, cone_display_name
 from src.rules.sign_codes import description_for
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -815,7 +815,6 @@ _DEVICE_GLYPHS: dict[DeviceType, Callable[[canvas.Canvas, float, float], None]] 
 }
 
 _DEVICE_DISPLAY_NAMES: dict[DeviceType, str] = {
-    DeviceType.CONE: "Traffic Cone (36-inch)",
     DeviceType.DRUM: "Channelizing Drum",
     DeviceType.SIGN_GENERIC: "Warning / Construction Sign",
     DeviceType.ARROW_BOARD: "Arrow Board",
@@ -1999,6 +1998,7 @@ def _draw_median_icon(c: canvas.Canvas, x: float, y: float) -> None:
 def _draw_legend(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
+    speed_mph: float,
     is_divided: bool = False,
     scale_note: str = "",
 ) -> None:
@@ -2065,7 +2065,12 @@ def _draw_legend(
         glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
         glyph(c, glyph_x, y + 3)
         c.setFillColor(colors.black)
-        c.drawString(text_x, y, _DEVICE_DISPLAY_NAMES.get(dt, dt.value))
+        label = (
+            cone_display_name(speed_mph)
+            if dt == DeviceType.CONE
+            else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
+        )
+        c.drawString(text_x, y, label)
         y -= row_h
         if _bail():
             return
@@ -2944,7 +2949,13 @@ def _render_schematic_page(
         code_to_num,
     )
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_short)
-    _draw_legend(c, placements, is_divided=params.is_divided, scale_note=scale_long)
+    _draw_legend(
+        c,
+        placements,
+        speed_mph=params.speed_mph,
+        is_divided=params.is_divided,
+        scale_note=scale_long,
+    )
     _draw_notes(c, params, shoulder_width_ft, schedule_order)
     _draw_structured_title_block(
         c,
