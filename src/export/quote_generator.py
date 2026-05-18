@@ -78,12 +78,11 @@ _TERMS: tuple[str, ...] = (
     "2. Minimum 4-hour call-out for all labor.",
     "3. Night work (sunset to sunrise) billed at 1.5x standard rate.",
     "4. Equipment rental begins at time of delivery to site.",
-    "5. Client responsible for all permit and ROW fees.",
-    "6. Setup and takedown charged per occurrence.",
-    "7. Damaged or missing equipment billed at replacement cost.",
-    "8. Traffic control plan (MHT) included with this estimate.",
-    "9. All work performed by ATSSA/CCA-certified personnel.",
-    "10. This estimate is for planning purposes only. Final pricing subject "
+    "5. Setup and takedown charged per occurrence.",
+    "6. Damaged or missing equipment billed at replacement cost.",
+    "7. Traffic control plan (MHT) included with this estimate.",
+    "8. All work performed by ATSSA/CCA-certified personnel.",
+    "9. This estimate is for planning purposes only. Final pricing subject "
     "to site inspection and contract terms.",
 )
 
@@ -146,7 +145,6 @@ class QuoteBreakdown:
     equipment_lines: list[EquipmentLine] = field(default_factory=list)
     labor_lines: list[LaborLine] = field(default_factory=list)
     delivery_lines: list[DeliveryLine] = field(default_factory=list)
-    permit_fee: float = 0.0
     is_night: bool = False
     night_multiplier: float = 1.0
     overhead_pct: float = 0.0
@@ -511,7 +509,6 @@ def _populate_summary_sheet(
         ("Equipment Rental", breakdown.equipment_total, False),
         ("Labor", breakdown.labor_total, False),
         ("Delivery & Logistics", breakdown.delivery_total, False),
-        ("Permits & Admin", breakdown.permit_fee, False),
         ("SUBTOTAL", breakdown.subtotal, True),
         (f"Overhead ({breakdown.overhead_pct * 100:.0f}%)", breakdown.overhead, False),
         (f"Profit ({breakdown.profit_pct * 100:.0f}%)", breakdown.profit, False),
@@ -580,7 +577,6 @@ def generate_quote(
     takedown_hours: float = 1.0,
     delivery_trips: int = 2,
     delivery_distance_miles: float = 20.0,
-    permit_fee: float = 0.0,
     flagger_hourly_rate: float = 55.0,
     tcs_hourly_rate: float = 75.0,
     crew_hourly_rate: float = 45.0,
@@ -622,7 +618,7 @@ def generate_quote(
     equipment_total = sum(line.extended for line in equipment_lines)
     labor_total = sum(line.extended for line in labor_lines)
     delivery_total = sum(line.extended for line in delivery_lines)
-    subtotal = equipment_total + labor_total + delivery_total + permit_fee
+    subtotal = equipment_total + labor_total + delivery_total
     overhead = subtotal * overhead_pct
     profit = (subtotal + overhead) * profit_pct
     total = subtotal + overhead + profit
@@ -631,7 +627,6 @@ def generate_quote(
         equipment_lines=equipment_lines,
         labor_lines=labor_lines,
         delivery_lines=delivery_lines,
-        permit_fee=permit_fee,
         is_night=params.is_night,
         night_multiplier=night_multiplier,
         overhead_pct=overhead_pct,
@@ -702,7 +697,6 @@ if __name__ == "__main__":
     duration = 3
     flaggers = 2
     distance = 25.0
-    permit = 150.0
 
     path, breakdown = generate_quote(
         smoke_placements,
@@ -711,7 +705,6 @@ if __name__ == "__main__":
         project_duration_days=duration,
         num_flaggers=flaggers,
         delivery_distance_miles=distance,
-        permit_fee=permit,
     )
 
     size_bytes = os.path.getsize(path)
@@ -727,7 +720,6 @@ if __name__ == "__main__":
     print(f"  Equipment Rental     ${breakdown.equipment_total:>12,.2f}")
     print(f"  Labor                ${breakdown.labor_total:>12,.2f}")
     print(f"  Delivery & Logistics ${breakdown.delivery_total:>12,.2f}")
-    print(f"  Permits & Admin      ${breakdown.permit_fee:>12,.2f}")
     print("-" * 44)
     print(f"  SUBTOTAL             ${breakdown.subtotal:>12,.2f}")
     print(f"  Overhead ({breakdown.overhead_pct * 100:.0f}%)       ${breakdown.overhead:>12,.2f}")

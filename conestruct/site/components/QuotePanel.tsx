@@ -63,7 +63,6 @@ interface Breakdown {
   equipment_lines: EquipmentLine[];
   labor_lines: LaborLine[];
   delivery_lines: DeliveryLine[];
-  permit_fee: number;
   is_night: boolean;
   night_multiplier: number;
   overhead_pct: number;
@@ -242,7 +241,7 @@ export function QuotePanel({ mode }: Props) {
         XLSX · CONTRACTOR ESTIMATE · OVERHEAD + PROFIT
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
         <NumberField
           label="Duration (days)"
           value={settings.project_duration_days}
@@ -276,14 +275,6 @@ export function QuotePanel({ mode }: Props) {
             setDelivery({ state: "manual" });
           }}
           caption={deliveryCaption(delivery)}
-        />
-        <NumberField
-          label="Permit fee ($)"
-          value={settings.permit_fee}
-          min={0}
-          max={100_000}
-          step={50}
-          onChange={(v) => setSettings({ ...settings, permit_fee: v })}
         />
       </div>
 
@@ -459,17 +450,6 @@ export function QuotePanel({ mode }: Props) {
                 ))}
               </tbody>
             </table>
-          </BreakdownGroup>
-
-          <BreakdownGroup
-            title="Permits & Admin"
-            subtotal={breakdown.permit_fee}
-          >
-            <p className="text-[12px]">
-              {breakdown.permit_fee > 0
-                ? `Permit fee: ${fmtCurrency(breakdown.permit_fee)}`
-                : "No permit fee entered."}
-            </p>
           </BreakdownGroup>
 
           <BreakdownGroup

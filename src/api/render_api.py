@@ -310,7 +310,6 @@ class QuoteSettings(BaseModel):
     project_duration_days: int = Field(default=1, ge=1, le=365)
     num_flaggers: int = Field(default=0, ge=0, le=20)
     delivery_distance_miles: float = Field(default=20.0, ge=0.0, le=500.0)
-    permit_fee: float = Field(default=0.0, ge=0.0, le=100_000.0)
 
 
 class QuoteRequest(BaseModel):
@@ -333,7 +332,6 @@ def _run_quote(req: QuoteRequest):
             project_duration_days=req.settings.project_duration_days,
             num_flaggers=req.settings.num_flaggers,
             delivery_distance_miles=req.settings.delivery_distance_miles,
-            permit_fee=req.settings.permit_fee,
         )
         return path.read_bytes(), breakdown
     finally:
@@ -410,7 +408,6 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
                 }
                 for line in breakdown.delivery_lines
             ],
-            "permit_fee": breakdown.permit_fee,
             "is_night": breakdown.is_night,
             "night_multiplier": breakdown.night_multiplier,
             "overhead_pct": breakdown.overhead_pct,

@@ -31,7 +31,6 @@ function coerceQuoteSettings(raw: unknown): QuoteSettings {
       0,
       Math.min(500, num(r.delivery_distance_miles, 20)),
     ),
-    permit_fee: Math.max(0, Math.min(100_000, num(r.permit_fee, 0))),
   };
 }
 

@@ -157,12 +157,10 @@ with st.sidebar.expander("Quote Settings"):
         delivery_distance = st.number_input(
             "Delivery distance one-way (miles)", value=20.0, min_value=0.0, step=5.0
         )
-        permit_fee = st.number_input("Permit fees ($)", value=0.0, min_value=0.0, step=50.0)
     else:
         project_duration = 1
         num_flaggers = 0
         delivery_distance = 20.0
-        permit_fee = 0.0
 
 
 if site_address and site_lat == 0.0 and site_lng == 0.0 and _mapbox_token:
@@ -352,7 +350,6 @@ if generate_button:
                 project_duration_days=int(project_duration),
                 num_flaggers=int(num_flaggers),
                 delivery_distance_miles=float(delivery_distance),
-                permit_fee=float(permit_fee),
             )
             with open(quote_path, "rb") as f:
                 quote_bytes = f.read()
@@ -484,12 +481,6 @@ if generate_button:
                     }
                 )
                 st.dataframe(del_df, use_container_width=True, hide_index=True)
-
-            with st.expander(f"Permits & Admin — ${qb.permit_fee:,.2f}"):
-                if qb.permit_fee > 0:
-                    st.write(f"Permit fee: **${qb.permit_fee:,.2f}**")
-                else:
-                    st.write("No permit fee entered.")
 
             with st.expander(
                 f"Markup — ${qb.overhead + qb.profit:,.2f} "
