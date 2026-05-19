@@ -1056,3 +1056,16 @@ body {
   color: var(--ink-on-dark-faint);
   box-shadow: none;
 }
+
+/* Hide the up/down stepper arrows on number inputs.  Users type values
+   directly; the arrows eat horizontal space inside narrow input boxes
+   (Speed, Lanes, Direction of Travel, Work Zone Length). */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

@@ -3,8 +3,26 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type * as MapboxGL from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import type {
+  Confidence,
+  DetectedField,
+  RoadClassification,
+} from "@/lib/road-classify";
+import type { RoadType, ScenarioKind } from "@/lib/scenarios";
+import { buildCorridorSpec } from "@/lib/corridor-spacing";
+import {
+  buildCorridorPolyline,
+  ZONE_COLOR,
+  ZONE_LABEL,
+  type CorridorPolyline,
+  type CorridorZone,
+} from "@/lib/corridor-polyline";
 
 type MapboxNamespace = typeof MapboxGL;
+
+// ---------------------------------------------------------------------------
+// Public surface
+// ---------------------------------------------------------------------------
 
 // Initial values supplied by the parent form. Treat (0, 0) as
 // "no pin placed yet" — common case when the user opens the picker
@@ -14,13 +32,37 @@ export interface LocationPickerInitial {
   lat?: number;
   lng?: number;
   bearingDeg?: number;
+  workZoneFt?: number;
+  // Pre-existing scenario kind so the corridor preview knows the
+  // closure type (shoulder vs lane vs shifting) for taper math.
+  scenarioKind: ScenarioKind;
+  // Speed limit fallback for advance-warning / buffer / taper math
+  // before the in-modal classify resolves.  Mirrors whatever the
+  // scenario currently carries.
+  speedMph: number;
 }
 
+// What the modal hands back on save.  ``classification`` is null when
+// auto-detect didn't run (e.g., no Mapbox token, off-road pin, OSM
+// timeout); the parent should treat that as "user wants to keep
+// existing road fields".  ``overrides`` carry any inline edits the
+// user made on top of the detected values — keyed by field so the
+// parent can apply them in scenario-narrowing-safe order.
 export interface LocationPickerResult {
   address: string;
   lat: number;
   lng: number;
   bearingDeg?: number;
+  workZoneFt: number;
+  classification: RoadClassification | null;
+  overrides: RoadFieldOverrides;
+}
+
+export interface RoadFieldOverrides {
+  speedMph?: number;
+  lanesPerDirection?: number;
+  roadType?: RoadType;
+  divided?: boolean;
 }
 
 interface Props {
@@ -29,6 +71,10 @@ interface Props {
   onCancel: () => void;
   onSave: (result: LocationPickerResult) => void;
 }
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
 type MapStyle = "satellite" | "streets";
 
@@ -42,13 +88,47 @@ const DEFAULT_ZOOM = 6;
 const PIN_ZOOM = 16;
 const PIN_COLOR = "#E8710A";
 
-interface BearingResponse {
-  bearing: number | null;
-  way_id: string | null;
+const CORRIDOR_SOURCE_ID = "corridor-source";
+const CORRIDOR_LAYER_ID = "corridor-layer";
+
+const ROAD_TYPE_LABELS: Record<RoadType, string> = {
+  rural_undivided: "Rural — undivided",
+  rural_divided: "Rural — divided",
+  urban_arterial: "Urban arterial",
+  freeway: "Freeway / interstate",
+};
+
+const ROAD_TYPE_OPTIONS: Array<{ v: RoadType; l: string }> = [
+  { v: "rural_undivided", l: "Rural — undivided" },
+  { v: "rural_divided", l: "Rural — divided" },
+  { v: "urban_arterial", l: "Urban arterial" },
+  { v: "freeway", l: "Freeway / interstate" },
+];
+
+interface BearingCandidate {
+  way_id: string;
   highway_class: string | null;
-  snapped_lat: number | null;
-  snapped_lng: number | null;
+  name: string | null;
+  bearing: number;
+  snap_distance_m: number;
+  snapped_lat: number;
+  snapped_lng: number;
 }
+
+interface BearingResponse {
+  candidates: BearingCandidate[];
+  primary_index: number | null;
+}
+
+type ClassifyStatus =
+  | { state: "idle" }
+  | { state: "resolving" }
+  | { state: "detected"; result: RoadClassification }
+  | { state: "error"; message: string };
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function isValidLat(n: number): boolean {
   return Number.isFinite(n) && n >= -90 && n <= 90;
@@ -56,16 +136,56 @@ function isValidLat(n: number): boolean {
 function isValidLng(n: number): boolean {
   return Number.isFinite(n) && n >= -180 && n <= 180;
 }
+// Bearing is presented as a 0–359 integer (360 normalises to 0 before
+// the value ever reaches the input).  Out-of-range or fractional
+// values trip the inline error and disable Save.
 function isValidBearing(n: number): boolean {
-  return Number.isFinite(n) && n >= 0 && n <= 360;
+  return Number.isFinite(n) && n >= 0 && n <= 359;
+}
+function normaliseBearing(n: number): number {
+  const r = ((Math.round(n) % 360) + 360) % 360;
+  return r;
 }
 
 function fmt4(n: number): string {
   return (Math.round(n * 10000) / 10000).toFixed(4);
 }
 
+function fmtFt(n: number): string {
+  if (!Number.isFinite(n)) return "0";
+  return Math.round(n).toLocaleString("en-US");
+}
+
+// Translate a compass bearing into the closest cardinal/intercardinal
+// label that DOT crews use for travel direction.  Cardinal directions
+// take the "-bound" suffix ("Northbound"); intercardinal use the
+// shorter compass form ("Northeast") since "Northeastbound" is awkward.
+function bearingToDirectionLabel(deg: number): string {
+  const n = ((deg % 360) + 360) % 360;
+  // 22.5° bands centred on each compass point.
+  if (n < 22.5 || n >= 337.5) return "Northbound";
+  if (n < 67.5) return "Northeast";
+  if (n < 112.5) return "Eastbound";
+  if (n < 157.5) return "Southeast";
+  if (n < 202.5) return "Southbound";
+  if (n < 247.5) return "Southwest";
+  if (n < 292.5) return "Westbound";
+  return "Northwest";
+}
+
+function confDotClass(c: Confidence): string {
+  switch (c) {
+    case "high":
+      return "bg-[color:var(--cyan)]";
+    case "medium":
+      return "bg-[color:var(--orange)]";
+    case "low":
+      return "bg-[#d94f4f]";
+  }
+}
+
 // Build the marker DOM: a circle "pin" with an arrow extending from its
-// center in the direction of travel. Updating ``bearingDeg`` rotates the
+// centre in the direction of travel. Updating ``bearingDeg`` rotates the
 // arrow around the pin without re-creating the marker.
 function buildMarkerEl(): {
   root: HTMLDivElement;
@@ -102,10 +222,7 @@ function buildMarkerEl(): {
   arrowSvg.style.transformOrigin = "50% 100%";
   arrowSvg.style.zIndex = "1";
 
-  const line = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "line",
-  );
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
   line.setAttribute("x1", "0");
   line.setAttribute("y1", "0");
   line.setAttribute("x2", "0");
@@ -136,12 +253,11 @@ function buildMarkerEl(): {
   };
 }
 
-export function LocationPickerModal({
-  open,
-  initial,
-  onCancel,
-  onSave,
-}: Props) {
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
+export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
   const tokenAvailable = token.length > 0;
 
@@ -155,21 +271,48 @@ export function LocationPickerModal({
     );
   }, [initial.lat, initial.lng]);
 
+  // ---- Pin / coord state -------------------------------------------------
   const [address, setAddress] = useState(initial.address ?? "");
   const [hasPin, setHasPin] = useState(initialHasPin);
   const [lat, setLat] = useState(initialHasPin ? initial.lat! : 0);
   const [lng, setLng] = useState(initialHasPin ? initial.lng! : 0);
-  const [bearing, setBearing] = useState(initial.bearingDeg ?? 0);
+  const [bearing, setBearing] = useState(
+    initial.bearingDeg !== undefined ? normaliseBearing(initial.bearingDeg) : 0,
+  );
+  // All candidate ways returned by /api/road-bearing within snap range.
+  // Length 0 → no road found; 1 → unambiguous (auto-fill behaviour);
+  // 2+ → divided-highway or intersection ambiguity, operator must pick.
+  const [bearingCandidates, setBearingCandidates] = useState<BearingCandidate[]>(
+    [],
+  );
+  // Which candidate is currently reflected in the bearing field.  Null
+  // means "no selection yet" (multi-candidate case before the operator
+  // picks).  Single-candidate case auto-selects index 0.
+  const [selectedCandidateIdx, setSelectedCandidateIdx] = useState<
+    number | null
+  >(null);
+  // When true, the inline picker is rendered under the bearing row.
+  // Auto-opens on a fresh multi-candidate detection and on "Use
+  // Detected" when multiple candidates exist; closes after the
+  // operator picks one.
+  const [showCandidatePicker, setShowCandidatePicker] = useState(false);
 
-  const [latInput, setLatInput] = useState(initialHasPin ? fmt4(initial.lat!) : "");
-  const [lngInput, setLngInput] = useState(initialHasPin ? fmt4(initial.lng!) : "");
+  const [latInput, setLatInput] = useState(
+    initialHasPin ? fmt4(initial.lat!) : "",
+  );
+  const [lngInput, setLngInput] = useState(
+    initialHasPin ? fmt4(initial.lng!) : "",
+  );
   const [bearingInput, setBearingInput] = useState(
-    initial.bearingDeg !== undefined ? String(Math.round(initial.bearingDeg)) : "",
+    initial.bearingDeg !== undefined
+      ? String(normaliseBearing(initial.bearingDeg))
+      : "",
   );
   const [latError, setLatError] = useState<string | null>(null);
   const [lngError, setLngError] = useState<string | null>(null);
   const [bearingError, setBearingError] = useState<string | null>(null);
 
+  // ---- Search / geocode --------------------------------------------------
   const [searchQuery, setSearchQuery] = useState(initial.address ?? "");
   const [searchStatus, setSearchStatus] = useState<
     | { state: "idle" }
@@ -177,21 +320,176 @@ export function LocationPickerModal({
     | { state: "error"; message: string }
   >({ state: "idle" });
 
+  // ---- Bearing detection warning ----------------------------------------
   const [bearingWarning, setBearingWarning] = useState<string | null>(null);
+
+  // ---- Road-property classification --------------------------------------
+  const [classify, setClassify] = useState<ClassifyStatus>({ state: "idle" });
+  // User overrides on top of the classification.  Keyed by field; an
+  // undefined entry means "no override, use detected".  The values
+  // here are committed to the parent on Save.
+  const [overrides, setOverrides] = useState<RoadFieldOverrides>({});
+
+  // ---- Work zone length --------------------------------------------------
+  const [workZoneFt, setWorkZoneFt] = useState(
+    Math.max(0, initial.workZoneFt ?? 0),
+  );
+  const [workZoneInput, setWorkZoneInput] = useState(
+    initial.workZoneFt && initial.workZoneFt > 0
+      ? String(Math.round(initial.workZoneFt))
+      : "",
+  );
+  const [workZoneError, setWorkZoneError] = useState<string | null>(null);
+
+  // ---- Map / basemap -----------------------------------------------------
   const [style, setStyle] = useState<MapStyle>("satellite");
+  // Toggle to surface the lat/lng fallback inputs when the user is
+  // working without an interactive map.  Auto-enabled when the Mapbox
+  // token is missing.
+  const [showManualCoords, setShowManualCoords] = useState(!tokenAvailable);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapboxGL.Map | null>(null);
   const markerRef = useRef<MapboxGL.Marker | null>(null);
   const setMarkerBearingRef = useRef<((deg: number) => void) | null>(null);
   const mapboxRef = useRef<MapboxNamespace | null>(null);
+  const corridorReadyRef = useRef(false);
+  // Mirrors the latest computed corridor so the deferred ``installCorridor``
+  // handler can push current data when the map's ``load`` fires *after*
+  // the corridor was computed.  Without this, opening the modal with an
+  // already-set work-zone length would race and never paint the line.
+  const corridorDataRef = useRef<CorridorPolyline | null>(null);
   // Guards to avoid feedback loops between marker drag and coord state.
   const suppressFlyToRef = useRef(false);
   const suppressDragHandlerRef = useRef(false);
-  // Each bearing-detect call gets a token; only the latest call's
-  // result is allowed to mutate state, so a fast drag doesn't get a
-  // stale snap from an earlier request.
-  const detectTokenRef = useRef(0);
+  // Each detect call gets a token; only the latest call's result is
+  // allowed to mutate state, so a fast drag doesn't get a stale snap
+  // from an earlier request.
+  const bearingTokenRef = useRef(0);
+  const classifyTokenRef = useRef(0);
+
+  // ---- Effective values (override > detected > current) -----------------
+  const effectiveRoadType: RoadType | null =
+    overrides.roadType ??
+    (classify.state === "detected" ? classify.result.roadType : null);
+  const effectiveDivided: boolean | null =
+    overrides.divided ??
+    (classify.state === "detected" ? classify.result.divided : null);
+  const effectiveSpeed: number | null =
+    overrides.speedMph ??
+    (classify.state === "detected"
+      ? (classify.result.speedLimitMph ??
+        classify.result.fields.speed.value ??
+        null)
+      : null);
+  const effectiveLanes: number | null =
+    overrides.lanesPerDirection ??
+    (classify.state === "detected"
+      ? (classify.result.lanesPerDirection ??
+        classify.result.fields.lanes.value ??
+        null)
+      : null);
+
+  // ---- Corridor projection ----------------------------------------------
+  const corridor = useMemo<CorridorPolyline | null>(() => {
+    if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
+    if (workZoneFt <= 0) return null;
+    const speed = effectiveSpeed ?? initial.speedMph ?? 35;
+    const spec = buildCorridorSpec({
+      anchorLat: lat,
+      anchorLng: lng,
+      bearingDeg: bearing,
+      speedMph: speed,
+      workZoneFt,
+      scenarioKind: initial.scenarioKind,
+      roadCategory:
+        effectiveRoadType === "freeway"
+          ? "freeway"
+          : effectiveRoadType === "rural_divided" ||
+              effectiveRoadType === "rural_undivided"
+            ? "rural"
+            : effectiveRoadType === "urban_arterial"
+              ? "urban_high"
+              : null,
+    });
+    return buildCorridorPolyline(spec);
+  }, [
+    hasPin,
+    lat,
+    lng,
+    bearing,
+    workZoneFt,
+    effectiveSpeed,
+    effectiveRoadType,
+    initial.scenarioKind,
+    initial.speedMph,
+  ]);
+
+  // Sync the corridor onto the live map.  ``corridorDataRef`` is the
+  // canonical "what should the line show" so the deferred installer
+  // (running on ``load`` after style swap or initial init) can read it.
+  // When ``corridor`` is null we clear the source so a half-edited
+  // state doesn't leave a stale line behind.
+  useEffect(() => {
+    corridorDataRef.current = corridor;
+    const map = mapRef.current;
+    if (!map) return;
+    const source = map.getSource(CORRIDOR_SOURCE_ID) as
+      | MapboxGL.GeoJSONSource
+      | undefined;
+    if (!source) return;
+    const fc =
+      corridor?.featureCollection ??
+      ({
+        type: "FeatureCollection",
+        features: [],
+      } as GeoJSON.FeatureCollection);
+    source.setData(fc as never);
+  }, [corridor]);
+
+  // Shared fitBounds helper.  Used by the one-shot initial auto-fit
+  // and by the explicit "Recenter on corridor" button — never on
+  // routine pin moves or length edits.
+  const recenterToCorridor = useCallback(
+    (bbox: [number, number, number, number]) => {
+      const map = mapRef.current;
+      if (!map) return;
+      const [w, s, e, n] = bbox;
+      try {
+        map.fitBounds(
+          [
+            [w, s],
+            [e, n],
+          ],
+          {
+            padding: { top: 80, right: 80, bottom: 60, left: 80 },
+            maxZoom: 17,
+            duration: 600,
+          },
+        );
+      } catch {
+        // fitBounds throws when both corners are identical (zero-length
+        // bbox).  Ignore — there's nothing to recenter on.
+      }
+    },
+    [],
+  );
+
+  // Auto-fit fires AT MOST ONCE per modal lifetime, and only when the
+  // modal opens with a pre-existing corridor (the "Edit Location &
+  // Corridor" flow with a saved plan).  After that, the camera stays
+  // wherever the operator left it — drags, length edits, bearing
+  // changes, road-property overrides all just redraw the polyline.
+  // Use the Recenter button to get a "show me everything" view back.
+  const shouldAutoFitInitialRef = useRef(
+    initialHasPin && (initial.workZoneFt ?? 0) > 0,
+  );
+  useEffect(() => {
+    if (!corridor) return;
+    if (!shouldAutoFitInitialRef.current) return;
+    shouldAutoFitInitialRef.current = false;
+    recenterToCorridor(corridor.bbox);
+  }, [corridor, recenterToCorridor]);
 
   // ESC to cancel.
   useEffect(() => {
@@ -213,132 +511,119 @@ export function LocationPickerModal({
     };
   }, [open]);
 
-  // Initialize Mapbox GL once the modal opens. Dynamic-import keeps it
-  // out of any SSR bundle since mapbox-gl touches ``window`` at module
-  // scope.
-  useEffect(() => {
-    if (!open || !tokenAvailable) return;
-    const el = containerRef.current;
-    if (!el) return;
+  // ---- Detection: bearing + classification -------------------------------
 
-    let cancelled = false;
-    let map: MapboxGL.Map | null = null;
-    let resizeObserver: ResizeObserver | null = null;
-    const resizeTimers: ReturnType<typeof setTimeout>[] = [];
-
-    (async () => {
-      const mod = await import("mapbox-gl");
-      if (cancelled) return;
-      // mapbox-gl is shipped as a CommonJS module: ESM consumers receive
-      // the namespace under ``.default`` (with a fallback for bundlers
-      // that interop differently).
-      const mapbox = ((mod as unknown as { default?: MapboxNamespace }).default ??
-        (mod as unknown as MapboxNamespace)) as MapboxNamespace;
-      mapboxRef.current = mapbox;
-
-      const initialCenter: [number, number] = initialHasPin
-        ? [initial.lng!, initial.lat!]
-        : DEFAULT_CENTER;
-      const initialZoom = initialHasPin ? PIN_ZOOM : DEFAULT_ZOOM;
-
-      map = new mapbox.Map({
-        accessToken: token,
-        container: el,
-        style: MAPBOX_STYLES[style],
-        center: initialCenter,
-        zoom: initialZoom,
-        attributionControl: true,
-      });
-      mapRef.current = map;
-
-      map.addControl(new mapbox.NavigationControl(), "top-right");
-
-      // Click on map to drop/move the pin (when no pin yet, or to relocate).
-      map.on("click", (e: MapboxGL.MapMouseEvent) => {
-        const { lat: clat, lng: clng } = e.lngLat;
-        applyPinPosition(clat, clng, { detect: true, fly: false });
-      });
-
-      // Mapbox caches the canvas size from ``new Map()`` time. When the
-      // modal mounts inside a flex column, the container often hasn't
-      // reached its final height by then — and a single ResizeObserver
-      // can miss the layout settle if it happens between async ticks.
-      // Belt-and-suspenders: observe ongoing resizes, AND kick resize()
-      // multiple times during the first ~600ms, AND on the map's own
-      // load/idle events.
-      resizeObserver = new ResizeObserver(() => {
-        mapRef.current?.resize();
-      });
-      resizeObserver.observe(el);
-      const kick = () => mapRef.current?.resize();
-      map.on("load", kick);
-      map.on("idle", kick);
-      requestAnimationFrame(kick);
-      for (const ms of [50, 150, 350, 700]) {
-        resizeTimers.push(setTimeout(kick, ms));
-      }
-
-      if (initialHasPin) {
-        ensureMarker(initial.lat!, initial.lng!, initial.bearingDeg ?? 0);
-      } else {
-        // No prefilled pin, but the parent may have an address from the
-        // sidebar input. Auto-geocode so the map opens at that location
-        // instead of the generic Colorado view — the user shouldn't have
-        // to click "Search" again for an address they already entered.
-        const initialAddress = (initial.address ?? "").trim();
-        if (initialAddress.length > 0) {
-          setSearchStatus({ state: "resolving" });
-          try {
-            const r = await fetch("/api/geocode", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify({ address: initialAddress }),
-            });
-            if (cancelled) return;
-            if (r.ok) {
-              const j = (await r.json()) as { lat: number; lng: number };
-              setSearchStatus({ state: "idle" });
-              applyPinPosition(j.lat, j.lng, { detect: true, fly: true });
-            } else {
-              const msg =
-                r.status === 503
-                  ? "Geocoding not configured"
-                  : r.status === 404
-                    ? "No match for that address"
-                    : `Geocoding failed (${r.status})`;
-              setSearchStatus({ state: "error", message: msg });
-            }
-          } catch (err) {
-            if (!cancelled) {
-              setSearchStatus({ state: "error", message: (err as Error).message });
-            }
+  const detectBearingAt = useCallback(
+    async (qLat: number, qLng: number) => {
+      const myToken = ++bearingTokenRef.current;
+      try {
+        const r = await fetch("/api/road-bearing", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ lat: qLat, lng: qLng }),
+        });
+        if (!r.ok) {
+          if (bearingTokenRef.current === myToken) {
+            setBearingWarning(
+              "Couldn't reach road-detection service. Enter bearing manually.",
+            );
+            setBearingCandidates([]);
+            setSelectedCandidateIdx(null);
+            setShowCandidatePicker(false);
           }
+          return;
+        }
+        const j = (await r.json()) as BearingResponse;
+        if (bearingTokenRef.current !== myToken) return;
+        const cands = j.candidates ?? [];
+        if (cands.length === 0) {
+          setBearingWarning(
+            "No road detected within 30 m. Verify the location or enter bearing manually.",
+          );
+          setBearingCandidates([]);
+          setSelectedCandidateIdx(null);
+          setShowCandidatePicker(false);
+          return;
+        }
+        setBearingWarning(null);
+        setBearingCandidates(cands);
+        if (cands.length === 1) {
+          // Unambiguous — keep the prior behaviour: adopt the detected
+          // bearing if the operator hasn't typed one, otherwise leave
+          // their override alone.
+          const newBearing = normaliseBearing(cands[0].bearing);
+          setSelectedCandidateIdx(0);
+          setShowCandidatePicker(false);
+          if (bearingInputRef.current.trim() === "") {
+            setBearing(newBearing);
+            setBearingInput(String(newBearing));
+            setBearingError(null);
+            setMarkerBearingRef.current?.(newBearing);
+          }
+        } else {
+          // Multi-candidate: do NOT auto-apply.  Surface the picker so
+          // the operator can resolve the divided-highway ambiguity
+          // themselves.  The bearing field stays empty / user-typed
+          // until they pick one.
+          setSelectedCandidateIdx(null);
+          setShowCandidatePicker(true);
+        }
+      } catch {
+        if (bearingTokenRef.current === myToken) {
+          setBearingWarning(
+            "Couldn't reach road-detection service. Enter bearing manually.",
+          );
+          setBearingCandidates([]);
+          setSelectedCandidateIdx(null);
+          setShowCandidatePicker(false);
         }
       }
-    })();
+    },
+    [],
+  );
 
-    return () => {
-      cancelled = true;
-      resizeObserver?.disconnect();
-      for (const t of resizeTimers) clearTimeout(t);
-      if (map) map.remove();
-      mapRef.current = null;
-      markerRef.current = null;
-      setMarkerBearingRef.current = null;
-    };
-    // We intentionally only re-init on open / token availability; style
-    // changes are handled below via setStyle on the existing map.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, tokenAvailable, token]);
+  const detectRoadAt = useCallback(async (qLat: number, qLng: number) => {
+    const myToken = ++classifyTokenRef.current;
+    setClassify({ state: "resolving" });
+    // Clear stale overrides so the new detection is the baseline.  The
+    // operator can re-apply edits on top of the fresh classification.
+    setOverrides({});
+    try {
+      const r = await fetch("/api/road-classify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lat: qLat, lng: qLng }),
+      });
+      if (classifyTokenRef.current !== myToken) return;
+      if (!r.ok) {
+        setClassify({
+          state: "error",
+          message:
+            r.status === 404
+              ? "No road detected at this point"
+              : r.status === 503
+                ? "Road classification not configured"
+                : "Auto-classify failed",
+        });
+        return;
+      }
+      const j = (await r.json()) as RoadClassification;
+      if (classifyTokenRef.current !== myToken) return;
+      setClassify({ state: "detected", result: j });
+    } catch {
+      if (classifyTokenRef.current === myToken) {
+        setClassify({ state: "error", message: "Auto-classify failed" });
+      }
+    }
+  }, []);
 
-  // Switch basemap style on the existing map without re-initializing.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    map.setStyle(MAPBOX_STYLES[style]);
-  }, [style]);
+  // The bearing-input string is captured in a ref so the async detection
+  // callback can read its *current* value without re-creating the
+  // closure (which would tear the request token-guard).
+  const bearingInputRef = useRef(bearingInput);
+  bearingInputRef.current = bearingInput;
 
-  // ---- Marker management --------------------------------------------------
+  // ---- Marker / pin management ------------------------------------------
 
   const ensureMarker = useCallback(
     (mlat: number, mlng: number, mbearing: number) => {
@@ -367,22 +652,24 @@ export function LocationPickerModal({
       }
       setMarkerBearingRef.current?.(mbearing);
     },
-    // ensureMarker and applyPinPosition reference each other; including
-    // applyPinPosition here would force a fresh marker on every render
-    // and tear down the user's drag interaction. Both read live values
-    // from refs, so empty deps are intentional.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
   // Single source of truth for "the pin is now at these coords": updates
   // state, repositions the marker, optionally pans the map, optionally
-  // re-detects road bearing and snaps.
+  // fires both /api/road-bearing and /api/road-classify.
+  //
+  // ``targetZoom`` only matters when ``fly`` is true.  Pass it for
+  // initial-load / search-bar navigation (bumps up from a state-level
+  // view to street level).  Omit it for pin drags / typed-coord moves
+  // so the camera *preserves* whatever zoom the operator landed on
+  // — small refinements shouldn't suddenly jump them to street level.
   const applyPinPosition = useCallback(
     (
       newLat: number,
       newLng: number,
-      opts: { detect: boolean; fly: boolean },
+      opts: { detect: boolean; fly: boolean; targetZoom?: number },
     ) => {
       if (!isValidLat(newLat) || !isValidLng(newLng)) return;
       setHasPin(true);
@@ -398,19 +685,24 @@ export function LocationPickerModal({
       const map = mapRef.current;
       if (map && opts.fly && !suppressFlyToRef.current) {
         const z = map.getZoom();
+        const targetZ =
+          opts.targetZoom !== undefined && z < opts.targetZoom
+            ? opts.targetZoom
+            : z;
         map.flyTo({
           center: [newLng, newLat],
-          zoom: z < PIN_ZOOM ? PIN_ZOOM : z,
+          zoom: targetZ,
           essential: true,
         });
       }
 
       if (opts.detect) {
-        void detectBearing(newLat, newLng);
+        void detectBearingAt(newLat, newLng);
+        void detectRoadAt(newLat, newLng);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bearing, ensureMarker],
+    [bearing, ensureMarker, detectBearingAt, detectRoadAt],
   );
 
   // Snap the map (if pin is off-screen) and the pin to provided coords.
@@ -428,102 +720,196 @@ export function LocationPickerModal({
     [applyPinPosition],
   );
 
-  // ---- Bearing detection --------------------------------------------------
+  // ---- Mapbox initialisation --------------------------------------------
 
-  const detectBearing = useCallback(
-    async (qLat: number, qLng: number) => {
-      const myToken = ++detectTokenRef.current;
-      try {
-        const r = await fetch("/api/road-bearing", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ lat: qLat, lng: qLng }),
-        });
-        if (!r.ok) {
-          if (detectTokenRef.current === myToken) {
-            setBearingWarning(
-              "Couldn't reach road-detection service. Enter bearing manually.",
-            );
+  useEffect(() => {
+    if (!open || !tokenAvailable) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    let cancelled = false;
+    let map: MapboxGL.Map | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+    const resizeTimers: ReturnType<typeof setTimeout>[] = [];
+
+    (async () => {
+      const mod = await import("mapbox-gl");
+      if (cancelled) return;
+      const mapbox = ((mod as unknown as { default?: MapboxNamespace }).default ??
+        (mod as unknown as MapboxNamespace)) as MapboxNamespace;
+      mapboxRef.current = mapbox;
+
+      const initialCenter: [number, number] = initialHasPin
+        ? [initial.lng!, initial.lat!]
+        : DEFAULT_CENTER;
+      const initialZoom = initialHasPin ? PIN_ZOOM : DEFAULT_ZOOM;
+
+      map = new mapbox.Map({
+        accessToken: token,
+        container: el,
+        style: MAPBOX_STYLES[style],
+        center: initialCenter,
+        zoom: initialZoom,
+        attributionControl: true,
+      });
+      mapRef.current = map;
+
+      map.addControl(new mapbox.NavigationControl(), "top-right");
+
+      map.on("click", (e: MapboxGL.MapMouseEvent) => {
+        const { lat: clat, lng: clng } = e.lngLat;
+        applyPinPosition(clat, clng, { detect: true, fly: false });
+      });
+
+      // Mapbox caches the canvas size from ``new Map()`` time.  Belt-
+      // and-suspenders: observe ongoing resizes, AND kick resize()
+      // multiple times during the first ~600 ms, AND on the map's own
+      // load/idle events.
+      resizeObserver = new ResizeObserver(() => {
+        mapRef.current?.resize();
+      });
+      resizeObserver.observe(el);
+      const kick = () => mapRef.current?.resize();
+      map.on("load", kick);
+      map.on("idle", kick);
+      requestAnimationFrame(kick);
+      for (const ms of [50, 150, 350, 700]) {
+        resizeTimers.push(setTimeout(kick, ms));
+      }
+
+      // Add the corridor source + a single layer that colours by zone
+      // property.  Idempotent — fires on initial ``load`` and again on
+      // every ``styledata`` (because setStyle wipes sources).  After
+      // (re)install, push the latest corridor data so an in-flight
+      // edit doesn't go missing during a basemap toggle.
+      const installCorridor = () => {
+        if (!map) return;
+        if (!map.getSource(CORRIDOR_SOURCE_ID)) {
+          map.addSource(CORRIDOR_SOURCE_ID, {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: [],
+            },
+          });
+          map.addLayer({
+            id: CORRIDOR_LAYER_ID,
+            type: "line",
+            source: CORRIDOR_SOURCE_ID,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-width": 6,
+              "line-opacity": 0.9,
+              "line-color": [
+                "match",
+                ["get", "zone"],
+                "advance_warning",
+                ZONE_COLOR.advance_warning,
+                "transition",
+                ZONE_COLOR.transition,
+                "buffer",
+                ZONE_COLOR.buffer,
+                "work_zone",
+                ZONE_COLOR.work_zone,
+                "downstream",
+                ZONE_COLOR.downstream,
+                /* default */ "#ffffff",
+              ],
+            },
+          });
+        }
+        corridorReadyRef.current = true;
+        const current = corridorDataRef.current;
+        const source = map.getSource(CORRIDOR_SOURCE_ID) as
+          | MapboxGL.GeoJSONSource
+          | undefined;
+        if (source) {
+          source.setData(
+            (current?.featureCollection ?? {
+              type: "FeatureCollection",
+              features: [],
+            }) as never,
+          );
+        }
+      };
+      map.on("load", installCorridor);
+      map.on("styledata", installCorridor);
+
+      if (initialHasPin) {
+        ensureMarker(initial.lat!, initial.lng!, bearing);
+        // Run detection so road properties + corridor populate on first
+        // open of an already-located plan.
+        void detectBearingAt(initial.lat!, initial.lng!);
+        void detectRoadAt(initial.lat!, initial.lng!);
+      } else {
+        const initialAddress = (initial.address ?? "").trim();
+        if (initialAddress.length > 0) {
+          setSearchStatus({ state: "resolving" });
+          try {
+            const r = await fetch("/api/geocode", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ address: initialAddress }),
+            });
+            if (cancelled) return;
+            if (r.ok) {
+              const j = (await r.json()) as { lat: number; lng: number };
+              setSearchStatus({ state: "idle" });
+              applyPinPosition(j.lat, j.lng, {
+                detect: true,
+                fly: true,
+                targetZoom: PIN_ZOOM,
+              });
+            } else {
+              const msg =
+                r.status === 503
+                  ? "Geocoding not configured"
+                  : r.status === 404
+                    ? "No match for that address"
+                    : `Geocoding failed (${r.status})`;
+              setSearchStatus({ state: "error", message: msg });
+            }
+          } catch (err) {
+            if (!cancelled) {
+              setSearchStatus({
+                state: "error",
+                message: (err as Error).message,
+              });
+            }
           }
-          return;
-        }
-        const j = (await r.json()) as BearingResponse;
-        if (detectTokenRef.current !== myToken) return;
-        if (j.bearing === null) {
-          setBearingWarning(
-            "No road detected within 100 m. Verify the location or enter bearing manually.",
-          );
-          return;
-        }
-        setBearingWarning(null);
-        const newBearing = Math.round(j.bearing);
-        setBearing(newBearing);
-        setBearingInput(String(newBearing));
-        setBearingError(null);
-        setMarkerBearingRef.current?.(newBearing);
-        // Snap pin to the projected nearest point on the road centerline.
-        if (j.snapped_lat !== null && j.snapped_lng !== null) {
-          suppressDragHandlerRef.current = true;
-          markerRef.current?.setLngLat([j.snapped_lng, j.snapped_lat]);
-          setLat(j.snapped_lat);
-          setLng(j.snapped_lng);
-          setLatInput(fmt4(j.snapped_lat));
-          setLngInput(fmt4(j.snapped_lng));
-          // Release the guard on next tick.
-          setTimeout(() => {
-            suppressDragHandlerRef.current = false;
-          }, 0);
-        }
-      } catch {
-        if (detectTokenRef.current === myToken) {
-          setBearingWarning(
-            "Couldn't reach road-detection service. Enter bearing manually.",
-          );
         }
       }
-    },
-    [],
-  );
+    })();
 
-  // ---- Search bar / geocode -----------------------------------------------
+    return () => {
+      cancelled = true;
+      resizeObserver?.disconnect();
+      for (const t of resizeTimers) clearTimeout(t);
+      if (map) map.remove();
+      mapRef.current = null;
+      markerRef.current = null;
+      setMarkerBearingRef.current = null;
+      corridorReadyRef.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, tokenAvailable, token]);
 
-  const onSubmitSearch = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const q = searchQuery.trim();
-      if (!q) return;
-      setSearchStatus({ state: "resolving" });
-      try {
-        const r = await fetch("/api/geocode", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ address: q }),
-        });
-        if (!r.ok) {
-          const msg =
-            r.status === 503
-              ? "Geocoding not configured"
-              : r.status === 404
-                ? "No match for that address"
-                : `Geocoding failed (${r.status})`;
-          setSearchStatus({ state: "error", message: msg });
-          return;
-        }
-        const j = (await r.json()) as { lat: number; lng: number };
-        setSearchStatus({ state: "idle" });
-        setAddress(q);
-        applyPinPosition(j.lat, j.lng, { detect: true, fly: true });
-      } catch (err) {
-        setSearchStatus({ state: "error", message: (err as Error).message });
-      }
-    },
-    [searchQuery, applyPinPosition],
-  );
+  // Switch basemap style on the existing map without re-initialising.
+  // ``setStyle`` clears all sources, so the corridor layer reinstalls
+  // itself in the ``styledata`` listener above.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    corridorReadyRef.current = false;
+    map.setStyle(MAPBOX_STYLES[style]);
+  }, [style]);
 
-  // ---- Field handlers -----------------------------------------------------
+  // ---- Field handlers ---------------------------------------------------
 
   const onLatChange = (raw: string) => {
-    // If a comma-separated paste lands here, split into both fields.
     if (raw.includes(",")) {
       const [a, b] = raw.split(",").map((s) => s.trim());
       const la = parseFloat(a);
@@ -532,7 +918,9 @@ export function LocationPickerModal({
         setLatInput(fmt4(la));
         setLngInput(fmt4(lo));
         setLatError(isValidLat(la) ? null : "Latitude must be between -90 and 90");
-        setLngError(isValidLng(lo) ? null : "Longitude must be between -180 and 180");
+        setLngError(
+          isValidLng(lo) ? null : "Longitude must be between -180 and 180",
+        );
         if (isValidLat(la) && isValidLng(lo)) {
           applyTypedCoords(la, lo);
         }
@@ -594,32 +982,140 @@ export function LocationPickerModal({
     setBearingInput(raw);
     if (raw.trim() === "") {
       setBearingError(null);
+      // Empty input — fall back to the operator's currently-selected
+      // candidate if any, else 0.  The arrow rotates so the operator
+      // sees the change immediately.
+      const fallback =
+        selectedCandidateIdx !== null
+          ? normaliseBearing(bearingCandidates[selectedCandidateIdx].bearing)
+          : 0;
+      setBearing(fallback);
+      setMarkerBearingRef.current?.(fallback);
       return;
     }
-    const n = parseFloat(raw);
+    // Reject anything that isn't a positive integer up-front.  ``parseFloat``
+    // would silently accept "37.5" or "37foo" — both are valid for the
+    // input box but not for a compass bearing.
+    if (!/^\d+$/.test(raw.trim())) {
+      setBearingError("Enter a whole number");
+      return;
+    }
+    const n = parseInt(raw, 10);
     if (!Number.isFinite(n)) {
       setBearingError("Invalid number");
       return;
     }
     if (!isValidBearing(n)) {
-      setBearingError("Bearing must be between 0 and 360");
+      setBearingError("Bearing must be between 0 and 359");
       return;
     }
     setBearingError(null);
-    const rounded = Math.round(n);
+    const rounded = normaliseBearing(n);
     setBearing(rounded);
     setMarkerBearingRef.current?.(rounded);
   };
 
+  // Apply a specific candidate to the bearing field.  Used by the
+  // picker buttons (multi-candidate case) and indirectly by
+  // ``onUseDetectedBearing`` when only one candidate exists.
+  const applyCandidate = useCallback(
+    (idx: number) => {
+      if (idx < 0 || idx >= bearingCandidates.length) return;
+      const c = bearingCandidates[idx];
+      const b = normaliseBearing(c.bearing);
+      setSelectedCandidateIdx(idx);
+      setBearing(b);
+      setBearingInput(String(b));
+      setBearingError(null);
+      setMarkerBearingRef.current?.(b);
+      setShowCandidatePicker(false);
+    },
+    [bearingCandidates],
+  );
+
+  const onUseDetectedBearing = () => {
+    if (bearingCandidates.length === 0) return;
+    if (bearingCandidates.length === 1) {
+      applyCandidate(0);
+      return;
+    }
+    // Multiple candidates — re-expand the picker so the operator can
+    // pick.  Don't pre-apply: that's the bug we're fixing.
+    setShowCandidatePicker(true);
+  };
+
   const onFlipDirection = () => {
-    const flipped = (bearing + 180) % 360;
+    const flipped = normaliseBearing(bearing + 180);
     setBearing(flipped);
     setBearingInput(String(flipped));
     setBearingError(null);
     setMarkerBearingRef.current?.(flipped);
   };
 
-  // ---- Save / cancel ------------------------------------------------------
+  const onWorkZoneChange = (raw: string) => {
+    setWorkZoneInput(raw);
+    if (raw.trim() === "") {
+      setWorkZoneError(null);
+      setWorkZoneFt(0);
+      return;
+    }
+    if (!/^\d+$/.test(raw.trim())) {
+      setWorkZoneError("Whole number of feet");
+      return;
+    }
+    const n = parseInt(raw, 10);
+    if (!Number.isFinite(n) || n < 0) {
+      setWorkZoneError("Invalid length");
+      return;
+    }
+    if (n > 50000) {
+      setWorkZoneError("Implausibly long — under 50,000 ft");
+      return;
+    }
+    setWorkZoneError(null);
+    setWorkZoneFt(n);
+  };
+
+  // ---- Search bar / geocode ---------------------------------------------
+
+  const onSubmitSearch = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      const q = searchQuery.trim();
+      if (!q) return;
+      setSearchStatus({ state: "resolving" });
+      try {
+        const r = await fetch("/api/geocode", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ address: q }),
+        });
+        if (!r.ok) {
+          const msg =
+            r.status === 503
+              ? "Geocoding not configured"
+              : r.status === 404
+                ? "No match for that address"
+                : `Geocoding failed (${r.status})`;
+          setSearchStatus({ state: "error", message: msg });
+          return;
+        }
+        const j = (await r.json()) as { lat: number; lng: number };
+        setSearchStatus({ state: "idle" });
+        setAddress(q);
+        applyPinPosition(j.lat, j.lng, {
+          detect: true,
+          fly: true,
+          targetZoom: PIN_ZOOM,
+        });
+      } catch (err) {
+        setSearchStatus({ state: "error", message: (err as Error).message });
+      }
+    },
+    [searchQuery, applyPinPosition],
+  );
+
+  // ---- Save / cancel ----------------------------------------------------
 
   const canSave =
     hasPin &&
@@ -627,7 +1123,8 @@ export function LocationPickerModal({
     isValidLng(lng) &&
     !latError &&
     !lngError &&
-    !bearingError;
+    !bearingError &&
+    !workZoneError;
 
   const onClickSave = () => {
     if (!canSave) return;
@@ -635,7 +1132,11 @@ export function LocationPickerModal({
       address,
       lat,
       lng,
-      bearingDeg: bearingInput.trim() === "" ? undefined : bearing,
+      bearingDeg:
+        bearingInput.trim() === "" ? undefined : normaliseBearing(bearing),
+      workZoneFt,
+      classification: classify.state === "detected" ? classify.result : null,
+      overrides,
     });
   };
 
@@ -647,31 +1148,31 @@ export function LocationPickerModal({
       onClick={onCancel}
     >
       <div
-        className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[80vw] md:h-[80vh] md:max-w-[1200px] md:max-h-[800px]"
+        className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label="Pick work zone location"
+        aria-label="Define work zone"
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-5 py-4">
+        <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-1">
-              Location · Pick on Map
+              Work zone · Define
             </div>
-            <h2 className="text-white text-[18px] font-semibold m-0">
-              Pick Work Zone Location
+            <h2 className="text-white text-[17px] font-semibold m-0">
+              Define Work Zone
             </h2>
-            <p className="text-[13px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0">
-              Drop a pin at the work zone anchor and indicate direction of
-              travel.
+            <p className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-0.5 m-0">
+              Drop a pin, review the detected road properties, and set the
+              work-zone length.
             </p>
           </div>
           <button
             type="button"
             onClick={onCancel}
             aria-label="Close"
-            className="text-[color:var(--ink-on-dark-faint)] hover:text-white text-[20px] leading-none px-2 py-1"
+            className="text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path
@@ -687,7 +1188,7 @@ export function LocationPickerModal({
         {/* Search bar */}
         <form
           onSubmit={onSubmitSearch}
-          className="flex gap-2 border-b border-[color:var(--rule)] px-5 py-3"
+          className="flex gap-2 border-b border-[color:var(--rule)] px-5 py-2.5 flex-shrink-0"
         >
           <input
             type="text"
@@ -705,131 +1206,213 @@ export function LocationPickerModal({
           </button>
         </form>
         {searchStatus.state === "error" && (
-          <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#EB5757]">
+          <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#EB5757] flex-shrink-0">
             {searchStatus.message}
           </div>
         )}
 
-        {/* Map area — mapbox attaches directly to the flex-1 div so the
-            canvas tracks the parent's resolved height without a layered
-            absolute child that can read 0 during the initial paint. */}
-        {tokenAvailable ? (
-          <div
-            ref={containerRef}
-            className="relative flex-1 bg-black/30"
-            style={{ minHeight: 320 }}
+        {/* Manual-coords toggle + collapsible row.  Sits directly under
+            the search bar so it reads as an alternative to address
+            search rather than a buried fallback at the modal foot.
+            Auto-expanded when the Mapbox token is missing. */}
+        <div className="border-b border-[color:var(--rule)] px-5 py-1.5 flex-shrink-0 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setShowManualCoords((s) => !s)}
+            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
           >
-            <button
-              type="button"
-              onClick={() =>
-                setStyle(style === "satellite" ? "streets" : "satellite")
-              }
-              className="absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
-            >
-              {style === "satellite" ? "Streets" : "Satellite"}
-            </button>
-            {!hasPin && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none">
-                Click the map or search to drop a pin
-              </div>
-            )}
-          </div>
-        ) : (
-          <div
-            className="relative flex-1 bg-black/30 flex items-center justify-center text-center px-6"
-            style={{ minHeight: 320 }}
-          >
-            <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
-              <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-2">
-                Map unavailable
-              </div>
-              NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
-              map can&apos;t load — please enter coordinates manually below.
+            {showManualCoords
+              ? "− Hide coordinate entry"
+              : "+ Or enter coordinates manually"}
+          </button>
+          {showManualCoords && (
+            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+              Lat / Lng decimal degrees
+            </span>
+          )}
+        </div>
+        {showManualCoords && (
+          <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-5 py-2 flex-shrink-0">
+            <div>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={latInput}
+                onChange={(e) => onLatChange(e.target.value)}
+                placeholder="Latitude (e.g., 38.8862)"
+                className="field-input w-full"
+              />
+              {latError && (
+                <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
+                  {latError}
+                </div>
+              )}
+            </div>
+            <div>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={lngInput}
+                onChange={(e) => onLngChange(e.target.value)}
+                placeholder="Longitude (e.g., -104.8354)"
+                className="field-input w-full"
+              />
+              {lngError && (
+                <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
+                  {lngError}
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Controls */}
-        <div className="flex items-center justify-between border-t border-[color:var(--rule)] px-5 py-3">
-          <button
-            type="button"
-            onClick={onFlipDirection}
-            disabled={!hasPin}
-            className="border border-[color:var(--ink-on-dark-faint)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 py-2 hover:border-white hover:text-white transition-colors disabled:opacity-40"
-          >
-            ⟲ Flip Direction
-          </button>
+        {/* Body: map (top) + panels (bottom). The body scrolls when the
+            viewport is small; the map keeps a minimum height so the
+            corridor preview is always readable. */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto">
+          {/* Map */}
+          {tokenAvailable ? (
+            <div
+              ref={containerRef}
+              className="relative bg-black/30 flex-shrink-0"
+              style={{ minHeight: 320, height: "44vh" }}
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  setStyle(style === "satellite" ? "streets" : "satellite")
+                }
+                className="absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
+              >
+                {style === "satellite" ? "Streets" : "Satellite"}
+              </button>
+              {!hasPin && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none">
+                  Click the map or search to drop a pin
+                </div>
+              )}
+              {/* Bottom-right stack: Recenter button (above) + legend.
+                  Recenter is the explicit "show me the whole corridor"
+                  control; we no longer auto-refit on pin drags. */}
+              {corridor && (
+                <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => recenterToCorridor(corridor.bbox)}
+                    title="Recenter on corridor"
+                    aria-label="Recenter on corridor"
+                    className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--cyan)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="8"
+                        cy="8"
+                        r="5.5"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                      <line
+                        x1="8"
+                        y1="0.5"
+                        x2="8"
+                        y2="3"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                      <line
+                        x1="8"
+                        y1="13"
+                        x2="8"
+                        y2="15.5"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                      <line
+                        x1="0.5"
+                        y1="8"
+                        x2="3"
+                        y2="8"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                      <line
+                        x1="13"
+                        y1="8"
+                        x2="15.5"
+                        y2="8"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                      />
+                      <circle cx="8" cy="8" r="1.25" fill="currentColor" />
+                    </svg>
+                    Recenter
+                  </button>
+                  <CorridorLegend />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div
+              className="relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0"
+              style={{ minHeight: 240, height: "30vh" }}
+            >
+              <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
+                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-2">
+                  Map unavailable
+                </div>
+                NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
+                map can&apos;t load — please enter coordinates manually below.
+              </div>
+            </div>
+          )}
+
+          {/* Bearing detection warning lives just below the map so it's
+              visible the moment classification surfaces a problem. */}
           {bearingWarning && (
-            <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#E8710A] text-right ml-3">
+            <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] flex-shrink-0">
               {bearingWarning}
             </div>
           )}
-        </div>
 
-        {/* Coordinate panel */}
-        <div className="grid grid-cols-3 gap-3 border-t border-[color:var(--rule)] px-5 py-3">
-          <div>
-            <label className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] block mb-1">
-              Latitude
-            </label>
-            <input
-              type="text"
-              inputMode="decimal"
-              value={latInput}
-              onChange={(e) => onLatChange(e.target.value)}
-              placeholder="38.8862"
-              className="field-input w-full"
+          {/* Panels: road properties (left, ~60%) + work zone & corridor
+              (right, ~40%) on wider screens; stacked below ~lg. */}
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-0 border-t border-[color:var(--rule)] flex-shrink-0">
+            <RoadPropertiesPanel
+              classify={classify}
+              overrides={overrides}
+              setOverrides={setOverrides}
             />
-            {latError && (
-              <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
-                {latError}
-              </div>
-            )}
+
+            <div className="border-l-0 lg:border-l border-t lg:border-t-0 border-[color:var(--rule)]">
+              <WorkZonePanel
+                workZoneInput={workZoneInput}
+                workZoneError={workZoneError}
+                onWorkZoneChange={onWorkZoneChange}
+                bearingInput={bearingInput}
+                bearingError={bearingError}
+                onBearingChange={onBearingChange}
+                bearingCandidates={bearingCandidates}
+                selectedCandidateIdx={selectedCandidateIdx}
+                showCandidatePicker={showCandidatePicker}
+                onApplyCandidate={applyCandidate}
+                onUseDetectedBearing={onUseDetectedBearing}
+                onFlipDirection={onFlipDirection}
+                hasPin={hasPin}
+              />
+              <CorridorPreviewPanel corridor={corridor} hasPin={hasPin} />
+            </div>
           </div>
-          <div>
-            <label className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] block mb-1">
-              Longitude
-            </label>
-            <input
-              type="text"
-              inputMode="decimal"
-              value={lngInput}
-              onChange={(e) => onLngChange(e.target.value)}
-              placeholder="-104.8354"
-              className="field-input w-full"
-            />
-            {lngError && (
-              <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
-                {lngError}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] block mb-1">
-              Bearing (° from N)
-            </label>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={bearingInput}
-              onChange={(e) => onBearingChange(e.target.value)}
-              placeholder="19"
-              className="field-input w-full"
-            />
-            {bearingError && (
-              <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
-                {bearingError}
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="px-5 pb-3 font-mono text-[10px] text-[color:var(--ink-on-dark-faint)]">
-          Coordinates update as you move the pin. You can also type them
-          directly.
+
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 border-t border-[color:var(--rule)] px-5 py-3">
+        <div className="flex justify-end gap-3 border-t border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
           <button
             type="button"
             onClick={onCancel}
@@ -847,6 +1430,715 @@ export function LocationPickerModal({
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Sub-panels (private to this file)
+// ---------------------------------------------------------------------------
+
+// Static legend bar.  Positioning is owned by the parent — this is
+// rendered inside the bottom-right stack alongside the Recenter
+// button, so it shouldn't carry its own absolute coords.
+function CorridorLegend() {
+  const rows: Array<{ zone: CorridorZone }> = [
+    { zone: "advance_warning" },
+    { zone: "transition" },
+    { zone: "buffer" },
+    { zone: "work_zone" },
+    { zone: "downstream" },
+  ];
+  return (
+    <div className="bg-black/75 border border-white/15 px-3 py-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-white max-w-[200px]">
+      {rows.map((r) => (
+        <div key={r.zone} className="flex items-center gap-2 whitespace-nowrap">
+          <span
+            className="inline-block w-3 h-1.5"
+            style={{ background: ZONE_COLOR[r.zone] }}
+          />
+          <span>{ZONE_LABEL[r.zone]}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---- RoadPropertiesPanel --------------------------------------------------
+
+function RoadPropertiesPanel({
+  classify,
+  overrides,
+  setOverrides,
+}: {
+  classify: ClassifyStatus;
+  overrides: RoadFieldOverrides;
+  setOverrides: (next: RoadFieldOverrides) => void;
+}) {
+  return (
+    <div>
+      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+        Road properties
+      </div>
+
+      <div className="px-5 py-1">
+        {classify.state === "idle" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3">
+            Drop a pin on the map to auto-detect road properties.
+          </div>
+        )}
+        {classify.state === "resolving" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3 flex items-center gap-2">
+            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--cyan)]/40 border-t-[color:var(--cyan)] animate-spin" />
+            Classifying road…
+          </div>
+        )}
+        {classify.state === "error" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-3">
+            {classify.message}. Fields default to the scenario&apos;s existing
+            values — verify manually below.
+          </div>
+        )}
+        {classify.state === "detected" && (
+          <DetectedRows
+            result={classify.result}
+            overrides={overrides}
+            setOverrides={setOverrides}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function DetectedRows({
+  result,
+  overrides,
+  setOverrides,
+}: {
+  result: RoadClassification;
+  overrides: RoadFieldOverrides;
+  setOverrides: (next: RoadFieldOverrides) => void;
+}) {
+  const speedDetected =
+    result.speedLimitMph ?? result.fields.speed.value ?? null;
+  const lanesDetected =
+    result.lanesPerDirection ?? result.fields.lanes.value ?? null;
+
+  const speedValue = overrides.speedMph ?? speedDetected;
+  const lanesValue = overrides.lanesPerDirection ?? lanesDetected;
+  const roadTypeValue = overrides.roadType ?? result.roadType;
+  const dividedValue = overrides.divided ?? result.divided;
+
+  return (
+    <div className="flex flex-col">
+      <RoadFieldRow
+        label="Speed limit (mph)"
+        field={result.fields.speed}
+        modified={
+          overrides.speedMph !== undefined &&
+          overrides.speedMph !== speedDetected
+        }
+      >
+        <NumericFieldEditor
+          value={speedValue}
+          step={5}
+          min={5}
+          max={85}
+          onChange={(v) =>
+            setOverrides({
+              ...overrides,
+              speedMph: v ?? undefined,
+            })
+          }
+          onClear={() => {
+            const next = { ...overrides };
+            delete next.speedMph;
+            setOverrides(next);
+          }}
+          hasOverride={overrides.speedMph !== undefined}
+        />
+      </RoadFieldRow>
+
+      <RoadFieldRow
+        label="Lanes per direction"
+        field={result.fields.lanes}
+        modified={
+          overrides.lanesPerDirection !== undefined &&
+          overrides.lanesPerDirection !== lanesDetected
+        }
+      >
+        <NumericFieldEditor
+          value={lanesValue}
+          step={1}
+          min={1}
+          max={6}
+          onChange={(v) =>
+            setOverrides({
+              ...overrides,
+              lanesPerDirection: v ?? undefined,
+            })
+          }
+          onClear={() => {
+            const next = { ...overrides };
+            delete next.lanesPerDirection;
+            setOverrides(next);
+          }}
+          hasOverride={overrides.lanesPerDirection !== undefined}
+        />
+      </RoadFieldRow>
+
+      <RoadFieldRow
+        label="Road type"
+        field={result.fields.roadType}
+        modified={
+          overrides.roadType !== undefined &&
+          overrides.roadType !== result.roadType
+        }
+      >
+        <RoadTypeEditor
+          value={roadTypeValue}
+          onChange={(v) =>
+            setOverrides({
+              ...overrides,
+              roadType: v === result.roadType ? undefined : v,
+            })
+          }
+          onClear={() => {
+            const next = { ...overrides };
+            delete next.roadType;
+            setOverrides(next);
+          }}
+          hasOverride={overrides.roadType !== undefined}
+        />
+      </RoadFieldRow>
+
+      <RoadFieldRow
+        label="Divided"
+        field={result.fields.divided}
+        modified={
+          overrides.divided !== undefined &&
+          overrides.divided !== result.divided
+        }
+      >
+        <DividedEditor
+          value={dividedValue}
+          onChange={(v) =>
+            setOverrides({
+              ...overrides,
+              divided: v === result.divided ? undefined : v,
+            })
+          }
+          onClear={() => {
+            const next = { ...overrides };
+            delete next.divided;
+            setOverrides(next);
+          }}
+          hasOverride={overrides.divided !== undefined}
+        />
+      </RoadFieldRow>
+    </div>
+  );
+}
+
+// One detected road property.  Layout is a strict 2-column grid: label
+// + single-line source caption on the left, control on the right.  The
+// right column width is locked at 150 px so every editor — number,
+// dropdown, pill — anchors to the same column edge regardless of its
+// natural width.  Row height ~52 px keeps the section dense.
+function RoadFieldRow<T>({
+  label,
+  field,
+  modified,
+  children,
+}: {
+  label: string;
+  field: DetectedField<T>;
+  modified: boolean;
+  children: React.ReactNode;
+}) {
+  const confTone =
+    field.confidence === "low"
+      ? "text-[color:var(--orange)]"
+      : "text-[color:var(--ink-on-dark-faint)]";
+  return (
+    <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 last:border-b-0 min-h-[52px]">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-[13px] text-white font-medium leading-none">
+            {label}
+          </span>
+          <span
+            className={`inline-block w-1.5 h-1.5 rounded-full ${confDotClass(field.confidence)}`}
+            title={`${field.confidence} confidence`}
+          />
+          {modified && (
+            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--orange)] leading-none">
+              modified
+            </span>
+          )}
+        </div>
+        <div
+          className={`mt-1 font-mono text-[10px] uppercase tracking-[0.06em] truncate leading-tight ${confTone}`}
+          title={field.rawData ?? undefined}
+        >
+          {field.source} · {field.confidence} confidence
+        </div>
+      </div>
+      <div className="flex items-center justify-end gap-1.5 min-w-0">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// Width of the revert button + its gap; the input fills the rest of
+// the 150 px right column so all three editors visually anchor to the
+// same column edge.
+function RevertButton({ onClear }: { onClear: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClear}
+      title="Revert to detected value"
+      className="font-mono text-[12px] text-[color:var(--ink-on-dark-faint)] hover:text-white px-1 leading-none flex-shrink-0"
+    >
+      ↺
+    </button>
+  );
+}
+
+function NumericFieldEditor({
+  value,
+  step,
+  min,
+  max,
+  onChange,
+  onClear,
+  hasOverride,
+}: {
+  value: number | null;
+  step: number;
+  min: number;
+  max: number;
+  onChange: (v: number | null) => void;
+  onClear: () => void;
+  hasOverride: boolean;
+}) {
+  return (
+    <>
+      <input
+        type="number"
+        step={step}
+        min={min}
+        max={max}
+        value={value ?? ""}
+        onChange={(e) => {
+          const raw = e.target.value;
+          if (raw === "") {
+            onChange(null);
+            return;
+          }
+          const n = parseInt(raw, 10);
+          if (Number.isFinite(n)) onChange(n);
+        }}
+        className="field-input flex-1 min-w-0 text-right"
+      />
+      {hasOverride && <RevertButton onClear={onClear} />}
+    </>
+  );
+}
+
+function RoadTypeEditor({
+  value,
+  onChange,
+  onClear,
+  hasOverride,
+}: {
+  value: RoadType;
+  onChange: (v: RoadType) => void;
+  onClear: () => void;
+  hasOverride: boolean;
+}) {
+  return (
+    <>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as RoadType)}
+        className="field-input field-select flex-1 min-w-0 text-[12px]"
+      >
+        {ROAD_TYPE_OPTIONS.map((o) => (
+          <option key={o.v} value={o.v}>
+            {o.l}
+          </option>
+        ))}
+      </select>
+      {hasOverride && <RevertButton onClear={onClear} />}
+    </>
+  );
+}
+
+function DividedEditor({
+  value,
+  onChange,
+  onClear,
+  hasOverride,
+}: {
+  value: boolean;
+  onChange: (v: boolean) => void;
+  onClear: () => void;
+  hasOverride: boolean;
+}) {
+  return (
+    <>
+      <div className="flex flex-1 min-w-0 border border-[color:var(--rule)]">
+        <button
+          type="button"
+          onClick={() => onChange(true)}
+          className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 ${
+            value
+              ? "bg-[color:var(--cyan)] text-[color:var(--canvas)]"
+              : "text-[color:var(--ink-on-dark)] hover:text-white"
+          }`}
+        >
+          Divided
+        </button>
+        <button
+          type="button"
+          onClick={() => onChange(false)}
+          className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 border-l border-[color:var(--rule)] ${
+            !value
+              ? "bg-[color:var(--cyan)] text-[color:var(--canvas)]"
+              : "text-[color:var(--ink-on-dark)] hover:text-white"
+          }`}
+        >
+          Undivided
+        </button>
+      </div>
+      {hasOverride && <RevertButton onClear={onClear} />}
+    </>
+  );
+}
+
+// ---- WorkZonePanel --------------------------------------------------------
+
+function WorkZonePanel({
+  workZoneInput,
+  workZoneError,
+  onWorkZoneChange,
+  bearingInput,
+  bearingError,
+  onBearingChange,
+  bearingCandidates,
+  selectedCandidateIdx,
+  showCandidatePicker,
+  onApplyCandidate,
+  onUseDetectedBearing,
+  onFlipDirection,
+  hasPin,
+}: {
+  workZoneInput: string;
+  workZoneError: string | null;
+  onWorkZoneChange: (v: string) => void;
+  bearingInput: string;
+  bearingError: string | null;
+  onBearingChange: (v: string) => void;
+  bearingCandidates: BearingCandidate[];
+  selectedCandidateIdx: number | null;
+  showCandidatePicker: boolean;
+  onApplyCandidate: (idx: number) => void;
+  onUseDetectedBearing: () => void;
+  onFlipDirection: () => void;
+  hasPin: boolean;
+}) {
+  const ambiguous = bearingCandidates.length > 1;
+  const selectedCandidate =
+    selectedCandidateIdx !== null
+      ? (bearingCandidates[selectedCandidateIdx] ?? null)
+      : null;
+  // Disable "Use Detected" only when we have nothing to apply.  Multi-
+  // candidate case keeps it enabled — clicking re-opens the picker.
+  const useDetectedDisabled = bearingCandidates.length === 0;
+  const useDetectedTitle =
+    bearingCandidates.length === 0
+      ? "No bearing detected at this pin"
+      : ambiguous
+        ? "Multiple roads detected — pick a direction"
+        : `Use ${normaliseBearing(bearingCandidates[0].bearing)}° detected from OSM`;
+  return (
+    <div>
+      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+        Work zone
+      </div>
+
+      <div className="px-5 py-1">
+        {/* Work zone length — matches RoadFieldRow's 2-col rhythm */}
+        <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 min-h-[52px]">
+          <div className="min-w-0">
+            <div className="text-[13px] text-white font-medium leading-none">
+              Work zone length (ft)
+            </div>
+            <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] leading-tight">
+              {workZoneError ? (
+                <span className="text-[#EB5757]">{workZoneError}</span>
+              ) : (
+                <>Whole feet, &lt; 50,000</>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-end min-w-0">
+            <input
+              type="number"
+              inputMode="numeric"
+              value={workZoneInput}
+              onChange={(e) => onWorkZoneChange(e.target.value)}
+              placeholder="200"
+              className="field-input flex-1 min-w-0 text-right"
+            />
+          </div>
+        </div>
+
+        {/* Direction of travel — label + caption on the left mirrors a
+            normal row, but the right side has 3 controls so we break it
+            into its own block below to keep buttons readable. */}
+        <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 min-h-[52px]">
+          <div className="min-w-0">
+            <div className="text-[13px] text-white font-medium leading-none">
+              Direction of travel (°)
+            </div>
+            <div
+              className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] leading-tight truncate"
+              title="Compass bearing in degrees clockwise from north."
+            >
+              {bearingError ? (
+                <span className="text-[#EB5757]">{bearingError}</span>
+              ) : ambiguous && selectedCandidate === null ? (
+                <span className="text-[color:var(--orange)]">
+                  Multiple roads detected — pick a direction below
+                </span>
+              ) : selectedCandidate ? (
+                <CandidateCaption
+                  candidate={selectedCandidate}
+                  multi={ambiguous}
+                />
+              ) : (
+                <>0–359 clockwise from north</>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-end min-w-0">
+            <input
+              type="number"
+              inputMode="numeric"
+              value={bearingInput}
+              onChange={(e) => onBearingChange(e.target.value)}
+              placeholder="0–359"
+              className="field-input flex-1 min-w-0 text-right"
+            />
+          </div>
+        </div>
+
+        {/* Bearing action row — sits flush under the bearing input,
+            full-width so the two buttons read as one cluster. */}
+        <div className="flex gap-2 pb-2 -mt-1">
+          <button
+            type="button"
+            onClick={onUseDetectedBearing}
+            disabled={useDetectedDisabled}
+            title={useDetectedTitle}
+            className="flex-1 border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:bg-[color:var(--cyan)] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {ambiguous ? "Pick Road" : "Use Detected"}
+          </button>
+          <button
+            type="button"
+            onClick={onFlipDirection}
+            disabled={!hasPin}
+            title="Reverse direction by 180°"
+            className="flex-1 border border-[color:var(--ink-on-dark-faint)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:border-white hover:text-white transition-colors disabled:opacity-40"
+          >
+            ⟲ Flip
+          </button>
+        </div>
+
+        {ambiguous && showCandidatePicker && (
+          <CandidatePicker
+            candidates={bearingCandidates}
+            selectedIdx={selectedCandidateIdx}
+            onPick={onApplyCandidate}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// One-line caption summarising the selected candidate.  Used both in
+// the unambiguous case (single road found) and after the operator picks
+// one in the multi-candidate case.
+function CandidateCaption({
+  candidate,
+  multi,
+}: {
+  candidate: BearingCandidate;
+  multi: boolean;
+}) {
+  const dir = bearingToDirectionLabel(candidate.bearing);
+  const namePart = candidate.name
+    ? `${candidate.name} ${dir.toLowerCase()}`
+    : dir;
+  const brg = normaliseBearing(candidate.bearing);
+  return (
+    <>
+      Detected from OSM: {brg}° ({namePart}) · way {candidate.way_id}
+      {multi && (
+        <span className="opacity-70"> · tap Pick Road to change</span>
+      )}
+    </>
+  );
+}
+
+// Inline picker shown when /api/road-bearing returns multiple
+// candidates within snap range (the divided-highway case).  Each
+// candidate is a button: clicking sets the bearing field and arrow.
+function CandidatePicker({
+  candidates,
+  selectedIdx,
+  onPick,
+}: {
+  candidates: BearingCandidate[];
+  selectedIdx: number | null;
+  onPick: (idx: number) => void;
+}) {
+  return (
+    <div className="border-t border-[color:var(--rule)]/40 pt-2 pb-2">
+      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
+        Select direction:
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {candidates.map((c, idx) => {
+          const dir = bearingToDirectionLabel(c.bearing);
+          const brg = normaliseBearing(c.bearing);
+          const label = c.name
+            ? `${c.name} ${dir.toLowerCase()}`
+            : dir;
+          const selected = idx === selectedIdx;
+          return (
+            <button
+              key={`${c.way_id}-${idx}`}
+              type="button"
+              onClick={() => onPick(idx)}
+              className={`text-left px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
+                selected
+                  ? "border-[color:var(--cyan)] bg-[color:var(--cyan)]/15 text-white"
+                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--cyan)] hover:text-white"
+              }`}
+              title={`${c.snap_distance_m.toFixed(0)} m from pin · way ${c.way_id}`}
+            >
+              <span className="text-white">{label}</span>
+              <span className="opacity-70"> ({brg}°)</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---- CorridorPreviewPanel -------------------------------------------------
+
+function CorridorPreviewPanel({
+  corridor,
+  hasPin,
+}: {
+  corridor: CorridorPolyline | null;
+  hasPin: boolean;
+}) {
+  return (
+    <div className="border-t border-[color:var(--rule)]">
+      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+        Corridor extent
+      </div>
+
+      <div className="px-5 py-3">
+        {!hasPin && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
+            Drop a pin to compute the corridor.
+          </div>
+        )}
+        {hasPin && !corridor && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
+            Enter a work-zone length to compute the corridor.
+          </div>
+        )}
+        {corridor && <ExtentRows corridor={corridor} />}
+      </div>
+    </div>
+  );
+}
+
+function ExtentRows({ corridor }: { corridor: CorridorPolyline }) {
+  // Always render all 5 zones in upstream → downstream order (the order
+  // a motorist encounters them), even if a segment is 0 ft.  Keeps the
+  // layout stable as the operator types and prevents the list from
+  // jumping around.
+  const display: Array<{ zone: CorridorZone; lengthFt: number }> = [
+    {
+      zone: "advance_warning",
+      lengthFt:
+        corridor.segments.find((s) => s.zone === "advance_warning")?.lengthFt ??
+        0,
+    },
+    {
+      zone: "transition",
+      lengthFt:
+        corridor.segments.find((s) => s.zone === "transition")?.lengthFt ?? 0,
+    },
+    {
+      zone: "buffer",
+      lengthFt:
+        corridor.segments.find((s) => s.zone === "buffer")?.lengthFt ?? 0,
+    },
+    {
+      zone: "work_zone",
+      lengthFt:
+        corridor.segments.find((s) => s.zone === "work_zone")?.lengthFt ?? 0,
+    },
+    {
+      zone: "downstream",
+      lengthFt:
+        corridor.segments.find((s) => s.zone === "downstream")?.lengthFt ?? 0,
+    },
+  ];
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-baseline justify-between py-1 border-b border-[color:var(--rule)]">
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Total
+        </span>
+        <span className="text-white font-semibold text-[15px] tabular-nums">
+          {fmtFt(corridor.totalLengthFt)} ft
+        </span>
+      </div>
+      {display.map((d) => (
+        <div
+          key={d.zone}
+          className="flex items-baseline justify-between gap-3 py-0.5"
+        >
+          <span className="flex items-center gap-2 min-w-0 flex-1">
+            <span
+              className="inline-block w-3 h-1.5 flex-shrink-0"
+              style={{ background: ZONE_COLOR[d.zone] }}
+            />
+            <span className="text-[12px] text-[color:var(--ink-on-dark)] truncate">
+              {ZONE_LABEL[d.zone]}
+            </span>
+          </span>
+          <span className="font-mono text-[12px] text-white tabular-nums whitespace-nowrap">
+            {fmtFt(d.lengthFt)} ft
+          </span>
+        </div>
+      ))}
     </div>
   );
 }

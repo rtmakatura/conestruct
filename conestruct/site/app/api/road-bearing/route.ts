@@ -1,19 +1,27 @@
-// Road-bearing detection: given a (lat, lng) anchor, query Overpass for the
-// nearest motorized highway way, find the geometry segment closest to the
-// anchor, and return the bearing of that segment along with the snapped
-// nearest point on the road.
+// Road-bearing detection: given a (lat, lng) anchor, query Overpass for
+// motorized highway ways within a tight radius, project the anchor onto
+// each candidate way, and return the per-way bearing + snap point.
 //
-// TS port of ``detect_road_bearing`` in ``src/rules/site_detection.py`` —
-// same Overpass query (``out geom tags``), same haversine + bearing math —
-// extended to also project the anchor onto the matching segment so the
-// frontend can snap a draggable pin to the road centerline.
+// Divided highways are modelled in OSM as two separate ways (one per
+// carriageway).  The previous behaviour returned only the geometrically-
+// nearest segment, which on close-spaced carriageways (I-25 in
+// Mead-Berthoud, where NB/SB are ~10–15 m apart) silently flipped to the
+// wrong direction.  The route now returns every way within snap range
+// so the caller can let the operator pick which carriageway they meant.
 
 import { NextRequest } from "next/server";
 
 const MAX_BODY_BYTES = 256;
 const RATE_LIMIT_PER_MIN = 30;
-const SEARCH_RADIUS_M = 30;
-const SNAP_MAX_DISTANCE_M = 100;
+// Overpass search radius.  We pull anything that *could* be in scope and
+// then filter by snap distance below.  Keep this a bit wider than
+// SNAP_MAX_DISTANCE_M so the projection step has options.
+const SEARCH_RADIUS_M = 50;
+// Hard snap tolerance.  30 m (~100 ft) is tight enough that a pin
+// placed clearly on one carriageway of a divided highway won't include
+// the opposite carriageway, while still wide enough to forgive normal
+// click imprecision on undivided roads.
+const SNAP_MAX_DISTANCE_M = 30;
 
 const OVERPASS_MIRRORS: readonly string[] = [
   "https://overpass-api.de/api/interpreter",
@@ -168,29 +176,47 @@ function projectOnSegment(
   return { lat: sLat, lng: sLng, distM };
 }
 
-interface BearingResult {
-  bearing: number | null;
-  way_id: string | null;
+interface BearingCandidate {
+  way_id: string;
   highway_class: string | null;
-  snapped_lat: number | null;
-  snapped_lng: number | null;
+  name: string | null;
+  bearing: number;
+  snap_distance_m: number;
+  snapped_lat: number;
+  snapped_lng: number;
 }
 
-function emptyResult(): BearingResult {
-  return {
-    bearing: null,
-    way_id: null,
-    highway_class: null,
-    snapped_lat: null,
-    snapped_lng: null,
-  };
+interface BearingDetectResponse {
+  candidates: BearingCandidate[];
+  primary_index: number | null;
 }
 
-function detect(
+function emptyResponse(): BearingDetectResponse {
+  return { candidates: [], primary_index: null };
+}
+
+// Pull the most useful display label from OSM tags.  ``name`` is the
+// human label ("Interstate 25"); ``ref`` is the route number ("I 25").
+// Some ways carry only one or the other.
+function pickName(tags: Record<string, string> | undefined): string | null {
+  if (!tags) return null;
+  if (typeof tags.name === "string" && tags.name.trim().length > 0) {
+    return tags.name.trim();
+  }
+  if (typeof tags.ref === "string" && tags.ref.trim().length > 0) {
+    return tags.ref.trim();
+  }
+  return null;
+}
+
+// For each candidate way, pick *its* nearest segment and compute the
+// per-way bearing + snap point.  Then keep only the ways whose nearest
+// snap is within SNAP_MAX_DISTANCE_M, sorted by distance.
+function buildCandidates(
   payload: OverpassResponse | null,
   lat: number,
   lng: number,
-): BearingResult {
+): BearingDetectResponse {
   const ways: OverpassWay[] =
     payload?.elements?.filter(
       (el): el is OverpassWay =>
@@ -198,41 +224,44 @@ function detect(
         Array.isArray((el as OverpassWay).geometry) &&
         ((el as OverpassWay).geometry?.length ?? 0) >= 2,
     ) ?? [];
-  if (ways.length === 0) return emptyResult();
+  if (ways.length === 0) return emptyResponse();
 
-  let bestWay: OverpassWay | null = null;
-  let bestA: OverpassNode | null = null;
-  let bestB: OverpassNode | null = null;
-  let bestProj: { lat: number; lng: number; distM: number } | null = null;
-  let bestDistance = Infinity;
-
+  const candidates: BearingCandidate[] = [];
   for (const way of ways) {
     const geom = way.geometry ?? [];
+    let bestA: OverpassNode | null = null;
+    let bestB: OverpassNode | null = null;
+    let bestProj: { lat: number; lng: number; distM: number } | null = null;
+    let bestDistance = Infinity;
     for (let i = 0; i < geom.length - 1; i++) {
       const a = geom[i];
       const b = geom[i + 1];
       const proj = projectOnSegment(lat, lng, a.lat, a.lon, b.lat, b.lon);
       if (proj.distM < bestDistance) {
         bestDistance = proj.distM;
-        bestWay = way;
         bestA = a;
         bestB = b;
         bestProj = proj;
       }
     }
+    if (!bestA || !bestB || !bestProj) continue;
+    if (bestDistance > SNAP_MAX_DISTANCE_M) continue;
+
+    const brg = bearingDeg(bestA.lat, bestA.lon, bestB.lat, bestB.lon);
+    candidates.push({
+      way_id: String(way.id),
+      highway_class: way.tags?.highway ?? null,
+      name: pickName(way.tags),
+      bearing: Math.round(brg * 100) / 100,
+      snap_distance_m: Math.round(bestDistance * 100) / 100,
+      snapped_lat: bestProj.lat,
+      snapped_lng: bestProj.lng,
+    });
   }
 
-  if (!bestWay || !bestA || !bestB || !bestProj) return emptyResult();
-  if (bestDistance > SNAP_MAX_DISTANCE_M) return emptyResult();
-
-  const bearing = bearingDeg(bestA.lat, bestA.lon, bestB.lat, bestB.lon);
-  return {
-    bearing: Math.round(bearing * 100) / 100,
-    way_id: String(bestWay.id),
-    highway_class: bestWay.tags?.highway ?? null,
-    snapped_lat: bestProj.lat,
-    snapped_lng: bestProj.lng,
-  };
+  if (candidates.length === 0) return emptyResponse();
+  candidates.sort((a, b) => a.snap_distance_m - b.snap_distance_m);
+  return { candidates, primary_index: 0 };
 }
 
 export async function POST(req: NextRequest) {
@@ -280,5 +309,5 @@ export async function POST(req: NextRequest) {
     payload = null;
   }
 
-  return Response.json(detect(payload, lat, lng));
+  return Response.json(buildCandidates(payload, lat, lng));
 }
