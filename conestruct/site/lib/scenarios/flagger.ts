@@ -5,7 +5,6 @@ import {
   nightDrumCount,
 } from "./shared";
 import type {
-  DeviceListEntry,
   FlaggerLaneClosureScenario,
   FlaggerResult,
   FlaggerWorkType,
@@ -90,87 +89,6 @@ export function computeFlagger(
   if (s.pilotCar) steps += 2;
   if (s.pedestrianAccess) steps += 1;
 
-  const devices: DeviceListEntry[] = [
-    {
-      device: 'Traffic cone (28")',
-      code: "—",
-      fn: "Channelizing",
-      qty: cones,
-    },
-  ];
-  if (drums > 0) {
-    devices.push({
-      device: "Drum (Type IX sheeting)",
-      code: "—",
-      fn: "Channelizing (night)",
-      qty: drums,
-    });
-  }
-  // Signs (each spec'd per direction × 2)
-  devices.push({
-    device: "Road work ahead",
-    code: "W20-1",
-    fn: "Advance warning",
-    qty: 2,
-  });
-  if (s.duration === "long") {
-    devices.push({
-      device: "One lane road ahead",
-      code: "W20-4",
-      fn: "Advance warning",
-      qty: 2,
-    });
-    devices.push({
-      device: "Be prepared to stop",
-      code: "W3-4",
-      fn: "Advance warning",
-      qty: 2,
-    });
-  }
-  if (s.afad) {
-    devices.push({
-      device: "AFAD ahead",
-      code: "W20-7a",
-      fn: "Advance warning",
-      qty: 2,
-    });
-    devices.push({
-      device: "Automated flagger device",
-      code: "—",
-      fn: "Active control",
-      qty: afadDevices,
-    });
-  } else {
-    devices.push({
-      device: "Flagger ahead",
-      code: "W20-7",
-      fn: "Advance warning",
-      qty: 2,
-    });
-    devices.push({
-      device: "Flagger station",
-      code: "—",
-      fn: "Active control",
-      qty: flaggerStations,
-    });
-  }
-  if (s.pilotCar) {
-    devices.push({
-      device: "Pilot car",
-      code: "—",
-      fn: "Convoy lead",
-      qty: 1,
-    });
-  }
-  if (s.pedestrianAccess) {
-    devices.push({
-      device: "Pedestrian detour signage",
-      code: "R9-3a / R9-9",
-      fn: "ADA detour",
-      qty: 2,
-    });
-  }
-
   return {
     kind: "flagger_lane_closure",
     ta: TA,
@@ -188,7 +106,6 @@ export function computeFlagger(
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
     flaggerStations,
     pilotCarVehicles,
     afadDevices,

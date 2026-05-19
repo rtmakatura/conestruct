@@ -1,5 +1,4 @@
 import type {
-  DeviceListEntry,
   MobileOpMultilaneResult,
   MobileOpMultilaneScenario,
 } from "./types";
@@ -32,35 +31,6 @@ export function computeMobileOpMultilane(
 
   const steps = s.secondTMA ? 8 : 6;
 
-  const devices: DeviceListEntry[] = [
-    {
-      device: "Work truck",
-      code: "—",
-      fn: "Mobile work platform",
-      qty: 1,
-    },
-    {
-      device: "Shadow vehicle w/ TMA",
-      code: "—",
-      fn: "Trailing protection",
-      qty: 1,
-    },
-    {
-      device: "Arrow board (LEFT arrow)",
-      code: "—",
-      fn: "Lane-closure indication",
-      qty: 1,
-    },
-  ];
-  if (s.secondTMA) {
-    devices.push({
-      device: "Upstream shadow TMA",
-      code: "—",
-      fn: "Additional protection (≥55 mph)",
-      qty: 1,
-    });
-  }
-
   return {
     kind: "mobile_op_multilane",
     ta: TA,
@@ -78,7 +48,6 @@ export function computeMobileOpMultilane(
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
     shadowVehicles,
     tmaCount,
   };

@@ -1,5 +1,4 @@
 import type {
-  DeviceListEntry,
   WorkBeyondShoulderResult,
   WorkBeyondShoulderScenario,
   WorkBeyondShoulderWorkType,
@@ -48,23 +47,6 @@ export function computeWorkBeyondShoulder(
 
   const steps = s.duration === "short" ? 4 : 6;
 
-  const devices: DeviceListEntry[] = [
-    {
-      device: "Shoulder work",
-      code: "W21-5",
-      fn: "Advance warning",
-      qty: 1,
-    },
-  ];
-  if (s.duration === "long") {
-    devices.push({
-      device: "End road work",
-      code: "G20-2",
-      fn: "Termination",
-      qty: 1,
-    });
-  }
-
   return {
     kind: "work_beyond_shoulder",
     ta: TA,
@@ -82,7 +64,6 @@ export function computeWorkBeyondShoulder(
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
   };
 }
 

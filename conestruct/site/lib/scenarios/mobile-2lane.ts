@@ -1,5 +1,4 @@
 import type {
-  DeviceListEntry,
   MobileOp2LaneResult,
   MobileOp2LaneScenario,
   MobileWorkType,
@@ -52,35 +51,6 @@ export function computeMobileOp2Lane(
 
   const steps = 6; // mobile ops have lean setup: brief + roll out + work + return
 
-  const devices: DeviceListEntry[] = [
-    {
-      device: "Workers ahead",
-      code: "W21-1A",
-      fn: "Advance warning (vehicle-mounted)",
-      qty: 1,
-    },
-    {
-      device: "Work truck",
-      code: "—",
-      fn: "Mobile work platform",
-      qty: 1,
-    },
-    {
-      device: "Shadow vehicle w/ TMA",
-      code: "—",
-      fn: "Trailing protection",
-      qty: 1,
-    },
-  ];
-  if (s.arrowBoardOnShadow) {
-    devices.push({
-      device: "Arrow board (caution mode)",
-      code: "—",
-      fn: "Active warning",
-      qty: 1,
-    });
-  }
-
   return {
     kind: "mobile_op_2lane",
     ta: TA,
@@ -98,7 +68,6 @@ export function computeMobileOp2Lane(
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
     shadowVehicles,
     tmaCount,
   };

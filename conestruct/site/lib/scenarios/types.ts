@@ -194,13 +194,6 @@ export type Scenario =
   | MobileOpMultilaneScenario;
 export type ScenarioKind = Scenario["kind"];
 
-export interface DeviceListEntry {
-  device: string;
-  code: string;
-  fn: string;
-  qty: number;
-}
-
 interface ResultBase {
   ta: string;
   cdotSheet: string;
@@ -220,8 +213,6 @@ interface ResultBase {
   totalDevices: number;
   uniqueTypes: number;
   steps: number;
-
-  devices: DeviceListEntry[];
 }
 
 export interface ShoulderResult extends ResultBase {

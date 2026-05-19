@@ -5,7 +5,6 @@ import {
   nightDrumCount,
 } from "./shared";
 import type {
-  DeviceListEntry,
   ShoulderResult,
   ShoulderScenario,
   ShoulderWorkType,
@@ -59,47 +58,6 @@ export function computeShoulder(s: ShoulderScenario): ShoulderResult {
   // Setup/takedown step count — short-duration jobs skip a few steps.
   const steps = s.duration === "short" ? 8 : cones > 30 ? 14 : 11;
 
-  const devices: DeviceListEntry[] = [
-    {
-      device: 'Traffic cone (28")',
-      code: "—",
-      fn: "Channelizing",
-      qty: cones,
-    },
-  ];
-  if (drums > 0) {
-    devices.push({
-      device: "Drum (Type IX sheeting)",
-      code: "—",
-      fn: "Channelizing (night)",
-      qty: drums,
-    });
-  }
-  if (signs >= 1) {
-    devices.push({
-      device: "Road work ahead",
-      code: "W20-1",
-      fn: "Advance warning",
-      qty: 2,
-    });
-  }
-  if (signs >= 2) {
-    devices.push({
-      device: "Shoulder work",
-      code: "W21-5",
-      fn: "Advance warning",
-      qty: 2,
-    });
-  }
-  if (signs >= 3) {
-    devices.push({
-      device: "End road work",
-      code: "G20-2",
-      fn: "Termination",
-      qty: 2,
-    });
-  }
-
   return {
     kind: "shoulder",
     ta: TA,
@@ -117,7 +75,6 @@ export function computeShoulder(s: ShoulderScenario): ShoulderResult {
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
   };
 }
 

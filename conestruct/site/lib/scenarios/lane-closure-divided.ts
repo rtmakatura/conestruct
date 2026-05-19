@@ -5,7 +5,6 @@ import {
   nightDrumCount,
 } from "./shared";
 import type {
-  DeviceListEntry,
   LaneClosureDividedScenario,
   LaneClosureResult,
   LaneClosureWorkType,
@@ -81,73 +80,6 @@ export function computeLaneClosure(
   let steps = s.duration === "short" ? 14 : 18;
   if (s.truckMountedAttenuator) steps += 2;
 
-  const devices: DeviceListEntry[] = [];
-  devices.push({
-    device: "Drum (Type IX sheeting)",
-    code: "—",
-    fn: "Channelizing taper + tangent",
-    qty: cones,
-  });
-  if (drums > 0) {
-    // For night, the TS model treats `cones` as the placed-channelizer
-    // count and `drums` as the *additional* retroreflective surcharge.
-    // Devices line above already covers the daytime drums; add the
-    // night surcharge separately.
-    devices[devices.length - 1].fn = "Channelizing (day)";
-    devices.push({
-      device: "Drum w/ Type IX (night)",
-      code: "—",
-      fn: "Channelizing (night surcharge)",
-      qty: drums,
-    });
-  }
-  devices.push({
-    device: "Road work ahead",
-    code: "W20-1",
-    fn: "Advance warning",
-    qty: 2,
-  });
-  devices.push({
-    device: "Right lane closed ahead",
-    code: "W20-5R",
-    fn: "Advance warning",
-    qty: 2,
-  });
-  devices.push({
-    device: "Right lane ends",
-    code: "W4-2R",
-    fn: "Advance warning (merge)",
-    qty: 2,
-  });
-  devices.push({
-    device: "End road work",
-    code: "G20-2",
-    fn: "Termination",
-    qty: 2,
-  });
-  if (plaques > 0) {
-    devices.push({
-      device: "Construction zone plaque",
-      code: "G20-5P",
-      fn: "Inside work zone",
-      qty: plaques,
-    });
-  }
-  devices.push({
-    device: "Arrow board (Type C)",
-    code: "—",
-    fn: "Lane-closure arrow",
-    qty: arrowBoards,
-  });
-  if (tmaCount > 0) {
-    devices.push({
-      device: "Truck-mounted attenuator",
-      code: "—",
-      fn: "Upstream protection",
-      qty: tmaCount,
-    });
-  }
-
   return {
     kind: "lane_closure_divided",
     ta: TA,
@@ -165,7 +97,6 @@ export function computeLaneClosure(
     totalDevices,
     uniqueTypes,
     steps,
-    devices,
     tmaCount,
   };
 }

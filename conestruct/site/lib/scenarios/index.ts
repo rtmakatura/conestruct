@@ -37,7 +37,6 @@ import type {
 } from "./types";
 
 export type {
-  DeviceListEntry,
   Duration,
   FlaggerLaneClosureScenario,
   FlaggerResult,
