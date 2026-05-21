@@ -5,3 +5,19 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: eslint-frontend
+        name: ESLint (Next.js frontend)
+        entry: npm --prefix conestruct/site run lint -- --fix
+        language: system
+        files: ^conestruct/site/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
+      - id: typecheck-frontend
+        name: TypeScript (Next.js frontend)
+        entry: npm --prefix conestruct/site run typecheck
+        language: system
+        files: ^conestruct/site/.*\.(ts|tsx)$
+        pass_filenames: false

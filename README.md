@@ -35,6 +35,8 @@ uv sync
 uv run pre-commit install
 ```
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full pre-commit setup, including frontend hooks and required `npm install` for the Next.js site.
+
 ### Environment variables
 
 | Variable | Required | Purpose |
