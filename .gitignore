@@ -11,6 +11,10 @@ weights/
 # Environment
 .env
 .env.*
+# .env.example files are documentation templates with placeholder values,
+# not real secrets — track them so contributors see the required vars.
+!.env.example
+!**/.env.example
 
 # Python
 __pycache__/

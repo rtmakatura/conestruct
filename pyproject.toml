@@ -23,6 +23,7 @@ dependencies = [
     "fastapi>=0.115",
     "uvicorn>=0.32",
     "modal>=0.66",
+    "sentry-sdk[fastapi]>=2.0",
 ]
 
 [project.optional-dependencies]

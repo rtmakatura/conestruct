@@ -6,10 +6,15 @@ Deploy:
 Required secrets (create once per Modal workspace):
     modal secret create conestruct-render-secret RENDER_API_SECRET=<long-random-string>
     modal secret create mapbox-token MAPBOX_TOKEN=<mapbox-public-token>
+    modal secret create sentry-dsn SENTRY_DSN=<sentry-project-dsn>
 
 The Mapbox token enables the page-2 aerial map on the rendered PDF
 (:func:`src.rendering.plan_sheet._fetch_mapbox_aerial`).  Without it,
 the renderer silently falls back to a single-page schematic.
+
+The Sentry DSN wires unhandled exceptions to the Python project in
+Sentry; the SDK init lives in :mod:`src.api.render_api`.  Without it,
+Sentry stays inert and the service runs normally.
 
 After deploy, Modal prints the public URL.  Wire that into the Next.js
 side as ``MODAL_RENDER_URL`` along with the matching
@@ -36,6 +41,7 @@ RENDER_DEPS = [
     "jinja2>=3.1",
     "pyyaml>=6.0",
     "httpx>=0.28",
+    "sentry-sdk[fastapi]>=2.0",
 ]
 
 image = (
@@ -53,6 +59,7 @@ app = modal.App("conestruct-render")
     secrets=[
         modal.Secret.from_name("conestruct-render-secret"),
         modal.Secret.from_name("mapbox-token"),
+        modal.Secret.from_name("sentry-dsn"),
     ],
     timeout=120,
 )

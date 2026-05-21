@@ -21,10 +21,14 @@ import tempfile
 from collections import Counter
 from collections.abc import Awaitable, Callable
 from pathlib import Path
+from typing import Any
 
+import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from src.api.schemas import (
     LaneClosureDividedScenario,
@@ -54,6 +58,35 @@ ENV_SECRET_VAR = "RENDER_API_SECRET"
 # CDOT S-630 typical sheets.  Adding a kind here re-enables it on the
 # server; the TS constant must match.
 ENABLED_SCENARIOS: frozenset[str] = frozenset({"shoulder"})
+
+
+def _drop_expected_http_errors(
+    event: dict[str, Any], hint: dict[str, Any]
+) -> dict[str, Any] | None:
+    """Drop intentional 4xx HTTPExceptions before they reach Sentry.
+
+    Validator 400s (geometry_validation_failed, gated scenario kinds)
+    and any other ``HTTPException`` with ``status_code < 500`` are
+    expected user-facing errors, not alertable backend failures.  Only
+    5xx and unhandled exceptions should generate Sentry events.
+    """
+    exc_info = hint.get("exc_info")
+    if exc_info:
+        exc = exc_info[1]
+        if isinstance(exc, HTTPException) and exc.status_code < 500:
+            return None
+    return event
+
+
+_SENTRY_DSN = os.environ.get("SENTRY_DSN")
+if _SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=_SENTRY_DSN,
+        integrations=[StarletteIntegration(), FastApiIntegration()],
+        traces_sample_rate=0.0,
+        send_default_pii=False,
+        before_send=_drop_expected_http_errors,
+    )
 
 app = FastAPI(title="Conestruct render service", version="0.1.0")
 
@@ -573,4 +606,23 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
             "profit": breakdown.profit,
             "total": breakdown.total,
         }
+    )
+
+
+# Sentry verification endpoints. Gated behind SENTRY_TEST_ENABLED=1 so
+# they 404 in normal operation. Enable inline only when re-verifying the
+# Sentry integration; see MONITORING.md for the toggle procedure.
+@app.get("/debug/sentry-test/500")
+def _debug_sentry_500() -> Response:
+    if os.environ.get("SENTRY_TEST_ENABLED") != "1":
+        raise HTTPException(status_code=404, detail="not found")
+    raise RuntimeError("Sentry backend verification: intentional 500 error")
+
+
+@app.get("/debug/sentry-test/400")
+def _debug_sentry_400() -> Response:
+    if os.environ.get("SENTRY_TEST_ENABLED") != "1":
+        raise HTTPException(status_code=404, detail="not found")
+    raise HTTPException(
+        status_code=400, detail="Sentry backend verification: intentional 400 (should be filtered)"
     )
