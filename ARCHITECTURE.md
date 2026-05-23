@@ -563,9 +563,12 @@ DSL is a known long-term ask; not scheduled.
   filtered, verification procedure, known deprecations).
 - **CONTRIBUTING.md** — first-time setup, pre-commit behavior,
   emergency bypass.
-- **DEPLOYMENT.md** — *coming next.* Will cover the
-  Vercel/Modal split, the stale-deploy window, secret rotation, and
-  the local dev story end-to-end.
+- **DEPLOYMENT.md** — operational runbook for shipping changes:
+  per-change-type checklists, first-time setup, the rollback
+  procedure for both Vercel and Modal, common production issues
+  (stale Modal deploy, NEXT_PUBLIC_ rebuild gotcha, Sentry not
+  landing, 401/503 from the backend), and a full secrets/env-var
+  reference with paired-secret invariants.
 - **README.md** — quick-start commands.
 - **`memory/` (in user's Claude profile)** — project context not
   captured here: account model decisions, auth provider rationale,
