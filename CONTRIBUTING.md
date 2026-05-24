@@ -54,3 +54,29 @@ git commit --no-verify -m "..."
 ```
 
 **Use this sparingly.** Until we have server-side CI, bypassing hooks means the code is not verified at all. Reserve `--no-verify` for genuine emergencies (e.g., shipping a hotfix while a hook is misconfigured) and fix the underlying issue immediately after.
+
+## Frontend tests
+
+The Next.js frontend uses [Vitest](https://vitest.dev/) for unit tests. Tests live alongside the code they exercise (`lib/scenarios/shared.test.ts` sits next to `shared.ts`).
+
+### Running tests
+
+```bash
+cd conestruct/site
+npm test              # run once and exit (CI-style)
+npm run test:watch    # re-run on file change (dev loop)
+```
+
+The runner uses the `node` environment by default — DOM-dependent tests can opt in per-file with a `/** @vitest-environment happy-dom */` comment at the top of the file (`happy-dom` is already installed).
+
+Path aliases match `tsconfig.json`: `@/lib/foo` resolves to `conestruct/site/lib/foo` in both `next` and `vitest`.
+
+### When to write a test
+
+Tests are not wired into pre-commit (they'd slow every commit and create pressure to `--no-verify`). The expectation is:
+
+- Run `npm test` locally before pushing anything that touches `conestruct/site/`.
+- When you fix a bug, add a test that fails on the broken behavior and passes on the fix — that's how this suite earns its keep over time.
+- New pure functions in `lib/` are the easiest test targets (no DOM, no mocking). Components and hooks can wait until we actually need them under test.
+
+Server-side CI will eventually run `npm test` on every PR; until then, the honor system applies.
