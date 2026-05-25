@@ -30,6 +30,7 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.8",
+    "mypy>=1.13",
     "pre-commit>=4.0",
 ]
 
@@ -46,3 +47,36 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+files = ["src"]
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+# Strict opt-in for modules that are already strict-clean.
+# When a module gets cleaned up, add it here. See TYPES.md.
+# Note: `strict = true` in overrides applies the flags globally in mypy 1.x/2.x,
+# so we expand the relevant strict-mode flags per-module instead.
+[[tool.mypy.overrides]]
+module = [
+    "src.rules.spacing",
+    "src.rules.devices",
+    "src.rules.corridor",
+    "src.rules.validators",
+    "src.rules.tables",
+    "src.rules.sign_codes",
+    "src.rules.site_adjustments",
+    "src.rules.night_adjustments",
+]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_any_generics = true
+no_implicit_optional = true
+warn_return_any = true
+warn_unreachable = true
+strict_equality = true
+extra_checks = true

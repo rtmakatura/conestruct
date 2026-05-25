@@ -14,6 +14,7 @@ the same records to render the "Site-Specific Notes" section.
 from __future__ import annotations
 
 from dataclasses import replace
+from typing import Any
 
 from src.rules.devices import DeviceType
 from src.rules.validators import DevicePlacement, ScenarioParams
@@ -43,7 +44,7 @@ def _ped_offset(params: ScenarioParams) -> float:
 
 def _adjust_limited_sight_distance(
     placements: list[DevicePlacement],
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Move advance warning signs 50% farther upstream from the taper."""
     out: list[DevicePlacement] = []
     moved = 0
@@ -73,7 +74,7 @@ def _adjust_limited_sight_distance(
 def _adjust_adjacent_intersection(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Add ROAD WORK AHEAD signs facing each cross-street approach."""
     midpoint = params.work_zone_length_ft / 2.0
     new_signs = [
@@ -102,7 +103,7 @@ def _adjust_adjacent_intersection(
 def _adjust_adjacent_interchange(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Add upstream-ramp signing for an adjacent highway interchange.
 
     Interchange cross-traffic enters the corridor via merging on/off
@@ -146,7 +147,7 @@ def _adjust_adjacent_interchange(
     return placements + new_devices, record
 
 
-def _adjust_driveways_present() -> dict:
+def _adjust_driveways_present() -> dict[str, Any]:
     """Advisory only — channelizer placement is hand-tuned in the field."""
     return {
         "flag": "driveways_present",
@@ -163,7 +164,7 @@ def _adjust_driveways_present() -> dict:
 def _adjust_pedestrian_facility(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Type III barricades + R9-9 SIDEWALK CLOSED signs at each end."""
     offset = _ped_offset(params)
     upstream = params.work_zone_length_ft
@@ -195,7 +196,7 @@ def _adjust_pedestrian_facility(
 def _adjust_bicycle_facility(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """M4-9a BIKE DETOUR signs at the upstream and downstream ends."""
     sign_offset = params.num_lanes * params.lane_width_ft + 4.0
     new_signs = [
@@ -216,7 +217,7 @@ def _adjust_bicycle_facility(
 def _adjust_school_zone(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """S1-1 SCHOOL signs upstream of the existing advance warning signs."""
     sign_offset = params.num_lanes * params.lane_width_ft + 4.0
     farthest_sign = max(
@@ -248,7 +249,7 @@ def apply_site_adjustments(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     flags: dict[str, bool] | None = None,
-) -> tuple[list[DevicePlacement], list[dict]]:
+) -> tuple[list[DevicePlacement], list[dict[str, Any]]]:
     """Apply checked site-condition flags to a baseline layout.
 
     Args:
@@ -264,7 +265,7 @@ def apply_site_adjustments(
     """
     flags = flags or {}
     out = list(placements)
-    records: list[dict] = []
+    records: list[dict[str, Any]] = []
 
     if flags.get("limited_sight_distance"):
         out, rec = _adjust_limited_sight_distance(out)

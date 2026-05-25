@@ -37,6 +37,8 @@ Authoritative sources:
 
 from __future__ import annotations
 
+from typing import Any
+
 from src.rules.devices import DeviceType
 from src.rules.spacing import buffer_space, shoulder_taper_length, taper_length
 from src.rules.validators import DevicePlacement, ScenarioParams
@@ -78,7 +80,7 @@ def _add_warning_lights_on_taper_drums(
     placements: list[DevicePlacement],
     taper_end: float,
     taper_start: float,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """One Type C warning light co-located with each taper drum."""
     new_lights: list[DevicePlacement] = []
     for p in placements:
@@ -109,7 +111,7 @@ _LIGHT_PLANT_LATERAL_OFFSET_FT: float = 5.0
 def _add_portable_light_plant(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], dict]:
+) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """One portable light plant just past the buffer/work-zone boundary.
 
     Placed 25 ft downstream of the buffer end so the plant clearly
@@ -150,7 +152,7 @@ def _add_portable_light_plant(
     return placements + [plant], record
 
 
-def _retroreflective_advisory() -> dict:
+def _retroreflective_advisory() -> dict[str, Any]:
     """Advisory-only record — surfaces in the audit trail and crew narrative."""
     return {
         "flag": "night_retroreflective",
@@ -167,7 +169,7 @@ def _retroreflective_advisory() -> dict:
 def apply_night_adjustments(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> tuple[list[DevicePlacement], list[dict]]:
+) -> tuple[list[DevicePlacement], list[dict[str, Any]]]:
     """Apply night-operation adjustments to a baseline layout.
 
     Args:
@@ -187,7 +189,7 @@ def apply_night_adjustments(
 
     taper_end, taper_start = _taper_bounds(params)
     out = list(placements)
-    records: list[dict] = []
+    records: list[dict[str, Any]] = []
 
     out, rec = _add_warning_lights_on_taper_drums(out, taper_end, taper_start)
     records.append(rec)
