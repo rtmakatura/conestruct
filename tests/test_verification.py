@@ -325,14 +325,21 @@ def test_shoulder_closure_divided_drum_count() -> None:
 
 
 def test_shoulder_closure_divided_cone_count() -> None:
-    """8 cones along the 800 ft work zone + 2 cones in the downstream taper = 10.
+    """9 cones along the 800 ft work zone + 2 cones in the downstream taper = 11.
 
-    Tangent: pick_device_count(800, 110, min_count=2) → 8 cones.
+    Tangent: pick_device_count(800, 110, min_count=2) → 9 cones.
+        target = device_spacing_on_tangent(55) = 110 ft (MUTCD §6C.09 max)
+        floor=7 intervals → 800/7 = 114.3 ft (above 110 max — REJECTED)
+        ceil=8 intervals  → 800/8 = 100 ft (in [99, 110]) → 9 cones.
     Downstream: hard-coded 2 cones (50–100 ft taper).
+
+    Before the asymmetric-window fix the picker returned 8 cones at
+    114.3 ft spacing — a §6C.09 violation.  Updated to 11 total cones
+    (9 tangent + 2 downstream) to reflect the compliant layout.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
-    assert _count_by_type(placements, DeviceType.CONE) == 10
+    assert _count_by_type(placements, DeviceType.CONE) == 11
 
 
 def test_shoulder_closure_divided_arrow_board_count() -> None:
@@ -364,17 +371,19 @@ def test_shoulder_closure_divided_no_flaggers() -> None:
 
 
 def test_shoulder_closure_divided_total_devices() -> None:
-    """Total device count: 5 drums + 10 cones + 1 arrow board + 14 signs = 30.
+    """Total device count: 5 drums + 11 cones + 1 arrow board + 14 signs = 31.
 
-    Drum count is 5 (Bug Fix 4 — the picker now prefers the
-    smaller-spacing candidate when neither lands in the ±10 % window,
+    Drum count is 5 (Bug Fix 4 — the picker prefers the
+    smaller-spacing candidate when neither lands in the window,
     keeping us under the MUTCD §6C.09 maximum).  Sign count is 14
     because every sign on a divided highway is mirrored on both sides
-    per CO Supplement §6C.04(A) (7 unique stations × 2 sides).
+    per CO Supplement §6C.04(A) (7 unique stations × 2 sides).  Cone
+    count is 11 after the asymmetric-window fix (was 10 — see
+    ``test_shoulder_closure_divided_cone_count``).
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
-    assert len(placements) == 30
+    assert len(placements) == 31
 
 
 def test_shoulder_closure_divided_all_signs_have_labels() -> None:
@@ -464,10 +473,16 @@ def test_lane_closure_drum_count() -> None:
 
 
 def test_lane_closure_cone_count() -> None:
-    """10 cones (8 tangent + 2 downstream) — same as shoulder closure."""
+    """11 cones (9 tangent + 2 downstream) — same as shoulder closure.
+
+    Tangent path is the same pick_device_count(800, 110, min_count=2)
+    call; see ``test_shoulder_closure_divided_cone_count`` for the math.
+    Was 10 before the asymmetric-window fix (8 tangent cones at 114.3 ft
+    spacing — a MUTCD §6C.09 violation).
+    """
     params = _lane_closure_params()
     placements = generate_lane_closure_divided(params, shoulder_width_ft=10.0)
-    assert _count_by_type(placements, DeviceType.CONE) == 10
+    assert _count_by_type(placements, DeviceType.CONE) == 11
 
 
 def test_lane_closure_arrow_board_count() -> None:
@@ -480,7 +495,7 @@ def test_lane_closure_arrow_board_count() -> None:
 
 
 def test_lane_closure_total_devices() -> None:
-    """Total: 13 drums + 10 cones + 1 arrow board + 14 signs = 38.
+    """Total: 13 drums + 11 cones + 1 arrow board + 14 signs = 39.
 
     Sign breakdown (each station mirrored on both sides per CO §6C.04(A)):
       3 advance (W4-2R, W20-5R, W20-1)
@@ -491,7 +506,7 @@ def test_lane_closure_total_devices() -> None:
     """
     params = _lane_closure_params()
     placements = generate_lane_closure_divided(params, shoulder_width_ft=10.0)
-    assert len(placements) == 38
+    assert len(placements) == 39
 
 
 def test_lane_closure_sign_labels_lane_specific() -> None:
@@ -613,12 +628,12 @@ def test_flagger_total_devices() -> None:
 def test_site_adjustments_baseline_unchanged() -> None:
     """No site flags → device count matches the baseline shoulder closure.
 
-    Baseline: 30 devices (per ``test_shoulder_closure_divided_total_devices``).
+    Baseline: 31 devices (per ``test_shoulder_closure_divided_total_devices``).
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=None)
-    assert len(adjusted) == 30
+    assert len(adjusted) == 31
     assert records == []
 
 
@@ -626,14 +641,14 @@ def test_site_adjustments_pedestrian_facility_adds_six() -> None:
     """pedestrian_facility=True adds 4 Type III barricades + 2 R9-9 signs.
 
     Per ``site_adjustments.py``: total +6 devices.
-    Total: 30 baseline + 6 = 36.
+    Total: 31 baseline + 6 = 37.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"pedestrian_facility": True}
     )
-    assert len(adjusted) == 36
+    assert len(adjusted) == 37
     # Verify the add-types match the audit record claim.
     delta_barricades = _count_by_type(adjusted, DeviceType.BARRICADE_TYPE_III) - _count_by_type(
         placements, DeviceType.BARRICADE_TYPE_III
@@ -675,7 +690,8 @@ def test_site_adjustments_all_flags_add_fourteen() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=flags)
-    assert len(adjusted) == 44
+    # 31 baseline + 14 add-ons (4 barricades + 2 R9-9 + 2 W20-1 + 2 W20-3/PCMS + ...)
+    assert len(adjusted) == 45
     # Seven audit records, one per checked flag (driveways included even
     # though it adds nothing).
     flags_seen = {r["flag"] for r in records}
@@ -695,7 +711,8 @@ def test_site_adjustments_intersection_only_adds_two() -> None:
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"adjacent_intersection": True}
     )
-    assert len(adjusted) == 32
+    # 31 baseline + 2 add-ons.
+    assert len(adjusted) == 33
     rec = next(r for r in records if r["flag"] == "adjacent_intersection")
     assert rec["devices_added"] == 2
     assert "W20-1" in rec["action"]
@@ -723,7 +740,8 @@ def test_site_adjustments_interchange_only_adds_w20_3_and_pcms() -> None:
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"adjacent_interchange": True}
     )
-    assert len(adjusted) == 32
+    # 31 baseline + 2 add-ons.
+    assert len(adjusted) == 33
 
     rec = next(r for r in records if r["flag"] == "adjacent_interchange")
     assert rec["devices_added"] == 2
@@ -770,8 +788,8 @@ def test_site_adjustments_intersection_and_interchange_records_are_distinct() ->
         params,
         flags={"adjacent_intersection": True, "adjacent_interchange": True},
     )
-    # 30 baseline + 2 (intersection) + 2 (interchange) = 34.
-    assert len(adjusted) == 34
+    # 31 baseline + 2 (intersection) + 2 (interchange) = 35.
+    assert len(adjusted) == 35
 
     by_flag = {r["flag"]: r for r in records}
     assert "adjacent_intersection" in by_flag

@@ -243,28 +243,30 @@ def pick_device_count(
     spacing is ``length_ft / (count - 1)``.  This helper compares the
     floor and ceil interval-count candidates around the exact ratio
     ``length_ft / target_spacing_ft`` and returns the device count whose
-    interval spacing best matches ``target_spacing_ft``:
+    interval spacing best matches ``target_spacing_ft``.
 
-      * If both candidates land inside ``[target * (1 - tolerance),
-        target * (1 + tolerance)]``, the one with smaller absolute
-        deviation from target wins.
+    ``target_spacing_ft`` is the MUTCD §6C.09 **maximum** spacing.  The
+    section specifies a ceiling only — tighter is conservative, wider
+    is unsafe — so the acceptance window is asymmetric:
+
+        [target * (1 - tolerance),  target]
+
+    The lower bound gives designers rounding room toward fewer devices;
+    the upper bound is the max itself, never relaxed.  Candidates with
+    spacing strictly above the target are rejected outright.
+
+      * If both candidates land inside the window, the one with smaller
+        absolute deviation from target wins.
       * If only one candidate lands inside, it wins.
       * If **neither** lands inside, the candidate with the smaller
-        spacing (= more devices, ceil intervals) wins.  MUTCD §6C.09
-        specifies a maximum spacing only; tighter is conservative,
-        wider is unsafe — given a forced choice we must not exceed
-        the maximum.  This is the Bug Fix 4 behavior; the previous
-        version returned the candidate with smaller absolute deviation
-        from target, which on shoulder-taper geometries (e.g. L/3 =
-        183.33 ft at 55 mph) silently picked the over-the-max
-        candidate.
+        spacing (= more devices, ceil intervals) wins, so a forced
+        choice never exceeds the maximum.
 
     Useful for laying out channelizers on a tangent (target =
     on-tangent spacing) or within a merging taper (target = in-taper
-    spacing) where the validator's ``±tolerance`` window gives the
-    designer room to round in either direction.  The returned count is
-    floored at ``min_count`` so callers can guarantee a minimum device
-    population (e.g. for taper-extraction disambiguation).
+    spacing).  The returned count is floored at ``min_count`` so callers
+    can guarantee a minimum device population (e.g. for taper-extraction
+    disambiguation).
 
     Raises:
         ValueError: ``length_ft`` or ``target_spacing_ft`` is non-positive.
@@ -279,7 +281,9 @@ def pick_device_count(
     floor_intervals = max(1, math.floor(exact_intervals))
     ceil_intervals = max(1, math.ceil(exact_intervals))
 
-    tol_hi = target_spacing_ft * (1 + tolerance)
+    # Asymmetric window: lower bound relaxed by ``tolerance``, upper
+    # bound clamped at the MUTCD max.
+    tol_hi = target_spacing_ft
     tol_lo = target_spacing_ft * (1 - tolerance)
 
     floor_spacing = length_ft / floor_intervals
@@ -299,7 +303,7 @@ def pick_device_count(
     else:
         # Neither fits.  Choose the smaller-spacing (= more-device)
         # candidate so we stay under the MUTCD §6C.09 maximum even when
-        # the geometry forces us out of the ±tolerance window.
+        # the geometry forces us out of the window.
         best_intervals = ceil_intervals
 
     return max(min_count, best_intervals + 1)

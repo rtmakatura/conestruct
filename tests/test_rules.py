@@ -200,38 +200,61 @@ def test_device_counts_on_tangent() -> None:
     assert num_devices_on_tangent(1000, 65) == 8
 
 
-def test_pick_device_count_both_in_tolerance() -> None:
-    """Both floor and ceil interval counts fit ±10 %; picker takes closer-to-target."""
+def test_pick_device_count_both_in_window() -> None:
+    """Both candidates fit the asymmetric window; closer-to-target wins.
+
+    The window is ``[target * 0.9, target]`` — asymmetric: lower bound
+    relaxed, upper bound clamped at the MUTCD §6C.09 max.
+    """
     # 1000 ft, target 90 → exact 11.11
-    # floor=11 intervals → 90.9 ft (in [81, 99], deviation 0.9)
-    # ceil=12 intervals  → 83.3 ft (in [81, 99], deviation 6.7)
-    # closer-to-target wins → 11 intervals → 12 devices
-    assert pick_device_count(1000, 90) == 12
+    # floor=11 intervals → 90.9 ft (above 90 max — REJECTED)
+    # ceil=12 intervals  → 83.3 ft (in [81, 90] — in window)
+    # Only ceil fits → 12 intervals → 13 devices.  Before the
+    # asymmetric-window fix this returned 12 because floor's 0.9-ft
+    # over-max spacing won the absolute-deviation comparison against
+    # ceil's 6.7-ft under-target spacing.
+    assert pick_device_count(1000, 90) == 13
 
 
-def test_pick_device_count_only_one_in_tolerance() -> None:
-    """Picks the in-tolerance candidate when its sibling falls outside ±10 %."""
+def test_pick_device_count_only_one_in_window() -> None:
+    """Picks the in-window candidate when its sibling falls outside."""
     # 800 ft, target 90 → exact 8.89
-    # floor=8  → 100 ft (out of [81, 99])
-    # ceil=9   → 88.9 ft (in tolerance)
+    # floor=8  → 100 ft (above 90 max)
+    # ceil=9   → 88.9 ft (in [81, 90])
     assert pick_device_count(800, 90) == 10
 
 
-def test_pick_device_count_neither_in_tolerance() -> None:
-    """Picks the safer (smaller-spacing) candidate when neither is in tolerance.
+def test_pick_device_count_neither_in_window() -> None:
+    """Picks the safer (smaller-spacing) candidate when neither fits.
 
-    Bug Fix 4: when both floor- and ceil-interval candidates fall
-    outside the ±tolerance window, the picker now prefers the ceil
-    (= more devices, smaller spacing) so we never exceed the MUTCD
-    §6C.09 maximum.  Previously it took the candidate closest to
-    target by absolute deviation, which on shoulder-taper geometry
-    silently picked the over-the-max candidate.
+    When both floor- and ceil-interval candidates fall outside the
+    asymmetric window, the picker prefers ceil (= more devices,
+    smaller spacing) so we never exceed the MUTCD §6C.09 maximum.
     """
     # 150 ft, target 45 → exact 3.33
-    # floor=3 → 50 ft  (over the [40.5, 49.5] window — TOO_WIDE)
-    # ceil=4  → 37.5 ft (under the window — conservative)
+    # floor=3 → 50 ft  (over the 45 max)
+    # ceil=4  → 37.5 ft (under the 40.5 lower bound — too tight)
     # ceil wins → 4 intervals → 5 devices
     assert pick_device_count(150, 45) == 5
+
+
+def test_pick_device_count_tangent_at_75mph_800ft() -> None:
+    """Repro for the 75 mph / 800 ft tangent over-max bug.
+
+    On a 75 mph freeway with an 800 ft work-zone tangent the picker
+    previously returned 6 cones at 160 ft spacing — over the 150 ft
+    MUTCD §6C.09 maximum.  With the asymmetric-window fix it now
+    returns 7 cones at 133.33 ft (within the max).
+
+    Hand calc:
+        target = device_spacing_on_tangent(75) = 2 × 75 = 150 ft (max)
+        exact intervals = 800 / 150 = 5.333
+        floor=5 → 800/5 = 160 ft (above 150 max — REJECTED)
+        ceil=6  → 800/6 = 133.33 ft (below 135 lower bound — too tight)
+        Neither fits → ceil wins → 6 intervals → 7 devices.
+    """
+    # device_spacing_on_tangent(75) = 150
+    assert pick_device_count(800, 150, min_count=2) == 7
 
 
 def test_pick_device_count_min_count_floor() -> None:

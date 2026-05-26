@@ -102,21 +102,27 @@ def _run(
             "rural",
             2000.0,
             11.0,
-            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 21},
+            # Tangent pick(2000, 110): pre-fix floor=18 at 111.11 ft (>110 max);
+            # post-fix ceil=19 at 105.26 ft → 20 tangent + 2 downstream = 22.
+            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 22},
         ),
         (
             65,
             "expressway",
             5000.0,
             12.0,
-            {"SIGN_GENERIC": 20, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 41},
+            # Tangent pick(5000, 130): pre-fix floor=38 at 131.58 ft (>130);
+            # post-fix ceil=39 at 128.21 ft → 40 tangent + 2 downstream = 42.
+            {"SIGN_GENERIC": 20, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 42},
         ),
         (
             75,
             "freeway",
             8000.0,
             12.0,
-            {"SIGN_GENERIC": 22, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 56},
+            # Tangent pick(8000, 150): pre-fix floor=53 at 150.94 ft (>150);
+            # post-fix ceil=54 at 148.15 ft → 55 tangent + 2 downstream = 57.
+            {"SIGN_GENERIC": 22, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
         ),
     ],
     ids=[
@@ -157,9 +163,15 @@ def test_shoulder_divided(
     "speed,road_type,wz_len,lane_w,expected",
     [
         (25, "urban_low", 200.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 7}),
-        (35, "rural", 500.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 10}),
-        (45, "rural", 1000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 14}),
-        (55, "rural", 3000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 30}),
+        # 35 mph: tangent pick(500, 70): pre-fix floor=7 at 71.43 ft (>70 max);
+        # post-fix ceil=8 at 62.5 ft → 9 tangent + 2 downstream = 11.
+        (35, "rural", 500.0, 11.0, {"SIGN_GENERIC": 6, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 11}),
+        # 45 mph: tangent pick(1000, 90): pre-fix floor=11 at 90.91 ft (>90);
+        # post-fix ceil=12 at 83.33 ft → 13 tangent + 2 downstream = 15.
+        (45, "rural", 1000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 15}),
+        # 55 mph: tangent pick(3000, 110): pre-fix floor=27 at 111.11 ft (>110);
+        # post-fix ceil=28 at 107.14 ft → 29 tangent + 2 downstream = 31.
+        (55, "rural", 3000.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 31}),
         (60, "rural", 1500.0, 12.0, {"SIGN_GENERIC": 7, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 16}),
     ],
     ids=[
@@ -201,9 +213,11 @@ def test_shoulder_undivided(
     [
         (40, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 13}),
         (45, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 12}),
-        (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 21}),
-        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 41}),
-        (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 56}),
+        # Same pick(wz_len, 2*speed) math as the shoulder_divided cases —
+        # pre-fix picked floor candidates that exceeded the §6C.09 max.
+        (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 22}),
+        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
+        (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 57}),
     ],
     ids=[
         "40mph_rural_800ft",
@@ -241,21 +255,24 @@ def test_lane_closure_divided(
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
+        # All four configs share the same tangent pick(1000, 90, min_count=3):
+        # pre-fix floor=11 at 90.91 ft (>90 max) → 12 cones tangent → 14 total;
+        # post-fix ceil=12 at 83.33 ft → 13 cones tangent → 15 total.
         (
             {},
-            {"SIGN_GENERIC": 12, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 14},
+            {"SIGN_GENERIC": 12, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 15},
         ),
         (
             {"afad": True},
-            {"SIGN_GENERIC": 12, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 14},
+            {"SIGN_GENERIC": 12, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 15},
         ),
         (
             {"pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 14},
+            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 15},
         ),
         (
             {"afad": True, "pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 14},
+            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 15},
         ),
     ],
     ids=["basic", "afad", "pilot_car_plus_pedestrian", "all_options_combined"],
@@ -278,12 +295,16 @@ def test_flagger(kwargs: dict[str, bool], expected: dict[str, int]) -> None:
 @pytest.mark.parametrize(
     "speed,road_type,wz_len,lane_w,expected",
     [
+        # Taper pick(224.58, 35): pre-fix floor=6 at 37.43 ft (>35 in-taper max)
+        # → 7 drums; post-fix ceil=7 at 32.08 ft → 8 drums.
+        # Tangent pick(300, 70): pre-fix floor=4 at 75 ft (>70 max) → 5 tangent
+        # cones + 2 downstream = 7; post-fix ceil=5 at 60 ft → 6 tangent + 2 = 8.
         (
             35,
             "urban_low",
             300.0,
             11.0,
-            {"SIGN_GENERIC": 11, "FLAGGER_STATION": 2, "DRUM": 7, "CONE": 7},
+            {"SIGN_GENERIC": 11, "FLAGGER_STATION": 2, "DRUM": 8, "CONE": 8},
         ),
     ],
     ids=["35mph_urban_low_300ft"],
