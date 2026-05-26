@@ -19,10 +19,10 @@ export function bufferFor(speed: number): number {
 }
 
 // MUTCD § 6C.08 Equation 6C-1 — merging taper length L (ft)
-// Speed >=45 mph: L = W * S
-// Speed <45 mph:  L = W * S^2 / 60
+// Speed >=40 mph: L = W * S
+// Speed <40 mph:  L = W * S^2 / 60
 export function mergingTaperLength(laneWidth: number, speed: number): number {
-  return speed >= 45
+  return speed >= 40
     ? Math.round(laneWidth * speed)
     : Math.round((laneWidth * speed * speed) / 60);
 }

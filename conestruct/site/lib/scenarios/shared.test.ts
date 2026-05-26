@@ -61,28 +61,48 @@ describe("bufferFor", () => {
 });
 
 describe("mergingTaperLength", () => {
-  it("uses L = W * S for speeds at or above 45 mph", () => {
+  it("uses L = W * S for speeds at or above 40 mph", () => {
+    expect(mergingTaperLength(12, 40)).toBe(480);
     expect(mergingTaperLength(12, 45)).toBe(540);
     expect(mergingTaperLength(12, 55)).toBe(660);
     expect(mergingTaperLength(12, 65)).toBe(780);
     expect(mergingTaperLength(11, 65)).toBe(715);
   });
 
-  it("uses L = W * S^2 / 60 for speeds below 45 mph", () => {
+  it("uses L = W * S^2 / 60 for speeds below 40 mph", () => {
     expect(mergingTaperLength(12, 30)).toBe(180);
     expect(mergingTaperLength(12, 35)).toBe(245);
-    // 12 * 1600 / 60 = 320.  TS treats 40 mph as low-speed (threshold
-    // is `>= 45`, not `>= 40`).  This differs from the Python backend,
-    // where TAPER_LENGTH_FORMULA_THRESHOLD_MPH = 40 and the same input
-    // returns 480.  See cross-check report.
-    expect(mergingTaperLength(12, 40)).toBe(320);
   });
 
   it("returns integer feet (Math.round of the formula)", () => {
-    // 12 * 44^2 / 60 = 387.2 → 387.
-    expect(mergingTaperLength(12, 44)).toBe(387);
-    // 12 * 43^2 / 60 = 369.8 → 370.
-    expect(mergingTaperLength(12, 43)).toBe(370);
+    // 12 * 44 = 528 (high-speed since 44 >= 40).
+    expect(mergingTaperLength(12, 44)).toBe(528);
+    // 12 * 43 = 516 (high-speed since 43 >= 40).
+    expect(mergingTaperLength(12, 43)).toBe(516);
+  });
+
+  it("switches formulas at the 40 mph boundary (MUTCD §6C.08)", () => {
+    // 39 mph (below threshold): 12 * 39^2 / 60 = 304.2 → 304.
+    expect(mergingTaperLength(12, 39)).toBe(304);
+    // 40 mph (at threshold, high-speed formula kicks in): 12 * 40 = 480.
+    expect(mergingTaperLength(12, 40)).toBe(480);
+    // 41 mph (above threshold): 12 * 41 = 492.
+    expect(mergingTaperLength(12, 41)).toBe(492);
+  });
+
+  // Cross-check captured to prevent silent TS/Python drift on the taper
+  // formula.  Expected values are Python src/rules/spacing.py::taper_length
+  // outputs at W=12, rounded with Math.round semantics to match TS.
+  // Computed and verified 2026-05-26.  Only 38 mph is off-integer
+  // (288.8 → 289); the other speeds land on clean integers at W=12.
+  it("matches Python taper_length across the speed range", () => {
+    expect(mergingTaperLength(12, 35)).toBe(245); // 12 * 35^2 / 60 = 245.0
+    expect(mergingTaperLength(12, 38)).toBe(289); // 12 * 38^2 / 60 = 288.8 → 289
+    expect(mergingTaperLength(12, 40)).toBe(480); // 12 * 40 = 480 (high-speed)
+    expect(mergingTaperLength(12, 45)).toBe(540); // 12 * 45 = 540
+    expect(mergingTaperLength(12, 55)).toBe(660); // 12 * 55 = 660
+    expect(mergingTaperLength(12, 65)).toBe(780); // 12 * 65 = 780
+    expect(mergingTaperLength(12, 75)).toBe(900); // 12 * 75 = 900
   });
 });
 
