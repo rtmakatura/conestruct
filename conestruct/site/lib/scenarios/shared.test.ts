@@ -18,6 +18,7 @@ import {
 
 describe("bufferFor", () => {
   it("returns exact table values for in-table speeds", () => {
+    expect(bufferFor(20)).toBe(115);
     expect(bufferFor(25)).toBe(155);
     expect(bufferFor(45)).toBe(360);
     expect(bufferFor(55)).toBe(495);
@@ -32,19 +33,28 @@ describe("bufferFor", () => {
     expect(bufferFor(62)).toBe(570);
     // 42 mph rounds down to 40 → 305 ft.
     expect(bufferFor(42)).toBe(305);
+    // 22 mph rounds down to 20 → 115 ft (the row that was missing from
+    // the TS table before).
+    expect(bufferFor(22)).toBe(115);
   });
 
-  it("falls back to 645 when the rounded speed is not in the table", () => {
-    // 80 mph rounds to 80, which is not a table key → fallback.
-    expect(bufferFor(80)).toBe(645);
-    // 22 mph rounds to 20, which is not in the TS table → fallback.
-    // (The Python BUFFER_SPACE table has a 20-mph row at 115 ft; the TS
-    // table starts at 25 mph.  See cross-check report.)
-    expect(bufferFor(22)).toBe(645);
+  it("throws on out-of-range speeds instead of fabricating a buffer", () => {
+    // 80 mph rounds to 80, which is not in MUTCD Table 6B-2.  Python
+    // raises ValueError with the same wording; TS now throws.  Previous
+    // behavior silently returned 645 (a non-MUTCD value masquerading as
+    // a safety-critical distance).
+    expect(() => bufferFor(80)).toThrow(
+      "Speed 80 mph is not in MUTCD Table 6B-2",
+    );
+    // 10 mph rounds to 10 — below the 20 mph table floor.
+    expect(() => bufferFor(10)).toThrow(
+      "Speed 10 mph is not in MUTCD Table 6B-2",
+    );
   });
 
   it("exposes the full TS buffer table for downstream callers", () => {
     expect(BUFFER_TABLE).toEqual({
+      20: 115,
       25: 155,
       30: 200,
       35: 250,
@@ -57,6 +67,27 @@ describe("bufferFor", () => {
       70: 730,
       75: 820,
     });
+  });
+
+  // Cross-check captured to prevent silent TS/Python drift on the buffer
+  // table.  Expected values are Python src/rules/spacing.py::buffer_space
+  // outputs across the shared speed range.  Asserted only on exact
+  // multiples of 5 in [20, 75] — TS's nearest-5 rounding for non-multiples
+  // is an intentional, documented divergence from Python (Python raises
+  // on non-multiples) and is excluded here.
+  it("matches Python buffer_space on every Table 6B-2 multiple", () => {
+    expect(bufferFor(20)).toBe(115);
+    expect(bufferFor(25)).toBe(155);
+    expect(bufferFor(30)).toBe(200);
+    expect(bufferFor(35)).toBe(250);
+    expect(bufferFor(40)).toBe(305);
+    expect(bufferFor(45)).toBe(360);
+    expect(bufferFor(50)).toBe(425);
+    expect(bufferFor(55)).toBe(495);
+    expect(bufferFor(60)).toBe(570);
+    expect(bufferFor(65)).toBe(645);
+    expect(bufferFor(70)).toBe(730);
+    expect(bufferFor(75)).toBe(820);
   });
 });
 

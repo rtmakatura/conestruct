@@ -1,6 +1,9 @@
 // MUTCD Table 6C-2 — Stopping Sight Distance / Buffer space (ft)
 // Doubles as flagger station sight distance per MUTCD Table 6E-1.
+// Keyed in 5-mph increments from 20 to 75 mph, matching the Python
+// BUFFER_SPACE table in src/rules/tables.py.
 export const BUFFER_TABLE: Record<number, number> = {
+  20: 115,
   25: 155,
   30: 200,
   35: 250,
@@ -14,8 +17,22 @@ export const BUFFER_TABLE: Record<number, number> = {
   75: 820,
 };
 
+// Known, accepted divergence from Python src/rules/spacing.py::buffer_space:
+// TS rounds in-range non-multiples to the nearest 5 (e.g. 42 → 40 → 305),
+// while Python requires an exact multiple of 5 and raises on anything else.
+// Both ends agree on exact multiples in [20, 75]; the TS rounding is
+// intentional UX-side forgiveness, not a bug.  Out-of-range speeds throw
+// with the same wording as Python so silent fabrication of a
+// safety-critical distance cannot happen on either side.
 export function bufferFor(speed: number): number {
-  return BUFFER_TABLE[Math.round(speed / 5) * 5] ?? 645;
+  const snapped = Math.round(speed / 5) * 5;
+  const buffer = BUFFER_TABLE[snapped];
+  if (buffer === undefined) {
+    throw new Error(
+      `Speed ${speed} mph is not in MUTCD Table 6B-2; valid values are 20, 25, 30, ..., 75.`,
+    );
+  }
+  return buffer;
 }
 
 // MUTCD § 6C.08 Equation 6C-1 — merging taper length L (ft)
