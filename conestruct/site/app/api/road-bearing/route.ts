@@ -1,27 +1,47 @@
-// Road-bearing detection: given a (lat, lng) anchor, query Overpass for
-// motorized highway ways within a tight radius, project the anchor onto
-// each candidate way, and return the per-way bearing + snap point.
+// Unified road detection: given a (lat, lng) anchor, query Overpass for
+// motorized highway ways AND nearby place nodes in a single round trip,
+// project the anchor onto each candidate way, deduplicate same-road
+// segments by (name||ref, highway_class, bearing-octant), and return
+// per-candidate OSM tags plus pin-level urban/place context so the
+// client can synthesize a full RoadClassification at candidate-pick
+// time without a second API call.
 //
-// Divided highways are modelled in OSM as two separate ways (one per
-// carriageway).  The previous behaviour returned only the geometrically-
-// nearest segment, which on close-spaced carriageways (I-25 in
-// Mead-Berthoud, where NB/SB are ~10–15 m apart) silently flipped to the
-// wrong direction.  The route now returns every way within snap range
-// so the caller can let the operator pick which carriageway they meant.
+// This route replaced the previous bearing-only behaviour AND the
+// /api/road-classify Mapbox-tilequery path on 2026-05-29.  Treating
+// road detection as one pipeline (one Overpass query, one response,
+// one operator-pick choice) was the structural fix for the
+// candidate-list inaccuracy and the related state-inconsistency bug
+// where the property panel and bearing field could disagree.
 
 import { NextRequest } from "next/server";
+import { dedupCandidates } from "@/lib/road-detection/dedup";
+import type {
+  RoadCandidate,
+  RoadDetectResponse,
+} from "@/lib/road-detection/types";
 
 const MAX_BODY_BYTES = 256;
 const RATE_LIMIT_PER_MIN = 30;
-// Overpass search radius.  We pull anything that *could* be in scope and
-// then filter by snap distance below.  Keep this a bit wider than
-// SNAP_MAX_DISTANCE_M so the projection step has options.
+// Overpass search radius for ways.  Wider than SNAP_MAX_DISTANCE_M so
+// the per-way projection step has options to consider.
 const SEARCH_RADIUS_M = 50;
-// Hard snap tolerance.  30 m (~100 ft) is tight enough that a pin
-// placed clearly on one carriageway of a divided highway won't include
-// the opposite carriageway, while still wide enough to forgive normal
-// click imprecision on undivided roads.
+// Hard snap tolerance.  30 m (~100 ft) is tight enough that a pin on
+// one carriageway of a divided highway won't include the opposite
+// carriageway, while still wide enough to forgive normal click
+// imprecision on undivided roads.
 const SNAP_MAX_DISTANCE_M = 30;
+// Place-node search radius.  Used to decide isUrban for road-type
+// classification — matches the Mapbox-tilequery `place_label` radius
+// that the previous /api/road-classify used (3000 m).
+const PLACE_RADIUS_M = 3000;
+
+// Treat these OSM `place=*` classes as "urban" for road-type assignment.
+const URBAN_PLACE_CLASSES: ReadonlySet<string> = new Set([
+  "city",
+  "town",
+  "suburb",
+  "neighbourhood",
+]);
 
 const OVERPASS_MIRRORS: readonly string[] = [
   "https://overpass-api.de/api/interpreter",
@@ -58,14 +78,36 @@ interface OverpassWay {
   tags?: Record<string, string>;
 }
 
-interface OverpassResponse {
-  elements?: Array<OverpassWay | { type: string }>;
+interface OverpassPlace {
+  type: "node";
+  id: number;
+  lat: number;
+  lon: number;
+  tags?: Record<string, string>;
 }
 
-function buildQuery(lat: number, lng: number, radiusM: number): string {
-  // Mirror ``_build_road_at_query``: pull motorized highway ways with
-  // geometry so we can compute bearings from the actual segment nodes.
-  return `[out:json][timeout:10];(way(around:${radiusM.toFixed(0)},${lat},${lng})["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];);out geom tags;`;
+type OverpassElement =
+  | OverpassWay
+  | OverpassPlace
+  | { type: string; [k: string]: unknown };
+
+interface OverpassResponse {
+  elements?: OverpassElement[];
+}
+
+function buildQuery(lat: number, lng: number): string {
+  // Single round-trip union: motorized ways within SEARCH_RADIUS_M +
+  // urban place nodes within PLACE_RADIUS_M.  `out geom tags;` returns
+  // way geometry for snap projection and full tag sets for downstream
+  // classification.
+  return (
+    `[out:json][timeout:10];` +
+    `(way(around:${SEARCH_RADIUS_M.toFixed(0)},${lat},${lng})` +
+    `["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];` +
+    `node(around:${PLACE_RADIUS_M.toFixed(0)},${lat},${lng})` +
+    `["place"~"^(city|town|suburb|neighbourhood|village|hamlet)$"];` +
+    `);out geom tags;`
+  );
 }
 
 async function overpassQuery(
@@ -73,7 +115,7 @@ async function overpassQuery(
   lng: number,
   signal: AbortSignal | undefined,
 ): Promise<OverpassResponse | null> {
-  const data = buildQuery(lat, lng, SEARCH_RADIUS_M);
+  const data = buildQuery(lat, lng);
   for (const url of OVERPASS_MIRRORS) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), OVERPASS_TIMEOUT_MS);
@@ -142,9 +184,9 @@ function bearingDeg(
   return (toDeg(Math.atan2(y, x)) + 360) % 360;
 }
 
-// Project (lat, lng) onto the segment a→b using a local equirectangular
-// approximation. At ~30 m scales the distortion is well below the snap
-// tolerance, and we sidestep needing geodesy for a small projection.
+// Local equirectangular projection of (pLat, pLng) onto segment a→b.
+// At ~30 m scales the distortion is well below the snap tolerance, so
+// we sidestep geodesy for a small projection.
 function projectOnSegment(
   pLat: number,
   pLng: number,
@@ -176,57 +218,65 @@ function projectOnSegment(
   return { lat: sLat, lng: sLng, distM };
 }
 
-interface BearingCandidate {
-  way_id: string;
-  highway_class: string | null;
-  name: string | null;
-  bearing: number;
-  snap_distance_m: number;
-  snapped_lat: number;
-  snapped_lng: number;
+function strOrNull(v: unknown): string | null {
+  if (typeof v !== "string") return null;
+  const t = v.trim();
+  return t.length > 0 ? t : null;
 }
 
-interface BearingDetectResponse {
-  candidates: BearingCandidate[];
-  primary_index: number | null;
-}
-
-function emptyResponse(): BearingDetectResponse {
-  return { candidates: [], primary_index: null };
-}
-
-// Pull the most useful display label from OSM tags.  ``name`` is the
-// human label ("Interstate 25"); ``ref`` is the route number ("I 25").
-// Some ways carry only one or the other.
-function pickName(tags: Record<string, string> | undefined): string | null {
-  if (!tags) return null;
-  if (typeof tags.name === "string" && tags.name.trim().length > 0) {
-    return tags.name.trim();
+// Pick the closest urban place node from the Overpass response.  The
+// presence of any urban-class place within PLACE_RADIUS_M means
+// `isUrban=true` for classification purposes; we additionally surface
+// the closest place's name for display.
+function pickClosestPlace(
+  elements: OverpassElement[],
+  lat: number,
+  lng: number,
+): OverpassPlace | null {
+  let best: OverpassPlace | null = null;
+  let bestDist = Infinity;
+  for (const el of elements) {
+    if (el.type !== "node") continue;
+    const node = el as OverpassPlace;
+    const placeClass = node.tags?.place;
+    if (!placeClass) continue;
+    if (typeof node.lat !== "number" || typeof node.lon !== "number") continue;
+    const d = haversineM(lat, lng, node.lat, node.lon);
+    if (d < bestDist) {
+      bestDist = d;
+      best = node;
+    }
   }
-  if (typeof tags.ref === "string" && tags.ref.trim().length > 0) {
-    return tags.ref.trim();
-  }
-  return null;
+  return best;
 }
 
-// For each candidate way, pick *its* nearest segment and compute the
-// per-way bearing + snap point.  Then keep only the ways whose nearest
-// snap is within SNAP_MAX_DISTANCE_M, sorted by distance.
-function buildCandidates(
+function emptyResponse(isUrban: boolean, placeName: string | null): RoadDetectResponse {
+  return { candidates: [], primary_index: null, isUrban, placeName };
+}
+
+function buildResponse(
   payload: OverpassResponse | null,
   lat: number,
   lng: number,
-): BearingDetectResponse {
-  const ways: OverpassWay[] =
-    payload?.elements?.filter(
-      (el): el is OverpassWay =>
-        el.type === "way" &&
-        Array.isArray((el as OverpassWay).geometry) &&
-        ((el as OverpassWay).geometry?.length ?? 0) >= 2,
-    ) ?? [];
-  if (ways.length === 0) return emptyResponse();
+): RoadDetectResponse {
+  const elements = payload?.elements ?? [];
 
-  const candidates: BearingCandidate[] = [];
+  // Resolve pin-level place context once for the whole response.
+  // isUrban is the gate that flips trunk/primary/secondary/tertiary
+  // toward urban_arterial vs rural_* in classifyFromOsmTags.
+  const place = pickClosestPlace(elements, lat, lng);
+  const isUrban = place !== null && URBAN_PLACE_CLASSES.has(place.tags?.place ?? "");
+  const placeName = place ? strOrNull(place.tags?.name) : null;
+
+  const ways: OverpassWay[] = elements.filter(
+    (el): el is OverpassWay =>
+      el.type === "way" &&
+      Array.isArray((el as OverpassWay).geometry) &&
+      ((el as OverpassWay).geometry?.length ?? 0) >= 2,
+  );
+  if (ways.length === 0) return emptyResponse(isUrban, placeName);
+
+  const candidates: RoadCandidate[] = [];
   for (const way of ways) {
     const geom = way.geometry ?? [];
     let bestA: OverpassNode | null = null;
@@ -247,21 +297,43 @@ function buildCandidates(
     if (!bestA || !bestB || !bestProj) continue;
     if (bestDistance > SNAP_MAX_DISTANCE_M) continue;
 
+    const tags = way.tags ?? {};
     const brg = bearingDeg(bestA.lat, bestA.lon, bestB.lat, bestB.lon);
     candidates.push({
       way_id: String(way.id),
-      highway_class: way.tags?.highway ?? null,
-      name: pickName(way.tags),
+      highway_class: tags.highway ?? "unclassified",
+      name: strOrNull(tags.name),
+      ref: strOrNull(tags.ref),
       bearing: Math.round(brg * 100) / 100,
       snap_distance_m: Math.round(bestDistance * 100) / 100,
       snapped_lat: bestProj.lat,
       snapped_lng: bestProj.lng,
+      tags: {
+        oneway: strOrNull(tags.oneway),
+        maxspeed: strOrNull(tags.maxspeed),
+        lanes: strOrNull(tags.lanes),
+        lanes_forward: strOrNull(tags["lanes:forward"]),
+        lanes_backward: strOrNull(tags["lanes:backward"]),
+      },
     });
   }
 
-  if (candidates.length === 0) return emptyResponse();
-  candidates.sort((a, b) => a.snap_distance_m - b.snap_distance_m);
-  return { candidates, primary_index: 0 };
+  if (candidates.length === 0) return emptyResponse(isUrban, placeName);
+
+  // Dedup clusters same-road segment duplicates (the dominant noise
+  // source in raw Overpass output), then sort what remains by snap
+  // distance so primary_index points at the geometrically nearest
+  // *logical road*.
+  const deduped = dedupCandidates(candidates).sort(
+    (a, b) => a.snap_distance_m - b.snap_distance_m,
+  );
+
+  return {
+    candidates: deduped,
+    primary_index: 0,
+    isUrban,
+    placeName,
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -309,5 +381,5 @@ export async function POST(req: NextRequest) {
     payload = null;
   }
 
-  return Response.json(buildCandidates(payload, lat, lng));
+  return Response.json(buildResponse(payload, lat, lng));
 }

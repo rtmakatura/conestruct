@@ -1,10 +1,10 @@
-// Apply a Mapbox-derived RoadClassification to the current Scenario,
+// Apply an OSM-tag-derived RoadClassification to the current Scenario,
 // respecting per-scenario-kind narrowing of the RoadType union. If the
 // detected road type isn't in the scenario kind's allowed set we skip
 // roadType but still apply lane width — operator can either override or
 // switch scenario kinds.
 
-import type { RoadClassification } from "../road-classify";
+import type { RoadClassification } from "../road-detection/types";
 import type {
   Scenario,
   RoadType,

@@ -6,8 +6,15 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import type {
   Confidence,
   DetectedField,
+  RoadCandidate,
   RoadClassification,
-} from "@/lib/road-classify";
+  RoadDetectResponse,
+} from "@/lib/road-detection/types";
+import { classifyFromCandidate } from "@/lib/road-detection/classify";
+import {
+  bearingToDirectionLabel as bearingToDirectionLabelImpl,
+  candidateLabel,
+} from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
@@ -105,24 +112,14 @@ const ROAD_TYPE_OPTIONS: Array<{ v: RoadType; l: string }> = [
   { v: "freeway", l: "Freeway / interstate" },
 ];
 
-interface BearingCandidate {
-  way_id: string;
-  highway_class: string | null;
-  name: string | null;
-  bearing: number;
-  snap_distance_m: number;
-  snapped_lat: number;
-  snapped_lng: number;
-}
-
-interface BearingResponse {
-  candidates: BearingCandidate[];
-  primary_index: number | null;
-}
-
+// State machine for the Road Properties panel.  ``awaiting_pick`` is
+// the multi-candidate case: properties aren't synthesized until the
+// operator picks one road, so the panel sits in this state in the
+// meantime instead of guessing.
 type ClassifyStatus =
   | { state: "idle" }
   | { state: "resolving" }
+  | { state: "awaiting_pick" }
   | { state: "detected"; result: RoadClassification }
   | { state: "error"; message: string };
 
@@ -156,22 +153,10 @@ function fmtFt(n: number): string {
   return Math.round(n).toLocaleString("en-US");
 }
 
-// Translate a compass bearing into the closest cardinal/intercardinal
-// label that DOT crews use for travel direction.  Cardinal directions
-// take the "-bound" suffix ("Northbound"); intercardinal use the
-// shorter compass form ("Northeast") since "Northeastbound" is awkward.
-function bearingToDirectionLabel(deg: number): string {
-  const n = ((deg % 360) + 360) % 360;
-  // 22.5° bands centred on each compass point.
-  if (n < 22.5 || n >= 337.5) return "Northbound";
-  if (n < 67.5) return "Northeast";
-  if (n < 112.5) return "Eastbound";
-  if (n < 157.5) return "Southeast";
-  if (n < 202.5) return "Southbound";
-  if (n < 247.5) return "Southwest";
-  if (n < 292.5) return "Westbound";
-  return "Northwest";
-}
+// Re-export the shared label helper under the original local name so
+// the modal's render code keeps reading naturally.  The single source
+// of truth lives in lib/road-detection/labels.ts.
+const bearingToDirectionLabel = bearingToDirectionLabelImpl;
 
 function confDotClass(c: Confidence): string {
   switch (c) {
@@ -279,12 +264,19 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const [bearing, setBearing] = useState(
     initial.bearingDeg !== undefined ? normaliseBearing(initial.bearingDeg) : 0,
   );
-  // All candidate ways returned by /api/road-bearing within snap range.
+  // All candidate ways returned by /api/road-bearing within snap range,
+  // already deduplicated server-side by (name||ref, class, octant).
   // Length 0 → no road found; 1 → unambiguous (auto-fill behaviour);
   // 2+ → divided-highway or intersection ambiguity, operator must pick.
-  const [bearingCandidates, setBearingCandidates] = useState<BearingCandidate[]>(
+  const [bearingCandidates, setBearingCandidates] = useState<RoadCandidate[]>(
     [],
   );
+  // Pin-level place context returned alongside the candidates.  Drives
+  // urban-vs-rural classification when the operator picks a candidate.
+  const [detectionContext, setDetectionContext] = useState<{
+    isUrban: boolean;
+    placeName: string | null;
+  }>({ isUrban: false, placeName: null });
   // Which candidate is currently reflected in the bearing field.  Null
   // means "no selection yet" (multi-candidate case before the operator
   // picks).  Single-candidate case auto-selects index 0.
@@ -364,9 +356,8 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const suppressDragHandlerRef = useRef(false);
   // Each detect call gets a token; only the latest call's result is
   // allowed to mutate state, so a fast drag doesn't get a stale snap
-  // from an earlier request.
+  // from an earlier request.  One pipeline now → one token.
   const bearingTokenRef = useRef(0);
-  const classifyTokenRef = useRef(0);
 
   // ---- Effective values (override > detected > current) -----------------
   const effectiveRoadType: RoadType | null =
@@ -513,29 +504,40 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
   // ---- Detection: bearing + classification -------------------------------
 
-  const detectBearingAt = useCallback(
+  // Unified detection: one /api/road-bearing call returns deduped
+  // candidates + pin-level place context.  Bearing and properties are
+  // both derived from the picked (or auto-picked) candidate, so the
+  // two can never disagree.  This collapses the previous two-pipeline
+  // arrangement that produced the state-inconsistency bug and the
+  // candidate-list inaccuracy together.
+  const detectAt = useCallback(
     async (qLat: number, qLng: number) => {
       const myToken = ++bearingTokenRef.current;
+      setClassify({ state: "resolving" });
       try {
         const r = await fetch("/api/road-bearing", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ lat: qLat, lng: qLng }),
         });
+        if (bearingTokenRef.current !== myToken) return;
         if (!r.ok) {
-          if (bearingTokenRef.current === myToken) {
-            setBearingWarning(
-              "Couldn't reach road-detection service. Enter bearing manually.",
-            );
-            setBearingCandidates([]);
-            setSelectedCandidateIdx(null);
-            setShowCandidatePicker(false);
-          }
+          setBearingWarning(
+            "Couldn't reach road-detection service. Enter bearing manually.",
+          );
+          setBearingCandidates([]);
+          setSelectedCandidateIdx(null);
+          setShowCandidatePicker(false);
+          setClassify({
+            state: "error",
+            message: "Detection service unavailable",
+          });
           return;
         }
-        const j = (await r.json()) as BearingResponse;
+        const j = (await r.json()) as RoadDetectResponse;
         if (bearingTokenRef.current !== myToken) return;
         const cands = j.candidates ?? [];
+        setDetectionContext({ isUrban: j.isUrban, placeName: j.placeName });
         if (cands.length === 0) {
           setBearingWarning(
             "No road detected within 30 m. Verify the location or enter bearing manually.",
@@ -543,15 +545,20 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
           setShowCandidatePicker(false);
+          setClassify({
+            state: "error",
+            message: "No road detected at this point",
+          });
           return;
         }
         setBearingWarning(null);
         setBearingCandidates(cands);
         if (cands.length === 1) {
-          // Unambiguous — keep the prior behaviour: adopt the detected
-          // bearing if the operator hasn't typed one, otherwise leave
-          // their override alone.
-          const newBearing = normaliseBearing(cands[0].bearing);
+          // Unambiguous — adopt the detected bearing if the operator
+          // hasn't typed one (otherwise leave their override alone),
+          // and synthesize properties from the candidate's OSM tags.
+          const only = cands[0];
+          const newBearing = normaliseBearing(only.bearing);
           setSelectedCandidateIdx(0);
           setShowCandidatePicker(false);
           if (bearingInputRef.current.trim() === "") {
@@ -560,13 +567,17 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             setBearingError(null);
             setMarkerBearingRef.current?.(newBearing);
           }
+          setClassify({
+            state: "detected",
+            result: classifyFromCandidate(only, j.isUrban, j.placeName),
+          });
         } else {
-          // Multi-candidate: do NOT auto-apply.  Surface the picker so
-          // the operator can resolve the divided-highway ambiguity
-          // themselves.  The bearing field stays empty / user-typed
-          // until they pick one.
+          // Multi-candidate: surface the picker, leave bearing alone,
+          // and hold the property panel in awaiting_pick until the
+          // operator commits to a road.
           setSelectedCandidateIdx(null);
           setShowCandidatePicker(true);
+          setClassify({ state: "awaiting_pick" });
         }
       } catch {
         if (bearingTokenRef.current === myToken) {
@@ -576,46 +587,15 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
           setShowCandidatePicker(false);
+          setClassify({
+            state: "error",
+            message: "Detection service unavailable",
+          });
         }
       }
     },
     [],
   );
-
-  const detectRoadAt = useCallback(async (qLat: number, qLng: number) => {
-    const myToken = ++classifyTokenRef.current;
-    setClassify({ state: "resolving" });
-    // Clear stale overrides so the new detection is the baseline.  The
-    // operator can re-apply edits on top of the fresh classification.
-    setOverrides({});
-    try {
-      const r = await fetch("/api/road-classify", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lat: qLat, lng: qLng }),
-      });
-      if (classifyTokenRef.current !== myToken) return;
-      if (!r.ok) {
-        setClassify({
-          state: "error",
-          message:
-            r.status === 404
-              ? "No road detected at this point"
-              : r.status === 503
-                ? "Road classification not configured"
-                : "Auto-classify failed",
-        });
-        return;
-      }
-      const j = (await r.json()) as RoadClassification;
-      if (classifyTokenRef.current !== myToken) return;
-      setClassify({ state: "detected", result: j });
-    } catch {
-      if (classifyTokenRef.current === myToken) {
-        setClassify({ state: "error", message: "Auto-classify failed" });
-      }
-    }
-  }, []);
 
   // The bearing-input string is captured in a ref so the async detection
   // callback can read its *current* value without re-creating the
@@ -658,7 +638,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
   // Single source of truth for "the pin is now at these coords": updates
   // state, repositions the marker, optionally pans the map, optionally
-  // fires both /api/road-bearing and /api/road-classify.
+  // fires /api/road-bearing (the unified detection endpoint).
   //
   // ``targetZoom`` only matters when ``fly`` is true.  Pass it for
   // initial-load / search-bar navigation (bumps up from a state-level
@@ -697,12 +677,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       }
 
       if (opts.detect) {
-        void detectBearingAt(newLat, newLng);
-        void detectRoadAt(newLat, newLng);
+        // Reset overrides on pin move so the fresh detection is the
+        // baseline.  Resetting here (not in candidate-pick) preserves
+        // operator edits when they pick a different carriageway from
+        // the same pin's candidate list.
+        setOverrides({});
+        void detectAt(newLat, newLng);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bearing, ensureMarker, detectBearingAt, detectRoadAt],
+    [bearing, ensureMarker, detectAt],
   );
 
   // Snap the map (if pin is off-screen) and the pin to provided coords.
@@ -842,8 +826,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
         ensureMarker(initial.lat!, initial.lng!, bearing);
         // Run detection so road properties + corridor populate on first
         // open of an already-located plan.
-        void detectBearingAt(initial.lat!, initial.lng!);
-        void detectRoadAt(initial.lat!, initial.lng!);
+        void detectAt(initial.lat!, initial.lng!);
       } else {
         const initialAddress = (initial.address ?? "").trim();
         if (initialAddress.length > 0) {
@@ -1015,9 +998,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     setMarkerBearingRef.current?.(rounded);
   };
 
-  // Apply a specific candidate to the bearing field.  Used by the
-  // picker buttons (multi-candidate case) and indirectly by
-  // ``onUseDetectedBearing`` when only one candidate exists.
+  // Apply a specific candidate to the bearing field AND synthesize
+  // the road properties from that candidate's OSM tags.  Used by the
+  // picker buttons and indirectly by ``onUseDetectedBearing`` when
+  // only one candidate exists.  Property panel and bearing are now
+  // derived from the same picked candidate — they cannot disagree.
   const applyCandidate = useCallback(
     (idx: number) => {
       if (idx < 0 || idx >= bearingCandidates.length) return;
@@ -1029,8 +1014,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       setBearingError(null);
       setMarkerBearingRef.current?.(b);
       setShowCandidatePicker(false);
+      setClassify({
+        state: "detected",
+        result: classifyFromCandidate(
+          c,
+          detectionContext.isUrban,
+          detectionContext.placeName,
+        ),
+      });
     },
-    [bearingCandidates],
+    [bearingCandidates, detectionContext],
   );
 
   const onUseDetectedBearing = () => {
@@ -1493,6 +1486,12 @@ function RoadPropertiesPanel({
             Classifying road…
           </div>
         )}
+        {classify.state === "awaiting_pick" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-3">
+            Multiple roads detected — pick a direction above to load road
+            properties.
+          </div>
+        )}
         {classify.state === "error" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-3">
             {classify.message}. Fields default to the scenario&apos;s existing
@@ -1843,7 +1842,7 @@ function WorkZonePanel({
   bearingInput: string;
   bearingError: string | null;
   onBearingChange: (v: string) => void;
-  bearingCandidates: BearingCandidate[];
+  bearingCandidates: RoadCandidate[];
   selectedCandidateIdx: number | null;
   showCandidatePicker: boolean;
   onApplyCandidate: (idx: number) => void;
@@ -1980,17 +1979,15 @@ function CandidateCaption({
   candidate,
   multi,
 }: {
-  candidate: BearingCandidate;
+  candidate: RoadCandidate;
   multi: boolean;
 }) {
-  const dir = bearingToDirectionLabel(candidate.bearing);
-  const namePart = candidate.name
-    ? `${candidate.name} ${dir.toLowerCase()}`
-    : dir;
+  const lbl = candidateLabel(candidate);
   const brg = normaliseBearing(candidate.bearing);
   return (
     <>
-      Detected from OSM: {brg}° ({namePart}) · way {candidate.way_id}
+      Detected from OSM: {brg}° ({lbl.primary} {lbl.direction.toLowerCase()},{" "}
+      {lbl.sub.toLowerCase()}) · way {candidate.way_id}
       {multi && (
         <span className="opacity-70"> · tap Pick Road to change</span>
       )}
@@ -2000,28 +1997,27 @@ function CandidateCaption({
 
 // Inline picker shown when /api/road-bearing returns multiple
 // candidates within snap range (the divided-highway case).  Each
-// candidate is a button: clicking sets the bearing field and arrow.
+// candidate is a button: clicking sets the bearing field, the arrow,
+// AND the road-property panel (via classifyFromCandidate in the parent
+// applyCandidate handler).
 function CandidatePicker({
   candidates,
   selectedIdx,
   onPick,
 }: {
-  candidates: BearingCandidate[];
+  candidates: RoadCandidate[];
   selectedIdx: number | null;
   onPick: (idx: number) => void;
 }) {
   return (
     <div className="border-t border-[color:var(--rule)]/40 pt-2 pb-2">
       <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
-        Select direction:
+        Select road:
       </div>
       <div className="flex flex-col gap-1.5">
         {candidates.map((c, idx) => {
-          const dir = bearingToDirectionLabel(c.bearing);
+          const lbl = candidateLabel(c);
           const brg = normaliseBearing(c.bearing);
-          const label = c.name
-            ? `${c.name} ${dir.toLowerCase()}`
-            : dir;
           const selected = idx === selectedIdx;
           return (
             <button
@@ -2035,8 +2031,13 @@ function CandidatePicker({
               }`}
               title={`${c.snap_distance_m.toFixed(0)} m from pin · way ${c.way_id}`}
             >
-              <span className="text-white">{label}</span>
-              <span className="opacity-70"> ({brg}°)</span>
+              <span className="text-white">
+                {lbl.primary} {lbl.direction.toLowerCase()}
+              </span>
+              <span className="opacity-70">
+                {" "}
+                ({lbl.sub.toLowerCase()}, {brg}°)
+              </span>
             </button>
           );
         })}
