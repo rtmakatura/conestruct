@@ -30,6 +30,7 @@ from pydantic import BaseModel, Field
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
+from src.api.audit import audit_projection, build_audit_trail
 from src.api.schemas import (
     LaneClosureDividedScenario,
     MobileOp2LaneScenario,
@@ -606,6 +607,43 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
             "unique_types": len(rows),
         }
     )
+
+
+@app.post("/render/audit")
+def render_audit(scenario: Scenario) -> JSONResponse:
+    """Return the audit projection that drives the AuditTrail UI.
+
+    Same placement source as ``/render/pdf`` so the audit shown in the
+    UI cannot drift from the rendered plan.  Response shape:
+
+      * ``summary`` — header fields: TA, CDOT sheet, case ID, taper
+        length, buffer space, in-taper and on-tangent device spacings.
+        Replaces what the TS ``compute()`` estimator used to return.
+      * ``sections`` — the full ``build_audit_trail`` body (taper,
+        buffer, spacing, advance, colorado, case, flagger,
+        corridor_validation, geometry_validation) with placeholder
+        ``(TODO: verify ...)`` case-# markers scrubbed.
+      * ``pending_verification`` — rollup with a count of scrubbed
+        references and the tracking-issue URL.  Keeps the existence of
+        pending case-# work transparent without exposing partial data.
+    """
+    _ensure_scenario_enabled(scenario)
+    try:
+        placements, params, _site, _night = _placements_for(scenario)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    shoulder_width = _shoulder_width_for(scenario)
+    audit = build_audit_trail(
+        placements,
+        params,
+        shoulder_width_ft=shoulder_width,
+        site_lat=scenario.meta.lat or None,
+        site_lng=scenario.meta.lng or None,
+    )
+    return JSONResponse(audit_projection(audit, scenario.kind))
 
 
 @app.post("/render/quote-breakdown")

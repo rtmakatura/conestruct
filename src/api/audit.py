@@ -472,3 +472,104 @@ def build_audit_trail(
         "corridor_validation": corridor_validation,
         "geometry_validation": geo_section,
     }
+
+
+# ---------------------------------------------------------------------------
+# Audit projection — scenario-kind → TA/CDOT sheet mapping
+# ---------------------------------------------------------------------------
+
+# Mirrors the per-file `TA` + `CDOT_SHEET` constants the TS estimators used
+# to surface (e.g. shoulder.ts: TA-2 / S-630-1).  This is the single Python-
+# side source while the TS estimators are still on disk; once they're
+# deleted in PR 3 this stays the only copy.
+_SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
+    "shoulder": ("TA-2", "S-630-1"),
+    "flagger_lane_closure": ("TA-10", "S-630-2"),
+    "lane_closure_divided": ("TA-19", "S-630-3"),
+    "work_beyond_shoulder": ("TA-1", "S-630-1"),
+    "mobile_op_2lane": ("TA-35", "S-630-1"),
+    "mobile_op_multilane": ("TA-26", "S-630-3"),
+}
+
+
+# Tracking issue for the placeholder Case # references in this module
+# (the three TODO markers in the taper/case sections).  Until the
+# references are verified against the 19-page S-630-1 set, the audit
+# projection scrubs the TODO text from user-facing fields and surfaces
+# this URL on the rollup so a reviewer can see what's pending.
+#
+# Filled in after the issue is opened.  Leaving as ``None`` means the
+# rollup still appears with a count + note but no link.
+AUDIT_PENDING_VERIFICATION_ISSUE: str | None = None
+
+
+def audit_projection(
+    audit: dict[str, Any],
+    scenario_kind: str,
+) -> dict[str, Any]:
+    """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
+
+    Two transforms on top of ``build_audit_trail``:
+
+    1. **Summary header** — surfaces the per-scenario TA / CDOT sheet
+       plus the math primitives (taper, buffer, spacings) the frontend
+       AuditTrail and math display previously computed in TypeScript.
+    2. **Pending-verification scrubbing** — replaces ``(TODO: verify ...)``
+       markers in ``case.case`` and ``taper.cdot_reference`` with neutral
+       placeholder text, and emits a top-level ``pending_verification``
+       rollup with a count + tracking-issue link.  Visible "TODO" text in
+       a production audit erodes trust; the rollup preserves transparency
+       without exposing partial references.
+
+    The original audit dict is not mutated — fields are copied as we
+    transform them.  ``sections`` is the unmodified body the existing UI
+    expects under each top-level key (``taper``, ``buffer``, etc.).
+    """
+    ta, cdot_sheet = _SCENARIO_TA_CDOT.get(scenario_kind, ("", ""))
+
+    taper = dict(audit["taper"])
+    case = dict(audit["case"])
+    pending = 0
+
+    case_label = case.get("case", "")
+    if "(TODO" in case_label:
+        case["case"] = "CDOT S-630-1 case reference — verification pending"
+        pending += 1
+
+    cdot_ref = taper.get("cdot_reference", "")
+    if "(TODO" in cdot_ref:
+        taper["cdot_reference"] = "CDOT S-630-1 case reference — verification pending"
+        # Same underlying case-number question as ``case.case`` — count
+        # once so the rollup reads "1 pending reference," not "2."
+
+    sections = {
+        **audit,
+        "taper": taper,
+        "case": case,
+    }
+    speed = audit["spacing"]["speed_mph"]
+    summary = {
+        "ta": ta,
+        "cdot_sheet": cdot_sheet,
+        "case_id": case["case"],
+        "taper_length_ft": taper["L_required_ft"],
+        "taper_label": taper["L_required_label"],
+        "buffer_space_ft": audit["buffer"]["buffer_ft"],
+        "device_spacing_taper_ft": device_spacing_in_taper(speed),
+        "device_spacing_tangent_ft": device_spacing_on_tangent(speed),
+    }
+
+    return {
+        "summary": summary,
+        "sections": sections,
+        "pending_verification": {
+            "count": pending,
+            "note": (
+                "CDOT S-630-1 case # is pending verification against the "
+                "19-page typical-application set."
+                if pending > 0
+                else ""
+            ),
+            "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+        },
+    }
