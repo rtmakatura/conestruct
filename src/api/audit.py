@@ -500,23 +500,112 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
 
 
+def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
+    """Port of ``mergingTaperLength`` from conestruct/site/lib/scenarios/shared.ts.
+
+    Returns the merging taper L in feet, rounded to the nearest integer
+    (matching the TS ``Math.round`` behavior).  Used by ``_compute_step_count``
+    for the shoulder heuristic's cones-count derivation — kept bit-exact
+    with TS so the step_count migration is behavior-preserving on a
+    user-visible number.
+
+    Speed ≥ 40 mph: L = W × S  (linear regime, MUTCD §6C.08).
+    Speed < 40 mph: L = W × S² / 60  (quadratic regime).
+    """
+    if speed_mph >= 40:
+        return round(lane_width_ft * speed_mph)
+    return round(lane_width_ft * speed_mph * speed_mph / 60)
+
+
+def _compute_step_count(scenario: Any) -> int:
+    """Port of the per-scenario step-count heuristics from
+    ``conestruct/site/lib/scenarios/{shoulder,flagger,lane-closure-divided,
+    work-beyond-shoulder,mobile-2lane,mobile-multilane}.ts`` at SHA e75cfbb.
+
+    Returns the integer step count the OutputCards "Crew instructions"
+    stat card surfaces.  Pure function of the input Scenario — does not
+    consult placements, the validator, or the audit trail.  Pinned by
+    behavior-preservation tests in ``tests/test_audit_endpoint.py`` so
+    a future refactor cannot drift away from the TS-era values without
+    a failing test.
+
+    The shoulder branch derives ``cones`` from the input parameters using
+    the same TS formulas (``mergingTaperLength`` + ``deviceSpacing``)
+    rather than the actual Python placement count, because the heuristic's
+    ``cones > 30`` threshold is calibrated against the TS calculation.
+    """
+    # Deferred import: keeps audit.py's module-level import graph free of
+    # the schema layer's generator imports.  ``audit.py`` is imported by
+    # build_audit_trail callers that don't need Scenario at all.
+    from src.api.schemas import (
+        FlaggerLaneClosureScenario,
+        LaneClosureDividedScenario,
+        MobileOp2LaneScenario,
+        MobileOpMultilaneScenario,
+        ShoulderScenario,
+        WorkBeyondShoulderScenario,
+    )
+
+    if isinstance(scenario, ShoulderScenario):
+        if scenario.duration == "short":
+            return 8
+        L = _ts_merging_taper_length(scenario.laneWidth, scenario.speed)
+        spacing = scenario.speed  # TS deviceSpacing = posted speed
+        taper_cones = max(4, math.ceil(L / spacing))
+        tangent_cones = math.ceil(scenario.workLen / spacing)
+        cones = taper_cones + tangent_cones
+        return 14 if cones > 30 else 11
+
+    if isinstance(scenario, FlaggerLaneClosureScenario):
+        steps = 12 if scenario.duration == "short" else 16
+        if scenario.pilotCar:
+            steps += 2
+        if scenario.pedestrianAccess:
+            steps += 1
+        return steps
+
+    if isinstance(scenario, LaneClosureDividedScenario):
+        steps = 14 if scenario.duration == "short" else 18
+        if scenario.truckMountedAttenuator:
+            steps += 2
+        return steps
+
+    if isinstance(scenario, WorkBeyondShoulderScenario):
+        return 4 if scenario.duration == "short" else 6
+
+    if isinstance(scenario, MobileOp2LaneScenario):
+        return 6  # constant — mobile 2-lane has fixed lean setup
+
+    if isinstance(scenario, MobileOpMultilaneScenario):
+        return 8 if scenario.secondTMA else 6
+
+    return 0
+
+
 def audit_projection(
     audit: dict[str, Any],
     scenario_kind: str,
+    step_count: int = 0,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
     Two transforms on top of ``build_audit_trail``:
 
-    1. **Summary header** — surfaces the per-scenario TA / CDOT sheet
-       plus the math primitives (taper, buffer, spacings) the frontend
-       AuditTrail and math display previously computed in TypeScript.
+    1. **Summary header** — surfaces the per-scenario TA / CDOT sheet,
+       the math primitives (taper, buffer, spacings) the frontend
+       AuditTrail and math display previously computed in TypeScript,
+       and the OutputCards crew-instructions step count.
     2. **Pending-verification scrubbing** — replaces ``(TODO: verify ...)``
        markers in ``case.case`` and ``taper.cdot_reference`` with neutral
        placeholder text, and emits a top-level ``pending_verification``
        rollup with a count + tracking-issue link.  Visible "TODO" text in
        a production audit erodes trust; the rollup preserves transparency
        without exposing partial references.
+
+    ``step_count`` is passed in rather than derived here because the
+    helper that produces it (``_compute_step_count``) needs the full
+    Scenario object, while this projection only sees the post-pipeline
+    audit dict.  The render-API caller threads both through.
 
     The original audit dict is not mutated — fields are copied as we
     transform them.  ``sections`` is the unmodified body the existing UI
@@ -554,6 +643,7 @@ def audit_projection(
         "buffer_space_ft": audit["buffer"]["buffer_ft"],
         "device_spacing_taper_ft": device_spacing_in_taper(speed),
         "device_spacing_tangent_ft": device_spacing_on_tangent(speed),
+        "step_count": step_count,
     }
 
     return {

@@ -19,6 +19,7 @@ Coverage:
 from __future__ import annotations
 
 import os
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
@@ -81,6 +82,10 @@ def test_audit_returns_200_for_shoulder(client: TestClient) -> None:
         json=_shoulder_scenario(),
     )
     assert res.status_code == 200, res.text
+    # Plumbing: confirm step_count threads through the endpoint into the
+    # summary block.  The fixture is shoulder + short duration, which the
+    # TS heuristic at shoulder.ts:59 returned as 8 — same after migration.
+    assert res.json()["summary"]["step_count"] == 8
 
 
 def test_audit_response_has_top_level_keys(client: TestClient) -> None:
@@ -293,3 +298,268 @@ def test_audit_projection_scrubs_flagger_todo_both_fields() -> None:
     assert "(TODO" not in projection["sections"]["taper"]["cdot_reference"]
     assert projection["summary"]["ta"] == "TA-10"
     assert projection["summary"]["cdot_sheet"] == "S-630-2"
+
+
+# ---------------------------------------------------------------------------
+# Step-count heuristic — port of the per-scenario step-count logic from
+# conestruct/site/lib/scenarios/*.ts at SHA e75cfbb.  PR 2a pins the
+# port as behavior-preserving so PR 2b can delete the TS estimator
+# without changing the OutputCards "Crew instructions" stat.
+#
+# Each test cites the source TS file + line so a future regression
+# points the reviewer at the original heuristic.
+# ---------------------------------------------------------------------------
+
+
+def _shoulder(**overrides) -> Any:
+    from src.api.schemas import ShoulderScenario
+
+    defaults = {
+        "kind": "shoulder",
+        "roadType": "rural_divided",
+        "speed": 55,
+        "lanes": 2,
+        "laneWidth": 12.0,
+        "divided": True,
+        "workType": "utility_locate",
+        "duration": "short",
+        "workLen": 800.0,
+        "night": False,
+    }
+    return ShoulderScenario(**{**defaults, **overrides})
+
+
+def _flagger(**overrides) -> Any:
+    from src.api.schemas import FlaggerLaneClosureScenario
+
+    defaults = {
+        "kind": "flagger_lane_closure",
+        "roadType": "rural_undivided",
+        "speed": 45,
+        "laneWidth": 11.0,
+        "workType": "utility_cut",
+        "duration": "short",
+        "workLen": 500.0,
+        "night": False,
+        "pilotCar": False,
+        "afad": False,
+        "pedestrianAccess": False,
+    }
+    return FlaggerLaneClosureScenario(**{**defaults, **overrides})
+
+
+def _lane_closure(**overrides) -> Any:
+    from src.api.schemas import LaneClosureDividedScenario
+
+    defaults = {
+        "kind": "lane_closure_divided",
+        "roadType": "rural_divided",
+        "speed": 55,
+        "laneWidth": 12.0,
+        "workType": "pavement_repair",
+        "duration": "short",
+        "workLen": 800.0,
+        "night": False,
+        "truckMountedAttenuator": False,
+    }
+    return LaneClosureDividedScenario(**{**defaults, **overrides})
+
+
+def _work_beyond_shoulder(**overrides) -> Any:
+    from src.api.schemas import WorkBeyondShoulderScenario
+
+    defaults = {
+        "kind": "work_beyond_shoulder",
+        "roadType": "rural_undivided",
+        "speed": 45,
+        "laneWidth": 12.0,
+        "workType": "utility",
+        "duration": "short",
+        "workLen": 200.0,
+        "night": False,
+    }
+    return WorkBeyondShoulderScenario(**{**defaults, **overrides})
+
+
+def _mobile_2lane(**overrides) -> Any:
+    from src.api.schemas import MobileOp2LaneScenario
+
+    defaults = {
+        "kind": "mobile_op_2lane",
+        "roadType": "rural_undivided",
+        "speed": 45,
+        "laneWidth": 12.0,
+        "workType": "striping",
+        "workLen": 200.0,
+        "night": False,
+        "arrowBoardOnShadow": True,
+    }
+    return MobileOp2LaneScenario(**{**defaults, **overrides})
+
+
+def _mobile_multilane(**overrides) -> Any:
+    from src.api.schemas import MobileOpMultilaneScenario
+
+    defaults = {
+        "kind": "mobile_op_multilane",
+        "roadType": "freeway",
+        "speed": 65,
+        "laneWidth": 12.0,
+        "workType": "striping",
+        "workLen": 300.0,
+        "night": False,
+        "secondTMA": False,
+    }
+    return MobileOpMultilaneScenario(**{**defaults, **overrides})
+
+
+# --- Basic coverage: one default-input case per scenario kind --------------
+
+
+def test_step_count_shoulder_short() -> None:
+    """Shoulder + short duration → 8 steps.
+
+    Matches lib/scenarios/shoulder.ts:59 at SHA e75cfbb:
+      `s.duration === "short" ? 8 : cones > 30 ? 14 : 11`
+    """
+    assert audit_module._compute_step_count(_shoulder(duration="short")) == 8
+
+
+def test_step_count_flagger_short_no_options() -> None:
+    """Flagger + short + no pilot/pedestrian → 12 steps.
+
+    Matches lib/scenarios/flagger.ts:88 at SHA e75cfbb:
+      `let steps = s.duration === "short" ? 12 : 16; ...`
+    """
+    assert audit_module._compute_step_count(_flagger(duration="short")) == 12
+
+
+def test_step_count_lane_closure_short_no_tma() -> None:
+    """Lane closure + short + no TMA → 14 steps.
+
+    Matches lib/scenarios/lane-closure-divided.ts:80 at SHA e75cfbb:
+      `let steps = s.duration === "short" ? 14 : 18; ...`
+    """
+    assert (
+        audit_module._compute_step_count(
+            _lane_closure(duration="short", truckMountedAttenuator=False)
+        )
+        == 14
+    )
+
+
+def test_step_count_work_beyond_shoulder_short() -> None:
+    """Work beyond shoulder + short → 4 steps.
+
+    Matches lib/scenarios/work-beyond-shoulder.ts:48 at SHA e75cfbb:
+      `const steps = s.duration === "short" ? 4 : 6;`
+    """
+    assert audit_module._compute_step_count(_work_beyond_shoulder(duration="short")) == 4
+
+
+def test_step_count_mobile_op_2lane_constant() -> None:
+    """Mobile 2-lane → always 6 steps (no inputs vary it).
+
+    Matches lib/scenarios/mobile-2lane.ts:52 at SHA e75cfbb:
+      `const steps = 6;`
+    """
+    assert audit_module._compute_step_count(_mobile_2lane()) == 6
+    # Confirm "no inputs vary it" by toggling an input flag and re-asserting.
+    assert audit_module._compute_step_count(_mobile_2lane(arrowBoardOnShadow=False)) == 6
+
+
+def test_step_count_mobile_op_multilane_no_second_tma() -> None:
+    """Mobile multilane + no second TMA → 6 steps.
+
+    Matches lib/scenarios/mobile-multilane.ts:32 at SHA e75cfbb:
+      `const steps = s.secondTMA ? 8 : 6;`
+    """
+    assert audit_module._compute_step_count(_mobile_multilane(secondTMA=False)) == 6
+
+
+# --- Behavior-preservation: every TS branch / conditional increment --------
+
+
+def test_step_count_shoulder_long_cones_under_threshold() -> None:
+    """Shoulder + long + cones ≤ 30 → 11 steps (the lower-branch path).
+
+    Hand calc at SHA e75cfbb (lib/scenarios/shoulder.ts:33-59):
+      L = mergingTaperLength(12, 55) = 12 × 55 = 660 ft
+      spacing = deviceSpacing(55) = 55 ft
+      taperCones = max(4, ceil(660/55)) = max(4, 12) = 12
+      tangentCones = ceil(800/55) = ceil(14.55) = 15
+      cones = 12 + 15 = 27 ≤ 30
+      steps = 11
+    """
+    assert (
+        audit_module._compute_step_count(
+            _shoulder(duration="long", speed=55, laneWidth=12.0, workLen=800.0)
+        )
+        == 11
+    )
+
+
+def test_step_count_shoulder_long_cones_over_threshold() -> None:
+    """Shoulder + long + cones > 30 → 14 steps (the upper-branch path).
+
+    Hand calc at SHA e75cfbb (lib/scenarios/shoulder.ts:33-59):
+      L = mergingTaperLength(12, 55) = 660 ft
+      spacing = 55 ft
+      taperCones = 12
+      tangentCones = ceil(2000/55) = ceil(36.36) = 37
+      cones = 12 + 37 = 49 > 30
+      steps = 14
+
+    Pins the cones>30 boundary as the load-bearing branch — if a future
+    refactor of _ts_merging_taper_length or the cone-derivation logic
+    flips this boundary, the port has drifted from the TS heuristic.
+    """
+    assert (
+        audit_module._compute_step_count(
+            _shoulder(duration="long", speed=55, laneWidth=12.0, workLen=2000.0)
+        )
+        == 14
+    )
+
+
+def test_step_count_flagger_long_pilot_car_only() -> None:
+    """Flagger + long + pilotCar → 16 + 2 = 18 steps.
+
+    Matches lib/scenarios/flagger.ts:88-90 at SHA e75cfbb:
+      `let steps = s.duration === "short" ? 12 : 16;
+       if (s.pilotCar) steps += 2;
+       if (s.pedestrianAccess) steps += 1;`
+    """
+    assert audit_module._compute_step_count(_flagger(duration="long", pilotCar=True)) == 18
+
+
+def test_step_count_flagger_long_pedestrian_only() -> None:
+    """Flagger + long + pedestrianAccess → 16 + 1 = 17 steps.
+
+    Same source as the pilot-car test; pins the +1 increment in isolation.
+    """
+    assert audit_module._compute_step_count(_flagger(duration="long", pedestrianAccess=True)) == 17
+
+
+def test_step_count_lane_closure_long_with_tma() -> None:
+    """Lane closure + long + TMA → 18 + 2 = 20 steps.
+
+    Matches lib/scenarios/lane-closure-divided.ts:80-81 at SHA e75cfbb:
+      `let steps = s.duration === "short" ? 14 : 18;
+       if (s.truckMountedAttenuator) steps += 2;`
+    """
+    assert (
+        audit_module._compute_step_count(
+            _lane_closure(duration="long", truckMountedAttenuator=True)
+        )
+        == 20
+    )
+
+
+def test_step_count_mobile_op_multilane_with_second_tma() -> None:
+    """Mobile multilane + secondTMA → 8 steps.
+
+    Matches lib/scenarios/mobile-multilane.ts:32 at SHA e75cfbb:
+      `const steps = s.secondTMA ? 8 : 6;`
+    """
+    assert audit_module._compute_step_count(_mobile_multilane(secondTMA=True)) == 8

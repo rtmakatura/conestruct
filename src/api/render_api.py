@@ -30,7 +30,7 @@ from pydantic import BaseModel, Field
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
-from src.api.audit import audit_projection, build_audit_trail
+from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.schemas import (
     LaneClosureDividedScenario,
     MobileOp2LaneScenario,
@@ -643,7 +643,8 @@ def render_audit(scenario: Scenario) -> JSONResponse:
         site_lat=scenario.meta.lat or None,
         site_lng=scenario.meta.lng or None,
     )
-    return JSONResponse(audit_projection(audit, scenario.kind))
+    step_count = _compute_step_count(scenario)
+    return JSONResponse(audit_projection(audit, scenario.kind, step_count))
 
 
 @app.post("/render/quote-breakdown")
