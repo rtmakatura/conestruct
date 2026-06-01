@@ -230,10 +230,23 @@ export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
   quote: "quote.xlsx",
 };
 
+export interface DetectSiteRequestBody {
+  lat: number;
+  lng: number;
+  radius_m: number;
+  // Corridor parameters.  When all five are present, the Modal service
+  // builds a WorkCorridor and runs corridor-aware detection; otherwise
+  // it falls back to the legacy point-and-radius detector.
+  bearing_deg?: number;
+  speed_mph?: number;
+  work_zone_ft?: number;
+  closure_type?: string;
+  road_type?: string;
+  lane_width_ft?: number;
+}
+
 export async function fetchSiteDetection(
-  lat: number,
-  lng: number,
-  radiusM: number,
+  body: DetectSiteRequestBody,
 ): Promise<Response> {
   const url = process.env.MODAL_RENDER_URL;
   const secret = process.env.MODAL_RENDER_SECRET;
@@ -249,7 +262,7 @@ export async function fetchSiteDetection(
         "content-type": "application/json",
         authorization: `Bearer ${secret}`,
       },
-      body: JSON.stringify({ lat, lng, radius_m: radiusM }),
+      body: JSON.stringify(body),
     });
   } catch (err) {
     console.error("site detection fetch failed", err);

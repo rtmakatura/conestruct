@@ -37,17 +37,19 @@ from src.api.schemas import (
     Scenario,
     ShoulderScenario,
     WorkBeyondShoulderScenario,
+    _map_road_type,
     scenario_to_call,
 )
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import generate_crew_narrative
 from src.rendering.plan_sheet import render_plan_sheet
+from src.rules.corridor import build_corridor
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import description_for
 from src.rules.site_adjustments import apply_site_adjustments
-from src.rules.site_detection import detect_site_conditions
+from src.rules.site_detection import detect_along_corridor, detect_site_conditions
 from src.rules.spacing import advance_warning_spacing
 from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
 
@@ -329,17 +331,78 @@ class DetectSiteRequest(BaseModel):
     lat: float = Field(ge=-90.0, le=90.0)
     lng: float = Field(ge=-180.0, le=180.0)
     radius_m: float = Field(default=500.0, ge=50.0, le=2000.0)
+    # Corridor parameters.  When all five are present the handler builds a
+    # ``WorkCorridor`` and runs corridor-aware detection (which filters out
+    # features off the corridor and applies per-bucket relevance overrides);
+    # otherwise it falls back to the legacy point-and-radius detector.
+    bearing_deg: float | None = Field(default=None, ge=0.0, le=360.0)
+    speed_mph: int | None = Field(default=None, ge=10, le=85)
+    work_zone_ft: float | None = Field(default=None, ge=10.0, le=20000.0)
+    closure_type: str | None = None
+    road_type: str | None = None
+    lane_width_ft: float = Field(default=12.0, ge=8.0, le=20.0)
 
 
 @app.post("/render/detect-site")
 def render_detect_site(req: DetectSiteRequest) -> JSONResponse:
     """Query OpenStreetMap for site conditions near (lat, lng).
 
-    Returns the bucketed dict from ``detect_site_conditions``. On any
-    upstream failure the returned dict carries an ``error`` key and all
-    buckets are empty — the UI must still work without auto-detection.
+    Returns the bucketed dict from ``detect_site_conditions`` /
+    ``detect_along_corridor`` plus a ``mode`` key (``'corridor'`` or
+    ``'point'``) so the UI can surface which detector ran.  Corridor mode
+    requires bearing + speed + work zone length + closure type + road type;
+    if any are missing or the corridor build fails (unknown closure/road
+    type), the handler falls back to legacy point-and-radius detection.
+    On any upstream failure the returned dict carries an ``error`` key and
+    all buckets are empty — the UI must still work without auto-detection.
     """
+    bearing_deg = req.bearing_deg
+    speed_mph = req.speed_mph
+    work_zone_ft = req.work_zone_ft
+    closure_type = req.closure_type
+    road_type = req.road_type
+
+    corridor_ready = (
+        bearing_deg is not None
+        and speed_mph is not None
+        and work_zone_ft is not None
+        and closure_type is not None
+        and road_type is not None
+    )
+
+    if corridor_ready:
+        # mypy/pyright narrowing — the five locals above are guaranteed
+        # non-None by ``corridor_ready``.
+        assert bearing_deg is not None
+        assert speed_mph is not None
+        assert work_zone_ft is not None
+        assert closure_type is not None
+        assert road_type is not None
+        try:
+            corridor = build_corridor(
+                lat=req.lat,
+                lng=req.lng,
+                bearing_deg=bearing_deg,
+                speed_mph=speed_mph,
+                work_zone_ft=work_zone_ft,
+                closure_type=closure_type,
+                road_type=_map_road_type(road_type, speed_mph),
+                lane_width_ft=req.lane_width_ft,
+            )
+        except ValueError as exc:
+            # Unknown closure_type / road_type → log the reason as a soft
+            # diagnostic and fall back to legacy point-and-radius scan so
+            # the UI still gets a useful result.
+            result = detect_site_conditions(req.lat, req.lng, radius_m=req.radius_m)
+            result["mode"] = "point"
+            result["corridor_unavailable_reason"] = str(exc)
+            return JSONResponse(result)
+        result = detect_along_corridor(corridor)
+        result["mode"] = "corridor"
+        return JSONResponse(result)
+
     result = detect_site_conditions(req.lat, req.lng, radius_m=req.radius_m)
+    result["mode"] = "point"
     return JSONResponse(result)
 
 

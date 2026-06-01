@@ -184,3 +184,202 @@ def test_interchange_bucket_present_when_no_features(
     assert result["interchanges"]["detected"] is False
     assert result["interchanges"]["count"] == 0
     assert result["interchanges"]["junction_refs"] == []
+
+
+# ---------------------------------------------------------------------------
+# Corridor-aware detection: per-bucket relevance overrides
+# ---------------------------------------------------------------------------
+#
+# These pin the relevance rules in ``_BUCKET_RELEVANCE_OVERRIDES``: schools
+# parallel to the corridor are *not* relevant (the original I-25 false
+# positive that motivated the corridor work); sidewalks at curbside lateral
+# offsets *are* relevant; intersections just past either end of the corridor
+# are relevant within their 250 ft tolerance.
+
+from src.rules.corridor import WorkCorridor, _destination_point  # noqa: E402
+
+# Anchor + corridor used for the corridor-mode tests below.  Bearing 0
+# (due north) keeps the math intuitive: along-station maps to latitude
+# change, lateral offset to longitude change.
+_TEST_ANCHOR_LAT: float = 39.9714
+_TEST_ANCHOR_LNG: float = -104.8205
+
+
+def _test_corridor() -> WorkCorridor:
+    """Stock corridor for the relevance-rule tests.
+
+    Bearing 0 (north), 800 ft work zone with realistic surrounding zones —
+    matches the I-25 hand-calc scenario from ``test_corridor.py``.  Total
+    length ≈ 3078 ft.
+    """
+    return WorkCorridor(
+        anchor_lat=_TEST_ANCHOR_LAT,
+        anchor_lng=_TEST_ANCHOR_LNG,
+        anchor_description="test anchor",
+        bearing_deg=0.0,
+        advance_warning_ft=1500.0,
+        taper_ft=183.0,
+        buffer_ft=495.0,
+        work_zone_ft=800.0,
+        downstream_taper_ft=100.0,
+    )
+
+
+def _point_at(
+    anchor_lat: float,
+    anchor_lng: float,
+    bearing_deg: float,
+    distance_m: float,
+) -> tuple[float, float]:
+    """Lat/lng ``distance_m`` from ``anchor`` along ``bearing_deg``."""
+    return _destination_point(anchor_lat, anchor_lng, bearing_deg, distance_m)
+
+
+def test_corridor_school_on_parallel_street_not_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """The I-25 regression: a school 200 ft lateral to the corridor is on a
+    parallel surface street, not part of the freeway work zone, and must
+    not flip ``schools.detected``.  Schools have no ``lateral`` override —
+    the default rule applies."""
+    corridor = _test_corridor()
+    # 200 ft = 60.96 m east of corridor midpoint.
+    midpoint_lat, midpoint_lng = _point_at(
+        corridor.anchor_lat, corridor.anchor_lng, 0.0, corridor.total_length_m / 2.0
+    )
+    school_lat, school_lng = _point_at(midpoint_lat, midpoint_lng, 90.0, 60.96)
+    stub_overpass.append(
+        {
+            "type": "node",
+            "lat": school_lat,
+            "lon": school_lng,
+            "tags": {"amenity": "school", "name": "Parallel St Elementary"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["schools"]["detected"] is False
+    assert result["schools"]["count"] == 0
+    # The feature is still recorded in features[] for transparency.
+    assert len(result["schools"]["features"]) == 1
+    assert result["schools"]["features"][0]["zone"] == "lateral"
+    assert result["schools"]["features"][0]["relevant"] is False
+
+
+def test_corridor_curbside_sidewalk_is_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """A sidewalk 80 ft lateral to centerline is curbside (just past the
+    lane/shoulder edge) — the *target* of the pedestrian-closure rule.
+    Sidewalks override the default and accept ``lateral`` features within
+    150 ft of centerline."""
+    corridor = _test_corridor()
+    midpoint_lat, midpoint_lng = _point_at(
+        corridor.anchor_lat, corridor.anchor_lng, 0.0, corridor.total_length_m / 2.0
+    )
+    # 80 ft = 24.38 m lateral.
+    sidewalk_lat, sidewalk_lng = _point_at(midpoint_lat, midpoint_lng, 90.0, 24.38)
+    stub_overpass.append(
+        {
+            "type": "way",
+            "center": {"lat": sidewalk_lat, "lon": sidewalk_lng},
+            "tags": {"footway": "sidewalk"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["sidewalks"]["detected"] is True
+    assert result["sidewalks"]["count"] == 1
+
+
+def test_corridor_far_lateral_sidewalk_not_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """A sidewalk 200 ft lateral exceeds the sidewalk override (150 ft) and
+    must not flip the flag — this is the limit case that prevents the
+    pre-corridor behavior from leaking back in for sidewalks specifically."""
+    corridor = _test_corridor()
+    midpoint_lat, midpoint_lng = _point_at(
+        corridor.anchor_lat, corridor.anchor_lng, 0.0, corridor.total_length_m / 2.0
+    )
+    # 200 ft = 60.96 m lateral — past sidewalk's 150 ft override.
+    sidewalk_lat, sidewalk_lng = _point_at(midpoint_lat, midpoint_lng, 90.0, 60.96)
+    stub_overpass.append(
+        {
+            "type": "way",
+            "center": {"lat": sidewalk_lat, "lon": sidewalk_lng},
+            "tags": {"footway": "sidewalk"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["sidewalks"]["detected"] is False
+
+
+def test_corridor_intersection_just_past_upstream_end_is_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """A traffic signal 100 ft past the most upstream end of the corridor
+    (past the advance warning zone) is a real cross-street intersection
+    that needs W20-1 facing the cross-traffic.  The intersections bucket
+    overrides ``outside`` with a 250 ft tolerance — this case is inside
+    the override."""
+    corridor = _test_corridor()
+    # 100 ft = 30.48 m past the upstream end in the bearing direction.
+    upstream_lat, upstream_lng = corridor.upstream_point()
+    sig_lat, sig_lng = _point_at(upstream_lat, upstream_lng, 0.0, 30.48)
+    stub_overpass.append(
+        {
+            "type": "node",
+            "lat": sig_lat,
+            "lon": sig_lng,
+            "tags": {"highway": "traffic_signals"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["intersections"]["detected"] is True
+    assert result["intersections"]["count"] == 1
+
+
+def test_corridor_intersection_well_past_upstream_end_not_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """A traffic signal 400 ft past the upstream end exceeds the 250 ft
+    intersections tolerance and must not flip the flag — drivers on the
+    project corridor will already be slowing to the work zone by the time
+    they reach the work zone signing.  Tests the upper boundary of the
+    override."""
+    corridor = _test_corridor()
+    upstream_lat, upstream_lng = corridor.upstream_point()
+    # 400 ft = 121.92 m past upstream — past the 250 ft override.
+    sig_lat, sig_lng = _point_at(upstream_lat, upstream_lng, 0.0, 121.92)
+    stub_overpass.append(
+        {
+            "type": "node",
+            "lat": sig_lat,
+            "lon": sig_lng,
+            "tags": {"highway": "traffic_signals"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["intersections"]["detected"] is False
+
+
+def test_corridor_school_outside_extent_not_detected(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """A school past the upstream end (outside) gets no tolerance override —
+    the schools bucket only counts features inside the corridor extent.
+    Complements the parallel-street test by pinning the upstream/downstream
+    direction."""
+    corridor = _test_corridor()
+    upstream_lat, upstream_lng = corridor.upstream_point()
+    # 100 ft past upstream — still outside the schools bucket (no override).
+    school_lat, school_lng = _point_at(upstream_lat, upstream_lng, 0.0, 30.48)
+    stub_overpass.append(
+        {
+            "type": "node",
+            "lat": school_lat,
+            "lon": school_lng,
+            "tags": {"amenity": "school"},
+        }
+    )
+    result = site_detection.detect_along_corridor(corridor)
+    assert result["schools"]["detected"] is False

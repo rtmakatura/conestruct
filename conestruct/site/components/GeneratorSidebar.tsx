@@ -228,7 +228,7 @@ export function GeneratorSidebar({
           />
         )}
 
-        <SiteConditionsField meta={scenario.meta} setMeta={setMeta} />
+        <SiteConditionsField scenario={scenario} setMeta={setMeta} />
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
           <button

@@ -249,13 +249,25 @@ class WorkCorridor:
     # Bounding box (for Overpass queries)
     # ------------------------------------------------------------------
 
-    def corridor_bbox(self, lateral_buffer_m: float = 100.0) -> tuple[float, float, float, float]:
+    def corridor_bbox(
+        self,
+        lateral_buffer_m: float = 100.0,
+        longitudinal_buffer_m: float = 0.0,
+    ) -> tuple[float, float, float, float]:
         """Bounding box ``(south, west, north, east)`` covering the full corridor.
 
         The box is inflated laterally by ``lateral_buffer_m`` on each side
-        of the corridor centerline so that adjacent features (sidewalks,
-        crossing streets) are caught.  This is the geometry that gets
-        passed to Overpass for corridor-aware site detection.
+        of the corridor centerline so adjacent features (sidewalks,
+        crossing streets) are caught.  When ``longitudinal_buffer_m > 0``,
+        the box is additionally extended past each end of the corridor
+        in the bearing direction — needed so that features just past the
+        upstream or downstream end (e.g. a T-intersection 30 ft past the
+        most upstream sign) fall inside the Overpass query bbox and are
+        available for the per-bucket tolerance check in
+        :func:`~src.rules.site_detection._is_feature_relevant`.  At
+        cardinal bearings a pure lateral inflation does not extend the
+        bbox in the bearing direction at all, so without this padding
+        end-of-corridor features are silently dropped.
         """
         upstream = self.upstream_point()
         downstream = self.downstream_point()
@@ -263,6 +275,8 @@ class WorkCorridor:
         # Perpendicular bearings to either side of the corridor.
         left = (self.bearing_deg - 90.0) % 360.0
         right = (self.bearing_deg + 90.0) % 360.0
+        # Reciprocal bearing — used to push downstream past the anchor.
+        reciprocal = (self.bearing_deg + 180.0) % 360.0
 
         # Include the two endpoints themselves alongside the four
         # laterally-offset corners.  At cardinal bearings the perp
@@ -271,8 +285,13 @@ class WorkCorridor:
         # would round-trip through ``_destination_point`` with a few
         # nanodegrees of drift; including the endpoints directly keeps
         # the bbox a strict superset of the corridor centerline.
-        corners: list[tuple[float, float]] = [upstream, downstream]
-        for lat, lng in (upstream, downstream):
+        endpoints: list[tuple[float, float]] = [upstream, downstream]
+        if longitudinal_buffer_m > 0.0:
+            endpoints.append(_destination_point(*upstream, self.bearing_deg, longitudinal_buffer_m))
+            endpoints.append(_destination_point(*downstream, reciprocal, longitudinal_buffer_m))
+
+        corners: list[tuple[float, float]] = list(endpoints)
+        for lat, lng in endpoints:
             corners.append(_destination_point(lat, lng, left, lateral_buffer_m))
             corners.append(_destination_point(lat, lng, right, lateral_buffer_m))
 

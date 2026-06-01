@@ -276,14 +276,87 @@ def detect_site_conditions(
 # Corridor-aware detection
 # ---------------------------------------------------------------------------
 
-# Zones that should not influence the site-conditions checkbox state.
-# Features falling laterally beside the corridor (parallel sidewalk,
-# crossing street) or entirely outside the corridor extent are still
-# reported in the payload for transparency, but ``relevant=False`` flags
-# them so the auto-apply layer can skip them.
+# Zones that always count as "relevant" — feature is on the corridor
+# centerline within one of the longitudinal segments.  Features tagged
+# ``lateral`` or ``outside`` are not relevant *by default*; per-bucket
+# overrides below relax this where the underlying signing rule has a
+# different geometric expectation.
 _RELEVANT_ZONES: frozenset[str] = frozenset(
     {"advance_warning", "transition", "buffer", "work_zone", "downstream"}
 )
+
+# Per-bucket relaxations of the default "relevant ⇔ zone ∈ _RELEVANT_ZONES"
+# rule.  Tuned so the auto-apply layer flips a flag iff the OSM feature is
+# in the geometric scope the corresponding MUTCD treatment cares about:
+#
+# * ``accept_lateral_within_ft`` — a feature classified ``lateral`` (offset
+#   from centerline beyond corridor's default 50 ft lateral_threshold) still
+#   counts as relevant if its lateral offset is within this distance.  Used
+#   for sidewalks/bike facilities, which run parallel to the work zone by
+#   construction — a curbside sidewalk at ~70–80 ft lateral is the *target*
+#   of the pedestrian-closure rule, not a parallel-street false positive.
+#
+# * ``outside_tolerance_ft`` — a feature classified ``outside`` (just past
+#   the corridor's upstream or downstream end, past classify_distance's
+#   25 ft hard tolerance) still counts as relevant if it sits within this
+#   distance of either end.  Used for at-grade intersections and highway
+#   interchanges, where cross-street ROAD WORK AHEAD or upstream-ramp
+#   signing must face the cross-traffic — a T-junction 30 ft past the most
+#   upstream sign is still a real intersection that needs treatment.
+#
+# Numbers are tunable; the lateral 150 ft covers a typical 4-lane arterial
+# section (lanes + shoulders + furnish) with margin, and the 250 ft / 500 ft
+# longitudinal extents match the urban A-spacing / ramp-signing distances
+# called out in MUTCD §6C.10 + §6F.60.
+_BUCKET_RELEVANCE_OVERRIDES: dict[str, dict[str, float]] = {
+    "intersections": {"outside_tolerance_ft": 250.0},
+    "interchanges": {"outside_tolerance_ft": 500.0},
+    "sidewalks": {"accept_lateral_within_ft": 150.0},
+    "bike_facilities": {"accept_lateral_within_ft": 150.0},
+}
+
+# Longitudinal Overpass-bbox pad used when fetching corridor features, in
+# meters.  Must be ≥ the widest ``outside_tolerance_ft`` above so that
+# features eligible to count via the tolerance override are inside the
+# query bbox in the first place.  500 ft ≈ 152.4 m.
+_CORRIDOR_LONGITUDINAL_BUFFER_M: float = 152.4
+
+
+def _is_feature_relevant(
+    bucket_name: str,
+    zone: str,
+    along_ft: float | None,
+    lateral_ft: float | None,
+    total_length_ft: float,
+) -> bool:
+    """Decide whether a feature is relevant enough to flip the bucket flag.
+
+    Default rule: ``zone ∈ _RELEVANT_ZONES`` (on-centerline, within the
+    corridor's longitudinal extent).  Per-bucket overrides in
+    ``_BUCKET_RELEVANCE_OVERRIDES`` relax this for sidewalks/bike facilities
+    (accept ``lateral`` features within a sub-threshold) and for
+    intersections/interchanges (accept ``outside`` features within a wider
+    end-of-corridor tolerance).  See the override-table docstring for
+    motivation.
+    """
+    if zone in _RELEVANT_ZONES:
+        return True
+
+    overrides = _BUCKET_RELEVANCE_OVERRIDES.get(bucket_name, {})
+
+    if zone == "lateral":
+        max_lateral_ft = overrides.get("accept_lateral_within_ft")
+        if max_lateral_ft is None or lateral_ft is None:
+            return False
+        return lateral_ft <= max_lateral_ft
+
+    if zone == "outside":
+        tol_ft = overrides.get("outside_tolerance_ft")
+        if tol_ft is None or along_ft is None:
+            return False
+        return -tol_ft <= along_ft <= total_length_ft + tol_ft
+
+    return False
 
 
 def _build_bbox_query(bbox: tuple[float, float, float, float]) -> str:
@@ -355,7 +428,10 @@ def detect_along_corridor(
     }
     buckets["interchanges"]["junction_refs"] = []
 
-    bbox = corridor.corridor_bbox(lateral_buffer_m=lateral_buffer_m)
+    bbox = corridor.corridor_bbox(
+        lateral_buffer_m=lateral_buffer_m,
+        longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
+    )
     query = _build_bbox_query(bbox)
     payload, error = _overpass_request_with_fallback(query)
     if payload is None:
@@ -392,7 +468,9 @@ def detect_along_corridor(
             feature = {
                 "label": label,
                 "zone": zone,
-                "relevant": zone in _RELEVANT_ZONES,
+                "relevant": _is_feature_relevant(
+                    bucket_name, zone, along_ft, lateral_ft, corridor.total_length_ft
+                ),
                 "along_station_ft": round(along_ft, 1),
                 "lateral_offset_ft": round(lateral_ft, 1),
                 "distance_to_anchor_m": round(anchor_dist_m, 1),

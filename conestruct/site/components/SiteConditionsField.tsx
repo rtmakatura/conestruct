@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import {
+  type Scenario,
+  type ScenarioKind,
   type ScenarioMeta,
   type SiteConditionFlag,
   type SiteConditions,
@@ -51,6 +53,28 @@ const DETECTION_TO_FLAG: Record<string, SiteConditionFlag> = {
   schools: "school_zone",
 };
 
+// ScenarioKind → closure_type accepted by build_corridor in
+// src/rules/corridor.py.  Each mapped value must belong to one of the
+// frozensets _resolve_taper_ft consults (corridor.py:58-61):
+//   _SHOULDER_KINDS = {"shoulder", "shoulder_divided", "shoulder_undivided"}
+//   _LANE_KINDS     = {"lane_closure", "lane_closure_divided", "lane"}
+//   _FLAGGER_KINDS  = {"flagger", "flagger_alternating_2lane"}
+//   _MOBILE_KINDS   = {"mobile_op_2lane", "mobile_op_multilane", "mobile"}
+// "flagger_lane_closure" → "flagger" because the scenario kind isn't in
+// _FLAGGER_KINDS directly.  "work_beyond_shoulder" → "shoulder" because
+// off-shoulder work uses a shoulder-width offset taper with no travel
+// lane lost.  If any mapped value falls out of the frozensets above,
+// build_corridor raises ValueError and the endpoint falls back to legacy
+// point-and-radius detection — see render_api.render_detect_site.
+const SCENARIO_KIND_TO_CLOSURE_TYPE: Record<ScenarioKind, string> = {
+  shoulder: "shoulder",
+  flagger_lane_closure: "flagger",
+  lane_closure_divided: "lane_closure_divided",
+  work_beyond_shoulder: "shoulder",
+  mobile_op_2lane: "mobile_op_2lane",
+  mobile_op_multilane: "mobile_op_multilane",
+};
+
 type DetectionBucket = {
   detected?: boolean;
   count?: number;
@@ -60,19 +84,22 @@ type DetectionBucket = {
 
 type DetectionResult = Record<string, DetectionBucket | string | undefined> & {
   error?: string;
+  mode?: "corridor" | "point";
 };
 
 interface Props {
-  meta: ScenarioMeta;
+  scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
 }
 
-export function SiteConditionsField({ meta, setMeta }: Props) {
+export function SiteConditionsField({ scenario, setMeta }: Props) {
+  const meta = scenario.meta;
   const flags: SiteConditions = meta.siteConditions ?? {};
   const [detection, setDetection] = useState<DetectionResult | null>(null);
   const [detecting, setDetecting] = useState(false);
   const [detectError, setDetectError] = useState<string | null>(null);
   const hasCoords = !!(meta.lat && meta.lng);
+  const hasBearing = typeof meta.bearingDeg === "number";
 
   const toggle = (key: SiteConditionFlag) => {
     const next: SiteConditions = { ...flags, [key]: !flags[key] };
@@ -85,10 +112,23 @@ export function SiteConditionsField({ meta, setMeta }: Props) {
     setDetecting(true);
     setDetectError(null);
     try {
+      const body: Record<string, number | string> = {
+        lat: meta.lat,
+        lng: meta.lng,
+        radius_m: 500,
+      };
+      if (hasBearing && meta.bearingDeg !== undefined) {
+        body.bearing_deg = meta.bearingDeg;
+        body.speed_mph = scenario.speed;
+        body.work_zone_ft = scenario.workLen;
+        body.closure_type = SCENARIO_KIND_TO_CLOSURE_TYPE[scenario.kind];
+        body.road_type = scenario.roadType;
+        body.lane_width_ft = scenario.laneWidth;
+      }
       const r = await fetch("/api/render/detect-site", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lat: meta.lat, lng: meta.lng, radius_m: 500 }),
+        body: JSON.stringify(body),
       });
       if (!r.ok) {
         setDetectError(`Detection failed (${r.status}).`);
@@ -100,13 +140,24 @@ export function SiteConditionsField({ meta, setMeta }: Props) {
         setDetectError(`Detection failed: ${String(result.error)}.`);
         return;
       }
-      // Pre-fill matching flags. Manual overrides remain — the user can
-      // uncheck a false positive or check something detection missed.
+      // For each detection-driven flag, set true when the bucket reports a
+      // relevant feature and clear when it doesn't — so re-running detect
+      // after moving the pin unsets stale auto-checks instead of letting
+      // false positives accumulate.  Manual-only flags
+      // (limited_sight_distance, driveways_present — not in
+      // DETECTION_TO_FLAG) are preserved across reruns.
       const next: SiteConditions = { ...flags };
       for (const [detKey, flagKey] of Object.entries(DETECTION_TO_FLAG)) {
         const bucket = result[detKey];
-        if (bucket && typeof bucket === "object" && bucket.detected) {
+        const detected = !!(
+          bucket &&
+          typeof bucket === "object" &&
+          bucket.detected
+        );
+        if (detected) {
           next[flagKey] = true;
+        } else {
+          delete next[flagKey];
         }
       }
       setMeta({ ...meta, siteConditions: next });
@@ -135,6 +186,14 @@ export function SiteConditionsField({ meta, setMeta }: Props) {
           : "Detect nearby site conditions"}
       </button>
 
+      {hasCoords && !hasBearing && (
+        <div className="mb-3 px-3 py-2 text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)]">
+          Set road direction above for corridor-aware scanning — without it,
+          detection runs in legacy point-and-radius mode and may flag
+          parallel-street features.
+        </div>
+      )}
+
       {detectError && (
         <div className="mb-3 px-3 py-2 text-[11px] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)]">
           {detectError}
@@ -143,6 +202,7 @@ export function SiteConditionsField({ meta, setMeta }: Props) {
 
       {detection && !detection.error && (
         <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--cyan)]">
+          {detection.mode === "corridor" ? "Corridor scan: " : "Point scan: "}
           {Object.values(DETECTION_TO_FLAG).filter((f) => flags[f]).length}{" "}
           flag(s) auto-checked
         </div>
