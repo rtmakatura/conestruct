@@ -497,10 +497,7 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 # references are verified against the 19-page S-630-1 set, the audit
 # projection scrubs the TODO text from user-facing fields and surfaces
 # this URL on the rollup so a reviewer can see what's pending.
-#
-# Filled in after the issue is opened.  Leaving as ``None`` means the
-# rollup still appears with a count + note but no link.
-AUDIT_PENDING_VERIFICATION_ISSUE: str | None = None
+AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
 
 
 def audit_projection(
