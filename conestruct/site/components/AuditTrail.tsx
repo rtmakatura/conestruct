@@ -89,12 +89,12 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  // Main per-scenario body items are TS-side display heuristics — same
-  // values the OLD compute()-based AuditTrail surfaced.  Kept TS-side
-  // for PR 2b behavior preservation: the dual-source-of-truth retirement
-  // changes WHERE the audit data lives, not WHAT the user sees.  Any
-  // bug fix or UX restructure of these displays is a separate PR.
-  const scenarioItems = buildScenarioItems(scenario, generated, r);
+  // Main per-scenario body items: most sections are TS-side display
+  // heuristics (spacing, advance warning, Colorado supplement, reference
+  // URL — each tracked by its own follow-up issue).  The taper item is
+  // already on backend data; the per-scenario builders thread ``audit``
+  // through to ``taperItem`` for that consumption.
+  const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
   // are strictly new — they never appeared in the OLD AuditTrail.  Each
@@ -203,15 +203,16 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
 
 function buildScenarioItems(
   scenario: Scenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
   if (scenario.kind === "shoulder")
-    return buildShoulderItems(scenario, generated, r);
+    return buildShoulderItems(scenario, audit, generated, r);
   if (scenario.kind === "flagger_lane_closure")
-    return buildFlaggerItems(scenario, generated, r);
+    return buildFlaggerItems(scenario, audit, generated, r);
   if (scenario.kind === "lane_closure_divided")
-    return buildLaneClosureItems(scenario, generated, r);
+    return buildLaneClosureItems(scenario, audit, generated, r);
   if (scenario.kind === "work_beyond_shoulder")
     return buildWorkBeyondShoulderItems(scenario, generated, r);
   if (scenario.kind === "mobile_op_2lane")
@@ -223,6 +224,7 @@ function buildScenarioItems(
 
 function buildShoulderItems(
   scenario: ShoulderScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -237,7 +239,7 @@ function buildShoulderItems(
     scenario.duration === "short" ? 1 : scenario.speed >= 45 ? 3 : 2;
   const caseId = scenario.divided ? "Case 1A" : "Case 1B";
   return [
-    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
@@ -322,6 +324,7 @@ function buildShoulderItems(
 
 function buildFlaggerItems(
   scenario: FlaggerLaneClosureScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -346,7 +349,7 @@ function buildFlaggerItems(
     : "—";
 
   return [
-    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
@@ -485,6 +488,7 @@ function buildFlaggerItems(
 
 function buildLaneClosureItems(
   scenario: LaneClosureDividedScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -503,7 +507,7 @@ function buildLaneClosureItems(
   const arrowBoards = 1;
   const tmaCount = scenario.truckMountedAttenuator ? 1 : 0;
   return [
-    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
@@ -941,36 +945,64 @@ function buildMobileOpMultilaneItems(
 // ---------------------------------------------------------------------------
 
 function taperItem(
-  laneWidth: number,
-  speed: number,
-  L: number,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
+  // Stale-while-revalidate: fall back to the previous successful response
+  // during refetch / error so the row keeps rendering with last-known
+  // good data while the global header shows the (refreshing…) cue.
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+
+  if (!data) {
+    return {
+      title: "Taper length calculation",
+      result: "L = —",
+      cite: "MUTCD § 6C.08",
+      body: (
+        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Computing…
+        </p>
+      ),
+    };
+  }
+
+  const taper = data.sections.taper as Record<string, unknown>;
+  const isShoulder = taper.closure_type === "shoulder";
+  const labelPrefix = isShoulder ? "L/3" : "L";
+  const lengthFt = Math.round(data.summary.taper_length_ft);
+  const formulaChoice = taper.formula_choice as string | undefined;
+
+  // Backend formats the math strings with ASCII "x" and one-decimal
+  // precision (L_third = `{:.1f}`).  Display fixes both: substitute the
+  // proper "×" glyph, and round the FINAL line's trailing value so the
+  // body agrees with the chip.  Which line is "final" depends on
+  // closure type — for shoulder, L_third; for lane, L (no L/3 row is
+  // shown).  The intermediate L row for shoulder keeps backend
+  // precision so the W × S product stays mathematically accurate.
+  const xify = (s: string) => s.replace(/ x /g, " × ");
+  const roundTrailing = (s: string) =>
+    s.replace(/[\d.]+ ft$/, `${lengthFt} ft`);
+
+  const lCalcRaw = (taper.L_calc_text as string | undefined) ?? "";
+  const lThirdRaw = taper.L_third_calc_text as string | undefined;
+  const lCalcText = isShoulder
+    ? xify(lCalcRaw)
+    : xify(roundTrailing(lCalcRaw));
+  const lThirdCalcText =
+    isShoulder && lThirdRaw ? xify(roundTrailing(lThirdRaw)) : undefined;
+
   return {
     title: "Taper length calculation",
-    result: `L = ${r(L)}${generated ? " ft" : ""}`,
+    result: `${labelPrefix} = ${r(lengthFt)}${generated ? " ft" : ""}`,
     cite: "MUTCD § 6C.08",
     body: (
       <>
-        <p>
-          For speed limits ≥ 45 mph, MUTCD Equation 6C-1 specifies the merging
-          taper length as the lane width × speed limit. For lower speeds, the
-          formula scales with the square of the speed.
-        </p>
-        <div className="formula">
-          <span className="var">L</span>
-          <span className="op">=</span>
-          <span className="var">W</span>
-          <span className="op">×</span>
-          <span className="var">S</span>
-          <span className="op">=</span>
-          <span>{laneWidth}</span>
-          <span className="op">×</span>
-          <span>{speed}</span>
-          <span className="op">=</span>
-          <span className="res">{r(L)} ft</span>
-        </div>
+        {formulaChoice && <p>{formulaChoice}</p>}
+        {lCalcText && <div className="formula">{lCalcText}</div>}
+        {isShoulder && lThirdCalcText && (
+          <div className="formula">{lThirdCalcText}</div>
+        )}
         <div className="citation">
           <span className="check">✓</span>
           MUTCD 2023 EDITION · CHAPTER 6C · TABLE 6C-3
@@ -1267,12 +1299,12 @@ function pendingVerificationItem(
 // from lib/scenarios/ into AuditTrail.tsx.
 //
 // The real fix is migrating each AuditTrail section to consume backend
-// audit data directly — five follow-up issues track those migrations
-// (taper L/3, spacing actual counts, advance-warning station table,
-// Colorado structured checks, reference PDF URL).  As each section moves
-// to backend data, the corresponding helper below gets deleted.  When
-// all five land, this block goes away entirely and the dual-source-of-
-// truth is genuinely retired.
+// audit data directly.  The taper item is already done; four follow-up
+// issues track the remaining migrations (spacing actual counts,
+// advance-warning station table, Colorado structured checks, reference
+// PDF URL).  As each section moves to backend data, the corresponding
+// helper below gets deleted.  When all four land, this block goes away
+// entirely and the dual-source-of-truth is genuinely retired.
 //
 // PR 3 deletes lib/scenarios/shared.ts and the per-scenario *.ts files
 // but leaves these inlined helpers in place — that's the gate that
