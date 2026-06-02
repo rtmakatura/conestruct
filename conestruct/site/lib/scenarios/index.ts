@@ -1,24 +1,23 @@
-import { computeFlagger, DEFAULT_FLAGGER, flaggerWorkLabel } from "./flagger";
-import {
-  computeLaneClosure,
-  DEFAULT_LANE_CLOSURE,
-  laneClosureWorkLabel,
-} from "./lane-closure-divided";
-import {
-  computeMobileOp2Lane,
-  DEFAULT_MOBILE_OP_2LANE,
-  mobileWorkLabel,
-} from "./mobile-2lane";
-import {
-  computeMobileOpMultilane,
-  DEFAULT_MOBILE_OP_MULTILANE,
-} from "./mobile-multilane";
-import { computeShoulder, DEFAULT_SHOULDER, shoulderWorkLabel } from "./shoulder";
-import {
-  computeWorkBeyondShoulder,
-  DEFAULT_WORK_BEYOND_SHOULDER,
-  workBeyondShoulderWorkLabel,
-} from "./work-beyond-shoulder";
+// Scenario module entrypoint.
+//
+// PR 3 deleted the per-scenario compute*() files (shoulder.ts, flagger.ts,
+// lane-closure-divided.ts, work-beyond-shoulder.ts, mobile-2lane.ts,
+// mobile-multilane.ts) and their shared formula helpers (shared.ts).  The
+// rules engine on the Modal-hosted backend is now the single source for
+// MUTCD/CDOT calculations; this module retains only:
+//
+//   - Type re-exports (the discriminated union and its members)
+//   - Per-scenario DEFAULT_* constants (form prefill + new-plan baselines)
+//   - Work-type labels (form dropdowns)
+//   - SCENARIO_KINDS + ENABLED_SCENARIO_KINDS gate
+//   - Narrowing helpers + carryMeta for form swaps
+//   - expectedFlaggerCount (Quote panel prefill)
+//   - Legacy saved-plan migration (isScenario, toScenario, migrateLegacy)
+//
+// AuditTrail.tsx carries its own inlined display heuristics (mergingTaperLength,
+// bufferFor, deviceSpacing, nightDrumCount) for the sections that haven't yet
+// migrated to backend audit data — see the five "AuditTrail display
+// migration" follow-up issues for that work.
 import type {
   FlaggerLaneClosureScenario,
   FlaggerWorkType,
@@ -27,9 +26,10 @@ import type {
   MobileOp2LaneScenario,
   MobileOpMultilaneScenario,
   MobileWorkType,
+  RoadType,
   Scenario,
   ScenarioKind,
-  ScenarioResult,
+  ScenarioMeta,
   ShoulderScenario,
   ShoulderWorkType,
   WorkBeyondShoulderScenario,
@@ -69,47 +69,122 @@ export type {
   WorkBeyondShoulderWorkType,
 } from "./types";
 
-export {
-  computeFlagger,
-  computeLaneClosure,
-  computeMobileOp2Lane,
-  computeMobileOpMultilane,
-  computeShoulder,
-  computeWorkBeyondShoulder,
-  DEFAULT_FLAGGER,
-  DEFAULT_LANE_CLOSURE,
-  DEFAULT_MOBILE_OP_2LANE,
-  DEFAULT_MOBILE_OP_MULTILANE,
-  DEFAULT_SHOULDER,
-  DEFAULT_WORK_BEYOND_SHOULDER,
-  flaggerWorkLabel,
-  laneClosureWorkLabel,
-  mobileWorkLabel,
-  shoulderWorkLabel,
-  workBeyondShoulderWorkLabel,
-};
-export { isLegacyParams, isScenario, migrateLegacy, toScenario } from "./legacy";
 export { applyClassification } from "./auto-apply";
 export type { AutoApplyDelta } from "./auto-apply";
 
-export function compute(s: Scenario): ScenarioResult {
-  switch (s.kind) {
-    case "shoulder":
-      return computeShoulder(s);
-    case "flagger_lane_closure":
-      return computeFlagger(s);
-    case "lane_closure_divided":
-      return computeLaneClosure(s);
-    case "work_beyond_shoulder":
-      return computeWorkBeyondShoulder(s);
-    case "mobile_op_2lane":
-      return computeMobileOp2Lane(s);
-    case "mobile_op_multilane":
-      return computeMobileOpMultilane(s);
-  }
-}
+// ---------------------------------------------------------------------------
+// Per-scenario defaults — initial form values when the user opens a fresh
+// workbench or switches scenario kind.  Inlined from the deleted per-scenario
+// .ts files (previously DEFAULT_SHOULDER lived in shoulder.ts, etc.).
+//
+// Only DEFAULT_SHOULDER is reachable in v1 (ENABLED_SCENARIO_KINDS gates the
+// rest off).  The other five are kept as the canonical starting points for
+// when those scenarios get enabled.
+// ---------------------------------------------------------------------------
+
+export const DEFAULT_SHOULDER: ShoulderScenario = {
+  kind: "shoulder",
+  meta: {
+    project: "",
+    address: "",
+    lat: 0,
+    lng: 0,
+  },
+  roadType: "rural_divided",
+  speed: 65,
+  lanes: 2,
+  laneWidth: 12,
+  divided: true,
+  workType: "utility_locate",
+  duration: "short",
+  // workLen: minimum 1000 ft to clear the backend's
+  // WORK_ZONE_SHORTER_THAN_TAPER hard rule (shoulder taper at 65 mph with
+  // 10-ft shoulder = 217 ft) and the WORK_ZONE_SHORT_VS_BUFFER soft rule
+  // (buffer/2 at 65 mph = 322 ft).  Default scenarios must render cleanly
+  // through /render/audit on first paint — no validation banner.
+  workLen: 1000,
+  night: false,
+};
+
+export const DEFAULT_FLAGGER: FlaggerLaneClosureScenario = {
+  kind: "flagger_lane_closure",
+  meta: {
+    project: "",
+    address: "",
+    lat: 0,
+    lng: 0,
+  },
+  roadType: "rural_undivided",
+  speed: 45,
+  laneWidth: 12,
+  workType: "utility_cut",
+  duration: "long",
+  workLen: 400,
+  night: false,
+  pilotCar: false,
+  afad: false,
+  pedestrianAccess: false,
+};
+
+export const DEFAULT_LANE_CLOSURE: LaneClosureDividedScenario = {
+  kind: "lane_closure_divided",
+  meta: {
+    project: "",
+    address: "",
+    lat: 0,
+    lng: 0,
+  },
+  roadType: "freeway",
+  speed: 65,
+  laneWidth: 12,
+  workType: "pavement_repair",
+  duration: "long",
+  workLen: 800,
+  night: false,
+  truckMountedAttenuator: true,
+};
+
+export const DEFAULT_WORK_BEYOND_SHOULDER: WorkBeyondShoulderScenario = {
+  kind: "work_beyond_shoulder",
+  meta: { project: "", address: "", lat: 0, lng: 0 },
+  roadType: "rural_undivided",
+  speed: 45,
+  laneWidth: 12,
+  workType: "utility",
+  duration: "short",
+  workLen: 200,
+  night: false,
+};
+
+export const DEFAULT_MOBILE_OP_2LANE: MobileOp2LaneScenario = {
+  kind: "mobile_op_2lane",
+  meta: { project: "", address: "", lat: 0, lng: 0 },
+  roadType: "rural_undivided",
+  speed: 45,
+  laneWidth: 12,
+  workType: "striping",
+  workLen: 200,
+  night: false,
+  arrowBoardOnShadow: true,
+};
+
+export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
+  kind: "mobile_op_multilane",
+  meta: { project: "", address: "", lat: 0, lng: 0 },
+  roadType: "freeway",
+  speed: 65,
+  laneWidth: 12,
+  workType: "striping",
+  workLen: 300,
+  night: false,
+  secondTMA: false,
+};
 
 export const DEFAULT_SCENARIO: Scenario = DEFAULT_SHOULDER;
+
+// ---------------------------------------------------------------------------
+// Scenario kinds and enablement gate
+// ---------------------------------------------------------------------------
 
 export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> = [
   { v: "shoulder", l: "Shoulder work", sub: "TA-2 · S-630-1" },
@@ -149,6 +224,10 @@ export const ENABLED_SCENARIO_KINDS = ["shoulder"] as const satisfies readonly S
 export function isScenarioKindEnabled(kind: ScenarioKind): boolean {
   return (ENABLED_SCENARIO_KINDS as readonly ScenarioKind[]).includes(kind);
 }
+
+// ---------------------------------------------------------------------------
+// Work-type labels — form dropdown options.
+// ---------------------------------------------------------------------------
 
 export const SHOULDER_WORK_TYPES: Array<{ v: ShoulderWorkType; l: string }> = [
   { v: "utility_locate", l: "Utility locate" },
@@ -200,6 +279,10 @@ export const MOBILE_WORK_TYPES: Array<{ v: MobileWorkType; l: string }> = [
   { v: "asphalt_repair", l: "Asphalt repair" },
   { v: "other", l: "Other" },
 ];
+
+// ---------------------------------------------------------------------------
+// Form-layer helpers
+// ---------------------------------------------------------------------------
 
 // Helpers for the form layer to swap between scenarios while preserving
 // shared meta/roadway fields where they apply.
@@ -264,4 +347,99 @@ export function asMobileOpMultilane(
 export function expectedFlaggerCount(s: Scenario): number {
   if (s.kind !== "flagger_lane_closure") return 0;
   return s.afad ? 0 : 2;
+}
+
+// ---------------------------------------------------------------------------
+// Legacy saved-plan migration
+//
+// Old plans saved before the discriminated-union refactor have a flat
+// ``LegacyScenarioParams`` shape.  This shim detects that shape on load
+// and translates it into the new Scenario union so the workbench can
+// render it.  Inlined from the deleted ``legacy.ts`` after PR 3.
+// ---------------------------------------------------------------------------
+
+interface LegacyScenarioParams {
+  roadType: RoadType;
+  speed: number;
+  lanes: number;
+  laneWidth: number;
+  closure: "shoulder" | "lane" | "full_road" | "mobile";
+  workLen: number;
+  divided: boolean;
+  night: boolean;
+  address: string;
+  lat: number;
+  lng: number;
+  project: string;
+}
+
+export function isLegacyParams(value: unknown): value is LegacyScenarioParams {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  // The new shape has `kind`; the old shape doesn't.  `closure` is the
+  // load-bearing legacy field.
+  if (typeof v.kind === "string") return false;
+  return typeof v.closure === "string";
+}
+
+export function isScenario(value: unknown): value is Scenario {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    v.kind === "shoulder" ||
+    v.kind === "flagger_lane_closure" ||
+    v.kind === "lane_closure_divided" ||
+    v.kind === "work_beyond_shoulder" ||
+    v.kind === "mobile_op_2lane" ||
+    v.kind === "mobile_op_multilane"
+  );
+}
+
+function metaFromLegacy(p: LegacyScenarioParams): ScenarioMeta {
+  return {
+    project: p.project ?? "",
+    address: p.address ?? "",
+    lat: p.lat ?? 0,
+    lng: p.lng ?? 0,
+  };
+}
+
+export function migrateLegacy(p: LegacyScenarioParams): Scenario {
+  // Map legacy `closure` to a best-fit new scenario.  "shoulder" is a
+  // direct match.  Everything else (lane / full_road / mobile) gets
+  // re-homed to flagger lane closure as the closest-fit v1 scenario,
+  // since the new model no longer carries those cases verbatim.
+  if (p.closure === "shoulder") {
+    return {
+      ...DEFAULT_SHOULDER,
+      meta: metaFromLegacy(p),
+      roadType: p.roadType,
+      speed: p.speed,
+      lanes: p.lanes,
+      laneWidth: p.laneWidth,
+      divided: p.divided,
+      workLen: p.workLen,
+      night: p.night,
+    };
+  }
+
+  // Coerce roadType to one allowed by flagger TA-10 (2-lane 2-way).
+  const flaggerRoadType =
+    p.roadType === "urban_arterial" ? "urban_arterial" : "rural_undivided";
+
+  return {
+    ...DEFAULT_FLAGGER,
+    meta: metaFromLegacy(p),
+    roadType: flaggerRoadType,
+    speed: p.speed,
+    laneWidth: p.laneWidth,
+    workLen: p.workLen,
+    night: p.night,
+  };
+}
+
+export function toScenario(value: unknown): Scenario {
+  if (isScenario(value)) return value;
+  if (isLegacyParams(value)) return migrateLegacy(value);
+  return DEFAULT_SHOULDER;
 }
