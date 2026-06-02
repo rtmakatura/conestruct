@@ -3,22 +3,16 @@
 import { useState, type ReactNode } from "react";
 import type {
   FlaggerLaneClosureScenario,
-  FlaggerResult,
   LaneClosureDividedScenario,
-  LaneClosureResult,
-  MobileOp2LaneResult,
   MobileOp2LaneScenario,
-  MobileOpMultilaneResult,
   MobileOpMultilaneScenario,
   Scenario,
-  ScenarioResult,
-  ShoulderResult,
   ShoulderScenario,
   SiteConditionFlag,
   SiteConditions,
-  WorkBeyondShoulderResult,
   WorkBeyondShoulderScenario,
 } from "@/lib/scenarios";
+import type { AuditResponse, AuditState } from "@/lib/render-types";
 
 const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
@@ -70,7 +64,13 @@ const SITE_ADJUSTMENT_DETAIL: Record<
 
 interface Props {
   scenario: Scenario;
-  results: ScenarioResult;
+  audit: AuditState;
+  onRetry: () => void;
+  /** Mirrors the OLD AuditTrail's prop of the same name: when false
+   *  (during bundle-zip generation), value fields render as "—" instead
+   *  of the computed number.  Decoupled from ``audit.state`` so the
+   *  refresh UX cue (dim header + (refreshing…) badge) for scenario
+   *  edits stays distinct from the bundle-generation "—" gating. */
   generated: boolean;
 }
 
@@ -79,52 +79,65 @@ interface ItemSpec {
   result: string;
   cite: string;
   body: ReactNode;
+  /** When true, the item renders with dimmed styling (used for the
+   *  pending-verification rollup that closes out the audit list). */
+  dim?: boolean;
 }
 
-export function AuditTrail({ scenario, results, generated }: Props) {
+export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const [openIdx, setOpenIdx] = useState<number>(0);
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  const items: ItemSpec[] = (() => {
-    let scenarioItems: ItemSpec[] = [];
-    if (scenario.kind === "shoulder" && results.kind === "shoulder") {
-      scenarioItems = buildShoulderItems(scenario, results, generated, r);
-    } else if (
-      scenario.kind === "flagger_lane_closure" &&
-      results.kind === "flagger_lane_closure"
-    ) {
-      scenarioItems = buildFlaggerItems(scenario, results, generated, r);
-    } else if (
-      scenario.kind === "lane_closure_divided" &&
-      results.kind === "lane_closure_divided"
-    ) {
-      scenarioItems = buildLaneClosureItems(scenario, results, generated, r);
-    } else if (
-      scenario.kind === "work_beyond_shoulder" &&
-      results.kind === "work_beyond_shoulder"
-    ) {
-      scenarioItems = buildWorkBeyondShoulderItems(scenario, results, generated, r);
-    } else if (
-      scenario.kind === "mobile_op_2lane" &&
-      results.kind === "mobile_op_2lane"
-    ) {
-      scenarioItems = buildMobileOp2LaneItems(scenario, results, generated, r);
-    } else if (
-      scenario.kind === "mobile_op_multilane" &&
-      results.kind === "mobile_op_multilane"
-    ) {
-      scenarioItems = buildMobileOpMultilaneItems(scenario, results, generated, r);
-    }
-    const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions);
-    return siteItem ? [...scenarioItems, siteItem] : scenarioItems;
-  })();
+  // Main per-scenario body items are TS-side display heuristics — same
+  // values the OLD compute()-based AuditTrail surfaced.  Kept TS-side
+  // for PR 2b behavior preservation: the dual-source-of-truth retirement
+  // changes WHERE the audit data lives, not WHAT the user sees.  Any
+  // bug fix or UX restructure of these displays is a separate PR.
+  const scenarioItems = buildScenarioItems(scenario, generated, r);
+
+  // Conditional additive items from the backend audit response.  These
+  // are strictly new — they never appeared in the OLD AuditTrail.  Each
+  // renders only when the backend explicitly reports the condition:
+  //   - corridor_validation: only when OSM check ran AND produced warnings
+  //   - geometry_validation: only when validators produced violations
+  //   - pending_verification: only when audit has scrubbed TODO Case # refs
+  // For SHOULDER closures in v1 with default coords, all three are empty.
+  // Read from ``ready.data`` only (not lastReady) so error states never
+  // surface stale validation flags from a previous good fetch.
+  const additiveItems: ItemSpec[] =
+    audit.state === "ready" ? buildAdditiveItems(audit.data) : [];
+
+  const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions);
+
+  const items: ItemSpec[] = [
+    ...scenarioItems,
+    ...(siteItem ? [siteItem] : []),
+    ...additiveItems,
+  ];
+
+  // Stale-while-revalidate UX cues: dim header + "(refreshing…)" badge
+  // when a refetch is in flight with prior data still visible; error
+  // banner above the list when the latest fetch failed.  The main body
+  // items keep rendering through both states because they're TS-derived
+  // and never depend on the in-flight backend call.
+  const isRefreshing =
+    audit.state === "loading" && audit.lastReady !== null;
+  const isFirstLoad =
+    audit.state === "loading" && audit.lastReady === null;
 
   return (
     <section className="mt-9">
       <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
-        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
+        <h2
+          className={`text-[20px] font-bold tracking-[-0.005em] text-white m-0 transition-opacity ${isRefreshing ? "opacity-60" : ""}`}
+        >
           Verification &amp; audit trail
+          {isRefreshing && (
+            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] normal-case">
+              (refreshing…)
+            </span>
+          )}
         </h2>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
           <span className="text-[color:var(--cyan)]">03</span> · SHOW THE WORK
@@ -139,6 +152,25 @@ export function AuditTrail({ scenario, results, generated }: Props) {
         impose additional requirements not yet captured.
       </div>
 
+      {audit.state === "error" && (
+        <div className="flex items-baseline gap-3 mb-5 px-4 py-3 border-l-2 border-[color:var(--orange)] font-mono text-[12px] text-[color:var(--orange)]">
+          <span>Audit trail failed: {audit.message}</span>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--cyan)] hover:underline cursor-pointer"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {isFirstLoad && items.length === 0 && (
+        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">
+          Computing audit trail…
+        </div>
+      )}
+
       <div className="audit-list">
         {items.map((item, i) => (
           <AuditItem
@@ -149,6 +181,7 @@ export function AuditTrail({ scenario, results, generated }: Props) {
             cite={item.cite}
             open={openIdx === i}
             onClick={() => toggle(i)}
+            dim={item.dim}
           >
             {item.body}
           </AuditItem>
@@ -158,28 +191,67 @@ export function AuditTrail({ scenario, results, generated }: Props) {
   );
 }
 
-function buildShoulderItems(
-  scenario: ShoulderScenario,
-  results: ShoulderResult,
+// ---------------------------------------------------------------------------
+// Per-scenario builders — TS-side display heuristics.
+//
+// These reproduce the OLD AuditTrail's per-scenario rendering verbatim.
+// Each function takes only ``scenario`` (no backend data) and computes
+// the displayed values inline using the heuristics ported from
+// lib/scenarios/shared.ts.  After PR 3 deletes shared.ts these helpers
+// remain self-contained here.
+// ---------------------------------------------------------------------------
+
+function buildScenarioItems(
+  scenario: Scenario,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  if (scenario.kind === "shoulder")
+    return buildShoulderItems(scenario, generated, r);
+  if (scenario.kind === "flagger_lane_closure")
+    return buildFlaggerItems(scenario, generated, r);
+  if (scenario.kind === "lane_closure_divided")
+    return buildLaneClosureItems(scenario, generated, r);
+  if (scenario.kind === "work_beyond_shoulder")
+    return buildWorkBeyondShoulderItems(scenario, generated, r);
+  if (scenario.kind === "mobile_op_2lane")
+    return buildMobileOp2LaneItems(scenario, generated, r);
+  if (scenario.kind === "mobile_op_multilane")
+    return buildMobileOpMultilaneItems(scenario, generated, r);
+  return [];
+}
+
+function buildShoulderItems(
+  scenario: ShoulderScenario,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
+  const B = bufferFor(scenario.speed);
+  const spacing = deviceSpacing(scenario.speed);
+  const taperCones = Math.max(4, Math.ceil(L / spacing));
+  const tangentCones = Math.ceil(scenario.workLen / spacing);
+  const cones = taperCones + tangentCones;
+  const drums = nightDrumCount(cones, scenario.night);
+  const signs =
+    scenario.duration === "short" ? 1 : scenario.speed >= 45 ? 3 : 2;
+  const caseId = scenario.divided ? "Case 1A" : "Case 1B";
   return [
-    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
-    bufferItem(scenario.speed, results.B, r),
+    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
-      results.spacing,
-      results.cones,
-      results.taperCones,
-      results.tangentCones,
-      results.drums,
+      spacing,
+      cones,
+      taperCones,
+      tangentCones,
+      drums,
       generated,
       r,
     ),
     {
       title: "Advance warning sign set",
-      result: generated ? `${results.signs} signs / side` : "—",
+      result: generated ? `${signs} signs / side` : "—",
       cite: "MUTCD TABLE 6C-1",
       body: (
         <>
@@ -200,17 +272,17 @@ function buildShoulderItems(
               <tr>
                 <td>Road work ahead</td>
                 <td>W20-1</td>
-                <td>{results.signs >= 1 ? "✓" : "—"}</td>
+                <td>{signs >= 1 ? "✓" : "—"}</td>
               </tr>
               <tr>
                 <td>Shoulder work</td>
                 <td>W21-5</td>
-                <td>{results.signs >= 2 ? "✓" : "—"}</td>
+                <td>{signs >= 2 ? "✓" : "—"}</td>
               </tr>
               <tr>
                 <td>End road work</td>
                 <td>G20-2</td>
-                <td>{results.signs >= 3 ? "✓" : "—"}</td>
+                <td>{signs >= 3 ? "✓" : "—"}</td>
               </tr>
             </tbody>
           </table>
@@ -244,38 +316,51 @@ function buildShoulderItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-2", "S-630-1", r(caseId)),
   ];
 }
 
 function buildFlaggerItems(
   scenario: FlaggerLaneClosureScenario,
-  results: FlaggerResult,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
+  const B = bufferFor(scenario.speed);
+  const sightDistance = bufferFor(scenario.speed);
+  const spacing = deviceSpacing(scenario.speed);
+  const taperConesPerEnd = Math.max(4, Math.ceil(L / spacing));
+  const taperCones = taperConesPerEnd * 2;
+  const tangentCones = Math.ceil(scenario.workLen / spacing);
+  const cones = taperCones + tangentCones;
+  const drums = nightDrumCount(cones, scenario.night);
+  const signsPerDirection = scenario.duration === "short" ? 2 : 4;
+  const signs = signsPerDirection * 2;
+  const flaggerStations = scenario.afad ? 0 : 2;
+  const afadDevices = scenario.afad ? 2 : 0;
+  const pilotCarVehicles = scenario.pilotCar ? 1 : 0;
   const flaggerSummary = generated
     ? scenario.afad
-      ? `${results.afadDevices} AFAD`
-      : `${results.flaggerStations} flagger`
+      ? `${afadDevices} AFAD`
+      : `${flaggerStations} flagger`
     : "—";
 
   return [
-    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
-    bufferItem(scenario.speed, results.B, r),
+    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
-      results.spacing,
-      results.cones,
-      results.taperCones,
-      results.tangentCones,
-      results.drums,
+      spacing,
+      cones,
+      taperCones,
+      tangentCones,
+      drums,
       generated,
       r,
     ),
     {
       title: "Flagger station sight distance",
-      result: generated ? `${results.sightDistance} ft` : "—",
+      result: generated ? `${sightDistance} ft` : "—",
       cite: "MUTCD § 6E.06",
       body: (
         <>
@@ -290,7 +375,7 @@ function buildFlaggerItems(
             <span className="var">{scenario.speed}</span>
             <span className="op">mph</span>
             <span className="op">=</span>
-            <span className="res">{r(results.sightDistance)} ft</span>
+            <span className="res">{r(sightDistance)} ft</span>
           </div>
           <p>
             Stations:{" "}
@@ -298,8 +383,11 @@ function buildFlaggerItems(
               {flaggerSummary}
               {scenario.afad ? "" : " station(s)"}
             </strong>
-            {results.pilotCarVehicles > 0 && (
-              <> · Pilot car: <strong>1 vehicle</strong></>
+            {pilotCarVehicles > 0 && (
+              <>
+                {" "}
+                · Pilot car: <strong>1 vehicle</strong>
+              </>
             )}
           </p>
           <div className="citation">
@@ -311,7 +399,7 @@ function buildFlaggerItems(
     },
     {
       title: "Advance warning sign set",
-      result: generated ? `${results.signs} signs (both ways)` : "—",
+      result: generated ? `${signs} signs (both ways)` : "—",
       cite: "MUTCD TABLE 6C-1",
       body: (
         <>
@@ -391,32 +479,45 @@ function buildFlaggerItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-10", "S-630-2", r("Case 2B")),
   ];
 }
 
 function buildLaneClosureItems(
   scenario: LaneClosureDividedScenario,
-  results: LaneClosureResult,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
+  const B = bufferFor(scenario.speed);
+  const spacing = deviceSpacing(scenario.speed);
+  const taperCones = Math.max(2, Math.ceil(L / spacing));
+  const tangentCones = Math.max(2, Math.ceil(scenario.workLen / spacing));
+  const downstreamCones = 2;
+  const cones = taperCones + tangentCones + downstreamCones;
+  const drums = nightDrumCount(cones, scenario.night);
+  const advanceSignsPerDirection = 3;
+  const endSignsPerDirection = 1;
+  const signsPerDirection = advanceSignsPerDirection + endSignsPerDirection;
+  const signs = signsPerDirection * 2;
+  const arrowBoards = 1;
+  const tmaCount = scenario.truckMountedAttenuator ? 1 : 0;
   return [
-    taperItem(scenario.laneWidth, scenario.speed, results.L, generated, r),
-    bufferItem(scenario.speed, results.B, r),
+    taperItem(scenario.laneWidth, scenario.speed, L, generated, r),
+    bufferItem(scenario.speed, B, r),
     spacingItem(
       scenario.workLen,
-      results.spacing,
-      results.cones,
-      results.taperCones,
-      results.tangentCones,
-      results.drums,
+      spacing,
+      cones,
+      taperCones,
+      tangentCones,
+      drums,
       generated,
       r,
     ),
     {
       title: "Arrow board placement",
-      result: generated ? `${results.arrowBoards} unit · LEFT arrow` : "—",
+      result: generated ? `${arrowBoards} unit · LEFT arrow` : "—",
       cite: "MUTCD § 6F.61",
       body: (
         <>
@@ -430,14 +531,11 @@ function buildLaneClosureItems(
             Truck-mounted attenuator (TMA):{" "}
             <strong>
               {scenario.truckMountedAttenuator
-                ? `${results.tmaCount} unit (recommended)`
+                ? `${tmaCount} unit (recommended)`
                 : "Not deployed"}
             </strong>
             {!scenario.truckMountedAttenuator && scenario.speed >= 45 && (
-              <>
-                {" "}
-                — CDOT M-630 strongly recommends a TMA at this speed.
-              </>
+              <> — CDOT M-630 strongly recommends a TMA at this speed.</>
             )}
           </p>
           <div className="citation">
@@ -449,7 +547,7 @@ function buildLaneClosureItems(
     },
     {
       title: "Advance warning sign set",
-      result: generated ? `${results.signs} signs (both ways)` : "—",
+      result: generated ? `${signs} signs (both ways)` : "—",
       cite: "MUTCD TABLE 6C-1",
       body: (
         <>
@@ -532,20 +630,20 @@ function buildLaneClosureItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-19", "S-630-3", r("Case 3A")),
   ];
 }
 
 function buildWorkBeyondShoulderItems(
   scenario: WorkBeyondShoulderScenario,
-  results: WorkBeyondShoulderResult,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  const signs = scenario.duration === "long" ? 2 : 1;
   return [
     {
       title: "Signing scope (no devices on roadway)",
-      result: generated ? `${results.signs} sign(s)` : "—",
+      result: generated ? `${signs} sign(s)` : "—",
       cite: "MUTCD § 6G.04",
       body: (
         <>
@@ -596,7 +694,9 @@ function buildWorkBeyondShoulderItems(
           </p>
           {scenario.speed >= 55 && (
             <p>
-              <strong>High-speed adjacent traffic ({scenario.speed} mph):</strong>{" "}
+              <strong>
+                High-speed adjacent traffic ({scenario.speed} mph):
+              </strong>{" "}
               consider PCMS upstream if work materially affects sight lines
               or driver attention (chip seal trucks, large equipment, etc.).
             </p>
@@ -631,20 +731,24 @@ function buildWorkBeyondShoulderItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-1", "S-630-1", r("Case 1")),
   ];
 }
 
 function buildMobileOp2LaneItems(
   scenario: MobileOp2LaneScenario,
-  results: MobileOp2LaneResult,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  const signs = 1;
+  const arrowBoards = scenario.arrowBoardOnShadow ? 1 : 0;
+  const shadowVehicles = 1;
+  const tmaCount = 1;
+  const totalDevices = signs + arrowBoards + shadowVehicles + tmaCount + 1;
   return [
     {
       title: "Mobile operation profile",
-      result: generated ? `${results.totalDevices} devices · moving` : "—",
+      result: generated ? `${totalDevices} devices · moving` : "—",
       cite: "MUTCD § 6G.05",
       body: (
         <>
@@ -672,7 +776,7 @@ function buildMobileOp2LaneItems(
     },
     {
       title: "Shadow vehicle protection",
-      result: generated ? `${results.shadowVehicles} shadow · ${results.tmaCount} TMA` : "—",
+      result: generated ? `${shadowVehicles} shadow · ${tmaCount} TMA` : "—",
       cite: "MUTCD § 6F.55",
       body: (
         <>
@@ -684,7 +788,9 @@ function buildMobileOp2LaneItems(
           </p>
           {scenario.speed >= 45 && (
             <p>
-              <strong>High-speed two-lane ({scenario.speed} mph):</strong>{" "}
+              <strong>
+                High-speed two-lane ({scenario.speed} mph):
+              </strong>{" "}
               shoulder use for evasive maneuvers may be limited — keep
               shadow-to-truck spacing tight (≤ 200 ft) and brief drivers
               on emergency-stop coordination.
@@ -727,20 +833,22 @@ function buildMobileOp2LaneItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-35", "S-630-1", r("Case 4A")),
   ];
 }
 
 function buildMobileOpMultilaneItems(
   scenario: MobileOpMultilaneScenario,
-  results: MobileOpMultilaneResult,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  const arrowBoards = 1;
+  const tmaCount = (scenario.secondTMA ? 2 : 1) + 1;
+  const totalDevices = arrowBoards + tmaCount;
   return [
     {
       title: "Mobile operation profile",
-      result: generated ? `${results.totalDevices} devices · moving` : "—",
+      result: generated ? `${totalDevices} devices · moving` : "—",
       cite: "MUTCD § 6G.06",
       body: (
         <>
@@ -766,19 +874,21 @@ function buildMobileOpMultilaneItems(
     },
     {
       title: "Shadow vehicle + arrow board",
-      result: generated ? `${results.tmaCount} TMA · ${results.arrowBoards} board` : "—",
+      result: generated ? `${tmaCount} TMA · ${arrowBoards} board` : "—",
       cite: "MUTCD § 6F.55 / § 6F.61",
       body: (
         <>
           <p>
             Shadow vehicle with NCHRP 350 / MASH-rated TMA provides
             crash-cushion protection. Arrow board (Type C) on the shadow
-            indicates merge direction at posted distance — <strong>LEFT</strong>{" "}
-            arrow for the right-lane operation.
+            indicates merge direction at posted distance —{" "}
+            <strong>LEFT</strong> arrow for the right-lane operation.
           </p>
           {scenario.speed >= 55 && !scenario.secondTMA && (
             <p>
-              <strong>⚠ Speed ≥ 55 mph without upstream second TMA:</strong>{" "}
+              <strong>
+                ⚠ Speed ≥ 55 mph without upstream second TMA:
+              </strong>{" "}
               CDOT M-630 strongly recommends a second TMA upstream for
               high-speed mobile ops to absorb high-energy hits.
             </p>
@@ -820,9 +930,15 @@ function buildMobileOpMultilaneItems(
         </>
       ),
     },
-    referenceItem(results.ta, results.cdotSheet, r(results.caseId)),
+    referenceItem("TA-26", "S-630-3", r("Case 4B")),
   ];
 }
+
+// ---------------------------------------------------------------------------
+// Shared per-section helpers — TS-side display, unchanged from the OLD
+// AuditTrail.  Each takes already-computed numbers from the per-scenario
+// builder.
+// ---------------------------------------------------------------------------
 
 function taperItem(
   laneWidth: number,
@@ -959,6 +1075,37 @@ function spacingItem(
   };
 }
 
+function referenceItem(
+  ta: string,
+  cdotSheet: string,
+  caseId: string,
+): ItemSpec {
+  return {
+    title: `${ta} · ${cdotSheet} reference`,
+    result: caseId,
+    cite: `CDOT ${cdotSheet}`,
+    body: (
+      <>
+        <p>
+          Plan matched against MUTCD Typical Application <strong>{ta}</strong>{" "}
+          and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
+          Colorado supplement to MUTCD Part 6.
+        </p>
+        <p>
+          <a
+            href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+          >
+            ↗ Open {cdotSheet} PDF on CDOT.gov
+          </a>
+        </p>
+      </>
+    ),
+  };
+}
+
 function siteAdjustmentsItem(
   flags: SiteConditions | undefined,
 ): ItemSpec | null {
@@ -1000,32 +1147,175 @@ function siteAdjustmentsItem(
   };
 }
 
-function referenceItem(ta: string, cdotSheet: string, caseId: string): ItemSpec {
+// ---------------------------------------------------------------------------
+// Additive backend items — only render when the backend explicitly
+// reports the condition.  Empty for SHOULDER default scenario in v1.
+// ---------------------------------------------------------------------------
+
+function buildAdditiveItems(data: AuditResponse): ItemSpec[] {
+  const items: (ItemSpec | null)[] = [
+    corridorValidationItem(data.sections.corridor_validation),
+    geometryValidationItem(data.sections.geometry_validation),
+    pendingVerificationItem(data.pending_verification),
+  ];
+  return items.filter((x): x is ItemSpec => x !== null);
+}
+
+function corridorValidationItem(
+  corridor: Record<string, unknown>,
+): ItemSpec | null {
+  const checked = corridor.checked === true;
+  const warnings = (corridor.warnings as string[] | undefined) ?? [];
+  if (!checked || warnings.length === 0) return null;
   return {
-    title: `${ta} · ${cdotSheet} reference`,
-    result: caseId,
-    cite: `CDOT ${cdotSheet}`,
+    title: "Site corridor validation",
+    result: `⚠ ${warnings.length} warning${warnings.length === 1 ? "" : "s"}`,
+    cite: "OpenStreetMap",
     body: (
       <>
         <p>
-          Plan matched against MUTCD Typical Application <strong>{ta}</strong>{" "}
-          and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
-          Colorado supplement to MUTCD Part 6.
+          Soft validation against OpenStreetMap ground truth — checks whether
+          the corridor anchor falls on a major road and whether the declared
+          bearing matches the road&apos;s actual heading.  Warnings do not block
+          plan generation; review and override if intentional.
         </p>
-        <p>
-          <a
-            href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
-            target="_blank"
-            rel="noreferrer"
-            className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
-          >
-            ↗ Open {cdotSheet} PDF on CDOT.gov
-          </a>
-        </p>
+        <ul>
+          {warnings.map((w, i) => (
+            <li key={i}>{w}</li>
+          ))}
+        </ul>
+        <div className="citation">
+          <span className="check">✓</span>
+          OPENSTREETMAP (OVERPASS API)
+        </div>
       </>
     ),
   };
 }
+
+interface ViolationSpec {
+  rule_id: string;
+  severity: string;
+  message: string;
+  mutcd_section: string;
+}
+
+function geometryValidationItem(
+  geo: Record<string, unknown>,
+): ItemSpec | null {
+  const violations = (geo.violations as ViolationSpec[] | undefined) ?? [];
+  if (violations.length === 0) return null;
+  const hasError = violations.some((v) => v.severity === "error");
+  return {
+    title: "Geometry validation",
+    result: hasError ? "✕ FAILED" : "⚠ WARNINGS",
+    cite: "MUTCD § 6C",
+    body: (
+      <>
+        <p>{typeof geo.source === "string" ? geo.source : ""}</p>
+        <div className="check-list">
+          {violations.map((v, i) => (
+            <CheckRow
+              key={`${v.rule_id}-${i}`}
+              label={v.message}
+              tone={v.severity === "error" ? "fail" : "warn"}
+              tag={`MUTCD § ${v.mutcd_section}`}
+            />
+          ))}
+        </div>
+      </>
+    ),
+  };
+}
+
+function pendingVerificationItem(
+  pending: AuditResponse["pending_verification"],
+): ItemSpec | null {
+  if (pending.count === 0) return null;
+  return {
+    title: "Verification status",
+    result: `${pending.count} reference${pending.count === 1 ? "" : "s"} pending`,
+    cite: "PENDING",
+    dim: true,
+    body: (
+      <>
+        <p>{pending.note}</p>
+        {pending.tracking_issue && (
+          <p>
+            <a
+              href={pending.tracking_issue}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+            >
+              ↗ Tracking issue
+            </a>
+          </p>
+        )}
+      </>
+    ),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Display heuristics — duplicate lib/scenarios/shared.ts intentionally.
+//
+// PR 2b retires compute() as the entry point (GeneratorShell no longer
+// dispatches to lib/scenarios/compute*()), but the display math for each
+// AuditTrail section continues to live here.  This is a transitional
+// state: the dual-source-of-truth isn't fully retired, it's RELOCATED
+// from lib/scenarios/ into AuditTrail.tsx.
+//
+// The real fix is migrating each AuditTrail section to consume backend
+// audit data directly — five follow-up issues track those migrations
+// (taper L/3, spacing actual counts, advance-warning station table,
+// Colorado structured checks, reference PDF URL).  As each section moves
+// to backend data, the corresponding helper below gets deleted.  When
+// all five land, this block goes away entirely and the dual-source-of-
+// truth is genuinely retired.
+//
+// PR 3 deletes lib/scenarios/shared.ts and the per-scenario *.ts files
+// but leaves these inlined helpers in place — that's the gate that
+// stages PR 3 cleanly without breaking AuditTrail's preserved display.
+// ---------------------------------------------------------------------------
+
+const BUFFER_TABLE: Record<number, number> = {
+  20: 115,
+  25: 155,
+  30: 200,
+  35: 250,
+  40: 305,
+  45: 360,
+  50: 425,
+  55: 495,
+  60: 570,
+  65: 645,
+  70: 730,
+  75: 820,
+};
+
+function bufferFor(speed: number): number {
+  // Round to nearest 5 mph; fall back to closest in-range if off-table.
+  const rounded = Math.round(speed / 5) * 5;
+  return BUFFER_TABLE[rounded] ?? 495;
+}
+
+function mergingTaperLength(laneWidth: number, speed: number): number {
+  if (speed >= 40) return Math.round(laneWidth * speed);
+  return Math.round((laneWidth * speed * speed) / 60);
+}
+
+function deviceSpacing(speed: number): number {
+  return speed;
+}
+
+function nightDrumCount(cones: number, night: boolean): number {
+  return night ? Math.ceil(cones * 0.25) : 0;
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
 
 interface ItemProps {
   num: string;
@@ -1035,6 +1325,7 @@ interface ItemProps {
   open: boolean;
   onClick: () => void;
   children: ReactNode;
+  dim?: boolean;
 }
 
 function AuditItem({
@@ -1045,9 +1336,12 @@ function AuditItem({
   open,
   onClick,
   children,
+  dim = false,
 }: ItemProps) {
   return (
-    <div className={`audit-item ${open ? "open" : ""}`}>
+    <div
+      className={`audit-item ${open ? "open" : ""} ${dim ? "opacity-70" : ""}`}
+    >
       <button type="button" className="audit-head" onClick={onClick}>
         <span className="num">{num}</span>
         <span className="title">{title}</span>

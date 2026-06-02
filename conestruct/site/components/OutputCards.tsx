@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Scenario, ScenarioResult } from "@/lib/scenarios";
+import type { Scenario } from "@/lib/scenarios";
+import type { AuditSummary } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
 type RenderKind = "pdf" | "xlsx" | "markdown";
@@ -18,7 +19,12 @@ interface SavedMode {
 type Mode = PublicMode | SavedMode;
 
 interface Props {
-  results: ScenarioResult;
+  // Audit summary drives the per-card TA / CDOT-sheet labels and the
+  // step count.  Null only during the very first audit fetch (before
+  // any successful response); after that, GeneratorShell passes the
+  // last-known summary even during refetches.  Each card renders a
+  // brief placeholder while summary is null.
+  summary: AuditSummary | null;
   generated: boolean;
   mode: Mode;
   breakdown: DeviceBreakdownState;
@@ -40,7 +46,7 @@ function statFromBreakdown(
   return "—";
 }
 
-export function OutputCards({ results, generated, mode, breakdown }: Props) {
+export function OutputCards({ summary, generated, mode, breakdown }: Props) {
   if (!generated) {
     return (
       <div className="empty-state">
@@ -50,13 +56,16 @@ export function OutputCards({ results, generated, mode, breakdown }: Props) {
       </div>
     );
   }
+  const planMeta = summary
+    ? `PDF · 11×17 · ${summary.ta} · ${summary.cdot_sheet}`
+    : "PDF · 11×17";
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <OutputCard
         ix="A"
         n="01"
         title="Plan sheet"
-        meta={`PDF · 11×17 · ${results.ta} · ${results.cdotSheet}`}
+        meta={planMeta}
         statLbl="Devices"
         statVal={statFromBreakdown(breakdown, (d) => d.total_devices)}
         kind="pdf"
@@ -78,7 +87,7 @@ export function OutputCards({ results, generated, mode, breakdown }: Props) {
         title="Crew instructions"
         meta="MARKDOWN · SETUP + TAKEDOWN"
         statLbl="Steps"
-        statVal={results.steps}
+        statVal={summary?.step_count ?? "—"}
         kind="markdown"
         mode={mode}
       />

@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  compute,
-  DEFAULT_SCENARIO,
-  type Scenario,
-} from "@/lib/scenarios";
+import { useEffect, useState } from "react";
+import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
+import type { AuditResponse, AuditState } from "@/lib/render-types";
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
@@ -47,19 +44,29 @@ export function GeneratorShell({
     setPlanName(name);
   };
 
-  const results = useMemo(() => compute(scenario), [scenario]);
   // OutputCards stay visible from first paint (original behavior); the
   // Generate button now performs a real bundled-zip download rather than
   // gating visibility.
   const [bundleError, setBundleError] = useState<string | null>(null);
 
-  // Plan Details panel is server-driven: fetch the aggregated device list
-  // from /api/render/device-breakdown so the panel reads from the same
-  // placements list that feeds the PDF, XLSX, and crew narrative.  Refetch
-  // whenever the scenario changes; retryNonce lets the panel's Retry button
-  // re-trigger the effect on an error.
+  // Both Plan Details and AuditTrail are server-driven: fetch from the
+  // matching Modal endpoint so the panels read from the same placements
+  // list that feeds the PDF, XLSX, and crew narrative.  Refetch on every
+  // scenario change; ``retryNonce`` lets a single Retry button re-trigger
+  // both effects (shared by design — an underlying network failure
+  // usually affects both).
   const [deviceBreakdown, setDeviceBreakdown] = useState<DeviceBreakdownState>({
     state: "loading",
+  });
+  // AuditTrail uses a stale-while-revalidate variant: ``lastReady`` keeps
+  // the previously-ready audit visible while the next refetch is in
+  // flight, so a user reading mid-edit doesn't see content flash empty.
+  // DeviceBreakdown stays on the simpler clear-on-refetch pattern — its
+  // tally is a small sidebar element where keeping stale numbers visible
+  // would be more confusing than a brief loading hop.
+  const [auditState, setAuditState] = useState<AuditState>({
+    state: "loading",
+    lastReady: null,
   });
   const [retryNonce, setRetryNonce] = useState(0);
 
@@ -103,7 +110,68 @@ export function GeneratorShell({
     return () => controller.abort();
   }, [scenario, retryNonce]);
 
-  const onRetryDeviceBreakdown = () => setRetryNonce((n) => n + 1);
+  useEffect(() => {
+    const controller = new AbortController();
+    setAuditState((prev) => ({
+      state: "loading",
+      lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+    }));
+    (async () => {
+      try {
+        const res = await fetch("/api/render/audit", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ scenario }),
+          signal: controller.signal,
+        });
+        if (!res.ok) {
+          let detail = "";
+          try {
+            const body = await res.json();
+            detail =
+              typeof body?.detail?.message === "string"
+                ? body.detail.message
+                : typeof body?.detail === "string"
+                  ? body.detail
+                  : "";
+          } catch {
+            detail = await res.text().catch(() => "");
+          }
+          setAuditState((prev) => ({
+            state: "error",
+            message: detail || `HTTP ${res.status}`,
+            lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+          }));
+          return;
+        }
+        const data = (await res.json()) as AuditResponse;
+        setAuditState({ state: "ready", data });
+      } catch (e) {
+        if ((e as Error).name === "AbortError") return;
+        setAuditState((prev) => ({
+          state: "error",
+          message: "Network error",
+          lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+        }));
+      }
+    })();
+    return () => controller.abort();
+  }, [scenario, retryNonce]);
+
+  // Shared retry: a single click refires BOTH fetches unconditionally.
+  // No smart-retry that targets only the failed call — a network
+  // failure usually affects both, and a coordinated retry keeps the two
+  // panels' "last refresh" timestamps aligned.
+  const onRetry = () => setRetryNonce((n) => n + 1);
+
+  // Derive the current "best known" audit summary for components that
+  // need scalar fields (AppNav, AppSheetMeta, OutputCards).  Reads from
+  // ``state.data`` when ready, falls back to ``state.lastReady`` during
+  // refetch/error so those headers don't flash empty mid-edit.  Null
+  // only on the very first load before any audit has resolved.
+  const currentAudit: AuditResponse | null =
+    auditState.state === "ready" ? auditState.data : auditState.lastReady;
+  const summary = currentAudit?.summary ?? null;
 
   const safeFilename = (name: string | undefined): string => {
     const cleaned = (name ?? "")
@@ -169,8 +237,8 @@ export function GeneratorShell({
 
       <AppNav
         mode={mode}
-        ta={results.ta}
-        cdotSheet={results.cdotSheet}
+        ta={summary?.ta ?? ""}
+        cdotSheet={summary?.cdot_sheet ?? ""}
         scenario={scenario}
         planId={planId}
         planName={planName}
@@ -179,7 +247,7 @@ export function GeneratorShell({
       <AppSheetMeta
         project={scenario.meta.project}
         address={scenario.meta.address}
-        cdotSheet={results.cdotSheet}
+        cdotSheet={summary?.cdot_sheet ?? ""}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-[360px_1fr]">
@@ -222,7 +290,7 @@ export function GeneratorShell({
             </div>
           )}
           <OutputCards
-            results={results}
+            summary={summary}
             generated={generated}
             mode={
               mode === "sandbox"
@@ -242,14 +310,12 @@ export function GeneratorShell({
           )}
           <AuditTrail
             scenario={scenario}
-            results={results}
+            audit={auditState}
+            onRetry={onRetry}
             generated={generated}
           />
           {generated && (
-            <DeviceBreakdown
-              state={deviceBreakdown}
-              onRetry={onRetryDeviceBreakdown}
-            />
+            <DeviceBreakdown state={deviceBreakdown} onRetry={onRetry} />
           )}
         </main>
       </div>
