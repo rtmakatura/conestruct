@@ -22,6 +22,7 @@ from src.rules.spacing import (
     co_construction_plaques,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    pick_device_count,
     shoulder_taper_length,
     taper_length,
 )
@@ -148,10 +149,18 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     in_taper = device_spacing_in_taper(speed)
     on_tan = device_spacing_on_tangent(speed)
-    raw_taper_drums = L_required / in_taper
-    n_taper_drums_required = max(2, math.ceil(raw_taper_drums))
-    raw_tangent_cones = wz_len / on_tan
-    n_tangent_cones_required = max(2, math.ceil(raw_tangent_cones))
+
+    # Deployed counts mirror the layout engine
+    # (``src/generation/layout.py`` calls the same helper).  Naive
+    # ``ceil(length / spacing)`` was wrong on two counts: it returned
+    # the interval count (= devices - 1) and ignored the §6C.09
+    # asymmetric acceptance window.  ``min_count=2`` matches the V1
+    # shoulder layout; lane and flagger layouts floor higher, but L
+    # and wz_len make the floor non-binding for realistic inputs.
+    n_taper_drums = pick_device_count(L_required, in_taper, min_count=2)
+    n_tangent_cones = pick_device_count(wz_len, on_tan, min_count=2)
+    taper_interval = L_required / (n_taper_drums - 1)
+    tangent_interval = wz_len / (n_tangent_cones - 1)
 
     actual_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
     actual_cones = sum(1 for p in placements if p.device_type == DeviceType.CONE)
@@ -168,17 +177,21 @@ def build_audit_trail(
             "(MUTCD Sec 6C.09: spacing equals 2x speed in feet)"
         ),
         "taper_count_text": (
-            f"{taper_label} = {L_required:.1f} ft / {in_taper:g} ft spacing = "
-            f"{raw_taper_drums:.2f}, rounded up = {n_taper_drums_required} drums"
+            f"{taper_label} = {L_required:.1f} ft / {in_taper:g} ft max spacing "
+            f"-> {n_taper_drums} drums at {taper_interval:.1f} ft intervals"
         ),
         "tangent_count_text": (
-            f"{wz_len:g} ft / {on_tan:g} ft spacing = "
-            f"{raw_tangent_cones:.2f}, rounded up = "
-            f"{n_tangent_cones_required} cones"
+            f"{wz_len:g} ft / {on_tan:g} ft max spacing "
+            f"-> {n_tangent_cones} cones at {tangent_interval:.1f} ft intervals"
         ),
-        "n_taper_drums_required": n_taper_drums_required,
+        # ``_required`` field name retained for backwards compatibility
+        # with verify scripts and the Streamlit panel.  Value is now the
+        # ``pick_device_count`` output (what the layout deploys), not
+        # the old naive ``ceil`` (what a strict reading of §6C.09 would
+        # demand).  Rename is a separate concern; see commit history.
+        "n_taper_drums_required": n_taper_drums,
         "n_taper_drums_actual": actual_drums,
-        "n_tangent_cones_required": n_tangent_cones_required,
+        "n_tangent_cones_required": n_tangent_cones,
         "n_tangent_cones_actual": actual_cones,
         "source": "MUTCD 11th Ed. Sec 6C.09",
     }
