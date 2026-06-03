@@ -14,9 +14,10 @@
 //   - expectedFlaggerCount (Quote panel prefill)
 //   - Legacy saved-plan migration (isScenario, toScenario, migrateLegacy)
 //
-// AuditTrail.tsx carries one remaining inlined display heuristic
-// (bufferFor) for the buffer-space section that hasn't yet migrated to
-// backend audit data — tracked by the buffer migration follow-up issue.
+// AuditTrail.tsx's render paths for shoulder/lane-closure are fully
+// backend-sourced.  The only remaining TS-side heuristic is ``bufferFor``
+// for the flagger station SSD lookup (cite §6E.06); flagger is gated off
+// in V1 (ENABLED_SCENARIO_KINDS), so the SSD migration is deferred.
 import type {
   FlaggerLaneClosureScenario,
   FlaggerWorkType,

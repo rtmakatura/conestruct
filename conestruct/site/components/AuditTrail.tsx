@@ -89,12 +89,12 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  // Main per-scenario body items: every section but buffer reads from
-  // backend audit data via the shared item helpers (``taperItem``,
-  // ``spacingItem``, ``advanceItem``, ``coloradoItem``,
-  // ``referenceItem``).  Per-scenario builders thread ``audit`` through.
-  // Buffer is the last TS-side display heuristic (``bufferFor``);
-  // migration tracked separately.
+  // Main per-scenario body items: every section reads from backend audit
+  // data via the shared item helpers (``taperItem``, ``bufferItem``,
+  // ``spacingItem``, ``advanceItem``, ``coloradoItem``, ``referenceItem``).
+  // Per-scenario builders thread ``audit`` through.  The only remaining
+  // TS-side heuristic is ``bufferFor`` for the flagger SSD block — gated
+  // off in V1 (ENABLED_SCENARIO_KINDS).
   const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
@@ -229,11 +229,10 @@ function buildShoulderItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const B = bufferFor(scenario.speed);
   const caseId = scenario.divided ? "Case 1A" : "Case 1B";
   return [
     taperItem(audit, generated, r),
-    bufferItem(scenario.speed, B, r),
+    bufferItem(audit, generated, r),
     spacingItem(audit, generated, r),
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-1"),
@@ -247,7 +246,6 @@ function buildFlaggerItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const B = bufferFor(scenario.speed);
   const sightDistance = bufferFor(scenario.speed);
   const flaggerStations = scenario.afad ? 0 : 2;
   const afadDevices = scenario.afad ? 2 : 0;
@@ -260,7 +258,7 @@ function buildFlaggerItems(
 
   return [
     taperItem(audit, generated, r),
-    bufferItem(scenario.speed, B, r),
+    bufferItem(audit, generated, r),
     spacingItem(audit, generated, r),
     {
       title: "Flagger station sight distance",
@@ -313,12 +311,11 @@ function buildLaneClosureItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const B = bufferFor(scenario.speed);
   const arrowBoards = 1;
   const tmaCount = scenario.truckMountedAttenuator ? 1 : 0;
   return [
     taperItem(audit, generated, r),
-    bufferItem(scenario.speed, B, r),
+    bufferItem(audit, generated, r),
     spacingItem(audit, generated, r),
     {
       title: "Arrow board placement",
@@ -654,46 +651,40 @@ function taperItem(
 }
 
 function bufferItem(
-  speed: number,
-  B: number,
+  audit: AuditState,
+  generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  if (!data) {
+    return {
+      title: "Buffer space calculation",
+      result: "B = — ft",
+      cite: "MUTCD § 6C.06",
+      body: (
+        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Computing…
+        </p>
+      ),
+    };
+  }
+  const buffer = data.sections.buffer as Record<string, unknown>;
+  const lookupText = buffer.lookup_text as string;
+  const bufferFt = data.summary.buffer_space_ft;
   return {
     title: "Buffer space calculation",
-    result: `B = ${r(B)} ft`,
-    cite: "MUTCD TABLE 6C-2",
+    result: `B = ${r(bufferFt)} ft`,
+    cite: "MUTCD § 6C.06",
     body: (
       <>
         <p>
           Buffer space is the longitudinal clear distance between traffic and
           workers, sized for stopping sight distance at the posted speed.
         </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Speed</th>
-              <th>Buffer (ft)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              [25, 155],
-              [35, 250],
-              [45, 360],
-              [55, 495],
-              [65, 645],
-              [75, 820],
-            ].map(([s, b]) => (
-              <tr key={s}>
-                <td className={speed === s ? "match" : ""}>{s} mph</td>
-                <td className={speed === s ? "match" : ""}>{b}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="formula">{lookupText}</div>
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD TABLE 6C-2 · STOPPING SIGHT DISTANCE
+          MUTCD § 6C.06 · STOPPING SIGHT DISTANCE
         </div>
       </>
     ),
@@ -1078,13 +1069,13 @@ function pendingVerificationItem(
 }
 
 // ---------------------------------------------------------------------------
-// Display heuristics — last TS-side computation remaining in AuditTrail.
+// Display heuristic — flagger SSD only.
 //
-// Taper, spacing, advance, Colorado, and reference all read from backend
-// audit data via their item helpers.  Buffer is the only section still
-// computed TS-side; ``bufferFor`` below is its display helper.  When the
-// buffer migration lands, this block goes away entirely and the
-// dual-source-of-truth is genuinely retired.
+// All shoulder/lane-closure render paths are fully backend-sourced.
+// ``bufferFor`` survives solely for the flagger station sight-distance
+// lookup in ``buildFlaggerItems`` (cite §6E.06).  Flagger is gated off in
+// V1 (ENABLED_SCENARIO_KINDS = ["shoulder"]); the SSD migration is
+// deferred to whenever flagger ships.
 // ---------------------------------------------------------------------------
 
 const BUFFER_TABLE: Record<number, number> = {
