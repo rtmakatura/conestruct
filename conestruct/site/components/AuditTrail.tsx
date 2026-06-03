@@ -997,12 +997,7 @@ function corridorValidationItem(
     cite: "OpenStreetMap",
     body: (
       <>
-        <p>
-          Soft validation against OpenStreetMap ground truth — checks whether
-          the corridor anchor falls on a major road and whether the declared
-          bearing matches the road&apos;s actual heading.  Warnings do not block
-          plan generation; review and override if intentional.
-        </p>
+        <p>Soft check against OSM — warnings do not block plan generation.</p>
         <div className="check-list">
           {warnings.map((w, i) => (
             <CheckRow
@@ -1012,10 +1007,6 @@ function corridorValidationItem(
               tag={w.flag.replace(/_/g, " ").toUpperCase()}
             />
           ))}
-        </div>
-        <div className="citation">
-          <span className="check">✓</span>
-          OPENSTREETMAP (OVERPASS API)
         </div>
       </>
     ),
