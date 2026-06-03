@@ -14,9 +14,9 @@
 //   - expectedFlaggerCount (Quote panel prefill)
 //   - Legacy saved-plan migration (isScenario, toScenario, migrateLegacy)
 //
-// AuditTrail.tsx carries its own inlined display heuristics (mergingTaperLength,
-// bufferFor, deviceSpacing, nightDrumCount) for the sections that haven't yet
-// migrated to backend audit data — see the five "AuditTrail display
+// AuditTrail.tsx carries one remaining inlined display heuristic
+// (bufferFor) for the buffer-space section that hasn't yet migrated to
+// backend audit data — see the three remaining "AuditTrail display
 // migration" follow-up issues for that work.
 import type {
   FlaggerLaneClosureScenario,

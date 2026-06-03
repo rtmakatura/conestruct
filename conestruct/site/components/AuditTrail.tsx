@@ -90,10 +90,11 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const r = (n: number | string) => (generated ? String(n) : "—");
 
   // Main per-scenario body items: most sections are TS-side display
-  // heuristics (spacing, advance warning, Colorado supplement, reference
-  // URL — each tracked by its own follow-up issue).  The taper item is
-  // already on backend data; the per-scenario builders thread ``audit``
-  // through to ``taperItem`` for that consumption.
+  // heuristics (advance warning, Colorado supplement, reference URL —
+  // each tracked by its own follow-up issue).  Taper and spacing are
+  // already on backend data; the per-scenario builders thread
+  // ``audit`` through to ``taperItem`` and ``spacingItem`` for that
+  // consumption.
   const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
@@ -228,29 +229,14 @@ function buildShoulderItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
   const B = bufferFor(scenario.speed);
-  const spacing = deviceSpacing(scenario.speed);
-  const taperCones = Math.max(4, Math.ceil(L / spacing));
-  const tangentCones = Math.ceil(scenario.workLen / spacing);
-  const cones = taperCones + tangentCones;
-  const drums = nightDrumCount(cones, scenario.night);
   const signs =
     scenario.duration === "short" ? 1 : scenario.speed >= 45 ? 3 : 2;
   const caseId = scenario.divided ? "Case 1A" : "Case 1B";
   return [
     taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
-    spacingItem(
-      scenario.workLen,
-      spacing,
-      cones,
-      taperCones,
-      tangentCones,
-      drums,
-      generated,
-      r,
-    ),
+    spacingItem(audit, generated, r),
     {
       title: "Advance warning sign set",
       result: generated ? `${signs} signs / side` : "—",
@@ -328,15 +314,8 @@ function buildFlaggerItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
   const B = bufferFor(scenario.speed);
   const sightDistance = bufferFor(scenario.speed);
-  const spacing = deviceSpacing(scenario.speed);
-  const taperConesPerEnd = Math.max(4, Math.ceil(L / spacing));
-  const taperCones = taperConesPerEnd * 2;
-  const tangentCones = Math.ceil(scenario.workLen / spacing);
-  const cones = taperCones + tangentCones;
-  const drums = nightDrumCount(cones, scenario.night);
   const signsPerDirection = scenario.duration === "short" ? 2 : 4;
   const signs = signsPerDirection * 2;
   const flaggerStations = scenario.afad ? 0 : 2;
@@ -351,16 +330,7 @@ function buildFlaggerItems(
   return [
     taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
-    spacingItem(
-      scenario.workLen,
-      spacing,
-      cones,
-      taperCones,
-      tangentCones,
-      drums,
-      generated,
-      r,
-    ),
+    spacingItem(audit, generated, r),
     {
       title: "Flagger station sight distance",
       result: generated ? `${sightDistance} ft` : "—",
@@ -492,14 +462,7 @@ function buildLaneClosureItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const L = mergingTaperLength(scenario.laneWidth, scenario.speed);
   const B = bufferFor(scenario.speed);
-  const spacing = deviceSpacing(scenario.speed);
-  const taperCones = Math.max(2, Math.ceil(L / spacing));
-  const tangentCones = Math.max(2, Math.ceil(scenario.workLen / spacing));
-  const downstreamCones = 2;
-  const cones = taperCones + tangentCones + downstreamCones;
-  const drums = nightDrumCount(cones, scenario.night);
   const advanceSignsPerDirection = 3;
   const endSignsPerDirection = 1;
   const signsPerDirection = advanceSignsPerDirection + endSignsPerDirection;
@@ -509,16 +472,7 @@ function buildLaneClosureItems(
   return [
     taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
-    spacingItem(
-      scenario.workLen,
-      spacing,
-      cones,
-      taperCones,
-      tangentCones,
-      drums,
-      generated,
-      r,
-    ),
+    spacingItem(audit, generated, r),
     {
       title: "Arrow board placement",
       result: generated ? `${arrowBoards} unit · LEFT arrow` : "—",
@@ -1060,47 +1014,46 @@ function bufferItem(
 }
 
 function spacingItem(
-  workLen: number,
-  spacing: number,
-  cones: number,
-  taperCones: number,
-  tangentCones: number,
-  drums: number,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  if (!data) {
+    return {
+      title: "Channelizing device spacing",
+      result: "— devices",
+      cite: "MUTCD § 6C.09",
+      body: (
+        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Computing…
+        </p>
+      ),
+    };
+  }
+  const spacing = data.sections.spacing as Record<string, unknown>;
+  const nDrums = spacing.n_taper_drums_required as number;
+  const nCones = spacing.n_tangent_cones_required as number;
+  const totalDevices = nDrums + nCones;
+  const inTaperFt = data.summary.device_spacing_taper_ft;
+  const onTangentFt = data.summary.device_spacing_tangent_ft;
+  const inTaperText = spacing.in_taper_text as string;
+  const onTangentText = spacing.on_tangent_text as string;
+  const taperCountText = spacing.taper_count_text as string;
+  const tangentCountText = spacing.tangent_count_text as string;
   return {
     title: "Channelizing device spacing",
-    result: generated ? `${cones} cones · ${spacing} ft o.c.` : "—",
-    cite: "MUTCD § 6F.65",
+    result: `${r(totalDevices)} devices · ${r(inTaperFt)}/${r(onTangentFt)} ft o.c.`,
+    cite: "MUTCD § 6C.09",
     body: (
       <>
-        <p>
-          In tapers and tangents, channelizing devices are spaced approximately
-          equal to the speed limit in feet on-center.
-        </p>
-        <div className="formula">
-          <span>spacing</span>
-          <span className="op">≈</span>
-          <span className="var">S</span>
-          <span className="op">=</span>
-          <span className="res">{r(spacing)} ft o.c.</span>
-        </div>
-        <p>
-          Taper:{" "}
-          <strong>{generated ? taperCones : "—"} cones</strong> · Tangent (
-          {workLen} ft):{" "}
-          <strong>{generated ? tangentCones : "—"} cones</strong>
-          {generated && drums > 0 && (
-            <>
-              {" "}
-              · Drums (night): <strong>{drums}</strong>
-            </>
-          )}
-        </p>
+        <p>{inTaperText}</p>
+        <p>{onTangentText}</p>
+        <div className="formula">{taperCountText}</div>
+        <div className="formula">{tangentCountText}</div>
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD § 6F.65 · CHANNELIZING DEVICES
+          MUTCD § 6C.09 · CHANNELIZING DEVICE SPACING
         </div>
       </>
     ),
@@ -1299,12 +1252,12 @@ function pendingVerificationItem(
 // from lib/scenarios/ into AuditTrail.tsx.
 //
 // The real fix is migrating each AuditTrail section to consume backend
-// audit data directly.  The taper item is already done; four follow-up
-// issues track the remaining migrations (spacing actual counts,
-// advance-warning station table, Colorado structured checks, reference
-// PDF URL).  As each section moves to backend data, the corresponding
-// helper below gets deleted.  When all four land, this block goes away
-// entirely and the dual-source-of-truth is genuinely retired.
+// audit data directly.  Taper and spacing are already done; three
+// follow-up issues track the remaining migrations (advance-warning
+// station table, Colorado structured checks, reference PDF URL).  As
+// each section moves to backend data, the corresponding helper below
+// gets deleted.  When all three land, this block goes away entirely
+// and the dual-source-of-truth is genuinely retired.
 //
 // PR 3 deletes lib/scenarios/shared.ts and the per-scenario *.ts files
 // but leaves these inlined helpers in place — that's the gate that
@@ -1330,19 +1283,6 @@ function bufferFor(speed: number): number {
   // Round to nearest 5 mph; fall back to closest in-range if off-table.
   const rounded = Math.round(speed / 5) * 5;
   return BUFFER_TABLE[rounded] ?? 495;
-}
-
-function mergingTaperLength(laneWidth: number, speed: number): number {
-  if (speed >= 40) return Math.round(laneWidth * speed);
-  return Math.round((laneWidth * speed * speed) / 60);
-}
-
-function deviceSpacing(speed: number): number {
-  return speed;
-}
-
-function nightDrumCount(cones: number, night: boolean): number {
-  return night ? Math.ceil(cones * 0.25) : 0;
 }
 
 // ---------------------------------------------------------------------------
