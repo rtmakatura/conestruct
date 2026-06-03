@@ -979,11 +979,17 @@ function buildAdditiveItems(data: AuditResponse): ItemSpec[] {
   return items.filter((x): x is ItemSpec => x !== null);
 }
 
+interface CorridorWarning {
+  flag: string;
+  level: string;
+  message: string;
+}
+
 function corridorValidationItem(
   corridor: Record<string, unknown>,
 ): ItemSpec | null {
   const checked = corridor.checked === true;
-  const warnings = (corridor.warnings as string[] | undefined) ?? [];
+  const warnings = (corridor.warnings as CorridorWarning[] | undefined) ?? [];
   if (!checked || warnings.length === 0) return null;
   return {
     title: "Site corridor validation",
@@ -997,11 +1003,16 @@ function corridorValidationItem(
           bearing matches the road&apos;s actual heading.  Warnings do not block
           plan generation; review and override if intentional.
         </p>
-        <ul>
+        <div className="check-list">
           {warnings.map((w, i) => (
-            <li key={i}>{w}</li>
+            <CheckRow
+              key={`${w.flag}-${i}`}
+              label={w.message}
+              tone={w.level === "error" ? "fail" : "warn"}
+              tag={w.flag.replace(/_/g, " ").toUpperCase()}
+            />
           ))}
-        </ul>
+        </div>
         <div className="citation">
           <span className="check">✓</span>
           OPENSTREETMAP (OVERPASS API)
