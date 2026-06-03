@@ -89,12 +89,12 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  // Main per-scenario body items: most sections are TS-side display
-  // heuristics (advance warning, Colorado supplement, reference URL —
-  // each tracked by its own follow-up issue).  Taper and spacing are
-  // already on backend data; the per-scenario builders thread
-  // ``audit`` through to ``taperItem`` and ``spacingItem`` for that
-  // consumption.
+  // Main per-scenario body items: every section but buffer reads from
+  // backend audit data via the shared item helpers (``taperItem``,
+  // ``spacingItem``, ``advanceItem``, ``coloradoItem``,
+  // ``referenceItem``).  Per-scenario builders thread ``audit`` through.
+  // Buffer is the last TS-side display heuristic (``bufferFor``);
+  // migration tracked separately.
   const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
@@ -215,11 +215,11 @@ function buildScenarioItems(
   if (scenario.kind === "lane_closure_divided")
     return buildLaneClosureItems(scenario, audit, generated, r);
   if (scenario.kind === "work_beyond_shoulder")
-    return buildWorkBeyondShoulderItems(scenario, generated, r);
+    return buildWorkBeyondShoulderItems(scenario, audit, generated, r);
   if (scenario.kind === "mobile_op_2lane")
-    return buildMobileOp2LaneItems(scenario, generated, r);
+    return buildMobileOp2LaneItems(scenario, audit, generated, r);
   if (scenario.kind === "mobile_op_multilane")
-    return buildMobileOpMultilaneItems(scenario, generated, r);
+    return buildMobileOpMultilaneItems(scenario, audit, generated, r);
   return [];
 }
 
@@ -230,81 +230,14 @@ function buildShoulderItems(
   r: (n: number | string) => string,
 ): ItemSpec[] {
   const B = bufferFor(scenario.speed);
-  const signs =
-    scenario.duration === "short" ? 1 : scenario.speed >= 45 ? 3 : 2;
   const caseId = scenario.divided ? "Case 1A" : "Case 1B";
   return [
     taperItem(audit, generated, r),
     bufferItem(scenario.speed, B, r),
     spacingItem(audit, generated, r),
-    {
-      title: "Advance warning sign set",
-      result: generated ? `${signs} signs / side` : "—",
-      cite: "MUTCD TABLE 6C-1",
-      body: (
-        <>
-          <p>
-            Sign set for shoulder work per MUTCD § 6G.02. Short-duration jobs
-            (&lt;1h) may use minimum signing; long-term work uses the full
-            advance / termination set.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Sign</th>
-                <th>Code</th>
-                <th>Used</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Road work ahead</td>
-                <td>W20-1</td>
-                <td>{signs >= 1 ? "✓" : "—"}</td>
-              </tr>
-              <tr>
-                <td>Shoulder work</td>
-                <td>W21-5</td>
-                <td>{signs >= 2 ? "✓" : "—"}</td>
-              </tr>
-              <tr>
-                <td>End road work</td>
-                <td>G20-2</td>
-                <td>{signs >= 3 ? "✓" : "—"}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.02 · DURATION-BASED SIGNING
-          </div>
-        </>
-      ),
-    },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-1",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="Shoulder work per S-630-1 (TA-2 equivalent)" />
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-            <CheckRow label="Cones placed at speed-limit spacing" />
-            {scenario.duration === "long" && (
-              <CheckRow label="End road work sign present (G20-2)" />
-            )}
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-1 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-2", "S-630-1", r(caseId)),
+    advanceItem(audit, generated, r),
+    coloradoItem(audit, "S-630-1"),
+    referenceItem(audit, "TA-2", "S-630-1", r(caseId)),
   ];
 }
 
@@ -316,8 +249,6 @@ function buildFlaggerItems(
 ): ItemSpec[] {
   const B = bufferFor(scenario.speed);
   const sightDistance = bufferFor(scenario.speed);
-  const signsPerDirection = scenario.duration === "short" ? 2 : 4;
-  const signs = signsPerDirection * 2;
   const flaggerStations = scenario.afad ? 0 : 2;
   const afadDevices = scenario.afad ? 2 : 0;
   const pilotCarVehicles = scenario.pilotCar ? 1 : 0;
@@ -370,89 +301,9 @@ function buildFlaggerItems(
         </>
       ),
     },
-    {
-      title: "Advance warning sign set",
-      result: generated ? `${signs} signs (both ways)` : "—",
-      cite: "MUTCD TABLE 6C-1",
-      body: (
-        <>
-          <p>
-            TA-10 sign set, posted in both directions of travel. Short-duration
-            jobs use the minimum (W20-1 + W20-7); long-term work adds W20-4
-            and W3-4.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Sign</th>
-                <th>Code</th>
-                <th>Used</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Road work ahead</td>
-                <td>W20-1</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>One lane road ahead</td>
-                <td>W20-4</td>
-                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
-              </tr>
-              <tr>
-                <td>Be prepared to stop</td>
-                <td>W3-4</td>
-                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
-              </tr>
-              <tr>
-                <td>{scenario.afad ? "AFAD ahead" : "Flagger ahead"}</td>
-                <td>{scenario.afad ? "W20-7a" : "W20-7"}</td>
-                <td>✓</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.02 · DURATION-BASED SIGNING
-          </div>
-        </>
-      ),
-    },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-2",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="2-lane 2-way flagger control per S-630-2 (TA-10 equivalent)" />
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-            <CheckRow label="Cones placed at speed-limit spacing" />
-            {scenario.workLen > 1500 && !scenario.pilotCar && (
-              <CheckRow
-                label="Work zone >1500 ft — pilot car recommended (MUTCD § 6E)"
-                tone="warn"
-                tag="WARN"
-              />
-            )}
-            {scenario.afad && (
-              <CheckRow label="AFAD operator certified per state requirements" />
-            )}
-            {scenario.pedestrianAccess && (
-              <CheckRow label="ADA-compliant pedestrian detour signed (R9-3a / R9-9)" />
-            )}
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-2 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-10", "S-630-2", r("Case 2B")),
+    advanceItem(audit, generated, r),
+    coloradoItem(audit, "S-630-2"),
+    referenceItem(audit, "TA-10", "S-630-2", r("Case 2B")),
   ];
 }
 
@@ -463,10 +314,6 @@ function buildLaneClosureItems(
   r: (n: number | string) => string,
 ): ItemSpec[] {
   const B = bufferFor(scenario.speed);
-  const advanceSignsPerDirection = 3;
-  const endSignsPerDirection = 1;
-  const signsPerDirection = advanceSignsPerDirection + endSignsPerDirection;
-  const signs = signsPerDirection * 2;
   const arrowBoards = 1;
   const tmaCount = scenario.truckMountedAttenuator ? 1 : 0;
   return [
@@ -503,97 +350,15 @@ function buildLaneClosureItems(
         </>
       ),
     },
-    {
-      title: "Advance warning sign set",
-      result: generated ? `${signs} signs (both ways)` : "—",
-      cite: "MUTCD TABLE 6C-1",
-      body: (
-        <>
-          <p>
-            TA-19 sign set, mirrored on both sides of the divided highway.
-            Long-term work adds CONSTRUCTION ZONE plaques (G20-5P) inside
-            the work zone.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Sign</th>
-                <th>Code</th>
-                <th>Used</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Road work ahead</td>
-                <td>W20-1</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>Right lane closed ahead</td>
-                <td>W20-5R</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>Right lane ends</td>
-                <td>W4-2R</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>End road work</td>
-                <td>G20-2</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>Construction zone plaque</td>
-                <td>G20-5P</td>
-                <td>{scenario.duration === "long" ? "✓" : "—"}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD § 6G.02 · DURATION-BASED SIGNING
-          </div>
-        </>
-      ),
-    },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-3",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="Right-lane closure on divided highway per S-630-3 (TA-19 equivalent)" />
-            <CheckRow label="Arrow board (Type C) at upstream taper, LEFT-arrow mode" />
-            {scenario.truckMountedAttenuator ? (
-              <CheckRow label="Truck-mounted attenuator deployed upstream" />
-            ) : scenario.speed >= 45 ? (
-              <CheckRow
-                label="TMA strongly recommended ≥ 45 mph (CDOT M-630)"
-                tone="warn"
-                tag="WARN"
-              />
-            ) : null}
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-            <CheckRow label="Drums placed at speed-limit spacing in merging taper" />
-            <CheckRow label="Mirror signs posted on median side of divided highway" />
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-3 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-19", "S-630-3", r("Case 3A")),
+    advanceItem(audit, generated, r),
+    coloradoItem(audit, "S-630-3"),
+    referenceItem(audit, "TA-19", "S-630-3", r("Case 3A")),
   ];
 }
 
 function buildWorkBeyondShoulderItems(
   scenario: WorkBeyondShoulderScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -666,35 +431,14 @@ function buildWorkBeyondShoulderItems(
         </>
       ),
     },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-1",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="Off-roadway work — no MHT footprint on the travelway" />
-            <CheckRow label="W21-5 advance sign placed at MUTCD Table 6C-1 distance" />
-            {scenario.duration === "long" && (
-              <CheckRow label="G20-2 END ROAD WORK termination sign present" />
-            )}
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-1 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-1", "S-630-1", r("Case 1")),
+    coloradoItem(audit, "S-630-1"),
+    referenceItem(audit, "TA-1", "S-630-1", r("Case 1")),
   ];
 }
 
 function buildMobileOp2LaneItems(
   scenario: MobileOp2LaneScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -761,42 +505,14 @@ function buildMobileOp2LaneItems(
         </>
       ),
     },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-1",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="Mobile two-lane op per S-630-1 (TA-35 equivalent)" />
-            <CheckRow label="W21-1A WORKERS AHEAD on shadow vehicle" />
-            <CheckRow label="Shadow vehicle equipped with NCHRP 350 / MASH TMA" />
-            {scenario.arrowBoardOnShadow ? (
-              <CheckRow label="Arrow board on shadow in caution mode (4-corner flash)" />
-            ) : (
-              <CheckRow
-                label="Arrow board recommended; not deployed in this plan"
-                tone="warn"
-                tag="WARN"
-              />
-            )}
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-1 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-35", "S-630-1", r("Case 4A")),
+    coloradoItem(audit, "S-630-1"),
+    referenceItem(audit, "TA-35", "S-630-1", r("Case 4A")),
   ];
 }
 
 function buildMobileOpMultilaneItems(
   scenario: MobileOpMultilaneScenario,
+  audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
@@ -858,37 +574,8 @@ function buildMobileOpMultilaneItems(
         </>
       ),
     },
-    {
-      title: "Colorado supplement requirements",
-      result: "ALL CHECKS PASS",
-      cite: "CDOT S-630-3",
-      body: (
-        <>
-          <div className="check-list">
-            <CheckRow label="Multi-lane mobile op per S-630-3 (TA-26 equivalent)" />
-            <CheckRow label="Shadow vehicle equipped with NCHRP 350 / MASH TMA" />
-            <CheckRow label="Arrow board (Type C) on shadow in LEFT-arrow mode" />
-            {scenario.secondTMA ? (
-              <CheckRow label="Second TMA upstream of shadow" />
-            ) : scenario.speed >= 55 ? (
-              <CheckRow
-                label="Second TMA strongly recommended ≥ 55 mph"
-                tone="warn"
-                tag="WARN"
-              />
-            ) : null}
-            {scenario.night && (
-              <CheckRow label="Type IX retroreflective sheeting (night ops)" />
-            )}
-          </div>
-          <div className="citation">
-            <span className="check">✓</span>
-            CDOT S-630-3 · COLORADO SUPPLEMENT
-          </div>
-        </>
-      ),
-    },
-    referenceItem("TA-26", "S-630-3", r("Case 4B")),
+    coloradoItem(audit, "S-630-3"),
+    referenceItem(audit, "TA-26", "S-630-3", r("Case 4B")),
   ];
 }
 
@@ -1060,11 +747,151 @@ function spacingItem(
   };
 }
 
+interface AdvanceSignRow {
+  Position: string;
+  Code: string;
+  "Station (ft)": string;
+  "Distance from Taper (ft)": string;
+}
+
+function advanceItem(
+  audit: AuditState,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec {
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  if (!data) {
+    return {
+      title: "Advance warning sign set",
+      result: "— signs",
+      cite: "MUTCD TABLE 6B-1",
+      body: (
+        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Computing…
+        </p>
+      ),
+    };
+  }
+  const advance = data.sections.advance as Record<string, unknown>;
+  const roadTypeText = advance.road_type_text as string;
+  const spacingText = advance.spacing_text as string;
+  const signTable = (advance.sign_table as AdvanceSignRow[]) ?? [];
+  return {
+    title: "Advance warning sign set",
+    result: `${r(signTable.length)} signs`,
+    cite: "MUTCD TABLE 6B-1",
+    body: (
+      <>
+        <p>{roadTypeText}</p>
+        <p>{spacingText}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Code</th>
+              <th>Station (ft)</th>
+              <th>Distance from Taper (ft)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {signTable.map((row, i) => (
+              <tr key={i}>
+                <td>{row.Position}</td>
+                <td>{row.Code}</td>
+                <td>{row["Station (ft)"]}</td>
+                <td>{row["Distance from Taper (ft)"]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="citation">
+          <span className="check">✓</span>
+          MUTCD § 6B-1 · ADVANCE WARNING SIGN SPACING
+        </div>
+      </>
+    ),
+  };
+}
+
+interface ColoradoCheck {
+  pass: boolean;
+  label: string;
+  citation: string;
+  detail: string;
+}
+
+interface ColoradoInfoItem {
+  info: boolean;
+  label: string;
+  citation: string;
+  detail: string;
+}
+
+function coloradoItem(
+  audit: AuditState,
+  cdotSheet: string,
+): ItemSpec {
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  if (!data) {
+    return {
+      title: "Colorado supplement requirements",
+      result: "— checks",
+      cite: `CDOT ${cdotSheet}`,
+      body: (
+        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+          Computing…
+        </p>
+      ),
+    };
+  }
+  const colorado = data.sections.colorado as Record<string, unknown>;
+  const checks = (colorado.checks as ColoradoCheck[]) ?? [];
+  const infoItems = (colorado.info_items as ColoradoInfoItem[]) ?? [];
+  const allPass = colorado.all_pass as boolean;
+  const fails = checks.filter((c) => !c.pass).length;
+  return {
+    title: "Colorado supplement requirements",
+    result: allPass ? "ALL CHECKS PASS" : `${fails} of ${checks.length} FAIL`,
+    cite: `CDOT ${cdotSheet}`,
+    body: (
+      <>
+        <div className="check-list">
+          {checks.map((c, i) => (
+            <CheckRow
+              key={`check-${i}`}
+              label={c.label}
+              detail={c.detail}
+              tone={c.pass ? "pass" : "fail"}
+              tag={c.citation}
+            />
+          ))}
+          {infoItems.map((item, i) => (
+            <CheckRow
+              key={`info-${i}`}
+              label={item.label}
+              detail={item.detail}
+              tone="info"
+              tag={item.citation}
+            />
+          ))}
+        </div>
+        <div className="citation">
+          <span className="check">✓</span>
+          CDOT {cdotSheet} · COLORADO SUPPLEMENT
+        </div>
+      </>
+    ),
+  };
+}
+
 function referenceItem(
+  audit: AuditState,
   ta: string,
   cdotSheet: string,
   caseId: string,
 ): ItemSpec {
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const url = (data?.sections.case as { url?: string } | undefined)?.url;
   return {
     title: `${ta} · ${cdotSheet} reference`,
     result: caseId,
@@ -1076,16 +903,22 @@ function referenceItem(
           and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
           Colorado supplement to MUTCD Part 6.
         </p>
-        <p>
-          <a
-            href="https://www.codot.gov/business/designsupport/standard-plans/2023-mash-standard-plans/cdot-m-and-s-standards/m-and-s-standards-traffic-control"
-            target="_blank"
-            rel="noreferrer"
-            className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
-          >
-            ↗ Open {cdotSheet} PDF on CDOT.gov
-          </a>
-        </p>
+        {url ? (
+          <p>
+            <a
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+            >
+              ↗ Open {cdotSheet} PDF on CDOT.gov
+            </a>
+          </p>
+        ) : (
+          <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+            Loading reference…
+          </p>
+        )}
       </>
     ),
   };
@@ -1243,25 +1076,13 @@ function pendingVerificationItem(
 }
 
 // ---------------------------------------------------------------------------
-// Display heuristics — duplicate lib/scenarios/shared.ts intentionally.
+// Display heuristics — last TS-side computation remaining in AuditTrail.
 //
-// PR 2b retires compute() as the entry point (GeneratorShell no longer
-// dispatches to lib/scenarios/compute*()), but the display math for each
-// AuditTrail section continues to live here.  This is a transitional
-// state: the dual-source-of-truth isn't fully retired, it's RELOCATED
-// from lib/scenarios/ into AuditTrail.tsx.
-//
-// The real fix is migrating each AuditTrail section to consume backend
-// audit data directly.  Taper and spacing are already done; three
-// follow-up issues track the remaining migrations (advance-warning
-// station table, Colorado structured checks, reference PDF URL).  As
-// each section moves to backend data, the corresponding helper below
-// gets deleted.  When all three land, this block goes away entirely
-// and the dual-source-of-truth is genuinely retired.
-//
-// PR 3 deletes lib/scenarios/shared.ts and the per-scenario *.ts files
-// but leaves these inlined helpers in place — that's the gate that
-// stages PR 3 cleanly without breaking AuditTrail's preserved display.
+// Taper, spacing, advance, Colorado, and reference all read from backend
+// audit data via their item helpers.  Buffer is the only section still
+// computed TS-side; ``bufferFor`` below is its display helper.  When the
+// buffer migration lands, this block goes away entirely and the
+// dual-source-of-truth is genuinely retired.
 // ---------------------------------------------------------------------------
 
 const BUFFER_TABLE: Record<number, number> = {
@@ -1328,19 +1149,36 @@ function AuditItem({
 
 function CheckRow({
   label,
+  detail,
   tone = "pass",
   tag = "PASS",
 }: {
   label: string;
-  tone?: "pass" | "warn" | "fail";
+  detail?: string;
+  tone?: "pass" | "warn" | "fail" | "info";
   tag?: string;
 }) {
   const ckClass = tone === "pass" ? "ck" : `ck ${tone}`;
-  const symbol = tone === "warn" ? "!" : tone === "fail" ? "✕" : "✓";
+  const symbol =
+    tone === "warn"
+      ? "!"
+      : tone === "fail"
+        ? "✕"
+        : tone === "info"
+          ? "ℹ"
+          : "✓";
   return (
     <div className="check-list-item">
       <span className={ckClass}>{symbol}</span>
-      <span className="check-list-lbl">{label}</span>
+      <span className="check-list-lbl">
+        {detail ? (
+          <>
+            <strong>{label}</strong> — {detail}
+          </>
+        ) : (
+          label
+        )}
+      </span>
       <span className="check-list-src">{tag}</span>
     </div>
   );

@@ -16,8 +16,7 @@
 //
 // AuditTrail.tsx carries one remaining inlined display heuristic
 // (bufferFor) for the buffer-space section that hasn't yet migrated to
-// backend audit data — see the three remaining "AuditTrail display
-// migration" follow-up issues for that work.
+// backend audit data — tracked by the buffer migration follow-up issue.
 import type {
   FlaggerLaneClosureScenario,
   FlaggerWorkType,
