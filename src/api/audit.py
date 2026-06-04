@@ -99,11 +99,12 @@ def build_audit_trail(
         )
         if is_flagger:
             cdot_reference = (
-                "CDOT S-630-1 flagger-controlled one-lane two-way operation "
-                "(TODO: verify exact Case # in 19-page set)"
+                "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)"
             )
         else:
-            cdot_reference = "CDOT S-630-1 Case 3 (right-lane closure on divided highway)"
+            cdot_reference = (
+                "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
+            )
     else:
         L_required = L_third
         L_required_label = "L/3 (shoulder taper)"
@@ -352,26 +353,19 @@ def build_audit_trail(
     # 6. S-630-1 case reference
     # ------------------------------------------------------------------
     if is_flagger:
-        # TODO: confirm exact Case number against the 19-page S-630-1 set;
-        # one-lane two-way flagger operations are commonly Cases 6/7.
-        case_label = (
-            "Flagger-controlled one-lane two-way operation "
-            "(TODO: verify Case # in 19-page S-630-1 set)"
-        )
+        case_label = "MUTCD TA-10: Flagger one-lane two-way"
         case_narrative = (
-            "This scenario matches the CDOT Standard Plan S-630-1 "
-            "flagger-controlled alternating-traffic case: a 2-lane "
-            "undivided highway with one lane closed and traffic alternating "
-            "through the opposing lane under flagger control."
+            "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal "
+            "standard for flagger-controlled alternating one-way traffic on "
+            "a 2-lane undivided highway). CDOT S-630-1 does not include a "
+            "general flagger one-lane two-way case; Case 17 (lane closure "
+            "at a curve) is the closest CDOT analog but is curve-specialized."
         )
     elif is_lane:
-        # TODO: confirm exact Case number against the 19-page S-630-1 set;
-        # right-lane closures on divided highways are commonly Case 3, but
-        # the print revision in use should be verified before sealing.
-        case_label = "Case 3: Right-lane closure on divided highway (TODO: verify)"
+        case_label = "Case 10: One Lane Closed - 4-Lane Divided Highway"
         case_narrative = (
-            "This scenario matches CDOT Standard Plan S-630-1, Case 3: "
-            "right-lane closure on a divided highway."
+            "This scenario matches CDOT Standard Plan S-630-1, Case 10: "
+            "one lane closed on a 4-lane divided highway (Sheet 7)."
         )
     else:
         case_label = "Case 11: Shoulder closure on divided highway"

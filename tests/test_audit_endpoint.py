@@ -238,10 +238,10 @@ def test_pending_verification_carries_tracking_issue_constant(
 # ---------------------------------------------------------------------------
 
 
-def test_audit_projection_scrubs_lane_closure_todo() -> None:
-    """The lane-closure divided branch in build_audit_trail stamps a
-    ``(TODO: verify)`` marker into ``case.case``.  The projection must
-    scrub that and increment ``pending_verification.count``.
+def test_audit_projection_lane_closure_divided_case_10_no_pending() -> None:
+    """Lane-closure-divided maps to CDOT S-630-1 Case 10 (4-lane divided,
+    Sheet 7).  No ``(TODO: verify)`` markers remain in the raw audit —
+    the projection rollup count must be 0.
 
     Done at the projection-helper level (not through the endpoint) so
     we don't have to spin up a lane-closure scenario through the
@@ -261,20 +261,24 @@ def test_audit_projection_scrubs_lane_closure_todo() -> None:
         jurisdiction="CDOT",
     )
     raw = audit_module.build_audit_trail([], params, shoulder_width_ft=10.0)
-    # Pre-condition: the raw audit still carries the TODO marker.
-    assert "(TODO" in raw["case"]["case"]
+    assert raw["case"]["case"] == "Case 10: One Lane Closed - 4-Lane Divided Highway"
+    assert raw["taper"]["cdot_reference"] == (
+        "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
+    )
 
     projection = audit_module.audit_projection(raw, "lane_closure_divided")
-    assert projection["pending_verification"]["count"] == 1
+    assert projection["pending_verification"]["count"] == 0
     assert "(TODO" not in projection["sections"]["case"]["case"]
     assert projection["summary"]["ta"] == "TA-19"
     assert projection["summary"]["cdot_sheet"] == "S-630-3"
 
 
-def test_audit_projection_scrubs_flagger_todo_both_fields() -> None:
-    """The flagger branch stamps TODOs into both ``case.case`` and
-    ``taper.cdot_reference``.  Both must scrub; the count must be 1
-    (same underlying case-#, not double-counted)."""
+def test_audit_projection_flagger_mutcd_ta10_no_pending() -> None:
+    """Flagger-controlled one-lane two-way cites MUTCD 11th Ed. Part 6
+    TA-10 as the primary federal standard.  CDOT S-630-1 has no general
+    flagger one-lane two-way case; the narrative notes Case 17 as the
+    closest CDOT analog (curve-specialized).  Rollup count must be 0.
+    """
     from src.rules.validators import ScenarioParams
 
     params = ScenarioParams(
@@ -289,11 +293,13 @@ def test_audit_projection_scrubs_flagger_todo_both_fields() -> None:
         jurisdiction="CDOT",
     )
     raw = audit_module.build_audit_trail([], params)
-    assert "(TODO" in raw["case"]["case"]
-    assert "(TODO" in raw["taper"]["cdot_reference"]
+    assert raw["case"]["case"] == "MUTCD TA-10: Flagger one-lane two-way"
+    assert raw["taper"]["cdot_reference"] == (
+        "MUTCD 11th Ed. Part 6 TA-10 " "(flagger-controlled one-lane two-way operation)"
+    )
 
     projection = audit_module.audit_projection(raw, "flagger_lane_closure")
-    assert projection["pending_verification"]["count"] == 1
+    assert projection["pending_verification"]["count"] == 0
     assert "(TODO" not in projection["sections"]["case"]["case"]
     assert "(TODO" not in projection["sections"]["taper"]["cdot_reference"]
     assert projection["summary"]["ta"] == "TA-10"
