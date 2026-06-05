@@ -221,7 +221,7 @@ def detect_site_conditions(
     On any network/parse failure, returns all-buckets-empty plus an ``error``
     key carrying the exception string. The generator must still work offline.
     """
-    buckets: dict[str, dict[str, Any]] = {
+    buckets: dict[str, Any] = {
         "intersections": _empty(),
         "interchanges": _empty(),
         "sidewalks": _empty(),
@@ -413,7 +413,7 @@ def detect_along_corridor(
     On any network/parse failure, returns all-buckets-empty plus an
     ``error`` key carrying the failure message.
     """
-    buckets: dict[str, dict[str, Any]] = {
+    buckets: dict[str, Any] = {
         "intersections": _empty_corridor_bucket(),
         "interchanges": _empty_corridor_bucket(),
         "sidewalks": _empty_corridor_bucket(),
@@ -449,6 +449,7 @@ def detect_along_corridor(
         coord = _element_coord(el)
         label = _label_for(el)
 
+        feature: dict[str, Any]
         if coord is None:
             # No geometry → can't classify zone; still record but mark
             # irrelevant so it doesn't move checkbox state.
