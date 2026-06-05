@@ -650,8 +650,13 @@ def generate_flagger_alternating_2lane(
         SIDE") at the upstream and downstream ends of the work zone on
         the work-side shoulder.
 
-    TODO: confirm exact CDOT S-630-1 Case number for one-lane two-way
-    flagger operation; cases 6/7 of the 19-page set are likely matches.
+    Standards: MUTCD 11th Ed. Part 6 TA-10 is the federal standard for
+    flagger-controlled alternating one-way traffic on a 2-lane undivided
+    highway. CDOT S-630-1 has no general case for this scenario; Case 17
+    (lane closure at a curve) is the closest CDOT analog but is curve-
+    specialized. (Cases 6 and 7 in the 19-page set are LANE #2 and LANE
+    #3 CLOSURES on multi-lane freeway, not flagger operations — the
+    prior TODO citation was incorrect.)
     """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
