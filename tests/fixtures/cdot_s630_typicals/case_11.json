@@ -1,0 +1,216 @@
+{
+  "_meta": {
+    "source": "CDOT Standard Plan S-630-1, Sheet 7 of 26",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "verified_by": "Ryan, June 5 2026, manual extraction from diagram",
+    "purpose": "validation fixture for Conestruct shoulder closure outputs against CDOT typical applications",
+    "structural_relationship_to_cases_26_27": "Case 11 is the general/no-specific-speed shoulder work on freeway/expressway. Cases 26 and 27 are the 65 mph and 75 mph speed-specific variants. Speed limit signs in Case 11 show 'XX' placeholders; signs marked with diamond (♦) are mandatory only when work zone speed is reduced."
+  },
+  "legend_symbols_extension": {
+    "diamond_filled": "these devices are not optional if the posted speed limit in the work zone is reduced (new symbol introduced in Case 11; not present in Case 26/27 legend)"
+  },
+  "case_11": {
+    "title": "Shoulder Work - Freeway/Expressway (general)",
+    "case_number": 11,
+    "sheet_number": 7,
+    "scenario": {
+      "road_type": "freeway/expressway",
+      "posted_speed_normal_mph": "XX (placeholder; Case 11 is speed-generic)",
+      "posted_speed_work_zone_mph": "XX (placeholder; signs only required when speed reduced)",
+      "closure_type": "shoulder",
+      "side": "right"
+    },
+    "trigger_condition": "none (Case 11 is the general case; no within-N-ft hazard trigger)",
+    "taper": {
+      "formula_at_45_plus_mph": "L = S × W",
+      "formula_at_under_45_mph": "L = WS² / 60",
+      "shoulder_taper_length": "1/3 L",
+      "notes": "Case 11 uses speed-generic L formula. Actual length depends on S (speed) and W (shoulder width)."
+    },
+    "buffer_space": {
+      "annotated_value": "VARIES",
+      "label_on_diagram": "VARIES",
+      "interpretation": "Case 11 does not lock a specific buffer minimum (unlike Cases 26/27 which post 570'/650' MIN). Conestruct should compute buffer per MUTCD Table 6C-2 or CDOT supplement based on the actual posted speed."
+    },
+    "work_zone": {
+      "labels_above_hatched_area": ["L (upstream)", "L (downstream)"],
+      "interpretation": "Work zone shown with L distance both before and after (illustrative). Temporary white edge line callout marks the inboard edge of the closure."
+    },
+    "clear_zone_annotated": true,
+    "lane_width_minimum": {
+      "annotated_value_ft": 11,
+      "label_on_diagram": "11' MIN.",
+      "interpretation": "Minimum width of remaining travel lane through the work zone (federal MUTCD common minimum). Conestruct should validate that lane_width input meets this minimum on freeway scenarios."
+    },
+    "temporary_edge_line": {
+      "callout": "TEMPORARY WHITE EDGE LINE",
+      "interpretation": "New temporary edge line inboard of the work zone delineates the reduced lane width"
+    },
+    "channelizing_devices": {
+      "callout_text": "BARRIER AND LIGHTS (OPTIONAL)",
+      "additional_callout": "OPTIONAL FOR PAVING OPERATIONS (referring to mobile attenuator)",
+      "diagram_taper_count": 5,
+      "diagram_taper_count_is_illustrative": true,
+      "actual_taper_device_count_rule": "depends on actual taper length (1/3 L) and §6C.09 max spacing (≤ S ft in taper)",
+      "diagram_work_zone_protection": "concrete barrier (temporary) with lights along the outside of the work zone lane",
+      "diagram_work_zone_protection_is_illustrative": true
+    },
+    "advance_warning_sequence": [
+      {
+        "position": 1,
+        "sign_stack": "LEFTMOST_STACK",
+        "components": [
+          {
+            "sign_code": "W20-1 OR W21-5",
+            "label": "ROAD WORK 1 MILE",
+            "annotations": ["sunburst", "triangle_solid"]
+          },
+          {
+            "sign_code": "SHOULDER WORK",
+            "label": "SHOULDER WORK",
+            "annotations": ["sunburst", "triangle_solid (inherited from stack)"]
+          }
+        ],
+        "distance_to_next_ft": 1700,
+        "distance_note": "1700 ft is min; the segment can be longer per diagram zigzag-break (≈) indicator. Total span from leftmost stack to first WORK ZONE assembly = 2200 ft (1700 + 500)."
+      },
+      {
+        "position": 2,
+        "sign_code": "R2-10",
+        "label": "BEGIN DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "plaques": [],
+        "distance_to_next_ft": 500,
+        "distance_note": "500 ft MIN per diagram"
+      },
+      {
+        "position": 3,
+        "sign_assembly": "WORK_ZONE_SPEED_LIMIT_GROUP",
+        "components": [
+          {
+            "sign_code": "G20-5P",
+            "label": "WORK ZONE"
+          },
+          {
+            "sign_code": "R2-1(XX)",
+            "label": "SPEED LIMIT XX (placeholder)"
+          }
+        ],
+        "annotations": [],
+        "distance_to_next": "VAR",
+        "distance_note": "Distance from G20-5P/R2-1(XX) to G20-5P/R2-6P is labeled VAR (variable, per engineer direction)"
+      },
+      {
+        "position": 4,
+        "sign_assembly": "WORK_ZONE_FINES_DOUBLE_GROUP",
+        "components": [
+          {
+            "sign_code": "G20-5P",
+            "label": "WORK ZONE"
+          },
+          {
+            "sign_code": "R2-6P",
+            "label": "FINES DOUBLE"
+          }
+        ],
+        "annotations": [],
+        "frequency_note": "TO BE PROVIDED EVERY 2640' OR THE SPACING OF THE SIGNS MAY BE CHANGED AS DIRECTED BY THE ENGINEER BETWEEN R2-10 AND R2-11 SIGNS",
+        "distance_to_next": "1000 ft minus the VAR distance from position 3",
+        "distance_note": "Total span from first WORK ZONE assembly (position 3) to first W21-5aR (position 5) = 1000 ft; the VAR portion is taken from the front of this span"
+      },
+      {
+        "position": 5,
+        "sign_code": "W21-5aR",
+        "label": "RIGHT SHOULDER CLOSED (first/upstream)",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [
+          {
+            "sign_code": "W16-2a",
+            "text": "1500 FT"
+          }
+        ],
+        "distance_to_next_ft": 1000
+      },
+      {
+        "position": 6,
+        "sign_code": "W21-5aR",
+        "label": "RIGHT SHOULDER CLOSED (second/downstream of first)",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [
+          {
+            "sign_code": "W7-3a(X)",
+            "text": "NEXT X MILES",
+            "selection_rule": "X is contractor-filled based on work zone length"
+          }
+        ],
+        "distance_to_next_ft": 500
+      },
+      {
+        "position": 7,
+        "sign_code": "W5-1",
+        "label": "ROAD NARROWS",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [],
+        "distance_to_taper_start_ft": 500
+      }
+    ],
+    "downstream_sequence": [
+      {
+        "from": "work zone end",
+        "to": "R2-11",
+        "distance_ft": 500
+      },
+      {
+        "position": "after work zone",
+        "sign_code": "R2-11",
+        "label": "END DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "plaques": [],
+        "distance_to_next_ft": 500
+      },
+      {
+        "position": "rightmost",
+        "sign_code": "R2-1(XX)",
+        "label": "SPEED LIMIT XX (placeholder)",
+        "annotations": ["diamond_filled"],
+        "plaques": [],
+        "interpretation": "Diamond marker indicates this sign is mandatory only when the work zone posted speed is reduced. If no speed reduction, sign is omitted."
+      }
+    ],
+    "case_specific_notes": [
+      "Case 11 is the general/speed-generic version. Speed-specific variants are Case 26 (65 mph) and Case 27 (75 mph).",
+      "Case 11 includes a W5-1 ROAD NARROWS sign that does NOT appear in Cases 26 or 27.",
+      "Case 11 uses 1700/500/VAR/1000/500 distances vs Case 26/27's 530/530/260/260/530/530 — Case 11 is more permissive on placement.",
+      "Case 11 introduces the diamond (♦) legend symbol for 'mandatory only when work zone speed reduced' — Cases 26/27 always have reduced speed so the diamond isn't needed there.",
+      "Case 11 has no 'WITHIN N FT OF TRAVEL WAY' trigger; Cases 26 and 27 do.",
+      "Case 11 annotates 11' MIN lane width; Cases 26 and 27 do not."
+    ],
+    "validation_notes": {
+      "exact_match_required": [
+        "all sign codes in advance_warning_sequence and downstream_sequence",
+        "presence of W5-1 ROAD NARROWS sign (unique to Case 11 among shoulder typicals)",
+        "presence of W16-2a '1500 FT' plaque under first W21-5aR",
+        "presence of W7-3a(X) 'NEXT X MILES' plaque under second W21-5aR",
+        "2640' frequency note for G20-5P/R2-6P assembly",
+        "11' MIN lane width annotation present"
+      ],
+      "annotation_match_recommended": [
+        "flashing beacon presence on sunburst-marked signs",
+        "fines double sign treatment per star marker",
+        "optional device handling per triangle marker",
+        "diamond marker handling: downstream R2-1 omitted when no speed reduction"
+      ],
+      "informational_only_not_assertions": [
+        "diagram taper device count (5) — actual count by §6C.09 spacing rules",
+        "diagram concrete barrier presence — illustrative only",
+        "work zone L labels — illustrative only, actual length is input"
+      ],
+      "phase_2_decisions_required": [
+        "How does the validation harness handle the 'XX' speed placeholder? Run Case 11 against a specific test speed (e.g., 55 mph) and substitute, or treat as structural template?",
+        "When Conestruct emits a plan without speed reduction, does it include or omit the diamond-marked downstream R2-1? This determines whether the diamond annotation becomes an assertion or stays informational.",
+        "The leftmost stack uses 'W20-1 OR W21-5' — does Conestruct pick one based on context? Validation needs to know which to expect.",
+        "VAR-labeled distances (R2-10 to first WORK ZONE assembly internal split, first WORK ZONE assembly to FINES DOUBLE assembly) need an interpretation rule: does Conestruct pick a specific value or pass through 'VAR'?"
+      ]
+    }
+  }
+}

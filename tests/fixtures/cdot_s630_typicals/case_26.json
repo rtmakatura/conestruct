@@ -1,0 +1,181 @@
+{
+  "_meta": {
+    "source": "CDOT Standard Plan S-630-1, Sheet 14 of 26",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "verified_by": "Ryan, June 5 2026, manual extraction from diagram",
+    "purpose": "validation fixture for Conestruct shoulder closure outputs against CDOT typical applications"
+  },
+  "legend_symbols": {
+    "star": "see Fines Double Signing Notes on Sheet 12 (operational rules, 250' min spacing flexibility)",
+    "sunburst": "flashing beacon attached to sign",
+    "triangle_solid": "optional device — contractor judgment per traffic volumes/scope; required when included in Schedule of Construction Control Devices",
+    "hexagon_solid": "required when work occupies the location more than 3 days",
+    "mobile_attenuator": "billable mobile attenuator device"
+  },
+  "case_26": {
+    "title": "Shoulder Work - Freeway/Expressway w/ 65 mph Speed Limit",
+    "case_number": 26,
+    "sheet_number": 14,
+    "scenario": {
+      "road_type": "freeway/expressway",
+      "posted_speed_normal_mph": 65,
+      "posted_speed_work_zone_mph": 60,
+      "closure_type": "shoulder",
+      "side": "right"
+    },
+    "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+    "taper": {
+      "formula_at_45_plus_mph": "L = S × W",
+      "shoulder_taper_length": "1/3 L",
+      "for_W_10ft_at_65mph": {
+        "L_ft": 650,
+        "shoulder_taper_L_third_ft": 217
+      },
+      "notes": "L/3 is labeled on diagram. Actual length depends on shoulder width W."
+    },
+    "buffer_space": {
+      "annotated_min_ft": 570,
+      "label_on_diagram": "570' MIN",
+      "mutcd_table_6c2_value_ft": 645,
+      "interpretation": "CDOT supplement uses 570 ft minimum at 65 mph; MUTCD Table 6C-2 federal value is 645 ft. CDOT supplement is more permissive. Conestruct should emit the CDOT value when CO supplement governs."
+    },
+    "work_zone": {
+      "label_above_hatched_area": "0.5L",
+      "interpretation": "Work zone length shown as 0.5L on diagram is illustrative only; actual work zone length is input parameter"
+    },
+    "clear_zone_annotated": true,
+    "channelizing_devices": {
+      "callout_text": "CHANNELIZING DEVICES OR TEMPORARY BARRIER (LIGHTS OPTIONAL)",
+      "diagram_taper_count": 8,
+      "diagram_taper_count_is_illustrative": true,
+      "actual_taper_device_count_rule": "depends on actual taper length (1/3 L) and §6C.09 max spacing (≤ S ft in taper = ≤ 65 ft at 65 mph)",
+      "diagram_concrete_barrier_count": 8,
+      "diagram_concrete_barrier_distribution": "2 before work zone, 5 in work zone, 1 after; ambiguous whether all 8 are conceptually 'in' work zone",
+      "diagram_concrete_barrier_is_illustrative": true
+    },
+    "advance_warning_sequence": [
+      {
+        "position": 1,
+        "sign_code": "W20-1",
+        "label": "ROAD WORK 1/2 MILE",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [],
+        "distance_to_next_ft": 530
+      },
+      {
+        "position": 2,
+        "sign_code": "W3-5(60)",
+        "label": "ADVISORY SPEED 60",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [],
+        "distance_to_next_ft": 530
+      },
+      {
+        "position": 3,
+        "sign_code": "R2-10",
+        "label": "BEGIN DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "plaques": [],
+        "distance_to_next_ft": 260
+      },
+      {
+        "position": 4,
+        "sign_code": "W21-5aR",
+        "label": "RIGHT SHOULDER CLOSED (first/upstream)",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [
+          {
+            "options": ["W16-2aP", "W16-3aP", "W16-9P"],
+            "example_text": "1/4 MILE",
+            "selection_rule": "contractor picks one of the three based on situation"
+          }
+        ],
+        "distance_to_next_ft": 260
+      },
+      {
+        "position": 5,
+        "sign_assembly": "WORK_ZONE_SPEED_LIMIT_GROUP",
+        "components": [
+          {
+            "sign_code": "G20-5P",
+            "label": "WORK ZONE"
+          },
+          {
+            "sign_code": "R2-1(60)",
+            "label": "SPEED LIMIT 60"
+          }
+        ],
+        "paired_assembly": [
+          {
+            "sign_code": "G20-5P",
+            "label": "WORK ZONE"
+          },
+          {
+            "sign_code": "R2-6P",
+            "label": "FINES DOUBLE"
+          }
+        ],
+        "annotations": [],
+        "frequency_note": "TO BE PROVIDED EVERY 2640' OR THE SPACING OF THE SIGNS MAY BE CHANGED AS DIRECTED BY THE ENGINEER BETWEEN R2-10 AND R2-11 SIGNS",
+        "distance_to_next_ft": 530
+      },
+      {
+        "position": 6,
+        "sign_code": "W21-5aR",
+        "label": "RIGHT SHOULDER CLOSED (second/near taper)",
+        "annotations": ["sunburst", "triangle_solid"],
+        "plaques": [
+          {
+            "sign_code": "W7-3aP(X)",
+            "text": "NEXT X MILES",
+            "selection_rule": "X is contractor-filled based on work zone length"
+          }
+        ],
+        "distance_to_taper_start_ft": 530
+      }
+    ],
+    "downstream_sequence": [
+      {
+        "from": "work zone end",
+        "to": "R2-11",
+        "distance_ft": 500
+      },
+      {
+        "position": "after work zone",
+        "sign_code": "R2-11",
+        "label": "END DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "plaques": [],
+        "distance_to_next_ft": 500
+      },
+      {
+        "position": "rightmost",
+        "sign_code": "R2-1(65)",
+        "label": "SPEED LIMIT 65",
+        "annotations": [],
+        "plaques": []
+      }
+    ],
+    "validation_notes": {
+      "exact_match_required": [
+        "all sign codes in advance_warning_sequence and downstream_sequence",
+        "posted speed values (65 normal, 60 work zone)",
+        "distances between sign assemblies",
+        "presence of W7-3aP(X) plaque under second W21-5aR",
+        "presence of one-of-three W16 plaques under first W21-5aR",
+        "2640' frequency note for G20-5P/R2-6P assembly",
+        "buffer space minimum (570' per CDOT supplement)"
+      ],
+      "annotation_match_recommended": [
+        "flashing beacon presence on sunburst-marked signs",
+        "fines double sign treatment per star marker",
+        "optional device handling per triangle marker"
+      ],
+      "informational_only_not_assertions": [
+        "diagram taper device count (8) — actual count by §6C.09 spacing rules",
+        "diagram concrete barrier count (8) — illustrative only",
+        "diagram work zone length (0.5L) — illustrative only, actual length is input"
+      ]
+    }
+  }
+}
