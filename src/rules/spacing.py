@@ -16,6 +16,7 @@ import math
 from src.rules.tables import (
     ADVANCE_WARNING_SIGN_SPACING,
     BUFFER_SPACE,
+    CDOT_BUFFER_SPACE,
     COLORADO_OVERRIDES,
     DOWNSTREAM_TAPER_LENGTH_PER_LANE_FT,
     SHIFTING_TAPER_RATIO,
@@ -83,26 +84,79 @@ def downstream_taper_length(num_lanes: int, use_max: bool = False) -> float:
 # ---------------------------------------------------------------------------
 
 
-def buffer_space(speed_mph: int) -> float:
+def buffer_space(speed_mph: int, jurisdiction: str = "CDOT") -> float:
     """Longitudinal buffer space, in feet.
 
-    Source: MUTCD 11th Ed. Table 6B-2.  Buffer is keyed to posted speed
-    in 5-mph increments from 20 to 75 mph.
+    Jurisdiction dispatch:
+
+    * ``"CDOT"`` — checks the CDOT supplement (S-630-1 Sheet 14) first.
+      At speeds where the supplement posts a specific minimum (currently
+      65 and 75 mph), returns the CDOT value.  At other speeds the
+      supplement is silent (CDOT Sheet 2 General Note 23 defers to
+      engineer's judgment); falls back to the federal MUTCD baseline.
+    * ``"federal"`` — always uses MUTCD 11th Ed. Table 6C-2.  Reachable
+      via direct code calls only; V1's form-driven path hardcodes
+      ``"CDOT"`` at the bridge.
+
+    CDOT minimums are regulatory floors (the "MIN" annotation on
+    S-630-1 diagrams), not recommendations — see
+    :func:`_is_cdot_minimum` for the predicate the validator uses to
+    enforce them strictly.
+
+    Args:
+        speed_mph: Posted speed in mph; must be a multiple of 5 in
+            {20, 25, ..., 75}.
+        jurisdiction: ``"CDOT"`` (default) or ``"federal"``.
 
     Raises:
-        ValueError: ``speed_mph`` is not in {20, 25, 30, ..., 75}, or
-            the table value at that speed is missing.
+        ValueError: ``speed_mph`` is not in the table, or
+            ``jurisdiction`` is not recognized.
     """
+    if jurisdiction not in ("CDOT", "federal"):
+        raise ValueError(f"Unknown jurisdiction {jurisdiction!r}; expected 'CDOT' or 'federal'.")
+
+    if jurisdiction == "CDOT":
+        cdot_value = _cdot_buffer_or_none(speed_mph)
+        if cdot_value is not None:
+            return float(cdot_value)
+        # Silent at this speed — fall through to federal.
+
     for row in BUFFER_SPACE:
         if row.speed_mph == speed_mph:
             if row.buffer_ft is None:
                 raise ValueError(
-                    f"Buffer space at {speed_mph} mph is not yet verified against MUTCD Table 6B-2."
+                    f"Buffer space at {speed_mph} mph is not yet verified against MUTCD Table 6C-2."
                 )
             return float(row.buffer_ft)
     raise ValueError(
-        f"Speed {speed_mph} mph is not in MUTCD Table 6B-2; valid values are 20, 25, 30, ..., 75."
+        f"Speed {speed_mph} mph is not in MUTCD Table 6C-2; valid values are 20, 25, 30, ..., 75."
     )
+
+
+def _cdot_buffer_or_none(speed_mph: int) -> int | None:
+    """CDOT supplement minimum buffer at this speed, or None if silent.
+
+    Returns the value posted on S-630-1 Sheet 14 (Case 26 at 65 mph,
+    Case 27 at 75 mph) when ``speed_mph`` matches.  Returns ``None`` at
+    every other speed — the supplement does not tabulate them and
+    General Note 23 defers to engineer's judgment.
+    """
+    for row in CDOT_BUFFER_SPACE:
+        if row.speed_mph == speed_mph:
+            return row.buffer_ft
+    return None
+
+
+def _is_cdot_minimum(jurisdiction: str, speed_mph: int) -> bool:
+    """True when CDOT supplement posts a hard minimum at this speed.
+
+    The validator uses this to enforce the CDOT floor strictly (no
+    tolerance), distinguishing CDOT regulatory minimums from MUTCD
+    advisory values (which carry a 10% tolerance).  When CDOT adds rows
+    to the supplement or other states join, update CDOT_BUFFER_SPACE
+    — this predicate reads from it directly.
+    """
+    return jurisdiction == "CDOT" and _cdot_buffer_or_none(speed_mph) is not None
 
 
 # ---------------------------------------------------------------------------

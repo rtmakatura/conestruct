@@ -32,8 +32,8 @@
     },
     "buffer": {
       "buffer_ft": 495.0,
-      "lookup_text": "MUTCD Table 6B-2: 55 mph -> 495 ft",
-      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6B-2 (stopping sight distance)",
+      "lookup_text": "MUTCD Table 6C-2: 495 ft (CDOT supplement silent at this speed)",
+      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
       "speed_mph": 55
     },
     "case": {

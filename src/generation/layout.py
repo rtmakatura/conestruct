@@ -58,7 +58,7 @@ def generate_shoulder_closure_divided(
 
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -263,7 +263,7 @@ def generate_shoulder_closure_undivided(
 
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -439,7 +439,7 @@ def generate_lane_closure_divided(
     # Longitudinal landmarks: full merging taper L (not L/3) since this
     # is a travel-lane closure rather than a shoulder closure.
     taper_len = taper_length(speed, params.lane_width_ft)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -680,7 +680,7 @@ def generate_flagger_alternating_2lane(
     # Longitudinal landmarks: full merging taper L (this is a travel-lane
     # closure, not a shoulder closure) per MUTCD §6C.08.
     taper_len = taper_length(speed, params.lane_width_ft)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
     ds_taper_len = downstream_taper_length(1)
 
     wz_end_station = 0.0

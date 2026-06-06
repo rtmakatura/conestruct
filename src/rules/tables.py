@@ -7,10 +7,11 @@ and lookup structures.
 Authoritative sources:
   - MUTCD 11th Edition, Part 6 (Temporary Traffic Control)
     * Table 6B-1: Suggested Advance Warning Sign Spacing
-    * Table 6B-2: Longitudinal Buffer Space
+    * Table 6C-2: Longitudinal Buffer Space
     * Section 6C.08: Tapers
     * Section 6C.09: Channelizing Device Spacing
   - Colorado Supplement to MUTCD (effective 2026-01-18)
+  - CDOT Standard Plan S-630-1 (19-page set, 2019; revised 01/14/26)
 """
 
 from __future__ import annotations
@@ -110,24 +111,28 @@ ADVANCE_WARNING_SIGN_SPACING: tuple[AdvanceWarningRow, ...] = (
 )
 
 # ---------------------------------------------------------------------------
-# Buffer space — MUTCD Table 6B-2
+# Buffer space — MUTCD Table 6C-2 (federal) + CDOT Supplement (Sheet 14)
 # ---------------------------------------------------------------------------
 
 
 @dataclass(frozen=True)
 class BufferSpaceRow:
-    """One row from MUTCD Table 6B-2.
+    """One row of a longitudinal buffer space table.
 
-    Longitudinal buffer space between the transition area and the work
-    space.  Based on stopping sight distance at posted speed.
+    Used for both the federal MUTCD Table 6C-2 baseline (``BUFFER_SPACE``)
+    and the CDOT supplement minimums (``CDOT_BUFFER_SPACE``).  Buffer is
+    measured between the downstream end of the merging taper and the
+    upstream end of the work space, keyed to posted speed.
     """
 
     speed_mph: int
     buffer_ft: int | None  # None = value needs verification against source
 
 
-# Source: MUTCD 11th Ed. Table 6B-2 (verified 2026-04-24 via
-# ATSSA MUTCD Flagger Reference Chart)
+# Source: MUTCD 11th Ed. Table 6C-2 (verified 2026-04-24 via
+# ATSSA MUTCD Flagger Reference Chart).  Federal baseline — used when
+# jurisdiction="federal" and as the silent-speed fallback for
+# jurisdiction="CDOT".
 BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
     BufferSpaceRow(speed_mph=20, buffer_ft=115),
     BufferSpaceRow(speed_mph=25, buffer_ft=155),
@@ -141,6 +146,23 @@ BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
     BufferSpaceRow(speed_mph=65, buffer_ft=645),
     BufferSpaceRow(speed_mph=70, buffer_ft=730),
     BufferSpaceRow(speed_mph=75, buffer_ft=820),
+)
+
+# Source: CDOT Standard Plan S-630-1, Sheet 14 (Cases 26 at 65 mph and
+# 27 at 75 mph) — the only two typical applications that post a specific
+# minimum buffer.  Other cases label buffer "VAR. BUFFER SPACE (SEE
+# GENERAL NOTE 23 ON SHEET 2)", deferring to project-specific
+# engineering judgment.  Sheet 2 General Note 23 verbatim: "BUFFER SPACE
+# IS OPTIONAL. NEED MUST BE DETERMINED ON A PROJECT OR SITE SPECIFIC
+# BASIS AS DIRECTED BY THE ENGINEER..."
+#
+# Values are regulatory minimums (the "MIN" annotation on diagrams), not
+# recommendations — validators enforce them as hard floors via
+# ``_is_cdot_minimum``.  At silent speeds, ``buffer_space`` falls back
+# to the federal ``BUFFER_SPACE`` table as the baseline.
+CDOT_BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
+    BufferSpaceRow(speed_mph=65, buffer_ft=570),
+    BufferSpaceRow(speed_mph=75, buffer_ft=650),
 )
 
 # ---------------------------------------------------------------------------

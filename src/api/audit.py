@@ -17,6 +17,7 @@ from typing import Any
 
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
+    _cdot_buffer_or_none,
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
@@ -136,15 +137,59 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 2. Buffer space
+    # 2. Buffer space — jurisdiction-aware (V1-Wide Item 2).
     # ------------------------------------------------------------------
-    buf = buffer_space(speed)
-    buffer_section = {
-        "speed_mph": speed,
-        "lookup_text": f"MUTCD Table 6B-2: {speed} mph -> {buf:g} ft",
-        "buffer_ft": buf,
-        "source": "MUTCD 11th Ed. Sec 6C.06, Table 6B-2 (stopping sight distance)",
-    }
+    # Three cases:
+    #   A. CDOT + speed posts a hard minimum (Sheet 14 Cases 26/27 at
+    #      65/75 mph) — divergent from MUTCD; emit full annotation with
+    #      structured fields for parseable downstream consumption.
+    #   B. CDOT + speed not in supplement (silent fallback) — falls
+    #      back to federal MUTCD value per Sheet 2 General Note 23;
+    #      flag the silence in lookup_text.
+    #   C. federal jurisdiction — pure MUTCD baseline.
+    # Structured divergence fields (jurisdiction/cdot_value_ft/
+    # mutcd_value_ft/divergence) appear only in case A so non-divergent
+    # speeds stay byte-identical to pre-Item-2 modulo the citation +
+    # silent annotation.
+    buf = buffer_space(speed, jurisdiction=params.jurisdiction)
+    cdot_value = _cdot_buffer_or_none(speed)
+    is_divergent = params.jurisdiction == "CDOT" and cdot_value is not None
+
+    if is_divergent:
+        mutcd_value = buffer_space(speed, jurisdiction="federal")
+        case_label = "Case 26 at 65 mph" if speed == 65 else "Case 27 at 75 mph"
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (
+                f"CDOT supplement: {buf:g} ft. MUTCD Table 6C-2: {mutcd_value:g} ft. "
+                f"Plan uses CDOT supplement value. Note: CDOT supplement permits "
+                f"shorter buffer than federal table. Verify against project-specific "
+                f"engineering judgment."
+            ),
+            "buffer_ft": buf,
+            "source": (
+                f"CDOT S-630-1 Standard Plan, Sheet 14 ({case_label}). "
+                f"MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (federal baseline)."
+            ),
+            "jurisdiction": params.jurisdiction,
+            "cdot_value_ft": int(buf),
+            "mutcd_value_ft": int(mutcd_value),
+            "divergence": True,
+        }
+    elif params.jurisdiction == "CDOT":
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (f"MUTCD Table 6C-2: {buf:g} ft (CDOT supplement silent at this speed)"),
+            "buffer_ft": buf,
+            "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+        }
+    else:  # jurisdiction == "federal"
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": f"MUTCD Table 6C-2: {buf:g} ft",
+            "buffer_ft": buf,
+            "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+        }
 
     # ------------------------------------------------------------------
     # 3. Channelizing device spacing

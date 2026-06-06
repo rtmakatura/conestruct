@@ -416,6 +416,7 @@ def build_corridor(
     num_lanes_closed: int = 1,
     anchor_description: str = "user-supplied anchor",
     downstream_taper_use_max: bool = True,
+    jurisdiction: str = "CDOT",
 ) -> WorkCorridor:
     """Build a :class:`WorkCorridor` from user inputs and MUTCD/CDOT distances.
 
@@ -457,7 +458,7 @@ def build_corridor(
     advance_ft = spacing["A"] + spacing["B"] + spacing["C"]
 
     taper_ft = _resolve_taper_ft(closure_type, speed_mph, lane_width_ft, shoulder_width_ft)
-    buffer_ft = buffer_space(speed_mph)
+    buffer_ft = buffer_space(speed_mph, jurisdiction=jurisdiction)
     downstream_ft = downstream_taper_length(num_lanes_closed, use_max=downstream_taper_use_max)
 
     return WorkCorridor(

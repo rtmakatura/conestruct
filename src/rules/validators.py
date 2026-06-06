@@ -464,33 +464,46 @@ def validate_buffer_space(
 ) -> list[Violation]:
     """Verify the longitudinal buffer between work space and taper.
 
-    Source: MUTCD 11th Ed. Table 6B-2.
+    Sources: MUTCD 11th Ed. Table 6C-2 (federal baseline) and CDOT
+    Standard Plan S-630-1 Sheet 14 (CDOT supplement minimums at 65 and
+    75 mph).
 
     The work zone is taken to occupy stations ``[0, work_zone_length_ft]``
     and the buffer is the gap between the work zone's upstream end and
-    the taper's downstream end.  The buffer may be longer than required
-    but not shorter than ``BUFFER_SPACE_TOLERANCE_LOW`` of the table value.
+    the taper's downstream end.  Tolerance depends on jurisdiction and
+    speed: CDOT supplement minimums (per :func:`_is_cdot_minimum`) are
+    regulatory floors enforced strictly (tolerance = 1.0); MUTCD
+    advisory values carry the standard 10% rounding tolerance.
     """
+    from src.rules.spacing import _is_cdot_minimum
+
     taper = _extract_taper_indices(placements)
     if not taper:
         return []
 
     taper_downstream = min(placements[i].station_ft for i in taper)
     actual_buffer = taper_downstream - params.work_zone_length_ft
-    expected = buffer_space(params.speed_mph)
+    expected = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    is_cdot_min = _is_cdot_minimum(params.jurisdiction, params.speed_mph)
+    tolerance = 1.0 if is_cdot_min else BUFFER_SPACE_TOLERANCE_LOW
 
-    if actual_buffer < BUFFER_SPACE_TOLERANCE_LOW * expected:
+    if actual_buffer < tolerance * expected:
+        source_text = "CDOT S-630-1 Sheet 14" if is_cdot_min else "MUTCD Table 6C-2"
+        tolerance_text = (
+            "no tolerance — CDOT minimum is a hard floor"
+            if is_cdot_min
+            else f"{BUFFER_SPACE_TOLERANCE_LOW:.0%} tolerance allowed"
+        )
         return [
             Violation(
                 rule_id="BUFFER_TOO_SHORT",
                 severity="error",
                 message=(
                     f"Longitudinal buffer is {actual_buffer:.0f} ft; "
-                    f"Table 6B-2 requires at least {expected:.0f} ft at "
-                    f"{params.speed_mph} mph "
-                    f"({BUFFER_SPACE_TOLERANCE_LOW:.0%} tolerance allowed)."
+                    f"{source_text} requires at least {expected:.0f} ft at "
+                    f"{params.speed_mph} mph ({tolerance_text})."
                 ),
-                mutcd_section="Table 6B-2",
+                mutcd_section="Table 6C-2",
                 device_index=None,
             )
         ]
@@ -1006,7 +1019,7 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
         taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     else:
         taper_ft = taper_length(params.speed_mph, params.lane_width_ft)
-    buffer_ft = buffer_space(params.speed_mph)
+    buffer_ft = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
     work_zone_ft = params.work_zone_length_ft
 
     taper_label = (

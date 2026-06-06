@@ -52,7 +52,7 @@ def _taper_bounds(params: ScenarioParams) -> tuple[float, float]:
     between the downstream buffer end (``taper_end_station``) and the
     upstream advance-warning lead (``taper_start_station``).
     """
-    buf_len = buffer_space(params.speed_mph)
+    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
     taper_end_station = params.work_zone_length_ft + buf_len
     if params.closure_type == "shoulder":
         taper_len = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)

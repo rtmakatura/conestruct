@@ -213,7 +213,7 @@ def build_narrative_context(
     sign_offset_right = lane_edge_offset + 4.0
 
     taper_len = shoulder_taper_length(speed, shoulder_width)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     taper_end_station = wz_len + buf_len
     taper_start_station = taper_end_station + taper_len

@@ -68,11 +68,9 @@ def _run(
     placements = generator(params, **kwargs)
     _assert_no_errors(placements, params)
     actual = _counts_by_type(placements)
-    assert actual == expected_counts, (
-        f"Device-count snapshot mismatch.\n"
-        f"  expected: {expected_counts}\n"
-        f"  actual:   {actual}"
-    )
+    assert (
+        actual == expected_counts
+    ), f"Device-count snapshot mismatch.\n  expected: {expected_counts}\n  actual:   {actual}"
 
 
 # ---------------------------------------------------------------------------
@@ -216,7 +214,11 @@ def test_shoulder_undivided(
         # Same pick(wz_len, 2*speed) math as the shoulder_divided cases —
         # pre-fix picked floor candidates that exceeded the §6C.09 max.
         (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 22}),
-        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
+        # V1-Wide Item 2: jurisdiction="CDOT" at 65/75 mph uses CDOT
+        # supplement buffer (570/650 ft) rather than MUTCD federal
+        # (645/820 ft). Shorter buffer → shorter total signed length
+        # → fewer CO construction-zone plaque pairs.
+        (65, "rural", 5000.0, {"SIGN_GENERIC": 16, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
         (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 57}),
     ],
     ids=[

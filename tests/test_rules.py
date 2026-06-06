@@ -154,13 +154,82 @@ def test_downstream_taper() -> None:
 
 
 def test_buffer_space_lookup() -> None:
-    """Table 6B-2 lookup; ValueError on invalid speeds."""
+    """Table 6C-2 lookup at silent CDOT speeds (falls back to federal)."""
+    # 45 and 60 mph: CDOT supplement is silent → falls back to MUTCD.
+    # Assertion holds under both jurisdiction=CDOT (default) and =federal.
     assert buffer_space(45) == pytest.approx(360.0)
     assert buffer_space(60) == pytest.approx(570.0)
     with pytest.raises(ValueError):
         buffer_space(42)  # not a 5-mph increment
     with pytest.raises(ValueError):
         buffer_space(80)  # out of table range
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide Item 2 — jurisdiction-aware buffer_space
+# ---------------------------------------------------------------------------
+
+
+def test_buffer_space_cdot_at_65_returns_570() -> None:
+    """CDOT supplement minimum at 65 mph (S-630-1 Sheet 14 Case 26)."""
+    assert buffer_space(65, jurisdiction="CDOT") == pytest.approx(570.0)
+
+
+def test_buffer_space_cdot_at_75_returns_650() -> None:
+    """CDOT supplement minimum at 75 mph (S-630-1 Sheet 14 Case 27)."""
+    assert buffer_space(75, jurisdiction="CDOT") == pytest.approx(650.0)
+
+
+def test_buffer_space_cdot_silent_fallback_at_55() -> None:
+    """CDOT silent at 55 mph → falls back to federal MUTCD 495."""
+    assert buffer_space(55, jurisdiction="CDOT") == pytest.approx(495.0)
+
+
+def test_buffer_space_cdot_silent_fallback_at_45() -> None:
+    """CDOT silent at 45 mph → falls back to federal MUTCD 360."""
+    assert buffer_space(45, jurisdiction="CDOT") == pytest.approx(360.0)
+
+
+def test_buffer_space_federal_at_65_returns_645() -> None:
+    """Federal path bypasses CDOT supplement; returns full MUTCD 645."""
+    assert buffer_space(65, jurisdiction="federal") == pytest.approx(645.0)
+
+
+def test_buffer_space_federal_at_75_returns_820() -> None:
+    """Federal path returns MUTCD 820, not CDOT 650."""
+    assert buffer_space(75, jurisdiction="federal") == pytest.approx(820.0)
+
+
+def test_buffer_space_rejects_unknown_jurisdiction() -> None:
+    """Only 'CDOT' and 'federal' are recognized; everything else raises."""
+    with pytest.raises(ValueError, match="jurisdiction"):
+        buffer_space(55, jurisdiction="TxDOT")
+
+
+def test_cdot_buffer_space_table_only_has_65_and_75() -> None:
+    """CDOT_BUFFER_SPACE is intentionally sparse — only the two speeds
+    that S-630-1 Sheet 14 posts as 'MIN' annotations. Other speeds are
+    silent per General Note 23 (engineer's judgment)."""
+    from src.rules.tables import CDOT_BUFFER_SPACE
+
+    speeds = {row.speed_mph for row in CDOT_BUFFER_SPACE}
+    assert speeds == {65, 75}
+    by_speed = {row.speed_mph: row.buffer_ft for row in CDOT_BUFFER_SPACE}
+    assert by_speed[65] == 570
+    assert by_speed[75] == 650
+
+
+def test_is_cdot_minimum_true_only_at_65_and_75_cdot() -> None:
+    """Predicate that distinguishes CDOT regulatory floors from MUTCD
+    advisory values. Drives the validator's tolerance branching."""
+    from src.rules.spacing import _is_cdot_minimum
+
+    assert _is_cdot_minimum("CDOT", 65) is True
+    assert _is_cdot_minimum("CDOT", 75) is True
+    assert _is_cdot_minimum("CDOT", 55) is False  # CDOT silent at 55
+    assert _is_cdot_minimum("CDOT", 60) is False
+    assert _is_cdot_minimum("federal", 65) is False  # federal path
+    assert _is_cdot_minimum("federal", 75) is False
 
 
 def test_advance_warning_auto_inference() -> None:

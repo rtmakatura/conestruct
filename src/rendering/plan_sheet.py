@@ -168,7 +168,7 @@ def _make_x_mapping(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
-    buf_len = buffer_space(speed)
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     def effective(s: float) -> float:
         if s <= wz_len:
@@ -1106,7 +1106,7 @@ def _draw_site_context(
         c.drawCentredString(x_mid, y_road_top + cross_len + 3, "CROSS ST.")
 
     if flags["school_zone"]:
-        buf_len = buffer_space(params.speed_mph)
+        buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
         taper_len = _required_taper_length(params, shoulder_width_ft)
         school_station = wz_len + buf_len + taper_len + 100.0
         x_school = x_of(school_station)
@@ -1482,7 +1482,7 @@ def _draw_landmarks(
         return
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
-    buf_len = buffer_space(params.speed_mph)
+    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
     taper_label = "L" if params.closure_type == "lane" else "L/3"
 
     wz_end = 0.0
@@ -2196,7 +2196,7 @@ def _draw_notes(
         taper_label = None
     else:
         taper_len = _required_taper_length(params, shoulder_width_ft)
-        buf_len = buffer_space(speed)
+        buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
         taper_label = "Lane taper (L)" if is_lane else "Shoulder taper (L/3)"
 
     if is_mobile:
@@ -2818,6 +2818,7 @@ def render_plan_sheet(
                         road_type=params.road_type,
                         lane_width_ft=params.lane_width_ft,
                         shoulder_width_ft=params.shoulder_width_ft,
+                        jurisdiction=params.jurisdiction,
                     )
                 except Exception as exc:  # noqa: BLE001
                     print(

@@ -725,3 +725,266 @@ def test_bridge_passes_none_when_wz_omitted() -> None:
 
     params, _gen, _kw = scenario_to_call(_shoulder())
     assert params.work_zone_speed_mph is None
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide Item 2 — jurisdiction-aware buffer + CDOT supplement divergence
+#
+# Three cases covered:
+#   A. CDOT + speed in {65, 75}: divergent, full annotation, structured
+#      fields present.
+#   B. CDOT + speed not in {65, 75}: silent fallback to MUTCD; lookup_text
+#      names the silence; structured fields suppressed.
+#   C. Snapshot match: re-baselined 55 mph body byte-identical to
+#      tests/snapshots/audit_shoulder_no_reduction.json (citation + silent
+#      annotation only).
+# ---------------------------------------------------------------------------
+
+
+def _shoulder_at_65() -> dict:
+    s = _shoulder_scenario()
+    s["roadType"] = "rural_divided"
+    s["speed"] = 65
+    s["workLen"] = 1200.0
+    return s
+
+
+def _shoulder_at_75() -> dict:
+    s = _shoulder_scenario()
+    s["roadType"] = "freeway"
+    s["speed"] = 75
+    s["workLen"] = 1500.0
+    return s
+
+
+def _buffer_section(body: dict) -> dict:
+    return body["sections"]["buffer"]
+
+
+def test_audit_buffer_divergent_at_65_emits_full_annotation(
+    client: TestClient,
+) -> None:
+    """65 mph CDOT: buffer_ft=570; lookup_text carries CDOT/MUTCD
+    comparison + Note sentence; structured divergence fields present."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_65())
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 570.0
+    assert b["divergence"] is True
+    assert b["jurisdiction"] == "CDOT"
+    assert b["cdot_value_ft"] == 570
+    assert b["mutcd_value_ft"] == 645
+    assert "CDOT supplement: 570 ft" in b["lookup_text"]
+    assert "MUTCD Table 6C-2: 645 ft" in b["lookup_text"]
+    assert "Plan uses CDOT supplement value" in b["lookup_text"]
+    assert "Note: CDOT supplement permits shorter buffer" in b["lookup_text"]
+    assert "engineering judgment" in b["lookup_text"]
+    assert "Case 26 at 65 mph" in b["source"]
+
+
+def test_audit_buffer_divergent_at_75_emits_full_annotation(
+    client: TestClient,
+) -> None:
+    """75 mph CDOT: buffer_ft=650; lookup_text references Case 27."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_75())
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 650.0
+    assert b["divergence"] is True
+    assert b["cdot_value_ft"] == 650
+    assert b["mutcd_value_ft"] == 820
+    assert "CDOT supplement: 650 ft" in b["lookup_text"]
+    assert "MUTCD Table 6C-2: 820 ft" in b["lookup_text"]
+    assert "Case 27 at 75 mph" in b["source"]
+
+
+def test_audit_buffer_silent_at_55_names_silence(client: TestClient) -> None:
+    """55 mph CDOT: CDOT supplement silent → falls back to MUTCD 495;
+    lookup_text names the silence; structured divergence fields suppressed."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 495.0
+    assert "MUTCD Table 6C-2: 495 ft" in b["lookup_text"]
+    assert "(CDOT supplement silent at this speed)" in b["lookup_text"]
+    # Suppression check: silent-speed bodies must not carry divergence keys.
+    assert "divergence" not in b
+    assert "cdot_value_ft" not in b
+    assert "mutcd_value_ft" not in b
+    assert "jurisdiction" not in b
+
+
+def test_audit_buffer_value_matches_layout_geometry_at_65() -> None:
+    """The buffer_ft the audit reports equals the buffer actually placed
+    by the layout. Confirms the Q1 load-bearing invariant: audit doesn't
+    lie about geometry."""
+    from src.api.audit import build_audit_trail
+    from src.api.schemas import scenario_to_call
+
+    s_dict = _shoulder_at_65()
+    from src.api.schemas import ShoulderScenario
+
+    scenario = ShoulderScenario(**s_dict)
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    audit = build_audit_trail(placements, params, shoulder_width_ft=10.0)
+    audit_buffer = audit["buffer"]["buffer_ft"]
+    # Buffer = first taper drum station - work zone length
+    from src.rules.devices import DeviceType
+
+    drum_stations = sorted(p.station_ft for p in placements if p.device_type == DeviceType.DRUM)
+    actual_taper_downstream = drum_stations[0]
+    actual_buffer = actual_taper_downstream - params.work_zone_length_ft
+    assert audit_buffer == pytest.approx(actual_buffer, abs=1.0)
+    assert audit_buffer == 570.0
+
+
+def test_audit_buffer_at_65_matches_baseline(client: TestClient) -> None:
+    """Canonical snapshot baseline for 65 mph divergent case."""
+    import json
+    from pathlib import Path
+
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_65())
+    assert res.status_code == 200
+    expected = json.loads(
+        Path("tests/snapshots/audit_shoulder_65mph.json").read_text(encoding="utf-8")
+    )
+    assert res.json() == expected
+
+
+def test_audit_buffer_at_75_matches_baseline(client: TestClient) -> None:
+    """Canonical snapshot baseline for 75 mph divergent case."""
+    import json
+    from pathlib import Path
+
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_75())
+    assert res.status_code == 200
+    expected = json.loads(
+        Path("tests/snapshots/audit_shoulder_75mph.json").read_text(encoding="utf-8")
+    )
+    assert res.json() == expected
+
+
+def test_audit_buffer_55_no_divergence_fields_suppression() -> None:
+    """Build-audit-trail directly, no API; assert silent-speed shape
+    has none of the structured divergence keys."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    audit = build_audit_trail([], params, shoulder_width_ft=10.0)
+    keys = set(audit["buffer"].keys())
+    assert keys == {"speed_mph", "lookup_text", "buffer_ft", "source"}
+
+
+# --- Federal jurisdiction explicit unit tests ----------------------------
+
+
+def test_audit_buffer_federal_at_65_uses_mutcd_value() -> None:
+    """jurisdiction='federal' bypasses CDOT supplement; audit emits MUTCD value."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1200.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="federal",
+    )
+    audit = build_audit_trail([], params, shoulder_width_ft=10.0)
+    b = audit["buffer"]
+    assert b["buffer_ft"] == 645.0
+    assert b["lookup_text"] == "MUTCD Table 6C-2: 645 ft"
+    assert "divergence" not in b
+
+
+# --- Validator tolerance: CDOT minimum is strict ------------------------
+
+
+def test_validate_buffer_space_cdot_minimum_enforced_strictly() -> None:
+    """At 65 mph CDOT, the validator tolerates no shortfall from the
+    570 ft minimum (Q-PLAN-1 answer: regulatory floor)."""
+    from src.rules.devices import DeviceType
+    from src.rules.validators import (
+        DevicePlacement,
+        ScenarioParams,
+        validate_buffer_space,
+    )
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    # Place a taper whose downstream end leaves a 569 ft buffer — 1 ft
+    # short of the CDOT minimum. Federal tolerance (90%) would accept;
+    # CDOT-minimum tolerance (100%) must reject.
+    placements = [
+        DevicePlacement(device_type=DeviceType.DRUM, station_ft=1000.0 + 569.0, offset_ft=24.0),
+        DevicePlacement(
+            device_type=DeviceType.DRUM, station_ft=1000.0 + 569.0 + 100.0, offset_ft=28.0
+        ),
+        DevicePlacement(
+            device_type=DeviceType.DRUM, station_ft=1000.0 + 569.0 + 200.0, offset_ft=32.0
+        ),
+    ]
+    violations = validate_buffer_space(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "BUFFER_TOO_SHORT"
+    assert "no tolerance" in violations[0].message.lower()
+
+
+def test_validate_buffer_space_federal_at_65_keeps_90_percent_tolerance() -> None:
+    """At 65 mph federal, the validator allows 90% of 645 = 580.5 ft
+    (advisory value, not regulatory floor)."""
+    from src.rules.devices import DeviceType
+    from src.rules.validators import (
+        DevicePlacement,
+        ScenarioParams,
+        validate_buffer_space,
+    )
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="federal",
+    )
+    # 585 ft buffer: above 580.5 ft tolerance threshold for federal 645.
+    placements = [
+        DevicePlacement(device_type=DeviceType.DRUM, station_ft=1000.0 + 585.0, offset_ft=24.0),
+        DevicePlacement(
+            device_type=DeviceType.DRUM, station_ft=1000.0 + 585.0 + 100.0, offset_ft=28.0
+        ),
+        DevicePlacement(
+            device_type=DeviceType.DRUM, station_ft=1000.0 + 585.0 + 200.0, offset_ft=32.0
+        ),
+    ]
+    violations = validate_buffer_space(placements, params)
+    assert violations == []

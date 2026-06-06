@@ -1,0 +1,13 @@
+{
+  "kind": "shoulder",
+  "meta": {"project": "T", "address": "", "lat": 0.0, "lng": 0.0},
+  "roadType": "freeway",
+  "speed": 75,
+  "lanes": 2,
+  "laneWidth": 12.0,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 1500.0,
+  "night": false
+}

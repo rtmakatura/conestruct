@@ -80,7 +80,7 @@ def test_shoulder_taper_length(speed: int, shoulder: float, expected: float) -> 
 @pytest.mark.parametrize(
     "speed,expected",
     [
-        # MUTCD Table 6B-2 — 12 speed rows, 5-mph increments.
+        # MUTCD Table 6C-2 — 12 speed rows, 5-mph increments.
         (20, 115),
         (25, 155),
         (30, 200),
@@ -95,9 +95,14 @@ def test_shoulder_taper_length(speed: int, shoulder: float, expected: float) -> 
         (75, 820),
     ],
 )
-def test_buffer_space_table_6b_2(speed: int, expected: int) -> None:
-    """Exact Table 6B-2 lookup at every speed."""
-    assert buffer_space(speed) == expected
+def test_buffer_space_federal_table_6c_2(speed: int, expected: int) -> None:
+    """Exact Table 6C-2 lookup at every speed under federal jurisdiction.
+
+    V1's default jurisdiction is "CDOT" — at 65 and 75 mph the CDOT
+    supplement overrides with smaller minimums (570 and 650).  Pass
+    ``jurisdiction="federal"`` to exercise the pure-MUTCD path.
+    """
+    assert buffer_space(speed, jurisdiction="federal") == expected
 
 
 def test_advance_warning_urban_low_55mph() -> None:
@@ -823,10 +828,15 @@ def test_taper_length_monotonic_in_speed() -> None:
         assert nxt > prev, f"{prev} → {nxt} is not strictly increasing"
 
 
-def test_buffer_space_monotonic_in_speed() -> None:
-    """Buffer space is strictly increasing with speed (Table 6B-2)."""
+def test_buffer_space_federal_monotonic_in_speed() -> None:
+    """Federal MUTCD Table 6C-2 buffer is strictly increasing with speed.
+
+    Tests the federal path explicitly; under V1's CDOT default the
+    sequence 60→65 plateaus (570→570) because the CDOT supplement
+    minimum at 65 mph matches MUTCD's value at 60 mph.
+    """
     speeds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75]
-    buffers = [buffer_space(s) for s in speeds]
+    buffers = [buffer_space(s, jurisdiction="federal") for s in speeds]
     for prev, nxt in zip(buffers, buffers[1:], strict=False):
         assert nxt > prev, f"buffer {prev} → {nxt} is not strictly increasing"
 
