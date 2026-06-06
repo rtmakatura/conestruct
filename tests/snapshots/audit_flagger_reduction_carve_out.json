@@ -1,0 +1,162 @@
+{
+  "pending_verification": {
+    "count": 0,
+    "note": "",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+  },
+  "sections": {
+    "advance": {
+      "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "sign_table": [
+        {
+          "Code": "W20-1",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "C (furthest)",
+          "Station (ft)": "2,855"
+        },
+        {
+          "Code": "W3-4",
+          "Distance from Taper (ft)": "1,000 upstream",
+          "Position": "B (middle)",
+          "Station (ft)": "2,355"
+        },
+        {
+          "Code": "W20-7",
+          "Distance from Taper (ft)": "500 upstream",
+          "Position": "A (nearest)",
+          "Station (ft)": "1,855"
+        }
+      ],
+      "source": "MUTCD 11th Ed. Table 6B-1",
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+    },
+    "buffer": {
+      "buffer_ft": 360.0,
+      "lookup_text": "MUTCD Table 6C-2: 360 ft (CDOT supplement silent at this speed)",
+      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+      "speed_mph": 45
+    },
+    "case": {
+      "case": "MUTCD TA-10: Flagger one-lane two-way",
+      "narrative": "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.",
+      "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 45 mph.",
+      "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+    },
+    "colorado": {
+      "all_pass": false,
+      "checks": [
+        {
+          "citation": "CO Supplement Sec 6C.04(A)",
+          "detail": "Required: False. Signs placed: 5 left, 7 right.",
+          "label": "Signs on both sides of divided highway",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6C.06(A)",
+          "detail": "Zone length: 2,855 ft. Required: 2. Placed: 2.",
+          "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 2B.13(A)",
+          "detail": "Work-zone speed reduced 45 \u2192 30 mph (\u039415 mph). 1 advance speed-reduction sign required per CO Supplement \u00a72B.13(A).",
+          "label": "Speed reduction <= 15 mph per sign installation",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6E.02(A)",
+          "detail": "2 flagger station(s); required for night operations (is_night = False).",
+          "label": "Flagger station lighting 500W @ 8 ft",
+          "pass": false
+        }
+      ],
+      "info_items": [
+        {
+          "citation": "CO Supplement Sec 6G.02(A)",
+          "detail": "Not applicable (not a mobile operation).",
+          "info": true,
+          "label": "AADT threshold for mobile operations (<= 2,000)"
+        }
+      ]
+    },
+    "corridor_validation": {
+      "checked": false,
+      "warnings": []
+    },
+    "fines_double": {
+      "applicable": false,
+      "reason": "Fines Double signing per CO Supplement Sec 2B.13 and S-630-1 Sheet 12 is scoped to freeway/expressway work zones. Flagger-controlled alternating one-way traffic on 2-lane undivided roads is governed separately by MUTCD Part 6E; Fines Double envelope not applicable. Verify against project-specific engineering judgment."
+    },
+    "flagger": {
+      "applicable": true,
+      "count": 2,
+      "narrative": "Two flagger stations are required for alternating one-way operations: one upstream of the merging taper to stop right-direction traffic, one past the downstream taper end to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+      "required": 2,
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones \u2014 Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "table": [
+        {
+          "Label": "FLAGGER_1",
+          "Offset (ft)": "+17.0",
+          "Side": "right shoulder",
+          "Station (ft)": "1,385"
+        },
+        {
+          "Label": "FLAGGER_2",
+          "Offset (ft)": "-17.0",
+          "Side": "left shoulder",
+          "Station (ft)": "-80"
+        }
+      ]
+    },
+    "geometry_validation": {
+      "all_pass": true,
+      "buffer_ft": 360.0,
+      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "speed_mph": 45,
+      "taper_ft": 495.0,
+      "taper_label": "L (full merging taper)",
+      "violations": [],
+      "work_zone_ft": 500.0
+    },
+    "spacing": {
+      "in_taper_text": "45 mph -> 45 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
+      "n_tangent_cones_actual": 9,
+      "n_tangent_cones_required": 7,
+      "n_taper_drums_actual": 12,
+      "n_taper_drums_required": 12,
+      "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "speed_mph": 45,
+      "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
+      "taper_count_text": "L = 495.0 ft / 45 ft max spacing -> 12 drums at 45.0 ft intervals"
+    },
+    "taper": {
+      "L_calc_text": "L = 11 x 45 = 495 ft",
+      "L_full_ft": 495.0,
+      "L_required_ft": 495.0,
+      "L_required_label": "L (full merging taper)",
+      "L_third_calc_text": "Required: L = 495 ft (full taper for lane closure)",
+      "L_third_ft": 495.0,
+      "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+      "closure_type": "lane",
+      "formula_choice": "Speed 45 mph >= 40 mph threshold -> using L = W x S",
+      "formula_latex": "L = W \\times S",
+      "offset_ft": 11.0,
+      "offset_label": "lane width",
+      "shoulder_width_ft": 11.0,
+      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the full merging taper length L.",
+      "speed_mph": 45
+    }
+  },
+  "summary": {
+    "buffer_space_ft": 360.0,
+    "case_id": "MUTCD TA-10: Flagger one-lane two-way",
+    "cdot_sheet": "S-630-2",
+    "device_spacing_tangent_ft": 90.0,
+    "device_spacing_taper_ft": 45.0,
+    "step_count": 12,
+    "ta": "TA-10",
+    "taper_label": "L (full merging taper)",
+    "taper_length_ft": 495.0
+  }
+}

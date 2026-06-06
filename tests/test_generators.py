@@ -435,3 +435,158 @@ def test_mobile_op_multilane(
         jurisdiction="CDOT",
     )
     _run(generate_mobile_op_multilane, params, expected, **kwargs)
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide Item 3 — Fines Double envelope emission.
+#
+# Per-label count tests instead of bulk SIGN_GENERIC totals so the delta
+# from envelope emission is locked precisely. Each test verifies:
+#   * No-reduction baseline emits zero R2-10/R2-11/R2-1
+#   * Reduction emits the expected mirrored or single-side counts
+# ---------------------------------------------------------------------------
+
+
+def _count_label(placements: list[DevicePlacement], label: str) -> int:
+    return sum(1 for p in placements if p.device_type.value == "SIGN_GENERIC" and p.label == label)
+
+
+def _shoulder_divided_params(work_zone_speed_mph: int | None) -> ScenarioParams:
+    return ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=work_zone_speed_mph,
+    )
+
+
+def test_shoulder_divided_no_reduction_emits_no_envelope() -> None:
+    """Baseline: no reduction → zero Fines Double envelope signs."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(None))
+    for label in ("R2-10", "R2-11", "R2-1", "R2-6P"):
+        assert _count_label(placements, label) == 0
+
+
+def test_shoulder_divided_with_reduction_emits_mirrored_envelope() -> None:
+    """Reduction on divided shoulder → mirrored R2-10/R2-11/R2-1 (2 each)
+    plus mirrored G20-5P/R2-6P pair per envelope assembly.
+    800 ft wz → 1800 ft envelope → ceil(1800/2640)=1 assembly →
+    2×R2-10 + 2×R2-11 + 2×R2-1 + 2×G20-5P(envelope) + 2×R2-6P."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
+    assert _count_label(placements, "R2-10") == 2
+    assert _count_label(placements, "R2-11") == 2
+    assert _count_label(placements, "R2-1") == 2
+    # R2-6P is envelope-only (no intra-work-zone R2-6P emission); equals
+    # 2 × n_assemblies for divided.
+    assert _count_label(placements, "R2-6P") == 2
+
+
+def test_shoulder_divided_g20_5p_coexists_intra_zone_and_envelope() -> None:
+    """Q1 confirmation: intra-work-zone G20-5P + envelope G20-5P both
+    emit. 800 ft wz → 1 intra-zone half-mile plaque pair (2 mirrored)
+    + 1 envelope assembly pair (2 mirrored) = 4 total G20-5P labels."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
+    # Pre-Item-3 baseline (no reduction): 2 intra-work-zone G20-5P (mirrored).
+    no_reduction = generate_shoulder_closure_divided(_shoulder_divided_params(None))
+    n_no_reduction = _count_label(no_reduction, "G20-5P")
+    n_with_reduction = _count_label(placements, "G20-5P")
+    # Reduction adds the envelope assembly pair: 2 × n_assemblies = 2.
+    assert n_with_reduction - n_no_reduction == 2
+
+
+def test_shoulder_divided_large_envelope_more_assemblies() -> None:
+    """5000 ft wz with reduction → 6000 ft envelope → ceil(6000/2640)=3
+    assemblies → 6 mirrored R2-6P, 6 mirrored envelope-G20-5P."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=5000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=45,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    assert _count_label(placements, "R2-6P") == 6
+
+
+def test_shoulder_undivided_with_reduction_single_side() -> None:
+    """Undivided shoulder → no mirror requirement under §6C.04(A).
+    Reduction emits single-side: 1×R2-10 + 1×R2-11 + 1×R2-1."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=1,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=600.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=45,
+    )
+    placements = generate_shoulder_closure_undivided(params)
+    assert _count_label(placements, "R2-10") == 1
+    assert _count_label(placements, "R2-11") == 1
+    assert _count_label(placements, "R2-1") == 1
+
+
+def test_lane_closure_divided_with_reduction_emits_envelope() -> None:
+    """Divided lane closure (TA-19) with reduction → mirrored envelope."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=55,
+    )
+    placements = generate_lane_closure_divided(params)
+    assert _count_label(placements, "R2-10") == 2
+    assert _count_label(placements, "R2-11") == 2
+    assert _count_label(placements, "R2-1") == 2
+
+
+def test_flagger_with_reduction_emits_no_envelope() -> None:
+    """Flagger 2-lane is exempt per Sheet 12 scope (freeway/expressway).
+    Even if work_zone_speed_mph triggers, the generator doesn't emit."""
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    placements = generate_flagger_alternating_2lane(params)
+    for label in ("R2-10", "R2-11", "R2-1", "R2-6P"):
+        assert _count_label(placements, label) == 0
+
+
+def test_shoulder_divided_envelope_station_geometry() -> None:
+    """R2-10 sits at wz_start+500, R2-11 at wz_end-500, R2-1 at wz_end-1000."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
+    r2_10_stations = sorted(p.station_ft for p in placements if p.label == "R2-10")
+    r2_11_stations = sorted(p.station_ft for p in placements if p.label == "R2-11")
+    r2_1_stations = sorted(p.station_ft for p in placements if p.label == "R2-1")
+    # 800 ft wz: wz_start = 800, wz_end = 0
+    assert r2_10_stations == [1300.0, 1300.0]
+    assert r2_11_stations == [-500.0, -500.0]
+    assert r2_1_stations == [-1000.0, -1000.0]

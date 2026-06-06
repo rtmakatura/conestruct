@@ -53,6 +53,12 @@ export interface AuditResponse {
     flagger: Record<string, unknown>;
     corridor_validation: Record<string, unknown>;
     geometry_validation: Record<string, unknown>;
+    // V1-Wide Item 3: Fines Double envelope section. Absent when the
+    // work-zone posted speed is not reduced. Present with
+    // ``applicable=true`` (envelope + Sheet 12 operational notes) for
+    // shoulder/lane closures with reduction, or ``applicable=false``
+    // (carve-out reason) for flagger scenarios with reduction.
+    fines_double?: Record<string, unknown>;
   };
   pending_verification: PendingVerification;
 }

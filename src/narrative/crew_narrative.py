@@ -34,7 +34,7 @@ from src.rules.spacing import (
     pick_device_count,
     shoulder_taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams, _is_flagger_scenario
 
 _TEMPLATES_DIR: Path = Path(__file__).parent / "templates"
 _BASE_TEMPLATE: str = "base.md.j2"
@@ -45,8 +45,12 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
 
 # Sign labels emitted by the Phase 3 layout.  Plaques and END ROAD WORK
 # get their own rows in the schedule and are excluded from the
-# advance-warning sign list.
-_PLAQUE_AND_END_LABELS: frozenset[str] = frozenset({"G20-5P", "G20-2", "R2-6P"})
+# advance-warning sign list.  Fines Double envelope signs (R2-10, R2-11,
+# R2-1) are also excluded since they have their own schedule rows when
+# the envelope is emitted (V1-Wide Item 3).
+_PLAQUE_AND_END_LABELS: frozenset[str] = frozenset(
+    {"G20-5P", "G20-2", "R2-6P", "R2-10", "R2-11", "R2-1"}
+)
 
 _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
     DeviceType.DRUM: "Channelizing Drum (36-inch)",
@@ -268,6 +272,84 @@ def build_narrative_context(
         }
     )
 
+    # Fines Double envelope schedule rows (V1-Wide Item 3) — emitted
+    # when work-zone speed is reduced AND scenario isn't a flagger
+    # operation (Sheet 12 scope is freeway/expressway).  Mirrors the
+    # ``fines_double`` audit section logic so the narrative and the
+    # audit trail agree on when the envelope ships.
+    fines_double_applicable = (
+        params.work_zone_speed_mph is not None
+        and params.work_zone_speed_mph < params.speed_mph
+        and not _is_flagger_scenario(params)
+    )
+    if fines_double_applicable:
+        sign_schedule.extend(
+            [
+                {
+                    "code": "R2-10",
+                    "description": description_for("R2-10"),
+                    "distance": "500 ft upstream of work zone",
+                },
+                {
+                    "code": "R2-11",
+                    "description": description_for("R2-11"),
+                    "distance": "500 ft downstream of work zone",
+                },
+                {
+                    "code": "G20-5P / R2-6P",
+                    "description": "WORK ZONE / FINES DOUBLE assembly",
+                    "distance": "2,640 ft assemblies between R2-10 and R2-11",
+                },
+                {
+                    "code": "R2-1",
+                    "description": f"SPEED LIMIT {params.speed_mph} (posted-speed restoration)",
+                    "distance": "1,000 ft downstream of work zone",
+                },
+            ]
+        )
+
+    # Sheet 12 operational rules — surfaced in a Safety Notes block in
+    # the template when the envelope is emitted.  Skipped on flagger
+    # scenarios per the audit-trail carve-out; estimator-facing
+    # "doesn't apply" lives in the audit, not the crew narrative.
+    fines_double_notes: list[dict[str, str]] = []
+    if fines_double_applicable:
+        fines_double_notes = [
+            {
+                "citation": "S-630-1 Sheet 12, Note 1",
+                "action": (
+                    "Install Fines Double signs no more than 4 hours before "
+                    "the start of the work day. Do not leave signs up "
+                    "overnight when work is not active."
+                ),
+            },
+            {
+                "citation": "S-630-1 Sheet 12, Note 2",
+                "action": (
+                    "Remove or cover Fines Double signs when work concludes; "
+                    "doubled fines apply only when workers or work activity "
+                    "are present in the zone."
+                ),
+            },
+            {
+                "citation": "S-630-1 Sheet 12, Note 3",
+                "action": (
+                    "Relocate the R2-10/R2-11 envelope to follow the actual "
+                    "work area as the project progresses; do not leave "
+                    "Fines Double signs in place beyond the active work zone."
+                ),
+            },
+            {
+                "citation": "S-630-1 Sheet 12, Note 4",
+                "action": (
+                    "Maintain a 250 ft minimum spacing between Fines Double "
+                    "signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and "
+                    "other warning or regulatory signs. Engineer may adjust "
+                    "placement to satisfy this minimum."
+                ),
+            },
+        ]
+
     end_sign_station = next(
         (
             p.station_ft
@@ -312,6 +394,7 @@ def build_narrative_context(
         "is_divided": params.is_divided,
         "site_adjustments": site_adjustments or [],
         "night_adjustments": night_adjustments or [],
+        "fines_double_notes": fines_double_notes,
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }
 

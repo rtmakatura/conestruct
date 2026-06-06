@@ -32,7 +32,12 @@ from src.rules.tables import (
     COLORADO_OVERRIDES,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    _is_flagger_scenario,
+    validate_corridor_geometry,
+)
 
 _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
@@ -435,7 +440,97 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 6. S-630-1 case reference
+    # 6. Fines Double envelope (V1-Wide Item 3 — CO Supplement §2B.13 +
+    #    S-630-1 Sheet 12).
+    # ------------------------------------------------------------------
+    # Three shapes, structurally distinct:
+    #   A. Speed reduced AND scenario applicable → applicable=True with
+    #      envelope geometry + Sheet 12 operational notes.
+    #   B. Speed reduced AND scenario is flagger → applicable=False with
+    #      reason text (Sheet 12 scopes Fines Double to freeway/
+    #      expressway; flagger 2-lane undivided is out of scope per
+    #      MUTCD Part 6E).
+    #   C. No reduction → section entirely absent from the audit dict.
+    #      Preserves byte-identity of pre-Item-3 no-reduction baselines.
+    fines_double_section: dict[str, Any] | None
+    fines_double_gate = wz_speed is not None and wz_speed < speed
+    if not fines_double_gate:
+        fines_double_section = None
+    elif _is_flagger_scenario(params):
+        fines_double_section = {
+            "applicable": False,
+            "reason": (
+                "Fines Double signing per CO Supplement Sec 2B.13 and "
+                "S-630-1 Sheet 12 is scoped to freeway/expressway work "
+                "zones. Flagger-controlled alternating one-way traffic "
+                "on 2-lane undivided roads is governed separately by "
+                "MUTCD Part 6E; Fines Double envelope not applicable. "
+                "Verify against project-specific engineering judgment."
+            ),
+        }
+    else:
+        wz_start_st = wz_len
+        wz_end_st = 0.0
+        r2_10_st = wz_start_st + 500.0
+        r2_11_st = wz_end_st - 500.0
+        ds_r2_1_st = wz_end_st - 1000.0
+        env_len = r2_10_st - r2_11_st
+        n_asm = max(1, math.ceil(env_len / 2640.0))
+        fines_double_section = {
+            "applicable": True,
+            "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
+            "envelope": {
+                "r2_10_station_ft": r2_10_st,
+                "r2_11_station_ft": r2_11_st,
+                "length_ft": env_len,
+                "n_assemblies": n_asm,
+                "downstream_r2_1_station_ft": ds_r2_1_st,
+                "downstream_r2_1_label": f"SPEED LIMIT {speed}",
+            },
+            "operational_notes": [
+                {
+                    "citation": "S-630-1 Sheet 12, Note 1",
+                    "action": (
+                        "Install Fines Double signs no more than 4 "
+                        "hours before the start of the work day. Do "
+                        "not leave signs up overnight when work is "
+                        "not active."
+                    ),
+                },
+                {
+                    "citation": "S-630-1 Sheet 12, Note 2",
+                    "action": (
+                        "Remove or cover Fines Double signs when work "
+                        "concludes; doubled fines apply only when "
+                        "workers or work activity are present in the "
+                        "zone."
+                    ),
+                },
+                {
+                    "citation": "S-630-1 Sheet 12, Note 3",
+                    "action": (
+                        "Relocate the R2-10/R2-11 envelope to follow "
+                        "the actual work area as the project "
+                        "progresses; do not leave Fines Double signs "
+                        "in place beyond the active work zone."
+                    ),
+                },
+                {
+                    "citation": "S-630-1 Sheet 12, Note 4",
+                    "action": (
+                        "Maintain a 250 ft minimum spacing between "
+                        "Fines Double signs (R2-10, R2-11, G20-5P/"
+                        "R2-6P assemblies) and other warning or "
+                        "regulatory signs. Engineer may adjust "
+                        "placement to satisfy this minimum."
+                    ),
+                },
+            ],
+            "source": "CDOT S-630-1 Standard Plan, Sheet 12",
+        }
+
+    # ------------------------------------------------------------------
+    # 7. S-630-1 case reference
     # ------------------------------------------------------------------
     if is_flagger:
         case_label = "MUTCD TA-10: Flagger one-lane two-way"
@@ -472,7 +567,7 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 7. Flagger placement (only meaningful when flaggers are present)
+    # 8. Flagger placement (only meaningful when flaggers are present)
     # ------------------------------------------------------------------
     flagger_placements = [p for p in placements if p.device_type == DeviceType.FLAGGER_STATION]
     flagger_rows = [
@@ -506,7 +601,7 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 8. Corridor / aerial validation (best-effort OSM check)
+    # 9. Corridor / aerial validation (best-effort OSM check)
     # ------------------------------------------------------------------
     # When the caller supplied site coords AND a corridor bearing, run a
     # soft check against OSM ground truth: warns if the anchor isn't on
@@ -527,7 +622,7 @@ def build_audit_trail(
         corridor_validation = {"checked": False, "warnings": []}
 
     # ------------------------------------------------------------------
-    # 9. Geometry validation (work zone vs taper / buffer)
+    # 10. Geometry validation (work zone vs taper / buffer)
     # ------------------------------------------------------------------
     # Pre-generation sanity check.  When the work zone is shorter than
     # the required taper, the layout is geometrically impossible; the
@@ -553,7 +648,7 @@ def build_audit_trail(
         "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
     }
 
-    return {
+    out: dict[str, Any] = {
         "taper": taper_section,
         "buffer": buffer_section,
         "spacing": spacing_section,
@@ -568,6 +663,13 @@ def build_audit_trail(
         # composing the response body's ``sections``.
         "_stepped_signs_pending": stepped_signs_pending,
     }
+    # Conditional inclusion of fines_double — when the section is None
+    # (no work-zone speed reduction in effect), the key is entirely
+    # absent so the audit dict stays byte-identical to pre-Item-3
+    # baselines for the common no-reduction case.
+    if fines_double_section is not None:
+        out["fines_double"] = fines_double_section
+    return out
 
 
 # ---------------------------------------------------------------------------

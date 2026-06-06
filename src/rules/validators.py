@@ -65,6 +65,15 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
     {
         "G20-4",  # PILOT CAR FOLLOW ME — co-located with flagger station
         "R9-9",  # SIDEWALK CLOSED — USE OTHER SIDE — at work-zone boundary
+        # Fines Double envelope signs (V1-Wide Item 3) — regulatory signs
+        # in the speed-reduction Fines Double envelope per CO Supplement
+        # §2B.13 + S-630-1 Sheet 12.  Excluded from A/B/C cluster math so
+        # R2-10 sitting upstream of the taper doesn't corrupt the
+        # advance-warning spacing analysis.
+        "R2-1",  # SPEED LIMIT — downstream restoration sign past R2-11
+        "R2-6P",  # FINES DOUBLE plaque — paired with G20-5P in envelope
+        "R2-10",  # BEGIN DOUBLE FINES ZONE — upstream envelope boundary
+        "R2-11",  # END DOUBLE FINES ZONE — downstream envelope boundary
     }
 )
 
@@ -154,6 +163,23 @@ class Violation:
 # ---------------------------------------------------------------------------
 # Internal helpers — placement extraction
 # ---------------------------------------------------------------------------
+
+
+def _is_flagger_scenario(params: ScenarioParams) -> bool:
+    """True when the scenario is a flagger-controlled alternating-flow operation.
+
+    Single-source predicate for the flagger carve-out used by
+    ``validate_flagger_stations`` (positive trigger) and
+    ``validate_fines_double_envelope`` (negative carve-out, per Sheet
+    12's freeway/expressway scope).  Same logic mirrored by
+    ``src.api.audit.build_audit_trail`` for the ``fines_double``
+    section's ``applicable=False`` branch.
+
+    Matches a single-lane closure on a non-divided 2-lane road —
+    ``num_lanes`` is read permissively (1 = per-direction count, 2 =
+    total-lane count both describe the same physical road).
+    """
+    return params.closure_type == "lane" and not params.is_divided and params.num_lanes <= 2
 
 
 def _channelizer_indices(placements: list[DevicePlacement]) -> list[int]:
@@ -947,10 +973,13 @@ def validate_flagger_stations(
     # for a 2-lane two-way road) and 2 (the total-lane count for the same
     # road) both describe the alternating-flow case.  Multi-lane undivided
     # facilities (num_lanes >= 3) handle a single-lane closure without
-    # alternating flow and are excluded here.
-    needs_flaggers = (params.closure_type == "full_road" and not params.is_divided) or (
-        params.closure_type == "lane" and params.num_lanes <= 2 and not params.is_divided
-    )
+    # alternating flow and are excluded here.  The lane-closure branch
+    # delegates to ``_is_flagger_scenario`` so the predicate stays in
+    # one place (also consumed by ``validate_fines_double_envelope``
+    # and the audit-trail ``fines_double`` section).
+    needs_flaggers = (
+        params.closure_type == "full_road" and not params.is_divided
+    ) or _is_flagger_scenario(params)
     if not needs_flaggers:
         return []
 
@@ -979,6 +1008,83 @@ def validate_flagger_stations(
             )
         ]
     return []
+
+
+def validate_fines_double_envelope(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Verify the R2-10/R2-11 envelope when work-zone speed is reduced.
+
+    Source: CO Supplement §2B.13 + CDOT S-630-1 Sheet 12.  When the
+    work-zone posted speed is reduced below the nominal posted speed
+    and the closure type is shoulder or lane on a non-flagger
+    facility, the layout must emit R2-10 (BEGIN DOUBLE FINES ZONE)
+    upstream of the work zone and R2-11 (END DOUBLE FINES ZONE)
+    downstream.  Sheet 12 explicitly scopes Fines Double signing to
+    freeway/expressway work zones, so flagger-controlled
+    alternating-flow operations on 2-lane undivided roads are
+    exempt — see ``_is_flagger_scenario``.
+
+    Pins behavior so a regression in the layout engine that silently
+    drops the envelope on a reduced-speed plan would fail this test
+    rather than ship an undersigned plan.  Assembly-count and
+    placement-spacing checks are intentionally out of scope; Sheet 12
+    permits engineer adjustment of the 2640 ft interval, so the
+    validator encodes the regulatory floor (envelope must exist),
+    not the implementation specifics (asserted in
+    ``tests/test_generators.py``).
+    """
+    if params.work_zone_speed_mph is None or params.work_zone_speed_mph >= params.speed_mph:
+        return []
+    if params.closure_type not in ("shoulder", "lane"):
+        return []
+    if _is_flagger_scenario(params):
+        return []
+
+    has_r2_10 = any(
+        p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-10"
+        for p in placements
+    )
+    has_r2_11 = any(
+        p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-11"
+        for p in placements
+    )
+
+    out: list[Violation] = []
+    if not has_r2_10:
+        out.append(
+            Violation(
+                rule_id="MISSING_R2_10",
+                severity="error",
+                message=(
+                    "Work-zone speed reduced below posted speed but no "
+                    "R2-10 (BEGIN DOUBLE FINES ZONE) placement found. "
+                    "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
+                    "the Fines Double envelope on freeway/expressway "
+                    "work zones whenever the work-zone speed is reduced."
+                ),
+                mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
+                device_index=None,
+            )
+        )
+    if not has_r2_11:
+        out.append(
+            Violation(
+                rule_id="MISSING_R2_11",
+                severity="error",
+                message=(
+                    "Work-zone speed reduced below posted speed but no "
+                    "R2-11 (END DOUBLE FINES ZONE) placement found. "
+                    "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
+                    "the Fines Double envelope on freeway/expressway "
+                    "work zones whenever the work-zone speed is reduced."
+                ),
+                mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
+                device_index=None,
+            )
+        )
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -1102,4 +1208,5 @@ def validate_layout(
     out.extend(validate_mobile_advance_warning(placements, params))
     out.extend(validate_co_construction_plaques(placements, params))
     out.extend(validate_flagger_stations(placements, params))
+    out.extend(validate_fines_double_envelope(placements, params))
     return out

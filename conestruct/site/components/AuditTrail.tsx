@@ -965,9 +965,163 @@ function buildAdditiveItems(data: AuditResponse): ItemSpec[] {
   const items: (ItemSpec | null)[] = [
     corridorValidationItem(data.sections.corridor_validation),
     geometryValidationItem(data.sections.geometry_validation),
+    finesDoubleItem(data.sections.fines_double),
     pendingVerificationItem(data.pending_verification),
   ];
   return items.filter((x): x is ItemSpec => x !== null);
+}
+
+interface FinesDoubleEnvelope {
+  r2_10_station_ft: number;
+  r2_11_station_ft: number;
+  length_ft: number;
+  n_assemblies: number;
+  downstream_r2_1_station_ft: number;
+  downstream_r2_1_label: string;
+}
+
+interface FinesDoubleNote {
+  citation: string;
+  action: string;
+}
+
+export function finesDoubleItem(
+  section: Record<string, unknown> | undefined,
+): ItemSpec | null {
+  // No section → no Fines Double envelope (no work-zone speed reduction
+  // in effect). Renderer suppresses entirely.
+  if (!section) return null;
+
+  const applicable = section.applicable === true;
+
+  // Flagger carve-out: applicable=false with reason. Sheet 12 scopes
+  // Fines Double to freeway/expressway; the estimator-facing audit
+  // surfaces the carve-out so it's visible, not silently missed.
+  if (!applicable) {
+    const reason =
+      typeof section.reason === "string"
+        ? section.reason
+        : "Fines Double envelope not applicable for this scenario.";
+    return {
+      title: "Fines Double envelope",
+      result: "NOT APPLICABLE",
+      cite: "S-630-1 Sheet 12",
+      dim: true,
+      body: (
+        <>
+          <p>{reason}</p>
+          <div className="citation">
+            <span className="check">ℹ</span>
+            CO SUPPLEMENT § 2B.13 · S-630-1 SHEET 12
+          </div>
+        </>
+      ),
+    };
+  }
+
+  // Applicable=true: envelope geometry + Sheet 12 operational notes.
+  const envelope = section.envelope as FinesDoubleEnvelope | undefined;
+  const notes = (section.operational_notes as FinesDoubleNote[] | undefined) ?? [];
+  const citation =
+    typeof section.citation === "string"
+      ? section.citation
+      : "CO Supplement Sec 2B.13 + S-630-1 Sheet 12";
+
+  const r210 = envelope?.r2_10_station_ft;
+  const r211 = envelope?.r2_11_station_ft;
+  const envLen = envelope?.length_ft;
+  const nAsm = envelope?.n_assemblies;
+  const dsR21 = envelope?.downstream_r2_1_station_ft;
+  const dsR21Label = envelope?.downstream_r2_1_label;
+
+  // Defensive snapshot: notes is empty when the backend ships an
+  // applicable=true section with no operational_notes array. Shouldn't
+  // happen with current code (audit.py always populates the four
+  // Sheet 12 rules) but the render path stays safe.
+  const noteCount = notes.length;
+  const result =
+    noteCount > 0
+      ? `${nAsm ?? "—"} assemblies · ${noteCount} ops note${noteCount === 1 ? "" : "s"}`
+      : `${nAsm ?? "—"} assemblies`;
+
+  return {
+    title: "Fines Double envelope",
+    result,
+    cite: "S-630-1 Sheet 12",
+    body: (
+      <>
+        <p>
+          Work-zone posted speed is reduced — Fines Double signing
+          applies per CO Supplement § 2B.13 and CDOT S-630-1 Sheet 12.
+          The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
+          assemblies at 2,640 ft intervals; the downstream R2-1 restores
+          posted speed past R2-11.
+        </p>
+        {envelope && (
+          <table>
+            <thead>
+              <tr>
+                <th>Sign</th>
+                <th>Station (ft)</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>R2-10</td>
+                <td>{r210 !== undefined ? Math.round(r210).toLocaleString() : "—"}</td>
+                <td>BEGIN DOUBLE FINES ZONE (upstream)</td>
+              </tr>
+              <tr>
+                <td>G20-5P / R2-6P</td>
+                <td>—</td>
+                <td>
+                  {nAsm !== undefined ? nAsm : "—"} assembl
+                  {nAsm === 1 ? "y" : "ies"} every 2,640 ft
+                </td>
+              </tr>
+              <tr>
+                <td>R2-11</td>
+                <td>{r211 !== undefined ? Math.round(r211).toLocaleString() : "—"}</td>
+                <td>END DOUBLE FINES ZONE (downstream)</td>
+              </tr>
+              <tr>
+                <td>R2-1</td>
+                <td>{dsR21 !== undefined ? Math.round(dsR21).toLocaleString() : "—"}</td>
+                <td>{dsR21Label ?? "SPEED LIMIT (restoration)"}</td>
+              </tr>
+            </tbody>
+          </table>
+        )}
+        {envLen !== undefined && (
+          <p>
+            Envelope length: <strong>{Math.round(envLen).toLocaleString()} ft</strong>
+          </p>
+        )}
+        {notes.length > 0 && (
+          <>
+            <p>
+              <strong>Sheet 12 operational rules</strong> (field crew):
+            </p>
+            <div className="check-list">
+              {notes.map((n, i) => (
+                <CheckRow
+                  key={`note-${i}`}
+                  label={n.action}
+                  tone="info"
+                  tag={n.citation}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        <div className="citation">
+          <span className="check">✓</span>
+          {citation.toUpperCase()}
+        </div>
+      </>
+    ),
+  };
 }
 
 interface CorridorWarning {

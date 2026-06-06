@@ -1412,3 +1412,186 @@ def test_geometry_validator_exempts_mobile_and_off_road() -> None:
         assert violations == [], f"closure_type={closure_type} should be exempt, got: " + ", ".join(
             v.rule_id for v in violations
         )
+
+
+# ===========================================================================
+# V1-Wide Item 3 — validate_fines_double_envelope + _is_flagger_scenario
+#                  + _NON_ADVANCE_WARNING_SIGN_LABELS regression.
+# ===========================================================================
+
+
+def _fines_double_params(
+    *,
+    closure_type: str = "shoulder",
+    is_divided: bool = True,
+    num_lanes: int = 2,
+    work_zone_speed_mph: int | None = 45,
+) -> ScenarioParams:
+    return ScenarioParams(
+        speed_mph=55,
+        num_lanes=num_lanes,
+        closure_type=closure_type,
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=is_divided,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=work_zone_speed_mph,
+    )
+
+
+def _mk_envelope_placements(include_r2_10: bool, include_r2_11: bool) -> list[DevicePlacement]:
+    """Hand-constructed placement list with the requested envelope signs.
+
+    Bypasses the generator so the validator is tested in isolation.
+    """
+    out: list[DevicePlacement] = []
+    if include_r2_10:
+        out.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=1300.0,
+                offset_ft=28.0,
+                label="R2-10",
+            )
+        )
+    if include_r2_11:
+        out.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=-500.0,
+                offset_ft=28.0,
+                label="R2-11",
+            )
+        )
+    return out
+
+
+def test_validate_fines_double_envelope_pass_when_both_signs_present() -> None:
+    """Happy path: R2-10 + R2-11 placements satisfy the validator."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=True)
+    violations = validate_fines_double_envelope(placements, params)
+    assert violations == []
+
+
+def test_validate_fines_double_envelope_error_when_r2_10_missing() -> None:
+    """Missing R2-10 → MISSING_R2_10 error violation."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()
+    placements = _mk_envelope_placements(include_r2_10=False, include_r2_11=True)
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "MISSING_R2_10"
+    assert violations[0].severity == "error"
+
+
+def test_validate_fines_double_envelope_error_when_r2_11_missing() -> None:
+    """Missing R2-11 → MISSING_R2_11 error violation."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=False)
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "MISSING_R2_11"
+
+
+def test_validate_fines_double_envelope_skipped_when_no_reduction() -> None:
+    """work_zone_speed_mph None → validator exits early with no violations."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params(work_zone_speed_mph=None)
+    placements: list[DevicePlacement] = []  # missing R2-10/R2-11 should be OK
+    assert validate_fines_double_envelope(placements, params) == []
+
+
+def test_validate_fines_double_envelope_skipped_on_flagger() -> None:
+    """Flagger carve-out: lane closure + undivided + num_lanes<=2 exits early
+    even with reduction in effect."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params(
+        closure_type="lane",
+        is_divided=False,
+        num_lanes=2,
+        work_zone_speed_mph=30,
+    )
+    placements: list[DevicePlacement] = []  # no envelope expected
+    assert validate_fines_double_envelope(placements, params) == []
+
+
+def test_validate_fines_double_envelope_skipped_on_mobile_and_off_road() -> None:
+    """closure_type='mobile' or 'off_road' or 'full_road' → validator exits early."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    for closure_type in ("mobile", "off_road", "full_road"):
+        params = _fines_double_params(closure_type=closure_type)
+        assert validate_fines_double_envelope([], params) == []
+
+
+def test_is_flagger_scenario_helper() -> None:
+    """Single-source predicate: lane + undivided + num_lanes<=2 → True."""
+    from src.rules.validators import _is_flagger_scenario
+
+    # Positive: 2-lane two-way undivided lane closure (num_lanes=2)
+    assert _is_flagger_scenario(
+        _fines_double_params(closure_type="lane", is_divided=False, num_lanes=2)
+    )
+    # Positive: per-direction count = 1 also describes the same road
+    assert _is_flagger_scenario(
+        _fines_double_params(closure_type="lane", is_divided=False, num_lanes=1)
+    )
+    # Negative: divided lane closure
+    assert not _is_flagger_scenario(
+        _fines_double_params(closure_type="lane", is_divided=True, num_lanes=2)
+    )
+    # Negative: shoulder closure
+    assert not _is_flagger_scenario(_fines_double_params(closure_type="shoulder", is_divided=False))
+    # Negative: multi-lane undivided (num_lanes >= 3)
+    assert not _is_flagger_scenario(
+        _fines_double_params(closure_type="lane", is_divided=False, num_lanes=3)
+    )
+
+
+def test_advance_warning_signs_excludes_r2_10() -> None:
+    """Regression: R2-10 placed upstream of taper must NOT corrupt the
+    A/B/C cluster analysis. Real generator output is fed through the
+    validator; only warnings (not errors) are acceptable."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_advance_warning_signs
+
+    params = _fines_double_params(work_zone_speed_mph=45)
+    placements = generate_shoulder_closure_divided(params)
+    violations = validate_advance_warning_signs(placements, params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert errors == [], f"R2-10 corrupted A/B/C analysis: {errors}"
+
+
+def test_co_construction_plaques_count_with_envelope() -> None:
+    """G20-5P from envelope adds to the plaque count; validator now sees
+    more plaques than the half-mile rule requires. Layout passes."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_co_construction_plaques
+
+    params = _fines_double_params(work_zone_speed_mph=45)
+    placements = generate_shoulder_closure_divided(params)
+    violations = validate_co_construction_plaques(placements, params)
+    assert violations == []  # more plaques than required is conservative
+
+
+def test_validate_layout_with_envelope_passes() -> None:
+    """End-to-end: reduced-speed divided shoulder generates a layout that
+    passes validate_layout (no errors)."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_layout
+
+    params = _fines_double_params(work_zone_speed_mph=45)
+    placements = generate_shoulder_closure_divided(params)
+    violations = validate_layout(placements, params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert errors == []

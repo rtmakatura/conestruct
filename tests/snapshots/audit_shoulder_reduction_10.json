@@ -47,19 +47,19 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 7 left, 7 right.",
+          "detail": "Required: True. Signs placed: 12 left, 12 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CO Supplement Sec 6C.06(A)",
-          "detail": "Zone length: 2,978 ft. Required: 2. Placed: 2.",
+          "detail": "Zone length: 2,978 ft. Required: 2. Placed: 3.",
           "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
           "pass": true
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 55 → 45 mph (Δ10 mph). 1 advance speed-reduction sign required per CO Supplement §2B.13(A).",
+          "detail": "Work-zone speed reduced 55 \u2192 45 mph (\u039410 mph). 1 advance speed-reduction sign required per CO Supplement \u00a72B.13(A).",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },
@@ -83,12 +83,43 @@
       "checked": false,
       "warnings": []
     },
+    "fines_double": {
+      "applicable": true,
+      "citation": "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes",
+      "envelope": {
+        "downstream_r2_1_label": "SPEED LIMIT 55",
+        "downstream_r2_1_station_ft": -1000.0,
+        "length_ft": 1800.0,
+        "n_assemblies": 1,
+        "r2_10_station_ft": 1300.0,
+        "r2_11_station_ft": -500.0
+      },
+      "operational_notes": [
+        {
+          "action": "Install Fines Double signs no more than 4 hours before the start of the work day. Do not leave signs up overnight when work is not active.",
+          "citation": "S-630-1 Sheet 12, Note 1"
+        },
+        {
+          "action": "Remove or cover Fines Double signs when work concludes; doubled fines apply only when workers or work activity are present in the zone.",
+          "citation": "S-630-1 Sheet 12, Note 2"
+        },
+        {
+          "action": "Relocate the R2-10/R2-11 envelope to follow the actual work area as the project progresses; do not leave Fines Double signs in place beyond the active work zone.",
+          "citation": "S-630-1 Sheet 12, Note 3"
+        },
+        {
+          "action": "Maintain a 250 ft minimum spacing between Fines Double signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and other warning or regulatory signs. Engineer may adjust placement to satisfy this minimum.",
+          "citation": "S-630-1 Sheet 12, Note 4"
+        }
+      ],
+      "source": "CDOT S-630-1 Standard Plan, Sheet 12"
+    },
     "flagger": {
       "applicable": false,
       "count": 0,
       "narrative": "Not applicable for this scenario.",
       "required": 0,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones \u2014 Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
       "table": []
     },
     "geometry_validation": {

@@ -42,3 +42,23 @@ Phase 2 decisions, locked June 5 2026.
 ## Default for Phase 4 findings
 - Pin by default
 - Exceptions require explicit reason (genuinely variable, hard to encode, low-value)
+
+## Fines Double envelope geometry (V1-Wide Item 3, June 6 2026)
+- Conestruct emits **Case 11 generic** geometry uniformly across all speeds
+  when the Fines Double envelope is triggered (work-zone posted speed
+  below nominal posted speed)
+- R2-10 placed at `wz_start + 500 ft`, R2-11 at `wz_end - 500 ft`,
+  downstream R2-1 at `wz_end - 1000 ft`
+- G20-5P/R2-6P assemblies distributed at 2,640 ft intervals between
+  R2-10 and R2-11 (assembly count = `max(1, ceil(envelope_len / 2640))`)
+- Sheet 12 explicitly permits engineer adjustment of these distances;
+  Case 26 (65 mph: 530/530/260/260/530/530) and Case 27 (75 mph: same)
+  fixture distances are diagram-illustrative refinements, not deployment
+  specs
+- **Validation harness should NOT assert against Case 26/27 specific
+  distances** — emit/assert only against the Case 11 generic envelope
+  formula. The fixture diagrams remain reference documents for the
+  sign-code presence, plaque-pair structure, and 2640 ft frequency note
+- Flagger-controlled alternating-flow (TA-10) scenarios are exempt from
+  the envelope per Sheet 12 scope (freeway/expressway only); the audit
+  trail surfaces a carve-out reason rather than silently omitting

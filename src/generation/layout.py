@@ -13,6 +13,8 @@ Authoritative sources:
 
 from __future__ import annotations
 
+import math
+
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -233,6 +235,68 @@ def generate_shoulder_closure_divided(
         )
     )
 
+    # 10. Fines Double envelope (V1-Wide Item 3 — CO Supplement §2B.13 +
+    # S-630-1 Sheet 12).  Emits only when the work-zone posted speed is
+    # reduced below the nominal posted speed.  Envelope spans
+    # wz_start+500 (R2-10) to wz_end-500 (R2-11), with G20-5P/R2-6P
+    # assemblies at 2640 ft intervals.  Downstream R2-1 restores posted
+    # speed 500 ft past R2-11.  Mirrored on both sides per CO Supplement
+    # §6C.04(A).  Case 11 generic 500 ft offsets used uniformly across
+    # speeds; Sheet 12 explicitly permits engineer adjustment.
+    if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
+        r2_10_station = wz_start_station + 500.0
+        r2_11_station = wz_end_station - 500.0
+        downstream_r2_1_station = wz_end_station - 1000.0
+        envelope_len = r2_10_station - r2_11_station
+        n_envelope_assemblies = max(1, math.ceil(envelope_len / 2640.0))
+
+        # R2-10 BEGIN DOUBLE FINES ZONE — mirrored
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_10_station, sign_offset_right, label="R2-10"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, r2_10_station, sign_offset_left, label="R2-10")
+        )
+        # R2-11 END DOUBLE FINES ZONE — mirrored
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_right, label="R2-11"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_left, label="R2-11")
+        )
+        # G20-5P / R2-6P assemblies — distinct placements at identical
+        # station + offset; plan_sheet._deoverlap_signs_pairwise spreads
+        # them vertically at render time.
+        for k in range(n_envelope_assemblies):
+            station = r2_11_station + (k + 0.5) * envelope_len / n_envelope_assemblies
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="R2-6P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="R2-6P")
+            )
+        # Downstream R2-1 — posted-speed restoration past R2-11
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_right, label="R2-1"
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_left, label="R2-1"
+            )
+        )
+
     return placements
 
 
@@ -395,6 +459,41 @@ def generate_shoulder_closure_undivided(
             label="G20-1",
         )
     )
+
+    # 10. Fines Double envelope (V1-Wide Item 3 — CO Supplement §2B.13 +
+    # S-630-1 Sheet 12).  Emits only when the work-zone posted speed is
+    # reduced below the nominal posted speed.  Single-side emission on
+    # undivided roads — no mirror requirement under §6C.04(A).
+    if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
+        r2_10_station = wz_start_station + 500.0
+        r2_11_station = wz_end_station - 500.0
+        downstream_r2_1_station = wz_end_station - 1000.0
+        envelope_len = r2_10_station - r2_11_station
+        n_envelope_assemblies = max(1, math.ceil(envelope_len / 2640.0))
+
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_10_station, sign_offset_right, label="R2-10"
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_right, label="R2-11"
+            )
+        )
+        for k in range(n_envelope_assemblies):
+            station = r2_11_station + (k + 0.5) * envelope_len / n_envelope_assemblies
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="R2-6P")
+            )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_right, label="R2-1"
+            )
+        )
 
     return placements
 
@@ -605,6 +704,58 @@ def generate_lane_closure_divided(
             label="G20-1",
         )
     )
+
+    # 10. Fines Double envelope (V1-Wide Item 3 — CO Supplement §2B.13 +
+    # S-630-1 Sheet 12).  Emits only when the work-zone posted speed is
+    # reduced below the nominal posted speed.  Mirrored on both sides
+    # per CO Supplement §6C.04(A).
+    if params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph:
+        r2_10_station = wz_start_station + 500.0
+        r2_11_station = wz_end_station - 500.0
+        downstream_r2_1_station = wz_end_station - 1000.0
+        envelope_len = r2_10_station - r2_11_station
+        n_envelope_assemblies = max(1, math.ceil(envelope_len / 2640.0))
+
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_10_station, sign_offset_right, label="R2-10"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, r2_10_station, sign_offset_left, label="R2-10")
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_right, label="R2-11"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, r2_11_station, sign_offset_left, label="R2-11")
+        )
+        for k in range(n_envelope_assemblies):
+            station = r2_11_station + (k + 0.5) * envelope_len / n_envelope_assemblies
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="R2-6P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="R2-6P")
+            )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_right, label="R2-1"
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_left, label="R2-1"
+            )
+        )
 
     # ``shoulder_edge_offset`` is computed for completeness (notes/legend
     # may reference the road's overall lateral extent) but is not used

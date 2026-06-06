@@ -38,7 +38,10 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "G20-5P": "CONSTRUCTION ZONE plaque",
     # Regulatory (R-series)
     "R9-9": "SIDEWALK CLOSED — USE OTHER SIDE",
+    "R2-1": "SPEED LIMIT XX",
     "R2-6P": "FINES DOUBLE plaque",
+    "R2-10": "BEGIN DOUBLE FINES ZONE",
+    "R2-11": "END DOUBLE FINES ZONE",
     # Route / school (M-series, S-series)
     "M4-9a": "BIKE DETOUR",
     "S1-1": "SCHOOL",
