@@ -103,6 +103,14 @@ export interface ShoulderScenario {
   duration: Duration;
   workLen: number;
   night: boolean;
+  /**
+   * Reduced speed limit through the work zone, or undefined when no
+   * reduction is in effect. Server rejects values > posted speed;
+   * values equal to posted are normalized to "no reduction" at the
+   * Python bridge. Operator-set only — never auto-applied from OSM
+   * or work type. See V1-Wide Item 1 (CO Supplement §2B.13(A)).
+   */
+  workZoneSpeed?: number;
 }
 
 export type FlaggerRoadType = "rural_undivided" | "urban_arterial";

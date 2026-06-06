@@ -20,6 +20,7 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
+    co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
     pick_device_count,
@@ -291,12 +292,51 @@ def build_audit_trail(
         ),
     }
 
-    speed_reduction_section = {
-        "pass": True,
-        "label": "Speed reduction <= 15 mph per sign installation",
-        "citation": "CO Supplement Sec 2B.13(A)",
-        "detail": "No speed reduction in this scenario.",
-    }
+    # Work-zone speed reduction (CO Supplement §2B.13(A)).
+    #
+    # ``pass`` reflects compliance of the *prescribed* plan with the
+    # standard — not Conestruct's current implementation completeness.
+    # Reductions > 15 mph require N stepped sign installations to be
+    # compliant; the prescribed plan is compliant when those signs are
+    # placed, so ``pass=True``.  Stepped-sign placement isn't yet
+    # implemented in the layout engine; the gap surfaces via the
+    # ``pending_verification`` rollup below (tracked by #36).
+    speed_reduction_section: dict[str, Any]
+    stepped_signs_pending = False
+    wz_speed = params.work_zone_speed_mph
+    if wz_speed is None or wz_speed >= speed:
+        speed_reduction_section = {
+            "pass": True,
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "citation": "CO Supplement Sec 2B.13(A)",
+            "detail": (
+                f"No work-zone speed reduction. Posted speed {speed} mph "
+                f"applies throughout the zone."
+            ),
+        }
+    else:
+        delta = speed - wz_speed
+        if delta <= COLORADO_OVERRIDES.max_speed_reduction_per_sign_mph:
+            detail = (
+                f"Work-zone speed reduced {speed} → {wz_speed} mph "
+                f"(Δ{delta} mph). 1 advance speed-reduction sign required "
+                f"per CO Supplement §2B.13(A)."
+            )
+        else:
+            n_signs = co_speed_reduction_signs(speed, wz_speed)
+            detail = (
+                f"Work-zone speed reduced {speed} → {wz_speed} mph "
+                f"(Δ{delta} mph). Requires {n_signs} stepped sign "
+                f"installations per CO Supplement §2B.13(A) (max 15 mph "
+                f"per sign). Stepped-sign placement pending — see #36."
+            )
+            stepped_signs_pending = True
+        speed_reduction_section = {
+            "pass": True,
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "citation": "CO Supplement Sec 2B.13(A)",
+            "detail": detail,
+        }
 
     n_flaggers = sum(1 for p in placements if p.device_type == DeviceType.FLAGGER_STATION)
     if n_flaggers == 0:
@@ -478,6 +518,10 @@ def build_audit_trail(
         "flagger": flagger_section,
         "corridor_validation": corridor_validation,
         "geometry_validation": geo_section,
+        # Internal signal for ``audit_projection`` — never reaches the
+        # UI; the projection consumes and removes this key before
+        # composing the response body's ``sections``.
+        "_stepped_signs_pending": stepped_signs_pending,
     }
 
 
@@ -505,6 +549,13 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 # projection scrubs the TODO text from user-facing fields and surfaces
 # this URL on the rollup so a reviewer can see what's pending.
 AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
+
+# Tracking issue for stepped speed-reduction sign placement (CO
+# Supplement §2B.13(A), reductions > 15 mph).  Surfaced in the
+# pending_verification rollup when the audit detects a >15 mph
+# reduction — the prescribed plan is compliant, but Conestruct's layout
+# engine doesn't yet emit the stepped W3-5 sign sequence.
+AUDIT_STEPPED_SIGNS_ISSUE: str = "https://github.com/rtmakatura/conestruct/issues/36"
 
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
@@ -622,24 +673,47 @@ def audit_projection(
 
     taper = dict(audit["taper"])
     case = dict(audit["case"])
-    pending = 0
+    items: list[dict[str, str | None]] = []
 
     case_label = case.get("case", "")
-    if "(TODO" in case_label:
+    cdot_case_pending = "(TODO" in case_label
+    if cdot_case_pending:
         case["case"] = "CDOT S-630-1 case reference — verification pending"
-        pending += 1
+        items.append(
+            {
+                "kind": "cdot_case_number",
+                "label": (
+                    "CDOT S-630-1 case # is pending verification against the "
+                    "19-page typical-application set."
+                ),
+                "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+            }
+        )
 
     cdot_ref = taper.get("cdot_reference", "")
     if "(TODO" in cdot_ref:
         taper["cdot_reference"] = "CDOT S-630-1 case reference — verification pending"
-        # Same underlying case-number question as ``case.case`` — count
-        # once so the rollup reads "1 pending reference," not "2."
+        # Same underlying case-number question as ``case.case`` — only
+        # appended to ``items`` once above, so the rollup reads
+        # "1 reference pending," not "2."
 
-    sections = {
-        **audit,
-        "taper": taper,
-        "case": case,
-    }
+    if audit.get("_stepped_signs_pending"):
+        items.append(
+            {
+                "kind": "stepped_speed_reduction_signs",
+                "label": (
+                    "Stepped speed-reduction sign placement (>15 mph "
+                    "reduction) is pending in the layout engine."
+                ),
+                "tracking_issue": AUDIT_STEPPED_SIGNS_ISSUE,
+            }
+        )
+
+    # Strip the internal-only signal before composing ``sections`` so it
+    # never reaches the UI body.
+    sections = {k: v for k, v in audit.items() if k != "_stepped_signs_pending"}
+    sections = {**sections, "taper": taper, "case": case}
+
     speed = audit["spacing"]["speed_mph"]
     summary = {
         "ta": ta,
@@ -653,17 +727,32 @@ def audit_projection(
         "step_count": step_count,
     }
 
+    # ``note`` / ``tracking_issue`` carry items[0] for back-compat with the
+    # existing AuditTrail.tsx renderer.  The new ``items`` array carries
+    # the full structured list; renderer iterates that.  When no items
+    # are pending, both flat fields preserve the pre-Item-1 shape
+    # (empty note, AUDIT_PENDING_VERIFICATION_ISSUE URL).
+    if items:
+        flat_note = items[0]["label"] or ""
+        flat_tracking = items[0]["tracking_issue"]
+    else:
+        flat_note = ""
+        flat_tracking = AUDIT_PENDING_VERIFICATION_ISSUE
+
+    # When ``items`` is empty, omit the key entirely so the
+    # ``pending_verification`` shape stays byte-identical to the
+    # pre-Item-1 baseline for the common no-reduction / no-TODO case.
+    # When items are present, include the array for the richer renderer.
+    pending_verification: dict[str, Any] = {
+        "count": len(items),
+        "note": flat_note,
+        "tracking_issue": flat_tracking,
+    }
+    if items:
+        pending_verification["items"] = items
+
     return {
         "summary": summary,
         "sections": sections,
-        "pending_verification": {
-            "count": pending,
-            "note": (
-                "CDOT S-630-1 case # is pending verification against the "
-                "19-page typical-application set."
-                if pending > 0
-                else ""
-            ),
-            "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
-        },
+        "pending_verification": pending_verification,
     }

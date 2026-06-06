@@ -24,10 +24,21 @@ export interface AuditSummary {
   step_count: number;
 }
 
+export interface PendingItem {
+  kind: string;
+  label: string;
+  tracking_issue: string | null;
+}
+
 export interface PendingVerification {
   count: number;
+  // ``note`` and ``tracking_issue`` mirror ``items[0]`` when ``items`` is
+  // present, preserving the pre-Item-1 shape for callers that only read
+  // the flat fields. ``items`` is omitted when nothing is pending so the
+  // empty-rollup shape stays byte-identical to the pre-Item-1 baseline.
   note: string;
   tracking_issue: string | null;
+  items?: PendingItem[];
 }
 
 export interface AuditResponse {

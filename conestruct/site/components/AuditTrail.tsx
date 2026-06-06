@@ -74,7 +74,7 @@ interface Props {
   generated: boolean;
 }
 
-interface ItemSpec {
+export interface ItemSpec {
   title: string;
   result: string;
   cite: string;
@@ -1039,16 +1039,42 @@ function geometryValidationItem(
   };
 }
 
-function pendingVerificationItem(
+export function pendingVerificationItem(
   pending: AuditResponse["pending_verification"],
 ): ItemSpec | null {
   if (pending.count === 0) return null;
+  // When ``items`` is present (Item 1+), iterate each pending entry with
+  // its own label + clickable tracking link. When absent (no-pending
+  // case, or a body produced before items[] shipped), fall back to the
+  // flat note + tracking_issue fields.
+  const items = pending.items;
+  const useItems = items && items.length > 0;
   return {
     title: "Verification status",
     result: `${pending.count} reference${pending.count === 1 ? "" : "s"} pending`,
     cite: "PENDING",
     dim: true,
-    body: (
+    body: useItems ? (
+      <ul className="list-none p-0 m-0 space-y-2">
+        {items!.map((item, i) => (
+          <li key={`pending-${i}`}>
+            <p>{item.label}</p>
+            {item.tracking_issue && (
+              <p>
+                <a
+                  href={item.tracking_issue}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+                >
+                  ↗ Tracking issue ({item.kind.replace(/_/g, " ")})
+                </a>
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    ) : (
       <>
         <p>{pending.note}</p>
         {pending.tracking_issue && (

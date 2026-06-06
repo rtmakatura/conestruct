@@ -3,6 +3,12 @@
 // detected road type isn't in the scenario kind's allowed set we skip
 // roadType but still apply lane width — operator can either override or
 // switch scenario kinds.
+//
+// Scope policy: this module only applies fields with a defensible OSM-
+// derived ground truth (roadType, divided, laneWidth, speed, lanes).
+// ``workZoneSpeed`` on ShoulderScenario is intentionally NOT auto-applied
+// — it's an operator decision based on work conditions, not a detectable
+// road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
 import type { RoadClassification } from "../road-detection/types";
 import type {

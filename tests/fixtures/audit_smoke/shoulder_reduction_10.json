@@ -1,0 +1,14 @@
+{
+  "kind": "shoulder",
+  "meta": {"project": "T", "address": "", "lat": 0.0, "lng": 0.0},
+  "roadType": "rural_divided",
+  "speed": 55,
+  "lanes": 2,
+  "laneWidth": 12.0,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 800.0,
+  "night": false,
+  "workZoneSpeed": 45
+}

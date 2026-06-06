@@ -16,9 +16,9 @@ generator callable that the rules engine consumes.
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.generation.layout import (
     generate_flagger_alternating_2lane,
@@ -109,6 +109,19 @@ class ShoulderScenario(BaseModel):
     duration: Duration
     workLen: float = Field(gt=0.0)
     night: bool
+    # Optional work-zone speed limit when reduced below ``speed``.  None
+    # / omitted means no reduction.  Equal to ``speed`` is accepted and
+    # normalized to None at the bridge (``scenario_to_call``).  Strictly
+    # greater than ``speed`` is rejected below.
+    workZoneSpeed: int | None = Field(default=None, ge=20, le=80)
+
+    @model_validator(mode="after")
+    def _check_work_zone_speed(self) -> Self:
+        if self.workZoneSpeed is not None and self.workZoneSpeed > self.speed:
+            raise ValueError(
+                f"workZoneSpeed ({self.workZoneSpeed}) must be <= posted speed ({self.speed})."
+            )
+        return self
 
 
 class FlaggerLaneClosureScenario(BaseModel):
@@ -265,6 +278,13 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     meta_kw = _meta_params(scenario.meta)
 
     if isinstance(scenario, ShoulderScenario):
+        # Normalize workZoneSpeed == speed (or unset) to None — both
+        # mean "no reduction in effect" downstream.
+        wz_speed = (
+            scenario.workZoneSpeed
+            if scenario.workZoneSpeed is not None and scenario.workZoneSpeed < scenario.speed
+            else None
+        )
         params = ScenarioParams(
             speed_mph=scenario.speed,
             num_lanes=scenario.lanes,
@@ -276,6 +296,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             is_night=scenario.night,
             is_divided=scenario.divided,
             jurisdiction="CDOT",
+            work_zone_speed_mph=wz_speed,
             **meta_kw,
         )
         generator = (

@@ -125,6 +125,13 @@ class ScenarioParams:
     project_name: str = "Untitled Project"
     location_description: str = ""
     bearing_deg: float | None = None
+    # Work-zone speed limit when reduced below ``speed_mph``.  None when
+    # no reduction is in effect.  Taper, buffer, and advance-warning math
+    # stay keyed to ``speed_mph`` — drivers enter the zone at posted
+    # speed before reading the reduction sign.  This field drives only
+    # the CO Supplement §2B.13(A) audit check today; stepped-sign
+    # placement for >15 mph reductions is tracked separately (see #36).
+    work_zone_speed_mph: int | None = None
 
 
 @dataclass(frozen=True)

@@ -64,7 +64,23 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             max="75"
             step="5"
             value={scenario.speed}
-            onChange={(e) => set("speed", +e.target.value)}
+            onChange={(e) => {
+              const newSpeed = +e.target.value;
+              // Clamp work-zone speed if it would exceed the new posted.
+              // Equal-to-posted means "no reduction" — drop to undefined.
+              if (
+                scenario.workZoneSpeed !== undefined &&
+                scenario.workZoneSpeed >= newSpeed
+              ) {
+                setScenario({
+                  ...scenario,
+                  speed: newSpeed,
+                  workZoneSpeed: undefined,
+                });
+              } else {
+                set("speed", newSpeed);
+              }
+            }}
             className="range-orange w-full my-1.5"
           />
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
@@ -148,6 +164,41 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
           desc="+ retroreflective"
           onToggle={() => set("night", !scenario.night)}
         />
+
+        <CheckRow
+          on={scenario.workZoneSpeed !== undefined}
+          label="Apply work-zone speed reduction"
+          desc="Lower limit through zone"
+          onToggle={() =>
+            scenario.workZoneSpeed === undefined
+              ? set("workZoneSpeed", Math.max(25, scenario.speed - 10))
+              : set("workZoneSpeed", undefined)
+          }
+        />
+
+        {scenario.workZoneSpeed !== undefined && (
+          <Field>
+            <LabelRow value={`${scenario.workZoneSpeed} mph`}>
+              Work-zone speed limit
+            </LabelRow>
+            <input
+              type="number"
+              className="field-input"
+              min={20}
+              max={scenario.speed}
+              step={5}
+              value={scenario.workZoneSpeed}
+              onChange={(e) =>
+                set("workZoneSpeed", +e.target.value || 0)
+              }
+            />
+            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+              {scenario.speed - scenario.workZoneSpeed > 15
+                ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
+                : `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): 1 advance sign`}
+            </div>
+          </Field>
+        )}
       </FieldGroup>
     </>
   );

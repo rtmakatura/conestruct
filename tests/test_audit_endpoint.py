@@ -295,7 +295,7 @@ def test_audit_projection_flagger_mutcd_ta10_no_pending() -> None:
     raw = audit_module.build_audit_trail([], params)
     assert raw["case"]["case"] == "MUTCD TA-10: Flagger one-lane two-way"
     assert raw["taper"]["cdot_reference"] == (
-        "MUTCD 11th Ed. Part 6 TA-10 " "(flagger-controlled one-lane two-way operation)"
+        "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)"
     )
 
     projection = audit_module.audit_projection(raw, "flagger_lane_closure")
@@ -569,3 +569,159 @@ def test_step_count_mobile_op_multilane_with_second_tma() -> None:
       `const steps = s.secondTMA ? 8 : 6;`
     """
     assert audit_module._compute_step_count(_mobile_multilane(secondTMA=True)) == 8
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide Item 1 — work-zone speed reduction
+#
+# Covers the four CO Supplement §2B.13(A) cases:
+#   1. No reduction (workZoneSpeed omitted)
+#   2. Reduction ≤ 15 mph (one advance sign)
+#   3. Reduction > 15 mph (stepped signs; pending_verification bumps)
+#   4. workZoneSpeed > posted (Pydantic 422)
+# Plus the wz == posted normalization (bridge collapses to None).
+# Plus a canonical-baseline snapshot match for the no-reduction case.
+# ---------------------------------------------------------------------------
+
+
+def _speed_reduction_check(body: dict) -> dict:
+    checks = body["sections"]["colorado"]["checks"]
+    return next(c for c in checks if "Speed reduction" in c["label"])
+
+
+def test_audit_no_reduction_speed_section_pass(client: TestClient) -> None:
+    """workZoneSpeed omitted → speed_reduction check passes with the
+    no-reduction detail text, posted speed echoed back."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200
+    sr = _speed_reduction_check(res.json())
+    assert sr["pass"] is True
+    assert sr["detail"] == (
+        "No work-zone speed reduction. Posted speed 55 mph applies throughout the zone."
+    )
+
+
+def test_audit_small_reduction_one_sign(client: TestClient) -> None:
+    """55 → 45 mph (Δ10) → pass=True, "1 advance speed-reduction sign"."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 45
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    sr = _speed_reduction_check(res.json())
+    assert sr["pass"] is True
+    assert "55 → 45 mph" in sr["detail"]
+    assert "Δ10 mph" in sr["detail"]
+    assert "1 advance speed-reduction sign" in sr["detail"]
+    # Small reduction does NOT trigger the stepped-signs pending entry.
+    pending = res.json()["pending_verification"]
+    items = pending.get("items", [])
+    kinds = [item["kind"] for item in items]
+    assert "stepped_speed_reduction_signs" not in kinds
+
+
+def test_audit_large_reduction_pending_bumps_with_36(client: TestClient) -> None:
+    """55 → 30 mph (Δ25) → 2 stepped signs required, pending_verification
+    gains a stepped_speed_reduction_signs item linking #36."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 30
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    body = res.json()
+    sr = _speed_reduction_check(body)
+    assert sr["pass"] is True
+    assert "55 → 30 mph" in sr["detail"]
+    assert "Δ25 mph" in sr["detail"]
+    assert "2 stepped sign installations" in sr["detail"]
+    assert "see #36" in sr["detail"]
+
+    pending = body["pending_verification"]
+    assert pending["count"] >= 1
+    items = pending["items"]
+    kinds = [item["kind"] for item in items]
+    assert "stepped_speed_reduction_signs" in kinds
+    stepped = next(item for item in items if item["kind"] == "stepped_speed_reduction_signs")
+    assert stepped["tracking_issue"] == audit_module.AUDIT_STEPPED_SIGNS_ISSUE
+
+
+def test_audit_wz_above_posted_rejected(client: TestClient) -> None:
+    """workZoneSpeed > posted → Pydantic 422 from the schema validator."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 60  # > posted 55
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 422
+    assert "workZoneSpeed" in res.text or "work_zone" in res.text.lower()
+
+
+def test_audit_wz_equal_to_posted_normalized(client: TestClient) -> None:
+    """workZoneSpeed == posted → bridge normalizes to None, audit reads
+    "No work-zone speed reduction." Same body as the no-reduction case."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 55  # == posted
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    sr = _speed_reduction_check(res.json())
+    assert sr["detail"].startswith("No work-zone speed reduction.")
+
+
+def test_audit_no_reduction_matches_baseline(client: TestClient) -> None:
+    """The no-reduction shoulder audit body must match the canonical
+    post-Item-1 baseline snapshot byte-for-byte. When future PRs change
+    audit shape, this snapshot is regenerated deliberately and the diff
+    documented in the PR description."""
+    import json
+    from pathlib import Path
+
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200
+    expected_path = Path("tests/snapshots/audit_shoulder_no_reduction.json")
+    expected = json.loads(expected_path.read_text(encoding="utf-8"))
+    assert res.json() == expected
+
+
+# --- Schema validator unit tests (bypass the API; cover edge cases) --------
+
+
+def test_shoulder_scenario_accepts_wz_below_posted() -> None:
+    """workZoneSpeed < posted is accepted by the Pydantic validator."""
+    s = _shoulder(workZoneSpeed=45)
+    assert s.workZoneSpeed == 45
+
+
+def test_shoulder_scenario_accepts_wz_equal_to_posted() -> None:
+    """workZoneSpeed == posted is accepted; bridge normalizes downstream."""
+    s = _shoulder(workZoneSpeed=55)
+    assert s.workZoneSpeed == 55
+
+
+def test_shoulder_scenario_rejects_wz_above_posted() -> None:
+    """workZoneSpeed > posted is rejected by the model validator."""
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError) as exc_info:
+        _shoulder(workZoneSpeed=60)
+    assert "workZoneSpeed" in str(exc_info.value)
+
+
+def test_bridge_normalizes_wz_equal_to_posted_to_none() -> None:
+    """scenario_to_call collapses workZoneSpeed == posted to None on
+    ScenarioParams — equal-to-posted is semantically "no reduction"."""
+    from src.api.schemas import scenario_to_call
+
+    params, _gen, _kw = scenario_to_call(_shoulder(workZoneSpeed=55))
+    assert params.work_zone_speed_mph is None
+
+
+def test_bridge_threads_wz_below_posted() -> None:
+    """scenario_to_call threads workZoneSpeed < posted through verbatim."""
+    from src.api.schemas import scenario_to_call
+
+    params, _gen, _kw = scenario_to_call(_shoulder(workZoneSpeed=45))
+    assert params.work_zone_speed_mph == 45
+
+
+def test_bridge_passes_none_when_wz_omitted() -> None:
+    """Default ShoulderScenario (no workZoneSpeed) yields None on params."""
+    from src.api.schemas import scenario_to_call
+
+    params, _gen, _kw = scenario_to_call(_shoulder())
+    assert params.work_zone_speed_mph is None
