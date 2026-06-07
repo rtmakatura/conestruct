@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
 
-import { finesDoubleItem, pendingVerificationItem } from "./AuditTrail";
+import {
+  finesDoubleItem,
+  pendingVerificationItem,
+  referenceItem,
+} from "./AuditTrail";
 import type {
   AuditResponse,
   PendingItem,
@@ -249,5 +253,128 @@ describe("finesDoubleItem renderer", () => {
 
   it("undefined section returns null (no audit card)", () => {
     expect(finesDoubleItem(undefined)).toBeNull();
+  });
+});
+
+// V1-Wide S1 — referenceItem surfaces the backend case_id and the
+// optional Sheet 14 trigger_condition. Before S1, the shoulder builder
+// hard-coded "Case 1A"/"Case 1B" and ignored summary.case_id entirely
+// — meaning the UI said "Case 1A" while the audit body said "Case 11".
+// These tests pin the post-S1 behavior: the renderer reads from the
+// backend summary and surfaces trigger_condition verbatim with quoted
+// source attribution when present.
+
+describe("referenceItem renderer (V1-Wide S1)", () => {
+  function readyAudit(
+    overrides: Partial<AuditResponse["summary"]>,
+  ): AuditResponse {
+    return {
+      summary: {
+        ta: "TA-2",
+        cdot_sheet: "S-630-1",
+        case_id: "Case 11: Shoulder closure on divided highway",
+        taper_length_ft: 183,
+        taper_label: "L/3 (shoulder taper)",
+        buffer_space_ft: 495,
+        device_spacing_taper_ft: 55,
+        device_spacing_tangent_ft: 110,
+        step_count: 8,
+        ...overrides,
+      },
+      sections: {
+        taper: {},
+        buffer: {},
+        spacing: {},
+        advance: {},
+        colorado: {},
+        case: {
+          url: "https://www.codot.gov/...PDF",
+        },
+        flagger: {},
+        corridor_validation: { checked: false, warnings: [] },
+        geometry_validation: { violations: [], all_pass: true },
+      },
+      pending_verification: { count: 0, note: "", tracking_issue: null },
+    };
+  }
+
+  it("no_reduction routing → Case 11 label, no Trigger caption", () => {
+    const data = readyAudit({
+      case_routing: "shoulder_no_reduction",
+      case_id: "Case 11: Shoulder closure on divided highway",
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      data.summary.case_id,
+      data.summary.trigger_condition,
+    );
+    expect(spec.result).toBe("Case 11: Shoulder closure on divided highway");
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).not.toContain("Trigger:");
+  });
+
+  it("65 mph reduction → Case 26 label + verbatim Trigger caption in quotes", () => {
+    const data = readyAudit({
+      case_routing: "shoulder_reduced_speed",
+      case_id: "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+      trigger_condition:
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      data.summary.case_id,
+      data.summary.trigger_condition,
+    );
+    expect(spec.result).toBe(
+      "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).toContain("Trigger:");
+    // Quoted source attribution — verbatim Sheet 14 text inside &ldquo;&rdquo;.
+    expect(html).toContain(
+      "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+    );
+  });
+
+  it("75 mph reduction → Case 27 label + 10 ft Trigger caption", () => {
+    const data = readyAudit({
+      case_routing: "shoulder_reduced_speed",
+      case_id: "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed",
+      trigger_condition:
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY",
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      data.summary.case_id,
+      data.summary.trigger_condition,
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).toContain("WITHIN 10 FT OF TRAVEL WAY");
+  });
+
+  it("55 mph reduction (Case 11 variant) → routing-aware label, no Trigger (no fixture)", () => {
+    const data = readyAudit({
+      case_routing: "shoulder_reduced_speed",
+      case_id:
+        "Case 11 (reduced work-zone speed): Shoulder closure on divided highway",
+      // trigger_condition deliberately absent — Sheet 14 has no fixture
+      // text at 55 mph; verbatim-or-nothing.
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      data.summary.case_id,
+      data.summary.trigger_condition,
+    );
+    expect(spec.result).toContain("Case 11 (reduced work-zone speed)");
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).not.toContain("Trigger:");
   });
 });

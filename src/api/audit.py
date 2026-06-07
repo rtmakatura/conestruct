@@ -81,6 +81,12 @@ def build_audit_trail(
     is_flagger = is_lane and not params.is_divided
     offset_ft = params.lane_width_ft if is_lane else shoulder_width_ft
     offset_label = "lane width" if is_lane else "shoulder width"
+    # Single source of truth for "work-zone speed is reduced from the
+    # posted speed". Drives both the S1 case routing
+    # (shoulder_no_reduction vs shoulder_reduced_speed) and Item 3's
+    # Fines Double envelope gate — same predicate, deduplicated.
+    wz_speed = params.work_zone_speed_mph
+    is_reduced = wz_speed is not None and wz_speed < speed
 
     # ------------------------------------------------------------------
     # 1. Taper length
@@ -119,7 +125,27 @@ def build_audit_trail(
         source_text = (
             "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B)."
         )
-        cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
+        # Routing-aware taper cdot_reference (V1-Wide S1). Reduced
+        # work-zone speed at 65/75 mph maps to the Sheet 14 Case 26/27
+        # parametric typicals; other speeds with reduction stay on
+        # Case 11 with a reduction marker; no reduction is plain Case 11.
+        if is_reduced and speed == 65:
+            cdot_reference = (
+                "CDOT S-630-1 Case 26 (shoulder closure on freeway/expressway, "
+                "65 mph posted with reduced work-zone speed; Sheet 14)"
+            )
+        elif is_reduced and speed == 75:
+            cdot_reference = (
+                "CDOT S-630-1 Case 27 (shoulder closure on freeway/expressway, "
+                "75 mph posted with reduced work-zone speed; Sheet 14)"
+            )
+        elif is_reduced:
+            cdot_reference = (
+                "CDOT S-630-1 Case 11 (right-shoulder closure on divided "
+                "highway, reduced work-zone speed)"
+            )
+        else:
+            cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
 
     taper_section = {
         "speed_mph": speed,
@@ -162,7 +188,11 @@ def build_audit_trail(
 
     if is_divergent:
         mutcd_value = buffer_space(speed, jurisdiction="federal")
-        case_label = "Case 26 at 65 mph" if speed == 65 else "Case 27 at 75 mph"
+        # Local variable scoped to the buffer-section CDOT supplement
+        # row label; named `_supplement_row_label` to avoid shadowing
+        # the outer `case_label` variable used by the S1 case routing
+        # below (audit.py:~555).
+        _supplement_row_label = "Case 26 at 65 mph" if speed == 65 else "Case 27 at 75 mph"
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
@@ -173,7 +203,7 @@ def build_audit_trail(
             ),
             "buffer_ft": buf,
             "source": (
-                f"CDOT S-630-1 Standard Plan, Sheet 14 ({case_label}). "
+                f"CDOT S-630-1 Standard Plan, Sheet 14 ({_supplement_row_label}). "
                 f"MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (federal baseline)."
             ),
             "jurisdiction": params.jurisdiction,
@@ -353,8 +383,7 @@ def build_audit_trail(
     # ``pending_verification`` rollup below (tracked by #36).
     speed_reduction_section: dict[str, Any]
     stepped_signs_pending = False
-    wz_speed = params.work_zone_speed_mph
-    if wz_speed is None or wz_speed >= speed:
+    if not is_reduced:
         speed_reduction_section = {
             "pass": True,
             "label": "Speed reduction <= 15 mph per sign installation",
@@ -453,8 +482,9 @@ def build_audit_trail(
     #   C. No reduction → section entirely absent from the audit dict.
     #      Preserves byte-identity of pre-Item-3 no-reduction baselines.
     fines_double_section: dict[str, Any] | None
-    fines_double_gate = wz_speed is not None and wz_speed < speed
-    if not fines_double_gate:
+    # Same gate as the S1 case routing — single source of truth via the
+    # hoisted `is_reduced` predicate (audit.py top of build_audit_trail).
+    if not is_reduced:
         fines_double_section = None
     elif _is_flagger_scenario(params):
         fines_double_section = {
@@ -532,7 +562,15 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 7. S-630-1 case reference
     # ------------------------------------------------------------------
+    # V1-Wide S1 two-routing model (shoulder only): the shoulder branch
+    # splits on the hoisted `is_reduced` predicate so reduced-speed
+    # scenarios surface their Sheet 14 Case 26/27 routing instead of
+    # silently masquerading as Case 11. Flagger and lane-closure
+    # branches are unchanged — they have their own case structure.
+    case_routing: str | None
+    trigger_condition: str | None = None
     if is_flagger:
+        case_routing = None
         case_label = "MUTCD TA-10: Flagger one-lane two-way"
         case_narrative = (
             "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal "
@@ -542,18 +580,49 @@ def build_audit_trail(
             "at a curve) is the closest CDOT analog but is curve-specialized."
         )
     elif is_lane:
+        case_routing = None
         case_label = "Case 10: One Lane Closed - 4-Lane Divided Highway"
         case_narrative = (
             "This scenario matches CDOT Standard Plan S-630-1, Case 10: "
             "one lane closed on a 4-lane divided highway (Sheet 7)."
         )
+    elif is_reduced:
+        case_routing = "shoulder_reduced_speed"
+        if speed == 65:
+            case_label = "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed"
+            # Verbatim from Sheet 14 Case 26 diagram trigger callout
+            # (tests/fixtures/cdot_s630_typicals/case_26.json:trigger_condition).
+            trigger_condition = (
+                "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
+                "ARE WITHIN 8 FT OF TRAVEL WAY"
+            )
+        elif speed == 75:
+            case_label = "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed"
+            # Verbatim from Sheet 14 Case 27 diagram trigger callout
+            # (tests/fixtures/cdot_s630_typicals/case_27.json:trigger_condition).
+            trigger_condition = (
+                "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
+                "ARE WITHIN 10 FT OF TRAVEL WAY"
+            )
+        else:
+            # Sheet 14 only tabulates trigger text at 65/75 mph. Verbatim
+            # or nothing: stay silent rather than fabricate a paraphrase.
+            case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
+        case_narrative = (
+            f"This scenario matches CDOT Standard Plan S-630-1 shoulder closure "
+            f"typical applications with a reduced work-zone posted speed "
+            f"(Cases 26/27, Sheet 14). Posted speed reduced from {speed} → "
+            f"{wz_speed} mph; Fines Double envelope applies per CO Supplement "
+            f"§2B.13 and S-630-1 Sheet 12."
+        )
     else:
+        case_routing = "shoulder_no_reduction"
         case_label = "Case 11: Shoulder closure on divided highway"
         case_narrative = (
             "This scenario matches CDOT Standard Plan S-630-1, Case 11: "
             "shoulder closure on a divided highway."
         )
-    case_section = {
+    case_section: dict[str, Any] = {
         "case": case_label,
         "url": (
             "https://www.codot.gov/safety/traffic-safety/assets/"
@@ -565,6 +634,13 @@ def build_audit_trail(
             f"reference case with spacing computed for {speed} mph."
         ),
     }
+    # Routing + trigger_condition surface only when populated (shoulder
+    # routing only). Absent on flagger/lane to preserve byte-identity of
+    # those snapshots.
+    if case_routing is not None:
+        case_section["routing"] = case_routing
+    if trigger_condition is not None:
+        case_section["trigger_condition"] = trigger_condition
 
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
@@ -862,7 +938,7 @@ def audit_projection(
     sections = {**sections, "taper": taper, "case": case}
 
     speed = audit["spacing"]["speed_mph"]
-    summary = {
+    summary: dict[str, Any] = {
         "ta": ta,
         "cdot_sheet": cdot_sheet,
         "case_id": case["case"],
@@ -873,6 +949,13 @@ def audit_projection(
         "device_spacing_tangent_ft": device_spacing_on_tangent(speed),
         "step_count": step_count,
     }
+    # V1-Wide S1: surface the routing label and Sheet 14 trigger text
+    # (when applicable) as flat siblings of `case_id`. Absent on
+    # flagger/lane scenarios where `case.routing` is never set.
+    if "routing" in case:
+        summary["case_routing"] = case["routing"]
+    if "trigger_condition" in case:
+        summary["trigger_condition"] = case["trigger_condition"]
 
     # ``note`` / ``tracking_issue`` carry items[0] for back-compat with the
     # existing AuditTrail.tsx renderer.  The new ``items`` array carries

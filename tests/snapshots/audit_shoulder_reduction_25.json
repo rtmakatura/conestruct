@@ -44,9 +44,10 @@
       "speed_mph": 55
     },
     "case": {
-      "case": "Case 11: Shoulder closure on divided highway",
-      "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
+      "case": "Case 11 (reduced work-zone speed): Shoulder closure on divided highway",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 55 \u2192 30 mph; Fines Double envelope applies per CO Supplement \u00a72B.13 and S-630-1 Sheet 12.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
+      "routing": "shoulder_reduced_speed",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
@@ -158,7 +159,7 @@
       "L_required_label": "L/3 (shoulder taper)",
       "L_third_calc_text": "L/3 = 550 / 3 = 183.3 ft",
       "L_third_ft": 183.33333333333334,
-      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway, reduced work-zone speed)",
       "closure_type": "shoulder",
       "formula_choice": "Speed 55 mph >= 40 mph threshold -> using L = W x S",
       "formula_latex": "L = W \\times S",
@@ -171,7 +172,8 @@
   },
   "summary": {
     "buffer_space_ft": 495.0,
-    "case_id": "Case 11: Shoulder closure on divided highway",
+    "case_id": "Case 11 (reduced work-zone speed): Shoulder closure on divided highway",
+    "case_routing": "shoulder_reduced_speed",
     "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 110.0,
     "device_spacing_taper_ft": 55.0,

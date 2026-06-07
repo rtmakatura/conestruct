@@ -224,19 +224,25 @@ function buildScenarioItems(
 }
 
 function buildShoulderItems(
-  scenario: ShoulderScenario,
+  _scenario: ShoulderScenario,
   audit: AuditState,
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
-  const caseId = scenario.divided ? "Case 1A" : "Case 1B";
+  // V1-Wide S1: read the case label and (when present) Sheet 14
+  // trigger condition from the backend audit summary instead of the
+  // historical TS-side Case 1A/1B placeholder, which silently masked
+  // the Case 11 vs Case 26/27 routing distinction.
+  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const caseId = data?.summary.case_id ?? "—";
+  const triggerCondition = data?.summary.trigger_condition;
   return [
     taperItem(audit, generated, r),
     bufferItem(audit, generated, r),
     spacingItem(audit, generated, r),
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-1"),
-    referenceItem(audit, "TA-2", "S-630-1", r(caseId)),
+    referenceItem(audit, "TA-2", "S-630-1", r(caseId), triggerCondition),
   ];
 }
 
@@ -875,11 +881,12 @@ function coloradoItem(
   };
 }
 
-function referenceItem(
+export function referenceItem(
   audit: AuditState,
   ta: string,
   cdotSheet: string,
   caseId: string,
+  triggerCondition?: string,
 ): ItemSpec {
   const data = audit.state === "ready" ? audit.data : audit.lastReady;
   const url = (data?.sections.case as { url?: string } | undefined)?.url;
@@ -894,6 +901,11 @@ function referenceItem(
           and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
           Colorado supplement to MUTCD Part 6.
         </p>
+        {triggerCondition && (
+          <p className="font-mono text-[12px] uppercase tracking-[0.04em] text-[color:var(--ink-on-dark-faint)]">
+            Trigger: &ldquo;{triggerCondition}&rdquo;
+          </p>
+        )}
         {url ? (
           <p>
             <a

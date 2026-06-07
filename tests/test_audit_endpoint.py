@@ -1250,3 +1250,215 @@ def test_audit_fines_double_65mph_envelope_matches_baseline(client: TestClient) 
         )
     )
     assert res.json() == expected
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide S1 — two-routing case model for shoulder closures.
+#
+# Routing predicate (`is_reduced = wz_speed is not None and wz_speed < speed`)
+# is the single source of truth shared with Item 3's Fines Double gate.
+# Shoulder branches into `shoulder_no_reduction` (Case 11) or
+# `shoulder_reduced_speed` (Case 26 at 65 mph, Case 27 at 75 mph, or
+# Case 11-reduced for other speeds). Sheet 14 trigger callouts surface
+# verbatim at 65/75 mph; absent at other speeds (no fixture text).
+# Flagger and lane-closure branches are unchanged.
+# ---------------------------------------------------------------------------
+
+
+def _summary(body: dict) -> dict:
+    return body["summary"]
+
+
+def _case_section(body: dict) -> dict:
+    return body["sections"]["case"]
+
+
+def test_case_routing_no_reduction_emits_case_11(client: TestClient) -> None:
+    """Default 55 mph shoulder, no work-zone speed → shoulder_no_reduction
+    routing, Case 11 label, no trigger_condition."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200
+    summary = _summary(res.json())
+    assert summary["case_routing"] == "shoulder_no_reduction"
+    assert summary["case_id"] == "Case 11: Shoulder closure on divided highway"
+    assert "trigger_condition" not in summary
+
+
+def test_case_routing_reduction_at_55_emits_case_11_variant(client: TestClient) -> None:
+    """55 → 45 mph reduction → shoulder_reduced_speed routing, Case 11
+    (reduced work-zone speed) label, no trigger_condition (Sheet 14
+    doesn't tabulate trigger text at 55 mph)."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 45
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    summary = _summary(res.json())
+    assert summary["case_routing"] == "shoulder_reduced_speed"
+    assert summary["case_id"] == (
+        "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
+    )
+    assert "trigger_condition" not in summary
+
+
+def test_case_routing_reduction_at_65_emits_case_26(client: TestClient) -> None:
+    """65 → 60 mph reduction → shoulder_reduced_speed routing, Case 26
+    label, verbatim 8 ft trigger_condition from Sheet 14."""
+    s = _shoulder_scenario()
+    s["speed"] = 65
+    s["workLen"] = 1000.0
+    s["workZoneSpeed"] = 60
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    summary = _summary(res.json())
+    assert summary["case_routing"] == "shoulder_reduced_speed"
+    assert summary["case_id"] == (
+        "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed"
+    )
+    assert summary["trigger_condition"] == (
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY"
+    )
+
+
+def test_case_routing_reduction_at_75_emits_case_27(client: TestClient) -> None:
+    """75 → 65 mph reduction → shoulder_reduced_speed routing, Case 27
+    label, verbatim 10 ft trigger_condition from Sheet 14."""
+    s = _shoulder_scenario()
+    s["speed"] = 75
+    s["workLen"] = 1500.0
+    s["workZoneSpeed"] = 65
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    summary = _summary(res.json())
+    assert summary["case_routing"] == "shoulder_reduced_speed"
+    assert summary["case_id"] == (
+        "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed"
+    )
+    assert summary["trigger_condition"] == (
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY"
+    )
+
+
+def test_case_routing_section_carries_routing_and_trigger(client: TestClient) -> None:
+    """The new fields are also surfaced on the case section (not just
+    summary) so audit-section consumers can read them without round-
+    tripping through the summary projection."""
+    s = _shoulder_scenario()
+    s["speed"] = 65
+    s["workLen"] = 1000.0
+    s["workZoneSpeed"] = 60
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    case = _case_section(res.json())
+    assert case["routing"] == "shoulder_reduced_speed"
+    assert case["trigger_condition"].startswith("WHEN HAZARDS")
+
+
+def test_case_routing_gate_parity_with_fines_double_at_boundary() -> None:
+    """The S1 routing gate and Item 3 Fines Double gate must agree at
+    the boundary (wz_speed == speed → not reduced → no fines_double,
+    no routing flip)."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=55,  # equal to posted — not reduced
+    )
+    audit = build_audit_trail([], params)
+    assert audit["case"]["routing"] == "shoulder_no_reduction"
+    assert "fines_double" not in audit
+
+
+def test_case_routing_gate_parity_with_fines_double_one_step_in() -> None:
+    """One step into reduction (wz_speed = speed - 1) → both the
+    routing flip and Fines Double envelope fire together."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=54,
+    )
+    audit = build_audit_trail([], params)
+    assert audit["case"]["routing"] == "shoulder_reduced_speed"
+    assert audit["fines_double"]["applicable"] is True
+
+
+def test_case_routing_flagger_unchanged_no_routing_field() -> None:
+    """Flagger scenarios (with or without reduction) do not participate
+    in the S1 two-routing model; case.routing is absent so flagger
+    snapshots stay byte-identical."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    audit = build_audit_trail([], params)
+    assert audit["case"]["case"] == "MUTCD TA-10: Flagger one-lane two-way"
+    assert "routing" not in audit["case"]
+    assert "trigger_condition" not in audit["case"]
+
+
+def test_case_routing_lane_closure_unchanged_no_routing_field() -> None:
+    """Lane closure on divided highway → Case 10 unchanged, no routing
+    field. S1 is scoped to shoulder."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    audit = build_audit_trail([], params)
+    assert audit["case"]["case"] == "Case 10: One Lane Closed - 4-Lane Divided Highway"
+    assert "routing" not in audit["case"]
+    assert "trigger_condition" not in audit["case"]
+
+
+def test_case_routing_cdot_reference_aligns_with_routing(client: TestClient) -> None:
+    """taper.cdot_reference must agree with case_routing — the audit
+    is honest about which CDOT case is being referenced."""
+    s = _shoulder_scenario()
+    s["speed"] = 65
+    s["workLen"] = 1000.0
+    s["workZoneSpeed"] = 60
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    taper = res.json()["sections"]["taper"]
+    assert "Case 26" in taper["cdot_reference"]
+    assert "Sheet 14" in taper["cdot_reference"]

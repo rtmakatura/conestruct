@@ -40,6 +40,7 @@
       "case": "Case 11: Shoulder closure on divided highway",
       "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
+      "routing": "shoulder_no_reduction",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
@@ -134,6 +135,7 @@
   "summary": {
     "buffer_space_ft": 495.0,
     "case_id": "Case 11: Shoulder closure on divided highway",
+    "case_routing": "shoulder_no_reduction",
     "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 110.0,
     "device_spacing_taper_ft": 55.0,

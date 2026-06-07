@@ -22,6 +22,17 @@ export interface AuditSummary {
   device_spacing_taper_ft: number;
   device_spacing_tangent_ft: number;
   step_count: number;
+  // V1-Wide S1: two-routing case model (shoulder only).
+  //   "shoulder_no_reduction" — Case 11 (posted speed unchanged).
+  //   "shoulder_reduced_speed" — Cases 26/27 parametric (Sheet 14).
+  // Absent on flagger and lane-closure scenarios — they have their
+  // own case structure outside the S1 two-routing model.
+  case_routing?: string;
+  // Verbatim Sheet 14 trigger callout, only when the routing maps to
+  // Case 26 (65 mph) or Case 27 (75 mph). Absent for Case 11 reductions
+  // because Sheet 14 doesn't tabulate trigger text at other speeds —
+  // verbatim or nothing.
+  trigger_condition?: string;
 }
 
 export interface PendingItem {
