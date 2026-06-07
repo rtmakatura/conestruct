@@ -282,6 +282,24 @@ def build_narrative_context(
         and params.work_zone_speed_mph < params.speed_mph
         and not _is_flagger_scenario(params)
     )
+
+    # G6: Sheet 14 trigger-condition language for the reduced-speed
+    # shoulder routing (Cases 26/27). Verbatim from the case fixtures;
+    # only tabulated at 65/75 mph — silent otherwise to preserve the
+    # verbatim-or-nothing symmetry the audit already enforces (S1).
+    trigger_condition: str | None = None
+    if fines_double_applicable:
+        if params.speed_mph == 65:
+            trigger_condition = (
+                "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
+                "ARE WITHIN 8 FT OF TRAVEL WAY"
+            )
+        elif params.speed_mph == 75:
+            trigger_condition = (
+                "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
+                "ARE WITHIN 10 FT OF TRAVEL WAY"
+            )
+
     if fines_double_applicable:
         sign_schedule.extend(
             [
@@ -395,6 +413,7 @@ def build_narrative_context(
         "site_adjustments": site_adjustments or [],
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
+        "trigger_condition": trigger_condition,
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }
 

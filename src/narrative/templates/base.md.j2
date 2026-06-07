@@ -83,6 +83,19 @@
 - **{{ adj.flag }}** — {{ adj.action }} _({{ adj.rule }})_
 {% endfor %}
 {% endif %}
+{% if trigger_condition %}
+
+## Trigger Condition
+
+CDOT S-630-1 Sheet 14. The Fines Double envelope and reduced
+work-zone speed limit are scoped to scenarios meeting this
+trigger condition in the field:
+
+> {{ trigger_condition }}
+
+The engineer of record determines activation; field crew should
+follow the project-specific TCP.
+{% endif %}
 {% if fines_double_notes %}
 
 ## Fines Double Operational Rules
