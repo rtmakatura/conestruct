@@ -1867,3 +1867,116 @@ def test_validate_layout_with_envelope_passes() -> None:
     violations = validate_layout(placements, params)
     errors = [v for v in violations if v.severity == "error"]
     assert errors == []
+
+
+# ---------------------------------------------------------------------------
+# G1 — validate_shoulder_warning_pair
+# ---------------------------------------------------------------------------
+# Two W21-5aR + W16-2a / W7-3a plaques are prescribed on freeway shoulder
+# closures per CDOT S-630-1 Sheet 7 Case 11 (positions 5/6) and Sheet 14
+# Cases 26/27 (positions 4/6).  Severity is `warning` rather than `error`:
+# missing the second W21-5aR is a signing-quality issue (drivers see the
+# warning once instead of twice), not a regulatory floor like
+# MISSING_R2_10 / MISSING_R2_11 / MISSING_R2_1_ENTRANCE.
+
+
+def _g1_freeway_shoulder_params(*, is_divided: bool = True) -> ScenarioParams:
+    return ScenarioParams(
+        speed_mph=65,
+        num_lanes=2 if is_divided else 1,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=is_divided,
+        jurisdiction="CDOT",
+    )
+
+
+def test_validate_shoulder_warning_pair_passes_on_freeway_divided_layout() -> None:
+    """Generated freeway divided shoulder layout emits the full pair —
+    validator returns zero violations."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_shoulder_warning_pair
+
+    params = _g1_freeway_shoulder_params(is_divided=True)
+    placements = generate_shoulder_closure_divided(params)
+    assert validate_shoulder_warning_pair(placements, params) == []
+
+
+def test_validate_shoulder_warning_pair_passes_on_freeway_undivided_layout() -> None:
+    """Generated freeway undivided shoulder layout emits the single-side
+    pair — validator returns zero violations."""
+    from src.generation.layout import generate_shoulder_closure_undivided
+    from src.rules.validators import validate_shoulder_warning_pair
+
+    params = _g1_freeway_shoulder_params(is_divided=False)
+    placements = generate_shoulder_closure_undivided(params)
+    assert validate_shoulder_warning_pair(placements, params) == []
+
+
+def test_validate_shoulder_warning_pair_warns_when_second_w21_5aR_missing() -> None:
+    """Hand-constructed layout with only the A-position W21-5aR and no
+    plaques: validator emits three warnings (MISSING_SECOND_W21_5aR +
+    MISSING_W16_2A_PLAQUE + MISSING_W7_3A_PLAQUE)."""
+    from src.rules.validators import validate_shoulder_warning_pair
+
+    params = _g1_freeway_shoulder_params()
+    placements = [
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=2786.67,
+            offset_ft=28.0,
+            label="W21-5aR",
+        ),
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=2786.67,
+            offset_ft=-28.0,
+            label="W21-5aR",
+        ),
+    ]
+    violations = validate_shoulder_warning_pair(placements, params)
+    rule_ids = {v.rule_id for v in violations}
+    assert rule_ids == {"MISSING_SECOND_W21_5aR", "MISSING_W16_2A_PLAQUE", "MISSING_W7_3A_PLAQUE"}
+    # All warnings — not errors.
+    assert all(v.severity == "warning" for v in violations)
+
+
+def test_validate_shoulder_warning_pair_skipped_on_non_freeway() -> None:
+    """G1 is freeway-only.  Rural shoulder layout returns zero violations
+    even with no W21-5aR pair."""
+    from src.rules.validators import validate_shoulder_warning_pair
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    assert validate_shoulder_warning_pair([], params) == []
+
+
+def test_validate_shoulder_warning_pair_skipped_on_lane_closure() -> None:
+    """G1 is shoulder-only.  Lane closure on freeway returns zero
+    violations (Case 10 prescribes W4-2R / W20-5R / W20-1, not W21-5aR)."""
+    from src.rules.validators import validate_shoulder_warning_pair
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    assert validate_shoulder_warning_pair([], params) == []

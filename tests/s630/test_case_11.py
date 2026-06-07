@@ -37,7 +37,6 @@ from src.rules.validators import DevicePlacement
 from ._harness import (
     CASE_11_GENERAL_BODY,
     CASE_11B_BODY,
-    G1_REASON,
     assert_mirror_balanced,
     assert_within,
     count_label,
@@ -191,18 +190,16 @@ def test_case_11_general_2640_frequency_check_label(
     assert label == "G20-5P/R2-6P construction plaques every 2,640 ft"
 
 
-@pytest.mark.xfail(strict=True, reason=G1_REASON)
 def test_case_11_general_second_w21_5aR_with_plaques(
     case_11_general: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
     # G1 — fixture Sheet 7 positions 5 and 6 prescribe two W21-5aR
-    # signs.  Currently Conestruct emits one (mirrored = 2 placements);
-    # G1 will emit two per side (4 total), with W16-2a "1500 FT" and
-    # W7-3a "NEXT X MILES" plaques attached.
+    # signs.  Conestruct emits two per side (4 total), with W16-2a and
+    # W7-3a plaques co-located at the first and second W21-5aR.
     placements, _ = case_11_general
     assert count_label(placements, "W21-5aR") == 4
-    assert count_label(placements, "W16-2a") >= 2
-    assert count_label_prefix(placements, "W7-3a") >= 2
+    assert count_label(placements, "W16-2a") == 2
+    assert count_label(placements, "W7-3a") == 2
 
 
 # ---------------------------------------------------------------------------
@@ -320,11 +317,12 @@ def test_case_11b_mirror_doubling(
     assert_mirror_balanced(placements)
 
 
-@pytest.mark.xfail(strict=True, reason=G1_REASON)
 def test_case_11b_second_w21_5aR_with_plaques(
     case_11b: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
+    # G1 propagates to 11b (reduced-speed branch): same shoulder pair
+    # emission regardless of routing.
     placements, _ = case_11b
     assert count_label(placements, "W21-5aR") == 4
-    assert count_label(placements, "W16-2a") >= 2
-    assert count_label_prefix(placements, "W7-3a") >= 2
+    assert count_label(placements, "W16-2a") == 2
+    assert count_label(placements, "W7-3a") == 2

@@ -25,6 +25,24 @@
           "Distance from Taper (ft)": "1,000 upstream",
           "Position": "A (nearest)",
           "Station (ft)": "3,400"
+        },
+        {
+          "Code": "W16-2a",
+          "Distance from Taper (ft)": "NEXT 1,900 FT (under W21-5aR at A)",
+          "Position": "A plaque",
+          "Station (ft)": "3,400"
+        },
+        {
+          "Code": "W21-5aR",
+          "Distance from Taper (ft)": "750 upstream",
+          "Position": "A2 (second W21-5aR)",
+          "Station (ft)": "3,150"
+        },
+        {
+          "Code": "W7-3a",
+          "Distance from Taper (ft)": "NEXT 1 MILE (under second W21-5aR)",
+          "Position": "A2 plaque",
+          "Station (ft)": "3,150"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
@@ -52,7 +70,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 9 left, 9 right.",
+          "detail": "Required: True. Signs placed: 12 left, 12 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },

@@ -28,15 +28,6 @@ from src.api.audit import build_audit_trail
 from src.api.schemas import ShoulderScenario, scenario_to_call
 from src.rules.validators import DevicePlacement
 
-# G1 (issue #45) is the only remaining open GAP from the Phase 4
-# catalogue.  Tests that assert G1's expected behaviour are marked
-# ``xfail(strict=True)`` so that when G1 ships the suite forces the
-# marker to be removed and the assertions promoted to active.
-G1_REASON = (
-    "Deferred to G1 (#45): layout: emit second W21-5aR sign with "
-    "NEXT X MILES plaque on shoulder closures"
-)
-
 
 def _common(speed: int, work_zone_speed: int | None) -> dict[str, Any]:
     """Scenario body shared across all four S-630-1 fixtures.

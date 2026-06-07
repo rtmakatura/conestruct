@@ -73,3 +73,8 @@ Phase 2 decisions, locked June 5 2026.
 
 - The four S-630-1 test scenarios (`case_11_general`, `case_11b_reduction_5mph`, `case_26_65mph`, `case_27_75mph`) omit `meta.lat` / `meta.lng` intentionally. `audit.corridor_validation` short-circuits to `checked=false` for these scenarios; that's the expected state, not a finding.
 - Corridor-validation behavior (OSM ground-truth check, bearing divergence detection) is a separate scenario class with its own fixtures and harness. Not in scope for S-630-1 typical-application validation.
+
+## W16-2a plaque label (V1-Wide G1, June 7 2026)
+
+- Sheet 7 Case 11 position 5 prescribes literal "1500 FT" plaque text. Conestruct emits `sign_a_station - wz_start_station` (1678 / 1787 / 1900 ft at 55 / 65 / 75 mph respectively per Table 6B-1 freeway A=1000 plus speed-dependent taper + buffer).
+- Match: code-level (W16-2a family). Variance: literal plaque text vs geometric-distance text.

@@ -121,9 +121,12 @@ def _run(
             # Tangent pick(8000, 150): pre-fix floor=53 at 150.94 ft (>150);
             # post-fix ceil=54 at 148.15 ft → 55 tangent + 2 downstream = 57.
             # G2 (CDOT S-630-1 Sheet 7 Case 11): freeway × no_reduction adds
-            # 2× W5-1 (mirrored).  Other parametrize cases are non-freeway
-            # (rural / expressway), so the G2 gate doesn't fire there.
-            {"SIGN_GENERIC": 24, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
+            # 2× W5-1 (mirrored).  G1 (Sheet 7 positions 5/6): freeway
+            # shoulder adds 2× second W21-5aR + 2× W16-2a + 2× W7-3a
+            # plaques (mirrored) = +6 signs.  Other parametrize cases are
+            # non-freeway (rural / expressway), so the G1/G2 gates don't
+            # fire there.
+            {"SIGN_GENERIC": 30, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
         ),
     ],
     ids=[
@@ -859,3 +862,93 @@ def test_shoulder_undivided_freeway_reduced_omits_w5_1() -> None:
     suppresses W5-1 just like on divided."""
     placements = generate_shoulder_closure_undivided(_freeway_shoulder_undivided_params(60))
     assert _count_label(placements, "W5-1") == 0
+
+
+# ---------------------------------------------------------------------------
+# G1 — Second W21-5aR + W16-2a / W7-3a plaques on freeway shoulder
+# ---------------------------------------------------------------------------
+# Per CDOT S-630-1 Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases
+# 26/27 positions 4/6): two W21-5aR signs prescribed on freeway shoulder
+# closures.  Upstream sign carries a W16-2a "NEXT XXX FT" plaque;
+# downstream sign (between A and the taper) carries a W7-3a "NEXT X
+# MILES" plaque.  Emission gate is freeway × shoulder regardless of
+# routing (fixture uniformity across Cases 11 / 11b / 26 / 27).  Lane
+# closures and flagger operations are out of scope.
+
+
+def test_shoulder_divided_freeway_no_reduction_emits_w21_5aR_pair_mirrored() -> None:
+    """Sheet 7 Case 11 (no reduction): two W21-5aR per side (mirrored
+    on divided) + two W16-2a plaques + two W7-3a plaques."""
+    placements = generate_shoulder_closure_divided(_freeway_shoulder_divided_params(None))
+    assert _count_label(placements, "W21-5aR") == 4
+    assert _count_label(placements, "W16-2a") == 2
+    assert _count_label(placements, "W7-3a") == 2
+
+
+def test_shoulder_divided_freeway_reduced_still_emits_w21_5aR_pair() -> None:
+    """Sheet 14 Cases 26/27 (reduced speed): same shoulder pair as Sheet 7."""
+    placements = generate_shoulder_closure_divided(_freeway_shoulder_divided_params(60))
+    assert _count_label(placements, "W21-5aR") == 4
+    assert _count_label(placements, "W16-2a") == 2
+    assert _count_label(placements, "W7-3a") == 2
+
+
+def test_shoulder_divided_non_freeway_omits_w21_5aR_pair() -> None:
+    """G1 gate is freeway-only.  Rural / expressway shoulder closures
+    emit only the original W21-5aR at the A position."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(None))
+    assert _count_label(placements, "W21-5aR") == 2  # A-position only, mirrored
+    assert _count_label(placements, "W16-2a") == 0
+    assert _count_label(placements, "W7-3a") == 0
+
+
+def test_shoulder_undivided_freeway_emits_single_side_w21_5aR_pair() -> None:
+    """Undivided freeway shoulder: single-side per CO §6C.04(A).  One
+    W21-5aR pair (two signs total) + one plaque each."""
+    placements = generate_shoulder_closure_undivided(_freeway_shoulder_undivided_params(None))
+    assert _count_label(placements, "W21-5aR") == 2
+    assert _count_label(placements, "W16-2a") == 1
+    assert _count_label(placements, "W7-3a") == 1
+
+
+def test_shoulder_divided_freeway_w21_5aR_pair_station_geometry() -> None:
+    """Second W21-5aR sits at the midpoint between sign_a_station and
+    the W5-1-would-be station (taper_start + 500).  W16-2a is co-located
+    with the upstream W21-5aR; W7-3a is co-located with the downstream
+    W21-5aR.  At 65 mph CDOT freeway, taper_start = 1000 + 570 + 216.67
+    = 1786.67; sign_a = taper_start + 1000 = 2786.67; W5-1-would-be =
+    2286.67; midpoint = 2536.67."""
+    params = _freeway_shoulder_divided_params(None)
+    placements = generate_shoulder_closure_divided(params)
+    w21_stations = sorted({p.station_ft for p in placements if p.label == "W21-5aR"})
+    expected_upstream = 1000.0 + 570.0 + (10.0 * 65 / 3.0) + 1000.0
+    expected_downstream = (expected_upstream + (expected_upstream - 1000.0 + 500.0)) / 2.0
+    assert w21_stations[0] == pytest.approx(expected_downstream)
+    assert w21_stations[1] == pytest.approx(expected_upstream)
+    # W16-2a co-located with upstream W21-5aR
+    for p in [pl for pl in placements if pl.label == "W16-2a"]:
+        assert p.station_ft == pytest.approx(expected_upstream)
+    # W7-3a co-located with downstream W21-5aR
+    for p in [pl for pl in placements if pl.label == "W7-3a"]:
+        assert p.station_ft == pytest.approx(expected_downstream)
+
+
+def test_lane_closure_divided_omits_w21_5aR_pair() -> None:
+    """G1 is shoulder-only.  Lane closure on freeway-equivalent geometry
+    must not emit the W21-5aR pair (Case 10 prescribes W4-2R / W20-5R /
+    W20-1, not W21-5aR)."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    placements = generate_lane_closure_divided(params)
+    assert _count_label(placements, "W21-5aR") == 0
+    assert _count_label(placements, "W16-2a") == 0
+    assert _count_label(placements, "W7-3a") == 0

@@ -17,11 +17,9 @@ from src.rules.validators import DevicePlacement
 
 from ._harness import (
     CASE_27_BODY,
-    G1_REASON,
     assert_mirror_balanced,
     assert_within,
     count_label,
-    count_label_prefix,
     placements_and_audit,
 )
 
@@ -49,7 +47,7 @@ def test_case_27_trigger_condition_within_10_ft_exact(
     # G6 — fixture case_27.trigger_condition verbatim.
     _, audit = case_27
     assert audit["case"]["trigger_condition"] == (
-        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) " "ARE WITHIN 10 FT OF TRAVEL WAY"
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY"
     )
 
 
@@ -190,15 +188,16 @@ def test_case_27_co_2b13_delta_10_check_passes(
 
 
 # ---------------------------------------------------------------------------
-# G1 deferred (issue #45)
+# G1 — second W21-5aR + plaques (#45 closed)
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.xfail(strict=True, reason=G1_REASON)
 def test_case_27_two_w21_5aR_with_plaques(
     case_27: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
+    # Sheet 14 position 4 / 6 — same shape as Case 26.  W16-2a is the
+    # deterministic V1 pick from Sheet 14's contractor-pick set.
     placements, _ = case_27
     assert count_label(placements, "W21-5aR") == 4
-    assert count_label_prefix(placements, "W16") >= 2
-    assert count_label_prefix(placements, "W7-3a") >= 2
+    assert count_label(placements, "W16-2a") == 2
+    assert count_label(placements, "W7-3a") == 2

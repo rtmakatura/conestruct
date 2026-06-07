@@ -326,6 +326,57 @@ def build_audit_trail(
         },
     ]
 
+    # G1 — second W21-5aR + W16-2a / W7-3a plaques per CDOT S-630-1
+    # Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases 26/27 positions
+    # 4/6).  Two W21-5aR signs are prescribed on freeway shoulder
+    # closures: the upstream sign carries a W16-2a "NEXT XXX FT" plaque;
+    # a second downstream sign (between the first W21-5aR and taper)
+    # carries a W7-3a "NEXT X MILES" plaque.  Emission gate matches the
+    # layout generator (freeway shoulder); same fixture uniformity across
+    # Cases 11 / 11b / 26 / 27 means the rows surface on both reduced
+    # and no-reduction routings.
+    if params.closure_type == "shoulder" and params.road_type == "freeway":
+        # Geometry mirrors the layout: second W21-5aR at the midpoint
+        # between sign_a_station and the W5-1-would-be station
+        # (taper_start + 500), independent of whether W5-1 actually
+        # emits — preserves geometric consistency across routings.
+        w21_5aR_upstream_st = sign_a_station
+        w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
+        w16_2a_distance_ft = int(round(w21_5aR_upstream_st - wz_len))
+        # X is computed from work zone length per the deterministic V1
+        # default.  Future iteration may surface a contractor-input
+        # field for engineer override.
+        w7_3a_miles = max(1, round(wz_len / 5280.0))
+        sign_table_rows.extend(
+            [
+                {
+                    "Position": "A plaque",
+                    "Code": "W16-2a",
+                    "Station (ft)": f"{w21_5aR_upstream_st:,.0f}",
+                    "Distance from Taper (ft)": (
+                        f"NEXT {w16_2a_distance_ft:,} FT (under W21-5aR at A)"
+                    ),
+                },
+                {
+                    "Position": "A2 (second W21-5aR)",
+                    "Code": "W21-5aR",
+                    "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
+                    "Distance from Taper (ft)": (
+                        f"{w21_5aR_downstream_st - taper_start_station:,.0f} upstream"
+                    ),
+                },
+                {
+                    "Position": "A2 plaque",
+                    "Code": "W7-3a",
+                    "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
+                    "Distance from Taper (ft)": (
+                        f"NEXT {w7_3a_miles} "
+                        f"{'MILE' if w7_3a_miles == 1 else 'MILES'} (under second W21-5aR)"
+                    ),
+                },
+            ]
+        )
+
     advance_section = {
         "road_type_text": (
             f"Speed {speed} mph, road_type = '{params.road_type}' "

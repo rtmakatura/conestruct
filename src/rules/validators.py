@@ -96,6 +96,15 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
         # selector would pick W5-1 as cluster[0] and corrupt the A/B/C
         # spacing analysis.
         "W5-1",
+        # G1 plaques: W16-2a sits at the A-position W21-5aR (co-located);
+        # W7-3a sits at the second W21-5aR (between A and taper).  Both
+        # plaques are mirror-doubled on divided generators.  The plaque
+        # clusters merge with their parent W21-5aR clusters via station
+        # tolerance — excluding the plaque labels here keeps the merge
+        # explicit (and protects against future divergence in mounting
+        # convention).
+        "W16-2a",
+        "W7-3a",
     }
 )
 
@@ -486,18 +495,25 @@ def validate_advance_warning_signs(
     # don't need to nullify-and-infer.
     distances = advance_warning_spacing(params.speed_mph, params.road_type)
 
+    # A/B/C are the **three most-upstream** clusters (Table 6B-1 walks
+    # outward from the taper).  Picking from the upstream end accommodates
+    # G1's second W21-5aR — emitted between the taper and the A-position
+    # W21-5aR on freeway shoulder closures — without corrupting the
+    # spacing analysis.  At ``len(clusters) == 3`` the negative indices
+    # collapse to ``[0], [1], [2]`` so pre-G1 scenarios stay
+    # behaviour-identical.
     centroids = [sum(placements[i].station_ft for i in c) / len(c) for c in clusters]
     cluster_reps = [c[0] for c in clusters]
-    actual_a = centroids[0] - taper_upstream
-    actual_b = centroids[1] - centroids[0]
-    actual_c = centroids[2] - centroids[1]
+    actual_a = centroids[-3] - taper_upstream
+    actual_b = centroids[-2] - centroids[-3]
+    actual_c = centroids[-1] - centroids[-2]
 
     out: list[Violation] = []
     tol = ADVANCE_SIGN_SPACING_TOLERANCE
     for label, actual, expected, idx in (
-        ("A", actual_a, distances["A"], cluster_reps[0]),
-        ("B", actual_b, distances["B"], cluster_reps[1]),
-        ("C", actual_c, distances["C"], cluster_reps[2]),
+        ("A", actual_a, distances["A"], cluster_reps[-3]),
+        ("B", actual_b, distances["B"], cluster_reps[-2]),
+        ("C", actual_c, distances["C"], cluster_reps[-1]),
     ):
         if expected == 0:
             continue
@@ -1299,6 +1315,106 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     return out
 
 
+def validate_shoulder_warning_pair(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> list[Violation]:
+    """Verify the second W21-5aR + W16-2a / W7-3a plaques on freeway shoulder.
+
+    Source: CDOT S-630-1 Sheet 7 Case 11 (positions 5/6) and Sheet 14
+    Cases 26/27 (positions 4/6).  Two W21-5aR signs are prescribed on
+    freeway shoulder closures: the upstream sign carries a W16-2a
+    "NEXT XXX FT" plaque; a second downstream sign sits between the
+    first W21-5aR and the taper carrying a W7-3a "NEXT X MILES" plaque.
+
+    Severity is ``warning`` rather than ``error`` (parity with other
+    MUTCD signing-quality checks, not the regulatory floors
+    ``MISSING_R2_10`` / ``MISSING_R2_11`` / ``MISSING_R2_1_ENTRANCE``).
+    A missing second W21-5aR means drivers see the right-shoulder-closed
+    warning once instead of twice — a signing-quality issue, not a
+    regulatory failure.
+
+    Scope: freeway shoulder closures only.  Lane closures (Case 10) and
+    flagger operations (TA-10) do not prescribe the W21-5aR pair.
+    """
+    if params.road_type != "freeway" or params.closure_type != "shoulder":
+        return []
+
+    w21_5aR_count = sum(
+        1
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "W21-5AR"
+    )
+    has_w16_2a = any(
+        p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "W16-2A"
+        for p in placements
+    )
+    has_w7_3a = any(
+        p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "W7-3A"
+        for p in placements
+    )
+
+    # Mirrored emission on divided highways doubles the per-sign count;
+    # ``required_w21_5aR`` is 4 on divided (two per side) and 2 on
+    # undivided (one upstream + one downstream, single-side per
+    # §6C.04(A)).  The same per-side mirror count drives plaque
+    # presence: divided needs ≥ 2 W16-2a / ≥ 2 W7-3a, undivided ≥ 1 each.
+    required_w21_5aR = 4 if params.is_divided else 2
+
+    out: list[Violation] = []
+    if w21_5aR_count < required_w21_5aR:
+        out.append(
+            Violation(
+                rule_id="MISSING_SECOND_W21_5aR",
+                severity="warning",
+                message=(
+                    f"Found {w21_5aR_count} W21-5aR placement(s); "
+                    f"{required_w21_5aR} required for a freeway shoulder "
+                    "closure per CDOT S-630-1 Sheet 7 Case 11 (positions "
+                    "5/6) and Sheet 14 Cases 26/27 (positions 4/6). Two "
+                    "RIGHT SHOULDER CLOSED AHEAD signs are prescribed: an "
+                    "upstream sign with a NEXT XXX FT plaque and a "
+                    "downstream sign with a NEXT X MILES plaque so drivers "
+                    "see the warning twice as they approach the closure."
+                ),
+                mutcd_section="CDOT S-630-1 Sheet 7 / 14",
+                device_index=None,
+            )
+        )
+    if not has_w16_2a:
+        out.append(
+            Violation(
+                rule_id="MISSING_W16_2A_PLAQUE",
+                severity="warning",
+                message=(
+                    "Freeway shoulder closure prescribes a W16-2a "
+                    "(NEXT XXX FT) plaque under the upstream W21-5aR per "
+                    "CDOT S-630-1 Sheet 7 Case 11 position 5. Plaque is "
+                    "absent from the placement list."
+                ),
+                mutcd_section="CDOT S-630-1 Sheet 7 (Case 11) position 5",
+                device_index=None,
+            )
+        )
+    if not has_w7_3a:
+        out.append(
+            Violation(
+                rule_id="MISSING_W7_3A_PLAQUE",
+                severity="warning",
+                message=(
+                    "Freeway shoulder closure prescribes a W7-3a "
+                    "(NEXT X MILES) plaque under the downstream W21-5aR "
+                    "per CDOT S-630-1 Sheet 7 Case 11 position 6 / Sheet "
+                    "14 Cases 26/27 position 6. Plaque is absent from the "
+                    "placement list."
+                ),
+                mutcd_section="CDOT S-630-1 Sheet 7 (Case 11) position 6",
+                device_index=None,
+            )
+        )
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Top-level entry point
 # ---------------------------------------------------------------------------
@@ -1344,4 +1460,5 @@ def validate_layout(
     out.extend(validate_co_construction_plaques(placements, params))
     out.extend(validate_flagger_stations(placements, params))
     out.extend(validate_fines_double_envelope(placements, params))
+    out.extend(validate_shoulder_warning_pair(placements, params))
     return out

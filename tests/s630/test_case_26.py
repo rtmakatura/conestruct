@@ -12,10 +12,10 @@ Documented variances (per match_rules.md + findings.md) **not** asserted:
     * "ROAD WORK 1 MILE" wording vs fixture "ROAD WORK 1/2 MILE" — code
       match, wording variance per SPEC_INTERPRETATION.
     * G20-1 / G20-2 work-zone-boundary marker augmentation.
-
-The G1 GAP (second W21-5aR + W16/W7 plaques) is encoded as
-``pytest.mark.xfail(strict=True)``; when G1 (#45) ships the marker
-flips and the suite fails until promoted.
+    * First W21-5aR plaque code: Conestruct uniformly emits W16-2a
+      across all four shoulder cases per the deterministic-pick
+      decision; Sheet 14 offers W16-2aP / W16-3aP / W16-9P (contractor
+      pick).  Code-match (W16 family); literal-text variance.
 """
 
 from __future__ import annotations
@@ -28,11 +28,9 @@ from src.rules.validators import DevicePlacement
 
 from ._harness import (
     CASE_26_BODY,
-    G1_REASON,
     assert_mirror_balanced,
     assert_within,
     count_label,
-    count_label_prefix,
     placements_and_audit,
 )
 
@@ -60,7 +58,7 @@ def test_case_26_trigger_condition_within_8_ft_exact(
     # G6 — fixture case_26.trigger_condition verbatim.
     _, audit = case_26
     assert audit["case"]["trigger_condition"] == (
-        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) " "ARE WITHIN 8 FT OF TRAVEL WAY"
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY"
     )
 
 
@@ -208,18 +206,18 @@ def test_case_26_co_2b13_delta_5_check_passes(
 
 
 # ---------------------------------------------------------------------------
-# G1 deferred (issue #45)
+# G1 — second W21-5aR + plaques (#45 closed)
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.xfail(strict=True, reason=G1_REASON)
 def test_case_26_two_w21_5aR_with_plaques(
     case_26: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
     # Fixture Sheet 14 positions 4 and 6 — two W21-5aR signs per side.
-    # Position 4: one-of-three W16-2aP/W16-3aP/W16-9P plaque (example
-    # "1/4 MILE"); position 6: W7-3aP(X) "NEXT X MILES" plaque.
+    # Conestruct emits W16-2a uniformly under position 4 (deterministic
+    # pick from Sheet 14's W16-2aP / W16-3aP / W16-9P contractor-pick
+    # set) and W7-3a under position 6.
     placements, _ = case_26
     assert count_label(placements, "W21-5aR") == 4
-    assert count_label_prefix(placements, "W16") >= 2
-    assert count_label_prefix(placements, "W7-3a") >= 2
+    assert count_label(placements, "W16-2a") == 2
+    assert count_label(placements, "W7-3a") == 2

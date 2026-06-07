@@ -254,6 +254,31 @@ def build_narrative_context(
     plaque_interval = wz_len / n_plaques_right if n_plaques_right > 0 else wz_len
 
     advance_signs = _advance_signs_from_placements(placements, taper_start_station)
+    # G1 — parametric descriptions for the W21-5aR-pair plaques.
+    # ``description_for("W16-2a")`` / ``description_for("W7-3a")`` return
+    # the generic ``NEXT XXX FT plaque`` / ``NEXT XX MILES plaque`` templates;
+    # the schedule row substitutes the values the layout actually computes
+    # so the crew narrative reads "NEXT 1500 FT" / "NEXT 1 MILES" rather
+    # than the placeholder text.  Geometry mirrors the layout +
+    # audit.sign_table — second W21-5aR sits midway between sign_a_station
+    # and the W5-1-would-be station; W16-2a distance is from the first
+    # W21-5aR to wz_start; W7-3a miles is the deterministic V1 default.
+    if params.road_type == "freeway" and params.closure_type == "shoulder":
+        rt_for_lookup = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
+        a_dist_ft = advance_warning_spacing(speed, rt_for_lookup)["A"]
+        sign_a_station = taper_start_station + a_dist_ft
+        w16_2a_distance_ft = int(round(sign_a_station - wz_len))
+        w7_3a_miles = max(1, round(wz_len / 5280.0))
+        w16_2a_text = f"NEXT {w16_2a_distance_ft:,} FT (under upstream W21-5aR)"
+        w7_3a_text = (
+            f"NEXT {w7_3a_miles} "
+            f"{'MILE' if w7_3a_miles == 1 else 'MILES'} (under downstream W21-5aR)"
+        )
+        for s in advance_signs:
+            if s["code"] == "W16-2a":
+                s["description"] = w16_2a_text
+            elif s["code"] == "W7-3a":
+                s["description"] = w7_3a_text
     # Schedule table: farthest-upstream first (the order a motorist
     # encounters the signs) plus the in-zone plaque and end-zone signs.
     sign_schedule: list[dict[str, str]] = []

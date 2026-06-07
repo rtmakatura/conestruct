@@ -297,3 +297,71 @@ def test_crew_narrative_non_freeway_no_reduction_omits_w5_1_row() -> None:
     markdown = _render(params)
     assert "W5-1" not in markdown
     assert "ROAD NARROWS" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# G1 — Second W21-5aR + W16-2a / W7-3a plaque schedule rows
+# ---------------------------------------------------------------------------
+# Verifies that the W16-2a plaque row carries the computed "NEXT XXX FT"
+# text (distance from first W21-5aR to wz_start) and the W7-3a row
+# carries the computed "NEXT X MILES" text (work zone length / 5280,
+# floored at 1).  Rows appear on freeway shoulder closures regardless of
+# routing; absent on non-freeway.
+
+
+def test_crew_narrative_freeway_includes_w16_2a_and_w7_3a_rows() -> None:
+    """Freeway shoulder closure → sign schedule carries W16-2a / W7-3a
+    rows with parametric distance text under the W21-5aR siblings."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    assert "| W16-2a |" in markdown
+    assert "NEXT" in markdown
+    assert "FT (under upstream W21-5aR)" in markdown
+    assert "| W7-3a |" in markdown
+    assert "MILE (under downstream W21-5aR)" in markdown
+
+
+def test_crew_narrative_freeway_reduced_includes_w21_5aR_pair() -> None:
+    """Reduced-speed shoulder closure (Sheet 14 Cases 26/27) keeps the
+    W21-5aR pair + plaques — emission gate is freeway-shoulder, not
+    routing-dependent."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=60,
+    )
+    markdown = _render(params)
+    assert "| W16-2a |" in markdown
+    assert "| W7-3a |" in markdown
+
+
+def test_crew_narrative_non_freeway_omits_w21_5aR_pair_plaques() -> None:
+    """Rural shoulder closure doesn't trigger G1 — no W16-2a / W7-3a
+    rows in the schedule."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    assert "W16-2a" not in markdown
+    assert "W7-3a" not in markdown

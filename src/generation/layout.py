@@ -122,6 +122,88 @@ def generate_shoulder_closure_divided(
             DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_left, label="W5-1")
         )
 
+    # 1b. Second W21-5aR + W16-2a / W7-3a plaque pair (V1-Wide G1) per
+    # CDOT S-630-1 Sheet 7 Case 11 positions 5/6 and Sheet 14 Cases
+    # 26/27 positions 4/6.  Two W21-5aR signs are prescribed: the
+    # upstream sign (already emitted at sign_a_station above) carries a
+    # W16-2a "NEXT XXX FT" plaque; a second downstream sign sits between
+    # the first W21-5aR and the taper carrying a W7-3a "NEXT X MILES"
+    # plaque.  Emission gate matches W5-1's: freeway shoulder closures
+    # only (Sheet 7/14 fixtures don't prescribe second W21-5aR off
+    # freeway; lane closures and flagger are out of scope per
+    # case_10/TA-10).  Applies on both no-reduction and reduced-speed
+    # routings — fixture uniformity across Cases 11/11b/26/27.
+    #
+    # Geometry: second W21-5aR sits at the midpoint between the first
+    # W21-5aR (sign_a_station) and the W5-1-would-be station
+    # (taper_start_station + 500).  Using the would-be anchor regardless
+    # of W5-1 emission preserves geometric consistency across reduced
+    # vs no-reduction routings.  Plaques sit at identical
+    # station + offset as their parent W21-5aR — separate DevicePlacement
+    # rows per the G20-5P/R2-6P plaque-attachment precedent;
+    # plan_sheet._deoverlap_signs_pairwise spreads them vertically at
+    # render time.
+    #
+    # Mirrored per CO Supplement §6C.04(A).
+    if params.road_type == "freeway" and params.closure_type == "shoulder":
+        w21_5aR_upstream_station = sign_a_station  # first W21-5aR (already placed above)
+        w5_1_would_be_station = taper_start_station + 500.0
+        w21_5aR_downstream_station = (w21_5aR_upstream_station + w5_1_would_be_station) / 2.0
+        # Plaque labels follow the bare-code convention (parity with
+        # R2-1 / W20-2 / G20-5P — parametric text lives in the audit
+        # sign_table + crew narrative rows, not the placement label).
+        # Second W21-5aR — mirrored
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_right,
+                label="W21-5aR",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_left,
+                label="W21-5aR",
+            )
+        )
+        # W16-2a plaque under first W21-5aR — mirrored, co-located
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_upstream_station,
+                sign_offset_right,
+                label="W16-2a",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_upstream_station,
+                sign_offset_left,
+                label="W16-2a",
+            )
+        )
+        # W7-3a plaque under second W21-5aR — mirrored, co-located
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_right,
+                label="W7-3a",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_left,
+                label="W7-3a",
+            )
+        )
+
     # 2. Shoulder taper (drums)
     in_taper_spacing = device_spacing_in_taper(speed)
     n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
@@ -434,6 +516,39 @@ def generate_shoulder_closure_undivided(
         w5_1_station = taper_start_station + 500.0
         placements.append(
             DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_right, label="W5-1")
+        )
+
+    # 1b. Second W21-5aR + W16-2a / W7-3a plaque pair (V1-Wide G1) per
+    # CDOT S-630-1 Sheet 7 Case 11 positions 5/6.  Single-side on
+    # undivided per CO §6C.04(A); geometry, gate, and label conventions
+    # match the divided generator — see that copy for the design notes.
+    if params.road_type == "freeway" and params.closure_type == "shoulder":
+        w21_5aR_upstream_station = sign_a_station
+        w5_1_would_be_station = taper_start_station + 500.0
+        w21_5aR_downstream_station = (w21_5aR_upstream_station + w5_1_would_be_station) / 2.0
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_right,
+                label="W21-5aR",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_upstream_station,
+                sign_offset_right,
+                label="W16-2a",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                w21_5aR_downstream_station,
+                sign_offset_right,
+                label="W7-3a",
+            )
         )
 
     # 2. Shoulder taper (drums) — L/3 length per §6C.08.
