@@ -42,7 +42,7 @@
     },
     "case": {
       "case": "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
-      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 65 \u2192 60 mph; Fines Double envelope applies per CO Supplement \u00a72B.13 and S-630-1 Sheet 12.",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 65 → 60 mph; Fines Double envelope applies per CO Supplement §2B.13 and S-630-1 Sheet 12.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 65 mph.",
       "routing": "shoulder_reduced_speed",
       "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
@@ -53,7 +53,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 13 left, 13 right.",
+          "detail": "Required: True. Signs placed: 14 left, 14 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
@@ -65,7 +65,7 @@
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 65 \u2192 60 mph (\u03945 mph). 1 advance speed-reduction sign required per CO Supplement \u00a72B.13(A).",
+          "detail": "Work-zone speed reduced 65 → 60 mph (Δ5 mph). 1 advance speed-reduction sign required per CO Supplement §2B.13(A).",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },
@@ -95,6 +95,8 @@
       "envelope": {
         "downstream_r2_1_label": "SPEED LIMIT 65",
         "downstream_r2_1_station_ft": -1000.0,
+        "entrance_r2_1_label": "SPEED LIMIT 60",
+        "entrance_r2_1_station_ft": 833.3333333333334,
         "length_ft": 2000.0,
         "n_assemblies": 1,
         "r2_10_station_ft": 1500.0,
@@ -125,7 +127,7 @@
       "count": 0,
       "narrative": "Not applicable for this scenario.",
       "required": 0,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones \u2014 Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
       "table": []
     },
     "geometry_validation": {

@@ -506,6 +506,14 @@ def build_audit_trail(
         ds_r2_1_st = wz_end_st - 1000.0
         env_len = r2_10_st - r2_11_st
         n_asm = max(1, math.ceil(env_len / 2640.0))
+        # G4 entrance R2-1 station — mirrors the layout's anchor on the
+        # upstream-most §6C.06(A) construction plaque so the audit field
+        # tracks whatever the generators emit.  Re-derive ``n_plaques``
+        # against the same ``total_signed_length`` (= sign_c_station)
+        # the layout uses; ``sign_c_station`` was computed at the
+        # advance-warning section above.
+        n_plaques_for_entrance = co_construction_plaques(sign_c_station)
+        entrance_r2_1_st = (n_plaques_for_entrance - 0.5) * wz_len / n_plaques_for_entrance
         fines_double_section = {
             "applicable": True,
             "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
@@ -514,6 +522,8 @@ def build_audit_trail(
                 "r2_11_station_ft": r2_11_st,
                 "length_ft": env_len,
                 "n_assemblies": n_asm,
+                "entrance_r2_1_station_ft": entrance_r2_1_st,
+                "entrance_r2_1_label": f"SPEED LIMIT {wz_speed}",
                 "downstream_r2_1_station_ft": ds_r2_1_st,
                 "downstream_r2_1_label": f"SPEED LIMIT {speed}",
             },

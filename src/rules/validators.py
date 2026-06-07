@@ -1050,6 +1050,17 @@ def validate_fines_double_envelope(
         p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper() == "R2-11"
         for p in placements
     )
+    # G4: entrance R2-1 posts the reduced limit as drivers enter the
+    # zone (CO Supplement §2B.13(A)).  Entrance R2-1 is currently
+    # anchored to the §6C.06(A) plaque, always inside wz
+    # (0 < station <= wz_len).  If anchor changes in future, update
+    # station bounds here.
+    has_entrance_r2_1 = any(
+        p.device_type == DeviceType.SIGN_GENERIC
+        and (p.label or "").upper() == "R2-1"
+        and 0 < p.station_ft <= params.work_zone_length_ft
+        for p in placements
+    )
 
     out: list[Violation] = []
     if not has_r2_10:
@@ -1081,6 +1092,24 @@ def validate_fines_double_envelope(
                     "work zones whenever the work-zone speed is reduced."
                 ),
                 mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
+                device_index=None,
+            )
+        )
+    if not has_entrance_r2_1:
+        out.append(
+            Violation(
+                rule_id="MISSING_R2_1_ENTRANCE",
+                severity="error",
+                message=(
+                    "Work-zone speed reduced below posted speed but no "
+                    "entrance R2-1 (work-zone SPEED LIMIT posting) found "
+                    "inside the work zone. CO Supplement §2B.13(A) "
+                    "requires the reduced limit be posted as drivers "
+                    "enter the zone; without it, drivers have no "
+                    "regulatory indication of the reduced limit until "
+                    "they exit past R2-11."
+                ),
+                mutcd_section="CO Supplement §2B.13(A)",
                 device_index=None,
             )
         )

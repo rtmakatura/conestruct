@@ -95,3 +95,65 @@ def test_crew_narrative_55mph_reduction_omits_trigger_section() -> None:
     assert _TRIGGER_HEADER not in markdown
     assert _TRIGGER_8FT not in markdown
     assert _TRIGGER_10FT not in markdown
+
+
+# ---------------------------------------------------------------------------
+# G4 — entrance R2-1 sign schedule row
+# ---------------------------------------------------------------------------
+# Verifies that the work-zone speed posting (entrance R2-1) appears in
+# the crew Markdown Sign Placement Schedule under reduction, and is
+# absent when no reduction is in effect.
+
+
+def test_crew_narrative_65mph_reduction_includes_entrance_r2_1_row() -> None:
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=60,
+    )
+    markdown = _render(params)
+    # Entrance R2-1 row carries the reduced limit; downstream R2-1 row
+    # carries the posted-speed restoration.
+    assert "| R2-1 | SPEED LIMIT 60 (work-zone speed posting)" in markdown
+    assert "| R2-1 | SPEED LIMIT 65 (posted-speed restoration)" in markdown
+    assert "Within work zone (paired with G20-5P plaque)" in markdown
+
+
+def test_crew_narrative_55mph_reduction_includes_entrance_r2_1_row() -> None:
+    # Case 11 variant — the entrance R2-1 is regulatory per §2B.13(A),
+    # not tabulated only at 65/75. It should appear at 55→45 too.
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=45,
+    )
+    markdown = _render(params)
+    assert "| R2-1 | SPEED LIMIT 45 (work-zone speed posting)" in markdown
+    assert "| R2-1 | SPEED LIMIT 55 (posted-speed restoration)" in markdown
+
+
+def test_crew_narrative_no_reduction_omits_entrance_r2_1_row() -> None:
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    # No reduction → no Fines Double envelope schedule rows at all.
+    assert "(work-zone speed posting)" not in markdown
+    assert "(posted-speed restoration)" not in markdown

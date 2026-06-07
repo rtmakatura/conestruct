@@ -988,6 +988,8 @@ interface FinesDoubleEnvelope {
   r2_11_station_ft: number;
   length_ft: number;
   n_assemblies: number;
+  entrance_r2_1_station_ft: number;
+  entrance_r2_1_label: string;
   downstream_r2_1_station_ft: number;
   downstream_r2_1_label: string;
 }
@@ -1043,6 +1045,8 @@ export function finesDoubleItem(
   const r211 = envelope?.r2_11_station_ft;
   const envLen = envelope?.length_ft;
   const nAsm = envelope?.n_assemblies;
+  const entR21 = envelope?.entrance_r2_1_station_ft;
+  const entR21Label = envelope?.entrance_r2_1_label;
   const dsR21 = envelope?.downstream_r2_1_station_ft;
   const dsR21Label = envelope?.downstream_r2_1_label;
 
@@ -1066,8 +1070,9 @@ export function finesDoubleItem(
           Work-zone posted speed is reduced — Fines Double signing
           applies per CO Supplement § 2B.13 and CDOT S-630-1 Sheet 12.
           The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
-          assemblies at 2,640 ft intervals; the downstream R2-1 restores
-          posted speed past R2-11.
+          assemblies at 2,640 ft intervals; the entrance R2-1 posts the
+          reduced limit as drivers enter the zone, and the downstream
+          R2-1 restores posted speed past R2-11.
         </p>
         {envelope && (
           <table>
@@ -1079,6 +1084,11 @@ export function finesDoubleItem(
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td>R2-1</td>
+                <td>{entR21 !== undefined ? Math.round(entR21).toLocaleString() : "—"}</td>
+                <td>{entR21Label ?? "SPEED LIMIT (work-zone posting)"}</td>
+              </tr>
               <tr>
                 <td>R2-10</td>
                 <td>{r210 !== undefined ? Math.round(r210).toLocaleString() : "—"}</td>

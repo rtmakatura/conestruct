@@ -1462,3 +1462,99 @@ def test_case_routing_cdot_reference_aligns_with_routing(client: TestClient) -> 
     taper = res.json()["sections"]["taper"]
     assert "Case 26" in taper["cdot_reference"]
     assert "Sheet 14" in taper["cdot_reference"]
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide G4 — entrance R2-1 envelope fields.
+#
+# fines_double.envelope grows entrance_r2_1_station_ft +
+# entrance_r2_1_label whenever applicable=True. Carve-out (flagger) and
+# no-reduction paths stay untouched and continue to omit the section
+# entirely — covered by the byte-identity snapshot guard rails above.
+# ---------------------------------------------------------------------------
+
+
+def test_entrance_r2_1_envelope_fields_at_65mph(client: TestClient) -> None:
+    """65 → 60 mph reduction → envelope carries entrance R2-1 station
+    inside wz and the reduced-limit label."""
+    s = _shoulder_scenario()
+    s["speed"] = 65
+    s["workLen"] = 1000.0
+    s["workZoneSpeed"] = 60
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    envelope = res.json()["sections"]["fines_double"]["envelope"]
+    # Inside wz (0 < station <= wz_len=1000).
+    assert 0 < envelope["entrance_r2_1_station_ft"] <= 1000.0
+    assert envelope["entrance_r2_1_label"] == "SPEED LIMIT 60"
+    # Both downstream and entrance fields coexist.
+    assert envelope["downstream_r2_1_label"] == "SPEED LIMIT 65"
+
+
+def test_entrance_r2_1_envelope_fields_at_75mph(client: TestClient) -> None:
+    """75 → 65 mph reduction → label carries the reduced limit (65)."""
+    s = _shoulder_scenario()
+    s["speed"] = 75
+    s["workLen"] = 1500.0
+    s["workZoneSpeed"] = 65
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    envelope = res.json()["sections"]["fines_double"]["envelope"]
+    assert envelope["entrance_r2_1_label"] == "SPEED LIMIT 65"
+    assert envelope["downstream_r2_1_label"] == "SPEED LIMIT 75"
+
+
+def test_entrance_r2_1_envelope_fields_at_55mph_case_11_variant(client: TestClient) -> None:
+    """Case 11 variant (55 → 50 mph) — entrance R2-1 still emits.
+    CO §2B.13(A) is the regulatory driver, not Sheet 14 tabulation."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 50
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    envelope = res.json()["sections"]["fines_double"]["envelope"]
+    assert envelope["entrance_r2_1_label"] == "SPEED LIMIT 50"
+    assert envelope["downstream_r2_1_label"] == "SPEED LIMIT 55"
+
+
+def test_entrance_r2_1_absent_on_no_reduction(client: TestClient) -> None:
+    """No reduction → fines_double section absent → entrance R2-1
+    fields absent. Tested via direct audit builder so a missing
+    envelope is unambiguous."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    audit = build_audit_trail([], params)
+    assert "fines_double" not in audit
+
+
+def test_entrance_r2_1_absent_on_flagger_carve_out() -> None:
+    """Flagger carve-out → fines_double.applicable=False, no envelope dict."""
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    audit = build_audit_trail([], params)
+    assert audit["fines_double"]["applicable"] is False
+    assert "envelope" not in audit["fines_double"]

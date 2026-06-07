@@ -1441,10 +1441,17 @@ def _fines_double_params(
     )
 
 
-def _mk_envelope_placements(include_r2_10: bool, include_r2_11: bool) -> list[DevicePlacement]:
+def _mk_envelope_placements(
+    include_r2_10: bool,
+    include_r2_11: bool,
+    *,
+    include_entrance_r2_1: bool = True,
+) -> list[DevicePlacement]:
     """Hand-constructed placement list with the requested envelope signs.
 
     Bypasses the generator so the validator is tested in isolation.
+    ``include_entrance_r2_1`` defaults to True so existing R2-10/R2-11
+    tests don't double-fire MISSING_R2_1_ENTRANCE (G4).
     """
     out: list[DevicePlacement] = []
     if include_r2_10:
@@ -1465,11 +1472,21 @@ def _mk_envelope_placements(include_r2_10: bool, include_r2_11: bool) -> list[De
                 label="R2-11",
             )
         )
+    if include_entrance_r2_1:
+        # Inside wz (0 < station <= wz_len=800): satisfies G4 validator.
+        out.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=600.0,
+                offset_ft=28.0,
+                label="R2-1",
+            )
+        )
     return out
 
 
 def test_validate_fines_double_envelope_pass_when_both_signs_present() -> None:
-    """Happy path: R2-10 + R2-11 placements satisfy the validator."""
+    """Happy path: R2-10 + R2-11 + entrance R2-1 satisfy the validator."""
     from src.rules.validators import validate_fines_double_envelope
 
     params = _fines_double_params()
@@ -1499,6 +1516,45 @@ def test_validate_fines_double_envelope_error_when_r2_11_missing() -> None:
     violations = validate_fines_double_envelope(placements, params)
     assert len(violations) == 1
     assert violations[0].rule_id == "MISSING_R2_11"
+
+
+def test_validate_fines_double_envelope_error_when_entrance_r2_1_missing() -> None:
+    """Missing entrance R2-1 → MISSING_R2_1_ENTRANCE error (G4)."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()
+    placements = _mk_envelope_placements(
+        include_r2_10=True, include_r2_11=True, include_entrance_r2_1=False
+    )
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "MISSING_R2_1_ENTRANCE"
+    assert violations[0].severity == "error"
+    assert violations[0].mutcd_section == "CO Supplement §2B.13(A)"
+
+
+def test_validate_fines_double_envelope_entrance_r2_1_outside_wz_does_not_satisfy() -> None:
+    """Downstream R2-1 (negative station) alone is not the entrance R2-1
+    G4 requires — validator still fires MISSING_R2_1_ENTRANCE."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()
+    placements = _mk_envelope_placements(
+        include_r2_10=True, include_r2_11=True, include_entrance_r2_1=False
+    )
+    # Add a downstream R2-1 at wz_end - 1000 (negative station). This
+    # mirrors the downstream restoration sign but isn't inside wz.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=-1000.0,
+            offset_ft=28.0,
+            label="R2-1",
+        )
+    )
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "MISSING_R2_1_ENTRANCE"
 
 
 def test_validate_fines_double_envelope_skipped_when_no_reduction() -> None:

@@ -296,6 +296,30 @@ def generate_shoulder_closure_divided(
                 DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_left, label="R2-1"
             )
         )
+        # Entrance R2-1 (V1-Wide G4 — CO Supplement §2B.13(A)).  Posts
+        # the reduced work-zone limit so drivers see a regulatory sign
+        # carrying the actual number as they enter the zone, not just
+        # the W3-5 advisory + Fines Double envelope.  Anchored to the
+        # upstream-most §6C.06(A) construction plaque (the first G20-5P
+        # drivers encounter); reuses an existing convention rather than
+        # inventing a new station constant.  Mirrored per CO §6C.04(A).
+        entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                entrance_r2_1_station,
+                sign_offset_right,
+                label="R2-1",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                entrance_r2_1_station,
+                sign_offset_left,
+                label="R2-1",
+            )
+        )
 
     return placements
 
@@ -492,6 +516,18 @@ def generate_shoulder_closure_undivided(
         placements.append(
             DevicePlacement(
                 DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_right, label="R2-1"
+            )
+        )
+        # Entrance R2-1 (V1-Wide G4 — CO Supplement §2B.13(A)).  Single
+        # side on undivided per CO §6C.04(A); anchored to the upstream-
+        # most §6C.06(A) plaque, matching the divided generator pattern.
+        entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                entrance_r2_1_station,
+                sign_offset_right,
+                label="R2-1",
             )
         )
 
@@ -754,6 +790,26 @@ def generate_lane_closure_divided(
         placements.append(
             DevicePlacement(
                 DeviceType.SIGN_GENERIC, downstream_r2_1_station, sign_offset_left, label="R2-1"
+            )
+        )
+        # Entrance R2-1 (V1-Wide G4 — CO Supplement §2B.13(A)).  Same
+        # upstream-most-§6C.06(A)-plaque anchor as the shoulder
+        # generators; mirrored per CO §6C.04(A).
+        entrance_r2_1_station = (n_plaques - 0.5) * wz_len / n_plaques
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                entrance_r2_1_station,
+                sign_offset_right,
+                label="R2-1",
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                entrance_r2_1_station,
+                sign_offset_left,
+                label="R2-1",
             )
         )
 

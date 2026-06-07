@@ -474,14 +474,17 @@ def test_shoulder_divided_no_reduction_emits_no_envelope() -> None:
 
 
 def test_shoulder_divided_with_reduction_emits_mirrored_envelope() -> None:
-    """Reduction on divided shoulder → mirrored R2-10/R2-11/R2-1 (2 each)
-    plus mirrored G20-5P/R2-6P pair per envelope assembly.
+    """Reduction on divided shoulder → mirrored R2-10/R2-11 (2 each) and
+    mirrored R2-1 entrance + downstream (4 total) plus mirrored
+    G20-5P/R2-6P pair per envelope assembly.
     800 ft wz → 1800 ft envelope → ceil(1800/2640)=1 assembly →
-    2×R2-10 + 2×R2-11 + 2×R2-1 + 2×G20-5P(envelope) + 2×R2-6P."""
+    2×R2-10 + 2×R2-11 + 4×R2-1 (entrance pair + downstream pair) +
+    2×G20-5P(envelope) + 2×R2-6P."""
     placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
     assert _count_label(placements, "R2-10") == 2
     assert _count_label(placements, "R2-11") == 2
-    assert _count_label(placements, "R2-1") == 2
+    # G4: entrance R2-1 mirrored (2) plus downstream R2-1 mirrored (2).
+    assert _count_label(placements, "R2-1") == 4
     # R2-6P is envelope-only (no intra-work-zone R2-6P emission); equals
     # 2 × n_assemblies for divided.
     assert _count_label(placements, "R2-6P") == 2
@@ -521,7 +524,8 @@ def test_shoulder_divided_large_envelope_more_assemblies() -> None:
 
 def test_shoulder_undivided_with_reduction_single_side() -> None:
     """Undivided shoulder → no mirror requirement under §6C.04(A).
-    Reduction emits single-side: 1×R2-10 + 1×R2-11 + 1×R2-1."""
+    Reduction emits single-side: 1×R2-10 + 1×R2-11 + 1×R2-1 entrance +
+    1×R2-1 downstream = 2 R2-1 total (single side, entrance + restoration)."""
     params = ScenarioParams(
         speed_mph=55,
         num_lanes=1,
@@ -537,11 +541,13 @@ def test_shoulder_undivided_with_reduction_single_side() -> None:
     placements = generate_shoulder_closure_undivided(params)
     assert _count_label(placements, "R2-10") == 1
     assert _count_label(placements, "R2-11") == 1
-    assert _count_label(placements, "R2-1") == 1
+    # G4: entrance R2-1 + downstream R2-1, single-side on undivided.
+    assert _count_label(placements, "R2-1") == 2
 
 
 def test_lane_closure_divided_with_reduction_emits_envelope() -> None:
-    """Divided lane closure (TA-19) with reduction → mirrored envelope."""
+    """Divided lane closure (TA-19) with reduction → mirrored envelope
+    with mirrored entrance + downstream R2-1 (G4)."""
     params = ScenarioParams(
         speed_mph=65,
         num_lanes=2,
@@ -557,7 +563,8 @@ def test_lane_closure_divided_with_reduction_emits_envelope() -> None:
     placements = generate_lane_closure_divided(params)
     assert _count_label(placements, "R2-10") == 2
     assert _count_label(placements, "R2-11") == 2
-    assert _count_label(placements, "R2-1") == 2
+    # G4: entrance R2-1 mirrored (2) + downstream R2-1 mirrored (2).
+    assert _count_label(placements, "R2-1") == 4
 
 
 def test_flagger_with_reduction_emits_no_envelope() -> None:
@@ -581,12 +588,18 @@ def test_flagger_with_reduction_emits_no_envelope() -> None:
 
 
 def test_shoulder_divided_envelope_station_geometry() -> None:
-    """R2-10 sits at wz_start+500, R2-11 at wz_end-500, R2-1 at wz_end-1000."""
+    """R2-10 sits at wz_start+500, R2-11 at wz_end-500, downstream R2-1
+    at wz_end-1000, entrance R2-1 at (n_plaques-0.5)*wz_len/n_plaques
+    (G4 — upstream-most §6C.06(A) plaque anchor, inside wz)."""
     placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
     r2_10_stations = sorted(p.station_ft for p in placements if p.label == "R2-10")
     r2_11_stations = sorted(p.station_ft for p in placements if p.label == "R2-11")
     r2_1_stations = sorted(p.station_ft for p in placements if p.label == "R2-1")
-    # 800 ft wz: wz_start = 800, wz_end = 0
+    # 800 ft wz: wz_start = 800, wz_end = 0. n_plaques for the harness
+    # 55 mph rural divided shoulder yields 3 plaques over the total
+    # signed length; upstream-most plaque sits at (3-0.5)/3 * 800 = 600.
     assert r2_10_stations == [1300.0, 1300.0]
     assert r2_11_stations == [-500.0, -500.0]
-    assert r2_1_stations == [-1000.0, -1000.0]
+    # Entrance R2-1 (2× mirrored) at 600 ft + downstream R2-1 (2× mirrored)
+    # at -1000 ft — driver-encounter order.
+    assert r2_1_stations == [-1000.0, -1000.0, 600.0, 600.0]

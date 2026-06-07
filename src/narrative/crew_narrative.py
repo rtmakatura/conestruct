@@ -304,6 +304,13 @@ def build_narrative_context(
         sign_schedule.extend(
             [
                 {
+                    "code": "R2-1",
+                    "description": (
+                        f"SPEED LIMIT {params.work_zone_speed_mph} (work-zone speed posting)"
+                    ),
+                    "distance": "Within work zone (paired with G20-5P plaque)",
+                },
+                {
                     "code": "R2-10",
                     "description": description_for("R2-10"),
                     "distance": "500 ft upstream of work zone",
