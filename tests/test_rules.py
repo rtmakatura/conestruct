@@ -1415,6 +1415,105 @@ def test_geometry_validator_exempts_mobile_and_off_road() -> None:
 
 
 # ===========================================================================
+# G3 — LANE_WIDTH_BELOW_FREEWAY_MIN: 11 ft minimum lane width on freeway.
+# Source: CDOT S-630-1 Sheet 7 (Case 11), "11' MIN." annotation on the
+# temporary edge line callout.  Validator-layer enforcement of a freeway
+# design constraint, independent of closure type.
+# ===========================================================================
+
+
+def test_geometry_validator_blocks_freeway_lane_below_11ft() -> None:
+    """Freeway × 10 ft lane width must fire LANE_WIDTH_BELOW_FREEWAY_MIN."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1500.0,
+        lane_width_ft=10.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    violations = validate_corridor_geometry(params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert any(
+        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in errors
+    ), f"Expected freeway lane-width error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    msg = next(v.message for v in errors if v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN")
+    assert "10.0 ft" in msg, msg
+    assert "11 ft" in msg, msg
+
+
+def test_geometry_validator_passes_freeway_lane_at_11ft_boundary() -> None:
+    """Freeway × 11.0 ft is the boundary — must clear the >=11 floor."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    violations = validate_corridor_geometry(params)
+    assert not any(
+        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations
+    ), f"Boundary 11 ft fired G3 error: {[v.rule_id for v in violations]}"
+
+
+def test_geometry_validator_skips_non_freeway_narrow_lane() -> None:
+    """Rural × 9 ft lane width does not trip the freeway-scoped rule.
+
+    Confirms G3 is gated on road_type=='freeway' — narrower lanes on
+    rural/urban facilities are governed by separate design standards
+    not enforced by this validator.
+    """
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=1500.0,
+        lane_width_ft=9.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+    violations = validate_corridor_geometry(params)
+    assert not any(
+        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations
+    ), f"Non-freeway scenario fired G3 error: {[v.rule_id for v in violations]}"
+
+
+def test_geometry_validator_freeway_lane_check_applies_to_mobile() -> None:
+    """Mobile-on-freeway × 10 ft still fires G3.
+
+    The mobile/off_road exemption applies to taper- and buffer-keyed
+    rules only.  G3 is a roadway design constraint (the public's
+    travel lane must be >=11 ft on a freeway) and the closure-type
+    exemption must not swallow it.
+    """
+    for closure_type in ("mobile", "off_road"):
+        params = ScenarioParams(
+            speed_mph=75,
+            num_lanes=2,
+            closure_type=closure_type,
+            road_type="freeway",
+            work_zone_length_ft=50.0,
+            lane_width_ft=10.0,
+            is_divided=True,
+            jurisdiction="CDOT",
+        )
+        violations = validate_corridor_geometry(params)
+        assert any(v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations), (
+            f"closure_type={closure_type} on freeway × 10 ft should still fire G3, "
+            f"got: {[v.rule_id for v in violations]}"
+        )
+
+
+# ===========================================================================
 # V1-Wide Item 3 — validate_fines_double_envelope + _is_flagger_scenario
 #                  + _NON_ADVANCE_WARNING_SIGN_LABELS regression.
 # ===========================================================================

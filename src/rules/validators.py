@@ -57,6 +57,13 @@ MIN_ADVANCE_WARNING_SIGNS: int = 3
 # Minimum number of flagger stations for alternating one-way operations.
 MIN_FLAGGER_STATIONS: int = 2
 
+# Minimum travel-lane width through a freeway work zone (CDOT S-630-1
+# Sheet 7, Case 11, "11' MIN." annotation on the temporary edge line
+# callout).  Applied in ``validate_corridor_geometry`` independent of
+# closure type — a freeway with sub-11 ft lanes is a design
+# non-conformance regardless of what's being done on it.
+FREEWAY_MIN_LANE_WIDTH_FT: float = 11.0
+
 # Sign labels that may sit upstream of the taper but are *not* part of
 # the Table 6B-1 advance-warning sequence — they are instructional or
 # regulatory signs that travel with the flagger station, work-zone
@@ -1206,12 +1213,41 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     area inside, which is usually a sign that the user mis-typed the
     length.  Does not block — just warns.
 
-    Mobile and off-road closures are exempt: they use a moving TMA or
-    operate beyond the shoulder respectively, so a fixed merging taper
-    is not part of the geometry.
+    Hard rule (``LANE_WIDTH_BELOW_FREEWAY_MIN`` / error): travel lane
+    width on a freeway must meet ``FREEWAY_MIN_LANE_WIDTH_FT``
+    (CDOT S-630-1 Sheet 7 Case 11).  Checked before the mobile/off-road
+    exemption because the minimum is a roadway design constraint, not a
+    closure-geometry rule — a freeway with sub-11 ft lanes is
+    non-compliant whether the work zone is a fixed taper, mobile op,
+    or work beyond the shoulder.
+
+    Mobile and off-road closures are exempt from the taper/buffer rules:
+    they use a moving TMA or operate beyond the shoulder respectively,
+    so a fixed merging taper is not part of the geometry.  The freeway
+    lane-width rule still applies.
     """
+    out: list[Violation] = []
+
+    if params.road_type == "freeway" and params.lane_width_ft < FREEWAY_MIN_LANE_WIDTH_FT:
+        out.append(
+            Violation(
+                rule_id="LANE_WIDTH_BELOW_FREEWAY_MIN",
+                severity="error",
+                message=(
+                    f"Lane width {params.lane_width_ft:.1f} ft is below the "
+                    f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft minimum for freeway "
+                    "work zones (CDOT S-630-1 Sheet 7 Case 11 '11' MIN.' "
+                    f"annotation). Increase lane width to at least "
+                    f"{FREEWAY_MIN_LANE_WIDTH_FT:.0f} ft, or verify the "
+                    "scenario is not actually on a freeway."
+                ),
+                mutcd_section="CDOT S-630-1 Sheet 7 (Case 11)",
+                device_index=None,
+            )
+        )
+
     if params.closure_type in ("mobile", "off_road"):
-        return []
+        return out
 
     if params.closure_type == "shoulder":
         taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
@@ -1223,7 +1259,6 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     taper_label = (
         "shoulder taper (L/3)" if params.closure_type == "shoulder" else "merging taper (L)"
     )
-    out: list[Violation] = []
     if work_zone_ft < taper_ft:
         out.append(
             Violation(
