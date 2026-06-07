@@ -59,7 +59,7 @@
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 45 \u2192 30 mph (\u039415 mph). 1 advance speed-reduction sign required per CO Supplement \u00a72B.13(A).",
+          "detail": "Not applicable (flagger carve-out — see fines_double for scope justification). Sheet 14 W3-5 placement is scoped to freeway/expressway work zones.",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },
@@ -92,7 +92,7 @@
       "count": 2,
       "narrative": "Two flagger stations are required for alternating one-way operations: one upstream of the merging taper to stop right-direction traffic, one past the downstream taper end to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
       "required": 2,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones \u2014 Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
       "table": [
         {
           "Label": "FLAGGER_1",

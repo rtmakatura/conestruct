@@ -48,7 +48,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 13 left, 13 right.",
+          "detail": "Required: True. Signs placed: 14 left, 14 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
@@ -60,7 +60,7 @@
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 55 → 45 mph (Δ10 mph). 1 advance speed-reduction sign required per CO Supplement §2B.13(A).",
+          "detail": "Work-zone speed reduced 55 → 45 mph (Δ10 mph). Required: 1. Placed: 1.",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },

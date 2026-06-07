@@ -1,15 +1,8 @@
 {
   "pending_verification": {
-    "count": 1,
-    "items": [
-      {
-        "kind": "stepped_speed_reduction_signs",
-        "label": "Stepped speed-reduction sign placement (>15 mph reduction) is pending in the layout engine.",
-        "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/36"
-      }
-    ],
-    "note": "Stepped speed-reduction sign placement (>15 mph reduction) is pending in the layout engine.",
-    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/36"
+    "count": 0,
+    "note": "",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
   },
   "sections": {
     "advance": {
@@ -55,7 +48,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 13 left, 13 right.",
+          "detail": "Required: True. Signs placed: 15 left, 15 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
@@ -67,7 +60,7 @@
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 55 → 30 mph (Δ25 mph). Requires 2 stepped sign installations per CO Supplement §2B.13(A) (max 15 mph per sign). Stepped-sign placement pending — see #36.",
+          "detail": "Work-zone speed reduced 55 → 30 mph (Δ25 mph). Required: 2 stepped sign installations per CO Supplement §2B.13(A) (max 15 mph per sign). Placed: 2.",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },

@@ -20,6 +20,7 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
+    co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
     downstream_taper_length,
@@ -320,6 +321,32 @@ def generate_shoulder_closure_divided(
                 label="R2-1",
             )
         )
+        # W3-5 advisory speed sign(s) per CO Supplement §2B.13(A)
+        # (V1-Wide G5). Single sign for Δ ≤ 15; stepped sequence for
+        # Δ > 15 (max 15 mph per sign installation).  Rightmost (k=0,
+        # closest to R2-10) carries the work-zone target speed; each
+        # prior sign 530 ft further upstream steps the advisory 15 mph
+        # closer to posted, rounded down to the nearest 5 mph, floored
+        # at the target.  Anchored 530 ft upstream of R2-10 per Sheet 14
+        # Cases 26/27 fixture geometry.  Mirrored per CO §6C.04(A).
+        n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
+        for k in range(n_w3_5):
+            w3_5_speed = max(
+                params.work_zone_speed_mph,
+                ((speed - (n_w3_5 - k) * 15) // 5) * 5,
+            )
+            w3_5_station = r2_10_station + 530.0 + k * 530.0
+            w3_5_label = f"W3-5({w3_5_speed})"
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, w3_5_station, sign_offset_right, label=w3_5_label
+                )
+            )
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, w3_5_station, sign_offset_left, label=w3_5_label
+                )
+            )
 
     return placements
 
@@ -530,6 +557,22 @@ def generate_shoulder_closure_undivided(
                 label="R2-1",
             )
         )
+        # W3-5 advisory speed sign(s) per CO Supplement §2B.13(A)
+        # (V1-Wide G5).  Single-side on undivided per CO §6C.04(A);
+        # stepping + station formula match the divided generator.
+        n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
+        for k in range(n_w3_5):
+            w3_5_speed = max(
+                params.work_zone_speed_mph,
+                ((speed - (n_w3_5 - k) * 15) // 5) * 5,
+            )
+            w3_5_station = r2_10_station + 530.0 + k * 530.0
+            w3_5_label = f"W3-5({w3_5_speed})"
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, w3_5_station, sign_offset_right, label=w3_5_label
+                )
+            )
 
     return placements
 
@@ -812,6 +855,27 @@ def generate_lane_closure_divided(
                 label="R2-1",
             )
         )
+        # W3-5 advisory speed sign(s) per CO Supplement §2B.13(A)
+        # (V1-Wide G5).  Stepping + station formula match the shoulder
+        # generators; mirrored per CO §6C.04(A).
+        n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
+        for k in range(n_w3_5):
+            w3_5_speed = max(
+                params.work_zone_speed_mph,
+                ((speed - (n_w3_5 - k) * 15) // 5) * 5,
+            )
+            w3_5_station = r2_10_station + 530.0 + k * 530.0
+            w3_5_label = f"W3-5({w3_5_speed})"
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, w3_5_station, sign_offset_right, label=w3_5_label
+                )
+            )
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, w3_5_station, sign_offset_left, label=w3_5_label
+                )
+            )
 
     # ``shoulder_edge_offset`` is computed for completeness (notes/legend
     # may reference the road's overall lateral extent) but is not used

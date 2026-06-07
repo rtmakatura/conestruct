@@ -29,6 +29,7 @@ from src.rules.sign_codes import description_for
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
+    co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
     pick_device_count,
@@ -51,6 +52,12 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
 _PLAQUE_AND_END_LABELS: frozenset[str] = frozenset(
     {"G20-5P", "G20-2", "R2-6P", "R2-10", "R2-11", "R2-1"}
 )
+
+
+def _is_w3_5_label(label: str | None) -> bool:
+    """True for any W3-5 label, including speed-encoded ``W3-5(60)``."""
+    return (label or "").upper().startswith("W3-5")
+
 
 _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
     DeviceType.DRUM: "Channelizing Drum (36-inch)",
@@ -175,6 +182,7 @@ def _advance_signs_from_placements(
             p.device_type == DeviceType.SIGN_GENERIC
             and p.label
             and p.label not in _PLAQUE_AND_END_LABELS
+            and not _is_w3_5_label(p.label)
             and p.offset_ft > 0
             and p.station_ft > taper_start_station
         ):
@@ -301,6 +309,29 @@ def build_narrative_context(
             )
 
     if fines_double_applicable:
+        # G5: W3-5 advisory-speed row(s) above the envelope, driver-
+        # encounter order (most-upstream first).  Single row for
+        # Δ ≤ 15; stepped sequence (N rows) for Δ > 15 — each row
+        # carries its intermediate posted speed from the same formula
+        # the layout uses.  Stations match ``layout.py``: rightmost
+        # (closest to R2-10) at 530 ft upstream of R2-10; each prior
+        # row +530 ft further upstream.
+        n_w3_5 = co_speed_reduction_signs(params.speed_mph, params.work_zone_speed_mph)
+        w3_5_rows: list[dict[str, str]] = []
+        for k in range(n_w3_5 - 1, -1, -1):
+            sp = max(
+                params.work_zone_speed_mph,
+                ((params.speed_mph - (n_w3_5 - k) * 15) // 5) * 5,
+            )
+            distance_ft = (k + 1) * 530.0
+            w3_5_rows.append(
+                {
+                    "code": f"W3-5({sp})",
+                    "description": f"ADVISORY SPEED {sp}",
+                    "distance": f"{distance_ft:,.0f} ft upstream of R2-10",
+                }
+            )
+        sign_schedule.extend(w3_5_rows)
         sign_schedule.extend(
             [
                 {

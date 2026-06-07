@@ -374,15 +374,14 @@ def build_audit_trail(
 
     # Work-zone speed reduction (CO Supplement §2B.13(A)).
     #
-    # ``pass`` reflects compliance of the *prescribed* plan with the
-    # standard — not Conestruct's current implementation completeness.
-    # Reductions > 15 mph require N stepped sign installations to be
-    # compliant; the prescribed plan is compliant when those signs are
-    # placed, so ``pass=True``.  Stepped-sign placement isn't yet
-    # implemented in the layout engine; the gap surfaces via the
-    # ``pending_verification`` rollup below (tracked by #36).
+    # ``pass`` now reflects actual placement compliance: the layout
+    # engine emits W3-5 advisory-speed sign(s) on every reduction
+    # (V1-Wide G5), so the check counts deployed W3-5 placements
+    # against the §2B.13(A) required count from
+    # ``co_speed_reduction_signs`` and passes iff placed ≥ required.
+    # Flagger scenarios carve out (same gate as the Fines Double
+    # envelope) — Sheet 14's W3-5 placement is freeway/expressway scope.
     speed_reduction_section: dict[str, Any]
-    stepped_signs_pending = False
     if not is_reduced:
         speed_reduction_section = {
             "pass": True,
@@ -393,25 +392,42 @@ def build_audit_trail(
                 f"applies throughout the zone."
             ),
         }
+    elif _is_flagger_scenario(params):
+        speed_reduction_section = {
+            "pass": True,
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "citation": "CO Supplement Sec 2B.13(A)",
+            "detail": (
+                "Not applicable (flagger carve-out — see fines_double "
+                "for scope justification). Sheet 14 W3-5 placement is "
+                "scoped to freeway/expressway work zones."
+            ),
+        }
     else:
         delta = speed - wz_speed
+        n_signs_required = co_speed_reduction_signs(speed, wz_speed)
+        n_w3_5_placed = sum(
+            1
+            for p in placements
+            if p.device_type == DeviceType.SIGN_GENERIC
+            and (p.label or "").upper().startswith("W3-5")
+            and p.offset_ft > 0
+        )
         if delta <= COLORADO_OVERRIDES.max_speed_reduction_per_sign_mph:
             detail = (
                 f"Work-zone speed reduced {speed} → {wz_speed} mph "
-                f"(Δ{delta} mph). 1 advance speed-reduction sign required "
-                f"per CO Supplement §2B.13(A)."
+                f"(Δ{delta} mph). Required: {n_signs_required}. "
+                f"Placed: {n_w3_5_placed}."
             )
         else:
-            n_signs = co_speed_reduction_signs(speed, wz_speed)
             detail = (
                 f"Work-zone speed reduced {speed} → {wz_speed} mph "
-                f"(Δ{delta} mph). Requires {n_signs} stepped sign "
-                f"installations per CO Supplement §2B.13(A) (max 15 mph "
-                f"per sign). Stepped-sign placement pending — see #36."
+                f"(Δ{delta} mph). Required: {n_signs_required} stepped "
+                f"sign installations per CO Supplement §2B.13(A) "
+                f"(max 15 mph per sign). Placed: {n_w3_5_placed}."
             )
-            stepped_signs_pending = True
         speed_reduction_section = {
-            "pass": True,
+            "pass": n_w3_5_placed >= n_signs_required,
             "label": "Speed reduction <= 15 mph per sign installation",
             "citation": "CO Supplement Sec 2B.13(A)",
             "detail": detail,
@@ -744,10 +760,6 @@ def build_audit_trail(
         "flagger": flagger_section,
         "corridor_validation": corridor_validation,
         "geometry_validation": geo_section,
-        # Internal signal for ``audit_projection`` — never reaches the
-        # UI; the projection consumes and removes this key before
-        # composing the response body's ``sections``.
-        "_stepped_signs_pending": stepped_signs_pending,
     }
     # Conditional inclusion of fines_double — when the section is None
     # (no work-zone speed reduction in effect), the key is entirely
@@ -782,13 +794,6 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 # projection scrubs the TODO text from user-facing fields and surfaces
 # this URL on the rollup so a reviewer can see what's pending.
 AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
-
-# Tracking issue for stepped speed-reduction sign placement (CO
-# Supplement §2B.13(A), reductions > 15 mph).  Surfaced in the
-# pending_verification rollup when the audit detects a >15 mph
-# reduction — the prescribed plan is compliant, but Conestruct's layout
-# engine doesn't yet emit the stepped W3-5 sign sequence.
-AUDIT_STEPPED_SIGNS_ISSUE: str = "https://github.com/rtmakatura/conestruct/issues/36"
 
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
@@ -930,22 +935,7 @@ def audit_projection(
         # appended to ``items`` once above, so the rollup reads
         # "1 reference pending," not "2."
 
-    if audit.get("_stepped_signs_pending"):
-        items.append(
-            {
-                "kind": "stepped_speed_reduction_signs",
-                "label": (
-                    "Stepped speed-reduction sign placement (>15 mph "
-                    "reduction) is pending in the layout engine."
-                ),
-                "tracking_issue": AUDIT_STEPPED_SIGNS_ISSUE,
-            }
-        )
-
-    # Strip the internal-only signal before composing ``sections`` so it
-    # never reaches the UI body.
-    sections = {k: v for k, v in audit.items() if k != "_stepped_signs_pending"}
-    sections = {**sections, "taper": taper, "case": case}
+    sections = {**audit, "taper": taper, "case": case}
 
     speed = audit["spacing"]["speed_mph"]
     summary: dict[str, Any] = {

@@ -19,6 +19,7 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     co_construction_plaques,
+    co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
     shoulder_taper_length,
@@ -60,7 +61,9 @@ MIN_FLAGGER_STATIONS: int = 2
 # the Table 6B-1 advance-warning sequence — they are instructional or
 # regulatory signs that travel with the flagger station, work-zone
 # boundary, or pedestrian-access detour.  Excluded from the A/B/C
-# spacing analysis in ``validate_advance_warning_signs``.
+# spacing analysis in ``validate_advance_warning_signs``.  Compared
+# against the label's pre-``(`` prefix so speed-encoded labels like
+# ``W3-5(60)`` collapse to their family code before lookup.
 _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
     {
         "G20-4",  # PILOT CAR FOLLOW ME — co-located with flagger station
@@ -74,8 +77,24 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
         "R2-6P",  # FINES DOUBLE plaque — paired with G20-5P in envelope
         "R2-10",  # BEGIN DOUBLE FINES ZONE — upstream envelope boundary
         "R2-11",  # END DOUBLE FINES ZONE — downstream envelope boundary
+        # W3-5 advisory-speed sign (V1-Wide G5) — sits upstream of R2-10
+        # per CO Supplement §2B.13(A); excluded from A/B/C cluster math
+        # for the same reason as R2-10.
+        "W3-5",
     }
 )
+
+
+def _advance_warning_label_key(label: str | None) -> str:
+    """Strip any ``(speed)`` suffix and uppercase, for non-advance lookup.
+
+    Speed-encoded labels (e.g. ``W3-5(60)``, ``R2-1(60)``) collapse to
+    their family code (``W3-5``, ``R2-1``) so the
+    ``_NON_ADVANCE_WARNING_SIGN_LABELS`` frozenset can match by code
+    alone without enumerating every possible speed value.
+    """
+    return (label or "").upper().split("(", 1)[0]
+
 
 # Lateral offset delta (ft) below which a channelizer pair is treated as
 # tangent (constant offset) rather than taper (changing offset).  V1
@@ -412,7 +431,7 @@ def validate_advance_warning_signs(
         i
         for i in _sign_indices(placements)
         if placements[i].station_ft > taper_upstream
-        and (placements[i].label or "").upper() not in _NON_ADVANCE_WARNING_SIGN_LABELS
+        and _advance_warning_label_key(placements[i].label) not in _NON_ADVANCE_WARNING_SIGN_LABELS
     ]
 
     # Cluster signs whose stations are within
@@ -755,7 +774,7 @@ def validate_flagger_advance_sign_sequence(
         i
         for i in _sign_indices(placements)
         if placements[i].station_ft > taper_upstream
-        and (placements[i].label or "").upper() not in _NON_ADVANCE_WARNING_SIGN_LABELS
+        and _advance_warning_label_key(placements[i].label) not in _NON_ADVANCE_WARNING_SIGN_LABELS
     ]
     sign_idx_sorted = sorted(sign_idx, key=lambda i: placements[i].station_ft)
     clusters: list[list[int]] = []
@@ -1061,6 +1080,18 @@ def validate_fines_double_envelope(
         and 0 < p.station_ft <= params.work_zone_length_ft
         for p in placements
     )
+    # G5: W3-5 advisory-speed sign(s) per CO Supplement §2B.13(A).
+    # Count by label prefix so stepped placements (W3-5(60), W3-5(45),
+    # ...) all aggregate to one family code.  Required count tracks
+    # ``co_speed_reduction_signs`` — 1 for Δ ≤ 15, ceil(Δ/15) for
+    # Δ > 15.  Split into two violations so the field-engineer message
+    # distinguishes "no W3-5 at all" from "partial stepped sequence".
+    n_w3_5 = sum(
+        1
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC and (p.label or "").upper().startswith("W3-5")
+    )
+    required_w3_5 = co_speed_reduction_signs(params.speed_mph, params.work_zone_speed_mph)
 
     out: list[Violation] = []
     if not has_r2_10:
@@ -1108,6 +1139,38 @@ def validate_fines_double_envelope(
                     "enter the zone; without it, drivers have no "
                     "regulatory indication of the reduced limit until "
                     "they exit past R2-11."
+                ),
+                mutcd_section="CO Supplement §2B.13(A)",
+                device_index=None,
+            )
+        )
+    if n_w3_5 == 0:
+        out.append(
+            Violation(
+                rule_id="MISSING_W3_5",
+                severity="error",
+                message=(
+                    "Work-zone speed reduced below posted speed but no "
+                    "W3-5 (ADVISORY SPEED) advance warning sign found. "
+                    "CO Supplement §2B.13(A) requires at least one W3-5 "
+                    "advisory upstream of the reduced-speed work zone "
+                    "(stepped sequence when the reduction exceeds 15 mph)."
+                ),
+                mutcd_section="CO Supplement §2B.13(A)",
+                device_index=None,
+            )
+        )
+    elif n_w3_5 < required_w3_5:
+        out.append(
+            Violation(
+                rule_id="INSUFFICIENT_W3_5_COUNT",
+                severity="error",
+                message=(
+                    f"Found {n_w3_5} W3-5 advisory-speed sign(s); "
+                    f"{required_w3_5} required for a "
+                    f"{params.speed_mph} → {params.work_zone_speed_mph} mph "
+                    "reduction per CO Supplement §2B.13(A) (max 15 mph "
+                    "per sign installation)."
                 ),
                 mutcd_section="CO Supplement §2B.13(A)",
                 device_index=None,

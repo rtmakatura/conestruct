@@ -157,3 +157,80 @@ def test_crew_narrative_no_reduction_omits_entrance_r2_1_row() -> None:
     # No reduction → no Fines Double envelope schedule rows at all.
     assert "(work-zone speed posting)" not in markdown
     assert "(posted-speed restoration)" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# G5 — W3-5 advisory-speed sign schedule row(s)
+# ---------------------------------------------------------------------------
+# Verifies that the W3-5 advisory advance-warning sign appears in the
+# crew Markdown Sign Placement Schedule whenever a reduction applies —
+# single row for Δ ≤ 15, N rows for stepped sequences — and is absent
+# under no reduction.
+
+
+def test_crew_narrative_65mph_reduction_includes_w3_5_row() -> None:
+    """65 → 60 (Δ=5, N=1) → one W3-5(60) row above the entrance R2-1."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=60,
+    )
+    markdown = _render(params)
+    assert "| W3-5(60) | ADVISORY SPEED 60 | 530 ft upstream of R2-10 " in markdown
+
+
+def test_crew_narrative_55mph_reduction_includes_w3_5_row() -> None:
+    """55 → 45 (Δ=10, N=1) → one W3-5(45) row."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=45,
+    )
+    markdown = _render(params)
+    assert "| W3-5(45) | ADVISORY SPEED 45 | 530 ft upstream of R2-10 " in markdown
+
+
+def test_crew_narrative_stepped_reduction_includes_n_w3_5_rows() -> None:
+    """55 → 30 (Δ=25, N=2 stepped) → two W3-5 rows: driver-encounter
+    order is W3-5(40) first (1,060 ft upstream), W3-5(30) second (530 ft
+    upstream of R2-10, rightmost = target speed)."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    markdown = _render(params)
+    assert "| W3-5(40) | ADVISORY SPEED 40 | 1,060 ft upstream of R2-10 " in markdown
+    assert "| W3-5(30) | ADVISORY SPEED 30 | 530 ft upstream of R2-10 " in markdown
+
+
+def test_crew_narrative_no_reduction_omits_w3_5_row() -> None:
+    """No reduction → no W3-5 row(s) in the sign schedule."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    assert "W3-5" not in markdown
+    assert "ADVISORY SPEED" not in markdown

@@ -1446,12 +1446,17 @@ def _mk_envelope_placements(
     include_r2_11: bool,
     *,
     include_entrance_r2_1: bool = True,
+    n_w3_5_signs: int = 1,
 ) -> list[DevicePlacement]:
     """Hand-constructed placement list with the requested envelope signs.
 
     Bypasses the generator so the validator is tested in isolation.
     ``include_entrance_r2_1`` defaults to True so existing R2-10/R2-11
     tests don't double-fire MISSING_R2_1_ENTRANCE (G4).
+    ``n_w3_5_signs`` defaults to 1 so existing tests don't double-fire
+    MISSING_W3_5 (G5) — assumes the harness ``_fines_double_params``
+    (55→45, Δ=10 → 1 sign required).  Override to 0 to drop the W3-5
+    family entirely, or to ≥ 2 for stepped scenarios.
     """
     out: list[DevicePlacement] = []
     if include_r2_10:
@@ -1480,6 +1485,18 @@ def _mk_envelope_placements(
                 station_ft=600.0,
                 offset_ft=28.0,
                 label="R2-1",
+            )
+        )
+    for k in range(n_w3_5_signs):
+        # G5: W3-5 advisory speed sign(s). Speed and station details
+        # don't matter for the validator (only count by prefix), so the
+        # harness uses synthetic ascending stations and a single speed.
+        out.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=1830.0 + k * 530.0,
+                offset_ft=28.0,
+                label=f"W3-5({45 - k * 5})",
             )
         )
     return out
@@ -1557,6 +1574,71 @@ def test_validate_fines_double_envelope_entrance_r2_1_outside_wz_does_not_satisf
     assert violations[0].rule_id == "MISSING_R2_1_ENTRANCE"
 
 
+def test_validate_fines_double_envelope_error_when_w3_5_missing() -> None:
+    """Missing W3-5 (any) → MISSING_W3_5 error (G5). Δ ≤ 15 default
+    requires 1 W3-5; zero placed fires the no-W3-5-at-all rule."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params()  # 55 → 45, Δ = 10, requires 1 W3-5
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=True, n_w3_5_signs=0)
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "MISSING_W3_5"
+    assert violations[0].severity == "error"
+    assert violations[0].mutcd_section == "CO Supplement §2B.13(A)"
+
+
+def test_validate_fines_double_envelope_error_when_w3_5_count_insufficient() -> None:
+    """Stepped reduction with partial W3-5 placement → INSUFFICIENT_W3_5_COUNT
+    error (G5).  55 → 30 (Δ=25) requires 2 stepped W3-5; placing only 1
+    fires the partial-sequence rule, distinct from MISSING_W3_5."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params(work_zone_speed_mph=30)  # Δ = 25, requires 2
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=True, n_w3_5_signs=1)
+    violations = validate_fines_double_envelope(placements, params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "INSUFFICIENT_W3_5_COUNT"
+    assert violations[0].severity == "error"
+
+
+def test_validate_fines_double_envelope_pass_with_stepped_w3_5_count_met() -> None:
+    """Stepped reduction with the full required count → no violation.
+    55 → 30 (Δ=25, N=2) with 2 W3-5 placements passes."""
+    from src.rules.validators import validate_fines_double_envelope
+
+    params = _fines_double_params(work_zone_speed_mph=30)
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=True, n_w3_5_signs=2)
+    assert validate_fines_double_envelope(placements, params) == []
+
+
+def test_validate_fines_double_envelope_w3_5_count_uses_label_prefix() -> None:
+    """W3-5 counter is by label prefix, not exact match — speed-encoded
+    labels W3-5(40), W3-5(30) all aggregate to the W3-5 family."""
+    from src.rules.validators import DevicePlacement, validate_fines_double_envelope
+
+    params = _fines_double_params(work_zone_speed_mph=30)  # Δ=25 → requires 2
+    placements = _mk_envelope_placements(include_r2_10=True, include_r2_11=True, n_w3_5_signs=0)
+    # Two manually placed W3-5 signs at different per-step speeds.
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=1830.0,
+            offset_ft=28.0,
+            label="W3-5(30)",
+        )
+    )
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.SIGN_GENERIC,
+            station_ft=2360.0,
+            offset_ft=28.0,
+            label="W3-5(40)",
+        )
+    )
+    assert validate_fines_double_envelope(placements, params) == []
+
+
 def test_validate_fines_double_envelope_skipped_when_no_reduction() -> None:
     """work_zone_speed_mph None → validator exits early with no violations."""
     from src.rules.validators import validate_fines_double_envelope
@@ -1626,6 +1708,21 @@ def test_advance_warning_signs_excludes_r2_10() -> None:
     violations = validate_advance_warning_signs(placements, params)
     errors = [v for v in violations if v.severity == "error"]
     assert errors == [], f"R2-10 corrupted A/B/C analysis: {errors}"
+
+
+def test_advance_warning_signs_excludes_w3_5() -> None:
+    """G5 regression: W3-5(target) placed upstream of taper must NOT
+    corrupt the A/B/C cluster analysis. Same shape as the R2-10
+    exclusion; the suffix-strip in ``_advance_warning_label_key``
+    collapses ``W3-5(45)`` to the ``W3-5`` family code for lookup."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_advance_warning_signs
+
+    params = _fines_double_params(work_zone_speed_mph=30)  # stepped Δ=25
+    placements = generate_shoulder_closure_divided(params)
+    violations = validate_advance_warning_signs(placements, params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert errors == [], f"W3-5 corrupted A/B/C analysis: {errors}"
 
 
 def test_co_construction_plaques_count_with_envelope() -> None:

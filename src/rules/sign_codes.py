@@ -26,6 +26,7 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "W20-7": "FLAGGER AHEAD",
     "W20-7a": "AFAD AHEAD",
     "W3-4": "BE PREPARED TO STOP",
+    "W3-5": "ADVISORY SPEED XX",
     "W21-1a": "WORKERS",
     "W21-5": "SHOULDER WORK",
     "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",

@@ -602,7 +602,8 @@ def test_audit_no_reduction_speed_section_pass(client: TestClient) -> None:
 
 
 def test_audit_small_reduction_one_sign(client: TestClient) -> None:
-    """55 → 45 mph (Δ10) → pass=True, "1 advance speed-reduction sign"."""
+    """55 → 45 mph (Δ10) → pass=True, detail carries Required: 1 / Placed: 1
+    (G5 — layout engine emits the W3-5 advisory)."""
     s = _shoulder_scenario()
     s["workZoneSpeed"] = 45
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
@@ -611,7 +612,8 @@ def test_audit_small_reduction_one_sign(client: TestClient) -> None:
     assert sr["pass"] is True
     assert "55 → 45 mph" in sr["detail"]
     assert "Δ10 mph" in sr["detail"]
-    assert "1 advance speed-reduction sign" in sr["detail"]
+    assert "Required: 1" in sr["detail"]
+    assert "Placed: 1" in sr["detail"]
     # Small reduction does NOT trigger the stepped-signs pending entry.
     pending = res.json()["pending_verification"]
     items = pending.get("items", [])
@@ -619,9 +621,11 @@ def test_audit_small_reduction_one_sign(client: TestClient) -> None:
     assert "stepped_speed_reduction_signs" not in kinds
 
 
-def test_audit_large_reduction_pending_bumps_with_36(client: TestClient) -> None:
-    """55 → 30 mph (Δ25) → 2 stepped signs required, pending_verification
-    gains a stepped_speed_reduction_signs item linking #36."""
+def test_audit_large_reduction_emits_stepped_w3_5(client: TestClient) -> None:
+    """55 → 30 mph (Δ25) → 2 stepped W3-5 signs emitted by the layout
+    engine (G5).  Detail carries Required: 2 stepped sign installations
+    + Placed: 2; the pre-G5 stepped_speed_reduction_signs pending entry
+    is retired now that the gap is closed."""
     s = _shoulder_scenario()
     s["workZoneSpeed"] = 30
     res = client.post("/render/audit", headers=_auth_headers(), json=s)
@@ -631,16 +635,13 @@ def test_audit_large_reduction_pending_bumps_with_36(client: TestClient) -> None
     assert sr["pass"] is True
     assert "55 → 30 mph" in sr["detail"]
     assert "Δ25 mph" in sr["detail"]
-    assert "2 stepped sign installations" in sr["detail"]
-    assert "see #36" in sr["detail"]
+    assert "Required: 2 stepped sign installations" in sr["detail"]
+    assert "Placed: 2" in sr["detail"]
 
     pending = body["pending_verification"]
-    assert pending["count"] >= 1
-    items = pending["items"]
+    items = pending.get("items", [])
     kinds = [item["kind"] for item in items]
-    assert "stepped_speed_reduction_signs" in kinds
-    stepped = next(item for item in items if item["kind"] == "stepped_speed_reduction_signs")
-    assert stepped["tracking_issue"] == audit_module.AUDIT_STEPPED_SIGNS_ISSUE
+    assert "stepped_speed_reduction_signs" not in kinds
 
 
 def test_audit_wz_above_posted_rejected(client: TestClient) -> None:
@@ -1558,3 +1559,96 @@ def test_entrance_r2_1_absent_on_flagger_carve_out() -> None:
     audit = build_audit_trail([], params)
     assert audit["fines_double"]["applicable"] is False
     assert "envelope" not in audit["fines_double"]
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide G5 — W3-5 advisory-speed sign placement (CO §2B.13(A)).
+#
+# The CO §2B.13(A) audit check now carries the Placed: N suffix and
+# passes iff placed ≥ required (was unconditionally True under the
+# pre-G5 audit-honesty semantics).  Flagger reduced-speed carves out
+# with a reason mirroring fines_double.  Δ > 15 retires the
+# stepped_speed_reduction_signs pending_verification entry because
+# the layout engine now emits the stepped sequence.
+# ---------------------------------------------------------------------------
+
+
+def _co_2b13_check(body: dict) -> dict:
+    """The §2B.13(A) row in colorado.checks — third entry, after both-sides
+    and plaques — pulled out as a helper so the G5 tests stay readable."""
+    return body["sections"]["colorado"]["checks"][2]
+
+
+def test_co_2b13_check_at_65mph_reduction_reports_placed_1(client: TestClient) -> None:
+    """65 → 60 (Δ=5, N=1) → §2B.13(A) detail carries `Placed: 1`."""
+    s = _shoulder_scenario()
+    s["speed"] = 65
+    s["workLen"] = 1000.0
+    s["workZoneSpeed"] = 60
+    s["roadType"] = "freeway"
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    check = _co_2b13_check(res.json())
+    assert "Required: 1" in check["detail"]
+    assert "Placed: 1" in check["detail"]
+    assert check["pass"] is True
+
+
+def test_co_2b13_check_at_55_to_30_reduction_reports_placed_2_stepped(client: TestClient) -> None:
+    """55 → 30 (Δ=25, N=2 stepped) → §2B.13(A) detail carries
+    `Required: 2 stepped sign installations` + `Placed: 2`, passes."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 30
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    check = _co_2b13_check(res.json())
+    assert "Required: 2 stepped sign installations" in check["detail"]
+    assert "Placed: 2" in check["detail"]
+    assert check["pass"] is True
+
+
+def test_co_2b13_check_no_reduction_reports_not_applicable(client: TestClient) -> None:
+    """No reduction → §2B.13(A) detail explicit `No work-zone speed reduction`."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    check = _co_2b13_check(res.json())
+    assert "No work-zone speed reduction" in check["detail"]
+    assert check["pass"] is True
+
+
+def test_co_2b13_check_flagger_carve_out_reports_not_applicable() -> None:
+    """Flagger reduced-speed → §2B.13(A) detail carves out with
+    `Not applicable (flagger carve-out — see fines_double ...)`."""
+    from src.api.audit import audit_projection, build_audit_trail
+    from src.generation.layout import generate_flagger_alternating_2lane
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    placements = generate_flagger_alternating_2lane(params)
+    audit = build_audit_trail(placements, params)
+    body = audit_projection(audit, scenario_kind="flagger_lane_closure")
+    check = _co_2b13_check(body)
+    assert "Not applicable (flagger carve-out" in check["detail"]
+    assert check["pass"] is True
+
+
+def test_stepped_signs_pending_entry_retired(client: TestClient) -> None:
+    """G5 retires the stepped_speed_reduction_signs pending_verification
+    entry: Δ > 15 reductions no longer surface a pending entry because
+    the layout engine emits the stepped sequence."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = 30  # Δ = 25, pre-G5 would surface stepped pending
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    pending = res.json()["pending_verification"]
+    assert pending["count"] == 0
+    assert "items" not in pending
+    kinds = [it.get("kind") for it in pending.get("items", [])]
+    assert "stepped_speed_reduction_signs" not in kinds

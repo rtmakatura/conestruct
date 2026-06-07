@@ -466,11 +466,27 @@ def _shoulder_divided_params(work_zone_speed_mph: int | None) -> ScenarioParams:
     )
 
 
+def _count_label_prefix(placements: list[DevicePlacement], prefix: str) -> int:
+    """Count placements whose label starts with ``prefix`` (case-sensitive).
+
+    Used for G5 W3-5 tests where labels carry per-step speeds
+    (e.g. ``W3-5(60)``, ``W3-5(45)``, ...) — exact-match wouldn't
+    aggregate the stepped sequence.
+    """
+    return sum(
+        1
+        for p in placements
+        if p.device_type.value == "SIGN_GENERIC" and p.label and p.label.startswith(prefix)
+    )
+
+
 def test_shoulder_divided_no_reduction_emits_no_envelope() -> None:
-    """Baseline: no reduction → zero Fines Double envelope signs."""
+    """Baseline: no reduction → zero Fines Double envelope signs (or W3-5)."""
     placements = generate_shoulder_closure_divided(_shoulder_divided_params(None))
     for label in ("R2-10", "R2-11", "R2-1", "R2-6P"):
         assert _count_label(placements, label) == 0
+    # G5: no W3-5 advisory-speed sign without a reduction.
+    assert _count_label_prefix(placements, "W3-5") == 0
 
 
 def test_shoulder_divided_with_reduction_emits_mirrored_envelope() -> None:
@@ -603,3 +619,145 @@ def test_shoulder_divided_envelope_station_geometry() -> None:
     # Entrance R2-1 (2× mirrored) at 600 ft + downstream R2-1 (2× mirrored)
     # at -1000 ft — driver-encounter order.
     assert r2_1_stations == [-1000.0, -1000.0, 600.0, 600.0]
+
+
+# ---------------------------------------------------------------------------
+# V1-Wide G5 — W3-5 advisory-speed sign emission (CO Supplement §2B.13(A))
+# ---------------------------------------------------------------------------
+
+
+def test_shoulder_divided_with_reduction_emits_mirrored_w3_5_single() -> None:
+    """Δ ≤ 15 → single W3-5 carrying the work-zone target speed, mirrored
+    on a divided highway per CO §6C.04(A). 55→45 → 2× W3-5(45)."""
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(45))
+    assert _count_label(placements, "W3-5(45)") == 2
+    # No other W3-5 speed labels emit.
+    assert _count_label_prefix(placements, "W3-5") == 2
+
+
+def test_shoulder_divided_with_stepped_reduction_emits_stepped_w3_5() -> None:
+    """Δ > 15 → stepped W3-5 sequence (max 15 mph per sign installation).
+    55→30 (Δ=25, N=2): rightmost W3-5(30) at target; prior W3-5(40) at
+    posted - 15. Mirrored on divided → 2× each label = 4 total."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    assert _count_label(placements, "W3-5(30)") == 2
+    assert _count_label(placements, "W3-5(40)") == 2
+    assert _count_label_prefix(placements, "W3-5") == 4
+
+
+def test_shoulder_divided_with_75_to_40_stepped_emits_3_w3_5() -> None:
+    """75→40 (Δ=35, N=3) — three stepped W3-5: rightmost W3-5(40) at
+    target; W3-5(45) one step up; W3-5(60) furthest upstream (posted - 15).
+    Mirrored → 6 total W3-5 placements."""
+    params = ScenarioParams(
+        speed_mph=75,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=40,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    assert _count_label(placements, "W3-5(40)") == 2
+    assert _count_label(placements, "W3-5(45)") == 2
+    assert _count_label(placements, "W3-5(60)") == 2
+    assert _count_label_prefix(placements, "W3-5") == 6
+
+
+def test_shoulder_undivided_with_reduction_emits_single_side_w3_5() -> None:
+    """Undivided shoulder → no mirror requirement. 55→45 (Δ=10) →
+    single-side W3-5(45) (count = 1)."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=1,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=600.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=45,
+    )
+    placements = generate_shoulder_closure_undivided(params)
+    assert _count_label(placements, "W3-5(45)") == 1
+    assert _count_label_prefix(placements, "W3-5") == 1
+
+
+def test_lane_closure_divided_with_reduction_emits_mirrored_w3_5() -> None:
+    """Lane closure on divided + reduction → mirrored W3-5(target).
+    65→55 (Δ=10) → 2× W3-5(55)."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=55,
+    )
+    placements = generate_lane_closure_divided(params)
+    assert _count_label(placements, "W3-5(55)") == 2
+    assert _count_label_prefix(placements, "W3-5") == 2
+
+
+def test_flagger_with_reduction_emits_no_w3_5() -> None:
+    """Flagger 2-lane carve-out (Sheet 14 scope) → no W3-5 even with
+    work_zone_speed_mph set, mirroring the Fines Double envelope carve-out."""
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    placements = generate_flagger_alternating_2lane(params)
+    assert _count_label_prefix(placements, "W3-5") == 0
+
+
+def test_shoulder_divided_w3_5_station_geometry() -> None:
+    """W3-5 stations follow the fixed-interval rule: rightmost (closest
+    to R2-10) at r2_10_station + 530; each further upstream at +530 ft.
+    55→30 stepped (N=2, wz=800, r2_10 at 1300): k=0 at 1830 carries
+    W3-5(30); k=1 at 2360 carries W3-5(40). Mirrored, so 2 each."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=30,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    stations_30 = sorted(p.station_ft for p in placements if p.label == "W3-5(30)")
+    stations_40 = sorted(p.station_ft for p in placements if p.label == "W3-5(40)")
+    assert stations_30 == [1830.0, 1830.0]
+    assert stations_40 == [2360.0, 2360.0]
