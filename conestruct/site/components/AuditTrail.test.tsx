@@ -3,14 +3,17 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
 
 import {
+  buildShoulderItems,
   finesDoubleItem,
   pendingVerificationItem,
   referenceItem,
 } from "./AuditTrail";
 import type {
   AuditResponse,
+  AuditState,
   PendingItem,
 } from "../lib/render-types";
+import type { ShoulderScenario } from "../lib/scenarios";
 
 // V1-Wide Item 1, Q-PLAN-1 (Option B): the AuditTrail renderer iterates
 // pending_verification.items[] so each pending entry surfaces with its
@@ -376,5 +379,125 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     expect(spec.result).toContain("Case 11 (reduced work-zone speed)");
     const html = renderToStaticMarkup(spec.body as ReactElement);
     expect(html).not.toContain("Trigger:");
+  });
+});
+
+// V1-Wide S1 follow-up (#49) — integration-style coverage of the
+// buildShoulderItems wiring itself. The 4 referenceItem tests above
+// pin the renderer surface, but the upstream call site
+// (buildShoulderItems threading summary.case_id + trigger_condition
+// into referenceItem) is unverified. If a regression reintroduced the
+// pre-S1 hardcoded "Case 1A"/"Case 1B" inside buildShoulderItems, the
+// referenceItem tests would still pass because referenceItem is fed
+// a literal string and has no view of where it came from.
+
+describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
+  function readyShoulderState(
+    overrides: Partial<AuditResponse["summary"]>,
+  ): AuditState {
+    return {
+      state: "ready",
+      data: {
+        summary: {
+          ta: "TA-2",
+          cdot_sheet: "S-630-1",
+          case_id: "Case 11: Shoulder closure on divided highway",
+          taper_length_ft: 183,
+          taper_label: "L/3 (shoulder taper)",
+          buffer_space_ft: 495,
+          device_spacing_taper_ft: 55,
+          device_spacing_tangent_ft: 110,
+          step_count: 8,
+          ...overrides,
+        },
+        sections: {
+          taper: {},
+          buffer: {},
+          spacing: {},
+          advance: {},
+          colorado: {},
+          case: { url: "https://www.codot.gov/...PDF" },
+          flagger: {},
+          corridor_validation: { checked: false, warnings: [] },
+          geometry_validation: { violations: [], all_pass: true },
+        },
+        pending_verification: { count: 0, note: "", tracking_issue: null },
+      },
+    };
+  }
+
+  // _scenario is unused by buildShoulderItems (underscore prefix is
+  // the contract); a minimal cast is sufficient.
+  const dummyShoulder = { kind: "shoulder" } as unknown as ShoulderScenario;
+  const identityR = (n: number | string) => String(n);
+
+  it("no_reduction routing surfaces backend case_id (Case 1A/1B regression sentinel)", () => {
+    const state = readyShoulderState({
+      case_routing: "shoulder_no_reduction",
+      case_id: "Case 11: Shoulder closure on divided highway",
+    });
+    const items = buildShoulderItems(dummyShoulder, state, true, identityR);
+    expect(items[5].result).toBe("Case 11: Shoulder closure on divided highway");
+    // Strict sentinel — the bug class is a hardcoded string anywhere
+    // in the returned spec array, not just the reference row's result.
+    const serialized = JSON.stringify(items);
+    expect(serialized).not.toContain("Case 1A");
+    expect(serialized).not.toContain("Case 1B");
+  });
+
+  it("shoulder_reduced_speed routing surfaces Case 26 case_id (Case 1A/1B regression sentinel)", () => {
+    const state = readyShoulderState({
+      case_routing: "shoulder_reduced_speed",
+      case_id: "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+      trigger_condition:
+        "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+    });
+    const items = buildShoulderItems(dummyShoulder, state, true, identityR);
+    expect(items[5].result).toBe(
+      "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+    );
+    const serialized = JSON.stringify(items);
+    expect(serialized).not.toContain("Case 1A");
+    expect(serialized).not.toContain("Case 1B");
+  });
+
+  it("row count is stable across routings (trigger_condition stays inline, not a separate row)", () => {
+    const noReduction = buildShoulderItems(
+      dummyShoulder,
+      readyShoulderState({
+        case_routing: "shoulder_no_reduction",
+        case_id: "Case 11: Shoulder closure on divided highway",
+      }),
+      true,
+      identityR,
+    );
+    const reducedSpeed = buildShoulderItems(
+      dummyShoulder,
+      readyShoulderState({
+        case_routing: "shoulder_reduced_speed",
+        case_id: "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+        trigger_condition:
+          "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+      }),
+      true,
+      identityR,
+    );
+    expect(noReduction.length).toBe(6);
+    expect(reducedSpeed.length).toBe(6);
+    expect(noReduction.length).toBe(reducedSpeed.length);
+  });
+
+  it("reference row is wired to TA-2 / S-630-1 and is positioned last", () => {
+    const items = buildShoulderItems(
+      dummyShoulder,
+      readyShoulderState({
+        case_routing: "shoulder_no_reduction",
+        case_id: "Case 11: Shoulder closure on divided highway",
+      }),
+      true,
+      identityR,
+    );
+    expect(items[5].title).toBe("TA-2 · S-630-1 reference");
+    expect(items[5].cite).toBe("CDOT S-630-1");
   });
 });

@@ -223,7 +223,7 @@ function buildScenarioItems(
   return [];
 }
 
-function buildShoulderItems(
+export function buildShoulderItems(
   _scenario: ShoulderScenario,
   audit: AuditState,
   generated: boolean,
