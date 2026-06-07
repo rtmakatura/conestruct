@@ -106,6 +106,22 @@ def generate_shoulder_closure_divided(
             )
         )
 
+    # 1a. W5-1 ROAD NARROWS (V1-Wide G2) per CDOT S-630-1 Sheet 7 Case 11,
+    # position 7 — emitted 500 ft upstream of taper start on freeway
+    # no-reduction shoulder closures.  Sheet 14 Cases 26/27 (reduced
+    # work-zone speed) omit W5-1 per case_specific_notes; gate is the
+    # inverse of the Fines Double / G4 / G5 predicate.  Mirrored per CO
+    # Supplement §6C.04(A).
+    is_reduced = params.work_zone_speed_mph is not None and params.work_zone_speed_mph < speed
+    if params.road_type == "freeway" and not is_reduced:
+        w5_1_station = taper_start_station + 500.0
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_right, label="W5-1")
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_left, label="W5-1")
+        )
+
     # 2. Shoulder taper (drums)
     in_taper_spacing = device_spacing_in_taper(speed)
     n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
@@ -408,6 +424,16 @@ def generate_shoulder_closure_undivided(
                 offset_ft=sign_offset_right,
                 label=label,
             )
+        )
+
+    # 1a. W5-1 ROAD NARROWS (V1-Wide G2) per CDOT S-630-1 Sheet 7 Case 11,
+    # position 7.  Single-side emission on undivided per CO §6C.04(A);
+    # gate matches the divided generator (freeway + not is_reduced).
+    is_reduced = params.work_zone_speed_mph is not None and params.work_zone_speed_mph < speed
+    if params.road_type == "freeway" and not is_reduced:
+        w5_1_station = taper_start_station + 500.0
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, w5_1_station, sign_offset_right, label="W5-1")
         )
 
     # 2. Shoulder taper (drums) — L/3 length per §6C.08.

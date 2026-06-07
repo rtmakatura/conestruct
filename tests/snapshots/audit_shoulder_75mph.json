@@ -52,7 +52,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 8 left, 8 right.",
+          "detail": "Required: True. Signs placed: 9 left, 9 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },

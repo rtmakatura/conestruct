@@ -234,3 +234,66 @@ def test_crew_narrative_no_reduction_omits_w3_5_row() -> None:
     markdown = _render(params)
     assert "W3-5" not in markdown
     assert "ADVISORY SPEED" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# G2 — W5-1 ROAD NARROWS sign schedule row
+# ---------------------------------------------------------------------------
+# Verifies that the W5-1 row appears in the Sign Placement Schedule on
+# freeway no-reduction shoulder closures (Case 11), and is absent on
+# reduced-speed (Cases 26/27) or non-freeway scenarios.  The row is
+# emitted automatically by ``_advance_signs_from_placements`` since W5-1
+# carries a positive offset, sits upstream of the taper, and is not in
+# ``_PLAQUE_AND_END_LABELS`` — no narrative-code change required.
+
+
+def test_crew_narrative_freeway_no_reduction_includes_w5_1_row() -> None:
+    """Freeway × no reduction → W5-1 row present at 500 ft upstream."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    assert "| W5-1 | ROAD NARROWS" in markdown
+    assert "500 ft upstream" in markdown
+
+
+def test_crew_narrative_freeway_reduced_omits_w5_1_row() -> None:
+    """Cases 26/27 exclude W5-1 — confirm no row appears when reduced."""
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=60,
+    )
+    markdown = _render(params)
+    assert "W5-1" not in markdown
+    assert "ROAD NARROWS" not in markdown
+
+
+def test_crew_narrative_non_freeway_no_reduction_omits_w5_1_row() -> None:
+    """Case 11 (Sheet 7) is freeway-scoped — rural shoulder closures
+    don't get W5-1 even without a work-zone reduction."""
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    markdown = _render(params)
+    assert "W5-1" not in markdown
+    assert "ROAD NARROWS" not in markdown

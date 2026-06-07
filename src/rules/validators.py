@@ -88,6 +88,14 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
         # per CO Supplement §2B.13(A); excluded from A/B/C cluster math
         # for the same reason as R2-10.
         "W3-5",
+        # W5-1 ROAD NARROWS (V1-Wide G2) — emitted 500 ft upstream of
+        # taper start on freeway no-reduction shoulder closures per
+        # CDOT S-630-1 Sheet 7 Case 11.  Sits between the taper and the
+        # A-position W21-5aR (which lives ≥ 1000 ft upstream of taper on
+        # freeway per Table 6B-1), so without exclusion the cluster
+        # selector would pick W5-1 as cluster[0] and corrupt the A/B/C
+        # spacing analysis.
+        "W5-1",
     }
 )
 

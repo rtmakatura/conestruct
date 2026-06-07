@@ -1824,6 +1824,26 @@ def test_advance_warning_signs_excludes_w3_5() -> None:
     assert errors == [], f"W3-5 corrupted A/B/C analysis: {errors}"
 
 
+def test_advance_warning_signs_excludes_w5_1() -> None:
+    """G2 regression: W5-1 placed 500 ft upstream of taper start (between
+    the taper and the A-position W21-5aR on freeway, per CDOT S-630-1
+    Sheet 7 Case 11) must NOT corrupt the A/B/C cluster analysis. Same
+    shape as the R2-10 / W3-5 exclusions; W5-1 is in
+    ``_NON_ADVANCE_WARNING_SIGN_LABELS`` so the cluster selector still
+    picks W21-5aR / W20-2 / W20-1 as A / B / C."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import validate_advance_warning_signs
+
+    # Freeway × no reduction = W5-1 emits.
+    params = _fines_double_params(work_zone_speed_mph=None)
+    placements = generate_shoulder_closure_divided(params)
+    # Sanity: W5-1 actually emitted (otherwise the regression test is vacuous).
+    assert any(p.label == "W5-1" for p in placements), "W5-1 not emitted; precondition broken"
+    violations = validate_advance_warning_signs(placements, params)
+    errors = [v for v in violations if v.severity == "error"]
+    assert errors == [], f"W5-1 corrupted A/B/C analysis: {errors}"
+
+
 def test_co_construction_plaques_count_with_envelope() -> None:
     """G20-5P from envelope adds to the plaque count; validator now sees
     more plaques than the half-mile rule requires. Layout passes."""

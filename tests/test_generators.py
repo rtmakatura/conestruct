@@ -120,7 +120,10 @@ def _run(
             12.0,
             # Tangent pick(8000, 150): pre-fix floor=53 at 150.94 ft (>150);
             # post-fix ceil=54 at 148.15 ft → 55 tangent + 2 downstream = 57.
-            {"SIGN_GENERIC": 22, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
+            # G2 (CDOT S-630-1 Sheet 7 Case 11): freeway × no_reduction adds
+            # 2× W5-1 (mirrored).  Other parametrize cases are non-freeway
+            # (rural / expressway), so the G2 gate doesn't fire there.
+            {"SIGN_GENERIC": 24, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 57},
         ),
     ],
     ids=[
@@ -761,3 +764,98 @@ def test_shoulder_divided_w3_5_station_geometry() -> None:
     stations_40 = sorted(p.station_ft for p in placements if p.label == "W3-5(40)")
     assert stations_30 == [1830.0, 1830.0]
     assert stations_40 == [2360.0, 2360.0]
+
+
+# ---------------------------------------------------------------------------
+# G2 — W5-1 ROAD NARROWS on freeway no-reduction shoulder closures
+# ---------------------------------------------------------------------------
+# Per CDOT S-630-1 Sheet 7 Case 11 position 7: W5-1 emits 500 ft upstream
+# of taper start on freeway shoulder closures without a work-zone speed
+# reduction.  Cases 26/27 (Sheet 14, reduced speed) omit W5-1.  Non-
+# freeway shoulder closures (rural / expressway) never emit W5-1 since
+# Sheet 7 Case 11 is explicitly the freeway/expressway diagram and the
+# v1 fixture set ties the rule to road_type='freeway'.
+
+
+def _freeway_shoulder_divided_params(work_zone_speed_mph: int | None) -> ScenarioParams:
+    return ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=work_zone_speed_mph,
+    )
+
+
+def _freeway_shoulder_undivided_params(work_zone_speed_mph: int | None) -> ScenarioParams:
+    return ScenarioParams(
+        speed_mph=65,
+        num_lanes=1,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=work_zone_speed_mph,
+    )
+
+
+def test_shoulder_divided_freeway_no_reduction_emits_w5_1_mirrored() -> None:
+    """G2 happy path: freeway × no reduction → mirrored W5-1 at
+    taper_start + 500 ft.  Two placements at the same station, one on
+    each side of the divided roadway."""
+    params = _freeway_shoulder_divided_params(None)
+    placements = generate_shoulder_closure_divided(params)
+    w5_1 = [p for p in placements if p.label == "W5-1"]
+    assert len(w5_1) == 2
+    # Mirrored: one positive offset, one negative, both at the same station.
+    offsets = sorted(p.offset_ft for p in w5_1)
+    assert offsets[0] < 0 < offsets[1]
+    assert offsets[0] == -offsets[1]
+    stations = {p.station_ft for p in w5_1}
+    assert len(stations) == 1
+    # Station = taper_start + 500.  taper_start = wz_len + buffer + L/3.
+    # 65 mph CDOT: buffer = 570, L = 65 * 10 = 650, L/3 = 216.666...
+    # wz_len = 1000.  taper_start = 1000 + 570 + 216.666 = 1786.666.
+    # +500 → 2286.666.
+    expected_station = 1000.0 + 570.0 + (10.0 * 65 / 3.0) + 500.0
+    assert stations.pop() == pytest.approx(expected_station)
+
+
+def test_shoulder_divided_freeway_reduced_omits_w5_1() -> None:
+    """Sheet 14 Cases 26/27 exclude W5-1 — confirm reduced-speed freeway
+    shoulder closure emits zero W5-1 placements."""
+    placements = generate_shoulder_closure_divided(_freeway_shoulder_divided_params(60))
+    assert _count_label(placements, "W5-1") == 0
+
+
+def test_shoulder_divided_non_freeway_omits_w5_1() -> None:
+    """Case 11 (Sheet 7) is the freeway/expressway diagram; rural shoulder
+    closures don't trigger W5-1 even when no work-zone reduction is in
+    effect."""
+    # Reuse the rural-baseline helper used by the envelope/G4/G5 tests.
+    placements = generate_shoulder_closure_divided(_shoulder_divided_params(None))
+    assert _count_label(placements, "W5-1") == 0
+
+
+def test_shoulder_undivided_freeway_no_reduction_emits_single_w5_1() -> None:
+    """G2 on undivided freeway shoulder: single-side per CO §6C.04(A).
+    One W5-1 placement, on the right side only."""
+    placements = generate_shoulder_closure_undivided(_freeway_shoulder_undivided_params(None))
+    w5_1 = [p for p in placements if p.label == "W5-1"]
+    assert len(w5_1) == 1
+    assert w5_1[0].offset_ft > 0
+
+
+def test_shoulder_undivided_freeway_reduced_omits_w5_1() -> None:
+    """Inverse sanity check on the undivided generator — reduction
+    suppresses W5-1 just like on divided."""
+    placements = generate_shoulder_closure_undivided(_freeway_shoulder_undivided_params(60))
+    assert _count_label(placements, "W5-1") == 0

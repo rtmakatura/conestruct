@@ -32,6 +32,7 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "W21-5aR": "RIGHT SHOULDER CLOSED AHEAD",
     "W21-5aL": "LEFT SHOULDER CLOSED AHEAD",
     "W4-2R": "RIGHT LANE ENDS",
+    "W5-1": "ROAD NARROWS",
     # Guide (G-series)
     "G20-1": "ROAD CONSTRUCTION (NEXT XXX FT)",
     "G20-2": "END ROAD WORK",
