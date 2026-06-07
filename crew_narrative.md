@@ -3,20 +3,21 @@
 ## Project Information
 
 - **Speed limit:** 55 mph
-- **Road type:** Divided highway
+- **Road type:** Freeway
 - **Closure type:** shoulder
 - **Work zone length:** 800 ft
 - **Jurisdiction:** CDOT
-- **Generated:** 2026-04-25
+- **Generated:** 2026-06-06
 
 ## Required Equipment
 
 - 1× Arrow Board
-- 10× Traffic Cone (36-inch)
-- 4× Channelizing Drum (36-inch)
-- 12× Construction/Warning Sign (see sign list below)
+- 11× Traffic Cone (36-inch)
+- 5× Channelizing Drum (36-inch)
+- 16× Construction/Warning Sign (see sign list below)
+  - 2× G20-1 ROAD CONSTRUCTION (NEXT XXX FT)
   - 2× G20-2 END ROAD WORK
-  - 4× G20-5P WORK ZONE
+  - 6× G20-5P CONSTRUCTION ZONE plaque
   - 2× W20-1 ROAD WORK AHEAD
   - 2× W20-2 ROAD WORK XXX FT
   - 2× W21-5aR RIGHT SHOULDER CLOSED AHEAD
@@ -25,10 +26,10 @@
 
 | Sign Code | Description | Distance from Taper |
 |-----------|-------------|---------------------|
-| W20-1 | ROAD WORK AHEAD | 1,500 ft upstream |
-| W20-2 | ROAD WORK XXX FT | 1,000 ft upstream |
-| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 500 ft upstream |
-| G20-5P | WORK ZONE | Within work zone |
+| W20-1 | ROAD WORK AHEAD | 5,140 ft upstream |
+| W20-2 | ROAD WORK XXX FT | 2,500 ft upstream |
+| W21-5aR | RIGHT SHOULDER CLOSED AHEAD | 1,000 ft upstream |
+| G20-5P | CONSTRUCTION ZONE plaque | Within work zone |
 | G20-2 | END ROAD WORK | Downstream of work zone |
 
 ## Setup Procedure
@@ -39,16 +40,16 @@
 
 2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station -150 ft), right side of road 28 ft from centerline. Place matching sign on left side.
 
-3. Place 8 traffic cones along the right lane edge at 114 ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station 800 ft. Offset: 24 ft from centerline.
+3. Place 9 traffic cones along the right lane edge at 100 ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station 800 ft. Offset: 24 ft from centerline.
 
-4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately 400 ft intervals. Place matching plaques on left side.
+4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately 267 ft intervals. Place matching plaques on left side.
 
-5. Place 4 channelizing drums in the shoulder taper, starting at station 1,295 ft and working upstream to station 1,478 ft. Space drums at 61 ft intervals. Drums transition from the lane edge (24 ft) to the shoulder edge (34 ft).
+5. Place 5 channelizing drums in the shoulder taper, starting at station 1,295 ft and working upstream to station 1,478 ft. Space drums at 46 ft intervals. Drums transition from the lane edge (24 ft) to the shoulder edge (34 ft).
 
 6. Place advance warning signs upstream of the taper:
-   - W21-5aR at 500 ft upstream of taper start (station 1,978 ft), right side.
-   - W20-2 at 1,000 ft upstream of taper start (station 2,478 ft), right side.
-   - W20-1 at 1,500 ft upstream of taper start (station 2,978 ft), right side.
+   - W21-5aR at 1,000 ft upstream of taper start (station 2,478 ft), right side.
+   - W20-2 at 2,500 ft upstream of taper start (station 3,978 ft), right side.
+   - W20-1 at 5,140 ft upstream of taper start (station 6,618 ft), right side.
    Place matching signs on left side at each location.
 
 ## Takedown Procedure
