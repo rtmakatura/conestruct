@@ -62,3 +62,14 @@ Phase 2 decisions, locked June 5 2026.
 - Flagger-controlled alternating-flow (TA-10) scenarios are exempt from
   the envelope per Sheet 12 scope (freeway/expressway only); the audit
   trail surfaces a carve-out reason rather than silently omitting
+
+## Phase 5 harness design (added 2026-06-06)
+
+- Validation harness reads `_placements_for(scenario)` directly when asserting sign-code presence, station, or count. The audit dict's `advance.sign_table` only enumerates the three A/B/C upstream warning signs and is not a complete placement-list source.
+- Audit dict is the authoritative source for derived values (taper L, buffer space, divergence wording, envelope geometry, CO §2B.13 reporting, operational-notes presence).
+- Harness convention: one helper `_placements_and_audit(scenario)` returns both, and each per-case test function decides which surface to read per assertion.
+
+## Phase 5 scenario classes — corridor validation (added 2026-06-06)
+
+- The four S-630-1 test scenarios (`case_11_general`, `case_11b_reduction_5mph`, `case_26_65mph`, `case_27_75mph`) omit `meta.lat` / `meta.lng` intentionally. `audit.corridor_validation` short-circuits to `checked=false` for these scenarios; that's the expected state, not a finding.
+- Corridor-validation behavior (OSM ground-truth check, bearing divergence detection) is a separate scenario class with its own fixtures and harness. Not in scope for S-630-1 typical-application validation.
