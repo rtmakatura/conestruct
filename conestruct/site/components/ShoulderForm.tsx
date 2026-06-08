@@ -177,27 +177,33 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         />
 
         {scenario.workZoneSpeed !== undefined && (
-          <Field>
-            <LabelRow value={`${scenario.workZoneSpeed} mph`}>
-              Work-zone speed limit
-            </LabelRow>
-            <input
-              type="number"
-              className="field-input"
-              min={20}
-              max={scenario.speed}
-              step={5}
-              value={scenario.workZoneSpeed}
-              onChange={(e) =>
-                set("workZoneSpeed", +e.target.value || 0)
-              }
-            />
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-              {scenario.speed - scenario.workZoneSpeed > 15
-                ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
-                : `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): 1 advance sign`}
-            </div>
-          </Field>
+          // Top margin matches the form's per-Field 14 px rhythm so the
+          // conditional input clears the CheckRow group's bottom border
+          // instead of butting up against it (see GeneratorFormPrimitives
+          // — Field uses mb-3.5, CheckRow carries no margin).
+          <div className="mt-3.5">
+            <Field>
+              <LabelRow value={`${scenario.workZoneSpeed} mph`}>
+                Work-zone speed limit
+              </LabelRow>
+              <input
+                type="number"
+                className="field-input"
+                min={20}
+                max={scenario.speed}
+                step={5}
+                value={scenario.workZoneSpeed}
+                onChange={(e) =>
+                  set("workZoneSpeed", +e.target.value || 0)
+                }
+              />
+              <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+                {scenario.speed - scenario.workZoneSpeed > 15
+                  ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
+                  : `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): 1 advance sign`}
+              </div>
+            </Field>
+          </div>
         )}
       </FieldGroup>
     </>
