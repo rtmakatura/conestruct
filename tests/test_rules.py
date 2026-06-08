@@ -861,7 +861,7 @@ def test_build_advance_warning_table_empty_placements() -> None:
     """Empty placement list returns an empty table without crashing."""
     from src.rendering.plan_sheet import _build_advance_warning_table
 
-    assert _build_advance_warning_table([], 1500.0, 1700.0) == []
+    assert _build_advance_warning_table([], 1500.0, 1700.0, 1000.0) == []
 
 
 def test_build_advance_warning_table_case_11_off_page_rows() -> None:
@@ -890,7 +890,9 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     taper_start_station = params.work_zone_length_ft + buf_len + taper_len
     station_max_visible = taper_start_station + 50.0
 
-    rows = _build_advance_warning_table(placements, taper_start_station, station_max_visible)
+    rows = _build_advance_warning_table(
+        placements, taper_start_station, station_max_visible, params.work_zone_length_ft
+    )
 
     codes = [code for code, _desc, _dist in rows]
     # Closest-first: W5-1 @ 500, then second W21-5aR + W7-3a plaque @
@@ -919,6 +921,21 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     assert "XXX" not in w20_2_desc
     assert "ROAD WORK" in w20_2_desc and "FT" in w20_2_desc
 
+    # G1 plaque substitution: W16-2a "NEXT XXX FT" -> NEXT 1,678 FT
+    # (= sign_a_station - wz_len = 1000 + 495 + 183 + 1000 - 1000).
+    # W7-3a "NEXT XX MILES" -> NEXT 1 MILE (max(1, round(1000/5280))).
+    w16_2a_desc = next(desc for code, desc, _d in rows if code == "W16-2a")
+    assert (
+        "XXX" not in w16_2a_desc and "plaque" not in w16_2a_desc
+    ), f"W16-2a description must substitute the NEXT-FT value, got {w16_2a_desc!r}"
+    assert "NEXT 1,678 FT" in w16_2a_desc
+
+    w7_3a_desc = next(desc for code, desc, _d in rows if code == "W7-3a")
+    assert (
+        "XX" not in w7_3a_desc and "plaque" not in w7_3a_desc
+    ), f"W7-3a description must substitute the NEXT-MILES value, got {w7_3a_desc!r}"
+    assert "NEXT 1 MILE" in w7_3a_desc and "MILES" not in w7_3a_desc
+
 
 def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
     """Case 27 (75 → 65) emits a stepped W3-5 sequence off-page (G5).
@@ -946,7 +963,9 @@ def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
     taper_start_station = params.work_zone_length_ft + buf_len + taper_len
     station_max_visible = taper_start_station + 50.0
 
-    rows = _build_advance_warning_table(placements, taper_start_station, station_max_visible)
+    rows = _build_advance_warning_table(
+        placements, taper_start_station, station_max_visible, params.work_zone_length_ft
+    )
     codes = [code for code, _desc, _d in rows]
 
     # Case 27 (reduced speed) omits W5-1 per the layout-engine gate,
@@ -1151,6 +1170,73 @@ def test_case_11_pdf_renders_g1_g2_off_page_signs() -> None:
         assert (
             code in text
         ), f"Expected {code} in the rendered PDF off-page table; not found in: {text!r}"
+
+    # G1 plaque substitution must reach the PDF — audit / crew_narrative
+    # already substitute these.  W16-2a "NEXT XXX FT" → NEXT 1,678 FT
+    # (= sign_a_station - wz_len for 55 mph freeway, wz_len=1000).
+    # W7-3a "NEXT XX MILES" → NEXT 1 MILE (workLen=1000 < 5280 → 1).
+    assert "NEXT 1,678 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
+    assert (
+        "NEXT 1 MILE" in text and "NEXT XX MILES" not in text
+    ), f"W7-3a placeholder not substituted in PDF; text: {text!r}"
+
+
+def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
+    """Regression for the SIGN_DESCRIPTIONS template tokens — every code
+    with a parametric placeholder (XXX FT, XX MILES, advisory speed,
+    speed limit) must substitute the actual value before rendering.
+
+    Catches future additions of new plaque/regulatory codes that forget
+    to wire up substitution in _build_advance_warning_table.
+    """
+    import os
+    import tempfile
+
+    import pypdfium2 as pdfium
+
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    placements = generate_shoulder_closure_divided(params)
+
+    fd, path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        render_plan_sheet(placements, params, output_path=path, shoulder_width_ft=10.0)
+        pdf = pdfium.PdfDocument(path)
+        try:
+            text = pdf[0].get_textpage().get_text_range()
+        finally:
+            pdf.close()
+    finally:
+        os.unlink(path)
+
+    # Unsubstituted SIGN_DESCRIPTIONS templates from src/rules/sign_codes.py.
+    # The literal "plaque" suffix is part of those templates and a strong
+    # signal the description was rendered verbatim.
+    bad_fragments = (
+        "NEXT XXX FT",
+        "NEXT XX MILES",
+        "ROAD WORK XXX",
+        "ADVISORY SPEED XX",
+        "FT plaque",
+        "MILES plaque",
+    )
+    for fragment in bad_fragments:
+        assert fragment not in text, (
+            f"Unsubstituted template fragment {fragment!r} leaked into PDF; " f"text: {text!r}"
+        )
 
 
 def _lane_divided_params() -> ScenarioParams:

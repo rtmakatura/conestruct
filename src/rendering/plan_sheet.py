@@ -2182,6 +2182,7 @@ def _build_advance_warning_table(
     placements: list[DevicePlacement],
     taper_start_station: float,
     station_max_visible: float,
+    wz_len: float,
 ) -> list[tuple[str, str, float]]:
     """Off-page ADVANCE WARNING SIGNS rows, read from the placement list.
 
@@ -2195,9 +2196,18 @@ def _build_advance_warning_table(
     left/right mirror pair (one row per code+station), and sorts
     ascending by distance upstream — closest-first, matching the prior
     static-list convention.  Plaques sort after their parent sign at
-    the same station.  Parametric labels (W20-2 distance, W3-5 advisory
-    speed) get their template placeholders substituted at the call site
-    that knows the value.
+    the same station.  Parametric labels get their template
+    placeholders substituted so the rendered table never carries a
+    literal "XX" / "XXX" through to the field crew:
+
+      * W20-2 ``ROAD WORK XXX FT`` → distance from taper
+      * W3-5(N) ``ADVISORY SPEED XX`` → suffix N
+      * W16-2a ``NEXT XXX FT plaque`` → distance from upstream W21-5aR
+        back to wz_start (mirrors audit.sign_table + crew_narrative;
+        the PDF omits the "(under W21-5aR)" parenthetical that the
+        text-only surfaces carry because column-major sorting puts
+        parent immediately before plaque at the same distance)
+      * W7-3a ``NEXT XX MILES plaque`` → max(1, round(wz_len / 5280))
     """
     upstream = [
         p
@@ -2234,6 +2244,12 @@ def _build_advance_warning_table(
         elif bare == "W3-5" and "(" in label:
             suffix = label.split("(", 1)[1].rstrip(")")
             desc = f"ADVISORY SPEED {suffix}"
+        elif bare == "W16-2a":
+            w16_2a_distance_ft = int(round(p.station_ft - wz_len))
+            desc = f"NEXT {w16_2a_distance_ft:,} FT"
+        elif bare == "W7-3a":
+            w7_3a_miles = max(1, round(wz_len / 5280.0))
+            desc = f"NEXT {w7_3a_miles} {'MILE' if w7_3a_miles == 1 else 'MILES'}"
         rows.append((bare, desc, dist))
     return rows
 
@@ -2396,7 +2412,10 @@ def _draw_notes(
         taper_start_station = params.work_zone_length_ft + buf_len + taper_len
         station_max_visible = taper_start_station + 50.0
         advance = _build_advance_warning_table(
-            placements or [], taper_start_station, station_max_visible
+            placements or [],
+            taper_start_station,
+            station_max_visible,
+            params.work_zone_length_ft,
         )
 
     x = x_box + 8
