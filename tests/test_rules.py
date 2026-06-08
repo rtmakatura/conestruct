@@ -857,6 +857,160 @@ def test_w20_2_label_substitutes_distance() -> None:
         ), f"Expected column header {column!r} in the rendered notes panel; found text: {text!r}"
 
 
+def test_build_advance_warning_table_empty_placements() -> None:
+    """Empty placement list returns an empty table without crashing."""
+    from src.rendering.plan_sheet import _build_advance_warning_table
+
+    assert _build_advance_warning_table([], 1500.0, 1700.0) == []
+
+
+def test_build_advance_warning_table_case_11_off_page_rows() -> None:
+    """Case 11 freeway shoulder closure surfaces the full off-page set:
+    baseline W21-5aR/W20-2/W20-1, plus G1's second W21-5aR + W16-2a /
+    W7-3a plaques and G2's W5-1.  Regression for the hard-coded 3-entry
+    list at plan_sheet.py:2226-2230 that pre-dated G1/G2.
+    """
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import _build_advance_warning_table
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    placements = generate_shoulder_closure_divided(params)
+    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    taper_len = shoulder_taper_length(params.speed_mph, 10.0)
+    taper_start_station = params.work_zone_length_ft + buf_len + taper_len
+    station_max_visible = taper_start_station + 50.0
+
+    rows = _build_advance_warning_table(placements, taper_start_station, station_max_visible)
+
+    codes = [code for code, _desc, _dist in rows]
+    # Closest-first: W5-1 @ 500, then second W21-5aR + W7-3a plaque @
+    # 750 (parent before plaque), then first W21-5aR + W16-2a plaque @
+    # 1000 (parent before plaque), then W20-2 and W20-1.
+    assert codes == [
+        "W5-1",
+        "W21-5aR",
+        "W7-3a",
+        "W21-5aR",
+        "W16-2a",
+        "W20-2",
+        "W20-1",
+    ], f"Off-page order unexpected: {codes}"
+
+    # Distances ascending; plaque shares its parent's distance.
+    dists = [round(d) for _code, _desc, d in rows]
+    assert dists == sorted(dists), f"Distances not ascending: {dists}"
+    parent1_dist = next(d for c, _, d in rows if c == "W21-5aR" and round(d) == 750)
+    plaque_w7_dist = next(d for c, _, d in rows if c == "W7-3a")
+    assert round(parent1_dist) == round(plaque_w7_dist)
+
+    # W20-2 description substitutes its actual distance, not the literal
+    # XXX placeholder from the SIGN_DESCRIPTIONS template.
+    w20_2_desc = next(desc for code, desc, _d in rows if code == "W20-2")
+    assert "XXX" not in w20_2_desc
+    assert "ROAD WORK" in w20_2_desc and "FT" in w20_2_desc
+
+
+def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
+    """Case 27 (75 → 65) emits a stepped W3-5 sequence off-page (G5).
+    Each step gets its own row with the advisory speed substituted into
+    the description.
+    """
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import _build_advance_warning_table
+
+    params = ScenarioParams(
+        speed_mph=75,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=65,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    taper_len = shoulder_taper_length(params.speed_mph, 10.0)
+    taper_start_station = params.work_zone_length_ft + buf_len + taper_len
+    station_max_visible = taper_start_station + 50.0
+
+    rows = _build_advance_warning_table(placements, taper_start_station, station_max_visible)
+    codes = [code for code, _desc, _d in rows]
+
+    # Case 27 (reduced speed) omits W5-1 per the layout-engine gate,
+    # but keeps the second W21-5aR + plaques and adds W3-5 step(s).
+    assert "W5-1" not in codes, f"W5-1 must not appear on reduced-speed routing: {codes}"
+    assert codes.count("W21-5aR") == 2, f"Expected two W21-5aR rows, got {codes}"
+    assert "W16-2a" in codes and "W7-3a" in codes
+    w3_5_rows = [(c, d) for c, d, _ in rows if c == "W3-5"]
+    assert w3_5_rows, "Expected at least one W3-5 advisory-speed row"
+    # Description carries the substituted advisory speed, never the
+    # literal 'XX' placeholder.
+    for _code, desc in w3_5_rows:
+        assert (
+            "ADVISORY SPEED" in desc and "XX" not in desc
+        ), f"W3-5 description must substitute the advisory speed: {desc!r}"
+
+
+def test_case_11_pdf_renders_g1_g2_off_page_signs() -> None:
+    """End-to-end: the rendered PDF's notes panel must list every
+    upstream sign emitted by the Case 11 layout, including G1's second
+    W21-5aR + W16-2a / W7-3a plaques and G2's W5-1.
+
+    Regression for the hard-coded shoulder branch in _draw_notes — the
+    layout / audit / XLSX showed them but the PDF didn't.
+    """
+    import os
+    import tempfile
+
+    import pypdfium2 as pdfium
+
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    placements = generate_shoulder_closure_divided(params)
+
+    fd, path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        render_plan_sheet(placements, params, output_path=path, shoulder_width_ft=10.0)
+        pdf = pdfium.PdfDocument(path)
+        try:
+            text = pdf[0].get_textpage().get_text_range()
+        finally:
+            pdf.close()
+    finally:
+        os.unlink(path)
+
+    for code in ("W5-1", "W16-2a", "W7-3a", "W21-5aR", "W20-2", "W20-1"):
+        assert (
+            code in text
+        ), f"Expected {code} in the rendered PDF off-page table; not found in: {text!r}"
+
+
 def _lane_divided_params() -> ScenarioParams:
     """Canonical TA-19 params for the divided-highway lane-closure validators."""
     return ScenarioParams(

@@ -2148,11 +2148,78 @@ def _draw_legend(
             c.drawString(box_x + 8, note_y - i * 9, line)
 
 
+# Plaque MUTCD codes — render after their parent sign at the same
+# station in the off-page advance-warning table so a reader scans the
+# parent code first, then sees the plaque modifier on the next line.
+_PLAQUE_CODES: frozenset[str] = frozenset({"W16-2a", "W7-3a", "G20-5P", "R2-6P"})
+
+
+def _build_advance_warning_table(
+    placements: list[DevicePlacement],
+    taper_start_station: float,
+    station_max_visible: float,
+) -> list[tuple[str, str, float]]:
+    """Off-page ADVANCE WARNING SIGNS rows, read from the placement list.
+
+    Replaces the prior static 3-entry shoulder-default table that
+    pre-dated W5-1 (G2), the second W21-5aR + W16-2a / W7-3a (G1), and
+    W3-5 (G5).  Those signs were emitted by the layout engine and
+    counted in the audit / XLSX / UI panel, but invisible on the PDF
+    because the table was hard-coded.
+
+    Filters to signs upstream of the visible schematic, dedupes the
+    left/right mirror pair (one row per code+station), and sorts
+    ascending by distance upstream — closest-first, matching the prior
+    static-list convention.  Plaques sort after their parent sign at
+    the same station.  Parametric labels (W20-2 distance, W3-5 advisory
+    speed) get their template placeholders substituted at the call site
+    that knows the value.
+    """
+    upstream = [
+        p
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC
+        and p.label
+        and p.station_ft > station_max_visible
+    ]
+    seen: set[tuple[str, int]] = set()
+    unique: list[tuple[DevicePlacement, str]] = []
+    for p in upstream:
+        # ``upstream`` filter requires p.label truthy; narrow here.
+        label = p.label
+        assert label is not None
+        key = (label, round(p.station_ft))
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append((p, label))
+    unique.sort(
+        key=lambda item: (
+            item[0].station_ft - taper_start_station,
+            item[1].split("(", 1)[0] in _PLAQUE_CODES,
+            item[1],
+        )
+    )
+    rows: list[tuple[str, str, float]] = []
+    for p, label in unique:
+        dist = p.station_ft - taper_start_station
+        bare = label.split("(", 1)[0] if label.startswith("W3-5(") else label
+        desc = description_for(bare)
+        if bare == "W20-2":
+            desc = f"ROAD WORK {dist:.0f} FT"
+        elif bare == "W3-5" and "(" in label:
+            suffix = label.split("(", 1)[1].rstrip(")")
+            desc = f"ADVISORY SPEED {suffix}"
+        rows.append((bare, desc, dist))
+    return rows
+
+
 def _draw_notes(
     c: canvas.Canvas,
     params: ScenarioParams,
     shoulder_width_ft: float,
     schedule_order: list[str] | None = None,
+    placements: list[DevicePlacement] | None = None,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -2223,11 +2290,20 @@ def _draw_notes(
             ("W20-1", "ROAD WORK AHEAD", sign_c_dist),
         ]
     else:
-        advance = [
-            ("W21-5aR", "RIGHT SHOULDER CLOSED AHEAD", sign_a_dist),
-            ("W20-2", f"ROAD WORK {sign_b_dist:.0f} FT", sign_b_dist),
-            ("W20-1", "ROAD WORK AHEAD", sign_c_dist),
-        ]
+        # Shoulder closure: drive the off-page table from the actual
+        # placement list so post-V1-Wide additions (W5-1, second
+        # W21-5aR + W16-2a / W7-3a, W3-5 stepped sequence) surface on
+        # the PDF.  taper_start_station and station_max_visible mirror
+        # the formula in _make_x_mapping (~line 195); kept local so the
+        # signature of _draw_notes doesn't need to thread the mapping.
+        # ``buf_len`` / ``taper_len`` are non-None on the non-mobile /
+        # non-off_road path that reaches here.
+        assert buf_len is not None and taper_len is not None
+        taper_start_station = params.work_zone_length_ft + buf_len + taper_len
+        station_max_visible = taper_start_station + 50.0
+        advance = _build_advance_warning_table(
+            placements or [], taper_start_station, station_max_visible
+        )
 
     x = x_box + 8
     x_right = x_box + width - 8
@@ -2957,7 +3033,7 @@ def _render_schematic_page(
         is_divided=params.is_divided,
         scale_note=scale_long,
     )
-    _draw_notes(c, params, shoulder_width_ft, schedule_order)
+    _draw_notes(c, params, shoulder_width_ft, schedule_order, placements)
     _draw_structured_title_block(
         c,
         params,
