@@ -965,25 +965,31 @@ def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
 
 
 def test_notes_layout_tier_selection() -> None:
-    """Threshold boundaries: tier 0 (≤8 rows) keeps current pitch; tier 1
-    (9-12) tightens pitch + padding; tier 2 (≥13) adds 2-column advance.
+    """Threshold boundaries: tier 0 (≤8 rows) keeps default pitch +
+    padding; tier 1 (9-11) tightens padding but holds row_pitch at 9 pt
+    for legibility; tier 2 (≥12) tightens padding + drops pitch to 8 +
+    flips advance to 2-column.
     """
     from src.rendering.plan_sheet import _notes_layout
 
-    # Tier 0 — current behavior, no regression on existing scenarios.
+    # Tier 0 — no regression on low-row scenarios.
     t0 = _notes_layout(3, 3)
     assert t0.row_pitch == 9.0 and not t0.two_col_advance
+    assert t0.section_header_pad == (4.0, 12.0)
     assert _notes_layout(4, 4).row_pitch == 9.0  # exactly 8 still tier 0
 
-    # Tier 1 — tightened pitch + padding, single column.
-    t1 = _notes_layout(3, 7)  # Case 11
-    assert t1.row_pitch == 8.0 and not t1.two_col_advance
+    # Tier 1 — padding tightened, row_pitch held at 9 pt (legibility:
+    # body font 7 pt occupies ~8 pt with descenders/ascenders, so a
+    # 9 pt baseline pitch keeps a 1 pt gap between lines).
+    t1 = _notes_layout(3, 7)  # Case 11 — 10 rows
+    assert t1.row_pitch == 9.0 and not t1.two_col_advance
     assert t1.section_header_pad == (3.0, 10.0)
-    assert _notes_layout(5, 7).row_pitch == 8.0  # 12 still tier 1
+    assert _notes_layout(3, 8).row_pitch == 9.0  # 11 rows still tier 1
 
-    # Tier 2 — Case 26 (13) and above use 2-column advance.
-    t2 = _notes_layout(5, 8)  # Case 26 = 13 total
+    # Tier 2 — pitch drops to 8 + 2-column advance kicks in at 12 rows.
+    t2 = _notes_layout(4, 8)  # 12 total
     assert t2.row_pitch == 8.0 and t2.two_col_advance
+    assert _notes_layout(5, 8).two_col_advance  # Case 26 (15) — Tier 2
     assert _notes_layout(5, 10).two_col_advance  # Case 27 stepped
 
 

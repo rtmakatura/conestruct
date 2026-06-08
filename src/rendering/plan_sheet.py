@@ -2263,10 +2263,21 @@ def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
     """Pick the layout tier for a notes box with the given row counts.
 
     Thresholds verified via cursor-budget simulation (see
-    test_notes_layout_cursor_budget): tier 0 fits up to 8 rows with
-    current pitch; tier 1 (tightened pitch + padding) fits up to 12;
-    tier 2 (tier 1 + 2-column advance) handles the densest stepped
-    W3-5 sequences and leaves headroom for future additions.
+    test_notes_layout_cursor_budget): tier 0 fits up to 8 rows; tier 1
+    (tightened padding only — row_pitch held at 9 pt for legibility)
+    fits 9-11 rows; tier 2 (tier 1 padding + 2-column advance) handles
+    the densest stepped-W3-5 sequences and leaves headroom for future
+    additions.
+
+    Row pitch policy: 9 pt across tier 0 and tier 1 — at body font 7 pt
+    (ascent ~6.5 + descent ~1.5 ≈ 8 pt occupied), a 9 pt baseline pitch
+    leaves ~1 pt of breathing room between lines.  Earlier 52d51ad
+    tightened tier 1 to 8 pt to fit 12 rows, but adjacent lines then
+    touched at the descender/ascender boundary and read cramped.
+    Restoring 9 pt costs 1 pt per row vs the previous tier 1; the
+    Tier 2 ceiling drops to 12 rows in exchange so dense cases get
+    the 2-column treatment instead of cramped 1-column.  Tier 2 keeps
+    pitch 8 because space is genuinely constrained there.
     """
     total = schedule_rows + advance_rows
     if total <= 8:
@@ -2278,9 +2289,9 @@ def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
             param_pitch=10.0,
             two_col_advance=False,
         )
-    if total <= 12:
+    if total <= 11:
         return _NotesLayout(
-            row_pitch=8.0,
+            row_pitch=9.0,
             section_header_pad=(3.0, 10.0),
             col_header_pad=(3.0, 7.0),
             footer_pads=(3.0, 6.0),
