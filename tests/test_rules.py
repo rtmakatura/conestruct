@@ -1053,12 +1053,18 @@ def test_notes_layout_cursor_budget_fits_all_validation_cases() -> None:
         y -= layout.footer_pads[1]
         return y
 
+    # Row counts are the live generator output (verified against
+    # build_sign_schedule + _build_advance_warning_table).  Reduced-speed
+    # cases carry the full Fines Double on-page schedule (R2-10, G20-1,
+    # G20-5P, R2-1 entrance, R2-6P, G20-2, R2-11, R2-1 restoration = 8
+    # rows) -- the two R2-1 rows are the entrance posting + downstream
+    # restoration split (see _schedule_key).
     cases = [
         ("Case 11", 3, 7),
-        ("Case 11b", 3, 8),
-        ("Case 26", 5, 8),
-        ("Case 27 single W3-5", 5, 8),
-        ("Case 27 stepped W3-5", 5, 10),
+        ("Case 11b", 8, 7),
+        ("Case 26", 8, 7),
+        ("Case 27 single W3-5", 8, 7),
+        ("Case 27 stepped W3-5", 8, 8),
         # Defensive worst-case: every code shows up off-page.
         ("Synthetic 20-row stress", 6, 14),
     ]
@@ -1230,6 +1236,7 @@ def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
         "NEXT XX MILES",
         "ROAD WORK XXX",
         "ADVISORY SPEED XX",
+        "SPEED LIMIT XX",
         "FT plaque",
         "MILES plaque",
     )
@@ -1237,6 +1244,63 @@ def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
         assert fragment not in text, (
             f"Unsubstituted template fragment {fragment!r} leaked into PDF; " f"text: {text!r}"
         )
+
+
+def test_case_11b_pdf_substitutes_r2_1_speed_limits() -> None:
+    """Reduced-speed plan (Case 11b: 55 -> 50) posts two distinct R2-1
+    SPEED LIMIT signs on the plan view -- the work-zone entrance carries
+    the reduced limit, the downstream sign restores the posted limit.
+
+    Both must substitute the actual speed into the on-page SIGN SCHEDULE;
+    the literal "SPEED LIMIT XX" template must never reach the PDF.
+    Regression for the on-page schedule template leak (the off-page
+    advance table was already covered).
+    """
+    import os
+    import tempfile
+
+    import pypdfium2 as pdfium
+
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=50,
+    )
+    placements = generate_shoulder_closure_divided(params)
+
+    fd, path = tempfile.mkstemp(suffix=".pdf")
+    os.close(fd)
+    try:
+        render_plan_sheet(placements, params, output_path=path, shoulder_width_ft=10.0)
+        pdf = pdfium.PdfDocument(path)
+        try:
+            text = pdf[0].get_textpage().get_text_range()
+        finally:
+            pdf.close()
+    finally:
+        os.unlink(path)
+
+    assert (
+        "SPEED LIMIT XX" not in text
+    ), f"Literal R2-1 'SPEED LIMIT XX' template leaked into PDF; text: {text!r}"
+    # Entrance R2-1 posts the reduced work-zone limit; downstream R2-1
+    # restores the posted limit.  Wording mirrors the crew narrative.
+    assert (
+        "SPEED LIMIT 50 (work-zone speed posting)" in text
+    ), f"Expected entrance R2-1 'SPEED LIMIT 50'; text: {text!r}"
+    assert (
+        "SPEED LIMIT 55 (posted-speed restoration)" in text
+    ), f"Expected downstream R2-1 'SPEED LIMIT 55'; text: {text!r}"
 
 
 def _lane_divided_params() -> ScenarioParams:

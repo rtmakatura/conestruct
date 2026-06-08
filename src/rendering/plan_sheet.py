@@ -1122,18 +1122,38 @@ def _draw_site_context(
         c.drawCentredString(x_school, y_school - 2, "SCHOOL")
 
 
+def _schedule_key(p: DevicePlacement) -> str:
+    """Schedule-grouping key for a sign placement.
+
+    Normally the bare MUTCD code (``p.label``).  The exception is R2-1
+    SPEED LIMIT, which is emitted twice on a reduced-speed plan with the
+    same bare label but two distinct regulatory faces: the work-zone
+    entrance posting (inside the work zone, ``station_ft >= 0``) carries
+    the reduced limit, while the downstream restoration sign (past the
+    work-zone end, ``station_ft < 0``) carries the original posted limit.
+    Splitting the key by station sign gives each its own schedule row and
+    callout number without changing the placement label — the bare-code
+    convention (and the locked canonical snapshot) is preserved.
+    """
+    if p.label == "R2-1":
+        return "R2-1@entrance" if p.station_ft >= 0 else "R2-1@restoration"
+    return p.label or ""
+
+
 def build_sign_schedule(
     placements: list[DevicePlacement],
     station_max_visible: float,
 ) -> tuple[list[str], dict[str, int]]:
-    """Assign a stable callout number to each unique sign code visible
-    on the plan view.  Numbering follows the order drivers encounter the
-    signs (upstream → downstream, then left → right of road).
+    """Assign a stable callout number to each unique sign visible on the
+    plan view.  Numbering follows the order drivers encounter the signs
+    (upstream → downstream, then left → right of road).
 
-    Returns ``(ordered_codes, code_to_number)``.  ``code_to_number`` maps
-    each MUTCD code that appears on the plan view to its 1-based callout
-    number; ``ordered_codes`` lists the codes in numbering order so the
-    Sign Schedule panel can be rendered.
+    Returns ``(ordered_keys, key_to_number)``.  ``key_to_number`` maps
+    each schedule key (see ``_schedule_key`` — the MUTCD code, except
+    R2-1 which splits into entrance/restoration variants) to its 1-based
+    callout number; ``ordered_keys`` lists the keys in numbering order so
+    the Sign Schedule panel can be rendered.  Mirror pairs (same key on
+    both sides of the road) share a number, as before.
     """
     visible = [
         p
@@ -1146,10 +1166,11 @@ def build_sign_schedule(
     seen: set[str] = set()
     order: list[str] = []
     for p in visible:
-        if p.label not in seen:
-            seen.add(p.label)
-            order.append(p.label)
-    return order, {code: i + 1 for i, code in enumerate(order)}
+        key = _schedule_key(p)
+        if key not in seen:
+            seen.add(key)
+            order.append(key)
+    return order, {key: i + 1 for i, key in enumerate(order)}
 
 
 def _draw_callout_circle(c: canvas.Canvas, x: float, y: float, n: int) -> None:
@@ -1396,7 +1417,7 @@ def _draw_devices(
     for p, x, y in items:
         if p.device_type != DeviceType.SIGN_GENERIC or not p.label:
             continue
-        n = code_to_num.get(p.label)
+        n = code_to_num.get(_schedule_key(p))
         if n is None:
             continue
         cy = y - inline_offset if p.offset_ft >= 0 else y + inline_offset
@@ -2483,7 +2504,11 @@ def _draw_notes(
         c.setLineWidth(0.3)
         c.line(x, y[0], x_right, y[0])
         y[0] -= layout.col_header_pad[1]
-        for i, code in enumerate(schedule_order, start=1):
+        for i, key in enumerate(schedule_order, start=1):
+            # Schedule keys are bare MUTCD codes except R2-1, which splits
+            # into entrance/restoration variants (see _schedule_key).  The
+            # CODE column always shows the bare code.
+            code = "R2-1" if key.startswith("R2-1@") else key
             desc = description_for(code)
             # Substitute parametric placeholders.  G20-1 BEGIN ROAD WORK
             # carries the work-zone length on its face ("ROAD CONSTRUCTION
@@ -2491,6 +2516,14 @@ def _draw_notes(
             # unsubstituted placeholder onto the sheet.
             if code == "G20-1":
                 desc = desc.replace("XXX", f"{params.work_zone_length_ft:.0f}")
+            # R2-1 SPEED LIMIT carries the work-zone reduced limit at the
+            # entrance and the restored posted limit downstream.  Wording
+            # mirrors the crew narrative (crew_narrative.py) for
+            # cross-surface consistency.
+            elif key == "R2-1@entrance":
+                desc = f"SPEED LIMIT {params.work_zone_speed_mph:.0f} (work-zone speed posting)"
+            elif key == "R2-1@restoration":
+                desc = f"SPEED LIMIT {params.speed_mph:.0f} (posted-speed restoration)"
             c.setFillColor(colors.black)
             c.setFont("Helvetica", 7)
             c.drawString(x, y[0], str(i))
