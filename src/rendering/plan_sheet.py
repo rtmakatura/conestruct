@@ -25,6 +25,7 @@ from __future__ import annotations
 import os
 import tempfile
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from urllib.parse import quote as urllib_quote
@@ -1265,6 +1266,29 @@ def _deoverlap_signs_pairwise(
     return out
 
 
+# ---------------------------------------------------------------------------
+# Rendering convention: on-page glyphs vs off-page notes
+# ---------------------------------------------------------------------------
+# Per CDOT S-630-1 typical-sheet convention, only devices within the work
+# zone + buffer + taper + 50 ft of padding (station_ft <= station_max_visible)
+# render as glyphs on the schematic.  Upstream advance-warning signs
+# (W21-5aR, W20-1, W20-2, W5-1, W16-2a, W7-3a, W3-5, etc.) sit 500-5000+ ft
+# from the taper — too far to depict to scale alongside the work zone — and
+# are documented textually in the NOTES ADVANCE WARNING SIGNS table instead
+# (see _build_advance_warning_table).
+#
+# Mirroring on divided highways: every sign emitted by the layout engine is
+# paired (positive offset_ft on the work-side shoulder, negative offset_ft
+# on the median side) per CO Supplement §6C.04(A).  Both placements render
+# on the on-page schematic: positive-offset signs land in the work-side
+# shoulder band (lower y); negative-offset signs snap to the median band
+# (y = PLAN_Y_CENTER) via the median-sign branch in _draw_devices.  The
+# notes table dedupes the left/right pair into a single row per
+# (code, station) — mirroring is implicit on divided, and the XLSX device
+# list is authoritative for the count.
+# ---------------------------------------------------------------------------
+
+
 def _draw_devices(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
@@ -2214,6 +2238,65 @@ def _build_advance_warning_table(
     return rows
 
 
+@dataclass(frozen=True)
+class _NotesLayout:
+    """Pitch / padding / column-mode plan for the NOTES & SIGN SCHEDULE box.
+
+    Picked by row count so dense tables (Cases 26/27 + future flagger /
+    lane closure additions) stay inside the fixed-height footer box.
+    Body fonts are deliberately held at 7 pt regardless of tier — going
+    smaller hurts legibility on the printed field plan.  Tightening
+    happens via row pitch, section-header padding, and footer-line
+    spacing; for the densest tier, the advance table also flips to a
+    2-column layout (column-major, closest-first within each column).
+    """
+
+    row_pitch: float
+    section_header_pad: tuple[float, float]  # (before-rule, after-title)
+    col_header_pad: tuple[float, float]  # (before-underline, after-underline)
+    footer_pads: tuple[float, float]  # (first-line, between-lines)
+    param_pitch: float  # between PARAMETERS row pairs
+    two_col_advance: bool
+
+
+def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
+    """Pick the layout tier for a notes box with the given row counts.
+
+    Thresholds verified via cursor-budget simulation (see
+    test_notes_layout_cursor_budget): tier 0 fits up to 8 rows with
+    current pitch; tier 1 (tightened pitch + padding) fits up to 12;
+    tier 2 (tier 1 + 2-column advance) handles the densest stepped
+    W3-5 sequences and leaves headroom for future additions.
+    """
+    total = schedule_rows + advance_rows
+    if total <= 8:
+        return _NotesLayout(
+            row_pitch=9.0,
+            section_header_pad=(4.0, 12.0),
+            col_header_pad=(4.0, 8.0),
+            footer_pads=(4.0, 8.0),
+            param_pitch=10.0,
+            two_col_advance=False,
+        )
+    if total <= 12:
+        return _NotesLayout(
+            row_pitch=8.0,
+            section_header_pad=(3.0, 10.0),
+            col_header_pad=(3.0, 7.0),
+            footer_pads=(3.0, 6.0),
+            param_pitch=9.0,
+            two_col_advance=False,
+        )
+    return _NotesLayout(
+        row_pitch=8.0,
+        section_header_pad=(3.0, 10.0),
+        col_header_pad=(3.0, 7.0),
+        footer_pads=(3.0, 6.0),
+        param_pitch=9.0,
+        two_col_advance=True,
+    )
+
+
 def _draw_notes(
     c: canvas.Canvas,
     params: ScenarioParams,
@@ -2309,15 +2392,17 @@ def _draw_notes(
     x_right = x_box + width - 8
     y = [FOOTER_H - 24]
 
+    layout = _notes_layout(len(schedule_order or []), len(advance))
+
     def section_header(title: str) -> None:
-        y[0] -= 4
+        y[0] -= layout.section_header_pad[0]
         c.setStrokeColor(colors.HexColor("#888888"))
         c.setLineWidth(0.4)
-        c.line(x, y[0] + 4, x_right, y[0] + 4)
+        c.line(x, y[0] + layout.section_header_pad[0], x_right, y[0] + layout.section_header_pad[0])
         c.setFillColor(colors.black)
         c.setFont("Helvetica-Bold", 7.5)
         c.drawString(x, y[0] - 4, title)
-        y[0] -= 12
+        y[0] -= layout.section_header_pad[1]
 
     def column_header(label: str, x_pos: float, align: str = "left") -> None:
         c.setFont("Helvetica-Bold", 6.5)
@@ -2349,13 +2434,13 @@ def _draw_notes(
     for k, (label, val) in enumerate(rows):
         col = k % 2
         if col == 0 and k > 0:
-            y[0] -= 10
+            y[0] -= layout.param_pitch
         c.setFont("Helvetica", 7)
         c.setFillColor(colors.black)
         c.drawString(col_x[col], y[0], f"{label}:")
         c.setFont("Helvetica-Bold", 7)
         c.drawString(val_x[col], y[0], val)
-    y[0] -= 10
+    y[0] -= layout.param_pitch
 
     # SIGN SCHEDULE — 3-column table (#, CODE, DESCRIPTION)
     if schedule_order:
@@ -2363,11 +2448,11 @@ def _draw_notes(
         column_header("#", x)
         column_header("CODE", x + 18)
         column_header("DESCRIPTION", x + 80)
-        y[0] -= 4
+        y[0] -= layout.col_header_pad[0]
         c.setStrokeColor(colors.HexColor("#CCCCCC"))
         c.setLineWidth(0.3)
         c.line(x, y[0], x_right, y[0])
-        y[0] -= 8
+        y[0] -= layout.col_header_pad[1]
         for i, code in enumerate(schedule_order, start=1):
             desc = description_for(code)
             # Substitute parametric placeholders.  G20-1 BEGIN ROAD WORK
@@ -2383,32 +2468,24 @@ def _draw_notes(
             c.drawString(x + 18, y[0], code)
             c.setFont("Helvetica", 7)
             c.drawString(x + 80, y[0], desc)
-            y[0] -= 9
+            y[0] -= layout.row_pitch
 
-    # ADVANCE WARNING SIGNS — 3-column table (CODE, DESCRIPTION, DISTANCE)
+    # ADVANCE WARNING SIGNS — 3-column table (CODE, DESCRIPTION, DISTANCE).
+    # Single-column for ≤12 total rows; 2-column (column-major fill,
+    # closest-first within each column) once row count crosses the
+    # tier-2 threshold so dense stepped-W3-5 and future flagger/lane
+    # closure additions stay inside the box.
     if is_mobile or is_off_road:
         advance_section_title = "ADVANCE WARNING SIGNS (upstream of work area)"
     else:
         advance_section_title = "ADVANCE WARNING SIGNS (off-page upstream of taper)"
     section_header(advance_section_title)
-    column_header("CODE", x)
-    column_header("DESCRIPTION", x + 60)
-    column_header("DISTANCE", x_right, align="right")
-    y[0] -= 4
-    c.setStrokeColor(colors.HexColor("#CCCCCC"))
-    c.setLineWidth(0.3)
-    c.line(x, y[0], x_right, y[0])
-    y[0] -= 8
-    for code, desc, dist in advance:
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 7)
-        c.drawString(x, y[0], code)
-        c.setFont("Helvetica", 7)
-        c.drawString(x + 60, y[0], desc)
-        c.drawRightString(x_right, y[0], f"{dist:.0f} ft")
-        y[0] -= 9
+    if layout.two_col_advance:
+        _draw_advance_table_two_column(c, advance, x, x_right, y, layout, column_header)
+    else:
+        _draw_advance_table_one_column(c, advance, x, x_right, y, layout, column_header)
 
-    y[0] -= 4
+    y[0] -= layout.footer_pads[0]
     c.setFont("Helvetica-Oblique", 6.5)
     c.setFillColor(colors.HexColor("#666666"))
     c.drawString(
@@ -2419,7 +2496,7 @@ def _draw_notes(
             "(effective 2026-01-18), Colorado Supplement."
         ),
     )
-    y[0] -= 8
+    y[0] -= layout.footer_pads[1]
     c.setFont("Helvetica-Bold", 6.5)
     c.setFillColor(colors.HexColor("#B05010"))
     c.drawString(
@@ -2427,10 +2504,107 @@ def _draw_notes(
         y[0],
         "GENERATED BY CONESTRUCT — DRAFT FOR PE REVIEW. NOT A SEALED PLAN.",
     )
-    y[0] -= 8
+    y[0] -= layout.footer_pads[1]
     c.setFont("Helvetica-Oblique", 6.5)
     c.setFillColor(colors.HexColor("#666666"))
     c.drawString(x, y[0], "Verify all dimensions before use.")
+
+
+def _draw_advance_table_one_column(
+    c: canvas.Canvas,
+    advance: list[tuple[str, str, float]],
+    x: float,
+    x_right: float,
+    y: list[float],
+    layout: _NotesLayout,
+    column_header: Callable[..., None],
+) -> None:
+    """Single-column ADVANCE WARNING table — current default layout."""
+    column_header("CODE", x)
+    column_header("DESCRIPTION", x + 60)
+    column_header("DISTANCE", x_right, align="right")
+    y[0] -= layout.col_header_pad[0]
+    c.setStrokeColor(colors.HexColor("#CCCCCC"))
+    c.setLineWidth(0.3)
+    c.line(x, y[0], x_right, y[0])
+    y[0] -= layout.col_header_pad[1]
+    for code, desc, dist in advance:
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 7)
+        c.drawString(x, y[0], code)
+        c.setFont("Helvetica", 7)
+        c.drawString(x + 60, y[0], desc)
+        c.drawRightString(x_right, y[0], f"{dist:.0f} ft")
+        y[0] -= layout.row_pitch
+
+
+def _draw_advance_table_two_column(
+    c: canvas.Canvas,
+    advance: list[tuple[str, str, float]],
+    x: float,
+    x_right: float,
+    y: list[float],
+    layout: _NotesLayout,
+    column_header: Callable[..., None],
+) -> None:
+    """Two-column ADVANCE WARNING table — column-major fill.
+
+    First ceil(N/2) rows in the left column, remainder in the right
+    column, so a reader scans left top-to-bottom (closest-first) and
+    then right top-to-bottom (continuing closest-first).  Both columns
+    carry their own CODE/DESCRIPTION/DISTANCE header set so the
+    structure reads at a glance.
+    """
+    total = len(advance)
+    half = (total + 1) // 2
+    left = advance[:half]
+    right = advance[half:]
+
+    col_gutter = 8.0
+    col_w = (x_right - x - col_gutter) / 2.0
+    left_x = x
+    left_x_right = x + col_w
+    right_x = left_x_right + col_gutter
+    right_x_right = x_right
+    # Per-column DESCRIPTION x-offset is narrower than 1-col mode (30
+    # vs 60) since each column is half-width; advance descriptions
+    # ("RIGHT SHOULDER CLOSED AHEAD" is the longest at ~94 pt) fit
+    # comfortably in the remaining ~125 pt before DISTANCE.
+    desc_dx = 30.0
+
+    column_header("CODE", left_x)
+    column_header("DESCRIPTION", left_x + desc_dx)
+    column_header("DISTANCE", left_x_right, align="right")
+    column_header("CODE", right_x)
+    column_header("DESCRIPTION", right_x + desc_dx)
+    column_header("DISTANCE", right_x_right, align="right")
+    y[0] -= layout.col_header_pad[0]
+    c.setStrokeColor(colors.HexColor("#CCCCCC"))
+    c.setLineWidth(0.3)
+    c.line(left_x, y[0], left_x_right, y[0])
+    c.line(right_x, y[0], right_x_right, y[0])
+    y[0] -= layout.col_header_pad[1]
+
+    for i in range(half):
+        l_row = left[i] if i < len(left) else None
+        r_row = right[i] if i < len(right) else None
+        if l_row is not None:
+            code, desc, dist = l_row
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica-Bold", 7)
+            c.drawString(left_x, y[0], code)
+            c.setFont("Helvetica", 7)
+            c.drawString(left_x + desc_dx, y[0], desc)
+            c.drawRightString(left_x_right, y[0], f"{dist:.0f} ft")
+        if r_row is not None:
+            code, desc, dist = r_row
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica-Bold", 7)
+            c.drawString(right_x, y[0], code)
+            c.setFont("Helvetica", 7)
+            c.drawString(right_x + desc_dx, y[0], desc)
+            c.drawRightString(right_x_right, y[0], f"{dist:.0f} ft")
+        y[0] -= layout.row_pitch
 
 
 # ---------------------------------------------------------------------------
