@@ -1303,6 +1303,59 @@ def test_case_11b_pdf_substitutes_r2_1_speed_limits() -> None:
     ), f"Expected downstream R2-1 'SPEED LIMIT 55'; text: {text!r}"
 
 
+def test_divided_signs_never_in_opposite_carriageway() -> None:
+    """Every SIGN_GENERIC glyph on a divided-highway schematic must land
+    in the work-side band (work shoulder + margin) or the median band —
+    never on the work-side travel lanes, the opposing carriageway's lanes,
+    or its shoulder.
+
+    Regression for the median-snap + offset-keyed de-overlap defect: the
+    vertical de-overlap pushed co-located median-side mirror signs upward
+    out of the thin median band into the opposing carriageway's lanes
+    (Case 11b walkthrough).  Covers the reduced-speed cases, which stack
+    the deepest on-page sign clusters (Fines Double envelope + entrance
+    R2-1 + §6C.06 plaques).  Drives off the same _layout_device_positions
+    helper the renderer uses, so it catches the bug class without a PDF.
+    """
+    from src.api.schemas import ShoulderScenario, scenario_to_call
+    from src.rendering.plan_sheet import (
+        _layout_device_positions,
+        _make_x_mapping,
+        _sign_y_bands,
+    )
+    from src.rules.validators import DeviceType
+    from tests.s630._harness import CASE_11B_BODY, CASE_26_BODY, CASE_27_BODY
+
+    for label, body in (
+        ("Case 11b", CASE_11B_BODY),
+        ("Case 26", CASE_26_BODY),
+        ("Case 27", CASE_27_BODY),
+    ):
+        scenario = ShoulderScenario.model_validate(body)
+        params, generator, kwargs = scenario_to_call(scenario)
+        placements = generator(params, **kwargs)
+        sw = params.shoulder_width_ft
+
+        mapping = _make_x_mapping(placements, params, sw)
+        items, _lighting = _layout_device_positions(
+            placements, mapping["x_of"], mapping["station_max_visible"], params, sw
+        )
+        bands = _sign_y_bands(params, sw)
+
+        for p, _x, y in items:
+            if p.device_type != DeviceType.SIGN_GENERIC:
+                continue
+            in_work = bands["work_floor"] <= y <= bands["work_shoulder_top"]
+            in_median = bands["median_lo"] <= y <= bands["median_hi"]
+            assert in_work or in_median, (
+                f"{label}: sign {p.label!r} at station={p.station_ft:.0f} "
+                f"offset={p.offset_ft:.0f} rendered at y={y:.1f}, outside the "
+                f"work-side band [{bands['work_floor']:.0f},{bands['work_shoulder_top']:.0f}] "
+                f"and median band [{bands['median_lo']:.0f},{bands['median_hi']:.0f}] "
+                "— likely on a travel lane or the opposing carriageway."
+            )
+
+
 def _lane_divided_params() -> ScenarioParams:
     """Canonical TA-19 params for the divided-highway lane-closure validators."""
     return ScenarioParams(

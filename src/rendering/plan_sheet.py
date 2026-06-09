@@ -912,6 +912,41 @@ def _on_road_max_offset_ft(
     return base
 
 
+def _is_median_sign(p: DevicePlacement, params: ScenarioParams, on_road_max: float) -> bool:
+    """True when a sign is a divided-highway median-side mirror copy that
+    gets snapped into the median band (see _draw_devices).  Negative
+    offset within the on-road threshold means the §6C.04(A) mirror that
+    would otherwise draw in the opposing carriageway's lanes."""
+    return (
+        params.is_divided
+        and p.device_type == DeviceType.SIGN_GENERIC
+        and p.offset_ft < 0
+        and abs(p.offset_ft) <= on_road_max + 4.0
+    )
+
+
+def _sign_y_bands(params: ScenarioParams, shoulder_width_ft: float) -> dict[str, float]:
+    """Legal page-y bands for SIGN_GENERIC glyphs on a divided highway.
+
+    A sign must render either in the work-side band (the work shoulder
+    plus the margin strip just outside it, where stacked callouts spill)
+    or in the median band — never on the work-side travel lanes, the
+    opposing carriageway's lanes, or its shoulder.  ``work_shoulder_top``
+    is the work-side lane/shoulder boundary (signs must stay below it to
+    avoid the work-side travel lanes); ``work_floor`` is the page-edge
+    floor below the road.  Median edges follow the drawn ``MEDIAN_PTS``
+    strip centred on ``PLAN_Y_CENTER``.
+    """
+    half_lanes = 2 if params.is_divided else 1
+    half_med = MEDIAN_PTS / 2.0
+    return {
+        "median_lo": PLAN_Y_CENTER - half_med,
+        "median_hi": PLAN_Y_CENTER + half_med,
+        "work_shoulder_top": _y_of(half_lanes * params.lane_width_ft, params.is_divided),
+        "work_floor": PLAN_BOTTOM,
+    }
+
+
 CALLOUT_RADIUS = 5.0  # circled-number callout radius
 CALLOUT_NUMBER_FONT_SIZE = 7
 
@@ -1287,6 +1322,142 @@ def _deoverlap_signs_pairwise(
     return out
 
 
+def _deoverlap_median_horizontal(
+    items: list[tuple[DevicePlacement, float, float]],
+    dx_grid: float = 6.0,
+    step: float = SIGN_BOX_W,
+) -> list[tuple[DevicePlacement, float, float]]:
+    """Spread co-located median-band signs along X (station axis).
+
+    Median-side mirror signs are all snapped to a single y line
+    (``PLAN_Y_CENTER``) inside an 18 pt band.  That band is far too thin
+    for the vertical de-overlap used elsewhere — a single vertical push
+    lands a sign in a travel lane (work side below, opposing side above).
+    So co-located median signs fan horizontally instead, staying on the
+    median line.  Signs are grouped by page-x; each group is spread
+    symmetrically about its shared x by ``step`` so the glyphs no longer
+    sit on top of one another.  y is left untouched.
+    """
+    from collections import defaultdict
+
+    groups: dict[int, list[int]] = defaultdict(list)
+    for i, (_p, x, _y) in enumerate(items):
+        groups[round(x / dx_grid)].append(i)
+
+    out = list(items)
+    for indices in groups.values():
+        n = len(indices)
+        if n <= 1:
+            continue
+        # Stable, deterministic order so callout/glyph assignment is
+        # reproducible across runs.
+        indices.sort(key=lambda i: (items[i][0].label or "", items[i][0].station_ft))
+        for j, idx in enumerate(indices):
+            p, x, y = items[idx]
+            out[idx] = (p, x + (j - (n - 1) / 2.0) * step, y)
+    return out
+
+
+def _clamp_sign_positions(
+    items: list[tuple[DevicePlacement, float, float]],
+    params: ScenarioParams,
+    on_road_max: float,
+    bands: dict[str, float],
+) -> list[tuple[DevicePlacement, float, float]]:
+    """Defensive backstop: clamp every SIGN_GENERIC glyph into a legal
+    band so no sign can render on a travel lane or in the opposing
+    carriageway, regardless of how the de-overlap passes moved it.
+
+    Scoped to divided highways, where the two-carriageway geometry makes
+    misplacement possible.  Median signs clamp to the median band;
+    work-side signs (positive offset) clamp between the page floor and the
+    work-side lane/shoulder boundary.  Snap-to-boundary keeps output
+    visible rather than dropping or erroring.
+    """
+    if not params.is_divided:
+        return items
+    out: list[tuple[DevicePlacement, float, float]] = []
+    for p, x, y in items:
+        if p.device_type == DeviceType.SIGN_GENERIC:
+            if _is_median_sign(p, params, on_road_max):
+                y = min(max(y, bands["median_lo"]), bands["median_hi"])
+            elif p.offset_ft > 0:
+                y = min(max(y, bands["work_floor"]), bands["work_shoulder_top"])
+        out.append((p, x, y))
+    return out
+
+
+def _layout_device_positions(
+    placements: list[DevicePlacement],
+    x_of: Callable[[float], float],
+    station_max_visible: float,
+    params: ScenarioParams,
+    shoulder_width_ft: float,
+) -> tuple[
+    list[tuple[DevicePlacement, float, float]],
+    list[tuple[DevicePlacement, float, float]],
+]:
+    """Resolve every visible device to a final (placement, x, y) on the
+    plan view: offset→page mapping, median snap, de-overlap, and the
+    legal-band clamp.  Pure geometry, no drawing — shared by
+    ``_draw_devices`` and the sign-band regression test so the two cannot
+    drift.  Returns ``(items, lighting_items)``.
+    """
+    flags = _detect_site_features(placements)
+    on_road_max = _on_road_max_offset_ft(
+        params, shoulder_width_ft, has_sidewalk=flags["pedestrian_facility"]
+    )
+    y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
+    bands = _sign_y_bands(params, shoulder_width_ft)
+
+    clampable_types = (
+        DeviceType.SIGN_GENERIC,
+        DeviceType.BARRICADE_TYPE_III,
+        DeviceType.BARRICADE_TYPE_II,
+    )
+    lighting_types = (
+        DeviceType.WARNING_LIGHT_TYPE_C,
+        DeviceType.PORTABLE_LIGHT_PLANT,
+    )
+
+    items: list[tuple[DevicePlacement, float, float]] = []
+    median_items: list[tuple[DevicePlacement, float, float]] = []
+    lighting_items: list[tuple[DevicePlacement, float, float]] = []
+    for p in placements:
+        if p.station_ft > station_max_visible:
+            continue
+        x = x_of(p.station_ft)
+        if _is_median_sign(p, params, on_road_max):
+            # Median-side mirror — snap to the median line; fanned along X
+            # below (the band is too thin to fan vertically).
+            median_items.append((p, x, PLAN_Y_CENTER))
+            continue
+        if p.device_type in clampable_types and abs(p.offset_ft) > on_road_max:
+            # Clamp off-road signs/barricades proportionally so a device at
+            # offset 36 ft sits closer to the shoulder than one at offset
+            # 50 ft (the intersection W20-1).  This keeps off-road
+            # placements visually attached to the road edge instead of
+            # floating in margin white space.
+            overage = abs(p.offset_ft) - on_road_max
+            clamp_dist = 7.0 + min(overage, 20.0) * 0.5
+            y = y_road_bottom - clamp_dist if p.offset_ft > 0 else y_road_top + clamp_dist
+        else:
+            y = _y_of(p.offset_ft, params.is_divided)
+        if p.device_type in lighting_types:
+            lighting_items.append((p, x, y))
+        else:
+            items.append((p, x, y))
+
+    # Work-side and other signs de-overlap vertically; median signs fan
+    # horizontally on their band line.
+    items = _deoverlap_items(items)
+    items = _deoverlap_signs_pairwise(items)
+    median_items = _deoverlap_median_horizontal(median_items)
+
+    items = _clamp_sign_positions(items + median_items, params, on_road_max, bands)
+    return items, lighting_items
+
+
 # ---------------------------------------------------------------------------
 # Rendering convention: on-page glyphs vs off-page notes
 # ---------------------------------------------------------------------------
@@ -1301,12 +1472,16 @@ def _deoverlap_signs_pairwise(
 # Mirroring on divided highways: every sign emitted by the layout engine is
 # paired (positive offset_ft on the work-side shoulder, negative offset_ft
 # on the median side) per CO Supplement §6C.04(A).  Both placements render
-# on the on-page schematic: positive-offset signs land in the work-side
-# shoulder band (lower y); negative-offset signs snap to the median band
-# (y = PLAN_Y_CENTER) via the median-sign branch in _draw_devices.  The
-# notes table dedupes the left/right pair into a single row per
-# (code, station) — mirroring is implicit on divided, and the XLSX device
-# list is authoritative for the count.
+# on the on-page schematic (see _layout_device_positions): positive-offset
+# signs land in the work-side shoulder band (lower y) and de-overlap
+# vertically; negative-offset signs snap to the median band
+# (y = PLAN_Y_CENTER) and de-overlap horizontally, because the 18 pt median
+# band is too thin to fan vertically without spilling into a travel lane.
+# Median callouts are suppressed (the work-side mirror carries the shared
+# number); a final clamp keeps every sign off the travel lanes and out of
+# the opposing carriageway.  The notes table dedupes the left/right pair
+# into a single row per (code, station) — mirroring is implicit on divided,
+# and the XLSX device list is authoritative for the count.
 # ---------------------------------------------------------------------------
 
 
@@ -1327,76 +1502,19 @@ def _draw_devices(
     text (W20-1 / R9-9 / M4-9a / …) that piles up unreadably when
     several signs share a station, e.g. at the work-zone ends after
     pedestrian-/bicycle-/intersection adjustments.
+
+    Position resolution (offset→page mapping, median snap, de-overlap,
+    legal-band clamp) lives in ``_layout_device_positions`` so it can be
+    asserted by the sign-band regression test without rendering a PDF.
     """
-    flags = _detect_site_features(placements)
     on_road_max = _on_road_max_offset_ft(
-        params, shoulder_width_ft, has_sidewalk=flags["pedestrian_facility"]
+        params,
+        shoulder_width_ft,
+        has_sidewalk=_detect_site_features(placements)["pedestrian_facility"],
     )
-    y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
-
-    # Devices that get clamped to the road edge when their nominal offset
-    # would otherwise place them off the page or floating in white space.
-    # Signs (W/G/R/M codes) and Type III barricades are placed by the
-    # site-adjustments module at offsets just past the shoulder; without
-    # clamping the negative-offset mirror lands far above the roadway and
-    # reads as detached.
-    clampable_types = (
-        DeviceType.SIGN_GENERIC,
-        DeviceType.BARRICADE_TYPE_III,
-        DeviceType.BARRICADE_TYPE_II,
+    items, lighting_items = _layout_device_positions(
+        placements, x_of, station_max_visible, params, shoulder_width_ft
     )
-
-    # Median-resident signs: on a divided highway, layout generators emit
-    # advance warning + downstream-end signs at sign_offset_left = -28 ft
-    # to satisfy CO Supplement §6C.04(A).  Geometrically those would land
-    # in the OPPOSING carriageway's lanes, which is wrong for a sign that
-    # serves work-direction drivers in the inside lane.  Snap negative-
-    # offset signs into the median band between the two carriageways so
-    # they sit visually just left of the work-side roadway.
-    median_sign_y = PLAN_Y_CENTER
-
-    # Lighting decorations (warning lights, light plants) render in a
-    # final pass at their original (x, y) so they stay visually attached
-    # to the drums they're paired with.  Routing them through the
-    # de-overlap groups would push warning lights away from their host
-    # drums and undo the "halo on the drum" intent.
-    lighting_types = (
-        DeviceType.WARNING_LIGHT_TYPE_C,
-        DeviceType.PORTABLE_LIGHT_PLANT,
-    )
-
-    items: list[tuple[DevicePlacement, float, float]] = []
-    lighting_items: list[tuple[DevicePlacement, float, float]] = []
-    for p in placements:
-        if p.station_ft > station_max_visible:
-            continue
-        x = x_of(p.station_ft)
-        if (
-            params.is_divided
-            and p.device_type == DeviceType.SIGN_GENERIC
-            and p.offset_ft < 0
-            and abs(p.offset_ft) <= on_road_max + 4.0
-        ):
-            # Median-side sign on a divided highway — render in the median.
-            y = median_sign_y
-        elif p.device_type in clampable_types and abs(p.offset_ft) > on_road_max:
-            # Clamp off-road signs/barricades proportionally so a device at
-            # offset 36 ft sits closer to the shoulder than one at offset
-            # 50 ft (the intersection W20-1).  This keeps off-road
-            # placements visually attached to the road edge instead of
-            # floating in margin white space.
-            overage = abs(p.offset_ft) - on_road_max
-            clamp_dist = 7.0 + min(overage, 20.0) * 0.5
-            y = y_road_bottom - clamp_dist if p.offset_ft > 0 else y_road_top + clamp_dist
-        else:
-            y = _y_of(p.offset_ft, params.is_divided)
-        if p.device_type in lighting_types:
-            lighting_items.append((p, x, y))
-        else:
-            items.append((p, x, y))
-
-    items = _deoverlap_items(items)
-    items = _deoverlap_signs_pairwise(items)
 
     # Pass 1: glyphs first — each device drawn at its (possibly
     # de-overlapped) screen position.
@@ -1413,9 +1531,15 @@ def _draw_devices(
     # Pass 2: inline numbered callouts attached to each sign.  The number
     # sits directly below (work-side) or above (opposing-side) its
     # symbol, with no leader line — proximity carries the association.
+    # Median-side mirror signs are skipped: the median band is too thin to
+    # hold a callout without poking into the opposing carriageway, and the
+    # work-side mirror already carries the same number (mirror pairs share
+    # a schedule key, so the reader loses nothing).
     inline_offset = 11.0
     for p, x, y in items:
         if p.device_type != DeviceType.SIGN_GENERIC or not p.label:
+            continue
+        if _is_median_sign(p, params, on_road_max):
             continue
         n = code_to_num.get(_schedule_key(p))
         if n is None:
