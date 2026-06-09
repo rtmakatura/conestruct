@@ -31,6 +31,37 @@ from src.rules.spacing import (
 from src.rules.validators import DevicePlacement, ScenarioParams
 
 
+def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacement]:
+    """Drop exact-coincident duplicate devices, preserving order (keep first).
+
+    Two devices sharing the same (device_type, label, station, offset)
+    describe a single physical sign at one point — two identical glyphs
+    there is never a real installation.  The known case: the §6C.06(A)
+    construction-zone plaque series (§5) and the Fines Double envelope
+    assembly (§10) each emit a G20-5P, and for some work-zone lengths the
+    single envelope assembly centres exactly on a §6C.06 plaque station
+    (e.g. wz_len = 1000 → n_plaques = 3 → middle plaque at 500 = envelope
+    centre).  Keep-first preserves the §6C.06 plaque (emitted earlier); the
+    envelope's R2-6P (distinct label) is untouched, so the Fines Double
+    G20-5P + R2-6P assembly stays intact.  Legitimate distinct-station
+    coexistence and same-coordinate different-label stacks are preserved.
+
+    Coordinates round to 0.1 ft so float wobble in the spacing math can't
+    defeat the match.  Applied at every generator return so "no generator
+    emits two identical devices at the same point" is a structural
+    invariant that also guards future generators.
+    """
+    seen: set[tuple[DeviceType, str | None, float, float]] = set()
+    out: list[DevicePlacement] = []
+    for p in placements:
+        key = (p.device_type, p.label, round(p.station_ft, 1), round(p.offset_ft, 1))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(p)
+    return out
+
+
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
     shoulder_width_ft: float = 10.0,
@@ -446,7 +477,7 @@ def generate_shoulder_closure_divided(
                 )
             )
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_shoulder_closure_undivided(
@@ -715,7 +746,7 @@ def generate_shoulder_closure_undivided(
                 )
             )
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_lane_closure_divided(
@@ -1023,7 +1054,7 @@ def generate_lane_closure_divided(
     # for any device placement in a lane-only closure.
     _ = shoulder_edge_offset
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_flagger_alternating_2lane(
@@ -1324,7 +1355,7 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_work_beyond_shoulder(
@@ -1372,7 +1403,7 @@ def generate_work_beyond_shoulder(
         ),
     ]
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_mobile_op_2lane(
@@ -1453,7 +1484,7 @@ def generate_mobile_op_2lane(
             )
         )
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def generate_mobile_op_multilane(
@@ -1519,7 +1550,7 @@ def generate_mobile_op_multilane(
     _ = lane_line_offset
     _ = sign_offset
 
-    return placements
+    return _dedupe_placements(placements)
 
 
 def _print_smoke_test(

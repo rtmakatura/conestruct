@@ -522,7 +522,77 @@ def test_shoulder_divided_g20_5p_coexists_intra_zone_and_envelope() -> None:
     n_no_reduction = _count_label(no_reduction, "G20-5P")
     n_with_reduction = _count_label(placements, "G20-5P")
     # Reduction adds the envelope assembly pair: 2 × n_assemblies = 2.
+    # (wz = 800 ft → §6C.06 plaques at 200/600, envelope at 400 — distinct
+    # stations, no exact-coincidence duplicate, so the dedup pass is a no-op
+    # here and the coexistence count is preserved.)
     assert n_with_reduction - n_no_reduction == 2
+
+
+def test_generators_emit_no_exact_duplicate_placements() -> None:
+    """Structural invariant: no generator emits two identical devices at the
+    same point — i.e. no exact (device_type, label, station, offset)
+    duplicate in the returned placement list.
+
+    Regression for the §6C.06 plaque / Fines Double envelope G20-5P
+    coincidence: at wz_len = 1000 the single envelope assembly centres on
+    the middle §6C.06 plaque (both at station 500), emitting an identical
+    G20-5P at the exact same coordinate.  The _dedupe_placements pass at
+    each generator return collapses such exact coincidences (keep-first)
+    while preserving distinct-station coexistence and same-coordinate
+    different-label stacks (e.g. G20-5P + R2-6P).  Covers the colliding
+    shoulder cases plus no-reduction and lane controls.
+    """
+
+    def _has_exact_duplicate(placements: list[DevicePlacement]) -> tuple | None:
+        seen: set[tuple] = set()
+        for p in placements:
+            key = (p.device_type, p.label, round(p.station_ft, 1), round(p.offset_ft, 1))
+            if key in seen:
+                return key
+            seen.add(key)
+        return None
+
+    def _freeway_divided(work_zone_speed_mph: int | None) -> ScenarioParams:
+        return ScenarioParams(
+            speed_mph=55,
+            num_lanes=2,
+            closure_type="shoulder",
+            road_type="freeway",
+            work_zone_length_ft=1000.0,
+            lane_width_ft=12.0,
+            shoulder_width_ft=10.0,
+            is_divided=True,
+            jurisdiction="CDOT",
+            work_zone_speed_mph=work_zone_speed_mph,
+        )
+
+    lane_params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+    cases = [
+        ("shoulder divided reduced", generate_shoulder_closure_divided(_freeway_divided(50))),
+        (
+            "shoulder undivided reduced",
+            generate_shoulder_closure_undivided(_freeway_shoulder_undivided_params(60)),
+        ),
+        (
+            "shoulder divided no-reduction",
+            generate_shoulder_closure_divided(_freeway_divided(None)),
+        ),
+        ("lane divided", generate_lane_closure_divided(lane_params)),
+    ]
+    for label, placements in cases:
+        dup = _has_exact_duplicate(placements)
+        assert dup is None, f"{label}: exact-coincident duplicate placement {dup}"
 
 
 def test_shoulder_divided_large_envelope_more_assemblies() -> None:
