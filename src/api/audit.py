@@ -16,6 +16,7 @@ import math
 from typing import Any
 
 from src.rules.devices import DeviceType
+from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
     _cdot_buffer_or_none,
     advance_warning_spacing,
@@ -310,77 +311,155 @@ def build_audit_trail(
     else:
         sign_codes = {"A": "W21-5aR", "B": "W20-2", "C": "W20-1"}
 
-    sign_table_rows = [
-        {
-            "Position": "C (furthest)",
-            "Code": sign_codes["C"],
-            "Station (ft)": f"{sign_c_station:,.0f}",
-            "Distance from Taper (ft)": f"{a_ft + b_ft + c_ft:,.0f} upstream",
-        },
-        {
-            "Position": "B (middle)",
-            "Code": sign_codes["B"],
-            "Station (ft)": f"{sign_b_station:,.0f}",
-            "Distance from Taper (ft)": f"{a_ft + b_ft:,.0f} upstream",
-        },
-        {
-            "Position": "A (nearest)",
-            "Code": sign_codes["A"],
-            "Station (ft)": f"{sign_a_station:,.0f}",
-            "Distance from Taper (ft)": f"{a_ft:,.0f} upstream",
-        },
-    ]
+    # Sign table — derived from the placement list (audit honesty, B-02).
+    #
+    # Every upstream SIGN_GENERIC placement (station > taper start) gets
+    # a row, so the audit JSON cannot silently omit a sign the layout
+    # ships — W5-1 (G2) was the observed omission under the previous
+    # hand-assembled table; the cross-surface invariant test pins the
+    # rest.  Conventions match the PDF off-page table: left/right mirror
+    # pairs dedupe to one row per (label, station); ordering is
+    # driver-encounter (furthest upstream first); plaques sort after
+    # their parent sign at the same station.  Position labels are
+    # matched against the computed anchor stations above so the
+    # established A/B/C vocabulary is preserved.
+    #
+    # The W21-5aR-pair anchor (G1): second W21-5aR at the midpoint
+    # between sign_a_station and the W5-1-would-be station
+    # (taper_start + 500), independent of whether W5-1 actually emits —
+    # preserves geometric consistency across routings.
+    w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
 
-    # G1 — second W21-5aR + W16-2a / W7-3a plaques per CDOT S-630-1
-    # Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases 26/27 positions
-    # 4/6).  Two W21-5aR signs are prescribed on freeway shoulder
-    # closures: the upstream sign carries a W16-2a "NEXT XXX FT" plaque;
-    # a second downstream sign (between the first W21-5aR and taper)
-    # carries a W7-3a "NEXT X MILES" plaque.  Emission gate matches the
-    # layout generator (freeway shoulder); same fixture uniformity across
-    # Cases 11 / 11b / 26 / 27 means the rows surface on both reduced
-    # and no-reduction routings.
-    if params.closure_type == "shoulder" and params.road_type == "freeway":
-        # Geometry mirrors the layout: second W21-5aR at the midpoint
-        # between sign_a_station and the W5-1-would-be station
-        # (taper_start + 500), independent of whether W5-1 actually
-        # emits — preserves geometric consistency across routings.
-        w21_5aR_upstream_st = sign_a_station
-        w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
-        w16_2a_distance_ft = int(round(w21_5aR_upstream_st - wz_len))
-        # X is computed from work zone length per the deterministic V1
-        # default.  Future iteration may surface a contractor-input
-        # field for engineer override.
-        w7_3a_miles = max(1, round(wz_len / 5280.0))
-        sign_table_rows.extend(
-            [
-                {
-                    "Position": "A plaque",
-                    "Code": "W16-2a",
-                    "Station (ft)": f"{w21_5aR_upstream_st:,.0f}",
-                    "Distance from Taper (ft)": (
-                        f"NEXT {w16_2a_distance_ft:,} FT (under W21-5aR at A)"
-                    ),
-                },
-                {
-                    "Position": "A2 (second W21-5aR)",
-                    "Code": "W21-5aR",
-                    "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
-                    "Distance from Taper (ft)": (
-                        f"{w21_5aR_downstream_st - taper_start_station:,.0f} upstream"
-                    ),
-                },
-                {
-                    "Position": "A2 plaque",
-                    "Code": "W7-3a",
-                    "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
-                    "Distance from Taper (ft)": (
-                        f"NEXT {w7_3a_miles} "
-                        f"{'MILE' if w7_3a_miles == 1 else 'MILES'} (under second W21-5aR)"
-                    ),
-                },
-            ]
+    def _position_label(label: str, station_ft: float, w3_5_step: int) -> str:
+        if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
+            return "C (furthest)"
+        if label == sign_codes["B"] and abs(station_ft - sign_b_station) <= 0.5:
+            return "B (middle)"
+        if label == sign_codes["A"] and abs(station_ft - sign_a_station) <= 0.5:
+            return "A (nearest)"
+        if label == "W16-2a" and abs(station_ft - sign_a_station) <= 0.5:
+            return "A plaque"
+        if label == "W21-5aR" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+            return "A2 (second W21-5aR)"
+        if label == "W7-3a" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
+            return "A2 plaque"
+        if label == "W5-1":
+            return "Supplemental (W5-1)"
+        if label.startswith("W3-5"):
+            return f"W3-5 step {w3_5_step}"
+        return f"Advance ({label})"
+
+    upstream_signs = [
+        p
+        for p in placements
+        if p.device_type == DeviceType.SIGN_GENERIC
+        and p.label
+        and p.station_ft > taper_start_station
+    ]
+    _seen_rows: set[tuple[str, int]] = set()
+    unique_upstream: list[DevicePlacement] = []
+    for p in upstream_signs:
+        row_key = (p.label or "", round(p.station_ft))
+        if row_key in _seen_rows:
+            continue
+        _seen_rows.add(row_key)
+        unique_upstream.append(p)
+    unique_upstream.sort(
+        key=lambda p: (
+            -p.station_ft,
+            (p.label or "").split("(", 1)[0] in PLAQUE_CODES,
+            p.label or "",
         )
+    )
+
+    sign_table_rows: list[dict[str, str]] = []
+    if unique_upstream:
+        w3_5_step = 0
+        for p in unique_upstream:
+            label = p.label or ""
+            if label.startswith("W3-5"):
+                # Encounter-order step number (most upstream = step 1).
+                w3_5_step += 1
+            if label in ("W16-2a", "W7-3a"):
+                # Plaque value via the shared substitution helper (same
+                # number the PDF / XLSX / narrative print), annotated
+                # with the host sign for the verification panel.
+                _, plaque_value = substitute_sign_description(
+                    label, p.station_ft, params, taper_start_station=taper_start_station
+                )
+                host = "W21-5aR at A" if label == "W16-2a" else "second W21-5aR"
+                distance_text = f"{plaque_value} (under {host})"
+            else:
+                distance_text = f"{p.station_ft - taper_start_station:,.0f} upstream"
+            sign_table_rows.append(
+                {
+                    "Position": _position_label(label, p.station_ft, w3_5_step),
+                    "Code": label,
+                    "Station (ft)": f"{p.station_ft:,.0f}",
+                    "Distance from Taper (ft)": distance_text,
+                }
+            )
+    else:
+        # Prescriptive fallback — direct callers (unit tests, ad-hoc
+        # scripts) pass empty or sign-free placement lists; the panel
+        # still documents the computed A/B/C prescription so the audit
+        # keeps describing the prescribed plan.
+        sign_table_rows = [
+            {
+                "Position": "C (furthest)",
+                "Code": sign_codes["C"],
+                "Station (ft)": f"{sign_c_station:,.0f}",
+                "Distance from Taper (ft)": f"{a_ft + b_ft + c_ft:,.0f} upstream",
+            },
+            {
+                "Position": "B (middle)",
+                "Code": sign_codes["B"],
+                "Station (ft)": f"{sign_b_station:,.0f}",
+                "Distance from Taper (ft)": f"{a_ft + b_ft:,.0f} upstream",
+            },
+            {
+                "Position": "A (nearest)",
+                "Code": sign_codes["A"],
+                "Station (ft)": f"{sign_a_station:,.0f}",
+                "Distance from Taper (ft)": f"{a_ft:,.0f} upstream",
+            },
+        ]
+        # G1 — second W21-5aR + W16-2a / W7-3a plaques per CDOT S-630-1
+        # Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases 26/27
+        # positions 4/6).  Prescription gate matches the layout
+        # generator (freeway shoulder), uniform across Cases
+        # 11 / 11b / 26 / 27.
+        if params.closure_type == "shoulder" and params.road_type == "freeway":
+            _, w16_2a_value = substitute_sign_description(
+                "W16-2a", sign_a_station, params, taper_start_station=taper_start_station
+            )
+            _, w7_3a_value = substitute_sign_description(
+                "W7-3a", w21_5aR_downstream_st, params, taper_start_station=taper_start_station
+            )
+            sign_table_rows.extend(
+                [
+                    {
+                        "Position": "A plaque",
+                        "Code": "W16-2a",
+                        "Station (ft)": f"{sign_a_station:,.0f}",
+                        "Distance from Taper (ft)": (f"{w16_2a_value} (under W21-5aR at A)"),
+                    },
+                    {
+                        "Position": "A2 (second W21-5aR)",
+                        "Code": "W21-5aR",
+                        "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
+                        "Distance from Taper (ft)": (
+                            f"{w21_5aR_downstream_st - taper_start_station:,.0f} upstream"
+                        ),
+                    },
+                    {
+                        "Position": "A2 plaque",
+                        "Code": "W7-3a",
+                        "Station (ft)": f"{w21_5aR_downstream_st:,.0f}",
+                        "Distance from Taper (ft)": (f"{w7_3a_value} (under second W21-5aR)"),
+                    },
+                ]
+            )
 
     advance_section = {
         "road_type_text": (

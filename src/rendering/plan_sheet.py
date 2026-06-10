@@ -37,7 +37,7 @@ from reportlab.pdfgen import canvas
 from src._dotenv import load_dotenv
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
 from src.rules.devices import DeviceType, cone_display_name
-from src.rules.sign_codes import schedule_key, substitute_sign_description
+from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -2314,7 +2314,8 @@ def _draw_legend(
 # Plaque MUTCD codes — render after their parent sign at the same
 # station in the off-page advance-warning table so a reader scans the
 # parent code first, then sees the plaque modifier on the next line.
-_PLAQUE_CODES: frozenset[str] = frozenset({"W16-2a", "W7-3a", "G20-5P", "R2-6P"})
+# Shared with the audit sign_table via sign_codes.PLAQUE_CODES.
+_PLAQUE_CODES: frozenset[str] = PLAQUE_CODES
 
 
 def _build_advance_warning_table(

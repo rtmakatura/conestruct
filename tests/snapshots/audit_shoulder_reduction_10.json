@@ -25,6 +25,12 @@
           "Distance from Taper (ft)": "500 upstream",
           "Position": "A (nearest)",
           "Station (ft)": "1,978"
+        },
+        {
+          "Code": "W3-5(45)",
+          "Distance from Taper (ft)": "352 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "1,830"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",

@@ -43,6 +43,12 @@
           "Distance from Taper (ft)": "NEXT 1 MILE (under second W21-5aR)",
           "Position": "A2 plaque",
           "Station (ft)": "2,537"
+        },
+        {
+          "Code": "W3-5(60)",
+          "Distance from Taper (ft)": "243 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "2,030"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",

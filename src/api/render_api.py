@@ -43,10 +43,9 @@ from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.night_adjustments import apply_night_adjustments
-from src.rules.sign_codes import description_for
+from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_along_corridor, detect_site_conditions
-from src.rules.spacing import advance_warning_spacing
 from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
@@ -476,29 +475,6 @@ _NON_SIGN_DISPLAY: dict[DeviceType, tuple[str, str]] = {
 }
 
 
-def _sign_description(code: str, params: ScenarioParams) -> str:
-    """Resolve a sign's description, substituting parametric placeholders.
-
-    Two MUTCD codes carry a distance on the sign face:
-
-      * **G20-1** ROAD CONSTRUCTION (NEXT XXX FT) — work zone length.
-      * **W20-2** ROAD WORK XXX FT — advance distance from the W20-2
-        sign back to the taper start (Table 6B-1 A+B).
-
-    Mirrors the substitution done in
-    :func:`src.rendering.plan_sheet._draw_notes` so the Plan Details
-    panel reads the same numbers as the PDF.
-    """
-    desc = description_for(code)
-    if code == "G20-1":
-        return desc.replace("XXX", f"{params.work_zone_length_ft:.0f}")
-    if code == "W20-2":
-        abc = advance_warning_spacing(params.speed_mph, params.road_type)
-        sign_b_dist = abc["A"] + abc["B"]
-        return desc.replace("XXX", f"{sign_b_dist:.0f}")
-    return desc
-
-
 def _sign_function_category(code: str) -> str:
     """Bucket a MUTCD sign code into a function label for the panel.
 
@@ -524,15 +500,26 @@ def _build_device_breakdown(
 ) -> list[dict[str, object]]:
     """Aggregate placements into panel-ready rows.
 
-    Signs are split by label so each MUTCD code gets its own row;
-    non-sign devices are merged by type.  CONE picks up the speed-aware
-    display name; everything else uses the static table above.
+    Signs are split by schedule key (bare MUTCD code, except R2-1 which
+    splits into entrance/restoration faces — same convention as the PDF
+    schedule and XLSX device list) so each sign face gets its own row;
+    non-sign devices are merged by type.  Parametric descriptions
+    resolve via the shared :func:`substitute_sign_description` helper so
+    the panel reads the same numbers as the PDF.  CONE picks up the
+    speed-aware display name; everything else uses the static table above.
     """
     non_sign_counts: Counter[DeviceType] = Counter()
     sign_counts: Counter[str] = Counter()
+    # Lowest-station member per sign group — deterministic representative
+    # for station-dependent substitutions.
+    sign_reps: dict[str, DevicePlacement] = {}
     for p in placements:
         if p.device_type == DeviceType.SIGN_GENERIC:
-            sign_counts[p.label or "(unlabeled)"] += 1
+            key = schedule_key(p.label, p.station_ft) if p.label else "(unlabeled)"
+            sign_counts[key] += 1
+            current = sign_reps.get(key)
+            if current is None or p.station_ft < current.station_ft:
+                sign_reps[key] = p
         else:
             non_sign_counts[p.device_type] += 1
 
@@ -552,10 +539,11 @@ def _build_device_breakdown(
             }
         )
 
-    for code, n in sorted(sign_counts.items()):
+    for key, n in sorted(sign_counts.items()):
+        code, desc = substitute_sign_description(key, sign_reps[key].station_ft, params)
         rows.append(
             {
-                "device": _sign_description(code, params),
+                "device": desc,
                 "code": code,
                 "function": _sign_function_category(code),
                 "qty": n,

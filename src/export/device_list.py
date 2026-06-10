@@ -18,7 +18,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
-from src.rules.sign_codes import description_for
+from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams
 
 # Light-gray header fill from the V1 spec.
@@ -78,12 +78,18 @@ _CHANNELIZER_OPTIONAL_NOTE: str = (
 def _row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:
     """Aggregation key for one placement.
 
-    Signs are split out by label so a W20-1 row and a G20-5P row are
-    counted separately; non-sign devices are aggregated solely by type.
-    Unlabeled signs fall through to a single "(unlabeled)" group.
+    Signs are split out by schedule key (the bare label, except R2-1
+    which splits into entrance/restoration faces — see
+    :func:`src.rules.sign_codes.schedule_key`) so a W20-1 row and a
+    G20-5P row are counted separately, and the two R2-1 faces on a
+    reduced-speed plan each get their own row instead of one merged
+    "SPEED LIMIT XX" line.  Non-sign devices are aggregated solely by
+    type.  Unlabeled signs fall through to a single "(unlabeled)" group.
     """
     if placement.device_type == DeviceType.SIGN_GENERIC:
-        return (DeviceType.SIGN_GENERIC, placement.label)
+        if placement.label is None:
+            return (DeviceType.SIGN_GENERIC, None)
+        return (DeviceType.SIGN_GENERIC, schedule_key(placement.label, placement.station_ft))
     return (placement.device_type, None)
 
 
@@ -92,8 +98,17 @@ def _row_for(
     device_type: DeviceType,
     label: str | None,
     quantity: int,
+    representative: DevicePlacement | None,
+    params: ScenarioParams,
 ) -> tuple[int, str, str, str, str, int, str]:
-    """Build a single Device-List row tuple in column order."""
+    """Build a single Device-List row tuple in column order.
+
+    ``label`` is the aggregation key (schedule key for signs);
+    ``representative`` is one placement from the group (lowest station)
+    so the shared substitution helper can resolve station-dependent
+    parametric values — keeping the XLSX descriptions identical to the
+    PDF schedule / off-page table.
+    """
     spec = DEVICE_CATALOG[device_type]
     pay_item_number = spec.cdot_pay_item_number or "TODO"
 
@@ -102,8 +117,9 @@ def _row_for(
             description = "Generic construction sign (unlabeled)"
             type_label = "SIGN_GENERIC (unlabeled)"
         else:
-            human = description_for(label)
-            description = f"{label} {human}".strip() if human != label else label
+            station_ft = representative.station_ft if representative is not None else 0.0
+            code, human = substitute_sign_description(label, station_ft, params)
+            description = f"{code} {human}".strip() if human != code else code
             type_label = "SIGN_GENERIC"
         unit = "EACH"  # V1 override; catalog says SF.
         notes = _SIGN_GENERIC_NOTE
@@ -124,6 +140,7 @@ def _row_for(
 def _populate_device_list_sheet(
     sheet,
     placements: list[DevicePlacement],
+    params: ScenarioParams,
 ) -> list[tuple[DeviceType, str | None, int]]:
     """Write the Device-List sheet and return the aggregated rows."""
     sheet.title = "Device List"
@@ -136,7 +153,17 @@ def _populate_device_list_sheet(
         cell.font = _HEADER_FONT
         cell.fill = _HEADER_FILL
 
-    counts = Counter(_row_key(p) for p in placements)
+    counts: Counter[tuple[DeviceType, str | None]] = Counter()
+    # Lowest-station member of each group — deterministic representative
+    # for station-dependent substitutions in _row_for.
+    representatives: dict[tuple[DeviceType, str | None], DevicePlacement] = {}
+    for p in placements:
+        key = _row_key(p)
+        counts[key] += 1
+        current = representatives.get(key)
+        if current is None or p.station_ft < current.station_ft:
+            representatives[key] = p
+
     # Sort: device_type alphabetically by enum value, then label
     # (with None last so unlabeled signs trail the labeled ones).
     aggregated: list[tuple[DeviceType, str | None, int]] = sorted(
@@ -145,7 +172,8 @@ def _populate_device_list_sheet(
     )
 
     for item_number, (device_type, label, quantity) in enumerate(aggregated, start=1):
-        sheet.append(_row_for(item_number, device_type, label, quantity))
+        representative = representatives.get((device_type, label))
+        sheet.append(_row_for(item_number, device_type, label, quantity, representative, params))
         sheet.cell(row=item_number + 1, column=6).number_format = "0"
 
     sheet.freeze_panes = "A2"
@@ -194,7 +222,7 @@ def export_device_list(
     """
     workbook = Workbook()
     device_sheet = workbook.active
-    aggregated = _populate_device_list_sheet(device_sheet, placements)
+    aggregated = _populate_device_list_sheet(device_sheet, placements, params)
     summary_sheet = workbook.create_sheet("Summary")
     _populate_summary_sheet(summary_sheet, placements, params, aggregated)
     for sheet in workbook.worksheets:

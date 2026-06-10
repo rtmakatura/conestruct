@@ -79,6 +79,13 @@ def description_for(code: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+# Plaque MUTCD codes — supplemental panels mounted under a parent sign.
+# Sorted after their parent at the same station in the PDF off-page
+# table and the audit sign_table so a reader scans the parent code
+# first, then the plaque modifier.
+PLAQUE_CODES: frozenset[str] = frozenset({"W16-2a", "W7-3a", "G20-5P", "R2-6P"})
+
+
 def schedule_key(label: str | None, station_ft: float) -> str:
     """Schedule/aggregation key for a sign placement.
 
