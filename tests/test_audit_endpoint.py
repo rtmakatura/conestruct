@@ -1820,3 +1820,86 @@ def test_corridor_geometry_translates_out_of_domain_speed() -> None:
     assert violations[0].rule_id == "SPEED_OUTSIDE_TABLE_DOMAIN"
     assert violations[0].severity == "error"
     assert "62 mph" in violations[0].message
+
+
+# ---------------------------------------------------------------------------
+# B-03 / T-03 — the quadratic-branch audit text, pinned by a low-speed
+# canonical snapshot (every other snapshot is >= 45 mph and linear).
+# ---------------------------------------------------------------------------
+
+
+def _shoulder_urban25() -> dict:
+    """25 mph urban undivided — quadratic taper branch + binding
+    undivided-shoulder taper floor."""
+    s = _shoulder_scenario()
+    s.update(roadType="urban_arterial", speed=25, workLen=400.0, divided=False)
+    s["lanes"] = 1
+    return s
+
+
+def test_audit_low_speed_quadratic_matches_baseline(client: TestClient) -> None:
+    """Canonical snapshot for the quadratic branch.  Pins three things
+    no other snapshot covers: the quadratic L_calc_text (B-03 — the
+    displayed arithmetic used to print the linear form against the
+    quadratic result), the urban_low A/B/C path, and the B-07 floor
+    (taper required == actual == 4)."""
+    import json
+    from pathlib import Path
+
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_urban25())
+    assert res.status_code == 200, res.text
+    expected = json.loads(
+        Path("tests/snapshots/audit_shoulder_urban25_quadratic.json").read_text(encoding="utf-8")
+    )
+    assert res.json() == expected
+
+
+def test_audit_quadratic_calc_text_is_arithmetically_coherent(client: TestClient) -> None:
+    """B-03 targeted assert: below 40 mph the calc text shows the
+    quadratic form and its value (8 x 25^2 / 60 = 83.3), never the
+    self-contradicting linear form (8 x 25 = 83.3)."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_urban25())
+    taper = res.json()["sections"]["taper"]
+    assert "x 25^2 / 60" in taper["L_calc_text"], taper["L_calc_text"]
+    assert taper["L_calc_text"].endswith("= 83.3333 ft")
+    assert "< 40 mph threshold" in taper["formula_choice"]
+    spacing = res.json()["sections"]["spacing"]
+    assert spacing["n_taper_drums_required"] == 4 == spacing["n_taper_drums_actual"]
+
+
+# ---------------------------------------------------------------------------
+# B-05 — at exactly 40 mph the audit discloses the conservative
+# deviation from MUTCD's quadratic prescription instead of asserting
+# linear as the MUTCD formula choice.  The L value itself is unchanged.
+# ---------------------------------------------------------------------------
+
+
+def test_taper_formula_choice_discloses_deviation_at_exactly_40() -> None:
+    from src.rules.validators import ScenarioParams
+
+    def params_at(speed: int) -> ScenarioParams:
+        return ScenarioParams(
+            speed_mph=speed,
+            num_lanes=2,
+            closure_type="shoulder",
+            road_type="urban_high",
+            work_zone_length_ft=800.0,
+            lane_width_ft=12.0,
+            shoulder_width_ft=10.0,
+            is_divided=True,
+            jurisdiction="CDOT",
+        )
+
+    taper_40 = audit_module.build_audit_trail([], params_at(40))["taper"]
+    # The L value is the settled conservative behavior — unchanged.
+    assert taper_40["L_full_ft"] == 400.0  # 10 ft x 40 mph, linear
+    assert taper_40["L_calc_text"] == "L = 10 x 40 = 400 ft"
+    # The text discloses the deviation rather than asserting MUTCD chose it.
+    assert "deliberate conservative deviation" in taper_40["formula_choice"]
+    assert "L = W x S^2 / 60" in taper_40["formula_choice"]
+    assert "deviates conservatively" in taper_40["source"]
+
+    # At 45+ the standard (snapshot-pinned) text is untouched.
+    taper_45 = audit_module.build_audit_trail([], params_at(45))["taper"]
+    assert taper_45["formula_choice"] == ("Speed 45 mph >= 40 mph threshold -> using L = W x S")
+    assert "deviates" not in taper_45["source"]

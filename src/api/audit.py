@@ -103,10 +103,28 @@ def build_audit_trail(
         formula_choice = f"Speed {speed} mph >= {threshold} mph threshold -> using L = W x S"
         formula_latex = r"L = W \times S"
         L_full = float(offset_ft * speed)
+        L_calc_text = f"L = {offset_ft:g} x {speed} = {L_full:g} ft"
+        if speed == threshold:
+            # B-05 disclosure — at exactly 40 mph MUTCD §6C.08 prescribes
+            # the quadratic formula (L = W x S^2 / 60 applies *through*
+            # 40; linear starts at 45).  The plan deliberately applies
+            # the longer linear taper as a conservative deviation; the
+            # L value itself is the settled behavior — only the audit
+            # text discloses the choice instead of asserting it as the
+            # MUTCD formula selection.
+            formula_choice = (
+                f"Speed {speed} mph: MUTCD Sec 6C.08 prescribes L = W x S^2 / 60 "
+                f"at {threshold} mph; plan applies the longer L = W x S as a "
+                "deliberate conservative deviation (longer taper, more transition room)"
+            )
     else:
         formula_choice = f"Speed {speed} mph < {threshold} mph threshold -> using L = W x S^2 / 60"
         formula_latex = r"L = \frac{W \times S^2}{60}"
         L_full = taper_length(speed, offset_ft)
+        # B-03 — the displayed arithmetic must match the formula that
+        # produced the number (the linear-format text shown here used
+        # to contradict the quadratic result at speeds below 40).
+        L_calc_text = f"L = {offset_ft:g} x {speed}^2 / 60 = {L_full:g} ft"
     L_third = shoulder_taper_length(speed, offset_ft)
 
     if is_lane:
@@ -154,6 +172,14 @@ def build_audit_trail(
         else:
             cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
 
+    if speed == threshold:
+        # B-05 — mirror the formula_choice disclosure on the citation line.
+        source_text += (
+            " Note: at exactly 40 mph the plan deviates conservatively from "
+            "the Table 6B-3 quadratic formula (L = W x S^2 / 60) by applying "
+            "the longer linear L = W x S."
+        )
+
     taper_section = {
         "speed_mph": speed,
         "closure_type": params.closure_type,
@@ -164,7 +190,7 @@ def build_audit_trail(
         "shoulder_width_ft": offset_ft,
         "formula_choice": formula_choice,
         "formula_latex": formula_latex,
-        "L_calc_text": f"L = {offset_ft:g} x {speed} = {L_full:g} ft",
+        "L_calc_text": L_calc_text,
         "L_full_ft": L_full,
         "L_third_calc_text": L_required_calc_text,
         "L_third_ft": L_required,
