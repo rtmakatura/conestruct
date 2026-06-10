@@ -1704,6 +1704,100 @@ def test_audit_rejects_out_of_domain_work_zone_speed_with_422(
     assert res.status_code == 422, f"workZoneSpeed {wz_speed}: got {res.status_code}"
 
 
+# ---------------------------------------------------------------------------
+# B-07 — audit "required" counts use the generators' floors.
+# ---------------------------------------------------------------------------
+
+
+def test_audit_required_taper_drums_match_undivided_floor() -> None:
+    """25 mph urban undivided shoulder: the formula alone gives 3 drums
+    but the generator floors at 4 — the audit's required count must say
+    4 (was 3 under the hard-coded min_count=2 recompute), matching the
+    deployed count."""
+    from src.api.audit import build_audit_trail
+    from src.api.schemas import ShoulderScenario, scenario_to_call
+
+    scenario = ShoulderScenario(
+        kind="shoulder",
+        roadType="urban_arterial",
+        speed=25,
+        lanes=1,
+        laneWidth=12.0,
+        divided=False,
+        workType="utility_locate",
+        duration="short",
+        workLen=400.0,
+        night=False,
+    )
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    audit = build_audit_trail(placements, params)
+    spacing = audit["spacing"]
+    assert spacing["n_taper_drums_required"] == 4
+    assert spacing["n_taper_drums_actual"] == 4
+    assert spacing["n_taper_drums_required"] == spacing["n_taper_drums_actual"]
+
+
+def test_device_count_floors_matrix() -> None:
+    """The shared floor source returns the documented per-scenario floors."""
+    from src.generation.layout import device_count_floors
+    from src.rules.validators import ScenarioParams
+
+    def params_for(closure_type: str, is_divided: bool) -> ScenarioParams:
+        return ScenarioParams(
+            speed_mph=55,
+            num_lanes=2,
+            closure_type=closure_type,
+            road_type="rural",
+            work_zone_length_ft=800.0,
+            lane_width_ft=12.0,
+            shoulder_width_ft=10.0 if is_divided else 8.0,
+            is_divided=is_divided,
+            jurisdiction="CDOT",
+        )
+
+    assert device_count_floors(params_for("shoulder", True)) == (2, 2)
+    assert device_count_floors(params_for("shoulder", False)) == (4, 2)
+    assert device_count_floors(params_for("lane", True)) == (2, 2)
+    assert device_count_floors(params_for("lane", False)) == (2, 3)  # flagger
+
+
+# ---------------------------------------------------------------------------
+# D-03 — unknown scenario kinds fail loud, not silent.
+# ---------------------------------------------------------------------------
+
+
+def test_audit_projection_unknown_kind_raises() -> None:
+    """An unknown scenario_kind raises with the known-kinds list instead
+    of shipping an audit summary with empty TA / CDOT citations."""
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail([], params)
+    with pytest.raises(ValueError) as exc_info:
+        audit_module.audit_projection(raw, "full_road_closure")
+    assert "full_road_closure" in str(exc_info.value)
+    assert "shoulder" in str(exc_info.value)  # lists the known kinds
+
+
+def test_compute_step_count_unknown_type_raises() -> None:
+    """A non-Scenario object raises TypeError instead of returning a
+    silent step count of 0."""
+    with pytest.raises(TypeError) as exc_info:
+        audit_module._compute_step_count(object())
+    assert "unknown scenario type" in str(exc_info.value)
+
+
 def test_corridor_geometry_translates_out_of_domain_speed() -> None:
     """Direct ScenarioParams callers bypass the schema; the geometry
     validator translates the buffer-table lookup error into a

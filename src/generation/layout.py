@@ -62,6 +62,31 @@ def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacemen
     return out
 
 
+def device_count_floors(params: ScenarioParams) -> tuple[int, int]:
+    """``(taper_min, tangent_min)`` device-count floors the V1 generators apply.
+
+    Single source for the per-scenario ``min_count`` values so the
+    audit trail and crew narrative recompute "required" counts with the
+    same floors the generators deploy (audit fix B-07 — the previous
+    hard-coded ``min_count=2`` recomputation under-reported on the
+    paths that floor higher):
+
+    * Undivided shoulder closures floor the taper at **4** drums so the
+      upstream taper run is strictly longer than the 3-element
+      downstream "taper + first tangent cone" run; otherwise
+      ``validate_taper_length`` picks the wrong taper at low speeds
+      with an 8-ft shoulder.
+    * Flagger operations (single-lane closure on an undivided road)
+      floor the tangent at **3** cones so the centerline is
+      unambiguously delineated even on short work zones.
+    * Everything else uses the ``pick_device_count`` default floor of 2.
+    """
+    is_lane = params.closure_type == "lane"
+    taper_min = 4 if params.closure_type == "shoulder" and not params.is_divided else 2
+    tangent_min = 3 if is_lane and not params.is_divided else 2
+    return taper_min, tangent_min
+
+
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
@@ -239,9 +264,11 @@ def generate_shoulder_closure_divided(
             )
         )
 
-    # 2. Shoulder taper (drums)
+    # 2. Shoulder taper (drums).  Floors from device_count_floors —
+    # the shared source the audit/narrative recomputations read.
+    taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals  # 0 at taper_start, 1 at buffer_end
@@ -298,7 +325,7 @@ def generate_shoulder_closure_divided(
     # 6. Work-zone tangent (cones).  ``pick_device_count`` chooses the
     # interval count whose spacing best matches the on-tangent target,
     # preferring counts that land in the validator's ±10 % tolerance.
-    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=tangent_min)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -592,12 +619,13 @@ def generate_shoulder_closure_undivided(
         )
 
     # 2. Shoulder taper (drums) — L/3 length per §6C.08.
-    # Floor at 4 drums so the upstream taper run is strictly longer than
-    # the 3-element downstream "taper + first tangent cone" run; otherwise
-    # validate_taper_length picks the wrong taper at low speeds with an
-    # 8-ft shoulder (formula gives 3 drums, ties with downstream).
+    # Undivided floor is 4 drums (see device_count_floors): the upstream
+    # taper run must be strictly longer than the 3-element downstream
+    # "taper + first tangent cone" run; otherwise validate_taper_length
+    # picks the wrong taper at low speeds with an 8-ft shoulder.
+    taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=4)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals  # 0 at taper_start, 1 at buffer_end
@@ -640,7 +668,7 @@ def generate_shoulder_closure_undivided(
     # 6. Work-zone tangent (cones).  ``pick_device_count`` chooses the
     # interval count whose spacing best matches the on-tangent target,
     # preferring counts that land in the validator's ±10 % tolerance.
-    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=tangent_min)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -845,9 +873,11 @@ def generate_lane_closure_divided(
             )
         )
 
-    # 2. Merging taper (drums) — full length L from lane edge to lane line
+    # 2. Merging taper (drums) — full length L from lane edge to lane line.
+    # Floors from device_count_floors (shared with the audit/narrative).
+    taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals  # 0 at taper_start (upstream), 1 at buffer_end
@@ -900,7 +930,7 @@ def generate_lane_closure_divided(
     # 6. Work-zone tangent (cones) — along the lane line between the
     # open left lane and the closed right lane.  ``pick_device_count``
     # chooses the interval count whose spacing best matches target.
-    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=tangent_min)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):
@@ -1205,8 +1235,10 @@ def generate_flagger_alternating_2lane(
     # 3. Merging taper drums — push right-lane traffic across the
     # centerline into the opposing lane.  Offset transitions from the
     # right lane edge (+lane_width) to the centerline (0).
+    # Floors from device_count_floors (shared with the audit/narrative).
+    taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
         t = k / n_taper_intervals
@@ -1225,9 +1257,10 @@ def generate_flagger_alternating_2lane(
     # 5. Work-zone tangent cones along the centerline, delineating the
     # boundary between the open opposing lane and the closed work lane.
     # ``pick_device_count`` chooses the interval count whose spacing
-    # best matches target; min_count=3 floors the cone count so the
-    # centerline is unambiguously delineated even on short work zones.
-    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=3)
+    # best matches target; the flagger tangent floor of 3 (see
+    # device_count_floors) keeps the centerline unambiguously
+    # delineated even on short work zones.
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=tangent_min)
     n_tangent_intervals = n_tangent - 1
     tangent_spacing = wz_len / n_tangent_intervals
     for k in range(n_tangent):

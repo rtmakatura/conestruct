@@ -15,6 +15,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from src.generation.layout import device_count_floors
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
@@ -242,11 +243,14 @@ def build_audit_trail(
     # (``src/generation/layout.py`` calls the same helper).  Naive
     # ``ceil(length / spacing)`` was wrong on two counts: it returned
     # the interval count (= devices - 1) and ignored the §6C.09
-    # asymmetric acceptance window.  ``min_count=2`` matches the V1
-    # shoulder layout; lane and flagger layouts floor higher, but L
-    # and wz_len make the floor non-binding for realistic inputs.
-    n_taper_drums = pick_device_count(L_required, in_taper, min_count=2)
-    n_tangent_cones = pick_device_count(wz_len, on_tan, min_count=2)
+    # asymmetric acceptance window.  Floors come from the generators'
+    # shared ``device_count_floors`` source (audit fix B-07) so the
+    # "required" recompute matches what the layout actually deploys —
+    # the undivided-shoulder taper floor of 4 and the flagger tangent
+    # floor of 3 bind at low speeds / short zones.
+    taper_min, tangent_min = device_count_floors(params)
+    n_taper_drums = pick_device_count(L_required, in_taper, min_count=taper_min)
+    n_tangent_cones = pick_device_count(wz_len, on_tan, min_count=tangent_min)
     taper_interval = L_required / (n_taper_drums - 1)
     tangent_interval = wz_len / (n_tangent_cones - 1)
 
@@ -1010,7 +1014,15 @@ def _compute_step_count(scenario: Any) -> int:
     if isinstance(scenario, MobileOpMultilaneScenario):
         return 8 if scenario.secondTMA else 6
 
-    return 0
+    # Fail loud (audit fix D-03): a silent 0 here would ship a wrong
+    # "Crew instructions" stat for a scenario type this port doesn't
+    # know.  Unreachable for any member of the Scenario union — only a
+    # new scenario kind added without extending this heuristic lands
+    # here, and that must fail the build, not degrade quietly.
+    raise TypeError(
+        f"_compute_step_count: unknown scenario type {type(scenario).__name__!r}; "
+        "extend the step-count heuristic when adding a scenario kind."
+    )
 
 
 def audit_projection(
@@ -1042,7 +1054,18 @@ def audit_projection(
     transform them.  ``sections`` is the unmodified body the existing UI
     expects under each top-level key (``taper``, ``buffer``, etc.).
     """
-    ta, cdot_sheet = _SCENARIO_TA_CDOT.get(scenario_kind, ("", ""))
+    # Fail loud (audit fix D-03): an unknown kind silently mapping to
+    # empty TA / CDOT-sheet strings would ship an audit summary with no
+    # citations — the worst place for quiet degradation.  The public
+    # path can't reach this (Pydantic's discriminated union only admits
+    # known kinds); only a renamed/new kind that skipped this table can.
+    try:
+        ta, cdot_sheet = _SCENARIO_TA_CDOT[scenario_kind]
+    except KeyError:
+        raise ValueError(
+            f"audit_projection: unknown scenario_kind {scenario_kind!r}; "
+            f"expected one of {sorted(_SCENARIO_TA_CDOT)}."
+        ) from None
 
     taper = dict(audit["taper"])
     case = dict(audit["case"])

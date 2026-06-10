@@ -24,6 +24,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from src.generation.layout import device_count_floors
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.sign_codes import description_for
 from src.rules.spacing import (
@@ -233,11 +234,16 @@ def build_narrative_context(
     rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
     spacing_abc = advance_warning_spacing(speed, rt)
 
+    # Floors from the generators' shared device_count_floors source
+    # (audit fix B-07) so the narrative's spacing math matches what the
+    # layout deploys — the undivided-shoulder taper floor of 4 binds at
+    # low speeds.
+    taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = device_spacing_in_taper(speed)
-    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=2)
+    n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     actual_taper_spacing = taper_len / (n_taper_devices - 1)
 
-    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=2)
+    n_tangent = pick_device_count(wz_len, device_spacing_on_tangent(speed), min_count=tangent_min)
     tangent_spacing = wz_len / (n_tangent - 1)
 
     # Extracted directly from the placement list so counts always match the
