@@ -1252,9 +1252,9 @@ def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
         "MILES plaque",
     )
     for fragment in bad_fragments:
-        assert fragment not in text, (
-            f"Unsubstituted template fragment {fragment!r} leaked into PDF; " f"text: {text!r}"
-        )
+        assert (
+            fragment not in text
+        ), f"Unsubstituted template fragment {fragment!r} leaked into PDF; text: {text!r}"
 
 
 def test_case_11b_pdf_substitutes_r2_1_speed_limits() -> None:
@@ -1365,6 +1365,162 @@ def test_divided_signs_never_in_opposite_carriageway() -> None:
                 f"and median band [{bands['median_lo']:.0f},{bands['median_hi']:.0f}] "
                 "— likely on a travel lane or the opposing carriageway."
             )
+
+
+def test_every_sign_on_exactly_one_surface() -> None:
+    """T-04: every SIGN_GENERIC placement appears on exactly one of
+    (on-page schematic, off-page ADVANCE WARNING SIGNS table) — never
+    both, never neither.  Drives the same pure helpers the renderer
+    uses (``_layout_device_positions`` for the schematic,
+    ``_build_advance_warning_table`` for the table) with the threaded
+    ``_make_x_mapping`` values (D-02), so the partition property is
+    pinned against either filter drifting.
+
+    The off-page table dedupes the divided-highway mirror pair into one
+    row per (code, station); membership is therefore checked on the
+    ``(bare_code, round(station))`` key, which both mirrors share.
+    """
+    from src.api.schemas import ShoulderScenario, scenario_to_call
+    from src.generation.layout import (
+        generate_flagger_alternating_2lane,
+        generate_lane_closure_divided,
+    )
+    from src.rendering.plan_sheet import (
+        _build_advance_warning_table,
+        _layout_device_positions,
+        _make_x_mapping,
+    )
+    from src.rules.validators import DeviceType
+    from tests.s630._harness import CASE_11_GENERAL_BODY, CASE_27_BODY
+
+    def shoulder_fixture(body: dict) -> tuple[ScenarioParams, list]:
+        scenario = ShoulderScenario.model_validate(body)
+        params, generator, kwargs = scenario_to_call(scenario)
+        return params, generator(params, **kwargs)
+
+    urban25 = {
+        "kind": "shoulder",
+        "roadType": "urban_arterial",
+        "speed": 25,
+        "lanes": 1,
+        "laneWidth": 12.0,
+        "divided": False,
+        "workType": "utility_locate",
+        "duration": "short",
+        "workLen": 400.0,
+        "night": False,
+    }
+    flagger_params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+    lane_params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="expressway",
+        work_zone_length_ft=5000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+
+    fixtures: list[tuple[str, ScenarioParams, list]] = [
+        ("Case 11", *shoulder_fixture(CASE_11_GENERAL_BODY)),
+        ("Case 27", *shoulder_fixture(CASE_27_BODY)),
+        ("urban 25 undivided", *shoulder_fixture(urban25)),
+        ("flagger 45", flagger_params, generate_flagger_alternating_2lane(flagger_params)),
+        ("lane divided 65", lane_params, generate_lane_closure_divided(lane_params)),
+    ]
+
+    def bare_key(label: str, station_ft: float) -> tuple[str, int]:
+        return (label.split("(", 1)[0], round(station_ft))
+
+    for name, params, placements in fixtures:
+        sw = params.shoulder_width_ft
+        mapping = _make_x_mapping(placements, params, sw)
+        smv = mapping["station_max_visible"]
+        tss = mapping["taper_start_station"]
+
+        items, _lighting = _layout_device_positions(placements, mapping["x_of"], smv, params, sw)
+        on_page = [p for (p, _x, _y) in items if p.device_type == DeviceType.SIGN_GENERIC]
+        rows = _build_advance_warning_table(placements, tss, smv, params)
+        table_keys = {(bare.split("(", 1)[0], round(dist + tss)) for bare, _desc, dist in rows}
+
+        signs = [p for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.label]
+        assert signs, f"{name}: fixture produced no signs"
+        for p in signs:
+            assert p.label is not None
+            drawn = p in on_page
+            tabled = bare_key(p.label, p.station_ft) in table_keys
+            assert drawn != tabled, (
+                f"{name}: sign {p.label!r} at station={p.station_ft:.0f} "
+                f"offset={p.offset_ft:.0f} (smv={smv:.0f}) is "
+                f"{'on BOTH surfaces' if drawn else 'on NEITHER surface'} — "
+                "the on-page/off-page partition is broken."
+            )
+            # The partition must agree with the threshold itself.
+            assert drawn == (p.station_ft <= smv), (
+                f"{name}: sign {p.label!r} at station={p.station_ft:.0f} on the "
+                f"wrong side of station_max_visible={smv:.0f}."
+            )
+
+
+def test_sign_partition_boundary_is_le_gt() -> None:
+    """T-04 boundary probe: a sign at exactly station_max_visible draws
+    on-page (<=) and stays out of the table; one a hair past it lands in
+    the table (>) and off the page.  Organic fixtures can't reach the
+    boundary (the first upstream sign sits >= 450 ft past it), so the
+    <=/> complementarity is pinned synthetically."""
+    from src.api.schemas import ShoulderScenario, scenario_to_call
+    from src.rendering.plan_sheet import (
+        _build_advance_warning_table,
+        _layout_device_positions,
+        _make_x_mapping,
+    )
+    from src.rules.validators import DevicePlacement, DeviceType
+    from tests.s630._harness import CASE_11_GENERAL_BODY
+
+    scenario = ShoulderScenario.model_validate(CASE_11_GENERAL_BODY)
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    sw = params.shoulder_width_ft
+
+    mapping = _make_x_mapping(placements, params, sw)
+    smv = mapping["station_max_visible"]
+    tss = mapping["taper_start_station"]
+
+    at_boundary = DevicePlacement(
+        device_type=DeviceType.SIGN_GENERIC,
+        station_ft=smv,
+        offset_ft=30.0,
+        label="W20-1",
+    )
+    past_boundary = DevicePlacement(
+        device_type=DeviceType.SIGN_GENERIC,
+        station_ft=smv + 0.1,
+        offset_ft=30.0,
+        label="W20-1",
+    )
+    probed = [*placements, at_boundary, past_boundary]
+
+    items, _lighting = _layout_device_positions(probed, mapping["x_of"], smv, params, sw)
+    drawn = [p for (p, _x, _y) in items]
+    rows = _build_advance_warning_table(probed, tss, smv, params)
+    table_stations = {round(dist + tss, 1) for _bare, _desc, dist in rows}
+
+    assert at_boundary in drawn, "sign at exactly smv must render on-page (<=)"
+    assert round(smv, 1) not in table_stations, "sign at exactly smv must NOT appear in the table"
+    assert past_boundary not in drawn, "sign past smv must not render on-page"
+    assert round(smv + 0.1, 1) in table_stations, "sign past smv must appear in the table (>)"
 
 
 def _lane_divided_params() -> ScenarioParams:

@@ -163,13 +163,21 @@ def _make_x_mapping(
       - ``x_of(station_ft)`` callable, raw stations in, page x out
       - ``pts_per_ft`` for the scale label in the title block (work-zone
         scale, since that is the region a reader will measure off)
+      - ``taper_start_station`` upstream end of the taper (raw station),
+        the off-page table's distance origin
       - ``station_max_visible`` for clipping advance-warning signs
       - ``buffer_break_x`` page x where the scale-break marks belong
+
+    ``taper_start_station`` / ``station_max_visible`` are computed here
+    and only here (D-02) — ``_draw_notes`` and every other consumer
+    thread them from this mapping so the on-page/off-page partition
+    cannot drift between the schematic and the notes table.
     """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
     buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    taper_start_station = wz_len + buf_len + taper_len
 
     def effective(s: float) -> float:
         if s <= wz_len:
@@ -180,7 +188,7 @@ def _make_x_mapping(
         return s - buf_len + BUFFER_VISUAL_FT
 
     eff_min = min(effective(p.station_ft) for p in placements) - 50.0
-    eff_taper_start = effective(wz_len + buf_len + taper_len)
+    eff_taper_start = effective(taper_start_station)
     eff_max = eff_taper_start + 100.0
 
     pts_per_ft = (PLAN_RIGHT - PLAN_LEFT) / (eff_max - eff_min)
@@ -192,12 +200,14 @@ def _make_x_mapping(
     buffer_break_x = x_of(buffer_mid_station)
 
     # Stations above this raw-station threshold (the advance warning signs)
-    # land outside the plan view and get filtered out before drawing.
-    station_max_visible = wz_len + buf_len + taper_len + 50.0
+    # land outside the plan view and get filtered out before drawing;
+    # everything above it appears in the NOTES table instead.
+    station_max_visible = taper_start_station + 50.0
 
     return {
         "x_of": x_of,
         "pts_per_ft": pts_per_ft,
+        "taper_start_station": taper_start_station,
         "station_max_visible": station_max_visible,
         "buffer_break_x": buffer_break_x,
     }
@@ -2457,6 +2467,9 @@ def _draw_notes(
     shoulder_width_ft: float,
     schedule_order: list[str] | None = None,
     placements: list[DevicePlacement] | None = None,
+    *,
+    taper_start_station: float,
+    station_max_visible: float,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -2464,6 +2477,11 @@ def _draw_notes(
     over (1) a 2-column PARAMETERS grid, (2) a 3-column SIGN SCHEDULE
     table (#, CODE, DESCRIPTION), and (3) a 3-column ADVANCE WARNING
     SIGNS table with right-aligned distances.  MUTCD codes are bolded.
+
+    ``taper_start_station`` / ``station_max_visible`` come from the
+    ``_make_x_mapping`` result (D-02) — the same values the schematic's
+    on-page sign filter uses, so the off-page table is the exact
+    complement of the drawn glyphs by construction.
     """
     # Middle box of the three-equal-width footer row.
     x_box = NOTES_BOX_X
@@ -2530,14 +2548,9 @@ def _draw_notes(
         # Shoulder closure: drive the off-page table from the actual
         # placement list so post-V1-Wide additions (W5-1, second
         # W21-5aR + W16-2a / W7-3a, W3-5 stepped sequence) surface on
-        # the PDF.  taper_start_station and station_max_visible mirror
-        # the formula in _make_x_mapping (~line 195); kept local so the
-        # signature of _draw_notes doesn't need to thread the mapping.
-        # ``buf_len`` / ``taper_len`` are non-None on the non-mobile /
-        # non-off_road path that reaches here.
-        assert buf_len is not None and taper_len is not None
-        taper_start_station = params.work_zone_length_ft + buf_len + taper_len
-        station_max_visible = taper_start_station + 50.0
+        # the PDF.  taper_start_station / station_max_visible are the
+        # threaded _make_x_mapping values (D-02) — the same threshold
+        # the schematic's sign filter uses.
         advance = _build_advance_warning_table(
             placements or [],
             taper_start_station,
@@ -3377,7 +3390,15 @@ def _render_schematic_page(
         is_divided=params.is_divided,
         scale_note=scale_long,
     )
-    _draw_notes(c, params, shoulder_width_ft, schedule_order, placements)
+    _draw_notes(
+        c,
+        params,
+        shoulder_width_ft,
+        schedule_order,
+        placements,
+        taper_start_station=mapping["taper_start_station"],
+        station_max_visible=station_max_visible,
+    )
     _draw_structured_title_block(
         c,
         params,
