@@ -58,7 +58,7 @@ def _resolve_road_category(speed_mph: int, road_type: str) -> str:
 def build_audit_trail(
     placements: list[DevicePlacement],
     params: ScenarioParams,
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
     site_lat: float | None = None,
     site_lng: float | None = None,
 ) -> dict[str, Any]:
@@ -74,7 +74,12 @@ def build_audit_trail(
     Falls back to the shoulder-closure presentation for any other value
     so the verification panel keeps rendering until other scenarios are
     implemented.
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     is_lane = params.closure_type == "lane"

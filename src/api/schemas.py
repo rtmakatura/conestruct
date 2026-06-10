@@ -224,6 +224,26 @@ GeneratorCall = tuple[
     dict,
 ]
 
+# V1 sanity range for the canonical shoulder width set at this bridge.
+# ``ScenarioParams.shoulder_width_ft`` is the single source of truth for
+# shoulder width across the pipeline (generators, renderer, audit,
+# validators, narrative all read it), so the one place that assigns it
+# also guards it.  Hard error by design: anything outside this range is
+# outside V1's intended scope and must fail loudly, not render quietly.
+_SHOULDER_WIDTH_MIN_FT: float = 4.0
+_SHOULDER_WIDTH_MAX_FT: float = 14.0
+
+
+def _validated(params: ScenarioParams) -> ScenarioParams:
+    """Guard the canonical shoulder width on every params leaving the bridge."""
+    if not (_SHOULDER_WIDTH_MIN_FT <= params.shoulder_width_ft <= _SHOULDER_WIDTH_MAX_FT):
+        raise ValueError(
+            f"shoulder_width_ft={params.shoulder_width_ft!r} is outside the "
+            f"supported range [{_SHOULDER_WIDTH_MIN_FT:g}, "
+            f"{_SHOULDER_WIDTH_MAX_FT:g}] ft for V1 scenarios."
+        )
+    return params
+
 
 def _map_road_type(road_type: str, speed: int) -> str:
     """Translate TS road-type strings to the Python rules engine vocabulary.
@@ -304,7 +324,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             if scenario.divided
             else generate_shoulder_closure_undivided
         )
-        return params, generator, {}
+        return _validated(params), generator, {}
 
     if isinstance(scenario, FlaggerLaneClosureScenario):
         # 2-lane two-way, alternating flow
@@ -326,7 +346,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             "pilot_car": scenario.pilotCar,
             "pedestrian_access": scenario.pedestrianAccess,
         }
-        return params, generate_flagger_alternating_2lane, kwargs
+        return _validated(params), generate_flagger_alternating_2lane, kwargs
 
     if isinstance(scenario, LaneClosureDividedScenario):
         # TA-19, right-lane closed on a divided highway with two lanes
@@ -346,7 +366,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             jurisdiction="CDOT",
             **meta_kw,
         )
-        return params, generate_lane_closure_divided, {}
+        return _validated(params), generate_lane_closure_divided, {}
 
     if isinstance(scenario, WorkBeyondShoulderScenario):
         # TA-1: work entirely off the roadway.  ``closure_type="shoulder"``
@@ -365,7 +385,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             jurisdiction="CDOT",
             **meta_kw,
         )
-        return params, generate_work_beyond_shoulder, {}
+        return _validated(params), generate_work_beyond_shoulder, {}
 
     if isinstance(scenario, MobileOp2LaneScenario):
         # TA-35: slow-moving operation on a two-lane road.  ``workLen``
@@ -385,7 +405,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             **meta_kw,
         )
         return (
-            params,
+            _validated(params),
             generate_mobile_op_2lane,
             {"arrow_board_on_shadow": scenario.arrowBoardOnShadow},
         )
@@ -405,7 +425,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
         **meta_kw,
     )
     return (
-        params,
+        _validated(params),
         generate_mobile_op_multilane,
         {"second_tma": scenario.secondTMA},
     )

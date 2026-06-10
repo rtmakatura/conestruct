@@ -2387,7 +2387,9 @@ def _g1_freeway_shoulder_params(*, is_divided: bool = True) -> ScenarioParams:
         road_type="freeway",
         work_zone_length_ft=1000.0,
         lane_width_ft=12.0,
-        shoulder_width_ft=10.0,
+        # Mirrors the schemas-bridge convention (10 ft divided / 8 ft
+        # undivided); the generators read this field directly (D-01).
+        shoulder_width_ft=10.0 if is_divided else 8.0,
         is_divided=is_divided,
         jurisdiction="CDOT",
     )

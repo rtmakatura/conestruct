@@ -873,7 +873,10 @@ def _freeway_shoulder_undivided_params(work_zone_speed_mph: int | None) -> Scena
         road_type="freeway",
         work_zone_length_ft=1000.0,
         lane_width_ft=12.0,
-        shoulder_width_ft=10.0,
+        # 8 ft matches the undivided convention set at the schemas bridge
+        # (and the undivided generator's historical kwarg default) — the
+        # generator now reads this field directly (D-01 single source).
+        shoulder_width_ft=8.0,
         is_divided=False,
         jurisdiction="CDOT",
         work_zone_speed_mph=work_zone_speed_mph,

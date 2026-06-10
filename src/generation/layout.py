@@ -64,7 +64,7 @@ def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacemen
 
 def generate_shoulder_closure_divided(
     params: ScenarioParams,
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
 ) -> list[DevicePlacement]:
     """Generate a complete CDOT S-630-1 right-shoulder closure layout.
 
@@ -73,13 +73,17 @@ def generate_shoulder_closure_divided(
     positions flow from the spacing functions in ``src.rules.spacing``,
     so the layout flexes with ``params.speed_mph``.  Lateral positions
     assume two ``params.lane_width_ft`` lanes per direction plus an
-    outer shoulder of ``shoulder_width_ft``.
+    outer shoulder of ``shoulder_width_ft`` (defaults to
+    ``params.shoulder_width_ft`` — the single source of truth; the
+    kwarg remains as an explicit override only).
 
     Coordinates follow the project convention: ``station_ft = 0`` at
     the downstream end of the work zone, increasing upstream against
     traffic; ``offset_ft = 0`` at the road centerline, positive values
     to the right when facing upstream.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
@@ -482,9 +486,12 @@ def generate_shoulder_closure_divided(
 
 def generate_shoulder_closure_undivided(
     params: ScenarioParams,
-    shoulder_width_ft: float = 8.0,
+    shoulder_width_ft: float | None = None,
 ) -> list[DevicePlacement]:
     """Generate a CDOT S-630-1 right-shoulder closure on a 2-lane undivided road.
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
 
     Hard-coded for a 2-lane two-way road (one lane each direction) with
     the right (work-side) shoulder closed.  Opposing traffic keeps its
@@ -496,6 +503,8 @@ def generate_shoulder_closure_undivided(
     traffic; ``offset_ft = 0`` at the road centerline, positive values
     to the right when facing upstream in the work direction.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
@@ -751,7 +760,7 @@ def generate_shoulder_closure_undivided(
 
 def generate_lane_closure_divided(
     params: ScenarioParams,
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
 ) -> list[DevicePlacement]:
     """Generate a complete CDOT S-630-1 right-lane closure layout.
 
@@ -774,7 +783,12 @@ def generate_lane_closure_divided(
     TODO (V1.1): add a shifting taper upstream of the merging taper for
     cases where geometry requires drivers to first shift laterally before
     encountering the lane drop.  V1 places the merging taper directly.
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
@@ -1059,7 +1073,7 @@ def generate_lane_closure_divided(
 
 def generate_flagger_alternating_2lane(
     params: ScenarioParams,
-    shoulder_width_ft: float = 8.0,
+    shoulder_width_ft: float | None = None,
     *,
     afad: bool = False,
     pilot_car: bool = False,
@@ -1100,7 +1114,12 @@ def generate_flagger_alternating_2lane(
     specialized. (Cases 6 and 7 in the 19-page set are LANE #2 and LANE
     #3 CLOSURES on multi-lane freeway, not flagger operations — the
     prior TODO citation was incorrect.)
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
@@ -1360,7 +1379,7 @@ def generate_flagger_alternating_2lane(
 
 def generate_work_beyond_shoulder(
     params: ScenarioParams,
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
 ) -> list[DevicePlacement]:
     """Generate a TA-1 'Work Beyond the Shoulder' layout.
 
@@ -1374,7 +1393,12 @@ def generate_work_beyond_shoulder(
     area; positive upstream against traffic.  Single-direction layout
     (no mirroring) since shoulder/setback work doesn't affect
     opposing traffic.
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
@@ -1408,7 +1432,7 @@ def generate_work_beyond_shoulder(
 
 def generate_mobile_op_2lane(
     params: ScenarioParams,
-    shoulder_width_ft: float = 8.0,
+    shoulder_width_ft: float | None = None,
     *,
     arrow_board_on_shadow: bool = True,
 ) -> list[DevicePlacement]:
@@ -1489,7 +1513,7 @@ def generate_mobile_op_2lane(
 
 def generate_mobile_op_multilane(
     params: ScenarioParams,
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
     *,
     second_tma: bool = False,
 ) -> list[DevicePlacement]:
@@ -1616,6 +1640,7 @@ if __name__ == "__main__":
         road_type="rural",
         work_zone_length_ft=500.0,
         lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
         is_divided=False,
         is_night=False,
         jurisdiction="CDOT",

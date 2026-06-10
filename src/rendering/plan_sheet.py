@@ -3194,7 +3194,7 @@ def render_plan_sheet(
     project_name: str = "",
     sheet_number: str = "1",
     total_sheets: str = "1",
-    shoulder_width_ft: float = 10.0,
+    shoulder_width_ft: float | None = None,
     site_lat: float | None = None,
     site_lng: float | None = None,
     site_address: str = "",
@@ -3209,7 +3209,12 @@ def render_plan_sheet(
     from ``params`` when available; the kwarg ``project_name`` is kept
     as a fallback for callers that haven't migrated to passing the
     fields through ScenarioParams.
+
+    ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
+    single source of truth); the kwarg remains as an explicit override.
     """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
     # Prefer params-supplied metadata; fall back to the per-call kwargs
     # (or the bare ``site_address`` for the LOCATION row) so older
     # callers continue to work.

@@ -32,12 +32,7 @@ from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
 from src.api.schemas import (
-    LaneClosureDividedScenario,
-    MobileOp2LaneScenario,
-    MobileOpMultilaneScenario,
     Scenario,
-    ShoulderScenario,
-    WorkBeyondShoulderScenario,
     _map_road_type,
     scenario_to_call,
 )
@@ -141,20 +136,6 @@ def healthz() -> dict[str, str]:
     return {"status": "ok"}
 
 
-def _shoulder_width_for(scenario: Scenario) -> float:
-    if isinstance(scenario, ShoulderScenario):
-        return 10.0 if scenario.divided else 8.0
-    if isinstance(scenario, LaneClosureDividedScenario):
-        return 10.0
-    if isinstance(scenario, MobileOpMultilaneScenario):
-        return 10.0
-    if isinstance(scenario, WorkBeyondShoulderScenario):
-        return 10.0 if scenario.roadType in ("rural_divided", "freeway") else 8.0
-    if isinstance(scenario, MobileOp2LaneScenario):
-        return 8.0
-    return 8.0
-
-
 def _safe_filename(scenario: Scenario, ext: str) -> str:
     base = (scenario.meta.project or "plan").strip()
     cleaned = "".join(c if c.isalnum() or c in (" ", "-", "_") else "_" for c in base)
@@ -240,7 +221,8 @@ def render_pdf(scenario: Scenario) -> Response:
     """Render the MHT plan-sheet PDF for a scenario."""
     _ensure_scenario_enabled(scenario)
     try:
-        shoulder_width = _shoulder_width_for(scenario)
+        # Shoulder width is read from params.shoulder_width_ft inside the
+        # renderer (single source of truth — set once at the schemas bridge).
         body = _render_with(
             scenario,
             ".pdf",
@@ -253,7 +235,6 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_lat=scenario.meta.lat or None,
                     site_lng=scenario.meta.lng or None,
                     site_address=scenario.meta.address,
-                    shoulder_width_ft=shoulder_width,
                 )
             ),
         )
@@ -635,11 +616,11 @@ def render_audit(scenario: Scenario) -> JSONResponse:
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
-    shoulder_width = _shoulder_width_for(scenario)
+    # Shoulder width is read from params.shoulder_width_ft inside the
+    # audit builder (single source of truth — set once at the schemas bridge).
     audit = build_audit_trail(
         placements,
         params,
-        shoulder_width_ft=shoulder_width,
         site_lat=scenario.meta.lat or None,
         site_lng=scenario.meta.lng or None,
     )
