@@ -1652,3 +1652,77 @@ def test_stepped_signs_pending_entry_retired(client: TestClient) -> None:
     assert "items" not in pending
     kinds = [it.get("kind") for it in pending.get("items", [])]
     assert "stepped_speed_reduction_signs" not in kinds
+
+
+# ---------------------------------------------------------------------------
+# B-04 / T-05 — schema speed domain matches the MUTCD Table 6C-2 lookup
+# domain.  Every speed the schema admits must resolve end-to-end; every
+# out-of-domain speed must be rejected with a 4xx, never a 500.
+# ---------------------------------------------------------------------------
+
+
+def test_buffer_table_covers_every_schema_admissible_speed() -> None:
+    """The schema↔table contract, pinned directly: each multiple of 5
+    in the schema range has a Table 6C-2 row (no speed can pass the
+    schema and then blow up in the lookup)."""
+    from src.rules.spacing import buffer_space
+
+    for speed in range(20, 80, 5):  # 20..75 — the post-B-04 schema domain
+        assert buffer_space(speed, jurisdiction="CDOT") > 0
+        assert buffer_space(speed, jurisdiction="federal") > 0
+
+
+@pytest.mark.parametrize("speed", list(range(20, 80, 5)))
+def test_audit_renders_every_schema_admissible_speed(client: TestClient, speed: int) -> None:
+    """End-to-end sweep: every schema-valid speed renders a 200 audit."""
+    s = _shoulder_scenario()
+    s["speed"] = speed
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, f"speed {speed}: {res.text}"
+
+
+@pytest.mark.parametrize("speed", [62, 77, 80])
+def test_audit_rejects_out_of_domain_speed_with_422(client: TestClient, speed: int) -> None:
+    """Out-of-domain speeds (km/h conversions like 62, 80-mph tags) are
+    rejected by the schema with a 422 naming the constraint — never a
+    500 from the table lookup."""
+    s = _shoulder_scenario()
+    s["speed"] = speed
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 422, f"speed {speed}: got {res.status_code}"
+
+
+@pytest.mark.parametrize("wz_speed", [47, 80])
+def test_audit_rejects_out_of_domain_work_zone_speed_with_422(
+    client: TestClient, wz_speed: int
+) -> None:
+    """workZoneSpeed shares the Table 6C-2 grid (posted limits are
+    multiples of 5; the stepped W3-5 math assumes the grid)."""
+    s = _shoulder_scenario()
+    s["workZoneSpeed"] = wz_speed
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 422, f"workZoneSpeed {wz_speed}: got {res.status_code}"
+
+
+def test_corridor_geometry_translates_out_of_domain_speed() -> None:
+    """Direct ScenarioParams callers bypass the schema; the geometry
+    validator translates the buffer-table lookup error into a
+    structured Violation instead of letting the ValueError escape."""
+    from src.rules.validators import ScenarioParams, validate_corridor_geometry
+
+    params = ScenarioParams(
+        speed_mph=62,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    violations = validate_corridor_geometry(params)
+    assert len(violations) == 1
+    assert violations[0].rule_id == "SPEED_OUTSIDE_TABLE_DOMAIN"
+    assert violations[0].severity == "error"
+    assert "62 mph" in violations[0].message

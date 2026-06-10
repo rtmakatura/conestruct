@@ -1277,7 +1277,28 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
         taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     else:
         taper_ft = taper_length(params.speed_mph, params.lane_width_ft)
-    buffer_ft = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    # The buffer table covers multiples of 5 in 20..75 mph only.  The
+    # API schema already rejects out-of-domain speeds (audit fix B-04),
+    # but direct ScenarioParams callers (scripts, tests) bypass the
+    # schema — translate the lookup error into a structured Violation
+    # so the failure surfaces as a clean geometry error, not a 500.
+    try:
+        buffer_ft = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    except ValueError as exc:
+        out.append(
+            Violation(
+                rule_id="SPEED_OUTSIDE_TABLE_DOMAIN",
+                severity="error",
+                message=(
+                    f"Speed {params.speed_mph} mph is outside the MUTCD "
+                    f"Table 6C-2 domain (multiples of 5 mph, 20-75): {exc} "
+                    f"Use a posted speed the buffer-space table covers."
+                ),
+                mutcd_section="MUTCD 11th Ed. Table 6C-2",
+                device_index=None,
+            )
+        )
+        return out
     work_zone_ft = params.work_zone_length_ft
 
     taper_label = (

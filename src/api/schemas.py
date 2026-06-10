@@ -100,7 +100,12 @@ class ShoulderScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: ShoulderRoadType
-    speed: int = Field(ge=20, le=80)
+    # Speed domain mirrors MUTCD Table 6C-2: the rules engine resolves
+    # buffer space only for multiples of 5 in 20..75 mph.  Constraining
+    # here turns out-of-domain inputs (OSM km/h conversions like 62,
+    # 80-mph rural tags) into a clean 422 instead of a 500 deep in the
+    # table lookup (audit fix B-04).  Same grid on every kind below.
+    speed: int = Field(ge=20, le=75, multiple_of=5)
     lanes: int = Field(ge=1, le=6)
     laneWidth: float = Field(ge=8.0, le=14.0)
     divided: bool
@@ -112,8 +117,10 @@ class ShoulderScenario(BaseModel):
     # Optional work-zone speed limit when reduced below ``speed``.  None
     # / omitted means no reduction.  Equal to ``speed`` is accepted and
     # normalized to None at the bridge (``scenario_to_call``).  Strictly
-    # greater than ``speed`` is rejected below.
-    workZoneSpeed: int | None = Field(default=None, ge=20, le=80)
+    # greater than ``speed`` is rejected below.  Same Table 6C-2 grid as
+    # ``speed`` — posted limits are multiples of 5, and the stepped
+    # W3-5 advisory math assumes the 5-mph grid.
+    workZoneSpeed: int | None = Field(default=None, ge=20, le=75, multiple_of=5)
 
     @model_validator(mode="after")
     def _check_work_zone_speed(self) -> Self:
@@ -129,7 +136,7 @@ class FlaggerLaneClosureScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: FlaggerRoadType
-    speed: int = Field(ge=20, le=55)
+    speed: int = Field(ge=20, le=55, multiple_of=5)
     laneWidth: float = Field(ge=9.0, le=14.0)
 
     workType: FlaggerWorkType
@@ -147,7 +154,7 @@ class LaneClosureDividedScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: LaneClosureRoadType
-    speed: int = Field(ge=35, le=80)
+    speed: int = Field(ge=35, le=75, multiple_of=5)
     laneWidth: float = Field(ge=10.0, le=14.0)
 
     workType: LaneClosureWorkType
@@ -163,7 +170,7 @@ class WorkBeyondShoulderScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: WorkBeyondShoulderRoadType
-    speed: int = Field(ge=20, le=80)
+    speed: int = Field(ge=20, le=75, multiple_of=5)
     laneWidth: float = Field(ge=9.0, le=14.0)
 
     workType: WorkBeyondShoulderWorkType
@@ -177,7 +184,7 @@ class MobileOp2LaneScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: MobileRoadType2Lane
-    speed: int = Field(ge=25, le=55)
+    speed: int = Field(ge=25, le=55, multiple_of=5)
     laneWidth: float = Field(ge=9.0, le=14.0)
 
     workType: MobileWorkType
@@ -192,7 +199,7 @@ class MobileOpMultilaneScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     roadType: MobileRoadTypeMultilane
-    speed: int = Field(ge=45, le=80)
+    speed: int = Field(ge=45, le=75, multiple_of=5)
     laneWidth: float = Field(ge=10.0, le=14.0)
 
     workType: MobileWorkType

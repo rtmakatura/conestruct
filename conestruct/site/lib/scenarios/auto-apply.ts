@@ -44,6 +44,32 @@ const MOBILE_MULTILANE_TYPES = new Set<MobileRoadTypeMultilane>([
   "freeway",
 ]);
 
+// Server schema speed domain per scenario kind — mirrors the Pydantic
+// bounds in src/api/schemas.py (multiples of 5 inside the MUTCD Table
+// 6C-2 range the rules engine can resolve). OSM `maxspeed` can carry
+// values off the grid: km/h conversions land on arbitrary integers
+// (100 km/h → 62 mph) and rural US tags reach 80 mph. Snapping +
+// clamping here means auto-apply only ever produces speeds the server
+// schema accepts, instead of handing the user a validation error for a
+// value the app filled in itself (audit fix B-04).
+const SPEED_RANGE: Record<Scenario["kind"], readonly [number, number]> = {
+  shoulder: [20, 75],
+  flagger_lane_closure: [20, 55],
+  lane_closure_divided: [35, 75],
+  work_beyond_shoulder: [20, 75],
+  mobile_op_2lane: [25, 55],
+  mobile_op_multilane: [45, 75],
+};
+
+export function snapSpeedToDomain(
+  kind: Scenario["kind"],
+  mph: number,
+): number {
+  const [min, max] = SPEED_RANGE[kind];
+  const snapped = Math.round(mph / 5) * 5;
+  return Math.min(max, Math.max(min, snapped));
+}
+
 export interface AutoApplyDelta {
   roadTypeApplied: boolean;
   roadTypeApplicable: boolean;
@@ -75,7 +101,7 @@ export function applyClassification(
   const speedApplied = c.speedLimitMph !== undefined;
   const speedPatch =
     speedApplied && c.speedLimitMph !== undefined
-      ? { speed: c.speedLimitMph }
+      ? { speed: snapSpeedToDomain(scenario.kind, c.speedLimitMph) }
       : {};
 
   switch (scenario.kind) {
