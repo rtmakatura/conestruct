@@ -861,7 +861,18 @@ def test_build_advance_warning_table_empty_placements() -> None:
     """Empty placement list returns an empty table without crashing."""
     from src.rendering.plan_sheet import _build_advance_warning_table
 
-    assert _build_advance_warning_table([], 1500.0, 1700.0, 1000.0) == []
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    assert _build_advance_warning_table([], 1500.0, 1700.0, params) == []
 
 
 def test_build_advance_warning_table_case_11_off_page_rows() -> None:
@@ -891,7 +902,7 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     station_max_visible = taper_start_station + 50.0
 
     rows = _build_advance_warning_table(
-        placements, taper_start_station, station_max_visible, params.work_zone_length_ft
+        placements, taper_start_station, station_max_visible, params
     )
 
     codes = [code for code, _desc, _dist in rows]
@@ -964,7 +975,7 @@ def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
     station_max_visible = taper_start_station + 50.0
 
     rows = _build_advance_warning_table(
-        placements, taper_start_station, station_max_visible, params.work_zone_length_ft
+        placements, taper_start_station, station_max_visible, params
     )
     codes = [code for code, _desc, _d in rows]
 
