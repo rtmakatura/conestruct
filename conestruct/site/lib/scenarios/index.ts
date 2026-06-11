@@ -217,11 +217,16 @@ export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> 
   },
 ];
 
-// Gate which scenario kinds the UI offers and the API accepts. v1 ships
-// with shoulder only while we verify the other generators against
-// CDOT S-630 typical sheets — extending the array re-enables the rest
-// without touching any other code.
-export const ENABLED_SCENARIO_KINDS = ["shoulder"] as const satisfies readonly ScenarioKind[];
+// Gate which scenario kinds the UI offers and the API accepts. Kinds
+// enable as their generators pass validation against the CDOT S-630
+// typical sheets — extending the array re-enables the rest without
+// touching any other code. flagger_lane_closure enabled in PR 3
+// (TA-10 + S-630-1 Cases 17/42; harness at tests/s630/
+// test_ta10_flagger.py). Must match render_api.py ENABLED_SCENARIOS.
+export const ENABLED_SCENARIO_KINDS = [
+  "shoulder",
+  "flagger_lane_closure",
+] as const satisfies readonly ScenarioKind[];
 
 export function isScenarioKindEnabled(kind: ScenarioKind): boolean {
   return (ENABLED_SCENARIO_KINDS as readonly ScenarioKind[]).includes(kind);

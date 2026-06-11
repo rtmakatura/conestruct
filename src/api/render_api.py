@@ -51,10 +51,13 @@ from src.rules.validators import DevicePlacement, ScenarioParams, validate_corri
 ENV_SECRET_VAR = "RENDER_API_SECRET"
 
 # Mirror of conestruct/site/lib/scenarios/index.ts ENABLED_SCENARIO_KINDS.
-# v1 ships with shoulder only while we verify the other generators against
-# CDOT S-630 typical sheets.  Adding a kind here re-enables it on the
+# Kinds enable as their generators pass validation against the CDOT
+# S-630 typical sheets.  Adding a kind here re-enables it on the
 # server; the TS constant must match.
-ENABLED_SCENARIOS: frozenset[str] = frozenset({"shoulder"})
+#   * shoulder — S-630-1 Cases 11/11b/26/27 (Phase 5 harness, tests/s630/)
+#   * flagger_lane_closure — MUTCD TA-10 + S-630-1 Cases 17/42
+#     (PR 3 gate flip; harness at tests/s630/test_ta10_flagger.py)
+ENABLED_SCENARIOS: frozenset[str] = frozenset({"shoulder", "flagger_lane_closure"})
 
 
 def _drop_expected_http_errors(
