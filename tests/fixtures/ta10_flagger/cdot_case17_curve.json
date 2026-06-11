@@ -1,0 +1,95 @@
+{
+  "_meta": {
+    "source": "CDOT Standard Plan S-630-1, Sheet 9 of 26, Case No. 17 'TYPICAL APPLICATION - LANE CLOSURE, 2-LANE HIGHWAY, AT CURVE' (issued 07/31/2019; sheet revisions through 01/14/26: 'REMOVED G20-10/11', 01/20/23 'Replaced R52-6(b) with R2-10(11), Updated G20-11, Add Drum/VerticalPanelSymbol')",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "verified_by": "Claude (Fable 5 vision extraction at 300 dpi), June 10 2026; re-verified June 11 2026 with fresh independent crops at 300/500 dpi (PR 2 Phase A) - series, gaps, taper bracket, warning note, and regulatory cluster confirmed",
+    "verification_changelog": "PR 2 Phase A re-verification: all Phase 1 values confirmed correct; three omissions added: (1) opposing-flagger standoff '200' TO 300'' from work-area end, (2) downstream taper '100' MAX.' annotation, (3) the 500'/500' exit chain dimensions for R2-11 and the restoration R2-1",
+    "purpose": "extraction record for CDOT's only direct 2-lane flagger lane-closure typical. Curve-specialized; routing DEFERRED for V1 (see match_rules.md) - extracted because it is the closest CDOT analog to TA-10 and documents the CDOT advance series and the short-taper warning.",
+    "extraction_caveat": "Case 17 shares Sheet 9 with Cases 15/16 and the diagram is drawn around a horizontal curve; some dimension anchors are harder to read than Case 42's straight-road strip. Where Case 42 (same sign family, straight road) is crisper, its chain is recorded as the dimensioned reference."
+  },
+  "case_17": {
+    "title": "Lane Closure, 2-Lane Highway, at Curve",
+    "case_number": 17,
+    "sheet_number": 9,
+    "scenario": {
+      "road_type": "2-lane undivided highway",
+      "geometry_trigger": "work zone at or near a horizontal curve",
+      "closure_type": "lane (one lane closed, alternating one-way traffic)",
+      "control": "flagger each end (flagger-station symbols on diagram)"
+    },
+    "advance_warning_sequence": [
+      {
+        "order": 1,
+        "sign_code": "W20-1",
+        "label": "ROAD WORK XX FT"
+      },
+      {
+        "order": 2,
+        "sign_code": "W20-4",
+        "label": "ONE LANE ROAD XX FT"
+      },
+      {
+        "order": 3,
+        "sign_code": "W20-7",
+        "label": "flagger symbol"
+      }
+    ],
+    "advance_spacing_markers": "C / B / A letter-coded gaps between the three signs (resolved by the Sheet 9 KEY TO ADVANCE SIGNING DISTANCES); '0.5B 0.5B' tick pair dimensions the upstream regulatory cluster (R2-10 BEGIN DOUBLE FINES ZONE and the G20-5P WORK ZONE + R2-1(XX) SPEED LIMIT assembly) relative to the warning series",
+    "upstream_regulatory_cluster": [
+      {
+        "sign_code": "R2-10",
+        "label": "BEGIN DOUBLE FINES ZONE",
+        "annotations": ["star (see FINES DOUBLE SIGNING NOTES, Sheet 12)"]
+      },
+      {
+        "sign_assembly": "WORK_ZONE_SPEED_LIMIT_GROUP",
+        "components": [
+          { "sign_code": "G20-5P", "label": "WORK ZONE" },
+          { "sign_code": "R2-1(XX)", "label": "SPEED LIMIT XX (placeholder)" }
+        ]
+      }
+    ],
+    "downstream_sequence": [
+      {
+        "sign_code": "R2-11",
+        "label": "END DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "gap_before": "500 ft (from the downstream taper end)",
+        "gap_to_next": "500 ft"
+      },
+      {
+        "sign_code": "R2-1(XX)",
+        "label": "SPEED LIMIT XX (posted-speed restoration)",
+        "annotations": ["diamond (NOT optional if the posted speed limit in the work zone is reduced)"]
+      }
+    ],
+    "flagger_to_taper": {
+      "annotated_value": "50' MIN. 100' MAX.",
+      "position_on_diagram": "between the A-position W20-7 / flagger-station region and the one-lane two-way taper into the curve"
+    },
+    "downstream_taper": {
+      "annotated_value": "100' MAX.",
+      "position": "device run guiding traffic back to the original lane past the work area; the 500 ft gap to R2-11 is measured from its end",
+      "added": "PR 2 Phase A re-verification (500-dpi end-region crop)"
+    },
+    "opposing_flagger_standoff": {
+      "annotated_value": "200' TO 300'",
+      "spans": "from the work-area end to the opposing-direction flagger station (dimension ticks read at 500 dpi: work-space end -> flagger symbol)",
+      "interpretation": "CDOT dimensions the opposing flagger 200-300 ft clear of the work area - more standoff than MUTCD Fig. 6P-10 implies (MUTCD's far-end '50 to 100 ft' dimension spans work-space end -> end of the channelizing-device run, not the flagger position). CDOT supplements MUTCD here; Case 42 reuses the same 200-300 ft as the pilot-car turnaround space.",
+      "added": "PR 2 Phase A re-verification"
+    },
+    "taper_warning_note_verbatim": "THIS TAPER MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A TRANSITION.",
+    "taper_interpretation": "the flagger-end taper is the short one-lane, two-way traffic taper (50-100 ft per MUTCD 6B.08 para 14), NOT a full merging taper L; the note exists precisely because a long taper misleads drivers into treating the closure as a merge",
+    "other_diagram_features": [
+      "SIGN SEQUENCE IS (the same) FOR OPPOSITE (direction) note at the diagram edge - series mirrored for the opposing approach",
+      "arrow board / mobile attenuator symbol shown near the work area (legend: optional devices per triangle marker rules)",
+      "buffer space not dimensioned; CDOT Sheet 2 General Note 24 makes buffer optional/engineer-determined"
+    ],
+    "case_specific_notes": [
+      "Case 17 is curve-specialized: MUTCD TA-10 note 6 guidance (extend buffer so the two-way taper lands before the curve, preserving flagger sight distance) is the underlying principle the case illustrates.",
+      "Case 17 does NOT show R4-1 DO NOT PASS or W3-4 BE PREPARED TO STOP; both appear in Case 42 (pilot car). The CDOT minimum series at a curve is the three-sign MUTCD series plus the fines/speed regulatory cluster.",
+      "The 01/14/26 sheet revision 'REMOVED G20-10/11' postdates the 2019 issue - the extracted diagram reflects the revised state (no G20-10/G20-11 BEGIN/END markers)."
+    ],
+    "routing_decision": "DEFERRED for V1. Conestruct's form does not capture horizontal-curve geometry, and the case adds no sign the basic TA-10 + CDOT overlay does not already carry. Revisit if/when curve geometry becomes an input (V1.1+)."
+  }
+}

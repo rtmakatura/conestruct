@@ -1,0 +1,117 @@
+{
+  "_meta": {
+    "source": "CDOT Standard Plan S-630-1, Sheet 25 of 26, Case No. 42 'TYPICAL APPLICATION - PILOT CAR - LANE CLOSURE, 2-LANE UNDIVIDED HIGHWAY' (added by revision: index note 'ADD CASE NUMBERS 40, 41, AND 42'; sheet revision 01/14/26 'REMOVED G20-10/11')",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "verified_by": "Claude (Fable 5 vision extraction at 300-500 dpi, dimension chain pinned tick-by-tick at 500 dpi), June 10 2026; re-verified June 11 2026 with fresh independent crops at 220-260 dpi (PR 2 Phase A) - both directions' chains, taper bracket, exit pairs, and annotations confirmed",
+    "verification_changelog": "PR 2 Phase A re-verification: all Phase 1 dimensional values confirmed correct; three omissions added: (1) 200'-300' BUFFER PILOT TURNAROUND annotation, (2) 'SIGNING MAY STAY WHILE LANES ARE REOPENED.' note, (3) fuller cross-reference text including CDOT's 2009-MUTCD chapter citation",
+    "purpose": "extraction record for the CDOT pilot-car flagger variant. Routing DEFERRED for V1 (pilotCar flag exists on the form but the variant is not the basic case). The dimension chain here is the crispest CDOT statement of the full flagger approach sequence and is cross-referenced by ta10_basic_flagger.json.",
+    "related_mutcd": "MUTCD 11th Ed. has no dedicated pilot-car TA; pilot car operation is an extension of TA-10 flagger control. G20-4 mounting per S-630-1 Sheet 26."
+  },
+  "case_42": {
+    "title": "Pilot Car - Lane Closure, 2-Lane Undivided Highway",
+    "case_number": 42,
+    "sheet_number": 25,
+    "scenario": {
+      "road_type": "2-lane undivided highway",
+      "closure_type": "lane (one lane closed, alternating one-way traffic)",
+      "control": "flagger each end + pilot car leading platoons through the one-lane section"
+    },
+    "advance_warning_sequence": {
+      "reading": "dimension chain pinned tick-by-tick from the 500-dpi crop; signs listed in driver order (outermost first), with the gap to the NEXT element",
+      "sequence": [
+        {
+          "order": 1,
+          "sign_code": "W20-1",
+          "label": "ROAD WORK AHEAD",
+          "gap_to_next": "C"
+        },
+        {
+          "order": 2,
+          "sign_code": "R2-10",
+          "label": "BEGIN DOUBLE FINES ZONE",
+          "annotations": ["star (FINES DOUBLE SIGNING NOTES, Sheet 12)"],
+          "gap_to_next": "260 ft"
+        },
+        {
+          "order": 3,
+          "sign_code": "W20-4",
+          "label": "ONE LANE ROAD AHEAD",
+          "gap_to_next": "260 ft"
+        },
+        {
+          "order": 4,
+          "sign_assembly": "WORK_ZONE_SPEED_LIMIT_GROUP",
+          "components": [
+            { "sign_code": "G20-5P", "label": "WORK ZONE" },
+            { "sign_code": "R2-1(XX)", "label": "SPEED LIMIT XX (placeholder)" }
+          ],
+          "gap_to_next": "C"
+        },
+        {
+          "order": 5,
+          "sign_code": "R4-1",
+          "label": "DO NOT PASS",
+          "gap_to_next": "C"
+        },
+        {
+          "order": 6,
+          "sign_code": "W3-4",
+          "label": "BE PREPARED TO STOP",
+          "annotations": ["solid triangle (optional device; need determined by detour design and/or scope of construction activity; required when included in the schedule of construction traffic control devices - Sheet 25 legend)"],
+          "gap_to_next": "B"
+        },
+        {
+          "order": 7,
+          "sign_code": "W20-7",
+          "label": "flagger symbol",
+          "gap_to_next": "A (to taper start)"
+        }
+      ],
+      "taper_annotation": "50' MIN. / 100' MAX. bracket at the end of the A gap, spanning the one-lane two-way taper / flagger station cluster (channelizing devices transition from the closed-lane edge to the centerline; flagger-station dot adjacent)"
+    },
+    "work_area": {
+      "depiction": "hatched area in the closed lane with channelizing devices along the centerline boundary",
+      "pilot_car": "pilot-car symbol (vehicle icon with 'P') staged in the open lane at the downstream end of the work area",
+      "buffer": "'VARIES' annotation at the far (downstream/opposing) end of the diagram; per Sheet 2 General Note 24 buffer space is optional and engineer-determined",
+      "pilot_turnaround": {
+        "annotation_verbatim": "200'-300' BUFFER PILOT TURNAROUND",
+        "position": "between the flagger station / taper cluster and the work area, dimensioned on the approach chain (read on the opposing chain at 260 dpi; same standoff appears undimensioned on the primary approach)",
+        "interpretation": "the flagger station stands 200-300 ft clear of the work area, giving the pilot car space to turn around at each end of the one-lane section. Matches Case 17's '200' TO 300'' opposing-flagger standoff (cdot_case17_curve.json) - the standoff generalizes; the turnaround label is the pilot-car-specific reading."
+      }
+    },
+    "downstream_sequence_per_direction": [
+      {
+        "from": "work area / taper end",
+        "sign_code": "R2-11",
+        "label": "END DOUBLE FINES ZONE",
+        "annotations": ["star"],
+        "gap_before": "500 ft",
+        "gap_to_next": "500 ft"
+      },
+      {
+        "sign_code": "R2-1(XX)",
+        "label": "SPEED LIMIT XX (posted-speed restoration)",
+        "annotations": ["diamond (NOT optional if the posted speed limit in the work zone is reduced - Sheet 25 legend)"]
+      }
+    ],
+    "mirroring": "full sequence repeated for the opposing approach (opposing dimension chain A/B/C/C/260'/260'/C read at the right edge of the strip); END-side pair (R2-11 + restoration R2-1) likewise mirrored",
+    "g20_4_mounting": {
+      "sheet_26_verbatim": "'PILOT CAR/FOLLOW ME' - THIS SIGN SHALL BE MOUNTED IN A CONSPICUOUS POSITION ON THE REAR OF A VEHICLE USED FOR GUIDING ONE-WAY TRAFFIC THROUGH OR AROUND THE PROJECT.",
+      "implication": "G20-4 is vehicle-mounted equipment on the pilot car, not a roadside sign at the flagger station. Case 42's diagram shows no roadside G20-4. The current generator emits roadside G20-4 at both flagger stations when pilot_car=True - delta recorded in phase1_findings.md."
+    },
+    "sheet_25_notes_verbatim": [
+      "1. ALL NIGHT HAZARDS WILL BE MARKED AND DELINEATED.",
+      "2. ALL SPEED LIMIT SIGNS CONFLICTING WITH WORK ZONE SPEED SHALL BE COVERED DURING SPEED REDUCTION.",
+      "(added PR 2 Phase A) SIGNING MAY STAY WHILE LANES ARE REOPENED.",
+      "(added PR 2 Phase A, cross-reference, partial) '... ON SHEET 10, AND CHAPTER 6H OF THE 2009 MUTCD FOR LANE CLOSURE IN WORK AREA.' - note CDOT's own text cites the 2009 MUTCD edition; the 11th Edition equivalent is Part 6, Chapter 6P typical applications"
+    ],
+    "speed_reduction_chart": "Sheet 25 carries a SPEED REDUCTION CHART adjacent to Case 41 (chip seals); applicability to Case 42 not established from the diagram - open question for Phase 2 if pilot-car routing is pursued",
+    "case_specific_notes": [
+      "Case 42 is the only S-630-1 typical that shows the full 7-element flagger approach chain with explicit gaps (C/260/260/C/C/B/A + 50-100 taper).",
+      "The 260-ft gaps are specific to the regulatory cluster (R2-10 and the WORK ZONE speed assembly relative to W20-4); the warning-series gaps remain letter-coded A/B/C.",
+      "R4-1 DO NOT PASS appears in Case 42 but not Case 17 - whether it generalizes to non-pilot-car flagger ops is an open question (passing-zone context dependent).",
+      "Page 25 cross-reference note: 'FOLLOW APPLICABLE STANDARDS AS SHOWN IN CASE NO. 17 ON SHEET 9, CASE NO. 19 (...)' - Case 42 layers onto the Case 17 standards."
+    ],
+    "routing_decision": "DEFERRED for V1 basic; the pilotCar flag on the form maps here when pursued (V1.1 candidate). Basic-case fixture is ta10_basic_flagger.json."
+  }
+}

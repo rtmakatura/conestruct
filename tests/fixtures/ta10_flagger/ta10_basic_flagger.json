@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "source": "MUTCD 11th Edition (December 2023), Part 6, Figure 6P-10 (TA-10) + Notes, Sect. 6P.01, PDF pages 878-879; supplemented by CDOT Standard Plan S-630-1 (07/31/2019, rev 01/20/23) Sheet 9 'KEY TO ADVANCE SIGNING DISTANCES', Sheet 2 General Notes 18/20/22/24, Sheet 12 'FINES DOUBLE SIGNING NOTES', Sheet 26 sign placement notes",
+    "source_urls": [
+      "https://mutcd.fhwa.dot.gov/pdfs/11th_Edition/part6.pdf",
+      "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+    ],
+    "verified_by": "Claude (Fable 5 vision extraction from rendered diagram pages), June 10 2026; re-verified June 11 2026 (PR 2 Phase A): B-position sign, plaque/G20-2 optionality, flagger-to-taper dimension, and the CDOT A/B/C key re-read from fresh crops",
+    "verification_changelog": "PR 2 Phase A re-verification: one addition - the figure's far-end '50 to 100 ft' dimension identified (450-dpi zoom) as work-space end -> end of the channelizing-device run (NOT the opposing flagger position, as the gitignored Phase 1 findings doc had guessed). Opposing-flagger standoff comes from CDOT Case 17 (200-300 ft); see opposing_end below.",
+    "purpose": "validation fixture for Conestruct flagger-controlled alternating one-way traffic on a 2-lane undivided road (basic single work zone, one flagger station per approach)",
+    "structural_note": "MUTCD TA-10 is the controlling federal typical. CDOT S-630-1 has NO general (non-curve, non-pilot-car) 2-lane flagger typical: Case 17 (sheet 9) is the curve-specialized variant, Case 42 (sheet 25) is the pilot-car variant. CDOT-supplement values (A/B/C distances, device spacing, fines-zone bracketing, work-zone speed assemblies) are layered onto the MUTCD core here and cross-referenced to the sibling fixtures."
+  },
+  "ta10_basic": {
+    "title": "Lane Closure on a Two-Lane Road Using Flaggers (TA-10) - basic, one flagger per approach",
+    "mutcd_figure": "Figure 6P-10",
+    "scenario": {
+      "road_type": "2-lane undivided, one lane each direction",
+      "posted_speed_mph": "speed-generic (letter-coded A/B/C distances; CDOT key resolves by road type)",
+      "closure_type": "lane (right/work-side lane closed; alternating one-way traffic in the remaining lane)",
+      "control": "one flagger at each end of the one-lane section"
+    },
+    "advance_warning_sequence_per_direction": [
+      {
+        "position": "C (outermost)",
+        "sign_code": "W20-1",
+        "label": "ROAD WORK XX FT",
+        "mutcd_note": "Note 3: ROAD WORK AHEAD and END ROAD WORK signs may be omitted for short-duration operations",
+        "distance_to_next": "C"
+      },
+      {
+        "position": "B",
+        "sign_code": "W20-4",
+        "label": "ONE LANE ROAD XX FT",
+        "mutcd_note": "B-position sign in the TA-10 diagram. This is the sign the audit finding B-11 concerns: the diagram shows W20-4, not W3-4.",
+        "distance_to_next": "B"
+      },
+      {
+        "position": "A (closest to flagger)",
+        "sign_code": "W20-7",
+        "label": "flagger symbol",
+        "plaques": [
+          {
+            "sign_code": "W16-2P",
+            "text": "XX FEET",
+            "optionality": "labeled '(optional)' on the figure"
+          }
+        ],
+        "distance_to_next": "A (to the flagger station region)"
+      }
+    ],
+    "optional_additions": [
+      {
+        "sign_code": "W3-4",
+        "label": "BE PREPARED TO STOP",
+        "mutcd_basis": "Notes for Figure 6P-10, note 4: 'A BE PREPARED TO STOP sign may be added to the sign series.' Note 8 (Guidance): 'When used, the BE PREPARED TO STOP sign should be located between the Flagger sign and the ONE LANE ROAD sign.'",
+        "interpretation": "W3-4 is an optional FOURTH sign inserted between W20-4 (B) and W20-7 (A). It does not replace W20-4. CDOT Case 42 includes it (marked with the optional-device triangle)."
+      },
+      {
+        "sign_code": "G20-2",
+        "label": "END ROAD WORK",
+        "optionality": "labeled '(optional)' on the figure, one per direction past the departure end",
+        "mutcd_note": "may be omitted for short-duration operations (note 3)"
+      }
+    ],
+    "flagger_station": {
+      "position": "50 to 100 ft upstream (approach side) of the one-lane, two-way taper start, on the closed-lane side",
+      "source": "Figure 6P-10 dimension between the flagger symbol and the first channelizing device of the taper (vision-read at 400 dpi)",
+      "night_standard": "Notes note 7 (Standard): 'At night, flagger stations shall be illuminated, except in emergencies.' CDOT Sheet 2 note 22 details the flood-light requirements (500 W min quartz, 8 ft min height, no glare, illuminates station + escape path).",
+      "single_flagger_option": "Notes note 2: low-volume, short TTC zones on straight roadways may use a single flagger visible to both directions (deferred; see match_rules)"
+    },
+    "taper": {
+      "type": "one-lane, two-way traffic taper",
+      "length_ft": "50 min, 100 max",
+      "device_spacing_in_taper_ft": "approximately 20",
+      "source": "MUTCD Sect. 6B.08 para 14 (Guidance): 'A taper having a minimum length of 50 feet and a maximum length of 100 feet with channelizing devices at approximately 20-foot spacing should be used to guide traffic into the one-lane section'; example in Figure 6B-3",
+      "explicitly_not": "NOT the merging taper L = W x S. The full-L merging taper applies to lane closures where traffic merges into an adjacent same-direction lane; here opposing traffic alternates through the one-lane section under flagger control. CDOT Case 17 carries the warning 'THIS TAPER MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A TRANSITION.'",
+      "downstream_taper": "50-100 ft with devices at ~20 ft spacing (Sect. 6B.08 para 12), guiding traffic back into the original lane"
+    },
+    "opposing_end": {
+      "mutcd_device_run_out": "the figure's far-end '50 to 100 ft' dimension spans from the work-space end to the end of the channelizing-device run guiding traffic back to the original lane (anchor ticks read at 450 dpi). It does NOT dimension the opposing flagger position.",
+      "cdot_opposing_flagger_standoff": "CDOT Case 17 dimensions the opposing flagger '200' TO 300'' from the work-area end; Case 42 carries the same value annotated '200'-300' BUFFER PILOT TURNAROUND'. CDOT supplements MUTCD here - the opposing flagger stands 200-300 ft clear of the work area.",
+      "added": "PR 2 Phase A re-verification"
+    },
+    "buffer_space": {
+      "mutcd": "no dimensioned buffer in Figure 6P-10. Notes note 6 (Guidance): 'The buffer space should be extended so that the two-way traffic taper is placed before a horizontal (or crest vertical) curve to provide adequate sight distance for the flagger and a queue of stopped vehicles.'",
+      "cdot": "S-630-1 Sheet 2 General Note 24 (verbatim): 'BUFFER SPACE IS OPTIONAL. NEED MUST BE DETERMINED ON A PROJECT OR SITE SPECIFIC BASIS AS DIRECTED BY THE ENGINEER. WHEN A BUFFER SPACE IS USED, DIMENSIONS AND/OR DEVICES USED ARE TO BE INCORPORATED IN THE TRAFFIC CONTROL PLAN (TCP) OR THE CONTRACTOR'S METHOD OF HANDLING TRAFFIC (MHT).'",
+      "note": "the S-630-1 Sheet 25 legend cross-references this as 'GENERAL NOTE 23' - stale reference; the note is numbered 24 in the current revision"
+    },
+    "channelizing_devices": {
+      "in_taper_spacing": "CDOT Sheet 2 note 18a: spacing in feet equals the numerical value of the speed limit (45 mph = 45 ft) for tapers and transitions - but the one-lane two-way taper carries the MUTCD ~20 ft guidance over its 50-100 ft length",
+      "tangent_spacing": "CDOT Sheet 2 note 18b: along the buffer space or work area, spacing may not be greater than 2x the speed limit (50 mph = 100 ft max)",
+      "centerline_delineation": "channelizing devices along the centerline boundary between the open lane and the work space (Figure 6P-10 and CDOT Case 42 both show devices along the work-space edge)"
+    },
+    "advance_signing_distances_cdot_key": {
+      "source": "S-630-1 Sheet 9 'KEY TO ADVANCE SIGNING DISTANCES' (also reproduced on Sheet 25)",
+      "units": "feet between signs",
+      "urban_le_40_mph": { "A": 100, "B": 100, "C": 100 },
+      "urban_ge_45_mph": { "A": 350, "B": 350, "C": 350 },
+      "rural": { "A": 500, "B": 500, "C": 500 },
+      "expressway_freeway": { "A": 1000, "B": 1500, "C": 2640 }
+    },
+    "cdot_overlay_signs": {
+      "interpretation": "CDOT's 2-lane flagger typicals (Cases 17 and 42) add regulatory signing the MUTCD TA-10 core does not show. See cdot_case17_curve.json / cdot_case42_pilot_car.json for the dimensioned sequences.",
+      "fines_double_bracketing": "R2-10 BEGIN DOUBLE FINES ZONE upstream / R2-11 END DOUBLE FINES ZONE downstream, star-marked (see Sheet 12 notes)",
+      "work_zone_speed_assembly": "G20-5P WORK ZONE + R2-1(XX) SPEED LIMIT XX upstream; R2-1(XX) restoration downstream diamond-marked (mandatory only when work-zone speed is reduced)",
+      "sheet12_scope_finding": "Sheet 12 'FINES DOUBLE SIGNING NOTES' are road-class-agnostic and list LANE CLOSURE among qualifying hazards; signs go where workers are present in the roadway/clear zone or hazards exist (notes 1-2). This is in tension with the Item 3 carve-out that set Fines Double applicable=False for flagger scenarios - surfaced in phase1_findings.md for triage."
+    },
+    "operational_notes": [
+      "MUTCD note 1: positive protection devices may be used per Sect. 6M.02",
+      "MUTCD note 5: AFADs (Sect. 6L.02) may be used where there is only one lane of approaching traffic in the direction controlled; CDOT Sheet 2 note 20: a flagger station comprises either a flagger or an AFAD",
+      "MUTCD notes 9-13: grade-crossing provisions (queue extension, flagger notification, left-side warning parity, railroad coordination) - out of V1 scope",
+      "MUTCD note 4: flashing warning lights and/or flags may call attention to the advance warning signs"
+    ],
+    "validation_flags": {
+      "two_flagger_stations_required": true,
+      "advance_series_mirrored_both_directions": true,
+      "one_lane_two_way_taper_50_to_100_ft": true,
+      "flagger_50_to_100_ft_upstream_of_taper": true
+    }
+  }
+}
