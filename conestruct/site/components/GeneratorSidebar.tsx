@@ -8,16 +8,12 @@ import {
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
   SCENARIO_KINDS,
-  type FlaggerRoadType,
-  type LaneClosureRoadType,
-  type MobileRoadType2Lane,
-  type MobileRoadTypeMultilane,
   type RoadType,
   type Scenario,
   type ScenarioKind,
   type ScenarioMeta,
-  type WorkBeyondShoulderRoadType,
 } from "@/lib/scenarios";
+import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
@@ -62,79 +58,9 @@ function fmtFt(n: number): string {
   return Math.round(n).toLocaleString("en-US");
 }
 
-// Apply user overrides on top of a freshly-applied classification.
-// Mirrors the per-scenario-kind narrowing rules in
-// ``applyClassification``: a roadType override only sticks when it's
-// in the kind's allowed set; ``lanes`` only persists on shoulder
-// (the only kind that carries it on the scenario today).
-function applyOverridesToScenario(
-  scenario: Scenario,
-  overrides: RoadFieldOverrides,
-): Scenario {
-  let next: Scenario = scenario;
-  if (overrides.speedMph !== undefined) {
-    next = { ...next, speed: overrides.speedMph } as Scenario;
-  }
-  if (overrides.roadType !== undefined) {
-    next = applyRoadTypeOverride(next, overrides.roadType);
-  }
-  if (overrides.divided !== undefined && next.kind === "shoulder") {
-    next = { ...next, divided: overrides.divided };
-  }
-  if (
-    overrides.lanesPerDirection !== undefined &&
-    next.kind === "shoulder"
-  ) {
-    next = { ...next, lanes: overrides.lanesPerDirection };
-  }
-  return next;
-}
-
-const FLAGGER_TYPES: ReadonlySet<FlaggerRoadType> = new Set<FlaggerRoadType>([
-  "rural_undivided",
-  "urban_arterial",
-]);
-const LANE_CLOSURE_TYPES: ReadonlySet<LaneClosureRoadType> =
-  new Set<LaneClosureRoadType>(["rural_divided", "freeway"]);
-const WORK_BEYOND_TYPES: ReadonlySet<WorkBeyondShoulderRoadType> =
-  new Set<WorkBeyondShoulderRoadType>([
-    "rural_undivided",
-    "rural_divided",
-    "urban_arterial",
-    "freeway",
-  ]);
-const MOBILE_2LANE_TYPES: ReadonlySet<MobileRoadType2Lane> =
-  new Set<MobileRoadType2Lane>(["rural_undivided", "urban_arterial"]);
-const MOBILE_MULTILANE_TYPES: ReadonlySet<MobileRoadTypeMultilane> =
-  new Set<MobileRoadTypeMultilane>(["rural_divided", "freeway"]);
-
-function applyRoadTypeOverride(scenario: Scenario, rt: RoadType): Scenario {
-  switch (scenario.kind) {
-    case "shoulder":
-      // ShoulderScenario carries the full RoadType union, so anything sticks.
-      return { ...scenario, roadType: rt };
-    case "flagger_lane_closure":
-      return FLAGGER_TYPES.has(rt as FlaggerRoadType)
-        ? { ...scenario, roadType: rt as FlaggerRoadType }
-        : scenario;
-    case "lane_closure_divided":
-      return LANE_CLOSURE_TYPES.has(rt as LaneClosureRoadType)
-        ? { ...scenario, roadType: rt as LaneClosureRoadType }
-        : scenario;
-    case "work_beyond_shoulder":
-      return WORK_BEYOND_TYPES.has(rt as WorkBeyondShoulderRoadType)
-        ? { ...scenario, roadType: rt as WorkBeyondShoulderRoadType }
-        : scenario;
-    case "mobile_op_2lane":
-      return MOBILE_2LANE_TYPES.has(rt as MobileRoadType2Lane)
-        ? { ...scenario, roadType: rt as MobileRoadType2Lane }
-        : scenario;
-    case "mobile_op_multilane":
-      return MOBILE_MULTILANE_TYPES.has(rt as MobileRoadTypeMultilane)
-        ? { ...scenario, roadType: rt as MobileRoadTypeMultilane }
-        : scenario;
-  }
-}
+// applyOverridesToScenario / applyRoadTypeOverride moved to
+// lib/scenarios/overrides.ts (PR 4) so the speed-clamp behavior is
+// unit-testable without the component/Mapbox dependency tree.
 
 export function GeneratorSidebar({
   scenario,

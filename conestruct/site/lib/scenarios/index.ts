@@ -69,7 +69,7 @@ export type {
   WorkBeyondShoulderWorkType,
 } from "./types";
 
-export { applyClassification } from "./auto-apply";
+export { applyClassification, snapSpeedToDomain } from "./auto-apply";
 export type { AutoApplyDelta } from "./auto-apply";
 
 // ---------------------------------------------------------------------------

@@ -65,12 +65,11 @@ export interface LocationPickerResult {
   overrides: RoadFieldOverrides;
 }
 
-export interface RoadFieldOverrides {
-  speedMph?: number;
-  lanesPerDirection?: number;
-  roadType?: RoadType;
-  divided?: boolean;
-}
+// Defined in lib/scenarios/overrides.ts (PR 4 extraction); imported
+// for local use and re-exported so existing importers keep their path.
+import type { RoadFieldOverrides } from "@/lib/scenarios/overrides";
+
+export type { RoadFieldOverrides };
 
 interface Props {
   open: boolean;
