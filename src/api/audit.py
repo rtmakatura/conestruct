@@ -26,6 +26,9 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    flagger_to_taper_distance,
+    one_lane_two_way_device_spacing,
+    one_lane_two_way_taper_length,
     pick_device_count,
     shoulder_taper_length,
     taper_length,
@@ -127,7 +130,40 @@ def build_audit_trail(
         L_calc_text = f"L = {offset_ft:g} x {speed}^2 / 60 = {L_full:g} ft"
     L_third = shoulder_taper_length(speed, offset_ft)
 
-    if is_lane:
+    if is_flagger:
+        # PR 2 geometry correction: flagger alternating-flow operations
+        # use the one-lane two-way taper (MUTCD §6B.08 ¶14: 50–100 ft,
+        # ~20 ft device spacing), NOT the merging taper L — the taper
+        # stages stopped traffic behind a flagger.  CDOT Case 17:
+        # "THIS TAPER MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A
+        # TRANSITION."  L_full above remains the W×S reference value;
+        # the formula texts are overridden so the audit shows the
+        # actually-applied rule.
+        L_required = one_lane_two_way_taper_length()
+        L_required_label = "one-lane two-way taper"
+        L_required_calc_text = (
+            f"Required: {L_required:g} ft (one-lane two-way taper, "
+            "50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft "
+            "maximum)"
+        )
+        formula_choice = (
+            "Flagger alternating-flow: one-lane two-way taper (50-100 ft "
+            "fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; "
+            "the merging-taper L = W x S formula does not apply"
+        )
+        formula_latex = r"50 \le L \le 100"
+        L_calc_text = f"One-lane two-way taper = {L_required:g} ft (Sec 6B.08 50-100 ft band)"
+        source_text = (
+            "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic "
+            "control): 50-100 ft taper with channelizing devices at "
+            "approximately 20 ft spacing. CDOT S-630-1 Case 17 warns "
+            "the taper must be short enough to not be mistaken for a "
+            "transition."
+        )
+        cdot_reference = (
+            "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)"
+        )
+    elif is_lane:
         L_required = L_full
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {L_full:g} ft (full taper for lane closure)"
@@ -135,14 +171,7 @@ def build_audit_trail(
             "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the "
             "full merging taper length L."
         )
-        if is_flagger:
-            cdot_reference = (
-                "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)"
-            )
-        else:
-            cdot_reference = (
-                "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
-            )
+        cdot_reference = "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
     else:
         L_required = L_third
         L_required_label = "L/3 (shoulder taper)"
@@ -172,8 +201,11 @@ def build_audit_trail(
         else:
             cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
 
-    if speed == threshold:
-        # B-05 — mirror the formula_choice disclosure on the citation line.
+    if speed == threshold and not is_flagger:
+        # B-05 — mirror the formula_choice disclosure on the citation
+        # line.  Skipped for flagger: the one-lane two-way taper is a
+        # fixed band, so the 40-mph formula-selection deviation does
+        # not arise.
         source_text += (
             " Note: at exactly 40 mph the plan deviates conservatively from "
             "the Table 6B-3 quadratic formula (L = W x S^2 / 60) by applying "
@@ -262,7 +294,11 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 3. Channelizing device spacing
     # ------------------------------------------------------------------
-    in_taper = device_spacing_in_taper(speed)
+    # Flagger one-lane two-way taper uses the §6B.08 ¶14 ~20 ft device
+    # spacing (taper-specific guidance overrides the speed-based §6C.09
+    # rule); all other tapers use §6C.09 speed-in-feet.  Tangent spacing
+    # is §6C.09 2x-speed everywhere.
+    in_taper = one_lane_two_way_device_spacing() if is_flagger else device_spacing_in_taper(speed)
     on_tan = device_spacing_on_tangent(speed)
 
     # Deployed counts mirror the layout engine
@@ -283,13 +319,22 @@ def build_audit_trail(
     actual_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
     actual_cones = sum(1 for p in placements if p.device_type == DeviceType.CONE)
 
-    taper_label = "L" if is_lane else "L/3"
-    spacing_section = {
-        "speed_mph": speed,
-        "in_taper_text": (
+    if is_flagger:
+        taper_label = "one-lane two-way taper"
+        in_taper_text = (
+            f"{in_taper:g} ft spacing in the one-lane two-way taper "
+            "(MUTCD Sec 6B.08: approximately 20 ft, taper-specific "
+            "guidance overriding the Sec 6C.09 speed-based rule)"
+        )
+    else:
+        taper_label = "L" if is_lane else "L/3"
+        in_taper_text = (
             f"{speed} mph -> {in_taper:g} ft spacing "
             "(MUTCD Sec 6C.09: spacing equals speed in feet)"
-        ),
+        )
+    spacing_section = {
+        "speed_mph": speed,
+        "in_taper_text": in_taper_text,
         "on_tangent_text": (
             f"{speed} mph -> {on_tan:g} ft spacing "
             "(MUTCD Sec 6C.09: spacing equals 2x speed in feet)"
@@ -311,7 +356,11 @@ def build_audit_trail(
         "n_taper_drums_actual": actual_drums,
         "n_tangent_cones_required": n_tangent_cones,
         "n_tangent_cones_actual": actual_cones,
-        "source": "MUTCD 11th Ed. Sec 6C.09",
+        "source": (
+            "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6C.09 (tangent)"
+            if is_flagger
+            else "MUTCD 11th Ed. Sec 6C.09"
+        ),
     }
 
     # ------------------------------------------------------------------
@@ -330,12 +379,27 @@ def build_audit_trail(
     sign_b_station = sign_a_station + b_ft
     sign_c_station = sign_b_station + c_ft
 
+    # Flagger W3-4 anchor — only meaningful on the flagger series; kept
+    # outside the branch so _position_label can reference it untyped.
+    sign_w3_4_station = 0.0
+
     if is_flagger:
-        # Flagger-controlled alternating-traffic series (MUTCD §6E.05 / TA-10).
-        # FLAGGER (W20-7) sits at A — closest to the flagger station — so the
-        # most specific cue is freshest as the driver reaches the stop.
-        # W3-4 (not W20-4 = ONE LANE ROAD AHEAD) is BE PREPARED TO STOP.
-        sign_codes = {"A": "W20-7", "B": "W3-4", "C": "W20-1"}
+        # Flagger-controlled alternating-traffic series (MUTCD Fig.
+        # 6P-10, PR 2 B-11 correction): ONE LANE ROAD AHEAD (W20-4) is
+        # the B-position sign; BE PREPARED TO STOP (W3-4) is an
+        # optional addition between W20-4 and W20-7 (TA-10 notes 4/8),
+        # emitted by default.  The A gap anchors on the flagger station
+        # (the stop point, 100 ft past taper start) — Fig. 6P-10 / Case
+        # 42 run W20-7 –A– flagger –50..100 ft– taper.  Chain
+        # (nearest-first): W20-7, +B → W3-4, +C → W20-4, +C → W20-1 —
+        # every letter-coded gap minimum preserved (fixtures:
+        # tests/fixtures/ta10_flagger/; mirrors
+        # generate_flagger_alternating_2lane).
+        sign_codes = {"A": "W20-7", "B": "W20-4", "C": "W20-1"}
+        sign_a_station = taper_start_station + flagger_to_taper_distance() + a_ft
+        sign_w3_4_station = sign_a_station + b_ft
+        sign_b_station = sign_w3_4_station + c_ft
+        sign_c_station = sign_b_station + c_ft
     elif is_lane:
         sign_codes = {"A": "W4-2R", "B": "W20-5R", "C": "W20-1"}
     else:
@@ -367,6 +431,8 @@ def build_audit_trail(
             return "B (middle)"
         if label == sign_codes["A"] and abs(station_ft - sign_a_station) <= 0.5:
             return "A (nearest)"
+        if is_flagger and label == "W3-4" and abs(station_ft - sign_w3_4_station) <= 0.5:
+            return "between A and B (TA-10 note 8)"
         if label == "W16-2a" and abs(station_ft - sign_a_station) <= 0.5:
             return "A plaque"
         if label == "W21-5aR" and abs(station_ft - w21_5aR_downstream_st) <= 0.5:
@@ -434,26 +500,49 @@ def build_audit_trail(
         # scripts) pass empty or sign-free placement lists; the panel
         # still documents the computed A/B/C prescription so the audit
         # keeps describing the prescribed plan.
+        # Distances derived from the anchor stations so the flagger
+        # 4-sign chain (W20-1 at A+B+2C) and the standard 3-sign chain
+        # both report correctly.
         sign_table_rows = [
             {
                 "Position": "C (furthest)",
                 "Code": sign_codes["C"],
                 "Station (ft)": f"{sign_c_station:,.0f}",
-                "Distance from Taper (ft)": f"{a_ft + b_ft + c_ft:,.0f} upstream",
+                "Distance from Taper (ft)": (
+                    f"{sign_c_station - taper_start_station:,.0f} upstream"
+                ),
             },
             {
                 "Position": "B (middle)",
                 "Code": sign_codes["B"],
                 "Station (ft)": f"{sign_b_station:,.0f}",
-                "Distance from Taper (ft)": f"{a_ft + b_ft:,.0f} upstream",
+                "Distance from Taper (ft)": (
+                    f"{sign_b_station - taper_start_station:,.0f} upstream"
+                ),
             },
             {
                 "Position": "A (nearest)",
                 "Code": sign_codes["A"],
                 "Station (ft)": f"{sign_a_station:,.0f}",
-                "Distance from Taper (ft)": f"{a_ft:,.0f} upstream",
+                "Distance from Taper (ft)": (
+                    f"{sign_a_station - taper_start_station:,.0f} upstream"
+                ),
             },
         ]
+        if is_flagger:
+            # W3-4 (emitted by default per the locked OQ-2 decision)
+            # sits between W20-4 (B) and W20-7 (A) — TA-10 note 8.
+            sign_table_rows.insert(
+                2,
+                {
+                    "Position": "between A and B (TA-10 note 8)",
+                    "Code": "W3-4",
+                    "Station (ft)": f"{sign_w3_4_station:,.0f}",
+                    "Distance from Taper (ft)": (
+                        f"{sign_w3_4_station - taper_start_station:,.0f} upstream"
+                    ),
+                },
+            )
         # G1 — second W21-5aR + W16-2a / W7-3a plaques per CDOT S-630-1
         # Sheet 7 Case 11 positions 5/6 (and Sheet 14 Cases 26/27
         # positions 4/6).  Prescription gate matches the layout
@@ -1158,7 +1247,14 @@ def audit_projection(
         "taper_length_ft": taper["L_required_ft"],
         "taper_label": taper["L_required_label"],
         "buffer_space_ft": audit["buffer"]["buffer_ft"],
-        "device_spacing_taper_ft": device_spacing_in_taper(speed),
+        # Flagger taper spacing is the §6B.08 ~20 ft taper-specific
+        # value (PR 2), not the §6C.09 speed-based rule — mirror the
+        # spacing-section branch so summary and section agree.
+        "device_spacing_taper_ft": (
+            one_lane_two_way_device_spacing()
+            if scenario_kind == "flagger_lane_closure"
+            else device_spacing_in_taper(speed)
+        ),
         "device_spacing_tangent_ft": device_spacing_on_tangent(speed),
         "step_count": step_count,
     }

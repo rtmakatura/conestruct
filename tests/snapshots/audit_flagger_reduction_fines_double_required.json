@@ -17,21 +17,27 @@
       "sign_table": [
         {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "1,500 upstream",
+          "Distance from Taper (ft)": "2,100 upstream",
           "Position": "C (furthest)",
-          "Station (ft)": "2,855"
+          "Station (ft)": "3,060"
+        },
+        {
+          "Code": "W20-4",
+          "Distance from Taper (ft)": "1,600 upstream",
+          "Position": "B (middle)",
+          "Station (ft)": "2,560"
         },
         {
           "Code": "W3-4",
-          "Distance from Taper (ft)": "1,000 upstream",
-          "Position": "B (middle)",
-          "Station (ft)": "2,355"
+          "Distance from Taper (ft)": "1,100 upstream",
+          "Position": "between A and B (TA-10 note 8)",
+          "Station (ft)": "2,060"
         },
         {
           "Code": "W20-7",
-          "Distance from Taper (ft)": "500 upstream",
+          "Distance from Taper (ft)": "600 upstream",
           "Position": "A (nearest)",
-          "Station (ft)": "1,855"
+          "Station (ft)": "1,560"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
@@ -54,13 +60,13 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: False. Signs placed: 5 left, 7 right.",
+          "detail": "Required: False. Signs placed: 6 left, 8 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CO Supplement Sec 6C.06(A)",
-          "detail": "Zone length: 2,855 ft. Required: 2. Placed: 2.",
+          "detail": "Zone length: 3,060 ft. Required: 2. Placed: 2.",
           "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
           "pass": true
         },
@@ -107,13 +113,13 @@
           "Label": "FLAGGER_1",
           "Offset (ft)": "+17.0",
           "Side": "right shoulder",
-          "Station (ft)": "1,385"
+          "Station (ft)": "1,060"
         },
         {
           "Label": "FLAGGER_2",
           "Offset (ft)": "-17.0",
           "Side": "left shoulder",
-          "Station (ft)": "-80"
+          "Station (ft)": "-300"
         }
       ]
     },
@@ -122,38 +128,38 @@
       "buffer_ft": 360.0,
       "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
       "speed_mph": 45,
-      "taper_ft": 495.0,
-      "taper_label": "L (full merging taper)",
+      "taper_ft": 100.0,
+      "taper_label": "one-lane two-way taper",
       "violations": [],
       "work_zone_ft": 500.0
     },
     "spacing": {
-      "in_taper_text": "45 mph -> 45 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
-      "n_tangent_cones_actual": 9,
+      "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6C.09 speed-based rule)",
+      "n_tangent_cones_actual": 11,
       "n_tangent_cones_required": 7,
-      "n_taper_drums_actual": 12,
-      "n_taper_drums_required": 12,
+      "n_taper_drums_actual": 6,
+      "n_taper_drums_required": 6,
       "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
-      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6C.09 (tangent)",
       "speed_mph": 45,
       "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
-      "taper_count_text": "L = 495.0 ft / 45 ft max spacing -> 12 drums at 45.0 ft intervals"
+      "taper_count_text": "one-lane two-way taper = 100.0 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"
     },
     "taper": {
-      "L_calc_text": "L = 11 x 45 = 495 ft",
+      "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
       "L_full_ft": 495.0,
-      "L_required_ft": 495.0,
-      "L_required_label": "L (full merging taper)",
-      "L_third_calc_text": "Required: L = 495 ft (full taper for lane closure)",
-      "L_third_ft": 495.0,
+      "L_required_ft": 100.0,
+      "L_required_label": "one-lane two-way taper",
+      "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
+      "L_third_ft": 100.0,
       "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
       "closure_type": "lane",
-      "formula_choice": "Speed 45 mph >= 40 mph threshold -> using L = W x S",
-      "formula_latex": "L = W \\times S",
+      "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+      "formula_latex": "50 \\le L \\le 100",
       "offset_ft": 11.0,
       "offset_label": "lane width",
       "shoulder_width_ft": 11.0,
-      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the full merging taper length L.",
+      "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.",
       "speed_mph": 45
     }
   },
@@ -162,10 +168,10 @@
     "case_id": "MUTCD TA-10: Flagger one-lane two-way",
     "cdot_sheet": "S-630-2",
     "device_spacing_tangent_ft": 90.0,
-    "device_spacing_taper_ft": 45.0,
+    "device_spacing_taper_ft": 20.0,
     "step_count": 12,
     "ta": "TA-10",
-    "taper_label": "L (full merging taper)",
-    "taper_length_ft": 495.0
+    "taper_label": "one-lane two-way taper",
+    "taper_length_ft": 100.0
   }
 }

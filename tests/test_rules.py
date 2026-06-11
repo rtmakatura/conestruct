@@ -1635,40 +1635,49 @@ def _flagger_params() -> ScenarioParams:
     )
 
 
-def test_flagger_uses_w3_4_not_w20_4() -> None:
-    """Regression: BE PREPARED TO STOP code is W3-4, not the typo W20-4 (= ONE LANE ROAD AHEAD)."""
+def test_flagger_series_carries_w20_4_and_w3_4() -> None:
+    """B-11 correction: W20-4 ONE LANE ROAD AHEAD is the required B-position
+    sign (MUTCD Fig. 6P-10); W3-4 BE PREPARED TO STOP is the optional
+    addition (TA-10 note 4), emitted by default per the locked OQ-2
+    decision.  The pre-PR-2 layout emitted W3-4 *instead of* W20-4 —
+    this test pins both being present."""
     from src.generation.layout import generate_flagger_alternating_2lane
 
     params = _flagger_params()
     placements = generate_flagger_alternating_2lane(params)
     labels = {p.label for p in placements if p.label is not None}
-    assert "W20-4" not in labels, "W20-4 is ONE LANE ROAD AHEAD, not BE PREPARED TO STOP — use W3-4"
+    assert (
+        "W20-4" in labels
+    ), f"W20-4 ONE LANE ROAD AHEAD is the TA-10 B-position sign (B-11); got labels: {labels!r}"
     assert (
         "W3-4" in labels
     ), f"Expected BE PREPARED TO STOP label W3-4 in TA-10 layout; got labels: {labels!r}"
 
 
-def test_flagger_pilot_car_uses_g20_4_not_w20_1a() -> None:
-    """Regression: PILOT CAR FOLLOW ME is G20-4 (guide), not W20-1A (warning)."""
+def test_flagger_pilot_car_no_roadside_g20_4() -> None:
+    """G20-4 PILOT CAR/FOLLOW ME is vehicle-mounted on the rear of the
+    pilot vehicle (S-630-1 Sheet 26) — never a roadside placement.
+    The pre-PR-2 layout emitted it at both flagger stations; pilot_car
+    now adds no placements (the sign is narrative field equipment).
+    Also pins the older W20-1A typo as still absent."""
     from src.generation.layout import generate_flagger_alternating_2lane
 
     params = _flagger_params()
-    placements = generate_flagger_alternating_2lane(params, pilot_car=True)
-    labels = {p.label for p in placements if p.label is not None}
-    assert "W20-1A" not in labels, "W20-1A is not a real MUTCD code; PILOT CAR FOLLOW ME is G20-4"
+    base = generate_flagger_alternating_2lane(params)
+    with_pilot = generate_flagger_alternating_2lane(params, pilot_car=True)
+    labels = {p.label for p in with_pilot if p.label is not None}
+    assert "W20-1A" not in labels, "W20-1A is not a real MUTCD code"
     assert (
-        "G20-4" in labels
-    ), f"Expected G20-4 PILOT CAR FOLLOW ME in pilot_car=True layout; got labels: {labels!r}"
+        "G20-4" not in labels
+    ), "G20-4 is mounted on the pilot vehicle per Sheet 26 — roadside emission is the pre-PR-2 bug"
+    assert len(with_pilot) == len(base), "pilot_car must add no placements"
 
 
 def test_flagger_advance_sign_order_canonical_layout() -> None:
-    """Canonical TA-10 output: FLAGGER (W20-7) at A and BE PREPARED TO STOP (W3-4) at B.
-
-    Walking signs from upstream → downstream (highest station first), the
-    first sign cluster the driver sees should be ROAD WORK AHEAD (W20-1),
-    then BE PREPARED TO STOP (W3-4), then FLAGGER (W20-7) closest to the
-    flagger station.
-    """
+    """Canonical TA-10 output (PR 2 B-11 correction), driver order:
+    ROAD WORK AHEAD (W20-1) → ONE LANE ROAD AHEAD (W20-4) → BE PREPARED
+    TO STOP (W3-4, optional addition between W20-4 and W20-7 per TA-10
+    note 8) → FLAGGER (W20-7) closest to the flagger station."""
     from src.generation.layout import generate_flagger_alternating_2lane
 
     params = _flagger_params()
@@ -1681,36 +1690,51 @@ def test_flagger_advance_sign_order_canonical_layout() -> None:
             if p.device_type == DeviceType.SIGN_GENERIC
             and p.offset_ft > 0
             and p.station_ft > 1500.0
-            and (p.label or "") in {"W20-1", "W3-4", "W20-7", "W20-7a"}
+            and (p.label or "") in {"W20-1", "W20-4", "W3-4", "W20-7", "W20-7a"}
         ],
         key=lambda p: -p.station_ft,  # most upstream first
     )
     labels = [p.label for p in right_advance]
     assert labels == [
         "W20-1",
+        "W20-4",
         "W3-4",
         "W20-7",
-    ], f"Expected advance sign order [C,B,A] = [W20-1, W3-4, W20-7]; got {labels}"
+    ], f"Expected advance sign order [W20-1, W20-4, W3-4, W20-7]; got {labels}"
 
 
-def test_flagger_advance_sign_order_validator_fires_when_reversed() -> None:
-    """Reverting to the old A=W20-4, B=W20-7 order fires FLAGGER_ADVANCE_SIGN_ORDER."""
+def test_flagger_advance_sign_order_validator_fires_on_pre_pr2_inversion() -> None:
+    """The pre-PR-2 series (W3-4 at B, no W20-4) fires FLAGGER_ADVANCE_SIGN_ORDER."""
     from src.generation.layout import generate_flagger_alternating_2lane
 
     params = _flagger_params()
     placements = list(generate_flagger_alternating_2lane(params))
-    # Rewrite the right-direction advance signs to the broken pre-fix order.
+    # Recreate the pre-PR-2 bug: strip every W20-4 (right and opposing)
+    # so W3-4 stands in as the B sign.
+    out = [p for p in placements if p.label != "W20-4"]
+    violations = validate_layout(out, params)
+    assert any(
+        v.rule_id == "FLAGGER_ADVANCE_SIGN_ORDER" and v.severity == "error" for v in violations
+    ), f"Expected FLAGGER_ADVANCE_SIGN_ORDER, got: {[v.rule_id for v in violations]}"
+
+
+def test_flagger_advance_sign_order_validator_fires_on_misplaced_w3_4() -> None:
+    """W3-4 placed upstream of W20-4 (violating TA-10 note 8's 'between
+    the Flagger sign and the ONE LANE ROAD sign') fires the order rule."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+
+    params = _flagger_params()
+    placements = list(generate_flagger_alternating_2lane(params))
     out: list[DevicePlacement] = []
     for p in placements:
         if (
             p.device_type == DeviceType.SIGN_GENERIC
             and p.offset_ft > 0
             and p.station_ft > 1500.0
-            and p.label in {"W20-7", "W3-4"}
+            and p.label in {"W20-4", "W3-4"}
         ):
-            new_label = "W20-4" if p.label == "W3-4" else "W20-7"
-            # Swap so W20-7 is at position B (middle) and the bogus
-            # W20-4 ends up at A (closest to flagger) — the old bug.
+            # Swap W20-4 and W3-4 so W3-4 sits upstream of W20-4.
+            new_label = "W20-4" if p.label == "W3-4" else "W3-4"
             out.append(
                 DevicePlacement(
                     device_type=p.device_type,

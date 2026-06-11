@@ -24,6 +24,10 @@ from src.rules.spacing import (
     device_spacing_in_taper,
     device_spacing_on_tangent,
     downstream_taper_length,
+    flagger_to_taper_distance,
+    one_lane_two_way_device_spacing,
+    one_lane_two_way_taper_length,
+    opposing_flagger_standoff,
     pick_device_count,
     shoulder_taper_length,
     taper_length,
@@ -1123,27 +1127,30 @@ def generate_flagger_alternating_2lane(
 
     Two sets of advance warning signs and two flagger stations are
     placed: one set for the right-direction approach (positive offset,
-    upstream of the merging taper) and one for the opposing approach
-    (negative offset, downstream of the work zone).
+    upstream of the one-lane two-way taper) and one for the opposing
+    approach (negative offset, past the work zone).
 
     Optional flags:
       ``afad``: substitute Automated Flagger Assistance Devices
         (TEMPORARY_SIGNAL with label "AFAD") for the human flagger
         stations and swap the W20-7 advance signs for W20-7a.
-      ``pilot_car``: add G20-4 ("PILOT CAR FOLLOW ME") at each flagger
-        station; the pilot vehicle itself is field equipment listed in
-        the narrative, not a placed device.
+      ``pilot_car``: the pilot vehicle and its vehicle-mounted G20-4
+        ("PILOT CAR FOLLOW ME" — mounted on the rear of the pilot
+        vehicle per S-630-1 Sheet 26, never a roadside placement) are
+        field equipment listed in the narrative, not placed devices.
+        The flag therefore adds no placements.
       ``pedestrian_access``: add R9-9 ("SIDEWALK CLOSED — USE OTHER
         SIDE") at the upstream and downstream ends of the work zone on
         the work-side shoulder.
 
-    Standards: MUTCD 11th Ed. Part 6 TA-10 is the federal standard for
-    flagger-controlled alternating one-way traffic on a 2-lane undivided
-    highway. CDOT S-630-1 has no general case for this scenario; Case 17
-    (lane closure at a curve) is the closest CDOT analog but is curve-
-    specialized. (Cases 6 and 7 in the 19-page set are LANE #2 and LANE
-    #3 CLOSURES on multi-lane freeway, not flagger operations — the
-    prior TODO citation was incorrect.)
+    Standards: MUTCD 11th Ed. Part 6 TA-10 (Fig. 6P-10) is the federal
+    standard for flagger-controlled alternating one-way traffic on a
+    2-lane undivided highway; the one-lane two-way taper is §6B.08 ¶14
+    (50–100 ft, ~20 ft device spacing — NOT the merging taper L).
+    CDOT S-630-1 has no general case for this scenario; Case 17 (lane
+    closure at a curve, Sheet 9) and Case 42 (pilot car, Sheet 25)
+    supply the CDOT overlay values. Dimensioned fixtures:
+    tests/fixtures/ta10_flagger/.
 
     ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
     single source of truth); the kwarg remains as an explicit override.
@@ -1169,9 +1176,15 @@ def generate_flagger_alternating_2lane(
     flagger_label_1 = "AFAD_1" if afad else "FLAGGER_1"
     flagger_label_2 = "AFAD_2" if afad else "FLAGGER_2"
 
-    # Longitudinal landmarks: full merging taper L (this is a travel-lane
-    # closure, not a shoulder closure) per MUTCD §6C.08.
-    taper_len = taper_length(speed, params.lane_width_ft)
+    # Longitudinal landmarks: one-lane, two-way traffic taper per MUTCD
+    # §6B.08 ¶14 (50–100 ft; Conestruct uses the 100 ft maximum).  NOT
+    # the merging taper L — this taper stages stopped traffic behind a
+    # flagger rather than merging moving traffic, and CDOT Case 17
+    # warns it "MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A
+    # TRANSITION."  Buffer retained per Table 6C-2 (CDOT Sheet 2 note
+    # 24 makes buffer optional/engineer-determined; Conestruct includes
+    # it as a documented conservative policy).
+    taper_len = one_lane_two_way_taper_length()
     buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
     ds_taper_len = downstream_taper_length(1)
 
@@ -1185,17 +1198,35 @@ def generate_flagger_alternating_2lane(
 
     placements: list[DevicePlacement] = []
 
-    # 1. Right-direction (upstream-approach) advance warning signs.
-    # MUTCD §6E.05 / TA-10: drivers encounter ROAD WORK AHEAD (C) first,
-    # then BE PREPARED TO STOP (B), then FLAGGER (A) closest to the flagger
-    # station so the most specific cue is the freshest in mind at the stop.
-    # Note W3-4 (not W20-4 = ONE LANE ROAD AHEAD) is the BE PREPARED TO STOP code.
-    sign_a_station_r = taper_start_station + a_dist
-    sign_b_station_r = sign_a_station_r + b_dist
-    sign_c_station_r = sign_b_station_r + c_dist
+    # 1. Flagger station #1 — 50–100 ft upstream of the taper start per
+    # MUTCD Fig. 6P-10 (Conestruct uses the 100 ft maximum), on the
+    # closed-lane side so approaching drivers stop before the taper.
+    # Computed first: the advance series anchors on the stop point.
+    flagger_1_station = taper_start_station + flagger_to_taper_distance()
+
+    # 2. Right-direction (upstream-approach) advance warning signs.
+    # MUTCD Fig. 6P-10 series (driver order): ROAD WORK (W20-1) → ONE
+    # LANE ROAD (W20-4, the B-position sign — audit B-11 correction) →
+    # BE PREPARED TO STOP (W3-4, optional addition per TA-10 note 4,
+    # placed between W20-4 and W20-7 per note 8; emitted by default per
+    # the locked OQ-2 decision — CDOT Case 42 includes it) → FLAGGER
+    # (W20-7) closest to the flagger station.  The A gap is measured
+    # from the flagger station (the stop point) — Fig. 6P-10 and Case
+    # 42 both run W20-7 –A– flagger –50..100 ft– taper, so anchoring on
+    # the taper would put W20-7 on top of the flagger wherever
+    # A == flagger_to_taper_distance (urban ≤40: A = 100).  Gaps
+    # A/B/C/C preserve every letter-coded minimum from the CDOT key;
+    # matches Case 42's full-gap chain with the deferred R4-1 /
+    # in-chain speed-assembly slots collapsed (fixtures:
+    # tests/fixtures/ta10_flagger/).
+    sign_a_station_r = flagger_1_station + a_dist  # W20-7
+    sign_w3_4_station_r = sign_a_station_r + b_dist  # W3-4
+    sign_b_station_r = sign_w3_4_station_r + c_dist  # W20-4
+    sign_c_station_r = sign_b_station_r + c_dist  # W20-1
     advance_signs_right = (
         (flagger_ahead_label, sign_a_station_r),  # FLAGGER AHEAD or AFAD AHEAD
-        ("W3-4", sign_b_station_r),  # BE PREPARED TO STOP
+        ("W3-4", sign_w3_4_station_r),  # BE PREPARED TO STOP
+        ("W20-4", sign_b_station_r),  # ONE LANE ROAD AHEAD
         ("W20-1", sign_c_station_r),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_right:
@@ -1208,8 +1239,6 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    # 2. Flagger station #1 — upstream end of the merging taper
-    flagger_1_station = taper_start_station + 30.0
     placements.append(
         DevicePlacement(
             device_type=flagger_device,
@@ -1218,26 +1247,20 @@ def generate_flagger_alternating_2lane(
             label=flagger_label_1,
         )
     )
-    if pilot_car:
-        # G20-4 "PILOT CAR FOLLOW ME" co-located with the flagger so
-        # drivers see the requirement at the stop point.  G-series guide
-        # sign, not a W-series warning sign — earlier code emitted the
-        # spurious "W20-1A".
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=flagger_1_station,
-                offset_ft=sign_offset_right,
-                label="G20-4",
-            )
-        )
+    # pilot_car: no roadside G20-4 — the sign is mounted on the rear of
+    # the pilot vehicle per S-630-1 Sheet 26 ("SHALL BE MOUNTED IN A
+    # CONSPICUOUS POSITION ON THE REAR OF A VEHICLE") and is listed as
+    # field equipment in the crew narrative.  Case 42's diagram shows
+    # no roadside G20-4.
 
-    # 3. Merging taper drums — push right-lane traffic across the
-    # centerline into the opposing lane.  Offset transitions from the
-    # right lane edge (+lane_width) to the centerline (0).
-    # Floors from device_count_floors (shared with the audit/narrative).
+    # 3. One-lane two-way taper drums — guide right-lane traffic across
+    # the centerline into the opposing lane behind the flagger.  Offset
+    # transitions from the right lane edge (+lane_width) to the
+    # centerline (0).  Device spacing ~20 ft per §6B.08 ¶14 (overrides
+    # the speed-based §6C.09 spacing for this taper type).  Floors from
+    # device_count_floors (shared with the audit/narrative).
     taper_min, tangent_min = device_count_floors(params)
-    in_taper_spacing = device_spacing_in_taper(speed)
+    in_taper_spacing = one_lane_two_way_device_spacing()
     n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     n_taper_intervals = n_taper_devices - 1
     for k in range(n_taper_devices):
@@ -1288,14 +1311,35 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    # 7. Opposing-direction advance warning signs (negative stations,
+    # 7. Flagger station #2 — 200–300 ft past the work-area end per
+    # CDOT Case 17 ("200' TO 300'"; Conestruct uses the 300 ft
+    # maximum), facing opposing traffic before they enter the one-lane
+    # section.  Case 42 reuses this standoff as the pilot-car
+    # turnaround space.  No taper on this approach: the opposing lane
+    # stays open — opposing traffic stops at the flagger and proceeds
+    # in its own lane.
+    flagger_2_station = -opposing_flagger_standoff()
+    placements.append(
+        DevicePlacement(
+            device_type=flagger_device,
+            station_ft=flagger_2_station,
+            offset_ft=flagger_offset_left,
+            label=flagger_label_2,
+        )
+    )
+
+    # 8. Opposing-direction advance warning signs (negative stations,
     # left side of road — facing traffic approaching from downstream).
-    sign_a_station_l = -ds_taper_len - 30.0 - a_dist
-    sign_b_station_l = sign_a_station_l - b_dist
-    sign_c_station_l = sign_b_station_l - c_dist
+    # Same A/B/C/C series mirrored, anchored off flagger #2 (Case 17:
+    # "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
+    sign_a_station_l = flagger_2_station - a_dist  # W20-7
+    sign_w3_4_station_l = sign_a_station_l - b_dist  # W3-4
+    sign_b_station_l = sign_w3_4_station_l - c_dist  # W20-4
+    sign_c_station_l = sign_b_station_l - c_dist  # W20-1
     advance_signs_left = (
         (flagger_ahead_label, sign_a_station_l),  # FLAGGER AHEAD closest to flagger #2
-        ("W3-4", sign_b_station_l),  # BE PREPARED TO STOP
+        ("W3-4", sign_w3_4_station_l),  # BE PREPARED TO STOP
+        ("W20-4", sign_b_station_l),  # ONE LANE ROAD AHEAD
         ("W20-1", sign_c_station_l),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_left:
@@ -1308,30 +1352,11 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    # 8. Flagger station #2 — just downstream of the downstream taper end,
-    # facing opposing traffic before they enter the work area.
-    flagger_2_station = -ds_taper_len - 30.0
-    placements.append(
-        DevicePlacement(
-            device_type=flagger_device,
-            station_ft=flagger_2_station,
-            offset_ft=flagger_offset_left,
-            label=flagger_label_2,
-        )
-    )
-    if pilot_car:
-        placements.append(
-            DevicePlacement(
-                device_type=DeviceType.SIGN_GENERIC,
-                station_ft=flagger_2_station,
-                offset_ft=sign_offset_left,
-                label="G20-4",
-            )
-        )
-
     # 9. Downstream taper cones — transition right-direction traffic from
     # the centerline back to the right lane edge after the work zone.
-    n_ds_cones = 2
+    # §6B.08 ¶12: 50–100 ft at ~20 ft device spacing (Case 17 annotates
+    # the run "100' MAX.").
+    n_ds_cones = pick_device_count(ds_taper_len, one_lane_two_way_device_spacing(), min_count=2)
     for k in range(n_ds_cones):
         t = (k + 1) / n_ds_cones
         station = wz_end_station - t * ds_taper_len

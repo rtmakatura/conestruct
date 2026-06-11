@@ -33,6 +33,8 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    one_lane_two_way_device_spacing,
+    one_lane_two_way_taper_length,
     pick_device_count,
     shoulder_taper_length,
 )
@@ -225,7 +227,15 @@ def build_narrative_context(
     shoulder_edge_offset = lane_edge_offset + shoulder_width
     sign_offset_right = lane_edge_offset + 4.0
 
-    taper_len = shoulder_taper_length(speed, shoulder_width)
+    # Flagger alternating-flow uses the one-lane two-way taper (§6B.08
+    # ¶14, PR 2 geometry correction); the narrative previously computed
+    # the shoulder L/3 here for every scenario kind, so flagger
+    # narratives described a taper that matched neither the layout nor
+    # the audit.
+    if _is_flagger_scenario(params):
+        taper_len = one_lane_two_way_taper_length()
+    else:
+        taper_len = shoulder_taper_length(speed, shoulder_width)
     buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
 
     taper_end_station = wz_len + buf_len
@@ -239,7 +249,11 @@ def build_narrative_context(
     # layout deploys — the undivided-shoulder taper floor of 4 binds at
     # low speeds.
     taper_min, tangent_min = device_count_floors(params)
-    in_taper_spacing = device_spacing_in_taper(speed)
+    in_taper_spacing = (
+        one_lane_two_way_device_spacing()
+        if _is_flagger_scenario(params)
+        else device_spacing_in_taper(speed)
+    )
     n_taper_devices = pick_device_count(taper_len, in_taper_spacing, min_count=taper_min)
     actual_taper_spacing = taper_len / (n_taper_devices - 1)
 

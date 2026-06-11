@@ -595,34 +595,31 @@ def test_flagger_signs_on_both_sides() -> None:
 
 
 def test_flagger_total_devices() -> None:
-    """Total: 12 drums + 9 cones + 2 flaggers + 12 signs = 35.
+    """Total: 6 drums + 11 cones + 2 flaggers + 14 signs = 33.
 
-    Hand calc:
-      L = 11 × 45 = 495 ft, in-taper spacing = 45 ft.
-        pick_device_count(495, 45, min_count=2): exact 11 intervals,
-        spacing 45 (on target) → 12 drums.
+    Hand calc (PR 2 TA-10 geometry):
+      One-lane two-way taper = 100 ft (§6B.08 ¶14 band max),
+        in-taper spacing = 20 ft.
+        pick_device_count(100, 20, min_count=2): exact 5 intervals,
+        spacing 20 (on target) → 6 drums.
       Tangent: pick_device_count(500, 90, min_count=3): exact 5.56;
         spacing(5)=100 (out of tol [81,99]); spacing(6)=83.33 (in tol).
-        winner: 6 intervals → 7 cones.  Plus 2 downstream = 9 cones.
+        winner: 6 intervals → 7 cones.
+      Downstream taper: pick_device_count(50, 20, min_count=2) → 4
+        cones (was hard-coded 2).  Cones total = 7 + 4 = 11.
       Signs:
-        3 right-direction advance (W20-7, W3-4, W20-1)
-        2 G20-5P plaques (zone length 2855 ft → ceil(2855/2640) = 2)
-        3 opposing-direction advance (W20-7, W3-4, W20-1)
+        4 right-direction advance (W20-7, W3-4, W20-4, W20-1 — B-11
+          correction adds W20-4; W3-4 retained per locked OQ-2)
+        2 G20-5P plaques (zone length 3060 ft → ceil(3060/2640) = 2)
+        4 opposing-direction advance (mirrored)
         2 G20-2 END ROAD WORK (one per direction)
         2 G20-1 BEGIN ROAD WORK (one per direction)
-        = 12 signs.
-      Total = 12 + 9 + 2 + 12 = 35.
-
-    # CORRECTION: WP3 spec said total == 32.  The actual generator
-    # emits 35.  The 3-device delta is consistent with the spec
-    # author not counting the 2 G20-5P plaques and 1 of the 4
-    # END/BEGIN paired signs (the generator paired them per
-    # MUTCD §6F.55 in 2026-04 cleanup; the spec hand-calc may
-    # predate that).
+        = 14 signs.
+      Total = 6 + 11 + 2 + 14 = 33.
     """
     params = _flagger_params()
     placements = generate_flagger_alternating_2lane(params, shoulder_width_ft=8.0)
-    assert len(placements) == 35
+    assert len(placements) == 33
 
 
 # ---------------------------------------------------------------------------

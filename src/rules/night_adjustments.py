@@ -40,8 +40,13 @@ from __future__ import annotations
 from typing import Any
 
 from src.rules.devices import DeviceType
-from src.rules.spacing import buffer_space, shoulder_taper_length, taper_length
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.spacing import (
+    buffer_space,
+    one_lane_two_way_taper_length,
+    shoulder_taper_length,
+    taper_length,
+)
+from src.rules.validators import DevicePlacement, ScenarioParams, _is_flagger_scenario
 
 
 def _taper_bounds(params: ScenarioParams) -> tuple[float, float]:
@@ -54,10 +59,14 @@ def _taper_bounds(params: ScenarioParams) -> tuple[float, float]:
     """
     buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
     taper_end_station = params.work_zone_length_ft + buf_len
-    if params.closure_type == "shoulder":
+    if _is_flagger_scenario(params):
+        # Flagger alternating-flow: one-lane two-way taper (§6B.08 ¶14,
+        # PR 2 geometry correction).
+        taper_len = one_lane_two_way_taper_length()
+    elif params.closure_type == "shoulder":
         taper_len = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     else:
-        # Lane closure / flagger / mobile all use the full merging taper.
+        # Lane closure / mobile use the full merging taper.
         taper_len = taper_length(params.speed_mph, params.lane_width_ft)
     taper_start_station = taper_end_station + taper_len
     return taper_end_station, taper_start_station

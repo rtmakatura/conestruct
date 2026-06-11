@@ -22,6 +22,7 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    one_lane_two_way_taper_length,
     shoulder_taper_length,
     taper_length,
 )
@@ -320,8 +321,10 @@ def validate_taper_length(
 ) -> list[Violation]:
     """Compare actual taper span to the formula length.  Source: MUTCD 11th Ed. §6C.08.
 
-    Lane closures use ``spacing.taper_length(speed, lane_width)``;
-    shoulder closures use ``spacing.shoulder_taper_length(speed,
+    Flagger alternating-flow closures use the one-lane two-way taper
+    (§6B.08 ¶14, 100 ft — PR 2 geometry correction); other lane
+    closures use ``spacing.taper_length(speed, lane_width)``; shoulder
+    closures use ``spacing.shoulder_taper_length(speed,
     shoulder_width)`` — per §6C.08, the shoulder taper is one-third of
     the full merging taper length.  Tolerances
     ``TAPER_LENGTH_TOLERANCE_LOW`` and ``TAPER_LENGTH_TOLERANCE_HIGH``
@@ -337,7 +340,9 @@ def validate_taper_length(
 
     stations = [placements[i].station_ft for i in taper]
     actual = max(stations) - min(stations)
-    if params.closure_type == "shoulder":
+    if _is_flagger_scenario(params):
+        expected = one_lane_two_way_taper_length()
+    elif params.closure_type == "shoulder":
         expected = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     else:
         expected = taper_length(params.speed_mph, params.lane_width_ft)
@@ -768,22 +773,27 @@ def validate_flagger_advance_sign_sequence(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Verify flagger advance-sign codes appear at the correct A/B/C positions.
+    """Verify flagger advance-sign codes appear in the correct series order.
 
-    Source: MUTCD 11th Ed. §6E.05 / TA-10.  When a flagger station (or
-    AFAD) is present, drivers should encounter the sign sequence:
-    C (farthest upstream) ROAD WORK AHEAD (W20-1) → B (middle) BE
-    PREPARED TO STOP (W3-4) → A (closest to flagger) FLAGGER (W20-7;
-    or W20-7a for AFAD).  Spacing is checked elsewhere
+    Source: MUTCD 11th Ed. Fig. 6P-10 (TA-10) + Notes.  When a flagger
+    station (or AFAD) is present, drivers should encounter (driver
+    order, i.e. descending station): ROAD WORK AHEAD (W20-1, farthest
+    upstream) → ONE LANE ROAD AHEAD (W20-4, the B-position sign — PR 2
+    B-11 correction) → optionally BE PREPARED TO STOP (W3-4; TA-10
+    note 4 Option, note 8: between the ONE LANE ROAD sign and the
+    Flagger sign) → FLAGGER (W20-7; or W20-7a for AFAD) closest to the
+    flagger station.  Spacing is checked elsewhere
     (``validate_advance_warning_signs``); this rule pins the *labels*
-    to their positions so a regenerated layout cannot silently
-    re-introduce the old "BE PREPARED TO STOP at A" inversion or the
-    W20-4 typo.
+    to their relative positions so a regenerated layout cannot silently
+    re-introduce the pre-PR-2 inversion (W3-4 at B, W20-4 absent).
 
     Only fires when at least one flagger station / AFAD is present and
     we have at least 3 advance-warning sign clusters upstream of the
     taper.  Otherwise the sign-count rule in
     ``validate_advance_warning_signs`` handles the missing-sign case.
+    Envelope/regulatory labels (R2-10, W3-5, G20-5P, ...) are excluded
+    by ``_NON_ADVANCE_WARNING_SIGN_LABELS`` so the Fines Double chain
+    insertion does not perturb the series check.
     """
     has_flagger = any(
         p.device_type == DeviceType.FLAGGER_STATION
@@ -824,58 +834,88 @@ def validate_flagger_advance_sign_sequence(
         return []
 
     out: list[Violation] = []
-    expected_a = {"W20-7", "W20-7A"}  # FLAGGER (or W20-7a AFAD AHEAD)
-    expected_b = {"W3-4"}
-    expected_c = {"W20-1"}
 
     def cluster_labels(cluster: list[int]) -> set[str]:
         return {(placements[i].label or "").upper() for i in cluster}
 
-    a_labels = cluster_labels(clusters[0])
-    b_labels = cluster_labels(clusters[1])
-    c_labels = cluster_labels(clusters[2])
+    labels_by_cluster = [cluster_labels(c) for c in clusters]
 
-    if not (a_labels & expected_a):
+    def cluster_index_of(code: str) -> int | None:
+        for idx, labels in enumerate(labels_by_cluster):
+            if code in labels:
+                return idx
+        return None
+
+    # Position A: nearest cluster to the flagger must be the FLAGGER sign.
+    if not (labels_by_cluster[0] & {"W20-7", "W20-7A"}):
         out.append(
             Violation(
                 rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
                 severity="error",
                 message=(
                     "Position A (closest to flagger) must include FLAGGER "
-                    f"(W20-7 or W20-7a); found {sorted(a_labels)!r}.  "
-                    "MUTCD §6E.05 places FLAGGER at the last advance station "
-                    "before the stop point."
+                    f"(W20-7 or W20-7a); found {sorted(labels_by_cluster[0])!r}.  "
+                    "MUTCD Fig. 6P-10 places FLAGGER at the last advance "
+                    "station before the stop point."
                 ),
-                mutcd_section="6E.05",
+                mutcd_section="6P.01 (TA-10)",
                 device_index=clusters[0][0],
             )
         )
-    if not (b_labels & expected_b):
+
+    # ONE LANE ROAD AHEAD (W20-4) is the B-position sign of the TA-10
+    # series — required (PR 2 B-11 correction).
+    w20_4_idx = cluster_index_of("W20-4")
+    if w20_4_idx is None:
         out.append(
             Violation(
                 rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
                 severity="error",
                 message=(
-                    "Position B (middle) must include BE PREPARED TO STOP "
-                    f"(W3-4); found {sorted(b_labels)!r}.  Note W20-4 is "
-                    "ONE LANE ROAD AHEAD, not BE PREPARED TO STOP — "
-                    "the BE PREPARED TO STOP code is W3-4."
+                    "ONE LANE ROAD AHEAD (W20-4) is missing from the flagger "
+                    "advance series.  MUTCD Fig. 6P-10 places W20-4 between "
+                    "ROAD WORK AHEAD and the FLAGGER sign; W3-4 BE PREPARED "
+                    "TO STOP is an optional addition, not a substitute "
+                    "(TA-10 notes 4 and 8)."
                 ),
-                mutcd_section="6E.05",
-                device_index=clusters[1][0],
+                mutcd_section="6P.01 (TA-10)",
+                device_index=clusters[0][0],
             )
         )
-    if not (c_labels & expected_c):
+
+    # Farthest-upstream cluster must be ROAD WORK AHEAD (W20-1).
+    if not (labels_by_cluster[-1] & {"W20-1"}):
         out.append(
             Violation(
                 rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
                 severity="error",
                 message=(
-                    "Position C (farthest upstream) must include "
-                    f"ROAD WORK AHEAD (W20-1); found {sorted(c_labels)!r}."
+                    "The farthest-upstream advance position must include "
+                    f"ROAD WORK AHEAD (W20-1); found "
+                    f"{sorted(labels_by_cluster[-1])!r}."
                 ),
-                mutcd_section="6E.05",
-                device_index=clusters[2][0],
+                mutcd_section="6P.01 (TA-10)",
+                device_index=clusters[-1][0],
+            )
+        )
+
+    # W3-4, when present, sits between the FLAGGER sign and W20-4
+    # (TA-10 note 8: "between the Flagger sign and the ONE LANE ROAD
+    # sign").
+    w3_4_idx = cluster_index_of("W3-4")
+    if w3_4_idx is not None and w20_4_idx is not None and not (0 < w3_4_idx < w20_4_idx):
+        out.append(
+            Violation(
+                rule_id="FLAGGER_ADVANCE_SIGN_ORDER",
+                severity="error",
+                message=(
+                    "BE PREPARED TO STOP (W3-4) must sit between the FLAGGER "
+                    "sign and ONE LANE ROAD AHEAD (W20-4) per TA-10 note 8; "
+                    f"found W3-4 at cluster {w3_4_idx}, W20-4 at cluster "
+                    f"{w20_4_idx} (clusters ordered nearest-first)."
+                ),
+                mutcd_section="6P.01 (TA-10)",
+                device_index=clusters[w3_4_idx][0],
             )
         )
     return out
@@ -1280,7 +1320,9 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     if params.closure_type in ("mobile", "off_road"):
         return out
 
-    if params.closure_type == "shoulder":
+    if _is_flagger_scenario(params):
+        taper_ft = one_lane_two_way_taper_length()
+    elif params.closure_type == "shoulder":
         taper_ft = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     else:
         taper_ft = taper_length(params.speed_mph, params.lane_width_ft)

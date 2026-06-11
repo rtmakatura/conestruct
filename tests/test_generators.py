@@ -263,24 +263,29 @@ def test_lane_closure_divided(
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        # All four configs share the same tangent pick(1000, 90, min_count=3):
-        # pre-fix floor=11 at 90.91 ft (>90 max) → 12 cones tangent → 14 total;
-        # post-fix ceil=12 at 83.33 ft → 13 cones tangent → 15 total.
+        # PR 2 TA-10 geometry: one-lane two-way taper (100 ft @ 20 ft →
+        # 6 drums, was 13 full-L drums); downstream taper pick(50, 20,
+        # min_count=2) → 4 cones (was hard-coded 2); tangent
+        # pick(1000, 90, min_count=3) → 13 cones → 17 CONE total.
+        # Signs: 4-sign series ×2 directions (W20-4 added per B-11) +
+        # 2 G20-5P + 2 G20-1 + 2 G20-2 = 14.  pilot_car adds NO
+        # placements (G20-4 is vehicle-mounted per Sheet 26);
+        # pedestrian_access adds 2 R9-9 → 16.
         (
             {},
-            {"SIGN_GENERIC": 12, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 15},
+            {"SIGN_GENERIC": 14, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 17},
         ),
         (
             {"afad": True},
-            {"SIGN_GENERIC": 12, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 15},
+            {"SIGN_GENERIC": 14, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 17},
         ),
         (
             {"pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 13, "CONE": 15},
+            {"SIGN_GENERIC": 16, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 17},
         ),
         (
             {"afad": True, "pilot_car": True, "pedestrian_access": True},
-            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 13, "CONE": 15},
+            {"SIGN_GENERIC": 16, "TEMPORARY_SIGNAL": 2, "DRUM": 6, "CONE": 17},
         ),
     ],
     ids=["basic", "afad", "pilot_car_plus_pedestrian", "all_options_combined"],
@@ -303,16 +308,18 @@ def test_flagger(kwargs: dict[str, bool], expected: dict[str, int]) -> None:
 @pytest.mark.parametrize(
     "speed,road_type,wz_len,lane_w,expected",
     [
-        # Taper pick(224.58, 35): pre-fix floor=6 at 37.43 ft (>35 in-taper max)
-        # → 7 drums; post-fix ceil=7 at 32.08 ft → 8 drums.
-        # Tangent pick(300, 70): pre-fix floor=4 at 75 ft (>70 max) → 5 tangent
-        # cones + 2 downstream = 7; post-fix ceil=5 at 60 ft → 6 tangent + 2 = 8.
+        # PR 2 TA-10 geometry: taper is the fixed one-lane two-way
+        # 100 ft @ 20 ft → 6 drums at every speed (speed-independent).
+        # Tangent pick(300, 70, min_count=3) → 6 cones + downstream
+        # pick(50, 20, min_count=2) → 4 = 10 CONE.  Signs: 4-sign
+        # series ×2 + 1 G20-5P (urban_low chain is short) + 2 G20-1 +
+        # 2 G20-2 = 13.
         (
             35,
             "urban_low",
             300.0,
             11.0,
-            {"SIGN_GENERIC": 11, "FLAGGER_STATION": 2, "DRUM": 8, "CONE": 8},
+            {"SIGN_GENERIC": 13, "FLAGGER_STATION": 2, "DRUM": 6, "CONE": 10},
         ),
     ],
     ids=["35mph_urban_low_300ft"],

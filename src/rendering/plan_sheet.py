@@ -41,10 +41,11 @@ from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_des
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
+    one_lane_two_way_taper_length,
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams, _is_flagger_scenario
 
 load_dotenv()
 
@@ -52,11 +53,14 @@ load_dotenv()
 def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> float:
     """Plan-side taper length used for fitting the scale and dimension callouts.
 
-    Lane closures use the full merging taper L (MUTCD §6C.08); shoulder
-    closures use L/3 (§6C.08(B)).  Mirrors the branching in
-    ``src.generation.layout`` so the rendered plan view fits whichever
-    layout the engine produced.
+    Flagger alternating-flow closures use the one-lane two-way taper
+    (§6B.08 ¶14, PR 2 geometry correction); other lane closures use the
+    full merging taper L (MUTCD §6C.08); shoulder closures use L/3
+    (§6C.08(B)).  Mirrors the branching in ``src.generation.layout`` so
+    the rendered plan view fits whichever layout the engine produced.
     """
+    if _is_flagger_scenario(params):
+        return one_lane_two_way_taper_length()
     if params.closure_type == "lane":
         return taper_length(params.speed_mph, params.lane_width_ft)
     return shoulder_taper_length(params.speed_mph, shoulder_width_ft)
@@ -2502,7 +2506,10 @@ def _draw_notes(
     is_mobile = params.closure_type == "mobile"
     is_off_road = params.closure_type == "off_road"
     is_lane = params.closure_type == "lane"
-    is_flagger = is_lane and not params.is_divided
+    # Single-source predicate (validators._is_flagger_scenario) so the
+    # taper label / advance-table routing here cannot drift from the
+    # taper length _required_taper_length computes.
+    is_flagger = _is_flagger_scenario(params)
 
     rt = params.road_type if params.road_type in _TABLE_CATEGORIES else None
     abc = advance_warning_spacing(speed, rt)
@@ -2519,7 +2526,12 @@ def _draw_notes(
     else:
         taper_len = _required_taper_length(params, shoulder_width_ft)
         buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
-        taper_label = "Lane taper (L)" if is_lane else "Shoulder taper (L/3)"
+        if is_flagger:
+            taper_label = "One-lane two-way taper"
+        elif is_lane:
+            taper_label = "Lane taper (L)"
+        else:
+            taper_label = "Shoulder taper (L/3)"
 
     if is_mobile:
         # Mobile-op series: WORKERS at A, ROAD WORK AHEAD at B (per
@@ -2532,23 +2544,23 @@ def _draw_notes(
         ]
     elif is_off_road:
         advance = [("W21-5", "SHOULDER WORK", sign_a_dist)]
-    elif is_flagger:
-        advance = [
-            ("W20-7", "FLAGGER AHEAD", sign_a_dist),
-            ("W3-4", "BE PREPARED TO STOP", sign_b_dist),
-            ("W20-1", "ROAD WORK AHEAD", sign_c_dist),
-        ]
-    elif is_lane:
+    elif is_lane and not is_flagger:
         advance = [
             ("W4-2R", "RIGHT LANE ENDS", sign_a_dist),
             ("W20-5R", "RIGHT LANE CLOSED AHEAD", sign_b_dist),
             ("W20-1", "ROAD WORK AHEAD", sign_c_dist),
         ]
     else:
-        # Shoulder closure: drive the off-page table from the actual
-        # placement list so post-V1-Wide additions (W5-1, second
-        # W21-5aR + W16-2a / W7-3a, W3-5 stepped sequence) surface on
-        # the PDF.  taper_start_station / station_max_visible are the
+        # Shoulder closure and flagger (D-05): drive the off-page table
+        # from the actual placement list so post-V1-Wide additions
+        # (W5-1, second W21-5aR + W16-2a / W7-3a, W3-5 stepped
+        # sequence) and the corrected flagger series (W20-4 at B,
+        # PR 2) surface on the PDF.  The flagger branch was a static
+        # 3-row list that reproduced the B-11 inversion and dropped
+        # W20-4 — audit finding D-05.  Opposing-direction negative
+        # stations satisfy ``station <= station_max_visible`` and draw
+        # on the schematic, so only far-upstream positive signs land
+        # here.  taper_start_station / station_max_visible are the
         # threaded _make_x_mapping values (D-02) — the same threshold
         # the schematic's sign filter uses.
         advance = _build_advance_warning_table(

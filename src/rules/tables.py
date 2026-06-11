@@ -42,6 +42,33 @@ SHIFTING_TAPER_RATIO: float = 0.5
 DOWNSTREAM_TAPER_LENGTH_PER_LANE_FT: tuple[int, int] = (50, 100)
 
 # ---------------------------------------------------------------------------
+# One-lane, two-way traffic taper (flagger-controlled alternating flow)
+# ---------------------------------------------------------------------------
+
+# Source: MUTCD 11th Ed. §6B.08 ¶14 (Guidance) — "A taper having a
+# minimum length of 50 feet and a maximum length of 100 feet with
+# channelizing devices at approximately 20-foot spacing should be used
+# to guide traffic into the one-lane section."  This taper is
+# deliberately short: it positions stopped traffic behind the flagger,
+# it does NOT merge moving traffic.  CDOT S-630-1 Case 17 (Sheet 9)
+# carries the warning "THIS TAPER MUST BE SHORT ENOUGH TO NOT BE
+# MISTAKEN FOR A TRANSITION."  Conestruct uses the 100 ft maximum of
+# the band (best driver visibility; six devices at the prescribed
+# spacing) — fixtures: tests/fixtures/ta10_flagger/.
+ONE_LANE_TWO_WAY_TAPER_LENGTH_FT: tuple[int, int] = (50, 100)
+ONE_LANE_TWO_WAY_DEVICE_SPACING_FT: float = 20.0
+
+# Flagger-station positions (TA-10 corrected geometry, PR 2):
+#   * Approach flagger stands 50–100 ft upstream of the one-lane
+#     two-way taper start (MUTCD Fig. 6P-10 dimension); Conestruct uses
+#     the 100 ft maximum.
+#   * Opposing flagger stands 200–300 ft from the work-area end (CDOT
+#     S-630-1 Case 17 "200' TO 300'"; Case 42 reuses the value as the
+#     pilot-car turnaround space).  Conestruct uses the 300 ft maximum.
+FLAGGER_TO_TAPER_FT: tuple[int, int] = (50, 100)
+OPPOSING_FLAGGER_STANDOFF_FT: tuple[int, int] = (200, 300)
+
+# ---------------------------------------------------------------------------
 # Advance warning sign spacing — MUTCD Table 6B-1
 # ---------------------------------------------------------------------------
 

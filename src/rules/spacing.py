@@ -19,6 +19,10 @@ from src.rules.tables import (
     CDOT_BUFFER_SPACE,
     COLORADO_OVERRIDES,
     DOWNSTREAM_TAPER_LENGTH_PER_LANE_FT,
+    FLAGGER_TO_TAPER_FT,
+    ONE_LANE_TWO_WAY_DEVICE_SPACING_FT,
+    ONE_LANE_TWO_WAY_TAPER_LENGTH_FT,
+    OPPOSING_FLAGGER_STANDOFF_FT,
     SHIFTING_TAPER_RATIO,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
     in_taper_spacing_ft,
@@ -65,6 +69,59 @@ def shoulder_taper_length(speed_mph: int, offset_ft: float) -> float:
     closed.
     """
     return taper_length(speed_mph, offset_ft) / 3
+
+
+def one_lane_two_way_taper_length(use_min: bool = False) -> float:
+    """One-lane, two-way traffic taper length, in feet.
+
+    Source: MUTCD 11th Ed. §6B.08 ¶14 — 50 ft minimum, 100 ft maximum,
+    channelizing devices at approximately 20-foot spacing.  Used by
+    flagger-controlled alternating-flow layouts (TA-10) in place of the
+    merging taper L: this taper guides traffic into the one-lane
+    section behind a flagger, it does not merge moving traffic.  CDOT
+    Case 17: "THIS TAPER MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A
+    TRANSITION."  Returns the 100 ft maximum by default (Conestruct's
+    pick — best driver visibility) and the 50 ft minimum when
+    ``use_min=True``.
+    """
+    lo, hi = ONE_LANE_TWO_WAY_TAPER_LENGTH_FT
+    return float(lo if use_min else hi)
+
+
+def one_lane_two_way_device_spacing() -> float:
+    """Device spacing inside the one-lane, two-way taper, in feet.
+
+    Source: MUTCD 11th Ed. §6B.08 ¶14 — "approximately 20-foot
+    spacing."  Overrides the speed-based §6C.09 / CDOT note 18a spacing
+    for this specific taper type (the §6B.08 guidance is taper-specific
+    and more granular).
+    """
+    return ONE_LANE_TWO_WAY_DEVICE_SPACING_FT
+
+
+def flagger_to_taper_distance(use_min: bool = False) -> float:
+    """Approach-flagger standoff upstream of the taper start, in feet.
+
+    Source: MUTCD 11th Ed. Fig. 6P-10 — the flagger stands 50 to 100 ft
+    upstream (approach side) of the one-lane two-way taper.  Returns
+    the 100 ft maximum by default.
+    """
+    lo, hi = FLAGGER_TO_TAPER_FT
+    return float(lo if use_min else hi)
+
+
+def opposing_flagger_standoff(use_min: bool = False) -> float:
+    """Opposing-flagger standoff from the work-area end, in feet.
+
+    Source: CDOT S-630-1 Case 17 (Sheet 9) "200' TO 300'" dimension
+    from the work-area end to the opposing flagger station; Case 42
+    (Sheet 25) annotates the same span "200'-300' BUFFER PILOT
+    TURNAROUND".  CDOT supplements MUTCD here (the MUTCD figure's
+    far-end 50–100 ft dimension covers only the channelizing-device
+    run-out).  Returns the 300 ft maximum by default.
+    """
+    lo, hi = OPPOSING_FLAGGER_STANDOFF_FT
+    return float(lo if use_min else hi)
 
 
 def downstream_taper_length(num_lanes: int, use_max: bool = False) -> float:

@@ -118,15 +118,27 @@ def display_code(key: str) -> str:
 
 
 def _taper_start_station(params: ScenarioParams) -> float:
-    """Upstream end of the merging taper (station ft) for fixed-taper layouts.
+    """Upstream end of the taper (station ft) for fixed-taper layouts.
 
     Mirrors the geometry used by the layout generators: shoulder
     closures use the L/3 shoulder taper on ``params.shoulder_width_ft``;
-    lane closures use the full merging taper L on ``params.lane_width_ft``.
+    flagger alternating-flow closures use the one-lane two-way taper
+    (§6B.08 ¶14, PR 2 geometry correction); other lane closures use the
+    full merging taper L on ``params.lane_width_ft``.  Byte-identity
+    with ``plan_sheet._make_x_mapping``'s ``taper_start_station`` is
+    pinned by the tss-equivalence check.
     """
-    from src.rules.spacing import buffer_space, shoulder_taper_length, taper_length
+    from src.rules.spacing import (
+        buffer_space,
+        one_lane_two_way_taper_length,
+        shoulder_taper_length,
+        taper_length,
+    )
+    from src.rules.validators import _is_flagger_scenario
 
-    if params.closure_type == "lane":
+    if _is_flagger_scenario(params):
+        taper = one_lane_two_way_taper_length()
+    elif params.closure_type == "lane":
         taper = taper_length(params.speed_mph, params.lane_width_ft)
     else:
         taper = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)

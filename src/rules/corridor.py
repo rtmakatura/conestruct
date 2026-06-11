@@ -43,6 +43,7 @@ from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
     downstream_taper_length,
+    one_lane_two_way_taper_length,
     shifting_taper_length,
     shoulder_taper_length,
     taper_length,
@@ -397,7 +398,10 @@ def _resolve_taper_ft(
         return shoulder_taper_length(speed_mph, shoulder_width_ft)
     if key in _SHIFTING_KINDS:
         return shifting_taper_length(speed_mph, lane_width_ft)
-    if key in _LANE_KINDS or key in _FLAGGER_KINDS or key in _MOBILE_KINDS:
+    if key in _FLAGGER_KINDS:
+        # One-lane two-way taper (§6B.08 ¶14, PR 2 geometry correction).
+        return one_lane_two_way_taper_length()
+    if key in _LANE_KINDS or key in _MOBILE_KINDS:
         return taper_length(speed_mph, lane_width_ft)
     valid = sorted(_SHOULDER_KINDS | _LANE_KINDS | _FLAGGER_KINDS | _MOBILE_KINDS | _SHIFTING_KINDS)
     raise ValueError(f"Unknown closure_type {closure_type!r}; expected one of {valid}")
