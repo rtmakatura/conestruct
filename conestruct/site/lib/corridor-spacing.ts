@@ -37,7 +37,18 @@ const ADVANCE_WARNING_TOTAL: Record<string, number> = {
 
 const TAPER_FORMULA_THRESHOLD_MPH = 40;
 
-export type ClosureKind = "shoulder" | "lane" | "shifting";
+// One-lane two-way traffic taper for flagger-controlled alternating
+// flow — mirrors one_lane_two_way_taper_length() in
+// src/rules/spacing.py (MUTCD §6B.08 ¶14: 50–100 ft band, Conestruct
+// uses the 100 ft maximum; NOT the merging taper L — CDOT Case 17:
+// "THIS TAPER MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A
+// TRANSITION").  NOTE: the Python source is currently a CONSTANT; if
+// it ever becomes parametric (e.g., a CDOT-permissive band pick),
+// this mirror must be updated in lockstep — the value here is an
+// assumption about spacing.py, not just a citation.
+const ONE_LANE_TWO_WAY_TAPER_FT = 100;
+
+export type ClosureKind = "shoulder" | "lane" | "shifting" | "one_lane_two_way";
 
 export type AdvanceRoadCategory = keyof typeof ADVANCE_WARNING_TOTAL;
 
@@ -59,6 +70,8 @@ function taperLengthFt(
       return fullTaperLengthFt(speedMph, shoulderWidthFt) / 3;
     case "shifting":
       return fullTaperLengthFt(speedMph, laneWidthFt) / 2;
+    case "one_lane_two_way":
+      return ONE_LANE_TWO_WAY_TAPER_FT;
     case "lane":
     default:
       return fullTaperLengthFt(speedMph, laneWidthFt);
@@ -82,7 +95,10 @@ function advanceWarningFt(speedMph: number, road: AdvanceRoadCategory | null): n
 
 const SCENARIO_TO_CLOSURE: Record<ScenarioKind, ClosureKind> = {
   shoulder: "shoulder",
-  flagger_lane_closure: "lane",
+  // PR 4: flagger uses the one-lane two-way taper — mapping it to
+  // "lane" fed the merging-taper L into the corridor preview (540 ft
+  // at 12 × 45) while the schematic/audit correctly showed 100 ft.
+  flagger_lane_closure: "one_lane_two_way",
   lane_closure_divided: "lane",
   work_beyond_shoulder: "shoulder",
   mobile_op_2lane: "lane",
