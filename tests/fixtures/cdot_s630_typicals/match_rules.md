@@ -59,9 +59,17 @@ Phase 2 decisions, locked June 5 2026.
   distances** — emit/assert only against the Case 11 generic envelope
   formula. The fixture diagrams remain reference documents for the
   sign-code presence, plaque-pair structure, and 2640 ft frequency note
-- Flagger-controlled alternating-flow (TA-10) scenarios are exempt from
-  the envelope per Sheet 12 scope (freeway/expressway only); the audit
-  trail surfaces a carve-out reason rather than silently omitting
+- Flagger-controlled alternating-flow (TA-10) scenarios are NOT exempt
+  from the envelope. Corrected June 10 2026: Sheet 12's FINES DOUBLE
+  SIGNING NOTES carry no road-class scoping — gating is worker presence
+  in the roadway/clear zone or hazards in the travelway/shoulders/clear
+  zone, with LANE CLOSURE a listed qualifying hazard — and CDOT's 2-lane
+  flagger typicals (Cases 17, 42) show the R2-10/R2-11 envelope. V1's
+  flagger generator does not yet emit it: the audit emits
+  fines_double.applicable=true with a v1_limitation field plus a
+  pending_verification item; the crew narrative carries a Manual
+  Handling Required block. Generator emission is tracked as PR 2 of the
+  Item 3 correction.
 
 ## Phase 5 harness design (added 2026-06-06)
 

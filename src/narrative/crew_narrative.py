@@ -312,15 +312,34 @@ def build_narrative_context(
     )
 
     # Fines Double envelope schedule rows (V1-Wide Item 3) — emitted
-    # when work-zone speed is reduced AND scenario isn't a flagger
-    # operation (Sheet 12 scope is freeway/expressway).  Mirrors the
-    # ``fines_double`` audit section logic so the narrative and the
-    # audit trail agree on when the envelope ships.
-    fines_double_applicable = (
-        params.work_zone_speed_mph is not None
-        and params.work_zone_speed_mph < params.speed_mph
-        and not _is_flagger_scenario(params)
+    # when work-zone speed is reduced AND the layout actually ships the
+    # envelope.  Flagger scenarios are excluded here because V1's
+    # flagger layout does not emit the envelope signs — listing signs
+    # that aren't in the plan would be dishonest in the other
+    # direction.  The requirement itself DOES cover flagger (Item 3
+    # retroactive correction: Sheet 12 carries no road-class scoping);
+    # that gap is surfaced via ``fines_double_manual_note`` below and
+    # the audit's fines_double.v1_limitation + pending_verification.
+    is_reduced = (
+        params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph
     )
+    fines_double_applicable = is_reduced and not _is_flagger_scenario(params)
+
+    # Item 3 retroactive correction: flagger + reduction gets an
+    # explanatory Manual Handling Required block in the narrative —
+    # lockstep with the audit's v1_limitation so both surfaces tell
+    # the crew the same true thing.
+    fines_double_manual_note: str | None = None
+    if is_reduced and _is_flagger_scenario(params):
+        fines_double_manual_note = (
+            "CO Supplement §2B.13 + S-630-1 Sheet 12 require Fines "
+            "Double signing for this reduced-speed lane closure (lane "
+            "closure is a listed Sheet 12 hazard). This V1 plan does "
+            "not include the envelope (R2-10, R2-11, G20-5P/R2-6P "
+            "assemblies, W3-5, entrance/restoration R2-1) — the "
+            "traffic control supervisor must add it per Sheet 12 "
+            "before work begins."
+        )
 
     # G6: Sheet 14 trigger-condition language for the reduced-speed
     # shoulder routing (Cases 26/27). Verbatim from the case fixtures;
@@ -396,9 +415,9 @@ def build_narrative_context(
         )
 
     # Sheet 12 operational rules — surfaced in a Safety Notes block in
-    # the template when the envelope is emitted.  Skipped on flagger
-    # scenarios per the audit-trail carve-out; estimator-facing
-    # "doesn't apply" lives in the audit, not the crew narrative.
+    # the template when the envelope is emitted.  Flagger scenarios
+    # get the Manual Handling Required block instead (the envelope is
+    # required but V1 doesn't ship it — see fines_double_manual_note).
     fines_double_notes: list[dict[str, str]] = []
     if fines_double_applicable:
         fines_double_notes = [
@@ -482,6 +501,7 @@ def build_narrative_context(
         "site_adjustments": site_adjustments or [],
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
+        "fines_double_manual_note": fines_double_manual_note,
         "trigger_condition": trigger_condition,
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }

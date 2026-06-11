@@ -127,10 +127,15 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
   });
 });
 
-// V1-Wide Item 3 — finesDoubleItem renderer. Three branches:
-//   (a) applicable=true → envelope geometry + operational notes table.
-//   (b) applicable=false → carve-out reason, dim styling.
-//   (c) section undefined → renderer returns null (no card).
+// V1-Wide Item 3 — finesDoubleItem renderer. Four branches:
+//   (a) applicable=true + envelope → geometry + operational notes table.
+//   (b) applicable=true, NO envelope → REQUIRED — MANUAL HANDLING (V1)
+//       card with gating + v1_limitation text (Item 3 retroactive
+//       correction: flagger + reduction).
+//   (c) applicable=false → reason text, dim styling. Legacy payload
+//       shape — the corrected backend no longer emits it, but the
+//       renderer keeps the branch for cached/old audit bodies.
+//   (d) section undefined → renderer returns null (no card).
 // Plus a defensive snapshot for the empty operational_notes edge case
 // (per Phase B Q-PLAN-1) which shouldn't happen with current backend
 // code but the renderer stays safe.
@@ -169,10 +174,24 @@ describe("finesDoubleItem renderer", () => {
     source: "CDOT S-630-1 Standard Plan, Sheet 12",
   };
 
+  // Legacy applicable=false payload — pre-correction backends emitted
+  // this shape; the renderer keeps the branch for old/cached bodies.
   const carveOutSection: Record<string, unknown> = {
     applicable: false,
     reason:
       "Fines Double signing per CO Supplement Sec 2B.13 and S-630-1 Sheet 12 is scoped to freeway/expressway work zones. Flagger-controlled alternating one-way traffic on 2-lane undivided roads is governed separately by MUTCD Part 6E; Fines Double envelope not applicable. Verify against project-specific engineering judgment.",
+  };
+
+  // Item 3 retroactive correction: current backend shape for flagger +
+  // reduction — required per Sheet 12, not emitted by the V1 layout.
+  const requiredManualSection: Record<string, unknown> = {
+    applicable: true,
+    citation:
+      "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes",
+    gating:
+      "S-630-1 Sheet 12 gates Fines Double signing on worker presence in the roadway/clear zone or hazards in the travelway/shoulders/clear zone; LANE CLOSURE is a listed qualifying hazard and Sheet 12 carries no road-class scoping. A reduced-speed flagger lane closure on a 2-lane undivided road meets the gating.",
+    v1_limitation:
+      "V1's flagger layout does not emit the Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 advisory-speed signs, entrance/restoration R2-1). Add Fines Double signage manually per Sheet 12 and CO Supplement Sec 2B.13 until generator support ships. See pending_verification.",
   };
 
   function renderBody(spec: ReturnType<typeof finesDoubleItem>): string {
@@ -239,7 +258,24 @@ describe("finesDoubleItem renderer", () => {
     expect(html).not.toContain("Sheet 12 operational rules");
   });
 
-  // --- applicable=false (carve-out) -------------------------------------
+  // --- applicable=true, no envelope (required — manual handling) --------
+
+  it("required-manual-handling renders gating and limitation, not dimmed", () => {
+    const spec = finesDoubleItem(requiredManualSection);
+    expect(spec).not.toBeNull();
+    expect(spec!.title).toBe("Fines Double envelope");
+    expect(spec!.result).toBe("REQUIRED — MANUAL HANDLING (V1)");
+    expect(spec!.dim).toBeUndefined();
+    const html = renderBody(spec);
+    expect(html).toContain("LANE CLOSURE is a listed qualifying hazard");
+    expect(html).toContain("no road-class scoping");
+    expect(html).toContain("does not emit the Fines Double envelope");
+    expect(html).toContain("Add Fines Double signage manually");
+    // No envelope table rows — the plan ships no R2-10/R2-11 stations.
+    expect(html).not.toContain("BEGIN DOUBLE FINES ZONE (upstream)");
+  });
+
+  // --- applicable=false (legacy carve-out payload, back-compat) ---------
 
   it("carve-out renders reason text with dim styling", () => {
     const spec = finesDoubleItem(carveOutSection);

@@ -995,10 +995,13 @@ def test_validate_buffer_space_federal_at_65_keeps_90_percent_tolerance() -> Non
 # V1-Wide Item 3 — Fines Double envelope.
 #
 # Three audit-trail shapes (per Phase B):
-#   A. Speed reduced AND scenario applicable → fines_double.applicable=True
+#   A. Speed reduced AND layout emits envelope → fines_double.applicable=True
 #      with envelope geometry + 4 Sheet 12 operational notes.
-#   B. Speed reduced AND scenario is flagger → fines_double.applicable=False
-#      with carve-out reason (Sheet 12 scope is freeway/expressway).
+#   B. Speed reduced AND scenario is flagger → fines_double.applicable=True
+#      with gating + v1_limitation, NO envelope (Item 3 retroactive
+#      correction: Sheet 12 has no road-class scoping; the envelope is
+#      required but V1's flagger layout doesn't emit it — surfaced via
+#      pending_verification).
 #   C. No reduction → fines_double key entirely absent (preserves byte-
 #      identity of pre-Item-3 no-reduction baselines).
 # ---------------------------------------------------------------------------
@@ -1080,9 +1083,10 @@ def test_audit_fines_double_absent_when_speed_equal_to_posted(
     assert "fines_double" not in body["sections"]
 
 
-def test_audit_fines_double_carve_out_unit_path() -> None:
-    """Direct build_audit_trail call exercises the flagger carve-out
-    (applicable=False with reason) — the API path doesn't expose
+def test_audit_fines_double_flagger_required_unit_path() -> None:
+    """Direct build_audit_trail call exercises the flagger branch
+    (Item 3 retroactive correction: applicable=True with gating +
+    v1_limitation, no envelope) — the API path doesn't expose
     workZoneSpeed for flagger in V1, but the audit logic still handles
     a manually-constructed flagger scenario with reduction."""
     from src.api.audit import build_audit_trail
@@ -1103,10 +1107,13 @@ def test_audit_fines_double_carve_out_unit_path() -> None:
     audit = build_audit_trail([], params)
     assert "fines_double" in audit
     fd = audit["fines_double"]
-    assert fd["applicable"] is False
-    assert "freeway/expressway" in fd["reason"]
-    assert "MUTCD Part 6E" in fd["reason"]
-    # Carve-out doesn't carry envelope / operational_notes — only reason.
+    assert fd["applicable"] is True
+    assert "LANE CLOSURE is a listed qualifying hazard" in fd["gating"]
+    assert "no road-class scoping" in fd["gating"]
+    assert "does not emit the Fines Double envelope" in fd["v1_limitation"]
+    assert "reason" not in fd
+    # No envelope geometry / operational_notes — the plan ships none;
+    # the v1_limitation + pending_verification item carry the gap.
     assert "envelope" not in fd
     assert "operational_notes" not in fd
 
@@ -1195,13 +1202,14 @@ def test_audit_fines_double_reduction_25_matches_baseline(client: TestClient) ->
     assert res.json() == expected
 
 
-def test_audit_flagger_reduction_carve_out_matches_baseline() -> None:
+def test_audit_flagger_reduction_fines_double_required_matches_baseline() -> None:
     """The flagger-with-reduction scenario routes through the unit path
     (build_audit_trail + audit_projection) because the API gates flagger
-    in V1. The projection body must match the carve-out canonical
-    snapshot byte-for-byte. Pins the applicable=False reason text and
-    the wider audit-shape so any silent drift in the carve-out branch
-    fails this test."""
+    in V1. The projection body must match the corrected canonical
+    snapshot byte-for-byte (Item 3 retroactive correction): fines_double
+    applicable=True with gating + v1_limitation, the colorado
+    speed-reduction check honestly failing (W3-5 required, none placed),
+    and the fines_double_manual_handling pending_verification item."""
     import json
     from pathlib import Path
 
@@ -1227,7 +1235,9 @@ def test_audit_flagger_reduction_carve_out_matches_baseline() -> None:
     # heuristic for short duration, no pilotCar, no pedestrianAccess.
     projection = audit_projection(audit, scenario_kind="flagger_lane_closure", step_count=12)
     expected = json.loads(
-        Path("tests/snapshots/audit_flagger_reduction_carve_out.json").read_text(encoding="utf-8")
+        Path("tests/snapshots/audit_flagger_reduction_fines_double_required.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert projection == expected
 
@@ -1539,8 +1549,11 @@ def test_entrance_r2_1_absent_on_no_reduction(client: TestClient) -> None:
     assert "fines_double" not in audit
 
 
-def test_entrance_r2_1_absent_on_flagger_carve_out() -> None:
-    """Flagger carve-out → fines_double.applicable=False, no envelope dict."""
+def test_entrance_r2_1_absent_on_flagger_v1_limitation() -> None:
+    """Flagger + reduction → fines_double.applicable=True (Item 3
+    retroactive correction) but still no envelope dict — the V1 layout
+    emits no envelope, so the audit carries gating + v1_limitation
+    instead of geometry."""
     from src.api.audit import build_audit_trail
     from src.rules.validators import ScenarioParams
 
@@ -1557,8 +1570,9 @@ def test_entrance_r2_1_absent_on_flagger_carve_out() -> None:
         work_zone_speed_mph=30,
     )
     audit = build_audit_trail([], params)
-    assert audit["fines_double"]["applicable"] is False
+    assert audit["fines_double"]["applicable"] is True
     assert "envelope" not in audit["fines_double"]
+    assert "v1_limitation" in audit["fines_double"]
 
 
 # ---------------------------------------------------------------------------
@@ -1566,8 +1580,10 @@ def test_entrance_r2_1_absent_on_flagger_carve_out() -> None:
 #
 # The CO §2B.13(A) audit check now carries the Placed: N suffix and
 # passes iff placed ≥ required (was unconditionally True under the
-# pre-G5 audit-honesty semantics).  Flagger reduced-speed carves out
-# with a reason mirroring fines_double.  Δ > 15 retires the
+# pre-G5 audit-honesty semantics).  Flagger reduced-speed flows
+# through the same computation (Item 3 retroactive correction) and
+# honestly fails with Placed: 0 until the flagger layout emits the
+# reduced-speed package.  Δ > 15 retires the
 # stepped_speed_reduction_signs pending_verification entry because
 # the layout engine now emits the stepped sequence.
 # ---------------------------------------------------------------------------
@@ -1613,9 +1629,12 @@ def test_co_2b13_check_no_reduction_reports_not_applicable(client: TestClient) -
     assert check["pass"] is True
 
 
-def test_co_2b13_check_flagger_carve_out_reports_not_applicable() -> None:
-    """Flagger reduced-speed → §2B.13(A) detail carves out with
-    `Not applicable (flagger carve-out — see fines_double ...)`."""
+def test_co_2b13_check_flagger_reduction_reports_placed_0_fail() -> None:
+    """Flagger reduced-speed flows through the same required-vs-placed
+    computation as every other scenario (Item 3 retroactive correction:
+    §2B.13(A) carries no road-class scoping). The V1 flagger layout
+    emits no W3-5, so the check honestly fails with `Placed: 0`; the
+    fines_double_manual_handling pending item carries the context."""
     from src.api.audit import audit_projection, build_audit_trail
     from src.generation.layout import generate_flagger_alternating_2lane
     from src.rules.validators import ScenarioParams
@@ -1636,8 +1655,10 @@ def test_co_2b13_check_flagger_carve_out_reports_not_applicable() -> None:
     audit = build_audit_trail(placements, params)
     body = audit_projection(audit, scenario_kind="flagger_lane_closure")
     check = _co_2b13_check(body)
-    assert "Not applicable (flagger carve-out" in check["detail"]
-    assert check["pass"] is True
+    assert "Required: 1. Placed: 0." in check["detail"]
+    assert check["pass"] is False
+    kinds = [it["kind"] for it in body["pending_verification"]["items"]]
+    assert "fines_double_manual_handling" in kinds
 
 
 def test_stepped_signs_pending_entry_retired(client: TestClient) -> None:

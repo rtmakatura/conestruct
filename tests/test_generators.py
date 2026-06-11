@@ -797,8 +797,13 @@ def test_lane_closure_divided_with_reduction_emits_mirrored_w3_5() -> None:
 
 
 def test_flagger_with_reduction_emits_no_w3_5() -> None:
-    """Flagger 2-lane carve-out (Sheet 14 scope) → no W3-5 even with
-    work_zone_speed_mph set, mirroring the Fines Double envelope carve-out."""
+    """V1 limitation pin: the flagger layout emits no W3-5 even with
+    work_zone_speed_mph set. The requirement DOES apply (Item 3
+    retroactive correction — §2B.13(A) has no road-class scoping); the
+    audit reports the gap honestly (speed-reduction check pass=False,
+    fines_double v1_limitation + pending_verification item). This test
+    pins the current emission state so the Item 3 correction PR 2
+    (generator emission) consciously flips it."""
     params = ScenarioParams(
         speed_mph=45,
         num_lanes=2,

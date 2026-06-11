@@ -544,8 +544,12 @@ def build_audit_trail(
     # (V1-Wide G5), so the check counts deployed W3-5 placements
     # against the §2B.13(A) required count from
     # ``co_speed_reduction_signs`` and passes iff placed ≥ required.
-    # Flagger scenarios carve out (same gate as the Fines Double
-    # envelope) — Sheet 14's W3-5 placement is freeway/expressway scope.
+    # Flagger scenarios flow through the same computation (Item 3
+    # retroactive correction): §2B.13(A) carries no road-class
+    # scoping, so a reduced-speed flagger plan with zero W3-5
+    # placements honestly reports pass=False until the flagger
+    # layout emits the reduced-speed signing package; the
+    # pending_verification item carries the V1-limitation context.
     speed_reduction_section: dict[str, Any]
     if not is_reduced:
         speed_reduction_section = {
@@ -555,17 +559,6 @@ def build_audit_trail(
             "detail": (
                 f"No work-zone speed reduction. Posted speed {speed} mph "
                 f"applies throughout the zone."
-            ),
-        }
-    elif _is_flagger_scenario(params):
-        speed_reduction_section = {
-            "pass": True,
-            "label": "Speed reduction <= 15 mph per sign installation",
-            "citation": "CO Supplement Sec 2B.13(A)",
-            "detail": (
-                "Not applicable (flagger carve-out — see fines_double "
-                "for scope justification). Sheet 14 W3-5 placement is "
-                "scoped to freeway/expressway work zones."
             ),
         }
     else:
@@ -654,12 +647,15 @@ def build_audit_trail(
     #    S-630-1 Sheet 12).
     # ------------------------------------------------------------------
     # Three shapes, structurally distinct:
-    #   A. Speed reduced AND scenario applicable → applicable=True with
-    #      envelope geometry + Sheet 12 operational notes.
-    #   B. Speed reduced AND scenario is flagger → applicable=False with
-    #      reason text (Sheet 12 scopes Fines Double to freeway/
-    #      expressway; flagger 2-lane undivided is out of scope per
-    #      MUTCD Part 6E).
+    #   A. Speed reduced AND layout emits the envelope → applicable=True
+    #      with envelope geometry + Sheet 12 operational notes.
+    #   B. Speed reduced AND scenario is flagger → applicable=True with
+    #      gating + v1_limitation, NO envelope key (Item 3 retroactive
+    #      correction: Sheet 12 carries no road-class scoping and lists
+    #      LANE CLOSURE as a qualifying hazard, so the envelope IS
+    #      required; V1's flagger layout does not yet emit it — the
+    #      audit_projection appends a pending_verification item keyed
+    #      off the v1_limitation field).
     #   C. No reduction → section entirely absent from the audit dict.
     #      Preserves byte-identity of pre-Item-3 no-reduction baselines.
     fines_double_section: dict[str, Any] | None
@@ -669,14 +665,23 @@ def build_audit_trail(
         fines_double_section = None
     elif _is_flagger_scenario(params):
         fines_double_section = {
-            "applicable": False,
-            "reason": (
-                "Fines Double signing per CO Supplement Sec 2B.13 and "
-                "S-630-1 Sheet 12 is scoped to freeway/expressway work "
-                "zones. Flagger-controlled alternating one-way traffic "
-                "on 2-lane undivided roads is governed separately by "
-                "MUTCD Part 6E; Fines Double envelope not applicable. "
-                "Verify against project-specific engineering judgment."
+            "applicable": True,
+            "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
+            "gating": (
+                "S-630-1 Sheet 12 gates Fines Double signing on worker "
+                "presence in the roadway/clear zone or hazards in the "
+                "travelway/shoulders/clear zone; LANE CLOSURE is a "
+                "listed qualifying hazard and Sheet 12 carries no "
+                "road-class scoping. A reduced-speed flagger lane "
+                "closure on a 2-lane undivided road meets the gating."
+            ),
+            "v1_limitation": (
+                "V1's flagger layout does not emit the Fines Double "
+                "envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 "
+                "advisory-speed signs, entrance/restoration R2-1). Add "
+                "Fines Double signage manually per Sheet 12 and CO "
+                "Supplement Sec 2B.13 until generator support ships. "
+                "See pending_verification."
             ),
         }
     else:
@@ -1118,6 +1123,30 @@ def audit_projection(
         # Same underlying case-number question as ``case.case`` — only
         # appended to ``items`` once above, so the rollup reads
         # "1 reference pending," not "2."
+
+    # Item 3 retroactive correction: a fines_double section carrying a
+    # ``v1_limitation`` field (flagger + reduction — the envelope is
+    # required per Sheet 12 but V1's flagger layout doesn't emit it)
+    # surfaces the gap as a pending-verification item.  Keyed off the
+    # section's own field so the predicate isn't duplicated here.
+    if "v1_limitation" in audit.get("fines_double", {}):
+        items.append(
+            {
+                "kind": "fines_double_manual_handling",
+                "label": (
+                    "Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P "
+                    "assemblies, W3-5 advisory-speed signs, entrance/"
+                    "restoration R2-1) is required for this reduced-speed "
+                    "flagger lane closure per CO Supplement Sec 2B.13 and "
+                    "S-630-1 Sheet 12 (lane closure is a listed qualifying "
+                    "hazard; Sheet 12 carries no road-class scoping). V1's "
+                    "flagger layout does not emit the envelope - add Fines "
+                    "Double signage manually per Sheet 12 until generator "
+                    "support ships."
+                ),
+                "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+            }
+        )
 
     sections = {**audit, "taper": taper, "case": case}
 

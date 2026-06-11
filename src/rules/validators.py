@@ -211,12 +211,13 @@ class Violation:
 def _is_flagger_scenario(params: ScenarioParams) -> bool:
     """True when the scenario is a flagger-controlled alternating-flow operation.
 
-    Single-source predicate for the flagger carve-out used by
-    ``validate_flagger_stations`` (positive trigger) and
-    ``validate_fines_double_envelope`` (negative carve-out, per Sheet
-    12's freeway/expressway scope).  Same logic mirrored by
-    ``src.api.audit.build_audit_trail`` for the ``fines_double``
-    section's ``applicable=False`` branch.
+    Single-source predicate used by ``validate_flagger_stations``
+    (positive trigger) and ``validate_fines_double_envelope`` (V1
+    carve-out: the flagger layout does not yet emit the envelope, so
+    the validator skips rather than fail every flagger-reduction
+    render — the audit surfaces the gap instead).  Same logic mirrored
+    by ``src.api.audit.build_audit_trail`` for the ``fines_double``
+    section's flagger branch (applicable=True + v1_limitation).
 
     Matches a single-lane closure on a non-divided 2-lane road —
     ``num_lanes`` is read permissively (1 = per-direction count, 2 =
@@ -1068,13 +1069,18 @@ def validate_fines_double_envelope(
 
     Source: CO Supplement §2B.13 + CDOT S-630-1 Sheet 12.  When the
     work-zone posted speed is reduced below the nominal posted speed
-    and the closure type is shoulder or lane on a non-flagger
-    facility, the layout must emit R2-10 (BEGIN DOUBLE FINES ZONE)
-    upstream of the work zone and R2-11 (END DOUBLE FINES ZONE)
-    downstream.  Sheet 12 explicitly scopes Fines Double signing to
-    freeway/expressway work zones, so flagger-controlled
-    alternating-flow operations on 2-lane undivided roads are
-    exempt — see ``_is_flagger_scenario``.
+    and the closure type is shoulder or lane, the layout must emit
+    R2-10 (BEGIN DOUBLE FINES ZONE) upstream of the work zone and
+    R2-11 (END DOUBLE FINES ZONE) downstream.  Sheet 12 carries no
+    road-class scoping (gating is worker presence / hazards, with
+    LANE CLOSURE a listed qualifying hazard), so the requirement
+    covers flagger scenarios too.  Flagger is skipped here anyway as
+    a V1 limitation: the flagger layout does not yet emit the
+    envelope, and failing every flagger-reduction render would block
+    plans the audit already flags honestly (fines_double
+    v1_limitation + pending_verification item).  Remove the
+    ``_is_flagger_scenario`` early return when the flagger generator
+    emits the envelope (Item 3 correction PR 2).
 
     Pins behavior so a regression in the layout engine that silently
     drops the envelope on a reduced-speed plan would fail this test
@@ -1089,6 +1095,7 @@ def validate_fines_double_envelope(
         return []
     if params.closure_type not in ("shoulder", "lane"):
         return []
+    # V1 limitation, not a Sheet 12 exemption — see docstring.
     if _is_flagger_scenario(params):
         return []
 
@@ -1134,8 +1141,8 @@ def validate_fines_double_envelope(
                     "Work-zone speed reduced below posted speed but no "
                     "R2-10 (BEGIN DOUBLE FINES ZONE) placement found. "
                     "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
-                    "the Fines Double envelope on freeway/expressway "
-                    "work zones whenever the work-zone speed is reduced."
+                    "the Fines Double envelope whenever the work-zone "
+                    "speed is reduced and Sheet 12 hazards are present."
                 ),
                 mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
                 device_index=None,
@@ -1150,8 +1157,8 @@ def validate_fines_double_envelope(
                     "Work-zone speed reduced below posted speed but no "
                     "R2-11 (END DOUBLE FINES ZONE) placement found. "
                     "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
-                    "the Fines Double envelope on freeway/expressway "
-                    "work zones whenever the work-zone speed is reduced."
+                    "the Fines Double envelope whenever the work-zone "
+                    "speed is reduced and Sheet 12 hazards are present."
                 ),
                 mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
                 device_index=None,
