@@ -85,7 +85,7 @@
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
-      "all_pass": false,
+      "all_pass": true,
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
@@ -107,9 +107,9 @@
         },
         {
           "citation": "CO Supplement Sec 6E.02(A)",
-          "detail": "2 flagger station(s); required for night operations (is_night = False).",
+          "detail": "2 flagger station(s); lighting not required (daytime operation; S-630-1 Sheet 2 Note 22 applies to night flagging).",
           "label": "Flagger station lighting 500W @ 8 ft",
-          "pass": false
+          "pass": true
         }
       ],
       "info_items": [
@@ -167,7 +167,7 @@
     "flagger": {
       "applicable": true,
       "count": 2,
-      "narrative": "Two flagger stations are required for alternating one-way operations: one upstream of the merging taper to stop right-direction traffic, one past the downstream taper end to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+      "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
       "required": 2,
       "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
       "table": [
@@ -228,7 +228,7 @@
   "summary": {
     "buffer_space_ft": 360.0,
     "case_id": "MUTCD TA-10: Flagger one-lane two-way",
-    "cdot_sheet": "S-630-2",
+    "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 90.0,
     "device_spacing_taper_ft": 20.0,
     "step_count": 12,

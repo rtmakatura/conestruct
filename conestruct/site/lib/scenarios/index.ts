@@ -191,7 +191,9 @@ export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> 
   {
     v: "flagger_lane_closure",
     l: "Flagger lane closure",
-    sub: "TA-10 · S-630-2",
+    // S-630-1 (PR 3 correction): the validated flagger fixtures come
+    // from S-630-1 Sheet 9 Case 17 / Sheet 25 Case 42.
+    sub: "TA-10 · S-630-1",
   },
   {
     v: "lane_closure_divided",

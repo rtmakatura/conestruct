@@ -4,7 +4,7 @@ The TS web app (``conestruct/site/lib/scenarios/``) carries a discriminated-
 union ``Scenario`` type with members:
 
   * ``ShoulderScenario`` (TA-2 / S-630-1)
-  * ``FlaggerLaneClosureScenario`` (TA-10 / S-630-2)
+  * ``FlaggerLaneClosureScenario`` (TA-10 / S-630-1 Cases 17 & 42)
   * ``LaneClosureDividedScenario`` (TA-19 / S-630-3)
 
 Field names there are camelCase.  This module mirrors that shape

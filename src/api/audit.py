@@ -723,6 +723,15 @@ def build_audit_trail(
             "detail": detail,
         }
 
+    # Flagger-station lighting (CO Supplement §6E.02(A) / S-630-1
+    # Sheet 2 Note 22): flood lighting is required at night only.
+    # PR 3 B5 correction — the prior check was inverted
+    # (``pass = params.is_night``): daytime plans failed a check that
+    # did not apply, and night plans passed despite the layout
+    # emitting no lighting equipment.  Now: daytime passes
+    # (not required); night fails honestly (required, placed 0 — V1
+    # does not emit lighting placements) and audit_projection mirrors
+    # the gap as a flagger_lighting_manual_handling pending item.
     n_flaggers = sum(1 for p in placements if p.device_type == DeviceType.FLAGGER_STATION)
     if n_flaggers == 0:
         flagger_section = {
@@ -735,9 +744,9 @@ def build_audit_trail(
             "citation": "CO Supplement Sec 6E.02(A)",
             "detail": "Not applicable (no flaggers).",
         }
-    else:
+    elif not params.is_night:
         flagger_section = {
-            "pass": params.is_night,
+            "pass": True,
             "label": (
                 f"Flagger station lighting "
                 f"{COLORADO_OVERRIDES.flagger_station_light_watts}W "
@@ -745,8 +754,28 @@ def build_audit_trail(
             ),
             "citation": "CO Supplement Sec 6E.02(A)",
             "detail": (
-                f"{n_flaggers} flagger station(s); "
-                f"required for night operations (is_night = {params.is_night})."
+                f"{n_flaggers} flagger station(s); lighting not required "
+                "(daytime operation; S-630-1 Sheet 2 Note 22 applies to "
+                "night flagging)."
+            ),
+        }
+    else:
+        flagger_section = {
+            "pass": False,
+            "label": (
+                f"Flagger station lighting "
+                f"{COLORADO_OVERRIDES.flagger_station_light_watts}W "
+                f"@ {COLORADO_OVERRIDES.flagger_station_light_height_ft} ft"
+            ),
+            "citation": "CO Supplement Sec 6E.02(A)",
+            "detail": (
+                f"{n_flaggers} flagger station(s) at night. Required: "
+                f"flood lighting "
+                f"({COLORADO_OVERRIDES.flagger_station_light_watts}W min "
+                f"@ {COLORADO_OVERRIDES.flagger_station_light_height_ft} ft "
+                "min) at each station per S-630-1 Sheet 2 Note 22. "
+                "Placed: 0 (V1 does not emit lighting equipment "
+                "placements)."
             ),
         }
 
@@ -980,9 +1009,11 @@ def build_audit_trail(
         ),
         "narrative": (
             "Two flagger stations are required for alternating one-way "
-            "operations: one upstream of the merging taper to stop "
-            "right-direction traffic, one past the downstream taper end to "
-            "stop opposing traffic.  Flagger stations should be visible to "
+            "operations: one 100 ft upstream of the one-lane two-way "
+            "taper (MUTCD Fig. 6P-10 50-100 ft band) to stop "
+            "right-direction traffic, one 300 ft past the work-area end "
+            "(CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop "
+            "opposing traffic.  Flagger stations should be visible to "
             "approaching drivers from the full advance-warning distance."
         )
         if is_flagger
@@ -1067,7 +1098,14 @@ def build_audit_trail(
 # deleted in PR 3 this stays the only copy.
 _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
     "shoulder": ("TA-2", "S-630-1"),
-    "flagger_lane_closure": ("TA-10", "S-630-2"),
+    # Flagger cites S-630-1 (PR 3 correction): the validated fixtures
+    # and match rules come from S-630-1 Sheet 9 Case 17 / Sheet 25
+    # Case 42 (tests/fixtures/ta10_flagger/).  The earlier "S-630-2"
+    # value referenced a CDOT safety standard this layout was never
+    # verified against.
+    "flagger_lane_closure": ("TA-10", "S-630-1"),
+    # NOTE: the gated kinds below carry UNVERIFIED citations — they
+    # triage with their respective enablement work (PR 3 Q3).
     "lane_closure_divided": ("TA-19", "S-630-3"),
     "work_beyond_shoulder": ("TA-1", "S-630-1"),
     "mobile_op_2lane": ("TA-35", "S-630-1"),
@@ -1245,6 +1283,37 @@ def audit_projection(
     # fines_double_manual_handling pending item is gone — the flagger
     # generator emits the envelope, so fines_double carries real
     # geometry and there is no gap to surface.)
+
+    # PR 3 B5: night flagger lighting gap — mirrors the PR 1
+    # manual-handling pattern.  The colorado lighting check reports the
+    # failure honestly (Required ... Placed: 0); this item surfaces the
+    # V1 generator gap on the pending rollup.  Keyed off the check's
+    # own pass state (audit_projection has no ``params``), which is the
+    # same night+flagger condition by construction — the check only
+    # fails when flaggers are present at night.
+    _lighting_check = next(
+        (
+            c
+            for c in audit.get("colorado", {}).get("checks", [])
+            if str(c.get("label", "")).startswith("Flagger station lighting")
+        ),
+        None,
+    )
+    if _lighting_check is not None and not _lighting_check.get("pass", True):
+        items.append(
+            {
+                "kind": "flagger_lighting_manual_handling",
+                "label": (
+                    "Flagger station lighting is required for night "
+                    "operations per CDOT S-630-1 Sheet 2 Note 22. V1's "
+                    "flagger generator does not emit lighting equipment "
+                    "placements; the traffic control supervisor must add "
+                    "flood lights per project requirements until generator "
+                    "support ships."
+                ),
+                "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+            }
+        )
 
     sections = {**audit, "taper": taper, "case": case}
 

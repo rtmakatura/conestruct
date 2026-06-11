@@ -1746,13 +1746,17 @@ def _mutcd_ta_reference(params: ScenarioParams) -> str:
 
 def _cdot_standard_reference(params: ScenarioParams) -> str:
     """CDOT M&S Standard Plan number for the scenario.  S-630-1 covers
-    shoulder closures, S-630-2 covers two-lane lane-closure (flagger),
-    S-630-3 covers divided-highway lane closures.  Mobile and off-road
-    operations don't have a dedicated standard plan."""
+    shoulder closures AND the 2-lane flagger lane closure (PR 3
+    correction: the validated flagger fixtures come from S-630-1
+    Sheet 9 Case 17 / Sheet 25 Case 42 — the earlier "S-630-2" value
+    referenced a CDOT safety standard this layout was never verified
+    against).  S-630-3 covers divided-highway lane closures
+    (UNVERIFIED — triages with that scenario's enablement).  Mobile and
+    off-road operations don't have a dedicated standard plan."""
     if params.closure_type == "shoulder" or params.closure_type == "off_road":
         return "S-630-1"
     if params.closure_type == "lane" and not params.is_divided:
-        return "S-630-2"
+        return "S-630-1"
     if params.closure_type == "lane" and params.is_divided:
         return "S-630-3"
     return "—"

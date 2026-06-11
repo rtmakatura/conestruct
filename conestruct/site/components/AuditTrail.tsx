@@ -252,6 +252,11 @@ function buildFlaggerItems(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec[] {
+  // PR 3: read the case label from the backend audit summary (same S1
+  // pattern as buildShoulderItems) instead of the historical "Case 2B"
+  // placeholder, which never corresponded to a real S-630-1 case.
+  const flaggerData = audit.state === "ready" ? audit.data : audit.lastReady;
+  const flaggerCaseId = flaggerData?.summary.case_id ?? "—";
   const sightDistance = bufferFor(scenario.speed);
   const flaggerStations = scenario.afad ? 0 : 2;
   const afadDevices = scenario.afad ? 2 : 0;
@@ -306,8 +311,8 @@ function buildFlaggerItems(
       ),
     },
     advanceItem(audit, generated, r),
-    coloradoItem(audit, "S-630-2"),
-    referenceItem(audit, "TA-10", "S-630-2", r("Case 2B")),
+    coloradoItem(audit, "S-630-1"),
+    referenceItem(audit, "TA-10", "S-630-1", r(flaggerCaseId)),
   ];
 }
 

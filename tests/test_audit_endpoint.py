@@ -303,7 +303,72 @@ def test_audit_projection_flagger_mutcd_ta10_no_pending() -> None:
     assert "(TODO" not in projection["sections"]["case"]["case"]
     assert "(TODO" not in projection["sections"]["taper"]["cdot_reference"]
     assert projection["summary"]["ta"] == "TA-10"
-    assert projection["summary"]["cdot_sheet"] == "S-630-2"
+    # PR 3 citation correction: the validated flagger fixtures are
+    # S-630-1 (Sheet 9 Case 17 / Sheet 25 Case 42).
+    assert projection["summary"]["cdot_sheet"] == "S-630-1"
+
+
+def test_flagger_lighting_check_day_passes_night_fails() -> None:
+    """PR 3 B5: the lighting check (CO Sec 6E.02(A) / Sheet 2 Note 22)
+    was inverted — ``pass = params.is_night`` failed daytime plans on a
+    rule that does not apply and passed night plans that ship no
+    lighting equipment.  Now: day -> pass (not required); night ->
+    honest fail (Required ... Placed: 0) with a
+    flagger_lighting_manual_handling pending item in lockstep."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+    from src.rules.validators import ScenarioParams
+
+    def _params(night: bool) -> ScenarioParams:
+        return ScenarioParams(
+            speed_mph=45,
+            num_lanes=2,
+            closure_type="lane",
+            road_type="rural",
+            work_zone_length_ft=500.0,
+            lane_width_ft=11.0,
+            shoulder_width_ft=8.0,
+            is_divided=False,
+            is_night=night,
+            jurisdiction="CDOT",
+        )
+
+    def _lighting_check(audit: dict) -> dict:
+        return next(
+            c
+            for c in audit["colorado"]["checks"]
+            if c["label"].startswith("Flagger station lighting")
+        )
+
+    # Day: lighting not required -> pass, no pending item.
+    day_params = _params(night=False)
+    day_audit = audit_module.build_audit_trail(
+        generate_flagger_alternating_2lane(day_params), day_params
+    )
+    day_check = _lighting_check(day_audit)
+    assert day_check["pass"] is True
+    assert "not required" in day_check["detail"]
+    day_proj = audit_module.audit_projection(day_audit, "flagger_lane_closure")
+    assert day_proj["pending_verification"]["count"] == 0
+
+    # Night: required, none placed -> honest fail + pending item.
+    night_params = _params(night=True)
+    night_audit = audit_module.build_audit_trail(
+        generate_flagger_alternating_2lane(night_params), night_params
+    )
+    night_check = _lighting_check(night_audit)
+    assert night_check["pass"] is False
+    assert "Placed: 0" in night_check["detail"]
+    assert night_audit["colorado"]["all_pass"] is False
+    night_proj = audit_module.audit_projection(night_audit, "flagger_lane_closure")
+    kinds = [it["kind"] for it in night_proj["pending_verification"]["items"]]
+    assert "flagger_lighting_manual_handling" in kinds
+    item = next(
+        it
+        for it in night_proj["pending_verification"]["items"]
+        if it["kind"] == "flagger_lighting_manual_handling"
+    )
+    assert "Sheet 2 Note 22" in item["label"]
+    assert item["tracking_issue"] == audit_module.AUDIT_PENDING_VERIFICATION_ISSUE
 
 
 # ---------------------------------------------------------------------------
