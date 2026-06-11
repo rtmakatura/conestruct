@@ -212,13 +212,13 @@ class Violation:
 def _is_flagger_scenario(params: ScenarioParams) -> bool:
     """True when the scenario is a flagger-controlled alternating-flow operation.
 
-    Single-source predicate used by ``validate_flagger_stations``
-    (positive trigger) and ``validate_fines_double_envelope`` (V1
-    carve-out: the flagger layout does not yet emit the envelope, so
-    the validator skips rather than fail every flagger-reduction
-    render — the audit surfaces the gap instead).  Same logic mirrored
-    by ``src.api.audit.build_audit_trail`` for the ``fines_double``
-    section's flagger branch (applicable=True + v1_limitation).
+    Single-source predicate for every flagger-conditional branch:
+    ``validate_flagger_stations`` (positive trigger), the taper-length
+    selectors across validators / sign_codes / plan_sheet / audit /
+    narrative / night_adjustments (one-lane two-way taper vs merging
+    L, PR 2), and the audit's ``fines_double`` flagger envelope branch
+    (Case-42 chain-insertion geometry via
+    ``layout.flagger_chain_stations``).
 
     Matches a single-lane closure on a non-divided 2-lane road —
     ``num_lanes`` is read permissively (1 = per-direction count, 2 =
@@ -1114,13 +1114,10 @@ def validate_fines_double_envelope(
     R2-11 (END DOUBLE FINES ZONE) downstream.  Sheet 12 carries no
     road-class scoping (gating is worker presence / hazards, with
     LANE CLOSURE a listed qualifying hazard), so the requirement
-    covers flagger scenarios too.  Flagger is skipped here anyway as
-    a V1 limitation: the flagger layout does not yet emit the
-    envelope, and failing every flagger-reduction render would block
-    plans the audit already flags honestly (fines_double
-    v1_limitation + pending_verification item).  Remove the
-    ``_is_flagger_scenario`` early return when the flagger generator
-    emits the envelope (Item 3 correction PR 2).
+    covers flagger scenarios too — the flagger generator emits the
+    Case-42 chain-insertion envelope since the Item 3 retroactive
+    correction PR 2, and this validator checks flagger plans like any
+    other reduced-speed closure (the interim early return is gone).
 
     Pins behavior so a regression in the layout engine that silently
     drops the envelope on a reduced-speed plan would fail this test
@@ -1134,9 +1131,6 @@ def validate_fines_double_envelope(
     if params.work_zone_speed_mph is None or params.work_zone_speed_mph >= params.speed_mph:
         return []
     if params.closure_type not in ("shoulder", "lane"):
-        return []
-    # V1 limitation, not a Sheet 12 exemption — see docstring.
-    if _is_flagger_scenario(params):
         return []
 
     has_r2_10 = any(

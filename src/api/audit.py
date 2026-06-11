@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from src.generation.layout import device_count_floors
+from src.generation.layout import device_count_floors, flagger_chain_stations
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
@@ -26,7 +26,6 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
-    flagger_to_taper_distance,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
@@ -47,6 +46,50 @@ from src.rules.validators import (
 _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
 )
+
+# Sheet 12 FINES DOUBLE SIGNING NOTES — operational rules attached to
+# every applicable fines_double section (shoulder, lane-divided, and
+# flagger all cite the same four notes; hoisted when the flagger
+# envelope shipped in the Item 3 correction PR 2).
+_SHEET_12_OPERATIONAL_NOTES: list[dict[str, str]] = [
+    {
+        "citation": "S-630-1 Sheet 12, Note 1",
+        "action": (
+            "Install Fines Double signs no more than 4 "
+            "hours before the start of the work day. Do "
+            "not leave signs up overnight when work is "
+            "not active."
+        ),
+    },
+    {
+        "citation": "S-630-1 Sheet 12, Note 2",
+        "action": (
+            "Remove or cover Fines Double signs when work "
+            "concludes; doubled fines apply only when "
+            "workers or work activity are present in the "
+            "zone."
+        ),
+    },
+    {
+        "citation": "S-630-1 Sheet 12, Note 3",
+        "action": (
+            "Relocate the R2-10/R2-11 envelope to follow "
+            "the actual work area as the project "
+            "progresses; do not leave Fines Double signs "
+            "in place beyond the active work zone."
+        ),
+    },
+    {
+        "citation": "S-630-1 Sheet 12, Note 4",
+        "action": (
+            "Maintain a 250 ft minimum spacing between "
+            "Fines Double signs (R2-10, R2-11, G20-5P/"
+            "R2-6P assemblies) and other warning or "
+            "regulatory signs. Engineer may adjust "
+            "placement to satisfy this minimum."
+        ),
+    },
+]
 
 
 def _resolve_road_category(speed_mph: int, road_type: str) -> str:
@@ -388,18 +431,18 @@ def build_audit_trail(
         # 6P-10, PR 2 B-11 correction): ONE LANE ROAD AHEAD (W20-4) is
         # the B-position sign; BE PREPARED TO STOP (W3-4) is an
         # optional addition between W20-4 and W20-7 (TA-10 notes 4/8),
-        # emitted by default.  The A gap anchors on the flagger station
-        # (the stop point, 100 ft past taper start) — Fig. 6P-10 / Case
-        # 42 run W20-7 –A– flagger –50..100 ft– taper.  Chain
-        # (nearest-first): W20-7, +B → W3-4, +C → W20-4, +C → W20-1 —
-        # every letter-coded gap minimum preserved (fixtures:
-        # tests/fixtures/ta10_flagger/; mirrors
-        # generate_flagger_alternating_2lane).
+        # emitted by default.  Anchor stations come from the shared
+        # flagger_chain_stations helper (same source the generator and
+        # narrative use), so the A gap anchors on the flagger station
+        # and W20-1 follows the R2-10 chain insertion when the
+        # work-zone speed is reduced (fixtures:
+        # tests/fixtures/ta10_flagger/).
         sign_codes = {"A": "W20-7", "B": "W20-4", "C": "W20-1"}
-        sign_a_station = taper_start_station + flagger_to_taper_distance() + a_ft
-        sign_w3_4_station = sign_a_station + b_ft
-        sign_b_station = sign_w3_4_station + c_ft
-        sign_c_station = sign_b_station + c_ft
+        _chain = flagger_chain_stations(params)
+        sign_a_station = _chain["w20_7_r"]
+        sign_w3_4_station = _chain["w3_4_r"]
+        sign_b_station = _chain["w20_4_r"]
+        sign_c_station = _chain["w20_1_r"]
     elif is_lane:
         sign_codes = {"A": "W4-2R", "B": "W20-5R", "C": "W20-1"}
     else:
@@ -753,6 +796,7 @@ def build_audit_trail(
     if not is_reduced:
         fines_double_section = None
     elif _is_flagger_scenario(params):
+        env = flagger_chain_stations(params)
         fines_double_section = {
             "applicable": True,
             "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
@@ -764,14 +808,36 @@ def build_audit_trail(
                 "road-class scoping. A reduced-speed flagger lane "
                 "closure on a 2-lane undivided road meets the gating."
             ),
-            "v1_limitation": (
-                "V1's flagger layout does not emit the Fines Double "
-                "envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 "
-                "advisory-speed signs, entrance/restoration R2-1). Add "
-                "Fines Double signage manually per Sheet 12 and CO "
-                "Supplement Sec 2B.13 until generator support ships. "
-                "See pending_verification."
-            ),
+            "envelope": {
+                # Primary-direction stations; the opposing direction
+                # carries a mirrored set (per-direction chains per CDOT
+                # Cases 17/42 — see *_opposing fields).
+                "r2_10_station_ft": env["r2_10_r"],
+                "r2_11_station_ft": env["r2_11_r"],
+                "length_ft": env["envelope_length"],
+                "n_assemblies": env["n_assemblies"],
+                "entrance_r2_1_station_ft": env["entrance_r2_1"],
+                "entrance_r2_1_label": f"SPEED LIMIT {wz_speed}",
+                "downstream_r2_1_station_ft": env["ds_r2_1_r"],
+                "downstream_r2_1_label": f"SPEED LIMIT {speed}",
+                "mirrored_per_direction": True,
+                "r2_10_station_ft_opposing": env["r2_10_l"],
+                "r2_11_station_ft_opposing": env["r2_11_l"],
+                "downstream_r2_1_station_ft_opposing": env["ds_r2_1_l"],
+                "geometry_note": (
+                    "CDOT Case 42 chain-insertion geometry: R2-10 sits "
+                    "260 ft upstream of W20-4 in each approach chain "
+                    "(W20-1 moves to R2-10 + C); exit per Case 17 — "
+                    "500 ft past the downstream taper end to R2-11, "
+                    "500 ft further to the restoration R2-1. The "
+                    "Case-11 generic formula (wz_start + 500) is not "
+                    "used for flagger: it would collide with the "
+                    "flagger station and violate Sheet 12 note 4's "
+                    "250 ft sign spacing."
+                ),
+            },
+            "operational_notes": _SHEET_12_OPERATIONAL_NOTES,
+            "source": "CDOT S-630-1 Standard Plan, Sheet 12",
         }
     else:
         wz_start_st = wz_len
@@ -802,45 +868,7 @@ def build_audit_trail(
                 "downstream_r2_1_station_ft": ds_r2_1_st,
                 "downstream_r2_1_label": f"SPEED LIMIT {speed}",
             },
-            "operational_notes": [
-                {
-                    "citation": "S-630-1 Sheet 12, Note 1",
-                    "action": (
-                        "Install Fines Double signs no more than 4 "
-                        "hours before the start of the work day. Do "
-                        "not leave signs up overnight when work is "
-                        "not active."
-                    ),
-                },
-                {
-                    "citation": "S-630-1 Sheet 12, Note 2",
-                    "action": (
-                        "Remove or cover Fines Double signs when work "
-                        "concludes; doubled fines apply only when "
-                        "workers or work activity are present in the "
-                        "zone."
-                    ),
-                },
-                {
-                    "citation": "S-630-1 Sheet 12, Note 3",
-                    "action": (
-                        "Relocate the R2-10/R2-11 envelope to follow "
-                        "the actual work area as the project "
-                        "progresses; do not leave Fines Double signs "
-                        "in place beyond the active work zone."
-                    ),
-                },
-                {
-                    "citation": "S-630-1 Sheet 12, Note 4",
-                    "action": (
-                        "Maintain a 250 ft minimum spacing between "
-                        "Fines Double signs (R2-10, R2-11, G20-5P/"
-                        "R2-6P assemblies) and other warning or "
-                        "regulatory signs. Engineer may adjust "
-                        "placement to satisfy this minimum."
-                    ),
-                },
-            ],
+            "operational_notes": _SHEET_12_OPERATIONAL_NOTES,
             "source": "CDOT S-630-1 Standard Plan, Sheet 12",
         }
 
@@ -1213,29 +1241,10 @@ def audit_projection(
         # appended to ``items`` once above, so the rollup reads
         # "1 reference pending," not "2."
 
-    # Item 3 retroactive correction: a fines_double section carrying a
-    # ``v1_limitation`` field (flagger + reduction — the envelope is
-    # required per Sheet 12 but V1's flagger layout doesn't emit it)
-    # surfaces the gap as a pending-verification item.  Keyed off the
-    # section's own field so the predicate isn't duplicated here.
-    if "v1_limitation" in audit.get("fines_double", {}):
-        items.append(
-            {
-                "kind": "fines_double_manual_handling",
-                "label": (
-                    "Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P "
-                    "assemblies, W3-5 advisory-speed signs, entrance/"
-                    "restoration R2-1) is required for this reduced-speed "
-                    "flagger lane closure per CO Supplement Sec 2B.13 and "
-                    "S-630-1 Sheet 12 (lane closure is a listed qualifying "
-                    "hazard; Sheet 12 carries no road-class scoping). V1's "
-                    "flagger layout does not emit the envelope - add Fines "
-                    "Double signage manually per Sheet 12 until generator "
-                    "support ships."
-                ),
-                "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
-            }
-        )
+    # (Item 3 retroactive correction PR 2: the interim
+    # fines_double_manual_handling pending item is gone — the flagger
+    # generator emits the envelope, so fines_double carries real
+    # geometry and there is no gap to surface.)
 
     sections = {**audit, "taper": taper, "case": case}
 

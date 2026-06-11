@@ -2437,9 +2437,12 @@ def test_validate_fines_double_envelope_skipped_when_no_reduction() -> None:
     assert validate_fines_double_envelope(placements, params) == []
 
 
-def test_validate_fines_double_envelope_skipped_on_flagger() -> None:
-    """Flagger carve-out: lane closure + undivided + num_lanes<=2 exits early
-    even with reduction in effect."""
+def test_validate_fines_double_envelope_checks_flagger() -> None:
+    """Item 3 retroactive correction PR 2: the flagger early return is
+    gone — a reduced-speed flagger plan with no envelope fires the
+    MISSING_* violations, and the canonical generator output passes
+    clean."""
+    from src.generation.layout import generate_flagger_alternating_2lane
     from src.rules.validators import validate_fines_double_envelope
 
     params = _fines_double_params(
@@ -2448,7 +2451,11 @@ def test_validate_fines_double_envelope_skipped_on_flagger() -> None:
         num_lanes=2,
         work_zone_speed_mph=30,
     )
-    placements: list[DevicePlacement] = []  # no envelope expected
+    # Empty placement list = envelope missing → violations fire.
+    rule_ids = {v.rule_id for v in validate_fines_double_envelope([], params)}
+    assert {"MISSING_R2_10", "MISSING_R2_11"} <= rule_ids, rule_ids
+    # Canonical generator output carries the envelope → clean.
+    placements = generate_flagger_alternating_2lane(params)
     assert validate_fines_double_envelope(placements, params) == []
 
 

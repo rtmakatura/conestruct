@@ -64,12 +64,14 @@ Phase 2 decisions, locked June 5 2026.
   SIGNING NOTES carry no road-class scoping — gating is worker presence
   in the roadway/clear zone or hazards in the travelway/shoulders/clear
   zone, with LANE CLOSURE a listed qualifying hazard — and CDOT's 2-lane
-  flagger typicals (Cases 17, 42) show the R2-10/R2-11 envelope. V1's
-  flagger generator does not yet emit it: the audit emits
-  fines_double.applicable=true with a v1_limitation field plus a
-  pending_verification item; the crew narrative carries a Manual
-  Handling Required block. Generator emission is tracked as PR 2 of the
-  Item 3 correction.
+  flagger typicals (Cases 17, 42) show the R2-10/R2-11 envelope.
+  Shipped June 11 2026 (Item 3 correction PR 2): the flagger generator
+  emits the envelope with **Case-42 chain-insertion geometry**
+  (per-direction mirrored sets via `layout.flagger_chain_stations`;
+  R2-10 at W20-4 + 260 ft, exit 500/500 from the downstream-taper end)
+  — the Case 11 generic envelope formula above remains scoped to
+  shoulder / lane-closure-divided. Rules: tests/fixtures/ta10_flagger/
+  match_rules.md.
 
 ## Phase 5 harness design (added 2026-06-06)
 

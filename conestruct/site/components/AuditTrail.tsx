@@ -1033,33 +1033,11 @@ export function finesDoubleItem(
     };
   }
 
-  // Item 3 retroactive correction: applicable=true WITHOUT envelope
-  // geometry. The envelope is required (Sheet 12 gating met — lane
-  // closure is a listed hazard, no road-class scoping) but V1's
-  // flagger layout does not emit it. Render the requirement and the
-  // manual-handling limitation; the pending-verification rollup
-  // carries the cross-reference item. Not dimmed — this is an action
-  // item for the estimator, not an informational no-op.
-  if (!section.envelope) {
-    const gating = typeof section.gating === "string" ? section.gating : "";
-    const limitation =
-      typeof section.v1_limitation === "string" ? section.v1_limitation : "";
-    return {
-      title: "Fines Double envelope",
-      result: "REQUIRED — MANUAL HANDLING (V1)",
-      cite: "S-630-1 Sheet 12",
-      body: (
-        <>
-          {gating && <p>{gating}</p>}
-          {limitation && <p>{limitation}</p>}
-          <div className="citation">
-            <span className="check">ℹ</span>
-            CO SUPPLEMENT § 2B.13 · S-630-1 SHEET 12
-          </div>
-        </>
-      ),
-    };
-  }
+  // (The Item 3 PR-1 interim branch — applicable=true without
+  // envelope, "REQUIRED — MANUAL HANDLING (V1)" — was removed in PR 2:
+  // the flagger generator emits the envelope, so every applicable=true
+  // section now carries geometry. A cached PR-1-era flagger body falls
+  // through to the envelope branch and renders with em-dash fallbacks.)
 
   // Applicable=true: envelope geometry + Sheet 12 operational notes.
   const envelope = section.envelope as FinesDoubleEnvelope | undefined;

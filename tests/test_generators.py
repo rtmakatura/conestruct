@@ -666,9 +666,14 @@ def test_lane_closure_divided_with_reduction_emits_envelope() -> None:
     assert _count_label(placements, "R2-1") == 4
 
 
-def test_flagger_with_reduction_emits_no_envelope() -> None:
-    """Flagger 2-lane is exempt per Sheet 12 scope (freeway/expressway).
-    Even if work_zone_speed_mph triggers, the generator doesn't emit."""
+def test_flagger_with_reduction_emits_envelope_per_direction() -> None:
+    """Item 3 retroactive correction PR 2: a reduced-speed flagger
+    closure carries the full Fines Double envelope, Case-42
+    chain-insertion geometry, per-direction mirrored sets (Sheet 12
+    has no road-class scoping; LANE CLOSURE is a listed hazard).
+    45→30 (Δ15 → 1 W3-5 per direction)."""
+    from src.generation.layout import flagger_chain_stations
+
     params = ScenarioParams(
         speed_mph=45,
         num_lanes=2,
@@ -682,8 +687,44 @@ def test_flagger_with_reduction_emits_no_envelope() -> None:
         work_zone_speed_mph=30,
     )
     placements = generate_flagger_alternating_2lane(params)
+    assert _count_label(placements, "R2-10") == 2  # one per approach chain
+    assert _count_label(placements, "R2-11") == 2  # one per exit
+    # Entrance R2-1 mirrored (2) + restoration R2-1 per direction (2).
+    assert _count_label(placements, "R2-1") == 4
+    assert _count_label_prefix(placements, "W3-5") == 2  # 1 per direction
+    assert _count_label(placements, "R2-6P") >= 2  # assemblies, both sides
+
+    # Station geometry from the shared helper (Case-42 chain insertion).
+    st = flagger_chain_stations(params)
+    r2_10_stations = sorted(p.station_ft for p in placements if p.label == "R2-10")
+    assert r2_10_stations == sorted([st["r2_10_r"], st["r2_10_l"]])
+    assert st["r2_10_r"] == st["w20_4_r"] + 260.0
+    # W20-1 follows the chain insertion: R2-10 + C (rural C = 500).
+    w20_1_right = max(p.station_ft for p in placements if p.label == "W20-1")
+    assert w20_1_right == st["r2_10_r"] + 500.0
+    # Exit per Case 17: ds-taper end (-50) → 500 → R2-11 → 500 → R2-1.
+    assert min(p.station_ft for p in placements if p.label == "R2-11") == -(50.0 + 500.0)
+    assert min(p.station_ft for p in placements if p.label == "R2-1") == -(50.0 + 1000.0)
+
+
+def test_flagger_no_reduction_emits_no_envelope() -> None:
+    """Without a work-zone speed reduction the envelope stays out and
+    W20-1 sits at the unreduced chain position (no R2-10 insertion)."""
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+    placements = generate_flagger_alternating_2lane(params)
     for label in ("R2-10", "R2-11", "R2-1", "R2-6P"):
         assert _count_label(placements, label) == 0
+    assert _count_label_prefix(placements, "W3-5") == 0
 
 
 def test_shoulder_divided_envelope_station_geometry() -> None:
@@ -803,14 +844,12 @@ def test_lane_closure_divided_with_reduction_emits_mirrored_w3_5() -> None:
     assert _count_label_prefix(placements, "W3-5") == 2
 
 
-def test_flagger_with_reduction_emits_no_w3_5() -> None:
-    """V1 limitation pin: the flagger layout emits no W3-5 even with
-    work_zone_speed_mph set. The requirement DOES apply (Item 3
-    retroactive correction — §2B.13(A) has no road-class scoping); the
-    audit reports the gap honestly (speed-reduction check pass=False,
-    fines_double v1_limitation + pending_verification item). This test
-    pins the current emission state so the Item 3 correction PR 2
-    (generator emission) consciously flips it."""
+def test_flagger_with_reduction_emits_w3_5_per_direction() -> None:
+    """Item 3 retroactive correction PR 2: §2B.13(A) W3-5 advisory
+    signage ships per direction.  45→25 is a stepped Δ=20 → 2 signs
+    per direction (4 total), at R2-10 + 530·k in each chain."""
+    from src.generation.layout import flagger_chain_stations
+
     params = ScenarioParams(
         speed_mph=45,
         num_lanes=2,
@@ -821,10 +860,15 @@ def test_flagger_with_reduction_emits_no_w3_5() -> None:
         shoulder_width_ft=8.0,
         is_divided=False,
         jurisdiction="CDOT",
-        work_zone_speed_mph=30,
+        work_zone_speed_mph=25,
     )
     placements = generate_flagger_alternating_2lane(params)
-    assert _count_label_prefix(placements, "W3-5") == 0
+    assert _count_label_prefix(placements, "W3-5") == 4
+    st = flagger_chain_stations(params)
+    right_w3_5 = sorted(
+        p.station_ft for p in placements if (p.label or "").startswith("W3-5") and p.offset_ft > 0
+    )
+    assert right_w3_5 == [st["r2_10_r"] + 530.0, st["r2_10_r"] + 1060.0]
 
 
 def test_shoulder_divided_w3_5_station_geometry() -> None:

@@ -1,14 +1,7 @@
 {
   "pending_verification": {
-    "count": 1,
-    "items": [
-      {
-        "kind": "fines_double_manual_handling",
-        "label": "Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 advisory-speed signs, entrance/restoration R2-1) is required for this reduced-speed flagger lane closure per CO Supplement Sec 2B.13 and S-630-1 Sheet 12 (lane closure is a listed qualifying hazard; Sheet 12 carries no road-class scoping). V1's flagger layout does not emit the envelope - add Fines Double signage manually per Sheet 12 until generator support ships.",
-        "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
-      }
-    ],
-    "note": "Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 advisory-speed signs, entrance/restoration R2-1) is required for this reduced-speed flagger lane closure per CO Supplement Sec 2B.13 and S-630-1 Sheet 12 (lane closure is a listed qualifying hazard; Sheet 12 carries no road-class scoping). V1's flagger layout does not emit the envelope - add Fines Double signage manually per Sheet 12 until generator support ships.",
+    "count": 0,
+    "note": "",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
   },
   "sections": {
@@ -16,10 +9,22 @@
       "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
       "sign_table": [
         {
+          "Code": "W3-5(30)",
+          "Distance from Taper (ft)": "2,390 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "3,350"
+        },
+        {
           "Code": "W20-1",
-          "Distance from Taper (ft)": "2,100 upstream",
+          "Distance from Taper (ft)": "2,360 upstream",
           "Position": "C (furthest)",
-          "Station (ft)": "3,060"
+          "Station (ft)": "3,320"
+        },
+        {
+          "Code": "R2-10",
+          "Distance from Taper (ft)": "1,860 upstream",
+          "Position": "Advance (R2-10)",
+          "Station (ft)": "2,820"
         },
         {
           "Code": "W20-4",
@@ -34,10 +39,34 @@
           "Station (ft)": "2,060"
         },
         {
+          "Code": "G20-5P",
+          "Distance from Taper (ft)": "1,018 upstream",
+          "Position": "Advance (G20-5P)",
+          "Station (ft)": "1,978"
+        },
+        {
+          "Code": "R2-6P",
+          "Distance from Taper (ft)": "1,018 upstream",
+          "Position": "Advance (R2-6P)",
+          "Station (ft)": "1,978"
+        },
+        {
+          "Code": "R2-1",
+          "Distance from Taper (ft)": "1,000 upstream",
+          "Position": "Advance (R2-1)",
+          "Station (ft)": "1,960"
+        },
+        {
           "Code": "W20-7",
           "Distance from Taper (ft)": "600 upstream",
           "Position": "A (nearest)",
           "Station (ft)": "1,560"
+        },
+        {
+          "Code": "R2-11",
+          "Distance from Taper (ft)": "500 upstream",
+          "Position": "Advance (R2-11)",
+          "Station (ft)": "1,460"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
@@ -60,21 +89,21 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: False. Signs placed: 6 left, 8 right.",
+          "detail": "Required: False. Signs placed: 15 left, 17 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
           "citation": "CO Supplement Sec 6C.06(A)",
-          "detail": "Zone length: 3,060 ft. Required: 2. Placed: 2.",
+          "detail": "Zone length: 3,320 ft. Required: 2. Placed: 4.",
           "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
           "pass": true
         },
         {
           "citation": "CO Supplement Sec 2B.13(A)",
-          "detail": "Work-zone speed reduced 45 → 30 mph (Δ15 mph). Required: 1. Placed: 0.",
+          "detail": "Work-zone speed reduced 45 → 30 mph (Δ15 mph). Required: 1. Placed: 1.",
           "label": "Speed reduction <= 15 mph per sign installation",
-          "pass": false
+          "pass": true
         },
         {
           "citation": "CO Supplement Sec 6E.02(A)",
@@ -99,8 +128,41 @@
     "fines_double": {
       "applicable": true,
       "citation": "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes",
+      "envelope": {
+        "downstream_r2_1_label": "SPEED LIMIT 45",
+        "downstream_r2_1_station_ft": -1050.0,
+        "downstream_r2_1_station_ft_opposing": 1960.0,
+        "entrance_r2_1_label": "SPEED LIMIT 30",
+        "entrance_r2_1_station_ft": 375.0,
+        "geometry_note": "CDOT Case 42 chain-insertion geometry: R2-10 sits 260 ft upstream of W20-4 in each approach chain (W20-1 moves to R2-10 + C); exit per Case 17 — 500 ft past the downstream taper end to R2-11, 500 ft further to the restoration R2-1. The Case-11 generic formula (wz_start + 500) is not used for flagger: it would collide with the flagger station and violate Sheet 12 note 4's 250 ft sign spacing.",
+        "length_ft": 3370.0,
+        "mirrored_per_direction": true,
+        "n_assemblies": 2,
+        "r2_10_station_ft": 2820.0,
+        "r2_10_station_ft_opposing": -2060.0,
+        "r2_11_station_ft": -550.0,
+        "r2_11_station_ft_opposing": 1460.0
+      },
       "gating": "S-630-1 Sheet 12 gates Fines Double signing on worker presence in the roadway/clear zone or hazards in the travelway/shoulders/clear zone; LANE CLOSURE is a listed qualifying hazard and Sheet 12 carries no road-class scoping. A reduced-speed flagger lane closure on a 2-lane undivided road meets the gating.",
-      "v1_limitation": "V1's flagger layout does not emit the Fines Double envelope (R2-10/R2-11, G20-5P/R2-6P assemblies, W3-5 advisory-speed signs, entrance/restoration R2-1). Add Fines Double signage manually per Sheet 12 and CO Supplement Sec 2B.13 until generator support ships. See pending_verification."
+      "operational_notes": [
+        {
+          "action": "Install Fines Double signs no more than 4 hours before the start of the work day. Do not leave signs up overnight when work is not active.",
+          "citation": "S-630-1 Sheet 12, Note 1"
+        },
+        {
+          "action": "Remove or cover Fines Double signs when work concludes; doubled fines apply only when workers or work activity are present in the zone.",
+          "citation": "S-630-1 Sheet 12, Note 2"
+        },
+        {
+          "action": "Relocate the R2-10/R2-11 envelope to follow the actual work area as the project progresses; do not leave Fines Double signs in place beyond the active work zone.",
+          "citation": "S-630-1 Sheet 12, Note 3"
+        },
+        {
+          "action": "Maintain a 250 ft minimum spacing between Fines Double signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and other warning or regulatory signs. Engineer may adjust placement to satisfy this minimum.",
+          "citation": "S-630-1 Sheet 12, Note 4"
+        }
+      ],
+      "source": "CDOT S-630-1 Standard Plan, Sheet 12"
     },
     "flagger": {
       "applicable": true,

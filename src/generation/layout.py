@@ -14,6 +14,7 @@ Authoritative sources:
 from __future__ import annotations
 
 import math
+from typing import Any
 
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
@@ -1105,6 +1106,116 @@ def generate_lane_closure_divided(
     return _dedupe_placements(placements)
 
 
+def flagger_chain_stations(params: ScenarioParams) -> dict[str, Any]:
+    """Single-source station math for the TA-10 flagger layout.
+
+    Consumed by ``generate_flagger_alternating_2lane`` (placements),
+    ``src.api.audit.build_audit_trail`` (advance anchors + fines_double
+    envelope geometry), and ``src.narrative.crew_narrative`` (schedule
+    rows) so the four surfaces agree on every station by construction.
+
+    Geometry (PR 2, fixtures: tests/fixtures/ta10_flagger/):
+      * one-lane two-way taper 100 ft (§6B.08 ¶14 band max) + Table
+        6C-2 buffer upstream of the work zone;
+      * approach flagger at taper start + 100 ft (Fig. 6P-10 band max);
+        opposing flagger at −300 ft (CDOT Case 17 "200' TO 300'" band
+        max from the work-area end);
+      * advance series anchored on each flagger (the stop point), gaps
+        A / B / C / C nearest-first: W20-7, W3-4, W20-4, W20-1;
+      * Fines Double envelope (reduced work-zone speed only), Case-42
+        chain insertion: R2-10 at W20-4 + 260 ft with W20-1 pushed to
+        R2-10 + C; W3-5 advisory set at R2-10 + 530·k per direction;
+        exit per Case 17: downstream-taper end → 500 ft → R2-11 →
+        500 ft → restoration R2-1 (right side), mirrored for the
+        opposing direction past the upstream taper start; G20-5P/R2-6P
+        assemblies at 2,640 ft intervals across the envelope, both
+        sides; entrance R2-1 at the §6C.06(A) plaque anchor, both
+        sides.  The Case-11 generic formula (wz_start + 500) is NOT
+        used here — it would collide with the corrected flagger
+        station and violate Sheet 12 note 4's 250 ft sign spacing.
+
+    Returns a dict of stations (suffix ``_r`` = right/primary
+    direction, ``_l`` = opposing).  Envelope keys are present only when
+    the work-zone speed is reduced.
+    """
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    taper_len = one_lane_two_way_taper_length()
+    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    ds_taper_len = downstream_taper_length(1)
+    taper_start = wz_len + buf_len + taper_len
+
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
+    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+
+    flagger_1 = taper_start + flagger_to_taper_distance()
+    flagger_2 = -opposing_flagger_standoff()
+
+    is_reduced = params.work_zone_speed_mph is not None and (
+        params.work_zone_speed_mph < params.speed_mph
+    )
+
+    st: dict[str, Any] = {
+        "taper_start": taper_start,
+        "taper_end": wz_len + buf_len,
+        "ds_taper_len": ds_taper_len,
+        "flagger_1": flagger_1,
+        "flagger_2": flagger_2,
+        "w20_7_r": flagger_1 + a_dist,
+        "w20_7_l": flagger_2 - a_dist,
+        "is_reduced": is_reduced,
+    }
+    st["w3_4_r"] = st["w20_7_r"] + b_dist
+    st["w3_4_l"] = st["w20_7_l"] - b_dist
+    st["w20_4_r"] = st["w3_4_r"] + c_dist
+    st["w20_4_l"] = st["w3_4_l"] - c_dist
+
+    if not is_reduced:
+        st["w20_1_r"] = st["w20_4_r"] + c_dist
+        st["w20_1_l"] = st["w20_4_l"] - c_dist
+        return st
+
+    # Fines Double envelope — Case-42 chain insertion (locked Q8).
+    st["r2_10_r"] = st["w20_4_r"] + 260.0
+    st["r2_10_l"] = st["w20_4_l"] - 260.0
+    st["w20_1_r"] = st["r2_10_r"] + c_dist
+    st["w20_1_l"] = st["r2_10_l"] - c_dist
+
+    # Exit chain per Case 17: ds-taper end → 500 → R2-11 → 500 → R2-1.
+    st["r2_11_r"] = -(ds_taper_len + 500.0)
+    st["ds_r2_1_r"] = -(ds_taper_len + 1000.0)
+    st["r2_11_l"] = taper_start + 500.0
+    st["ds_r2_1_l"] = taper_start + 1000.0
+
+    # W3-5 advisory set per direction (G5 stepped formula, 530 ft
+    # intervals upstream of each direction's R2-10).
+    assert params.work_zone_speed_mph is not None
+    n_w3_5 = co_speed_reduction_signs(speed, params.work_zone_speed_mph)
+    st["n_w3_5"] = n_w3_5
+    st["w3_5_r"] = [st["r2_10_r"] + 530.0 * (k + 1) for k in range(n_w3_5)]
+    st["w3_5_l"] = [st["r2_10_l"] - 530.0 * (k + 1) for k in range(n_w3_5)]
+
+    # Envelope span (primary-direction R2-10 to primary-direction
+    # R2-11) for assembly count; assemblies at the same stations both
+    # sides, each facing its direction.
+    envelope_len = st["r2_10_r"] - st["r2_11_r"]
+    n_asm = max(1, math.ceil(envelope_len / 2640.0))
+    st["envelope_length"] = envelope_len
+    st["n_assemblies"] = n_asm
+    st["assembly_stations"] = [
+        st["r2_11_r"] + (k + 0.5) * envelope_len / n_asm for k in range(n_asm)
+    ]
+
+    # Entrance R2-1 (G4) — §6C.06(A) plaque anchor.  Plaque count is
+    # derived from the full signed length (W20-1 station, reduced
+    # chain), matching the generator's total_zone_length.
+    n_plaques = co_construction_plaques(st["w20_1_r"])
+    st["n_plaques"] = n_plaques
+    st["entrance_r2_1"] = (n_plaques - 0.5) * wz_len / n_plaques
+    return st
+
+
 def generate_flagger_alternating_2lane(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
@@ -1185,16 +1296,16 @@ def generate_flagger_alternating_2lane(
     # 24 makes buffer optional/engineer-determined; Conestruct includes
     # it as a documented conservative policy).
     taper_len = one_lane_two_way_taper_length()
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
     ds_taper_len = downstream_taper_length(1)
+
+    # All chain stations come from the shared helper (buffer included
+    # there) so the layout, the audit, and the crew narrative agree by
+    # construction.
+    st = flagger_chain_stations(params)
 
     wz_end_station = 0.0
     wz_start_station = wz_len
-    taper_end_station = wz_start_station + buf_len
-    taper_start_station = taper_end_station + taper_len
-
-    spacing_abc = advance_warning_spacing(speed, params.road_type)
-    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+    taper_start_station = st["taper_start"]
 
     placements: list[DevicePlacement] = []
 
@@ -1202,7 +1313,7 @@ def generate_flagger_alternating_2lane(
     # MUTCD Fig. 6P-10 (Conestruct uses the 100 ft maximum), on the
     # closed-lane side so approaching drivers stop before the taper.
     # Computed first: the advance series anchors on the stop point.
-    flagger_1_station = taper_start_station + flagger_to_taper_distance()
+    flagger_1_station = st["flagger_1"]
 
     # 2. Right-direction (upstream-approach) advance warning signs.
     # MUTCD Fig. 6P-10 series (driver order): ROAD WORK (W20-1) → ONE
@@ -1217,17 +1328,16 @@ def generate_flagger_alternating_2lane(
     # A == flagger_to_taper_distance (urban ≤40: A = 100).  Gaps
     # A/B/C/C preserve every letter-coded minimum from the CDOT key;
     # matches Case 42's full-gap chain with the deferred R4-1 /
-    # in-chain speed-assembly slots collapsed (fixtures:
-    # tests/fixtures/ta10_flagger/).
-    sign_a_station_r = flagger_1_station + a_dist  # W20-7
-    sign_w3_4_station_r = sign_a_station_r + b_dist  # W3-4
-    sign_b_station_r = sign_w3_4_station_r + c_dist  # W20-4
-    sign_c_station_r = sign_b_station_r + c_dist  # W20-1
+    # in-chain speed-assembly slots collapsed.  With reduced work-zone
+    # speed, R2-10 inserts into the chain at W20-4 + 260 ft and W20-1
+    # moves to R2-10 + C (Case-42 chain insertion; see
+    # flagger_chain_stations).
+    sign_c_station_r = st["w20_1_r"]  # total signed length (plaques)
     advance_signs_right = (
-        (flagger_ahead_label, sign_a_station_r),  # FLAGGER AHEAD or AFAD AHEAD
-        ("W3-4", sign_w3_4_station_r),  # BE PREPARED TO STOP
-        ("W20-4", sign_b_station_r),  # ONE LANE ROAD AHEAD
-        ("W20-1", sign_c_station_r),  # ROAD WORK AHEAD
+        (flagger_ahead_label, st["w20_7_r"]),  # FLAGGER AHEAD or AFAD AHEAD
+        ("W3-4", st["w3_4_r"]),  # BE PREPARED TO STOP
+        ("W20-4", st["w20_4_r"]),  # ONE LANE ROAD AHEAD
+        ("W20-1", st["w20_1_r"]),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_right:
         placements.append(
@@ -1318,7 +1428,7 @@ def generate_flagger_alternating_2lane(
     # turnaround space.  No taper on this approach: the opposing lane
     # stays open — opposing traffic stops at the flagger and proceeds
     # in its own lane.
-    flagger_2_station = -opposing_flagger_standoff()
+    flagger_2_station = st["flagger_2"]
     placements.append(
         DevicePlacement(
             device_type=flagger_device,
@@ -1331,16 +1441,13 @@ def generate_flagger_alternating_2lane(
     # 8. Opposing-direction advance warning signs (negative stations,
     # left side of road — facing traffic approaching from downstream).
     # Same A/B/C/C series mirrored, anchored off flagger #2 (Case 17:
-    # "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
-    sign_a_station_l = flagger_2_station - a_dist  # W20-7
-    sign_w3_4_station_l = sign_a_station_l - b_dist  # W3-4
-    sign_b_station_l = sign_w3_4_station_l - c_dist  # W20-4
-    sign_c_station_l = sign_b_station_l - c_dist  # W20-1
+    # "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION"), with the
+    # same R2-10 chain insertion when the work-zone speed is reduced.
     advance_signs_left = (
-        (flagger_ahead_label, sign_a_station_l),  # FLAGGER AHEAD closest to flagger #2
-        ("W3-4", sign_w3_4_station_l),  # BE PREPARED TO STOP
-        ("W20-4", sign_b_station_l),  # ONE LANE ROAD AHEAD
-        ("W20-1", sign_c_station_l),  # ROAD WORK AHEAD
+        (flagger_ahead_label, st["w20_7_l"]),  # FLAGGER AHEAD closest to flagger #2
+        ("W3-4", st["w3_4_l"]),  # BE PREPARED TO STOP
+        ("W20-4", st["w20_4_l"]),  # ONE LANE ROAD AHEAD
+        ("W20-1", st["w20_1_l"]),  # ROAD WORK AHEAD
     )
     for label, station in advance_signs_left:
         placements.append(
@@ -1408,6 +1515,103 @@ def generate_flagger_alternating_2lane(
             label="G20-1",
         )
     )
+
+    # 10b. Fines Double envelope (Item 3 retroactive correction PR 2 —
+    # CO Supplement §2B.13 + S-630-1 Sheet 12).  Sheet 12 carries no
+    # road-class scoping and lists LANE CLOSURE as a qualifying hazard,
+    # so a reduced-speed flagger closure gets the full envelope.
+    # Geometry is the Case-42 chain insertion computed by
+    # flagger_chain_stations (locked Q8) — per-direction mirrored sets,
+    # NOT the same-station left/right pairs divided highways use:
+    #   * R2-10 already sits in each approach chain (W20-4 + 260 ft);
+    #     emitted here so the series block stays purely the warning
+    #     series.
+    #   * W3-5 advisory set per direction at R2-10 + 530·k (G5 stepped
+    #     formula, same label math as the shoulder generators).
+    #   * Exit per Case 17: downstream-taper end → 500 ft → R2-11 →
+    #     500 ft → restoration R2-1; mirrored for the opposing
+    #     direction past the upstream taper start.
+    #   * G20-5P/R2-6P assemblies at 2,640 ft intervals across the
+    #     envelope, both sides.
+    #   * Entrance R2-1 at the §6C.06(A) plaque anchor, both sides
+    #     (both directions enter the zone).
+    if st["is_reduced"]:
+        assert params.work_zone_speed_mph is not None
+        # R2-10 BEGIN DOUBLE FINES ZONE — one per approach chain.
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["r2_10_r"], sign_offset_right, label="R2-10"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, st["r2_10_l"], sign_offset_left, label="R2-10")
+        )
+        # W3-5 advisory speed sign(s) per direction (CO §2B.13(A), G5).
+        n_w3_5 = st["n_w3_5"]
+        for k in range(n_w3_5):
+            w3_5_speed = max(
+                params.work_zone_speed_mph,
+                ((speed - (n_w3_5 - k) * 15) // 5) * 5,
+            )
+            w3_5_label = f"W3-5({w3_5_speed})"
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, st["w3_5_r"][k], sign_offset_right, label=w3_5_label
+                )
+            )
+            placements.append(
+                DevicePlacement(
+                    DeviceType.SIGN_GENERIC, st["w3_5_l"][k], sign_offset_left, label=w3_5_label
+                )
+            )
+        # R2-11 END DOUBLE FINES ZONE + restoration R2-1 — per
+        # direction at its exit.
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["r2_11_r"], sign_offset_right, label="R2-11"
+            )
+        )
+        placements.append(
+            DevicePlacement(DeviceType.SIGN_GENERIC, st["r2_11_l"], sign_offset_left, label="R2-11")
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["ds_r2_1_r"], sign_offset_right, label="R2-1"
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["ds_r2_1_l"], sign_offset_left, label="R2-1"
+            )
+        )
+        # G20-5P / R2-6P assemblies — same stations both sides, each
+        # facing its direction; plan_sheet._deoverlap_signs_pairwise
+        # spreads the co-located pair at render time.
+        for station in st["assembly_stations"]:
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_right, label="R2-6P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="G20-5P")
+            )
+            placements.append(
+                DevicePlacement(DeviceType.SIGN_GENERIC, station, sign_offset_left, label="R2-6P")
+            )
+        # Entrance R2-1 (G4) — posts the reduced limit at the plaque
+        # anchor, both sides.
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["entrance_r2_1"], sign_offset_right, label="R2-1"
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC, st["entrance_r2_1"], sign_offset_left, label="R2-1"
+            )
+        )
 
     # 11. Pedestrian access signs — R9-9 "SIDEWALK CLOSED — USE OTHER
     # SIDE" at the upstream and downstream ends of the work zone, on
