@@ -251,6 +251,102 @@ def test_build_corridor_lane_closure_uses_full_taper() -> None:
     assert corridor.taper_ft == pytest.approx(660.0, abs=0.1)
 
 
+def test_build_corridor_flagger_uses_one_lane_two_way_taper() -> None:
+    """PR 4: the flagger corridor uses the 100 ft one-lane two-way
+    taper (§6B.08 ¶14), not the merging L — the live-fixture inputs
+    (45 mph, laneWidth 12, wz 400, rural) must total 2,460 ft:
+    advance 1,500 + taper 100 + buffer 360 + wz 400 + downstream 100.
+    The pre-fix bug fed closure_type="lane" through, producing
+    L = 12 x 45 = 540 and a 2,900 ft total on the PDF page 2 panel."""
+    corridor = build_corridor(
+        lat=39.9714,
+        lng=-104.8205,
+        bearing_deg=0.0,
+        speed_mph=45,
+        work_zone_ft=400.0,
+        closure_type="flagger_alternating_2lane",
+        lane_width_ft=12.0,
+        road_type="rural",
+        jurisdiction="CDOT",
+    )
+    assert corridor.taper_ft == pytest.approx(100.0, abs=0.1)
+    assert corridor.advance_warning_ft == pytest.approx(1500.0, abs=0.1)
+    assert corridor.buffer_ft == pytest.approx(360.0, abs=0.1)
+    assert corridor.downstream_taper_ft == pytest.approx(100.0, abs=0.1)
+    assert corridor.total_length_ft == pytest.approx(2460.0, abs=0.1)
+
+
+def test_plan_sheet_corridor_closure_type_maps_flagger() -> None:
+    """PR 4 call-site regression: ``params.closure_type`` stays "lane"
+    for flagger scenarios, so plan_sheet must map to the
+    ``_FLAGGER_KINDS`` discriminator before calling build_corridor —
+    passing it verbatim silently routes through the merging-taper
+    branch (the PR 2 8th-site fix was dead code until this mapping).
+    Pins the exact expression the page-2 corridor path uses."""
+    from src.rules.validators import ScenarioParams, _is_flagger_scenario
+
+    flagger_params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=400.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+    corridor_closure_type = (
+        "flagger_alternating_2lane"
+        if _is_flagger_scenario(flagger_params)
+        else flagger_params.closure_type
+    )
+    assert corridor_closure_type == "flagger_alternating_2lane"
+    corridor = build_corridor(
+        lat=39.9714,
+        lng=-104.8205,
+        bearing_deg=0.0,
+        speed_mph=flagger_params.speed_mph,
+        work_zone_ft=flagger_params.work_zone_length_ft,
+        closure_type=corridor_closure_type,
+        lane_width_ft=flagger_params.lane_width_ft,
+        road_type=flagger_params.road_type,
+        jurisdiction="CDOT",
+    )
+    assert corridor.taper_ft == pytest.approx(100.0, abs=0.1)
+
+    # Divided lane closure keeps the merging taper through the same
+    # expression (predicate false -> closure_type verbatim).
+    lane_params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    lane_closure_type = (
+        "flagger_alternating_2lane"
+        if _is_flagger_scenario(lane_params)
+        else lane_params.closure_type
+    )
+    assert lane_closure_type == "lane"
+    corridor = build_corridor(
+        lat=39.9714,
+        lng=-104.8205,
+        bearing_deg=0.0,
+        speed_mph=55,
+        work_zone_ft=800.0,
+        closure_type=lane_closure_type,
+        lane_width_ft=12.0,
+        road_type="rural",
+    )
+    assert corridor.taper_ft == pytest.approx(660.0, abs=0.1)  # L = 12 x 55
+
+
 def test_build_corridor_shifting_uses_half_taper() -> None:
     """Shifting taper = L/2."""
     corridor = build_corridor(

@@ -3256,6 +3256,20 @@ def render_plan_sheet(
             print("MAPBOX_TOKEN not set — skipping aerial page")
         else:
             if bearing_deg is not None:
+                # PR 4: ``_resolve_taper_ft`` discriminates flagger by
+                # closure-type STRING (``_FLAGGER_KINDS``), but
+                # ``params.closure_type`` stays "lane" for flagger
+                # scenarios — passing it verbatim routed the corridor
+                # taper through the merging-taper L formula (540 ft @
+                # 12 x 45) while every other surface showed the
+                # one-lane two-way 100 ft.  Map to the discriminator
+                # the resolver expects so PR 2's flagger branch
+                # actually fires.
+                corridor_closure_type = (
+                    "flagger_alternating_2lane"
+                    if _is_flagger_scenario(params)
+                    else params.closure_type
+                )
                 try:
                     aerial_corridor = build_corridor(
                         lat=site_lat,
@@ -3263,7 +3277,7 @@ def render_plan_sheet(
                         bearing_deg=bearing_deg,
                         speed_mph=params.speed_mph,
                         work_zone_ft=params.work_zone_length_ft,
-                        closure_type=params.closure_type,
+                        closure_type=corridor_closure_type,
                         road_type=params.road_type,
                         lane_width_ft=params.lane_width_ft,
                         shoulder_width_ft=params.shoulder_width_ft,
