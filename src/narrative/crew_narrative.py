@@ -211,6 +211,7 @@ def build_narrative_context(
     params: ScenarioParams,
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -218,12 +219,23 @@ def build_narrative_context(
     narrative text matches the layout it describes.  Pure data extraction
     — no string formatting beyond the small helpers above; the template
     handles presentation.
+
+    ``pilot_car`` is threaded from the scenario (PR 3): the pilot
+    vehicle and its rear-mounted G20-4 are field equipment with no
+    placement trace post-PR-2, so the caller must say so explicitly.
     """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     shoulder_width = params.shoulder_width_ft
 
-    lane_edge_offset = 2.0 * params.lane_width_ft
+    narrative_is_flagger = _is_flagger_scenario(params)
+
+    # Lateral landmarks.  Flagger runs on a 2-lane two-way road: the
+    # closed-lane edge is one lane width from the centerline and the
+    # taper/cone line runs to the centerline (0), mirroring
+    # generate_flagger_alternating_2lane's lane_edge_right.  The
+    # shoulder generators use the 2-lanes-per-direction geometry.
+    lane_edge_offset = params.lane_width_ft if narrative_is_flagger else 2.0 * params.lane_width_ft
     shoulder_edge_offset = lane_edge_offset + shoulder_width
     sign_offset_right = lane_edge_offset + 4.0
 
@@ -232,7 +244,7 @@ def build_narrative_context(
     # the shoulder L/3 here for every scenario kind, so flagger
     # narratives described a taper that matched neither the layout nor
     # the audit.
-    if _is_flagger_scenario(params):
+    if narrative_is_flagger:
         taper_len = one_lane_two_way_taper_length()
     else:
         taper_len = shoulder_taper_length(speed, shoulder_width)
@@ -337,7 +349,6 @@ def build_narrative_context(
         params.work_zone_speed_mph is not None and params.work_zone_speed_mph < params.speed_mph
     )
     fines_double_applicable = is_reduced
-    narrative_is_flagger = _is_flagger_scenario(params)
 
     # G6: Sheet 14 trigger-condition language for the reduced-speed
     # shoulder routing (Cases 26/27). Verbatim from the case fixtures;
@@ -481,12 +492,45 @@ def build_narrative_context(
     setup_order = sorted(advance_signs, key=lambda d: d["distance_ft"])
     takedown_order = sorted(advance_signs, key=lambda d: -d["distance_ft"])
     device_summary = _device_summary(placements, params.speed_mph)
+    equipment_bullets = _format_equipment_bullets(device_summary)
+
+    # Flagger-station positions read from the placement list (PR 3 G2 —
+    # the Setup/Takedown prose was shoulder-hard-coded: it positioned
+    # an arrow board that flagger layouts do not carry and described
+    # the taper running to the shoulder edge).  AFAD layouts substitute
+    # TEMPORARY_SIGNAL devices at the same stations.
+    flagger_stations = sorted(
+        p.station_ft
+        for p in placements
+        if p.device_type == DeviceType.FLAGGER_STATION
+        or (
+            p.device_type == DeviceType.TEMPORARY_SIGNAL
+            and (p.label or "").upper().startswith("AFAD")
+        )
+    )
+    flagger_station_1_ft = flagger_stations[-1] if flagger_stations else 0.0
+    flagger_station_2_ft = flagger_stations[0] if flagger_stations else 0.0
+    is_afad = any(
+        p.device_type == DeviceType.TEMPORARY_SIGNAL and (p.label or "").upper().startswith("AFAD")
+        for p in placements
+    )
+
+    # Pilot car (PR 3): vehicle-mounted field equipment, not a
+    # placement — S-630-1 Sheet 26 mounts G20-4 on the rear of the
+    # pilot vehicle. Appended to Required Equipment when the scenario
+    # carries the flag.
+    if pilot_car:
+        equipment_bullets += (
+            '\n- 1× Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign '
+            "mounted on the rear of the vehicle (S-630-1 Sheet 26 — "
+            "vehicle-mounted, not a roadside placement)"
+        )
 
     return {
         "params": params,
         "road_type_human": _ROAD_TYPE_HUMAN.get(params.road_type, params.road_type),
         "device_summary": device_summary,
-        "equipment_bullets": _format_equipment_bullets(device_summary),
+        "equipment_bullets": equipment_bullets,
         "sign_schedule": sign_schedule,
         "advance_signs_setup_order": setup_order,
         "advance_signs_takedown_order": takedown_order,
@@ -508,6 +552,10 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        "is_flagger": narrative_is_flagger,
+        "is_afad": is_afad,
+        "flagger_station_1_ft": flagger_station_1_ft,
+        "flagger_station_2_ft": flagger_station_2_ft,
         "site_adjustments": site_adjustments or [],
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
@@ -584,6 +632,7 @@ def generate_crew_narrative(
     use_llm: bool = False,
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -593,6 +642,8 @@ def generate_crew_narrative(
         output_path: Destination file path (relative to CWD or absolute).
         use_llm: When True, refine the template draft with Claude Haiku.
             Default False — pure template rendering, no API calls.
+        pilot_car: Flagger pilot-car scenarios list the pilot vehicle +
+            rear-mounted G20-4 as field equipment (no placement trace).
 
     Returns:
         The output path that was written.
@@ -602,6 +653,7 @@ def generate_crew_narrative(
         params,
         site_adjustments=site_adjustments,
         night_adjustments=night_adjustments,
+        pilot_car=pilot_car,
     )
     markdown = _render_template(context)
     if use_llm:

@@ -27,24 +27,50 @@
 
 **Important: Set up from downstream to upstream (against traffic flow). This ensures you are always working behind protection.**
 
+{% if is_flagger %}
+1. Identify both {% if is_afad %}AFAD{% else %}flagger{% endif %} station positions (do not staff yet — stations are staffed after all devices are in place, step 7): Station #1 at station {{ "{:,.0f}".format(flagger_station_1_ft) }} ft (approach side, 100 ft upstream of the taper start, closed-lane side); Station #2 at station {{ "{:,.0f}".format(flagger_station_2_ft) }} ft (opposing approach, 300 ft past the work-area end per CDOT S-630-1 Case 17).
+{% else %}
 1. Position arrow board at the upstream start of the shoulder taper (station {{ "{:,.0f}".format(taper_start_station) }} ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
+{% endif %}
 
-2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station {{ "{:,.0f}".format(end_sign_station_ft) }} ft), right side of road {{ "{:.0f}".format(sign_offset_ft) }} ft from centerline.{% if is_divided %} Place matching sign on left side.{% endif +%}
+2. Place the END ROAD WORK sign (G20-2) at the downstream termination (station {{ "{:,.0f}".format(end_sign_station_ft) }} ft), right side of road {{ "{:.0f}".format(sign_offset_ft) }} ft from centerline.{% if is_divided %} Place matching sign on left side.{% endif %}{% if is_flagger %} Place the opposing-direction G20-2 past the upstream end of the work zone (left side).{% endif +%}
 
+{% if is_flagger %}
+3. Place {{ num_tangent_cones }} traffic cones along the centerline boundary between the open opposing lane and the closed work lane at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft.
+{% else %}
 3. Place {{ num_tangent_cones }} traffic cones along the right lane edge at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft. Offset: {{ "{:.0f}".format(lane_edge_offset_ft) }} ft from centerline.
+{% endif %}
 
 4. Place G20-5P WORK ZONE plaque(s) within the work zone at approximately {{ "{:,.0f}".format(plaque_interval_ft) }} ft intervals.{% if is_divided %} Place matching plaques on left side.{% endif +%}
 
+{% if is_flagger %}
+5. Place {{ num_taper_drums }} channelizing drums in the one-lane two-way taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals (approximately 20 ft per MUTCD §6B.08 — this taper stages stopped traffic behind the flagger; it must be short enough to not be mistaken for a transition). Drums transition from the right lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the centerline (0 ft).
+{% else %}
 5. Place {{ num_taper_drums }} channelizing drums in the shoulder taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals. Drums transition from the lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the shoulder edge ({{ "{:.0f}".format(shoulder_edge_offset_ft) }} ft).
+{% endif %}
 
 6. Place advance warning signs upstream of the taper:
 {{ advance_signs_setup_bullets }}
 {% if is_divided %}
    Place matching signs on left side at each location.
 {% endif %}
+{% if is_flagger %}
+   Repeat the series for the opposing approach (left side, negative stations — S-630-1 Case 17: "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
+
+7. Staff both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations{% if is_afad %} (position and activate the AFADs; the operator must maintain sight of both devices){% else %} (STOP/SLOW paddles, high-visibility apparel, radio or agreed hand-signal communication between stations){% endif %}{% if is_night %}, with station flood lighting per S-630-1 Sheet 2 Note 22{% endif %}. Verify each station is visible to approaching traffic from the full advance-warning distance and has an identified escape path. Begin the alternating one-way operation.
+{% endif %}
 
 ## Takedown Procedure
 
+{% if is_flagger %}
+**Important: The one-lane operation ends before its warning signs come down. Flaggers control traffic until the roadway is fully restored to two-way operation.**
+
+1. Complete work and clear all personnel and equipment from the work area.
+2. Under continued flagger control, remove the work-zone cones and the taper drums (restoring the closed lane).
+3. Cease the alternating one-way operation and release both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations.
+4. Remove advance warning signs on both approaches: {{ takedown_sign_sequence }}.
+5. Remove G20-5P plaques and the G20-1/G20-2 BEGIN/END ROAD WORK signs.
+{% else %}
 **Important: Remove from upstream to downstream (with traffic flow). Remove advance warning signs first, work zone devices last.**
 
 1. Remove advance warning signs: {{ takedown_sign_sequence }}.{% if is_divided %} Remove both sides at each station.{% endif +%}
@@ -53,6 +79,7 @@
 4. Remove work zone cones from upstream to downstream.
 5. Remove G20-5P plaques.
 6. Remove G20-2 END ROAD WORK sign(s).
+{% endif %}
 
 ## Safety Notes
 

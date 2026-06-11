@@ -293,6 +293,10 @@ def render_markdown(scenario: Scenario) -> Response:
                     output_path=str(path),
                     site_adjustments=site_adj,
                     night_adjustments=night_adj,
+                    # Pilot car is field equipment with no placement
+                    # trace (G20-4 is vehicle-mounted per S-630-1
+                    # Sheet 26) — threaded from the scenario (PR 3).
+                    pilot_car=getattr(scenario, "pilotCar", False),
                 )
             ),
         )
