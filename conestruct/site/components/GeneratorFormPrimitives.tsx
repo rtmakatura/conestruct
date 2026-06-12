@@ -75,6 +75,39 @@ export function ChipRow<T extends string | number>({
   );
 }
 
+// Primary CTA — the only button that runs generation. Labeled with the
+// generate verb, not a download verb (UX audit finding UX-17): per-file
+// download buttons live on the output cards, and in workbench mode this
+// button downloads nothing at all (sandbox additionally auto-downloads
+// the zip as a side effect). Extracted here (Mapbox-free module) so the
+// label is unit-testable via renderToStaticMarkup — same pattern as
+// AuditTrail.test.tsx / lib/scenarios/overrides.ts.
+export function GenerateButton({
+  generating,
+  onGenerate,
+}: {
+  generating: boolean;
+  onGenerate: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="generate-btn"
+      onClick={onGenerate}
+      disabled={generating}
+    >
+      {generating ? (
+        <>
+          <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
+          Generating plan…
+        </>
+      ) : (
+        <>Generate plan</>
+      )}
+    </button>
+  );
+}
+
 export function LabelRow({
   children,
   value,

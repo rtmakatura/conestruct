@@ -22,7 +22,12 @@ import {
   type CorridorPolyline,
   type CorridorZone,
 } from "@/lib/corridor-polyline";
-import { Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
+import {
+  Field,
+  FieldGroup,
+  GenerateButton,
+  LabelRow,
+} from "./GeneratorFormPrimitives";
 import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
 import { LaneClosureForm } from "./LaneClosureForm";
@@ -157,24 +162,7 @@ export function GeneratorSidebar({
         <SiteConditionsField scenario={scenario} setMeta={setMeta} />
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
-          <button
-            type="button"
-            className="generate-btn"
-            onClick={onGenerate}
-            disabled={generating}
-          >
-            {generating ? (
-              <>
-                <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
-                Building bundle…
-              </>
-            ) : (
-              <>
-                Download MHT package (.zip)
-                <span className="font-mono">↓</span>
-              </>
-            )}
-          </button>
+          <GenerateButton generating={generating} onGenerate={onGenerate} />
 
           <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] text-center">
             Output requires TCS review
