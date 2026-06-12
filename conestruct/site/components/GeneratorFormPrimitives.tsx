@@ -75,6 +75,20 @@ export function ChipRow<T extends string | number>({
   );
 }
 
+// Inline field-level validation error (UX audit finding UX-21).  Same
+// visual family as the flagger pilot-car hint, but red — these mirror
+// backend gates the render API enforces with HTTP 400, not advisories.
+export function FieldErrorLine({ children }: { children: ReactNode }) {
+  return (
+    <div
+      role="alert"
+      className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--red)] mt-1.5"
+    >
+      ⚠ {children}
+    </div>
+  );
+}
+
 // Primary CTA — the only button that runs generation. Labeled with the
 // generate verb, not a download verb (UX audit finding UX-17): per-file
 // download buttons live on the output cards, and in workbench mode this
@@ -82,29 +96,49 @@ export function ChipRow<T extends string | number>({
 // the zip as a side effect). Extracted here (Mapbox-free module) so the
 // label is unit-testable via renderToStaticMarkup — same pattern as
 // AuditTrail.test.tsx / lib/scenarios/overrides.ts.
+//
+// ``disabled`` + ``disabledReason`` gate generation on invalid inputs
+// (UX-21): the reason renders adjacent below the button (hover-only
+// via ``title`` would fail on touch) so a disabled CTA is never
+// unexplained.
 export function GenerateButton({
   generating,
   onGenerate,
+  disabled = false,
+  disabledReason,
 }: {
   generating: boolean;
   onGenerate: () => void;
+  disabled?: boolean;
+  disabledReason?: string;
 }) {
   return (
-    <button
-      type="button"
-      className="generate-btn"
-      onClick={onGenerate}
-      disabled={generating}
-    >
-      {generating ? (
-        <>
-          <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
-          Generating plan…
-        </>
-      ) : (
-        <>Generate plan</>
+    <>
+      <button
+        type="button"
+        className="generate-btn"
+        onClick={onGenerate}
+        disabled={generating || disabled}
+        title={!generating && disabled ? disabledReason : undefined}
+      >
+        {generating ? (
+          <>
+            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
+            Generating plan…
+          </>
+        ) : (
+          <>Generate plan</>
+        )}
+      </button>
+      {!generating && disabled && disabledReason && (
+        <div
+          role="alert"
+          className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--red)] text-center"
+        >
+          {disabledReason}
+        </div>
       )}
-    </button>
+    </>
   );
 }
 

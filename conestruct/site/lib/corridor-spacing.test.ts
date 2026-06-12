@@ -5,7 +5,11 @@
 // silently fall back to the merging-taper L for flagger again.
 
 import { describe, expect, it } from "vitest";
-import { buildCorridorSpec, corridorTotalLengthFt } from "./corridor-spacing";
+import {
+  buildCorridorSpec,
+  corridorTotalLengthFt,
+  minWorkZoneFt,
+} from "./corridor-spacing";
 
 const ANCHOR = { anchorLat: 38.7, anchorLng: -104.6, bearingDeg: 0 };
 
@@ -62,5 +66,32 @@ describe("buildCorridorSpec", () => {
       laneWidthFt: 12,
     });
     expect(spec.taperFt).toBe(660); // L = 12 × 55
+  });
+});
+
+// PR 7 (UX-21): minWorkZoneFt mirrors validate_corridor_geometry's
+// WORK_ZONE_SHORTER_THAN_TAPER floor — the work zone must be at least
+// as long as its kind's required taper.
+describe("minWorkZoneFt", () => {
+  it("flagger minimum is the fixed 100 ft one-lane two-way taper", () => {
+    for (const speedMph of [25, 45, 65]) {
+      expect(minWorkZoneFt("flagger_lane_closure", speedMph, 12, 8)).toBe(100);
+    }
+  });
+
+  it("shoulder minimum is the L/3 shoulder taper at both widths", () => {
+    // Divided (10 ft shoulder): (10 × 55) / 3 ≈ 183.33.
+    expect(minWorkZoneFt("shoulder", 55, 12, 10)).toBeCloseTo(183.33, 1);
+    // Undivided (8 ft shoulder): (8 × 55) / 3 ≈ 146.67.
+    expect(minWorkZoneFt("shoulder", 55, 12, 8)).toBeCloseTo(146.67, 1);
+  });
+
+  it("shoulder minimum uses the W·S²/60 branch below 40 mph", () => {
+    // (8 × 25² / 60) / 3 ≈ 27.78.
+    expect(minWorkZoneFt("shoulder", 25, 12, 8)).toBeCloseTo(27.78, 1);
+  });
+
+  it("divided lane closure minimum is the merging taper L", () => {
+    expect(minWorkZoneFt("lane_closure_divided", 55, 12, 10)).toBe(660);
   });
 });

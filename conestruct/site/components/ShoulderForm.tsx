@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   SHOULDER_WORK_TYPES,
   type ShoulderScenario,
@@ -7,10 +8,12 @@ import {
   type RoadType,
   type Duration,
 } from "@/lib/scenarios";
+import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
   ChipRow,
   CheckRow,
   Field,
+  FieldErrorLine,
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
@@ -37,6 +40,14 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
     key: K,
     value: ShoulderScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
+
+  // UX-21: inline min-validation on the work-zone field.  The error
+  // text is blur-gated (``wzTouched``) so transient keystrokes don't
+  // flash it mid-entry; the GenerateButton disabled state (wired in
+  // GeneratorSidebar from the same validateWorkZone helper) is live
+  // regardless.
+  const [wzTouched, setWzTouched] = useState(false);
+  const wzValidation = validateWorkZone(scenario);
 
   return (
     <>
@@ -155,7 +166,11 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             className="field-input"
             value={scenario.workLen}
             onChange={(e) => set("workLen", +e.target.value || 0)}
+            onBlur={() => setWzTouched(true)}
           />
+          {wzTouched && !wzValidation.ok && (
+            <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
+          )}
         </Field>
 
         <CheckRow

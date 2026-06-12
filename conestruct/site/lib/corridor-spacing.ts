@@ -153,6 +153,36 @@ export function buildCorridorSpec(input: BuildCorridorInput): CorridorSpec {
   };
 }
 
+// Minimum work-zone length for a scenario kind, in feet — the required
+// taper length for that kind's closure mapping.  Client-side mirror of
+// ``validate_corridor_geometry``'s WORK_ZONE_SHORTER_THAN_TAPER rule
+// (src/rules/validators.py:1350): a work zone shorter than its taper is
+// geometrically impossible to lay out, and the render API blocks it
+// with HTTP 400.  This mirror exists purely for instant inline feedback
+// (UX-21) — the backend stays authoritative, so drift here fails safe
+// (the 400 still blocks; the user just loses the inline hint).  Any
+// drift between the two should be reconciled by re-running the Python
+// tests, same convention as the rest of this module.
+//
+// NOTE: the mobile kinds map to closure "lane" here AND in
+// scenario_to_call (schemas.py), so this mirror faithfully reproduces
+// the backend's taper floor on them — including the known
+// trailing-distance/taper-floor collision on the gated mobile kinds
+// (parked with the gated-kinds triage; unreachable while gated).
+export function minWorkZoneFt(
+  kind: ScenarioKind,
+  speedMph: number,
+  laneWidthFt: number,
+  shoulderWidthFt: number,
+): number {
+  return taperLengthFt(
+    SCENARIO_TO_CLOSURE[kind],
+    speedMph,
+    laneWidthFt,
+    shoulderWidthFt,
+  );
+}
+
 export function corridorTotalLengthFt(spec: CorridorSpec): number {
   return (
     spec.advanceWarningFt +

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   FLAGGER_WORK_TYPES,
   type Duration,
@@ -7,10 +8,12 @@ import {
   type FlaggerRoadType,
   type FlaggerWorkType,
 } from "@/lib/scenarios";
+import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
   ChipRow,
   CheckRow,
   Field,
+  FieldErrorLine,
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
@@ -35,6 +38,11 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
     key: K,
     value: FlaggerLaneClosureScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
+
+  // UX-21: inline min-validation on the work-zone field (blur-gated
+  // error text; live button gating lives in GeneratorSidebar).
+  const [wzTouched, setWzTouched] = useState(false);
+  const wzValidation = validateWorkZone(scenario);
 
   return (
     <>
@@ -123,7 +131,11 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             className="field-input"
             value={scenario.workLen}
             onChange={(e) => set("workLen", +e.target.value || 0)}
+            onBlur={() => setWzTouched(true)}
           />
+          {wzTouched && !wzValidation.ok && (
+            <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
+          )}
           {scenario.workLen > 1500 && !scenario.pilotCar && (
             <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5">
               ⚠ &gt;1500 ft — MUTCD § 6E recommends pilot car

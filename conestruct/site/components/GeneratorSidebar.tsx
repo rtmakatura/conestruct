@@ -14,6 +14,7 @@ import {
   type ScenarioMeta,
 } from "@/lib/scenarios";
 import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
+import { validateWorkZone } from "@/lib/scenarios/validation";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
@@ -24,6 +25,7 @@ import {
 } from "@/lib/corridor-polyline";
 import {
   Field,
+  FieldErrorLine,
   FieldGroup,
   GenerateButton,
   LabelRow,
@@ -74,6 +76,7 @@ export function GeneratorSidebar({
   onGenerate,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const wzValidation = validateWorkZone(scenario);
 
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
@@ -162,7 +165,15 @@ export function GeneratorSidebar({
         <SiteConditionsField scenario={scenario} setMeta={setMeta} />
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
-          <GenerateButton generating={generating} onGenerate={onGenerate} />
+          {/* UX-21: generation is gated on the same validateWorkZone
+              mirror the forms render inline — the backend would 400
+              this input, so the CTA must not pretend otherwise. */}
+          <GenerateButton
+            generating={generating}
+            onGenerate={onGenerate}
+            disabled={!wzValidation.ok}
+            disabledReason={wzValidation.message ?? undefined}
+          />
 
           <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] text-center">
             Output requires TCS review
@@ -520,6 +531,10 @@ function ManualFallback({
   setScenario: (next: Scenario) => void;
 }) {
   const meta = scenario.meta;
+  // UX-21: same blur-gated inline validation as the per-kind forms —
+  // this fallback panel is the third surface that edits workLen.
+  const [wzTouched, setWzTouched] = useState(false);
+  const wzValidation = validateWorkZone(scenario);
   return (
     <div className="border border-[color:var(--rule)] bg-[color:var(--canvas)] p-3">
       <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] mb-2">
@@ -596,9 +611,13 @@ function ManualFallback({
                 workLen: Number.isFinite(n) ? n : 0,
               } as Scenario);
             }}
+            onBlur={() => setWzTouched(true)}
           />
         </div>
       </div>
+      {wzTouched && !wzValidation.ok && (
+        <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
+      )}
     </div>
   );
 }
