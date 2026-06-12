@@ -378,3 +378,73 @@ def test_case17_curve_variant() -> None:  # pragma: no cover
 )
 def test_case42_pilot_car_variant() -> None:  # pragma: no cover
     raise NotImplementedError
+
+
+# ---------------------------------------------------------------------------
+# Off-page ADVANCE WARNING table — approach station row (PR 5 / UX-09)
+# ---------------------------------------------------------------------------
+#
+# The approach flagger sits at taper_start + 100 (Fig. 6P-10 band max)
+# while the schematic's visible extent ends at taper_start + 50, so it
+# is off-page on every flagger plan.  Before PR 5 the off-page table
+# was signs-only and the station vanished from page 1 entirely (UX
+# audit finding UX-09); these tests lock the row in.
+
+
+def _offpage_rows(
+    placements: list[DevicePlacement], params: ScenarioParams
+) -> list[tuple[str, str, float]]:
+    """Run the production mapping → table path on a placement list."""
+    from src.rendering.plan_sheet import _build_advance_warning_table, _make_x_mapping
+
+    mapping = _make_x_mapping(placements, params, params.shoulder_width_ft)
+    return _build_advance_warning_table(
+        placements,
+        mapping["taper_start_station"],
+        mapping["station_max_visible"],
+        params,
+    )
+
+
+def test_offpage_table_lists_approach_flagger_first() -> None:
+    """UX-09: the approach flagger station is a table row, not a silent drop.
+
+    Exactly one station row (the opposing station draws on-page at a
+    negative station), CODE "—" (a flagger is a person, not an MUTCD
+    code), #1 numbering matching the narrative convention (#1 = max
+    station = approach side), distance = the Fig. 6P-10 +100 ft band
+    max — sorted first as the closest off-page entry.
+    """
+    placements, _, params = flagger_placements_and_audit(FLAGGER_BASIC_BODY)
+    rows = _offpage_rows(placements, params)
+
+    station_rows = [r for r in rows if r[0] == "—"]
+    assert station_rows == [("—", "FLAGGER STATION #1 (APPROACH)", FLAGGER_TO_TAPER_FT)]
+    assert rows[0] == station_rows[0]  # closest-first puts it on top
+
+    # The sign rows are untouched by the widened filter: same four-sign
+    # upstream series the table carried before PR 5.
+    assert [r[0] for r in rows[1:]] == ["W20-7", "W3-4", "W20-4", "W20-1"]
+
+
+def test_offpage_table_afad_variant() -> None:
+    """The AFAD form (live "Use AFAD" toggle) gets the same treatment."""
+    placements, _, params = flagger_placements_and_audit(dict(FLAGGER_BASIC_BODY, afad=True))
+    rows = _offpage_rows(placements, params)
+
+    station_rows = [r for r in rows if r[0] == "—"]
+    assert station_rows == [("—", "AFAD #1 (APPROACH)", FLAGGER_TO_TAPER_FT)]
+
+
+def test_offpage_table_shoulder_has_no_station_rows() -> None:
+    """Non-flagger regression: shoulder plans emit zero station rows."""
+    from src.api.schemas import ShoulderScenario
+    from tests.s630._harness import CASE_11_GENERAL_BODY
+
+    scenario = ShoulderScenario.model_validate(CASE_11_GENERAL_BODY)
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    rows = _offpage_rows(placements, params)
+
+    assert rows  # the table itself is populated…
+    assert all(r[0] != "—" for r in rows)  # …with sign rows only

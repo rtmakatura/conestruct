@@ -2336,6 +2336,18 @@ def _draw_legend(
 _PLAQUE_CODES: frozenset[str] = PLAQUE_CODES
 
 
+def _is_station_placement(p: DevicePlacement) -> bool:
+    """Flagger station or AFAD — the placements a flagger plan staffs.
+
+    Mirrors crew_narrative.py's flagger_stations predicate
+    (FLAGGER_STATION, or TEMPORARY_SIGNAL labeled AFAD_*) so the PDF
+    table and the narrative number the same set of stations.
+    """
+    return p.device_type == DeviceType.FLAGGER_STATION or (
+        p.device_type == DeviceType.TEMPORARY_SIGNAL and (p.label or "").upper().startswith("AFAD")
+    )
+
+
 def _build_advance_warning_table(
     placements: list[DevicePlacement],
     taper_start_station: float,
@@ -2363,11 +2375,25 @@ def _build_advance_warning_table(
     The PDF omits the "(under W21-5aR)" parenthetical that the
     text-only surfaces append to the plaque values because column-major
     sorting puts parent immediately before plaque at the same distance.
+
+    Off-page flagger / AFAD stations (UX-09): the approach station
+    sits at taper_start + 100 (Fig. 6P-10 band max) while the visible
+    extent ends at taper_start + 50, so it is *always* off-page on
+    flagger plans — and was silently dropped because this filter was
+    signs-only while the off-page X had no table fallback.  Station
+    placements now emit a row (CODE "—" — no MUTCD code; a flagger is
+    a person, an AFAD a device) so the schematic + table union covers
+    every placement.  The device predicate mirrors
+    crew_narrative.py's flagger_stations comprehension
+    (FLAGGER_STATION, or TEMPORARY_SIGNAL labeled AFAD_*) and the #N
+    numbering mirrors its convention: #1 = highest station (approach
+    side), #2 = opposing.  AFAD is reachable from the live UI
+    (FlaggerForm "Use AFAD" toggle), so both forms are handled here.
     """
     upstream = [
         p
         for p in placements
-        if p.device_type == DeviceType.SIGN_GENERIC
+        if (p.device_type == DeviceType.SIGN_GENERIC or _is_station_placement(p))
         and p.label
         and p.station_ft > station_max_visible
     ]
@@ -2392,6 +2418,19 @@ def _build_advance_warning_table(
     rows: list[tuple[str, str, float]] = []
     for p, label in unique:
         dist = p.station_ft - taper_start_station
+        if _is_station_placement(p):
+            # Rank among ALL stations (on- and off-page) so the table's
+            # #N matches the narrative: #1 = max station = approach.
+            rank = 1 + sum(
+                1 for q in placements if _is_station_placement(q) and q.station_ft > p.station_ft
+            )
+            kind = "AFAD" if p.device_type == DeviceType.TEMPORARY_SIGNAL else "FLAGGER STATION"
+            # "(APPROACH)" not "(APPROACH SIDE)": the longer form is
+            # 139.6 pt at Helvetica 7 vs the 134.5 pt description room
+            # in the tier-2 two-column advance layout (col_w 182 −
+            # desc_dx 30 − "100 ft" 17.9); the short form is 121.4 pt.
+            rows.append(("—", f"{kind} #{rank} (APPROACH)", dist))
+            continue
         bare, desc = substitute_sign_description(
             label, p.station_ft, params, taper_start_station=taper_start_station
         )
@@ -2669,8 +2708,22 @@ def _draw_notes(
     # closest-first within each column) once row count crosses the
     # tier-2 threshold so dense stepped-W3-5 and future flagger/lane
     # closure additions stay inside the box.
+    #
+    # Title gains "& FLAGGER STATIONS" only when a station placement
+    # actually landed off-page (UX-09) — the same filter the table rows
+    # use — so a flagger isn't mislabeled a sign and every non-flagger
+    # plan keeps the existing string byte-for-byte.  AFAD rows keep the
+    # same title: an AFAD staffs a flagger station (the narrative calls
+    # them "AFAD station positions").
+    has_offpage_station = any(
+        _is_station_placement(p) and p.station_ft > station_max_visible for p in (placements or [])
+    )
     if is_mobile or is_off_road:
         advance_section_title = "ADVANCE WARNING SIGNS (upstream of work area)"
+    elif has_offpage_station:
+        advance_section_title = (
+            "ADVANCE WARNING SIGNS & FLAGGER STATIONS (off-page upstream of taper)"
+        )
     else:
         advance_section_title = "ADVANCE WARNING SIGNS (off-page upstream of taper)"
     section_header(advance_section_title)
