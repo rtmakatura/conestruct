@@ -87,4 +87,13 @@ export interface AuditResponse {
 export type AuditState =
   | { state: "loading"; lastReady: AuditResponse | null }
   | { state: "ready"; data: AuditResponse }
-  | { state: "error"; message: string; lastReady: AuditResponse | null };
+  | {
+      state: "error";
+      message: string;
+      // HTTP status of the failed fetch, when one was received.  400 is
+      // load-bearing: it means the backend judged the *scenario* invalid
+      // (geometry validation), which the StatusBar renders as a red
+      // input error rather than a neutral "verification unavailable".
+      httpStatus?: number;
+      lastReady: AuditResponse | null;
+    };

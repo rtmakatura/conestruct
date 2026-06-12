@@ -310,6 +310,55 @@ body {
     background: var(--green-soft);
     color: var(--green);
   }
+  /* PR 7 (UX-21/22): derived strip states.  ``caution`` = validation
+     warnings present (amber); ``fail`` = invalid input, generation
+     blocked (red).  The ``warn`` class stays the in-progress style. */
+  .status-bar.caution {
+    border-left: 3px solid var(--orange);
+  }
+  .status-bar.caution .indicator {
+    background: var(--orange);
+  }
+  .status-bar.fail {
+    border-left: 3px solid var(--red);
+  }
+  .status-bar.fail .indicator {
+    background: var(--red);
+  }
+  .status-bar .pill.caution {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+  }
+  .status-bar .pill.fail {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  /* Warnings disclosure (UX-22): the caution strip is a <summary>;
+     expanding lists each warning with rule ID + citation. */
+  .status-details {
+    margin-bottom: 24px;
+  }
+  .status-details > summary {
+    list-style: none;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .status-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .status-details .disclosure-caret {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .status-details[open] .disclosure-caret {
+    transform: rotate(90deg);
+  }
+  .status-warnings {
+    border: 1px solid var(--line);
+    border-top: 0;
+    background: white;
+    padding: 12px 16px;
+  }
 
   /* Output card with corner ticks */
   .output-card {
@@ -872,6 +921,33 @@ body {
   font-size: 11px;
   padding: 2px 8px;
   margin-left: auto;
+}
+/* PR 7 (UX-21/22): derived strip states on the dark theme.  Note the
+   base ``warn`` class stays cyan here (in-progress style) — amber
+   belongs to ``caution`` and red to ``fail``. */
+.workbench .status-bar.caution {
+  border-left-color: var(--orange);
+}
+.workbench .status-bar.caution .indicator {
+  background: var(--orange);
+}
+.workbench .status-bar.fail {
+  border-left-color: var(--red);
+}
+.workbench .status-bar.fail .indicator {
+  background: var(--red);
+}
+.workbench .status-bar .pill.caution {
+  background: var(--orange-soft);
+  color: var(--orange);
+}
+.workbench .status-bar .pill.fail {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.workbench .status-warnings {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
 }
 
 /* Output cards: slate paper on dark canvas */

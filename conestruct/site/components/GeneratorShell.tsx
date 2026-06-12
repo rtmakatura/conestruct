@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
+import { validateWorkZone } from "@/lib/scenarios/validation";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
@@ -140,6 +141,10 @@ export function GeneratorShell({
           setAuditState((prev) => ({
             state: "error",
             message: detail || `HTTP ${res.status}`,
+            // 400 = the backend judged the scenario invalid (geometry
+            // validation) — the StatusBar renders that as a red input
+            // error instead of a neutral "verification unavailable".
+            httpStatus: res.status,
             lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
           }));
           return;
@@ -226,6 +231,18 @@ export function GeneratorShell({
 
   const generated = status === "done";
 
+  // UX-21: the strip's red input-error state.  Client mirror first
+  // (validateWorkZone — same helper that gates the GenerateButton);
+  // a backend geometry 400 (mirror drift) is the authoritative
+  // fallback.  Non-400 audit errors stay "verification unavailable"
+  // inside StatusBar.
+  const wzValidation = validateWorkZone(scenario);
+  const auditInputError =
+    auditState.state === "error" && auditState.httpStatus === 400
+      ? auditState.message
+      : null;
+  const inputError = !wzValidation.ok ? wzValidation.message : auditInputError;
+
   return (
     <div className="workbench min-h-screen">
       <div className="workbench-frame" aria-hidden>
@@ -283,7 +300,11 @@ export function GeneratorShell({
             </div>
           </div>
 
-          <StatusBar status={status} />
+          <StatusBar
+            status={status}
+            inputError={inputError}
+            audit={auditState}
+          />
           {bundleError && (
             <div className="mb-5 px-4 py-3 border-l-2 border-[color:var(--orange)] font-mono text-[12px] text-[color:var(--orange)]">
               {bundleError}
