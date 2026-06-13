@@ -367,12 +367,18 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const effectiveDivided: boolean | null =
     overrides.divided ??
     (classify.state === "detected" ? classify.result.divided : null);
+  // UX-02: only an override (an explicit accept/edit) or a high-confidence
+  // OSM speed feeds the corridor preview.  A low-confidence highway-class
+  // fallback is shown in the field but does NOT auto-apply on Save, so it
+  // must not drive the preview either — otherwise the corridor computes a
+  // value Save won't keep (the same divergence UX-01 fixes for the clamp).
+  // Until the operator accepts it (which makes it an override), the preview
+  // falls back to initial.speedMph — the scenario's current speed, which is
+  // exactly what Save will keep.
   const effectiveSpeed: number | null =
     overrides.speedMph ??
     (classify.state === "detected"
-      ? (classify.result.speedLimitMph ??
-        classify.result.fields.speed.value ??
-        null)
+      ? (classify.result.speedLimitMph ?? null)
       : null);
   const effectiveLanes: number | null =
     overrides.lanesPerDirection ??
@@ -1565,6 +1571,16 @@ function DetectedRows({
       : `${speedValue} mph ${speedSourceWord} snaps to the ${speedClampedTo} mph grid. Plan will use ${speedClampedTo}.`;
   }
 
+  // UX-02: a low-confidence speed (highway-class fallback, no OSM tag)
+  // does not auto-apply.  Offer an explicit click-to-accept so the
+  // reviewed value can be kept in one click (Pattern B) instead of
+  // silently evaporating.  Once accepted it becomes an override (applies
+  // + drives the preview); the affordance hides and the row reads as
+  // modified.  No auto-apply behavior changes — the operator opts in.
+  const speedLowConf =
+    result.fields.speed.confidence === "low" && speedDetected != null;
+  const showAcceptSpeed = speedLowConf && overrides.speedMph === undefined;
+
   return (
     <div className="flex flex-col">
       <RoadFieldRow
@@ -1572,7 +1588,7 @@ function DetectedRows({
         field={result.fields.speed}
         modified={
           overrides.speedMph !== undefined &&
-          overrides.speedMph !== speedDetected
+          (overrides.speedMph !== speedDetected || speedLowConf)
         }
         note={speedNote}
       >
@@ -1595,6 +1611,26 @@ function DetectedRows({
           hasOverride={overrides.speedMph !== undefined}
         />
       </RoadFieldRow>
+
+      {showAcceptSpeed && (
+        <div className="flex items-center justify-between gap-3 py-2 -mt-1 border-b border-[color:var(--rule)]/40">
+          <span className="font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--orange)]">
+            Low-confidence fallback — won&apos;t apply unless you accept it.
+          </span>
+          <button
+            type="button"
+            onClick={() =>
+              setOverrides({
+                ...overrides,
+                speedMph: speedDetected ?? undefined,
+              })
+            }
+            className="flex-shrink-0 border border-[color:var(--orange)] bg-transparent text-[color:var(--orange)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--orange)] hover:text-[color:var(--canvas)] transition-colors"
+          >
+            Use {speedDetected} mph
+          </button>
+        </div>
+      )}
 
       <RoadFieldRow
         label="Lanes per direction"

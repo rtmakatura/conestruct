@@ -528,12 +528,19 @@ function LocationSummary({
 // renders the speed clamp/snap events; commit 3 (UX-02) extends the
 // switch with the low-confidence skip/accept events.
 function handoffNoteText(event: HandoffEvent, kind: Scenario["kind"]): string {
-  const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
   switch (event.kind) {
-    case "clamped":
+    case "clamped": {
+      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
       return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel} — ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
-    case "snapped":
+    }
+    case "snapped": {
+      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
       return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
+    }
+    case "accepted_low_confidence":
+      return `Speed ${event.valueMph} mph — accepted low-confidence fallback (${event.sourceLabel}).`;
+    case "skipped_low_confidence":
+      return `Speed fallback ${event.detectedMph} mph not applied — plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
   }
 }
 

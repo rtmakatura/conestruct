@@ -4,7 +4,11 @@
 // Commit 3 (UX-02) adds the low-confidence skip/accept cases.
 
 import { describe, expect, it } from "vitest";
-import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "./index";
+import {
+  DEFAULT_FLAGGER,
+  DEFAULT_MOBILE_OP_MULTILANE,
+  DEFAULT_SHOULDER,
+} from "./index";
 import type { AutoApplyDelta } from "./auto-apply";
 import type { RoadClassification } from "../road-detection/types";
 import type { Scenario } from "./types";
@@ -40,6 +44,38 @@ function osmClassification(speedLimitMph: number): RoadClassification {
         confidence: "high",
         source: "OSM maxspeed tag",
         rawData: `maxspeed=${speedLimitMph} mph`,
+      },
+      lanes: { value: 1, confidence: "low", source: "fallback" },
+      roadType: { value: "rural_undivided", confidence: "low", source: "x" },
+      divided: { value: false, confidence: "low", source: "x" },
+    },
+  };
+}
+
+// No OSM maxspeed → speedLimitMph undefined, the speed field carries the
+// low-confidence highway-class fallback (UX-02's tertiary-road case).
+function fallbackClassification(fallbackMph: number): RoadClassification {
+  return {
+    roadType: "rural_undivided",
+    divided: false,
+    laneWidthFt: 12,
+    confidence: "low",
+    source: "osm-tags",
+    raw: {
+      class: "tertiary",
+      oneway: false,
+      roadName: null,
+      roadRef: null,
+      placeName: null,
+      osmLanesTag: null,
+      osmMaxspeedTag: null,
+    },
+    fields: {
+      speed: {
+        value: fallbackMph,
+        confidence: "low",
+        source: 'highway-class fallback ("tertiary")',
+        rawData: "class=tertiary",
       },
       lanes: { value: 1, confidence: "low", source: "fallback" },
       roadType: { value: "rural_undivided", confidence: "low", source: "x" },
@@ -125,6 +161,67 @@ describe("summarizeHandoff — speed clamp/snap (UX-01)", () => {
       delta: null,
     });
     expect(events).toEqual([]);
+  });
+});
+
+describe("summarizeHandoff — low-confidence skip/accept (UX-02)", () => {
+  const SKIP_DELTA: AutoApplyDelta = { ...DELTA, speedApplied: false };
+
+  it("emits skipped_low_confidence when a fallback was shown but never applied", () => {
+    // No override, no OSM speed → form keeps the prior 45; the 35 fallback
+    // the operator saw in the picker evaporates.
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: fallbackClassification(35),
+      overrides: {},
+      final: DEFAULT_FLAGGER, // speed unchanged at 45
+      delta: SKIP_DELTA,
+    });
+    expect(events).toEqual([
+      {
+        field: "speed",
+        kind: "skipped_low_confidence",
+        detectedMph: 35,
+        inEffectMph: 45,
+        sourceLabel: 'highway-class fallback ("tertiary")',
+      },
+    ]);
+  });
+
+  it("emits accepted_low_confidence when the operator opts in via click-to-accept", () => {
+    // Click-to-accept writes the fallback as an override → it applies.
+    const final = { ...DEFAULT_FLAGGER, speed: 35 } as Scenario;
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: fallbackClassification(35),
+      overrides: { speedMph: 35 },
+      final,
+      delta: SKIP_DELTA,
+    });
+    expect(events).toEqual([
+      {
+        field: "speed",
+        kind: "accepted_low_confidence",
+        valueMph: 35,
+        sourceLabel: 'highway-class fallback ("tertiary")',
+      },
+    ]);
+  });
+
+  it("an accepted fallback that is out of domain reports the clamp, not the accept", () => {
+    // 35 mph fallback accepted on a multilane scenario (domain [45, 75])
+    // → clamped up to 45; the clamp is the louder signal.
+    const final = { ...DEFAULT_MOBILE_OP_MULTILANE, speed: 45 } as Scenario;
+    const events = summarizeHandoff({
+      prior: DEFAULT_MOBILE_OP_MULTILANE,
+      classification: fallbackClassification(35),
+      overrides: { speedMph: 35 },
+      final,
+      delta: SKIP_DELTA,
+    });
+    expect(events).toEqual([
+      { field: "speed", kind: "clamped", fromMph: 35, toMph: 45, source: "manual" },
+    ]);
   });
 });
 
