@@ -30,6 +30,7 @@ from openpyxl import load_workbook
 from src.api.render_api import _build_device_breakdown
 from src.api.schemas import ShoulderScenario, scenario_to_call
 from src.export.device_list import export_device_list
+from src.narrative.crew_narrative import build_narrative_context
 from src.rules.devices import DeviceType
 from src.rules.validators import DevicePlacement, ScenarioParams
 
@@ -86,9 +87,9 @@ def test_xlsx_descriptions_carry_no_template_tokens(name: str, tmp_path) -> None
     placements, params = _pipeline(BODIES[name])
     for row in _xlsx_device_rows(placements, params, tmp_path):
         description = str(row[2])
-        assert not _TEMPLATE_TOKEN.search(description), (
-            f"{name}: XLSX description carries a literal template token: " f"{description!r}"
-        )
+        assert not _TEMPLATE_TOKEN.search(
+            description
+        ), f"{name}: XLSX description carries a literal template token: {description!r}"
 
 
 @pytest.mark.parametrize("name", sorted(REDUCED_SPEEDS))
@@ -122,9 +123,9 @@ def test_breakdown_descriptions_carry_no_template_tokens(name: str) -> None:
     """No device-breakdown row ships a literal XX/XXX placeholder."""
     placements, params = _pipeline(BODIES[name])
     for row in _build_device_breakdown(placements, params):
-        assert not _TEMPLATE_TOKEN.search(str(row["device"])), (
-            f"{name}: breakdown device description carries a literal " f"template token: {row!r}"
-        )
+        assert not _TEMPLATE_TOKEN.search(
+            str(row["device"])
+        ), f"{name}: breakdown device description carries a literal template token: {row!r}"
 
 
 @pytest.mark.parametrize("name", sorted(REDUCED_SPEEDS))
@@ -138,6 +139,25 @@ def test_breakdown_splits_r2_1_faces_on_reduced_plans(name: str) -> None:
     assert all(r["qty"] == 2 for r in rows), rows
     assert devices[0] == f"SPEED LIMIT {wz_speed} (work-zone speed posting)", devices
     assert devices[1] == f"SPEED LIMIT {posted} (posted-speed restoration)", devices
+
+
+# ---------------------------------------------------------------------------
+# T-01 — crew narrative Required Equipment list (UX-10)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("name", sorted(BODIES))
+def test_narrative_equipment_carries_no_template_tokens(name: str) -> None:
+    """The Required Equipment bullets must resolve parametric sign
+    legends (e.g. ``G20-1 ROAD CONSTRUCTION (NEXT XXX FT)``) to real
+    values instead of leaking the bare template token — the same
+    invariant the XLSX device list and UI breakdown already hold, now
+    extended to the narrative equipment surface (UX-10)."""
+    placements, params = _pipeline(BODIES[name])
+    bullets = build_narrative_context(placements, params)["equipment_bullets"]
+    assert not _TEMPLATE_TOKEN.search(
+        bullets
+    ), f"{name}: narrative equipment list carries a literal template token:\n{bullets}"
 
 
 # ---------------------------------------------------------------------------

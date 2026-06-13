@@ -26,7 +26,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from src.generation.layout import device_count_floors
 from src.rules.devices import DeviceType, cone_display_name
-from src.rules.sign_codes import description_for
+from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -94,20 +94,39 @@ _ROAD_TYPE_HUMAN: dict[str, str] = {
 }
 
 
-def _device_summary(placements: list[DevicePlacement], speed_mph: float) -> list[dict[str, Any]]:
-    """Bullet-list aggregation: non-signs at top level, signs nested beneath one parent."""
+def _device_summary(
+    placements: list[DevicePlacement], params: ScenarioParams
+) -> list[dict[str, Any]]:
+    """Bullet-list aggregation: non-signs at top level, signs nested beneath one parent.
+
+    Signs aggregate by schedule key (R2-1 splitting into entrance /
+    restoration faces, per :func:`schedule_key`) and resolve their
+    descriptions through the shared :func:`substitute_sign_description`
+    helper with a lowest-station representative — exactly the
+    device-list aggregation.  So the Required Equipment list reads the
+    same substituted values ("G20-1 ROAD CONSTRUCTION (NEXT 400 FT)") as
+    the XLSX device list, the PDF schedule, and the UI breakdown, instead
+    of leaking the bare "(NEXT XXX FT)" template (UX-10).
+    """
     non_sign_counts: Counter[DeviceType] = Counter()
     sign_counts: Counter[str] = Counter()
+    # Lowest-station member per sign key — deterministic representative
+    # for station-dependent substitutions, matching device_list._row_for.
+    sign_reps: dict[str, DevicePlacement] = {}
     for p in placements:
         if p.device_type == DeviceType.SIGN_GENERIC:
-            sign_counts[p.label or "(unlabeled)"] += 1
+            key = schedule_key(p.label, p.station_ft) if p.label else "(unlabeled)"
+            sign_counts[key] += 1
+            current = sign_reps.get(key)
+            if current is None or p.station_ft < current.station_ft:
+                sign_reps[key] = p
         else:
             non_sign_counts[p.device_type] += 1
 
     rows: list[dict[str, Any]] = []
     for dt, n in sorted(non_sign_counts.items(), key=lambda kv: kv[0].value):
         label = (
-            cone_display_name(speed_mph)
+            cone_display_name(params.speed_mph)
             if dt == DeviceType.CONE
             else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
         )
@@ -121,9 +140,13 @@ def _device_summary(placements: list[DevicePlacement], speed_mph: float) -> list
 
     if sign_counts:
         sign_rows = []
-        for code, n in sorted(sign_counts.items()):
-            human = description_for(code)
-            label = f"{code} {human}".strip() if human != code else code
+        for key, n in sorted(sign_counts.items()):
+            rep = sign_reps.get(key)
+            if rep is None or key == "(unlabeled)":
+                label = "(unlabeled)"
+            else:
+                code, desc = substitute_sign_description(key, rep.station_ft, params)
+                label = f"{code} {desc}".strip() if desc != code else code
             sign_rows.append(
                 {
                     "label": label,
@@ -496,7 +519,7 @@ def build_narrative_context(
     # and pulls the farthest sign (C) first.
     setup_order = sorted(advance_signs, key=lambda d: d["distance_ft"])
     takedown_order = sorted(advance_signs, key=lambda d: -d["distance_ft"])
-    device_summary = _device_summary(placements, params.speed_mph)
+    device_summary = _device_summary(placements, params)
     equipment_bullets = _format_equipment_bullets(device_summary)
 
     # Flagger-station positions read from the placement list (PR 3 G2 —
