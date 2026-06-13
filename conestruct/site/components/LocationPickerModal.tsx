@@ -17,6 +17,7 @@ import {
 } from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
+import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
@@ -1388,6 +1389,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
               classify={classify}
               overrides={overrides}
               setOverrides={setOverrides}
+              scenarioKind={initial.scenarioKind}
             />
 
             <div className="border-l-0 lg:border-l border-t lg:border-t-0 border-[color:var(--rule)]">
@@ -1471,10 +1473,12 @@ function RoadPropertiesPanel({
   classify,
   overrides,
   setOverrides,
+  scenarioKind,
 }: {
   classify: ClassifyStatus;
   overrides: RoadFieldOverrides;
   setOverrides: (next: RoadFieldOverrides) => void;
+  scenarioKind: ScenarioKind;
 }) {
   return (
     <div>
@@ -1511,6 +1515,7 @@ function RoadPropertiesPanel({
             result={classify.result}
             overrides={overrides}
             setOverrides={setOverrides}
+            scenarioKind={scenarioKind}
           />
         )}
       </div>
@@ -1522,10 +1527,12 @@ function DetectedRows({
   result,
   overrides,
   setOverrides,
+  scenarioKind,
 }: {
   result: RoadClassification;
   overrides: RoadFieldOverrides;
   setOverrides: (next: RoadFieldOverrides) => void;
+  scenarioKind: ScenarioKind;
 }) {
   const speedDetected =
     result.speedLimitMph ?? result.fields.speed.value ?? null;
@@ -1537,6 +1544,27 @@ function DetectedRows({
   const roadTypeValue = overrides.roadType ?? result.roadType;
   const dividedValue = overrides.divided ?? result.divided;
 
+  // UX-01: surface the domain clamp right at the speed field so the
+  // operator sees the cap before Save.  The corridor preview already
+  // computes with the clamped value (commit 1); this names *why* the
+  // value shown in the field won't carry verbatim.  Only the bound clamp
+  // gets the "cap" framing; a pure 5-mph grid snap gets the lighter note.
+  const speedClampedTo =
+    speedValue != null ? snapSpeedToDomain(scenarioKind, speedValue) : null;
+  const speedSourceWord =
+    overrides.speedMph !== undefined ? "entered" : "detected (OSM)";
+  let speedNote: string | null = null;
+  if (
+    speedValue != null &&
+    speedClampedTo != null &&
+    speedClampedTo !== speedValue
+  ) {
+    const boundClamp = Math.round(speedValue / 5) * 5 !== speedClampedTo;
+    speedNote = boundClamp
+      ? `${speedValue} mph ${speedSourceWord} — ${scenarioNoun(scenarioKind)} plans cap at ${speedClampedTo} mph (${scenarioTa(scenarioKind)} speed domain). Plan will use ${speedClampedTo}.`
+      : `${speedValue} mph ${speedSourceWord} snaps to the ${speedClampedTo} mph grid. Plan will use ${speedClampedTo}.`;
+  }
+
   return (
     <div className="flex flex-col">
       <RoadFieldRow
@@ -1546,6 +1574,7 @@ function DetectedRows({
           overrides.speedMph !== undefined &&
           overrides.speedMph !== speedDetected
         }
+        note={speedNote}
       >
         <NumericFieldEditor
           value={speedValue}
@@ -1658,11 +1687,16 @@ function RoadFieldRow<T>({
   field,
   modified,
   children,
+  note,
 }: {
   label: string;
   field: DetectedField<T>;
   modified: boolean;
   children: React.ReactNode;
+  // Optional below-caption annotation (UX-01: the domain clamp/snap note
+  // on the speed row).  Rendered in the orange low-confidence tone so it
+  // reads as a "heads up, this value will change" signal.
+  note?: string | null;
 }) {
   const confTone =
     field.confidence === "low"
@@ -1691,6 +1725,11 @@ function RoadFieldRow<T>({
         >
           {field.source} · {field.confidence} confidence
         </div>
+        {note && (
+          <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--orange)]">
+            {note}
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-end gap-1.5 min-w-0">
         {children}

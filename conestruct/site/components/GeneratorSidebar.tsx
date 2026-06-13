@@ -8,12 +8,20 @@ import {
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
   SCENARIO_KINDS,
+  type AutoApplyDelta,
   type RoadType,
   type Scenario,
   type ScenarioKind,
   type ScenarioMeta,
 } from "@/lib/scenarios";
 import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
+import {
+  handoffEventIsCurrent,
+  scenarioNoun,
+  scenarioTa,
+  summarizeHandoff,
+  type HandoffEvent,
+} from "@/lib/scenarios/handoff-summary";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
@@ -76,6 +84,11 @@ export function GeneratorSidebar({
   onGenerate,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  // UX-01/UX-02: the transformations the picker → form handoff applied
+  // (speed clamp/snap; later, low-confidence skip/accept).  Frontend-only
+  // metadata held here and rendered in LocationSummary — never written to
+  // scenario state or the backend payload.
+  const [handoff, setHandoff] = useState<HandoffEvent[]>([]);
   const wzValidation = validateWorkZone(scenario);
 
   const scenarioRef = useRef(scenario);
@@ -83,6 +96,9 @@ export function GeneratorSidebar({
 
   const onKindChange = (kind: ScenarioKind) => {
     if (kind === scenario.kind) return;
+    // The notes describe the previous kind's handoff — drop them so a
+    // stale clamp note can't follow the operator into a different kind.
+    setHandoff([]);
     setScenario(carryMeta(scenario, defaultFor(kind)));
   };
 
@@ -105,10 +121,25 @@ export function GeneratorSidebar({
     if (r.workZoneFt > 0) {
       next = { ...next, workLen: r.workZoneFt } as Scenario;
     }
+    let delta: AutoApplyDelta | null = null;
     if (r.classification) {
-      next = applyClassification(next, r.classification).scenario;
+      const applied = applyClassification(next, r.classification);
+      next = applied.scenario;
+      delta = applied.delta;
     }
     next = applyOverridesToScenario(next, r.overrides);
+    // Name what the handoff did to the values the operator reviewed, so
+    // the clamp/skip isn't silent (UX-01/UX-02).  Derived from the raw
+    // picker result + the applied scenario; pure frontend metadata.
+    setHandoff(
+      summarizeHandoff({
+        prior: cur,
+        classification: r.classification,
+        overrides: r.overrides,
+        final: next,
+        delta,
+      }),
+    );
     setScenario(next);
     setPickerOpen(false);
   };
@@ -132,6 +163,7 @@ export function GeneratorSidebar({
           setMeta={setMeta}
           setScenario={setScenario}
           onOpenPicker={() => setPickerOpen(true)}
+          handoff={handoff}
         />
 
         <DisabledScenarioBanner kind={scenario.kind} />
@@ -259,11 +291,13 @@ function LocationCorridorSection({
   setMeta,
   setScenario,
   onOpenPicker,
+  handoff,
 }: {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
   setScenario: (next: Scenario) => void;
   onOpenPicker: () => void;
+  handoff: HandoffEvent[];
 }) {
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
@@ -275,6 +309,7 @@ function LocationCorridorSection({
           onOpenPicker={onOpenPicker}
           setMeta={setMeta}
           setScenario={setScenario}
+          handoff={handoff}
         />
       ) : (
         <UnsetLocation
@@ -359,14 +394,24 @@ function LocationSummary({
   onOpenPicker,
   setMeta,
   setScenario,
+  handoff,
 }: {
   scenario: Scenario;
   onOpenPicker: () => void;
   setMeta: (m: ScenarioMeta) => void;
   setScenario: (next: Scenario) => void;
+  handoff: HandoffEvent[];
 }) {
   const meta = scenario.meta;
   const [showManual, setShowManual] = useState(false);
+
+  // Only show notes that still describe the current scenario — a manual
+  // speed edit after the handoff hides its now-stale clamp note.  If
+  // nothing notable happened (clean high-confidence in-domain handoff),
+  // this is empty and the summary row doesn't render at all.
+  const handoffNotes = handoff.filter((e) =>
+    handoffEventIsCurrent(e, scenario),
+  );
 
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!meta.lat || !meta.lng || !scenario.workLen) return null;
@@ -415,6 +460,20 @@ function LocationSummary({
         </div>
       </SummaryRow>
 
+      {/* Applied-changes summary — names the transformations the picker →
+          form handoff made to the values the operator reviewed (UX-01
+          clamp/snap; UX-02 low-confidence skip/accept).  Renders only
+          when something notable happened. */}
+      {handoffNotes.length > 0 && (
+        <SummaryRow label="Applied from picker">
+          <div className="flex flex-col gap-1.5">
+            {handoffNotes.map((e, i) => (
+              <HandoffNote key={i} event={e} kind={scenario.kind} />
+            ))}
+          </div>
+        </SummaryRow>
+      )}
+
       {/* Corridor extent rows */}
       {corridor && (
         <SummaryRow label="Corridor extent">
@@ -461,6 +520,38 @@ function LocationSummary({
           setScenario={setScenario}
         />
       )}
+    </div>
+  );
+}
+
+// One applied-changes note in the LocationSummary.  Commit 2 (UX-01)
+// renders the speed clamp/snap events; commit 3 (UX-02) extends the
+// switch with the low-confidence skip/accept events.
+function handoffNoteText(event: HandoffEvent, kind: Scenario["kind"]): string {
+  const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+  switch (event.kind) {
+    case "clamped":
+      return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel} — ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
+    case "snapped":
+      return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
+  }
+}
+
+function HandoffNote({
+  event,
+  kind,
+}: {
+  event: HandoffEvent;
+  kind: Scenario["kind"];
+}) {
+  return (
+    <div className="flex items-baseline gap-2">
+      <span className="text-[color:var(--orange)] font-mono text-[11px] leading-none flex-shrink-0">
+        !
+      </span>
+      <span className="text-[11px] text-[color:var(--ink-on-dark)] leading-snug">
+        {handoffNoteText(event, kind)}
+      </span>
     </div>
   );
 }
