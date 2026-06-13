@@ -894,7 +894,21 @@ export function referenceItem(
   triggerCondition?: string,
 ): ItemSpec {
   const data = audit.state === "ready" ? audit.data : audit.lastReady;
-  const url = (data?.sections.case as { url?: string } | undefined)?.url;
+  // UX-19: the backend case section carries two narrative strings the UI
+  // previously dropped — ``narrative`` (which CDOT case this matches and
+  // how closely; e.g. the flagger closest-analog framing) and
+  // ``narrative_2`` (layout-conformance + spacing note).  Both render as
+  // their own paragraph below the generic lead-in.  Presence-guarded:
+  // when a payload omits either (malformed / a kind that bypasses the
+  // case section), the body degrades to the prior generic-sentence form
+  // rather than rendering ``undefined``.  The collapsed chip (caseId) is
+  // unchanged.
+  const caseSection = data?.sections.case as
+    | { url?: string; narrative?: string; narrative_2?: string }
+    | undefined;
+  const url = caseSection?.url;
+  const narrative = caseSection?.narrative;
+  const narrative2 = caseSection?.narrative_2;
   return {
     title: `${ta} · ${cdotSheet} reference`,
     result: caseId,
@@ -906,6 +920,8 @@ export function referenceItem(
           and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
           Colorado supplement to MUTCD Part 6.
         </p>
+        {narrative && <p>{narrative}</p>}
+        {narrative2 && <p>{narrative2}</p>}
         {triggerCondition && (
           <p className="font-mono text-[12px] uppercase tracking-[0.04em] text-[color:var(--ink-on-dark-faint)]">
             Trigger: &ldquo;{triggerCondition}&rdquo;

@@ -418,6 +418,146 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
   });
 });
 
+// UX-19 — referenceItem surfaces the backend case-section narrative. The
+// case section ships two strings the UI previously dropped on the floor:
+// ``narrative`` (which CDOT case this matches and how closely — the
+// stamping PE's first question) and ``narrative_2`` (layout-conformance +
+// spacing note). These tests pin: both render as their own paragraph in
+// the expanded body when present, the flagger closest-analog framing
+// surfaces verbatim, and an absent case section degrades gracefully to
+// the generic sentence without rendering "undefined" or throwing.
+
+describe("referenceItem renderer (UX-19 case narrative)", () => {
+  function readyAuditWithCase(
+    caseFields: Record<string, unknown>,
+  ): AuditResponse {
+    return {
+      summary: {
+        ta: "TA-10",
+        cdot_sheet: "S-630-1",
+        case_id: "MUTCD TA-10: Flagger one-lane two-way",
+        taper_length_ft: 100,
+        taper_label: "one-lane two-way taper",
+        buffer_space_ft: 360,
+        device_spacing_taper_ft: 20,
+        device_spacing_tangent_ft: 90,
+        step_count: 16,
+      },
+      sections: {
+        taper: {},
+        buffer: {},
+        spacing: {},
+        advance: {},
+        colorado: {},
+        case: caseFields,
+        flagger: {},
+        corridor_validation: { checked: false, warnings: [] },
+        geometry_validation: { violations: [], all_pass: true },
+      },
+      pending_verification: { count: 0, note: "", tracking_issue: null },
+    };
+  }
+
+  const FLAGGER_NARRATIVE =
+    "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal " +
+    "standard for flagger-controlled alternating one-way traffic on a " +
+    "2-lane undivided highway). CDOT S-630-1 does not include a general " +
+    "flagger one-lane two-way case; Case 17 (lane closure at a curve) is " +
+    "the closest CDOT analog but is curve-specialized.";
+  const FLAGGER_NARRATIVE_2 =
+    "The generated plan follows the same device layout as the reference " +
+    "case with spacing computed for 55 mph.";
+
+  it("renders both narrative paragraphs (flagger closest-analog + layout note)", () => {
+    const data = readyAuditWithCase({
+      url: "https://www.codot.gov/...PDF",
+      narrative: FLAGGER_NARRATIVE,
+      narrative_2: FLAGGER_NARRATIVE_2,
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-10",
+      "S-630-1",
+      data.summary.case_id,
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    // The closest-analog framing — the exact answer to "which case is
+    // this based on, and how closely?"
+    expect(html).toContain(
+      "CDOT S-630-1 does not include a general flagger one-lane two-way case",
+    );
+    expect(html).toContain(
+      "Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized",
+    );
+    // The layout/spacing note as its own paragraph.
+    expect(html).toContain(
+      "follows the same device layout as the reference case with spacing computed for 55 mph",
+    );
+    // The generic lead-in is still present (additive, not replaced).
+    expect(html).toContain("Plan matched against MUTCD Typical Application");
+  });
+
+  it("renders narrative and narrative_2 as two distinct paragraphs", () => {
+    const data = readyAuditWithCase({
+      url: "https://www.codot.gov/...PDF",
+      narrative: FLAGGER_NARRATIVE,
+      narrative_2: FLAGGER_NARRATIVE_2,
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-10",
+      "S-630-1",
+      data.summary.case_id,
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    // Generic lead-in + narrative + narrative_2 = three <p> ahead of the
+    // PDF link paragraph (no trigger here). Assert the two narrative
+    // strings land in separate paragraphs, not concatenated into one.
+    const pCount = (html.match(/<p[> ]/g) ?? []).length;
+    expect(pCount).toBeGreaterThanOrEqual(4);
+    expect(html).not.toContain("curve-specialized.The generated plan");
+  });
+
+  it("renders the shoulder Case 11 narrative", () => {
+    const data = readyAuditWithCase({
+      url: "https://www.codot.gov/...PDF",
+      narrative:
+        "This scenario matches CDOT Standard Plan S-630-1, Case 11: " +
+        "shoulder closure on a divided highway.",
+      narrative_2:
+        "The generated plan follows the same device layout as the " +
+        "reference case with spacing computed for 65 mph.",
+    });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      "Case 11: Shoulder closure on divided highway",
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).toContain(
+      "matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway",
+    );
+    expect(html).toContain("spacing computed for 65 mph");
+  });
+
+  it("degrades gracefully when the case section omits narrative fields", () => {
+    // The pre-UX-19 fixture shape: case carries only a url. The body must
+    // render the generic sentence + link and NOT emit "undefined".
+    const data = readyAuditWithCase({ url: "https://www.codot.gov/...PDF" });
+    const spec = referenceItem(
+      { state: "ready", data },
+      "TA-2",
+      "S-630-1",
+      "Case 11: Shoulder closure on divided highway",
+    );
+    const html = renderToStaticMarkup(spec.body as ReactElement);
+    expect(html).toContain("Plan matched against MUTCD Typical Application");
+    expect(html).not.toContain("undefined");
+    expect(html).toContain("Open S-630-1 PDF on CDOT.gov");
+  });
+});
+
 // V1-Wide S1 follow-up (#49) — integration-style coverage of the
 // buildShoulderItems wiring itself. The 4 referenceItem tests above
 // pin the renderer surface, but the upstream call site
