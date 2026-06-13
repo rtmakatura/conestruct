@@ -38,7 +38,12 @@ from src.rules.spacing import (
     pick_device_count,
     shoulder_taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams, _is_flagger_scenario
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    _is_flagger_scenario,
+    scenario_display_name,
+)
 
 _TEMPLATES_DIR: Path = Path(__file__).parent / "templates"
 _BASE_TEMPLATE: str = "base.md.j2"
@@ -529,6 +534,8 @@ def build_narrative_context(
     return {
         "params": params,
         "road_type_human": _ROAD_TYPE_HUMAN.get(params.road_type, params.road_type),
+        # UX-11: display name, not the raw "lane" / "shoulder" enum.
+        "closure_type_display": scenario_display_name(params),
         "device_summary": device_summary,
         "equipment_bullets": equipment_bullets,
         "sign_schedule": sign_schedule,

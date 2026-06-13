@@ -19,7 +19,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.sign_codes import schedule_key, substitute_sign_description
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
 # Light-gray header fill from the V1 spec.
 _HEADER_FILL: PatternFill = PatternFill(
@@ -195,7 +195,8 @@ def _populate_summary_sheet(
         ("Total device count", len(placements)),
         ("Total unique device types", len(aggregated_rows)),
         ("Speed (mph)", params.speed_mph),
-        ("Closure type", params.closure_type),
+        # UX-11: display name, not the raw "lane" / "shoulder" enum.
+        ("Closure type", scenario_display_name(params)),
         ("Work zone length (ft)", params.work_zone_length_ft),
         ("Jurisdiction", params.jurisdiction),
         ("Generated", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),

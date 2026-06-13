@@ -21,7 +21,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.sign_codes import description_for
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
 # ---------------------------------------------------------------------------
 # Pricing constants
@@ -481,7 +481,8 @@ def _populate_summary_sheet(
     sheet.cell(row=3, column=1, value=datetime.now().strftime("%Y-%m-%d"))
 
     sheet.cell(row=5, column=1, value=f"Project: {project_name}").font = _SUBTOTAL_FONT
-    closure = params.closure_type.replace("_", " ")
+    # UX-11: display name, not the raw "lane" / "shoulder" enum.
+    closure = scenario_display_name(params)
     road = params.road_type.replace("_", " ")
     sheet.cell(
         row=6,

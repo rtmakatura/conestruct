@@ -187,6 +187,48 @@ class ScenarioParams:
     work_zone_speed_mph: int | None = None
 
 
+def scenario_display_name(params: ScenarioParams) -> str:
+    """Human-readable scenario name in Title Case.
+
+    Single source for the closure-type label across every deliverable
+    surface (UX-11): the PDF title-block banner, the PDF PARAMETERS box,
+    the XLSX Summary sheet, the crew narrative, and the cost-estimate
+    export.  ``plan_sheet._scenario_label`` uppercases this for the
+    banner — kept byte-identical to the pre-UX-11 title block — while the
+    secondary surfaces render the Title-Case form instead of the raw
+    ``closure_type`` enum ("lane" / "shoulder").  Covers all six scenario
+    kinds so the gated ones are correct the moment they un-gate.
+
+    Branch order mirrors the former ``_scenario_label`` exactly so the
+    same params resolve to the same string.
+    """
+    ct = params.closure_type
+    divided = params.is_divided
+    if ct == "mobile":
+        return "Mobile Operation — Multi-Lane Road" if divided else "Mobile Operation — 2-Lane Road"
+    if ct == "off_road":
+        return "Work Beyond the Shoulder"
+    if ct == "lane" and not divided:
+        return "Flagger Alternating Traffic — 2-Lane Undivided"
+    if ct == "lane":
+        return "Right-Lane Closure — Divided Highway"
+    if divided:
+        return "Shoulder Closure — Divided Highway"
+    return "Shoulder Closure — 2-Lane Undivided"
+
+
+def scenario_display_name_short(params: ScenarioParams) -> str:
+    """Compact closure label for tight columns (the PDF PARAMETERS box).
+
+    Drops the road-configuration qualifier after the em dash — the full
+    title-block banner on the same sheet already carries it, so the
+    PARAMETERS box stays legible without overflowing its half-width value
+    column.  Still strictly more informative than the bare enum it
+    replaces ("shoulder" -> "Shoulder Closure").
+    """
+    return scenario_display_name(params).split(" — ")[0]
+
+
 @dataclass(frozen=True)
 class Violation:
     """A single validation finding.

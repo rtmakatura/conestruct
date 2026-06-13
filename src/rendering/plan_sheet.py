@@ -45,7 +45,13 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams, _is_flagger_scenario
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    _is_flagger_scenario,
+    scenario_display_name,
+    scenario_display_name_short,
+)
 
 load_dotenv()
 
@@ -1706,22 +1712,13 @@ def _draw_landmarks(
 
 def _scenario_label(params: ScenarioParams) -> str:
     """Default banner label derived from closure_type + is_divided when
-    the project_name field is left empty."""
-    if params.closure_type == "mobile":
-        return (
-            "MOBILE OPERATION — MULTI-LANE ROAD"
-            if params.is_divided
-            else "MOBILE OPERATION — 2-LANE ROAD"
-        )
-    if params.closure_type == "off_road":
-        return "WORK BEYOND THE SHOULDER"
-    if params.closure_type == "lane" and not params.is_divided:
-        return "FLAGGER ALTERNATING TRAFFIC — 2-LANE UNDIVIDED"
-    if params.closure_type == "lane":
-        return "RIGHT-LANE CLOSURE — DIVIDED HIGHWAY"
-    if params.is_divided:
-        return "SHOULDER CLOSURE — DIVIDED HIGHWAY"
-    return "SHOULDER CLOSURE — 2-LANE UNDIVIDED"
+    the project_name field is left empty.
+
+    Uppercase view of the canonical ``scenario_display_name`` (UX-11) so
+    the title-block banner stays byte-identical to its pre-UX-11 form
+    while the secondary surfaces share the same Title-Case source.
+    """
+    return scenario_display_name(params).upper()
 
 
 def _mutcd_ta_reference(params: ScenarioParams) -> str:
@@ -2641,7 +2638,9 @@ def _draw_notes(
     section_header("PARAMETERS")
     rows: list[tuple[str, str]] = [
         ("Speed limit", f"{speed} mph"),
-        ("Closure", params.closure_type),
+        # UX-11: short display name (the full banner already sits in the
+        # title block above; the half-width value column can't hold it).
+        ("Closure", scenario_display_name_short(params)),
     ]
     if is_mobile:
         # Mobile ops have no fixed work area or taper.  The trailing
