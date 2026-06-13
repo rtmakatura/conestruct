@@ -16,6 +16,7 @@ import {
   candidateLabel,
 } from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
+import { snapSpeedToDomain } from "@/lib/scenarios";
 import { buildCorridorSpec } from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
@@ -384,7 +385,15 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
     if (workZoneFt <= 0) return null;
-    const speed = effectiveSpeed ?? initial.speedMph ?? 35;
+    // UX-01: the form clamps speed to the scenario kind's schema domain
+    // on Save (snapSpeedToDomain, inside applyClassification /
+    // applyOverridesToScenario).  Compute the in-modal preview with that
+    // same clamped value so the corridor numbers the operator reviews are
+    // the ones Save will actually apply — otherwise they implicitly
+    // approve a buffer/total the form then silently changes (the
+    // "approved 2,745, received 2,595" contradiction at the handoff).
+    const rawSpeed = effectiveSpeed ?? initial.speedMph ?? 35;
+    const speed = snapSpeedToDomain(initial.scenarioKind, rawSpeed);
     const spec = buildCorridorSpec({
       anchorLat: lat,
       anchorLng: lng,

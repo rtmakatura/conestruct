@@ -10,6 +10,7 @@ import {
   corridorTotalLengthFt,
   minWorkZoneFt,
 } from "./corridor-spacing";
+import { snapSpeedToDomain } from "./scenarios";
 
 const ANCHOR = { anchorLat: 38.7, anchorLng: -104.6, bearingDeg: 0 };
 
@@ -66,6 +67,53 @@ describe("buildCorridorSpec", () => {
       laneWidthFt: 12,
     });
     expect(spec.taperFt).toBe(660); // L = 12 × 55
+  });
+});
+
+// UX-01: the LocationPicker preview must clamp speed to the scenario
+// kind's schema domain (snapSpeedToDomain) *before* feeding it to
+// buildCorridorSpec — the same clamp the form applies on Save. This pins
+// the SH-94 reproduction: an OSM-detected 65 mph on a flagger scenario
+// (TA-10 domain [20, 55]) lands at 55, so the preview must show the 55
+// numbers the form will keep, not the 65 numbers it will silently drop.
+describe("buildCorridorSpec — UX-01 picker preview is post-clamp", () => {
+  // DEFAULT_FLAGGER live fixture, rural, wz 400 — matches the modal's
+  // SH-94 flagger handoff (effectiveRoadType rural_undivided → "rural").
+  const flaggerPreview = (rawSpeedMph: number) =>
+    buildCorridorSpec({
+      ...ANCHOR,
+      speedMph: snapSpeedToDomain("flagger_lane_closure", rawSpeedMph),
+      workZoneFt: 400,
+      scenarioKind: "flagger_lane_closure",
+      laneWidthFt: 12,
+      roadCategory: "rural",
+    });
+
+  it("clamps an OSM 65 mph to 55 → Buffer 495 / Total 2,595 (the value Save applies)", () => {
+    const spec = flaggerPreview(65);
+    expect(spec.bufferFt).toBe(495); // BUFFER_BY_SPEED[55], NOT 645
+    expect(corridorTotalLengthFt(spec)).toBe(2595); // NOT the pre-clamp 2,745
+  });
+
+  it("pre-clamp 65 mph would have shown Buffer 645 / Total 2,745 (the bug this prevents)", () => {
+    // Same inputs WITHOUT the clamp — documents the divergence the fix
+    // closes: 645 − 495 = 150 ft of buffer, 2,745 − 2,595 = 150 ft total.
+    const unclamped = buildCorridorSpec({
+      ...ANCHOR,
+      speedMph: 65,
+      workZoneFt: 400,
+      scenarioKind: "flagger_lane_closure",
+      laneWidthFt: 12,
+      roadCategory: "rural",
+    });
+    expect(unclamped.bufferFt).toBe(645);
+    expect(corridorTotalLengthFt(unclamped)).toBe(2745);
+  });
+
+  it("an in-domain speed is unchanged (45 mph stays 45 → Buffer 360)", () => {
+    const spec = flaggerPreview(45);
+    expect(spec.bufferFt).toBe(360);
+    expect(corridorTotalLengthFt(spec)).toBe(2460);
   });
 });
 
