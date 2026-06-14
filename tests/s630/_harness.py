@@ -116,9 +116,9 @@ def stations_of(placements: list[DevicePlacement], label: str) -> list[float]:
 
 def assert_within(actual: float, expected: float, tol: float = 10.0, name: str = "") -> None:
     """±tol-ft tolerance check per match_rules.md §"Numeric tolerance"."""
-    assert actual == pytest.approx(
-        expected, abs=tol
-    ), f"{name or 'value'}: expected {expected} ± {tol}, got {actual}"
+    assert actual == pytest.approx(expected, abs=tol), (
+        f"{name or 'value'}: expected {expected} ± {tol}, got {actual}"
+    )
 
 
 def assert_mirror_balanced(placements: list[DevicePlacement]) -> None:

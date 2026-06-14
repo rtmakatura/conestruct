@@ -250,8 +250,7 @@ def main() -> None:
                 # Write partial log and abort
                 _write_log(log_path, log_rows)
                 print(
-                    f"\n!!! FAILED: PATCH /api/annotations/{anno_id}/ "
-                    f"returned {resp.status_code}"
+                    f"\n!!! FAILED: PATCH /api/annotations/{anno_id}/ returned {resp.status_code}"
                 )
                 print(f"Response: {resp.text[:500]}")
                 print(f"Partial log written to {log_path}")
@@ -300,9 +299,7 @@ def main() -> None:
                         }
                     )
                 _write_log(log_path, log_rows)
-                print(
-                    f"\n!!! FAILED: PATCH /api/drafts/{draft_id}/ " f"returned {resp.status_code}"
-                )
+                print(f"\n!!! FAILED: PATCH /api/drafts/{draft_id}/ returned {resp.status_code}")
                 print(f"Response: {resp.text[:500]}")
                 print(f"Partial log written to {log_path}")
                 print(

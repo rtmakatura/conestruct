@@ -57,9 +57,9 @@ def test_buffer_space_table_complete() -> None:
     values = [row.buffer_ft for row in BUFFER_SPACE]
     assert all(v is not None for v in values)
     assert values == sorted(values), "buffer_ft must increase with speed"
-    assert all(
-        values[i] < values[i + 1] for i in range(len(values) - 1)
-    ), "buffer_ft must be strictly monotonic"
+    assert all(values[i] < values[i + 1] for i in range(len(values) - 1)), (
+        "buffer_ft must be strictly monotonic"
+    )
 
 
 def test_buffer_space_table_known_values() -> None:
@@ -82,9 +82,9 @@ def test_advance_warning_all_rows_have_abc() -> None:
         row for row in ADVANCE_WARNING_SIGN_SPACING if row.road_category == "expressway"
     )
     assert expressway.c_ft is not None
-    assert (
-        expressway.a_ft < expressway.b_ft < expressway.c_ft
-    ), "expressway A/B/C distances are required to be asymmetric and increasing"
+    assert expressway.a_ft < expressway.b_ft < expressway.c_ft, (
+        "expressway A/B/C distances are required to be asymmetric and increasing"
+    )
 
 
 def test_advance_warning_known_values() -> None:
@@ -413,12 +413,12 @@ def test_no_unverified_pay_items() -> None:
     See ``docs/cdot_pay_items.md`` for the mapping and reasoning.
     """
     for device_type, spec in DEVICE_CATALOG.items():
-        assert (
-            spec.cdot_pay_item_number is not None
-        ), f"{device_type.value}: cdot_pay_item_number is None"
-        assert (
-            spec.cdot_pay_item_number != "TODO"
-        ), f"{device_type.value}: cdot_pay_item_number is still 'TODO'"
+        assert spec.cdot_pay_item_number is not None, (
+            f"{device_type.value}: cdot_pay_item_number is None"
+        )
+        assert spec.cdot_pay_item_number != "TODO", (
+            f"{device_type.value}: cdot_pay_item_number is still 'TODO'"
+        )
 
 
 def test_pay_item_number_format() -> None:
@@ -429,13 +429,13 @@ def test_pay_item_number_format() -> None:
     for device_type, spec in DEVICE_CATALOG.items():
         number = spec.cdot_pay_item_number
         if number == "subsidiary":
-            assert (
-                spec.cdot_pay_item is None
-            ), f"{device_type.value}: subsidiary items must have cdot_pay_item=None"
+            assert spec.cdot_pay_item is None, (
+                f"{device_type.value}: subsidiary items must have cdot_pay_item=None"
+            )
             continue
-        assert pattern.match(
-            number or ""
-        ), f"{device_type.value}: pay item number {number!r} does not match 630-XXXXX format"
+        assert pattern.match(number or ""), (
+            f"{device_type.value}: pay item number {number!r} does not match 630-XXXXX format"
+        )
 
 
 def test_pay_item_name_present_when_not_subsidiary() -> None:
@@ -443,9 +443,9 @@ def test_pay_item_name_present_when_not_subsidiary() -> None:
     for device_type, spec in DEVICE_CATALOG.items():
         if spec.cdot_pay_item_number == "subsidiary":
             continue
-        assert (
-            spec.cdot_pay_item
-        ), f"{device_type.value}: non-subsidiary entry missing cdot_pay_item name"
+        assert spec.cdot_pay_item, (
+            f"{device_type.value}: non-subsidiary entry missing cdot_pay_item name"
+        )
 
 
 # ===========================================================================
@@ -588,9 +588,9 @@ def test_taper_too_short() -> None:
             placements.append(p)
     params = _simple_lane_closure_params()
     violations = validate_layout(placements, params)
-    assert any(
-        v.rule_id == "TAPER_TOO_SHORT" for v in violations
-    ), f"Expected TAPER_TOO_SHORT, got: {[v.rule_id for v in violations]}"
+    assert any(v.rule_id == "TAPER_TOO_SHORT" for v in violations), (
+        f"Expected TAPER_TOO_SHORT, got: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_missing_advance_warning_signs() -> None:
@@ -603,9 +603,9 @@ def test_missing_advance_warning_signs() -> None:
         for v in violations
         if v.severity == "error" and ("ADVANCE" in v.rule_id or "SIGN" in v.rule_id)
     ]
-    assert (
-        advance_errors
-    ), f"Expected an advance-sign error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert advance_errors, (
+        f"Expected an advance-sign error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
 
 
 def test_buffer_too_short() -> None:
@@ -622,9 +622,9 @@ def test_buffer_too_short() -> None:
             placements.append(p)
     params = _simple_lane_closure_params()
     violations = validate_layout(placements, params)
-    assert any(
-        v.rule_id == "BUFFER_TOO_SHORT" for v in violations
-    ), f"Expected BUFFER_TOO_SHORT, got: {[v.rule_id for v in violations]}"
+    assert any(v.rule_id == "BUFFER_TOO_SHORT" for v in violations), (
+        f"Expected BUFFER_TOO_SHORT, got: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_missing_arrow_board() -> None:
@@ -632,9 +632,9 @@ def test_missing_arrow_board() -> None:
     placements = [p for p in _textbook_layout() if p.device_type != DeviceType.ARROW_BOARD]
     params = _simple_lane_closure_params()
     violations = validate_layout(placements, params)
-    assert any(
-        v.rule_id == "MISSING_ARROW_BOARD" for v in violations
-    ), f"Expected MISSING_ARROW_BOARD, got: {[v.rule_id for v in violations]}"
+    assert any(v.rule_id == "MISSING_ARROW_BOARD" for v in violations), (
+        f"Expected MISSING_ARROW_BOARD, got: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_co_signs_one_side_only() -> None:
@@ -656,9 +656,9 @@ def test_co_signs_one_side_only() -> None:
     co_errors = [
         v for v in violations if v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error"
     ]
-    assert (
-        co_errors
-    ), f"Expected CO_SIGN_BOTH_SIDES errors, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert co_errors, (
+        f"Expected CO_SIGN_BOTH_SIDES errors, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
 
 
 def test_mobile_skips_taper_check() -> None:
@@ -674,9 +674,9 @@ def test_mobile_skips_taper_check() -> None:
     )
     violations = validate_layout([], params)
     taper_violations = [v for v in violations if "TAPER" in v.rule_id]
-    assert (
-        not taper_violations
-    ), f"Did not expect taper violations, got: {[v.rule_id for v in taper_violations]}"
+    assert not taper_violations, (
+        f"Did not expect taper violations, got: {[v.rule_id for v in taper_violations]}"
+    )
 
 
 def test_flagger_stations_required() -> None:
@@ -691,9 +691,9 @@ def test_flagger_stations_required() -> None:
         jurisdiction="CDOT",
     )
     violations = validate_layout([], params)
-    assert any(
-        "FLAGGER" in v.rule_id for v in violations
-    ), f"Expected a FLAGGER violation, got: {[v.rule_id for v in violations]}"
+    assert any("FLAGGER" in v.rule_id for v in violations), (
+        f"Expected a FLAGGER violation, got: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_flagger_not_required_for_divided() -> None:
@@ -709,9 +709,9 @@ def test_flagger_not_required_for_divided() -> None:
     )
     violations = validate_layout([], params)
     flagger_violations = [v for v in violations if "FLAGGER" in v.rule_id]
-    assert (
-        not flagger_violations
-    ), f"Did not expect FLAGGER violations, got: {[v.rule_id for v in flagger_violations]}"
+    assert not flagger_violations, (
+        f"Did not expect FLAGGER violations, got: {[v.rule_id for v in flagger_violations]}"
+    )
 
 
 def _shoulder_divided_params() -> ScenarioParams:
@@ -770,9 +770,9 @@ def test_shoulder_divided_one_side_only_fires_error() -> None:
         if not (DEVICE_CATALOG[p.device_type].is_sign and p.offset_ft < 0)
     ]
     violations = validate_layout(placements, params)
-    assert any(
-        v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations
-    ), f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert any(v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations), (
+        f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
 
 
 def test_begin_road_work_required_with_end() -> None:
@@ -832,16 +832,16 @@ def test_w20_2_label_substitutes_distance() -> None:
     finally:
         os.unlink(path)
 
-    assert (
-        "ROAD WORK XXX FT" not in text
-    ), "Rendered PDF still contains the literal 'ROAD WORK XXX FT' placeholder"
+    assert "ROAD WORK XXX FT" not in text, (
+        "Rendered PDF still contains the literal 'ROAD WORK XXX FT' placeholder"
+    )
     assert "ROAD WORK 2500 FT" in text, (
         "Expected the substituted W20-2 distance 'ROAD WORK 2500 FT' in the rendered PDF; "
         f"found notes text: {text!r}"
     )
-    assert (
-        "NEXT XXX FT" not in text
-    ), "Rendered PDF still contains the literal 'NEXT XXX FT' placeholder for G20-1"
+    assert "NEXT XXX FT" not in text, (
+        "Rendered PDF still contains the literal 'NEXT XXX FT' placeholder for G20-1"
+    )
     assert "NEXT 5000 FT" in text, (
         "Expected the substituted G20-1 distance 'NEXT 5000 FT' in the rendered PDF; "
         f"found notes text: {text!r}"
@@ -852,9 +852,9 @@ def test_w20_2_label_substitutes_distance() -> None:
             f"found text: {text!r}"
         )
     for column in ("CODE", "DESCRIPTION", "DISTANCE"):
-        assert (
-            column in text
-        ), f"Expected column header {column!r} in the rendered notes panel; found text: {text!r}"
+        assert column in text, (
+            f"Expected column header {column!r} in the rendered notes panel; found text: {text!r}"
+        )
 
 
 def test_build_advance_warning_table_empty_placements() -> None:
@@ -936,15 +936,15 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
     # (= sign_a_station - wz_len = 1000 + 495 + 183 + 1000 - 1000).
     # W7-3a "NEXT XX MILES" -> NEXT 1 MILE (max(1, round(1000/5280))).
     w16_2a_desc = next(desc for code, desc, _d in rows if code == "W16-2a")
-    assert (
-        "XXX" not in w16_2a_desc and "plaque" not in w16_2a_desc
-    ), f"W16-2a description must substitute the NEXT-FT value, got {w16_2a_desc!r}"
+    assert "XXX" not in w16_2a_desc and "plaque" not in w16_2a_desc, (
+        f"W16-2a description must substitute the NEXT-FT value, got {w16_2a_desc!r}"
+    )
     assert "NEXT 1,678 FT" in w16_2a_desc
 
     w7_3a_desc = next(desc for code, desc, _d in rows if code == "W7-3a")
-    assert (
-        "XX" not in w7_3a_desc and "plaque" not in w7_3a_desc
-    ), f"W7-3a description must substitute the NEXT-MILES value, got {w7_3a_desc!r}"
+    assert "XX" not in w7_3a_desc and "plaque" not in w7_3a_desc, (
+        f"W7-3a description must substitute the NEXT-MILES value, got {w7_3a_desc!r}"
+    )
     assert "NEXT 1 MILE" in w7_3a_desc and "MILES" not in w7_3a_desc
 
 
@@ -989,9 +989,9 @@ def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
     # Description carries the substituted advisory speed, never the
     # literal 'XX' placeholder.
     for _code, desc in w3_5_rows:
-        assert (
-            "ADVISORY SPEED" in desc and "XX" not in desc
-        ), f"W3-5 description must substitute the advisory speed: {desc!r}"
+        assert "ADVISORY SPEED" in desc and "XX" not in desc, (
+            f"W3-5 description must substitute the advisory speed: {desc!r}"
+        )
 
 
 def test_notes_layout_tier_selection() -> None:
@@ -1184,18 +1184,18 @@ def test_case_11_pdf_renders_g1_g2_off_page_signs() -> None:
         os.unlink(path)
 
     for code in ("W5-1", "W16-2a", "W7-3a", "W21-5aR", "W20-2", "W20-1"):
-        assert (
-            code in text
-        ), f"Expected {code} in the rendered PDF off-page table; not found in: {text!r}"
+        assert code in text, (
+            f"Expected {code} in the rendered PDF off-page table; not found in: {text!r}"
+        )
 
     # G1 plaque substitution must reach the PDF — audit / crew_narrative
     # already substitute these.  W16-2a "NEXT XXX FT" → NEXT 1,678 FT
     # (= sign_a_station - wz_len for 55 mph freeway, wz_len=1000).
     # W7-3a "NEXT XX MILES" → NEXT 1 MILE (workLen=1000 < 5280 → 1).
     assert "NEXT 1,678 FT" in text, f"W16-2a placeholder not substituted in PDF; text: {text!r}"
-    assert (
-        "NEXT 1 MILE" in text and "NEXT XX MILES" not in text
-    ), f"W7-3a placeholder not substituted in PDF; text: {text!r}"
+    assert "NEXT 1 MILE" in text and "NEXT XX MILES" not in text, (
+        f"W7-3a placeholder not substituted in PDF; text: {text!r}"
+    )
 
 
 def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
@@ -1252,9 +1252,9 @@ def test_case_11_pdf_no_literal_placeholders_in_advance_table() -> None:
         "MILES plaque",
     )
     for fragment in bad_fragments:
-        assert (
-            fragment not in text
-        ), f"Unsubstituted template fragment {fragment!r} leaked into PDF; text: {text!r}"
+        assert fragment not in text, (
+            f"Unsubstituted template fragment {fragment!r} leaked into PDF; text: {text!r}"
+        )
 
 
 def test_case_11b_pdf_substitutes_r2_1_speed_limits() -> None:
@@ -1301,17 +1301,17 @@ def test_case_11b_pdf_substitutes_r2_1_speed_limits() -> None:
     finally:
         os.unlink(path)
 
-    assert (
-        "SPEED LIMIT XX" not in text
-    ), f"Literal R2-1 'SPEED LIMIT XX' template leaked into PDF; text: {text!r}"
+    assert "SPEED LIMIT XX" not in text, (
+        f"Literal R2-1 'SPEED LIMIT XX' template leaked into PDF; text: {text!r}"
+    )
     # Entrance R2-1 posts the reduced work-zone limit; downstream R2-1
     # restores the posted limit.  Wording mirrors the crew narrative.
-    assert (
-        "SPEED LIMIT 50 (work-zone speed posting)" in text
-    ), f"Expected entrance R2-1 'SPEED LIMIT 50'; text: {text!r}"
-    assert (
-        "SPEED LIMIT 55 (posted-speed restoration)" in text
-    ), f"Expected downstream R2-1 'SPEED LIMIT 55'; text: {text!r}"
+    assert "SPEED LIMIT 50 (work-zone speed posting)" in text, (
+        f"Expected entrance R2-1 'SPEED LIMIT 50'; text: {text!r}"
+    )
+    assert "SPEED LIMIT 55 (posted-speed restoration)" in text, (
+        f"Expected downstream R2-1 'SPEED LIMIT 55'; text: {text!r}"
+    )
 
 
 def test_divided_signs_never_in_opposite_carriageway() -> None:
@@ -1574,9 +1574,9 @@ def test_lane_closure_one_side_only_fires_error() -> None:
         if not (DEVICE_CATALOG[p.device_type].is_sign and p.offset_ft < 0)
     ]
     violations = validate_layout(placements, params)
-    assert any(
-        v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations
-    ), f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert any(v.rule_id == "CO_SIGN_BOTH_SIDES" and v.severity == "error" for v in violations), (
+        f"Expected CO_SIGN_BOTH_SIDES error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
 
 
 def test_lane_closure_begin_road_work_required_with_end() -> None:
@@ -1615,9 +1615,9 @@ def test_lane_closure_uses_w20_5r_not_w20_5b() -> None:
     placements = generate_lane_closure_divided(params)
     labels = {p.label for p in placements if p.label is not None}
     assert "W20-5B" not in labels, "W20-5B is not a real MUTCD code; expected W20-5R"
-    assert (
-        "W20-5R" in labels
-    ), f"Expected RIGHT LANE CLOSED AHEAD label W20-5R in TA-19 layout; got labels: {labels!r}"
+    assert "W20-5R" in labels, (
+        f"Expected RIGHT LANE CLOSED AHEAD label W20-5R in TA-19 layout; got labels: {labels!r}"
+    )
 
 
 def _flagger_params() -> ScenarioParams:
@@ -1646,12 +1646,12 @@ def test_flagger_series_carries_w20_4_and_w3_4() -> None:
     params = _flagger_params()
     placements = generate_flagger_alternating_2lane(params)
     labels = {p.label for p in placements if p.label is not None}
-    assert (
-        "W20-4" in labels
-    ), f"W20-4 ONE LANE ROAD AHEAD is the TA-10 B-position sign (B-11); got labels: {labels!r}"
-    assert (
-        "W3-4" in labels
-    ), f"Expected BE PREPARED TO STOP label W3-4 in TA-10 layout; got labels: {labels!r}"
+    assert "W20-4" in labels, (
+        f"W20-4 ONE LANE ROAD AHEAD is the TA-10 B-position sign (B-11); got labels: {labels!r}"
+    )
+    assert "W3-4" in labels, (
+        f"Expected BE PREPARED TO STOP label W3-4 in TA-10 layout; got labels: {labels!r}"
+    )
 
 
 def test_flagger_pilot_car_no_roadside_g20_4() -> None:
@@ -1667,9 +1667,9 @@ def test_flagger_pilot_car_no_roadside_g20_4() -> None:
     with_pilot = generate_flagger_alternating_2lane(params, pilot_car=True)
     labels = {p.label for p in with_pilot if p.label is not None}
     assert "W20-1A" not in labels, "W20-1A is not a real MUTCD code"
-    assert (
-        "G20-4" not in labels
-    ), "G20-4 is mounted on the pilot vehicle per Sheet 26 — roadside emission is the pre-PR-2 bug"
+    assert "G20-4" not in labels, (
+        "G20-4 is mounted on the pilot vehicle per Sheet 26 — roadside emission is the pre-PR-2 bug"
+    )
     assert len(with_pilot) == len(base), "pilot_car must add no placements"
 
 
@@ -1805,9 +1805,9 @@ def test_mobile_uses_w21_1a_lowercase_not_uppercase() -> None:
         "MUTCD suffix convention is lowercase ('W20-7a', 'W3-4', 'W21-1a'); "
         "uppercase 'W21-1A' is the typo"
     )
-    assert (
-        "W21-1a" in labels
-    ), f"Expected WORKERS label W21-1a in TA-35 layout; got labels: {labels!r}"
+    assert "W21-1a" in labels, (
+        f"Expected WORKERS label W21-1a in TA-35 layout; got labels: {labels!r}"
+    )
 
 
 def test_mobile_emits_road_work_ahead_advance_sign() -> None:
@@ -1891,9 +1891,9 @@ def test_mobile_shadow_vehicle_present_in_canonical_layout() -> None:
     placements = generate_mobile_op_2lane(params)
     violations = validate_layout(placements, params)
     bad = [v for v in violations if v.rule_id == "MISSING_SHADOW_VEHICLE"]
-    assert (
-        not bad
-    ), f"Canonical TA-35 layout should not fire MISSING_SHADOW_VEHICLE: {[v.message for v in bad]}"
+    assert not bad, (
+        f"Canonical TA-35 layout should not fire MISSING_SHADOW_VEHICLE: {[v.message for v in bad]}"
+    )
 
 
 def test_mobile_advance_sign_required_when_missing() -> None:
@@ -2021,9 +2021,9 @@ def test_geometry_validator_blocks_work_zone_shorter_than_taper() -> None:
     params = _i25_mead_shoulder_params(work_zone_ft=200.0)
     violations = validate_corridor_geometry(params)
     errors = [v for v in violations if v.severity == "error"]
-    assert any(
-        v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER" for v in errors
-    ), f"Expected blocking error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert any(v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER" for v in errors), (
+        f"Expected blocking error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
     # Error message names the actual taper length so the user can act on it.
     msg = next(v.message for v in errors if v.rule_id == "WORK_ZONE_SHORTER_THAN_TAPER")
     assert "250 ft" in msg, msg
@@ -2036,9 +2036,9 @@ def test_geometry_validator_warns_work_zone_short_vs_buffer() -> None:
     params = _i25_mead_shoulder_params(work_zone_ft=200.0)
     violations = validate_corridor_geometry(params)
     warnings = [v for v in violations if v.severity == "warning"]
-    assert any(
-        v.rule_id == "WORK_ZONE_SHORT_VS_BUFFER" for v in warnings
-    ), f"Expected soft buffer warning, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert any(v.rule_id == "WORK_ZONE_SHORT_VS_BUFFER" for v in warnings), (
+        f"Expected soft buffer warning, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
 
 
 def test_geometry_validator_passes_when_work_zone_matches_taper_exactly() -> None:
@@ -2127,9 +2127,9 @@ def test_geometry_validator_blocks_freeway_lane_below_11ft() -> None:
     )
     violations = validate_corridor_geometry(params)
     errors = [v for v in violations if v.severity == "error"]
-    assert any(
-        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in errors
-    ), f"Expected freeway lane-width error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    assert any(v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in errors), (
+        f"Expected freeway lane-width error, got: {[(v.severity, v.rule_id) for v in violations]}"
+    )
     msg = next(v.message for v in errors if v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN")
     assert "10.0 ft" in msg, msg
     assert "11 ft" in msg, msg
@@ -2149,9 +2149,9 @@ def test_geometry_validator_passes_freeway_lane_at_11ft_boundary() -> None:
         jurisdiction="CDOT",
     )
     violations = validate_corridor_geometry(params)
-    assert not any(
-        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations
-    ), f"Boundary 11 ft fired G3 error: {[v.rule_id for v in violations]}"
+    assert not any(v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations), (
+        f"Boundary 11 ft fired G3 error: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_geometry_validator_skips_non_freeway_narrow_lane() -> None:
@@ -2172,9 +2172,9 @@ def test_geometry_validator_skips_non_freeway_narrow_lane() -> None:
         jurisdiction="CDOT",
     )
     violations = validate_corridor_geometry(params)
-    assert not any(
-        v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations
-    ), f"Non-freeway scenario fired G3 error: {[v.rule_id for v in violations]}"
+    assert not any(v.rule_id == "LANE_WIDTH_BELOW_FREEWAY_MIN" for v in violations), (
+        f"Non-freeway scenario fired G3 error: {[v.rule_id for v in violations]}"
+    )
 
 
 def test_geometry_validator_freeway_lane_check_applies_to_mobile() -> None:

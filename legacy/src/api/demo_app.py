@@ -33,14 +33,13 @@ import cv2
 import fitz
 import gradio as gr
 import numpy as np
-
-# ⚠️ AGPL — replace with RF-DETR before commercial release
-from ultralytics import YOLO
-
 from src.pdf_processing.isolate_tcp import (
     classify_tcp,
     extract_title_block_text,
 )
+
+# ⚠️ AGPL — replace with RF-DETR before commercial release
+from ultralytics import YOLO
 
 logger = logging.getLogger(__name__)
 

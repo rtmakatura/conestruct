@@ -867,9 +867,9 @@ def test_shoulder_taper_strictly_less_than_full_taper() -> None:
         for offset in (8.0, 10.0, 12.0):
             full = taper_length(speed, offset)
             shoulder = shoulder_taper_length(speed, offset)
-            assert (
-                shoulder < full
-            ), f"shoulder taper {shoulder} ≥ full taper {full} at speed={speed} offset={offset}"
+            assert shoulder < full, (
+                f"shoulder taper {shoulder} ≥ full taper {full} at speed={speed} offset={offset}"
+            )
             # Bonus check: shoulder is exactly L/3.
             assert shoulder == pytest.approx(full / 3.0, abs=1e-6)
 

@@ -68,9 +68,9 @@ def _run(
     placements = generator(params, **kwargs)
     _assert_no_errors(placements, params)
     actual = _counts_by_type(placements)
-    assert (
-        actual == expected_counts
-    ), f"Device-count snapshot mismatch.\n  expected: {expected_counts}\n  actual:   {actual}"
+    assert actual == expected_counts, (
+        f"Device-count snapshot mismatch.\n  expected: {expected_counts}\n  actual:   {actual}"
+    )
 
 
 # ---------------------------------------------------------------------------

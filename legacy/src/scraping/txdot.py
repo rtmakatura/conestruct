@@ -52,7 +52,7 @@ DISTRICTS = [
 ]
 
 REQUEST_DELAY_SECONDS = 2.0
-USER_AGENT = "traffic-control-tool/0.1 " "(research scraper; contact: rtmakatura1@gmail.com)"
+USER_AGENT = "traffic-control-tool/0.1 (research scraper; contact: rtmakatura1@gmail.com)"
 
 DATA_DIR = Path("data/raw/txdot")
 DB_PATH = Path("data/raw/txdot/scraper.db")

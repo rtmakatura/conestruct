@@ -87,9 +87,9 @@ def test_xlsx_descriptions_carry_no_template_tokens(name: str, tmp_path) -> None
     placements, params = _pipeline(BODIES[name])
     for row in _xlsx_device_rows(placements, params, tmp_path):
         description = str(row[2])
-        assert not _TEMPLATE_TOKEN.search(
-            description
-        ), f"{name}: XLSX description carries a literal template token: {description!r}"
+        assert not _TEMPLATE_TOKEN.search(description), (
+            f"{name}: XLSX description carries a literal template token: {description!r}"
+        )
 
 
 @pytest.mark.parametrize("name", sorted(REDUCED_SPEEDS))
@@ -105,12 +105,12 @@ def test_xlsx_splits_r2_1_faces_on_reduced_plans(name: str, tmp_path) -> None:
     descriptions = sorted(str(r[2]) for r in r2_1_rows)
     quantities = [r[5] for r in r2_1_rows]
     assert quantities == [2, 2], f"{name}: expected qty 2 per face, got {quantities}"
-    assert descriptions[0] == (
-        f"R2-1 SPEED LIMIT {wz_speed} (work-zone speed posting)"
-    ), descriptions
-    assert descriptions[1] == (
-        f"R2-1 SPEED LIMIT {posted} (posted-speed restoration)"
-    ), descriptions
+    assert descriptions[0] == (f"R2-1 SPEED LIMIT {wz_speed} (work-zone speed posting)"), (
+        descriptions
+    )
+    assert descriptions[1] == (f"R2-1 SPEED LIMIT {posted} (posted-speed restoration)"), (
+        descriptions
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -123,9 +123,9 @@ def test_breakdown_descriptions_carry_no_template_tokens(name: str) -> None:
     """No device-breakdown row ships a literal XX/XXX placeholder."""
     placements, params = _pipeline(BODIES[name])
     for row in _build_device_breakdown(placements, params):
-        assert not _TEMPLATE_TOKEN.search(
-            str(row["device"])
-        ), f"{name}: breakdown device description carries a literal template token: {row!r}"
+        assert not _TEMPLATE_TOKEN.search(str(row["device"])), (
+            f"{name}: breakdown device description carries a literal template token: {row!r}"
+        )
 
 
 @pytest.mark.parametrize("name", sorted(REDUCED_SPEEDS))
@@ -155,9 +155,9 @@ def test_narrative_equipment_carries_no_template_tokens(name: str) -> None:
     extended to the narrative equipment surface (UX-10)."""
     placements, params = _pipeline(BODIES[name])
     bullets = build_narrative_context(placements, params)["equipment_bullets"]
-    assert not _TEMPLATE_TOKEN.search(
-        bullets
-    ), f"{name}: narrative equipment list carries a literal template token:\n{bullets}"
+    assert not _TEMPLATE_TOKEN.search(bullets), (
+        f"{name}: narrative equipment list carries a literal template token:\n{bullets}"
+    )
 
 
 # ---------------------------------------------------------------------------
