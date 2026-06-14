@@ -12,56 +12,52 @@
           "Code": "W20-1",
           "Distance from Taper (ft)": "5,140 upstream",
           "Position": "C (furthest)",
-          "Station (ft)": "7,540"
+          "Station (ft)": "7,710"
         },
         {
           "Code": "W20-2",
           "Distance from Taper (ft)": "2,500 upstream",
           "Position": "B (middle)",
-          "Station (ft)": "4,900"
+          "Station (ft)": "5,070"
         },
         {
           "Code": "W21-5aR",
           "Distance from Taper (ft)": "1,000 upstream",
           "Position": "A (nearest)",
-          "Station (ft)": "3,400"
+          "Station (ft)": "3,570"
         },
         {
           "Code": "W16-2a",
-          "Distance from Taper (ft)": "NEXT 1,900 FT (under W21-5aR at A)",
+          "Distance from Taper (ft)": "NEXT 2,070 FT (under W21-5aR at A)",
           "Position": "A plaque",
-          "Station (ft)": "3,400"
+          "Station (ft)": "3,570"
         },
         {
           "Code": "W21-5aR",
           "Distance from Taper (ft)": "750 upstream",
           "Position": "A2 (second W21-5aR)",
-          "Station (ft)": "3,150"
+          "Station (ft)": "3,320"
         },
         {
           "Code": "W7-3a",
           "Distance from Taper (ft)": "NEXT 1 MILE (under second W21-5aR)",
           "Position": "A2 plaque",
-          "Station (ft)": "3,150"
+          "Station (ft)": "3,320"
         },
         {
           "Code": "W5-1",
           "Distance from Taper (ft)": "500 upstream",
           "Position": "Supplemental (W5-1)",
-          "Station (ft)": "2,900"
+          "Station (ft)": "3,070"
         }
       ],
       "source": "MUTCD 11th Ed. Table 6B-1",
       "spacing_text": "A = 1000 ft, B = 1500 ft, C = 2640 ft"
     },
     "buffer": {
-      "buffer_ft": 650.0,
-      "cdot_value_ft": 650,
-      "divergence": true,
-      "jurisdiction": "CDOT",
-      "lookup_text": "CDOT supplement: 650 ft. MUTCD Table 6C-2: 820 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
-      "mutcd_value_ft": 820,
-      "source": "CDOT S-630-1 Standard Plan, Sheet 14 (Case 27 at 75 mph). MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (federal baseline).",
+      "buffer_ft": 820.0,
+      "lookup_text": "MUTCD Table 6C-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 → 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 23).",
+      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23).",
       "speed_mph": 75
     },
     "case": {
@@ -82,7 +78,7 @@
         },
         {
           "citation": "CO Supplement Sec 6C.06(A)",
-          "detail": "Zone length: 7,540 ft. Required: 3. Placed: 3.",
+          "detail": "Zone length: 7,710 ft. Required: 3. Placed: 3.",
           "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
           "pass": true
         },
@@ -122,7 +118,7 @@
     },
     "geometry_validation": {
       "all_pass": true,
-      "buffer_ft": 650.0,
+      "buffer_ft": 820.0,
       "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
       "speed_mph": 75,
       "taper_ft": 250.0,
@@ -161,7 +157,7 @@
     }
   },
   "summary": {
-    "buffer_space_ft": 650.0,
+    "buffer_space_ft": 820.0,
     "case_id": "Case 11: Shoulder closure on divided highway",
     "case_routing": "shoulder_no_reduction",
     "cdot_sheet": "S-630-1",

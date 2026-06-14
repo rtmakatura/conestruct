@@ -192,6 +192,21 @@ CDOT_BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
     BufferSpaceRow(speed_mph=75, buffer_ft=650),
 )
 
+# The CDOT supplement buffer minimums above are NOT unconditional.  Each
+# is the stopping-sight distance at the *reduced* work-zone speed that
+# Cases 26/27 mandate as part of the standard layout: Case 26 steps the
+# posted 65 mph down to 60 (SSD ~570 ft), Case 27 steps 75 down to 65
+# (SSD ~645, posted on the Sheet 14 diagram as 650).  The 570/650 floors
+# therefore apply only when that exact step-down is in effect.  A plain
+# closure at 65/75 mph with no reduction — or a non-standard reduction
+# such as 65 -> 55 — is the generic Sheet 7 Case 11 ("SHOULDER WORK -
+# FREEWAY/EXPRESSWAY"), whose buffer is labeled "VARIES (SEE GENERAL
+# NOTE 23 ON SHEET 2)" with no posted minimum; those fall back to the
+# federal MUTCD Table 6C-2 value at the posted speed.  This map encodes
+# the qualifying (posted -> work-zone) step-down for each supplement row;
+# ``spacing._cdot_buffer_or_none`` returns the minimum only on a match.
+CDOT_BUFFER_STEPDOWN: dict[int, int] = {65: 60, 75: 65}
+
 # ---------------------------------------------------------------------------
 # Channelizing device spacing — MUTCD §6C.09
 # ---------------------------------------------------------------------------

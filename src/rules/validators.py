@@ -607,8 +607,14 @@ def validate_buffer_space(
 
     taper_downstream = min(placements[i].station_ft for i in taper)
     actual_buffer = taper_downstream - params.work_zone_length_ft
-    expected = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
-    is_cdot_min = _is_cdot_minimum(params.jurisdiction, params.speed_mph)
+    expected = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
+    is_cdot_min = _is_cdot_minimum(
+        params.jurisdiction, params.speed_mph, params.work_zone_speed_mph
+    )
     tolerance = 1.0 if is_cdot_min else BUFFER_SPACE_TOLERANCE_LOW
 
     if actual_buffer < tolerance * expected:
@@ -1368,7 +1374,11 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
     # schema — translate the lookup error into a structured Violation
     # so the failure surfaces as a clean geometry error, not a 500.
     try:
-        buffer_ft = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+        buffer_ft = buffer_space(
+            params.speed_mph,
+            jurisdiction=params.jurisdiction,
+            work_zone_speed_mph=params.work_zone_speed_mph,
+        )
     except ValueError as exc:
         out.append(
             Violation(

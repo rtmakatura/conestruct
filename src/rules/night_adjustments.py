@@ -57,7 +57,11 @@ def _taper_bounds(params: ScenarioParams) -> tuple[float, float]:
     between the downstream buffer end (``taper_end_station``) and the
     upstream advance-warning lead (``taper_start_station``).
     """
-    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
     taper_end_station = params.work_zone_length_ft + buf_len
     if _is_flagger_scenario(params):
         # Flagger alternating-flow: one-lane two-way taper (§6B.08 ¶14,

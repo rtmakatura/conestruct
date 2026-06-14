@@ -33,6 +33,7 @@ from src.rules.spacing import (
     taper_length,
 )
 from src.rules.tables import (
+    CDOT_BUFFER_STEPDOWN,
     COLORADO_OVERRIDES,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
 )
@@ -290,9 +291,18 @@ def build_audit_trail(
     # mutcd_value_ft/divergence) appear only in case A so non-divergent
     # speeds stay byte-identical to pre-Item-2 modulo the citation +
     # silent annotation.
-    buf = buffer_space(speed, jurisdiction=params.jurisdiction)
-    cdot_value = _cdot_buffer_or_none(speed)
+    buf = buffer_space(speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=wz_speed)
+    # The 570/650 supplement minimum is conditional: it applies only on a
+    # qualifying Case 26/27 step-down (65->60, 75->65).  ``cdot_value`` is
+    # None for a plain 65/75 closure or a non-standard reduction, so the
+    # divergence branch (and its "Case 26/27" citation) fires only when the
+    # supplement minimum actually governs.
+    cdot_value = _cdot_buffer_or_none(speed, wz_speed)
     is_divergent = params.jurisdiction == "CDOT" and cdot_value is not None
+    # True at 65/75 mph regardless of reduction: the supplement tabulates a
+    # (conditional) minimum at this speed, which lets us explain *why* the
+    # federal value is used when no qualifying step-down is present.
+    supplement_speed = params.jurisdiction == "CDOT" and speed in CDOT_BUFFER_STEPDOWN
 
     if is_divergent:
         mutcd_value = buffer_space(speed, jurisdiction="federal")
@@ -318,6 +328,30 @@ def build_audit_trail(
             "cdot_value_ft": int(buf),
             "mutcd_value_ft": int(mutcd_value),
             "divergence": True,
+        }
+    elif supplement_speed:
+        # CDOT 65/75 mph but no qualifying Case 26/27 step-down: the
+        # supplement minimum is SSD at the reduced work-zone speed, which is
+        # not in effect, so MUTCD Table 6C-2 at the posted speed governs per
+        # Sheet 7 Case 11 (buffer "VARIES", General Note 23).
+        required_wz = CDOT_BUFFER_STEPDOWN[speed]
+        supplement_min = _cdot_buffer_or_none(speed, required_wz)
+        _supplement_case = "Case 26" if speed == 65 else "Case 27"
+        buffer_section = {
+            "speed_mph": speed,
+            "lookup_text": (
+                f"MUTCD Table 6C-2: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
+                f"{_supplement_case} mandatory speed step-down "
+                f"({speed} → {required_wz} mph); this plan has no qualifying "
+                f"reduction, so the federal posted-speed value governs (Sheet 7 "
+                f"Case 11: buffer VARIES per General Note 23)."
+            ),
+            "buffer_ft": buf,
+            "source": (
+                "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance). "
+                "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23)."
+            ),
         }
     elif params.jurisdiction == "CDOT":
         buffer_section = {

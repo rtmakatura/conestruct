@@ -220,11 +220,19 @@ def test_shoulder_undivided(
         # Same pick(wz_len, 2*speed) math as the shoulder_divided cases —
         # pre-fix picked floor candidates that exceeded the §6C.09 max.
         (55, "rural", 2000.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 22}),
-        # V1-Wide Item 2: jurisdiction="CDOT" at 65/75 mph uses CDOT
-        # supplement buffer (570/650 ft) rather than MUTCD federal
-        # (645/820 ft). Shorter buffer → shorter total signed length
-        # → fewer CO construction-zone plaque pairs.
-        (65, "rural", 5000.0, {"SIGN_GENERIC": 16, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
+        # Buffer conditionality (Case 26/27 fix): jurisdiction="CDOT" at
+        # 65/75 mph with NO qualifying step-down uses the federal
+        # posted-speed buffer (645/820 ft), not the CDOT supplement minimum
+        # (570/650 ft) — those apply only on the Case 26/27 reduction
+        # (65->60, 75->65), which these no-reduction lane closures lack.
+        # NOTE: lane closures are gated off in V1 and 570/650 were verified
+        # for shoulder only (#26); the corrected buffer reaches them
+        # closure-agnostically via buffer_space.  At 65 the longer 645 ft
+        # buffer lengthens the signed corridor past a CO construction-plaque
+        # spacing threshold, adding one G20-5P pair (SIGN_GENERIC 16 -> 18).
+        # At 75 the +170 ft buffer shifts stations but crosses no plaque
+        # threshold, so the count is unchanged (22).
+        (65, "rural", 5000.0, {"SIGN_GENERIC": 18, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 42}),
         (75, "freeway", 8000.0, {"SIGN_GENERIC": 22, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 57}),
     ],
     ids=[
@@ -954,10 +962,12 @@ def test_shoulder_divided_freeway_no_reduction_emits_w5_1_mirrored() -> None:
     stations = {p.station_ft for p in w5_1}
     assert len(stations) == 1
     # Station = taper_start + 500.  taper_start = wz_len + buffer + L/3.
-    # 65 mph CDOT: buffer = 570, L = 65 * 10 = 650, L/3 = 216.666...
-    # wz_len = 1000.  taper_start = 1000 + 570 + 216.666 = 1786.666.
-    # +500 → 2286.666.
-    expected_station = 1000.0 + 570.0 + (10.0 * 65 / 3.0) + 500.0
+    # 65 mph CDOT, no reduction: buffer = 645 (federal posted-speed value —
+    # the 570 Case 26 minimum applies only with the 65 -> 60 step-down),
+    # L = 65 * 10 = 650, L/3 = 216.666...
+    # wz_len = 1000.  taper_start = 1000 + 645 + 216.666 = 1861.666.
+    # +500 → 2361.666.
+    expected_station = 1000.0 + 645.0 + (10.0 * 65 / 3.0) + 500.0
     assert stations.pop() == pytest.approx(expected_station)
 
 
@@ -1044,13 +1054,15 @@ def test_shoulder_divided_freeway_w21_5aR_pair_station_geometry() -> None:
     """Second W21-5aR sits at the midpoint between sign_a_station and
     the W5-1-would-be station (taper_start + 500).  W16-2a is co-located
     with the upstream W21-5aR; W7-3a is co-located with the downstream
-    W21-5aR.  At 65 mph CDOT freeway, taper_start = 1000 + 570 + 216.67
-    = 1786.67; sign_a = taper_start + 1000 = 2786.67; W5-1-would-be =
-    2286.67; midpoint = 2536.67."""
+    W21-5aR.  At 65 mph CDOT freeway, no reduction → buffer = 645 (federal
+    posted-speed value; the 570 Case 26 minimum needs the 65 -> 60
+    step-down).  taper_start = 1000 + 645 + 216.67 = 1861.67; sign_a =
+    taper_start + 1000 = 2861.67; W5-1-would-be = 2361.67; midpoint =
+    2611.67."""
     params = _freeway_shoulder_divided_params(None)
     placements = generate_shoulder_closure_divided(params)
     w21_stations = sorted({p.station_ft for p in placements if p.label == "W21-5aR"})
-    expected_upstream = 1000.0 + 570.0 + (10.0 * 65 / 3.0) + 1000.0
+    expected_upstream = 1000.0 + 645.0 + (10.0 * 65 / 3.0) + 1000.0
     expected_downstream = (expected_upstream + (expected_upstream - 1000.0 + 500.0)) / 2.0
     assert w21_stations[0] == pytest.approx(expected_downstream)
     assert w21_stations[1] == pytest.approx(expected_upstream)

@@ -126,7 +126,9 @@ def generate_shoulder_closure_divided(
 
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -548,7 +550,9 @@ def generate_shoulder_closure_undivided(
 
     # Longitudinal landmarks
     taper_len = shoulder_taper_length(speed, shoulder_width_ft)
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -836,7 +840,9 @@ def generate_lane_closure_divided(
     # Longitudinal landmarks: full merging taper L (not L/3) since this
     # is a travel-lane closure rather than a shoulder closure.
     taper_len = taper_length(speed, params.lane_width_ft)
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
 
     wz_end_station = 0.0
     wz_start_station = wz_len
@@ -1142,7 +1148,9 @@ def flagger_chain_stations(params: ScenarioParams) -> dict[str, Any]:
     wz_len = params.work_zone_length_ft
 
     taper_len = one_lane_two_way_taper_length()
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
     ds_taper_len = downstream_taper_length(1)
     taper_start = wz_len + buf_len + taper_len
 

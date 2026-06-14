@@ -170,14 +170,24 @@ def test_buffer_space_lookup() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_buffer_space_cdot_at_65_returns_570() -> None:
-    """CDOT supplement minimum at 65 mph (S-630-1 Sheet 14 Case 26)."""
-    assert buffer_space(65, jurisdiction="CDOT") == pytest.approx(570.0)
+def test_buffer_space_cdot_at_65_conditional_on_case_26_stepdown() -> None:
+    """CDOT supplement minimum at 65 mph (S-630-1 Sheet 14 Case 26) applies
+    only with the mandated 65 -> 60 step-down. A plain 65 mph closure — or a
+    non-standard reduction such as 65 -> 55 — is the generic Sheet 7 Case 11
+    (buffer VARIES) and falls back to the federal posted-speed value (645)."""
+    assert buffer_space(65, jurisdiction="CDOT", work_zone_speed_mph=60) == pytest.approx(570.0)
+    assert buffer_space(65, jurisdiction="CDOT") == pytest.approx(645.0)
+    # The explicit "65 -> 55 must not get 570" guard.
+    assert buffer_space(65, jurisdiction="CDOT", work_zone_speed_mph=55) == pytest.approx(645.0)
 
 
-def test_buffer_space_cdot_at_75_returns_650() -> None:
-    """CDOT supplement minimum at 75 mph (S-630-1 Sheet 14 Case 27)."""
-    assert buffer_space(75, jurisdiction="CDOT") == pytest.approx(650.0)
+def test_buffer_space_cdot_at_75_conditional_on_case_27_stepdown() -> None:
+    """CDOT supplement minimum at 75 mph (S-630-1 Sheet 14 Case 27) applies
+    only with the mandated 75 -> 65 step-down; otherwise the federal
+    posted-speed value (820) governs per Sheet 7 Case 11."""
+    assert buffer_space(75, jurisdiction="CDOT", work_zone_speed_mph=65) == pytest.approx(650.0)
+    assert buffer_space(75, jurisdiction="CDOT") == pytest.approx(820.0)
+    assert buffer_space(75, jurisdiction="CDOT", work_zone_speed_mph=70) == pytest.approx(820.0)
 
 
 def test_buffer_space_cdot_silent_fallback_at_55() -> None:
@@ -219,17 +229,22 @@ def test_cdot_buffer_space_table_only_has_65_and_75() -> None:
     assert by_speed[75] == 650
 
 
-def test_is_cdot_minimum_true_only_at_65_and_75_cdot() -> None:
+def test_is_cdot_minimum_true_only_on_qualifying_stepdown() -> None:
     """Predicate that distinguishes CDOT regulatory floors from MUTCD
-    advisory values. Drives the validator's tolerance branching."""
+    advisory values. Strict (no tolerance) only on a qualifying Case 26/27
+    step-down (65->60, 75->65); a plain or non-standard reduction carries the
+    normal MUTCD tolerance. Drives the validator's tolerance branching."""
     from src.rules.spacing import _is_cdot_minimum
 
-    assert _is_cdot_minimum("CDOT", 65) is True
-    assert _is_cdot_minimum("CDOT", 75) is True
+    assert _is_cdot_minimum("CDOT", 65, 60) is True
+    assert _is_cdot_minimum("CDOT", 75, 65) is True
+    assert _is_cdot_minimum("CDOT", 65) is False  # 65 mph, no reduction
+    assert _is_cdot_minimum("CDOT", 65, 55) is False  # non-standard reduction
+    assert _is_cdot_minimum("CDOT", 75, 70) is False  # non-standard reduction
     assert _is_cdot_minimum("CDOT", 55) is False  # CDOT silent at 55
     assert _is_cdot_minimum("CDOT", 60) is False
-    assert _is_cdot_minimum("federal", 65) is False  # federal path
-    assert _is_cdot_minimum("federal", 75) is False
+    assert _is_cdot_minimum("federal", 65, 60) is False  # federal path
+    assert _is_cdot_minimum("federal", 75, 65) is False
 
 
 def test_advance_warning_auto_inference() -> None:
@@ -896,7 +911,11 @@ def test_build_advance_warning_table_case_11_off_page_rows() -> None:
         jurisdiction="CDOT",
     )
     placements = generate_shoulder_closure_divided(params)
-    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
     taper_len = shoulder_taper_length(params.speed_mph, 10.0)
     taper_start_station = params.work_zone_length_ft + buf_len + taper_len
     station_max_visible = taper_start_station + 50.0
@@ -969,7 +988,11 @@ def test_build_advance_warning_table_case_27_includes_w3_5_stepped() -> None:
         work_zone_speed_mph=65,
     )
     placements = generate_shoulder_closure_divided(params)
-    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
     taper_len = shoulder_taper_length(params.speed_mph, 10.0)
     taper_start_station = params.work_zone_length_ft + buf_len + taper_len
     station_max_visible = taper_start_station + 50.0

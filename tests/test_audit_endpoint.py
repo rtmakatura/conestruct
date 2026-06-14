@@ -827,12 +827,33 @@ def _buffer_section(body: dict) -> dict:
     return body["sections"]["buffer"]
 
 
-def test_audit_buffer_divergent_at_65_emits_full_annotation(
-    client: TestClient,
-) -> None:
-    """65 mph CDOT: buffer_ft=570; lookup_text carries CDOT/MUTCD
-    comparison + Note sentence; structured divergence fields present."""
+def test_audit_buffer_at_65_no_reduction_uses_federal(client: TestClient) -> None:
+    """65 mph CDOT, no reduction: the Case 26 570 ft minimum is SSD at the
+    65 -> 60 step-down, which is absent here, so the federal posted-speed
+    value (645) governs (Sheet 7 Case 11, buffer VARIES).  No divergence;
+    lookup_text explains why 570 does not apply; source cites Case 11."""
     res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_65())
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 645.0
+    # Divergence (and its structured fields) suppressed — the supplement
+    # minimum does not govern.
+    assert "divergence" not in b
+    assert "cdot_value_ft" not in b
+    assert "mutcd_value_ft" not in b
+    assert "MUTCD Table 6C-2: 645 ft" in b["lookup_text"]
+    assert "Case 26" in b["lookup_text"]  # cited only to explain non-application
+    assert "no qualifying" in b["lookup_text"]
+    assert "Case 26 at 65 mph" not in b["source"]
+    assert "Case 11" in b["source"]
+
+
+def test_audit_buffer_at_65_with_case_26_stepdown_diverges(client: TestClient) -> None:
+    """65 -> 60 (Case 26 mandated step-down): the CDOT supplement 570 ft
+    minimum applies; full divergence annotation citing Case 26."""
+    s = _shoulder_at_65()
+    s["workZoneSpeed"] = 60
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
     assert res.status_code == 200, res.text
     b = _buffer_section(res.json())
     assert b["buffer_ft"] == 570.0
@@ -843,16 +864,29 @@ def test_audit_buffer_divergent_at_65_emits_full_annotation(
     assert "CDOT supplement: 570 ft" in b["lookup_text"]
     assert "MUTCD Table 6C-2: 645 ft" in b["lookup_text"]
     assert "Plan uses CDOT supplement value" in b["lookup_text"]
-    assert "Note: CDOT supplement permits shorter buffer" in b["lookup_text"]
-    assert "engineering judgment" in b["lookup_text"]
     assert "Case 26 at 65 mph" in b["source"]
 
 
-def test_audit_buffer_divergent_at_75_emits_full_annotation(
-    client: TestClient,
-) -> None:
-    """75 mph CDOT: buffer_ft=650; lookup_text references Case 27."""
+def test_audit_buffer_at_75_no_reduction_uses_federal(client: TestClient) -> None:
+    """75 mph CDOT, no reduction: federal posted-speed value (820) governs;
+    the Case 27 650 ft minimum needs the 75 -> 65 step-down."""
     res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_at_75())
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 820.0
+    assert "divergence" not in b
+    assert "MUTCD Table 6C-2: 820 ft" in b["lookup_text"]
+    assert "Case 27" in b["lookup_text"]
+    assert "Case 27 at 75 mph" not in b["source"]
+    assert "Case 11" in b["source"]
+
+
+def test_audit_buffer_at_75_with_case_27_stepdown_diverges(client: TestClient) -> None:
+    """75 -> 65 (Case 27 mandated step-down): CDOT supplement 650 ft minimum
+    applies; divergence annotation references Case 27."""
+    s = _shoulder_at_75()
+    s["workZoneSpeed"] = 65
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
     assert res.status_code == 200, res.text
     b = _buffer_section(res.json())
     assert b["buffer_ft"] == 650.0
@@ -862,6 +896,38 @@ def test_audit_buffer_divergent_at_75_emits_full_annotation(
     assert "CDOT supplement: 650 ft" in b["lookup_text"]
     assert "MUTCD Table 6C-2: 820 ft" in b["lookup_text"]
     assert "Case 27 at 75 mph" in b["source"]
+
+
+def test_audit_buffer_at_65_non_standard_reduction_uses_federal(client: TestClient) -> None:
+    """65 -> 55 (Δ10, not the Case 26 65 -> 60 step-down): the 570 ft
+    minimum must NOT apply; the federal posted-speed value (645) governs."""
+    s = _shoulder_at_65()
+    s["workZoneSpeed"] = 55
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, res.text
+    b = _buffer_section(res.json())
+    assert b["buffer_ft"] == 645.0
+    assert "divergence" not in b
+    assert "Case 26 at 65 mph" not in b["source"]
+
+
+def test_audit_taper_and_buffer_cite_consistent_case_at_65(client: TestClient) -> None:
+    """The taper cdot_reference and the buffer source must not contradict on
+    Case identity: no-reduction 65 → neither cites Case 26; the 65 -> 60
+    step-down → both cite Case 26."""
+    no_reduction = client.post(
+        "/render/audit", headers=_auth_headers(), json=_shoulder_at_65()
+    ).json()
+    taper_ref = no_reduction["sections"]["taper"]["cdot_reference"]
+    buf_src = no_reduction["sections"]["buffer"]["source"]
+    assert "Case 26" not in taper_ref
+    assert "Case 26" not in buf_src
+
+    s = _shoulder_at_65()
+    s["workZoneSpeed"] = 60
+    reduced = client.post("/render/audit", headers=_auth_headers(), json=s).json()
+    assert "Case 26" in reduced["sections"]["taper"]["cdot_reference"]
+    assert "Case 26 at 65 mph" in reduced["sections"]["buffer"]["source"]
 
 
 def test_audit_buffer_silent_at_55_names_silence(client: TestClient) -> None:
@@ -902,7 +968,9 @@ def test_audit_buffer_value_matches_layout_geometry_at_65() -> None:
     actual_taper_downstream = drum_stations[0]
     actual_buffer = actual_taper_downstream - params.work_zone_length_ft
     assert audit_buffer == pytest.approx(actual_buffer, abs=1.0)
-    assert audit_buffer == 570.0
+    # No reduction at 65 mph → federal posted-speed buffer (645), not the
+    # Case 26 570 ft minimum.  Audit and drawn geometry move together.
+    assert audit_buffer == 645.0
 
 
 def test_audit_buffer_at_65_matches_baseline(client: TestClient) -> None:
@@ -983,8 +1051,11 @@ def test_audit_buffer_federal_at_65_uses_mutcd_value() -> None:
 
 
 def test_validate_buffer_space_cdot_minimum_enforced_strictly() -> None:
-    """At 65 mph CDOT, the validator tolerates no shortfall from the
-    570 ft minimum (Q-PLAN-1 answer: regulatory floor)."""
+    """At 65 -> 60 mph CDOT (Case 26 step-down), the validator tolerates no
+    shortfall from the 570 ft minimum (Q-PLAN-1 answer: regulatory floor).
+    The strict floor binds only on this qualifying reduction; a plain 65 mph
+    closure carries the federal 645 ft advisory value at 90% tolerance
+    (see test_validate_buffer_space_federal_at_65_keeps_90_percent_tolerance)."""
     from src.rules.devices import DeviceType
     from src.rules.validators import (
         DevicePlacement,
@@ -1002,6 +1073,7 @@ def test_validate_buffer_space_cdot_minimum_enforced_strictly() -> None:
         shoulder_width_ft=10.0,
         is_divided=True,
         jurisdiction="CDOT",
+        work_zone_speed_mph=60,  # Case 26 step-down unlocks the strict 570 ft floor
     )
     # Place a taper whose downstream end leaves a 569 ft buffer — 1 ft
     # short of the CDOT minimum. Federal tolerance (90%) would accept;

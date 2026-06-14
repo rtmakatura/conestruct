@@ -276,7 +276,9 @@ def build_narrative_context(
         taper_len = one_lane_two_way_taper_length()
     else:
         taper_len = shoulder_taper_length(speed, shoulder_width)
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
 
     taper_end_station = wz_len + buf_len
     taper_start_station = taper_end_station + taper_len

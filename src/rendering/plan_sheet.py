@@ -186,7 +186,9 @@ def _make_x_mapping(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
-    buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
     taper_start_station = wz_len + buf_len + taper_len
 
     def effective(s: float) -> float:
@@ -1162,7 +1164,11 @@ def _draw_site_context(
         c.drawCentredString(x_mid, y_road_top + cross_len + 3, "CROSS ST.")
 
     if flags["school_zone"]:
-        buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+        buf_len = buffer_space(
+            params.speed_mph,
+            jurisdiction=params.jurisdiction,
+            work_zone_speed_mph=params.work_zone_speed_mph,
+        )
         taper_len = _required_taper_length(params, shoulder_width_ft)
         school_station = wz_len + buf_len + taper_len + 100.0
         x_school = x_of(school_station)
@@ -1665,7 +1671,11 @@ def _draw_landmarks(
         return
     wz_len = params.work_zone_length_ft
     taper_len = _required_taper_length(params, shoulder_width_ft)
-    buf_len = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    buf_len = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
     taper_label = "L" if params.closure_type == "lane" else "L/3"
 
     wz_end = 0.0
@@ -2565,7 +2575,9 @@ def _draw_notes(
         taper_label = None
     else:
         taper_len = _required_taper_length(params, shoulder_width_ft)
-        buf_len = buffer_space(speed, jurisdiction=params.jurisdiction)
+        buf_len = buffer_space(
+            speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+        )
         if is_flagger:
             taper_label = "One-lane two-way taper"
         elif is_lane:

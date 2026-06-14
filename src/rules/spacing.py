@@ -17,6 +17,7 @@ from src.rules.tables import (
     ADVANCE_WARNING_SIGN_SPACING,
     BUFFER_SPACE,
     CDOT_BUFFER_SPACE,
+    CDOT_BUFFER_STEPDOWN,
     COLORADO_OVERRIDES,
     DOWNSTREAM_TAPER_LENGTH_PER_LANE_FT,
     FLAGGER_TO_TAPER_FT,
@@ -141,19 +142,33 @@ def downstream_taper_length(num_lanes: int, use_max: bool = False) -> float:
 # ---------------------------------------------------------------------------
 
 
-def buffer_space(speed_mph: int, jurisdiction: str = "CDOT") -> float:
+def buffer_space(
+    speed_mph: int,
+    jurisdiction: str = "CDOT",
+    work_zone_speed_mph: int | None = None,
+) -> float:
     """Longitudinal buffer space, in feet.
 
     Jurisdiction dispatch:
 
-    * ``"CDOT"`` — checks the CDOT supplement (S-630-1 Sheet 14) first.
-      At speeds where the supplement posts a specific minimum (currently
-      65 and 75 mph), returns the CDOT value.  At other speeds the
-      supplement is silent (CDOT Sheet 2 General Note 23 defers to
-      engineer's judgment); falls back to the federal MUTCD baseline.
-    * ``"federal"`` — always uses MUTCD 11th Ed. Table 6C-2.  Reachable
-      via direct code calls only; V1's form-driven path hardcodes
-      ``"CDOT"`` at the bridge.
+    * ``"CDOT"`` — checks the CDOT supplement (S-630-1 Sheet 14) first,
+      but the supplement minimum is *conditional*.  The 570/650 ft floors
+      at 65/75 mph are stopping-sight distance at the reduced work-zone
+      speed that Cases 26/27 mandate (65 -> 60, 75 -> 65); they apply only
+      when that exact step-down is supplied via ``work_zone_speed_mph``.
+      A plain closure at 65/75 with no reduction — or a non-standard
+      reduction like 65 -> 55 — is the generic Sheet 7 Case 11 (buffer
+      "VARIES", General Note 23) and falls back to the federal MUTCD value
+      at the posted speed, exactly as every other speed does.
+    * ``"federal"`` — always uses MUTCD 11th Ed. Table 6C-2 at the posted
+      speed; ``work_zone_speed_mph`` is ignored.  Reachable via direct
+      code calls only; V1's form-driven path hardcodes ``"CDOT"`` at the
+      bridge.
+
+    The buffer is keyed to the *posted* (approach) speed in every case
+    except the two qualifying Case 26/27 step-downs — drivers enter the
+    zone at posted speed before reading the reduction sign, so the
+    fallback SSD is the approach-speed value.
 
     CDOT minimums are regulatory floors (the "MIN" annotation on
     S-630-1 diagrams), not recommendations — see
@@ -164,6 +179,9 @@ def buffer_space(speed_mph: int, jurisdiction: str = "CDOT") -> float:
         speed_mph: Posted speed in mph; must be a multiple of 5 in
             {20, 25, ..., 75}.
         jurisdiction: ``"CDOT"`` (default) or ``"federal"``.
+        work_zone_speed_mph: Reduced work-zone posted speed, or ``None``
+            when no reduction is in effect.  Only ``(65, 60)`` and
+            ``(75, 65)`` unlock the CDOT supplement minimum (Cases 26/27).
 
     Raises:
         ValueError: ``speed_mph`` is not in the table, or
@@ -173,10 +191,10 @@ def buffer_space(speed_mph: int, jurisdiction: str = "CDOT") -> float:
         raise ValueError(f"Unknown jurisdiction {jurisdiction!r}; expected 'CDOT' or 'federal'.")
 
     if jurisdiction == "CDOT":
-        cdot_value = _cdot_buffer_or_none(speed_mph)
+        cdot_value = _cdot_buffer_or_none(speed_mph, work_zone_speed_mph)
         if cdot_value is not None:
             return float(cdot_value)
-        # Silent at this speed — fall through to federal.
+        # No qualifying Case 26/27 step-down — fall through to federal.
 
     for row in BUFFER_SPACE:
         if row.speed_mph == speed_mph:
@@ -190,30 +208,43 @@ def buffer_space(speed_mph: int, jurisdiction: str = "CDOT") -> float:
     )
 
 
-def _cdot_buffer_or_none(speed_mph: int) -> int | None:
-    """CDOT supplement minimum buffer at this speed, or None if silent.
+def _cdot_buffer_or_none(speed_mph: int, work_zone_speed_mph: int | None = None) -> int | None:
+    """CDOT supplement minimum buffer for this scenario, or None.
 
     Returns the value posted on S-630-1 Sheet 14 (Case 26 at 65 mph,
-    Case 27 at 75 mph) when ``speed_mph`` matches.  Returns ``None`` at
-    every other speed — the supplement does not tabulate them and
-    General Note 23 defers to engineer's judgment.
+    Case 27 at 75 mph) only when ``speed_mph`` matches a supplement row
+    *and* ``work_zone_speed_mph`` equals the CDOT-mandated step-down for
+    that case (65 -> 60, 75 -> 65, per :data:`CDOT_BUFFER_STEPDOWN`).
+    Returns ``None`` otherwise — no supplement row, no reduction, or a
+    non-standard reduction — because the 570/650 floors are SSD at the
+    reduced work-zone speed and are meaningless without that step-down.
+    Sheet 7 Case 11 (buffer "VARIES", General Note 23) then governs and
+    the caller falls back to the federal posted-speed baseline.
     """
+    required_wz = CDOT_BUFFER_STEPDOWN.get(speed_mph)
+    if required_wz is None or work_zone_speed_mph != required_wz:
+        return None
     for row in CDOT_BUFFER_SPACE:
         if row.speed_mph == speed_mph:
             return row.buffer_ft
     return None
 
 
-def _is_cdot_minimum(jurisdiction: str, speed_mph: int) -> bool:
-    """True when CDOT supplement posts a hard minimum at this speed.
+def _is_cdot_minimum(
+    jurisdiction: str, speed_mph: int, work_zone_speed_mph: int | None = None
+) -> bool:
+    """True when the CDOT supplement posts a hard minimum for this scenario.
 
     The validator uses this to enforce the CDOT floor strictly (no
     tolerance), distinguishing CDOT regulatory minimums from MUTCD
-    advisory values (which carry a 10% tolerance).  When CDOT adds rows
-    to the supplement or other states join, update CDOT_BUFFER_SPACE
-    — this predicate reads from it directly.
+    advisory values (which carry a 10% tolerance).  Mirrors
+    :func:`_cdot_buffer_or_none`'s conditionality: the floor is strict
+    only on a qualifying Case 26/27 step-down; absent that, the buffer is
+    the federal advisory value and carries the normal tolerance.
     """
-    return jurisdiction == "CDOT" and _cdot_buffer_or_none(speed_mph) is not None
+    return (
+        jurisdiction == "CDOT" and _cdot_buffer_or_none(speed_mph, work_zone_speed_mph) is not None
+    )
 
 
 # ---------------------------------------------------------------------------

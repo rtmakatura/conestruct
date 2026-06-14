@@ -49,7 +49,7 @@ def _taper_drums(
     params: ScenarioParams,
 ) -> list[DevicePlacement]:
     """Subset of placements that are drums sitting in the taper region."""
-    buf = buffer_space(params.speed_mph)
+    buf = buffer_space(params.speed_mph, work_zone_speed_mph=params.work_zone_speed_mph)
     taper_end = params.work_zone_length_ft + buf
     taper_len = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
     taper_start = taper_end + taper_len

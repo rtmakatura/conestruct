@@ -142,7 +142,11 @@ def _taper_start_station(params: ScenarioParams) -> float:
         taper = taper_length(params.speed_mph, params.lane_width_ft)
     else:
         taper = shoulder_taper_length(params.speed_mph, params.shoulder_width_ft)
-    buf = buffer_space(params.speed_mph, jurisdiction=params.jurisdiction)
+    buf = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
     return params.work_zone_length_ft + buf + taper
 
 
