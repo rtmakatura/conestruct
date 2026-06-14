@@ -734,7 +734,7 @@ def build_audit_trail(
     # the gap as a flagger_lighting_manual_handling pending item.
     n_flaggers = sum(1 for p in placements if p.device_type == DeviceType.FLAGGER_STATION)
     if n_flaggers == 0:
-        flagger_section = {
+        flagger_lighting_section = {
             "pass": True,
             "label": (
                 f"Flagger station lighting "
@@ -745,7 +745,7 @@ def build_audit_trail(
             "detail": "Not applicable (no flaggers).",
         }
     elif not params.is_night:
-        flagger_section = {
+        flagger_lighting_section = {
             "pass": True,
             "label": (
                 f"Flagger station lighting "
@@ -760,7 +760,7 @@ def build_audit_trail(
             ),
         }
     else:
-        flagger_section = {
+        flagger_lighting_section = {
             "pass": False,
             "label": (
                 f"Flagger station lighting "
@@ -790,7 +790,7 @@ def build_audit_trail(
     }
 
     co_section = {
-        "checks": [both_sides, plaques_section, speed_reduction_section, flagger_section],
+        "checks": [both_sides, plaques_section, speed_reduction_section, flagger_lighting_section],
         "info_items": [aadt_section],
         "all_pass": all(
             c["pass"]
@@ -798,7 +798,7 @@ def build_audit_trail(
                 both_sides,
                 plaques_section,
                 speed_reduction_section,
-                flagger_section,
+                flagger_lighting_section,
             )
         ),
     }
