@@ -930,6 +930,46 @@ def test_audit_taper_and_buffer_cite_consistent_case_at_65(client: TestClient) -
     assert "Case 26 at 65 mph" in reduced["sections"]["buffer"]["source"]
 
 
+def test_audit_taper_case_buffer_cite_same_case_across_reduction_types(client: TestClient) -> None:
+    """Commit 2 invariant: taper.cdot_reference, case.case, and buffer.source
+    must name the SAME CDOT case for every reduction type — no reduction
+    (Case 11), the qualifying Case 26/27 step-down (65->60, 75->65), and a
+    non-standard reduction (65->55, which must read Case 11, not Case 26)."""
+
+    def case_token(text: str) -> str:
+        for c in ("Case 26", "Case 27", "Case 11"):
+            if c in text:
+                return c
+        raise AssertionError(f"no Case token in: {text!r}")
+
+    def scenario(speed: int, wz: int | None) -> dict:
+        s = _shoulder_at_65() if speed == 65 else _shoulder_at_75()
+        if wz is not None:
+            s["workZoneSpeed"] = wz
+        return s
+
+    matrix = [
+        (65, None, "Case 11"),
+        (65, 60, "Case 26"),
+        (65, 55, "Case 11"),  # non-standard reduction → NOT Case 26
+        (75, None, "Case 11"),
+        (75, 65, "Case 27"),
+        (75, 70, "Case 11"),  # non-standard reduction → NOT Case 27
+    ]
+    for speed, wz, expected in matrix:
+        body = client.post(
+            "/render/audit", headers=_auth_headers(), json=scenario(speed, wz)
+        ).json()
+        sec = body["sections"]
+        taper_c = case_token(sec["taper"]["cdot_reference"])
+        case_c = case_token(sec["case"]["case"])
+        buffer_c = case_token(sec["buffer"]["source"])
+        assert taper_c == case_c == buffer_c == expected, (
+            f"speed={speed} wz={wz}: taper={taper_c} case={case_c} "
+            f"buffer={buffer_c} expected={expected}"
+        )
+
+
 def test_audit_buffer_silent_at_55_names_silence(client: TestClient) -> None:
     """55 mph CDOT: CDOT supplement silent → falls back to MUTCD 495;
     lookup_text names the silence; structured divergence fields suppressed."""

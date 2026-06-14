@@ -141,6 +141,13 @@ def build_audit_trail(
     # Fines Double envelope gate — same predicate, deduplicated.
     wz_speed = params.work_zone_speed_mph
     is_reduced = wz_speed is not None and wz_speed < speed
+    # Exact Case 26/27 mandated step-down (65->60, 75->65) — the only
+    # reductions that carry the CDOT supplement buffer minimum AND the
+    # Case 26/27 citation.  Derived from the same predicate the buffer
+    # lookup uses so the case/taper citations can never disagree with the
+    # buffer source.  A non-standard reduction (e.g. 65->55) is generic
+    # Case 11 with a reduction marker.
+    is_supplement_case = _cdot_buffer_or_none(speed, wz_speed) is not None
 
     # ------------------------------------------------------------------
     # 1. Taper length
@@ -223,16 +230,18 @@ def build_audit_trail(
         source_text = (
             "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B)."
         )
-        # Routing-aware taper cdot_reference (V1-Wide S1). Reduced
-        # work-zone speed at 65/75 mph maps to the Sheet 14 Case 26/27
-        # parametric typicals; other speeds with reduction stay on
-        # Case 11 with a reduction marker; no reduction is plain Case 11.
-        if is_reduced and speed == 65:
+        # Routing-aware taper cdot_reference (V1-Wide S1). Only the exact
+        # Case 26/27 mandated step-down (65->60, 75->65) maps to the Sheet
+        # 14 parametric typicals; a non-standard reduction (e.g. 65->55)
+        # stays on Case 11 with a reduction marker; no reduction is plain
+        # Case 11.  Gated on ``is_supplement_case`` so the taper citation
+        # tracks the buffer citation exactly.
+        if is_supplement_case and speed == 65:
             cdot_reference = (
                 "CDOT S-630-1 Case 26 (shoulder closure on freeway/expressway, "
                 "65 mph posted with reduced work-zone speed; Sheet 14)"
             )
-        elif is_reduced and speed == 75:
+        elif is_supplement_case and speed == 75:
             cdot_reference = (
                 "CDOT S-630-1 Case 27 (shoulder closure on freeway/expressway, "
                 "75 mph posted with reduced work-zone speed; Sheet 14)"
@@ -962,7 +971,10 @@ def build_audit_trail(
             "This scenario matches CDOT Standard Plan S-630-1, Case 10: "
             "one lane closed on a 4-lane divided highway (Sheet 7)."
         )
-    elif is_reduced:
+    elif is_supplement_case:
+        # Exact Case 26/27 mandated step-down (65->60, 75->65) — gated on
+        # the same predicate as the buffer citation so case identity tracks
+        # the buffer source.
         case_routing = "shoulder_reduced_speed"
         if speed == 65:
             case_label = "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed"
@@ -972,7 +984,7 @@ def build_audit_trail(
                 "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
                 "ARE WITHIN 8 FT OF TRAVEL WAY"
             )
-        elif speed == 75:
+        else:  # speed == 75 — the only other supplement-case speed
             case_label = "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed"
             # Verbatim from Sheet 14 Case 27 diagram trigger callout
             # (tests/fixtures/cdot_s630_typicals/case_27.json:trigger_condition).
@@ -980,16 +992,27 @@ def build_audit_trail(
                 "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) "
                 "ARE WITHIN 10 FT OF TRAVEL WAY"
             )
-        else:
-            # Sheet 14 only tabulates trigger text at 65/75 mph. Verbatim
-            # or nothing: stay silent rather than fabricate a paraphrase.
-            case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
         case_narrative = (
             f"This scenario matches CDOT Standard Plan S-630-1 shoulder closure "
             f"typical applications with a reduced work-zone posted speed "
             f"(Cases 26/27, Sheet 14). Posted speed reduced from {speed} → "
             f"{wz_speed} mph; Fines Double envelope applies per CO Supplement "
             f"§2B.13 and S-630-1 Sheet 12."
+        )
+    elif is_reduced:
+        # Reduced work-zone speed but NOT the Case 26/27 mandated step-down
+        # (e.g. 65->55, or any reduction at a non-65/75 speed): generic
+        # Case 11 with a reduction marker, matching the buffer citation
+        # (federal posted-speed value, Sheet 7 Case 11).  No Sheet 14
+        # trigger text — that is tabulated only for the 65/75 step-downs.
+        case_routing = "shoulder_reduced_speed"
+        case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
+        case_narrative = (
+            f"This scenario matches CDOT Standard Plan S-630-1, Case 11: "
+            f"shoulder closure on a divided highway, with a reduced work-zone "
+            f"posted speed ({speed} → {wz_speed} mph) that does not match the "
+            f"Case 26/27 mandated step-down. Fines Double envelope applies per "
+            f"CO Supplement §2B.13 and S-630-1 Sheet 12."
         )
     else:
         case_routing = "shoulder_no_reduction"
