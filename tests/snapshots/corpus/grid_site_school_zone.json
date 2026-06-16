@@ -1,0 +1,153 @@
+{
+  "pending_verification": {
+    "count": 0,
+    "note": "",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+  },
+  "sections": {
+    "advance": {
+      "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "sign_table": [
+        {
+          "Code": "S1-1",
+          "Distance from Taper (ft)": "2,000 upstream",
+          "Position": "Advance (S1-1)",
+          "Station (ft)": "4,678"
+        },
+        {
+          "Code": "W20-1",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "C (furthest)",
+          "Station (ft)": "4,178"
+        },
+        {
+          "Code": "W20-2",
+          "Distance from Taper (ft)": "1,000 upstream",
+          "Position": "B (middle)",
+          "Station (ft)": "3,678"
+        },
+        {
+          "Code": "W21-5aR",
+          "Distance from Taper (ft)": "500 upstream",
+          "Position": "A (nearest)",
+          "Station (ft)": "3,178"
+        }
+      ],
+      "source": "MUTCD 11th Ed. Table 6B-1",
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+    },
+    "buffer": {
+      "buffer_ft": 495.0,
+      "lookup_text": "MUTCD Table 6C-2: 495 ft (CDOT supplement silent at this speed)",
+      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+      "speed_mph": 55
+    },
+    "case": {
+      "case": "Case 11: Shoulder closure on divided highway",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
+      "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
+      "routing": "shoulder_no_reduction",
+      "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+    },
+    "colorado": {
+      "all_pass": true,
+      "checks": [
+        {
+          "citation": "CO Supplement Sec 6C.04(A)",
+          "detail": "Required: True. Signs placed: 8 left, 8 right.",
+          "label": "Signs on both sides of divided highway",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6C.06(A)",
+          "detail": "Zone length: 4,178 ft. Required: 2. Placed: 2.",
+          "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 2B.13(A)",
+          "detail": "No work-zone speed reduction. Posted speed 55 mph applies throughout the zone.",
+          "label": "Speed reduction <= 15 mph per sign installation",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6E.02(A)",
+          "detail": "Not applicable (no flaggers).",
+          "label": "Flagger station lighting 500W @ 8 ft",
+          "pass": true
+        }
+      ],
+      "info_items": [
+        {
+          "citation": "CO Supplement Sec 6G.02(A)",
+          "detail": "Not applicable (not a mobile operation).",
+          "info": true,
+          "label": "AADT threshold for mobile operations (<= 2,000)"
+        }
+      ]
+    },
+    "corridor_validation": {
+      "checked": false,
+      "warnings": []
+    },
+    "flagger": {
+      "applicable": false,
+      "count": 0,
+      "narrative": "Not applicable for this scenario.",
+      "required": 0,
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "table": []
+    },
+    "geometry_validation": {
+      "all_pass": true,
+      "buffer_ft": 495.0,
+      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "speed_mph": 55,
+      "taper_ft": 183.33333333333334,
+      "taper_label": "L/3 (shoulder taper)",
+      "violations": [],
+      "work_zone_ft": 2000.0
+    },
+    "spacing": {
+      "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
+      "n_tangent_cones_actual": 22,
+      "n_tangent_cones_required": 20,
+      "n_taper_drums_actual": 5,
+      "n_taper_drums_required": 5,
+      "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "speed_mph": 55,
+      "tangent_count_text": "2000 ft / 110 ft max spacing -> 20 cones at 105.3 ft intervals",
+      "taper_count_text": "L/3 = 183.3 ft / 55 ft max spacing -> 5 drums at 45.8 ft intervals"
+    },
+    "taper": {
+      "L_calc_text": "L = 10 x 55 = 550 ft",
+      "L_full_ft": 550.0,
+      "L_required_ft": 183.33333333333334,
+      "L_required_label": "L/3 (shoulder taper)",
+      "L_third_calc_text": "L/3 = 550 / 3 = 183.3 ft",
+      "L_third_ft": 183.33333333333334,
+      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+      "closure_type": "shoulder",
+      "formula_choice": "Speed 55 mph >= 45 mph threshold -> using L = W x S",
+      "formula_latex": "L = W \\times S",
+      "offset_ft": 10.0,
+      "offset_label": "shoulder width",
+      "shoulder_width_ft": 10.0,
+      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B).",
+      "speed_mph": 55
+    }
+  },
+  "summary": {
+    "buffer_space_ft": 495.0,
+    "case_id": "Case 11: Shoulder closure on divided highway",
+    "case_routing": "shoulder_no_reduction",
+    "cdot_sheet": "S-630-1",
+    "device_spacing_tangent_ft": 110.0,
+    "device_spacing_taper_ft": 55.0,
+    "step_count": 8,
+    "ta": "TA-2",
+    "taper_label": "L/3 (shoulder taper)",
+    "taper_length_ft": 183.33333333333334
+  }
+}

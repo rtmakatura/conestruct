@@ -1,0 +1,192 @@
+{
+  "pending_verification": {
+    "count": 0,
+    "note": "",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+  },
+  "sections": {
+    "advance": {
+      "road_type_text": "Speed 65 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+      "sign_table": [
+        {
+          "Code": "W20-1",
+          "Distance from Taper (ft)": "1,500 upstream",
+          "Position": "C (furthest)",
+          "Station (ft)": "4,287"
+        },
+        {
+          "Code": "W20-2",
+          "Distance from Taper (ft)": "1,000 upstream",
+          "Position": "B (middle)",
+          "Station (ft)": "3,787"
+        },
+        {
+          "Code": "W21-5aR",
+          "Distance from Taper (ft)": "500 upstream",
+          "Position": "A (nearest)",
+          "Station (ft)": "3,287"
+        },
+        {
+          "Code": "W3-5(60)",
+          "Distance from Taper (ft)": "243 upstream",
+          "Position": "W3-5 step 1",
+          "Station (ft)": "3,030"
+        }
+      ],
+      "source": "MUTCD 11th Ed. Table 6B-1",
+      "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+    },
+    "buffer": {
+      "buffer_ft": 570.0,
+      "cdot_value_ft": 570,
+      "divergence": true,
+      "jurisdiction": "CDOT",
+      "lookup_text": "CDOT supplement: 570 ft. MUTCD Table 6C-2: 645 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
+      "mutcd_value_ft": 645,
+      "source": "CDOT S-630-1 Standard Plan, Sheet 14 (Case 26 at 65 mph). MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (federal baseline).",
+      "speed_mph": 65
+    },
+    "case": {
+      "case": "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 65 → 60 mph; Fines Double envelope applies per CO Supplement §2B.13 and S-630-1 Sheet 12.",
+      "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 65 mph.",
+      "routing": "shoulder_reduced_speed",
+      "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+      "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+    },
+    "colorado": {
+      "all_pass": true,
+      "checks": [
+        {
+          "citation": "CO Supplement Sec 6C.04(A)",
+          "detail": "Required: True. Signs placed: 16 left, 16 right.",
+          "label": "Signs on both sides of divided highway",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6C.06(A)",
+          "detail": "Zone length: 4,287 ft. Required: 2. Placed: 4.",
+          "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 2B.13(A)",
+          "detail": "Work-zone speed reduced 65 → 60 mph (Δ5 mph). Required: 1. Placed: 1.",
+          "label": "Speed reduction <= 15 mph per sign installation",
+          "pass": true
+        },
+        {
+          "citation": "CO Supplement Sec 6E.02(A)",
+          "detail": "Not applicable (no flaggers).",
+          "label": "Flagger station lighting 500W @ 8 ft",
+          "pass": true
+        }
+      ],
+      "info_items": [
+        {
+          "citation": "CO Supplement Sec 6G.02(A)",
+          "detail": "Not applicable (not a mobile operation).",
+          "info": true,
+          "label": "AADT threshold for mobile operations (<= 2,000)"
+        }
+      ]
+    },
+    "corridor_validation": {
+      "checked": false,
+      "warnings": []
+    },
+    "fines_double": {
+      "applicable": true,
+      "citation": "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes",
+      "envelope": {
+        "downstream_r2_1_label": "SPEED LIMIT 65",
+        "downstream_r2_1_station_ft": -1000.0,
+        "entrance_r2_1_label": "SPEED LIMIT 60",
+        "entrance_r2_1_station_ft": 1500.0,
+        "length_ft": 3000.0,
+        "n_assemblies": 2,
+        "r2_10_station_ft": 2500.0,
+        "r2_11_station_ft": -500.0
+      },
+      "operational_notes": [
+        {
+          "action": "Install Fines Double signs no more than 4 hours before the start of the work day. Do not leave signs up overnight when work is not active.",
+          "citation": "S-630-1 Sheet 12, Note 1"
+        },
+        {
+          "action": "Remove or cover Fines Double signs when work concludes; doubled fines apply only when workers or work activity are present in the zone.",
+          "citation": "S-630-1 Sheet 12, Note 2"
+        },
+        {
+          "action": "Relocate the R2-10/R2-11 envelope to follow the actual work area as the project progresses; do not leave Fines Double signs in place beyond the active work zone.",
+          "citation": "S-630-1 Sheet 12, Note 3"
+        },
+        {
+          "action": "Maintain a 250 ft minimum spacing between Fines Double signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and other warning or regulatory signs. Engineer may adjust placement to satisfy this minimum.",
+          "citation": "S-630-1 Sheet 12, Note 4"
+        }
+      ],
+      "source": "CDOT S-630-1 Standard Plan, Sheet 12"
+    },
+    "flagger": {
+      "applicable": false,
+      "count": 0,
+      "narrative": "Not applicable for this scenario.",
+      "required": 0,
+      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "table": []
+    },
+    "geometry_validation": {
+      "all_pass": true,
+      "buffer_ft": 570.0,
+      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "speed_mph": 65,
+      "taper_ft": 216.66666666666666,
+      "taper_label": "L/3 (shoulder taper)",
+      "violations": [],
+      "work_zone_ft": 2000.0
+    },
+    "spacing": {
+      "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
+      "n_tangent_cones_actual": 19,
+      "n_tangent_cones_required": 17,
+      "n_taper_drums_actual": 5,
+      "n_taper_drums_required": 5,
+      "on_tangent_text": "65 mph -> 130 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "speed_mph": 65,
+      "tangent_count_text": "2000 ft / 130 ft max spacing -> 17 cones at 125.0 ft intervals",
+      "taper_count_text": "L/3 = 216.7 ft / 65 ft max spacing -> 5 drums at 54.2 ft intervals"
+    },
+    "taper": {
+      "L_calc_text": "L = 10 x 65 = 650 ft",
+      "L_full_ft": 650.0,
+      "L_required_ft": 216.66666666666666,
+      "L_required_label": "L/3 (shoulder taper)",
+      "L_third_calc_text": "L/3 = 650 / 3 = 216.7 ft",
+      "L_third_ft": 216.66666666666666,
+      "cdot_reference": "CDOT S-630-1 Case 26 (shoulder closure on freeway/expressway, 65 mph posted with reduced work-zone speed; Sheet 14)",
+      "closure_type": "shoulder",
+      "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
+      "formula_latex": "L = W \\times S",
+      "offset_ft": 10.0,
+      "offset_label": "shoulder width",
+      "shoulder_width_ft": 10.0,
+      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B).",
+      "speed_mph": 65
+    }
+  },
+  "summary": {
+    "buffer_space_ft": 570.0,
+    "case_id": "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+    "case_routing": "shoulder_reduced_speed",
+    "cdot_sheet": "S-630-1",
+    "device_spacing_tangent_ft": 130.0,
+    "device_spacing_taper_ft": 65.0,
+    "step_count": 8,
+    "ta": "TA-2",
+    "taper_label": "L/3 (shoulder taper)",
+    "taper_length_ft": 216.66666666666666,
+    "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY"
+  }
+}

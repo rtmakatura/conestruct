@@ -126,8 +126,14 @@ def allowed_input_keys() -> frozenset[str]:
 # and the quadratic/linear taper boundary. Cone size (28/36 in) is computed for
 # the device list/PDF but absent from the /render/audit projection, so the
 # anchors cannot pin it yet (tracked as an audit-coverage enhancement).
-# current-behavior grid + site-condition snapshots land in PR-3; boundary/
-# invalid set in PR-4.
+#
+# PR-3 adds the current-behavior grid: a one-factor-at-a-time sweep around a
+# fixed baseline (43 cases), each locking the FULL /render/audit projection as a
+# snapshot. These make NO MUTCD-correctness claim — they freeze today's output so
+# any future drift in any audit field fails a test. The seven site-condition
+# cases live here (their spec mapping is unsettled, overlapping open #19), and
+# the 40-mph cases capture the corrected post-taper-fix behavior. boundary/
+# invalid set lands in PR-4.
 # ---------------------------------------------------------------------------
 
 # Shared baseline for the bootstrap anchors: a divided rural shoulder closure,
@@ -192,6 +198,73 @@ def _anchor(
         },
         citation=_ANCHOR_CITATION,
     )
+
+
+# Baseline for the current-behavior grid (PR-3): a divided rural shoulder
+# closure. Each grid case overrides exactly ONE factor from this baseline (the
+# reduced-speed pairs override speed + workZoneSpeed together). The bare
+# baseline itself is not snapshotted — only its single-factor variants are.
+_GRID_BASE: dict[str, Any] = {
+    "roadType": "rural_divided",
+    "speed": 55,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "divided": True,
+    "workType": "utility_locate",
+    "duration": "short",
+    "workLen": 2000,
+    "night": False,
+    "workZoneSpeed": None,
+    "siteConditions": {},
+}
+
+
+def _grid(case_id: str, **overrides: Any) -> CorpusCase:
+    """A current-behavior grid case: the snapshot IS the assertion.
+
+    No ``expected`` and no ``citation`` — provenance is current-behavior, so the
+    locked /render/audit projection (written by the PR-3 snapshot generator) is
+    the regression baseline. test_manifest_integrity enforces that shape.
+    """
+    return CorpusCase(
+        id=case_id,
+        provenance="current-behavior",
+        inputs={**_GRID_BASE, **overrides},
+    )
+
+
+# One factor varied at a time from the baseline (NOT cartesian). Each swept
+# domain is written literally so the exact set is visible at a glance.
+_GRID_SPEEDS = (20, 25, 30, 35, 40, 45, 50, 60, 65, 70, 75)  # 55 is the baseline
+_GRID_LANE_WIDTHS = (8.0, 9.0, 10.0, 11.0, 13.0, 14.0)  # 12.0 is the baseline
+_GRID_ROAD_TYPES = ("rural_undivided", "urban_arterial", "freeway")  # rural_divided baseline
+_GRID_WORK_LENS = (500, 1000, 5000, 10560)  # 2000 is the baseline
+# (posted speed, reduced work-zone speed) pairs — workZoneSpeed < speed.
+_GRID_REDUCED = ((55, 50), (55, 45), (65, 60), (75, 65), (75, 70))
+_GRID_WORK_TYPES = ("survey", "signal_cabinet", "guardrail", "other")  # utility_locate baseline
+# Site-condition flags, one at a time. Keys match src.rules.site_adjustments.
+_GRID_SITE_FLAGS = (
+    "limited_sight_distance",
+    "adjacent_intersection",
+    "adjacent_interchange",
+    "driveways_present",
+    "pedestrian_facility",
+    "bicycle_facility",
+    "school_zone",
+)
+
+_GRID_CASES_BUILT: tuple[CorpusCase, ...] = (
+    *(_grid(f"grid_speed_{s}", speed=s) for s in _GRID_SPEEDS),
+    *(_grid(f"grid_lanewidth_{w:g}", laneWidth=w) for w in _GRID_LANE_WIDTHS),
+    _grid("grid_undivided", divided=False),
+    _grid("grid_night", night=True),
+    _grid("grid_duration_long", duration="long"),
+    *(_grid(f"grid_road_{rt}", roadType=rt) for rt in _GRID_ROAD_TYPES),
+    *(_grid(f"grid_worklen_{wl:g}", workLen=wl) for wl in _GRID_WORK_LENS),
+    *(_grid(f"grid_reduced_{s}_{wz}", speed=s, workZoneSpeed=wz) for s, wz in _GRID_REDUCED),
+    *(_grid(f"grid_worktype_{wt}", workType=wt) for wt in _GRID_WORK_TYPES),
+    *(_grid(f"grid_site_{flag}", siteConditions={flag: True}) for flag in _GRID_SITE_FLAGS),
+)
 
 
 CASES: tuple[CorpusCase, ...] = (
@@ -298,6 +371,9 @@ CASES: tuple[CorpusCase, ...] = (
         in_taper=75.0,
         on_tangent=150.0,
     ),
+    # PR-3 current-behavior grid (43 cases): one factor varied at a time around
+    # _GRID_BASE, each locking the full /render/audit projection as a snapshot.
+    *_GRID_CASES_BUILT,
 )
 
 ANCHOR_CASES: tuple[CorpusCase, ...] = tuple(c for c in CASES if c.provenance == "spec-verified")
