@@ -5,6 +5,8 @@ masquerade as spec-verified ground truth:
 
 * spec-verified ⟺ has ``expected`` values, has a ``citation``, has NO snapshot.
 * current-behavior ⟺ has NO ``expected``, has a snapshot file on disk.
+* boundary ⟺ has NO ``expected`` and NO snapshot; pins an ``expected_status``
+  (and, for 400s, an ``expected_error`` rule_id).
 
 Also pins the determinism invariants (no ``meta``/``lat``/``lng`` overrides; a
 case may only set known scenario fields) and unique ids.
@@ -33,7 +35,7 @@ def test_case_ids_unique() -> None:
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.id)
 def test_provenance_is_known(case: CorpusCase) -> None:
-    assert case.provenance in ("spec-verified", "current-behavior"), (
+    assert case.provenance in ("spec-verified", "current-behavior", "boundary"), (
         f"{case.id}: unknown provenance {case.provenance!r}"
     )
 
@@ -72,7 +74,7 @@ def test_provenance_shape_matches(case: CorpusCase) -> None:
             f"({snapshot_path(case.id)}) — that would let a snapshot stand in "
             f"for verified truth."
         )
-    else:  # current-behavior
+    elif case.provenance == "current-behavior":
         assert not case.expected, (
             f"{case.id}: current-behavior cases must NOT carry expected values "
             f"(a snapshot is not spec-verified ground truth)."
@@ -81,3 +83,26 @@ def test_provenance_shape_matches(case: CorpusCase) -> None:
             f"{case.id}: current-behavior cases must have a snapshot file at "
             f"{snapshot_path(case.id)}."
         )
+    else:  # boundary
+        assert not case.expected, (
+            f"{case.id}: boundary cases assert an HTTP status, not expected values."
+        )
+        assert not has_snapshot, (
+            f"{case.id}: boundary cases must NOT have a snapshot file "
+            f"({snapshot_path(case.id)}) — they assert a rejection/accept status, "
+            f"not a locked projection."
+        )
+        assert case.expected_status in (200, 400, 422), (
+            f"{case.id}: boundary cases must pin expected_status to 200/400/422, "
+            f"got {case.expected_status!r}."
+        )
+        if case.expected_status == 400:
+            assert case.expected_error, (
+                f"{case.id}: a 400 boundary case must name the "
+                f"validate_corridor_geometry rule_id it expects."
+            )
+        else:
+            assert not case.expected_error, (
+                f"{case.id}: only 400 boundary cases carry an expected_error "
+                f"rule_id (got {case.expected_error!r})."
+            )

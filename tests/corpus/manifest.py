@@ -9,6 +9,10 @@ A ``CorpusCase`` is one scenario plus its provenance:
 * ``current-behavior`` — ``expected`` is empty; a snapshot file under
   ``tests/snapshots/corpus/<id>.json`` locks today's full projection.
   ``test_grid`` asserts the live projection equals the snapshot.
+* ``boundary`` — neither ``expected`` nor a snapshot; the case pins an HTTP
+  ``expected_status`` (422 schema reject / 400 geometry reject / 200 near-edge
+  accept) and, for a 400, the ``expected_error`` rule_id. ``test_boundary``
+  asserts the tool fails honestly instead of emitting a degraded plan.
 
 The provenance ⟺ shape mapping is enforced by ``test_manifest_integrity`` so a
 snapshot can never masquerade as spec-verified ground truth.
@@ -25,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
-Provenance = Literal["spec-verified", "current-behavior"]
+Provenance = Literal["spec-verified", "current-behavior", "boundary"]
 
 # Corpus snapshots live in their own subdirectory so the existing
 # tests/snapshots/*.json drift guard (non-recursive) is untouched. A
@@ -69,6 +73,12 @@ class CorpusCase:
     expected: Mapping[str, Any] = field(default_factory=dict)
     # spec-verified only: where the expected values come from.
     citation: str = ""
+    # boundary only: the HTTP status /render/audit must return (422 schema
+    # reject / 400 geometry reject / 200 near-edge accept).
+    expected_status: int | None = None
+    # boundary only, 400 cases: the validate_corridor_geometry rule_id that must
+    # appear in detail.violations[] of the 400 response.
+    expected_error: str = ""
 
 
 def scenario_body(case: CorpusCase) -> dict[str, Any]:
@@ -132,8 +142,15 @@ def allowed_input_keys() -> frozenset[str]:
 # snapshot. These make NO MUTCD-correctness claim — they freeze today's output so
 # any future drift in any audit field fails a test. The seven site-condition
 # cases live here (their spec mapping is unsettled, overlapping open #19), and
-# the 40-mph cases capture the corrected post-taper-fix behavior. boundary/
-# invalid set lands in PR-4.
+# the 40-mph cases capture the corrected post-taper-fix behavior.
+#
+# PR-4 adds the boundary/invalid tier (7 cases): inputs at or past a validation
+# edge that the tool must REJECT honestly rather than emit a degraded plan, plus
+# two near-edge ACCEPTS that guard the valid envelope from over-tightening. Two
+# rejection layers, each asserted by status: 422 (pydantic schema refuses the
+# input) and 400 (validate_corridor_geometry rejects an impossible corridor,
+# with a named rule_id). These assert HTTP status/error codes — not snapshots,
+# not expected dicts — so they are a third provenance kind ("boundary").
 # ---------------------------------------------------------------------------
 
 # Shared baseline for the bootstrap anchors: a divided rural shoulder closure,
@@ -267,6 +284,70 @@ _GRID_CASES_BUILT: tuple[CorpusCase, ...] = (
 )
 
 
+# Baseline for the boundary/invalid tier (PR-4): the same valid divided shoulder
+# closure as the grid. Each boundary case varies ONLY the field under test, so a
+# rejection can be attributed to that one edge — everything else stays valid.
+_BOUNDARY_BASE: dict[str, Any] = {
+    "roadType": "rural_divided",
+    "speed": 55,
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "divided": True,
+    "workType": "utility_locate",
+    "duration": "short",
+    "workLen": 2000,
+    "night": False,
+    "workZoneSpeed": None,
+    "siteConditions": {},
+}
+
+
+def _boundary(case_id: str, *, status: int, error: str = "", **overrides: Any) -> CorpusCase:
+    """A boundary case: assert an HTTP status (and, for 400s, a rule_id).
+
+    No expected/citation/snapshot — provenance is boundary, asserted by
+    test_boundary. ``status`` is 422 (pydantic schema reject), 400 (geometry
+    reject), or 200 (near-edge accept); ``error`` is the
+    validate_corridor_geometry rule_id required to appear in a 400 response.
+    """
+    return CorpusCase(
+        id=case_id,
+        provenance="boundary",
+        inputs={**_BOUNDARY_BASE, **overrides},
+        expected_status=status,
+        expected_error=error,
+    )
+
+
+_BOUNDARY_CASES_BUILT: tuple[CorpusCase, ...] = (
+    # 422 — pydantic ShoulderScenario schema refuses malformed input.
+    _boundary("boundary_speed_85", speed=85, status=422),  # outside 20-75
+    _boundary("boundary_speed_52", speed=52, status=422),  # not a multiple of 5
+    _boundary("boundary_wzs_exceeds_speed", speed=55, workZoneSpeed=60, status=422),
+    # 400 — validate_corridor_geometry rejects an impossible corridor.
+    _boundary(
+        "boundary_workzone_shorter_than_taper",
+        roadType="freeway",
+        speed=70,
+        workLen=10,  # < required shoulder taper L/3 at 70 mph
+        status=400,
+        error="WORK_ZONE_SHORTER_THAN_TAPER",
+    ),
+    _boundary(
+        "boundary_lanewidth_below_freeway_min",
+        roadType="freeway",
+        speed=70,
+        laneWidth=10.0,  # < FREEWAY_MIN_LANE_WIDTH_FT (11.0)
+        status=400,
+        error="LANE_WIDTH_BELOW_FREEWAY_MIN",
+    ),
+    # Near-edge ACCEPTS — must still pass (guard the valid envelope from the
+    # other side, so a future over-tightening of validation gets caught).
+    _boundary("boundary_speed_20_accepted", speed=20, status=200),
+    _boundary("boundary_speed_75_accepted", speed=75, status=200),
+)
+
+
 CASES: tuple[CorpusCase, ...] = (
     CorpusCase(
         id="anchor_spacing_55mph_divided",
@@ -374,7 +455,11 @@ CASES: tuple[CorpusCase, ...] = (
     # PR-3 current-behavior grid (43 cases): one factor varied at a time around
     # _GRID_BASE, each locking the full /render/audit projection as a snapshot.
     *_GRID_CASES_BUILT,
+    # PR-4 boundary/invalid tier (7 cases): 3x 422 schema rejects, 2x 400
+    # geometry rejects (named rule_id), 2x near-edge 200 accepts.
+    *_BOUNDARY_CASES_BUILT,
 )
 
 ANCHOR_CASES: tuple[CorpusCase, ...] = tuple(c for c in CASES if c.provenance == "spec-verified")
 GRID_CASES: tuple[CorpusCase, ...] = tuple(c for c in CASES if c.provenance == "current-behavior")
+BOUNDARY_CASES: tuple[CorpusCase, ...] = tuple(c for c in CASES if c.provenance == "boundary")
