@@ -14,6 +14,13 @@ from fastapi.testclient import TestClient
 
 from tests.corpus.manifest import ANCHOR_CASES, CorpusCase, resolve_path, scenario_body
 
+# Quantities whose spec value is a repeating decimal (the shoulder taper L/3 of
+# a quadratic/linear L, e.g. 88.888... at 40 mph) are compared with a small
+# tolerance so the anchor can carry the spec's 2-dp value (88.89) verbatim.
+# Everything else — buffer and both device spacings — is exact.
+_APPROX_PATHS = frozenset({"summary.taper_length_ft"})
+_APPROX_ABS = 0.01
+
 
 @pytest.mark.parametrize("case", ANCHOR_CASES, ids=lambda c: c.id)
 def test_anchor_matches_spec(
@@ -24,8 +31,14 @@ def test_anchor_matches_spec(
     projection = res.json()
     for dotted, want in case.expected.items():
         got = resolve_path(projection, dotted)
-        assert got == want, (
-            f"{case.id}: {dotted} = {got!r}, spec expects {want!r}. "
+        if dotted in _APPROX_PATHS:
+            matches = got == pytest.approx(want, abs=_APPROX_ABS)
+            tol = f" (abs={_APPROX_ABS})"
+        else:
+            matches = got == want
+            tol = ""
+        assert matches, (
+            f"{case.id}: {dotted} = {got!r}, spec expects {want!r}{tol}. "
             f"If the code is right and the spec value is wrong, fix the anchor; "
             f"if the spec is right, xfail this case and file a bug — do not "
             f"change rules-engine behavior here. Citation: {case.citation}"

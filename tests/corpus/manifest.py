@@ -119,10 +119,15 @@ def allowed_input_keys() -> frozenset[str]:
 # ---------------------------------------------------------------------------
 # The corpus.
 #
-# PR-1 (harness) ships two trivially-checkable spec-verified anchors that pin
-# channelizing-device spacing only (MUTCD §6C.09: in-taper = S, on-tangent =
-# 2S). Full hand-verified anchors land in PR-2; current-behavior grid +
-# site-condition snapshots in PR-3; boundary/invalid set in PR-4.
+# PR-1 (harness) shipped two trivially-checkable spacing anchors (MUTCD §6C.09:
+# in-taper = S, on-tangent = 2S). PR-2 adds eight hand-verified shoulder-closure
+# anchors pinning the four audit-resolvable quantities — taper length (L/3),
+# buffer, in-taper spacing, on-tangent spacing — across the 25-75 mph envelope
+# and the quadratic/linear taper boundary. Cone size (28/36 in) is computed for
+# the device list/PDF but absent from the /render/audit projection, so the
+# anchors cannot pin it yet (tracked as an audit-coverage enhancement).
+# current-behavior grid + site-condition snapshots land in PR-3; boundary/
+# invalid set in PR-4.
 # ---------------------------------------------------------------------------
 
 # Shared baseline for the bootstrap anchors: a divided rural shoulder closure,
@@ -145,6 +150,50 @@ _SPACING_CITATION = (
     "that (2S). Trivially checkable, independent of taper/buffer math."
 )
 
+# Shared inputs for the eight full anchors: a rural shoulder closure, utility
+# locate, short duration, work zone comfortably long enough to clear every
+# taper/buffer minimum. Only roadType, speed, and divided vary per anchor.
+_ANCHOR_BASE: dict[str, Any] = {
+    "lanes": 2,
+    "laneWidth": 12.0,
+    "workType": "utility_locate",
+    "duration": "short",
+    "workLen": 2000,
+    "night": False,
+    "workZoneSpeed": None,
+    "siteConditions": {},
+}
+
+# One citation covers all four pinned quantities. The confirmed MUTCD table
+# numbers are cited here; the in-code section-number citations are the open #19
+# cleanup, so anchors stand on the tables rather than the code's labels.
+_ANCHOR_CITATION = (
+    "MUTCD 11th Ed.: taper length L per Table 6B-4 (<=40 mph: L = W*S^2/60 "
+    "quadratic; >=45 mph: L = W*S linear), shoulder taper = 0.33L per Table "
+    "6B-3; buffer per Table 6B-2; channelizing-device spacing = S in the taper "
+    "and 2S on the tangent. Confirmed table numbers (in-code section citations "
+    "are the open #19 cleanup)."
+)
+
+
+def _anchor(
+    case_id: str, road_type: str, speed: int, divided: bool, **expected: float
+) -> CorpusCase:
+    """A full spec-verified anchor pinning the four audit-resolvable quantities."""
+    return CorpusCase(
+        id=case_id,
+        provenance="spec-verified",
+        inputs={**_ANCHOR_BASE, "roadType": road_type, "speed": speed, "divided": divided},
+        expected={
+            "summary.taper_length_ft": expected["taper"],
+            "summary.buffer_space_ft": expected["buffer"],
+            "summary.device_spacing_taper_ft": expected["in_taper"],
+            "summary.device_spacing_tangent_ft": expected["on_tangent"],
+        },
+        citation=_ANCHOR_CITATION,
+    )
+
+
 CASES: tuple[CorpusCase, ...] = (
     CorpusCase(
         id="anchor_spacing_55mph_divided",
@@ -165,6 +214,89 @@ CASES: tuple[CorpusCase, ...] = (
             "summary.device_spacing_tangent_ft": 140.0,
         },
         citation=_SPACING_CITATION,
+    ),
+    # Eight hand-verified anchors. taper_length_ft is compared with abs=0.01
+    # tolerance in test_anchors (repeating decimals); buffer and both spacings
+    # are exact. Table values written verbatim.
+    _anchor(
+        "anchor_div_25",
+        "rural_divided",
+        25,
+        True,
+        taper=34.72,
+        buffer=155.0,
+        in_taper=25.0,
+        on_tangent=50.0,
+    ),
+    _anchor(
+        "anchor_div_35",
+        "rural_divided",
+        35,
+        True,
+        taper=68.06,
+        buffer=250.0,
+        in_taper=35.0,
+        on_tangent=70.0,
+    ),
+    _anchor(
+        "anchor_div_40",
+        "rural_divided",
+        40,
+        True,
+        taper=88.89,
+        buffer=305.0,
+        in_taper=40.0,
+        on_tangent=80.0,
+    ),
+    _anchor(
+        "anchor_undiv_40",
+        "rural_undivided",
+        40,
+        False,
+        taper=71.11,
+        buffer=305.0,
+        in_taper=40.0,
+        on_tangent=80.0,
+    ),
+    _anchor(
+        "anchor_div_45",
+        "rural_divided",
+        45,
+        True,
+        taper=150.00,
+        buffer=360.0,
+        in_taper=45.0,
+        on_tangent=90.0,
+    ),
+    _anchor(
+        "anchor_undiv_45",
+        "rural_undivided",
+        45,
+        False,
+        taper=120.00,
+        buffer=360.0,
+        in_taper=45.0,
+        on_tangent=90.0,
+    ),
+    _anchor(
+        "anchor_div_65",
+        "rural_divided",
+        65,
+        True,
+        taper=216.67,
+        buffer=645.0,
+        in_taper=65.0,
+        on_tangent=130.0,
+    ),
+    _anchor(
+        "anchor_div_75",
+        "rural_divided",
+        75,
+        True,
+        taper=250.00,
+        buffer=820.0,
+        in_taper=75.0,
+        on_tangent=150.0,
     ),
 )
 
