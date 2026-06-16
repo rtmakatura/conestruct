@@ -841,7 +841,7 @@ def test_audit_buffer_at_65_no_reduction_uses_federal(client: TestClient) -> Non
     assert "divergence" not in b
     assert "cdot_value_ft" not in b
     assert "mutcd_value_ft" not in b
-    assert "MUTCD Table 6C-2: 645 ft" in b["lookup_text"]
+    assert "MUTCD Table 6B-2: 645 ft" in b["lookup_text"]
     assert "Case 26" in b["lookup_text"]  # cited only to explain non-application
     assert "no qualifying" in b["lookup_text"]
     assert "Case 26 at 65 mph" not in b["source"]
@@ -862,7 +862,7 @@ def test_audit_buffer_at_65_with_case_26_stepdown_diverges(client: TestClient) -
     assert b["cdot_value_ft"] == 570
     assert b["mutcd_value_ft"] == 645
     assert "CDOT supplement: 570 ft" in b["lookup_text"]
-    assert "MUTCD Table 6C-2: 645 ft" in b["lookup_text"]
+    assert "MUTCD Table 6B-2: 645 ft" in b["lookup_text"]
     assert "Plan uses CDOT supplement value" in b["lookup_text"]
     assert "Case 26 at 65 mph" in b["source"]
 
@@ -875,7 +875,7 @@ def test_audit_buffer_at_75_no_reduction_uses_federal(client: TestClient) -> Non
     b = _buffer_section(res.json())
     assert b["buffer_ft"] == 820.0
     assert "divergence" not in b
-    assert "MUTCD Table 6C-2: 820 ft" in b["lookup_text"]
+    assert "MUTCD Table 6B-2: 820 ft" in b["lookup_text"]
     assert "Case 27" in b["lookup_text"]
     assert "Case 27 at 75 mph" not in b["source"]
     assert "Case 11" in b["source"]
@@ -894,7 +894,7 @@ def test_audit_buffer_at_75_with_case_27_stepdown_diverges(client: TestClient) -
     assert b["cdot_value_ft"] == 650
     assert b["mutcd_value_ft"] == 820
     assert "CDOT supplement: 650 ft" in b["lookup_text"]
-    assert "MUTCD Table 6C-2: 820 ft" in b["lookup_text"]
+    assert "MUTCD Table 6B-2: 820 ft" in b["lookup_text"]
     assert "Case 27 at 75 mph" in b["source"]
 
 
@@ -977,7 +977,7 @@ def test_audit_buffer_silent_at_55_names_silence(client: TestClient) -> None:
     assert res.status_code == 200, res.text
     b = _buffer_section(res.json())
     assert b["buffer_ft"] == 495.0
-    assert "MUTCD Table 6C-2: 495 ft" in b["lookup_text"]
+    assert "MUTCD Table 6B-2: 495 ft" in b["lookup_text"]
     assert "(CDOT supplement silent at this speed)" in b["lookup_text"]
     # Suppression check: silent-speed bodies must not carry divergence keys.
     assert "divergence" not in b
@@ -1083,7 +1083,7 @@ def test_audit_buffer_federal_at_65_uses_mutcd_value() -> None:
     audit = build_audit_trail([], params, shoulder_width_ft=10.0)
     b = audit["buffer"]
     assert b["buffer_ft"] == 645.0
-    assert b["lookup_text"] == "MUTCD Table 6C-2: 645 ft"
+    assert b["lookup_text"] == "MUTCD Table 6B-2: 645 ft"
     assert "divergence" not in b
 
 

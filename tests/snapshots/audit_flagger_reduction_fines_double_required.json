@@ -74,8 +74,8 @@
     },
     "buffer": {
       "buffer_ft": 360.0,
-      "lookup_text": "MUTCD Table 6C-2: 360 ft (CDOT supplement silent at this speed)",
-      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+      "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+      "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 45
     },
     "case": {
@@ -169,7 +169,7 @@
       "count": 2,
       "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
       "required": 2,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
       "table": [
         {
           "Label": "FLAGGER_1",
@@ -188,7 +188,7 @@
     "geometry_validation": {
       "all_pass": true,
       "buffer_ft": 360.0,
-      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 45,
       "taper_ft": 100.0,
       "taper_label": "one-lane two-way taper",
@@ -196,13 +196,13 @@
       "work_zone_ft": 500.0
     },
     "spacing": {
-      "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6C.09 speed-based rule)",
+      "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
       "n_tangent_cones_actual": 11,
       "n_tangent_cones_required": 7,
       "n_taper_drums_actual": 6,
       "n_taper_drums_required": 6,
-      "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
-      "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6C.09 (tangent)",
+      "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
       "speed_mph": 45,
       "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
       "taper_count_text": "one-lane two-way taper = 100.0 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"

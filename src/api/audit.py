@@ -116,9 +116,9 @@ def build_audit_trail(
     Branches on ``params.closure_type``:
 
     * ``"shoulder"`` — taper offset is the closed shoulder width and the
-      required taper run is L/3 (MUTCD §6C.08(B)).
+      required taper run is L/3 (MUTCD §6B.08).
     * ``"lane"`` — taper offset is one lane width and the required taper
-      run is the full merging taper L (MUTCD §6C.08).
+      run is the full merging taper L (MUTCD §6B.08).
 
     Falls back to the shoulder-closure presentation for any other value
     so the verification panel keeps rendering until other scenarios are
@@ -206,7 +206,7 @@ def build_audit_trail(
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {L_full:g} ft (full taper for lane closure)"
         source_text = (
-            "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Lane closures use the "
+            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the "
             "full merging taper length L."
         )
         cdot_reference = "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
@@ -215,7 +215,8 @@ def build_audit_trail(
         L_required_label = "L/3 (shoulder taper)"
         L_required_calc_text = f"L/3 = {L_full:g} / 3 = {L_third:.1f} ft"
         source_text = (
-            "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B)."
+            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 "
+            "per Sec 6B.08 (Table 6B-3)."
         )
         # Routing-aware taper cdot_reference (V1-Wide S1). Only the exact
         # Case 26/27 mandated step-down (65->60, 75->65) maps to the Sheet
@@ -299,7 +300,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"CDOT supplement: {buf:g} ft. MUTCD Table 6C-2: {mutcd_value:g} ft. "
+                f"CDOT supplement: {buf:g} ft. MUTCD Table 6B-2: {mutcd_value:g} ft. "
                 f"Plan uses CDOT supplement value. Note: CDOT supplement permits "
                 f"shorter buffer than federal table. Verify against project-specific "
                 f"engineering judgment."
@@ -307,7 +308,7 @@ def build_audit_trail(
             "buffer_ft": buf,
             "source": (
                 f"CDOT S-630-1 Standard Plan, Sheet 14 ({_supplement_row_label}). "
-                f"MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (federal baseline)."
+                f"MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline)."
             ),
             "jurisdiction": params.jurisdiction,
             "cdot_value_ft": int(buf),
@@ -317,7 +318,7 @@ def build_audit_trail(
     elif supplement_speed:
         # CDOT 65/75 mph but no qualifying Case 26/27 step-down: the
         # supplement minimum is SSD at the reduced work-zone speed, which is
-        # not in effect, so MUTCD Table 6C-2 at the posted speed governs per
+        # not in effect, so MUTCD Table 6B-2 at the posted speed governs per
         # Sheet 7 Case 11 (buffer "VARIES", General Note 23).
         required_wz = CDOT_BUFFER_STEPDOWN[speed]
         supplement_min = _cdot_buffer_or_none(speed, required_wz)
@@ -325,7 +326,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table 6C-2: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table 6B-2: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
                 f"{_supplement_case} mandatory speed step-down "
                 f"({speed} → {required_wz} mph); this plan has no qualifying "
@@ -334,39 +335,39 @@ def build_audit_trail(
             ),
             "buffer_ft": buf,
             "source": (
-                "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance). "
+                "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). "
                 "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23)."
             ),
         }
     elif params.jurisdiction == "CDOT":
         buffer_section = {
             "speed_mph": speed,
-            "lookup_text": (f"MUTCD Table 6C-2: {buf:g} ft (CDOT supplement silent at this speed)"),
+            "lookup_text": (f"MUTCD Table 6B-2: {buf:g} ft (CDOT supplement silent at this speed)"),
             "buffer_ft": buf,
-            "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+            "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
         }
     else:  # jurisdiction == "federal"
         buffer_section = {
             "speed_mph": speed,
-            "lookup_text": f"MUTCD Table 6C-2: {buf:g} ft",
+            "lookup_text": f"MUTCD Table 6B-2: {buf:g} ft",
             "buffer_ft": buf,
-            "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+            "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
         }
 
     # ------------------------------------------------------------------
     # 3. Channelizing device spacing
     # ------------------------------------------------------------------
     # Flagger one-lane two-way taper uses the §6B.08 ¶14 ~20 ft device
-    # spacing (taper-specific guidance overrides the speed-based §6C.09
-    # rule); all other tapers use §6C.09 speed-in-feet.  Tangent spacing
-    # is §6C.09 2x-speed everywhere.
+    # spacing (taper-specific guidance overrides the speed-based §6K.01
+    # rule); all other tapers use §6K.01 speed-in-feet.  Tangent spacing
+    # is §6K.01 2x-speed everywhere.
     in_taper = one_lane_two_way_device_spacing() if is_flagger else device_spacing_in_taper(speed)
     on_tan = device_spacing_on_tangent(speed)
 
     # Deployed counts mirror the layout engine
     # (``src/generation/layout.py`` calls the same helper).  Naive
     # ``ceil(length / spacing)`` was wrong on two counts: it returned
-    # the interval count (= devices - 1) and ignored the §6C.09
+    # the interval count (= devices - 1) and ignored the §6K.01
     # asymmetric acceptance window.  Floors come from the generators'
     # shared ``device_count_floors`` source (audit fix B-07) so the
     # "required" recompute matches what the layout actually deploys —
@@ -386,20 +387,20 @@ def build_audit_trail(
         in_taper_text = (
             f"{in_taper:g} ft spacing in the one-lane two-way taper "
             "(MUTCD Sec 6B.08: approximately 20 ft, taper-specific "
-            "guidance overriding the Sec 6C.09 speed-based rule)"
+            "guidance overriding the Sec 6K.01 speed-based rule)"
         )
     else:
         taper_label = "L" if is_lane else "L/3"
         in_taper_text = (
             f"{speed} mph -> {in_taper:g} ft spacing "
-            "(MUTCD Sec 6C.09: spacing equals speed in feet)"
+            "(MUTCD Sec 6K.01: spacing equals speed in feet)"
         )
     spacing_section = {
         "speed_mph": speed,
         "in_taper_text": in_taper_text,
         "on_tangent_text": (
             f"{speed} mph -> {on_tan:g} ft spacing "
-            "(MUTCD Sec 6C.09: spacing equals 2x speed in feet)"
+            "(MUTCD Sec 6K.01: spacing equals 2x speed in feet)"
         ),
         "taper_count_text": (
             f"{taper_label} = {L_required:.1f} ft / {in_taper:g} ft max spacing "
@@ -412,16 +413,16 @@ def build_audit_trail(
         # ``_required`` field name retained for backwards compatibility
         # with verify scripts and the Streamlit panel.  Value is now the
         # ``pick_device_count`` output (what the layout deploys), not
-        # the old naive ``ceil`` (what a strict reading of §6C.09 would
+        # the old naive ``ceil`` (what a strict reading of §6K.01 would
         # demand).  Rename is a separate concern; see commit history.
         "n_taper_drums_required": n_taper_drums,
         "n_taper_drums_actual": actual_drums,
         "n_tangent_cones_required": n_tangent_cones,
         "n_tangent_cones_actual": actual_cones,
         "source": (
-            "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6C.09 (tangent)"
+            "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)"
             if is_flagger
-            else "MUTCD 11th Ed. Sec 6C.09"
+            else "MUTCD 11th Ed. Sec 6K.01"
         ),
     }
 
@@ -1036,8 +1037,7 @@ def build_audit_trail(
         "required": 2 if is_flagger else 0,
         "table": flagger_rows,
         "source": (
-            "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary "
-            "Traffic Control Zones — Flagger Control) and Sec 6C.13 "
+            "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E "
             "(One-Lane, Two-Way Traffic Control)."
         ),
         "narrative": (
@@ -1098,7 +1098,7 @@ def build_audit_trail(
             for v in geo_violations
         ],
         "all_pass": all(v.severity != "error" for v in geo_violations),
-        "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
     }
 
     out: dict[str, Any] = {
@@ -1163,7 +1163,7 @@ def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
     with TS so the step_count migration is behavior-preserving on a
     user-visible number.
 
-    Speed ≥ 40 mph: L = W × S  (linear regime, MUTCD §6C.08).
+    Speed ≥ 40 mph: L = W × S  (linear regime, MUTCD §6B.08).
     Speed < 40 mph: L = W × S² / 60  (quadratic regime).
     """
     if speed_mph >= 40:
@@ -1359,7 +1359,7 @@ def audit_projection(
         "taper_label": taper["L_required_label"],
         "buffer_space_ft": audit["buffer"]["buffer_ft"],
         # Flagger taper spacing is the §6B.08 ~20 ft taper-specific
-        # value (PR 2), not the §6C.09 speed-based rule — mirror the
+        # value (PR 2), not the §6K.01 speed-based rule — mirror the
         # spacing-section branch so summary and section agree.
         "device_spacing_taper_ft": (
             one_lane_two_way_device_spacing()

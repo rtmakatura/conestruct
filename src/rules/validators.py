@@ -1386,10 +1386,10 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
                 severity="error",
                 message=(
                     f"Speed {params.speed_mph} mph is outside the MUTCD "
-                    f"Table 6C-2 domain (multiples of 5 mph, 20-75): {exc} "
+                    f"Table 6B-2 domain (multiples of 5 mph, 20-75): {exc} "
                     f"Use a posted speed the buffer-space table covers."
                 ),
-                mutcd_section="MUTCD 11th Ed. Table 6C-2",
+                mutcd_section="MUTCD 11th Ed. Table 6B-2",
                 device_index=None,
             )
         )
@@ -1410,7 +1410,7 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
                     f"{params.speed_mph} mph. Increase the work zone to at least "
                     f"{taper_ft:.0f} ft, or reduce the speed limit."
                 ),
-                mutcd_section="6C.08",
+                mutcd_section="6B.08",
                 device_index=None,
             )
         )
@@ -1424,7 +1424,7 @@ def validate_corridor_geometry(params: ScenarioParams) -> list[Violation]:
                     f"to the required buffer space ({buffer_ft:.0f} ft) at "
                     f"{params.speed_mph} mph. Verify this matches the actual job."
                 ),
-                mutcd_section="6C.06",
+                mutcd_section="6B.06",
                 device_index=None,
             )
         )

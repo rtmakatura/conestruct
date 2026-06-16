@@ -56,8 +56,8 @@
     },
     "buffer": {
       "buffer_ft": 820.0,
-      "lookup_text": "MUTCD Table 6C-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 → 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 23).",
-      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23).",
+      "lookup_text": "MUTCD Table 6B-2: 820 ft. CDOT S-630-1 Sheet 14 posts a 650 ft minimum at 75 mph, but only as part of the Case 27 mandatory speed step-down (75 → 65 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 23).",
+      "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23).",
       "speed_mph": 75
     },
     "case": {
@@ -113,13 +113,13 @@
       "count": 0,
       "narrative": "Not applicable for this scenario.",
       "required": 0,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
       "table": []
     },
     "geometry_validation": {
       "all_pass": true,
       "buffer_ft": 820.0,
-      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 75,
       "taper_ft": 250.0,
       "taper_label": "L/3 (shoulder taper)",
@@ -127,13 +127,13 @@
       "work_zone_ft": 1500.0
     },
     "spacing": {
-      "in_taper_text": "75 mph -> 75 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
+      "in_taper_text": "75 mph -> 75 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_tangent_cones_actual": 13,
       "n_tangent_cones_required": 11,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
-      "on_tangent_text": "75 mph -> 150 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
-      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "on_tangent_text": "75 mph -> 150 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 75,
       "tangent_count_text": "1500 ft / 150 ft max spacing -> 11 cones at 150.0 ft intervals",
       "taper_count_text": "L/3 = 250.0 ft / 75 ft max spacing -> 5 drums at 62.5 ft intervals"
@@ -152,7 +152,7 @@
       "offset_ft": 10.0,
       "offset_label": "shoulder width",
       "shoulder_width_ft": 10.0,
-      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B).",
+      "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
       "speed_mph": 75
     }
   },

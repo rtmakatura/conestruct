@@ -38,8 +38,8 @@
     },
     "buffer": {
       "buffer_ft": 495.0,
-      "lookup_text": "MUTCD Table 6C-2: 495 ft (CDOT supplement silent at this speed)",
-      "source": "MUTCD 11th Ed. Sec 6C.06, Table 6C-2 (stopping sight distance)",
+      "lookup_text": "MUTCD Table 6B-2: 495 ft (CDOT supplement silent at this speed)",
+      "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 55
     },
     "case": {
@@ -128,13 +128,13 @@
       "count": 0,
       "narrative": "Not applicable for this scenario.",
       "required": 0,
-      "source": "MUTCD 11th Ed. Sec 6E (Control of Traffic Through Temporary Traffic Control Zones — Flagger Control) and Sec 6C.13 (One-Lane, Two-Way Traffic Control).",
+      "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
       "table": []
     },
     "geometry_validation": {
       "all_pass": true,
       "buffer_ft": 495.0,
-      "source": "MUTCD 11th Ed. Sec 6C.06 (buffer) and Sec 6C.08 (taper)",
+      "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 55,
       "taper_ft": 183.33333333333334,
       "taper_label": "L/3 (shoulder taper)",
@@ -142,13 +142,13 @@
       "work_zone_ft": 2000.0
     },
     "spacing": {
-      "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6C.09: spacing equals speed in feet)",
+      "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_tangent_cones_actual": 22,
       "n_tangent_cones_required": 20,
       "n_taper_drums_actual": 5,
       "n_taper_drums_required": 5,
-      "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6C.09: spacing equals 2x speed in feet)",
-      "source": "MUTCD 11th Ed. Sec 6C.09",
+      "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 55,
       "tangent_count_text": "2000 ft / 110 ft max spacing -> 20 cones at 105.3 ft intervals",
       "taper_count_text": "L/3 = 183.3 ft / 55 ft max spacing -> 5 drums at 45.8 ft intervals"
@@ -167,7 +167,7 @@
       "offset_ft": 10.0,
       "offset_label": "shoulder width",
       "shoulder_width_ft": 10.0,
-      "source": "MUTCD 11th Ed. Sec 6C.08, Table 6B-3. Shoulder closures use L/3 per Sec 6C.08(B).",
+      "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
       "speed_mph": 55
     }
   },
