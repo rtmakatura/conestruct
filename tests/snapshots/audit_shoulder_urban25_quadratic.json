@@ -123,7 +123,7 @@
       "L_third_ft": 27.777777777777775,
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
       "closure_type": "shoulder",
-      "formula_choice": "Speed 25 mph < 40 mph threshold -> using L = W x S^2 / 60",
+      "formula_choice": "Speed 25 mph < 45 mph threshold -> using L = W x S^2 / 60",
       "formula_latex": "L = \\frac{W \\times S^2}{60}",
       "offset_ft": 8.0,
       "offset_label": "shoulder width",

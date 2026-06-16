@@ -2072,19 +2072,20 @@ def test_audit_quadratic_calc_text_is_arithmetically_coherent(client: TestClient
     taper = res.json()["sections"]["taper"]
     assert "x 25^2 / 60" in taper["L_calc_text"], taper["L_calc_text"]
     assert taper["L_calc_text"].endswith("= 83.3333 ft")
-    assert "< 40 mph threshold" in taper["formula_choice"]
+    assert "< 45 mph threshold" in taper["formula_choice"]
     spacing = res.json()["sections"]["spacing"]
     assert spacing["n_taper_drums_required"] == 4 == spacing["n_taper_drums_actual"]
 
 
 # ---------------------------------------------------------------------------
-# B-05 — at exactly 40 mph the audit discloses the conservative
-# deviation from MUTCD's quadratic prescription instead of asserting
-# linear as the MUTCD formula choice.  The L value itself is unchanged.
+# Taper-formula boundary — at 40 mph the audit selects MUTCD's quadratic
+# formula (L = W x S^2 / 60), the spec-correct branch for speeds <= 40.
+# The 45 mph threshold is the first speed that uses the linear L = W x S.
+# (Supersedes the former B-05 "conservative deviation" disclosure.)
 # ---------------------------------------------------------------------------
 
 
-def test_taper_formula_choice_discloses_deviation_at_exactly_40() -> None:
+def test_taper_formula_choice_uses_quadratic_at_40() -> None:
     from src.rules.validators import ScenarioParams
 
     def params_at(speed: int) -> ScenarioParams:
@@ -2101,15 +2102,17 @@ def test_taper_formula_choice_discloses_deviation_at_exactly_40() -> None:
         )
 
     taper_40 = audit_module.build_audit_trail([], params_at(40))["taper"]
-    # The L value is the settled conservative behavior — unchanged.
-    assert taper_40["L_full_ft"] == 400.0  # 10 ft x 40 mph, linear
-    assert taper_40["L_calc_text"] == "L = 10 x 40 = 400 ft"
-    # The text discloses the deviation rather than asserting MUTCD chose it.
-    assert "deliberate conservative deviation" in taper_40["formula_choice"]
-    assert "L = W x S^2 / 60" in taper_40["formula_choice"]
-    assert "deviates conservatively" in taper_40["source"]
+    # 40 mph is below the 45 mph threshold -> quadratic: 10 x 40^2 / 60 = 266.67.
+    assert taper_40["L_full_ft"] == pytest.approx(266.67, abs=0.01)
+    assert taper_40["L_calc_text"] == "L = 10 x 40^2 / 60 = 266.667 ft"
+    # The formula choice asserts the MUTCD quadratic branch; no deviation text.
+    assert taper_40["formula_choice"] == (
+        "Speed 40 mph < 45 mph threshold -> using L = W x S^2 / 60"
+    )
+    assert "deviat" not in taper_40["formula_choice"]
+    assert "deviat" not in taper_40["source"]
 
-    # At 45+ the standard (snapshot-pinned) text is untouched.
+    # At the 45 mph threshold the linear branch applies and the text is clean.
     taper_45 = audit_module.build_audit_trail([], params_at(45))["taper"]
-    assert taper_45["formula_choice"] == ("Speed 45 mph >= 40 mph threshold -> using L = W x S")
-    assert "deviates" not in taper_45["source"]
+    assert taper_45["formula_choice"] == ("Speed 45 mph >= 45 mph threshold -> using L = W x S")
+    assert "deviat" not in taper_45["source"]

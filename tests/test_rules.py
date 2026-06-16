@@ -115,18 +115,18 @@ def test_colorado_overrides_values() -> None:
 
 
 def test_taper_length_below_threshold() -> None:
-    """L = W * S^2 / 60 for speeds below 40 mph."""
+    """L = W * S^2 / 60 for speeds below the 45 mph threshold."""
     # 30 mph, 12-ft lane: 12 * 900 / 60 = 180
     assert taper_length(30, 12) == pytest.approx(180.0)
     # 35 mph, 11-ft lane: 11 * 1225 / 60 = 224.5833...
     assert taper_length(35, 11) == pytest.approx(11 * 35**2 / 60)
+    # 40 mph (just below the 45 mph threshold), 12-ft lane: 12 * 1600 / 60 = 320
+    assert taper_length(40, 12) == pytest.approx(320.0)
 
 
 def test_taper_length_at_and_above_threshold() -> None:
-    """L = W * S at and above 40 mph (the threshold itself uses linear)."""
-    # 40 mph (at threshold), 12-ft lane
-    assert taper_length(40, 12) == pytest.approx(480.0)
-    # 45 mph, 11-ft lane
+    """L = W * S at and above the 45 mph threshold (the threshold uses linear)."""
+    # 45 mph (at threshold), 11-ft lane
     assert taper_length(45, 11) == pytest.approx(495.0)
     # 65 mph, 12-ft lane
     assert taper_length(65, 12) == pytest.approx(780.0)
@@ -144,6 +144,24 @@ def test_shoulder_taper_is_third() -> None:
     assert shoulder_taper_length(45, 6) == pytest.approx(90.0)
     # 30 mph (below threshold), 4-ft shoulder: full = 60, shoulder = 20
     assert shoulder_taper_length(30, 4) == pytest.approx(20.0)
+
+
+def test_shoulder_taper_40_mph_uses_quadratic() -> None:
+    """At 40 mph the quadratic branch governs (MUTCD §6C.08: ≤40 -> W·S²/60).
+
+    Regression for the 40 mph boundary fix (threshold moved 40 -> 45).  40 mph
+    is now below the linear threshold, so the shoulder taper shortens:
+    divided 133.33 -> 88.89, undivided 106.67 -> 71.11.  35 and 45 mph are
+    pinned unchanged to prove the move touches 40 mph only.
+    """
+    # 40 mph divided (W = 10 ft): 10 * 1600 / 60 / 3 = 88.888...
+    assert shoulder_taper_length(40, 10) == pytest.approx(88.89, abs=0.01)
+    # 40 mph undivided (W = 8 ft): 8 * 1600 / 60 / 3 = 71.111...
+    assert shoulder_taper_length(40, 8) == pytest.approx(71.11, abs=0.01)
+    # 35 mph divided (already quadratic) — unchanged: 10 * 1225 / 60 / 3 = 68.05...
+    assert shoulder_taper_length(35, 10) == pytest.approx(68.06, abs=0.01)
+    # 45 mph divided (linear, at threshold) — unchanged: 10 * 45 / 3 = 150.0
+    assert shoulder_taper_length(45, 10) == pytest.approx(150.0)
 
 
 def test_downstream_taper() -> None:

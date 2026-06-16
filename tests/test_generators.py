@@ -86,7 +86,10 @@ def _run(
             "rural",
             1000.0,
             12.0,
-            {"SIGN_GENERIC": 14, "DRUM": 5, "ARROW_BOARD": 1, "CONE": 16},
+            # 40 mph now uses the quadratic taper (L = W*S^2/60): shoulder
+            # taper 10*40^2/60/3 = 88.89 ft vs the old linear 133.33 ft, so
+            # one fewer taper drum (DRUM 5 -> 4).  All other zones unchanged.
+            {"SIGN_GENERIC": 14, "DRUM": 4, "ARROW_BOARD": 1, "CONE": 16},
         ),
         (
             45,
@@ -215,7 +218,11 @@ def test_shoulder_undivided(
 @pytest.mark.parametrize(
     "speed,road_type,wz_len,expected",
     [
-        (40, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 13}),
+        # 40 mph now uses the quadratic taper: lane closures use the FULL
+        # merging taper L (= W*S^2/60 = 320 ft vs the old linear 480 ft), so
+        # the taper shrinks 160 ft -> four fewer taper drums (DRUM 13 -> 9).
+        # Cones and all other zones unchanged.
+        (40, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 9, "ARROW_BOARD": 1, "CONE": 13}),
         (45, "rural", 800.0, {"SIGN_GENERIC": 14, "DRUM": 13, "ARROW_BOARD": 1, "CONE": 12}),
         # Same pick(wz_len, 2*speed) math as the shoulder_divided cases —
         # pre-fix picked floor candidates that exceeded the §6C.09 max.

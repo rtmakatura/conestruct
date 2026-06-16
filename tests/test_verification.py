@@ -48,8 +48,8 @@ from src.rules.validators import DevicePlacement, ScenarioParams, validate_layou
         (25, 12 * 25**2 / 60),  # = 125.0  ft
         (30, 12 * 30**2 / 60),  # = 180.0  ft
         (35, 12 * 35**2 / 60),  # = 245.0  ft
-        # At/above 40 mph: L = W * S      (linear regime)
-        (40, 12 * 40),  # = 480.0  ft
+        (40, 12 * 40**2 / 60),  # = 320.0  ft
+        # At/above 45 mph: L = W * S      (linear regime)
         (45, 12 * 45),  # = 540.0  ft
         (55, 12 * 55),  # = 660.0  ft
         (65, 12 * 65),  # = 780.0  ft

@@ -25,7 +25,7 @@ from dataclasses import dataclass
 # Source: MUTCD 11th Ed. §6C.08
 # Below this speed:    L = W × S² / 60
 # At or above this:    L = W × S
-TAPER_LENGTH_FORMULA_THRESHOLD_MPH: int = 40
+TAPER_LENGTH_FORMULA_THRESHOLD_MPH: int = 45
 
 # ---------------------------------------------------------------------------
 # Shifting taper ratio

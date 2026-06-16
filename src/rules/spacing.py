@@ -39,7 +39,7 @@ def taper_length(speed_mph: int, offset_ft: float) -> float:
     """Merging taper length L, in feet.
 
     Source: MUTCD 11th Ed. §6C.08.
-    Below ``TAPER_LENGTH_FORMULA_THRESHOLD_MPH`` (40 mph): ``L = W * S² / 60``.
+    Below ``TAPER_LENGTH_FORMULA_THRESHOLD_MPH`` (45 mph): ``L = W * S² / 60``.
     At or above the threshold:                              ``L = W * S``.
 
     Args:
