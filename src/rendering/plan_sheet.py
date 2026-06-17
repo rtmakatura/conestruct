@@ -3284,6 +3284,13 @@ def render_plan_sheet(
     ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
     single source of truth); the kwarg remains as an explicit override.
     """
+    # Invariant: the renderer never receives an empty device list.  The
+    # API path rejects this with an honest 400 upstream (_placements_for);
+    # this guard protects the Streamlit/dev path and any future caller,
+    # replacing the cryptic ``min() arg is an empty sequence`` from
+    # _make_x_mapping with a clear message.
+    if not placements:
+        raise ValueError("No devices generated for scenario")
     if shoulder_width_ft is None:
         shoulder_width_ft = params.shoulder_width_ft
     # Prefer params-supplied metadata; fall back to the per-call kwargs

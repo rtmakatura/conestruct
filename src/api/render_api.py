@@ -188,6 +188,30 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
             },
         )
     placements = generator(params, **kwargs)
+    if not placements:
+        # The generator produced zero devices — no valid layout exists to
+        # render (a blank schematic would be a degraded, dishonest plan).
+        # Unreachable from today's generators (each emits >=1 device); this
+        # guards a future gated stub so the failure surfaces as a clear 400
+        # at the API boundary rather than a min()-over-empty crash deep in
+        # the renderer, which render_pdf would otherwise mask into a 500.
+        # Mirrors the geometry-rejection detail shape above.
+        message = "No devices were generated for this scenario; a plan cannot be rendered."
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "no_devices_generated",
+                "message": message,
+                "violations": [
+                    {
+                        "rule_id": "NO_DEVICES_GENERATED",
+                        "severity": "error",
+                        "message": message,
+                        "mutcd_section": None,
+                    }
+                ],
+            },
+        )
     placements, site_records = apply_site_adjustments(
         placements, params, scenario.meta.siteConditions or {}
     )
