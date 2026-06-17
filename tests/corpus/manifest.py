@@ -129,7 +129,7 @@ def allowed_input_keys() -> frozenset[str]:
 # ---------------------------------------------------------------------------
 # The corpus.
 #
-# PR-1 (harness) shipped two trivially-checkable spacing anchors (MUTCD §6C.09:
+# PR-1 (harness) shipped two trivially-checkable spacing anchors (MUTCD §6K.01:
 # in-taper = S, on-tangent = 2S). PR-2 adds eight hand-verified shoulder-closure
 # anchors pinning the four audit-resolvable quantities — taper length (L/3),
 # buffer, in-taper spacing, on-tangent spacing — across the 25-75 mph envelope
@@ -168,7 +168,7 @@ _SPACING_ANCHOR_BASE: dict[str, Any] = {
 }
 
 _SPACING_CITATION = (
-    "MUTCD 11th ed. §6C.09 / Table 6C-1: channelizing-device spacing in a taper "
+    "MUTCD 11th ed. §6K.01 / Table 6C-1: channelizing-device spacing in a taper "
     "equals the speed limit in mph read as feet (S); on the tangent it is twice "
     "that (2S). Trivially checkable, independent of taper/buffer math."
 )

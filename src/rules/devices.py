@@ -410,7 +410,7 @@ def get_channelizers() -> list[DeviceType]:
     """Devices placed at computed taper/tangent spacing.
 
     Used by the layout engine to know which device types follow the
-    in-taper / on-tangent spacing rules from MUTCD §6C.09.
+    in-taper / on-tangent spacing rules from MUTCD §6K.01.
     """
     return [device_type for device_type, spec in DEVICE_CATALOG.items() if spec.is_channelizer]
 

@@ -627,7 +627,7 @@ def generate_shoulder_closure_undivided(
             )
         )
 
-    # 2. Shoulder taper (drums) — L/3 length per §6C.08.
+    # 2. Shoulder taper (drums) — L/3 length per §6B.08.
     # Undivided floor is 4 drums (see device_count_floors): the upstream
     # taper run must be strictly longer than the 3-element downstream
     # "taper + first tangent cone" run; otherwise validate_taper_length
@@ -815,7 +815,7 @@ def generate_lane_closure_divided(
 
     The merging taper drums run from the right edge of the right lane
     (lane_edge_offset) DOWN to the lane line (lane_line_offset), so the
-    full taper length L (not L/3) is required by MUTCD §6C.08.
+    full taper length L (not L/3) is required by MUTCD §6B.08.
 
     TODO (V1.1): add a shifting taper upstream of the merging taper for
     cases where geometry requires drivers to first shift laterally before
@@ -1122,7 +1122,7 @@ def flagger_chain_stations(params: ScenarioParams) -> dict[str, Any]:
 
     Geometry (PR 2, fixtures: tests/fixtures/ta10_flagger/):
       * one-lane two-way taper 100 ft (§6B.08 ¶14 band max) + Table
-        6C-2 buffer upstream of the work zone;
+        6B-2 buffer upstream of the work zone;
       * approach flagger at taper start + 100 ft (Fig. 6P-10 band max);
         opposing flagger at −300 ft (CDOT Case 17 "200' TO 300'" band
         max from the work-area end);
@@ -1300,7 +1300,7 @@ def generate_flagger_alternating_2lane(
     # the merging taper L — this taper stages stopped traffic behind a
     # flagger rather than merging moving traffic, and CDOT Case 17
     # warns it "MUST BE SHORT ENOUGH TO NOT BE MISTAKEN FOR A
-    # TRANSITION."  Buffer retained per Table 6C-2 (CDOT Sheet 2 note
+    # TRANSITION."  Buffer retained per Table 6B-2 (CDOT Sheet 2 note
     # 24 makes buffer optional/engineer-determined; Conestruct includes
     # it as a documented conservative policy).
     taper_len = one_lane_two_way_taper_length()
@@ -1375,7 +1375,7 @@ def generate_flagger_alternating_2lane(
     # the centerline into the opposing lane behind the flagger.  Offset
     # transitions from the right lane edge (+lane_width) to the
     # centerline (0).  Device spacing ~20 ft per §6B.08 ¶14 (overrides
-    # the speed-based §6C.09 spacing for this taper type).  Floors from
+    # the speed-based §6K.01 spacing for this taper type).  Floors from
     # device_count_floors (shared with the audit/narrative).
     taper_min, tangent_min = device_count_floors(params)
     in_taper_spacing = one_lane_two_way_device_spacing()

@@ -61,8 +61,8 @@ def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> 
 
     Flagger alternating-flow closures use the one-lane two-way taper
     (§6B.08 ¶14, PR 2 geometry correction); other lane closures use the
-    full merging taper L (MUTCD §6C.08); shoulder closures use L/3
-    (§6C.08(B)).  Mirrors the branching in ``src.generation.layout`` so
+    full merging taper L (MUTCD §6B.08); shoulder closures use L/3
+    (§6B.08).  Mirrors the branching in ``src.generation.layout`` so
     the rendered plan view fits whichever layout the engine produced.
     """
     if _is_flagger_scenario(params):
@@ -164,7 +164,7 @@ def _make_x_mapping(
 ) -> dict:
     """Build a piecewise station → page-x mapping for the plan view.
 
-    The buffer region carries no devices (MUTCD §6C.08) so it dominates
+    The buffer region carries no devices (MUTCD §6B.08) so it dominates
     page width without earning any.  We compress it to a fixed visual
     length (``BUFFER_VISUAL_FT``) marked with a // scale break, freeing
     width for the work zone and taper where every device lives.

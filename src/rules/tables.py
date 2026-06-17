@@ -7,9 +7,9 @@ and lookup structures.
 Authoritative sources:
   - MUTCD 11th Edition, Part 6 (Temporary Traffic Control)
     * Table 6B-1: Suggested Advance Warning Sign Spacing
-    * Table 6C-2: Longitudinal Buffer Space
-    * Section 6C.08: Tapers
-    * Section 6C.09: Channelizing Device Spacing
+    * Table 6B-2: Longitudinal Buffer Space
+    * Section 6B.08: Tapers
+    * Section 6K.01: Channelizing Device Spacing
   - Colorado Supplement to MUTCD (effective 2026-01-18)
   - CDOT Standard Plan S-630-1 (19-page set, 2019; revised 01/14/26)
 """
@@ -22,7 +22,7 @@ from dataclasses import dataclass
 # Taper length formula threshold
 # ---------------------------------------------------------------------------
 
-# Source: MUTCD 11th Ed. §6C.08
+# Source: MUTCD 11th Ed. §6B.08
 # Below this speed:    L = W × S² / 60
 # At or above this:    L = W × S
 TAPER_LENGTH_FORMULA_THRESHOLD_MPH: int = 45
@@ -31,14 +31,14 @@ TAPER_LENGTH_FORMULA_THRESHOLD_MPH: int = 45
 # Shifting taper ratio
 # ---------------------------------------------------------------------------
 
-# Source: MUTCD 11th Ed. §6C.08 — shifting taper length = L / 2
+# Source: MUTCD 11th Ed. §6B.08 — shifting taper length = L / 2
 SHIFTING_TAPER_RATIO: float = 0.5
 
 # ---------------------------------------------------------------------------
 # Downstream taper
 # ---------------------------------------------------------------------------
 
-# Source: MUTCD 11th Ed. §6C.08 — downstream taper is 50–100 ft per lane
+# Source: MUTCD 11th Ed. §6B.08 — downstream taper is 50–100 ft per lane
 DOWNSTREAM_TAPER_LENGTH_PER_LANE_FT: tuple[int, int] = (50, 100)
 
 # ---------------------------------------------------------------------------
@@ -138,7 +138,7 @@ ADVANCE_WARNING_SIGN_SPACING: tuple[AdvanceWarningRow, ...] = (
 )
 
 # ---------------------------------------------------------------------------
-# Buffer space — MUTCD Table 6C-2 (federal) + CDOT Supplement (Sheet 14)
+# Buffer space — MUTCD Table 6B-2 (federal) + CDOT Supplement (Sheet 14)
 # ---------------------------------------------------------------------------
 
 
@@ -146,7 +146,7 @@ ADVANCE_WARNING_SIGN_SPACING: tuple[AdvanceWarningRow, ...] = (
 class BufferSpaceRow:
     """One row of a longitudinal buffer space table.
 
-    Used for both the federal MUTCD Table 6C-2 baseline (``BUFFER_SPACE``)
+    Used for both the federal MUTCD Table 6B-2 baseline (``BUFFER_SPACE``)
     and the CDOT supplement minimums (``CDOT_BUFFER_SPACE``).  Buffer is
     measured between the downstream end of the merging taper and the
     upstream end of the work space, keyed to posted speed.
@@ -156,7 +156,7 @@ class BufferSpaceRow:
     buffer_ft: int | None  # None = value needs verification against source
 
 
-# Source: MUTCD 11th Ed. Table 6C-2 (verified 2026-04-24 via
+# Source: MUTCD 11th Ed. Table 6B-2 (verified 2026-04-24 via
 # ATSSA MUTCD Flagger Reference Chart).  Federal baseline — used when
 # jurisdiction="federal" and as the silent-speed fallback for
 # jurisdiction="CDOT".
@@ -202,16 +202,16 @@ CDOT_BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
 # such as 65 -> 55 — is the generic Sheet 7 Case 11 ("SHOULDER WORK -
 # FREEWAY/EXPRESSWAY"), whose buffer is labeled "VARIES (SEE GENERAL
 # NOTE 23 ON SHEET 2)" with no posted minimum; those fall back to the
-# federal MUTCD Table 6C-2 value at the posted speed.  This map encodes
+# federal MUTCD Table 6B-2 value at the posted speed.  This map encodes
 # the qualifying (posted -> work-zone) step-down for each supplement row;
 # ``spacing._cdot_buffer_or_none`` returns the minimum only on a match.
 CDOT_BUFFER_STEPDOWN: dict[int, int] = {65: 60, 75: 65}
 
 # ---------------------------------------------------------------------------
-# Channelizing device spacing — MUTCD §6C.09
+# Channelizing device spacing — MUTCD §6K.01
 # ---------------------------------------------------------------------------
 
-# Source: MUTCD 11th Ed. §6C.09
+# Source: MUTCD 11th Ed. §6K.01
 # In a taper: maximum device spacing (ft) = posted speed (mph)
 # On tangent through work zone: spacing = 2 × taper spacing
 
@@ -219,7 +219,7 @@ CDOT_BUFFER_STEPDOWN: dict[int, int] = {65: 60, 75: 65}
 def in_taper_spacing_ft(speed_mph: int) -> int:
     """Maximum channelizing device spacing inside a taper, in feet.
 
-    Source: MUTCD 11th Ed. §6C.09 — spacing equals the posted speed
+    Source: MUTCD 11th Ed. §6K.01 — spacing equals the posted speed
     limit expressed in feet (e.g., 55 mph → 55 ft).
     """
     return speed_mph
@@ -228,7 +228,7 @@ def in_taper_spacing_ft(speed_mph: int) -> int:
 def on_tangent_spacing_ft(speed_mph: int) -> int:
     """Maximum channelizing device spacing on tangent sections, in feet.
 
-    Source: MUTCD 11th Ed. §6C.09 — tangent spacing is twice the
+    Source: MUTCD 11th Ed. §6K.01 — tangent spacing is twice the
     taper spacing.
     """
     return 2 * speed_mph

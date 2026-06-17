@@ -38,7 +38,7 @@ from src.rules.tables import (
 def taper_length(speed_mph: int, offset_ft: float) -> float:
     """Merging taper length L, in feet.
 
-    Source: MUTCD 11th Ed. §6C.08.
+    Source: MUTCD 11th Ed. §6B.08.
     Below ``TAPER_LENGTH_FORMULA_THRESHOLD_MPH`` (45 mph): ``L = W * S² / 60``.
     At or above the threshold:                              ``L = W * S``.
 
@@ -55,7 +55,7 @@ def taper_length(speed_mph: int, offset_ft: float) -> float:
 def shifting_taper_length(speed_mph: int, offset_ft: float) -> float:
     """Shifting taper length, in feet (L/2).
 
-    Source: MUTCD 11th Ed. §6C.08 — shifting taper equals
+    Source: MUTCD 11th Ed. §6B.08 — shifting taper equals
     ``SHIFTING_TAPER_RATIO * L``.  Used at both ends of a lateral lane
     shift.
     """
@@ -65,7 +65,7 @@ def shifting_taper_length(speed_mph: int, offset_ft: float) -> float:
 def shoulder_taper_length(speed_mph: int, offset_ft: float) -> float:
     """Shoulder taper length, in feet (L/3).
 
-    Source: MUTCD 11th Ed. §6C.08 — shoulder taper is one-third of the
+    Source: MUTCD 11th Ed. §6B.08 — shoulder taper is one-third of the
     full merging taper length.  Applies when only the shoulder is being
     closed.
     """
@@ -93,7 +93,7 @@ def one_lane_two_way_device_spacing() -> float:
     """Device spacing inside the one-lane, two-way taper, in feet.
 
     Source: MUTCD 11th Ed. §6B.08 ¶14 — "approximately 20-foot
-    spacing."  Overrides the speed-based §6C.09 / CDOT note 18a spacing
+    spacing."  Overrides the speed-based §6K.01 / CDOT note 18a spacing
     for this specific taper type (the §6B.08 guidance is taper-specific
     and more granular).
     """
@@ -128,7 +128,7 @@ def opposing_flagger_standoff(use_min: bool = False) -> float:
 def downstream_taper_length(num_lanes: int, use_max: bool = False) -> float:
     """Downstream taper length, in feet.
 
-    Source: MUTCD 11th Ed. §6C.08 — downstream taper is 50 to 100 ft per
+    Source: MUTCD 11th Ed. §6B.08 — downstream taper is 50 to 100 ft per
     lane closed.  The designer chooses within that range; this function
     returns the lower bound by default and the upper bound when
     ``use_max=True``.
@@ -160,7 +160,7 @@ def buffer_space(
       reduction like 65 -> 55 — is the generic Sheet 7 Case 11 (buffer
       "VARIES", General Note 23) and falls back to the federal MUTCD value
       at the posted speed, exactly as every other speed does.
-    * ``"federal"`` — always uses MUTCD 11th Ed. Table 6C-2 at the posted
+    * ``"federal"`` — always uses MUTCD 11th Ed. Table 6B-2 at the posted
       speed; ``work_zone_speed_mph`` is ignored.  Reachable via direct
       code calls only; V1's form-driven path hardcodes ``"CDOT"`` at the
       bridge.
@@ -339,7 +339,7 @@ def advance_warning_spacing(
 def device_spacing_in_taper(speed_mph: int) -> float:
     """Maximum channelizing device spacing within a taper, in feet.
 
-    Source: MUTCD 11th Ed. §6C.09 — equals the posted speed expressed
+    Source: MUTCD 11th Ed. §6K.01 — equals the posted speed expressed
     in feet (e.g., 55 mph → 55 ft).
     """
     return float(in_taper_spacing_ft(speed_mph))
@@ -348,7 +348,7 @@ def device_spacing_in_taper(speed_mph: int) -> float:
 def device_spacing_on_tangent(speed_mph: int) -> float:
     """Maximum channelizing device spacing on a tangent section, in feet.
 
-    Source: MUTCD 11th Ed. §6C.09 — twice the in-taper spacing.
+    Source: MUTCD 11th Ed. §6K.01 — twice the in-taper spacing.
     """
     return float(on_tangent_spacing_ft(speed_mph))
 
@@ -356,7 +356,7 @@ def device_spacing_on_tangent(speed_mph: int) -> float:
 def num_devices_in_taper(speed_mph: int, offset_ft: float) -> int:
     """Number of channelizing devices required within a merging taper.
 
-    Source: MUTCD 11th Ed. §6C.08 (taper length) + §6C.09 (spacing).
+    Source: MUTCD 11th Ed. §6B.08 (taper length) + §6K.01 (spacing).
     Computed as ``ceil(L / in_taper_spacing)`` so the taper is never
     under-populated.
     """
@@ -366,7 +366,7 @@ def num_devices_in_taper(speed_mph: int, offset_ft: float) -> int:
 def num_devices_on_tangent(tangent_length_ft: float, speed_mph: int) -> int:
     """Number of channelizing devices required on a tangent section.
 
-    Source: MUTCD 11th Ed. §6C.09.  Computed as
+    Source: MUTCD 11th Ed. §6K.01.  Computed as
     ``ceil(length / tangent_spacing)``.
     """
     return math.ceil(tangent_length_ft / device_spacing_on_tangent(speed_mph))
@@ -387,7 +387,7 @@ def pick_device_count(
     ``length_ft / target_spacing_ft`` and returns the device count whose
     interval spacing best matches ``target_spacing_ft``.
 
-    ``target_spacing_ft`` is the MUTCD §6C.09 **maximum** spacing.  The
+    ``target_spacing_ft`` is the MUTCD §6K.01 **maximum** spacing.  The
     section specifies a ceiling only — tighter is conservative, wider
     is unsafe — so the acceptance window is asymmetric:
 
@@ -444,7 +444,7 @@ def pick_device_count(
         best_intervals = ceil_intervals
     else:
         # Neither fits.  Choose the smaller-spacing (= more-device)
-        # candidate so we stay under the MUTCD §6C.09 maximum even when
+        # candidate so we stay under the MUTCD §6K.01 maximum even when
         # the geometry forces us out of the window.
         best_intervals = ceil_intervals
 

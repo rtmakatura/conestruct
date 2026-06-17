@@ -330,7 +330,7 @@ def validate_taper_present(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Verify a merging taper exists.  Source: MUTCD 11th Ed. §6C.08.
+    """Verify a merging taper exists.  Source: MUTCD 11th Ed. §6B.08.
 
     Mobile operations are exempt — they use a shadow vehicle and TMA in
     place of a fixed channelizing taper.  Off-road work (MUTCD §6G.04)
@@ -350,7 +350,7 @@ def validate_taper_present(
                     "No merging taper detected. A taper of channelizing "
                     f"devices is required for {params.closure_type} closures."
                 ),
-                mutcd_section="6C.08",
+                mutcd_section="6B.08",
                 device_index=None,
             )
         ]
@@ -361,13 +361,13 @@ def validate_taper_length(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Compare actual taper span to the formula length.  Source: MUTCD 11th Ed. §6C.08.
+    """Compare actual taper span to the formula length.  Source: MUTCD 11th Ed. §6B.08.
 
     Flagger alternating-flow closures use the one-lane two-way taper
     (§6B.08 ¶14, 100 ft — PR 2 geometry correction); other lane
     closures use ``spacing.taper_length(speed, lane_width)``; shoulder
     closures use ``spacing.shoulder_taper_length(speed,
-    shoulder_width)`` — per §6C.08, the shoulder taper is one-third of
+    shoulder_width)`` — per §6B.08, the shoulder taper is one-third of
     the full merging taper length.  Tolerances
     ``TAPER_LENGTH_TOLERANCE_LOW`` and ``TAPER_LENGTH_TOLERANCE_HIGH``
     account for field rounding.
@@ -399,7 +399,7 @@ def validate_taper_length(
                     f"{TAPER_LENGTH_TOLERANCE_LOW:.0%} of the formula length "
                     f"{expected:.0f} ft at {params.speed_mph} mph."
                 ),
-                mutcd_section="6C.08",
+                mutcd_section="6B.08",
                 device_index=None,
             )
         ]
@@ -414,7 +414,7 @@ def validate_taper_length(
                     f"{expected:.0f} ft. Excess length is permitted but uses "
                     "extra devices."
                 ),
-                mutcd_section="6C.08",
+                mutcd_section="6B.08",
                 device_index=None,
             )
         ]
@@ -425,7 +425,7 @@ def validate_channelizer_spacing(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Check spacing between consecutive channelizers.  Source: MUTCD 11th Ed. §6C.09.
+    """Check spacing between consecutive channelizers.  Source: MUTCD 11th Ed. §6K.01.
 
     In-taper spacing target is the posted speed in feet; on-tangent
     target is twice that.  Tolerance is ``DEVICE_SPACING_TOLERANCE``.
@@ -445,7 +445,7 @@ def validate_channelizer_spacing(
         i_prev, i_cur = chans[k - 1], chans[k]
         # Skip pairs touching the downstream taper (station < 0 by our
         # coordinate convention).  Downstream tapers have their own
-        # length rule (50–100 ft per lane, §6C.08) and aren't subject to
+        # length rule (50–100 ft per lane, §6B.08) and aren't subject to
         # the in-taper / on-tangent spacing limits.
         if placements[i_prev].station_ft < 0 or placements[i_cur].station_ft < 0:
             continue
@@ -470,11 +470,11 @@ def validate_channelizer_spacing(
                         f"{zone_label} maximum {expected:.0f} ft "
                         f"(±{tol:.0%}) at {params.speed_mph} mph."
                     ),
-                    mutcd_section="6C.09",
+                    mutcd_section="6K.01",
                     device_index=i_cur,
                 )
             )
-        # NOTE: MUTCD §6C.09 specifies a *maximum* spacing, not a minimum.
+        # NOTE: MUTCD §6K.01 specifies a *maximum* spacing, not a minimum.
         # Tighter-than-target spacing is conservative (more devices, more
         # delineation) and is not a code violation.  Bug Fix 4 dropped the
         # TOO_TIGHT branch here; cost-vs-safety tradeoffs around extra
@@ -588,7 +588,7 @@ def validate_buffer_space(
 ) -> list[Violation]:
     """Verify the longitudinal buffer between work space and taper.
 
-    Sources: MUTCD 11th Ed. Table 6C-2 (federal baseline) and CDOT
+    Sources: MUTCD 11th Ed. Table 6B-2 (federal baseline) and CDOT
     Standard Plan S-630-1 Sheet 14 (CDOT supplement minimums at 65 and
     75 mph).
 
@@ -618,7 +618,7 @@ def validate_buffer_space(
     tolerance = 1.0 if is_cdot_min else BUFFER_SPACE_TOLERANCE_LOW
 
     if actual_buffer < tolerance * expected:
-        source_text = "CDOT S-630-1 Sheet 14" if is_cdot_min else "MUTCD Table 6C-2"
+        source_text = "CDOT S-630-1 Sheet 14" if is_cdot_min else "MUTCD Table 6B-2"
         tolerance_text = (
             "no tolerance — CDOT minimum is a hard floor"
             if is_cdot_min
@@ -633,7 +633,7 @@ def validate_buffer_space(
                     f"{source_text} requires at least {expected:.0f} ft at "
                     f"{params.speed_mph} mph ({tolerance_text})."
                 ),
-                mutcd_section="Table 6C-2",
+                mutcd_section="Table 6B-2",
                 device_index=None,
             )
         ]
