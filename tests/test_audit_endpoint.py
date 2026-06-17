@@ -593,6 +593,76 @@ def test_step_count_shoulder_long_cones_over_threshold() -> None:
     )
 
 
+# --- #67: TS-estimator taper threshold routed through the shared constant ---
+#
+# _ts_merging_taper_length used a hardcoded ``>= 40``, independent of the shared
+# TAPER_LENGTH_FORMULA_THRESHOLD_MPH (now 45 after the 40->45 taper fix).  The
+# only speed in [40, 45) is 40, so the correction touches 40 mph ONLY: it moves
+# from the linear W*S regime to the spec-exact quadratic W*S^2/60.  These tests
+# pin the 40-mph correction and prove every other speed is byte-identical.
+
+
+def test_ts_merging_taper_length_40mph_now_quadratic() -> None:
+    """40 mph uses W*S^2/60 (was the linear W*S before #67).
+
+    L(12, 40) = 12 * 40^2 / 60 = 12 * 1600 / 60 = 320 ft (was 12 * 40 = 480).
+    This is the single behavioral change in #67.
+    """
+    assert audit_module._ts_merging_taper_length(12.0, 40) == 320
+
+
+def test_ts_merging_taper_length_other_speeds_unchanged() -> None:
+    """Only 40 mph moved: >=45 stays linear, <40 stays quadratic.
+
+    L(12, 45) = 12 * 45 = 540 ft  (linear, at/above threshold — unchanged)
+    L(12, 35) = 12 * 35^2 / 60 = 14700 / 60 = 245 ft  (quadratic — unchanged)
+    """
+    assert audit_module._ts_merging_taper_length(12.0, 45) == 540
+    assert audit_module._ts_merging_taper_length(12.0, 35) == 245
+
+
+def test_step_count_shoulder_long_40mph_flips_to_11() -> None:
+    """40 mph long shoulder at workLen 800 ft → 11 (was 14 before #67).
+
+    Hand calc with the corrected quadratic taper at 40 mph:
+      L = _ts_merging_taper_length(12, 40) = 320 ft
+      spacing = 40 ft (TS deviceSpacing = posted speed)
+      taper_cones = max(4, ceil(320/40)) = 8
+      tangent_cones = ceil(800/40) = 20
+      cones = 8 + 20 = 28 <= 30  ->  11 steps
+    Pre-#67 the linear L=480 gave taper_cones=12, cones=32 > 30 -> 14.
+    """
+    assert (
+        audit_module._compute_step_count(
+            _shoulder(duration="long", speed=40, laneWidth=12.0, workLen=800.0)
+        )
+        == 11
+    )
+
+
+def test_step_count_shoulder_long_40mph_flip_confined() -> None:
+    """The 40-mph flip is confined to the ~720-880 ft band, not a blanket change.
+
+    Above the band (workLen 2000) both regimes clear cones > 30, so step_count
+    stays 14; below it (workLen 500) both stay <= 30, so step_count stays 11.
+    Only job lengths whose cone count straddles 30 between the two regimes flip.
+      workLen 2000: tangent = ceil(2000/40) = 50; cones = 8 + 50 = 58 > 30 -> 14
+      workLen 500:  tangent = ceil(500/40)  = 13; cones = 8 + 13 = 21 <= 30 -> 11
+    """
+    assert (
+        audit_module._compute_step_count(
+            _shoulder(duration="long", speed=40, laneWidth=12.0, workLen=2000.0)
+        )
+        == 14
+    )
+    assert (
+        audit_module._compute_step_count(
+            _shoulder(duration="long", speed=40, laneWidth=12.0, workLen=500.0)
+        )
+        == 11
+    )
+
+
 def test_step_count_flagger_long_pilot_car_only() -> None:
     """Flagger + long + pilotCar → 16 + 2 = 18 steps.
 

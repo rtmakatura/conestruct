@@ -1163,12 +1163,18 @@ def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
     with TS so the step_count migration is behavior-preserving on a
     user-visible number.
 
-    Speed ≥ 40 mph: L = W × S  (linear regime, MUTCD §6B.08).
-    Speed < 40 mph: L = W × S² / 60  (quadratic regime).
+    Speed >= ``TAPER_LENGTH_FORMULA_THRESHOLD_MPH``: L = W x S  (linear, MUTCD §6B.08).
+    Speed below the threshold:                       L = W x S² / 60  (quadratic).
+
+    The threshold routes through the shared ``TAPER_LENGTH_FORMULA_THRESHOLD_MPH``
+    (#67) rather than a hardcoded 40, so this estimator agrees with the placed
+    taper at 40 mph.  This helper is a surviving TS-estimator remnant: it should
+    fold into the flagger-path TS retirement (#67) — until then its bit-exact
+    cone derivation is preserved deliberately.
     """
-    if speed_mph >= 40:
-        return round(lane_width_ft * speed_mph)
-    return round(lane_width_ft * speed_mph * speed_mph / 60)
+    if speed_mph < TAPER_LENGTH_FORMULA_THRESHOLD_MPH:
+        return round(lane_width_ft * speed_mph * speed_mph / 60)
+    return round(lane_width_ft * speed_mph)
 
 
 def _compute_step_count(scenario: Any) -> int:
