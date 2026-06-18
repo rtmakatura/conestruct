@@ -3320,7 +3320,6 @@ def render_plan_sheet(
     # plain pin at the anchor) but loses the overlay and panel.
     aerial_png: Path | None = None
     aerial_corridor: WorkCorridor | None = None
-    bearing_deg = getattr(params, "bearing_deg", None)
     if site_lat is not None and site_lng is not None and (site_lat or site_lng):
         token = os.environ.get("MAPBOX_TOKEN", "")
         if not token:
