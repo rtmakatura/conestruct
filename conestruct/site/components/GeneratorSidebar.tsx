@@ -541,6 +541,12 @@ function handoffNoteText(event: HandoffEvent, kind: Scenario["kind"]): string {
       return `Speed ${event.valueMph} mph — accepted low-confidence fallback (${event.sourceLabel}).`;
     case "skipped_low_confidence":
       return `Speed fallback ${event.detectedMph} mph not applied — plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
+    case "applied": {
+      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+      return `Road type set to ${ROAD_TYPE_LABELS[event.to]} (from detected ${ROAD_TYPE_LABELS[event.from]}, ${srcLabel}).`;
+    }
+    case "skipped_not_in_domain":
+      return `Detected ${ROAD_TYPE_LABELS[event.detected]} not valid for ${scenarioNoun(kind)} plans — kept ${ROAD_TYPE_LABELS[event.inEffect]}. Switch scenario kind to use it.`;
   }
 }
 

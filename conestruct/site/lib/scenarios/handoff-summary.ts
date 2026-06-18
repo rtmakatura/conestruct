@@ -22,7 +22,7 @@ import { snapSpeedToDomain } from "./auto-apply";
 import type { AutoApplyDelta } from "./auto-apply";
 import type { RoadClassification } from "../road-detection/types";
 import type { RoadFieldOverrides } from "./overrides";
-import type { Scenario } from "./types";
+import type { RoadType, Scenario } from "./types";
 
 export type SpeedSource = "osm" | "manual";
 
@@ -59,6 +59,33 @@ export type HandoffEvent =
       detectedMph: number;
       inEffectMph: number;
       sourceLabel: string;
+    }
+  // #62: roadType crosses the same seam.  The picker detects a roadType
+  // (OSM classification) or carries a manual override; applyClassification /
+  // applyRoadTypeOverride only keep it when it's in the scenario kind's
+  // allowed set, else the plan silently keeps its prior value.  These two
+  // members name the roadType half the same way the speed members name the
+  // clamp/snap/skip — reusing the structure, NOT a parallel mechanism.
+  //
+  // "applied" fires only when the detected/override roadType actually
+  // CHANGED prior -> final (a clean, unchanged landing stays silent, just
+  // like the speed path stays silent on an in-domain on-grid value).
+  | {
+      field: "roadType";
+      kind: "applied";
+      from: RoadType;
+      to: RoadType;
+      source: SpeedSource;
+    }
+  // "skipped_not_in_domain": the picker detected a roadType the scenario
+  // kind doesn't accept (e.g. a freeway on a flagger plan), so it was
+  // dropped and the plan kept its prior value — the consequential case.
+  | {
+      field: "roadType";
+      kind: "skipped_not_in_domain";
+      detected: RoadType;
+      inEffect: RoadType;
+      source: SpeedSource;
     };
 
 export interface SummarizeHandoffArgs {
@@ -117,7 +144,7 @@ function isBoundClamp(rawMph: number, appliedMph: number): boolean {
 }
 
 export function summarizeHandoff(args: SummarizeHandoffArgs): HandoffEvent[] {
-  const { classification, overrides, final, delta } = args;
+  const { prior, classification, overrides, final, delta } = args;
   const kind = final.kind;
   const events: HandoffEvent[] = [];
 
@@ -176,6 +203,40 @@ export function summarizeHandoff(args: SummarizeHandoffArgs): HandoffEvent[] {
     });
   }
 
+  // --- Road type ---------------------------------------------------------
+  // The override wins over the OSM classification (apply order in
+  // onPickerSave: applyClassification then applyOverridesToScenario), so
+  // the value the operator effectively asked for is override ?? detected.
+  // final.roadType already reflects whether the apply path kept it, so we
+  // compare against final/prior rather than re-deriving the allowed sets.
+  const sourceRoadType = overrides.roadType ?? classification?.roadType;
+  const roadTypeSource: SpeedSource =
+    overrides.roadType !== undefined ? "manual" : "osm";
+
+  if (sourceRoadType !== undefined) {
+    if (final.roadType === sourceRoadType && prior.roadType !== sourceRoadType) {
+      // It landed AND changed the prior value — name the applied change.
+      // (A clean, unchanged landing stays silent, like the speed path.)
+      events.push({
+        field: "roadType",
+        kind: "applied",
+        from: prior.roadType,
+        to: final.roadType,
+        source: roadTypeSource,
+      });
+    } else if (final.roadType !== sourceRoadType) {
+      // Detected/overridden but not in the kind's allowed set, so it was
+      // dropped and the plan kept its prior value.
+      events.push({
+        field: "roadType",
+        kind: "skipped_not_in_domain",
+        detected: sourceRoadType,
+        inEffect: final.roadType,
+        source: roadTypeSource,
+      });
+    }
+  }
+
   return events;
 }
 
@@ -195,5 +256,9 @@ export function handoffEventIsCurrent(
       return scenario.speed === event.valueMph;
     case "skipped_low_confidence":
       return scenario.speed === event.inEffectMph;
+    case "applied":
+      return scenario.roadType === event.to;
+    case "skipped_not_in_domain":
+      return scenario.roadType === event.inEffect;
   }
 }

@@ -11,7 +11,7 @@ import {
 } from "./index";
 import type { AutoApplyDelta } from "./auto-apply";
 import type { RoadClassification } from "../road-detection/types";
-import type { Scenario } from "./types";
+import type { RoadType, Scenario } from "./types";
 import {
   handoffEventIsCurrent,
   scenarioNoun,
@@ -84,6 +84,33 @@ function fallbackClassification(fallbackMph: number): RoadClassification {
   };
 }
 
+// #62: a classification carrying a chosen roadType but NO maxspeed, so the
+// speed path stays silent and the roadType assertions stand alone.
+function roadTypeClassification(roadType: RoadType): RoadClassification {
+  return {
+    roadType,
+    divided: false,
+    laneWidthFt: 12,
+    confidence: "high",
+    source: "osm-tags",
+    raw: {
+      class: "motorway",
+      oneway: false,
+      roadName: null,
+      roadRef: null,
+      placeName: null,
+      osmLanesTag: null,
+      osmMaxspeedTag: null,
+    },
+    fields: {
+      speed: { value: null, confidence: "high", source: "none" },
+      lanes: { value: null, confidence: "low", source: "fallback" },
+      roadType: { value: roadType, confidence: "high", source: "OSM highway tag" },
+      divided: { value: false, confidence: "high", source: "OSM oneway tag" },
+    },
+  };
+}
+
 const DELTA: AutoApplyDelta = {
   roadTypeApplied: true,
   roadTypeApplicable: true,
@@ -130,7 +157,8 @@ describe("summarizeHandoff — speed clamp/snap (UX-01)", () => {
     const final = { ...DEFAULT_SHOULDER, speed: 60 } as Scenario;
     const events = summarizeHandoff({
       prior: DEFAULT_SHOULDER,
-      classification: osmClassification(62),
+      // roadType matches the scenario so only the speed event fires (#62).
+      classification: { ...osmClassification(62), roadType: "rural_divided" },
       overrides: {},
       final,
       delta: DELTA,
@@ -144,7 +172,8 @@ describe("summarizeHandoff — speed clamp/snap (UX-01)", () => {
     const final = { ...DEFAULT_SHOULDER, speed: 65 } as Scenario;
     const events = summarizeHandoff({
       prior: DEFAULT_SHOULDER,
-      classification: osmClassification(65),
+      // roadType matches the scenario so only the speed result is asserted (#62).
+      classification: { ...osmClassification(65), roadType: "rural_divided" },
       overrides: {},
       final,
       delta: DELTA,
@@ -156,7 +185,9 @@ describe("summarizeHandoff — speed clamp/snap (UX-01)", () => {
     const events = summarizeHandoff({
       prior: DEFAULT_FLAGGER,
       classification: null,
-      overrides: { roadType: "urban_arterial" },
+      // a roadType override that's already the prior value → a no-op, so the
+      // result stays empty and the test isolates the no-speed case (#62).
+      overrides: { roadType: "rural_undivided" },
       final: DEFAULT_FLAGGER,
       delta: null,
     });
@@ -214,7 +245,8 @@ describe("summarizeHandoff — low-confidence skip/accept (UX-02)", () => {
     const final = { ...DEFAULT_MOBILE_OP_MULTILANE, speed: 45 } as Scenario;
     const events = summarizeHandoff({
       prior: DEFAULT_MOBILE_OP_MULTILANE,
-      classification: fallbackClassification(35),
+      // roadType matches the scenario so only the speed clamp is asserted (#62).
+      classification: { ...fallbackClassification(35), roadType: "freeway" },
       overrides: { speedMph: 35 },
       final,
       delta: SKIP_DELTA,
@@ -242,6 +274,157 @@ describe("handoffEventIsCurrent — self-hide on manual edit", () => {
   it("self-hides once the operator edits the speed away from the clamped value", () => {
     const sc = { ...DEFAULT_FLAGGER, speed: 45 } as Scenario;
     expect(handoffEventIsCurrent(clamp, sc)).toBe(false);
+  });
+});
+
+describe("summarizeHandoff — roadType applied/skipped (#62)", () => {
+  it("emits skipped_not_in_domain when a detected freeway is dropped on a flagger plan", () => {
+    // DEFAULT_FLAGGER carries rural_undivided; freeway isn't in FLAGGER_TYPES,
+    // so applyClassification keeps the prior value — name the silent drop.
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: roadTypeClassification("freeway"),
+      overrides: {},
+      final: DEFAULT_FLAGGER, // roadType unchanged at rural_undivided
+      delta: null,
+    });
+    expect(events).toEqual([
+      {
+        field: "roadType",
+        kind: "skipped_not_in_domain",
+        detected: "freeway",
+        inEffect: "rural_undivided",
+        source: "osm",
+      },
+    ]);
+  });
+
+  it("tags a manual roadType override drop as source: manual", () => {
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: null,
+      overrides: { roadType: "freeway" },
+      final: DEFAULT_FLAGGER, // freeway not in FLAGGER_TYPES → kept rural_undivided
+      delta: null,
+    });
+    expect(events).toEqual([
+      {
+        field: "roadType",
+        kind: "skipped_not_in_domain",
+        detected: "freeway",
+        inEffect: "rural_undivided",
+        source: "manual",
+      },
+    ]);
+  });
+
+  it("emits applied when an allowed roadType changes prior → final", () => {
+    // Shoulder accepts the full union; freeway lands and changes the prior
+    // rural_divided.
+    const final = { ...DEFAULT_SHOULDER, roadType: "freeway" } as Scenario;
+    const events = summarizeHandoff({
+      prior: DEFAULT_SHOULDER,
+      classification: roadTypeClassification("freeway"),
+      overrides: {},
+      final,
+      delta: null,
+    });
+    expect(events).toEqual([
+      {
+        field: "roadType",
+        kind: "applied",
+        from: "rural_divided",
+        to: "freeway",
+        source: "osm",
+      },
+    ]);
+  });
+
+  it("stays silent when the detected roadType equals prior and final (no change)", () => {
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: roadTypeClassification("rural_undivided"),
+      overrides: {},
+      final: DEFAULT_FLAGGER,
+      delta: null,
+    });
+    expect(events).toEqual([]);
+  });
+
+  it("shoulder accepts everything: applied on change, silent on no-change, never skipped", () => {
+    const changedFinal = { ...DEFAULT_SHOULDER, roadType: "freeway" } as Scenario;
+    const changed = summarizeHandoff({
+      prior: DEFAULT_SHOULDER,
+      classification: null,
+      overrides: { roadType: "freeway" },
+      final: changedFinal,
+      delta: null,
+    });
+    expect(changed).toEqual([
+      {
+        field: "roadType",
+        kind: "applied",
+        from: "rural_divided",
+        to: "freeway",
+        source: "manual",
+      },
+    ]);
+
+    const unchanged = summarizeHandoff({
+      prior: DEFAULT_SHOULDER,
+      classification: null,
+      overrides: { roadType: "rural_divided" }, // already the prior value
+      final: DEFAULT_SHOULDER,
+      delta: null,
+    });
+    expect(unchanged).toEqual([]);
+  });
+
+  it("emits NO roadType event for a divided/lanes-only handoff (deliberately not surfaced)", () => {
+    // divided + lanes cross the seam but neither has a detect-then-override
+    // path worth naming; only roadType does.  Locks that decision against a
+    // future refactor manufacturing no-op noise.
+    const events = summarizeHandoff({
+      prior: DEFAULT_SHOULDER,
+      classification: null,
+      overrides: { divided: true, lanesPerDirection: 2 },
+      final: { ...DEFAULT_SHOULDER, divided: true, lanes: 2 } as Scenario,
+      delta: null,
+    });
+    expect(events).toEqual([]);
+  });
+});
+
+describe("handoffEventIsCurrent — roadType self-hide (#62)", () => {
+  const applied = {
+    field: "roadType",
+    kind: "applied",
+    from: "rural_divided",
+    to: "freeway",
+    source: "osm",
+  } as const;
+  const skipped = {
+    field: "roadType",
+    kind: "skipped_not_in_domain",
+    detected: "freeway",
+    inEffect: "rural_undivided",
+    source: "osm",
+  } as const;
+
+  it("applied: current while the scenario holds the applied roadType, hides once edited away", () => {
+    expect(
+      handoffEventIsCurrent(applied, { ...DEFAULT_SHOULDER, roadType: "freeway" } as Scenario),
+    ).toBe(true);
+    expect(
+      handoffEventIsCurrent(applied, { ...DEFAULT_SHOULDER, roadType: "rural_divided" } as Scenario),
+    ).toBe(false);
+  });
+
+  it("skipped_not_in_domain: current while the kept value stands, hides once edited away", () => {
+    expect(handoffEventIsCurrent(skipped, DEFAULT_FLAGGER)).toBe(true);
+    expect(
+      handoffEventIsCurrent(skipped, { ...DEFAULT_FLAGGER, roadType: "urban_arterial" } as Scenario),
+    ).toBe(false);
   });
 });
 
