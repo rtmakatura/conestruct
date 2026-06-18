@@ -681,7 +681,7 @@ def build_audit_trail(
     plaques_required = co_construction_plaques(total_signed_length)
     plaques_section = {
         "pass": plaques_right >= plaques_required,
-        "label": "G20-5P/R2-6P construction plaques every 2,640 ft",
+        "label": "G20-5P construction plaques every 2,640 ft",
         "citation": "CO Supplement Sec 6C.06(A)",
         "detail": (
             f"Zone length: {total_signed_length:,.0f} ft. "

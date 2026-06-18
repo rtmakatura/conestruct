@@ -187,7 +187,7 @@ def test_case_11_general_2640_frequency_check_label(
     # as the CO §6C.06(A) check label.
     _, audit = case_11_general
     label = audit["colorado"]["checks"][1]["label"]
-    assert label == "G20-5P/R2-6P construction plaques every 2,640 ft"
+    assert label == "G20-5P construction plaques every 2,640 ft"
 
 
 def test_case_11_general_second_w21_5aR_with_plaques(

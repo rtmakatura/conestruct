@@ -88,3 +88,8 @@ Phase 2 decisions, locked June 5 2026.
 
 - Sheet 7 Case 11 position 5 prescribes literal "1500 FT" plaque text. Conestruct emits `sign_a_station - wz_start_station` (1678 / 1787 / 1900 ft at 55 / 65 / 75 mph respectively per Table 6B-1 freeway A=1000 plus speed-dependent taper + buffer).
 - Match: code-level (W16-2a family). Variance: literal plaque text vs geometric-distance text.
+
+## G20-5P §6C.06(A) plaque check label
+
+- The `colorado.checks` §6C.06(A) entry labels and counts **G20-5P construction plaques alone**. The case fixtures' "every 2,640 ft" frequency note pairs G20-5P with R2-6P; that pairing is **not** a §6C.06(A) requirement (§6C.06(A) governs G20-5P construction plaques at half-mile intervals). Accepted variance: fixture pairs, check counts G20-5P only.
+- The R2-6P companion is still emitted on reduced-speed cases, but it's asserted under the **Fines Double envelope** (`sections.fines_double.envelope`, §2B.13 / Sheet 12), not the §6C.06(A) plaque check. Harness asserts R2-6P presence against the envelope, not this check.
