@@ -308,6 +308,56 @@ def test_audit_projection_flagger_mutcd_ta10_no_pending() -> None:
     assert projection["summary"]["cdot_sheet"] == "S-630-1"
 
 
+@pytest.mark.parametrize("speed", [55, 60, 65, 70, 75])
+@pytest.mark.parametrize("road_type", ["urban_low", "urban_high", "rural", "expressway", "freeway"])
+def test_audit_road_type_text_sourced_from_lookup_value(road_type: str, speed: int) -> None:
+    """#55 parity: the displayed Table 6B-1 category is the same value fed
+    to ``advance_warning_spacing`` (``rt_for_lookup``), not a parallel
+    ``_resolve_road_category`` copy.  For every valid Table 6B-1 category
+    at 55-75 mph the ``road_type_text`` echoes ``road_type`` unchanged —
+    this locks the consolidated display against regression."""
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=speed,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type=road_type,
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail([], params)
+    assert raw["advance"]["road_type_text"] == (
+        f"Speed {speed} mph, road_type = '{road_type}' -> Table 6B-1 category: {road_type}"
+    )
+
+
+def test_build_audit_trail_raises_on_non_category_road_type_at_high_speed() -> None:
+    """#55: the canonical ``advance_warning_spacing`` raise governs the
+    55+ / non-Table-6B-1 case and fires before any displayed category is
+    resolved — documenting that the deleted ``_resolve_road_category``
+    lenient 'rural at 55+' branch was dead code.  A non-category road_type
+    at 55 mph never reaches a display string; it raises at the lookup."""
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="divided_highway",  # not a Table 6B-1 category
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    with pytest.raises(ValueError, match="explicit road_type"):
+        audit_module.build_audit_trail([], params)
+
+
 def test_flagger_lighting_check_day_passes_night_fails() -> None:
     """PR 3 B5: the lighting check (CO Sec 6E.02(A) / Sheet 2 Note 22)
     was inverted — ``pass = params.is_night`` failed daytime plans on a

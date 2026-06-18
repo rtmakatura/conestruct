@@ -93,17 +93,6 @@ _SHEET_12_OPERATIONAL_NOTES: list[dict[str, str]] = [
 ]
 
 
-def _resolve_road_category(speed_mph: int, road_type: str) -> str:
-    """Mirror the auto-inference in advance_warning_spacing."""
-    if road_type in _TABLE_6B_1_CATEGORIES:
-        return road_type
-    if speed_mph <= 35:
-        return "urban_low"
-    if speed_mph < 45:
-        return "urban_high"
-    return "rural"
-
-
 def build_audit_trail(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -153,15 +142,19 @@ def build_audit_trail(
     # 1. Taper length
     # ------------------------------------------------------------------
     threshold = TAPER_LENGTH_FORMULA_THRESHOLD_MPH
+    # Single source of truth for the taper value — spacing.taper_length() is
+    # the canonical L (W x S at/above the threshold, W x S^2 / 60 below).  The
+    # if/else only selects the per-branch display strings; both branches show
+    # the same number the canonical helper produced (#55: audit.py no longer
+    # re-inlines the >= threshold formula).
+    L_full = taper_length(speed, offset_ft)
     if speed >= threshold:
         formula_choice = f"Speed {speed} mph >= {threshold} mph threshold -> using L = W x S"
         formula_latex = r"L = W \times S"
-        L_full = float(offset_ft * speed)
         L_calc_text = f"L = {offset_ft:g} x {speed} = {L_full:g} ft"
     else:
         formula_choice = f"Speed {speed} mph < {threshold} mph threshold -> using L = W x S^2 / 60"
         formula_latex = r"L = \frac{W \times S^2}{60}"
-        L_full = taper_length(speed, offset_ft)
         # B-03 — the displayed arithmetic must match the formula that
         # produced the number (the linear-format text shown here used
         # to contradict the quadratic result at speeds below 40).
@@ -434,7 +427,12 @@ def build_audit_trail(
     a_ft = spacing_abc["A"]
     b_ft = spacing_abc["B"]
     c_ft = spacing_abc["C"]
-    resolved_category = _resolve_road_category(speed, params.road_type)
+    # #55: the displayed Table 6B-1 category is exactly the value fed to the
+    # lookup above (single source of truth, no parallel inference).  For every
+    # valid scenario road_type is a Table 6B-1 category, so rt_for_lookup ==
+    # params.road_type; the canonical raise at the lookup already governs the
+    # 55+ / non-category case, so no lenient fallback is needed here.
+    resolved_category = rt_for_lookup
 
     taper_end_station = wz_len + buf
     taper_start_station = taper_end_station + L_required
