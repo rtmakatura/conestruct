@@ -200,11 +200,11 @@ def buffer_space(
         if row.speed_mph == speed_mph:
             if row.buffer_ft is None:
                 raise ValueError(
-                    f"Buffer space at {speed_mph} mph is not yet verified against MUTCD Table 6C-2."
+                    f"Buffer space at {speed_mph} mph is not yet verified against MUTCD Table 6B-2."
                 )
             return float(row.buffer_ft)
     raise ValueError(
-        f"Speed {speed_mph} mph is not in MUTCD Table 6C-2; valid values are 20, 25, 30, ..., 75."
+        f"Speed {speed_mph} mph is not in MUTCD Table 6B-2; valid values are 20, 25, 30, ..., 75."
     )
 
 

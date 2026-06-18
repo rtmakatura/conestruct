@@ -66,7 +66,7 @@ def _adjust_limited_sight_distance(
         ),
         "devices_added": 0,
         "devices_modified": moved,
-        "rule": "MUTCD §6C.04 — increased advance warning for limited sight distance",
+        "rule": "MUTCD §6B.04 — increased advance warning for limited sight distance",
     }
     return out, record
 
@@ -157,7 +157,7 @@ def _adjust_driveways_present() -> dict[str, Any]:
             "driveway entrances."
         ),
         "devices_added": 0,
-        "rule": "MUTCD §6C.09 — access management in work zones",
+        "rule": "MUTCD §6K.01 — access management in work zones",
     }
 
 

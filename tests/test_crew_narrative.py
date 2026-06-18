@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from src.generation.layout import generate_shoulder_closure_divided
 from src.narrative.crew_narrative import _render_template, build_narrative_context
+from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.validators import ScenarioParams
 
 _TRIGGER_HEADER = "## Trigger Condition"
@@ -365,3 +366,59 @@ def test_crew_narrative_non_freeway_omits_w21_5aR_pair_plaques() -> None:
     markdown = _render(params)
     assert "W16-2a" not in markdown
     assert "W7-3a" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# Site-Specific Notes — emitted MUTCD citations
+# ---------------------------------------------------------------------------
+# The site-adjustment "rule" string renders into the crew narrative under
+# "## Site-Specific Notes" (base.md.j2) and the Streamlit panel.  This
+# surface is NOT in the /render/audit projection, so it has no snapshot
+# coverage — which is how stale §6C citations regressed unnoticed past
+# a86740c (audit-projection only).  These tests pin the 11th-edition
+# citation each site adjustment emits, with a negative guard against the
+# old §6C number.
+#
+# Each test drives a SINGLE flag so its negative guard only inspects that
+# flag's own rendered note.  Do NOT add a whole-narrative "no §6C"
+# assertion: the §6C.10 / §6F.60 intersection and interchange citations
+# are intentionally still stale (UNRESOLVED — pending PDF verification),
+# and pinning them here would pin an unverified value.
+
+
+def _render_with_flags(params: ScenarioParams, flags: dict[str, bool]) -> str:
+    placements = generate_shoulder_closure_divided(params)
+    adjusted, records = apply_site_adjustments(placements, params, flags)
+    context = build_narrative_context(adjusted, params, site_adjustments=records)
+    return _render_template(context)
+
+
+_SITE_ADJ_PARAMS = ScenarioParams(
+    speed_mph=65,
+    num_lanes=2,
+    closure_type="shoulder",
+    road_type="freeway",
+    work_zone_length_ft=800.0,
+    is_divided=True,
+    jurisdiction="CDOT",
+    work_zone_speed_mph=None,
+)
+
+
+def test_crew_narrative_limited_sight_distance_emits_6b04_citation() -> None:
+    """limited_sight_distance note cites §6B.04 (advance warning), not §6C.04."""
+    markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"limited_sight_distance": True})
+    assert "## Site-Specific Notes" in markdown
+    assert "MUTCD §6B.04" in markdown
+    # Guard the MUTCD citation specifically: the divided-highway note still
+    # carries a retained "Colorado Supplement §6C.04(A)" (Category 4), so a
+    # bare "§6C.04" guard would collide with it.
+    assert "MUTCD §6C.04" not in markdown
+
+
+def test_crew_narrative_driveways_present_emits_6k01_citation() -> None:
+    """driveways_present note cites §6K.01 (channelizing devices), not §6C.09."""
+    markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"driveways_present": True})
+    assert "## Site-Specific Notes" in markdown
+    assert "MUTCD §6K.01" in markdown
+    assert "MUTCD §6C.09" not in markdown
