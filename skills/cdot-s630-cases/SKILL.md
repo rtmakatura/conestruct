@@ -1,164 +1,91 @@
 # CDOT S-630-1 Cases
 
-Reference for the 39 CDOT standard MHT cases from Standard Plan S-630-1.
-Each case defines a road type, lane configuration, closure pattern, and
-required device placement. The generation engine in `src/generation/scenarios.py`
-implements these cases programmatically.
+Reference for the CDOT S-630-1 case identities that the Conestruct plan
+generator actually emits. This table mirrors the case labels assigned in
+`src/api/audit.py` (the audit-trail case section) and the layouts in
+`src/generation/layout.py`. It is the single source for what the tool
+claims — NOT an index of every case in the standard-plan sheet set.
 
-Source: CDOT S-630-1 (26-sheet set, 2019 edition)
+> **Verification status:** the case→sheet and case→condition mappings below
+> mirror what the code emits. They are NOT yet verified against the S-630-1
+> PDF — that manual check is tracked under #30 (case table) and #51 (W16-2a
+> "NEXT XXX FT" on Case 11). Treat every sheet/condition citation as
+> "claimed by code, pending PDF confirmation."
+
+Source: CDOT M&S Standard Plan S-630-1 (19-page set, 2019; revised 01/14/26)
 URL: https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf
 
 ---
 
-## Case Index
+## S-630-1 shoulder cases (V1 enabled)
 
-Cases are grouped by road type and closure pattern. Case numbers follow
-CDOT's naming convention from the S-630-1 sheet set.
+These are the cases the production V1 shoulder-closure path emits. Case
+identity is assigned in `src/api/audit.py` (~922-998), branching on
+`is_flagger` → `is_lane` → `is_supplement_case` → `is_reduced` → base.
+This is the table #30/#51 verify against the PDF.
 
-### Two-Lane Two-Way Roads
+| Case label (verbatim) | Trigger | Generator effect | Code ref |
+|---|---|---|---|
+| `Case 11: Shoulder closure on divided highway` | Shoulder closure, no work-zone speed reduction | Federal Table 6B-2 buffer; `routing=shoulder_no_reduction` | `audit.py:992-998` |
+| `Case 11 (reduced work-zone speed): Shoulder closure on divided highway` | Shoulder, WZ speed reduced but NOT a 65→60 / 75→65 step-down (e.g. 65→55) | Federal posted-speed buffer; Fines Double envelope (§2B.13 / Sheet 12); `routing=shoulder_reduced_speed` | `audit.py:977-991` |
+| `Case 26 at 65 mph: Shoulder closure with reduced work-zone speed` | Shoulder, posted 65 → WZ 60 (mandated step-down) | CDOT Sheet 14 buffer floor; trigger "WHEN HAZARDS … ARE WITHIN 8 FT OF TRAVEL WAY"; Fines Double | `audit.py:954-961` |
+| `Case 27 at 75 mph: Shoulder closure with reduced work-zone speed` | Shoulder, posted 75 → WZ 65 (mandated step-down) | CDOT Sheet 14 buffer floor; trigger "WHEN HAZARDS … ARE WITHIN 10 FT OF TRAVEL WAY"; Fines Double | `audit.py:962-969` |
 
-| Case | Description | Key Features |
-|------|------------|--------------|
-| 1 | Lane closure — work in travel lane | Flagger-controlled, one-lane operation |
-| 2 | Shoulder work — travel lane open | Minor encroachment into travel lane |
-| 3 | Lane closure — pilot car operation | Long work zone requiring pilot car |
-| 4 | Shoulder closure | Work on shoulder only, travel lane open |
-| 5 | Road closure — detour | Full road closure with signed detour |
-| 6 | Intermittent closure | Short-duration stops (e.g., utility work) |
-| 7 | Mobile operation | Slow-moving work (e.g., striping, patching) |
-| 8 | Lane closure — temporary signal | Signal-controlled one-lane operation |
+The buffer step-down predicate (`is_supplement_case`) is gated identically to
+the buffer citation and case routing so case identity, buffer source, and
+taper citation cannot drift (`CDOT_BUFFER_STEPDOWN = {65:60, 75:65}` in
+`tables.py`; `_cdot_buffer_or_none` in `spacing.py`). Cases 26/27 fire only on
+the exact mandated step-down; any other reduction routes to the Case 11
+reduced variant.
 
-### Multi-Lane Undivided Roads
+## Gated scenarios — outside V1 verification (built, not enabled)
 
-| Case | Description | Key Features |
-|------|------------|--------------|
-| 9 | Right lane closure | One direction, right lane closed |
-| 10 | Left lane closure | One direction, left lane closed |
-| 11 | Center lane closure | 3+ lanes, center lane closed |
-| 12 | Multiple lane closure | 2+ lanes closed in same direction |
-| 13 | Shoulder closure | Shoulder work, all lanes open |
-| 14 | Mobile operation | Slow-moving work on multi-lane undivided |
+These case labels are emitted only when their scenario kinds are enabled
+(currently gated off via `ENABLED_SCENARIO_KINDS = ["shoulder"]`). They are
+grouped here by enablement, not by standard plan — each row keeps its own
+plan citation (the flagger label is S-630-1 Sheets 9/25; only Case 10 is
+S-630-3). They are NOT part of the S-630-1 shoulder table above and sit
+outside the #30/#51 PDF pass; the flagger's S-630-1 citations are separately
+unverified under #71. Listed for completeness so the reference matches the
+code's full vocabulary.
 
-### Multi-Lane Divided Roads (Non-Freeway)
+| Case label (verbatim) | Trigger | Standard plan (per code) | Code ref | Scenario kind |
+|---|---|---|---|---|
+| `Case 10: One Lane Closed - 4-Lane Divided Highway` | `closure_type=lane` and divided | **Conflict — see note** | `audit.py:942-948` | `lane_closure_divided` |
+| `MUTCD TA-10: Flagger one-lane two-way` (not a CDOT case) | `closure_type=lane` and not divided | S-630-1 Sheets 9 & 25 (analogs 17/42) | `audit.py:932-941` | `flagger_lane_closure` |
 
-| Case | Description | Key Features |
-|------|------------|--------------|
-| 15 | Right lane closure | Divided road, right lane closed |
-| 16 | Left lane closure | Divided road, left lane closed |
-| 17 | Center lane closure | Divided road, center lane closed |
-| 18 | Multiple lane closure | Divided road, 2+ lanes closed |
-| 19 | Median crossover | Traffic shifted to opposing lanes |
-| 20 | Shoulder closure | Divided road, shoulder work |
-| 21 | Mobile operation | Slow-moving work on divided road |
+> **Case 10 plan conflict (code, not this doc — flag for resolution):** the
+> audit narrative labels Case 10 as "S-630-1 … Sheet 7" (`audit.py:944-948`),
+> but the title-block standard-plan helper returns **S-630-3** for a divided
+> lane closure (`plan_sheet.py:1767-1768`, marked UNVERIFIED), matching
+> `schemas.py:8` (TA-19 / S-630-3). These disagree on the standard plan for
+> the same scenario. Resolve when `lane_closure_divided` is enabled; left
+> code-untouched here.
 
-### Freeway / Interstate
+## Referenced analogs (not emitted as case IDs)
 
-| Case | Description | Key Features |
-|------|------------|--------------|
-| 22 | Right lane closure | Freeway, right lane closed |
-| 23 | Left lane closure | Freeway, left lane closed |
-| 24 | Center lane closure | Freeway, center lane closed |
-| 25 | Multiple lane closure | Freeway, 2+ lanes closed |
-| 26 | Right shoulder closure | Freeway shoulder work |
-| 27 | Left shoulder/median closure | Freeway median work |
-| 28 | Ramp closure | On-ramp or off-ramp closed |
-| 29 | Freeway-to-freeway connector closure | Connector ramp closed |
-| 30 | Mobile operation | Slow-moving work on freeway |
-| 31 | Median crossover | Freeway traffic shifted to opposing lanes |
-| 32 | Lane shift | Freeway lanes shifted laterally |
+These appear in layout/narrative comments to justify dimensions on the gated
+flagger path, but the tool never labels a plan with them:
 
-### Intersection and Special Cases
+| Case | Sheet | Used for | Code ref |
+|---|---|---|---|
+| Case 17 | Sheet 9 | Flagger curve lane closure — supplies the "200'–300'" opposing-flagger standoff | `layout.py:1127-1451`, `spacing.py:117-118` |
+| Case 42 | Sheet 25 | Pilot-car operation — reuses the Case 17 standoff; pilot-vehicle mounting per Sheet 26 | `layout.py:1269-1435` |
 
-| Case | Description | Key Features |
-|------|------------|--------------|
-| 33 | Intersection — lane closure approaching | Work near signalized intersection |
-| 34 | Intersection — work within | Work inside intersection box |
-| 35 | Roundabout work zone | Work in or near roundabout |
-| 36 | Pedestrian/bicycle accommodation | Work affecting ped/bike facilities |
-| 37 | Bridge work | Lane closure on bridge deck |
-| 38 | Night work | Nighttime-specific lighting and device requirements |
-| 39 | Temporary road | Temporary bypass road construction |
+## Scenario → standard-plan mapping
 
----
+| Scenario kind | Standard plan (per code) | Emitted case(s) |
+|---|---|---|
+| `shoulder` (TA-2) | S-630-1 | Case 11 / 11-reduced / 26 / 27 |
+| `flagger_lane_closure` (TA-10) | S-630-1 Sheets 9 & 25 | TA-10 (analogs 17/42) |
+| `lane_closure_divided` (TA-19) | S-630-3 (see Case 10 conflict above) | Case 10 |
 
-## Case Data Structure
+Source: `src/api/schemas.py:6-8`, `src/rendering/plan_sheet.py:1755-1768`.
 
-Each case in `configs/cdot_cases.yaml` should contain:
+## Pending PDF verification
 
-```yaml
-case_1:
-  name: "Two-Lane Two-Way — Lane Closure (Flagger)"
-  road_type: two_lane_two_way
-  speed_range: [25, 55]           # applicable speed range (mph)
-  lanes_total: 2
-  lanes_open: 1                   # during work
-  closure_type: lane_closure
-  control_method: flagger         # flagger | signal | pilot_car | none
-  duration: [short, long]         # applicable durations
-
-  # Devices required (references device vocab from mutcd-symbols)
-  devices:
-    advance_warning:
-      - {type: SIGN_GENERIC, code: "W20-1", text: "ROAD WORK AHEAD"}
-      - {type: SIGN_GENERIC, code: "W20-1", text: "ONE LANE ROAD AHEAD"}
-    transition:
-      - {type: CONE, count: "computed"}       # from taper formula
-      - {type: ARROW_BOARD, count: 1}
-    buffer:
-      - {type: TRUCK_MOUNTED_ATTENUATOR, count: 1, condition: "speed >= 45"}
-    activity_area:
-      - {type: DRUM, count: "computed"}       # from tangent spacing
-    termination:
-      - {type: SIGN_GENERIC, code: "G20-2", text: "END ROAD WORK"}
-    flagger:
-      - {type: FLAGGER_STATION, count: 2}     # one per approach
-
-  # Layout geometry
-  geometry:
-    taper: merging                 # merging | shifting | shoulder
-    work_zone_side: right          # right | left | center | both
-    detour: false
-```
-
----
-
-## Implementation Notes
-
-### Speed-Dependent Case Selection
-
-Many cases have speed thresholds that change device requirements:
-- `< 45 mph`: flaggers may be used, smaller signs acceptable
-- `≥ 45 mph`: TMA typically required, larger signs, arrow board
-- `≥ 55 mph`: additional advance warning distance, larger buffer
-
-### Duration-Dependent Requirements
-
-- **Short-term** (< 1 hour): may use cones instead of drums, reduced signage
-- **Intermediate** (1 hour to 3 days): standard device set
-- **Long-term** (> 3 days): drums required (not cones), temporary striping,
-  raised pavement markers
-
-### Nighttime Modifier (Case 38)
-
-When work occurs at night, all cases gain additional requirements:
-- Retroreflective devices required (all classes)
-- Flashing warning lights on barricades
-- Additional advance warning signs
-- Temporary lighting at work space
-- High-visibility apparel for all workers (ANSI Class 3)
-
----
-
-## Verification Status
-
-| Case Range | Verified Against S-630-1 PDF | Notes |
-|-----------|------------------------------|-------|
-| 1–8 | TODO | Two-lane two-way |
-| 9–14 | TODO | Multi-lane undivided |
-| 15–21 | TODO | Multi-lane divided |
-| 22–32 | TODO | Freeway/interstate |
-| 33–39 | TODO | Intersection/special |
-
-Each case needs verification by reading the corresponding S-630-1 sheet and
-confirming: device types, placement rules, speed thresholds, and special
-conditions. Fill in as we build `configs/cdot_cases.yaml`.
+| Item | Tracking | What to confirm against the PDF |
+|---|---|---|
+| Case 11 ↔ Sheet 7 layout & "NEXT XXX FT" W16-2a value | #51 | Sheet 7 Case 11 plaque semantics |
+| Full emitted-case ↔ sheet/condition mapping | #30 | Sheets 7, 12, 14 vs the S-630-1 shoulder table above |
+| Cases 26/27 trigger text (8 ft / 10 ft) | #30 | Sheet 14 diagram callouts |
