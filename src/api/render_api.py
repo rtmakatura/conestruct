@@ -422,6 +422,15 @@ class QuoteSettings(BaseModel):
     project_duration_days: int = Field(default=1, ge=1, le=365)
     num_flaggers: int = Field(default=0, ge=0, le=20)
     delivery_distance_miles: float = Field(default=20.0, ge=0.0, le=500.0)
+    # Markup and labor rates surfaced as editable so a contractor can price
+    # the quote with their own numbers. Defaults mirror generate_quote's
+    # kwargs exactly, so an unset field reproduces today's output. Percentages
+    # are fractions (0.10 == 10%); the UI shows 0-100 and divides by 100.
+    overhead_pct: float = Field(default=0.10, ge=0.0, le=1.0)
+    profit_pct: float = Field(default=0.10, ge=0.0, le=1.0)
+    flagger_hourly_rate: float = Field(default=55.0, ge=0.0, le=500.0)
+    tcs_hourly_rate: float = Field(default=75.0, ge=0.0, le=500.0)
+    crew_hourly_rate: float = Field(default=45.0, ge=0.0, le=500.0)
 
 
 class QuoteRequest(BaseModel):
@@ -444,6 +453,11 @@ def _run_quote(req: QuoteRequest):
             project_duration_days=req.settings.project_duration_days,
             num_flaggers=req.settings.num_flaggers,
             delivery_distance_miles=req.settings.delivery_distance_miles,
+            overhead_pct=req.settings.overhead_pct,
+            profit_pct=req.settings.profit_pct,
+            flagger_hourly_rate=req.settings.flagger_hourly_rate,
+            tcs_hourly_rate=req.settings.tcs_hourly_rate,
+            crew_hourly_rate=req.settings.crew_hourly_rate,
         )
         return path.read_bytes(), breakdown
     finally:

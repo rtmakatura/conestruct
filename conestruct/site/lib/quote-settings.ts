@@ -2,12 +2,24 @@ export interface QuoteSettings {
   project_duration_days: number;
   num_flaggers: number;
   delivery_distance_miles: number;
+  // Markup and labor rates. Percentages are fractions (0.1 == 10%) to match
+  // the backend wire format; the panel displays them 0-100 and converts.
+  overhead_pct: number;
+  profit_pct: number;
+  flagger_hourly_rate: number;
+  tcs_hourly_rate: number;
+  crew_hourly_rate: number;
 }
 
 export const DEFAULT_QUOTE_SETTINGS: QuoteSettings = {
   project_duration_days: 1,
   num_flaggers: 0,
   delivery_distance_miles: 20,
+  overhead_pct: 0.1,
+  profit_pct: 0.1,
+  flagger_hourly_rate: 55,
+  tcs_hourly_rate: 75,
+  crew_hourly_rate: 45,
 };
 
 // Single source for coercing an untrusted request body into a bounded
@@ -29,5 +41,13 @@ export function coerceQuoteSettings(raw: unknown): QuoteSettings {
       0,
       Math.min(500, num(r.delivery_distance_miles, 20)),
     ),
+    overhead_pct: Math.max(0, Math.min(1, num(r.overhead_pct, 0.1))),
+    profit_pct: Math.max(0, Math.min(1, num(r.profit_pct, 0.1))),
+    flagger_hourly_rate: Math.max(
+      0,
+      Math.min(500, num(r.flagger_hourly_rate, 55)),
+    ),
+    tcs_hourly_rate: Math.max(0, Math.min(500, num(r.tcs_hourly_rate, 75))),
+    crew_hourly_rate: Math.max(0, Math.min(500, num(r.crew_hourly_rate, 45))),
   };
 }

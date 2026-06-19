@@ -93,6 +93,10 @@ const fmtTotal = (n: number) =>
     maximumFractionDigits: 0,
   });
 
+// A stored fraction (0.1) shown as a percent (10). Round to 2 decimals so
+// 0.1 * 100 doesn't surface its float dust (10.000000000000002) in the input.
+const pctToDisplay = (frac: number) => Math.round(frac * 10000) / 100;
+
 function safeFilename(name: string | undefined, ext: string): string {
   const cleaned = (name ?? "")
     .trim()
@@ -275,6 +279,50 @@ export function QuotePanel({ mode }: Props) {
             setDelivery({ state: "manual" });
           }}
           caption={deliveryCaption(delivery)}
+        />
+        <NumberField
+          label="Overhead (%)"
+          value={pctToDisplay(settings.overhead_pct)}
+          min={0}
+          max={100}
+          step={1}
+          onChange={(v) =>
+            setSettings({ ...settings, overhead_pct: v / 100 })
+          }
+        />
+        <NumberField
+          label="Profit (%)"
+          value={pctToDisplay(settings.profit_pct)}
+          min={0}
+          max={100}
+          step={1}
+          onChange={(v) => setSettings({ ...settings, profit_pct: v / 100 })}
+        />
+        <NumberField
+          label="Flagger ($/hr)"
+          value={settings.flagger_hourly_rate}
+          min={0}
+          max={500}
+          step={1}
+          onChange={(v) =>
+            setSettings({ ...settings, flagger_hourly_rate: v })
+          }
+        />
+        <NumberField
+          label="TCS ($/hr)"
+          value={settings.tcs_hourly_rate}
+          min={0}
+          max={500}
+          step={1}
+          onChange={(v) => setSettings({ ...settings, tcs_hourly_rate: v })}
+        />
+        <NumberField
+          label="Crew ($/hr)"
+          value={settings.crew_hourly_rate}
+          min={0}
+          max={500}
+          step={1}
+          onChange={(v) => setSettings({ ...settings, crew_hourly_rate: v })}
         />
       </div>
 
