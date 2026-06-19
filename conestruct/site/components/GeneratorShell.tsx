@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
+import {
+  DEFAULT_QUOTE_SETTINGS,
+  type QuoteSettings,
+} from "@/lib/quote-settings";
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
@@ -36,7 +40,19 @@ export function GeneratorShell({
   const [scenario, setScenario] = useState<Scenario>(
     initialScenario ?? DEFAULT_SCENARIO,
   );
-  const [status, setStatus] = useState<Status>("done");
+  // ``status`` keeps the deliverable panels visible from first paint and is
+  // intentionally never mutated by the bundle download. The generate cycle
+  // used to flip it to "generating", which unmounted QuotePanel and wiped its
+  // edited rates / flagger / delivery state; the in-progress spinner now
+  // rides on ``bundling`` instead.
+  const [status] = useState<Status>("done");
+  // Live quote settings owned here (the single source) so the bundle download
+  // can read the user's edits and QuotePanel reads/writes the same store
+  // through props — no second settings copy.
+  const [settings, setSettings] = useState<QuoteSettings>(
+    DEFAULT_QUOTE_SETTINGS,
+  );
+  const [bundling, setBundling] = useState(false);
   const [planId, setPlanId] = useState<string | null>(initialPlanId);
   const [planName, setPlanName] = useState<string | null>(initialPlanName);
 
@@ -191,14 +207,14 @@ export function GeneratorShell({
   // parallel and zips the bytes server-side).  Saved/workbench mode just
   // re-uses the existing per-file download links exposed in OutputCards.
   const onGenerate = async () => {
-    if (status === "generating") return;
-    setStatus("generating");
+    if (bundling) return;
+    setBundling(true);
     setBundleError(null);
 
     if (mode !== "sandbox") {
       // Workbench mode: OutputCards already serves per-file downloads
       // tied to the saved plan; nothing to bundle here.
-      setStatus("done");
+      setBundling(false);
       return;
     }
 
@@ -206,11 +222,13 @@ export function GeneratorShell({
       const res = await fetch("/api/render/bundle", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ scenario }),
+        // Thread the live, user-edited quote settings into the bundle so the
+        // zipped quote.xlsx matches the on-screen rates. Omitting them made
+        // the route coerce defaults, silently ignoring every edit.
+        body: JSON.stringify({ scenario, settings }),
       });
       if (!res.ok) {
         setBundleError(`Bundle failed (${res.status})`);
-        setStatus("done");
         return;
       }
       const blob = await res.blob();
@@ -225,7 +243,7 @@ export function GeneratorShell({
     } catch {
       setBundleError("Network error while building bundle");
     } finally {
-      setStatus("done");
+      setBundling(false);
     }
   };
 
@@ -271,7 +289,7 @@ export function GeneratorShell({
         <GeneratorSidebar
           scenario={scenario}
           setScenario={setScenario}
-          generating={status === "generating"}
+          generating={bundling}
           onGenerate={onGenerate}
         />
 
@@ -301,7 +319,7 @@ export function GeneratorShell({
           </div>
 
           <StatusBar
-            status={status}
+            status={bundling ? "generating" : status}
             inputError={inputError}
             audit={auditState}
           />
@@ -327,6 +345,8 @@ export function GeneratorShell({
                   ? { kind: "public", scenario }
                   : { kind: "saved", planId }
               }
+              settings={settings}
+              setSettings={setSettings}
             />
           )}
           <AuditTrail

@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import {
-  DEFAULT_QUOTE_SETTINGS,
-  type QuoteSettings,
-} from "@/lib/quote-settings";
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import Link from "next/link";
+import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 
 type DeliveryStatus =
@@ -29,6 +32,11 @@ type Mode = PublicMode | SavedMode;
 
 interface Props {
   mode: Mode;
+  // Settings are owned by GeneratorShell (the single source) so the bundle
+  // download and this panel read/write the same store. Lifting them up also
+  // keeps the user's edits alive across a generate cycle.
+  settings: QuoteSettings;
+  setSettings: Dispatch<SetStateAction<QuoteSettings>>;
 }
 
 interface EquipmentLine {
@@ -105,10 +113,7 @@ function safeFilename(name: string | undefined, ext: string): string {
   return `${cleaned || "plan"}.${ext}`;
 }
 
-export function QuotePanel({ mode }: Props) {
-  const [settings, setSettings] = useState<QuoteSettings>(
-    DEFAULT_QUOTE_SETTINGS,
-  );
+export function QuotePanel({ mode, settings, setSettings }: Props) {
   const [breakdown, setBreakdown] = useState<Breakdown | null>(null);
   const [busy, setBusy] = useState(false);
   const [downloading, setDownloading] = useState(false);
