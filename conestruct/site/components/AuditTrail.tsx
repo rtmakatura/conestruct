@@ -84,10 +84,50 @@ export interface ItemSpec {
   dim?: boolean;
 }
 
+function auditFilename(name: string | undefined): string {
+  const cleaned = (name ?? "")
+    .trim()
+    .replace(/[^a-zA-Z0-9 _-]+/g, "_")
+    .replace(/\s+/g, "_");
+  return `${cleaned || "plan"}.audit.pdf`;
+}
+
 export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const [openIdx, setOpenIdx] = useState<number>(0);
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
   const r = (n: number | string) => (generated ? String(n) : "—");
+
+  // Audit-PDF export — POSTs the live scenario to the same public render
+  // route the other downloads use; works wherever AuditTrail renders
+  // (it always has the scenario), so it needs no mode/planId threading.
+  const [auditDl, setAuditDl] = useState<"idle" | "busy" | "error">("idle");
+  const onDownloadAuditPdf = async () => {
+    if (!generated || auditDl === "busy") return;
+    setAuditDl("busy");
+    try {
+      const res = await fetch("/api/render/audit-pdf", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scenario }),
+      });
+      if (!res.ok) {
+        setAuditDl("error");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = auditFilename(scenario.meta?.project);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setAuditDl("idle");
+    } catch {
+      setAuditDl("error");
+    }
+  };
 
   // Main per-scenario body items: every section reads from backend audit
   // data via the shared item helpers (``taperItem``, ``bufferItem``,
@@ -140,9 +180,23 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
             </span>
           )}
         </h2>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
-          <span className="text-[color:var(--cyan)]">03</span> · SHOW THE WORK
-        </span>
+        <div className="flex items-baseline gap-4">
+          <button
+            type="button"
+            onClick={onDownloadAuditPdf}
+            disabled={!generated || auditDl === "busy"}
+            className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--cyan)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer"
+          >
+            {auditDl === "busy"
+              ? "Rendering…"
+              : auditDl === "error"
+                ? "Try again"
+                : "↓ Audit PDF"}
+          </button>
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
+            <span className="text-[color:var(--cyan)]">03</span> · SHOW THE WORK
+          </span>
+        </div>
       </div>
       <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] mb-4 max-w-[620px]">
         Every calculation is traced to its MUTCD or Colorado Supplement source.

@@ -12,6 +12,7 @@ const KINDS: ReadonlySet<RenderKind> = new Set([
   "markdown",
   "quote",
   "crew-pdf",
+  "audit-pdf",
 ]);
 const MAX_BODY_BYTES = 32 * 1024;
 const RATE_LIMIT_PER_MIN = 20;
