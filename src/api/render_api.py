@@ -42,6 +42,7 @@ from src.narrative.crew_narrative import (
     generate_crew_narrative,
     generate_crew_narrative_pdf,
 )
+from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
 from src.rules.devices import DeviceType, cone_display_name
@@ -663,6 +664,27 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     )
 
 
+def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
+    """Build the audit projection for a scenario — the single source both
+    ``/render/audit`` (JSON) and ``/render/audit-pdf`` (PDF) render from, so
+    the two cannot be two different builds.
+
+    Same placement source as ``/render/pdf`` so the audit cannot drift from
+    the rendered plan.
+    """
+    placements, params, _site, _night = _placements_for(scenario)
+    # Shoulder width is read from params.shoulder_width_ft inside the
+    # audit builder (single source of truth — set once at the schemas bridge).
+    audit = build_audit_trail(
+        placements,
+        params,
+        site_lat=scenario.meta.lat or None,
+        site_lng=scenario.meta.lng or None,
+    )
+    step_count = _compute_step_count(scenario)
+    return audit_projection(audit, scenario.kind, step_count)
+
+
 @app.post("/render/audit")
 def render_audit(scenario: Scenario) -> JSONResponse:
     """Return the audit projection that drives the AuditTrail UI.
@@ -683,22 +705,46 @@ def render_audit(scenario: Scenario) -> JSONResponse:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        placements, params, _site, _night = _placements_for(scenario)
+        projection = _audit_projection_for(scenario)
     except HTTPException:
         raise
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
-    # Shoulder width is read from params.shoulder_width_ft inside the
-    # audit builder (single source of truth — set once at the schemas bridge).
-    audit = build_audit_trail(
-        placements,
-        params,
-        site_lat=scenario.meta.lat or None,
-        site_lng=scenario.meta.lng or None,
+    return JSONResponse(projection)
+
+
+@app.post("/render/audit-pdf")
+def render_audit_pdf_endpoint(scenario: Scenario) -> Response:
+    """Render the audit trail as an exportable PDF.
+
+    Builds from the exact same projection ``/render/audit`` serializes
+    (via ``_audit_projection_for``) — the PDF is a re-presentation of that
+    one object, not a second computation.
+    """
+    _ensure_scenario_enabled(scenario)
+    try:
+        projection = _audit_projection_for(scenario)
+        fd, raw_path = tempfile.mkstemp(suffix=".pdf")
+        os.close(fd)
+        path = Path(raw_path)
+        try:
+            render_audit_pdf(projection, str(path))
+            body = path.read_bytes()
+        finally:
+            path.unlink(missing_ok=True)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "audit.pdf")}"'
+        },
     )
-    step_count = _compute_step_count(scenario)
-    return JSONResponse(audit_projection(audit, scenario.kind, step_count))
 
 
 @app.post("/render/quote-breakdown")

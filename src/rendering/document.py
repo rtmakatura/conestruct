@@ -88,10 +88,16 @@ class Ordered:
 
 @dataclass
 class Table_:
-    """A table with a header row and body rows (cells are rich text)."""
+    """A table with a header row and body rows (cells are rich text).
+
+    ``weights`` optionally sets relative column widths (e.g. ``[2, 1, 1, 3]``
+    gives the last column triple the first's share); ``None`` splits the
+    available width evenly.  A length mismatch falls back to even split.
+    """
 
     header: list[str]
     rows: list[list[str]]
+    weights: list[float] | None = None
 
 
 @dataclass
@@ -249,7 +255,13 @@ def _table_flowable(block: Table_, ss: StyleSheet1, avail_width: float) -> Flowa
     head_style = ss["DocCellHead"]
     cell_style = ss["DocCell"]
     n_cols = max(len(block.header), 1)
-    col_w = avail_width / n_cols
+    # Proportional widths when weights match the column count; even split
+    # otherwise (the default — keeps existing callers byte-identical).
+    if block.weights and len(block.weights) == n_cols and sum(block.weights) > 0:
+        total = sum(block.weights)
+        col_widths = [avail_width * w / total for w in block.weights]
+    else:
+        col_widths = [avail_width / n_cols] * n_cols
 
     data: list[list[Paragraph]] = [[Paragraph(c, head_style) for c in block.header]]
     for row in block.rows:
@@ -257,7 +269,7 @@ def _table_flowable(block: Table_, ss: StyleSheet1, avail_width: float) -> Flowa
         cells = list(row)[:n_cols] + [""] * (n_cols - len(row))
         data.append([Paragraph(c, cell_style) for c in cells])
 
-    table = Table(data, colWidths=[col_w] * n_cols, repeatRows=1)
+    table = Table(data, colWidths=col_widths, repeatRows=1)
     table.setStyle(
         TableStyle(
             [
