@@ -25,6 +25,8 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from src.generation.layout import device_count_floors
+from src.rendering.document import render_document_pdf
+from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
@@ -657,6 +659,35 @@ def _refine_with_llm(template_markdown: str) -> str:
         return template_markdown
 
 
+def render_crew_narrative_markdown(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    use_llm: bool = False,
+    site_adjustments: list[dict[str, Any]] | None = None,
+    night_adjustments: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
+) -> str:
+    """Build the crew-instructions Markdown string (no file I/O).
+
+    The single content path: ``build_narrative_context`` →
+    ``_render_template`` → optional LLM refinement.  Both the on-disk
+    Markdown deliverable (:func:`generate_crew_narrative`) and the PDF
+    deliverable (:func:`generate_crew_narrative_pdf`) consume this exact
+    string, so they cannot drift in wording or citations.
+    """
+    context = build_narrative_context(
+        placements,
+        params,
+        site_adjustments=site_adjustments,
+        night_adjustments=night_adjustments,
+        pilot_car=pilot_car,
+    )
+    markdown = _render_template(context)
+    if use_llm:
+        markdown = _refine_with_llm(markdown)
+    return markdown
+
+
 def generate_crew_narrative(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -680,18 +711,47 @@ def generate_crew_narrative(
     Returns:
         The output path that was written.
     """
-    context = build_narrative_context(
+    markdown = render_crew_narrative_markdown(
         placements,
         params,
+        use_llm=use_llm,
         site_adjustments=site_adjustments,
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
     )
-    markdown = _render_template(context)
-    if use_llm:
-        markdown = _refine_with_llm(markdown)
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
+
+
+def generate_crew_narrative_pdf(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    output_path: str = "crew_narrative.pdf",
+    use_llm: bool = False,
+    site_adjustments: list[dict[str, Any]] | None = None,
+    night_adjustments: list[dict[str, Any]] | None = None,
+    pilot_car: bool = False,
+) -> str:
+    """Render the crew narrative as a phone-readable PDF and write it to disk.
+
+    Renders the *same* Markdown string :func:`generate_crew_narrative`
+    produces, parses it into the shared block model, and hands that to the
+    reusable document renderer.  Render-only: no narrative wording or
+    citation is touched.
+
+    Returns:
+        The output path that was written.
+    """
+    markdown = render_crew_narrative_markdown(
+        placements,
+        params,
+        use_llm=use_llm,
+        site_adjustments=site_adjustments,
+        night_adjustments=night_adjustments,
+        pilot_car=pilot_car,
+    )
+    blocks = markdown_to_blocks(markdown)
+    return render_document_pdf(blocks, output_path, title="Crew Instructions")
 
 
 if __name__ == "__main__":

@@ -38,7 +38,10 @@ from src.api.schemas import (
 )
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
-from src.narrative.crew_narrative import generate_crew_narrative
+from src.narrative.crew_narrative import (
+    generate_crew_narrative,
+    generate_crew_narrative_pdf,
+)
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
 from src.rules.devices import DeviceType, cone_display_name
@@ -336,6 +339,43 @@ def render_markdown(scenario: Scenario) -> Response:
         content=body,
         media_type="text/markdown; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "md")}"'},
+    )
+
+
+@app.post("/render/crew-pdf")
+def render_crew_pdf(scenario: Scenario) -> Response:
+    """Render the crew narrative as a phone-readable PDF.
+
+    Same content as ``/render/markdown`` — the narrative Markdown string —
+    rendered through the shared document renderer instead of served raw.
+    """
+    _ensure_scenario_enabled(scenario)
+    try:
+        body = _render_with(
+            scenario,
+            ".pdf",
+            lambda path, placements, params, site_adj, night_adj: Path(
+                generate_crew_narrative_pdf(
+                    placements,
+                    params,
+                    output_path=str(path),
+                    site_adjustments=site_adj,
+                    night_adjustments=night_adj,
+                    pilot_car=getattr(scenario, "pilotCar", False),
+                )
+            ),
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f'attachment; filename="{_safe_filename(scenario, "crew.pdf")}"'
+        },
     )
 
 
