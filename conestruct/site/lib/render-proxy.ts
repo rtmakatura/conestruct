@@ -11,13 +11,16 @@ import {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export type RenderKind = "pdf" | "xlsx" | "markdown" | "quote";
+export type RenderKind = "pdf" | "xlsx" | "markdown" | "quote" | "crew-pdf";
 
 const EXT: Record<RenderKind, string> = {
   pdf: "pdf",
   xlsx: "xlsx",
   markdown: "md",
   quote: "xlsx",
+  // The crew narrative rendered as a PDF — a distinct deliverable from
+  // the plan-sheet PDF, so name it "<plan>.crew.pdf" to avoid collision.
+  "crew-pdf": "crew.pdf",
 };
 
 function safeFilename(name: string, ext: string): string {
@@ -273,6 +276,10 @@ export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
   xlsx: "device_list.xlsx",
   markdown: "crew_narrative.md",
   quote: "quote.xlsx",
+  // Not a bundle part (fetchAllRenderParts renders the four above); the
+  // crew PDF is a standalone download. Named here only to satisfy the
+  // RenderKind record.
+  "crew-pdf": "crew_narrative.pdf",
 };
 
 export interface DetectSiteRequestBody {

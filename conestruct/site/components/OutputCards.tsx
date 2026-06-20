@@ -6,7 +6,7 @@ import type { Scenario } from "@/lib/scenarios";
 import type { AuditSummary } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
-type RenderKind = "pdf" | "xlsx" | "markdown";
+type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf";
 
 interface PublicMode {
   kind: "public";
@@ -85,10 +85,11 @@ export function OutputCards({ summary, generated, mode, breakdown }: Props) {
         ix="C"
         n="03"
         title="Crew instructions"
-        meta="MARKDOWN · SETUP + TAKEDOWN"
+        meta="PDF + MD · SETUP + TAKEDOWN"
         statLbl="Steps"
         statVal={summary?.step_count ?? "—"}
-        kind="markdown"
+        kind="crew-pdf"
+        secondaryKind="markdown"
         mode={mode}
       />
     </div>
@@ -103,6 +104,9 @@ interface CardProps {
   statLbl: string;
   statVal: number | string;
   kind: RenderKind;
+  // An optional second download offered on the same card (the crew card
+  // offers the PDF as `kind` and the raw `.md` as `secondaryKind`).
+  secondaryKind?: RenderKind;
   mode: Mode;
 }
 
@@ -110,18 +114,23 @@ const LABELS: Record<RenderKind, string> = {
   pdf: "Download PDF",
   xlsx: "Download XLSX",
   markdown: "Download .md",
+  "crew-pdf": "Download PDF",
 };
 
 const SIGNUP_LABELS: Record<RenderKind, string> = {
   pdf: "Sign up to download PDF",
   xlsx: "Sign up to download XLSX",
   markdown: "Sign up to download .md",
+  "crew-pdf": "Sign up to download PDF",
 };
 
 const EXT: Record<RenderKind, string> = {
   pdf: "pdf",
   xlsx: "xlsx",
   markdown: "md",
+  // Distinct from the plan-sheet PDF so the browser doesn't dedupe the
+  // two downloads to "<plan> (1).pdf".
+  "crew-pdf": "crew.pdf",
 };
 
 function safeFilename(name: string | undefined, ext: string): string {
@@ -156,6 +165,19 @@ async function extractValidationMessage(res: Response): Promise<string> {
   return "Invalid scenario";
 }
 
+// Shared button/anchor shape; the primary is solid, a secondary CTA is
+// rendered as a lighter outline so the two reads as primary + alternate.
+const CTA_BASE =
+  "w-full font-sans font-semibold text-[13px] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 transition-colors";
+const CTA_PRIMARY =
+  "bg-[color:var(--canvas)] text-white hover:bg-[color:var(--cyan-deep)]";
+const CTA_SECONDARY =
+  "bg-transparent text-[color:var(--canvas)] border border-[color:var(--paper-line)] hover:border-[color:var(--canvas)]";
+
+function ctaClass(idx: number): string {
+  return `${CTA_BASE} ${idx === 0 ? CTA_PRIMARY : CTA_SECONDARY}`;
+}
+
 function OutputCard({
   ix,
   n,
@@ -164,20 +186,25 @@ function OutputCard({
   statLbl,
   statVal,
   kind,
+  secondaryKind,
   mode,
 }: CardProps) {
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
+  const [error, setError] = useState<{ kind: RenderKind; msg: string } | null>(
+    null,
+  );
 
-  const ctaLabel =
-    mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[kind] : LABELS[kind];
+  const kinds: RenderKind[] = secondaryKind ? [kind, secondaryKind] : [kind];
 
-  const onPublicDownload = async () => {
+  const labelFor = (k: RenderKind) =>
+    mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[k] : LABELS[k];
+
+  const onPublicDownload = async (dlKind: RenderKind) => {
     if (mode.kind !== "public") return;
-    setBusy(true);
-    setErr(null);
+    setBusyKind(dlKind);
+    setError(null);
     try {
-      const res = await fetch(`/api/render/${kind}`, {
+      const res = await fetch(`/api/render/${dlKind}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ scenario: mode.scenario }),
@@ -188,26 +215,26 @@ function OutputCard({
         // user-facing message out of detail.message instead of showing
         // a generic "Render failed (400)" — the message names the
         // specific taper length / speed limit the user must satisfy.
-        if (res.status === 400) {
-          setErr(await extractValidationMessage(res));
-        } else {
-          setErr(`Render failed (${res.status})`);
-        }
+        const msg =
+          res.status === 400
+            ? await extractValidationMessage(res)
+            : `Render failed (${res.status})`;
+        setError({ kind: dlKind, msg });
         return;
       }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = safeFilename(mode.scenario.meta?.project, EXT[kind]);
+      a.download = safeFilename(mode.scenario.meta?.project, EXT[dlKind]);
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch {
-      setErr("Network error");
+      setError({ kind: dlKind, msg: "Network error" });
     } finally {
-      setBusy(false);
+      setBusyKind(null);
     }
   };
 
@@ -234,36 +261,47 @@ function OutputCard({
       </div>
       {mode.kind === "public" ? (
         <>
-          <button
-            type="button"
-            onClick={onPublicDownload}
-            disabled={busy}
-            className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors disabled:opacity-60"
-          >
-            {busy ? "Rendering…" : err ? "Try again" : ctaLabel}
-            <span className="font-mono">↓</span>
-          </button>
-          {err && (
+          <div className="flex flex-col gap-2">
+            {kinds.map((k, idx) => (
+              <button
+                key={k}
+                type="button"
+                onClick={() => onPublicDownload(k)}
+                disabled={busyKind !== null}
+                className={`${ctaClass(idx)} disabled:opacity-60`}
+              >
+                {busyKind === k
+                  ? "Rendering…"
+                  : error?.kind === k
+                    ? "Try again"
+                    : labelFor(k)}
+                <span className="font-mono">↓</span>
+              </button>
+            ))}
+          </div>
+          {error && (
             <div className="mt-2 text-[12px] leading-snug text-[#b94343] font-sans">
-              {err}
+              {error.msg}
             </div>
           )}
         </>
       ) : mode.planId ? (
-        <a
-          href={`/api/plans/${mode.planId}/${kind}`}
-          download
-          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
-        >
-          {ctaLabel}
-          <span className="font-mono">↓</span>
-        </a>
+        <div className="flex flex-col gap-2">
+          {kinds.map((k, idx) => (
+            <a
+              key={k}
+              href={`/api/plans/${mode.planId}/${k}`}
+              download
+              className={ctaClass(idx)}
+            >
+              {labelFor(k)}
+              <span className="font-mono">↓</span>
+            </a>
+          ))}
+        </div>
       ) : (
-        <Link
-          href={SIGNUP_HREF}
-          className="w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
-        >
-          {ctaLabel}
+        <Link href={SIGNUP_HREF} className={ctaClass(0)}>
+          {labelFor(kind)}
           <span className="font-mono">↓</span>
         </Link>
       )}
