@@ -43,7 +43,14 @@ _PARAMS = ScenarioParams(
 # ``formula_choice`` (e.g. ``L = W \times S``); it is intentionally not
 # rendered (the prose form carries the same fact), so exclude it from the
 # leaf sweep.
-_SKIP_KEYS = frozenset({"formula_latex"})
+#
+# ``flag`` / ``level`` are corridor-warning styling/enum metadata (#82):
+# the UI uses them for a tag chip and severity tone, but the rendered
+# prose is the warning's ``message``.  They are not displayed text, so
+# they are excluded like ``formula_latex``.  Caveat: ``_SKIP_KEYS`` is
+# global, so this assumes no future section adds a *displayed* ``flag`` /
+# ``level`` string — true today (they appear only on corridor warnings).
+_SKIP_KEYS = frozenset({"formula_latex", "flag", "level"})
 
 _TAG_RE = re.compile(r"<[^>]+>")
 
@@ -145,3 +152,57 @@ def test_render_audit_pdf_is_valid(tmp_path) -> None:
     assert data.startswith(b"%PDF-")
     assert data.rstrip().endswith(b"%%EOF")
     assert len(data) > 1500
+
+
+def test_corridor_warning_renders_as_clean_line() -> None:
+    """A corridor warning renders as its composed ``message`` line, not a
+    raw Python dict (#82).
+
+    The projection slims the rule's rich diagnostic dict to {flag, level,
+    message}, dropping the debug fields, and the single-source proof holds
+    for the warning-bearing projection.  Injecting the warning avoids a
+    live Overpass call (``validate_corridor_against_osm`` is network-bound).
+    """
+    placements = generate_shoulder_closure_divided(_PARAMS)
+    audit = build_audit_trail(placements, _PARAMS)
+    # The #82 example: the full diagnostic dict the corridor rule emits.
+    message = (
+        "No motorway/trunk/primary/secondary road detected at anchor "
+        "(39.73915, -104.99025) within 30 m (closest road within 30 m: "
+        "'residential').  Verify coordinates correspond to the actual work zone."
+    )
+    audit["corridor_validation"] = {
+        "checked": True,
+        "warnings": [
+            {
+                "flag": "no_road_at_anchor",
+                "level": "warning",
+                "message": message,
+                "anchor_lat": 39.73915,
+                "anchor_lng": -104.99025,
+                "detected_highway": "residential",
+                "search_radius_m": 30.0,
+            }
+        ],
+    }
+    projection = audit_projection(audit, "shoulder", step_count=11)
+
+    # The projection slims each warning to exactly {flag, level, message};
+    # the debug fields (anchor_lat, detected_highway, ...) are dropped.
+    warning = projection["sections"]["corridor_validation"]["warnings"][0]
+    assert warning == {
+        "flag": "no_road_at_anchor",
+        "level": "warning",
+        "message": message,
+    }
+
+    text = normalize_glyphs(_block_plaintext(audit_to_blocks(projection)))
+    # The composed message renders; no stringified-dict text leaks in.
+    assert "No motorway/trunk/primary/secondary road detected at anchor" in text
+    assert "{'flag'" not in text
+    assert "'message':" not in text
+
+    # The single-source proof still holds for the warning-bearing projection
+    # (flag/level are skipped; message is the rendered prose).
+    missing = [leaf for leaf in _string_leaves(projection) if normalize_glyphs(leaf) not in text]
+    assert not missing, f"projection strings absent from the PDF blocks: {missing}"

@@ -256,7 +256,10 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
     warnings = corridor.get("warnings", [])
     if warnings:
         blocks.append(_body("OpenStreetMap corridor check produced warnings:"))
-        blocks.append(Bullets([ListItem(_cell(w)) for w in warnings]))
+        # Each warning is a dict (#82: the projection slims it to
+        # {flag, level, message}); render the composed ``message`` line,
+        # not str(dict).
+        blocks.append(Bullets([ListItem(_cell(w.get("message", ""))) for w in warnings]))
     else:
         blocks.append(_body("OpenStreetMap corridor check ran with no warnings."))
     return blocks

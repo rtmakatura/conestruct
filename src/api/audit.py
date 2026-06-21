@@ -1352,7 +1352,33 @@ def audit_projection(
             }
         )
 
+    # #82: the corridor rule (validate_corridor_against_osm) emits rich
+    # diagnostic dicts — anchor_lat/lng, detected_highway, bearing values,
+    # detected_way_id, etc.  Slim each warning to the displayed/styling
+    # shape {flag, level, message} so (a) the PDF renders the composed
+    # ``message`` line instead of str()-ing the whole dict, and (b) the
+    # internal diagnostics stop leaking onto the public /render/audit JSON.
+    # Display-only: the detection rule is untouched and still emits the
+    # full dict for other callers/logging — only the projection slims it.
+    # The ``message`` sentence is the single composed display string every
+    # surface renders.  No-warning baselines are left byte-identical.
+    corridor = audit.get("corridor_validation")
+    if isinstance(corridor, dict) and corridor.get("warnings"):
+        corridor = {
+            **corridor,
+            "warnings": [
+                {
+                    "flag": w.get("flag"),
+                    "level": w.get("level"),
+                    "message": w.get("message"),
+                }
+                for w in corridor["warnings"]
+            ],
+        }
+
     sections = {**audit, "taper": taper, "case": case}
+    if isinstance(corridor, dict):
+        sections["corridor_validation"] = corridor
 
     speed = audit["spacing"]["speed_mph"]
     summary: dict[str, Any] = {
