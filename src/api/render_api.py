@@ -45,7 +45,7 @@ from src.narrative.crew_narrative import (
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
-from src.rules.devices import DeviceType, cone_display_name
+from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
@@ -610,7 +610,23 @@ def _build_device_breakdown(
             non_sign_counts[p.device_type] += 1
 
     rows: list[dict[str, object]] = []
-    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: kv[0].value):
+
+    # Signs first (issue #88), keeping their existing schedule-key order.
+    for key, n in sorted(sign_counts.items()):
+        code, desc = substitute_sign_description(key, sign_reps[key].station_ft, params)
+        rows.append(
+            {
+                "device": desc,
+                "code": code,
+                "function": _sign_function_category(code),
+                "qty": n,
+            }
+        )
+
+    # Then non-signs: channelizing devices, then equipment, each alphabetical
+    # by display name — ordered via the shared device_row_sort_key helper so
+    # this panel, the XLSX device list, and the crew equipment list agree.
+    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: device_row_sort_key(kv[0], None)):
         if dt == DeviceType.CONE:
             device_label = cone_display_name(params.speed_mph)
             function_label = "Channelizing"
@@ -621,17 +637,6 @@ def _build_device_breakdown(
                 "device": device_label,
                 "code": "—",
                 "function": function_label,
-                "qty": n,
-            }
-        )
-
-    for key, n in sorted(sign_counts.items()):
-        code, desc = substitute_sign_description(key, sign_reps[key].station_ft, params)
-        rows.append(
-            {
-                "device": desc,
-                "code": code,
-                "function": _sign_function_category(code),
                 "qty": n,
             }
         )

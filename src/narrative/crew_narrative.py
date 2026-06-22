@@ -27,7 +27,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from src.generation.layout import device_count_floors
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
-from src.rules.devices import DeviceType, cone_display_name
+from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
 from src.rules.sign_codes import description_for, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -99,7 +99,7 @@ _ROAD_TYPE_HUMAN: dict[str, str] = {
 def _device_summary(
     placements: list[DevicePlacement], params: ScenarioParams
 ) -> list[dict[str, Any]]:
-    """Bullet-list aggregation: non-signs at top level, signs nested beneath one parent.
+    """Bullet-list aggregation: signs nested beneath one parent, then non-signs.
 
     Signs aggregate by schedule key (R2-1 splitting into entrance /
     restoration faces, per :func:`schedule_key`) and resolve their
@@ -109,6 +109,12 @@ def _device_summary(
     same substituted values ("G20-1 ROAD CONSTRUCTION (NEXT 400 FT)") as
     the XLSX device list, the PDF schedule, and the UI breakdown, instead
     of leaking the bare "(NEXT XXX FT)" template (UX-10).
+
+    Row order is the shared :func:`device_row_sort_key` ordering (issue
+    #88) — signs first, then channelizing devices, then equipment, each
+    alphabetical by display name — rather than a per-surface hand-matched
+    sort.  The XLSX device list and the UI breakdown route through the
+    same helper, so all three reorder identically by construction.
     """
     non_sign_counts: Counter[DeviceType] = Counter()
     sign_counts: Counter[str] = Counter()
@@ -126,20 +132,8 @@ def _device_summary(
             non_sign_counts[p.device_type] += 1
 
     rows: list[dict[str, Any]] = []
-    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: kv[0].value):
-        label = (
-            cone_display_name(params.speed_mph)
-            if dt == DeviceType.CONE
-            else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
-        )
-        rows.append(
-            {
-                "label": label,
-                "count": n,
-                "children": [],
-            }
-        )
 
+    # Signs first (issue #88): one parent bullet with the sign rows nested.
     if sign_counts:
         sign_rows = []
         for key, n in sorted(sign_counts.items()):
@@ -160,6 +154,22 @@ def _device_summary(
                 "label": "Construction/Warning Sign (see sign list below)",
                 "count": sum(sign_counts.values()),
                 "children": sign_rows,
+            }
+        )
+
+    # Then non-signs: channelizing devices, then equipment, each alphabetical
+    # by display name — via the shared device_row_sort_key helper.
+    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: device_row_sort_key(kv[0], None)):
+        label = (
+            cone_display_name(params.speed_mph)
+            if dt == DeviceType.CONE
+            else _DEVICE_HUMAN_NAMES.get(dt, dt.value)
+        )
+        rows.append(
+            {
+                "label": label,
+                "count": n,
+                "children": [],
             }
         )
     return rows

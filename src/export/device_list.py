@@ -17,7 +17,7 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-from src.rules.devices import DEVICE_CATALOG, DeviceType
+from src.rules.devices import DEVICE_CATALOG, DeviceType, device_row_sort_key
 from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
@@ -164,11 +164,13 @@ def _populate_device_list_sheet(
         if current is None or p.station_ft < current.station_ft:
             representatives[key] = p
 
-    # Sort: device_type alphabetically by enum value, then label
-    # (with None last so unlabeled signs trail the labeled ones).
+    # Sort via the shared device_row_sort_key helper (issue #88): signs
+    # first (by schedule key, unlabeled last), then channelizing devices,
+    # then equipment, each alphabetical by display name.  Same helper the
+    # UI breakdown and crew equipment list use, so the three agree.
     aggregated: list[tuple[DeviceType, str | None, int]] = sorted(
         ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda row: (row[0].value, row[1] is None, row[1] or ""),
+        key=lambda row: device_row_sort_key(row[0], row[1]),
     )
 
     for item_number, (device_type, label, quantity) in enumerate(aggregated, start=1):
@@ -257,7 +259,7 @@ if __name__ == "__main__":
     counts = Counter(_row_key(p) for p in placements)
     aggregated = sorted(
         ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda r: (r[0].value, r[1] is None, r[1] or ""),
+        key=lambda r: device_row_sort_key(r[0], r[1]),
     )
     print(f"{'#':>3}  {'Device Type':25s}  {'Label':12s}  {'Qty':>4s}")
     print("-" * 52)

@@ -21,7 +21,7 @@ mappings, and subsidiary-item handling.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import IntEnum, StrEnum
 
 # ---------------------------------------------------------------------------
 # DeviceType enum
@@ -434,3 +434,141 @@ def get_field_only_devices() -> list[DeviceType]:
     taxonomy and are handled in the export module.
     """
     return [device_type for device_type, spec in DEVICE_CATALOG.items() if not spec.is_drawn]
+
+
+# ---------------------------------------------------------------------------
+# Aggregated device-list ordering (issue #88)
+# ---------------------------------------------------------------------------
+#
+# Single source of truth for the row order on every aggregated device
+# surface: the UI "Plan details" panel (``render_api._build_device_breakdown``),
+# the XLSX Device List (``device_list._populate_device_list_sheet``), and the
+# crew-narrative Required Equipment list (``crew_narrative._device_summary``).
+#
+# Before #88 each surface sorted independently on the raw ``DeviceType`` enum
+# value, so the order was alphabetical-by-internal-name (``"CONE"`` landed near
+# the top) AND the three surfaces did not even agree with each other — signs
+# sorted last on the panel and crew list, but mid-list on the XLSX (where
+# ``"SIGN_GENERIC"`` fell between ``"PORTABLE_LIGHT_PLANT"`` and
+# ``"TEMPORARY_BARRIER"``).  All three now route through this helper, so they
+# reorder identically by construction.
+#
+# Order: signs first, then channelizing devices, then equipment.  Signs keep
+# their existing schedule-key / MUTCD-code order (resolved at the call site).
+# Channelizing and equipment rows sort alphabetically by the canonical display
+# name in ``_DEVICE_SORT_NAME``.
+
+
+class DeviceCategory(IntEnum):
+    """Grouping for the aggregated device-list surfaces, in display order.
+
+    ``IntEnum`` so the member value doubles as the primary sort rank:
+    ``SIGN`` (0) < ``CHANNELIZING`` (1) < ``EQUIPMENT`` (2).
+    """
+
+    SIGN = 0
+    CHANNELIZING = 1
+    EQUIPMENT = 2
+
+
+# Every DeviceType's display-list category.  Completeness (one entry per enum
+# member) is enforced by ``tests/test_device_ordering.py``.
+#
+# Judgment calls flagged for review (#88) — sensible defaults, easy to move:
+#   * BARRICADE_TYPE_II / _III -> CHANNELIZING.  Barricades physically
+#     delineate/close the travel way; a Type III can also carry a sign panel,
+#     so "signs" is arguable.  Defaulted to channelizing.
+#   * TEMPORARY_BARRIER        -> CHANNELIZING.  Longitudinal positive
+#     separation; the panel function label calls it "Closure".  "Equipment"
+#     (it is deployed, not hand-placed at spacing) is arguable.
+#   * WARNING_LIGHT_TYPE_C     -> CHANNELIZING.  Night delineation mounted on
+#     channelizers (panel function label "Channelizing (night)").
+#   * DETOUR_MARKER            -> EQUIPMENT.  The catalog marks it
+#     ``is_sign=True`` and bills it as a sign panel, but it is a discrete guide
+#     marker, not a ``SIGN_GENERIC`` schedule entry, so it cannot share the
+#     signs group's schedule-key order.  Grouped with deployed gear; move to a
+#     dedicated "guide" rank if it should sit with signs.
+#
+# ``is_channelizer`` on ``DeviceSpec`` is deliberately NOT reused here: that
+# flag means "placed at computed taper/tangent spacing" (cone/drum/tubular/
+# optional only), which is narrower than the visual channelizing category.
+_DEVICE_CATEGORY: dict[DeviceType, DeviceCategory] = {
+    DeviceType.SIGN_GENERIC: DeviceCategory.SIGN,
+    # Channelizing devices
+    DeviceType.CONE: DeviceCategory.CHANNELIZING,
+    DeviceType.DRUM: DeviceCategory.CHANNELIZING,
+    DeviceType.TUBULAR_MARKER: DeviceCategory.CHANNELIZING,
+    DeviceType.LONGITUDINAL_CHANNELIZER: DeviceCategory.CHANNELIZING,
+    DeviceType.CHANNELIZER_OPTIONAL: DeviceCategory.CHANNELIZING,
+    DeviceType.BARRICADE_TYPE_II: DeviceCategory.CHANNELIZING,
+    DeviceType.BARRICADE_TYPE_III: DeviceCategory.CHANNELIZING,
+    DeviceType.TEMPORARY_BARRIER: DeviceCategory.CHANNELIZING,
+    DeviceType.WARNING_LIGHT_TYPE_C: DeviceCategory.CHANNELIZING,
+    # Equipment
+    DeviceType.ARROW_BOARD: DeviceCategory.EQUIPMENT,
+    DeviceType.PCMS: DeviceCategory.EQUIPMENT,
+    DeviceType.TRUCK_MOUNTED_ATTENUATOR: DeviceCategory.EQUIPMENT,
+    DeviceType.FLAGGER_STATION: DeviceCategory.EQUIPMENT,
+    DeviceType.TEMPORARY_SIGNAL: DeviceCategory.EQUIPMENT,
+    DeviceType.PORTABLE_LIGHT_PLANT: DeviceCategory.EQUIPMENT,
+    DeviceType.DETOUR_MARKER: DeviceCategory.EQUIPMENT,
+}
+
+
+# Canonical name used ONLY to order rows within the channelizing and equipment
+# groups — it is not a display string (each surface keeps its own rendered
+# text: the panel's ``_NON_SIGN_DISPLAY``, the crew list's
+# ``_DEVICE_HUMAN_NAMES``, the XLSX's catalog description).  These mirror the
+# panel display names so the visible panel order reads alphabetically.  CONE
+# uses a size-agnostic "Traffic Cone" so its rank does not shift with the
+# speed-dependent display label.  ``SIGN_GENERIC`` is intentionally absent:
+# signs order by schedule key at the call site, not by a static name.
+_DEVICE_SORT_NAME: dict[DeviceType, str] = {
+    DeviceType.CONE: "Traffic Cone",
+    DeviceType.DRUM: "Channelizing Drum",
+    DeviceType.TUBULAR_MARKER: "Tubular Marker",
+    DeviceType.LONGITUDINAL_CHANNELIZER: "Longitudinal Channelizer",
+    DeviceType.CHANNELIZER_OPTIONAL: "Optional Channelizer",
+    DeviceType.BARRICADE_TYPE_II: "Type II Barricade",
+    DeviceType.BARRICADE_TYPE_III: "Type III Barricade",
+    DeviceType.TEMPORARY_BARRIER: "Temporary Barrier",
+    DeviceType.WARNING_LIGHT_TYPE_C: "Type C Warning Light",
+    DeviceType.ARROW_BOARD: "Arrow Board",
+    DeviceType.PCMS: "Portable Changeable Message Sign",
+    DeviceType.TRUCK_MOUNTED_ATTENUATOR: "Truck-Mounted Attenuator",
+    DeviceType.FLAGGER_STATION: "Flagger Station",
+    DeviceType.TEMPORARY_SIGNAL: "Temporary Signal",
+    DeviceType.PORTABLE_LIGHT_PLANT: "Portable Light Plant",
+    DeviceType.DETOUR_MARKER: "Detour Marker",
+}
+
+
+def device_category(device_type: DeviceType) -> DeviceCategory:
+    """Return the display-list category for ``device_type``."""
+    return _DEVICE_CATEGORY[device_type]
+
+
+def device_row_sort_key(device_type: DeviceType, sign_key: str | None) -> tuple[int, int, str]:
+    """Canonical ordering key for one aggregated device row.
+
+    Shared by every aggregated device surface so they order an identical
+    device set identically (issue #88).  Primary rank is the category —
+    signs, then channelizing devices, then equipment.
+
+    * Sign rows (``device_type is SIGN_GENERIC``) sort into the leading group
+      by ``sign_key`` (the schedule key / MUTCD code), with unlabeled signs
+      trailing — preserving the prior ``(label is None, label or "")`` tiebreak.
+    * Non-sign rows sort after, alphabetically by the canonical display name in
+      ``_DEVICE_SORT_NAME``.  ``sign_key`` is ignored for them (pass ``None``).
+
+    The two surfaces that emit the signs group separately
+    (``_build_device_breakdown``, ``_device_summary``) sort only their non-sign
+    counts with ``device_row_sort_key(dt, None)`` and prepend the signs block;
+    the XLSX, which aggregates signs and non-signs into one counter, sorts the
+    whole set with this key.  Both routes yield the same signs→channelizing→
+    equipment order.
+    """
+    category = _DEVICE_CATEGORY[device_type]
+    if device_type is DeviceType.SIGN_GENERIC:
+        return (category.value, 1 if sign_key is None else 0, sign_key or "")
+    return (category.value, 0, _DEVICE_SORT_NAME[device_type])
