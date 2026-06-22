@@ -1205,8 +1205,12 @@ def _compute_step_count(scenario: Any) -> int:
     )
 
     if isinstance(scenario, ShoulderScenario):
-        if scenario.duration == "short":
-            return 8
+        # Duration-independent: CDOT S-630 has no reduced short-duration
+        # stationary shoulder case (Cases 11/26/27 are the layout regardless
+        # of duration; General Note 28 makes the typical cases minimums), and
+        # the layout/devices/narrative ignore duration entirely.  The step
+        # count derives from the actual cone-derived device set so the
+        # "Crew instructions" stat stays consistent with the plan it counts.
         L = _ts_merging_taper_length(scenario.laneWidth, scenario.speed)
         spacing = scenario.speed  # TS deviceSpacing = posted speed
         taper_cones = max(4, math.ceil(L / spacing))

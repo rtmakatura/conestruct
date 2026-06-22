@@ -6,7 +6,6 @@ import {
   type ShoulderScenario,
   type ShoulderWorkType,
   type RoadType,
-  type Duration,
 } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import { dividedForShoulderRoadType } from "@/lib/scenarios/overrides";
@@ -24,11 +23,6 @@ const ROAD_TYPES: Array<{ v: RoadType; l: string }> = [
   { v: "rural_divided", l: "Rural — divided hwy" },
   { v: "urban_arterial", l: "Urban arterial" },
   { v: "freeway", l: "Freeway / interstate" },
-];
-
-const DURATIONS: Array<{ v: Duration; l: string }> = [
-  { v: "short", l: "Short (<1h)" },
-  { v: "long", l: "Long-term" },
 ];
 
 interface Props {
@@ -161,18 +155,6 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
               </option>
             ))}
           </select>
-        </Field>
-
-        <Field>
-          <LabelRow>Duration</LabelRow>
-          <ChipRow
-            options={DURATIONS}
-            value={scenario.duration}
-            onChange={(v) => set("duration", v)}
-          />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            MUTCD § 6G.02 · short-duration permits minimum signing
-          </div>
         </Field>
 
         <Field>

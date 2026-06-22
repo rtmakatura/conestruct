@@ -83,9 +83,10 @@ def test_audit_returns_200_for_shoulder(client: TestClient) -> None:
     )
     assert res.status_code == 200, res.text
     # Plumbing: confirm step_count threads through the endpoint into the
-    # summary block.  The fixture is shoulder + short duration, which the
-    # TS heuristic at shoulder.ts:59 returned as 8 — same after migration.
-    assert res.json()["summary"]["step_count"] == 8
+    # summary block.  The fixture is shoulder, 55 mph, 800 ft work zone:
+    # the duration-independent cone derivation yields 11 (taper 12 +
+    # tangent 15 = 27 cones <= 30).  See test_step_count_shoulder_*.
+    assert res.json()["summary"]["step_count"] == 11
 
 
 def test_audit_response_has_top_level_keys(client: TestClient) -> None:
@@ -537,13 +538,23 @@ def _mobile_multilane(**overrides) -> Any:
 # --- Basic coverage: one default-input case per scenario kind --------------
 
 
-def test_step_count_shoulder_short() -> None:
-    """Shoulder + short duration → 8 steps.
+def test_step_count_shoulder_duration_independent() -> None:
+    """Shoulder step count does not depend on duration (Refs #90).
 
-    Matches lib/scenarios/shoulder.ts:59 at SHA e75cfbb:
-      `s.duration === "short" ? 8 : cones > 30 ? 14 : 11`
+    CDOT S-630 has no reduced short-duration stationary shoulder case —
+    Cases 11/26/27 are the layout regardless of duration, and the
+    layout/devices/crew narrative all ignore ``duration``.  So flipping
+    only ``duration`` must not move the crew-step count: both resolve to
+    the cone-derived value.  For the 55 mph / 800 ft fixture that is 11
+    (taper 12 + tangent 15 = 27 cones <= 30).
     """
-    assert audit_module._compute_step_count(_shoulder(duration="short")) == 8
+    short = audit_module._compute_step_count(
+        _shoulder(duration="short", speed=55, laneWidth=12.0, workLen=800.0)
+    )
+    long = audit_module._compute_step_count(
+        _shoulder(duration="long", speed=55, laneWidth=12.0, workLen=800.0)
+    )
+    assert short == long == 11
 
 
 def test_step_count_flagger_short_no_options() -> None:
@@ -601,10 +612,10 @@ def test_step_count_mobile_op_multilane_no_second_tma() -> None:
 # --- Behavior-preservation: every TS branch / conditional increment --------
 
 
-def test_step_count_shoulder_long_cones_under_threshold() -> None:
-    """Shoulder + long + cones ≤ 30 → 11 steps (the lower-branch path).
+def test_step_count_shoulder_cones_under_threshold() -> None:
+    """Shoulder, cones ≤ 30 → 11 steps (the lower cone-count branch).
 
-    Hand calc at SHA e75cfbb (lib/scenarios/shoulder.ts:33-59):
+    Hand calc (cone derivation in _compute_step_count):
       L = mergingTaperLength(12, 55) = 12 × 55 = 660 ft
       spacing = deviceSpacing(55) = 55 ft
       taperCones = max(4, ceil(660/55)) = max(4, 12) = 12
@@ -613,17 +624,14 @@ def test_step_count_shoulder_long_cones_under_threshold() -> None:
       steps = 11
     """
     assert (
-        audit_module._compute_step_count(
-            _shoulder(duration="long", speed=55, laneWidth=12.0, workLen=800.0)
-        )
-        == 11
+        audit_module._compute_step_count(_shoulder(speed=55, laneWidth=12.0, workLen=800.0)) == 11
     )
 
 
-def test_step_count_shoulder_long_cones_over_threshold() -> None:
-    """Shoulder + long + cones > 30 → 14 steps (the upper-branch path).
+def test_step_count_shoulder_cones_over_threshold() -> None:
+    """Shoulder, cones > 30 → 14 steps (the upper cone-count branch).
 
-    Hand calc at SHA e75cfbb (lib/scenarios/shoulder.ts:33-59):
+    Hand calc (cone derivation in _compute_step_count):
       L = mergingTaperLength(12, 55) = 660 ft
       spacing = 55 ft
       taperCones = 12
@@ -633,13 +641,10 @@ def test_step_count_shoulder_long_cones_over_threshold() -> None:
 
     Pins the cones>30 boundary as the load-bearing branch — if a future
     refactor of _ts_merging_taper_length or the cone-derivation logic
-    flips this boundary, the port has drifted from the TS heuristic.
+    flips this boundary, the step count has drifted.
     """
     assert (
-        audit_module._compute_step_count(
-            _shoulder(duration="long", speed=55, laneWidth=12.0, workLen=2000.0)
-        )
-        == 14
+        audit_module._compute_step_count(_shoulder(speed=55, laneWidth=12.0, workLen=2000.0)) == 14
     )
 
 
