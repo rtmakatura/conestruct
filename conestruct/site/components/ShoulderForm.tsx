@@ -9,6 +9,7 @@ import {
   type Duration,
 } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
+import { dividedForShoulderRoadType } from "@/lib/scenarios/overrides";
 import {
   ChipRow,
   CheckRow,
@@ -41,6 +42,16 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
     value: ShoulderScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
 
+  // Single-source divided (#85): roadType drives `divided` so the two
+  // can't disagree. Set both in one update; urban_arterial keeps the
+  // explicit toggle (rendered below), preserving its current value here.
+  const onRoadTypeChange = (rt: RoadType) =>
+    setScenario({
+      ...scenario,
+      roadType: rt,
+      divided: dividedForShoulderRoadType(rt, scenario.divided),
+    });
+
   // UX-21: inline min-validation on the work-zone field.  The error
   // text is blur-gated (``wzTouched``) so transient keystrokes don't
   // flash it mid-entry; the GenerateButton disabled state (wired in
@@ -57,7 +68,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
           <select
             className="field-input field-select"
             value={scenario.roadType}
-            onChange={(e) => set("roadType", e.target.value as RoadType)}
+            onChange={(e) => onRoadTypeChange(e.target.value as RoadType)}
           >
             {ROAD_TYPES.map((r) => (
               <option key={r.v} value={r.v}>
@@ -121,12 +132,17 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
           />
         </Field>
 
-        <CheckRow
-          on={scenario.divided}
-          label="Divided highway"
-          desc="Median present"
-          onToggle={() => set("divided", !scenario.divided)}
-        />
+        {/* Divided is derived from road type for every type except urban
+            arterial, which can be either — so only it shows the toggle.
+            (#85 single-source consolidation.) */}
+        {scenario.roadType === "urban_arterial" && (
+          <CheckRow
+            on={scenario.divided}
+            label="Divided highway"
+            desc="Median present"
+            onToggle={() => set("divided", !scenario.divided)}
+          />
+        )}
       </FieldGroup>
 
       <FieldGroup label="Work" step={4}>

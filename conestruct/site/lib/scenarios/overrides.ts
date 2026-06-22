@@ -49,6 +49,22 @@ const MOBILE_2LANE_TYPES: ReadonlySet<MobileRoadType2Lane> =
 const MOBILE_MULTILANE_TYPES: ReadonlySet<MobileRoadTypeMultilane> =
   new Set<MobileRoadTypeMultilane>(["rural_divided", "freeway"]);
 
+// Single-source `divided` for shoulder scenarios: roadType drives it, so
+// the road-type select and the divided state can't disagree (#85
+// consolidation). rural_divided / freeway are inherently divided;
+// rural_undivided is not; urban_arterial can be either, so it keeps the
+// operator's current toggle. Mirrors the backend's is_divided derivation
+// for work_beyond_shoulder (schemas.py:391) and keeps the exact `divided`
+// boolean the render API receives.
+export function dividedForShoulderRoadType(
+  roadType: RoadType,
+  current: boolean,
+): boolean {
+  if (roadType === "rural_divided" || roadType === "freeway") return true;
+  if (roadType === "rural_undivided") return false;
+  return current; // urban_arterial — explicit toggle
+}
+
 export function applyRoadTypeOverride(scenario: Scenario, rt: RoadType): Scenario {
   switch (scenario.kind) {
     case "shoulder":

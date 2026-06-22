@@ -308,6 +308,10 @@ function ProjectGroup({
           placeholder="US-85 & Bromley Ln, Brighton, CO"
           onChange={(e) => set("address", e.target.value)}
         />
+        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+          Title-block metadata — set the work location with the map pin
+          above.
+        </div>
       </Field>
     </>
   );
