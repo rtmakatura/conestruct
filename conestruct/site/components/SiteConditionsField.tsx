@@ -212,7 +212,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
         </div>
       )}
 
-      <div className="flex flex-col gap-1.5">
+      <div className="check-list flex flex-col gap-1.5">
         {(Object.keys(FLAG_LABELS) as SiteConditionFlag[]).map((key) => (
           <CheckRow
             key={key}

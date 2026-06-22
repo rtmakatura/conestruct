@@ -1145,3 +1145,35 @@ input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* Site Conditions checklist.  The shared .check-row/.check-desc pattern
+   (margin-left: auto, single line) is built for the SHORT trailing tags
+   used everywhere else ("Median present", "+ retroreflective").  This
+   list feeds full sentences into .check-desc, which can't share the
+   label's line at the 312px sidebar width — so the desc wraps onto its
+   own full-width line beneath the label.  Every row then aligns the same
+   way regardless of label/desc length (intersection, interchange,
+   limited-sight, pedestrian, school, bike all wrapped raggedly before).
+   Scoped to .check-list so the short-tag rows keep the inline layout.
+   Placed after the .workbench block so it wins the 0,2,0 specificity tie
+   by source order in both the sandbox and workbench contexts.
+
+   --check-box-size mirrors the .check-box width literals (16px base at
+   :189, 14px workbench override at :818) so the desc indent tracks the
+   checkbox size in each context; keep these two values in sync with the
+   box if it ever changes.  The +10px is the .check-row gap (:181). */
+.check-list {
+  --check-box-size: 16px;
+}
+.workbench .check-list {
+  --check-box-size: 14px;
+}
+.check-list .check-row {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.check-list .check-row .check-desc {
+  flex-basis: 100%;
+  margin-left: calc(var(--check-box-size) + 10px);
+  margin-top: 2px;
+}
