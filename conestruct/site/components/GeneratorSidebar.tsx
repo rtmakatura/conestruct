@@ -65,6 +65,23 @@ const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   freeway: "Freeway / interstate",
 };
 
+// Site conditions is the final numbered step, so its index depends on
+// whether the active per-kind form contributed a fifth step (Flagger /
+// Protection) after the fixed Road (3) / Work (4). Location (1) and
+// Scenario (2) are constant.
+const KIND_HAS_FIFTH_STEP: Record<ScenarioKind, boolean> = {
+  shoulder: false,
+  flagger_lane_closure: true, // Flagger
+  lane_closure_divided: true, // Protection
+  work_beyond_shoulder: false,
+  mobile_op_2lane: true, // Protection
+  mobile_op_multilane: true, // Protection
+};
+
+function siteStep(kind: ScenarioKind): number {
+  return KIND_HAS_FIFTH_STEP[kind] ? 6 : 5;
+}
+
 function fmt6(n: number): string {
   return n.toFixed(6);
 }
@@ -152,12 +169,13 @@ export function GeneratorSidebar({
             Plan
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--cyan)]">
-            01 · INPUT
+            INPUT
           </span>
         </div>
 
-        <ProjectGroup scenario={scenario} setMeta={setMeta} />
-
+        {/* Step 1 — Location leads the panel; the optional project
+            metadata (name / description / address) is demoted into a
+            collapsed disclosure inside it. */}
         <LocationCorridorSection
           scenario={scenario}
           setMeta={setMeta}
@@ -166,6 +184,8 @@ export function GeneratorSidebar({
           handoff={handoff}
         />
 
+        {/* Step 2 — Scenario gates every field below, so it precedes
+            Road / Work. */}
         <DisabledScenarioBanner kind={scenario.kind} />
         <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
@@ -194,7 +214,11 @@ export function GeneratorSidebar({
           />
         )}
 
-        <SiteConditionsField scenario={scenario} setMeta={setMeta} />
+        <SiteConditionsField
+          scenario={scenario}
+          setMeta={setMeta}
+          step={siteStep(scenario.kind)}
+        />
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
           {/* UX-21: generation is gated on the same validateWorkZone
@@ -236,6 +260,11 @@ export function GeneratorSidebar({
 // Section components
 // ---------------------------------------------------------------------------
 
+// Optional project metadata. Demoted from the top of the panel into a
+// collapsed disclosure inside the Location step — it's title-block
+// metadata, not part of the required path, so it no longer leads. Renders
+// only the fields (no FieldGroup wrapper); the disclosure in
+// LocationCorridorSection supplies the heading.
 function ProjectGroup({
   scenario,
   setMeta,
@@ -247,7 +276,7 @@ function ProjectGroup({
   const set = <K extends keyof ScenarioMeta>(key: K, value: ScenarioMeta[K]) =>
     setMeta({ ...meta, [key]: value });
   return (
-    <FieldGroup label="Project Information" ix="· OPT">
+    <>
       <Field>
         <LabelRow>Project name</LabelRow>
         <input
@@ -280,7 +309,37 @@ function ProjectGroup({
           onChange={(e) => set("address", e.target.value)}
         />
       </Field>
-    </FieldGroup>
+    </>
+  );
+}
+
+// Collapsed "Project details" disclosure — holds the optional project
+// metadata inside the Location step. Mirrors the "Enter manually" toggle
+// pattern used elsewhere in this panel; default collapsed.
+function ProjectDetailsDisclosure({
+  scenario,
+  setMeta,
+}: {
+  scenario: Scenario;
+  setMeta: (m: ScenarioMeta) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t border-[color:var(--rule)] pt-3 mt-1">
+      <button
+        type="button"
+        onClick={() => setOpen((s) => !s)}
+        className="w-full flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
+      >
+        <span>{open ? "Hide project details" : "Project details"}</span>
+        <span className="text-[color:var(--cyan)]">OPTIONAL</span>
+      </button>
+      {open && (
+        <div className="mt-3">
+          <ProjectGroup scenario={scenario} setMeta={setMeta} />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -302,7 +361,7 @@ function LocationCorridorSection({
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
   return (
-    <FieldGroup label="Location & Corridor" ix="01 · DEFINE">
+    <FieldGroup label="Location" step={1}>
       {hasPin ? (
         <LocationSummary
           scenario={scenario}
@@ -319,6 +378,7 @@ function LocationCorridorSection({
           onOpenPicker={onOpenPicker}
         />
       )}
+      <ProjectDetailsDisclosure scenario={scenario} setMeta={setMeta} />
     </FieldGroup>
   );
 }
@@ -741,8 +801,8 @@ function ScenarioPicker({
     return (
       <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
         <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span>Scenario type</span>
-          <span className="text-[color:var(--cyan)]">LOCKED</span>
+          <span>Scenario</span>
+          <span className="text-[color:var(--cyan)]">STEP 2</span>
         </div>
         <div className="px-6 pb-5 pt-2">
           <div className="px-3 py-2.5 border border-[color:var(--cyan)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
@@ -764,8 +824,8 @@ function ScenarioPicker({
   return (
     <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
       <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        <span>Scenario type</span>
-        <span className="text-[color:var(--cyan)]">SELECT</span>
+        <span>Scenario</span>
+        <span className="text-[color:var(--cyan)]">STEP 2</span>
       </div>
       <div className="px-6 pb-5 pt-2 flex flex-col gap-2">
         {enabledKinds.map((k) => {

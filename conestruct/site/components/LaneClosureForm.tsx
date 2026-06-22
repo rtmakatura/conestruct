@@ -38,7 +38,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Roadway" ix="A">
+      <FieldGroup label="Road" step={3}>
         <Field>
           <LabelRow>Road type</LabelRow>
           <select
@@ -89,7 +89,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" ix="B">
+      <FieldGroup label="Work" step={4}>
         <Field>
           <LabelRow>Work type</LabelRow>
           <select
@@ -134,7 +134,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Protection" ix="C">
+      <FieldGroup label="Protection" step={5}>
         <CheckRow
           on={scenario.truckMountedAttenuator}
           label="Truck-mounted attenuator"

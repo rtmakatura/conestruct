@@ -2,20 +2,27 @@
 
 import type { ReactNode } from "react";
 
+// One numbered scheme across the whole panel (replaces the prior
+// 01 / A-C / OPT / DEFINE mix). A section is either a numbered step
+// (``step``) or optional metadata (``optional``); the right-hand tag
+// reads "STEP n" or "OPTIONAL" accordingly.
 export function FieldGroup({
   label,
-  ix,
+  step,
+  optional = false,
   children,
 }: {
   label: string;
-  ix: string;
+  step?: number;
+  optional?: boolean;
   children: ReactNode;
 }) {
+  const tag = optional ? "OPTIONAL" : step !== undefined ? `STEP ${step}` : "";
   return (
     <div>
       <div className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         <span>{label}</span>
-        <span className="text-[color:var(--cyan)]">{ix}</span>
+        {tag && <span className="text-[color:var(--cyan)]">{tag}</span>}
       </div>
       <div className="px-6 py-5">{children}</div>
     </div>

@@ -90,9 +90,13 @@ type DetectionResult = Record<string, DetectionBucket | string | undefined> & {
 interface Props {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
+  // The panel's numbered-step index for this section. Site conditions is
+  // the final step, so its number shifts with the active scenario kind —
+  // the parent computes it.
+  step: number;
 }
 
-export function SiteConditionsField({ scenario, setMeta }: Props) {
+export function SiteConditionsField({ scenario, setMeta, step }: Props) {
   const meta = scenario.meta;
   const flags: SiteConditions = meta.siteConditions ?? {};
   const [detection, setDetection] = useState<DetectionResult | null>(null);
@@ -169,7 +173,7 @@ export function SiteConditionsField({ scenario, setMeta }: Props) {
   };
 
   return (
-    <FieldGroup label="Site Conditions" ix="· OPT">
+    <FieldGroup label="Site conditions" step={step}>
       <button
         type="button"
         onClick={detect}
