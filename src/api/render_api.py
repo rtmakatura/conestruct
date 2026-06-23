@@ -139,7 +139,11 @@ async def require_bearer_secret(
 
 @app.get("/healthz")
 def healthz() -> dict[str, str]:
-    return {"status": "ok"}
+    # GIT_SHA is baked into the Modal image at deploy time (modal_app.py
+    # ._git_sha); surfacing it here makes backend drift behind main
+    # detectable.  "unknown" when unstamped (local dev, or a failed
+    # stamp) — an honest sentinel, never a fabricated SHA.
+    return {"status": "ok", "sha": os.environ.get("GIT_SHA", "unknown")}
 
 
 def _safe_filename(scenario: Scenario, ext: str) -> str:

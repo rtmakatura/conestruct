@@ -23,7 +23,37 @@ side as ``MODAL_RENDER_URL`` along with the matching
 
 from __future__ import annotations
 
+import subprocess
+from pathlib import Path
+
 import modal
+
+
+def _git_sha() -> str:
+    """Capture the deployed commit SHA at deploy time (runs locally).
+
+    ``modal deploy modal_app.py`` executes this file on the deploy
+    machine, where git and the repo are present, before building the
+    (immutable, git-less) runtime image.  We stamp the SHA into the
+    image env here so ``/healthz`` can report which commit Modal is
+    serving — making backend drift behind ``main`` detectable.
+
+    Returns the 40-char SHA, or the honest sentinel ``"unknown"`` if the
+    capture fails (git missing, not a repo).  A failed stamp must never
+    crash the deploy or fabricate a SHA.
+    """
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=Path(__file__).parent,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return out.stdout.strip() or "unknown"
+    except Exception:
+        return "unknown"
+
 
 # Curated runtime deps — pyproject.toml carries streamlit/opencv/anthropic
 # for local dev work that the render service does not need.
@@ -49,6 +79,10 @@ image = (
     .apt_install("libcairo2", "fontconfig")  # cairosvg system deps
     .pip_install(*RENDER_DEPS)
     .add_local_dir("src", remote_path="/root/src")
+    # Stamp the deployed SHA LAST so it's a trivial env layer — the
+    # SHA changes every deploy, but the expensive pip_install layer
+    # above stays cached.  Read at runtime by /healthz.
+    .env({"GIT_SHA": _git_sha()})
 )
 
 app = modal.App("conestruct-render")
