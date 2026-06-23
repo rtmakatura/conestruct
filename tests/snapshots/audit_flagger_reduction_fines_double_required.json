@@ -231,7 +231,7 @@
     "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 90.0,
     "device_spacing_taper_ft": 20.0,
-    "step_count": 12,
+    "step_count": 16,
     "ta": "TA-10",
     "taper_label": "one-lane two-way taper",
     "taper_length_ft": 100.0

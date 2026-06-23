@@ -557,13 +557,18 @@ def test_step_count_shoulder_duration_independent() -> None:
     assert short == long == 11
 
 
-def test_step_count_flagger_short_no_options() -> None:
-    """Flagger + short + no pilot/pedestrian → 12 steps.
+def test_step_count_flagger_duration_independent() -> None:
+    """Flagger step count does not depend on duration (Refs #92).
 
-    Matches lib/scenarios/flagger.ts:88 at SHA e75cfbb:
-      `let steps = s.duration === "short" ? 12 : 16; ...`
+    CDOT S-630 has no reduced short-duration flagger case — General Note 28
+    makes the typical cases minimums, and a flagger is the control itself
+    with nothing to substitute.  The layout/devices/crew narrative all
+    ignore ``duration``, so flipping only ``duration`` must not move the
+    crew-step count: both resolve to the flat base of 16 (no options).
     """
-    assert audit_module._compute_step_count(_flagger(duration="short")) == 12
+    short = audit_module._compute_step_count(_flagger(duration="short"))
+    long = audit_module._compute_step_count(_flagger(duration="long"))
+    assert short == long == 16
 
 
 def test_step_count_lane_closure_short_no_tma() -> None:
@@ -718,23 +723,21 @@ def test_step_count_shoulder_long_40mph_flip_confined() -> None:
     )
 
 
-def test_step_count_flagger_long_pilot_car_only() -> None:
-    """Flagger + long + pilotCar → 16 + 2 = 18 steps.
+def test_step_count_flagger_pilot_car_only() -> None:
+    """Flagger + pilotCar → 16 + 2 = 18 steps.
 
-    Matches lib/scenarios/flagger.ts:88-90 at SHA e75cfbb:
-      `let steps = s.duration === "short" ? 12 : 16;
-       if (s.pilotCar) steps += 2;
-       if (s.pedestrianAccess) steps += 1;`
+    Base 16 (duration-independent since #92) plus the +2 pilot-car modifier:
+      `steps = 16; if (pilotCar) steps += 2; if (pedestrianAccess) steps += 1;`
     """
-    assert audit_module._compute_step_count(_flagger(duration="long", pilotCar=True)) == 18
+    assert audit_module._compute_step_count(_flagger(pilotCar=True)) == 18
 
 
-def test_step_count_flagger_long_pedestrian_only() -> None:
-    """Flagger + long + pedestrianAccess → 16 + 1 = 17 steps.
+def test_step_count_flagger_pedestrian_only() -> None:
+    """Flagger + pedestrianAccess → 16 + 1 = 17 steps.
 
     Same source as the pilot-car test; pins the +1 increment in isolation.
     """
-    assert audit_module._compute_step_count(_flagger(duration="long", pedestrianAccess=True)) == 17
+    assert audit_module._compute_step_count(_flagger(pedestrianAccess=True)) == 17
 
 
 def test_step_count_lane_closure_long_with_tma() -> None:
@@ -1539,9 +1542,9 @@ def test_audit_flagger_reduction_fines_double_required_matches_baseline() -> Non
     )
     placements = generate_flagger_alternating_2lane(params)
     audit = build_audit_trail(placements, params)
-    # step_count=12 mirrors _compute_step_count's FlaggerLaneClosureScenario
-    # heuristic for short duration, no pilotCar, no pedestrianAccess.
-    projection = audit_projection(audit, scenario_kind="flagger_lane_closure", step_count=12)
+    # step_count=16 mirrors _compute_step_count's FlaggerLaneClosureScenario
+    # base (duration-independent since #92), no pilotCar, no pedestrianAccess.
+    projection = audit_projection(audit, scenario_kind="flagger_lane_closure", step_count=16)
     expected = json.loads(
         Path("tests/snapshots/audit_flagger_reduction_fines_double_required.json").read_text(
             encoding="utf-8"

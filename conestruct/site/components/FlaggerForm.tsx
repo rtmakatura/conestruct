@@ -3,14 +3,12 @@
 import { useState } from "react";
 import {
   FLAGGER_WORK_TYPES,
-  type Duration,
   type FlaggerLaneClosureScenario,
   type FlaggerRoadType,
   type FlaggerWorkType,
 } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
-  ChipRow,
   CheckRow,
   Field,
   FieldErrorLine,
@@ -21,11 +19,6 @@ import {
 const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
   { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
   { v: "urban_arterial", l: "Urban arterial" },
-];
-
-const DURATIONS: Array<{ v: Duration; l: string }> = [
-  { v: "short", l: "Short (<1h)" },
-  { v: "long", l: "Long-term" },
 ];
 
 interface Props {
@@ -113,15 +106,6 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
               </option>
             ))}
           </select>
-        </Field>
-
-        <Field>
-          <LabelRow>Duration</LabelRow>
-          <ChipRow
-            options={DURATIONS}
-            value={scenario.duration}
-            onChange={(v) => set("duration", v)}
-          />
         </Field>
 
         <Field>

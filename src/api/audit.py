@@ -1219,7 +1219,14 @@ def _compute_step_count(scenario: Any) -> int:
         return 14 if cones > 30 else 11
 
     if isinstance(scenario, FlaggerLaneClosureScenario):
-        steps = 12 if scenario.duration == "short" else 16
+        # Duration-independent: CDOT S-630 has no reduced short-duration
+        # flagger case (General Note 28 makes the typical cases minimums; a
+        # flagger is the control itself, with nothing to substitute), and the
+        # layout/devices/narrative ignore duration entirely.  Base 16 (the
+        # former long-term value) plus the optional-equipment modifiers, so
+        # the "Crew instructions" stat no longer swings on a flag that changes
+        # nothing else in the plan.
+        steps = 16
         if scenario.pilotCar:
             steps += 2
         if scenario.pedestrianAccess:
