@@ -97,7 +97,7 @@
       "buffer_ft": 305.0,
       "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 40,
-      "taper_ft": 88.8888888888889,
+      "taper_ft": 89,
       "taper_label": "L/3 (shoulder taper)",
       "violations": [],
       "work_zone_ft": 2000.0
@@ -112,15 +112,15 @@
       "source": "MUTCD 11th Ed. Sec 6K.01",
       "speed_mph": 40,
       "tangent_count_text": "2000 ft / 80 ft max spacing -> 26 cones at 80.0 ft intervals",
-      "taper_count_text": "L/3 = 88.9 ft / 40 ft max spacing -> 4 drums at 29.6 ft intervals"
+      "taper_count_text": "L/3 = 89 ft / 40 ft max spacing -> 4 drums at 29.6 ft intervals"
     },
     "taper": {
-      "L_calc_text": "L = 10 x 40^2 / 60 = 266.667 ft",
-      "L_full_ft": 266.6666666666667,
-      "L_required_ft": 88.8888888888889,
+      "L_calc_text": "L = 10 x 40^2 / 60 = 267 ft",
+      "L_full_ft": 267,
+      "L_required_ft": 89,
       "L_required_label": "L/3 (shoulder taper)",
-      "L_third_calc_text": "L/3 = 266.667 / 3 = 88.9 ft",
-      "L_third_ft": 88.8888888888889,
+      "L_third_calc_text": "L/3 = 267 / 3 = 89 ft",
+      "L_third_ft": 89,
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
       "closure_type": "shoulder",
       "formula_choice": "Speed 40 mph < 45 mph threshold -> using L = W x S^2 / 60",
@@ -142,6 +142,6 @@
     "step_count": 14,
     "ta": "TA-2",
     "taper_label": "L/3 (shoulder taper)",
-    "taper_length_ft": 88.8888888888889
+    "taper_length_ft": 89
   }
 }

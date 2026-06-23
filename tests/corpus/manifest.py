@@ -369,15 +369,17 @@ CASES: tuple[CorpusCase, ...] = (
         },
         citation=_SPACING_CITATION,
     ),
-    # Eight hand-verified anchors. taper_length_ft is compared with abs=0.01
-    # tolerance in test_anchors (repeating decimals); buffer and both spacings
-    # are exact. Table values written verbatim.
+    # Eight hand-verified anchors.  summary.taper_length_ft is the whole-feet
+    # DISPLAY rounding of L/3 (#93) — the full-precision L/3 spec math stays
+    # verified in test_rules.py (test_shoulder_taper_*); buffer and both
+    # spacings are exact table values, written verbatim.  taper keeps the
+    # abs=0.01 approx in test_anchors (now satisfied exactly on the integer).
     _anchor(
         "anchor_div_25",
         "rural_divided",
         25,
         True,
-        taper=34.72,
+        taper=35,  # L/3 = 34.72 -> 35 ft displayed (#93)
         buffer=155.0,
         in_taper=25.0,
         on_tangent=50.0,
@@ -387,7 +389,7 @@ CASES: tuple[CorpusCase, ...] = (
         "rural_divided",
         35,
         True,
-        taper=68.06,
+        taper=68,  # L/3 = 68.06 -> 68 ft displayed (#93)
         buffer=250.0,
         in_taper=35.0,
         on_tangent=70.0,
@@ -397,7 +399,7 @@ CASES: tuple[CorpusCase, ...] = (
         "rural_divided",
         40,
         True,
-        taper=88.89,
+        taper=89,  # L/3 = 88.89 -> 89 ft displayed (#93)
         buffer=305.0,
         in_taper=40.0,
         on_tangent=80.0,
@@ -407,7 +409,7 @@ CASES: tuple[CorpusCase, ...] = (
         "rural_undivided",
         40,
         False,
-        taper=71.11,
+        taper=71,  # L/3 = 71.11 -> 71 ft displayed (#93)
         buffer=305.0,
         in_taper=40.0,
         on_tangent=80.0,
@@ -437,7 +439,7 @@ CASES: tuple[CorpusCase, ...] = (
         "rural_divided",
         65,
         True,
-        taper=216.67,
+        taper=217,  # L/3 = 216.67 -> 217 ft displayed (#93)
         buffer=645.0,
         in_taper=65.0,
         on_tangent=130.0,

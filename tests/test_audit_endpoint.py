@@ -125,14 +125,15 @@ def test_audit_summary_taper_buffer_spacing_match_spacing_py(
       L (full merging taper) = 10 × 55 = 550 ft  (high-speed L = W × S
         regime at 55 mph; the W is the offset being closed off, which
         is the shoulder width for a shoulder closure, not the lane width)
-      Shoulder taper = L/3 = 183.33 ft  — NOT the full 550 ft.
+      Shoulder taper = L/3 = 183.33 ft, displayed rounded to 183 ft (#93
+        whole-feet display rounding) — NOT the full 550 ft.
       buffer = 495 ft (Table 6B-2).
       in-taper spacing = 55 ft, on-tangent spacing = 110 ft (§6C.09).
 
     The 183 ft vs 550 ft distinction is load-bearing: confusing the
     shoulder taper with the full merging taper would under-spec a
     shoulder closure (a class of bug we've been chasing this week).
-    Asserting the numeric 183.33 directly — not the formula — so a
+    Asserting the displayed 183 directly — not the formula — so a
     future reader cannot misread the literal as "550 ft taper."
     """
     res = client.post(
@@ -141,7 +142,7 @@ def test_audit_summary_taper_buffer_spacing_match_spacing_py(
         json=_shoulder_scenario(),
     )
     summary = res.json()["summary"]
-    assert summary["taper_length_ft"] == pytest.approx(183.33, abs=0.1)
+    assert summary["taper_length_ft"] == 183
     assert summary["buffer_space_ft"] == 495
     assert summary["device_spacing_taper_ft"] == 55.0
     assert summary["device_spacing_tangent_ft"] == 110.0
@@ -2194,12 +2195,13 @@ def test_audit_low_speed_quadratic_matches_baseline(client: TestClient) -> None:
 
 def test_audit_quadratic_calc_text_is_arithmetically_coherent(client: TestClient) -> None:
     """B-03 targeted assert: below 40 mph the calc text shows the
-    quadratic form and its value (8 x 25^2 / 60 = 83.3), never the
-    self-contradicting linear form (8 x 25 = 83.3)."""
+    quadratic form and its value (8 x 25^2 / 60 = 83), never the
+    self-contradicting linear form (8 x 25 = 83).  The value is the
+    whole-feet display rounding of 83.3333 (#93)."""
     res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_urban25())
     taper = res.json()["sections"]["taper"]
     assert "x 25^2 / 60" in taper["L_calc_text"], taper["L_calc_text"]
-    assert taper["L_calc_text"].endswith("= 83.3333 ft")
+    assert taper["L_calc_text"].endswith("= 83 ft")
     assert "< 45 mph threshold" in taper["formula_choice"]
     spacing = res.json()["sections"]["spacing"]
     assert spacing["n_taper_drums_required"] == 4 == spacing["n_taper_drums_actual"]
@@ -2230,9 +2232,10 @@ def test_taper_formula_choice_uses_quadratic_at_40() -> None:
         )
 
     taper_40 = audit_module.build_audit_trail([], params_at(40))["taper"]
-    # 40 mph is below the 45 mph threshold -> quadratic: 10 x 40^2 / 60 = 266.67.
-    assert taper_40["L_full_ft"] == pytest.approx(266.67, abs=0.01)
-    assert taper_40["L_calc_text"] == "L = 10 x 40^2 / 60 = 266.667 ft"
+    # 40 mph is below the 45 mph threshold -> quadratic: 10 x 40^2 / 60 =
+    # 266.667, displayed rounded to whole feet 267 (#93).
+    assert taper_40["L_full_ft"] == 267
+    assert taper_40["L_calc_text"] == "L = 10 x 40^2 / 60 = 267 ft"
     # The formula choice asserts the MUTCD quadratic branch; no deviation text.
     assert taper_40["formula_choice"] == (
         "Speed 40 mph < 45 mph threshold -> using L = W x S^2 / 60"

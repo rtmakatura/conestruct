@@ -190,7 +190,7 @@
       "buffer_ft": 360.0,
       "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
       "speed_mph": 45,
-      "taper_ft": 100.0,
+      "taper_ft": 100,
       "taper_label": "one-lane two-way taper",
       "violations": [],
       "work_zone_ft": 500.0
@@ -205,15 +205,15 @@
       "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
       "speed_mph": 45,
       "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
-      "taper_count_text": "one-lane two-way taper = 100.0 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"
+      "taper_count_text": "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"
     },
     "taper": {
       "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
-      "L_full_ft": 495.0,
-      "L_required_ft": 100.0,
+      "L_full_ft": 495,
+      "L_required_ft": 100,
       "L_required_label": "one-lane two-way taper",
       "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
-      "L_third_ft": 100.0,
+      "L_third_ft": 100,
       "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
       "closure_type": "lane",
       "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
@@ -234,6 +234,6 @@
     "step_count": 16,
     "ta": "TA-10",
     "taper_label": "one-lane two-way taper",
-    "taper_length_ft": 100.0
+    "taper_length_ft": 100
   }
 }

@@ -93,6 +93,23 @@ _SHEET_12_OPERATIONAL_NOTES: list[dict[str, str]] = [
 ]
 
 
+def _ft(value: float) -> int:
+    """Round a length in feet to whole feet for DISPLAY only.
+
+    The MUTCD §6B.08 taper formulas yield long decimal tails (e.g. L =
+    W·S²/60 = 83.3333, L/3 = 27.7778); the spec tabulates taper lengths in
+    whole feet.  This is the single source of that display precision —
+    applied at the projection composition points so the PDF, the AuditTrail
+    UI, and the JSON all render one value identically (it retired a
+    three-way split: PDF ``:g`` → 27.7778, backend string ``:.1f`` → 27.8,
+    UI ``Math.round`` → 28).  Scoped to the taper-length family only;
+    buffers, device spacing, intervals, and offsets are left untouched.
+    Computed values feeding device counts and geometry checks keep full
+    precision — only the rendered number rounds.
+    """
+    return round(value)
+
+
 def build_audit_trail(
     placements: list[DevicePlacement],
     params: ScenarioParams,
@@ -151,14 +168,14 @@ def build_audit_trail(
     if speed >= threshold:
         formula_choice = f"Speed {speed} mph >= {threshold} mph threshold -> using L = W x S"
         formula_latex = r"L = W \times S"
-        L_calc_text = f"L = {offset_ft:g} x {speed} = {L_full:g} ft"
+        L_calc_text = f"L = {offset_ft:g} x {speed} = {_ft(L_full)} ft"
     else:
         formula_choice = f"Speed {speed} mph < {threshold} mph threshold -> using L = W x S^2 / 60"
         formula_latex = r"L = \frac{W \times S^2}{60}"
         # B-03 — the displayed arithmetic must match the formula that
         # produced the number (the linear-format text shown here used
         # to contradict the quadratic result at speeds below 40).
-        L_calc_text = f"L = {offset_ft:g} x {speed}^2 / 60 = {L_full:g} ft"
+        L_calc_text = f"L = {offset_ft:g} x {speed}^2 / 60 = {_ft(L_full)} ft"
     L_third = shoulder_taper_length(speed, offset_ft)
 
     if is_flagger:
@@ -197,7 +214,7 @@ def build_audit_trail(
     elif is_lane:
         L_required = L_full
         L_required_label = "L (full merging taper)"
-        L_required_calc_text = f"Required: L = {L_full:g} ft (full taper for lane closure)"
+        L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
         source_text = (
             "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the "
             "full merging taper length L."
@@ -206,7 +223,7 @@ def build_audit_trail(
     else:
         L_required = L_third
         L_required_label = "L/3 (shoulder taper)"
-        L_required_calc_text = f"L/3 = {L_full:g} / 3 = {L_third:.1f} ft"
+        L_required_calc_text = f"L/3 = {_ft(L_full)} / 3 = {_ft(L_third)} ft"
         source_text = (
             "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 "
             "per Sec 6B.08 (Table 6B-3)."
@@ -246,10 +263,13 @@ def build_audit_trail(
         "formula_choice": formula_choice,
         "formula_latex": formula_latex,
         "L_calc_text": L_calc_text,
-        "L_full_ft": L_full,
+        # Display-only whole-feet rounding (see _ft); the local L_full /
+        # L_required floats above keep full precision for pick_device_count
+        # and the geometry checks.
+        "L_full_ft": _ft(L_full),
         "L_third_calc_text": L_required_calc_text,
-        "L_third_ft": L_required,
-        "L_required_ft": L_required,
+        "L_third_ft": _ft(L_required),
+        "L_required_ft": _ft(L_required),
         "L_required_label": L_required_label,
         "source": source_text,
         "cdot_reference": cdot_reference,
@@ -396,7 +416,7 @@ def build_audit_trail(
             "(MUTCD Sec 6K.01: spacing equals 2x speed in feet)"
         ),
         "taper_count_text": (
-            f"{taper_label} = {L_required:.1f} ft / {in_taper:g} ft max spacing "
+            f"{taper_label} = {_ft(L_required)} ft / {in_taper:g} ft max spacing "
             f"-> {n_taper_drums} drums at {taper_interval:.1f} ft intervals"
         ),
         "tangent_count_text": (
@@ -1083,7 +1103,9 @@ def build_audit_trail(
     geo_section = {
         "speed_mph": speed,
         "work_zone_ft": wz_len,
-        "taper_ft": L_required,
+        # Display-only whole-feet rounding (see _ft); validate_corridor_geometry
+        # above ran on full-precision params, so the pass/fail is unaffected.
+        "taper_ft": _ft(L_required),
         "taper_label": L_required_label,
         "buffer_ft": buf,
         "violations": [
@@ -1396,7 +1418,9 @@ def audit_projection(
         "ta": ta,
         "cdot_sheet": cdot_sheet,
         "case_id": case["case"],
-        "taper_length_ft": taper["L_required_ft"],
+        # Already whole-feet from build_audit_trail; _ft here is idempotent
+        # and pins the display contract at the summary boundary too.
+        "taper_length_ft": _ft(taper["L_required_ft"]),
         "taper_label": taper["L_required_label"],
         "buffer_space_ft": audit["buffer"]["buffer_ft"],
         # Flagger taper spacing is the §6B.08 ~20 ft taper-specific
