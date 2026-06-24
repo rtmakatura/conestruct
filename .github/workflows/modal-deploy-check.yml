@@ -1,15 +1,30 @@
 name: Modal deploy check
 
-# Detect when a push to main touches the Python render service and
-# remind the operator to run `modal deploy modal_app.py` — Vercel
-# auto-deploys the Next.js site on every push, but Modal does not.
-# At most ONE open `modal-deploy-needed` issue at a time: subsequent
-# undeployed pushes append a comment to it and bump the title to the
-# latest SHA. Close the issue once you've run the deploy.
+# Self-resolving backend-drift detector.
+#
+# Vercel auto-deploys the Next.js site on every push, but Modal does
+# NOT — `modal deploy modal_app.py` is a manual step, so production can
+# drift behind the backend code on `main`.  #94 stamps the deployed
+# commit into `/healthz` (`{status, sha}`; `"unknown"` if unstamped),
+# so the live backend version is readable over HTTP.
+#
+# This workflow polls `/healthz`, compares the SERVED commit against
+# `main` HEAD over the backend file scope (`src/**/*.py`, `modal_app.py`,
+# `pyproject.toml`, `uv.lock`), and keeps exactly ONE open
+# `modal-deploy-needed` issue alive ONLY while a backend deploy is owed:
+# it opens itself when the live backend falls behind backend code, and
+# closes itself once a deploy makes it current.  No per-push noise, no
+# hand-closing.
+#
+# Note we compare by backend-file scope, not raw SHA equality: a
+# frontend/docs/workflow-only commit advances `main` HEAD but requires
+# no backend deploy, so raw equality would false-fire permanently.
 
 on:
-  push:
-    branches: [main]
+  schedule:
+    # Public repo — 15-minute cadence (a reminder doesn't need tighter).
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,118 +40,161 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Full history so the served commit is reachable for the diff.
           fetch-depth: 0
 
-      - name: Detect Python diff
-        id: diff
+      - name: Read served SHA from /healthz
+        id: served
         shell: bash
+        env:
+          MODAL_URL: ${{ vars.MODAL_RENDER_URL }}
         run: |
-          BEFORE="${{ github.event.before }}"
-          AFTER="${{ github.sha }}"
-          # First push to a fresh branch can have a zero-SHA "before".
-          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            BEFORE="$(git rev-parse "$AFTER^" 2>/dev/null || echo "$AFTER")"
+          if [ -z "$MODAL_URL" ]; then
+            echo "::error::Repo variable MODAL_RENDER_URL is not set — run: gh variable set MODAL_RENDER_URL --body '<modal-base-url>'"
+            exit 1
           fi
 
-          CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" -- \
-            'src/**/*.py' 'modal_app.py' 'pyproject.toml' 'uv.lock' || true)
+          # --max-time covers a Modal cold start.  If /healthz is
+          # unreachable (timeout, network, HTTP error) we cannot read the
+          # live state — skip the run, touch no issues, exit success.
+          set +e
+          BODY="$(curl -fsS --max-time 30 "$MODAL_URL/healthz")"
+          RC=$?
+          set -e
+          if [ "$RC" -ne 0 ]; then
+            echo "Could not reach $MODAL_URL/healthz (curl exit $RC) — skipping this run."
+            echo "reachable=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          SERVED="$(echo "$BODY" | jq -r '.sha // "unknown"')"
+          echo "Served SHA: $SERVED"
+          echo "reachable=true" >> "$GITHUB_OUTPUT"
+          echo "served_sha=$SERVED" >> "$GITHUB_OUTPUT"
+
+      - name: Determine whether a backend deploy is owed
+        id: owed
+        if: steps.served.outputs.reachable == 'true'
+        shell: bash
+        run: |
+          SERVED="${{ steps.served.outputs.served_sha }}"
+          HEAD_SHA="$(git rev-parse HEAD)"
+          echo "head_sha=$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+          # Unstamped image can't prove it's current → deploy owed.
+          if [ "$SERVED" = "unknown" ]; then
+            echo "Served image is unstamped (sha=unknown) — treating as deploy owed."
+            echo "owed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Served SHA must resolve in the fetched history.  If it doesn't
+          # (force-push, orphaned commit), we can't prove the live backend
+          # is current → deploy owed.
+          if ! git cat-file -e "${SERVED}^{commit}" 2>/dev/null; then
+            echo "Served SHA $SERVED not found in history — treating as deploy owed."
+            echo "owed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Deploy owed iff a backend-affecting file changed between the
+          # served commit and HEAD.  Same scope the old push-trigger used,
+          # but anchored to the deployed commit instead of before..after.
+          CHANGED="$(git diff --name-only "$SERVED" "$HEAD_SHA" -- \
+            'src/**/*.py' 'modal_app.py' 'pyproject.toml' 'uv.lock' || true)"
 
           if [ -z "$CHANGED" ]; then
-            echo "needs_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "No backend-affecting changes between served ($SERVED) and HEAD ($HEAD_SHA) — backend is current."
+            echo "owed=false" >> "$GITHUB_OUTPUT"
           else
-            echo "needs_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Backend-affecting changes since the served commit:"
+            echo "$CHANGED"
+            echo "owed=true" >> "$GITHUB_OUTPUT"
             {
-              echo "files<<EOF"
+              echo "changed<<EOF"
               echo "$CHANGED"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Update or open Modal-deploy reminder issue
-        if: steps.diff.outputs.needs_deploy == 'true'
+      - name: Reconcile modal-deploy-needed issue
+        if: steps.served.outputs.reachable == 'true'
         uses: actions/github-script@v7
         env:
-          CHANGED_FILES: ${{ steps.diff.outputs.files }}
-          COMMIT_SHA: ${{ github.sha }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          OWED: ${{ steps.owed.outputs.owed }}
+          SERVED_SHA: ${{ steps.served.outputs.served_sha }}
+          HEAD_SHA: ${{ steps.owed.outputs.head_sha }}
+          CHANGED_FILES: ${{ steps.owed.outputs.changed }}
         with:
           script: |
-            const sha = process.env.COMMIT_SHA;
-            const shortSha = sha.slice(0, 7);
-            const fileList = process.env.CHANGED_FILES
-              .split('\n').filter(Boolean).map(f => `- \`${f}\``).join('\n');
-            const commitMessage = (process.env.COMMIT_MESSAGE || '')
-              .split('\n').join('\n> ');
+            const LABEL = 'modal-deploy-needed';
+            const owed = process.env.OWED === 'true';
+            const served = process.env.SERVED_SHA;
+            const head = process.env.HEAD_SHA;
 
-            const title = `Modal deploy needed for ${shortSha}`;
-
-            // Find an existing open reminder. If multiple exist (e.g. a
-            // pre-existing stale backlog), take the newest and treat it
-            // as canonical — older ones get closed manually.
-            const { data: openIssues } = await github.rest.issues.listForRepo({
+            const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'modal-deploy-needed',
-              sort: 'created',
-              direction: 'desc',
+              labels: LABEL,
               per_page: 100,
             });
             // listForRepo returns PRs as issues — filter them out.
-            const existing = openIssues.find(i => !i.pull_request);
+            const open = issues.filter(i => !i.pull_request);
 
-            if (existing) {
-              const commentBody = [
-                `Commit [${shortSha}](${process.env.COMMIT_URL}) added more`,
-                `undeployed Python changes.`,
-                ``,
-                `**Changed files:**`,
-                fileList,
-                ``,
-                `**Commit message:**`,
-                '> ' + commitMessage,
-              ].join('\n');
-
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existing.number,
-                body: commentBody,
-              });
-
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existing.number,
-                title,
-              });
-            } else {
+            if (owed) {
+              if (open.length > 0) {
+                console.log(`Deploy owed; ${open.length} reminder issue(s) already open — leaving untouched.`);
+                return;
+              }
+              const fileList = (process.env.CHANGED_FILES || '')
+                .split('\n').filter(Boolean).map(f => `- \`${f}\``).join('\n');
               const body = [
-                `Commit [${shortSha}](${process.env.COMMIT_URL}) touched the Python`,
-                `render service.  The Next.js site auto-deploys via Vercel, but the`,
-                `Modal-hosted render API does **not** — run the deploy locally:`,
-                ``,
+                'The live backend (Modal) is behind the latest backend code on `main`.',
+                '',
+                `- **Served (\`/healthz\`):** \`${served}\``,
+                `- **Latest \`main\` HEAD:** \`${head}\``,
+                '',
+                '**Backend-affecting files changed since the served commit:**',
+                fileList || '_(served image is unstamped — `sha=unknown`)_',
+                '',
+                'Run the deploy locally to bring production current:',
+                '',
                 '```bash',
                 'modal deploy modal_app.py',
                 '```',
-                ``,
-                `**Changed files:**`,
-                fileList,
-                ``,
-                `**Commit message:**`,
-                '> ' + commitMessage,
-                ``,
-                `Close this issue once Modal has been redeployed and conestruct.com`,
-                `is serving the new render code. Until then, subsequent undeployed`,
-                `pushes will append comments here and bump the title to the latest SHA.`,
+                '',
+                'This issue opened itself and will close itself once `/healthz`',
+                'reports a commit whose backend matches `main`. No need to close',
+                'it by hand.',
               ].join('\n');
 
               await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title,
+                title: 'Backend deploy owed — live site behind latest backend code',
                 body,
-                labels: ['modal-deploy-needed'],
+                labels: [LABEL],
               });
+              console.log('Opened a new modal-deploy-needed issue.');
+            } else {
+              if (open.length === 0) {
+                console.log('Backend is current; no open reminders to close.');
+                return;
+              }
+              for (const issue of open) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `Served SHA now matches the latest backend code (\`${served}\`) — deploy confirmed live.`,
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+                console.log(`Closed #${issue.number}.`);
+              }
             }
