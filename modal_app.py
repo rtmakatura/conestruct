@@ -78,11 +78,12 @@ image = (
     modal.Image.debian_slim(python_version="3.12")
     .apt_install("libcairo2", "fontconfig")  # cairosvg system deps
     .pip_install(*RENDER_DEPS)
-    .add_local_dir("src", remote_path="/root/src")
-    # Stamp the deployed SHA LAST so it's a trivial env layer — the
-    # SHA changes every deploy, but the expensive pip_install layer
-    # above stays cached.  Read at runtime by /healthz.
+    # Stamp the deployed SHA after pip_install (so that expensive layer
+    # stays cached — only this trivial env layer rebuilds per deploy) but
+    # BEFORE the local add: Modal requires add_local_* to be the terminal
+    # layers, so no build step may follow them.  Read at runtime by /healthz.
     .env({"GIT_SHA": _git_sha()})
+    .add_local_dir("src", remote_path="/root/src")
 )
 
 app = modal.App("conestruct-render")
