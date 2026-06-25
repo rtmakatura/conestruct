@@ -27,11 +27,22 @@ export type Status = "idle" | "generating" | "done";
 //
 // "GENERATED" became "VERIFIED" (the audit/breakdown are live-computed
 // per scenario; nothing is generated until the CTA is clicked) and the
-// unverifiable "all CDOT supplement checks pass" claim is gone.  The
-// count aggregates only the validation-warning streams the backend
-// already ships (geometry_validation + corridor_validation); audit-
-// panel honest-fail checks and pending_verification items[] do NOT
-// feed the strip — tracked as a follow-up design conversation.
+// unverifiable "all CDOT supplement checks pass" claim is gone.
+//
+// #60: the strip used to flip green on validation warnings ALONE — a
+// plan with a failing compliance check or a known V1 limitation showed
+// full-green READY, which is honest for validation warnings but
+// misleading for an estimator who reads green as "no flags."  The
+// green/off-green verdict now comes from the backend ``plan_flags``
+// rollup (``is_clean``), so the strip and the audit panel can never
+// disagree on whether a plan is clean (single-source; the strip does
+// NOT re-derive the verdict).  When any category is non-empty the strip
+// goes amber and the disclosure breaks the count down by category —
+// validation warnings (fix your input) kept distinct from compliance
+// fails and V1 limitations (capability gaps).  The rollup is OPTIONAL on
+// the response: during the brief deploy window where the frontend ships
+// before ``modal deploy``, ``plan_flags`` is absent and the strip falls
+// back to the pre-#60 validation-warnings-only behavior.
 // ---------------------------------------------------------------------------
 
 export interface StripWarning {
@@ -138,7 +149,18 @@ export function StatusBar({ status, inputError, audit }: Props) {
   }
 
   const warnings = collectValidationWarnings(data);
-  if (warnings.length === 0) {
+
+  // #60: the green/off-green verdict is the backend's, not ours.  When
+  // the plan_flags rollup is present we read its ``is_clean`` verdict
+  // (single source — the strip and the audit panel can't disagree).
+  // When it's absent — the brief deploy window where Vercel ships the
+  // frontend before ``modal deploy`` lands the rollup — we fall back to
+  // the pre-#60 validation-warnings-only behavior so the strip never
+  // crashes or shows a wrong color (raw-dict robustness class).
+  const flags = data.plan_flags;
+  const isClean = flags ? flags.is_clean : warnings.length === 0;
+
+  if (isClean) {
     return (
       <div className="status-bar pass">
         <span className="indicator" />
@@ -148,22 +170,85 @@ export function StatusBar({ status, inputError, audit }: Props) {
     );
   }
 
+  // Not clean.  When the only flags are validation warnings (no
+  // compliance fails, no V1 limitations) — or the rollup is absent — the
+  // existing validation-warnings disclosure renders unchanged: the
+  // common path looks exactly as it did pre-#60.
+  const hasOtherCategories =
+    flags !== undefined &&
+    (flags.compliance_fails > 0 || flags.v1_limitations > 0);
+
+  if (!hasOtherCategories) {
+    return (
+      <details className="status-details">
+        <summary className="status-bar caution">
+          <span className="indicator" />
+          <span>
+            VERIFIED · {warnings.length} validation warning
+            {warnings.length === 1 ? "" : "s"}
+            <span className="disclosure-caret" aria-hidden>
+              {" "}
+              ▸
+            </span>
+          </span>
+          <span className="pill caution">REVIEW WARNINGS</span>
+        </summary>
+        <div className="status-warnings">
+          <div className="check-list">
+            {warnings.map((w, i) => (
+              <div className="check-list-item" key={`${w.ruleId}-${i}`}>
+                <span className="ck warn">!</span>
+                <span className="check-list-lbl">
+                  <strong>{w.ruleId.replace(/_/g, " ").toUpperCase()}</strong> —{" "}
+                  {w.message}
+                </span>
+                <span className="check-list-src">{w.citation}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </details>
+    );
+  }
+
+  // Generalized plan-flags breakdown (#60 option b/c): one amber strip,
+  // count broken down by category in the disclosure so "fix your input"
+  // (validation warnings) stays separate from "Conestruct doesn't do X
+  // yet" (V1 limitations) and "a compliance check failed".  Counts come
+  // from the authoritative rollup; the validation-warning detail rows
+  // reuse collectValidationWarnings for their text/citations.  Compliance
+  // fails and V1 limitations carry their full detail in the audit panel
+  // below (single-source — the strip points there rather than restating).
+  const total =
+    flags.validation_warnings + flags.compliance_fails + flags.v1_limitations;
   return (
     <details className="status-details">
       <summary className="status-bar caution">
         <span className="indicator" />
         <span>
-          VERIFIED · {warnings.length} validation warning
-          {warnings.length === 1 ? "" : "s"}
+          VERIFIED · {total} plan flag{total === 1 ? "" : "s"}
           <span className="disclosure-caret" aria-hidden>
             {" "}
             ▸
           </span>
         </span>
-        <span className="pill caution">REVIEW WARNINGS</span>
+        <span className="pill caution">REVIEW FLAGS</span>
       </summary>
       <div className="status-warnings">
         <div className="check-list">
+          {flags.validation_warnings > 0 && (
+            <div className="check-list-item">
+              <span className="ck warn">!</span>
+              <span className="check-list-lbl">
+                <strong>
+                  {flags.validation_warnings} validation warning
+                  {flags.validation_warnings === 1 ? "" : "s"}
+                </strong>{" "}
+                — inputs to review
+              </span>
+              <span className="check-list-src">FIX INPUTS</span>
+            </div>
+          )}
           {warnings.map((w, i) => (
             <div className="check-list-item" key={`${w.ruleId}-${i}`}>
               <span className="ck warn">!</span>
@@ -174,6 +259,32 @@ export function StatusBar({ status, inputError, audit }: Props) {
               <span className="check-list-src">{w.citation}</span>
             </div>
           ))}
+          {flags.compliance_fails > 0 && (
+            <div className="check-list-item">
+              <span className="ck fail">✕</span>
+              <span className="check-list-lbl">
+                <strong>
+                  {flags.compliance_fails} compliance check
+                  {flags.compliance_fails === 1 ? "" : "s"} failed
+                </strong>{" "}
+                — see the audit trail below for details
+              </span>
+              <span className="check-list-src">COLORADO SUPPLEMENT</span>
+            </div>
+          )}
+          {flags.v1_limitations > 0 && (
+            <div className="check-list-item">
+              <span className="ck">ℹ</span>
+              <span className="check-list-lbl">
+                <strong>
+                  {flags.v1_limitations} V1 limitation
+                  {flags.v1_limitations === 1 ? "" : "s"}
+                </strong>{" "}
+                — known capability gap; see the audit trail below
+              </span>
+              <span className="check-list-src">MANUAL HANDLING</span>
+            </div>
+          )}
         </div>
       </div>
     </details>

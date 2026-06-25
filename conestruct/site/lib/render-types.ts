@@ -52,8 +52,27 @@ export interface PendingVerification {
   items?: PendingItem[];
 }
 
+// #60 plan-flags rollup — the backend's single derived verdict for the
+// status strip. Categories are kept distinct (different lifecycles):
+// validation_warnings (fix your input), compliance_fails (a colorado
+// check failed), v1_limitations (Conestruct doesn't emit X yet). The
+// strip reads ``is_clean`` for its green/off-green decision instead of
+// re-deriving it, so the strip and the audit panel can't drift.
+//
+// OPTIONAL on the type: the backend ships this only after `modal deploy`;
+// during the brief Vercel-leads-Modal deploy window the frontend may
+// receive an audit response without it, so StatusBar falls back to the
+// pre-#60 validation-warnings-only behavior when it's absent.
+export interface PlanFlags {
+  validation_warnings: number;
+  compliance_fails: number;
+  v1_limitations: number;
+  is_clean: boolean;
+}
+
 export interface AuditResponse {
   summary: AuditSummary;
+  plan_flags?: PlanFlags;
   sections: {
     taper: Record<string, unknown>;
     buffer: Record<string, unknown>;

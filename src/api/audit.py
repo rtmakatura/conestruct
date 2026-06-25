@@ -1466,8 +1466,45 @@ def audit_projection(
     if items:
         pending_verification["items"] = items
 
+    # ------------------------------------------------------------------
+    # Plan-flags rollup (#60) — one derived verdict both surfaces read.
+    # ------------------------------------------------------------------
+    # The StatusBar strip used to show full-green "READY FOR TCS REVIEW"
+    # on any plan with zero validation warnings, even when the audit
+    # panel surfaced a failing compliance check or a known V1 limitation.
+    # This rollup is the single source for the strip's clean/not-clean
+    # verdict and its per-category breakdown, so the strip and the audit
+    # panel can never disagree on "is this plan clean" (the #93 drift
+    # class).  It is DERIVED on top of the existing sections /
+    # pending_verification — those arrays are untouched, so AuditTrail's
+    # current rendering is unchanged.  Three distinct categories, kept
+    # separate because they have different lifecycles (fix-your-input vs
+    # Conestruct-doesn't-do-X-yet):
+    #
+    #   * validation_warnings — geometry violations + (when the OSM check
+    #     ran) corridor warnings.  Mirrors StatusBar.collectValidationWarnings
+    #     exactly so the strip's count and the rollup never diverge.
+    #   * compliance_fails — colorado.checks entries with pass == False.
+    #   * v1_limitations — pending_verification.count (capability gaps).
+    geo_violations = sections.get("geometry_validation", {}).get("violations", [])
+    validation_warnings = len(geo_violations)
+    corridor_section = sections.get("corridor_validation", {})
+    if isinstance(corridor_section, dict) and corridor_section.get("checked") is True:
+        validation_warnings += len(corridor_section.get("warnings", []))
+    colorado_checks = sections.get("colorado", {}).get("checks", [])
+    compliance_fails = sum(1 for c in colorado_checks if not c.get("pass", True))
+    v1_limitations = pending_verification["count"]
+    plan_flags = {
+        "validation_warnings": validation_warnings,
+        "compliance_fails": compliance_fails,
+        "v1_limitations": v1_limitations,
+        # Clean only when every category is empty — the green-READY gate.
+        "is_clean": (validation_warnings == 0 and compliance_fails == 0 and v1_limitations == 0),
+    }
+
     return {
         "summary": summary,
         "sections": sections,
         "pending_verification": pending_verification,
+        "plan_flags": plan_flags,
     }

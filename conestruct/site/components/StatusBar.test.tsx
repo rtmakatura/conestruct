@@ -23,8 +23,22 @@ function makeAudit(opts?: {
   }>;
   corridorChecked?: boolean;
   corridorWarnings?: Array<{ flag: string; level: string; message: string }>;
+  // #60: extra plan_flags categories the strip's verdict now reflects.
+  coloradoFails?: number;
+  pendingItems?: number;
+  // #60: simulate the brief deploy window where the backend hasn't
+  // shipped the rollup yet — the response carries no plan_flags.
+  omitPlanFlags?: boolean;
 }): AuditResponse {
-  return {
+  const geoViolations = opts?.geoViolations ?? [];
+  const corridorChecked = opts?.corridorChecked ?? false;
+  const corridorWarnings = opts?.corridorWarnings ?? [];
+  const validationWarnings =
+    geoViolations.length + (corridorChecked ? corridorWarnings.length : 0);
+  const complianceFails = opts?.coloradoFails ?? 0;
+  const v1Limitations = opts?.pendingItems ?? 0;
+
+  const audit: AuditResponse = {
     summary: {
       ta: "TA-10",
       cdot_sheet: "S-630-1",
@@ -45,16 +59,29 @@ function makeAudit(opts?: {
       case: {},
       flagger: {},
       corridor_validation: {
-        checked: opts?.corridorChecked ?? false,
-        warnings: opts?.corridorWarnings ?? [],
+        checked: corridorChecked,
+        warnings: corridorWarnings,
       },
       geometry_validation: {
-        violations: opts?.geoViolations ?? [],
+        violations: geoViolations,
         all_pass: true,
       },
     },
-    pending_verification: { count: 0, note: "", tracking_issue: null },
+    pending_verification: { count: v1Limitations, note: "", tracking_issue: null },
   };
+
+  // Mirror the backend rollup derivation (src/api/audit.py audit_projection),
+  // unless the test is exercising the absent-rollup fallback.
+  if (!opts?.omitPlanFlags) {
+    audit.plan_flags = {
+      validation_warnings: validationWarnings,
+      compliance_fails: complianceFails,
+      v1_limitations: v1Limitations,
+      is_clean:
+        validationWarnings === 0 && complianceFails === 0 && v1Limitations === 0,
+    };
+  }
+  return audit;
 }
 
 const GEO_WARNING = {
@@ -236,5 +263,124 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).toContain("status-bar caution");
     expect(html).toContain("1 validation warning");
     expect(html).not.toContain("VERIFYING");
+  });
+});
+
+// #60: the strip used to flip green on zero validation warnings ALONE,
+// hiding failing compliance checks and V1 limitations the audit panel
+// surfaced.  The verdict now comes from the backend plan_flags rollup;
+// any non-empty category goes amber with a per-category breakdown.
+describe("StatusBar (#60 plan-flags rollup)", () => {
+  it("a failing compliance check with zero validation warnings is now amber, not green", () => {
+    // The bug-fix flip: pre-#60 this plan showed green READY because it
+    // had no validation warnings; the failing colorado check was invisible.
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={ready(makeAudit({ coloradoFails: 1 }))}
+      />,
+    );
+    expect(html).toContain("status-bar caution");
+    expect(html).toContain("1 plan flag");
+    expect(html).toContain("REVIEW FLAGS");
+    expect(html).toContain("1 compliance check failed");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("status-bar pass");
+  });
+
+  it("a V1 limitation with zero validation warnings is amber, not green", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={ready(makeAudit({ pendingItems: 1 }))}
+      />,
+    );
+    expect(html).toContain("status-bar caution");
+    expect(html).toContain("1 plan flag");
+    expect(html).toContain("1 V1 limitation");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("status-bar pass");
+  });
+
+  it("breaks a mixed flag set down by category — input vs compliance vs V1", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={ready(
+          makeAudit({
+            geoViolations: [GEO_WARNING],
+            coloradoFails: 1,
+            pendingItems: 1,
+          }),
+        )}
+      />,
+    );
+    // 1 validation warning + 1 compliance fail + 1 V1 limitation = 3.
+    expect(html).toContain("3 plan flags");
+    expect(html).toContain("REVIEW FLAGS");
+    // Each category surfaced distinctly (no conflated single number).
+    expect(html).toContain("1 validation warning");
+    expect(html).toContain("1 compliance check failed");
+    expect(html).toContain("1 V1 limitation");
+    // The validation-warning detail row still carries its rule + citation.
+    expect(html).toContain("WORK ZONE SHORT VS BUFFER");
+    expect(html).toContain("MUTCD § 6C.06");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+  });
+
+  it("clean rollup (all categories zero) is green READY", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar status="done" inputError={null} audit={ready(makeAudit())} />,
+    );
+    expect(html).toContain("status-bar pass");
+    expect(html).toContain("READY FOR TCS REVIEW");
+  });
+
+  it("validation-warnings-only behavior is unchanged (no 'plan flags' framing)", () => {
+    // Acceptance: a plan with only an input warning still surfaces it as a
+    // validation warning, exactly as pre-#60 — not the generalized breakdown.
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={ready(makeAudit({ geoViolations: [GEO_WARNING] }))}
+      />,
+    );
+    expect(html).toContain("1 validation warning");
+    expect(html).toContain("REVIEW WARNINGS");
+    expect(html).not.toContain("plan flag");
+    expect(html).not.toContain("REVIEW FLAGS");
+  });
+
+  describe("absent rollup (deploy window) falls back to pre-#60 behavior", () => {
+    it("no plan_flags + clean → green READY, never crashes", () => {
+      const html = renderToStaticMarkup(
+        <StatusBar
+          status="done"
+          inputError={null}
+          audit={ready(makeAudit({ omitPlanFlags: true }))}
+        />,
+      );
+      expect(html).toContain("status-bar pass");
+      expect(html).toContain("READY FOR TCS REVIEW");
+    });
+
+    it("no plan_flags + a validation warning → amber, as before", () => {
+      const html = renderToStaticMarkup(
+        <StatusBar
+          status="done"
+          inputError={null}
+          audit={ready(
+            makeAudit({ geoViolations: [GEO_WARNING], omitPlanFlags: true }),
+          )}
+        />,
+      );
+      expect(html).toContain("status-bar caution");
+      expect(html).toContain("1 validation warning");
+      expect(html).toContain("REVIEW WARNINGS");
+    });
   });
 });

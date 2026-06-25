@@ -96,7 +96,12 @@ def test_audit_response_has_top_level_keys(client: TestClient) -> None:
         json=_shoulder_scenario(),
     )
     body = res.json()
-    assert set(body.keys()) == {"summary", "sections", "pending_verification"}
+    assert set(body.keys()) == {
+        "summary",
+        "sections",
+        "pending_verification",
+        "plan_flags",  # #60 rollup
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -421,6 +426,124 @@ def test_flagger_lighting_check_day_passes_night_fails() -> None:
     )
     assert "Sheet 2 Note 22" in item["label"]
     assert item["tracking_issue"] == audit_module.AUDIT_PENDING_VERIFICATION_ISSUE
+
+
+# ---------------------------------------------------------------------------
+# #60 plan_flags rollup — the single derived verdict the status strip
+# reads instead of re-deriving "is this plan clean."  Three categories
+# (validation_warnings / compliance_fails / v1_limitations) + an
+# ``is_clean`` verdict true only when all three are zero.  The strip used
+# to flip green on validation warnings alone, hiding compliance fails and
+# V1 limitations the audit panel surfaced.
+# ---------------------------------------------------------------------------
+
+
+def test_plan_flags_clean_shoulder_is_clean() -> None:
+    """A default shoulder plan trips nothing — green-READY stays correct."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=4,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail(generate_shoulder_closure_divided(params), params)
+    flags = audit_module.audit_projection(raw, "shoulder")["plan_flags"]
+    assert flags == {
+        "validation_warnings": 0,
+        "compliance_fails": 0,
+        "v1_limitations": 0,
+        "is_clean": True,
+    }
+
+
+def test_plan_flags_night_flagger_not_clean() -> None:
+    """Acceptance: a night flagger plan has a failing lighting check AND a
+    V1 limitation — it must NOT read clean (the strip must go off-green)."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        is_night=True,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail(generate_flagger_alternating_2lane(params), params)
+    flags = audit_module.audit_projection(raw, "flagger_lane_closure")["plan_flags"]
+    assert flags["is_clean"] is False
+    assert flags["compliance_fails"] >= 1  # night lighting check fails
+    assert flags["v1_limitations"] >= 1  # flagger_lighting_manual_handling
+
+
+def test_plan_flags_reduced_speed_flagger_is_clean() -> None:
+    """Documents the live state of the issue's second acceptance scenario:
+    the Item 3 / PR 2 correction made the flagger generator emit the Fines
+    Double envelope, so a reduced-speed (daytime) flagger has no carve-out,
+    no pending item, and no failing check — it is genuinely clean.  The
+    rollup must NOT fabricate a flag here."""
+    from src.generation.layout import generate_flagger_alternating_2lane
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        work_zone_speed_mph=35,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail(generate_flagger_alternating_2lane(params), params)
+    proj = audit_module.audit_projection(raw, "flagger_lane_closure")
+    assert proj["sections"]["fines_double"]["applicable"] is True
+    assert proj["plan_flags"]["is_clean"] is True
+
+
+def test_plan_flags_counts_validation_warnings() -> None:
+    """A soft geometry warning (work-zone short vs buffer; 200 OK, no
+    error) counts as a validation warning and flips is_clean false — and
+    the count mirrors the geometry_validation.violations the strip's
+    collectValidationWarnings reads, so the two never diverge."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=4,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=300.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    raw = audit_module.build_audit_trail(generate_shoulder_closure_divided(params), params)
+    proj = audit_module.audit_projection(raw, "shoulder")
+    n_violations = len(proj["sections"]["geometry_validation"]["violations"])
+    assert n_violations >= 1
+    flags = proj["plan_flags"]
+    assert flags["validation_warnings"] == n_violations
+    assert flags["compliance_fails"] == 0
+    assert flags["v1_limitations"] == 0
+    assert flags["is_clean"] is False
 
 
 # ---------------------------------------------------------------------------

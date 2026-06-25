@@ -4,6 +4,12 @@
     "note": "",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
   },
+  "plan_flags": {
+    "compliance_fails": 0,
+    "is_clean": true,
+    "v1_limitations": 0,
+    "validation_warnings": 0
+  },
   "sections": {
     "advance": {
       "road_type_text": "Speed 25 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
