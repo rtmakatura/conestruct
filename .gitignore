@@ -52,3 +52,22 @@ Thumbs.db
 /render_ta*.py
 # One-off Next.js harness scripts (e.g., verify_road_bearing.mjs).
 conestruct/site/scripts/
+
+# Node dependencies — anywhere in the tree (root harness installs and the
+# Next.js app's own node_modules).
+node_modules/
+
+# Local validation/walkthrough harnesses and their render outputs (PDFs,
+# screenshots, throwaway Playwright scripts) — kept on disk for debugging,
+# never committed.
+validation-artifacts/
+
+# Claude Code local workspace (settings, transcripts, scratch). Nothing in
+# here is shared state — if a tracked, shared .claude/settings.json is ever
+# wanted, add a `!.claude/settings.json` negation below this line.
+.claude/
+
+# Confidential working-knowledge files — read locally, never committed.
+/CLAUDE.md
+/memory.md
+/handoff.md
