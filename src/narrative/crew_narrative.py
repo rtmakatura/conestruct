@@ -212,12 +212,21 @@ def _format_takedown_sign_sequence(advance_signs_takedown_order: list[dict[str, 
 def _advance_signs_from_placements(
     placements: list[DevicePlacement],
     taper_start_station: float,
+    params: ScenarioParams,
 ) -> list[dict[str, Any]]:
     """Right-side advance warning signs upstream of the taper, sorted by distance.
 
     Restricting to ``offset_ft > 0`` collapses divided-highway mirror pairs
     to the right-side representative; the template emits a "place matching
     sign on left side" instruction when ``is_divided`` is true.
+
+    Descriptions resolve through the shared
+    :func:`substitute_sign_description` helper — the same one the Required
+    Equipment list uses — so a parametric face like W20-2 reads "ROAD WORK
+    1000 FT" in the schedule rather than the bare "ROAD WORK XXX FT"
+    template (#78).  The already-computed ``taper_start_station`` is passed
+    through so the schedule distance is byte-identical to the layout/audit
+    value.
     """
     out: list[dict[str, Any]] = []
     for p in placements:
@@ -229,11 +238,13 @@ def _advance_signs_from_placements(
             and p.offset_ft > 0
             and p.station_ft > taper_start_station
         ):
-            human = description_for(p.label)
+            code, desc = substitute_sign_description(
+                p.label, p.station_ft, params, taper_start_station
+            )
             out.append(
                 {
                     "code": p.label,
-                    "description": "" if human == p.label else human,
+                    "description": "" if desc == code else desc,
                     "distance_ft": p.station_ft - taper_start_station,
                     "station_ft": p.station_ft,
                 }
@@ -327,7 +338,7 @@ def build_narrative_context(
     )
     plaque_interval = wz_len / n_plaques_right if n_plaques_right > 0 else wz_len
 
-    advance_signs = _advance_signs_from_placements(placements, taper_start_station)
+    advance_signs = _advance_signs_from_placements(placements, taper_start_station, params)
     # G1 — parametric descriptions for the W21-5aR-pair plaques.
     # ``description_for("W16-2a")`` / ``description_for("W7-3a")`` return
     # the generic ``NEXT XXX FT plaque`` / ``NEXT XX MILES plaque`` templates;

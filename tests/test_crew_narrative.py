@@ -329,6 +329,9 @@ def test_crew_narrative_freeway_includes_w16_2a_and_w7_3a_rows() -> None:
     assert "FT (under upstream W21-5aR)" in markdown
     assert "| W7-3a |" in markdown
     assert "MILE (under downstream W21-5aR)" in markdown
+    # #78: no literal placeholder survives on the freeway path either (the
+    # W16-2a / W7-3a / W20-2 rows all resolve to real values).
+    assert "XXX" not in markdown
 
 
 def test_crew_narrative_freeway_reduced_includes_w21_5aR_pair() -> None:
@@ -422,3 +425,48 @@ def test_crew_narrative_driveways_present_emits_6k01_citation() -> None:
     assert "## Site-Specific Notes" in markdown
     assert "MUTCD §6K.01" in markdown
     assert "MUTCD §6C.09" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# #78 — W20-2 distance substituted in the Sign Placement Schedule
+# ---------------------------------------------------------------------------
+# The schedule row built its W20-2 description from the raw
+# SIGN_DESCRIPTIONS template ("ROAD WORK XXX FT") while the Required
+# Equipment list routed through substitute_sign_description and showed the
+# real distance.  Both now share the helper, so the schedule reads the
+# substituted distance and no literal XXX placeholder survives anywhere in
+# the narrative.
+
+_W20_2_PARAMS = ScenarioParams(
+    speed_mph=55,
+    num_lanes=2,
+    closure_type="shoulder",
+    road_type="rural",
+    work_zone_length_ft=800.0,
+    lane_width_ft=12.0,
+    is_divided=True,
+    jurisdiction="CDOT",
+)
+
+
+def test_crew_narrative_w20_2_schedule_substitutes_distance() -> None:
+    """#78: the W20-2 schedule row carries the real distance (not the 'XXX'
+    placeholder) and matches the Required Equipment list value for the same
+    plan; no literal XXX survives anywhere in the rendered narrative."""
+    placements = generate_shoulder_closure_divided(_W20_2_PARAMS)
+    context = build_narrative_context(placements, _W20_2_PARAMS)
+    markdown = _render_template(context)
+
+    # Schedule W20-2 description is substituted — no placeholder.
+    w20_2 = next(s for s in context["sign_schedule"] if s["code"] == "W20-2")
+    assert "XXX" not in w20_2["description"]
+    assert w20_2["description"].startswith("ROAD WORK")
+    assert w20_2["description"].endswith("FT")
+
+    # Same value the Required Equipment list shows (the path already correct).
+    equip_lines = [line for line in context["equipment_bullets"].splitlines() if "W20-2" in line]
+    assert equip_lines, "expected a W20-2 entry in the equipment bullets"
+    assert w20_2["description"] in equip_lines[0]
+
+    # No literal placeholder survives anywhere in the rendered narrative.
+    assert "XXX" not in markdown
