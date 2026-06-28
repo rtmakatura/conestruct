@@ -63,6 +63,10 @@
     "buffer": {
       "buffer_ft": 570.0,
       "cdot_value_ft": 570,
+      "citation": {
+        "cite": "MUTCD § 6B.06",
+        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
       "divergence": true,
       "jurisdiction": "CDOT",
       "lookup_text": "CDOT supplement: 570 ft. MUTCD Table 6B-2: 645 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
@@ -171,6 +175,10 @@
       "work_zone_ft": 1000.0
     },
     "spacing": {
+      "citation": {
+        "cite": "MUTCD § 6K.01",
+        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
       "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_tangent_cones_actual": 11,
       "n_tangent_cones_required": 9,
@@ -190,6 +198,10 @@
       "L_third_calc_text": "L/3 = 650 / 3 = 217 ft",
       "L_third_ft": 217,
       "cdot_reference": "CDOT S-630-1 Case 26 (shoulder closure on freeway/expressway, 65 mph posted with reduced work-zone speed; Sheet 14)",
+      "citation": {
+        "cite": "MUTCD § 6B.08",
+        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
       "closure_type": "shoulder",
       "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
       "formula_latex": "L = W \\times S",

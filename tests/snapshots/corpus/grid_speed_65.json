@@ -38,6 +38,10 @@
     },
     "buffer": {
       "buffer_ft": 645.0,
+      "citation": {
+        "cite": "MUTCD § 6B.06",
+        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
       "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 → 60 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 23).",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23).",
       "speed_mph": 65
@@ -109,6 +113,10 @@
       "work_zone_ft": 2000.0
     },
     "spacing": {
+      "citation": {
+        "cite": "MUTCD § 6K.01",
+        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
       "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_tangent_cones_actual": 19,
       "n_tangent_cones_required": 17,
@@ -128,6 +136,10 @@
       "L_third_calc_text": "L/3 = 650 / 3 = 217 ft",
       "L_third_ft": 217,
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+      "citation": {
+        "cite": "MUTCD § 6B.08",
+        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
       "closure_type": "shoulder",
       "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
       "formula_latex": "L = W \\times S",

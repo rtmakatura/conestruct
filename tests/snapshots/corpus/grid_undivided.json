@@ -38,6 +38,10 @@
     },
     "buffer": {
       "buffer_ft": 495.0,
+      "citation": {
+        "cite": "MUTCD § 6B.06",
+        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
       "lookup_text": "MUTCD Table 6B-2: 495 ft (CDOT supplement silent at this speed)",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 55
@@ -109,6 +113,10 @@
       "work_zone_ft": 2000.0
     },
     "spacing": {
+      "citation": {
+        "cite": "MUTCD § 6K.01",
+        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
       "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
       "n_tangent_cones_actual": 22,
       "n_tangent_cones_required": 20,
@@ -128,6 +136,10 @@
       "L_third_calc_text": "L/3 = 440 / 3 = 147 ft",
       "L_third_ft": 147,
       "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+      "citation": {
+        "cite": "MUTCD § 6B.08",
+        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
       "closure_type": "shoulder",
       "formula_choice": "Speed 55 mph >= 45 mph threshold -> using L = W x S",
       "formula_latex": "L = W \\times S",

@@ -48,6 +48,42 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
     {"urban_low", "urban_high", "rural", "expressway", "freeway"}
 )
 
+# Discrete display citations for the on-screen audit panel (#97).
+#
+# The audit *PDF* renders the prose ``source`` field on each section
+# (e.g. "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 …") and is already correct.
+# The React audit panel (``AuditTrail.tsx``) needs a short cite header and
+# a footer chip, and used to HARDCODE them — which is how it drifted to
+# 2009-edition numbers (§6C.06/§6C.09/Table 6C-3) while the backend prose
+# already said 6B/6K.  These constants are the single source for those two
+# panel strings; the panel reads ``section.citation.{cite,footer}`` instead
+# of re-deriving them, so the panel and the PDF can no longer disagree.
+#
+# 11th-edition mapping (2023 renumber of Part 6): device spacing
+# §6C.09→§6K.01, buffer §6C.06→§6B.06, taper criteria moved Chapter 6C→6B
+# (§6C.08→§6B.08, Table 6C-3→Table 6B-3).  The taper footer is a single
+# constant matching the dominant shoulder/lane Table 6B-3 lookup; the
+# flagger one-lane two-way taper's §6B.08 50-100 ft band is already named
+# in its prose ``source``/body text (pre-existing imprecision in the table
+# chip, neither introduced nor worsened here).
+#
+# FOLLOW-UP: the prose ``source`` sentences still spell these section
+# numbers out independently; consolidating them onto these constants would
+# kill the last drift seam but churns PDF snapshot strings, so it is left
+# to its own behavior-preserving PR (rule #5).
+_CITATION_TAPER: dict[str, str] = {
+    "cite": "MUTCD § 6B.08",
+    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+}
+_CITATION_BUFFER: dict[str, str] = {
+    "cite": "MUTCD § 6B.06",
+    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+}
+_CITATION_SPACING: dict[str, str] = {
+    "cite": "MUTCD § 6K.01",
+    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+}
+
 # Sheet 12 FINES DOUBLE SIGNING NOTES — operational rules attached to
 # every applicable fines_double section (shoulder, lane-divided, and
 # flagger all cite the same four notes; hoisted when the flagger
@@ -273,6 +309,8 @@ def build_audit_trail(
         "L_required_label": L_required_label,
         "source": source_text,
         "cdot_reference": cdot_reference,
+        # #97 — discrete panel citation (the PDF keeps rendering ``source``).
+        "citation": _CITATION_TAPER,
     }
 
     # ------------------------------------------------------------------
@@ -327,6 +365,7 @@ def build_audit_trail(
             "cdot_value_ft": int(buf),
             "mutcd_value_ft": int(mutcd_value),
             "divergence": True,
+            "citation": _CITATION_BUFFER,
         }
     elif supplement_speed:
         # CDOT 65/75 mph but no qualifying Case 26/27 step-down: the
@@ -351,6 +390,7 @@ def build_audit_trail(
                 "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). "
                 "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23)."
             ),
+            "citation": _CITATION_BUFFER,
         }
     elif params.jurisdiction == "CDOT":
         buffer_section = {
@@ -358,6 +398,7 @@ def build_audit_trail(
             "lookup_text": (f"MUTCD Table 6B-2: {buf:g} ft (CDOT supplement silent at this speed)"),
             "buffer_ft": buf,
             "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+            "citation": _CITATION_BUFFER,
         }
     else:  # jurisdiction == "federal"
         buffer_section = {
@@ -365,6 +406,7 @@ def build_audit_trail(
             "lookup_text": f"MUTCD Table 6B-2: {buf:g} ft",
             "buffer_ft": buf,
             "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+            "citation": _CITATION_BUFFER,
         }
 
     # ------------------------------------------------------------------
@@ -437,6 +479,10 @@ def build_audit_trail(
             if is_flagger
             else "MUTCD 11th Ed. Sec 6K.01"
         ),
+        # #97 — §6K.01 is the channelizing-device-spacing section in both
+        # branches; the flagger in-taper §6B.08 override is named in the
+        # body text above (in_taper_text), not the footer chip.
+        "citation": _CITATION_SPACING,
     }
 
     # ------------------------------------------------------------------

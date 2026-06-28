@@ -1310,7 +1310,11 @@ def test_audit_buffer_55_no_divergence_fields_suppression() -> None:
     )
     audit = build_audit_trail([], params, shoulder_width_ft=10.0)
     keys = set(audit["buffer"].keys())
-    assert keys == {"speed_mph", "lookup_text", "buffer_ft", "source"}
+    # ``citation`` (#97) is always present on every buffer variant; the
+    # divergence STRUCTURED keys (jurisdiction / cdot_value_ft /
+    # mutcd_value_ft / divergence) are what must be suppressed at a silent
+    # speed — and they remain absent here.
+    assert keys == {"speed_mph", "lookup_text", "buffer_ft", "source", "citation"}
 
 
 # --- Federal jurisdiction explicit unit tests ----------------------------

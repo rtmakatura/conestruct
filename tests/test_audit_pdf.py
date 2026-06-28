@@ -52,6 +52,26 @@ _PARAMS = ScenarioParams(
 # ``level`` string — true today (they appear only on corridor warnings).
 _SKIP_KEYS = frozenset({"formula_latex", "flag", "level"})
 
+# #97 — the taper/buffer/spacing ``citation`` field ({cite, footer}) feeds
+# the React audit PANEL's cite header + footer chip only; the PDF renders
+# the prose ``source`` field on each section (unchanged), so these discrete
+# strings intentionally do NOT appear in the PDF blocks.  They are a nested
+# dict under the key ``citation`` — which elsewhere (plaque / Colorado /
+# Fines Double) is a *rendered* string, so we can't skip the key globally
+# (that would stop verifying those real PDF citations).  Allowlist the exact
+# panel-only leaves instead.  Kept in sync with ``_CITATION_*`` in
+# ``src/api/audit.py``.
+_PANEL_ONLY_CITATIONS = frozenset(
+    {
+        "MUTCD § 6B.08",
+        "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+        "MUTCD § 6B.06",
+        "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+        "MUTCD § 6K.01",
+        "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+    }
+)
+
 _TAG_RE = re.compile(r"<[^>]+>")
 
 
@@ -97,12 +117,23 @@ def _string_leaves(obj: Any) -> list[str]:
     return out
 
 
+def _missing_leaves(projection: Any, text: str) -> list[str]:
+    """Projection string leaves absent from the rendered PDF text, minus the
+    #97 panel-only citations (rendered by the React audit panel, not the PDF
+    — the PDF carries the prose ``source`` field instead)."""
+    return [
+        leaf
+        for leaf in _string_leaves(projection)
+        if leaf not in _PANEL_ONLY_CITATIONS and normalize_glyphs(leaf) not in text
+    ]
+
+
 def test_blocks_carry_every_projection_string() -> None:
     """No citation, source, value-sentence, table cell, or note is dropped
     or altered in the projection → blocks step (single-source proof)."""
     projection = _projection()
     text = normalize_glyphs(_block_plaintext(audit_to_blocks(projection)))
-    missing = [leaf for leaf in _string_leaves(projection) if normalize_glyphs(leaf) not in text]
+    missing = _missing_leaves(projection, text)
     assert not missing, f"projection strings absent from the PDF blocks: {missing}"
 
 
@@ -139,7 +170,7 @@ def test_no_reduction_omits_quote_and_fines_double() -> None:
     assert not any(isinstance(b, Quote) for b in blocks)
     # The single-source guarantee still holds for the lighter projection.
     text = normalize_glyphs(_block_plaintext(blocks))
-    missing = [leaf for leaf in _string_leaves(projection) if normalize_glyphs(leaf) not in text]
+    missing = _missing_leaves(projection, text)
     assert not missing, f"projection strings absent: {missing}"
 
 
@@ -204,5 +235,5 @@ def test_corridor_warning_renders_as_clean_line() -> None:
 
     # The single-source proof still holds for the warning-bearing projection
     # (flag/level are skipped; message is the rendered prose).
-    missing = [leaf for leaf in _string_leaves(projection) if normalize_glyphs(leaf) not in text]
+    missing = _missing_leaves(projection, text)
     assert not missing, f"projection strings absent from the PDF blocks: {missing}"

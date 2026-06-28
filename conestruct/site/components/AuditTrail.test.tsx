@@ -3,17 +3,24 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
 
 import {
+  buildFlaggerItems,
   buildShoulderItems,
   finesDoubleItem,
   pendingVerificationItem,
   referenceItem,
+  siteAdjustmentsItem,
+  type ItemSpec,
 } from "./AuditTrail";
 import type {
   AuditResponse,
   AuditState,
   PendingItem,
 } from "../lib/render-types";
-import type { ShoulderScenario } from "../lib/scenarios";
+import type {
+  FlaggerLaneClosureScenario,
+  ShoulderScenario,
+  SiteConditions,
+} from "../lib/scenarios";
 
 // V1-Wide Item 1, Q-PLAN-1 (Option B): the AuditTrail renderer iterates
 // pending_verification.items[] so each pending entry surfaces with its
@@ -675,5 +682,171 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
     );
     expect(items[5].title).toBe("TA-2 · S-630-1 reference");
     expect(items[5].cite).toBe("CDOT S-630-1");
+  });
+});
+
+// #97 — citation-edition regression guard. The taper/buffer/spacing cite
+// header + footer chip used to be HARDCODED in this component and had
+// drifted to 2009-edition numbers (§6C.06 / §6C.08 / §6C.09 / Table 6C-3)
+// while the backend prose ``source`` already said 6B/6K. The fix repoints
+// them to the backend ``section.citation.{cite,footer}`` field (single
+// source). This guard fails if any stale-edition string reappears in the
+// rendered panel, for both deploy states (backend field present, and
+// absent → corrected-constant fallback) across shoulder + flagger, and
+// covers the driveways site-adjustment rule (§6C.09 → §6K.01).
+//
+// NOTE on coverage bounds (honest reporting): the guard asserts the
+// SPECIFIC strings below, not a blanket "6C". Out of this PR's scope and
+// deliberately NOT asserted: the flagger sight-distance cite "MUTCD §
+// 6E.06" (Ch. 6E → 6D renumber — adjacent debt) and the Site-adjustments
+// aggregate header "MUTCD § 6C / § 6D" (rides with the SITE_ADJUSTMENT_DETAIL
+// → backend follow-up, #71).
+describe("#97 audit-panel citation edition guard", () => {
+  const STALE = ["§ 6C.06", "§ 6C.08", "§ 6C.09", "6C-3", "CHAPTER 6C"];
+  const FRESH = ["6B.06", "6K.01", "6B.08", "6B-3"];
+
+  function itemsHtml(items: ItemSpec[]): string {
+    return items
+      .map((it) => `${it.cite} ${renderToStaticMarkup(it.body as ReactElement)}`)
+      .join("\n");
+  }
+
+  // Section payloads with the backend-fed values the item helpers read.
+  // ``withCitation`` controls the deploy state under test.
+  function readySections(
+    withCitation: boolean,
+    taperCitation = {
+      cite: "MUTCD § 6B.08",
+      footer: "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+    },
+  ): AuditResponse["sections"] {
+    const taper: Record<string, unknown> = {
+      closure_type: "shoulder",
+      formula_choice: "L = W × S",
+      L_calc_text: "L = 12 × 55 = 660 ft",
+      L_third_calc_text: "L/3 = 660 / 3 = 220 ft",
+    };
+    const buffer: Record<string, unknown> = {
+      lookup_text: "MUTCD Table 6B-2: 495 ft",
+    };
+    const spacing: Record<string, unknown> = {
+      in_taper_text: "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: speed in feet)",
+      on_tangent_text: "55 mph -> 110 ft spacing (MUTCD Sec 6K.01: 2x speed)",
+      taper_count_text: "L/3 = 220 ft / 55 ft max spacing -> 5 drums",
+      tangent_count_text: "1000 ft / 110 ft max spacing -> 10 cones",
+      n_taper_drums_required: 5,
+      n_tangent_cones_required: 10,
+    };
+    if (withCitation) {
+      taper.citation = taperCitation;
+      buffer.citation = {
+        cite: "MUTCD § 6B.06",
+        footer: "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+      };
+      spacing.citation = {
+        cite: "MUTCD § 6K.01",
+        footer: "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+      };
+    }
+    return {
+      taper,
+      buffer,
+      spacing,
+      advance: {},
+      colorado: {},
+      case: { url: "https://www.codot.gov/...PDF" },
+      flagger: {},
+      corridor_validation: { checked: false, warnings: [] },
+      geometry_validation: { violations: [], all_pass: true },
+    };
+  }
+
+  function readyState(withCitation: boolean): AuditState {
+    return {
+      state: "ready",
+      data: {
+        summary: {
+          ta: "TA-2",
+          cdot_sheet: "S-630-1",
+          case_id: "Case 11: Shoulder closure on divided highway",
+          taper_length_ft: 220,
+          taper_label: "L/3 (shoulder taper)",
+          buffer_space_ft: 495,
+          device_spacing_taper_ft: 55,
+          device_spacing_tangent_ft: 110,
+          step_count: 8,
+        },
+        sections: readySections(withCitation),
+        pending_verification: { count: 0, note: "", tracking_issue: null },
+      },
+    };
+  }
+
+  const dummyShoulder = { kind: "shoulder" } as unknown as ShoulderScenario;
+  const dummyFlagger = {
+    kind: "flagger_lane_closure",
+    speed: 55,
+    afad: false,
+    pilotCar: false,
+  } as unknown as FlaggerLaneClosureScenario;
+  const identityR = (n: number | string) => String(n);
+
+  // Field-present (post-deploy) and field-absent (Vercel-leads-Modal window)
+  // × shoulder + flagger. Both must render the 11th-edition strings and none
+  // of the stale ones.
+  for (const withCitation of [true, false]) {
+    const label = withCitation ? "backend field present" : "fallback (field absent)";
+
+    it(`shoulder panel — ${label} — no stale, all fresh`, () => {
+      const html = itemsHtml(
+        buildShoulderItems(dummyShoulder, readyState(withCitation), true, identityR),
+      );
+      for (const s of STALE) expect(html).not.toContain(s);
+      for (const f of FRESH) expect(html).toContain(f);
+    });
+
+    it(`flagger panel — ${label} — no stale, all fresh`, () => {
+      const html = itemsHtml(
+        buildFlaggerItems(dummyFlagger, readyState(withCitation), true, identityR),
+      );
+      for (const s of STALE) expect(html).not.toContain(s);
+      for (const f of FRESH) expect(html).toContain(f);
+    });
+  }
+
+  it("loading fallback (no data yet) — cites are 11th-edition, never stale", () => {
+    const loading: AuditState = { state: "loading", lastReady: null };
+    const items = buildShoulderItems(dummyShoulder, loading, false, identityR);
+    const cites = items.map((it) => it.cite).join(" ");
+    for (const s of STALE) expect(cites).not.toContain(s);
+    // Footers aren't rendered in the "Computing…" body, so only the cite
+    // headers are asserted present here.
+    expect(cites).toContain("6B.08");
+    expect(cites).toContain("6B.06");
+    expect(cites).toContain("6K.01");
+  });
+
+  it("reads the backend citation field, not a frontend hardcode", () => {
+    // Feed a sentinel footer only the backend path can surface: if the
+    // panel re-derived/hardcoded, this string could never appear.
+    const sentinel = {
+      cite: "MUTCD § 6B.08",
+      footer: "MUTCD 2023 EDITION · SENTINEL-FROM-BACKEND",
+    };
+    const base = readyState(true) as Extract<AuditState, { state: "ready" }>;
+    const state: AuditState = {
+      state: "ready",
+      data: { ...base.data, sections: readySections(true, sentinel) },
+    };
+    const html = itemsHtml(buildShoulderItems(dummyShoulder, state, true, identityR));
+    expect(html).toContain("SENTINEL-FROM-BACKEND");
+  });
+
+  it("driveways site-adjustment rule cites §6K.01, not the stale §6C.09", () => {
+    const spec = siteAdjustmentsItem({ driveways_present: true } as SiteConditions);
+    expect(spec).not.toBeNull();
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).not.toContain("§ 6C.09");
+    expect(html).toContain("§ 6K.01");
   });
 });

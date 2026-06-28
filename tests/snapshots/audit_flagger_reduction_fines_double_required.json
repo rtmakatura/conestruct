@@ -80,6 +80,10 @@
     },
     "buffer": {
       "buffer_ft": 360.0,
+      "citation": {
+        "cite": "MUTCD § 6B.06",
+        "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+      },
       "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
       "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
       "speed_mph": 45
@@ -202,6 +206,10 @@
       "work_zone_ft": 500.0
     },
     "spacing": {
+      "citation": {
+        "cite": "MUTCD § 6K.01",
+        "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+      },
       "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
       "n_tangent_cones_actual": 11,
       "n_tangent_cones_required": 7,
@@ -221,6 +229,10 @@
       "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
       "L_third_ft": 100,
       "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+      "citation": {
+        "cite": "MUTCD § 6B.08",
+        "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+      },
       "closure_type": "lane",
       "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
       "formula_latex": "50 \\le L \\le 100",

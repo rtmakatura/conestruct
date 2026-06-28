@@ -14,6 +14,44 @@ import type {
 } from "@/lib/scenarios";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
 
+// #97 — the taper/buffer/spacing cite header + footer chip now come from
+// the backend ``section.citation`` field (single source; the backend prose
+// ``source`` already feeds the body text and was always 11th-edition).
+// These constants are the deploy-window fallback ONLY: during the brief
+// window where Vercel ships this frontend before ``modal deploy`` lands the
+// new field, ``section.citation`` is absent and we fall back to these —
+// which are the CORRECT 11th-edition strings, never the old 2009 chrome, so
+// the panel can never display a stale citation regardless of deploy order.
+// The guard (AuditTrail.test.tsx) asserts both the field-present and
+// field-absent branches render clean.
+const TAPER_CITATION_FALLBACK = {
+  cite: "MUTCD § 6B.08",
+  footer: "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+} as const;
+const BUFFER_CITATION_FALLBACK = {
+  cite: "MUTCD § 6B.06",
+  footer: "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+} as const;
+const SPACING_CITATION_FALLBACK = {
+  cite: "MUTCD § 6K.01",
+  footer: "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+} as const;
+
+// Read the backend ``section.citation`` ({cite, footer}); fall back to the
+// corrected constant above when the field is absent (deploy window).
+function sectionCitation(
+  section: Record<string, unknown> | undefined,
+  fallback: { cite: string; footer: string },
+): { cite: string; footer: string } {
+  const c = section?.citation as
+    | { cite?: string; footer?: string }
+    | undefined;
+  return {
+    cite: c?.cite ?? fallback.cite,
+    footer: c?.footer ?? fallback.footer,
+  };
+}
+
 const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
   { label: string; rule: string; action: string }
@@ -38,7 +76,11 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   },
   driveways_present: {
     label: "Driveways present",
-    rule: "MUTCD § 6C.09",
+    // #97 — 11th-edition renumber (§6C.09 → §6K.01, channelizing-device
+    // spacing); the backend crew narrative already cites §6K.01. NOTE:
+    // SITE_ADJUSTMENT_DETAIL is still a static client-side table; making it
+    // read backend citations is filed as a follow-up on #71.
+    rule: "MUTCD § 6K.01",
     action:
       "Maintain access gaps in channelization. Do not place devices across driveway entrances (advisory only).",
   },
@@ -300,7 +342,7 @@ export function buildShoulderItems(
   ];
 }
 
-function buildFlaggerItems(
+export function buildFlaggerItems(
   scenario: FlaggerLaneClosureScenario,
   audit: AuditState,
   generated: boolean,
@@ -661,7 +703,7 @@ function taperItem(
     return {
       title: "Taper length calculation",
       result: "L = —",
-      cite: "MUTCD § 6C.08",
+      cite: TAPER_CITATION_FALLBACK.cite,
       body: (
         <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
           Computing…
@@ -695,10 +737,11 @@ function taperItem(
   const lThirdCalcText =
     isShoulder && lThirdRaw ? xify(roundTrailing(lThirdRaw)) : undefined;
 
+  const citation = sectionCitation(taper, TAPER_CITATION_FALLBACK);
   return {
     title: "Taper length calculation",
     result: `${labelPrefix} = ${r(lengthFt)}${generated ? " ft" : ""}`,
-    cite: "MUTCD § 6C.08",
+    cite: citation.cite,
     body: (
       <>
         {formulaChoice && <p>{formulaChoice}</p>}
@@ -708,7 +751,7 @@ function taperItem(
         )}
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD 2023 EDITION · CHAPTER 6C · TABLE 6C-3
+          {citation.footer}
         </div>
       </>
     ),
@@ -725,7 +768,7 @@ function bufferItem(
     return {
       title: "Buffer space calculation",
       result: "B = — ft",
-      cite: "MUTCD § 6C.06",
+      cite: BUFFER_CITATION_FALLBACK.cite,
       body: (
         <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
           Computing…
@@ -736,10 +779,11 @@ function bufferItem(
   const buffer = data.sections.buffer as Record<string, unknown>;
   const lookupText = buffer.lookup_text as string;
   const bufferFt = data.summary.buffer_space_ft;
+  const citation = sectionCitation(buffer, BUFFER_CITATION_FALLBACK);
   return {
     title: "Buffer space calculation",
     result: `B = ${r(bufferFt)} ft`,
-    cite: "MUTCD § 6C.06",
+    cite: citation.cite,
     body: (
       <>
         <p>
@@ -749,7 +793,7 @@ function bufferItem(
         <div className="formula">{lookupText}</div>
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD § 6C.06 · STOPPING SIGHT DISTANCE
+          {citation.footer}
         </div>
       </>
     ),
@@ -766,7 +810,7 @@ function spacingItem(
     return {
       title: "Channelizing device spacing",
       result: "— devices",
-      cite: "MUTCD § 6C.09",
+      cite: SPACING_CITATION_FALLBACK.cite,
       body: (
         <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
           Computing…
@@ -784,10 +828,11 @@ function spacingItem(
   const onTangentText = spacing.on_tangent_text as string;
   const taperCountText = spacing.taper_count_text as string;
   const tangentCountText = spacing.tangent_count_text as string;
+  const citation = sectionCitation(spacing, SPACING_CITATION_FALLBACK);
   return {
     title: "Channelizing device spacing",
     result: `${r(totalDevices)} devices · ${r(inTaperFt)}/${r(onTangentFt)} ft o.c.`,
-    cite: "MUTCD § 6C.09",
+    cite: citation.cite,
     body: (
       <>
         <p>{inTaperText}</p>
@@ -796,7 +841,7 @@ function spacingItem(
         <div className="formula">{tangentCountText}</div>
         <div className="citation">
           <span className="check">✓</span>
-          MUTCD § 6C.09 · CHANNELIZING DEVICE SPACING
+          {citation.footer}
         </div>
       </>
     ),
@@ -1002,7 +1047,7 @@ export function referenceItem(
   };
 }
 
-function siteAdjustmentsItem(
+export function siteAdjustmentsItem(
   flags: SiteConditions | undefined,
 ): ItemSpec | null {
   const checked = (Object.keys(SITE_ADJUSTMENT_DETAIL) as SiteConditionFlag[])
