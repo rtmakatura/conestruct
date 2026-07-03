@@ -431,7 +431,9 @@ describe("handoffEventIsCurrent — roadType self-hide (#62)", () => {
 describe("scenario vocabulary helpers", () => {
   it("maps kinds to their TA labels", () => {
     expect(scenarioTa("flagger_lane_closure")).toBe("TA-10");
-    expect(scenarioTa("shoulder")).toBe("TA-2");
+    // Family label (Refs #100): pre-generation surface, so the shoulder
+    // label covers both road-type variants (TA-3 general, TA-5 freeway).
+    expect(scenarioTa("shoulder")).toBe("TA-3/TA-5");
   });
 
   it("maps kinds to plain-language nouns", () => {

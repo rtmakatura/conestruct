@@ -187,7 +187,11 @@ export const DEFAULT_SCENARIO: Scenario = DEFAULT_SHOULDER;
 // ---------------------------------------------------------------------------
 
 export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> = [
-  { v: "shoulder", l: "Shoulder work", sub: "TA-2 · S-630-1" },
+  // Kind-level family label (Refs #100): the picker renders before any
+  // plan exists, so it can't read the backend's road-type-aware
+  // summary.ta (TA-3 generally, TA-5 on a freeway).  Static family
+  // label only — never a road-type conditional here (rule #3).
+  { v: "shoulder", l: "Shoulder work", sub: "TA-3/TA-5 · S-630-1" },
   {
     v: "flagger_lane_closure",
     l: "Flagger lane closure",

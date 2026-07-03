@@ -338,7 +338,16 @@ export function buildShoulderItems(
     spacingItem(audit, generated, r),
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-1"),
-    referenceItem(audit, "TA-2", "S-630-1", r(caseId), triggerCondition),
+    // Refs #100: the TA is road-type-aware (TA-3 generally, TA-5 on a
+    // freeway) and comes from the backend summary — same single-source
+    // pattern as case_id above.  Never re-derive it here (rule #3).
+    referenceItem(
+      audit,
+      data?.summary.ta ?? "—",
+      "S-630-1",
+      r(caseId),
+      triggerCondition,
+    ),
   ];
 }
 
@@ -408,7 +417,8 @@ export function buildFlaggerItems(
     },
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-1"),
-    referenceItem(audit, "TA-10", "S-630-1", r(flaggerCaseId)),
+    // Same summary.ta read as the shoulder card (backend sends TA-10).
+    referenceItem(audit, flaggerData?.summary.ta ?? "—", "S-630-1", r(flaggerCaseId)),
   ];
 }
 

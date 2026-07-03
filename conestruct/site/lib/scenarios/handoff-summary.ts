@@ -102,7 +102,11 @@ export interface SummarizeHandoffArgs {
 export function scenarioTa(kind: Scenario["kind"]): string {
   switch (kind) {
     case "shoulder":
-      return "TA-2";
+      // Kind-level family label (Refs #100): this fires pre-generation
+      // (picker clamp notes), so no backend summary.ta exists yet.
+      // TA-3 generally, TA-5 on a freeway — static label, never a
+      // road-type conditional here (rule #3).
+      return "TA-3/TA-5";
     case "flagger_lane_closure":
       return "TA-10";
     case "lane_closure_divided":

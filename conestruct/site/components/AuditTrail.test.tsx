@@ -316,7 +316,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
   ): AuditResponse {
     return {
       summary: {
-        ta: "TA-2",
+        ta: "TA-3",
         cdot_sheet: "S-630-1",
         case_id: "Case 11: Shoulder closure on divided highway",
         taper_length_ft: 183,
@@ -351,7 +351,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       data.summary.case_id,
       data.summary.trigger_condition,
@@ -370,7 +370,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       data.summary.case_id,
       data.summary.trigger_condition,
@@ -395,7 +395,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       data.summary.case_id,
       data.summary.trigger_condition,
@@ -414,7 +414,7 @@ describe("referenceItem renderer (V1-Wide S1)", () => {
     });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       data.summary.case_id,
       data.summary.trigger_condition,
@@ -537,7 +537,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
     });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       "Case 11: Shoulder closure on divided highway",
     );
@@ -554,7 +554,7 @@ describe("referenceItem renderer (UX-19 case narrative)", () => {
     const data = readyAuditWithCase({ url: "https://www.codot.gov/...PDF" });
     const spec = referenceItem(
       { state: "ready", data },
-      "TA-2",
+      "TA-3",
       "S-630-1",
       "Case 11: Shoulder closure on divided highway",
     );
@@ -582,7 +582,7 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
       state: "ready",
       data: {
         summary: {
-          ta: "TA-2",
+          ta: "TA-3",
           cdot_sheet: "S-630-1",
           case_id: "Case 11: Shoulder closure on divided highway",
           taper_length_ft: 183,
@@ -670,7 +670,7 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
     expect(noReduction.length).toBe(reducedSpeed.length);
   });
 
-  it("reference row is wired to TA-2 / S-630-1 and is positioned last", () => {
+  it("reference row reads summary.ta (Refs #100) and is positioned last", () => {
     const items = buildShoulderItems(
       dummyShoulder,
       readyShoulderState({
@@ -680,8 +680,19 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
       true,
       identityR,
     );
-    expect(items[5].title).toBe("TA-2 · S-630-1 reference");
+    // The fixture's summary.ta is "TA-3"; the title must be the
+    // read-through of that backend field, never a hardcoded TA.
+    expect(items[5].title).toBe("TA-3 · S-630-1 reference");
     expect(items[5].cite).toBe("CDOT S-630-1");
+
+    // A freeway plan carries TA-5 in summary.ta — same read-through.
+    const freewayItems = buildShoulderItems(
+      dummyShoulder,
+      readyShoulderState({ ta: "TA-5" }),
+      true,
+      identityR,
+    );
+    expect(freewayItems[5].title).toBe("TA-5 · S-630-1 reference");
   });
 });
 
@@ -766,7 +777,7 @@ describe("#97 audit-panel citation edition guard", () => {
       state: "ready",
       data: {
         summary: {
-          ta: "TA-2",
+          ta: "TA-3",
           cdot_sheet: "S-630-1",
           case_id: "Case 11: Shoulder closure on divided highway",
           taper_length_ft: 220,
