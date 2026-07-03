@@ -691,7 +691,7 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
         site_lng=scenario.meta.lng or None,
     )
     step_count = _compute_step_count(scenario)
-    return audit_projection(audit, scenario.kind, step_count)
+    return audit_projection(audit, scenario.kind, step_count, road_type=params.road_type)
 
 
 @app.post("/render/audit")

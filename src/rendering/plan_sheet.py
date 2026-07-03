@@ -51,6 +51,7 @@ from src.rules.validators import (
     _is_flagger_scenario,
     scenario_display_name,
     scenario_display_name_short,
+    shoulder_ta_reference,
 )
 
 load_dotenv()
@@ -1741,7 +1742,9 @@ def _mutcd_ta_reference(params: ScenarioParams) -> str:
     if params.closure_type == "off_road":
         return "TA-1"
     if params.closure_type == "shoulder":
-        return "TA-2"
+        # Road-type-aware (Refs #100): TA-3 generally, TA-5 on a freeway.
+        # Shared with the audit summary via the single rules-layer helper.
+        return shoulder_ta_reference(params.road_type)
     if params.closure_type == "lane" and not params.is_divided:
         return "TA-10"
     if params.closure_type == "lane" and params.is_divided:

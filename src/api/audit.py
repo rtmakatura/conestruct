@@ -41,6 +41,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    shoulder_ta_reference,
     validate_corridor_geometry,
 )
 
@@ -1196,7 +1197,12 @@ def build_audit_trail(
 # side source while the TS estimators are still on disk; once they're
 # deleted in PR 3 this stays the only copy.
 _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
-    "shoulder": ("TA-2", "S-630-1"),
+    # Shoulder TA is road-type-aware (TA-3 generally, TA-5 on a freeway,
+    # Refs #100) — audit_projection overrides the TA half of this entry
+    # via rules.validators.shoulder_ta_reference; only the CDOT sheet is
+    # read from here.  "TA-3" is the general-case value, never the old
+    # TA-2 (the Blasting Zone typical — a transcription error).
+    "shoulder": ("TA-3", "S-630-1"),
     # Flagger cites S-630-1 (PR 3 correction): the validated fixtures
     # and match rules come from S-630-1 Sheet 9 Case 17 / Sheet 25
     # Case 42 (tests/fixtures/ta10_flagger/).  The earlier "S-630-2"
@@ -1331,6 +1337,7 @@ def audit_projection(
     audit: dict[str, Any],
     scenario_kind: str,
     step_count: int = 0,
+    road_type: str | None = None,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -1368,6 +1375,16 @@ def audit_projection(
             f"audit_projection: unknown scenario_kind {scenario_kind!r}; "
             f"expected one of {sorted(_SCENARIO_TA_CDOT)}."
         ) from None
+    if scenario_kind == "shoulder":
+        # Road-type-aware TA (Refs #100): TA-3 generally, TA-5 on a
+        # freeway.  Same fail-loud posture as the kind lookup above — a
+        # missing road_type would silently ship the wrong typical.
+        if road_type is None:
+            raise ValueError(
+                "audit_projection: road_type is required for the shoulder "
+                "kind (TA-3 vs TA-5 splits on the Table 6B-1 category)."
+            )
+        ta = shoulder_ta_reference(road_type)
 
     taper = dict(audit["taper"])
     case = dict(audit["case"])

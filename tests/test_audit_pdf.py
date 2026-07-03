@@ -78,7 +78,7 @@ _TAG_RE = re.compile(r"<[^>]+>")
 def _projection() -> dict[str, Any]:
     placements = generate_shoulder_closure_divided(_PARAMS)
     audit = build_audit_trail(placements, _PARAMS)
-    return audit_projection(audit, "shoulder", step_count=11)
+    return audit_projection(audit, "shoulder", step_count=11, road_type=_PARAMS.road_type)
 
 
 def _strip(text: str) -> str:
@@ -164,7 +164,9 @@ def test_no_reduction_omits_quote_and_fines_double() -> None:
         work_zone_speed_mph=None,
     )
     placements = generate_shoulder_closure_divided(params)
-    projection = audit_projection(build_audit_trail(placements, params), "shoulder", 11)
+    projection = audit_projection(
+        build_audit_trail(placements, params), "shoulder", 11, road_type="freeway"
+    )
     assert "fines_double" not in projection["sections"]
     blocks = audit_to_blocks(projection)
     assert not any(isinstance(b, Quote) for b in blocks)
@@ -216,7 +218,7 @@ def test_corridor_warning_renders_as_clean_line() -> None:
             }
         ],
     }
-    projection = audit_projection(audit, "shoulder", step_count=11)
+    projection = audit_projection(audit, "shoulder", step_count=11, road_type="rural")
 
     # The projection slims each warning to exactly {flag, level, message};
     # the debug fields (anchor_lat, detected_highway, ...) are dropped.

@@ -76,7 +76,7 @@ flagger path, but the tool never labels a plan with them:
 
 | Scenario kind | Standard plan (per code) | Emitted case(s) |
 |---|---|---|
-| `shoulder` (TA-2) | S-630-1 | Case 11 / 11-reduced / 26 / 27 |
+| `shoulder` (TA-3, TA-5 on freeways) | S-630-1 | Case 11 / 11-reduced / 26 / 27 |
 | `flagger_lane_closure` (TA-10) | S-630-1 Sheets 9 & 25 | TA-10 (analogs 17/42) |
 | `lane_closure_divided` (TA-19) | S-630-3 (see Case 10 conflict above) | Case 10 |
 

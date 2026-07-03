@@ -217,6 +217,22 @@ def scenario_display_name(params: ScenarioParams) -> str:
     return "Shoulder Closure — 2-Lane Undivided"
 
 
+def shoulder_ta_reference(road_type: str) -> str:
+    """MUTCD 11th Ed. Typical Application for a stationary shoulder closure.
+
+    Table 6P-1 groups stationary shoulder work under §6N.06: TA-3 ("Work
+    on the Shoulders") is the general typical, TA-5 ("Shoulder Closure on
+    a Freeway") the limited-access-specific one.  The manual splits by
+    facility type, not speed, so this branches on the Table 6B-1 road
+    category only.  Single source for the shoulder TA label — the audit
+    summary (``audit_projection``) and the plan-sheet title block
+    (``plan_sheet._mutcd_ta_reference``) must both call this rather than
+    carry their own copies (Refs #100; TA-2 is the Blasting Zone typical
+    and was never correct for shoulder work).
+    """
+    return "TA-5" if road_type == "freeway" else "TA-3"
+
+
 def scenario_display_name_short(params: ScenarioParams) -> str:
     """Compact closure label for tight columns (the PDF PARAMETERS box).
 

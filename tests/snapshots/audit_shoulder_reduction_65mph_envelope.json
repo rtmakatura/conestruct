@@ -220,7 +220,7 @@
     "device_spacing_tangent_ft": 130.0,
     "device_spacing_taper_ft": 65.0,
     "step_count": 11,
-    "ta": "TA-2",
+    "ta": "TA-5",
     "taper_label": "L/3 (shoulder taper)",
     "taper_length_ft": 217,
     "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY"

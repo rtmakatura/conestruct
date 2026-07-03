@@ -110,14 +110,26 @@ def test_audit_response_has_top_level_keys(client: TestClient) -> None:
 
 
 def test_audit_summary_shoulder_ta_and_sheet(client: TestClient) -> None:
-    """Shoulder closure → TA-2 / S-630-1 (mirrors shoulder.ts:17-18)."""
+    """Shoulder closure → road-type-aware TA (Refs #100): TA-3 generally,
+    TA-5 on a freeway (MUTCD Table 6P-1; TA-2 is the Blasting Zone
+    typical and was a transcription error)."""
     res = client.post(
         "/render/audit",
         headers=_auth_headers(),
         json=_shoulder_scenario(),
     )
     summary = res.json()["summary"]
-    assert summary["ta"] == "TA-2"
+    assert summary["ta"] == "TA-3"
+    assert summary["cdot_sheet"] == "S-630-1"
+
+    freeway = {**_shoulder_scenario(), "roadType": "freeway", "speed": 65}
+    res = client.post(
+        "/render/audit",
+        headers=_auth_headers(),
+        json=freeway,
+    )
+    summary = res.json()["summary"]
+    assert summary["ta"] == "TA-5"
     assert summary["cdot_sheet"] == "S-630-1"
 
 
@@ -455,7 +467,7 @@ def test_plan_flags_clean_shoulder_is_clean() -> None:
         jurisdiction="CDOT",
     )
     raw = audit_module.build_audit_trail(generate_shoulder_closure_divided(params), params)
-    flags = audit_module.audit_projection(raw, "shoulder")["plan_flags"]
+    flags = audit_module.audit_projection(raw, "shoulder", road_type="freeway")["plan_flags"]
     assert flags == {
         "validation_warnings": 0,
         "compliance_fails": 0,
@@ -536,7 +548,7 @@ def test_plan_flags_counts_validation_warnings() -> None:
         jurisdiction="CDOT",
     )
     raw = audit_module.build_audit_trail(generate_shoulder_closure_divided(params), params)
-    proj = audit_module.audit_projection(raw, "shoulder")
+    proj = audit_module.audit_projection(raw, "shoulder", road_type="freeway")
     n_violations = len(proj["sections"]["geometry_validation"]["violations"])
     assert n_violations >= 1
     flags = proj["plan_flags"]
