@@ -28,14 +28,16 @@ const BUFFER_BY_SPEED: Record<number, number> = {
 // as a single sum since the corridor preview only needs the upstream
 // extent.
 const ADVANCE_WARNING_TOTAL: Record<string, number> = {
-  urban_low: 350 + 350 + 350,
+  urban_low: 100 + 100 + 100,
   urban_high: 350 + 350 + 350,
   rural: 500 + 500 + 500,
   expressway: 1000 + 1500 + 2640,
   freeway: 1000 + 1500 + 2640,
 };
 
-const TAPER_FORMULA_THRESHOLD_MPH = 40;
+// Mirrors TAPER_LENGTH_FORMULA_THRESHOLD_MPH in src/rules/tables.py
+// (MUTCD §6B.08: below 45 mph L = W×S²/60, at or above L = W×S).
+const TAPER_FORMULA_THRESHOLD_MPH = 45;
 
 // One-lane two-way traffic taper for flagger-controlled alternating
 // flow — mirrors one_lane_two_way_taper_length() in
@@ -51,6 +53,25 @@ const ONE_LANE_TWO_WAY_TAPER_FT = 100;
 export type ClosureKind = "shoulder" | "lane" | "shifting" | "one_lane_two_way";
 
 export type AdvanceRoadCategory = keyof typeof ADVANCE_WARNING_TOTAL;
+
+// Mirrors _map_road_type() in src/api/schemas.py — the backend's
+// road_type → Table 6B-1 category mapping, including the speed-dependent
+// urban_arterial split (urban_high above 40 mph, urban_low at or below).
+// Unknown/absent road types return null so advanceWarningFt falls back
+// to its speed-based heuristic.
+export function roadCategoryForRoadType(
+  roadType: string | null | undefined,
+  speedMph: number,
+): AdvanceRoadCategory | null {
+  if (roadType === "rural_undivided" || roadType === "rural_divided") {
+    return "rural";
+  }
+  if (roadType === "urban_arterial") {
+    return speedMph > 40 ? "urban_high" : "urban_low";
+  }
+  if (roadType === "freeway") return "freeway";
+  return null;
+}
 
 function fullTaperLengthFt(speedMph: number, offsetFt: number): number {
   if (speedMph < TAPER_FORMULA_THRESHOLD_MPH) {

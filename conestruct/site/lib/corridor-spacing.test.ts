@@ -9,6 +9,7 @@ import {
   buildCorridorSpec,
   corridorTotalLengthFt,
   minWorkZoneFt,
+  roadCategoryForRoadType,
 } from "./corridor-spacing";
 import { snapSpeedToDomain } from "./scenarios";
 
@@ -134,12 +135,67 @@ describe("minWorkZoneFt", () => {
     expect(minWorkZoneFt("shoulder", 55, 12, 8)).toBeCloseTo(146.67, 1);
   });
 
-  it("shoulder minimum uses the W·S²/60 branch below 40 mph", () => {
+  it("shoulder minimum uses the W·S²/60 branch below 45 mph", () => {
     // (8 × 25² / 60) / 3 ≈ 27.78.
     expect(minWorkZoneFt("shoulder", 25, 12, 8)).toBeCloseTo(27.78, 1);
   });
 
   it("divided lane closure minimum is the merging taper L", () => {
     expect(minWorkZoneFt("lane_closure_divided", 55, 12, 10)).toBe(660);
+  });
+
+  // Refs #99: the mirror's threshold was 40 while the backend
+  // (TAPER_LENGTH_FORMULA_THRESHOLD_MPH, src/rules/tables.py) is 45 —
+  // at exactly 40 mph the UI demanded the linear W·S taper and blocked
+  // work zones the backend accepts. Pin the quadratic branch at 40.
+  it("40 mph stays on the W·S²/60 branch (backend threshold is 45)", () => {
+    // Divided (10 ft shoulder): (10 × 40² / 60) / 3 ≈ 88.89 — NOT 133.33.
+    expect(minWorkZoneFt("shoulder", 40, 12, 10)).toBeCloseTo(88.89, 1);
+    // Undivided (8 ft shoulder): (8 × 40² / 60) / 3 ≈ 71.11 — NOT 106.67.
+    expect(minWorkZoneFt("shoulder", 40, 12, 8)).toBeCloseTo(71.11, 1);
+    // 45 mph is the first linear-formula speed: L = 12 × 45 = 540.
+    expect(minWorkZoneFt("lane_closure_divided", 45, 12, 10)).toBe(540);
+  });
+});
+
+// Refs #99: advance-warning urban_low drifted to 1050 ft while the
+// backend Table 6B-1 row (src/rules/tables.py) is 100+100+100 = 300 ft,
+// and callers that omitted roadCategory fell back to the rural row even
+// for freeways. roadCategoryForRoadType mirrors schemas.py's
+// _map_road_type, including the speed-dependent urban_arterial split.
+describe("advance-warning categories (Refs #99)", () => {
+  it("urban_low totals 300 ft (Table 6B-1: 100/100/100)", () => {
+    const spec = buildCorridorSpec({
+      ...ANCHOR,
+      speedMph: 35,
+      workZoneFt: 400,
+      scenarioKind: "shoulder",
+      roadCategory: "urban_low",
+    });
+    expect(spec.advanceWarningFt).toBe(300);
+  });
+
+  it("freeway totals 5140 ft when the category is threaded", () => {
+    const spec = buildCorridorSpec({
+      ...ANCHOR,
+      speedMph: 65,
+      workZoneFt: 1000,
+      scenarioKind: "shoulder",
+      roadCategory: "freeway",
+    });
+    expect(spec.advanceWarningFt).toBe(5140);
+  });
+
+  it("roadCategoryForRoadType mirrors the backend _map_road_type", () => {
+    expect(roadCategoryForRoadType("rural_undivided", 55)).toBe("rural");
+    expect(roadCategoryForRoadType("rural_divided", 55)).toBe("rural");
+    expect(roadCategoryForRoadType("freeway", 65)).toBe("freeway");
+    // urban_arterial splits on speed > 40 (schemas.py _map_road_type).
+    expect(roadCategoryForRoadType("urban_arterial", 45)).toBe("urban_high");
+    expect(roadCategoryForRoadType("urban_arterial", 40)).toBe("urban_low");
+    expect(roadCategoryForRoadType("urban_arterial", 35)).toBe("urban_low");
+    // Unknown/absent road types fall back to the speed heuristic.
+    expect(roadCategoryForRoadType(null, 55)).toBeNull();
+    expect(roadCategoryForRoadType("divided_highway", 55)).toBeNull();
   });
 });

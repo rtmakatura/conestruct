@@ -18,7 +18,10 @@ import {
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
-import { buildCorridorSpec } from "@/lib/corridor-spacing";
+import {
+  buildCorridorSpec,
+  roadCategoryForRoadType,
+} from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
   ZONE_COLOR,
@@ -408,15 +411,10 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       speedMph: speed,
       workZoneFt,
       scenarioKind: initial.scenarioKind,
-      roadCategory:
-        effectiveRoadType === "freeway"
-          ? "freeway"
-          : effectiveRoadType === "rural_divided" ||
-              effectiveRoadType === "rural_undivided"
-            ? "rural"
-            : effectiveRoadType === "urban_arterial"
-              ? "urban_high"
-              : null,
+      // Backend-faithful category mapping (schemas.py _map_road_type),
+      // including the speed-dependent urban_arterial split the previous
+      // inline ternary got wrong (it always picked urban_high).
+      roadCategory: roadCategoryForRoadType(effectiveRoadType, speed),
     });
     return buildCorridorPolyline(spec);
   }, [

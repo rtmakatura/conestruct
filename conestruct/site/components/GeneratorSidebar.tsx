@@ -23,7 +23,10 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import { validateWorkZone } from "@/lib/scenarios/validation";
-import { buildCorridorSpec } from "@/lib/corridor-spacing";
+import {
+  buildCorridorSpec,
+  roadCategoryForRoadType,
+} from "@/lib/corridor-spacing";
 import {
   buildCorridorPolyline,
   ZONE_COLOR,
@@ -477,6 +480,11 @@ function LocationSummary({
     handoffEventIsCurrent(e, scenario),
   );
 
+  const lanes = scenario.kind === "shoulder" ? scenario.lanes : null;
+  const divided = scenario.kind === "shoulder" ? scenario.divided : null;
+  const roadType: RoadType | null =
+    "roadType" in scenario ? (scenario.roadType as RoadType) : null;
+
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!meta.lat || !meta.lng || !scenario.workLen) return null;
     const spec = buildCorridorSpec({
@@ -486,14 +494,10 @@ function LocationSummary({
       speedMph: scenario.speed,
       workZoneFt: scenario.workLen,
       scenarioKind: scenario.kind,
+      roadCategory: roadCategoryForRoadType(roadType, scenario.speed),
     });
     return buildCorridorPolyline(spec);
-  }, [meta.lat, meta.lng, meta.bearingDeg, scenario.speed, scenario.workLen, scenario.kind]);
-
-  const lanes = scenario.kind === "shoulder" ? scenario.lanes : null;
-  const divided = scenario.kind === "shoulder" ? scenario.divided : null;
-  const roadType: RoadType | null =
-    "roadType" in scenario ? (scenario.roadType as RoadType) : null;
+  }, [meta.lat, meta.lng, meta.bearingDeg, scenario.speed, scenario.workLen, scenario.kind, roadType]);
 
   return (
     <div className="flex flex-col gap-3">
