@@ -47,8 +47,8 @@
       "speed_mph": 55
     },
     "case": {
-      "case": "Case 11: Shoulder closure on divided highway",
-      "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
+      "case": "Case 11: Shoulder closure on undivided highway",
+      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 — the general shoulder-work typical (drawn for freeway/expressway) — applied to an undivided highway with single-side signing per CO Supplement §6C.04(A).",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
       "routing": "shoulder_no_reduction",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
@@ -135,7 +135,7 @@
       "L_required_label": "L/3 (shoulder taper)",
       "L_third_calc_text": "L/3 = 440 / 3 = 147 ft",
       "L_third_ft": 147,
-      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)",
       "citation": {
         "cite": "MUTCD § 6B.08",
         "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
@@ -152,7 +152,7 @@
   },
   "summary": {
     "buffer_space_ft": 495.0,
-    "case_id": "Case 11: Shoulder closure on divided highway",
+    "case_id": "Case 11: Shoulder closure on undivided highway",
     "case_routing": "shoulder_no_reduction",
     "cdot_sheet": "S-630-1",
     "device_spacing_tangent_ft": 110.0,

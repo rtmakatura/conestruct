@@ -1762,6 +1762,61 @@ def test_case_routing_reduction_at_55_emits_case_11_variant(client: TestClient) 
     assert "trigger_condition" not in summary
 
 
+def test_case_label_undivided_shoulder_says_undivided(client: TestClient) -> None:
+    """Undivided shoulder plan → case label and taper cdot_reference say
+    "undivided", and the narrative discloses the Case 11 generalization
+    (freeway/expressway general typical, single-side signing per CO
+    §6C.04(A)) instead of claiming a divided highway (Refs #103)."""
+    s = _shoulder_scenario()
+    s["roadType"] = "rural_undivided"
+    s["divided"] = False
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    body = res.json()
+    assert _summary(body)["case_id"] == "Case 11: Shoulder closure on undivided highway"
+    case = _case_section(body)
+    assert case["case"] == "Case 11: Shoulder closure on undivided highway"
+    assert "undivided highway" in case["narrative"]
+    assert "freeway/expressway" in case["narrative"]
+    assert "6C.04(A)" in case["narrative"]
+    # No leftover divided claim ("undivided highway" contains the substring
+    # "divided highway", so anchor on the article).
+    assert " a divided highway" not in case["narrative"]
+    assert body["sections"]["taper"]["cdot_reference"] == (
+        "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)"
+    )
+    # Routing key is display-independent — must not move with the wording.
+    assert _summary(body)["case_routing"] == "shoulder_no_reduction"
+
+
+def test_case_label_undivided_shoulder_reduced_variant(client: TestClient) -> None:
+    """Undivided + non-step-down reduction (55 → 45) → the reduced Case 11
+    label in its undivided form, same disclosure, reduced cdot_reference
+    (Refs #103)."""
+    s = _shoulder_scenario()
+    s["roadType"] = "rural_undivided"
+    s["divided"] = False
+    s["workZoneSpeed"] = 45
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200
+    body = res.json()
+    assert _summary(body)["case_id"] == (
+        "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway"
+    )
+    case = _case_section(body)
+    assert "undivided highway" in case["narrative"]
+    assert "6C.04(A)" in case["narrative"]
+    assert " a divided highway" not in case["narrative"]
+    # The reduced-speed sentence survives alongside the disclosure.
+    assert "55 → 45 mph" in case["narrative"]
+    assert "Fines Double envelope" in case["narrative"]
+    assert body["sections"]["taper"]["cdot_reference"] == (
+        "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided "
+        "highway, reduced work-zone speed)"
+    )
+    assert _summary(body)["case_routing"] == "shoulder_reduced_speed"
+
+
 def test_case_routing_reduction_at_65_emits_case_26(client: TestClient) -> None:
     """65 → 60 mph reduction → shoulder_reduced_speed routing, Case 26
     label, verbatim 8 ft trigger_condition from Sheet 14."""

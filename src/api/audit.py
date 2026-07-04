@@ -285,9 +285,18 @@ def build_audit_trail(
             cdot_reference = (
                 "CDOT S-630-1 Case 11 (right-shoulder closure on divided "
                 "highway, reduced work-zone speed)"
+                if params.is_divided
+                else (
+                    "CDOT S-630-1 Case 11 (right-shoulder closure, applied to "
+                    "undivided highway, reduced work-zone speed)"
+                )
             )
         else:
-            cdot_reference = "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
+            cdot_reference = (
+                "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)"
+                if params.is_divided
+                else ("CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)")
+            )
 
     taper_section = {
         "speed_mph": speed,
@@ -1048,21 +1057,46 @@ def build_audit_trail(
         # (federal posted-speed value, Sheet 7 Case 11).  No Sheet 14
         # trigger text — that is tabulated only for the 65/75 step-downs.
         case_routing = "shoulder_reduced_speed"
-        case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
-        case_narrative = (
-            f"This scenario matches CDOT Standard Plan S-630-1, Case 11: "
-            f"shoulder closure on a divided highway, with a reduced work-zone "
-            f"posted speed ({speed} → {wz_speed} mph) that does not match the "
-            f"Case 26/27 mandated step-down. Fines Double envelope applies per "
-            f"CO Supplement §2B.13 and S-630-1 Sheet 12."
-        )
+        if params.is_divided:
+            case_label = "Case 11 (reduced work-zone speed): Shoulder closure on divided highway"
+            case_narrative = (
+                f"This scenario matches CDOT Standard Plan S-630-1, Case 11: "
+                f"shoulder closure on a divided highway, with a reduced work-zone "
+                f"posted speed ({speed} → {wz_speed} mph) that does not match the "
+                f"Case 26/27 mandated step-down. Fines Double envelope applies per "
+                f"CO Supplement §2B.13 and S-630-1 Sheet 12."
+            )
+        else:
+            # Case 11 is CDOT's general shoulder-work typical, drawn for
+            # freeway/expressway; Conestruct applies its device chain to
+            # undivided roads with single-side signing (Refs #103).
+            case_label = "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway"
+            case_narrative = (
+                f"This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
+                f"the general shoulder-work typical (drawn for "
+                f"freeway/expressway) — applied to an undivided highway with "
+                f"single-side signing per CO Supplement §6C.04(A), with a "
+                f"reduced work-zone posted speed ({speed} → {wz_speed} mph) "
+                f"that does not match the Case 26/27 mandated step-down. "
+                f"Fines Double envelope applies per CO Supplement §2B.13 and "
+                f"S-630-1 Sheet 12."
+            )
     else:
         case_routing = "shoulder_no_reduction"
-        case_label = "Case 11: Shoulder closure on divided highway"
-        case_narrative = (
-            "This scenario matches CDOT Standard Plan S-630-1, Case 11: "
-            "shoulder closure on a divided highway."
-        )
+        if params.is_divided:
+            case_label = "Case 11: Shoulder closure on divided highway"
+            case_narrative = (
+                "This scenario matches CDOT Standard Plan S-630-1, Case 11: "
+                "shoulder closure on a divided highway."
+            )
+        else:
+            case_label = "Case 11: Shoulder closure on undivided highway"
+            case_narrative = (
+                "This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
+                "the general shoulder-work typical (drawn for "
+                "freeway/expressway) — applied to an undivided highway with "
+                "single-side signing per CO Supplement §6C.04(A)."
+            )
     case_section: dict[str, Any] = {
         "case": case_label,
         "url": (
