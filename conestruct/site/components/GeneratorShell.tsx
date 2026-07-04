@@ -21,6 +21,10 @@ import {
   type DeviceBreakdownState,
 } from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
+import {
+  DebugSnapshotButton,
+  type SnapshotDetection,
+} from "./DebugSnapshotButton";
 
 type Mode = "sandbox" | "workbench";
 
@@ -53,6 +57,12 @@ export function GeneratorShell({
     DEFAULT_QUOTE_SETTINGS,
   );
   const [bundling, setBundling] = useState(false);
+  // Dev-only replication snapshot (Refs #102, TEMPORARY): the last picker
+  // classification + the pin it was captured at, surfaced by
+  // GeneratorSidebar. Delete with DebugSnapshotButton.
+  const [lastDetection, setLastDetection] = useState<SnapshotDetection | null>(
+    null,
+  );
   const [planId, setPlanId] = useState<string | null>(initialPlanId);
   const [planName, setPlanName] = useState<string | null>(initialPlanName);
 
@@ -291,6 +301,9 @@ export function GeneratorShell({
           setScenario={setScenario}
           generating={bundling}
           onGenerate={onGenerate}
+          onClassification={(c, at) =>
+            setLastDetection(c ? { classification: c, ...at } : null)
+          }
         />
 
         <main className="px-10 pt-8 pb-20 max-w-[1100px] max-md:px-6 max-md:pt-6">
@@ -322,6 +335,13 @@ export function GeneratorShell({
             status={bundling ? "generating" : status}
             inputError={inputError}
             audit={auditState}
+          />
+          {/* Dev-only replication snapshot (Refs #102, TEMPORARY) — renders
+              nothing without ?debug=1. Delete with DebugSnapshotButton. */}
+          <DebugSnapshotButton
+            scenario={scenario}
+            settings={settings}
+            detection={lastDetection}
           />
           {bundleError && (
             <div className="mb-5 px-4 py-3 border-l-2 border-[color:var(--orange)] font-mono text-[12px] text-[color:var(--orange)]">

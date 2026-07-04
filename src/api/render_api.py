@@ -31,6 +31,7 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from src.api.audit import _compute_step_count, audit_projection, build_audit_trail
+from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     Scenario,
     _map_road_type,
@@ -817,6 +818,31 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
             "profit": breakdown.profit,
             "total": breakdown.total,
         }
+    )
+
+
+@app.post("/render/replication-snapshot")
+def render_replication_snapshot(req: QuoteRequest) -> Response:
+    """Dev-only replication snapshot (Refs #102): the backend sections of
+    the diagnostic markdown dump. TEMPORARY scaffolding — delete together
+    with src/api/replication_snapshot.py and the frontend
+    DebugSnapshotButton."""
+    _ensure_scenario_enabled(req.scenario)
+    try:
+        body = build_snapshot_markdown(req)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
+
+    return Response(
+        content=body,
+        media_type="text/markdown; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{_safe_filename(req.scenario, "replication.md")}"'
+            )
+        },
     )
 
 

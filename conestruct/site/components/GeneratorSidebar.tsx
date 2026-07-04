@@ -23,6 +23,7 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import { validateWorkZone } from "@/lib/scenarios/validation";
+import type { RoadClassification } from "@/lib/road-detection/types";
 import {
   buildCorridorSpec,
   roadCategoryForRoadType,
@@ -59,6 +60,14 @@ interface Props {
   setScenario: (next: Scenario) => void;
   generating: boolean;
   onGenerate: () => void;
+  // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
+  // picker classification (plus the pin it was captured at, so a later
+  // location edit is detectable as staleness) up to the shell — it
+  // otherwise evaporates at the handoff. Delete with DebugSnapshotButton.
+  onClassification?: (
+    c: RoadClassification | null,
+    at: { lat: number; lng: number },
+  ) => void;
 }
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
@@ -102,6 +111,7 @@ export function GeneratorSidebar({
   setScenario,
   generating,
   onGenerate,
+  onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
   // UX-01/UX-02: the transformations the picker → form handoff applied
@@ -127,6 +137,8 @@ export function GeneratorSidebar({
   };
 
   const onPickerSave = (r: LocationPickerResult) => {
+    // Dev-only snapshot wiring (Refs #102): keep the raw detection alive.
+    onClassification?.(r.classification ?? null, { lat: r.lat, lng: r.lng });
     const cur = scenarioRef.current;
     let next: Scenario = {
       ...cur,
