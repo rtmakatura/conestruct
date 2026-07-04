@@ -19,8 +19,8 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
-from src.rules.devices import DEVICE_CATALOG, DeviceType
-from src.rules.sign_codes import description_for
+from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name, device_row_sort_key
+from src.rules.sign_codes import display_code, schedule_key, substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
 # ---------------------------------------------------------------------------
@@ -164,28 +164,55 @@ class QuoteBreakdown:
 
 
 def _row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:
-    """Match the device-list aggregation: signs split by label, others merged."""
+    """Match the device-list aggregation (device_list._row_key): signs
+    split by schedule key (so the two R2-1 faces on a reduced-speed plan
+    get separate rows), others merged by type."""
     if placement.device_type == DeviceType.SIGN_GENERIC:
-        return (DeviceType.SIGN_GENERIC, placement.label)
+        if placement.label is None:
+            return (DeviceType.SIGN_GENERIC, None)
+        return (DeviceType.SIGN_GENERIC, schedule_key(placement.label, placement.station_ft))
     return (placement.device_type, None)
 
 
 def _aggregate(
     placements: list[DevicePlacement],
-) -> list[tuple[DeviceType, str | None, int]]:
-    counts = Counter(_row_key(p) for p in placements)
-    return sorted(
+) -> tuple[
+    list[tuple[DeviceType, str | None, int]],
+    dict[tuple[DeviceType, str | None], DevicePlacement],
+]:
+    """Aggregate placements into quote rows, plus a lowest-station
+    representative per group for station-dependent substitutions —
+    mirroring device_list._populate_device_list_sheet so the two
+    workbooks agree row for row (Refs #101)."""
+    counts: Counter[tuple[DeviceType, str | None]] = Counter()
+    representatives: dict[tuple[DeviceType, str | None], DevicePlacement] = {}
+    for p in placements:
+        key = _row_key(p)
+        counts[key] += 1
+        current = representatives.get(key)
+        if current is None or p.station_ft < current.station_ft:
+            representatives[key] = p
+    aggregated = sorted(
         ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda row: (row[0].value, row[1] is None, row[1] or ""),
+        key=lambda row: device_row_sort_key(row[0], row[1]),
     )
+    return aggregated, representatives
 
 
-def _description_for(device_type: DeviceType, label: str | None) -> str:
+def _description_for(
+    device_type: DeviceType,
+    label: str | None,
+    representative: DevicePlacement | None,
+    params: ScenarioParams,
+) -> str:
     if device_type == DeviceType.SIGN_GENERIC:
         if label is None:
             return "Generic construction sign (unlabeled)"
-        human = description_for(label)
-        return f"{label} {human}".strip() if human != label else label
+        station_ft = representative.station_ft if representative is not None else 0.0
+        code, human = substitute_sign_description(label, station_ft, params)
+        return f"{code} {human}".strip() if human != code else code
+    if device_type == DeviceType.CONE:
+        return cone_display_name(params.speed_mph)
     return DEVICE_CATALOG[device_type].description
 
 
@@ -218,18 +245,23 @@ def _style_header_row(sheet, row_index: int, num_cols: int) -> None:
 
 def _compute_equipment_lines(
     aggregated: list[tuple[DeviceType, str | None, int]],
+    representatives: dict[tuple[DeviceType, str | None], DevicePlacement],
+    params: ScenarioParams,
     project_duration_days: int,
 ) -> list[EquipmentLine]:
     lines: list[EquipmentLine] = []
     for item_number, (device_type, label, qty) in enumerate(aggregated, start=1):
         rate = EQUIPMENT_DAILY_RATES.get(device_type, 0.0)
         extended = qty * rate * project_duration_days
+        representative = representatives.get((device_type, label))
         lines.append(
             EquipmentLine(
                 item_number=item_number,
                 device_type=device_type.value,
-                label=label or "",
-                description=_description_for(device_type, label),
+                # display_code strips the internal R2-1@face split marker
+                # so both faces show "R2-1" (descriptions distinguish them).
+                label=display_code(label) if label else "",
+                description=_description_for(device_type, label, representative, params),
                 qty=qty,
                 unit=_unit_for(device_type),
                 daily_rate=rate,
@@ -593,9 +625,11 @@ def generate_quote(
     ``QuoteBreakdown`` with all line items, subtotals, markup, and the final
     total — ready to drive a UI drill-down or further programmatic use.
     """
-    aggregated = _aggregate(placements)
+    aggregated, representatives = _aggregate(placements)
 
-    equipment_lines = _compute_equipment_lines(aggregated, project_duration_days)
+    equipment_lines = _compute_equipment_lines(
+        aggregated, representatives, params, project_duration_days
+    )
     labor_lines = _compute_labor_lines(
         is_night=params.is_night,
         project_duration_days=project_duration_days,

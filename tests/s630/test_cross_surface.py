@@ -30,6 +30,7 @@ from openpyxl import load_workbook
 from src.api.render_api import _build_device_breakdown
 from src.api.schemas import ShoulderScenario, scenario_to_call
 from src.export.device_list import export_device_list
+from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import build_narrative_context
 from src.rules.devices import DeviceType
 from src.rules.validators import DevicePlacement, ScenarioParams
@@ -158,6 +159,136 @@ def test_narrative_equipment_carries_no_template_tokens(name: str) -> None:
     assert not _TEMPLATE_TOKEN.search(bullets), (
         f"{name}: narrative equipment list carries a literal template token:\n{bullets}"
     )
+
+
+# ---------------------------------------------------------------------------
+# T-01 — quote Equipment Detail (T4-1 closure, Refs #101)
+#
+# The quote must route through the same shared helpers as the XLSX /
+# breakdown / narrative (substitute_sign_description, schedule_key,
+# device_row_sort_key, cone_display_name) — asserted here on the
+# generated workbook content, not on rate math.
+# ---------------------------------------------------------------------------
+
+# Low-speed variant of the Case 11 body: 40 mph on an undivided rural
+# road, below the MUTCD §6F.65 36-inch cone threshold — exercises the
+# 28-inch branch of cone_display_name on the export surfaces.
+CASE_11_LOW_SPEED_BODY: dict[str, Any] = {
+    **CASE_11_GENERAL_BODY,
+    "roadType": "rural_undivided",
+    "speed": 40,
+    "divided": False,
+}
+
+
+def _quote_equipment_rows(placements, params, tmp_path) -> list[tuple]:
+    """Data rows of the quote's Equipment Detail sheet (skips SUBTOTAL)."""
+    path = tmp_path / "quote.xlsx"
+    generate_quote(placements, params, output_path=str(path))
+    wb = load_workbook(str(path), read_only=True)
+    rows = [
+        r
+        for r in wb["Equipment Detail"].iter_rows(min_row=2, values_only=True)
+        if isinstance(r[0], int)
+    ]
+    wb.close()
+    return rows
+
+
+@pytest.mark.parametrize("name", sorted(BODIES))
+def test_quote_descriptions_carry_no_template_tokens(name: str, tmp_path) -> None:
+    """No Equipment Detail description ships a literal XX/XXX placeholder,
+    and no labeled sign falls back to its bare code (the W3-5(NN)
+    dict-miss case)."""
+    placements, params = _pipeline(BODIES[name])
+    rows = _quote_equipment_rows(placements, params, tmp_path)
+    assert rows, f"{name}: quote Equipment Detail has no data rows"
+    for row in rows:
+        description = str(row[3])
+        assert not _TEMPLATE_TOKEN.search(description), (
+            f"{name}: quote description carries a literal template token: {description!r}"
+        )
+        if row[1] == "SIGN_GENERIC" and row[2]:
+            assert description != str(row[2]), (
+                f"{name}: labeled sign fell back to its bare code: {description!r}"
+            )
+
+
+@pytest.mark.parametrize("name", sorted(REDUCED_SPEEDS))
+def test_quote_splits_r2_1_faces_on_reduced_plans(name: str, tmp_path) -> None:
+    """Same R2-1 face split the XLSX/breakdown already hold: two rows
+    (entrance + restoration), qty 2 each, with the actual limits."""
+    posted, wz_speed = REDUCED_SPEEDS[name]
+    placements, params = _pipeline(BODIES[name])
+    rows = _quote_equipment_rows(placements, params, tmp_path)
+    r2_1_rows = [r for r in rows if str(r[3]).startswith("R2-1 ")]
+    assert len(r2_1_rows) == 2, f"{name}: expected 2 R2-1 rows, got {r2_1_rows}"
+    descriptions = sorted(str(r[3]) for r in r2_1_rows)
+    quantities = [r[4] for r in r2_1_rows]
+    assert quantities == [2, 2], f"{name}: expected qty 2 per face, got {quantities}"
+    assert descriptions[0] == (f"R2-1 SPEED LIMIT {wz_speed} (work-zone speed posting)"), (
+        descriptions
+    )
+    assert descriptions[1] == (f"R2-1 SPEED LIMIT {posted} (posted-speed restoration)"), (
+        descriptions
+    )
+
+
+@pytest.mark.parametrize("name", sorted(BODIES))
+def test_quote_rows_match_xlsx_order_and_descriptions(name: str, tmp_path) -> None:
+    """Quote Equipment Detail agrees with the XLSX Device List row for
+    row — same device_row_sort_key order, byte-identical descriptions,
+    identical quantities, signs leading."""
+    placements, params = _pipeline(BODIES[name])
+    quote_rows = _quote_equipment_rows(placements, params, tmp_path)
+    xlsx_rows = _xlsx_device_rows(placements, params, tmp_path)
+    assert [str(r[3]) for r in quote_rows] == [str(r[2]) for r in xlsx_rows], (
+        f"{name}: quote and XLSX descriptions disagree (content or order)"
+    )
+    assert [r[4] for r in quote_rows] == [r[5] for r in xlsx_rows], (
+        f"{name}: quote and XLSX quantities disagree"
+    )
+    assert quote_rows[0][1] == "SIGN_GENERIC", (
+        f"{name}: quote does not lead with signs: first row {quote_rows[0]!r}"
+    )
+
+
+def test_quote_sign_descriptions_appear_in_narrative(tmp_path) -> None:
+    """Every quote sign description also appears verbatim in the crew
+    narrative's Required Equipment bullets (shared substitution helper
+    ⇒ byte-identity across the three surfaces)."""
+    placements, params = _pipeline(CASE_26_BODY)
+    quote_rows = _quote_equipment_rows(placements, params, tmp_path)
+    bullets = build_narrative_context(placements, params)["equipment_bullets"]
+    sign_descriptions = [str(r[3]) for r in quote_rows if r[1] == "SIGN_GENERIC" and r[2]]
+    assert sign_descriptions, "no labeled sign rows in the quote"
+    for description in sign_descriptions:
+        assert description in bullets, (
+            f"quote sign description not found in narrative equipment bullets: {description!r}"
+        )
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        (CASE_11_GENERAL_BODY, "Traffic Cone (36-inch)"),
+        (CASE_11_LOW_SPEED_BODY, "Traffic Cone (28-inch)"),
+    ],
+    ids=["55mph_36in", "40mph_28in"],
+)
+def test_cone_description_resolves_size_on_quote_and_xlsx(
+    body: dict[str, Any], expected: str, tmp_path
+) -> None:
+    """Quote and XLSX resolve the cone size via cone_display_name(speed),
+    matching the narrative/UI/plan-sheet legend text."""
+    placements, params = _pipeline(body)
+    quote_cones = [r for r in _quote_equipment_rows(placements, params, tmp_path) if r[1] == "CONE"]
+    xlsx_cones = [r for r in _xlsx_device_rows(placements, params, tmp_path) if r[1] == "CONE"]
+    assert quote_cones and xlsx_cones, "no cone row on one of the surfaces"
+    assert str(quote_cones[0][3]) == expected
+    assert str(xlsx_cones[0][2]) == expected
+    bullets = build_narrative_context(placements, params)["equipment_bullets"]
+    assert expected in bullets
 
 
 # ---------------------------------------------------------------------------

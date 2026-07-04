@@ -405,7 +405,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
               <tbody>
                 {breakdown.equipment_lines.map((line) => (
                   <tr
-                    key={`${line.device_type}-${line.label || line.item_number}`}
+                    key={line.item_number}
                     className="border-b border-dotted border-[color:var(--paper-line)]"
                   >
                     <td className="py-1.5">{line.device_type}</td>

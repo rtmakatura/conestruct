@@ -17,7 +17,7 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-from src.rules.devices import DEVICE_CATALOG, DeviceType, device_row_sort_key
+from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name, device_row_sort_key
 from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
@@ -128,6 +128,13 @@ def _row_for(
         type_label = device_type.value
         unit = "EACH"  # V1 override; catalog says SF per Table 630-7 footnote.
         notes = _BARRICADE_TYPE_II_NOTE
+    elif device_type == DeviceType.CONE:
+        # Resolve the size for the posted speed (§6F.65) — same helper the
+        # narrative, UI breakdown, and plan-sheet legend use (Refs #101).
+        description = cone_display_name(params.speed_mph)
+        type_label = device_type.value
+        unit = spec.unit
+        notes = ""
     else:
         description = spec.description
         type_label = device_type.value
