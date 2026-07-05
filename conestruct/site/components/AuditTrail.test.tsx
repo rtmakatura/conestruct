@@ -860,4 +860,15 @@ describe("#97 audit-panel citation edition guard", () => {
     expect(html).not.toContain("§ 6C.09");
     expect(html).toContain("§ 6K.01");
   });
+
+  it("limited-sight-distance rule cites §6B.04, not the stale §6C.04 (#104 A1(a))", () => {
+    // The backend rule (site_adjustments.py) was corrected to §6B.04; this
+    // table had drifted. Holds the line until #104 makes the table read
+    // backend-supplied citations.
+    const spec = siteAdjustmentsItem({ limited_sight_distance: true } as SiteConditions);
+    expect(spec).not.toBeNull();
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).not.toContain("§ 6C.04");
+    expect(html).toContain("§ 6B.04");
+  });
 });

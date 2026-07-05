@@ -58,7 +58,7 @@ const SITE_ADJUSTMENT_DETAIL: Record<
 > = {
   limited_sight_distance: {
     label: "Limited sight distance",
-    rule: "MUTCD § 6C.04",
+    rule: "MUTCD § 6B.04",
     action:
       "Advance warning signs moved 50% farther upstream to compensate for restricted sight lines.",
   },
