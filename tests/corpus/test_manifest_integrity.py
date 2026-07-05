@@ -41,6 +41,13 @@ def test_provenance_is_known(case: CorpusCase) -> None:
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.id)
+def test_kind_is_known(case: CorpusCase) -> None:
+    assert case.kind in ("shoulder", "flagger_lane_closure"), (
+        f"{case.id}: unknown scenario kind {case.kind!r}"
+    )
+
+
+@pytest.mark.parametrize("case", CASES, ids=lambda c: c.id)
 def test_inputs_are_scenario_fields_only(case: CorpusCase) -> None:
     keys = set(case.inputs)
     forbidden = keys & _FORBIDDEN_INPUT_KEYS
@@ -48,7 +55,7 @@ def test_inputs_are_scenario_fields_only(case: CorpusCase) -> None:
         f"{case.id}: inputs must not set {sorted(forbidden)} — meta/lat/lng are "
         f"pinned by scenario_body for determinism."
     )
-    unknown = keys - allowed_input_keys()
+    unknown = keys - allowed_input_keys(case.kind)
     assert not unknown, f"{case.id}: unknown input field(s) {sorted(unknown)}"
 
 

@@ -56,6 +56,27 @@ _SCENARIO_FIELDS = frozenset(
     }
 )
 
+# Fields a flagger_lane_closure case may vary (FlaggerLaneClosureScenario).
+# No lanes/divided/workZoneSpeed: the V1 flagger bridge is fixed 2-lane
+# undivided and carries no reduced-speed field (V1.1 / PR 4).  No
+# siteConditions either: the flagger tier deliberately doesn't sweep the
+# site flags (unsettled #19 spec mapping), so the allowed set doesn't
+# advertise them.
+_FLAGGER_SCENARIO_FIELDS = frozenset(
+    {
+        "roadType",
+        "speed",
+        "laneWidth",
+        "workType",
+        "duration",
+        "workLen",
+        "night",
+        "pilotCar",
+        "afad",
+        "pedestrianAccess",
+    }
+)
+
 
 @dataclass(frozen=True)
 class CorpusCase:
@@ -79,6 +100,10 @@ class CorpusCase:
     # boundary only, 400 cases: the validate_corridor_geometry rule_id that must
     # appear in detail.violations[] of the 400 response.
     expected_error: str = ""
+    # Scenario kind the case exercises. Defaults to "shoulder" so every
+    # pre-flagger case is byte-identical; "flagger_lane_closure" switches
+    # scenario_body's kind and the allowed input-field set.
+    kind: str = "shoulder"
 
 
 def scenario_body(case: CorpusCase) -> dict[str, Any]:
@@ -90,7 +115,7 @@ def scenario_body(case: CorpusCase) -> dict[str, Any]:
     fields = dict(case.inputs)
     site_conditions = fields.pop("siteConditions", {})
     return {
-        "kind": "shoulder",
+        "kind": case.kind,
         "meta": {
             "project": case.id,
             "address": "",
@@ -121,9 +146,9 @@ def snapshot_path(case_id: str) -> Path:
     return CORPUS_SNAPSHOT_DIR / f"{case_id}.json"
 
 
-def allowed_input_keys() -> frozenset[str]:
-    """Scenario field names a case may set in ``inputs``."""
-    return _SCENARIO_FIELDS
+def allowed_input_keys(kind: str = "shoulder") -> frozenset[str]:
+    """Scenario field names a case of this ``kind`` may set in ``inputs``."""
+    return _FLAGGER_SCENARIO_FIELDS if kind == "flagger_lane_closure" else _SCENARIO_FIELDS
 
 
 # ---------------------------------------------------------------------------
@@ -348,6 +373,158 @@ _BOUNDARY_CASES_BUILT: tuple[CorpusCase, ...] = (
 )
 
 
+# ---------------------------------------------------------------------------
+# Flagger tier (Region 6 item 1): the enabled flagger_lane_closure scenario
+# gets the same three provenance tiers shoulder has.  Baseline mirrors
+# FLAGGER_BASIC_BODY (tests/s630/test_ta10_flagger.py) so the corpus and the
+# TA-10 placement harness anchor on the same regime.
+# ---------------------------------------------------------------------------
+
+_FLAGGER_ANCHOR_BASE: dict[str, Any] = {
+    "laneWidth": 11.0,
+    "workType": "utility_cut",
+    "duration": "short",
+    "workLen": 1000.0,
+    "night": False,
+    "pilotCar": False,
+    "afad": False,
+    "pedestrianAccess": False,
+}
+
+_FLAGGER_ANCHOR_CITATION = (
+    "MUTCD 11th Ed.: one-lane two-way taper = 100 ft and in-taper device "
+    "spacing ~20 ft per Sec 6B.08 P14 (Conestruct picks the 100 ft band max; "
+    "same values tests/s630/test_ta10_flagger.py pins at placement level); "
+    "buffer per Table 6B-2 at posted speed (no Case 26/27 step-down is "
+    "expressible on the V1 flagger bridge, so CDOT floors never apply); "
+    "tangent device spacing = 2S per Sec 6K.01; A/B/C per Table 6B-1 by road "
+    "category (rural 500/500/500, matching the CDOT S-630-1 Sheet 9 key "
+    "rural row; urban_low 100/100/100 at <=40 mph, urban_high 350/350/350 "
+    "at >40 mph via the _map_road_type speed branch)."
+)
+
+
+def _flagger_anchor(
+    case_id: str, road_type: str, speed: int, *, buffer: float, tangent: float, abc: int
+) -> CorpusCase:
+    """Spec-verified flagger anchor: the four summary quantities plus the
+    Table 6B-1 A/B/C line (the only road-type-sensitive quantity)."""
+    return CorpusCase(
+        id=case_id,
+        provenance="spec-verified",
+        kind="flagger_lane_closure",
+        inputs={**_FLAGGER_ANCHOR_BASE, "roadType": road_type, "speed": speed},
+        expected={
+            "summary.taper_length_ft": 100.0,
+            "summary.buffer_space_ft": buffer,
+            "summary.device_spacing_taper_ft": 20.0,
+            "summary.device_spacing_tangent_ft": tangent,
+            "sections.advance.spacing_text": f"A = {abc} ft, B = {abc} ft, C = {abc} ft",
+        },
+        citation=_FLAGGER_ANCHOR_CITATION,
+    )
+
+
+_FLAGGER_ANCHOR_CASES_BUILT: tuple[CorpusCase, ...] = (
+    _flagger_anchor(
+        "anchor_flagger_rural_20", "rural_undivided", 20, buffer=115.0, tangent=40.0, abc=500
+    ),
+    _flagger_anchor(
+        "anchor_flagger_rural_45", "rural_undivided", 45, buffer=360.0, tangent=90.0, abc=500
+    ),
+    _flagger_anchor(
+        "anchor_flagger_rural_55", "rural_undivided", 55, buffer=495.0, tangent=110.0, abc=500
+    ),
+    _flagger_anchor(
+        "anchor_flagger_urban_20", "urban_arterial", 20, buffer=115.0, tangent=40.0, abc=100
+    ),
+    _flagger_anchor(
+        "anchor_flagger_urban_40", "urban_arterial", 40, buffer=305.0, tangent=80.0, abc=100
+    ),
+    _flagger_anchor(
+        "anchor_flagger_urban_45", "urban_arterial", 45, buffer=360.0, tangent=90.0, abc=350
+    ),
+    _flagger_anchor(
+        "anchor_flagger_urban_55", "urban_arterial", 55, buffer=495.0, tangent=110.0, abc=350
+    ),
+)
+
+
+# Baseline for the flagger current-behavior grid: FLAGGER_BASIC_BODY's regime.
+# One factor varied at a time, except the noted urban_35 case which crosses
+# the urban_low/urban_high regime branch (_map_road_type, speed > 40) that no
+# single-factor variant can reach.  Site-condition flags are deliberately NOT
+# swept: their spec mapping is the same unsettled open #19 that made them
+# snapshot-only for shoulder — snapshotting unverified flagger semantics adds
+# lock-in, not truth.
+_FLAGGER_GRID_BASE: dict[str, Any] = {
+    "roadType": "rural_undivided",
+    "speed": 45,
+    "laneWidth": 11.0,
+    "workType": "utility_cut",
+    "duration": "short",
+    "workLen": 1000.0,
+    "night": False,
+    "pilotCar": False,
+    "afad": False,
+    "pedestrianAccess": False,
+}
+
+
+def _fgrid(case_id: str, **overrides: Any) -> CorpusCase:
+    """A flagger current-behavior grid case: the snapshot IS the assertion."""
+    return CorpusCase(
+        id=case_id,
+        provenance="current-behavior",
+        kind="flagger_lane_closure",
+        inputs={**_FLAGGER_GRID_BASE, **overrides},
+    )
+
+
+_FLAGGER_GRID_SPEEDS = (20, 25, 30, 35, 40, 50, 55)  # 45 is the baseline
+_FLAGGER_GRID_LANE_WIDTHS = (9.0, 10.0, 12.0, 13.0, 14.0)  # 11.0 baseline
+_FLAGGER_GRID_WORK_LENS = (500, 2500, 5280)  # 1000 baseline
+_FLAGGER_GRID_WORK_TYPES = ("water_main", "chip_seal", "patching", "other")
+
+_FLAGGER_GRID_CASES_BUILT: tuple[CorpusCase, ...] = (
+    *(_fgrid(f"flagger_grid_speed_{s}", speed=s) for s in _FLAGGER_GRID_SPEEDS),
+    *(_fgrid(f"flagger_grid_lanewidth_{w:g}", laneWidth=w) for w in _FLAGGER_GRID_LANE_WIDTHS),
+    *(_fgrid(f"flagger_grid_worklen_{wl:g}", workLen=wl) for wl in _FLAGGER_GRID_WORK_LENS),
+    *(_fgrid(f"flagger_grid_worktype_{wt}", workType=wt) for wt in _FLAGGER_GRID_WORK_TYPES),
+    _fgrid("flagger_grid_road_urban_arterial", roadType="urban_arterial"),
+    _fgrid("flagger_grid_road_urban_arterial_35", roadType="urban_arterial", speed=35),
+    _fgrid("flagger_grid_night", night=True),
+    _fgrid("flagger_grid_duration_long", duration="long"),
+    _fgrid("flagger_grid_afad", afad=True),
+    _fgrid("flagger_grid_pilot_car", pilotCar=True),
+    _fgrid("flagger_grid_pedestrian_access", pedestrianAccess=True),
+    _fgrid("flagger_grid_all_toggles", afad=True, pilotCar=True, pedestrianAccess=True),
+)
+
+
+def _fboundary(case_id: str, *, status: int, **overrides: Any) -> CorpusCase:
+    """A flagger boundary case: assert the HTTP status only (no 400-tier
+    geometry rejects here — the flagger taper is a 100 ft constant, so the
+    schema envelope is the binding edge)."""
+    return CorpusCase(
+        id=case_id,
+        provenance="boundary",
+        kind="flagger_lane_closure",
+        inputs={**_FLAGGER_GRID_BASE, **overrides},
+        expected_status=status,
+    )
+
+
+_FLAGGER_BOUNDARY_CASES_BUILT: tuple[CorpusCase, ...] = (
+    # 422 — schema envelope: flagger speed is 20-55, multiple of 5.
+    _fboundary("flagger_boundary_speed_60", speed=60, status=422),
+    _fboundary("flagger_boundary_speed_15", speed=15, status=422),
+    # Near-edge ACCEPTS guarding the valid envelope from over-tightening.
+    _fboundary("flagger_boundary_speed_20_accepted", speed=20, status=200),
+    _fboundary("flagger_boundary_speed_55_accepted", speed=55, status=200),
+)
+
+
 CASES: tuple[CorpusCase, ...] = (
     CorpusCase(
         id="anchor_spacing_55mph_divided",
@@ -460,6 +637,13 @@ CASES: tuple[CorpusCase, ...] = (
     # PR-4 boundary/invalid tier (7 cases): 3x 422 schema rejects, 2x 400
     # geometry rejects (named rule_id), 2x near-edge 200 accepts.
     *_BOUNDARY_CASES_BUILT,
+    # Flagger tier: 7 hand-verified anchors across the 20-55 envelope and
+    # both road types, incl. both sides of the 40-mph urban_low/urban_high
+    # regime boundary.
+    *_FLAGGER_ANCHOR_CASES_BUILT,
+    # Flagger current-behavior grid (27 cases) + boundary tier (4 cases).
+    *_FLAGGER_GRID_CASES_BUILT,
+    *_FLAGGER_BOUNDARY_CASES_BUILT,
 )
 
 ANCHOR_CASES: tuple[CorpusCase, ...] = tuple(c for c in CASES if c.provenance == "spec-verified")

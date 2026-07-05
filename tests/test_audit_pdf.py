@@ -239,3 +239,38 @@ def test_corridor_warning_renders_as_clean_line() -> None:
     # (flag/level are skipped; message is the rendered prose).
     missing = _missing_leaves(projection, text)
     assert not missing, f"projection strings absent from the PDF blocks: {missing}"
+
+
+# ---------------------------------------------------------------------------
+# Flagger twin of the single-source proof (Region 6 item 1)
+# ---------------------------------------------------------------------------
+
+
+def _flagger_projection() -> dict[str, Any]:
+    """The V1 flagger baseline (FLAGGER_BASIC_BODY) through the same
+    production build_audit_trail -> audit_projection path."""
+    from src.api.audit import _compute_step_count
+    from src.api.schemas import FlaggerLaneClosureScenario, scenario_to_call
+    from tests.s630.test_ta10_flagger import FLAGGER_BASIC_BODY
+
+    scenario = FlaggerLaneClosureScenario.model_validate(FLAGGER_BASIC_BODY)
+    params, generator, kwargs = scenario_to_call(scenario)
+    placements = generator(params, **kwargs)
+    audit = build_audit_trail(placements, params)
+    return audit_projection(
+        audit,
+        "flagger_lane_closure",
+        step_count=_compute_step_count(scenario),
+        road_type=params.road_type,
+    )
+
+
+def test_blocks_carry_every_projection_string_flagger() -> None:
+    """Flagger twin of the single-source proof: no flagger citation, value
+    sentence, table cell, or note is dropped or altered in the projection ->
+    blocks step.  (String leaves only — the numeric-leaf gap is a tracked,
+    separate item: reliability-map Region 6 item 3.)"""
+    projection = _flagger_projection()
+    text = normalize_glyphs(_block_plaintext(audit_to_blocks(projection)))
+    missing = _missing_leaves(projection, text)
+    assert not missing, f"flagger projection strings absent from the PDF blocks: {missing}"

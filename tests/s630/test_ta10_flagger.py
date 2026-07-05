@@ -448,3 +448,40 @@ def test_offpage_table_shoulder_has_no_station_rows() -> None:
 
     assert rows  # the table itself is populated…
     assert all(r[0] != "—" for r in rows)  # …with sign rows only
+
+
+# ---------------------------------------------------------------------------
+# Plan-sheet PDF content — flagger twin of test_w20_2_label_substitutes_distance
+# (Region 6 item 1: no flagger plan-sheet content test existed)
+# ---------------------------------------------------------------------------
+
+
+def test_flagger_plan_sheet_pdf_substitutes_and_carries_no_tokens(tmp_path) -> None:
+    """Rendered flagger plan-sheet text carries no literal XX/XXX template
+    token, substitutes a real G20-1 distance, names the flagger station, and
+    renders the notes-panel structure — the shoulder pypdfium2 invariant,
+    applied to flagger."""
+    import re
+
+    import pypdfium2 as pdfium
+
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    placements, _, params = flagger_placements_and_audit(FLAGGER_BASIC_BODY)
+    path = str(tmp_path / "flagger_plan.pdf")
+    # No shoulder_width_ft kwarg: match production (render_api.render_pdf),
+    # which lets the renderer read params.shoulder_width_ft.
+    render_plan_sheet(placements, params, output_path=path)
+    pdf = pdfium.PdfDocument(path)
+    try:
+        text = "\n".join(page.get_textpage().get_text_range() for page in pdf)
+    finally:
+        pdf.close()
+
+    assert not re.search(r"\bX{2,3}\b", text), "flagger plan sheet leaks a literal template token"
+    assert re.search(r"NEXT [\d,]+ FT", text), (
+        "expected a substituted G20-1 'NEXT <distance> FT' legend in the flagger plan sheet"
+    )
+    assert "FLAGGER" in text, "expected the flagger station to be named on the plan sheet"
+    for header in ("PARAMETERS", "SIGN SCHEDULE", "ADVANCE WARNING SIGNS"):
+        assert header in text, f"expected notes-panel header {header!r}"
