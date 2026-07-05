@@ -64,13 +64,13 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   },
   adjacent_intersection: {
     label: "Intersection within work zone",
-    rule: "MUTCD § 6C.10",
+    rule: "MUTCD § 6N.12",
     action:
       "Two W20-1 ROAD WORK AHEAD signs added facing cross-street approaches.",
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
-    rule: "MUTCD §§ 6C.10 + 6F.60",
+    rule: "MUTCD § 6N.16 + Ch. 6H",
     action:
       "1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS added to warn upstream ramp traffic of the closure.",
   },

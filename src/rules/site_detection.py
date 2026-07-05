@@ -307,7 +307,8 @@ _RELEVANT_ZONES: frozenset[str] = frozenset(
 # Numbers are tunable; the lateral 150 ft covers a typical 4-lane arterial
 # section (lanes + shoulders + furnish) with margin, and the 250 ft / 500 ft
 # longitudinal extents match the urban A-spacing / ramp-signing distances
-# called out in MUTCD §6C.10 + §6F.60.
+# called out in MUTCD §6N.12 + §6N.16 (11th-ed intersection/interchange
+# work-zone sections; formerly cited via the stale §6C.10 + §6F.60).
 _BUCKET_RELEVANCE_OVERRIDES: dict[str, dict[str, float]] = {
     "intersections": {"outside_tolerance_ft": 250.0},
     "interchanges": {"outside_tolerance_ft": 500.0},

@@ -749,7 +749,7 @@ def test_site_adjustments_interchange_only_adds_w20_3_and_pcms() -> None:
     assert rec["devices_added"] == 2
     assert "W20-3" in rec["action"]
     assert "PCMS" in rec["action"]
-    assert "6F.60" in rec["rule"]
+    assert "6N.16" in rec["rule"]
 
     # Exactly one W20-3 sign added at the work-zone midpoint.
     w20_3 = [p for p in adjusted if p.device_type == DeviceType.SIGN_GENERIC and p.label == "W20-3"]

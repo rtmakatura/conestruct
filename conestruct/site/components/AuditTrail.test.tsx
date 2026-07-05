@@ -871,4 +871,25 @@ describe("#97 audit-panel citation edition guard", () => {
     expect(html).not.toContain("§ 6C.04");
     expect(html).toContain("§ 6B.04");
   });
+
+  it("intersection rule cites §6N.12, not the stale §6C.10", () => {
+    // Verified by subject against the 11th-ed Part 6 PDF (§6N.12 = Work
+    // within the Traveled Way at an Intersection); backend fixed in
+    // lockstep (site_adjustments.py). Holds until #104.
+    const spec = siteAdjustmentsItem({ adjacent_intersection: true } as SiteConditions);
+    expect(spec).not.toBeNull();
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).not.toContain("6C.10");
+    expect(html).toContain("§ 6N.12");
+  });
+
+  it("interchange rule cites §6N.16 + Ch. 6H, not the stale §6C.10 + §6F.60", () => {
+    const spec = siteAdjustmentsItem({ adjacent_interchange: true } as SiteConditions);
+    expect(spec).not.toBeNull();
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).not.toContain("6C.10");
+    expect(html).not.toContain("6F.60");
+    expect(html).toContain("§ 6N.16");
+    expect(html).toContain("Ch. 6H");
+  });
 });

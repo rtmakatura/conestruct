@@ -95,7 +95,7 @@ def _adjust_adjacent_intersection(
         "flag": "adjacent_intersection",
         "action": "Added 2 ROAD WORK AHEAD (W20-1) signs facing cross-street traffic.",
         "devices_added": 2,
-        "rule": "MUTCD §6C.10 — signing for intersections within or adjacent to work zones",
+        "rule": "MUTCD §6N.12 — signing for intersections within or adjacent to work zones",
     }
     return placements + new_signs, record
 
@@ -142,7 +142,7 @@ def _adjust_adjacent_interchange(
             "upstream interchange ramp signaling."
         ),
         "devices_added": 2,
-        "rule": ("MUTCD §6C.10 + §6F.60 — work zone signing for interchanges and ramp areas"),
+        "rule": ("MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"),
     }
     return placements + new_devices, record
 
