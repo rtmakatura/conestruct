@@ -469,6 +469,26 @@ def test_crew_narrative_pedestrian_facility_emits_6c02_citation() -> None:
     assert "§6D.01" not in markdown
 
 
+def test_crew_narrative_r9_9_legend_is_plain_sidewalk_closed() -> None:
+    """R9-9 renders as plain SIDEWALK CLOSED, never USE OTHER SIDE.
+
+    Per MUTCD 11th ed. §6G.10, R9-9 is plain "SIDEWALK CLOSED"; the
+    "USE OTHER SIDE" legend belongs to R9-10, which asserts an alternate
+    walkable side the tool has no way to confirm exists.  Covers both
+    narrative renderings: the equipment-list line (via the shared
+    sign_codes description) and the Site-Specific Notes action text
+    (site_adjustments' own sentence).
+    """
+    markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"pedestrian_facility": True})
+    assert "R9-9 SIDEWALK CLOSED" in markdown
+    assert "USE OTHER SIDE" not in markdown
+    # Legend-only fix: the note must still claim the unchanged device
+    # set — 4 barricades, 2 signs, both work-zone ends.
+    assert "4 Type III barricades" in markdown
+    assert "2 R9-9" in markdown
+    assert "upstream and downstream ends" in markdown
+
+
 # ---------------------------------------------------------------------------
 # Night Operation Notes — emitted MUTCD citations
 # ---------------------------------------------------------------------------

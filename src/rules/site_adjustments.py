@@ -184,8 +184,8 @@ def _adjust_pedestrian_facility(
         "flag": "pedestrian_facility",
         "action": (
             "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 "
-            "SIDEWALK CLOSED USE OTHER SIDE signs at the upstream and "
-            "downstream ends of the work zone."
+            "SIDEWALK CLOSED signs at the upstream and downstream ends of "
+            "the work zone."
         ),
         "devices_added": 6,
         "rule": "MUTCD §6C.02 — pedestrian considerations in work zones",

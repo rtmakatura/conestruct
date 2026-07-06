@@ -2022,6 +2022,20 @@ def test_description_for_falls_back_to_bare_code_for_unknown() -> None:
     assert description_for("ZZ-99") == "ZZ-99"
 
 
+def test_r9_9_description_is_plain_sidewalk_closed() -> None:
+    """R9-9 is plain "SIDEWALK CLOSED" per MUTCD 11th ed. §6G.10.
+
+    The "USE OTHER SIDE" legend belongs to a different code, R9-10 —
+    it asserts a walkable alternate side exists, which this tool cannot
+    verify, so the plain R9-9 legend is the deliberate choice.  (The old
+    mapping conflated the two; wrong in the 2009 edition as well.)
+    """
+    from src.rules.sign_codes import description_for
+
+    assert description_for("R9-9") == "SIDEWALK CLOSED"
+    assert "USE OTHER SIDE" not in description_for("R9-9")
+
+
 def test_description_for_keeps_xxx_placeholder_for_substitution() -> None:
     """W20-2 and G20-1 carry parametric distances — the literal XXX must
     survive the lookup so consumers can substitute the actual length."""

@@ -49,7 +49,9 @@ SIGN_DESCRIPTIONS: dict[str, str] = {
     "G20-4": "PILOT CAR FOLLOW ME",
     "G20-5P": "CONSTRUCTION ZONE plaque",
     # Regulatory (R-series)
-    "R9-9": "SIDEWALK CLOSED — USE OTHER SIDE",
+    # Plain legend per §6G.10 — "USE OTHER SIDE" belongs to R9-10, which
+    # asserts a walkable alternate side the tool cannot verify exists.
+    "R9-9": "SIDEWALK CLOSED",
     "R2-1": "SPEED LIMIT XX",
     "R2-6P": "FINES DOUBLE plaque",
     "R2-10": "BEGIN DOUBLE FINES ZONE",

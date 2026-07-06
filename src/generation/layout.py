@@ -1258,9 +1258,10 @@ def generate_flagger_alternating_2lane(
         vehicle per S-630-1 Sheet 26, never a roadside placement) are
         field equipment listed in the narrative, not placed devices.
         The flag therefore adds no placements.
-      ``pedestrian_access``: add R9-9 ("SIDEWALK CLOSED — USE OTHER
-        SIDE") at the upstream and downstream ends of the work zone on
-        the work-side shoulder.
+      ``pedestrian_access``: add R9-9 ("SIDEWALK CLOSED" — plain legend
+        per §6G.10; R9-10's "USE OTHER SIDE" asserts an alternate side
+        the tool cannot verify) at the upstream and downstream ends of
+        the work zone on the work-side shoulder.
 
     Standards: MUTCD 11th Ed. Part 6 TA-10 (Fig. 6P-10) is the federal
     standard for flagger-controlled alternating one-way traffic on a
@@ -1621,11 +1622,12 @@ def generate_flagger_alternating_2lane(
             )
         )
 
-    # 11. Pedestrian access signs — R9-9 "SIDEWALK CLOSED — USE OTHER
-    # SIDE" at the upstream and downstream ends of the work zone, on
-    # the work-side shoulder.  v1 does not emit detour-routing signs
-    # (R9-11a etc.) — those need sidewalk geometry the form does not
-    # capture yet.
+    # 11. Pedestrian access signs — R9-9 "SIDEWALK CLOSED" (plain legend
+    # per §6G.10; "USE OTHER SIDE" is R9-10 and asserts an alternate
+    # side the tool cannot verify) at the upstream and downstream ends
+    # of the work zone, on the work-side shoulder.  v1 does not emit
+    # detour-routing signs (R9-11a etc.) — those need sidewalk geometry
+    # the form does not capture yet.
     if pedestrian_access:
         placements.append(
             DevicePlacement(

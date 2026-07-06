@@ -75,7 +75,7 @@ FREEWAY_MIN_LANE_WIDTH_FT: float = 11.0
 _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
     {
         "G20-4",  # PILOT CAR FOLLOW ME — co-located with flagger station
-        "R9-9",  # SIDEWALK CLOSED — USE OTHER SIDE — at work-zone boundary
+        "R9-9",  # SIDEWALK CLOSED — at work-zone boundary
         # Fines Double envelope signs (V1-Wide Item 3) — regulatory signs
         # in the speed-reduction Fines Double envelope per CO Supplement
         # §2B.13 + S-630-1 Sheet 12.  Excluded from A/B/C cluster math so
