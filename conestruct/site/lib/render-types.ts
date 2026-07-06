@@ -70,6 +70,20 @@ export interface PlanFlags {
   is_clean: boolean;
 }
 
+// #104 — one record per fired site-condition flag, passed through from the
+// backend's apply_site_adjustments verbatim plus a derived ``citation``
+// display string (the panel chip, e.g. "MUTCD § 6B.04"). The panel reads
+// ``citation`` backend-first so the static SITE_ADJUSTMENT_DETAIL table is
+// a deploy-window fallback only, closing the citation-drift class.
+export interface SiteAdjustmentRecord {
+  flag: string;
+  action: string;
+  rule: string;
+  citation: string;
+  devices_added: number;
+  devices_modified?: number;
+}
+
 export interface AuditResponse {
   summary: AuditSummary;
   plan_flags?: PlanFlags;
@@ -89,6 +103,9 @@ export interface AuditResponse {
     // shoulder/lane closures with reduction, or ``applicable=false``
     // (carve-out reason) for flagger scenarios with reduction.
     fines_double?: Record<string, unknown>;
+    // #104: absent when no site-condition flag fired AND during the
+    // Vercel-leads-Modal deploy window (fallback: static table).
+    site_adjustments?: SiteAdjustmentRecord[];
   };
   pending_verification: PendingVerification;
 }

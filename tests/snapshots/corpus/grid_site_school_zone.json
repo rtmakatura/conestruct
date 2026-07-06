@@ -118,6 +118,15 @@
       "violations": [],
       "work_zone_ft": 2000.0
     },
+    "site_adjustments": [
+      {
+        "action": "Added 2 S1-1 SCHOOL signs upstream of the advance warning signs (station 4,678 ft, both sides).",
+        "citation": "MUTCD § 7B.08",
+        "devices_added": 2,
+        "flag": "school_zone",
+        "rule": "MUTCD §7B.08 — school zone signing in proximity to work zones"
+      }
+    ],
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

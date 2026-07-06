@@ -112,6 +112,15 @@
       "violations": [],
       "work_zone_ft": 2000.0
     },
+    "site_adjustments": [
+      {
+        "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+        "citation": "MUTCD § 6C.02",
+        "devices_added": 6,
+        "flag": "pedestrian_facility",
+        "rule": "MUTCD §6C.02 — pedestrian considerations in work zones"
+      }
+    ],
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

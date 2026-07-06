@@ -2497,3 +2497,55 @@ def test_taper_formula_choice_uses_quadratic_at_40() -> None:
     taper_45 = audit_module.build_audit_trail([], params_at(45))["taper"]
     assert taper_45["formula_choice"] == ("Speed 45 mph >= 45 mph threshold -> using L = W x S")
     assert "deviat" not in taper_45["source"]
+
+
+# ---------------------------------------------------------------------------
+# #104 — sections.site_adjustments: backend-supplied per-flag citations.
+#
+# The React panel's SITE_ADJUSTMENT_DETAIL table used to be a hardcoded
+# copy of the backend's site-adjustment citations; every citation-drift
+# bug in the #97/#101 batch came from that duplication. The projection now
+# carries the fired site-adjustment records verbatim plus a derived
+# ``citation`` display string (the #97 discrete-panel-citation pattern),
+# so the panel reads the backend and the static table becomes a
+# deploy-window fallback only. Single source stays site_adjustments.py's
+# ``rule`` — a citation fix there propagates here automatically.
+# ---------------------------------------------------------------------------
+
+# flag → the exact chip string the panel displays today (byte-identical to
+# the frontend's SITE_ADJUSTMENT_DETAIL entries — behavior-preserving).
+_SITE_PANEL_CITATIONS = {
+    "limited_sight_distance": "MUTCD § 6B.04",
+    "adjacent_intersection": "MUTCD § 6N.12",
+    "adjacent_interchange": "MUTCD § 6N.16 + Ch. 6H",
+    "driveways_present": "MUTCD § 6K.01",
+    "pedestrian_facility": "MUTCD § 6C.02",
+    "bicycle_facility": "MUTCD § 9C.101",
+    "school_zone": "MUTCD § 7B.08",
+}
+
+
+def test_site_adjustments_carry_panel_citations(client: TestClient) -> None:
+    """All 7 flags → sections.site_adjustments has one record per flag,
+    each carrying the record fields verbatim plus the derived panel
+    ``citation`` byte-identical to the static frontend table."""
+    s = _shoulder_scenario()
+    s["meta"]["siteConditions"] = {flag: True for flag in _SITE_PANEL_CITATIONS}
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, res.text
+    records = res.json()["sections"]["site_adjustments"]
+    assert [r["flag"] for r in records] == list(_SITE_PANEL_CITATIONS)
+    for r in records:
+        assert r["citation"] == _SITE_PANEL_CITATIONS[r["flag"]]
+        # Record passes through verbatim alongside the derived citation.
+        assert r["action"]
+        assert r["rule"].replace("§", "§ ").startswith(r["citation"])
+        assert isinstance(r["devices_added"], int)
+
+
+def test_site_adjustments_absent_when_no_flags(client: TestClient) -> None:
+    """No site flags → the key is omitted entirely (additive field; every
+    existing no-flag snapshot stays byte-identical)."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200, res.text
+    assert "site_adjustments" not in res.json()["sections"]

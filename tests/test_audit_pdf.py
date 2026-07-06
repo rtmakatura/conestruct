@@ -69,6 +69,15 @@ _PANEL_ONLY_CITATIONS = frozenset(
         "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
         "MUTCD § 6K.01",
         "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+        # #104 — site-adjustment ``citation`` chips (derived from ``rule``
+        # by _site_citation): panel-only; the PDF renders the full ``rule``
+        # prose in the Site Adjustments table instead.
+        "MUTCD § 6B.04",
+        "MUTCD § 6N.12",
+        "MUTCD § 6N.16 + Ch. 6H",
+        "MUTCD § 6C.02",
+        "MUTCD § 9C.101",
+        "MUTCD § 7B.08",
     }
 )
 
@@ -274,3 +283,50 @@ def test_blocks_carry_every_projection_string_flagger() -> None:
     text = normalize_glyphs(_block_plaintext(audit_to_blocks(projection)))
     missing = _missing_leaves(projection, text)
     assert not missing, f"flagger projection strings absent from the PDF blocks: {missing}"
+
+
+# ---------------------------------------------------------------------------
+# #104 — Site Adjustments section (sections.site_adjustments)
+# ---------------------------------------------------------------------------
+
+_ALL_SITE_FLAGS = (
+    "limited_sight_distance",
+    "adjacent_intersection",
+    "adjacent_interchange",
+    "driveways_present",
+    "pedestrian_facility",
+    "bicycle_facility",
+    "school_zone",
+)
+
+
+def _projection_with_site_flags() -> dict[str, Any]:
+    """The shoulder baseline with every site flag fired, through the same
+    production path (_placements_for applies site adjustments before the
+    audit builder; here apply_site_adjustments plays that role)."""
+    from src.rules.site_adjustments import apply_site_adjustments
+
+    placements = generate_shoulder_closure_divided(_PARAMS)
+    placements, site_records = apply_site_adjustments(
+        placements, _PARAMS, {flag: True for flag in _ALL_SITE_FLAGS}
+    )
+    audit = build_audit_trail(placements, _PARAMS)
+    return audit_projection(
+        audit,
+        "shoulder",
+        step_count=11,
+        road_type=_PARAMS.road_type,
+        site_records=site_records,
+    )
+
+
+def test_blocks_carry_every_projection_string_site_adjustments() -> None:
+    """Site-flag twin of the single-source proof: the projection's new
+    sections.site_adjustments records (rule prose + action text) render on
+    the PDF — the audit PDF is the complete attach-to-a-bid-packet view, so
+    a section the projection carries cannot be silently dropped."""
+    projection = _projection_with_site_flags()
+    text = normalize_glyphs(_block_plaintext(audit_to_blocks(projection)))
+    missing = _missing_leaves(projection, text)
+    assert not missing, f"site-adjustment strings absent from the PDF blocks: {missing}"
+    assert "Site Adjustments" in text

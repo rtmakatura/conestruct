@@ -271,6 +271,36 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
     return blocks
 
 
+def _site_adjustments_blocks(records: list[dict[str, Any]]) -> list[Block]:
+    """Site-condition adjustments (#104) — one row per fired flag.
+
+    The PDF renders each record's full ``rule`` prose + ``action`` text;
+    the derived discrete ``citation`` chip is panel-only (same split as
+    the #97 taper/buffer/spacing citations, where the PDF carries the
+    prose ``source``).  ``flag`` is a machine key, not display text.
+    """
+    if not records:
+        return []
+    blocks: list[Block] = [Heading(2, _cell("Site Adjustments"))]
+    blocks.append(
+        _body(
+            "Site-condition flags layered onto the baseline MUTCD/CDOT "
+            "layout. Each adjustment is traced to its source rule; the "
+            "rendered plan, device list, and crew narrative reflect every "
+            "item below."
+        )
+    )
+    rows = [[_cell(r.get("rule", "")), _cell(r.get("action", ""))] for r in records]
+    blocks.append(
+        Table_(
+            header=[_cell(h) for h in ("Rule", "Adjustment")],
+            rows=rows,
+            weights=[2, 3],
+        )
+    )
+    return blocks
+
+
 def _flagger_blocks(flagger: dict[str, Any]) -> list[Block]:
     if not flagger:
         return []
@@ -377,6 +407,7 @@ def audit_to_blocks(projection: dict[str, Any]) -> list[Block]:
     blocks += _case_blocks(sections.get("case", {}))
     blocks += _geometry_blocks(sections.get("geometry_validation", {}))
     blocks += _corridor_blocks(sections.get("corridor_validation", {}))
+    blocks += _site_adjustments_blocks(sections.get("site_adjustments", []))
     blocks += _flagger_blocks(sections.get("flagger", {}))
     if "fines_double" in sections:
         blocks += _fines_double_blocks(sections["fines_double"])

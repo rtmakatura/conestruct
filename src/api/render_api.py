@@ -682,7 +682,7 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
     Same placement source as ``/render/pdf`` so the audit cannot drift from
     the rendered plan.
     """
-    placements, params, _site, _night = _placements_for(scenario)
+    placements, params, site_records, _night = _placements_for(scenario)
     # Shoulder width is read from params.shoulder_width_ft inside the
     # audit builder (single source of truth — set once at the schemas bridge).
     audit = build_audit_trail(
@@ -692,7 +692,16 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
         site_lng=scenario.meta.lng or None,
     )
     step_count = _compute_step_count(scenario)
-    return audit_projection(audit, scenario.kind, step_count, road_type=params.road_type)
+    return audit_projection(
+        audit,
+        scenario.kind,
+        step_count,
+        road_type=params.road_type,
+        # #104 — the site-adjustment records were already computed for the
+        # narrative path; pass them through so the projection carries the
+        # per-flag citations the panel reads (no second computation).
+        site_records=site_records,
+    )
 
 
 @app.post("/render/audit")

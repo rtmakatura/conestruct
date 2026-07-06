@@ -12,7 +12,11 @@ import type {
   SiteConditions,
   WorkBeyondShoulderScenario,
 } from "@/lib/scenarios";
-import type { AuditResponse, AuditState } from "@/lib/render-types";
+import type {
+  AuditResponse,
+  AuditState,
+  SiteAdjustmentRecord,
+} from "@/lib/render-types";
 
 // #97 — the taper/buffer/spacing cite header + footer chip now come from
 // the backend ``section.citation`` field (single source; the backend prose
@@ -52,6 +56,15 @@ function sectionCitation(
   };
 }
 
+// #104 — per-flag ``rule`` citations now read the backend's
+// ``sections.site_adjustments[].citation`` when present (single source:
+// site_adjustments.py), following the sectionCitation pattern above. This
+// table is the deploy-window fallback only — its citation values are
+// byte-identical to what the backend derives, so the panel displays the
+// same chip regardless of deploy order. ``label`` and ``action`` remain
+// panel copy (the backend's ``action`` prose is worded differently, and
+// converting it would visibly change the panel — a value change kept out
+// of the #104 structural migration).
 const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
   { label: string; rule: string; action: string }
@@ -77,9 +90,7 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   driveways_present: {
     label: "Driveways present",
     // #97 — 11th-edition renumber (§6C.09 → §6K.01, channelizing-device
-    // spacing); the backend crew narrative already cites §6K.01. NOTE:
-    // SITE_ADJUSTMENT_DETAIL is still a static client-side table; making it
-    // read backend citations is filed as a follow-up on #71.
+    // spacing); the backend crew narrative already cites §6K.01.
     rule: "MUTCD § 6K.01",
     action:
       "Maintain access gaps in channelization. Do not place devices across driveway entrances (advisory only).",
@@ -191,7 +202,17 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const additiveItems: ItemSpec[] =
     audit.state === "ready" ? buildAdditiveItems(audit.data) : [];
 
-  const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions);
+  // #104 — thread the backend site-adjustment records into the item so
+  // its per-flag citations are backend-fed. ``lastReady`` keeps the
+  // backend values through refetch/error (stale-while-revalidate); on the
+  // very first load — or during the deploy window where the backend
+  // doesn't ship the field yet — the static fallback renders identical
+  // values, so there is no flicker.
+  const siteRecords =
+    audit.state === "ready"
+      ? audit.data.sections.site_adjustments
+      : audit.lastReady?.sections.site_adjustments;
+  const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions, siteRecords);
 
   const items: ItemSpec[] = [
     ...scenarioItems,
@@ -1067,14 +1088,25 @@ export function referenceItem(
 
 export function siteAdjustmentsItem(
   flags: SiteConditions | undefined,
+  records?: SiteAdjustmentRecord[],
 ): ItemSpec | null {
   const checked = (Object.keys(SITE_ADJUSTMENT_DETAIL) as SiteConditionFlag[])
     .filter((k) => flags?.[k]);
   if (checked.length === 0) return null;
+  // #104 — per-flag citation reads the backend record when present (same
+  // deploy-window fallback contract as sectionCitation above). The static
+  // values are byte-identical to the backend derivation, so either source
+  // renders the same chip.
+  const citationFor = (k: SiteConditionFlag): string =>
+    records?.find((r) => r.flag === k)?.citation ??
+    SITE_ADJUSTMENT_DETAIL[k].rule;
   return {
     title: "Site adjustments",
     result: `${checked.length} flag${checked.length === 1 ? "" : "s"}`,
-    cite: "MUTCD § 6C / § 6D",
+    // The 7 rules span MUTCD Parts 6, 7, and 9, so no single aggregate
+    // section is honest here — the per-flag chips below carry the real
+    // citations (backend-fed).
+    cite: "MUTCD — per-flag citations below",
     body: (
       <>
         <p>
@@ -1092,7 +1124,7 @@ export function siteAdjustmentsItem(
                 <span className="check-list-lbl">
                   <strong>{d.label}</strong> — {d.action}
                 </span>
-                <span className="check-list-src">{d.rule}</span>
+                <span className="check-list-src">{citationFor(k)}</span>
               </div>
             );
           })}

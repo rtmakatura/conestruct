@@ -112,6 +112,15 @@
       "violations": [],
       "work_zone_ft": 2000.0
     },
+    "site_adjustments": [
+      {
+        "action": "Added 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for upstream interchange ramp signaling.",
+        "citation": "MUTCD § 6N.16 + Ch. 6H",
+        "devices_added": 2,
+        "flag": "adjacent_interchange",
+        "rule": "MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"
+      }
+    ],
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

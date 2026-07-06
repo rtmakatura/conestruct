@@ -15,6 +15,7 @@ import type {
   AuditResponse,
   AuditState,
   PendingItem,
+  SiteAdjustmentRecord,
 } from "../lib/render-types";
 import type {
   FlaggerLaneClosureScenario,
@@ -709,9 +710,9 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
 // NOTE on coverage bounds (honest reporting): the guard asserts the
 // SPECIFIC strings below, not a blanket "6C". Out of this PR's scope and
 // deliberately NOT asserted: the flagger sight-distance cite "MUTCD §
-// 6E.06" (Ch. 6E → 6D renumber — adjacent debt) and the Site-adjustments
-// aggregate header "MUTCD § 6C / § 6D" (rides with the SITE_ADJUSTMENT_DETAIL
-// → backend follow-up, #71).
+// 6E.06" (Ch. 6E → 6D renumber — adjacent debt). The Site-adjustments
+// aggregate header (previously the stale "MUTCD § 6C / § 6D") and the
+// per-flag backend-fed citations are covered by the #104 suite below.
 describe("#97 audit-panel citation edition guard", () => {
   const STALE = ["§ 6C.06", "§ 6C.08", "§ 6C.09", "6C-3", "CHAPTER 6C"];
   const FRESH = ["6B.06", "6K.01", "6B.08", "6B-3"];
@@ -974,5 +975,82 @@ describe("#96 spacing card downstream-taper line", () => {
     const html = spacingHtml(stateWith({}));
     expect(html).not.toContain("Downstream taper");
     expect(html).not.toContain("undefined");
+  });
+});
+
+
+// #104 — siteAdjustmentsItem reads backend-supplied per-flag citations
+// (sections.site_adjustments[].citation) when present, and falls back to
+// the static SITE_ADJUSTMENT_DETAIL table when absent (deploy window /
+// first load). The two sources are byte-identical today, so the panel
+// renders the same chip either way — asserted below in both directions.
+describe("#104 site-adjustment citations read the backend, static fallback", () => {
+  // flag → the exact chip the panel displays today (mirrors the backend
+  // derivation pinned in tests/test_audit_endpoint.py).
+  const EXPECTED: Record<string, string> = {
+    limited_sight_distance: "MUTCD § 6B.04",
+    adjacent_intersection: "MUTCD § 6N.12",
+    adjacent_interchange: "MUTCD § 6N.16 + Ch. 6H",
+    driveways_present: "MUTCD § 6K.01",
+    pedestrian_facility: "MUTCD § 6C.02",
+    bicycle_facility: "MUTCD § 9C.101",
+    school_zone: "MUTCD § 7B.08",
+  };
+  const ALL_FLAGS = Object.fromEntries(
+    Object.keys(EXPECTED).map((k) => [k, true]),
+  ) as SiteConditions;
+
+  function backendRecords(): SiteAdjustmentRecord[] {
+    return Object.entries(EXPECTED).map(([flag, citation]) => ({
+      flag,
+      citation,
+      action: `backend action for ${flag}`,
+      rule: `${citation.replace("§ ", "§")} — backend rule prose`,
+      devices_added: 2,
+    }));
+  }
+
+  it("renders the backend citation when the record is present (sentinel proof)", () => {
+    const records = backendRecords();
+    records[0] = { ...records[0], citation: "SENTINEL-CITE-FROM-BACKEND" };
+    const spec = siteAdjustmentsItem(ALL_FLAGS, records);
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).toContain("SENTINEL-CITE-FROM-BACKEND");
+    // Only the sentinel flag lost its normal chip; the rest still render.
+    expect(html).not.toContain("MUTCD § 6B.04");
+    expect(html).toContain("MUTCD § 6N.12");
+  });
+
+  it("backend-present output is byte-identical to the static fallback (behavior-preserving)", () => {
+    const withBackend = siteAdjustmentsItem(ALL_FLAGS, backendRecords());
+    const fallback = siteAdjustmentsItem(ALL_FLAGS);
+    expect(renderToStaticMarkup(withBackend!.body as ReactElement)).toBe(
+      renderToStaticMarkup(fallback!.body as ReactElement),
+    );
+    expect(withBackend!.cite).toBe(fallback!.cite);
+  });
+
+  it("falls back to the static table per flag when records are absent or partial", () => {
+    // No records at all (first load / deploy window).
+    const noRecords = siteAdjustmentsItem(ALL_FLAGS);
+    const htmlNone = renderToStaticMarkup(noRecords!.body as ReactElement);
+    for (const cite of Object.values(EXPECTED)) {
+      expect(htmlNone).toContain(cite);
+    }
+    // Partial records: missing flags fall back individually.
+    const onlyOne = backendRecords().slice(0, 1);
+    const partial = siteAdjustmentsItem(ALL_FLAGS, onlyOne);
+    const htmlPartial = renderToStaticMarkup(partial!.body as ReactElement);
+    for (const cite of Object.values(EXPECTED)) {
+      expect(htmlPartial).toContain(cite);
+    }
+  });
+
+  it("aggregate header is the neutral label, not the stale § 6C / § 6D", () => {
+    // The 7 rules span MUTCD Parts 6, 7, and 9 — no single aggregate
+    // section is honest, so the header defers to the per-flag chips.
+    const spec = siteAdjustmentsItem(ALL_FLAGS, backendRecords());
+    expect(spec!.cite).toBe("MUTCD — per-flag citations below");
+    expect(spec!.cite).not.toContain("6C / § 6D");
   });
 });

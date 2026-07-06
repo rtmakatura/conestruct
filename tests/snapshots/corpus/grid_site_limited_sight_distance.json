@@ -112,6 +112,16 @@
       "violations": [],
       "work_zone_ft": 2000.0
     },
+    "site_adjustments": [
+      {
+        "action": "Moved 6 advance warning sign(s) 50% farther upstream from the taper to compensate for limited sight distance.",
+        "citation": "MUTCD § 6B.04",
+        "devices_added": 0,
+        "devices_modified": 6,
+        "flag": "limited_sight_distance",
+        "rule": "MUTCD §6B.04 — increased advance warning for limited sight distance"
+      }
+    ],
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

@@ -112,6 +112,15 @@
       "violations": [],
       "work_zone_ft": 2000.0
     },
+    "site_adjustments": [
+      {
+        "action": "Added 2 M4-9a BIKE DETOUR signs at the upstream and downstream ends.",
+        "citation": "MUTCD § 9C.101",
+        "devices_added": 2,
+        "flag": "bicycle_facility",
+        "rule": "MUTCD §9C.101 — bicycle facility work zone signing"
+      }
+    ],
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

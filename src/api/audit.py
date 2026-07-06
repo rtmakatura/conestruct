@@ -1396,11 +1396,25 @@ def _compute_step_count(scenario: Any) -> int:
     )
 
 
+def _site_citation(rule: str) -> str:
+    """Discrete panel citation derived from a site-adjustment ``rule``.
+
+    #104 — the React panel's citation chip displays ``MUTCD § 6B.04`` style
+    strings while the record's ``rule`` carries the full prose
+    (``MUTCD §6B.04 — increased advance warning ...``). Deriving the chip
+    from the prose (prefix before the em-dash, ``§`` spaced) keeps
+    site_adjustments.py's ``rule`` the single source: a citation fix there
+    propagates to the panel with no second table to update.
+    """
+    return rule.split(" — ")[0].replace("§", "§ ")
+
+
 def audit_projection(
     audit: dict[str, Any],
     scenario_kind: str,
     step_count: int = 0,
     road_type: str | None = None,
+    site_records: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -1538,6 +1552,19 @@ def audit_projection(
     sections = {**audit, "taper": taper, "case": case}
     if isinstance(corridor, dict):
         sections["corridor_validation"] = corridor
+
+    # #104 — attach the fired site-adjustment records (from
+    # apply_site_adjustments, threaded through by the render-API caller)
+    # so the panel's per-flag citations read the backend instead of a
+    # hardcoded frontend copy. Each record passes through verbatim plus a
+    # derived discrete ``citation`` display string (the #97 pattern).
+    # Attached only when a flag fired, so every no-flag projection — and
+    # every existing corpus snapshot without site flags — stays
+    # byte-identical (additive key, rule #5).
+    if site_records:
+        sections["site_adjustments"] = [
+            {**rec, "citation": _site_citation(str(rec.get("rule", "")))} for rec in site_records
+        ]
 
     speed = audit["spacing"]["speed_mph"]
     summary: dict[str, Any] = {
