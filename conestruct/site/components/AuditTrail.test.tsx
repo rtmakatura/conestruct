@@ -905,3 +905,74 @@ describe("#97 audit-panel citation edition guard", () => {
     expect(html).toContain("§ 6C.02");
   });
 });
+
+// #96 — the spacing card renders the backend's downstream-taper derivation
+// line when present, and stays silent (no crash, no stray text) during the
+// Vercel-leads-Modal deploy window when the field is absent.
+describe("#96 spacing card downstream-taper line", () => {
+  const DS_TEXT =
+    "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones " +
+    "(MUTCD Sec 6B.08: 50-100 ft downstream taper); " +
+    "10 tangent + 2 downstream = 12 cones total";
+
+  function stateWith(spacingExtra: Record<string, unknown>): AuditState {
+    return {
+      state: "ready",
+      data: {
+        summary: {
+          ta: "TA-3",
+          cdot_sheet: "S-630-1",
+          case_id: "Case 11: Shoulder closure on divided highway",
+          taper_length_ft: 220,
+          taper_label: "L/3 (shoulder taper)",
+          buffer_space_ft: 495,
+          device_spacing_taper_ft: 55,
+          device_spacing_tangent_ft: 110,
+          step_count: 8,
+        },
+        sections: {
+          taper: {},
+          buffer: {},
+          spacing: {
+            in_taper_text: "55 mph -> 55 ft spacing",
+            on_tangent_text: "55 mph -> 110 ft spacing",
+            taper_count_text: "L/3 = 220 ft / 55 ft max spacing -> 5 drums",
+            tangent_count_text: "500 ft / 110 ft max spacing -> 10 cones",
+            n_taper_drums_required: 5,
+            n_tangent_cones_required: 10,
+            ...spacingExtra,
+          },
+          advance: {},
+          colorado: {},
+          case: { url: "https://www.codot.gov/...PDF" },
+          flagger: {},
+          corridor_validation: { checked: false, warnings: [] },
+          geometry_validation: { violations: [], all_pass: true },
+        },
+        pending_verification: { count: 0, note: "", tracking_issue: null },
+      },
+    };
+  }
+
+  const dummyShoulder = { kind: "shoulder" } as unknown as ShoulderScenario;
+  const identityR = (n: number | string) => String(n);
+
+  function spacingHtml(state: AuditState): string {
+    const items = buildShoulderItems(dummyShoulder, state, true, identityR);
+    const spec = items.find((it) => it.title === "Channelizing device spacing");
+    expect(spec).toBeDefined();
+    return renderToStaticMarkup(spec!.body as ReactElement);
+  }
+
+  it("renders the downstream_count_text line when the backend sends it", () => {
+    const html = spacingHtml(stateWith({ downstream_count_text: DS_TEXT }));
+    expect(html).toContain("12 cones total");
+    expect(html).toContain("Downstream taper");
+  });
+
+  it("omits the line cleanly when the field is absent (deploy window)", () => {
+    const html = spacingHtml(stateWith({}));
+    expect(html).not.toContain("Downstream taper");
+    expect(html).not.toContain("undefined");
+  });
+});

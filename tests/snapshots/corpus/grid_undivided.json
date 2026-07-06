@@ -117,7 +117,10 @@
         "cite": "MUTCD § 6K.01",
         "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
       },
+      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 20 tangent + 2 downstream = 22 cones total",
       "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+      "n_cones_placed_total": 22,
+      "n_downstream_taper_cones": 2,
       "n_tangent_cones_actual": 22,
       "n_tangent_cones_required": 20,
       "n_taper_drums_actual": 4,

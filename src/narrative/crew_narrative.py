@@ -331,6 +331,18 @@ def build_narrative_context(
     n_tangent_cones = sum(
         1 for p in placements if p.device_type == DeviceType.CONE and 0.0 <= p.station_ft <= wz_len
     )
+    # #96 — downstream-taper cones sit at negative stations (past the
+    # downstream end of the work zone).  The equipment bill and XLSX count
+    # them (they aggregate all CONE placements), so step 3 must instruct
+    # them too.  Count and extent come straight from the placements: the
+    # shoulder generators place a fixed 2, the flagger layout computes the
+    # count (pick_device_count over the §6B.08 run — typically 4).
+    ds_cone_stations = [
+        p.station_ft for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0
+    ]
+    n_ds_cones = len(ds_cone_stations)
+    ds_taper_len_ft = -min(ds_cone_stations) if ds_cone_stations else 0.0
+    ds_spacing_ft = ds_taper_len_ft / n_ds_cones if n_ds_cones else 0.0
     n_plaques_right = sum(
         1
         for p in placements
@@ -598,6 +610,9 @@ def build_narrative_context(
         "tangent_spacing_ft": tangent_spacing,
         "num_taper_drums": n_taper_drums,
         "num_tangent_cones": n_tangent_cones,
+        "num_ds_cones": n_ds_cones,
+        "ds_taper_len_ft": ds_taper_len_ft,
+        "ds_spacing_ft": ds_spacing_ft,
         "buffer_space_ft": buf_len,
         "plaque_interval_ft": plaque_interval,
         "lane_edge_offset_ft": lane_edge_offset,

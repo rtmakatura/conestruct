@@ -446,6 +446,15 @@ def build_audit_trail(
 
     actual_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
     actual_cones = sum(1 for p in placements if p.device_type == DeviceType.CONE)
+    # #96 — downstream-taper cones sit at negative stations (past the
+    # downstream end of the work zone): a fixed 2 from the shoulder
+    # generators, a computed count (typically 4) from the flagger layout.
+    # The bill/XLSX count them, so the derivation must account for them
+    # too or its only visible cone total disagrees with the bill.
+    ds_cone_stations = [
+        p.station_ft for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0
+    ]
+    n_ds_cones = len(ds_cone_stations)
 
     if is_flagger:
         taper_label = "one-lane two-way taper"
@@ -483,6 +492,10 @@ def build_audit_trail(
         "n_taper_drums_required": n_taper_drums,
         "n_taper_drums_actual": actual_drums,
         "n_tangent_cones_required": n_tangent_cones,
+        # NOTE (#96): despite the name, this counts ALL cone placements —
+        # including the downstream-taper run — not just the tangent line.
+        # Kept as-is (verify scripts and snapshots read this key); the
+        # honestly-named total is ``n_cones_placed_total`` below.
         "n_tangent_cones_actual": actual_cones,
         "source": (
             "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)"
@@ -494,6 +507,22 @@ def build_audit_trail(
         # body text above (in_taper_text), not the footer chip.
         "citation": _CITATION_SPACING,
     }
+    # #96 — downstream-taper derivation line + honestly-named placed total,
+    # emitted only when the layout actually places downstream cones (the
+    # gated no-cone scenarios stay untouched).  Components are placement-
+    # derived so the sum equals the bill/XLSX count by construction.
+    if n_ds_cones:
+        ds_len = -min(ds_cone_stations)
+        ds_spacing = ds_len / n_ds_cones
+        n_tangent_actual = actual_cones - n_ds_cones
+        spacing_section["downstream_count_text"] = (
+            f"Downstream taper: {ds_len:g} ft at ~{ds_spacing:g} ft spacing "
+            f"-> {n_ds_cones} cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); "
+            f"{n_tangent_actual} tangent + {n_ds_cones} downstream = "
+            f"{actual_cones} cones total"
+        )
+        spacing_section["n_downstream_taper_cones"] = n_ds_cones
+        spacing_section["n_cones_placed_total"] = actual_cones
 
     # ------------------------------------------------------------------
     # 4. Advance warning sign placement

@@ -8,11 +8,15 @@ narrative for the Sheet 14 Cases 26/27 trigger language: present at
 
 from __future__ import annotations
 
-from src.generation.layout import generate_shoulder_closure_divided
+from src.generation.layout import (
+    generate_flagger_alternating_2lane,
+    generate_shoulder_closure_divided,
+)
 from src.narrative.crew_narrative import _render_template, build_narrative_context
+from src.rules.devices import DeviceType
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.site_adjustments import apply_site_adjustments
-from src.rules.validators import ScenarioParams
+from src.rules.validators import DevicePlacement, ScenarioParams
 
 _TRIGGER_HEADER = "## Trigger Condition"
 _TRIGGER_8FT = (
@@ -559,3 +563,68 @@ def test_crew_narrative_w20_2_schedule_substitutes_distance() -> None:
 
     # No literal placeholder survives anywhere in the rendered narrative.
     assert "XXX" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# #96 — Setup Procedure step 3 instructs the downstream-taper cones
+# ---------------------------------------------------------------------------
+# The layout places downstream-taper cones at negative stations (past the
+# downstream end of the work zone) in both enabled scenarios — a fixed 2 on
+# shoulder closures (layout.py hardcodes n_ds_cones = 2), a computed count
+# (typically 4) on the flagger one-lane two-way layout (pick_device_count
+# over the 50 ft run at ~20 ft spacing).  The equipment bill and XLSX count
+# them (they aggregate ALL CONE placements), but step 3 only instructed the
+# tangent run — a crew following the steps literally was left holding real,
+# billed devices.  Step 3 now leads with the downstream-taper instruction;
+# the instructed total must equal the bill's CONE count by construction.
+
+
+def _cone_split(placements: list[DevicePlacement]) -> tuple[int, int]:
+    """(tangent, downstream-taper) CONE counts straight from the placements."""
+    tangent = sum(1 for p in placements if p.device_type == DeviceType.CONE and p.station_ft >= 0.0)
+    ds = sum(1 for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0)
+    return tangent, ds
+
+
+def test_crew_narrative_shoulder_step3_instructs_downstream_taper_cones() -> None:
+    """#96: shoulder step 3 leads with the downstream-taper cones (fixed 2),
+    and the instructed total equals the bill's CONE placement count."""
+    placements = generate_shoulder_closure_divided(_SITE_ADJ_PARAMS)
+    context = build_narrative_context(placements, _SITE_ADJ_PARAMS)
+    markdown = _render_template(context)
+    n_tangent, n_ds = _cone_split(placements)
+
+    assert n_ds == 2  # shoulder generators place a fixed short downstream taper
+    assert f"Place {n_ds} traffic cones in the downstream taper" in markdown
+    assert f"Then place {n_tangent} traffic cones along the right lane edge" in markdown
+    # Instructed total == equipment-bill total (bill counts all CONE placements).
+    assert context["num_ds_cones"] + context["num_tangent_cones"] == n_tangent + n_ds
+
+
+_FLAGGER_DS_PARAMS = ScenarioParams(
+    speed_mph=45,
+    num_lanes=2,
+    closure_type="lane",
+    road_type="rural",
+    work_zone_length_ft=500.0,
+    lane_width_ft=11.0,
+    shoulder_width_ft=8.0,
+    is_divided=False,
+    jurisdiction="CDOT",
+    work_zone_speed_mph=None,
+)
+
+
+def test_crew_narrative_flagger_step3_instructs_downstream_taper_cones() -> None:
+    """#96 generalization: the flagger downstream-taper cone count is COMPUTED
+    (pick_device_count, not a hardcoded 2) — the step must instruct exactly
+    the placed count, whatever it is."""
+    placements = generate_flagger_alternating_2lane(_FLAGGER_DS_PARAMS)
+    context = build_narrative_context(placements, _FLAGGER_DS_PARAMS)
+    markdown = _render_template(context)
+    n_tangent, n_ds = _cone_split(placements)
+
+    assert n_ds > 2  # computed count — the 50 ft run at ~20 ft spacing exceeds 2
+    assert f"Place {n_ds} traffic cones in the downstream taper" in markdown
+    assert f"Then place {n_tangent} traffic cones along the centerline boundary" in markdown
+    assert context["num_ds_cones"] + context["num_tangent_cones"] == n_tangent + n_ds

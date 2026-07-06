@@ -838,6 +838,11 @@ function spacingItem(
   const onTangentText = spacing.on_tangent_text as string;
   const taperCountText = spacing.taper_count_text as string;
   const tangentCountText = spacing.tangent_count_text as string;
+  // #96 — downstream-taper derivation line; absent until the backend
+  // deploy lands (Vercel-leads-Modal window), so render conditionally.
+  const downstreamCountText = spacing.downstream_count_text as
+    | string
+    | undefined;
   const citation = sectionCitation(spacing, SPACING_CITATION_FALLBACK);
   return {
     title: "Channelizing device spacing",
@@ -849,6 +854,9 @@ function spacingItem(
         <p>{onTangentText}</p>
         <div className="formula">{taperCountText}</div>
         <div className="formula">{tangentCountText}</div>
+        {downstreamCountText ? (
+          <div className="formula">{downstreamCountText}</div>
+        ) : null}
         <div className="citation">
           <span className="check">✓</span>
           {citation.footer}

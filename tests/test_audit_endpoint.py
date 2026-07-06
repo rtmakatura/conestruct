@@ -1008,6 +1008,62 @@ def test_audit_no_reduction_matches_baseline(client: TestClient) -> None:
     assert res.json() == expected
 
 
+# --- #96: downstream-taper cones in the spacing derivation ------------------
+# The spacing card derived only the tangent count (10) while the bill/XLSX
+# count all CONE placements (12, incl. the downstream taper) — the only cone
+# total a reader saw in the derivation disagreed with the bill.  The section
+# now carries the downstream-taper line and an honestly-named placed total.
+# ``n_tangent_cones_actual`` keeps its (misnamed) all-cones semantics for
+# verify-script/snapshot compatibility.
+
+
+def test_audit_spacing_downstream_taper_fields_shoulder(client: TestClient) -> None:
+    """Shoulder: fixed 2 downstream-taper cones; total = tangent + 2 and
+    matches the all-cones ``n_tangent_cones_actual`` by construction."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200
+    sp = res.json()["sections"]["spacing"]
+    assert sp["n_downstream_taper_cones"] == 2
+    assert sp["n_cones_placed_total"] == sp["n_tangent_cones_actual"]
+    assert sp["n_cones_placed_total"] == sp["n_tangent_cones_required"] + 2
+    text = sp["downstream_count_text"]
+    assert "Downstream taper" in text
+    assert "Sec 6B.08" in text
+    assert f"{sp['n_cones_placed_total']} cones total" in text
+
+
+def test_audit_spacing_downstream_taper_fields_flagger() -> None:
+    """Flagger: the downstream count is COMPUTED (>2 for the 50 ft run at
+    ~20 ft spacing) — the derivation must reflect the placed count, not a
+    hardcoded 2."""
+    from src.api.audit import build_audit_trail
+    from src.generation.layout import generate_flagger_alternating_2lane
+    from src.rules.devices import DeviceType
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        lane_width_ft=11.0,
+        shoulder_width_ft=8.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    placements = generate_flagger_alternating_2lane(params)
+    n_ds = sum(1 for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0)
+    assert n_ds > 2  # computed, not the shoulder generators' fixed 2
+
+    sp = build_audit_trail(placements, params)["spacing"]
+    assert sp["n_downstream_taper_cones"] == n_ds
+    assert sp["n_cones_placed_total"] == sp["n_tangent_cones_actual"]
+    assert f"{n_ds} downstream" in sp["downstream_count_text"]
+    assert f"{sp['n_cones_placed_total']} cones total" in sp["downstream_count_text"]
+
+
 # --- Schema validator unit tests (bypass the API; cover edge cases) --------
 
 

@@ -151,7 +151,13 @@ def _spacing_blocks(spacing: dict[str, Any]) -> list[Block]:
     if not spacing:
         return []
     blocks: list[Block] = [Heading(2, _cell("Channelizing Device Spacing"))]
-    for key in ("in_taper_text", "on_tangent_text", "taper_count_text", "tangent_count_text"):
+    for key in (
+        "in_taper_text",
+        "on_tangent_text",
+        "taper_count_text",
+        "tangent_count_text",
+        "downstream_count_text",
+    ):
         if spacing.get(key):
             blocks.append(_body(_str(spacing, key)))
     blocks.append(_body(f"Source: {_str(spacing, 'source')}"))
