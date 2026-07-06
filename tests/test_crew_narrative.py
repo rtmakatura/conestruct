@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from src.generation.layout import generate_shoulder_closure_divided
 from src.narrative.crew_narrative import _render_template, build_narrative_context
+from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.validators import ScenarioParams
 
@@ -385,12 +386,15 @@ def test_crew_narrative_non_freeway_omits_w21_5aR_pair_plaques() -> None:
 # Each test drives a SINGLE flag so its negative guard only inspects that
 # flag's own rendered note.  Do NOT add a whole-narrative "no §6C"
 # assertion: the retained Colorado Supplement §6C.04(A) citations are
-# legitimate (different document), and the §6D.01 / §6F.83 / §6F.02
-# citations remain UNRESOLVED pending PDF verification (#71/#104) — a
-# blanket guard would pin unverified values.  The intersection and
-# interchange citations were resolved by subject-match against the
-# 11th-ed Part 6 PDF: §6N.12 (Work within the Traveled Way at an
-# Intersection) and §6N.16 (Interchanges) + Ch. 6H (TTC warning signs).
+# legitimate (different document) — a blanket guard would collide with
+# them.  Every rendered V1-surface citation is now subject-verified
+# against the 11th-ed Part 6 PDF (#71): §6N.12 (Work within the Traveled
+# Way at an Intersection), §6N.16 (Interchanges) + Ch. 6H (TTC warning
+# signs), §6C.02 (Pedestrian Considerations), §6L.07 (Flashing Beacons
+# and Warning Lights), and §6F.01 ¶11 + §6K.01 ¶10 (sign / channelizing-
+# device retroreflectivity).  Still stale but NOT rendered on a V1
+# surface (rides with #71/#104): the gated-path validator literals and
+# the gated work-beyond-shoulder panel's § 6D.01 worker-exposure cite.
 
 
 def _render_with_flags(params: ScenarioParams, flags: dict[str, bool]) -> str:
@@ -449,6 +453,67 @@ def test_crew_narrative_adjacent_interchange_emits_6n16_citation() -> None:
     assert "Ch. 6H" in markdown
     assert "§6C.10" not in markdown
     assert "§6F.60" not in markdown
+
+
+def test_crew_narrative_pedestrian_facility_emits_6c02_citation() -> None:
+    """pedestrian_facility note cites §6C.02 (Pedestrian Considerations),
+    not the stale §6D.01 (11th-ed Qualifications for Flaggers — wrong
+    subject)."""
+    markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"pedestrian_facility": True})
+    assert "## Site-Specific Notes" in markdown
+    assert "MUTCD §6C.02" in markdown
+    assert "§6D.01" not in markdown
+
+
+# ---------------------------------------------------------------------------
+# Night Operation Notes — emitted MUTCD citations
+# ---------------------------------------------------------------------------
+# The night-adjustment "rule" strings render under "## Night Operation
+# Notes" (base.md.j2) via the same {{ adj.rule }} path as the site notes,
+# and have no frontend mirror (the audit panel doesn't display night
+# records) — the crew narrative and replication snapshot are the only
+# rendered surfaces.  Same pin-with-negative-guard pattern as above.
+
+
+def _render_night(params: ScenarioParams) -> str:
+    placements = generate_shoulder_closure_divided(params)
+    adjusted, records = apply_night_adjustments(placements, params)
+    context = build_narrative_context(adjusted, params, night_adjustments=records)
+    return _render_template(context)
+
+
+_NIGHT_PARAMS = ScenarioParams(
+    speed_mph=65,
+    num_lanes=2,
+    closure_type="shoulder",
+    road_type="freeway",
+    work_zone_length_ft=800.0,
+    is_night=True,
+    is_divided=True,
+    jurisdiction="CDOT",
+    work_zone_speed_mph=None,
+)
+
+
+def test_crew_narrative_night_taper_lighting_emits_6l07_citation() -> None:
+    """night_taper_lighting note cites §6L.07 (Flashing Beacons and Warning
+    Lights — steady-burn on channelizing devices in series, ¶10/¶19), not
+    the nonexistent §6F.83 (Chapter 6F caps at §6F.03 in the 11th ed)."""
+    markdown = _render_night(_NIGHT_PARAMS)
+    assert "## Night Operation Notes" in markdown
+    assert "MUTCD §6L.07" in markdown
+    assert "§6F.83" not in markdown
+
+
+def test_crew_narrative_night_retroreflective_emits_6f01_6k01_citation() -> None:
+    """night_retroreflective note cites §6F.01 (signs at night retroreflective
+    or illuminated, ¶11) + §6K.01 (channelizing-device retroreflective
+    material, ¶10), not the stale §6F.02 (11th-ed Sign Placement — wrong
+    subject)."""
+    markdown = _render_night(_NIGHT_PARAMS)
+    assert "## Night Operation Notes" in markdown
+    assert "MUTCD §6F.01 + §6K.01" in markdown
+    assert "§6F.02" not in markdown
 
 
 # ---------------------------------------------------------------------------

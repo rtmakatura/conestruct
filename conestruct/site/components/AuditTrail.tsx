@@ -86,7 +86,7 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   },
   pedestrian_facility: {
     label: "Pedestrian sidewalks present",
-    rule: "MUTCD § 6D.01",
+    rule: "MUTCD § 6C.02",
     action:
       "4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added at the upstream and downstream ends.",
   },

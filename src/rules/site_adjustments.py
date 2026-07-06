@@ -188,7 +188,7 @@ def _adjust_pedestrian_facility(
             "downstream ends of the work zone."
         ),
         "devices_added": 6,
-        "rule": "MUTCD §6D.01 — pedestrian considerations in work zones",
+        "rule": "MUTCD §6C.02 — pedestrian considerations in work zones",
     }
     return placements + barricades + signs, record
 

@@ -892,4 +892,16 @@ describe("#97 audit-panel citation edition guard", () => {
     expect(html).toContain("§ 6N.16");
     expect(html).toContain("Ch. 6H");
   });
+
+  it("pedestrian rule cites §6C.02, not the stale §6D.01", () => {
+    // Verified by subject against the 11th-ed Part 6 PDF (§6C.02 =
+    // Pedestrian Considerations; 11th-ed §6D.01 is Qualifications for
+    // Flaggers — wrong subject). Backend fixed in lockstep
+    // (site_adjustments.py). Holds until #104.
+    const spec = siteAdjustmentsItem({ pedestrian_facility: true } as SiteConditions);
+    expect(spec).not.toBeNull();
+    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    expect(html).not.toContain("6D.01");
+    expect(html).toContain("§ 6C.02");
+  });
 });

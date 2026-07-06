@@ -12,8 +12,8 @@ Three adjustments fire whenever ``params.is_night`` is True:
   ``WARNING_LIGHT_TYPE_C`` placement is co-located with each drum in
   the taper region (stations between the upstream taper start and the
   downstream buffer start).  Tangent drums and signs are unaffected.
-  MUTCD §6F.83 calls for steady-burn lights on the channelizing devices
-  forming a taper at night.
+  MUTCD §6L.07 calls for steady-burn lights on channelizing devices
+  used in a series (¶10), Type C at night (¶19).
 
 * **Portable light plant at the upstream end of the taper.** A single
   ``PORTABLE_LIGHT_PLANT`` placement at ``taper_start_station`` with
@@ -24,14 +24,16 @@ Three adjustments fire whenever ``params.is_night`` is True:
 * **Retroreflectivity advisory record.** No device added — a flag is
   surfaced through the audit trail so the crew narrative reminds the
   field crew that every cone, drum, sign, and barricade must be
-  retroreflective and inspected at shift start (MUTCD §6F.02).
+  retroreflective and inspected at shift start (MUTCD §6F.01 ¶11 for
+  signs, §6K.01 ¶10 for channelizing devices).
 
 This module is a no-op when ``params.is_night`` is False: the
 placements list is returned unchanged (a copy) and an empty list of
 adjustment records.
 
 Authoritative sources:
-  - MUTCD 11th Ed., §6F.02 (retroreflectivity), §6F.83 (warning lights)
+  - MUTCD 11th Ed., §6F.01 + §6K.01 (retroreflectivity), §6L.07 (warning
+    lights); formerly cited via the stale 2009-ed §6F.02 + §6F.83
   - CDOT M&S §630.05.1 (work-zone illumination)
 """
 
@@ -112,7 +114,7 @@ def _add_warning_lights_on_taper_drums(
             f"Added {n} Type C steady-burn warning lights on taper drums for nighttime visibility."
         ),
         "devices_added": n,
-        "rule": ("MUTCD §6F.83 — warning lights on channelizing devices in nighttime work zones"),
+        "rule": ("MUTCD §6L.07 — warning lights on channelizing devices in nighttime work zones"),
     }
     return placements + new_lights, record
 
@@ -175,7 +177,7 @@ def _retroreflective_advisory() -> dict[str, Any]:
             "retroreflectivity at shift start."
         ),
         "devices_added": 0,
-        "rule": ("MUTCD §6F.02 — retroreflectivity requirements for nighttime visibility"),
+        "rule": ("MUTCD §6F.01 + §6K.01 — retroreflectivity requirements for nighttime visibility"),
     }
 
 
