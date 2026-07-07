@@ -90,22 +90,26 @@ class AdvanceWarningRow:
     c_ft: int | None  # distance from Sign B to Sign C (None if C not used)
 
 
-# Source: MUTCD 11th Ed. Table 6B-1 (verified 2026-04-24)
+# Source: MUTCD 11th Ed. Table 6B-1, p. 773 (verified 2026-07-07)
 # Note: expressway and freeway rows have asymmetric A/B/C distances.
 # Speed ranges define typical applicability; road category is selected
-# by the scenario, not by speed alone.
+# by the scenario, not by speed alone.  The federal table carries no
+# speed numbers for the urban split — its footnote delegates the
+# low/high determination to the highway agency.  Colorado's is on
+# CDOT S-630-1: URBAN (<=40 MPH) -> 100 ft, URBAN (>=45 MPH) -> 350 ft,
+# so 40 mph is urban_low (matches _map_road_type's ``speed > 40``).
 ADVANCE_WARNING_SIGN_SPACING: tuple[AdvanceWarningRow, ...] = (
     AdvanceWarningRow(
         road_category="urban_low",
         speed_min_mph=20,
-        speed_max_mph=35,
+        speed_max_mph=40,
         a_ft=100,
         b_ft=100,
         c_ft=100,
     ),
     AdvanceWarningRow(
         road_category="urban_high",
-        speed_min_mph=40,
+        speed_min_mph=45,
         speed_max_mph=55,
         a_ft=350,
         b_ft=350,

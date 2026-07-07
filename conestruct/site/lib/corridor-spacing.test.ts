@@ -198,4 +198,22 @@ describe("advance-warning categories (Refs #99)", () => {
     expect(roadCategoryForRoadType(null, 55)).toBeNull();
     expect(roadCategoryForRoadType("divided_highway", 55)).toBeNull();
   });
+
+  it("null-category speed fallback splits urban at 40 mph (CDOT S-630-1)", () => {
+    // No roadCategory threaded: advanceWarningFt's speed-only heuristic
+    // must use the same <=40 -> urban_low boundary as the backend
+    // auto-infer (spacing.py) and _map_road_type — 40 mph is urban_low
+    // (300 ft), 42 mph is urban_high (1050 ft), 45+ falls to rural.
+    const at = (speedMph: number) =>
+      buildCorridorSpec({
+        ...ANCHOR,
+        speedMph,
+        workZoneFt: 400,
+        scenarioKind: "shoulder",
+        roadCategory: null,
+      }).advanceWarningFt;
+    expect(at(40)).toBe(300);
+    expect(at(42)).toBe(1050);
+    expect(at(45)).toBe(1500);
+  });
 });

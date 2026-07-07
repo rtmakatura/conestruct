@@ -271,10 +271,15 @@ def advance_warning_spacing(
             ``"expressway"``, ``"freeway"``.  When ``None``, the road
             category is inferred from speed:
 
-                ≤ 35 mph        → ``urban_low``
-                36–44 mph       → ``urban_high``
+                ≤ 40 mph        → ``urban_low``
+                41–44 mph       → ``urban_high``
                 45–54 mph       → ``rural``
                 ≥ 55 mph        → must be passed explicitly
+
+            The 40/41 split follows CDOT S-630-1 ("URBAN (<=40 MPH)" /
+            "URBAN (>=45 MPH)"), the agency determination the Table
+            6B-1 footnote delegates — same convention as
+            ``_map_road_type`` in ``src/api/schemas.py``.
 
             High-speed facilities span three Table 6B-1 categories
             (rural, expressway, freeway) with sharply different
@@ -295,7 +300,7 @@ def advance_warning_spacing(
             string not in :data:`VALID_ROAD_TYPES`.
     """
     if road_type is None:
-        if speed_mph <= 35:
+        if speed_mph <= 40:
             road_type = "urban_low"
         elif speed_mph < 45:
             road_type = "urban_high"

@@ -109,7 +109,10 @@ function advanceWarningFt(speedMph: number, road: AdvanceRoadCategory | null): n
   if (road && ADVANCE_WARNING_TOTAL[road] !== undefined) {
     return ADVANCE_WARNING_TOTAL[road];
   }
-  if (speedMph <= 35) return ADVANCE_WARNING_TOTAL.urban_low;
+  // Speed-only fallback mirrors advance_warning_spacing()'s auto-infer
+  // (src/rules/spacing.py): <=40 mph is urban_low per CDOT S-630-1
+  // "URBAN (<=40 MPH)" — the same boundary roadCategoryForRoadType uses.
+  if (speedMph <= 40) return ADVANCE_WARNING_TOTAL.urban_low;
   if (speedMph < 45) return ADVANCE_WARNING_TOTAL.urban_high;
   return ADVANCE_WARNING_TOTAL.rural;
 }

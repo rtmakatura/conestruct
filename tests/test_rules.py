@@ -269,8 +269,11 @@ def test_advance_warning_auto_inference() -> None:
     """Speed-based inference selects urban/rural; 55+ mph requires explicit."""
     # 30 mph -> urban_low (A=B=C=100)
     assert advance_warning_spacing(30) == {"A": 100.0, "B": 100.0, "C": 100.0}
-    # 40 mph -> urban_high (A=B=C=350)
-    assert advance_warning_spacing(40) == {"A": 350.0, "B": 350.0, "C": 350.0}
+    # 40 mph -> urban_low per CDOT S-630-1 "URBAN (<=40 MPH)"; same
+    # boundary as _map_road_type (schemas.py) and the corpus anchors.
+    assert advance_warning_spacing(40) == {"A": 100.0, "B": 100.0, "C": 100.0}
+    # 41-44 mph band -> urban_high (A=B=C=350)
+    assert advance_warning_spacing(42) == {"A": 350.0, "B": 350.0, "C": 350.0}
     # 45-54 mph band -> rural (A=B=C=500)
     assert advance_warning_spacing(50) == {"A": 500.0, "B": 500.0, "C": 500.0}
     # 60 mph with explicit expressway -> asymmetric 1000/1500/2640
