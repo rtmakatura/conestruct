@@ -16,6 +16,7 @@ routes that proxy to it.
 
 from __future__ import annotations
 
+import math
 import os
 import tempfile
 from collections import Counter
@@ -25,6 +26,8 @@ from typing import Any
 
 import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
 from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -94,6 +97,35 @@ if _SENTRY_DSN:
     )
 
 app = FastAPI(title="Conestruct render service", version="0.1.0")
+
+
+def _sanitize_non_finite(obj: Any) -> Any:
+    """Replace non-finite floats (inf/-inf/nan) with their string form."""
+    if isinstance(obj, float) and not math.isfinite(obj):
+        return str(obj)
+    if isinstance(obj, dict):
+        return {k: _sanitize_non_finite(v) for k, v in obj.items()}
+    if isinstance(obj, list | tuple):
+        return [_sanitize_non_finite(v) for v in obj]
+    return obj
+
+
+@app.exception_handler(RequestValidationError)
+async def _validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+    """Serve pydantic 422s even when the rejected input is inf/nan.
+
+    Starlette's ``JSONResponse`` renders with ``allow_nan=False``, so
+    echoing a non-finite float back in the error body (the ``input`` /
+    ``ctx`` keys of ``exc.errors()``) raised during serialization and
+    the client saw a bare 500 instead of the validation error — e.g.
+    ``workLen=Infinity`` before its ``le=`` cap, or ``laneWidth=NaN``
+    today.  Finite inputs serialize byte-identically to FastAPI's
+    default handler (same ``{"detail": [...]}`` shape).
+    """
+    return JSONResponse(
+        status_code=422,
+        content={"detail": _sanitize_non_finite(jsonable_encoder(exc.errors()))},
+    )
 
 
 def _ensure_scenario_enabled(scenario: Scenario) -> None:

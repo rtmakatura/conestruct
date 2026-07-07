@@ -1,14 +1,21 @@
 // Client-side input validation for scenario forms (UX audit finding
 // UX-21).  Mirrors the backend gates so the UI can refuse to generate
 // a plan the render API would reject — instantly, without a round
-// trip.  The backend stays authoritative: ``workLen`` has a Pydantic
-// ``gt=0`` floor (schemas.py) and ``validate_corridor_geometry``
+// trip.  The backend stays authoritative: ``workLen`` has Pydantic
+// ``gt=0`` / ``le=WORK_LEN_MAX_FT`` bounds (schemas.py) and ``validate_corridor_geometry``
 // raises HTTP 400 on WORK_ZONE_SHORTER_THAN_TAPER, so drift in this
 // mirror fails safe.  Mapbox-free by design — unit-tested via vitest
 // like lib/scenarios/overrides.ts.
 
 import { minWorkZoneFt } from "../corridor-spacing";
 import type { Scenario } from "./types";
+
+// Mirrors WORK_LEN_MAX_FT in src/api/schemas.py — the Pydantic
+// ``le=`` ceiling on every scenario kind's ``workLen`` (itself matching
+// the DetectSiteRequest.work_zone_ft cap).  Backend stays authoritative:
+// drift here fails safe (the 422 still blocks; the user just loses the
+// inline hint).
+export const MAX_WORK_LEN_FT = 20000;
 
 export interface WorkZoneValidation {
   ok: boolean;
@@ -87,6 +94,16 @@ export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
         `Work zone must be at least ${minFt} ft — the required ` +
         `${taperLabelFor(scenario)} at ${scenario.speed} mph ` +
         `(MUTCD § 6C.08). Lengthen the work zone or reduce the speed.`,
+    };
+  }
+  if (wz > MAX_WORK_LEN_FT) {
+    return {
+      ok: false,
+      minFt,
+      message:
+        `Work zone can't exceed ${MAX_WORK_LEN_FT.toLocaleString("en-US")} ft ` +
+        `(about 3.8 miles) on a single plan. Split a longer project into ` +
+        `multiple plans.`,
     };
   }
   return { ok: true, minFt, message: null };

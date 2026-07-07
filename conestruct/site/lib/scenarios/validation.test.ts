@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from "vitest";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "./index";
-import { validateWorkZone } from "./validation";
+import { MAX_WORK_LEN_FT, validateWorkZone } from "./validation";
 
 describe("validateWorkZone — flagger (100 ft one-lane two-way floor)", () => {
   it("accepts the live default (400 ft)", () => {
@@ -72,5 +72,35 @@ describe("validateWorkZone — shoulder (L/3 floor, width per divided)", () => {
     expect(validateWorkZone(at35).ok).toBe(true);
     // (10 × 55) / 3 ≈ 183.33 → 75 ft now under the floor.
     expect(validateWorkZone({ ...at35, speed: 55 }).ok).toBe(false);
+  });
+});
+
+// Mirror of the backend WORK_LEN_MAX_FT ceiling (schemas.py le=20000):
+// without this the form happily submits a workLen the render API 422s.
+describe("validateWorkZone — 20,000 ft ceiling (backend le= mirror)", () => {
+  it("accepts exactly the ceiling", () => {
+    const v = validateWorkZone({ ...DEFAULT_SHOULDER, workLen: MAX_WORK_LEN_FT });
+    expect(v.ok).toBe(true);
+  });
+
+  it("rejects just above the ceiling with the split-the-project message", () => {
+    const v = validateWorkZone({
+      ...DEFAULT_SHOULDER,
+      workLen: MAX_WORK_LEN_FT + 1,
+    });
+    expect(v.ok).toBe(false);
+    expect(v.message).toContain("20,000 ft");
+    expect(v.message).toContain("multiple plans");
+  });
+
+  it("rejects a huge finite value on every kind's default", () => {
+    for (const base of [DEFAULT_SHOULDER, DEFAULT_FLAGGER]) {
+      expect(validateWorkZone({ ...base, workLen: 5e7 }).ok).toBe(false);
+    }
+  });
+
+  it("Infinity stays rejected (Number.isFinite guard, pre-existing)", () => {
+    const v = validateWorkZone({ ...DEFAULT_SHOULDER, workLen: Infinity });
+    expect(v.ok).toBe(false);
   });
 });

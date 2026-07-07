@@ -35,6 +35,15 @@ from src.rules.validators import DevicePlacement, ScenarioParams
 # Pydantic models — mirror TS Scenario exactly (camelCase field names)
 # ---------------------------------------------------------------------------
 
+# Upper bound for ``workLen`` on every scenario kind, matching the
+# ``DetectSiteRequest.work_zone_ft`` cap (render_api.py).  20,000 ft is
+# ~3.8 miles — beyond any single-plan work zone.  Without a ceiling,
+# ``workLen=Infinity`` passed validation and died as an OverflowError
+# (HTTP 500) in the plaque math, and large finite values silently
+# generated hundreds of thousands of device placements.  Mirrored in
+# conestruct/site/lib/scenarios/validation.ts (MAX_WORK_LEN_FT).
+WORK_LEN_MAX_FT = 20000.0
+
 
 class ScenarioMeta(BaseModel):
     project: str = ""
@@ -112,7 +121,7 @@ class ShoulderScenario(BaseModel):
 
     workType: ShoulderWorkType
     duration: Duration
-    workLen: float = Field(gt=0.0)
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
     night: bool
     # Optional work-zone speed limit when reduced below ``speed``.  None
     # / omitted means no reduction.  Equal to ``speed`` is accepted and
@@ -141,7 +150,7 @@ class FlaggerLaneClosureScenario(BaseModel):
 
     workType: FlaggerWorkType
     duration: Duration
-    workLen: float = Field(gt=0.0)
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
     night: bool
 
     pilotCar: bool
@@ -159,7 +168,7 @@ class LaneClosureDividedScenario(BaseModel):
 
     workType: LaneClosureWorkType
     duration: Duration
-    workLen: float = Field(gt=0.0)
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
     night: bool
 
     truckMountedAttenuator: bool
@@ -175,7 +184,7 @@ class WorkBeyondShoulderScenario(BaseModel):
 
     workType: WorkBeyondShoulderWorkType
     duration: Duration
-    workLen: float = Field(gt=0.0)
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
     night: bool
 
 
@@ -188,7 +197,7 @@ class MobileOp2LaneScenario(BaseModel):
     laneWidth: float = Field(ge=9.0, le=14.0)
 
     workType: MobileWorkType
-    workLen: float = Field(gt=0.0)  # trailing distance to shadow vehicle
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)  # trailing distance to shadow vehicle
     night: bool
 
     arrowBoardOnShadow: bool
@@ -203,7 +212,7 @@ class MobileOpMultilaneScenario(BaseModel):
     laneWidth: float = Field(ge=10.0, le=14.0)
 
     workType: MobileWorkType
-    workLen: float = Field(gt=0.0)  # trailing distance to shadow vehicle
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)  # trailing distance to shadow vehicle
     night: bool
 
     secondTMA: bool
