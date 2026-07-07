@@ -11,6 +11,7 @@
 // road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
 import type { RoadClassification } from "../road-detection/types";
+import { clampLanesToDomain } from "./validation";
 import type {
   Scenario,
   RoadType,
@@ -108,9 +109,11 @@ export function applyClassification(
     case "shoulder": {
       const lanesApplicable = true;
       const lanesApplied = c.lanesPerDirection !== undefined;
+      // Clamp to the schema domain (1..4): OSM can tag more lanes per
+      // direction than the backend accepts or the sheet can draw.
       const lanesPatch =
         lanesApplied && c.lanesPerDirection !== undefined
-          ? { lanes: c.lanesPerDirection }
+          ? { lanes: clampLanesToDomain(c.lanesPerDirection) }
           : {};
       return {
         scenario: {

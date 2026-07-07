@@ -17,6 +17,61 @@ import type { Scenario } from "./types";
 // inline hint).
 export const MAX_WORK_LEN_FT = 20000;
 
+// Mirrors the lanes bounds in src/api/schemas.py (multi-lane
+// wire-through): ``lanes`` is capped at 4 per direction, and the
+// combination lanes x laneWidth + shoulder may not exceed
+// MAX_DRAWABLE_HALF_ROAD_FT — the widest half-road the plan sheet can
+// draw at its fixed vertical scale (verified against real renders).
+// Backend stays authoritative; drift here fails safe as a 422.
+export const MAX_LANES_PER_DIRECTION = 4;
+export const MAX_DRAWABLE_HALF_ROAD_FT = 52;
+
+/** Clamp an OSM-detected or user-override lane count into the schema
+ * domain (1..MAX_LANES_PER_DIRECTION). */
+export function clampLanesToDomain(lanes: number): number {
+  const whole = Math.round(lanes);
+  return Math.min(MAX_LANES_PER_DIRECTION, Math.max(1, whole));
+}
+
+export interface LanesValidation {
+  ok: boolean;
+  /** Inline error message; null when ok. */
+  message: string | null;
+}
+
+/** Mirror of the backend's drawable-half-road cross-check (shoulder
+ * kind only — it's the only kind with a ``lanes`` field). */
+export function validateLanes(scenario: Scenario): LanesValidation {
+  if (scenario.kind !== "shoulder") {
+    return { ok: true, message: null };
+  }
+  if (
+    !Number.isInteger(scenario.lanes) ||
+    scenario.lanes < 1 ||
+    scenario.lanes > MAX_LANES_PER_DIRECTION
+  ) {
+    return {
+      ok: false,
+      message: `Lanes per direction must be between 1 and ${MAX_LANES_PER_DIRECTION}.`,
+    };
+  }
+  const shoulderFt = scenario.divided ? 10 : 8;
+  const halfRoad = scenario.lanes * scenario.laneWidth + shoulderFt;
+  if (halfRoad > MAX_DRAWABLE_HALF_ROAD_FT) {
+    // Widest lane the slider offers (0.5-ft steps) that still fits.
+    const maxWidth =
+      Math.floor(((MAX_DRAWABLE_HALF_ROAD_FT - shoulderFt) / scenario.lanes) * 2) / 2;
+    return {
+      ok: false,
+      message:
+        `${scenario.lanes} lanes × ${scenario.laneWidth} ft + ${shoulderFt} ft shoulder ` +
+        `is wider than the plan sheet can draw (${MAX_DRAWABLE_HALF_ROAD_FT} ft per ` +
+        `direction). Use a lane width of ${maxWidth} ft or less, or fewer lanes.`,
+    };
+  }
+  return { ok: true, message: null };
+}
+
 export interface WorkZoneValidation {
   ok: boolean;
   /** Smallest whole-foot work-zone length the backend accepts. */

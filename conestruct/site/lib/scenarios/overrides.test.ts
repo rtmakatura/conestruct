@@ -36,3 +36,29 @@ describe("applyOverridesToScenario speed clamp", () => {
     );
   });
 });
+
+describe("applyOverridesToScenario lanes clamp", () => {
+  // Same B-04 class as the speed clamp: the schema's lanes domain is
+  // 1..4 (multi-lane wire-through), so a detected/typed 6 must not
+  // land on the form as an app-filled 422.
+  it("applies an in-domain lanes override as-is", () => {
+    const next = applyOverridesToScenario(DEFAULT_SHOULDER, {
+      lanesPerDirection: 3,
+    });
+    expect(next.kind === "shoulder" && next.lanes).toBe(3);
+  });
+
+  it("clamps a 6-lane override to the schema cap (4)", () => {
+    const next = applyOverridesToScenario(DEFAULT_SHOULDER, {
+      lanesPerDirection: 6,
+    });
+    expect(next.kind === "shoulder" && next.lanes).toBe(4);
+  });
+
+  it("ignores the override on kinds without a lanes field", () => {
+    const next = applyOverridesToScenario(DEFAULT_FLAGGER, {
+      lanesPerDirection: 3,
+    });
+    expect(next).toEqual(DEFAULT_FLAGGER);
+  });
+});

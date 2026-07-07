@@ -125,3 +125,32 @@ describe("applyClassification speed patching", () => {
     expect(delta.speedApplied).toBe(false);
   });
 });
+
+describe("applyClassification lanes clamping", () => {
+  // Same B-04 class as the speed snap: OSM can tag more lanes per
+  // direction than the schema's 1..4 domain — the auto-applied value
+  // must never hand the user a 422 they didn't type.
+  function withLanes(lanesPerDirection: number): RoadClassification {
+    return { ...classification(undefined), lanesPerDirection };
+  }
+
+  it("applies an in-domain detected lane count as-is", () => {
+    const { scenario, delta } = applyClassification(SHOULDER, withLanes(3));
+    expect((scenario as ShoulderScenario).lanes).toBe(3);
+    expect(delta.lanesApplied).toBe(true);
+  });
+
+  it("clamps a 6-lane-per-direction detection to the schema cap (4)", () => {
+    const { scenario } = applyClassification(SHOULDER, withLanes(6));
+    expect((scenario as ShoulderScenario).lanes).toBe(4);
+  });
+
+  it("leaves lanes untouched when OSM carried no lanes tag", () => {
+    const { scenario, delta } = applyClassification(
+      SHOULDER,
+      classification(undefined),
+    );
+    expect((scenario as ShoulderScenario).lanes).toBe(2);
+    expect(delta.lanesApplied).toBe(false);
+  });
+});

@@ -7,7 +7,7 @@ import {
   type ShoulderWorkType,
   type RoadType,
 } from "@/lib/scenarios";
-import { validateWorkZone } from "@/lib/scenarios/validation";
+import { validateLanes, validateWorkZone } from "@/lib/scenarios/validation";
 import { dividedForShoulderRoadType } from "@/lib/scenarios/overrides";
 import {
   ChipRow,
@@ -39,12 +39,21 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
   // Single-source divided (#85): roadType drives `divided` so the two
   // can't disagree. Set both in one update; urban_arterial keeps the
   // explicit toggle (rendered below), preserving its current value here.
-  const onRoadTypeChange = (rt: RoadType) =>
+  // When divided-ness flips, lanes resets to the road-class default
+  // (2 per direction divided, 1 undivided — the classic 2-lane road);
+  // the picker's auto-apply sets lanes in the same patch as roadType,
+  // so a detected value is never clobbered by this reset.
+  const onRoadTypeChange = (rt: RoadType) => {
+    const nextDivided = dividedForShoulderRoadType(rt, scenario.divided);
     setScenario({
       ...scenario,
       roadType: rt,
-      divided: dividedForShoulderRoadType(rt, scenario.divided),
+      divided: nextDivided,
+      ...(nextDivided !== scenario.divided
+        ? { lanes: nextDivided ? 2 : 1 }
+        : {}),
     });
+  };
 
   // UX-21: inline min-validation on the work-zone field.  The error
   // text is blur-gated (``wzTouched``) so transient keystrokes don't
@@ -53,6 +62,9 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
   // regardless.
   const [wzTouched, setWzTouched] = useState(false);
   const wzValidation = validateWorkZone(scenario);
+  // Lanes x width drawable bound (schemas.py mirror).  Rendered live —
+  // it only trips on chip/slider clicks, never mid-keystroke.
+  const lanesValidation = validateLanes(scenario);
 
   return (
     <>
@@ -124,6 +136,9 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             onChange={(e) => set("laneWidth", +e.target.value)}
             className="range-orange w-full my-1.5"
           />
+          {!lanesValidation.ok && (
+            <FieldErrorLine>{lanesValidation.message}</FieldErrorLine>
+          )}
         </Field>
 
         {/* Divided is derived from road type for every type except urban
@@ -134,7 +149,14 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             on={scenario.divided}
             label="Divided highway"
             desc="Median present"
-            onToggle={() => set("divided", !scenario.divided)}
+            onToggle={() =>
+              // Same divided-flip lanes default as onRoadTypeChange.
+              setScenario({
+                ...scenario,
+                divided: !scenario.divided,
+                lanes: !scenario.divided ? 2 : 1,
+              })
+            }
           />
         )}
       </FieldGroup>

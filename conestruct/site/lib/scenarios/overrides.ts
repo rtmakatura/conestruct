@@ -14,6 +14,7 @@
 // the clamp exists to prevent).
 
 import { snapSpeedToDomain } from "./auto-apply";
+import { clampLanesToDomain } from "./validation";
 import type {
   FlaggerRoadType,
   LaneClosureRoadType,
@@ -113,7 +114,9 @@ export function applyOverridesToScenario(
     next = { ...next, divided: overrides.divided };
   }
   if (overrides.lanesPerDirection !== undefined && next.kind === "shoulder") {
-    next = { ...next, lanes: overrides.lanesPerDirection };
+    // Clamp to the schema domain (1..4), same B-04 class as the speed
+    // snap above — never hand the user a 422 for an app-filled value.
+    next = { ...next, lanes: clampLanesToDomain(overrides.lanesPerDirection) };
   }
   return next;
 }

@@ -22,7 +22,7 @@ import {
   summarizeHandoff,
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
-import { validateWorkZone } from "@/lib/scenarios/validation";
+import { validateLanes, validateWorkZone } from "@/lib/scenarios/validation";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import {
   buildCorridorSpec,
@@ -120,6 +120,10 @@ export function GeneratorSidebar({
   // scenario state or the backend payload.
   const [handoff, setHandoff] = useState<HandoffEvent[]>([]);
   const wzValidation = validateWorkZone(scenario);
+  // Lanes x width drawable bound (shoulder only) — same 422-mirror
+  // class as validateWorkZone; the CTA must not offer a plan the
+  // backend will reject.
+  const lanesValidation = validateLanes(scenario);
 
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
@@ -242,8 +246,10 @@ export function GeneratorSidebar({
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
-            disabled={!wzValidation.ok}
-            disabledReason={wzValidation.message ?? undefined}
+            disabled={!wzValidation.ok || !lanesValidation.ok}
+            disabledReason={
+              wzValidation.message ?? lanesValidation.message ?? undefined
+            }
           />
 
           <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] text-center">

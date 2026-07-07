@@ -5,7 +5,14 @@
 
 import { describe, expect, it } from "vitest";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "./index";
-import { MAX_WORK_LEN_FT, validateWorkZone } from "./validation";
+import {
+  clampLanesToDomain,
+  MAX_DRAWABLE_HALF_ROAD_FT,
+  MAX_LANES_PER_DIRECTION,
+  MAX_WORK_LEN_FT,
+  validateLanes,
+  validateWorkZone,
+} from "./validation";
 
 describe("validateWorkZone — flagger (100 ft one-lane two-way floor)", () => {
   it("accepts the live default (400 ft)", () => {
@@ -102,5 +109,48 @@ describe("validateWorkZone — 20,000 ft ceiling (backend le= mirror)", () => {
   it("Infinity stays rejected (Number.isFinite guard, pre-existing)", () => {
     const v = validateWorkZone({ ...DEFAULT_SHOULDER, workLen: Infinity });
     expect(v.ok).toBe(false);
+  });
+});
+
+// Mirror of the backend multi-lane bounds (schemas.py): lanes 1..4 and
+// lanes x laneWidth + shoulder <= MAX_DRAWABLE_HALF_ROAD_FT.
+describe("validateLanes — drawable half-road mirror", () => {
+  it("accepts the live default (2 lanes x 12 ft divided)", () => {
+    expect(validateLanes(DEFAULT_SHOULDER)).toEqual({ ok: true, message: null });
+  });
+
+  it("accepts the widest drawable combination (3 x 14 + 10 = 52)", () => {
+    const v = validateLanes({ ...DEFAULT_SHOULDER, lanes: 3, laneWidth: 14 });
+    expect(v.ok).toBe(true);
+  });
+
+  it("rejects 4 x 12 divided (58 ft) with an actionable message", () => {
+    const v = validateLanes({ ...DEFAULT_SHOULDER, lanes: 4, laneWidth: 12 });
+    expect(v.ok).toBe(false);
+    expect(v.message).toContain(`${MAX_DRAWABLE_HALF_ROAD_FT} ft`);
+    expect(v.message).toContain("lane width of 10.5 ft or less");
+  });
+
+  it("undivided uses the 8-ft shoulder (4 x 11 + 8 = 52 fits)", () => {
+    const base = { ...DEFAULT_SHOULDER, divided: false, lanes: 4 };
+    expect(validateLanes({ ...base, laneWidth: 11 }).ok).toBe(true);
+    expect(validateLanes({ ...base, laneWidth: 11.5 }).ok).toBe(false);
+  });
+
+  it("rejects lane counts outside 1..4", () => {
+    expect(validateLanes({ ...DEFAULT_SHOULDER, lanes: 5 }).ok).toBe(false);
+    expect(validateLanes({ ...DEFAULT_SHOULDER, lanes: 0 }).ok).toBe(false);
+  });
+
+  it("is a no-op for kinds without a lanes field", () => {
+    expect(validateLanes(DEFAULT_FLAGGER).ok).toBe(true);
+  });
+});
+
+describe("clampLanesToDomain", () => {
+  it("clamps into 1..MAX_LANES_PER_DIRECTION", () => {
+    expect(clampLanesToDomain(0)).toBe(1);
+    expect(clampLanesToDomain(3)).toBe(3);
+    expect(clampLanesToDomain(6)).toBe(MAX_LANES_PER_DIRECTION);
   });
 });
