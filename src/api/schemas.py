@@ -44,6 +44,15 @@ from src.rules.validators import DevicePlacement, ScenarioParams
 # conestruct/site/lib/scenarios/validation.ts (MAX_WORK_LEN_FT).
 WORK_LEN_MAX_FT = 20000.0
 
+# Widest half-road (work-direction lanes + shoulder, in ft) the plan
+# sheet can draw at its fixed 3.5 pt/ft vertical scale.  Verified
+# empirically: at 52 ft (e.g. 3 lanes x 14 ft + 10 ft shoulder) the
+# sheet renders cleanly; beyond it the road collides with the title
+# block and dimension callouts.  Shoulder width is derived in the
+# bridge (10 ft divided / 8 ft undivided).  Mirrored in
+# conestruct/site/lib/scenarios/validation.ts (MAX_DRAWABLE_HALF_ROAD_FT).
+MAX_DRAWABLE_HALF_ROAD_FT = 52.0
+
 
 class ScenarioMeta(BaseModel):
     project: str = ""
@@ -115,7 +124,11 @@ class ShoulderScenario(BaseModel):
     # 80-mph rural tags) into a clean 422 instead of a 500 deep in the
     # table lookup (audit fix B-04).  Same grid on every kind below.
     speed: int = Field(ge=20, le=75, multiple_of=5)
-    lanes: int = Field(ge=1, le=6)
+    # Lanes per direction on the work side (same semantics as
+    # ``ScenarioParams.num_lanes``).  Capped at 4: even at the 8-ft
+    # minimum lane width, 5+ lanes exceed MAX_DRAWABLE_HALF_ROAD_FT
+    # (cross-checked against laneWidth below).
+    lanes: int = Field(ge=1, le=4)
     laneWidth: float = Field(ge=8.0, le=14.0)
     divided: bool
 
@@ -136,6 +149,21 @@ class ShoulderScenario(BaseModel):
         if self.workZoneSpeed is not None and self.workZoneSpeed > self.speed:
             raise ValueError(
                 f"workZoneSpeed ({self.workZoneSpeed}) must be <= posted speed ({self.speed})."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_drawable_road_width(self) -> Self:
+        # Mirrored in conestruct/site/lib/scenarios/validation.ts.
+        shoulder_ft = 10.0 if self.divided else 8.0
+        half_road = self.lanes * self.laneWidth + shoulder_ft
+        if half_road > MAX_DRAWABLE_HALF_ROAD_FT:
+            max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
+            raise ValueError(
+                f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
+                f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
+                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft) — use a lane width of "
+                f"{max_width:.1f} ft or less, or reduce the lane count."
             )
         return self
 
@@ -343,10 +371,11 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
         return _validated(params), generator, {}
 
     if isinstance(scenario, FlaggerLaneClosureScenario):
-        # 2-lane two-way, alternating flow
+        # 2-lane two-way, alternating flow.  ``num_lanes`` is the
+        # per-direction count (one lane each way).
         params = ScenarioParams(
             speed_mph=scenario.speed,
-            num_lanes=2,
+            num_lanes=1,
             closure_type="lane",
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
@@ -366,9 +395,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
 
     if isinstance(scenario, LaneClosureDividedScenario):
         # TA-19, right-lane closed on a divided highway with two lanes
-        # per direction.  ``num_lanes=2`` documents the work-side
-        # carriageway; the generator hard-codes the 2-per-direction
-        # geometry so this is informational rather than load-bearing.
+        # per direction.  ``num_lanes`` is the per-direction count; the
+        # renderer draws that many lanes per carriageway (the generator
+        # itself hard-codes the 2-per-direction device geometry).
         params = ScenarioParams(
             speed_mph=scenario.speed,
             num_lanes=2,
@@ -387,17 +416,19 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     if isinstance(scenario, WorkBeyondShoulderScenario):
         # TA-1: work entirely off the roadway.  ``closure_type="shoulder"``
         # so the renderer draws the shoulder area; the generator emits no
-        # devices on the road itself.
+        # devices on the road itself.  ``num_lanes`` is per direction: 2 on
+        # the divided road types, 1 on the 2-lane undivided ones.
+        wbs_divided = scenario.roadType in ("rural_divided", "freeway")
         params = ScenarioParams(
             speed_mph=scenario.speed,
-            num_lanes=2,
+            num_lanes=2 if wbs_divided else 1,
             closure_type="shoulder",
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=10.0 if scenario.roadType in ("rural_divided", "freeway") else 8.0,
+            shoulder_width_ft=10.0 if wbs_divided else 8.0,
             is_night=scenario.night,
-            is_divided=scenario.roadType in ("rural_divided", "freeway"),
+            is_divided=wbs_divided,
             jurisdiction="CDOT",
             **meta_kw,
         )
@@ -406,10 +437,11 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     if isinstance(scenario, MobileOp2LaneScenario):
         # TA-35: slow-moving operation on a two-lane road.  ``workLen``
         # carries the trailing distance to the shadow vehicle so the
-        # generator can place it.
+        # generator can place it.  ``num_lanes`` is per direction (one
+        # lane each way on the 2-lane road).
         params = ScenarioParams(
             speed_mph=scenario.speed,
-            num_lanes=2,
+            num_lanes=1,
             closure_type="lane",
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,

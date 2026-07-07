@@ -227,11 +227,22 @@ _ANCHOR_CITATION = (
 def _anchor(
     case_id: str, road_type: str, speed: int, divided: bool, **expected: float
 ) -> CorpusCase:
-    """A full spec-verified anchor pinning the four audit-resolvable quantities."""
+    """A full spec-verified anchor pinning the four audit-resolvable quantities.
+
+    ``lanes`` is per direction (multi-lane wire-through): the undivided
+    anchors describe the classic 2-lane two-way road, so lanes=1.  The
+    expected quantities are longitudinal and don't depend on lanes.
+    """
     return CorpusCase(
         id=case_id,
         provenance="spec-verified",
-        inputs={**_ANCHOR_BASE, "roadType": road_type, "speed": speed, "divided": divided},
+        inputs={
+            **_ANCHOR_BASE,
+            "roadType": road_type,
+            "speed": speed,
+            "divided": divided,
+            "lanes": 2 if divided else 1,
+        },
         expected={
             "summary.taper_length_ft": expected["taper"],
             "summary.buffer_space_ft": expected["buffer"],
@@ -298,7 +309,9 @@ _GRID_SITE_FLAGS = (
 _GRID_CASES_BUILT: tuple[CorpusCase, ...] = (
     *(_grid(f"grid_speed_{s}", speed=s) for s in _GRID_SPEEDS),
     *(_grid(f"grid_lanewidth_{w:g}", laneWidth=w) for w in _GRID_LANE_WIDTHS),
-    _grid("grid_undivided", divided=False),
+    # lanes=1: the undivided variant describes the classic 2-lane two-way
+    # road under per-direction lanes semantics (multi-lane wire-through).
+    _grid("grid_undivided", divided=False, lanes=1),
     _grid("grid_night", night=True),
     _grid("grid_duration_long", duration="long"),
     *(_grid(f"grid_road_{rt}", roadType=rt) for rt in _GRID_ROAD_TYPES),

@@ -285,8 +285,11 @@ def build_narrative_context(
     # closed-lane edge is one lane width from the centerline and the
     # taper/cone line runs to the centerline (0), mirroring
     # generate_flagger_alternating_2lane's lane_edge_right.  The
-    # shoulder generators use the 2-lanes-per-direction geometry.
-    lane_edge_offset = params.lane_width_ft if narrative_is_flagger else 2.0 * params.lane_width_ft
+    # shoulder generators put the lane edge at num_lanes lane widths
+    # from the centerline (num_lanes = lanes per direction).
+    lane_edge_offset = (
+        params.lane_width_ft if narrative_is_flagger else params.num_lanes * params.lane_width_ft
+    )
     shoulder_edge_offset = lane_edge_offset + shoulder_width
     sign_offset_right = lane_edge_offset + 4.0
 

@@ -157,6 +157,11 @@ class ScenarioParams:
     """Inputs the validators need to interpret a proposed layout."""
 
     speed_mph: int
+    # Lanes PER DIRECTION on the work side (a 2-lane two-way road is
+    # num_lanes=1).  Load-bearing: the shoulder generators' lane-edge
+    # offsets, the plan-sheet road drawing, and the site-adjustment sign
+    # offsets all scale with it.  A few legacy predicates below still
+    # read it permissively (<= 2).
     num_lanes: int
     closure_type: str  # "lane" | "shoulder" | "full_road" | "mobile" | "off_road"
     # Speed/access category from MUTCD Table 6B-1.  Divided-ness is

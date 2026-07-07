@@ -143,8 +143,11 @@ def _add_portable_light_plant(
     past the downstream end.
     """
     if params.closure_type == "shoulder":
-        closure_lateral = 2.0 * params.lane_width_ft + params.shoulder_width_ft
+        closure_lateral = params.num_lanes * params.lane_width_ft + params.shoulder_width_ft
     else:
+        # Lane closures keep the historical 2-lane-width edge: the
+        # enabled lane-closure kinds (flagger, TA-19) shipped with this
+        # placement and their num_lanes values would move it.
         closure_lateral = 2.0 * params.lane_width_ft
     plant_offset = closure_lateral + _LIGHT_PLANT_LATERAL_OFFSET_FT
     plant_station = max(0.0, params.work_zone_length_ft - _LIGHT_PLANT_INTO_WORK_ZONE_FT)

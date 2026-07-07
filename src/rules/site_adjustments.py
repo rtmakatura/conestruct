@@ -77,17 +77,22 @@ def _adjust_adjacent_intersection(
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
     """Add ROAD WORK AHEAD signs facing each cross-street approach."""
     midpoint = params.work_zone_length_ft / 2.0
+    # At least 6 ft beyond the road edge (so wide multi-lane roads don't
+    # swallow the sign into the travel lanes); 50 ft is the historical
+    # placement, kept whenever the road is narrow enough for it.
+    road_edge = params.num_lanes * params.lane_width_ft + _shoulder_width(params)
+    sign_offset = max(50.0, road_edge + 6.0)
     new_signs = [
         DevicePlacement(
             device_type=DeviceType.SIGN_GENERIC,
             station_ft=midpoint,
-            offset_ft=50.0,
+            offset_ft=sign_offset,
             label="W20-1",
         ),
         DevicePlacement(
             device_type=DeviceType.SIGN_GENERIC,
             station_ft=midpoint,
-            offset_ft=-50.0,
+            offset_ft=-sign_offset,
             label="W20-1",
         ),
     ]

@@ -76,14 +76,13 @@ def _required_taper_length(params: ScenarioParams, shoulder_width_ft: float) -> 
 def _road_y_extent(params: ScenarioParams, shoulder_width_ft: float) -> tuple[float, float]:
     """Return (y_road_top, y_road_bottom) on the page for the rendered road.
 
-    Divided highways are drawn with two lanes per direction separated by
-    a visible median band of ``MEDIAN_PTS`` height; undivided highways
-    are drawn with a single lane each direction and a yellow centerline.
+    Both directions are drawn with ``params.num_lanes`` lanes; divided
+    highways separate them with a visible median band of ``MEDIAN_PTS``
+    height, undivided highways with a yellow centerline.
     """
     lane_h = params.lane_width_ft * PTS_PER_OFFSET_FT
     shoulder_h = shoulder_width_ft * PTS_PER_OFFSET_FT
-    half_lanes = 2 if params.is_divided else 1
-    half_road = half_lanes * lane_h + shoulder_h
+    half_road = params.num_lanes * lane_h + shoulder_h
     if params.is_divided:
         half_road += MEDIAN_PTS / 2.0
     return PLAN_Y_CENTER + half_road, PLAN_Y_CENTER - half_road
@@ -255,6 +254,7 @@ def _draw_road(
     shoulder_width_ft: float,
     closure_type: str = "shoulder",
     is_divided: bool = True,
+    num_lanes: int = 2,
 ) -> None:
     x_left = PLAN_LEFT
     x_right = PLAN_RIGHT
@@ -270,7 +270,7 @@ def _draw_road(
     # band sits between them.
     y_center = PLAN_Y_CENTER
     half_median = MEDIAN_PTS / 2.0 if is_divided else 0.0
-    half_lanes = 2 if is_divided else 1
+    half_lanes = num_lanes  # lanes per direction, drawn symmetrically
     y_closed_lane_inner = y_center - half_median - half_lanes * lane_h  # top of closed lanes? no
     # Note: y_closed_lane_inner is the OUTER (page-bottom) edge of the closed-side lane stack.
     # We compute from the inner (median-facing) edge down through the lanes.
@@ -288,17 +288,31 @@ def _draw_road(
     is_lane_closure = closure_type == "lane"
 
     if not is_divided:
-        # 2-lane undivided road: single lane each direction with a yellow
-        # centerline.  No median gap; the closed right lane is painted
-        # pink to flag it as the work-side lane.
+        # Undivided road: ``num_lanes`` lanes each direction with a yellow
+        # centerline.  No median gap; for a lane closure the outer
+        # work-side lane is painted pink to flag it.
         c.setFillColor(SHOULDER_OPEN_FILL)
         c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
         c.rect(x_left, y_open_lane_inner, width, shoulder_h, fill=1, stroke=0)
 
-        c.setFillColor(SHOULDER_CLOSED_FILL if is_lane_closure else LANE_FILL)
-        c.rect(x_left, y_closed_lane_inner, width, lane_h, fill=1, stroke=0)
+        if is_lane_closure:
+            c.setFillColor(SHOULDER_CLOSED_FILL)
+            c.rect(x_left, y_closed_lane_outer, width, lane_h, fill=1, stroke=0)
+            if half_lanes > 1:
+                c.setFillColor(LANE_FILL)
+                c.rect(
+                    x_left,
+                    y_closed_lane_outer + lane_h,
+                    width,
+                    (half_lanes - 1) * lane_h,
+                    fill=1,
+                    stroke=0,
+                )
+        else:
+            c.setFillColor(LANE_FILL)
+            c.rect(x_left, y_closed_lane_outer, width, half_lanes * lane_h, fill=1, stroke=0)
         c.setFillColor(LANE_FILL)
-        c.rect(x_left, y_center, width, lane_h, fill=1, stroke=0)
+        c.rect(x_left, y_center, width, half_lanes * lane_h, fill=1, stroke=0)
 
         # Yellow dashed centerline (no-passing in a real work zone, but
         # dashed reads cleaner on the schematic).
@@ -307,6 +321,16 @@ def _draw_road(
         c.setDash(12, 8)
         c.line(x_left, y_center, x_right, y_center)
         c.setDash()
+
+        # Lane stripes between same-direction lanes (white dashed, 2 pt).
+        if half_lanes > 1:
+            c.setStrokeColor(EDGE_LINE)
+            c.setLineWidth(2.0)
+            c.setDash(12, 8)
+            for i in range(1, half_lanes):
+                c.line(x_left, y_center - i * lane_h, x_right, y_center - i * lane_h)
+                c.line(x_left, y_center + i * lane_h, x_right, y_center + i * lane_h)
+            c.setDash()
 
         # Outer edge lines (white solid)
         c.setStrokeColor(EDGE_LINE)
@@ -357,14 +381,14 @@ def _draw_road(
         # Outer (closed) lane abutting the work-side shoulder.
         c.setFillColor(SHOULDER_CLOSED_FILL)
         c.rect(x_left, y_closed_lane_outer, width, lane_h, fill=1, stroke=0)
-        # Inner (open) lane on the closed-side carriageway, butting against
-        # the median.
+        # Inner (open) lane(s) on the closed-side carriageway, butting
+        # against the median.
         c.setFillColor(LANE_FILL)
         c.rect(
             x_left,
             y_closed_lane_outer + lane_h,
             width,
-            lane_h,
+            (half_lanes - 1) * lane_h,
             fill=1,
             stroke=0,
         )
@@ -401,11 +425,13 @@ def _draw_road(
     c.line(x_left, y_closed_lane_outer, x_right, y_closed_lane_outer)
     c.line(x_left, y_open_lane_outer, x_right, y_open_lane_outer)
 
-    # Lane stripes between same-direction lanes (white dashed, 2 pt) at ±lane_width_ft
+    # Lane stripes between same-direction lanes (white dashed, 2 pt) at
+    # ±i·lane_width_ft for each interior lane boundary.
     c.setLineWidth(2.0)
     c.setDash(12, 8)
-    c.line(x_left, _y_of(lane_width_ft, True), x_right, _y_of(lane_width_ft, True))
-    c.line(x_left, _y_of(-lane_width_ft, True), x_right, _y_of(-lane_width_ft, True))
+    for i in range(1, half_lanes):
+        c.line(x_left, _y_of(i * lane_width_ft, True), x_right, _y_of(i * lane_width_ft, True))
+        c.line(x_left, _y_of(-i * lane_width_ft, True), x_right, _y_of(-i * lane_width_ft, True))
     c.setDash()
 
     # Shoulder outer edges (white solid, 1 pt)
@@ -928,8 +954,7 @@ def _on_road_max_offset_ft(
     flag is on, the threshold is widened so signs that sit on the
     sidewalk strip (R9-9 at offset ~36 ft) stay at their natural
     position rather than getting pulled in to the road edge."""
-    half_lanes = 2 if params.is_divided else 1
-    base = half_lanes * params.lane_width_ft + shoulder_width_ft
+    base = params.num_lanes * params.lane_width_ft + shoulder_width_ft
     if has_sidewalk:
         return base + 6.0  # sidewalk outer edge + small margin
     return base
@@ -960,12 +985,11 @@ def _sign_y_bands(params: ScenarioParams, shoulder_width_ft: float) -> dict[str,
     floor below the road.  Median edges follow the drawn ``MEDIAN_PTS``
     strip centred on ``PLAN_Y_CENTER``.
     """
-    half_lanes = 2 if params.is_divided else 1
     half_med = MEDIAN_PTS / 2.0
     return {
         "median_lo": PLAN_Y_CENTER - half_med,
         "median_hi": PLAN_Y_CENTER + half_med,
-        "work_shoulder_top": _y_of(half_lanes * params.lane_width_ft, params.is_divided),
+        "work_shoulder_top": _y_of(params.num_lanes * params.lane_width_ft, params.is_divided),
         "work_floor": PLAN_BOTTOM,
     }
 
@@ -980,28 +1004,45 @@ BIKE_LANE_BORDER = colors.HexColor("#7AAA50")
 HATCH_GRAY = colors.HexColor("#5A5A5A")
 SCHOOL_FILL = colors.HexColor("#FFE89D")
 
-# Schematic facility offsets (ft).  Positions chosen so the existing
-# site_adjustments device offsets (R9-9 at 36, M4-9a at 28) sit roughly
-# centered on their corresponding strips.
-BIKE_LANE_INNER_FT = 25.0
-BIKE_LANE_OUTER_FT = 31.0
-SIDEWALK_INNER_FT = 33.0
-SIDEWALK_OUTER_FT = 39.0
+# Schematic facility strips (ft), derived from the road geometry so they
+# track the lane count (multi-lane wire-through).  Sized so the
+# site_adjustments device offsets sit roughly centered on their strips:
+# the bike strip straddles M4-9a (lane edge + 4) and the sidewalk strip
+# straddles R9-9 (road edge + 2).  At the classic 2x12 ft + 10 ft
+# shoulder geometry these reproduce the original fixed strips
+# (bike 25..31, sidewalk 33..39) exactly.
 
 
-def _detect_site_features(placements: list[DevicePlacement]) -> dict[str, bool]:
+def _bike_strip_ft(params: ScenarioParams) -> tuple[float, float]:
+    lane_edge = params.num_lanes * params.lane_width_ft
+    return lane_edge + 1.0, lane_edge + 7.0
+
+
+def _sidewalk_strip_ft(params: ScenarioParams, shoulder_width_ft: float) -> tuple[float, float]:
+    road_edge = params.num_lanes * params.lane_width_ft + shoulder_width_ft
+    return road_edge - 1.0, road_edge + 5.0
+
+
+def _detect_site_features(
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+    shoulder_width_ft: float,
+) -> dict[str, bool]:
     """Infer which site-condition flags are active by scanning placement
     labels.  This avoids threading the flag dict through render_plan_sheet
     callers — the device list itself carries all the information we need.
 
-    ``adjacent_intersection`` is detected by a W20-1 placed at large
-    offset (|offset| > 40 ft); the baseline advance W20-1 sits at the
-    shoulder offset (≈ 28 ft) and is filtered out by station clipping
-    anyway, so the offset check is unambiguous in practice.
+    ``adjacent_intersection`` is detected by a W20-1 placed beyond the
+    road edge (the cross-street pair sits at least 6 ft outside it);
+    the baseline advance W20-1 sits at lane edge + 4 ft, inside the
+    shoulder, so the check cannot false-positive on wide roads.
     """
+    beyond_road = params.num_lanes * params.lane_width_ft + shoulder_width_ft + 2.0
     has_r99 = any(p.label == "R9-9" for p in placements)
     has_m49a = any(p.label == "M4-9a" for p in placements)
-    has_xstreet_w201 = any(p.label == "W20-1" and abs(p.offset_ft) > 40.0 for p in placements)
+    has_xstreet_w201 = any(
+        p.label == "W20-1" and abs(p.offset_ft) > beyond_road for p in placements
+    )
     has_school = any(p.label == "S1-1" for p in placements)
     return {
         "pedestrian_facility": has_r99,
@@ -1085,7 +1126,7 @@ def _draw_site_context(
     and bike lane at the intersection point so the strips appear to
     break for the cross street.
     """
-    flags = _detect_site_features(placements)
+    flags = _detect_site_features(placements, params, shoulder_width_ft)
     if not any(flags.values()):
         return
 
@@ -1095,10 +1136,13 @@ def _draw_site_context(
 
     sides = (1, -1) if params.is_divided else (1,)
 
+    sidewalk_inner_ft, sidewalk_outer_ft = _sidewalk_strip_ft(params, shoulder_width_ft)
+    bike_inner_ft, bike_outer_ft = _bike_strip_ft(params)
+
     if flags["pedestrian_facility"]:
         for side in sides:
             y_low, y_high = _strip_y_range(
-                SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, side, params.is_divided
+                sidewalk_inner_ft, sidewalk_outer_ft, side, params.is_divided
             )
             _draw_strip(c, PLAN_LEFT, PLAN_RIGHT, y_low, y_high, SIDEWALK_FILL, SIDEWALK_BORDER)
             # Closed segment within the work zone
@@ -1109,23 +1153,19 @@ def _draw_site_context(
         c.setFillColor(colors.HexColor("#5A5A5A"))
         c.setFont("Helvetica-Oblique", 6)
         y_low_w, y_high_w = _strip_y_range(
-            SIDEWALK_INNER_FT, SIDEWALK_OUTER_FT, 1, params.is_divided
+            sidewalk_inner_ft, sidewalk_outer_ft, 1, params.is_divided
         )
         c.drawString(PLAN_LEFT + 4, (y_low_w + y_high_w) / 2 - 2, "SIDEWALK")
 
     if flags["bicycle_facility"]:
         for side in sides:
-            y_low, y_high = _strip_y_range(
-                BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, side, params.is_divided
-            )
+            y_low, y_high = _strip_y_range(bike_inner_ft, bike_outer_ft, side, params.is_divided)
             _draw_strip(c, PLAN_LEFT, PLAN_RIGHT, y_low, y_high, BIKE_LANE_FILL, BIKE_LANE_BORDER)
             if side == 1:
                 _draw_diagonal_hatch(c, wz_x_left, wz_x_right, y_low, y_high)
         c.setFillColor(colors.HexColor("#3F6020"))
         c.setFont("Helvetica-Oblique", 6)
-        y_low_b, y_high_b = _strip_y_range(
-            BIKE_LANE_INNER_FT, BIKE_LANE_OUTER_FT, 1, params.is_divided
-        )
+        y_low_b, y_high_b = _strip_y_range(bike_inner_ft, bike_outer_ft, 1, params.is_divided)
         c.drawString(PLAN_LEFT + 4, (y_low_b + y_high_b) / 2 - 2, "BIKE LANE")
 
     if flags["adjacent_intersection"]:
@@ -1424,7 +1464,7 @@ def _layout_device_positions(
     ``_draw_devices`` and the sign-band regression test so the two cannot
     drift.  Returns ``(items, lighting_items)``.
     """
-    flags = _detect_site_features(placements)
+    flags = _detect_site_features(placements, params, shoulder_width_ft)
     on_road_max = _on_road_max_offset_ft(
         params, shoulder_width_ft, has_sidewalk=flags["pedestrian_facility"]
     )
@@ -1531,7 +1571,9 @@ def _draw_devices(
     on_road_max = _on_road_max_offset_ft(
         params,
         shoulder_width_ft,
-        has_sidewalk=_detect_site_features(placements)["pedestrian_facility"],
+        has_sidewalk=_detect_site_features(placements, params, shoulder_width_ft)[
+            "pedestrian_facility"
+        ],
     )
     items, lighting_items = _layout_device_positions(
         placements, x_of, station_max_visible, params, shoulder_width_ft
@@ -2189,6 +2231,8 @@ def _draw_median_icon(c: canvas.Canvas, x: float, y: float) -> None:
 def _draw_legend(
     c: canvas.Canvas,
     placements: list[DevicePlacement],
+    params: ScenarioParams,
+    shoulder_width_ft: float,
     speed_mph: float,
     is_divided: bool = False,
     scale_note: str = "",
@@ -2211,7 +2255,7 @@ def _draw_legend(
             sign_cats_present.add(_sign_category(p.label))
     sign_cats_used = [c for c in _SIGN_CATEGORY_ORDER if c in sign_cats_present]
 
-    flags = _detect_site_features(placements)
+    flags = _detect_site_features(placements, params, shoulder_width_ft)
     flag_to_kind = {
         "pedestrian_facility": "sidewalk",
         "bicycle_facility": "bike_lane",
@@ -3453,6 +3497,7 @@ def _render_schematic_page(
         shoulder_width_ft,
         closure_type=params.closure_type,
         is_divided=params.is_divided,
+        num_lanes=params.num_lanes,
     )
     _draw_site_context(c, placements, params, x_of, shoulder_width_ft)
     _draw_landmarks(c, params, x_of, shoulder_width_ft)
@@ -3461,8 +3506,7 @@ def _render_schematic_page(
     # the opposing shoulder.  Keeps the arrow from fighting taper drums
     # or tangent cones for screen real estate, while staying close enough
     # to the carriageway it describes that the semantics are unambiguous.
-    half_lanes = 2 if params.is_divided else 1
-    shoulder_outer_offset = half_lanes * params.lane_width_ft + shoulder_width_ft
+    shoulder_outer_offset = params.num_lanes * params.lane_width_ft + shoulder_width_ft
     arrow_y_work_side = _y_of(shoulder_outer_offset, params.is_divided) - 14.0
     arrow_y_open_side = _y_of(-shoulder_outer_offset, params.is_divided) + 14.0
     arrow_x_left = PLAN_LEFT + 30.0
@@ -3489,6 +3533,8 @@ def _render_schematic_page(
     _draw_legend(
         c,
         placements,
+        params,
+        shoulder_width_ft,
         speed_mph=params.speed_mph,
         is_divided=params.is_divided,
         scale_note=scale_long,

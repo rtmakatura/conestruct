@@ -98,12 +98,12 @@ def generate_shoulder_closure_divided(
 ) -> list[DevicePlacement]:
     """Generate a complete CDOT S-630-1 right-shoulder closure layout.
 
-    Hard-coded for a 4-lane divided highway with a right-shoulder
-    closure at posted speeds in the 45–65 mph range.  All longitudinal
-    positions flow from the spacing functions in ``src.rules.spacing``,
-    so the layout flexes with ``params.speed_mph``.  Lateral positions
-    assume two ``params.lane_width_ft`` lanes per direction plus an
-    outer shoulder of ``shoulder_width_ft`` (defaults to
+    Models a divided highway with a right-shoulder closure at posted
+    speeds in the 45–65 mph range.  All longitudinal positions flow
+    from the spacing functions in ``src.rules.spacing``, so the layout
+    flexes with ``params.speed_mph``.  Lateral positions use
+    ``params.num_lanes`` lanes per direction of ``params.lane_width_ft``
+    plus an outer shoulder of ``shoulder_width_ft`` (defaults to
     ``params.shoulder_width_ft`` — the single source of truth; the
     kwarg remains as an explicit override only).
 
@@ -118,7 +118,7 @@ def generate_shoulder_closure_divided(
     wz_len = params.work_zone_length_ft
 
     # Lateral landmarks
-    lane_edge_offset = 2.0 * params.lane_width_ft  # right edge of right lane
+    lane_edge_offset = params.num_lanes * params.lane_width_ft  # right edge of outer lane
     shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
     arrow_board_offset = lane_edge_offset + shoulder_width_ft / 2.0
     sign_offset_right = lane_edge_offset + 4.0
@@ -522,15 +522,16 @@ def generate_shoulder_closure_undivided(
     params: ScenarioParams,
     shoulder_width_ft: float | None = None,
 ) -> list[DevicePlacement]:
-    """Generate a CDOT S-630-1 right-shoulder closure on a 2-lane undivided road.
+    """Generate a CDOT S-630-1 right-shoulder closure on an undivided road.
 
     ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
     single source of truth); the kwarg remains as an explicit override.
 
-    Hard-coded for a 2-lane two-way road (one lane each direction) with
-    the right (work-side) shoulder closed.  Opposing traffic keeps its
-    full lane and is not signed — MUTCD does not require both-sides
-    advance warning for shoulder-only closures on undivided roads.
+    Models a two-way road with ``params.num_lanes`` lanes each direction
+    (1 = the classic 2-lane road) and the right (work-side) shoulder
+    closed.  Opposing traffic keeps its lanes and is not signed — MUTCD
+    does not require both-sides advance warning for shoulder-only
+    closures on undivided roads.
 
     Coordinates follow the project convention: ``station_ft = 0`` at the
     downstream end of the work zone, increasing upstream against
@@ -542,8 +543,8 @@ def generate_shoulder_closure_undivided(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
-    # Lateral landmarks — single lane in the work direction
-    lane_edge_offset = params.lane_width_ft  # right edge of work-side lane
+    # Lateral landmarks — ``num_lanes`` lanes in the work direction
+    lane_edge_offset = params.num_lanes * params.lane_width_ft  # right edge of outer lane
     shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
     arrow_board_offset = lane_edge_offset + shoulder_width_ft / 2.0
     sign_offset_right = lane_edge_offset + 4.0

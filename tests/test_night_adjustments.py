@@ -187,7 +187,9 @@ def test_light_plant_at_start_of_work_zone() -> None:
     plant = next(p for p in adjusted if p.device_type == DeviceType.PORTABLE_LIGHT_PLANT)
 
     assert plant.station_ft == pytest.approx(params.work_zone_length_ft - 25.0, abs=0.5)
-    closure_edge = 2.0 * params.lane_width_ft + params.shoulder_width_ft
+    # Closure edge scales with lanes per direction (multi-lane wire-through);
+    # this fixture is a 3-lane I-25 carriageway.
+    closure_edge = params.num_lanes * params.lane_width_ft + params.shoulder_width_ft
     assert plant.offset_ft == pytest.approx(closure_edge + 5.0, abs=0.5)
 
 
