@@ -128,8 +128,21 @@ export function GeneratorSidebar({
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
 
+  // Content of the last classification applyClassification actually
+  // applied, surviving picker re-opens.  Detection writes to the form
+  // only when it is NEW information: a re-Apply with an unchanged
+  // detection must not re-impose detected values over manual form edits
+  // made since the last apply — that silently reverted a user's lane
+  // selection to the detected count (the picker re-apply lanes bug).  A
+  // moved pin or changed OSM result produces different content and still
+  // applies; in-modal overrides always apply (explicit user actions).
+  const lastAppliedDetectionRef = useRef<string | null>(null);
+
   const onKindChange = (kind: ScenarioKind) => {
     if (kind === scenario.kind) return;
+    // The new kind starts from its defaults, so the same detection IS
+    // new information for it — let the next Apply fill the fresh form.
+    lastAppliedDetectionRef.current = null;
     // The notes describe the previous kind's handoff — drop them so a
     // stale clamp note can't follow the operator into a different kind.
     setHandoff([]);
@@ -158,19 +171,25 @@ export function GeneratorSidebar({
       next = { ...next, workLen: r.workZoneFt } as Scenario;
     }
     let delta: AutoApplyDelta | null = null;
-    if (r.classification) {
+    const detectionJson = r.classification ? JSON.stringify(r.classification) : null;
+    const isNewDetection =
+      detectionJson !== null && detectionJson !== lastAppliedDetectionRef.current;
+    if (r.classification && isNewDetection) {
       const applied = applyClassification(next, r.classification);
       next = applied.scenario;
       delta = applied.delta;
+      lastAppliedDetectionRef.current = detectionJson;
     }
     next = applyOverridesToScenario(next, r.overrides);
     // Name what the handoff did to the values the operator reviewed, so
     // the clamp/skip isn't silent (UX-01/UX-02).  Derived from the raw
     // picker result + the applied scenario; pure frontend metadata.
+    // A skipped (unchanged) detection is passed as null — its values were
+    // not applied, so no note may claim they were.
     setHandoff(
       summarizeHandoff({
         prior: cur,
-        classification: r.classification,
+        classification: isNewDetection ? r.classification : null,
         overrides: r.overrides,
         final: next,
         delta,
