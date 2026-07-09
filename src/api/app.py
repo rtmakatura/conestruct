@@ -328,6 +328,7 @@ if generate_button:
             site_lat=site_lat if (site_lat or site_lng) else None,
             site_lng=site_lng if (site_lat or site_lng) else None,
             site_address=site_address,
+            site_flags=site_conditions,
         )
         export_device_list(placements, params, output_path=xlsx_path)
         generate_crew_narrative(

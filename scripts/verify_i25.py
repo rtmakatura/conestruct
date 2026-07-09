@@ -382,6 +382,7 @@ render_plan_sheet(
     site_lat=LAT,
     site_lng=LNG,
     shoulder_width_ft=SHOULDER_WIDTH,
+    site_flags=night_interchange_flags,
 )
 print(f"Wrote {pdf_path.name} — total devices {len(placements_combo)}")
 print("\nSite adjustment records (interchange):")

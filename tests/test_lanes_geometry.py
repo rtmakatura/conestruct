@@ -130,36 +130,84 @@ def test_pedestrian_signs_track_the_lane_edge(lanes: int, divided: bool) -> None
 
 
 # ---------------------------------------------------------------------------
-# Site-feature detection scales with the road width
+# Site context is driven by structured flags, not device-label inference
+# (#121 — the label-scan false-positive class is asserted on the OUTCOME:
+# what text the rendered sheet carries, not on the retired mechanism)
 # ---------------------------------------------------------------------------
 
 
-def test_wide_road_does_not_phantom_detect_cross_street() -> None:
-    """The intersection glyph is inferred from a W20-1 beyond the road
-    edge.  The old fixed 40-ft threshold false-positived on wide roads
-    (a 4x10 baseline advance sign sits at 44 ft), drawing a phantom
-    CROSS ST. on plans with no site flags."""
-    from src.rendering.plan_sheet import _detect_site_features
+def _plan_sheet_text(params: ScenarioParams, placements: list, tmp_path, **kwargs) -> str:
+    import pypdfium2 as pdfium
 
+    from src.rendering.plan_sheet import render_plan_sheet
+
+    path = str(tmp_path / "sheet.pdf")
+    render_plan_sheet(placements, params, output_path=path, **kwargs)
+    pdf = pdfium.PdfDocument(path)
+    try:
+        return "\n".join(page.get_textpage().get_text_range() for page in pdf)
+    finally:
+        pdf.close()
+
+
+def test_wide_road_does_not_phantom_detect_cross_street(tmp_path) -> None:
+    """No site flags → no cross-street (or any site) context on the sheet,
+    regardless of road width or device offsets.  Historic regression: the
+    renderer used to INFER the intersection from any W20-1 beyond a fixed
+    40-ft offset, drawing a phantom CROSS ST. on wide flag-free plans."""
     params = _params(4, divided=True)
     placements = generate_shoulder_closure_divided(params)
-    flags = _detect_site_features(placements, params, params.shoulder_width_ft)
-    assert not any(flags.values()), flags
+    text = _plan_sheet_text(params, placements, tmp_path)
+    for marker in ("CROSS ST.", "SIDEWALK", "BIKE LANE"):
+        assert marker not in text, f"phantom site context {marker!r} on a no-flag plan"
 
 
 @pytest.mark.parametrize("lanes", [2, 4])
-def test_cross_street_signs_detected_and_off_the_road(lanes: int) -> None:
-    from src.rendering.plan_sheet import _detect_site_features
-
+def test_cross_street_signs_off_the_road_and_context_drawn(lanes: int, tmp_path) -> None:
+    """The adjacent_intersection adjustment still places its W20-1 pair
+    beyond the road edge for every lane count, and the structured flag —
+    not the sign offsets — makes the sheet draw the cross-street stub."""
     params = _params(lanes, divided=True)
-    adjusted, _ = apply_site_adjustments(
-        generate_shoulder_closure_divided(params), params, {"adjacent_intersection": True}
-    )
+    flags = {"adjacent_intersection": True}
+    adjusted, _ = apply_site_adjustments(generate_shoulder_closure_divided(params), params, flags)
     road_edge = lanes * params.lane_width_ft + params.shoulder_width_ft
     xstreet = [p for p in adjusted if p.label == "W20-1" and abs(p.offset_ft) > road_edge]
     assert len(xstreet) == 2  # one facing each cross-street approach
-    flags = _detect_site_features(adjusted, params, params.shoulder_width_ft)
-    assert flags["adjacent_intersection"]
+    text = _plan_sheet_text(params, adjusted, tmp_path, site_flags=flags)
+    assert "CROSS ST." in text
+
+
+def test_flagger_pedestrian_access_still_draws_sidewalk(client: TestClient, tmp_path) -> None:
+    """Like-for-like guard for the #121 swap: the flagger's R9-9 signs come
+    from the generator's pedestrianAccess kwarg, not a siteConditions flag.
+    The API path must fold pedestrianAccess into the renderer's
+    pedestrian_facility flag or the sidewalk strip silently disappears."""
+    import pypdfium2 as pdfium
+
+    body = {
+        "kind": "flagger_lane_closure",
+        "meta": {"project": "lanes-geometry", "address": "", "lat": 0.0, "lng": 0.0},
+        "roadType": "rural_undivided",
+        "speed": 45,
+        "laneWidth": 11.0,
+        "workType": "utility_cut",
+        "duration": "short",
+        "workLen": 1000.0,
+        "night": False,
+        "pilotCar": False,
+        "afad": False,
+        "pedestrianAccess": True,
+    }
+    res = client.post("/render/pdf", headers={"Authorization": f"Bearer {_SECRET}"}, json=body)
+    assert res.status_code == 200, res.text
+    path = tmp_path / "flagger_ped.pdf"
+    path.write_bytes(res.content)
+    pdf = pdfium.PdfDocument(str(path))
+    try:
+        text = "\n".join(page.get_textpage().get_text_range() for page in pdf)
+    finally:
+        pdf.close()
+    assert "SIDEWALK" in text, "pedestrianAccess flagger plan lost its sidewalk strip"
 
 
 # ---------------------------------------------------------------------------

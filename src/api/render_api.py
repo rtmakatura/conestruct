@@ -260,6 +260,24 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
     return placements, params, site_records, night_records
 
 
+def _plan_sheet_site_flags(scenario: Scenario) -> dict[str, bool]:
+    """Structured site flags for the plan-sheet renderer (Refs #121).
+
+    The renderer's site context used to be inferred by scanning device
+    labels; it is now driven by the same flags ``apply_site_adjustments``
+    consumed.  Two structured sources produce drawable context devices:
+    ``meta.siteConditions`` and — for the flagger scenario — the
+    top-level ``pedestrianAccess`` field, whose R9-9 signs come from the
+    generator itself rather than a site adjustment.  Folding the latter
+    into ``pedestrian_facility`` keeps the drawn sheet identical to the
+    pre-#121 inference (like-for-like, rule #5).
+    """
+    flags = dict(scenario.meta.siteConditions or {})
+    if getattr(scenario, "pedestrianAccess", False):
+        flags["pedestrian_facility"] = True
+    return flags
+
+
 def _render_with(
     scenario: Scenario,
     suffix: str,
@@ -302,6 +320,7 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_lat=scenario.meta.lat or None,
                     site_lng=scenario.meta.lng or None,
                     site_address=scenario.meta.address,
+                    site_flags=_plan_sheet_site_flags(scenario),
                 )
             ),
         )

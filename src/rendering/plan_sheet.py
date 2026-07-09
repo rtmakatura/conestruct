@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import os
 import tempfile
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -1023,33 +1023,34 @@ def _sidewalk_strip_ft(params: ScenarioParams, shoulder_width_ft: float) -> tupl
     return road_edge - 1.0, road_edge + 5.0
 
 
-def _detect_site_features(
-    placements: list[DevicePlacement],
-    params: ScenarioParams,
-    shoulder_width_ft: float,
-) -> dict[str, bool]:
-    """Infer which site-condition flags are active by scanning placement
-    labels.  This avoids threading the flag dict through render_plan_sheet
-    callers — the device list itself carries all the information we need.
+# Site-condition flags the renderer draws context for.  Structured input
+# (Refs #121): callers pass the authoritative flag dict instead of the
+# retired label-scan inference, which reconstructed these by scanning
+# placement labels/offsets and false-triggered on any W20-1 beyond the
+# road edge — a hard blocker for real intersection devices (#117).
+# ``adjacent_interchange`` is deliberately absent: it has never driven
+# any drawn context, and adding it is a visible value change (rule #5).
+_SITE_FLAG_KEYS: tuple[str, ...] = (
+    "pedestrian_facility",
+    "bicycle_facility",
+    "adjacent_intersection",
+    "school_zone",
+)
 
-    ``adjacent_intersection`` is detected by a W20-1 placed beyond the
-    road edge (the cross-street pair sits at least 6 ft outside it);
-    the baseline advance W20-1 sits at lane edge + 4 ft, inside the
-    shoulder, so the check cannot false-positive on wide roads.
+
+def _resolve_site_flags(site_flags: Mapping[str, bool] | None) -> dict[str, bool]:
+    """Normalize a caller-supplied site-flag mapping to the drawable set.
+
+    ``None`` (the default for every ``site_flags`` parameter in this
+    module) means all-off — accepted as a deliberate tradeoff so
+    flag-free callers (tests, dev scripts) stay untouched.  Any future
+    call site that renders a scenario which can carry site conditions
+    MUST pass the real flags; omitting them silently drops the site
+    context from the sheet.  Unknown keys are ignored.
     """
-    beyond_road = params.num_lanes * params.lane_width_ft + shoulder_width_ft + 2.0
-    has_r99 = any(p.label == "R9-9" for p in placements)
-    has_m49a = any(p.label == "M4-9a" for p in placements)
-    has_xstreet_w201 = any(
-        p.label == "W20-1" and abs(p.offset_ft) > beyond_road for p in placements
-    )
-    has_school = any(p.label == "S1-1" for p in placements)
-    return {
-        "pedestrian_facility": has_r99,
-        "bicycle_facility": has_m49a,
-        "adjacent_intersection": has_xstreet_w201,
-        "school_zone": has_school,
-    }
+    if not site_flags:
+        return {key: False for key in _SITE_FLAG_KEYS}
+    return {key: bool(site_flags.get(key)) for key in _SITE_FLAG_KEYS}
 
 
 def _draw_diagonal_hatch(
@@ -1113,10 +1114,10 @@ def _strip_y_range(
 
 def _draw_site_context(
     c: canvas.Canvas,
-    placements: list[DevicePlacement],
     params: ScenarioParams,
     x_of: Callable[[float], float],
     shoulder_width_ft: float,
+    site_flags: Mapping[str, bool] | None,
 ) -> None:
     """Schematic context features driven by the active site flags.
 
@@ -1126,7 +1127,7 @@ def _draw_site_context(
     and bike lane at the intersection point so the strips appear to
     break for the cross street.
     """
-    flags = _detect_site_features(placements, params, shoulder_width_ft)
+    flags = _resolve_site_flags(site_flags)
     if not any(flags.values()):
         return
 
@@ -1454,6 +1455,7 @@ def _layout_device_positions(
     station_max_visible: float,
     params: ScenarioParams,
     shoulder_width_ft: float,
+    site_flags: Mapping[str, bool] | None = None,
 ) -> tuple[
     list[tuple[DevicePlacement, float, float]],
     list[tuple[DevicePlacement, float, float]],
@@ -1463,8 +1465,12 @@ def _layout_device_positions(
     legal-band clamp.  Pure geometry, no drawing — shared by
     ``_draw_devices`` and the sign-band regression test so the two cannot
     drift.  Returns ``(items, lighting_items)``.
+
+    ``site_flags`` defaults to ``None`` (all-off) so flag-free callers
+    stay untouched; callers rendering a scenario with site conditions
+    must pass the real flags (see ``_resolve_site_flags``).
     """
-    flags = _detect_site_features(placements, params, shoulder_width_ft)
+    flags = _resolve_site_flags(site_flags)
     on_road_max = _on_road_max_offset_ft(
         params, shoulder_width_ft, has_sidewalk=flags["pedestrian_facility"]
     )
@@ -1554,6 +1560,7 @@ def _draw_devices(
     params: ScenarioParams,
     shoulder_width_ft: float,
     code_to_num: dict[str, int],
+    site_flags: Mapping[str, bool] | None = None,
 ) -> None:
     """Three-pass render: leaders behind, glyphs above, numbered callouts on top.
 
@@ -1568,15 +1575,12 @@ def _draw_devices(
     legal-band clamp) lives in ``_layout_device_positions`` so it can be
     asserted by the sign-band regression test without rendering a PDF.
     """
+    flags = _resolve_site_flags(site_flags)
     on_road_max = _on_road_max_offset_ft(
-        params,
-        shoulder_width_ft,
-        has_sidewalk=_detect_site_features(placements, params, shoulder_width_ft)[
-            "pedestrian_facility"
-        ],
+        params, shoulder_width_ft, has_sidewalk=flags["pedestrian_facility"]
     )
     items, lighting_items = _layout_device_positions(
-        placements, x_of, station_max_visible, params, shoulder_width_ft
+        placements, x_of, station_max_visible, params, shoulder_width_ft, site_flags
     )
 
     # Pass 1: glyphs first — each device drawn at its (possibly
@@ -2236,6 +2240,7 @@ def _draw_legend(
     speed_mph: float,
     is_divided: bool = False,
     scale_note: str = "",
+    site_flags: Mapping[str, bool] | None = None,
 ) -> None:
     """Two-section legend: device-type icons (cone, drum, barricade, …)
     followed by sign-category icons keyed to the shape and color used on
@@ -2255,7 +2260,7 @@ def _draw_legend(
             sign_cats_present.add(_sign_category(p.label))
     sign_cats_used = [c for c in _SIGN_CATEGORY_ORDER if c in sign_cats_present]
 
-    flags = _detect_site_features(placements, params, shoulder_width_ft)
+    flags = _resolve_site_flags(site_flags)
     flag_to_kind = {
         "pedestrian_facility": "sidewalk",
         "bicycle_facility": "bike_lane",
@@ -3316,6 +3321,7 @@ def render_plan_sheet(
     site_lat: float | None = None,
     site_lng: float | None = None,
     site_address: str = "",
+    site_flags: Mapping[str, bool] | None = None,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -3330,6 +3336,16 @@ def render_plan_sheet(
 
     ``shoulder_width_ft`` defaults to ``params.shoulder_width_ft`` (the
     single source of truth); the kwarg remains as an explicit override.
+
+    ``site_flags`` is the structured site-condition dict (the same one
+    ``apply_site_adjustments`` consumed) plus the flagger scenario's
+    pedestrian-access flag folded in as ``pedestrian_facility``; it
+    drives the drawn site context (sidewalk/bike/cross-street/school)
+    and the off-road sign clamp threshold.  ``None`` means all-off — a
+    deliberate tradeoff so flag-free callers stay untouched.  Any new
+    call site rendering a scenario that can carry site conditions MUST
+    pass the real flags, or the sheet silently drops its site context
+    (Refs #121; replaced the retired label-scan inference).
     """
     # Invariant: the renderer never receives an empty device list.  The
     # API path rejects this with an honest 400 upstream (_placements_for);
@@ -3429,6 +3445,7 @@ def render_plan_sheet(
         shoulder_width_ft=shoulder_width_ft,
         title=title,
         aerial_page="2" if aerial_png is not None else None,
+        site_flags=site_flags,
     )
     _draw_sheet_border(c)
     c.showPage()
@@ -3471,6 +3488,7 @@ def _render_schematic_page(
     shoulder_width_ft: float,
     title: str,
     aerial_page: str | None,
+    site_flags: Mapping[str, bool] | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -3499,7 +3517,7 @@ def _render_schematic_page(
         is_divided=params.is_divided,
         num_lanes=params.num_lanes,
     )
-    _draw_site_context(c, placements, params, x_of, shoulder_width_ft)
+    _draw_site_context(c, params, x_of, shoulder_width_ft, site_flags)
     _draw_landmarks(c, params, x_of, shoulder_width_ft)
     # Direction-of-travel indicators sit in the page margin just outside
     # the asphalt — below the work-side shoulder and (when divided) above
@@ -3528,6 +3546,7 @@ def _render_schematic_page(
         params,
         shoulder_width_ft,
         code_to_num,
+        site_flags,
     )
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_short)
     _draw_legend(
@@ -3538,6 +3557,7 @@ def _render_schematic_page(
         speed_mph=params.speed_mph,
         is_divided=params.is_divided,
         scale_note=scale_long,
+        site_flags=site_flags,
     )
     _draw_notes(
         c,
