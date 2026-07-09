@@ -1,13 +1,20 @@
 {
   "pending_verification": {
-    "count": 0,
-    "note": "",
-    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    "count": 1,
+    "items": [
+      {
+        "kind": "interchange_layout_not_generated",
+        "label": "An adjacent interchange is flagged. Conestruct adds a W20-3 sign and a PCMS for upstream ramp messaging (the S-630 minimum) but does not generate the per-ramp layout. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor until interchange support ships.",
+        "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+      }
+    ],
+    "note": "An adjacent interchange is flagged. Conestruct adds a W20-3 sign and a PCMS for upstream ramp messaging (the S-630 minimum) but does not generate the per-ramp layout. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor until interchange support ships.",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
   },
   "plan_flags": {
     "compliance_fails": 1,
     "is_clean": false,
-    "v1_limitations": 0,
+    "v1_limitations": 1,
     "validation_warnings": 0
   },
   "sections": {

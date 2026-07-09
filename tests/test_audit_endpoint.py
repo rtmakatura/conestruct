@@ -2549,3 +2549,75 @@ def test_site_adjustments_absent_when_no_flags(client: TestClient) -> None:
     res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
     assert res.status_code == 200, res.text
     assert "site_adjustments" not in res.json()["sections"]
+
+
+# ---------------------------------------------------------------------------
+# #117 Phase 0 intersection honesty — the adjacent_intersection /
+# adjacent_interchange flags disclose what they do NOT generate
+# (cross-street / per-ramp layout, signal review) as pending_verification
+# items, so the plan reads amber (is_clean False) instead of green.
+# ---------------------------------------------------------------------------
+
+
+def test_adjacent_intersection_flag_discloses_v1_limitation(client: TestClient) -> None:
+    """adjacent_intersection → intersection_layout_not_generated pending
+    item citing §6N.12, counted into v1_limitations, flipping is_clean."""
+    s = _shoulder_scenario()
+    s["meta"]["siteConditions"] = {"adjacent_intersection": True}
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, res.text
+    body = res.json()
+    items = body["pending_verification"]["items"]
+    item = next(it for it in items if it["kind"] == "intersection_layout_not_generated")
+    assert "§6N.12" in item["label"]
+    assert item["tracking_issue"] == audit_module.INTERSECTION_SUPPORT_ISSUE
+    assert body["plan_flags"]["v1_limitations"] >= 1
+    assert body["plan_flags"]["is_clean"] is False
+
+
+def test_adjacent_interchange_flag_discloses_v1_limitation(client: TestClient) -> None:
+    """adjacent_interchange → interchange_layout_not_generated pending
+    item citing §6N.16, counted into v1_limitations, flipping is_clean."""
+    s = _shoulder_scenario()
+    s["meta"]["siteConditions"] = {"adjacent_interchange": True}
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, res.text
+    body = res.json()
+    items = body["pending_verification"]["items"]
+    item = next(it for it in items if it["kind"] == "interchange_layout_not_generated")
+    assert "§6N.16" in item["label"]
+    assert item["tracking_issue"] == audit_module.INTERSECTION_SUPPORT_ISSUE
+    assert body["plan_flags"]["v1_limitations"] >= 1
+    assert body["plan_flags"]["is_clean"] is False
+
+
+def test_both_intersection_flags_emit_two_items(client: TestClient) -> None:
+    """Both flags → both items; the flat back-compat note carries items[0];
+    the shoulder baseline contributes no other pending items."""
+    s = _shoulder_scenario()
+    s["meta"]["siteConditions"] = {
+        "adjacent_intersection": True,
+        "adjacent_interchange": True,
+    }
+    res = client.post("/render/audit", headers=_auth_headers(), json=s)
+    assert res.status_code == 200, res.text
+    pending = res.json()["pending_verification"]
+    assert pending["count"] == 2
+    assert [it["kind"] for it in pending["items"]] == [
+        "intersection_layout_not_generated",
+        "interchange_layout_not_generated",
+    ]
+    assert pending["note"] == pending["items"][0]["label"]
+    assert pending["tracking_issue"] == audit_module.INTERSECTION_SUPPORT_ISSUE
+
+
+def test_no_intersection_flags_pending_unchanged(client: TestClient) -> None:
+    """No flags → no items, count 0, flat fields at the pre-#117 baseline
+    (the byte-identity proof for every no-flag snapshot)."""
+    res = client.post("/render/audit", headers=_auth_headers(), json=_shoulder_scenario())
+    assert res.status_code == 200, res.text
+    pending = res.json()["pending_verification"]
+    assert pending["count"] == 0
+    assert "items" not in pending
+    assert pending["note"] == ""
+    assert pending["tracking_issue"] == audit_module.AUDIT_PENDING_VERIFICATION_ISSUE

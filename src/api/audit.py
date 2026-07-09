@@ -1288,6 +1288,13 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 # this URL on the rollup so a reviewer can see what's pending.
 AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
 
+# Tracking issue for the intersection/interchange support gap (Phase 0
+# honesty, #117): the adjacent_intersection / adjacent_interchange site
+# adjustments add the S-630 minimum signing only; the pending items keyed
+# to this URL disclose that the cross-street / per-ramp layout and the
+# signal-operation review are not generated.
+INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/117"
+
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
     """Port of ``mergingTaperLength`` from conestruct/site/lib/scenarios/shared.ts.
@@ -1522,6 +1529,49 @@ def audit_projection(
                     "support ships."
                 ),
                 "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
+            }
+        )
+
+    # Phase 0 intersection honesty (#117): the adjacent_intersection /
+    # adjacent_interchange site adjustments add the S-630 minimum signing
+    # only — no cross-street approach layout, no signal-operation review,
+    # no per-ramp layout.  Disclose the gap as a pending item so the plan
+    # reads amber honestly instead of green (rule #10).  Keyed off the
+    # fired site-adjustment records threaded through by the render-API
+    # caller — the same source #104 uses for sections.site_adjustments —
+    # so no-flag plans are byte-identical.
+    _fired_site_flags = {str(rec.get("flag", "")) for rec in (site_records or [])}
+    if "adjacent_intersection" in _fired_site_flags:
+        items.append(
+            {
+                "kind": "intersection_layout_not_generated",
+                "label": (
+                    "An adjacent intersection is flagged. Conestruct adds "
+                    "the W20-1 cross-street pair (the S-630 minimum) but "
+                    "does not generate the cross-street approach layout or "
+                    "evaluate traffic-signal operation. Cross-street "
+                    "control design and the signal-operation review "
+                    "(MUTCD §6N.12; Part 4 for signal-head visibility) "
+                    "remain with the traffic control supervisor until "
+                    "intersection support ships."
+                ),
+                "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
+            }
+        )
+    if "adjacent_interchange" in _fired_site_flags:
+        items.append(
+            {
+                "kind": "interchange_layout_not_generated",
+                "label": (
+                    "An adjacent interchange is flagged. Conestruct adds "
+                    "a W20-3 sign and a PCMS for upstream ramp messaging "
+                    "(the S-630 minimum) but does not generate the "
+                    "per-ramp layout. Ramp-specific control design and "
+                    "the ramp-access and coordination review (MUTCD "
+                    "§6N.16) remain with the traffic control supervisor "
+                    "until interchange support ships."
+                ),
+                "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
             }
         )
 
