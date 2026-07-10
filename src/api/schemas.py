@@ -246,13 +246,172 @@ class MobileOpMultilaneScenario(BaseModel):
     secondTMA: bool
 
 
+IntersectionRoadType = Literal["rural_undivided", "urban_arterial"]
+# Phase 1 scope: S-630-1 Cases 18/19 are undivided/arterial plates.
+# Freeway at-grade intersections are rare and rural_divided adds the
+# median-opening question — both deferred; the Literal is the gate.
+ApproachRoadType = Literal["rural_undivided", "urban_arterial"]
+IntersectionWorkType = Literal[
+    "utility_cut",
+    "water_main",
+    "patching",
+    "signal_work",
+    "other",
+]
+
+
+class IntersectionApproach(BaseModel):
+    """One cross-street leg entering the intersection.
+
+    An ordinary 4-leg intersection contributes TWO approaches (the two
+    cross-street directions of travel toward the intersection); a
+    T-intersection contributes one.  The mainline is never in this
+    list — it is the scenario's top-level fields, id ``"mainline"``.
+    """
+
+    # Stable identifier, referenced by DevicePlacement.approach_id and
+    # by the per-approach audit nesting.  "mainline" is reserved for
+    # the scenario's primary road — enforced by the validator below
+    # (pydantic-core's regex engine has no look-ahead, so the
+    # reservation can't live in the pattern).
+    id: str = Field(pattern=r"^[a-z][a-z0-9_]{0,31}$")
+
+    @model_validator(mode="after")
+    def _check_id_not_reserved(self) -> Self:
+        if self.id == "mainline":
+            raise ValueError(
+                'approach id "mainline" is reserved for the scenario\'s '
+                "primary road — pick another id for the cross street."
+            )
+        return self
+
+    # Same Table 6B-2 grid floor as the mainline (both buffer tables
+    # serve 20 mph — Python BUFFER_SPACE always did, TS since f256db6).
+    # Cap 55 matches the mainline cap below (D8 — Cases 18/19 are
+    # arterial/local plates).
+    speed: int = Field(ge=20, le=55, multiple_of=5)
+    roadType: ApproachRoadType
+    # Same semantics as ScenarioParams.num_lanes: lanes PER DIRECTION.
+    # Capped at 4 like every kind's lane count.
+    lanesPerDirection: int = Field(ge=1, le=4)
+    laneWidth: float = Field(ge=9.0, le=14.0)
+
+    # Flag-and-cite only (#117 signal posture): True emits a
+    # pending_verification item citing §6N.12.04 (signal review per
+    # Part 4) and §6N.12.05 (jurisdiction contact).  No signal math.
+    signalized: bool
+
+    # Compass bearing of the approach's direction of travel toward the
+    # intersection (0 = N, 90 = E).  Drawing/geo overlay only; the
+    # rules math never reads it.
+    bearingDeg: float | None = None
+
+    # Where this approach's road centerline crosses the mainline
+    # station axis, in the SAME frame as DevicePlacement.station_ft
+    # (0 = downstream end of the work zone, increasing upstream).
+    # Both approaches of one cross street carry the same value.
+    # Near/far side derives from it: < 0 → intersection downstream of
+    # the work → near-side work (§6N.12.08, Fig. 6P-21); > workLen →
+    # intersection upstream → far-side work (§6N.12.12).  Values
+    # inside [0, workLen] are rejected on the scenario (in-intersection
+    # work is Phase 2).  Bounds keep the value finite and inside the
+    # same envelope as workLen itself.
+    alongStationFt: float = Field(ge=-WORK_LEN_MAX_FT, le=WORK_LEN_MAX_FT)
+
+
+class NearIntersectionScenario(BaseModel):
+    """Work near (not within) an intersection — S-630-1 Cases 18/19.
+
+    GATED: absent from ``ENABLED_SCENARIOS`` (render_api.py) and from
+    the frontend mirror; requests return the standard gated-kind 400.
+    Option C (#117): cross-street control is computed into the device
+    list / quote / narrative / audit; the plan sheet cites the S-630-1
+    plate instead of drawing the intersection.  The kind name is
+    side-neutral — near-side vs. far-side work is DERIVED from each
+    approach's ``alongStationFt``, never an input flag.
+    """
+
+    kind: Literal["near_intersection"]
+    meta: ScenarioMeta = ScenarioMeta()
+
+    # --- mainline: same field set and bounds as ShoulderScenario,
+    # speed capped at 55 like the flagger kind (D8) ---
+    roadType: IntersectionRoadType
+    speed: int = Field(ge=20, le=55, multiple_of=5)
+    lanes: int = Field(ge=1, le=4)  # per direction, as everywhere
+    laneWidth: float = Field(ge=9.0, le=14.0)
+    divided: bool  # Phase 1: must be False (validator below)
+
+    workType: IntersectionWorkType
+    duration: Duration
+    workLen: float = Field(gt=0.0, le=WORK_LEN_MAX_FT)
+    night: bool
+
+    # min 1 (a T-intersection), max 2 (one cross street, both legs).
+    # A second cross street inside one work zone is multi-road scope;
+    # raising the max is a deliberate, schema-visible act.
+    approaches: list[IntersectionApproach] = Field(min_length=1, max_length=2)
+
+    @model_validator(mode="after")
+    def _check_not_divided(self) -> Self:
+        if self.divided:
+            raise ValueError(
+                "divided intersections are not supported yet — Cases 18/19 "
+                "are undivided/arterial plates; a divided mainline adds the "
+                "median-opening question (deferred)."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _check_approach_ids_unique(self) -> Self:
+        ids = [a.id for a in self.approaches]
+        if len(set(ids)) != len(ids):
+            raise ValueError(f"approach ids must be unique, got {ids}")
+        return self
+
+    @model_validator(mode="after")
+    def _check_intersection_outside_work_zone(self) -> Self:
+        # Phase 1 is Cases 18/19: work NEAR an intersection.  Work
+        # within the intersection interior (MUTCD Figures 6P-26/27,
+        # §6N.12.14-16) is out of scope — a clean 422 here, not a
+        # silently-wrong near-side plan (rule 10).
+        for a in self.approaches:
+            if 0.0 <= a.alongStationFt <= self.workLen:
+                raise ValueError(
+                    f"approach {a.id!r}: the cross street crosses inside the "
+                    f"work zone (alongStationFt={a.alongStationFt:g}, work "
+                    f"zone spans 0..{self.workLen:g}).  Work within the "
+                    f"intersection (MUTCD Figures 6P-26/27) is not supported."
+                )
+        return self
+
+    @model_validator(mode="after")
+    def _check_drawable_road_width(self) -> Self:
+        # Mainline only: under Option C the cross street is never drawn
+        # (the sheet cites the S-630-1 plate), so the drawable bound
+        # does not apply to approaches.  Same check as ShoulderScenario,
+        # undivided 8-ft shoulder.
+        shoulder_ft = 8.0
+        half_road = self.lanes * self.laneWidth + shoulder_ft
+        if half_road > MAX_DRAWABLE_HALF_ROAD_FT:
+            max_width = (MAX_DRAWABLE_HALF_ROAD_FT - shoulder_ft) / self.lanes
+            raise ValueError(
+                f"{self.lanes} lanes x {self.laneWidth} ft + {shoulder_ft:.0f} ft shoulder "
+                f"= {half_road:.1f} ft exceeds the plan sheet's drawable half-road "
+                f"({MAX_DRAWABLE_HALF_ROAD_FT:.0f} ft) — use a lane width of "
+                f"{max_width:.1f} ft or less, or reduce the lane count."
+            )
+        return self
+
+
 Scenario = Annotated[
     ShoulderScenario
     | FlaggerLaneClosureScenario
     | LaneClosureDividedScenario
     | WorkBeyondShoulderScenario
     | MobileOp2LaneScenario
-    | MobileOpMultilaneScenario,
+    | MobileOpMultilaneScenario
+    | NearIntersectionScenario,
     Field(discriminator="kind"),
 ]
 
@@ -458,22 +617,33 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             {"arrow_board_on_shadow": scenario.arrowBoardOnShadow},
         )
 
-    # MobileOpMultilaneScenario — TA-26
-    params = ScenarioParams(
-        speed_mph=scenario.speed,
-        num_lanes=2,
-        closure_type="lane",
-        road_type=_map_road_type(scenario.roadType, scenario.speed),
-        work_zone_length_ft=scenario.workLen,
-        lane_width_ft=scenario.laneWidth,
-        shoulder_width_ft=10.0,
-        is_night=scenario.night,
-        is_divided=True,
-        jurisdiction="CDOT",
-        **meta_kw,
-    )
-    return (
-        _validated(params),
-        generate_mobile_op_multilane,
-        {"second_tma": scenario.secondTMA},
+    if isinstance(scenario, MobileOpMultilaneScenario):
+        # TA-26
+        params = ScenarioParams(
+            speed_mph=scenario.speed,
+            num_lanes=2,
+            closure_type="lane",
+            road_type=_map_road_type(scenario.roadType, scenario.speed),
+            work_zone_length_ft=scenario.workLen,
+            lane_width_ft=scenario.laneWidth,
+            shoulder_width_ft=10.0,
+            is_night=scenario.night,
+            is_divided=True,
+            jurisdiction="CDOT",
+            **meta_kw,
+        )
+        return (
+            _validated(params),
+            generate_mobile_op_multilane,
+            {"second_tma": scenario.secondTMA},
+        )
+
+    # Union members without a generator bridge (near_intersection until
+    # Option C increment 2) fail loudly here.  The ENABLED_SCENARIOS
+    # gate rejects them upstream with a 400; this guard covers direct
+    # callers and keeps a future union member from silently riding the
+    # last branch's generator.
+    raise ValueError(
+        f"no generator bridge for scenario kind {scenario.kind!r} — "
+        f"the kind is schema-only (gated) until its generator lands."
     )

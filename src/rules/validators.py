@@ -150,6 +150,16 @@ class DevicePlacement:
     station_ft: float
     offset_ft: float
     label: str | None = None
+    # Which road's station/offset frame this placement lives in.
+    # "mainline" = the scenario's primary road (every pre-intersection
+    # kind; the default keeps all existing generators untouched).  Any
+    # other value must match an IntersectionApproach.id on the scenario;
+    # station_ft is then measured along that approach FROM the curb line
+    # of the intersection, increasing away from it (upstream for traffic
+    # approaching the intersection), and offset_ft from that approach's
+    # own centerline with the same sign convention.  Frames must never
+    # be mixed without partitioning on this field first.
+    approach_id: str = "mainline"
 
 
 @dataclass(frozen=True)
@@ -299,15 +309,24 @@ def _sign_indices(placements: list[DevicePlacement]) -> list[int]:
 
 
 def _extract_taper_indices(placements: list[DevicePlacement]) -> list[int]:
-    """Indices of channelizers that form the merging taper.
+    """Indices of mainline channelizers that form the merging taper.
 
     Identifies the longest contiguous run of station-sorted channelizers
     whose lateral offset is monotonically changing by more than
     ``TAPER_OFFSET_DELTA_THRESHOLD_FT`` between neighbors.  Returns an
     empty list if no such run exists.
+
+    Only ``approach_id == "mainline"`` placements participate: station
+    values in different approach frames are not comparable, so a
+    cross-street channelizer sorted into the mainline sequence could
+    stitch two unrelated runs into one false taper.  For all-mainline
+    lists (every current generator) the filter is the identity.
+    Per-approach taper validation is deferred until per-approach params
+    exist (Option C increment 2) — the taper-length math below is
+    mainline math and must not be applied to a cross street's group.
     """
     chans = sorted(
-        _channelizer_indices(placements),
+        (i for i in _channelizer_indices(placements) if placements[i].approach_id == "mainline"),
         key=lambda i: placements[i].station_ft,
     )
     if len(chans) < 2:
