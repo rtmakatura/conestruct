@@ -25,11 +25,12 @@ from src.generation.layout import (
     generate_lane_closure_divided,
     generate_mobile_op_2lane,
     generate_mobile_op_multilane,
+    generate_near_intersection,
     generate_shoulder_closure_divided,
     generate_shoulder_closure_undivided,
     generate_work_beyond_shoulder,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
 
 # ---------------------------------------------------------------------------
 # Pydantic models — mirror TS Scenario exactly (camelCase field names)
@@ -638,11 +639,46 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             {"second_tma": scenario.secondTMA},
         )
 
-    # Union members without a generator bridge (near_intersection until
-    # Option C increment 2) fail loudly here.  The ENABLED_SCENARIOS
-    # gate rejects them upstream with a 400; this guard covers direct
-    # callers and keeps a future union member from silently riding the
-    # last branch's generator.
+    if isinstance(scenario, NearIntersectionScenario):
+        # S-630-1 Sheet 10 Case 18 (GATED — the ENABLED_SCENARIOS gate
+        # still 400s the kind over HTTP; this bridge serves the internal
+        # call path and tests until enablement).  The mainline is an
+        # undivided right-lane closure; ``near_intersection=True`` keeps
+        # ``_is_flagger_scenario`` from claiming it.  Approaches ride
+        # kwargs as ApproachParams with road types pre-mapped to the
+        # Table 6B-1 vocabulary, per-leg.
+        params = ScenarioParams(
+            speed_mph=scenario.speed,
+            num_lanes=scenario.lanes,
+            closure_type="lane",
+            road_type=_map_road_type(scenario.roadType, scenario.speed),
+            work_zone_length_ft=scenario.workLen,
+            lane_width_ft=scenario.laneWidth,
+            shoulder_width_ft=8.0,
+            is_night=scenario.night,
+            is_divided=False,
+            jurisdiction="CDOT",
+            near_intersection=True,
+            **meta_kw,
+        )
+        approaches = [
+            ApproachParams(
+                id=a.id,
+                speed_mph=a.speed,
+                road_type=_map_road_type(a.roadType, a.speed),
+                num_lanes=a.lanesPerDirection,
+                lane_width_ft=a.laneWidth,
+                along_station_ft=a.alongStationFt,
+                signalized=a.signalized,
+            )
+            for a in scenario.approaches
+        ]
+        return _validated(params), generate_near_intersection, {"approaches": approaches}
+
+    # Union members without a generator bridge fail loudly here.  The
+    # ENABLED_SCENARIOS gate rejects them upstream with a 400; this
+    # guard covers direct callers and keeps a future union member from
+    # silently riding the last branch's generator.
     raise ValueError(
         f"no generator bridge for scenario kind {scenario.kind!r} — "
         f"the kind is schema-only (gated) until its generator lands."

@@ -33,7 +33,7 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
 
 
 def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacement]:
@@ -55,11 +55,23 @@ def _dedupe_placements(placements: list[DevicePlacement]) -> list[DevicePlacemen
     defeat the match.  Applied at every generator return so "no generator
     emits two identical devices at the same point" is a structural
     invariant that also guards future generators.
+
+    ``approach_id`` is part of the identity: equal coordinates in
+    different approach frames are different physical points (two
+    cross-street legs get identical sign sets at identical approach-frame
+    stations — Option C increment 2).  All-mainline lists (every other
+    generator) are unaffected: the extra key element is constant there.
     """
-    seen: set[tuple[DeviceType, str | None, float, float]] = set()
+    seen: set[tuple[DeviceType, str | None, float, float, str]] = set()
     out: list[DevicePlacement] = []
     for p in placements:
-        key = (p.device_type, p.label, round(p.station_ft, 1), round(p.offset_ft, 1))
+        key = (
+            p.device_type,
+            p.label,
+            round(p.station_ft, 1),
+            round(p.offset_ft, 1),
+            p.approach_id,
+        )
         if key in seen:
             continue
         seen.add(key)
@@ -1110,6 +1122,433 @@ def generate_lane_closure_divided(
     # for any device placement in a lane-only closure.
     _ = shoulder_edge_offset
 
+    return _dedupe_placements(placements)
+
+
+# Longitudinal clearance between the merging taper's downstream end and
+# the intersection's upstream curb line in the far-side geometry, per the
+# 100-ft dimension S-630-1 Sheet 10 Cases 18/19 draw between the taper
+# and the corner.
+_INTERSECTION_TAPER_CLEARANCE_FT: float = 100.0
+# Departure-side END DOUBLE FINES ZONE (R2-11) station in the approach
+# frame, per the 100-ft dimension on Case 18's cross-street departure
+# legs (and past the far curb on the mainline).
+_INTERSECTION_R2_11_SETBACK_FT: float = 100.0
+
+
+def near_intersection_stations(
+    params: ScenarioParams,
+    approaches: list[ApproachParams],
+) -> dict[str, Any]:
+    """Single-source station math for the near_intersection layout.
+
+    Same pattern as ``flagger_chain_stations``: the generator, the
+    (increment 3) audit sections, and the tests all read these landmarks
+    from one place so they agree by construction.  Raises loud
+    ``ValueError`` on geometry the kind cannot honestly lay out (rule 10)
+    rather than emitting a degraded plan:
+
+    * mainline ``num_lanes < 2`` — Cases 18/19 merge the closed lane's
+      traffic into an adjacent same-direction lane; a 1-lane-per-direction
+      mainline is the flagger/Case 19 shape, out of increment-2 scope.
+    * approaches disagreeing on ``along_station_ft`` — two values means
+      two cross streets (multi-road scope; the schema documents one
+      shared value per cross street but cannot see across entries).
+    * the intersection's curb-to-curb box overlapping the work zone —
+      the schema rejects centerline crossings inside ``[0, workLen]``,
+      but the box is ``along ± half_cross_width`` and the schema cannot
+      know the cross street's width; work inside the box is
+      in-intersection work (MUTCD Figures 6P-26/27), not supported.
+
+    Near-side vs. far-side derives from the shared ``along_station_ft``
+    sign (schema contract): ``< 0`` → intersection downstream of the
+    work → near-side work handled as a midblock closure (§6N.12.08,
+    Fig. 6P-21); ``> workLen`` → far-side work, and the §6N.12.12
+    companion closure moves the merging taper upstream of the
+    intersection so the lane is already closed where it crosses.
+    """
+    if params.num_lanes < 2:
+        raise ValueError(
+            f"near_intersection needs num_lanes >= 2 on the mainline "
+            f"(got {params.num_lanes}): Cases 18/19 merge the closed "
+            f"lane into an adjacent same-direction lane.  A 1-lane-per-"
+            f"direction mainline is the flagger-controlled Case 19 "
+            f"shape, which is out of scope."
+        )
+    if not approaches:
+        raise ValueError("near_intersection requires at least one approach.")
+    along_values = {a.along_station_ft for a in approaches}
+    if len(along_values) != 1:
+        raise ValueError(
+            f"approaches disagree on along_station_ft ({sorted(along_values)!r}) "
+            f"— both legs of the one supported cross street must carry the "
+            f"same value; two values describe two cross streets (multi-road "
+            f"scope, not supported)."
+        )
+    along = along_values.pop()
+    wz_len = params.work_zone_length_ft
+
+    # Curb-to-curb extent of the cross street on the mainline station
+    # axis.  Derived, not an input: half-width = the widest approach's
+    # lanes-per-direction x lane width, assuming a symmetric two-way
+    # cross street.  Conservative (widest leg governs both sides).
+    half_cross_ft = max(a.num_lanes * a.lane_width_ft for a in approaches)
+    upstream_curb = along + half_cross_ft
+    downstream_curb = along - half_cross_ft
+
+    if along < 0.0:
+        side = "near"
+        if upstream_curb > 0.0:
+            raise ValueError(
+                f"the cross street's upstream curb line ({upstream_curb:g} ft) "
+                f"reaches into the work zone (0..{wz_len:g}): work inside the "
+                f"intersection's curb-to-curb box is in-intersection work "
+                f"(MUTCD Figures 6P-26/27), not supported."
+            )
+    elif along > wz_len:
+        side = "far"
+        if downstream_curb < wz_len:
+            raise ValueError(
+                f"the cross street's downstream curb line ({downstream_curb:g} ft) "
+                f"reaches into the work zone (0..{wz_len:g}): work inside the "
+                f"intersection's curb-to-curb box is in-intersection work "
+                f"(MUTCD Figures 6P-26/27), not supported."
+            )
+    else:
+        # The schema rejects [0, workLen]; direct callers get the same
+        # honesty here.
+        raise ValueError(
+            f"along_station_ft={along:g} lies inside the work zone "
+            f"(0..{wz_len:g}) — in-intersection work is not supported."
+        )
+
+    speed = params.speed_mph
+    taper_len = taper_length(speed, params.lane_width_ft)
+    buf_len = buffer_space(
+        speed, jurisdiction=params.jurisdiction, work_zone_speed_mph=params.work_zone_speed_mph
+    )
+
+    # Far side: §6N.12.12 — the closed lane must already be closed on
+    # the near side of the intersection, so the taper completes at least
+    # the plate's 100-ft clearance upstream of the upstream curb line.
+    # The midblock anchoring (workLen + buffer) still applies when it is
+    # the more upstream of the two.
+    taper_end_station = wz_len + buf_len
+    if side == "far":
+        taper_end_station = max(taper_end_station, upstream_curb + _INTERSECTION_TAPER_CLEARANCE_FT)
+    taper_start_station = taper_end_station + taper_len
+
+    spacing_abc = advance_warning_spacing(speed, params.road_type)
+    a_dist, b_dist, c_dist = spacing_abc["A"], spacing_abc["B"], spacing_abc["C"]
+    sign_a_station = taper_start_station + a_dist
+    sign_b_station = sign_a_station + b_dist
+    sign_c_station = sign_b_station + c_dist
+    # BEGIN DOUBLE FINES ZONE at 1/2 C inside the outermost sign, per the
+    # 1/2C dimension Case 18 draws between W20-1 and W20-5(R).  Placed
+    # unconditionally for this kind: a lane closure is a listed hazard
+    # under Sheet 12's Fines Double signing notes (note 1), and the
+    # plates star R2-10/R2-11 on every leg.  (The other generators gate
+    # their fines envelope on a reduced work-zone speed — a deliberate,
+    # plate-driven divergence for this kind.)
+    r2_10_station = sign_c_station - c_dist / 2.0
+
+    ds_taper_len = downstream_taper_length(1)
+    if side == "near":
+        # §6N.12.08: near-side work is handled as a midblock closure —
+        # but only when the standard reopening hardware (downstream
+        # taper + END signage) fits upstream of the intersection.  When
+        # it does not, Fig. 6P-21 / Case 18 run the closure to the
+        # corner instead: channelizers continue to the upstream curb
+        # line and the lane reopens beyond the intersection.
+        far_gap = -along - half_cross_ft  # work-zone end to upstream curb
+        extend_to_corner = far_gap < ds_taper_len + _INTERSECTION_R2_11_SETBACK_FT
+        if extend_to_corner:
+            r2_11_station = downstream_curb - _INTERSECTION_R2_11_SETBACK_FT
+            g20_2_station = r2_11_station - 100.0
+        else:
+            g20_2_station = -ds_taper_len - 100.0
+            r2_11_station = g20_2_station - 100.0
+    else:
+        extend_to_corner = False
+        g20_2_station = -ds_taper_len - 100.0
+        r2_11_station = g20_2_station - 100.0
+
+    # BEGIN ROAD WORK: midblock convention (workLen + 100), pulled to the
+    # midpoint between the work zone and the downstream curb when the
+    # intersection box would otherwise swallow it (far side only).
+    g20_1_station = wz_len + 100.0
+    if side == "far" and g20_1_station >= downstream_curb:
+        g20_1_station = (wz_len + downstream_curb) / 2.0
+
+    approach_stations: dict[str, dict[str, float]] = {}
+    for a in approaches:
+        xa = advance_warning_spacing(a.speed_mph, a.road_type)["A"]
+        approach_stations[a.id] = {
+            # Sheet 10 key pattern (rural 500'/500', urban per key): the
+            # fines companion at A back from the curb line, W20-1 at 2A,
+            # END DOUBLE FINES at 100 ft on the departure side.
+            "a_dist": xa,
+            "r2_10": xa,
+            "w20_1": 2.0 * xa,
+            "r2_11": _INTERSECTION_R2_11_SETBACK_FT,
+        }
+
+    return {
+        "side": side,
+        "along_station_ft": along,
+        "half_cross_ft": half_cross_ft,
+        "upstream_curb": upstream_curb,
+        "downstream_curb": downstream_curb,
+        "wz_start": wz_len,
+        "wz_end": 0.0,
+        "taper_len": taper_len,
+        "buffer_len": buf_len,
+        "taper_end": taper_end_station,
+        "taper_start": taper_start_station,
+        "sign_a": sign_a_station,
+        "sign_b": sign_b_station,
+        "sign_c": sign_c_station,
+        "r2_10": r2_10_station,
+        "r2_11": r2_11_station,
+        "g20_1": g20_1_station,
+        "g20_2": g20_2_station,
+        "ds_taper_len": ds_taper_len,
+        "extend_to_corner": extend_to_corner,
+        "approaches": approach_stations,
+    }
+
+
+def generate_near_intersection(
+    params: ScenarioParams,
+    shoulder_width_ft: float | None = None,
+    *,
+    approaches: list[ApproachParams],
+) -> list[DevicePlacement]:
+    """Generate the near_intersection lane-closure layout (GATED kind).
+
+    S-630-1 Sheet 10 Case 18's shape: a right-lane closure on an
+    undivided mainline near a cross street, plus a per-approach advance
+    warning set on every cross-street leg (§6N.12.06).  Adapted from
+    ``generate_lane_closure_divided`` with the CO §6C.04(A) median-side
+    mirroring dropped (undivided → single-side signing, matching the
+    undivided shoulder generator) and the lateral geometry generalized
+    to ``params.num_lanes`` lanes per direction.
+
+    Scope (increment 2, Refs #117): cross-street legs receive advance
+    sets only — Case 18's plate typifies corner-quadrant work whose
+    cross-street closure train this data model cannot express (approaches
+    carry no work extent); Case 19's flagger one-lane-two-way variant is
+    out entirely.  The opposing mainline direction is not signed, per the
+    undivided house convention.  Signalized approaches receive the same
+    set (flag-and-cite lands in the increment-3 audit).
+
+    Mainline placements carry ``approach_id="mainline"`` (default);
+    cross-street placements carry their approach's id with stations in
+    the approach frame (0 = intersection curb line, increasing away).
+    """
+    if shoulder_width_ft is None:
+        shoulder_width_ft = params.shoulder_width_ft
+    st = near_intersection_stations(params, approaches)
+    speed = params.speed_mph
+    wz_len = params.work_zone_length_ft
+
+    # Lateral landmarks — closed lane is the rightmost of num_lanes.
+    lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
+    lane_edge_offset = params.num_lanes * params.lane_width_ft
+    arrow_board_offset = lane_line_offset + params.lane_width_ft / 2.0
+    sign_offset = lane_edge_offset + 4.0
+
+    placements: list[DevicePlacement] = []
+
+    # 1. Advance warning signs — lane-closure series, single side
+    # (undivided; CO §6C.04(A) mirroring applies to divided roads).
+    for label, station in (
+        ("W4-2R", st["sign_a"]),  # RIGHT LANE ENDS (merge arrow)
+        ("W20-5R", st["sign_b"]),  # RIGHT LANE CLOSED AHEAD
+        ("W20-1", st["sign_c"]),  # ROAD WORK AHEAD
+        ("R2-10", st["r2_10"]),  # BEGIN DOUBLE FINES ZONE at 1/2 C (Case 18)
+    ):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset,
+                label=label,
+            )
+        )
+
+    # 2. Merging taper (drums) — full L, lane edge down to lane line.
+    taper_min, tangent_min = device_count_floors(params)
+    n_taper_devices = pick_device_count(
+        st["taper_len"], device_spacing_in_taper(speed), min_count=taper_min
+    )
+    n_taper_intervals = n_taper_devices - 1
+    for k in range(n_taper_devices):
+        t = k / n_taper_intervals
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.DRUM,
+                station_ft=st["taper_start"] - t * st["taper_len"],
+                offset_ft=lane_edge_offset - t * (lane_edge_offset - lane_line_offset),
+            )
+        )
+
+    # 3. Arrow board at the taper start, LEFT arrow (merge left).
+    placements.append(
+        DevicePlacement(
+            device_type=DeviceType.ARROW_BOARD,
+            station_ft=st["taper_start"],
+            offset_ft=arrow_board_offset,
+            label="LEFT_ARROW",
+        )
+    )
+
+    # 4. Far side only: the §6N.12.12 companion closure's tangent — the
+    # closed lane stays delineated from the taper down to the work zone,
+    # skipping the intersection's curb-to-curb box (no devices inside
+    # the intersection).  Deliberate divergence from the midblock
+    # "buffer is device-empty" convention: an undelineated closed lane
+    # across an intersection is not an option.
+    tangent_spacing_target = device_spacing_on_tangent(speed)
+    if st["side"] == "far":
+        s = st["taper_end"] - tangent_spacing_target
+        while s > st["upstream_curb"]:
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
+            )
+            s -= tangent_spacing_target
+        placements.append(
+            DevicePlacement(
+                DeviceType.CONE, station_ft=st["upstream_curb"], offset_ft=lane_line_offset
+            )
+        )
+        s = st["downstream_curb"]
+        while s > st["wz_start"]:
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
+            )
+            s -= tangent_spacing_target
+
+    # 5. CONSTRUCTION ZONE plaques (G20-5P), single side.
+    total_zone_length = st["sign_c"]
+    n_plaques = co_construction_plaques(total_zone_length)
+    for k in range(n_plaques):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=(k + 0.5) * wz_len / n_plaques,
+                offset_ft=sign_offset,
+                label="G20-5P",
+            )
+        )
+
+    # 6. Work-zone tangent (cones) along the lane line.
+    n_tangent = pick_device_count(wz_len, tangent_spacing_target, min_count=tangent_min)
+    n_tangent_intervals = n_tangent - 1
+    tangent_spacing = wz_len / n_tangent_intervals
+    for k in range(n_tangent):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.CONE,
+                station_ft=k * tangent_spacing,
+                offset_ft=lane_line_offset,
+            )
+        )
+
+    # 7. Downstream end.  Midblock branches reopen the lane with the
+    # standard short taper; the extend-to-corner branch (near side,
+    # intersection immediately downstream — Fig. 6P-21 / Case 18) runs
+    # the closure to the upstream curb line instead, and the lane
+    # reopens beyond the intersection with no devices in the box.
+    if st["extend_to_corner"]:
+        placements.append(
+            DevicePlacement(
+                DeviceType.CONE, station_ft=st["upstream_curb"], offset_ft=lane_line_offset
+            )
+        )
+        s = st["upstream_curb"] + tangent_spacing_target
+        while s < 0.0:
+            placements.append(
+                DevicePlacement(DeviceType.CONE, station_ft=s, offset_ft=lane_line_offset)
+            )
+            s += tangent_spacing_target
+    else:
+        for k in range(2):
+            t = (k + 1) / 2
+            placements.append(
+                DevicePlacement(
+                    device_type=DeviceType.CONE,
+                    station_ft=-t * st["ds_taper_len"],
+                    offset_ft=lane_line_offset + t * (lane_edge_offset - lane_line_offset),
+                )
+            )
+
+    # 8/9. Road-work bookends (G20-1 / G20-2, §6F.55) and the mainline
+    # END DOUBLE FINES ZONE (R2-11), single side.
+    for label, station in (
+        ("G20-1", st["g20_1"]),
+        ("G20-2", st["g20_2"]),
+        ("R2-11", st["r2_11"]),
+    ):
+        placements.append(
+            DevicePlacement(
+                device_type=DeviceType.SIGN_GENERIC,
+                station_ft=station,
+                offset_ft=sign_offset,
+                label=label,
+            )
+        )
+
+    # 10. Cross-street advance sets, one per approach (§6N.12.06 /
+    # Sheet 10 Case 18): W20-1 outermost, R2-10 inside it on the
+    # approach side; R2-11 on the departure side.  Stations are in the
+    # APPROACH frame (0 = curb line, increasing away from the
+    # intersection); offsets from the approach's own centerline —
+    # positive = the approaching direction's roadside, negative = the
+    # departing direction's.  Only static-legend codes: parametric signs
+    # (W20-2, W16-2a, G20-1) and R2-1 compute mainline-frame values and
+    # must never be emitted off-mainline.
+    for a in approaches:
+        a_st = st["approaches"][a.id]
+        a_sign_offset = a.num_lanes * a.lane_width_ft + 4.0
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                station_ft=a_st["w20_1"],
+                offset_ft=a_sign_offset,
+                label="W20-1",
+                approach_id=a.id,
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                station_ft=a_st["r2_10"],
+                offset_ft=a_sign_offset,
+                label="R2-10",
+                approach_id=a.id,
+            )
+        )
+        placements.append(
+            DevicePlacement(
+                DeviceType.SIGN_GENERIC,
+                station_ft=a_st["r2_11"],
+                offset_ft=-a_sign_offset,
+                label="R2-11",
+                approach_id=a.id,
+            )
+        )
+
+    # Every placement must resolve to a declared frame (increment-1
+    # plan's post-generation assert): structural invariant, loud.
+    declared = {"mainline"} | {a.id for a in approaches}
+    for p in placements:
+        if p.approach_id not in declared:
+            raise AssertionError(
+                f"generator emitted approach_id={p.approach_id!r}, not in {sorted(declared)!r}"
+            )
+
+    _ = shoulder_width_ft  # lane-only closure: shoulder width places no device
     return _dedupe_placements(placements)
 
 

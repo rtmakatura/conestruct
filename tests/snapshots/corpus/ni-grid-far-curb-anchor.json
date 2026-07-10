@@ -1,0 +1,303 @@
+[
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W4-2R",
+    "offset_ft": 48.0,
+    "station_ft": 1857.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-5R",
+    "offset_ft": 48.0,
+    "station_ft": 2207.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 48.0,
+    "station_ft": 2557.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 48.0,
+    "station_ft": 2382.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 44.0,
+    "station_ft": 1507.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 43.0,
+    "station_ft": 1462.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 42.0,
+    "station_ft": 1417.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 41.0,
+    "station_ft": 1372.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 40.0,
+    "station_ft": 1327.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 39.0,
+    "station_ft": 1282.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 38.0,
+    "station_ft": 1237.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 37.0,
+    "station_ft": 1192.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 36.0,
+    "station_ft": 1147.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 35.0,
+    "station_ft": 1102.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 34.0,
+    "station_ft": 1057.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 1012.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "ARROW_BOARD",
+    "label": "LEFT_ARROW",
+    "offset_ft": 38.5,
+    "station_ft": 1507.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 922.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 912.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 888.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 798.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 708.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 618.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 528.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 438.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 348.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-5P",
+    "offset_ft": 48.0,
+    "station_ft": 150.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 0.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 75.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 150.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 225.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 33.0,
+    "station_ft": 300.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 38.5,
+    "station_ft": -25.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 44.0,
+    "station_ft": -50.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-1",
+    "offset_ft": 48.0,
+    "station_ft": 400.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-2",
+    "offset_ft": 48.0,
+    "station_ft": -150.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": 48.0,
+    "station_ft": -250.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 16.0,
+    "station_ft": 1000.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 16.0,
+    "station_ft": 500.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": -16.0,
+    "station_ft": 100.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 16.0,
+    "station_ft": 1000.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 16.0,
+    "station_ft": 500.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": -16.0,
+    "station_ft": 100.0
+  }
+]

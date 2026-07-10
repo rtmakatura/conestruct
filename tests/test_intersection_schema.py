@@ -1,16 +1,18 @@
 """Option C increment 1 — the near_intersection data model (Refs #117).
 
-Three contracts pinned here, all schema/data-layer only (the kind is
-GATED: no generator, renderer, narrative, audit, quote, or frontend
-work exists yet):
+Three contracts pinned here, all schema/data-layer (the kind is GATED:
+no renderer, narrative, audit, or frontend work exists; the generator
+landed in increment 2 and is covered by test_near_intersection_generator
+and the corpus tier):
 
   * ``NearIntersectionScenario`` validates with the documented bounds
     and rejects out-of-scope inputs with clean 422s (rule 10): work
     inside the intersection, divided mainlines, duplicate or reserved
     approach ids, out-of-grid speeds.
   * The render API answers a schema-valid near_intersection body with
-    the standard gated-kind 400, and ``scenario_to_call`` fails loudly
-    (no silent ride on the last bridge branch's generator).
+    the standard gated-kind 400.  Since increment 2 the kind has a
+    generator bridge — ``scenario_to_call`` returns it (pinned below);
+    unbridged kinds still fail loudly in the bridge's final guard.
   * ``DevicePlacement.approach_id`` defaults to ``"mainline"`` and the
     taper extraction partitions on it: cross-street channelizers can
     never stitch into (or be mistaken for) the mainline merging taper,
@@ -31,7 +33,7 @@ from src.api.schemas import (
     Scenario,
     scenario_to_call,
 )
-from src.generation.layout import generate_shoulder_closure_undivided
+from src.generation.layout import generate_near_intersection, generate_shoulder_closure_undivided
 from src.rules.devices import DeviceType
 from src.rules.validators import (
     DevicePlacement,
@@ -239,10 +241,25 @@ def test_render_pdf_near_intersection_is_gated_400(client: TestClient) -> None:
     assert "not yet available" in res.json()["detail"]
 
 
-def test_scenario_to_call_fails_loudly_for_unbridged_kind() -> None:
+def test_scenario_to_call_bridges_near_intersection() -> None:
+    # Increment 2 (Refs #117): the kind now has a generator bridge —
+    # mainline params carry near_intersection=True (so the flagger
+    # predicate can never claim the undivided lane closure) and the
+    # approaches ride kwargs as ApproachParams with road types mapped
+    # to the Table 6B-1 vocabulary.  The HTTP gate still 400s the kind
+    # (test above); this pins the internal call path.
     scenario = _ADAPTER.validate_python(_body())
-    with pytest.raises(ValueError, match="no generator bridge for scenario kind"):
-        scenario_to_call(scenario)
+    params, generator, kwargs = scenario_to_call(scenario)
+    assert generator is generate_near_intersection
+    assert params.closure_type == "lane"
+    assert params.is_divided is False
+    assert params.near_intersection is True
+    assert params.road_type == "urban_high"  # 45 mph urban_arterial
+    (ap,) = kwargs["approaches"]
+    assert ap.id == "cross_n"
+    assert ap.speed_mph == 30
+    assert ap.road_type == "urban_low"  # 30 mph urban_arterial
+    assert ap.along_station_ft == -60.0
 
 
 # ---------------------------------------------------------------------------

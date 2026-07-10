@@ -11,7 +11,7 @@ Authoritative sources:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
@@ -200,6 +200,37 @@ class ScenarioParams:
     # the CO Supplement §2B.13(A) audit check today; stepped-sign
     # placement for >15 mph reductions is tracked separately (see #36).
     work_zone_speed_mph: int | None = None
+    # True only for the (gated) near_intersection kind — a mainline lane
+    # closure near a cross street per S-630-1 Sheet 10 Cases 18/19.
+    # Appended with a default so every existing constructor is untouched
+    # (zero-churn by construction, same move as DevicePlacement.approach_id).
+    # Load-bearing consumer: ``_is_flagger_scenario`` — without this flag
+    # an undivided lane closure with <=2 lanes/direction is
+    # indistinguishable from the flagger kind and would validate against
+    # the 100-ft one-lane-two-way taper instead of the full merging L.
+    near_intersection: bool = False
+
+
+@dataclass(frozen=True)
+class ApproachParams:
+    """Per-approach inputs for the near_intersection kind (Option C inc. 2).
+
+    One entry per cross-street leg, bridged from
+    ``IntersectionApproach`` by ``scenario_to_call``.  ``road_type`` is
+    already mapped to the Table 6B-1 vocabulary (``urban_low`` /
+    ``urban_high`` / ``rural``) so the rules engine consumes it directly.
+    ``along_station_ft`` is in the MAINLINE frame (same value for both
+    legs of one cross street); every other field describes the
+    approach's own road and drives the per-approach spacing math.
+    """
+
+    id: str
+    speed_mph: int
+    road_type: str
+    num_lanes: int  # per direction, same semantics as ScenarioParams
+    lane_width_ft: float
+    along_station_ft: float
+    signalized: bool = False
 
 
 def scenario_display_name(params: ScenarioParams) -> str:
@@ -223,6 +254,8 @@ def scenario_display_name(params: ScenarioParams) -> str:
         return "Mobile Operation — Multi-Lane Road" if divided else "Mobile Operation — 2-Lane Road"
     if ct == "off_road":
         return "Work Beyond the Shoulder"
+    if ct == "lane" and not divided and params.near_intersection:
+        return "Lane Closure Near Intersection — Undivided"
     if ct == "lane" and not divided:
         return "Flagger Alternating Traffic — 2-Lane Undivided"
     if ct == "lane":
@@ -295,9 +328,17 @@ def _is_flagger_scenario(params: ScenarioParams) -> bool:
 
     Matches a single-lane closure on a non-divided 2-lane road —
     ``num_lanes`` is read permissively (1 = per-direction count, 2 =
-    total-lane count both describe the same physical road).
+    total-lane count both describe the same physical road).  The
+    near_intersection kind is an undivided lane closure too but merges
+    within its own direction (Cases 18/19, full merging L) — excluded
+    explicitly so it never inherits the flagger taper/station logic.
     """
-    return params.closure_type == "lane" and not params.is_divided and params.num_lanes <= 2
+    return (
+        params.closure_type == "lane"
+        and not params.is_divided
+        and params.num_lanes <= 2
+        and not params.near_intersection
+    )
 
 
 def _channelizer_indices(placements: list[DevicePlacement]) -> list[int]:
@@ -308,25 +349,29 @@ def _sign_indices(placements: list[DevicePlacement]) -> list[int]:
     return [i for i, p in enumerate(placements) if DEVICE_CATALOG[p.device_type].is_sign]
 
 
-def _extract_taper_indices(placements: list[DevicePlacement]) -> list[int]:
-    """Indices of mainline channelizers that form the merging taper.
+def _extract_taper_indices(
+    placements: list[DevicePlacement],
+    approach_id: str = "mainline",
+) -> list[int]:
+    """Indices of one approach frame's channelizers that form the merging taper.
 
     Identifies the longest contiguous run of station-sorted channelizers
     whose lateral offset is monotonically changing by more than
     ``TAPER_OFFSET_DELTA_THRESHOLD_FT`` between neighbors.  Returns an
     empty list if no such run exists.
 
-    Only ``approach_id == "mainline"`` placements participate: station
-    values in different approach frames are not comparable, so a
+    Only placements in the requested ``approach_id`` frame participate:
+    station values in different approach frames are not comparable, so a
     cross-street channelizer sorted into the mainline sequence could
-    stitch two unrelated runs into one false taper.  For all-mainline
-    lists (every current generator) the filter is the identity.
-    Per-approach taper validation is deferred until per-approach params
-    exist (Option C increment 2) — the taper-length math below is
-    mainline math and must not be applied to a cross street's group.
+    stitch two unrelated runs into one false taper.  The default frame is
+    ``"mainline"`` — for all-mainline lists (every current generator) the
+    filter is then the identity, so every pre-intersection call site is
+    byte-identical.  Per-approach callers (Option C increment 2) pass the
+    approach's id and must supply that approach's params to any length
+    math downstream.
     """
     chans = sorted(
-        (i for i in _channelizer_indices(placements) if placements[i].approach_id == "mainline"),
+        (i for i in _channelizer_indices(placements) if placements[i].approach_id == approach_id),
         key=lambda i: placements[i].station_ft,
     )
     if len(chans) < 2:
@@ -1576,15 +1621,125 @@ def validate_shoulder_warning_pair(
 # ---------------------------------------------------------------------------
 
 
+def _validate_approach_groups(
+    placements: list[DevicePlacement],
+    approach_params: dict[str, ApproachParams],
+) -> list[Violation]:
+    """Per-approach checks for the near_intersection kind (Option C inc. 2).
+
+    Each cross-street approach group is validated against ITS OWN
+    speed/road-type numbers, never the mainline's:
+
+    * ``UNKNOWN_APPROACH_ID`` (error) — a placement's frame tag matches
+      neither ``"mainline"`` nor a declared approach.  Such a placement
+      is unpositionable: no consumer can resolve its station frame.
+    * ``MISSING_APPROACH_ADVANCE_SIGNS`` (error) — §6N.12.06 requires an
+      advance warning set on every cross-street approach; fewer than two
+      approach-side signs (W20-1 + the R2-10 fines companion per Case 18)
+      means the set is absent or incomplete.
+    * ``APPROACH_SIGN_SPACING_OFF`` (warning) — the Sheet 10 advance-
+      signing key spaces the approach's signs (and the first sign back
+      from the intersection curb line) by the approach road type's
+      distance.  Station 0 is the curb line in the approach frame, so
+      the curb itself is the first reference point.
+
+    ``device_index`` values refer to the full ``placements`` list.
+    """
+    out: list[Violation] = []
+    declared = {"mainline"} | set(approach_params)
+    for i, p in enumerate(placements):
+        if p.approach_id not in declared:
+            out.append(
+                Violation(
+                    rule_id="UNKNOWN_APPROACH_ID",
+                    severity="error",
+                    message=(
+                        f"placement {i} carries approach_id={p.approach_id!r}, "
+                        f"which matches no declared approach "
+                        f"({sorted(declared)!r}) — its station frame cannot "
+                        f"be resolved."
+                    ),
+                    mutcd_section="§6N.12.06",
+                    device_index=i,
+                )
+            )
+
+    tol = ADVANCE_SIGN_SPACING_TOLERANCE
+    for ap_id, ap in approach_params.items():
+        signs = sorted(
+            (
+                (i, p)
+                for i, p in enumerate(placements)
+                if p.approach_id == ap_id
+                and DEVICE_CATALOG[p.device_type].is_sign
+                and p.offset_ft > 0  # approach side; departure-side signs (R2-11) excluded
+            ),
+            key=lambda ip: ip[1].station_ft,
+        )
+        if len(signs) < 2:
+            out.append(
+                Violation(
+                    rule_id="MISSING_APPROACH_ADVANCE_SIGNS",
+                    severity="error",
+                    message=(
+                        f"approach {ap_id!r} has {len(signs)} approach-side "
+                        f"sign(s); §6N.12.06 requires an advance warning set "
+                        f"(W20-1 + R2-10 per S-630-1 Sheet 10 Case 18) on "
+                        f"every cross-street approach."
+                    ),
+                    mutcd_section="§6N.12.06 / S-630-1 Sheet 10",
+                    device_index=None,
+                )
+            )
+            continue
+
+        a_dist = advance_warning_spacing(ap.speed_mph, ap.road_type)["A"]
+        # Gaps measured from the curb line (station 0) outward: curb ->
+        # first sign, then sign -> sign.  Each must match the approach's
+        # own key distance.
+        stations = [0.0] + [p.station_ft for _, p in signs]
+        reps = [i for i, _ in signs]
+        for k in range(1, len(stations)):
+            gap = stations[k] - stations[k - 1]
+            if not (a_dist * (1 - tol) <= gap <= a_dist * (1 + tol)):
+                out.append(
+                    Violation(
+                        rule_id="APPROACH_SIGN_SPACING_OFF",
+                        severity="warning",
+                        message=(
+                            f"approach {ap_id!r}: advance-sign gap {k} is "
+                            f"{gap:.0f} ft; the Sheet 10 advance-signing key "
+                            f"for this approach ({ap.speed_mph} mph, "
+                            f"{ap.road_type}) calls for {a_dist:.0f} ft "
+                            f"(±{tol:.0%})."
+                        ),
+                        mutcd_section="S-630-1 Sheet 10 advance-signing key / Table 6B-1",
+                        device_index=reps[k - 1],
+                    )
+                )
+    return out
+
+
 def validate_layout(
     placements: list[DevicePlacement],
     params: ScenarioParams,
+    approach_params: dict[str, ApproachParams] | None = None,
 ) -> list[Violation]:
     """Run every validator against a proposed layout.
 
     Returns the concatenated list of violations from all sub-validators,
     or an empty list if every check passes.  Order does not encode
     priority — sort by ``severity`` if needed.
+
+    ``approach_params`` is the per-approach parameter map for the
+    near_intersection kind (Option C increment 2).  When ``None`` — every
+    pre-intersection caller — behavior is byte-identical to the
+    single-frame validator.  When provided, the fifteen mainline
+    validators run on the mainline-frame placements only (mixing frames
+    is wrong by construction: approach stations measure from the curb
+    line, not the work zone), with ``device_index`` values mapped back to
+    the full list, and each approach group is then validated against its
+    own approach's numbers.
 
     Raises:
         ValueError: ``params.road_type`` is not a Table 6B-1 category.
@@ -1601,20 +1756,36 @@ def validate_layout(
             "speed/access categories instead."
         )
 
+    if approach_params is None:
+        target = placements
+        mainline_idx: list[int] | None = None
+    else:
+        mainline_idx = [i for i, p in enumerate(placements) if p.approach_id == "mainline"]
+        target = [placements[i] for i in mainline_idx]
+
     out: list[Violation] = []
-    out.extend(validate_taper_present(placements, params))
-    out.extend(validate_taper_length(placements, params))
-    out.extend(validate_channelizer_spacing(placements, params))
-    out.extend(validate_advance_warning_signs(placements, params))
-    out.extend(validate_buffer_space(placements, params))
-    out.extend(validate_arrow_board_present(placements, params))
-    out.extend(validate_co_signs_both_sides(placements, params))
-    out.extend(validate_begin_end_road_work_pair(placements, params))
-    out.extend(validate_flagger_advance_sign_sequence(placements, params))
-    out.extend(validate_mobile_shadow_vehicle(placements, params))
-    out.extend(validate_mobile_advance_warning(placements, params))
-    out.extend(validate_co_construction_plaques(placements, params))
-    out.extend(validate_flagger_stations(placements, params))
-    out.extend(validate_fines_double_envelope(placements, params))
-    out.extend(validate_shoulder_warning_pair(placements, params))
+    out.extend(validate_taper_present(target, params))
+    out.extend(validate_taper_length(target, params))
+    out.extend(validate_channelizer_spacing(target, params))
+    out.extend(validate_advance_warning_signs(target, params))
+    out.extend(validate_buffer_space(target, params))
+    out.extend(validate_arrow_board_present(target, params))
+    out.extend(validate_co_signs_both_sides(target, params))
+    out.extend(validate_begin_end_road_work_pair(target, params))
+    out.extend(validate_flagger_advance_sign_sequence(target, params))
+    out.extend(validate_mobile_shadow_vehicle(target, params))
+    out.extend(validate_mobile_advance_warning(target, params))
+    out.extend(validate_co_construction_plaques(target, params))
+    out.extend(validate_flagger_stations(target, params))
+    out.extend(validate_fines_double_envelope(target, params))
+    out.extend(validate_shoulder_warning_pair(target, params))
+
+    if approach_params is not None and mainline_idx is not None:
+        out = [
+            replace(v, device_index=mainline_idx[v.device_index])
+            if v.device_index is not None
+            else v
+            for v in out
+        ]
+        out.extend(_validate_approach_groups(placements, approach_params))
     return out

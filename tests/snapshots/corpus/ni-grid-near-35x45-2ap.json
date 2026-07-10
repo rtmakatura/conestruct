@@ -1,0 +1,212 @@
+[
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W4-2R",
+    "offset_ft": 28.0,
+    "station_ft": 895.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-5R",
+    "offset_ft": 28.0,
+    "station_ft": 995.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 28.0,
+    "station_ft": 1095.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 28.0,
+    "station_ft": 1045.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 24.0,
+    "station_ft": 795.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 22.3,
+    "station_ft": 760.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 20.6,
+    "station_ft": 725.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 18.9,
+    "station_ft": 690.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 17.1,
+    "station_ft": 655.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 15.4,
+    "station_ft": 620.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 13.7,
+    "station_ft": 585.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "DRUM",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 550.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "ARROW_BOARD",
+    "label": "LEFT_ARROW",
+    "offset_ft": 18.0,
+    "station_ft": 795.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-5P",
+    "offset_ft": 28.0,
+    "station_ft": 150.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 0.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 60.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 120.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 180.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 240.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": 300.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "CONE",
+    "label": null,
+    "offset_ft": 12.0,
+    "station_ft": -56.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-1",
+    "offset_ft": 28.0,
+    "station_ft": 400.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "G20-2",
+    "offset_ft": 28.0,
+    "station_ft": -304.0
+  },
+  {
+    "approach_id": "mainline",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": 28.0,
+    "station_ft": -204.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 16.0,
+    "station_ft": 700.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 16.0,
+    "station_ft": 350.0
+  },
+  {
+    "approach_id": "cross_n",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": -16.0,
+    "station_ft": 100.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "W20-1",
+    "offset_ft": 28.0,
+    "station_ft": 700.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-10",
+    "offset_ft": 28.0,
+    "station_ft": 350.0
+  },
+  {
+    "approach_id": "cross_s",
+    "device_type": "SIGN_GENERIC",
+    "label": "R2-11",
+    "offset_ft": -28.0,
+    "station_ft": 100.0
+  }
+]
