@@ -1,9 +1,10 @@
+// Title-block fields are load-bearing in this domain — decorative-but-false
+// is worse than decorative-and-honest (same rule as AppSheetMeta / UX-20).
+// SHEET, ISSUED, and BY were fabricated (no sheet set, stale date, false
+// TCS/CDOT authorship) and are removed; only rows this page can back stay.
 export function SheetMeta() {
   const items = [
-    "SHEET: 01 / 03",
     "PROJECT: CONESTRUCT.COM / LANDING",
-    "ISSUED: 2026-04-26",
-    "BY: TCS · CDOT",
     "SCALE: AS NOTED",
   ];
   return (

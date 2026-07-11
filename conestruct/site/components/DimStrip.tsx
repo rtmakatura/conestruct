@@ -1,6 +1,8 @@
+import { ENABLED_SCENARIO_KINDS } from "@/lib/scenarios";
+
 const STATS: Array<[string, string]> = [
   ["~90s", "from scenario to PDF"],
-  ["3", "scenarios supported"],
+  [String(ENABLED_SCENARIO_KINDS.length), "scenarios supported"],
   ["PDF + XLSX + MD", "in one click"],
   ["100%", "MUTCD-cited"],
 ];

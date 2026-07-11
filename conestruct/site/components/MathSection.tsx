@@ -95,7 +95,7 @@ export function MathSection() {
             <span className="absolute -bottom-px -right-px w-3.5 h-3.5 border-[1.5px] border-orange border-l-0 border-t-0" />
 
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint mb-2">
-              MUTCD <span className="text-orange">§ 6C.08</span> · MERGING TAPER
+              MUTCD <span className="text-orange">§ 6B.08</span> · MERGING TAPER
               LENGTH
             </div>
 
@@ -153,7 +153,7 @@ export function MathSection() {
             <div className="relative bg-paper border border-line px-6 pt-8 pb-14 mt-7 min-h-[280px] overflow-hidden">
               <div className="absolute inset-0 pointer-events-none blueprint-grid-faint" />
               <span className="absolute top-3 left-4 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint z-[2]">
-                TAPER GEOMETRY · 1:80 SCALE
+                TAPER GEOMETRY · NOT TO SCALE
               </span>
               <span className="absolute top-3 right-4 font-mono text-[11px] font-semibold text-orange z-[2]">
                 L = {L} ft · B = {B} ft
@@ -165,7 +165,7 @@ export function MathSection() {
 
             {/* citations */}
             <div className="flex gap-6 mt-6 pt-4 border-t border-dashed border-line flex-wrap">
-              {["MUTCD § 6C.08", "CDOT S-630-1", "FHWA TABLE 6C-3"].map((c) => (
+              {["MUTCD § 6B.08", "MUTCD TABLE 6B-4", "CDOT S-630-1"].map((c) => (
                 <div
                   key={c}
                   className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-mute"
@@ -192,36 +192,36 @@ export function MathSection() {
                 n="01"
                 label="Merging taper length"
                 value={`${L} ft`}
-                cite="MUTCD § 6C.08"
+                cite="MUTCD § 6B.08"
                 desc="W × S for ≥ 45 mph"
               />
               <CalcItem
                 n="02"
                 label="Buffer space"
                 value={`${B} ft`}
-                cite="MUTCD TABLE 6C-2"
+                cite="MUTCD TABLE 6B-2"
                 desc="Stopping sight distance @ S"
               />
               <CalcItem
                 n="03"
                 label="Channelizing device spacing"
                 value={`${sp} ft o.c.`}
-                cite="MUTCD § 6F.65"
-                desc="≈ S in feet, in taper / tangent"
+                cite="MUTCD § 6K.01"
+                desc="≤ S ft in taper · ≤ 2×S on tangent"
               />
               <CalcItem
                 n="04"
                 label="Advance warning sign placement"
                 value="500 / 1000 / 1500 ft"
-                cite="MUTCD TABLE 6C-1"
-                desc="Three-sign series for high-speed hwy"
+                cite="MUTCD TABLE 6B-1"
+                desc="Three-sign series · rural highway"
               />
               <CalcItem
                 n="05"
                 label="S-630-1 case match"
-                value="Case 2A"
-                cite="CDOT S-630-1"
-                desc="Right lane closure · divided · ≥45 mph"
+                value="Case 11"
+                cite="CDOT S-630-1 · SHEET 7"
+                desc="Shoulder closure · divided highway"
               />
             </div>
           </div>

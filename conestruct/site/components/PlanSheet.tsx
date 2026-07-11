@@ -141,16 +141,22 @@ function Dimension({
   );
 }
 
+// The demo scenario is the ScenarioCard's shoulder closure (an ENABLED
+// kind — lane closures are gated).  All stated values are the real
+// backend's output for that scenario: Case 11, shoulder taper
+// L/3 = 217 ft, buffer 645 ft, spacing 65/130 ft, 25 cones/drums +
+// 14 signs + 1 arrow board.  The drawing is not to scale.
 function Schematic({ revealStage }: { revealStage: Stage }) {
+  // Shoulder taper: cones run from the travel-way edge onto the shoulder.
   const taperCones = Array.from({ length: 7 }, (_, i) => {
     const t = i / 6;
     const x = 360 + t * 220;
-    const y = 220 - t * 50;
+    const y = 117 - t * 13;
     return { x, y, key: "t" + i };
   });
   const lineCones = Array.from({ length: 10 }, (_, i) => ({
-    x: 590 + i * 38,
-    y: 170,
+    x: 590 + i * 44,
+    y: 103,
     key: "l" + i,
   }));
 
@@ -161,6 +167,7 @@ function Schematic({ revealStage }: { revealStage: Stage }) {
       style={{ width: "100%", height: "100%" }}
     >
       <Fade stage={1} current={revealStage} delayMs={0}>
+        <rect x="0" y="98" width="1100" height="22" fill="#ECE4D9" />
         <rect x="0" y="120" width="1100" height="55" fill="#D9D3CA" />
         <rect x="0" y="175" width="1100" height="55" fill="#CFC8BD" />
         <rect x="0" y="230" width="1100" height="14" fill="#ECE4D9" />
@@ -206,7 +213,7 @@ function Schematic({ revealStage }: { revealStage: Stage }) {
 
       <Fade stage={2} current={revealStage} delayMs={300}>
         <path
-          d="M 580 175 L 1000 175 L 1000 230 L 580 230 Z"
+          d="M 780 98 L 1000 98 L 1000 120 L 780 120 Z"
           fill="#F2C9D6"
           opacity="0.65"
         />
@@ -229,10 +236,10 @@ function Schematic({ revealStage }: { revealStage: Stage }) {
             />
           </pattern>
         </defs>
-        <rect x="580" y="175" width="420" height="55" fill="url(#hatch)" />
+        <rect x="780" y="98" width="220" height="22" fill="url(#hatch)" />
         <text
-          x="790"
-          y="207"
+          x="890"
+          y="113"
           textAnchor="middle"
           fontFamily="var(--font-mono), JetBrains Mono, monospace"
           fontSize="11"
@@ -254,16 +261,16 @@ function Schematic({ revealStage }: { revealStage: Stage }) {
       </Fade>
 
       <Fade stage={3} current={revealStage} delayMs={850}>
-        <Dimension x1={360} x2={580} y={92} label="L = 650 ft" sub="TAPER" />
-        <Dimension x1={580} x2={780} y={92} label="B = 645 ft" sub="BUFFER" />
-        <Dimension x1={780} x2={1000} y={92} label="0.40 mi" sub="WORK ZONE" />
+        <Dimension x1={360} x2={580} y={64} label="L/3 = 217 ft" sub="SHOULDER TAPER" />
+        <Dimension x1={580} x2={780} y={64} label="B = 645 ft" sub="BUFFER" />
+        <Dimension x1={780} x2={1000} y={64} label="0.40 mi" sub="WORK ZONE" />
       </Fade>
 
       <Fade stage={4} current={revealStage} delayMs={1100}>
-        <Sign x={120} y={108} code="W20-1" />
-        <Sign x={210} y={108} code="W20-5" />
-        <Sign x={300} y={108} code="W4-2" />
-        <ArrowBoard x={480} y={195} />
+        <Sign x={120} y={84} code="W20-1" />
+        <Sign x={210} y={84} code="W20-2" />
+        <Sign x={300} y={84} code="W21-5aR" />
+        <ArrowBoard x={670} y={109} />
       </Fade>
 
       <Fade stage={1} current={revealStage} delayMs={0}>
@@ -295,7 +302,7 @@ export function PlanSheet({ revealStage }: { revealStage: Stage }) {
       {/* title block */}
       <div className="absolute top-0 left-0 right-0 z-[2] flex justify-between bg-white border-b border-line px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.1em] text-navy">
         <span className="font-semibold">Method of Handling Traffic</span>
-        <span className="text-ink-faint">SHT 1 OF 1 · MUTCD 2023 · CDOT S-630-1</span>
+        <span className="text-ink-faint">MUTCD 2023 · CDOT S-630-1 · CASE 11</span>
       </div>
 
       {/* schematic */}
@@ -347,10 +354,10 @@ export function PlanSheet({ revealStage }: { revealStage: Stage }) {
             Notes
           </h4>
           {[
-            ["Taper L", "650 ft"],
+            ["Taper L/3", "217 ft"],
             ["Buffer B", "645 ft"],
             ["Spacing", "65 ft o.c."],
-            ["Devices", "34 cones · 5 signs"],
+            ["Devices", "25 cones/drums · 14 signs"],
           ].map(([label, val]) => (
             <div
               key={label}

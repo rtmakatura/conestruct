@@ -1,7 +1,11 @@
+// The demo scenario must be one the product actually generates:
+// `shoulder` is in ENABLED_SCENARIO_KINDS; lane closures are gated.
+// The PlanSheet numbers are this exact scenario run through the real
+// backend (Case 11, L/3 taper 217 ft, buffer 645 ft, 65/130 spacing).
 export const SCENARIO_FIELDS = [
   { key: "road_type:", val: "rural divided hwy" },
   { key: "speed_limit:", val: "65 mph" },
-  { key: "closure:", val: "right lane" },
+  { key: "closure:", val: "right shoulder" },
   { key: "length:", val: "0.4 mi" },
   { key: "lanes_dir:", val: "2" },
   { key: "project:", val: "I-25 MM 184" },
