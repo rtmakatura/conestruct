@@ -197,6 +197,9 @@ def test_audit_sections_carries_all_build_audit_trail_keys(client: TestClient) -
         "flagger",
         "corridor_validation",
         "geometry_validation",
+        # Engine-removal PR B: corridor-preview zone lengths, backend-
+        # computed so PR D can delete the corridor-spacing.ts mirror.
+        "corridor_spec",
     }
 
 

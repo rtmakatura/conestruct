@@ -78,6 +78,13 @@ _PANEL_ONLY_CITATIONS = frozenset(
         "MUTCD § 6C.02",
         "MUTCD § 9C.101",
         "MUTCD § 7B.08",
+        # Engine-removal PR B — flagger sight-distance citation chips
+        # (sections.flagger.sight_distance_citation): panel-only, PR C
+        # renders them.  The PDF's flagger block keeps its prose
+        # ``source``/``narrative``; whether the PDF gains an SSD row is
+        # a separate visible-content decision, not bundled here.
+        "MUTCD § 6D.06",
+        "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
     }
 )
 

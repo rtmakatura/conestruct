@@ -137,6 +137,26 @@ def downstream_taper_length(num_lanes: int, use_max: bool = False) -> float:
     return float(num_lanes * (per_lane_max if use_max else per_lane_min))
 
 
+def stopping_sight_distance_ft(speed_mph: int) -> float:
+    """Stopping sight distance at posted speed, in feet.
+
+    Source: MUTCD 11th Ed. Table 6B-2 "Stopping Sight Distance as a
+    Function of Speed" (PDF p.11 of the local Part 6 copy, MUTCD
+    p.775).  §6D.06 "Flagger Stations" ¶03 (PDF p.22, p.786): "The
+    distances shown in Table 6B-2 ... may be used for the location of
+    a flagger station."  Table 6B-2 is the same table BUFFER_SPACE
+    encodes, so this is a thin, correctly-named view of the federal
+    lookup — added in engine-removal PR B so the audit's flagger
+    sight-distance value is backend-sourced (the frontend previously
+    carried its own copy of this table under a §6E.06/"Table 6E-1"
+    citation, both wrong-subject/nonexistent in the 11th edition).
+
+    Raises:
+        ValueError: ``speed_mph`` is not a Table 6B-2 row.
+    """
+    return buffer_space(speed_mph, jurisdiction="federal")
+
+
 # ---------------------------------------------------------------------------
 # Buffer space
 # ---------------------------------------------------------------------------

@@ -30,10 +30,12 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
+    downstream_taper_length,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
     shoulder_taper_length,
+    stopping_sight_distance_ft,
     taper_length,
 )
 from src.rules.tables import (
@@ -971,18 +973,15 @@ def build_audit_trail(
         "detail": "Not applicable (not a mobile operation).",
     }
 
+    co_checks = [both_sides, plaques_section, speed_reduction_section, flagger_lighting_section]
     co_section = {
-        "checks": [both_sides, plaques_section, speed_reduction_section, flagger_lighting_section],
+        "checks": co_checks,
         "info_items": [aadt_section],
-        "all_pass": all(
-            c["pass"]
-            for c in (
-                both_sides,
-                plaques_section,
-                speed_reduction_section,
-                flagger_lighting_section,
-            )
-        ),
+        "all_pass": all(c["pass"] for c in co_checks),
+        # Engine-removal PR B: the panel's "N of M FAIL" verdict was the
+        # last frontend-derived Colorado number (AuditTrail.tsx counted
+        # failing checks itself).  Additive; PR C reads it.
+        "fail_count": sum(1 for c in co_checks if not c["pass"]),
     }
 
     # ------------------------------------------------------------------
@@ -1279,6 +1278,21 @@ def build_audit_trail(
         if is_flagger
         else "Not applicable for this scenario.",
     }
+    if is_flagger:
+        # Engine-removal PR B: the flagger station sight-distance value
+        # was 100% frontend-invented (AuditTrail.tsx carried its own
+        # copy of Table 6B-2 under a wrong-subject §6E.06 / nonexistent
+        # "Table 6E-1" citation).  Backend-sourced here; PR C deletes
+        # the frontend table and renders these fields.  Citation
+        # verified by SUBJECT against the local MUTCD 11th-ed PDF:
+        # §6D.06 "Flagger Stations" ¶03 (PDF p.22) points to Table 6B-2
+        # (PDF p.11).  Keys present only for the flagger kind — every
+        # other kind's flagger section stays byte-identical.
+        flagger_section["sight_distance_ft"] = _ft(stopping_sight_distance_ft(speed))
+        flagger_section["sight_distance_citation"] = {
+            "cite": "MUTCD § 6D.06",
+            "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+        }
 
     # ------------------------------------------------------------------
     # 9. Corridor / aerial validation (best-effort OSM check)
@@ -1398,6 +1412,23 @@ def build_audit_trail(
         "flagger": flagger_section,
         "corridor_validation": corridor_validation,
         "geometry_validation": geo_section,
+        # Engine-removal PR B: the corridor-preview zone lengths,
+        # backend-computed so PR D can delete the corridor-spacing.ts
+        # mirror.  These are the audit's OWN numbers (single source):
+        # the kind-appropriate taper (L_required), the CDOT-aware
+        # buffer, the Table 6B-1 A+B+C sum, and the layout's actual
+        # downstream-taper run when it placed one (the §6B.08 50-ft-
+        # per-lane floor otherwise).  Geometry (anchor/bearing) stays
+        # with the client — this block is lengths only.
+        "corridor_spec": {
+            "taper_ft": _ft(L_required),
+            "buffer_ft": _ft(buf),
+            "advance_warning_ft": _ft(a_ft + b_ft + c_ft),
+            "downstream_taper_ft": _ft(
+                -min(ds_cone_stations) if n_ds_cones else downstream_taper_length(1)
+            ),
+            "road_category": resolved_category,
+        },
     }
     # Additive key, near_intersection only — every other kind's audit
     # dict stays byte-identical (rule #5).

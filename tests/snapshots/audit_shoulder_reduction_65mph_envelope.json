@@ -110,6 +110,7 @@
           "pass": true
         }
       ],
+      "fail_count": 0,
       "info_items": [
         {
           "citation": "CO Supplement Sec 6G.02(A)",
@@ -118,6 +119,13 @@
           "label": "AADT threshold for mobile operations (<= 2,000)"
         }
       ]
+    },
+    "corridor_spec": {
+      "advance_warning_ft": 5140,
+      "buffer_ft": 570,
+      "downstream_taper_ft": 50,
+      "road_category": "freeway",
+      "taper_ft": 217
     },
     "corridor_validation": {
       "checked": false,

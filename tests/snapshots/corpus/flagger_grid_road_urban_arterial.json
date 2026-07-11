@@ -86,6 +86,7 @@
           "pass": true
         }
       ],
+      "fail_count": 0,
       "info_items": [
         {
           "citation": "CO Supplement Sec 6G.02(A)",
@@ -94,6 +95,13 @@
           "label": "AADT threshold for mobile operations (<= 2,000)"
         }
       ]
+    },
+    "corridor_spec": {
+      "advance_warning_ft": 1050,
+      "buffer_ft": 360,
+      "downstream_taper_ft": 50,
+      "road_category": "urban_high",
+      "taper_ft": 100
     },
     "corridor_validation": {
       "checked": false,
@@ -104,6 +112,11 @@
       "count": 2,
       "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
       "required": 2,
+      "sight_distance_citation": {
+        "cite": "MUTCD § 6D.06",
+        "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+      },
+      "sight_distance_ft": 360,
       "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
       "table": [
         {
