@@ -286,11 +286,11 @@ class IntersectionApproach(BaseModel):
             )
         return self
 
-    # Same Table 6B-2 grid floor as the mainline (both buffer tables
-    # serve 20 mph — Python BUFFER_SPACE always did, TS since f256db6).
-    # Cap 55 matches the mainline cap below (D8 — Cases 18/19 are
-    # arterial/local plates).
-    speed: int = Field(ge=20, le=55, multiple_of=5)
+    # Floor 25 per the increment-1 ruling — matching the enabled kinds'
+    # form floor, not the Table 6B-2 grid floor (the tables serve 20 mph,
+    # but that wider bound was offered and declined).  Cap 55 matches the
+    # mainline cap below (D8 — Cases 18/19 are arterial/local plates).
+    speed: int = Field(ge=25, le=55, multiple_of=5)
     roadType: ApproachRoadType
     # Same semantics as ScenarioParams.num_lanes: lanes PER DIRECTION.
     # Capped at 4 like every kind's lane count.
@@ -336,9 +336,10 @@ class NearIntersectionScenario(BaseModel):
     meta: ScenarioMeta = ScenarioMeta()
 
     # --- mainline: same field set and bounds as ShoulderScenario,
-    # speed capped at 55 like the flagger kind (D8) ---
+    # speed capped at 55 like the flagger kind (D8); floor 25 per the
+    # increment-1 ruling (same as the approach floor above) ---
     roadType: IntersectionRoadType
-    speed: int = Field(ge=20, le=55, multiple_of=5)
+    speed: int = Field(ge=25, le=55, multiple_of=5)
     lanes: int = Field(ge=1, le=4)  # per direction, as everywhere
     laneWidth: float = Field(ge=9.0, le=14.0)
     divided: bool  # Phase 1: must be False (validator below)

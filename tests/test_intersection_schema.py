@@ -106,7 +106,7 @@ def test_valid_far_side_and_two_approaches_parse() -> None:
         _body(
             approaches=[
                 _approach(id="cross_n", alongStationFt=700.0),
-                _approach(id="cross_s", alongStationFt=700.0, speed=20),
+                _approach(id="cross_s", alongStationFt=700.0, speed=25),
             ]
         )
     )
@@ -122,13 +122,14 @@ def test_valid_far_side_and_two_approaches_parse() -> None:
 @pytest.mark.parametrize(
     ("overrides", "match"),
     [
+        ({"speed": 20}, "greater_than_equal"),  # floor is 25 (increment-1 ruling)
         ({"speed": 60}, "less_than_equal"),
         ({"speed": 80}, "less_than_equal"),
         ({"lanes": 5}, "less_than_equal"),
         ({"workLen": WORK_LEN_MAX_FT + 0.1}, "less_than_equal"),
         ({"roadType": "freeway"}, "literal_error"),
     ],
-    ids=["speed-60", "speed-80", "lanes-5", "worklen-cap", "freeway"],
+    ids=["speed-20", "speed-60", "speed-80", "lanes-5", "worklen-cap", "freeway"],
 )
 def test_mainline_bounds_reject(overrides: dict, match: str) -> None:
     with pytest.raises(ValidationError) as exc_info:
@@ -139,7 +140,7 @@ def test_mainline_bounds_reject(overrides: dict, match: str) -> None:
 @pytest.mark.parametrize(
     ("approach_overrides", "match"),
     [
-        ({"speed": 15}, "greater_than_equal"),  # Table 6B-2 floor is 20
+        ({"speed": 20}, "greater_than_equal"),  # floor is 25 (increment-1 ruling)
         ({"speed": 60}, "less_than_equal"),
         ({"speed": 42}, "multiple_of"),
         ({"lanesPerDirection": 5}, "less_than_equal"),
@@ -152,7 +153,7 @@ def test_mainline_bounds_reject(overrides: dict, match: str) -> None:
         ({"roadType": "freeway"}, "literal_error"),
     ],
     ids=[
-        "speed-15",
+        "speed-20",
         "speed-60",
         "speed-off-grid",
         "lanes-5",

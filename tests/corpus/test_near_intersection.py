@@ -175,13 +175,13 @@ GRID_BODIES: dict[str, dict[str, Any]] = {
             _approach(id="cross_s", roadType="rural_undivided", speed=55, alongStationFt=900.0),
         ],
     ),
-    # Far side, midblock (buffer) anchoring dominates; 20-mph minimum
+    # Far side, midblock (buffer) anchoring dominates; 25-mph minimum
     # approach speed; long work zone.
     "ni-grid-far-buffer-anchor": _body(
         "ni-grid-far-buffer-anchor",
         speed=50,
         workLen=1000.0,
-        approaches=[_approach(speed=20, alongStationFt=1150.0)],
+        approaches=[_approach(speed=25, alongStationFt=1150.0)],
     ),
 }
 
