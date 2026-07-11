@@ -181,7 +181,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
         type="button"
         onClick={detect}
         disabled={!hasCoords || detecting}
-        className="w-full mb-3 px-3 py-2 text-[12px] border border-[color:var(--rule)] hover:border-[color:var(--cyan)] disabled:opacity-50 disabled:cursor-not-allowed text-[color:var(--ink-on-dark)] transition-colors"
+        className="w-full mb-3 px-3 py-2 text-[12px] border border-[color:var(--rule)] hover:border-[color:var(--act)] disabled:opacity-50 disabled:cursor-not-allowed text-[color:var(--ink-on-dark)] transition-colors"
         title={
           hasCoords
             ? "Query OpenStreetMap for nearby intersections, sidewalks, schools…"
@@ -208,7 +208,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
       )}
 
       {detection && !detection.error && (
-        <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--cyan)]">
+        <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--act)]">
           {detection.mode === "corridor" ? "Corridor scan: " : "Point scan: "}
           {Object.values(DETECTION_TO_FLAG).filter((f) => flags[f]).length}{" "}
           flag(s) auto-checked

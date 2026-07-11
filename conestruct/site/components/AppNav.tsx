@@ -29,10 +29,10 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
       <div className="flex items-stretch">
         <Link
           href="/"
-          className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--cyan)] transition-colors"
+          className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--act)] transition-colors"
         >
           <span>
-            conestruct<span className="text-[color:var(--orange)]">.</span>
+            conestruct<span className="text-[color:var(--dim)]">.</span>
           </span>
           <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-[color:var(--ink-on-dark-faint)]">
             v0.4
@@ -51,7 +51,7 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
         )}
         {isSandbox || !AUTH_UI_ENABLED ? (
           <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em]">
-            <span className="text-[color:var(--orange)]">Demo</span>
+            <span className="text-[color:var(--dim)]">Demo</span>
             <span className="text-[color:var(--ink-on-dark-faint)]">/</span>
             <span className="text-[color:var(--ink-on-dark-faint)]">MUTCD plan generator</span>
           </span>
@@ -59,18 +59,18 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
           <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
             <span>Workbench</span>
             <span>/</span>
-            <span className="text-[color:var(--cyan)]">{planName ?? "New MHT"}</span>
+            <span className="text-[color:var(--act)]">{planName ?? "New MHT"}</span>
           </span>
         )}
         <span className="hidden lg:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span className="text-[color:var(--orange)]">{ta}</span>
+          <span className="text-[color:var(--dim)]">{ta}</span>
           <span>·</span>
           <span>{cdotSheet}</span>
         </span>
       </div>
       <div className="flex items-stretch">
         <span className="hidden md:flex items-center px-5 border-l border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span className="w-1.5 h-1.5 bg-[color:var(--green)] inline-block mr-2 animate-pulse" />
+          <span className="w-1.5 h-1.5 bg-[color:var(--pass)] inline-block mr-2 animate-pulse" />
           MUTCD 2023 · CDOT
         </span>
         {AUTH_UI_ENABLED && (

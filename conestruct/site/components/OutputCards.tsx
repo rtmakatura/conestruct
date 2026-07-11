@@ -170,9 +170,9 @@ async function extractValidationMessage(res: Response): Promise<string> {
 const CTA_BASE =
   "w-full font-sans font-semibold text-[13px] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 transition-colors";
 const CTA_PRIMARY =
-  "bg-[color:var(--canvas)] text-white hover:bg-[color:var(--cyan-deep)]";
+  "bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)]";
 const CTA_SECONDARY =
-  "bg-transparent text-[color:var(--canvas)] border border-[color:var(--paper-line)] hover:border-[color:var(--canvas)]";
+  "bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)]";
 
 function ctaClass(idx: number): string {
   return `${CTA_BASE} ${idx === 0 ? CTA_PRIMARY : CTA_SECONDARY}`;
@@ -243,7 +243,7 @@ function OutputCard({
       <span className="corner tl" />
       <span className="corner br" />
       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
-        <span className="text-[color:var(--orange)]">{ix}</span> · DELIVERABLE {n}
+        <span className="text-[color:var(--dim)]">{ix}</span> · DELIVERABLE {n}
       </div>
       <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
         {title}
@@ -251,11 +251,11 @@ function OutputCard({
       <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-3.5">
         {meta}
       </div>
-      <div className="flex justify-between items-baseline my-3.5 py-2.5 border-t border-b border-dashed border-[color:var(--paper-line)]">
+      <div className="flex justify-between items-baseline my-3.5 py-2.5 border-t border-b border-dashed border-[color:var(--rule-soft)]">
         <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
           {statLbl}
         </span>
-        <span className="font-mono text-[22px] text-[color:var(--orange)] font-semibold">
+        <span className="font-mono text-[22px] text-[color:var(--dim)] font-semibold">
           {statVal}
         </span>
       </div>
@@ -280,7 +280,7 @@ function OutputCard({
             ))}
           </div>
           {error && (
-            <div className="mt-2 text-[12px] leading-snug text-[#b94343] font-sans">
+            <div className="mt-2 text-[12px] leading-snug text-[color:var(--fail)] font-sans">
               {error.msg}
             </div>
           )}

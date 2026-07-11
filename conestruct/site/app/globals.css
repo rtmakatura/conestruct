@@ -687,13 +687,16 @@ body {
    Scope: any descendant of `.workbench`. The landing page stays untouched.
    Locks the slate palette (no runtime toggle). */
 .workbench {
-  /* dark canvas */
+  /* dark canvas (fix-spec-02 surface set) */
   --canvas: #14202e;
   --canvas-tint: #1b2838;
-  --rule: #28384b;
-  --rule-soft: #1f2d3f;
+  --rule: #2c3e53;
+  --rule-soft: #223244;
+  --raise: #22344a;
+  --raise-hi: #294056;
 
-  /* slate cards */
+  /* slate cards (audit trail / device table keep the raised look;
+     QuotePanel and OutputCards are dark-native per P1·03) */
   --paper: #243447;
   --paper-deep: #1e2d3f;
   --paper-line: #3a4d66;
@@ -701,29 +704,62 @@ body {
 
   /* on-paper ink (slate-tuned) */
   --ink: #eaf0f7;
-  --ink-mute: #a8b5c6;
-  --ink-faint: #7e8da1;
+  --ink-mute: #aebbcc;
+  --ink-faint: #93a0b0;
   --heading-on-paper: #ffffff;
   --match-bg: rgba(232, 113, 10, 0.18);
   --match-ink: #ffd9b0;
 
   /* on-canvas ink */
   --ink-on-dark: #c8d1dd;
-  --ink-on-dark-faint: #6e7c8e;
+  --ink-on-dark-faint: #93a0b0;
 
-  /* lifted brand for punch on dark */
-  --orange: #ff8a2e;
-  --orange-deep: #e8710a;
-  --orange-soft: rgba(232, 113, 10, 0.18);
-  --green: #5bd68a;
-  --green-soft: rgba(39, 174, 96, 0.22);
-  --red: #ff7a7a;
-  --red-soft: rgba(235, 87, 87, 0.22);
+  /* ─── Role colors — one job each (fix-spec-02, P1·01) ───
+     act  = INTERACTIVE: anything you touch (buttons, links, focus,
+            selection).  Solid act surfaces carry --on-act ink.
+     dim  = OUTPUT/DIMENSION: generated numbers only.  Never interactive.
+     warn = WARNING: review flags.  Amber, never hue-alone — always
+            paired with a glyph or label.
+     pass/fail = verdict + error states.
+     none = verification-unavailable: deliberately chromaless — "no
+            signal" is read via copy/hollow dot, not hue. */
+  --act: #34a9e8;
+  --act-bright: #56bcf2;
+  --act-deep: #1f7bb0;
+  --act-glow: rgba(52, 169, 232, 0.32);
+  --on-act: #06222f;
 
-  /* interactive accent */
-  --cyan: #2d9cdb;
-  --cyan-deep: #1f7bb0;
-  --cyan-glow: rgba(45, 156, 219, 0.18);
+  --dim: #ff8a2e;
+  --dim-deep: #e8710a;
+  --dim-soft: rgba(255, 138, 46, 0.16);
+
+  --warn: #f4c020;
+  --warn-deep: #c79300;
+  --warn-soft: rgba(244, 192, 32, 0.15);
+
+  --pass: #4fd787;
+  --pass-soft: rgba(39, 174, 96, 0.2);
+  --fail: #ff7a7a;
+  --fail-soft: rgba(235, 87, 87, 0.2);
+  --none: #93a0b0;
+  --none-soft: rgba(147, 160, 176, 0.14);
+
+  /* confidence speaks its own achromatic language (P1·04) */
+  --conf-fill: #c6d2e0;
+  --conf-empty: #33475e;
+
+  /* legacy aliases — safety net so a missed var() reference can never
+     fall back to the light :root palette.  New code uses role names. */
+  --orange: var(--dim);
+  --orange-deep: var(--dim-deep);
+  --orange-soft: var(--dim-soft);
+  --green: var(--pass);
+  --green-soft: var(--pass-soft);
+  --red: var(--fail);
+  --red-soft: var(--fail-soft);
+  --cyan: var(--act);
+  --cyan-deep: var(--act-deep);
+  --cyan-glow: var(--act-glow);
 
   background: var(--canvas);
   color: var(--ink-on-dark);
@@ -742,7 +778,7 @@ body {
   position: absolute;
   width: 14px;
   height: 14px;
-  border: 1.5px solid var(--orange);
+  border: 1.5px solid var(--dim);
 }
 .workbench-frame .ftick.tl {
   top: -1px;
@@ -799,10 +835,10 @@ body {
   border-color: var(--rule);
 }
 .workbench .chip.on {
-  background: var(--cyan);
-  color: white;
-  border-color: var(--cyan-deep);
-  box-shadow: inset 0 0 0 1px var(--cyan-deep);
+  background: var(--act);
+  color: var(--on-act);
+  border-color: var(--act-deep);
+  box-shadow: inset 0 0 0 1px var(--act-deep);
 }
 
 /* Check rows: cyan on, rule borders */
@@ -822,8 +858,11 @@ body {
   height: 14px;
 }
 .workbench .check-row.on .check-box {
-  background: var(--cyan);
-  border-color: var(--cyan-deep);
+  background: var(--act);
+  border-color: var(--act-deep);
+}
+.workbench .check-row.on .check-box::after {
+  color: var(--on-act);
 }
 .workbench .check-row .check-lbl {
   color: var(--ink-on-dark);
@@ -851,8 +890,9 @@ body {
   color: var(--ink-on-dark-faint);
 }
 .workbench .field-input:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 2px var(--cyan-glow);
+  background-color: var(--raise);
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
 }
 .workbench .field-select {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23C8D1DD' fill='none' stroke-width='1.2'/></svg>");
@@ -870,17 +910,17 @@ body {
 .workbench .range-orange::-webkit-slider-thumb {
   width: 14px;
   height: 14px;
-  background: var(--cyan);
+  background: var(--act);
   border: 2px solid var(--canvas-tint);
-  box-shadow: 0 0 0 1px var(--cyan);
+  box-shadow: 0 0 0 1px var(--act);
   margin-top: -6px;
 }
 .workbench .range-orange::-moz-range-thumb {
   width: 14px;
   height: 14px;
-  background: var(--cyan);
+  background: var(--act);
   border: 2px solid var(--canvas-tint);
-  box-shadow: 0 0 0 1px var(--cyan);
+  box-shadow: 0 0 0 1px var(--act);
 }
 
 /* Status bar */
@@ -900,21 +940,22 @@ body {
   border-left-color: var(--rule);
 }
 .workbench .status-bar.warn {
-  border-left-color: var(--cyan);
+  border-left-color: var(--act);
 }
 .workbench .status-bar.warn .indicator {
-  background: var(--cyan);
+  background: var(--act);
+  animation: sb-pulse 1.2s ease-in-out infinite;
 }
 .workbench .status-bar.pass {
-  border-left-color: var(--green);
+  border-left-color: var(--pass);
 }
 .workbench .status-bar.pass .indicator {
-  background: var(--green);
+  background: var(--pass);
 }
 .workbench .status-bar .pill,
 .workbench .status-bar .pill.pass {
-  background: var(--green-soft);
-  color: var(--green);
+  background: var(--pass-soft);
+  color: var(--pass);
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -922,44 +963,90 @@ body {
   padding: 2px 8px;
   margin-left: auto;
 }
-/* PR 7 (UX-21/22): derived strip states on the dark theme.  Note the
-   base ``warn`` class stays cyan here (in-progress style) — amber
-   belongs to ``caution`` and red to ``fail``. */
+/* PR 7 (UX-21/22) + fix-spec-02 P1·02: derived strip states on the dark
+   theme.  The base ``warn`` class stays the in-progress style (act cyan,
+   pulsing) — amber belongs to ``caution`` and red to ``fail``.  The
+   caution indicator is a hazard hatch, not a flat swatch, so the warning
+   state never reads by hue alone. */
 .workbench .status-bar.caution {
-  border-left-color: var(--orange);
+  border-left-color: var(--warn);
 }
 .workbench .status-bar.caution .indicator {
-  background: var(--orange);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn) 0 3px,
+    #1a1200 3px 6px
+  );
 }
 .workbench .status-bar.fail {
-  border-left-color: var(--red);
+  border-left-color: var(--fail);
 }
 .workbench .status-bar.fail .indicator {
-  background: var(--red);
+  background: var(--fail);
 }
 .workbench .status-bar .pill.caution {
-  background: var(--orange-soft);
-  color: var(--orange);
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 .workbench .status-bar .pill.fail {
-  background: var(--red-soft);
-  color: var(--red);
+  background: var(--fail-soft);
+  color: var(--fail);
+}
+/* fix-spec-02 P1·02 — the two engine-removal states get their own
+   treatments (both previously rendered as bare ``idle``).  Additive
+   modifier classes on top of ``idle``; the pinned class names and copy
+   are untouched.
+   ``verifying``: in-flight check — act-cyan spinner, distinct from a
+   verdict.  ``unavail``: deliberately chromaless (--none) hollow dot —
+   the absence of a verdict is not an error and gets no verdict hue. */
+.workbench .status-bar.verifying {
+  border-left-color: var(--act);
+}
+.workbench .status-bar.verifying .indicator {
+  background: transparent;
+  border: 1.5px solid var(--rule);
+  border-top-color: var(--act);
+  border-radius: 50%;
+  animation: sb-spin 0.7s linear infinite;
+}
+.workbench .status-bar.unavail {
+  border-left-color: var(--none);
+  background: var(--none-soft);
+  color: var(--ink-mute);
+}
+.workbench .status-bar.unavail .indicator {
+  background: var(--none);
+  box-shadow: inset 0 0 0 2px var(--canvas);
+}
+@keyframes sb-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes sb-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .workbench .status-warnings {
   background: rgba(0, 0, 0, 0.25);
   border-color: var(--rule);
 }
 
-/* Output cards: slate paper on dark canvas */
+/* Output cards: dark-native (fix-spec-02 P1·03 — no paper-era tokens
+   on the dark canvas; the spec's .ocard is canvas-tint with rule
+   borders and rule corner ticks) */
 .workbench .output-card {
-  background: var(--paper);
-  border-color: var(--paper-line);
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.4),
-    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+  background: var(--canvas-tint);
+  border-color: var(--rule);
+  box-shadow: none;
 }
 .workbench .output-card .corner {
-  border-color: var(--orange);
+  border-color: var(--rule);
 }
 .workbench .output-card h3 {
   color: var(--heading-on-paper);
@@ -998,7 +1085,7 @@ body {
   color: var(--heading-on-paper);
 }
 .workbench .audit-head .result {
-  color: var(--orange);
+  color: var(--dim);
 }
 .workbench .audit-head .cite {
   color: var(--ink-faint);
@@ -1024,10 +1111,10 @@ body {
   color: var(--heading-on-paper);
 }
 .workbench .audit-body .formula .var {
-  color: var(--orange);
+  color: var(--dim);
 }
 .workbench .audit-body .formula .res {
-  color: var(--green);
+  color: var(--pass);
 }
 .workbench .audit-body .formula .op {
   color: var(--ink-mute);
@@ -1036,8 +1123,8 @@ body {
   color: var(--ink-faint);
 }
 .workbench .audit-body .citation .check {
-  background: var(--green);
-  color: white;
+  background: var(--pass);
+  color: var(--on-act);
 }
 .workbench .audit-body table {
   background: var(--paper);
@@ -1069,16 +1156,16 @@ body {
   color: var(--ink-faint);
 }
 .workbench .check-list-item .ck {
-  background: var(--green-soft);
-  color: var(--green);
+  background: var(--pass-soft);
+  color: var(--pass);
 }
 .workbench .check-list-item .ck.warn {
-  background: var(--orange-soft);
-  color: var(--orange);
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 .workbench .check-list-item .ck.fail {
-  background: var(--red-soft);
-  color: var(--red);
+  background: var(--fail-soft);
+  color: var(--fail);
 }
 
 /* Device breakdown table */
@@ -1100,7 +1187,7 @@ body {
   color: var(--ink-faint);
 }
 .workbench .device-table td.num {
-  color: var(--orange);
+  color: var(--dim);
 }
 
 /* Empty state */
@@ -1117,15 +1204,19 @@ body {
   color: white;
 }
 .workbench .empty-state .arrow {
-  color: var(--cyan);
+  color: var(--act);
 }
 
-/* Generate button: orange + soft glow on dark */
+/* Generate button: the headline P1·01 change — the primary action joins
+   the interactive (act) role instead of borrowing brand orange.  Label
+   ink is --on-act per the spec's CTA pairing. */
 .workbench .generate-btn {
+  background: var(--act);
+  color: var(--on-act);
   box-shadow:
-    0 1px 0 var(--orange-deep),
-    0 0 0 1px var(--orange-deep),
-    0 0 24px -8px rgba(232, 113, 10, 0.6);
+    0 1px 0 var(--act-deep),
+    0 0 0 1px var(--act-deep),
+    0 0 24px -8px var(--act-glow);
 }
 .workbench .generate-btn:disabled {
   background: var(--rule);

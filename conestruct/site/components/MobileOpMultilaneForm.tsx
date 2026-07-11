@@ -126,7 +126,7 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
           onToggle={() => set("secondTMA", !scenario.secondTMA)}
         />
         {scenario.speed >= 55 && !scenario.secondTMA && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5 px-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--warn)] mt-1.5 px-1">
             ⚠ Second TMA strongly recommended at this speed
           </div>
         )}

@@ -47,10 +47,10 @@ export default async function AppPage() {
         <div className="flex items-stretch">
           <Link
             href="/"
-            className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--cyan)] transition-colors"
+            className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--act)] transition-colors"
           >
             <span>
-              conestruct<span className="text-[color:var(--orange)]">.</span>
+              conestruct<span className="text-[color:var(--dim)]">.</span>
             </span>
             <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-[color:var(--ink-on-dark-faint)]">
               v0.4
@@ -75,7 +75,7 @@ export default async function AppPage() {
 
       <div className="px-10 pt-10 pb-6 max-md:px-6 flex items-end justify-between gap-4">
         <div>
-          <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--cyan)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--cyan)] before:inline-block">
+          <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block">
             01 · PLANS
           </div>
           <h1 className="text-[28px] font-bold tracking-tighter text-white m-0 leading-[1.1]">
@@ -84,7 +84,7 @@ export default async function AppPage() {
         </div>
         <Link
           href="/app/plans/new"
-          className="px-4 py-2 border border-[color:var(--cyan)] text-[color:var(--cyan)] font-sans text-[13px] hover:bg-[color:var(--cyan)] hover:text-[color:var(--canvas)] transition-colors whitespace-nowrap"
+          className="px-4 py-2 border border-[color:var(--act)] text-[color:var(--act)] font-sans text-[13px] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors whitespace-nowrap"
         >
           + New plan
         </Link>
@@ -98,7 +98,7 @@ export default async function AppPage() {
             </p>
             <Link
               href="/app/plans/new"
-              className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--cyan)] hover:text-white"
+              className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:text-white"
             >
               Start a new plan →
             </Link>

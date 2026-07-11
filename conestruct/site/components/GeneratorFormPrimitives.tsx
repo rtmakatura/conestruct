@@ -22,7 +22,7 @@ export function FieldGroup({
     <div>
       <div className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         <span>{label}</span>
-        {tag && <span className="text-[color:var(--cyan)]">{tag}</span>}
+        {tag && <span className="text-[color:var(--act)]">{tag}</span>}
       </div>
       <div className="px-6 py-5">{children}</div>
     </div>
@@ -89,7 +89,7 @@ export function FieldErrorLine({ children }: { children: ReactNode }) {
   return (
     <div
       role="alert"
-      className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--red)] mt-1.5"
+      className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--fail)] mt-1.5"
     >
       ⚠ {children}
     </div>
@@ -130,7 +130,7 @@ export function GenerateButton({
       >
         {generating ? (
           <>
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-white/40 border-t-white animate-spin" />
+            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[#06222F]/40 border-t-[#06222F] animate-spin" />
             Generating plan…
           </>
         ) : (
@@ -140,7 +140,7 @@ export function GenerateButton({
       {!generating && disabled && disabledReason && (
         <div
           role="alert"
-          className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--red)] text-center"
+          className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--fail)] text-center"
         >
           {disabledReason}
         </div>
@@ -160,7 +160,7 @@ export function LabelRow({
     <div className="field-label-row">
       <span>{children}</span>
       {value !== undefined && (
-        <span className="field-val text-[color:var(--cyan)]">{value}</span>
+        <span className="field-val text-[color:var(--act)]">{value}</span>
       )}
     </div>
   );

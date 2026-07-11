@@ -100,12 +100,12 @@ export function PlanRow({ id, name, updatedLabel, createdByLabel }: Props) {
               onBlur={commitEdit}
               onKeyDown={onKeyDown}
               disabled={busy}
-              className="w-full bg-[color:var(--canvas)] border border-[color:var(--cyan)] px-2 py-1 text-[14px] text-white outline-none disabled:opacity-50"
+              className="w-full bg-[color:var(--canvas)] border border-[color:var(--act)] px-2 py-1 text-[14px] text-white outline-none disabled:opacity-50"
             />
           ) : (
             <Link
               href={`/app/plans/${id}`}
-              className="text-white hover:text-[color:var(--cyan)] font-medium text-[14px]"
+              className="text-white hover:text-[color:var(--act)] font-medium text-[14px]"
             >
               {name}
             </Link>
@@ -144,7 +144,7 @@ export function PlanRow({ id, name, updatedLabel, createdByLabel }: Props) {
               <button
                 type="button"
                 onClick={() => setConfirmingDelete(true)}
-                className="p-1.5 hover:bg-[color:var(--rule)] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--orange)] transition-colors"
+                className="p-1.5 hover:bg-[color:var(--rule)] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--fail)] transition-colors"
                 aria-label={`Delete ${name}`}
                 title="Delete"
               >
@@ -209,7 +209,7 @@ function DeleteConfirmModal({
         className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] p-6 max-w-md w-full mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-3">
+        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--fail)] mb-3">
           Confirm · Delete
         </div>
         <h2 className="text-white text-[18px] font-semibold mb-2">
@@ -232,7 +232,7 @@ function DeleteConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="px-4 py-2 font-sans text-[13px] bg-[color:var(--orange)] text-[color:var(--canvas)] hover:bg-white disabled:opacity-50"
+            className="px-4 py-2 font-sans text-[13px] bg-[color:var(--fail)] text-[color:var(--canvas)] hover:bg-white disabled:opacity-50"
           >
             {busy ? "Deleting…" : "Delete"}
           </button>

@@ -134,9 +134,12 @@ export function StatusBar({ status, inputError, audit }: Props) {
     );
   }
 
+  // fix-spec-02 P1·02: ``verifying`` / ``unavail`` are additive style
+  // modifiers on the ``idle`` base (spinner vs. chromaless hollow dot);
+  // the derivation order and every string of copy are unchanged.
   if (audit.state === "error") {
     return (
-      <div className="status-bar idle">
+      <div className="status-bar idle unavail">
         <span className="indicator" />
         <span>
           VERIFICATION UNAVAILABLE · retry from the audit trail panel below
@@ -155,7 +158,7 @@ export function StatusBar({ status, inputError, audit }: Props) {
   // that errors flips to "error" → VERIFICATION UNAVAILABLE above.
   if (audit.state !== "ready") {
     return (
-      <div className="status-bar idle">
+      <div className="status-bar idle verifying">
         <span className="indicator" />
         <span>VERIFYING · taper · buffer · spacing · sign placement</span>
       </div>
@@ -176,7 +179,7 @@ export function StatusBar({ status, inputError, audit }: Props) {
   const flags = data.plan_flags;
   if (!flags) {
     return (
-      <div className="status-bar idle">
+      <div className="status-bar idle unavail">
         <span className="indicator" />
         <span>
           VERIFICATION UNAVAILABLE · this response carries no plan verdict —

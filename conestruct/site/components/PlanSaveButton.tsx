@@ -167,7 +167,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
               type="text"
               value={nameDraft}
               onChange={(e) => setNameDraft(e.target.value)}
-              className="w-full bg-[color:var(--canvas)] border border-[color:var(--rule)] px-3 py-2 text-[13px] text-white outline-none focus:border-[color:var(--cyan)]"
+              className="w-full bg-[color:var(--canvas)] border border-[color:var(--rule)] px-3 py-2 text-[13px] text-white outline-none focus:border-[color:var(--act)]"
             />
             {ackRequired && (
               <label className="flex items-start gap-2 mt-3 text-[12px] text-[color:var(--ink-on-dark-faint)] leading-snug cursor-pointer">
@@ -175,7 +175,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
                   type="checkbox"
                   checked={ackChecked}
                   onChange={(e) => setAckChecked(e.target.checked)}
-                  className="mt-0.5 accent-[color:var(--orange)]"
+                  className="mt-0.5 accent-[color:var(--act)]"
                 />
                 <span>
                   I understand outputs are engineering reference, not sealed
@@ -184,7 +184,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
                   <Link
                     href="/terms"
                     target="_blank"
-                    className="text-[color:var(--cyan)] hover:underline"
+                    className="text-[color:var(--act)] hover:underline"
                   >
                     Terms
                   </Link>{" "}
@@ -192,7 +192,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
                   <Link
                     href="/privacy"
                     target="_blank"
-                    className="text-[color:var(--cyan)] hover:underline"
+                    className="text-[color:var(--act)] hover:underline"
                   >
                     Privacy Policy
                   </Link>
@@ -211,7 +211,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="px-3 py-1.5 font-sans text-[12px] bg-[color:var(--cyan)] text-[color:var(--canvas)] disabled:opacity-50 hover:bg-white"
+                className="px-3 py-1.5 font-sans text-[12px] bg-[color:var(--act)] text-[color:var(--on-act)] disabled:opacity-50 hover:bg-white"
               >
                 Save
               </button>

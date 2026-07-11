@@ -144,7 +144,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
           }
         />
         {scenario.speed >= 45 && !scenario.truckMountedAttenuator && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5 px-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--warn)] mt-1.5 px-1">
             ⚠ TMA strongly recommended at this speed (CDOT M-630)
           </div>
         )}

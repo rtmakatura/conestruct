@@ -250,7 +250,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
             type="button"
             onClick={onDownloadAuditPdf}
             disabled={!generated || auditDl === "busy"}
-            className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--cyan)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer"
+            className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer"
           >
             {auditDl === "busy"
               ? "Rendering…"
@@ -259,7 +259,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
                 : "↓ Audit PDF"}
           </button>
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
-            <span className="text-[color:var(--cyan)]">03</span> · SHOW THE WORK
+            <span className="text-[color:var(--act)]">03</span> · SHOW THE WORK
           </span>
         </div>
       </div>
@@ -273,12 +273,12 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
       </div>
 
       {audit.state === "error" && (
-        <div className="flex items-baseline gap-3 mb-5 px-4 py-3 border-l-2 border-[color:var(--orange)] font-mono text-[12px] text-[color:var(--orange)]">
+        <div className="flex items-baseline gap-3 mb-5 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
           <span>Audit trail failed: {audit.message}</span>
           <button
             type="button"
             onClick={onRetry}
-            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--cyan)] hover:underline cursor-pointer"
+            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
           >
             Retry
           </button>
@@ -1109,7 +1109,7 @@ export function referenceItem(
               href={url}
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
             >
               ↗ Open {cdotSheet} PDF on CDOT.gov
             </a>
@@ -1251,7 +1251,7 @@ export function approachesItem(
               Approach &lsquo;{ap.id}&rsquo; — {ap.speed_mph} mph,{" "}
               {ap.road_type}
               {ap.signalized && (
-                <span className="text-[color:var(--orange)]">
+                <span className="text-[color:var(--warn)]">
                   {" "}
                   — SIGNALIZED (signal operation review required)
                 </span>
@@ -1558,7 +1558,7 @@ export function pendingVerificationItem(
                   href={item.tracking_issue}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+                  className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
                 >
                   ↗ Tracking issue ({item.kind.replace(/_/g, " ")})
                 </a>
@@ -1576,7 +1576,7 @@ export function pendingVerificationItem(
               href={pending.tracking_issue}
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--cyan)] hover:underline"
+              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
             >
               ↗ Tracking issue
             </a>

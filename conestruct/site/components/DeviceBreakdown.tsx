@@ -38,13 +38,13 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
 
       {state.state === "error" && (
         <div className="flex items-baseline gap-3 py-6">
-          <div className="font-mono text-[12px] text-[color:var(--orange)]">
+          <div className="font-mono text-[12px] text-[color:var(--fail)]">
             Device breakdown failed: {state.message}
           </div>
           <button
             type="button"
             onClick={onRetry}
-            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--cyan)] hover:underline cursor-pointer"
+            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
           >
             Retry
           </button>

@@ -241,7 +241,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
       <span className="corner tl" />
       <span className="corner br" />
       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
-        <span className="text-[color:var(--orange)]">D</span> · DELIVERABLE 04
+        <span className="text-[color:var(--dim)]">D</span> · DELIVERABLE 04
       </div>
       <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
         Pricing quote
@@ -337,7 +337,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
             type="button"
             onClick={onPreview}
             disabled={busy}
-            className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--paper-line)] text-[color:var(--ink-on-paper)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--paper-line-hover)] transition-colors disabled:opacity-60"
+            className="md:flex-1 font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
             {busy ? "Calculating…" : "Preview breakdown"}
           </button>
@@ -345,7 +345,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
             type="button"
             onClick={onDownload}
             disabled={downloading}
-            className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors disabled:opacity-60"
+            className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
           >
             {downloading ? "Rendering…" : "Download Quote (XLSX)"}
             <span className="font-mono">↓</span>
@@ -355,7 +355,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
         <a
           href={`/api/plans/${mode.planId}/quote`}
           download
-          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
+          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
         >
           Download Quote (XLSX)
           <span className="font-mono">↓</span>
@@ -363,7 +363,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
       ) : (
         <Link
           href={SIGNUP_HREF}
-          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--canvas)] text-white px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--cyan-deep)] transition-colors"
+          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
         >
           Sign up to download Quote
           <span className="font-mono">↓</span>
@@ -371,18 +371,18 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
       )}
 
       {err && (
-        <div className="mt-3 font-mono text-[11px] text-[color:var(--orange)]">
+        <div className="mt-3 font-mono text-[11px] text-[color:var(--fail)]">
           {err}
         </div>
       )}
 
       {breakdown && (
         <div className="mt-7">
-          <div className="flex justify-between items-baseline border-t border-b border-dashed border-[color:var(--paper-line)] py-3 mb-5">
+          <div className="flex justify-between items-baseline border-t border-b border-dashed border-[color:var(--rule-soft)] py-3 mb-5">
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
               Total estimate
             </span>
-            <span className="font-mono text-[28px] text-[color:var(--orange)] font-semibold">
+            <span className="font-mono text-[28px] text-[color:var(--dim)] font-semibold">
               {fmtTotal(breakdown.total)}
             </span>
           </div>
@@ -393,7 +393,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
           >
             <table className="w-full text-[12px]">
               <thead className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
-                <tr className="border-b border-dashed border-[color:var(--paper-line)]">
+                <tr className="border-b border-dashed border-[color:var(--rule-soft)]">
                   <th className="text-left py-1.5">Device</th>
                   <th className="text-left py-1.5">Label</th>
                   <th className="text-right py-1.5">Qty</th>
@@ -406,7 +406,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
                 {breakdown.equipment_lines.map((line) => (
                   <tr
                     key={line.item_number}
-                    className="border-b border-dotted border-[color:var(--paper-line)]"
+                    className="border-b border-dotted border-[color:var(--rule-soft)]"
                   >
                     <td className="py-1.5">{line.device_type}</td>
                     <td className="py-1.5">{line.label || "—"}</td>
@@ -427,7 +427,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
           <BreakdownGroup title="Labor" subtotal={breakdown.labor_total}>
             <table className="w-full text-[12px]">
               <thead className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
-                <tr className="border-b border-dashed border-[color:var(--paper-line)]">
+                <tr className="border-b border-dashed border-[color:var(--rule-soft)]">
                   <th className="text-left py-1.5">Role</th>
                   <th className="text-right py-1.5">Personnel</th>
                   <th className="text-right py-1.5">Hrs/Day</th>
@@ -440,7 +440,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
                 {breakdown.labor_lines.map((line) => (
                   <tr
                     key={line.role}
-                    className="border-b border-dotted border-[color:var(--paper-line)]"
+                    className="border-b border-dotted border-[color:var(--rule-soft)]"
                   >
                     <td className="py-1.5">{line.role}</td>
                     <td className="text-right py-1.5">{line.personnel}</td>
@@ -470,7 +470,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
           >
             <table className="w-full text-[12px]">
               <thead className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
-                <tr className="border-b border-dashed border-[color:var(--paper-line)]">
+                <tr className="border-b border-dashed border-[color:var(--rule-soft)]">
                   <th className="text-left py-1.5">Item</th>
                   <th className="text-right py-1.5">Trips</th>
                   <th className="text-right py-1.5">Distance</th>
@@ -483,7 +483,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
                 {breakdown.delivery_lines.map((line) => (
                   <tr
                     key={line.item}
-                    className="border-b border-dotted border-[color:var(--paper-line)]"
+                    className="border-b border-dotted border-[color:var(--rule-soft)]"
                   >
                     <td className="py-1.5">{line.item}</td>
                     <td className="text-right py-1.5">{line.trips}</td>
@@ -511,13 +511,13 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
           >
             <table className="w-full text-[12px]">
               <tbody>
-                <tr className="border-b border-dotted border-[color:var(--paper-line)]">
+                <tr className="border-b border-dotted border-[color:var(--rule-soft)]">
                   <td className="py-1.5">Subtotal (pre-markup)</td>
                   <td className="text-right py-1.5 font-mono">
                     {fmtCurrency(breakdown.subtotal)}
                   </td>
                 </tr>
-                <tr className="border-b border-dotted border-[color:var(--paper-line)]">
+                <tr className="border-b border-dotted border-[color:var(--rule-soft)]">
                   <td className="py-1.5">
                     Overhead ({(breakdown.overhead_pct * 100).toFixed(0)}%)
                   </td>
@@ -525,7 +525,7 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
                     {fmtCurrency(breakdown.overhead)}
                   </td>
                 </tr>
-                <tr className="border-b border-dotted border-[color:var(--paper-line)]">
+                <tr className="border-b border-dotted border-[color:var(--rule-soft)]">
                   <td className="py-1.5">
                     Profit ({(breakdown.profit_pct * 100).toFixed(0)}%)
                   </td>
@@ -583,13 +583,13 @@ function NumberField({
           const v = Number(e.target.value);
           if (Number.isFinite(v)) onChange(v);
         }}
-        className="bg-transparent border border-[color:var(--paper-line)] text-[13px] font-mono px-2.5 py-2 outline-none focus:border-[color:var(--canvas)]"
+        className="bg-[color:var(--canvas)] border border-[color:var(--rule)] text-[13px] font-mono px-2.5 py-2 outline-none focus:bg-[color:var(--raise)] focus:border-[color:var(--act)] focus:[box-shadow:0_0_0_2px_var(--act-glow)]"
       />
       {caption && (
         <span
           className={`font-mono text-[10px] uppercase tracking-[0.08em] ${
             caption.tone === "accent"
-              ? "text-[color:var(--orange)]"
+              ? "text-[color:var(--dim)]"
               : "text-[color:var(--ink-faint)]"
           }`}
         >
@@ -635,19 +635,19 @@ function BreakdownGroup({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-t border-[color:var(--paper-line)] py-2">
+    <div className="border-t border-[color:var(--rule-soft)] py-2">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="w-full flex justify-between items-baseline py-1.5 cursor-pointer hover:opacity-80"
       >
-        <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-paper)]">
-          <span className="text-[color:var(--orange)] mr-2">
+        <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink)]">
+          <span className="text-[color:var(--act)] mr-2">
             {open ? "−" : "+"}
           </span>
           {title}
         </span>
-        <span className="font-mono text-[14px] text-[color:var(--ink-on-paper)] font-semibold">
+        <span className="font-mono text-[14px] text-[color:var(--ink)] font-semibold">
           {fmtCurrency(subtotal)}
         </span>
       </button>

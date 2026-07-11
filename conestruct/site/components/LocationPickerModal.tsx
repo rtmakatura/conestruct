@@ -175,15 +175,41 @@ function fmtFt(n: number): string {
 // of truth lives in lib/road-detection/labels.ts.
 const bearingToDirectionLabel = bearingToDirectionLabelImpl;
 
-function confDotClass(c: Confidence): string {
+// fix-spec-02 P1·04 — confidence speaks its own achromatic language:
+// filled pips (3/2/1 of 3) plus the word in the caption beneath the row
+// ("<source> · <level> confidence").  The old single dot borrowed the
+// interactive cyan, the output orange, and a hardcoded red — three role
+// collisions, and a hue-alone signal.
+function confPipCount(c: Confidence): number {
   switch (c) {
     case "high":
-      return "bg-[color:var(--cyan)]";
+      return 3;
     case "medium":
-      return "bg-[color:var(--orange)]";
+      return 2;
     case "low":
-      return "bg-[#d94f4f]";
+      return 1;
   }
+}
+
+function ConfPips({ c }: { c: Confidence }) {
+  const filled = confPipCount(c);
+  return (
+    <span
+      className="inline-flex items-center gap-[3px]"
+      title={`${c} confidence`}
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className={`inline-block w-1.5 h-1.5 rounded-full ${
+            i < filled
+              ? "bg-[color:var(--conf-fill)]"
+              : "bg-[color:var(--conf-empty)]"
+          }`}
+        />
+      ))}
+    </span>
+  );
 }
 
 // Build the marker DOM: a circle "pin" with an arrow extending from its
@@ -1348,7 +1374,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
           <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-1">
+            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1">
               Work zone · Define
             </div>
             <h2 className="text-white text-[17px] font-semibold m-0">
@@ -1391,13 +1417,13 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           <button
             type="submit"
             disabled={searchStatus.state === "resolving" || !searchQuery.trim()}
-            className="border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--cyan)] hover:text-white transition-colors disabled:opacity-40"
+            className="border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"
           >
             {searchStatus.state === "resolving" ? "Searching…" : "Search"}
           </button>
         </form>
         {searchStatus.state === "error" && (
-          <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[#EB5757] flex-shrink-0">
+          <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
             {searchStatus.message}
           </div>
         )}
@@ -1410,7 +1436,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           <button
             type="button"
             onClick={() => setShowManualCoords((s) => !s)}
-            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
+            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
           >
             {showManualCoords
               ? "− Hide coordinate entry"
@@ -1434,7 +1460,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 className="field-input w-full"
               />
               {latError && (
-                <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
+                <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
                   {latError}
                 </div>
               )}
@@ -1449,7 +1475,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 className="field-input w-full"
               />
               {lngError && (
-                <div className="mt-1 font-mono text-[10px] text-[#EB5757]">
+                <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
                   {lngError}
                 </div>
               )}
@@ -1492,7 +1518,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                     onClick={() => recenterToCorridor(corridor.bbox)}
                     title="Recenter on corridor"
                     aria-label="Recenter on corridor"
-                    className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--cyan)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
+                    className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--act)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
                   >
                     <svg
                       width="14"
@@ -1554,7 +1580,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
               style={{ minHeight: 240, height: "30vh" }}
             >
               <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
-                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--orange)] mb-2">
+                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
                   Map unavailable
                 </div>
                 NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
@@ -1566,7 +1592,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           {/* Bearing detection warning lives just below the map so it's
               visible the moment classification surfaces a problem. */}
           {bearingWarning && (
-            <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] flex-shrink-0">
+            <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
               {bearingWarning}
             </div>
           )}
@@ -1631,7 +1657,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             type="button"
             onClick={onClickSave}
             disabled={!canSave}
-            className="px-5 py-2 font-sans text-[13px] bg-[color:var(--orange)] text-[color:var(--canvas)] hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-5 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Save &amp; Close
           </button>
@@ -1679,7 +1705,7 @@ function CrossStreetPanel({
           disabled={!hasPin}
           className={`px-3 py-1.5 font-sans text-[12px] border disabled:opacity-40 disabled:cursor-not-allowed ${
             intersectionMode
-              ? "border-[color:var(--cyan)] text-[color:var(--cyan)]"
+              ? "border-[color:var(--act)] text-[color:var(--act)]"
               : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:text-white"
           }`}
         >
@@ -1711,13 +1737,13 @@ function CrossStreetPanel({
         </p>
       )}
       {crossStatus === "none" && (
-        <p className="text-[11px] text-[color:var(--orange)] mt-2 m-0">
+        <p className="text-[11px] text-[color:var(--warn)] mt-2 m-0">
           No cross street found at that point. You can still describe the
           approaches by hand in the form.
         </p>
       )}
       {crossStatus === "error" && (
-        <p className="text-[11px] text-[color:var(--orange)] mt-2 m-0">
+        <p className="text-[11px] text-[color:var(--fail)] mt-2 m-0">
           Couldn&apos;t reach the road-detection service. Describe the
           approaches by hand in the form.
         </p>
@@ -1789,18 +1815,18 @@ function RoadPropertiesPanel({
         )}
         {classify.state === "resolving" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3 flex items-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--cyan)]/40 border-t-[color:var(--cyan)] animate-spin" />
+            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--act)]/40 border-t-[color:var(--act)] animate-spin" />
             Classifying road…
           </div>
         )}
         {classify.state === "awaiting_pick" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-3">
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] py-3">
             Multiple roads detected — pick a direction above to load road
             properties.
           </div>
         )}
         {classify.state === "error" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-3">
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] py-3">
             {classify.message}. Fields default to the scenario&apos;s existing
             values — verify manually below.
           </div>
@@ -1903,7 +1929,7 @@ function DetectedRows({
 
       {showAcceptSpeed && (
         <div className="flex items-center justify-between gap-3 py-2 -mt-1 border-b border-[color:var(--rule)]/40">
-          <span className="font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--orange)]">
+          <span className="font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">
             Low-confidence fallback — won&apos;t apply unless you accept it.
           </span>
           <button
@@ -1914,7 +1940,7 @@ function DetectedRows({
                 speedMph: speedDetected ?? undefined,
               })
             }
-            className="flex-shrink-0 border border-[color:var(--orange)] bg-transparent text-[color:var(--orange)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--orange)] hover:text-[color:var(--canvas)] transition-colors"
+            className="flex-shrink-0 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors"
           >
             Use {speedDetected} mph
           </button>
@@ -2025,7 +2051,7 @@ function RoadFieldRow<T>({
 }) {
   const confTone =
     field.confidence === "low"
-      ? "text-[color:var(--orange)]"
+      ? "text-[color:var(--warn)]"
       : "text-[color:var(--ink-on-dark-faint)]";
   return (
     <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 last:border-b-0 min-h-[52px]">
@@ -2034,12 +2060,9 @@ function RoadFieldRow<T>({
           <span className="text-[13px] text-white font-medium leading-none">
             {label}
           </span>
-          <span
-            className={`inline-block w-1.5 h-1.5 rounded-full ${confDotClass(field.confidence)}`}
-            title={`${field.confidence} confidence`}
-          />
+          <ConfPips c={field.confidence} />
           {modified && (
-            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--orange)] leading-none">
+            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-mute)] border border-dashed border-[color:var(--ink-faint)] px-1 leading-none py-px">
               modified
             </span>
           )}
@@ -2051,7 +2074,7 @@ function RoadFieldRow<T>({
           {field.source} · {field.confidence} confidence
         </div>
         {note && (
-          <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--orange)]">
+          <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">
             {note}
           </div>
         )}
@@ -2168,7 +2191,7 @@ function DividedEditor({
           onClick={() => onChange(true)}
           className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 ${
             value
-              ? "bg-[color:var(--cyan)] text-[color:var(--canvas)]"
+              ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
               : "text-[color:var(--ink-on-dark)] hover:text-white"
           }`}
         >
@@ -2179,7 +2202,7 @@ function DividedEditor({
           onClick={() => onChange(false)}
           className={`flex-1 font-mono text-[10px] uppercase tracking-[0.06em] py-1.5 border-l border-[color:var(--rule)] ${
             !value
-              ? "bg-[color:var(--cyan)] text-[color:var(--canvas)]"
+              ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
               : "text-[color:var(--ink-on-dark)] hover:text-white"
           }`}
         >
@@ -2251,7 +2274,7 @@ function WorkZonePanel({
             </div>
             <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] leading-tight">
               {workZoneError ? (
-                <span className="text-[#EB5757]">{workZoneError}</span>
+                <span className="text-[color:var(--fail)]">{workZoneError}</span>
               ) : (
                 <>Whole feet, &lt; 50,000</>
               )}
@@ -2282,9 +2305,9 @@ function WorkZonePanel({
               title="Compass bearing in degrees clockwise from north."
             >
               {bearingError ? (
-                <span className="text-[#EB5757]">{bearingError}</span>
+                <span className="text-[color:var(--fail)]">{bearingError}</span>
               ) : ambiguous && selectedCandidate === null ? (
-                <span className="text-[color:var(--orange)]">
+                <span className="text-[color:var(--warn)]">
                   Multiple roads detected — pick a direction below
                 </span>
               ) : selectedCandidate ? (
@@ -2317,7 +2340,7 @@ function WorkZonePanel({
             onClick={onUseDetectedBearing}
             disabled={useDetectedDisabled}
             title={useDetectedTitle}
-            className="flex-1 border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:bg-[color:var(--cyan)] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {ambiguous ? "Pick Road" : "Use Detected"}
           </button>
@@ -2398,8 +2421,8 @@ function CandidatePicker({
               onClick={() => onPick(idx)}
               className={`text-left px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
                 selected
-                  ? "border-[color:var(--cyan)] bg-[color:var(--cyan)]/15 text-white"
-                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--cyan)] hover:text-white"
+                  ? "border-[color:var(--act)] bg-[color:var(--act)]/15 text-white"
+                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--act)] hover:text-white"
               }`}
               title={`${c.snap_distance_m.toFixed(0)} m from pin · way ${c.way_id}`}
             >
@@ -2450,7 +2473,7 @@ function CorridorPreviewPanel({
           </div>
         )}
         {hasPin && !corridor && specStatus === "error" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] py-1">
             Corridor preview unavailable — couldn&apos;t reach the spacing
             service. You can still save; the plan is validated when
             generated.
@@ -2470,7 +2493,7 @@ function CorridorPreviewPanel({
               </div>
             )}
             {specStatus === "error" && (
-              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] pt-2">
+              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--none)] pt-2">
                 Preview may be stale — spacing service unreachable.
               </div>
             )}

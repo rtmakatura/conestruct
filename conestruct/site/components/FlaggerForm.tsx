@@ -124,7 +124,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
           )}
           {scenario.workLen > 1500 && !scenario.pilotCar && (
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--orange)] mt-1.5">
+            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--warn)] mt-1.5">
               ⚠ &gt;1500 ft — MUTCD § 6E recommends pilot car
             </div>
           )}

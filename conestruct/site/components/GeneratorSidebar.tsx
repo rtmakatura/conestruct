@@ -264,7 +264,7 @@ export function GeneratorSidebar({
           <h2 className="text-[15px] font-semibold text-white m-0 tracking-[-0.005em]">
             Plan
           </h2>
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--cyan)]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--act)]">
             INPUT
           </span>
         </div>
@@ -457,10 +457,10 @@ function ProjectDetailsDisclosure({
       <button
         type="button"
         onClick={() => setOpen((s) => !s)}
-        className="w-full flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
+        className="w-full flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
       >
         <span>{open ? "Hide project details" : "Project details"}</span>
-        <span className="text-[color:var(--cyan)]">OPTIONAL</span>
+        <span className="text-[color:var(--act)]">OPTIONAL</span>
       </button>
       {open && (
         <div className="mt-3">
@@ -541,7 +541,7 @@ function UnsetLocation({
       <button
         type="button"
         onClick={onOpenPicker}
-        className="w-full border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[11px] uppercase tracking-[0.1em] py-3 hover:bg-[color:var(--cyan)] hover:text-white transition-colors flex items-center justify-center gap-2"
+        className="w-full border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] py-3 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors flex items-center justify-center gap-2"
       >
         <svg width="13" height="15" viewBox="0 0 12 14" fill="none">
           <path
@@ -561,7 +561,7 @@ function UnsetLocation({
         <button
           type="button"
           onClick={() => setShowManual((s) => !s)}
-          className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
+          className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
         >
           {showManual ? "Hide manual entry" : "Enter manually"}
         </button>
@@ -705,7 +705,7 @@ function LocationSummary({
       <button
         type="button"
         onClick={onOpenPicker}
-        className="w-full border border-[color:var(--cyan)] bg-transparent text-[color:var(--cyan)] font-mono text-[11px] uppercase tracking-[0.1em] py-2.5 hover:bg-[color:var(--cyan)] hover:text-white transition-colors mt-1"
+        className="w-full border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] py-2.5 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors mt-1"
       >
         Edit Location &amp; Corridor →
       </button>
@@ -714,7 +714,7 @@ function LocationSummary({
         <button
           type="button"
           onClick={() => setShowManual((s) => !s)}
-          className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--cyan)]"
+          className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
         >
           {showManual ? "Hide manual entry" : "Edit manually"}
         </button>
@@ -765,7 +765,7 @@ function HandoffNote({
 }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="text-[color:var(--orange)] font-mono text-[11px] leading-none flex-shrink-0">
+      <span className="text-[color:var(--warn)] font-mono text-[11px] leading-none flex-shrink-0">
         !
       </span>
       <span className="text-[11px] text-[color:var(--ink-on-dark)] leading-snug">
@@ -948,10 +948,10 @@ function ScenarioPicker({
       <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
         <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
           <span>Scenario</span>
-          <span className="text-[color:var(--cyan)]">STEP 2</span>
+          <span className="text-[color:var(--act)]">STEP 2</span>
         </div>
         <div className="px-6 pb-5 pt-2">
-          <div className="px-3 py-2.5 border border-[color:var(--cyan)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
+          <div className="px-3 py-2.5 border border-[color:var(--act)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
             <span className="text-[13px] font-medium text-white">
               {only.l}
             </span>
@@ -971,7 +971,7 @@ function ScenarioPicker({
     <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
       <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         <span>Scenario</span>
-        <span className="text-[color:var(--cyan)]">STEP 2</span>
+        <span className="text-[color:var(--act)]">STEP 2</span>
       </div>
       <div className="px-6 pb-5 pt-2 flex flex-col gap-2">
         {enabledKinds.map((k) => {
@@ -984,7 +984,7 @@ function ScenarioPicker({
               className={[
                 "flex items-baseline justify-between text-left px-3 py-2.5 border transition-colors",
                 active
-                  ? "border-[color:var(--cyan)] bg-[color:var(--canvas-tint)]"
+                  ? "border-[color:var(--act)] bg-[color:var(--canvas-tint)]"
                   : "border-[color:var(--rule)] hover:border-[color:var(--ink-on-dark-faint)]",
               ].join(" ")}
             >
@@ -1015,8 +1015,8 @@ function DisabledScenarioBanner({ kind }: { kind: ScenarioKind }) {
     SCENARIO_KINDS.find((k) => k.v === ENABLED_SCENARIO_KINDS[0])?.l ??
     "shoulder closure";
   return (
-    <div className="px-6 py-3 border-t border-b border-[color:var(--orange)] bg-[color:var(--canvas)]">
-      <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--orange)] mb-1">
+    <div className="px-6 py-3 border-t border-b border-[color:var(--warn)] bg-[color:var(--canvas)]">
+      <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--warn)] mb-1">
         Scenario disabled
       </div>
       <div className="text-[12px] text-[color:var(--ink-on-dark)] leading-snug">

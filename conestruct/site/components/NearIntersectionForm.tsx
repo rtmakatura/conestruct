@@ -340,9 +340,9 @@ export function NearIntersectionForm({
         {approachConfirm.pending && (
           <div
             role="alert"
-            className="mt-1 border border-[color:var(--orange)] px-3 py-2"
+            className="mt-1 border border-[color:var(--warn)] px-3 py-2"
           >
-            <p className="text-[11px] text-[color:var(--orange)] m-0">
+            <p className="text-[11px] text-[color:var(--warn)] m-0">
               {approachConfirm.reason ??
                 "The cross-street lane count was filled from map data. Map " +
                   "lane counts near intersections often include turn " +
@@ -351,7 +351,7 @@ export function NearIntersectionForm({
             <button
               type="button"
               onClick={clearApproachConfirm}
-              className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--orange)] text-[color:var(--orange)] hover:bg-[color:var(--orange)] hover:text-[color:var(--canvas)]"
+              className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
               Lane count is right
             </button>
