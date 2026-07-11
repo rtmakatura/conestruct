@@ -5,7 +5,9 @@ import type { ReactElement } from "react";
 import {
   buildFlaggerItems,
   buildShoulderItems,
+  coloradoItem,
   finesDoubleItem,
+  flaggerSightDistanceItem,
   geometryValidationItem,
   pendingVerificationItem,
   referenceItem,
@@ -709,13 +711,26 @@ describe("buildShoulderItems wiring (V1-Wide S1 follow-up)", () => {
 // covers the driveways site-adjustment rule (§6C.09 → §6K.01).
 //
 // NOTE on coverage bounds (honest reporting): the guard asserts the
-// SPECIFIC strings below, not a blanket "6C". Out of this PR's scope and
-// deliberately NOT asserted: the flagger sight-distance cite "MUTCD §
-// 6E.06" (Ch. 6E → 6D renumber — adjacent debt). The Site-adjustments
-// aggregate header (previously the stale "MUTCD § 6C / § 6D") and the
-// per-flag backend-fed citations are covered by the #104 suite below.
+// SPECIFIC strings below, not a blanket "6C". The flagger sight-distance
+// cite "§ 6E.06" / "Table 6E-1" — previously parked here as adjacent
+// debt — was fabricated (wrong-subject / nonexistent in the 11th ed)
+// and is retired by engine-removal PR C; both strings now sit in STALE,
+// and the dedicated PR C suite below covers the backend-fed replacement.
+// The Site-adjustments aggregate header (previously the stale "MUTCD §
+// 6C / § 6D") and the per-flag backend-fed citations are covered by the
+// #104 suite below.
 describe("#97 audit-panel citation edition guard", () => {
-  const STALE = ["§ 6C.06", "§ 6C.08", "§ 6C.09", "6C-3", "CHAPTER 6C"];
+  const STALE = [
+    "§ 6C.06",
+    "§ 6C.08",
+    "§ 6C.09",
+    "6C-3",
+    "CHAPTER 6C",
+    // PR C — the retired flagger SSD citation (fabricated: § 6E.06 is
+    // Stop-or-Yield; Table 6E-1 does not exist in the 11th edition).
+    "§ 6E.06",
+    "6E-1",
+  ];
   const FRESH = ["6B.06", "6K.01", "6B.08", "6B-3"];
 
   function itemsHtml(items: ItemSpec[]): string {
@@ -1177,5 +1192,148 @@ describe("geometry validation verdict is the backend's all_pass (PR A sentinel)"
     expect(geometryValidationItem({ violations: [], all_pass: true })).toBe(
       null,
     );
+  });
+});
+
+// Engine-removal PR C — the flagger sight-distance row is backend-fed
+// (sections.flagger.sight_distance_ft + sight_distance_citation, PR B)
+// and the Colorado fail count is read, not re-derived.  Sentinel
+// technique per the #104 suite: a value no lookup table could produce
+// proves the renderer READS the field rather than computing it — the
+// exact assertion the deleted BUFFER_TABLE could never have passed.
+describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count", () => {
+  const FLAGGER: FlaggerLaneClosureScenario = {
+    kind: "flagger_lane_closure",
+    meta: { project: "T", address: "", lat: 0, lng: 0 },
+    roadType: "rural_undivided",
+    speed: 45,
+    laneWidth: 12,
+    workType: "utility_cut",
+    duration: "short",
+    workLen: 500,
+    night: false,
+    pilotCar: false,
+    afad: false,
+    pedestrianAccess: false,
+  };
+
+  const BACKEND_CITATION = {
+    cite: "MUTCD § 6D.06",
+    footer: "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+  };
+
+  function auditWith(sections: Partial<AuditResponse["sections"]>): AuditResponse {
+    return {
+      summary: {
+        ta: "TA-10",
+        cdot_sheet: "S-630-1",
+        case_id: "Case 17",
+        taper_length_ft: 100,
+        taper_label: "one-lane two-way taper",
+        buffer_space_ft: 360,
+        device_spacing_taper_ft: 20,
+        device_spacing_tangent_ft: 90,
+        step_count: 16,
+      },
+      sections: {
+        taper: {},
+        buffer: {},
+        spacing: {},
+        advance: {},
+        colorado: {},
+        case: {},
+        flagger: {},
+        corridor_validation: { checked: false, warnings: [] },
+        geometry_validation: { violations: [], all_pass: true },
+        ...sections,
+      },
+      pending_verification: { count: 0, note: "", tracking_issue: null },
+    };
+  }
+
+  const r = (n: number | string) => String(n);
+
+  it("sentinel: renders the backend's 777 ft, proving read-not-computed", () => {
+    // Table 6B-2 at 45 mph is 360 ft — a computed row could never show
+    // 777.  The deleted BUFFER_TABLE would have rendered 360 here.
+    const data = auditWith({
+      flagger: {
+        sight_distance_ft: 777,
+        sight_distance_citation: BACKEND_CITATION,
+      },
+    });
+    const item = flaggerSightDistanceItem(data, FLAGGER, true, r);
+    expect(item?.result).toBe("777 ft");
+    expect(item?.cite).toBe("MUTCD § 6D.06");
+    const html = renderToStaticMarkup(item!.body as ReactElement);
+    expect(html).toContain("777");
+    expect(html).toContain("TABLE 6B-2 · STOPPING SIGHT DISTANCE");
+    expect(html).not.toContain("6E.06");
+    expect(html).not.toContain("6E-1");
+  });
+
+  it("absent field → the row is OMITTED from the flagger items, never computed", () => {
+    const data = auditWith({ flagger: { applicable: true, count: 2 } });
+    expect(flaggerSightDistanceItem(data, FLAGGER, true, r)).toBeNull();
+    const items = buildFlaggerItems(
+      FLAGGER,
+      { state: "ready", data },
+      true,
+      r,
+    );
+    expect(items.map((it) => it.title)).not.toContain(
+      "Flagger station sight distance",
+    );
+  });
+
+  it("no audit data at all → no SSD row (lastReady null)", () => {
+    expect(flaggerSightDistanceItem(null, FLAGGER, true, r)).toBeNull();
+  });
+
+  it("value present, citation absent (half-shipped shape) → corrected § 6D.06 fallback", () => {
+    const data = auditWith({ flagger: { sight_distance_ft: 360 } });
+    const item = flaggerSightDistanceItem(data, FLAGGER, true, r);
+    expect(item?.cite).toBe("MUTCD § 6D.06");
+    const html = renderToStaticMarkup(item!.body as ReactElement);
+    expect(html).not.toContain("6E.06");
+  });
+
+  function coloradoState(colorado: Record<string, unknown>): AuditState {
+    return { state: "ready", data: auditWith({ colorado }) };
+  }
+
+  const CHECKS = [
+    { label: "a", detail: "", citation: "", pass: true },
+    { label: "b", detail: "", citation: "", pass: false },
+    { label: "c", detail: "", citation: "", pass: true },
+    { label: "d", detail: "", citation: "", pass: false },
+  ];
+
+  it("fail count reads the backend field: sentinel 3 (not the derivable 2)", () => {
+    // The checks array has 2 failing entries; a re-derivation would say
+    // "2 of 4".  The backend field says 3 — the render must follow the
+    // FIELD.  (In production they agree by construction; the sentinel
+    // divergence proves which source the panel reads.)
+    const item = coloradoItem(
+      coloradoState({ checks: CHECKS, all_pass: false, fail_count: 3 }),
+      "S-630-1",
+    );
+    expect(item.result).toBe("3 of 4 FAIL");
+  });
+
+  it("fail_count absent + failing → CHECKS FAILED, no invented count", () => {
+    const item = coloradoItem(
+      coloradoState({ checks: CHECKS, all_pass: false }),
+      "S-630-1",
+    );
+    expect(item.result).toBe("CHECKS FAILED");
+  });
+
+  it("all_pass true → ALL CHECKS PASS (unchanged)", () => {
+    const item = coloradoItem(
+      coloradoState({ checks: CHECKS, all_pass: true, fail_count: 0 }),
+      "S-630-1",
+    );
+    expect(item.result).toBe("ALL CHECKS PASS");
   });
 });

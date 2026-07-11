@@ -185,10 +185,11 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   // Main per-scenario body items: every section reads from backend audit
   // data via the shared item helpers (``taperItem``, ``bufferItem``,
   // ``spacingItem``, ``advanceItem``, ``coloradoItem``, ``referenceItem``).
-  // Per-scenario builders thread ``audit`` through.  The only remaining
-  // TS-side heuristic is ``bufferFor`` for the flagger SSD block — LIVE
-  // in production (flagger_lane_closure is enabled); its backend-field
-  // migration is PR B/C of the frontend-engine-removal arc.
+  // Per-scenario builders thread ``audit`` through.  As of engine-removal
+  // PR C this component computes NO MUTCD values: the last TS-side
+  // heuristic (the flagger SSD ``bufferFor`` table) is deleted and the
+  // row reads ``sections.flagger.sight_distance_ft`` — absent field →
+  // absent row, never a computed fallback.
   const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
@@ -373,6 +374,82 @@ export function buildShoulderItems(
   ];
 }
 
+// Engine-removal PR C — the flagger sight-distance row is backend-fed:
+// ``sections.flagger.sight_distance_ft`` + ``sight_distance_citation``
+// (§ 6D.06 → Table 6B-2, verified by subject against the FHWA PDF in
+// PR B).  When the field is absent (deploy/rollback window) the row is
+// OMITTED, never computed — the retired frontend BUFFER_TABLE served
+// this number under a fabricated "§ 6E.06 / Table 6E-1" citation, and
+// a silently-computed fallback would recreate exactly that violation
+// (unlike the #104 string fallbacks, which are byte-identical text).
+const SSD_CITATION_FALLBACK = {
+  cite: "MUTCD § 6D.06",
+  footer: "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+} as const;
+
+export function flaggerSightDistanceItem(
+  data: AuditResponse | null,
+  scenario: FlaggerLaneClosureScenario,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec | null {
+  const flagger = data?.sections.flagger as Record<string, unknown> | undefined;
+  const ssd = flagger?.sight_distance_ft;
+  if (typeof ssd !== "number") return null;
+  const citation = sectionCitation(
+    { citation: flagger?.sight_distance_citation },
+    SSD_CITATION_FALLBACK,
+  );
+  const flaggerStations = scenario.afad ? 0 : 2;
+  const afadDevices = scenario.afad ? 2 : 0;
+  const pilotCarVehicles = scenario.pilotCar ? 1 : 0;
+  const flaggerSummary = generated
+    ? scenario.afad
+      ? `${afadDevices} AFAD`
+      : `${flaggerStations} flagger`
+    : "—";
+  return {
+    title: "Flagger station sight distance",
+    result: generated ? `${ssd} ft` : "—",
+    cite: citation.cite,
+    body: (
+      <>
+        <p>
+          Each flagger station must be located so approaching drivers have
+          at least the stopping sight distance for the posted speed (MUTCD
+          § 6D.06, which points to Table 6B-2), so they can stop on the
+          open lane.
+        </p>
+        <div className="formula">
+          <span>SSD</span>
+          <span className="op">@</span>
+          <span className="var">{scenario.speed}</span>
+          <span className="op">mph</span>
+          <span className="op">=</span>
+          <span className="res">{r(ssd)} ft</span>
+        </div>
+        <p>
+          Stations:{" "}
+          <strong>
+            {flaggerSummary}
+            {scenario.afad ? "" : " station(s)"}
+          </strong>
+          {pilotCarVehicles > 0 && (
+            <>
+              {" "}
+              · Pilot car: <strong>1 vehicle</strong>
+            </>
+          )}
+        </p>
+        <div className="citation">
+          <span className="check">✓</span>
+          {citation.footer}
+        </div>
+      </>
+    ),
+  };
+}
+
 export function buildFlaggerItems(
   scenario: FlaggerLaneClosureScenario,
   audit: AuditState,
@@ -384,59 +461,13 @@ export function buildFlaggerItems(
   // placeholder, which never corresponded to a real S-630-1 case.
   const flaggerData = audit.state === "ready" ? audit.data : audit.lastReady;
   const flaggerCaseId = flaggerData?.summary.case_id ?? "—";
-  const sightDistance = bufferFor(scenario.speed);
-  const flaggerStations = scenario.afad ? 0 : 2;
-  const afadDevices = scenario.afad ? 2 : 0;
-  const pilotCarVehicles = scenario.pilotCar ? 1 : 0;
-  const flaggerSummary = generated
-    ? scenario.afad
-      ? `${afadDevices} AFAD`
-      : `${flaggerStations} flagger`
-    : "—";
+  const ssdItem = flaggerSightDistanceItem(flaggerData, scenario, generated, r);
 
   return [
     taperItem(audit, generated, r),
     bufferItem(audit, generated, r),
     spacingItem(audit, generated, r),
-    {
-      title: "Flagger station sight distance",
-      result: generated ? `${sightDistance} ft` : "—",
-      cite: "MUTCD § 6E.06",
-      body: (
-        <>
-          <p>
-            Each flagger station must have a clear sight distance of at least
-            the stopping sight distance for the posted speed (MUTCD Table
-            6E-1), so approaching drivers can stop on the open lane.
-          </p>
-          <div className="formula">
-            <span>SSD</span>
-            <span className="op">@</span>
-            <span className="var">{scenario.speed}</span>
-            <span className="op">mph</span>
-            <span className="op">=</span>
-            <span className="res">{r(sightDistance)} ft</span>
-          </div>
-          <p>
-            Stations:{" "}
-            <strong>
-              {flaggerSummary}
-              {scenario.afad ? "" : " station(s)"}
-            </strong>
-            {pilotCarVehicles > 0 && (
-              <>
-                {" "}
-                · Pilot car: <strong>1 vehicle</strong>
-              </>
-            )}
-          </p>
-          <div className="citation">
-            <span className="check">✓</span>
-            MUTCD TABLE 6E-1 · STOPPING SIGHT DISTANCE
-          </div>
-        </>
-      ),
-    },
+    ...(ssdItem ? [ssdItem] : []),
     advanceItem(audit, generated, r),
     coloradoItem(audit, "S-630-1"),
     // Same summary.ta read as the shoulder card (backend sends TA-10).
@@ -963,7 +994,9 @@ interface ColoradoInfoItem {
   detail: string;
 }
 
-function coloradoItem(
+// Exported for the PR C fail_count sentinel tests (file pattern: every
+// tested item helper is exported).
+export function coloradoItem(
   audit: AuditState,
   cdotSheet: string,
 ): ItemSpec {
@@ -984,10 +1017,19 @@ function coloradoItem(
   const checks = (colorado.checks as ColoradoCheck[]) ?? [];
   const infoItems = (colorado.info_items as ColoradoInfoItem[]) ?? [];
   const allPass = colorado.all_pass as boolean;
-  const fails = checks.filter((c) => !c.pass).length;
+  // Engine-removal PR C: the fail count is the backend's
+  // ``fail_count`` (PR B), not a frontend re-derivation.  Field absent
+  // (deploy/rollback window): a failing state still names the failure
+  // without inventing a count.
+  const failCount =
+    typeof colorado.fail_count === "number" ? colorado.fail_count : null;
   return {
     title: "Colorado supplement requirements",
-    result: allPass ? "ALL CHECKS PASS" : `${fails} of ${checks.length} FAIL`,
+    result: allPass
+      ? "ALL CHECKS PASS"
+      : failCount !== null
+        ? `${failCount} of ${checks.length} FAIL`
+        : "CHECKS FAILED",
     cite: `CDOT ${cdotSheet}`,
     body: (
       <>
@@ -1543,43 +1585,6 @@ export function pendingVerificationItem(
       </>
     ),
   };
-}
-
-// ---------------------------------------------------------------------------
-// Display heuristic — flagger SSD only.  ⚠ LIVE IN PRODUCTION.
-//
-// All shoulder/lane-closure render paths are fully backend-sourced.
-// ``bufferFor`` survives solely for the flagger station sight-distance
-// lookup in ``buildFlaggerItems``.  A prior version of this comment
-// claimed flagger was gated off — it is NOT: flagger_lane_closure is in
-// ENABLED_SCENARIO_KINDS (lib/scenarios/index.ts) and this table renders
-// on production flagger plans.  The values match MUTCD 11th-ed Table
-// 6B-2 exactly, but the item's citation ("§ 6E.06" / "Table 6E-1") is
-// wrong-subject in the 11th edition — governing text is § 6D.06, which
-// points to Table 6B-2.  Migration to a backend-provided value +
-// corrected citation is PR B/C of the frontend-engine-removal arc;
-// tracked as its own correctness issue.
-// ---------------------------------------------------------------------------
-
-const BUFFER_TABLE: Record<number, number> = {
-  20: 115,
-  25: 155,
-  30: 200,
-  35: 250,
-  40: 305,
-  45: 360,
-  50: 425,
-  55: 495,
-  60: 570,
-  65: 645,
-  70: 730,
-  75: 820,
-};
-
-function bufferFor(speed: number): number {
-  // Round to nearest 5 mph; fall back to closest in-range if off-table.
-  const rounded = Math.round(speed / 5) * 5;
-  return BUFFER_TABLE[rounded] ?? 495;
 }
 
 // ---------------------------------------------------------------------------
