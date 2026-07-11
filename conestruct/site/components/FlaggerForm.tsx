@@ -32,8 +32,11 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
     value: FlaggerLaneClosureScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
 
-  // UX-21: inline min-validation on the work-zone field (blur-gated
-  // error text; live button gating lives in GeneratorSidebar).
+  // UX-21: inline schema-bound validation on the work-zone field
+  // (required / 20,000-ft ceiling; blur-gated error text — live button
+  // gating lives in GeneratorSidebar).  The MUTCD taper floor is
+  // backend-owned (engine-removal PR D): it surfaces via the StatusBar's
+  // INVALID INPUT and the Generate gate, not inline here.
   const [wzTouched, setWzTouched] = useState(false);
   const wzValidation = validateWorkZone(scenario);
 

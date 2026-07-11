@@ -1,13 +1,14 @@
 // Client-side input validation for scenario forms (UX audit finding
-// UX-21).  Mirrors the backend gates so the UI can refuse to generate
-// a plan the render API would reject — instantly, without a round
-// trip.  The backend stays authoritative: ``workLen`` has Pydantic
-// ``gt=0`` / ``le=WORK_LEN_MAX_FT`` bounds (schemas.py) and ``validate_corridor_geometry``
-// raises HTTP 400 on WORK_ZONE_SHORTER_THAN_TAPER, so drift in this
-// mirror fails safe.  Mapbox-free by design — unit-tested via vitest
-// like lib/scenarios/overrides.ts.
+// UX-21).  Mirrors the backend SCHEMA bounds only (Pydantic ``gt=0`` /
+// ``le=WORK_LEN_MAX_FT`` on ``workLen``, the lanes bounds) so the UI can
+// refuse a payload the render API would 422 — instantly, without a round
+// trip.  The MUTCD taper floor (WORK_ZONE_SHORTER_THAN_TAPER) is NOT
+// mirrored here: it is MUTCD math, owned by the backend
+// (validate_corridor_geometry), and reaches the UI as the audit fetch's
+// HTTP 400 (engine-removal PR D — rule 3, no parallel frontend
+// computation).  Mapbox-free by design — unit-tested via vitest like
+// lib/scenarios/overrides.ts.
 
-import { minWorkZoneFt } from "../corridor-spacing";
 import type { Scenario } from "./types";
 
 // Mirrors WORK_LEN_MAX_FT in src/api/schemas.py — the Pydantic
@@ -85,98 +86,36 @@ export function validateLanes(scenario: Scenario): LanesValidation {
 
 export interface WorkZoneValidation {
   ok: boolean;
-  /** Smallest whole-foot work-zone length the backend accepts. */
-  minFt: number;
   /** Inline error message; null when ok. */
   message: string | null;
 }
 
-// Shoulder width per kind — mirrors the ``shoulder_width_ft`` values
-// scenario_to_call hard-codes at the schemas bridge (schemas.py): the
-// shoulder kind reads 10 ft divided / 8 ft undivided; the others carry
-// fixed widths.  Only the shoulder kinds feed the taper math (L/3 uses
-// the shoulder width); the rest are carried for completeness.
-function shoulderWidthFtFor(scenario: Scenario): number {
-  switch (scenario.kind) {
-    case "shoulder":
-      return scenario.divided ? 10 : 8;
-    case "work_beyond_shoulder":
-      return scenario.roadType === "rural_divided" ||
-        scenario.roadType === "freeway"
-        ? 10
-        : 8;
-    case "lane_closure_divided":
-    case "mobile_op_multilane":
-      return 10;
-    case "flagger_lane_closure":
-    case "mobile_op_2lane":
-      return 8;
-    case "near_intersection":
-      // Undivided mainline — same 8 ft the backend's drawable-width
-      // check assumes (schemas.py _check_drawable_road_width).
-      return 8;
-  }
-}
-
-// Human label for the taper that sets the minimum — driver-facing copy
-// for the inline error.  The flagger label diverges from the backend's
-// generic "merging taper (L)" string deliberately: flagger plans use
-// the one-lane two-way taper (§6B.08 ¶14), and quoting a merging taper
-// would contradict the schematic.
-function taperLabelFor(scenario: Scenario): string {
-  if (scenario.kind === "flagger_lane_closure") {
-    return "one-lane two-way taper";
-  }
-  if (
-    scenario.kind === "shoulder" ||
-    scenario.kind === "work_beyond_shoulder"
-  ) {
-    return "shoulder taper (L/3)";
-  }
-  return "merging taper (L)";
-}
-
+// Schema-bound checks only (Pydantic gt=0 / le=WORK_LEN_MAX_FT).  The
+// MUTCD taper floor that used to live here (engine-removal PR D) is the
+// backend's: validate_corridor_geometry raises HTTP 400
+// (WORK_ZONE_SHORTER_THAN_TAPER) on the audit fetch that already fires
+// per change, and GeneratorShell surfaces that message as the strip's
+// INVALID INPUT + the Generate gate.  No client-side floor may return —
+// a value computed here is one the audit trail can disagree with.
 export function validateWorkZone(scenario: Scenario): WorkZoneValidation {
-  const minExact = minWorkZoneFt(
-    scenario.kind,
-    scenario.speed,
-    scenario.laneWidth,
-    shoulderWidthFtFor(scenario),
-  );
-  const minFt = Math.ceil(minExact);
   const wz = scenario.workLen;
 
   if (!Number.isFinite(wz) || wz <= 0) {
     return {
       ok: false,
-      minFt,
-      message:
-        `Work zone length is required — at least ${minFt} ft ` +
-        `(the ${taperLabelFor(scenario)} at ${scenario.speed} mph, ` +
-        `MUTCD § 6C.08).`,
-    };
-  }
-  if (wz < minExact) {
-    return {
-      ok: false,
-      minFt,
-      message:
-        `Work zone must be at least ${minFt} ft — the required ` +
-        `${taperLabelFor(scenario)} at ${scenario.speed} mph ` +
-        `(MUTCD § 6C.08). Lengthen the work zone or reduce the speed.`,
+      message: "Work zone length is required.",
     };
   }
   if (wz > MAX_WORK_LEN_FT) {
     return {
       ok: false,
-      minFt,
       message:
         `Work zone can't exceed ${MAX_WORK_LEN_FT.toLocaleString("en-US")} ft ` +
         `(about 3.8 miles) on a single plan. Split a longer project into ` +
         `multiple plans.`,
     };
   }
-  return { ok: true, minFt, message: null };
+  return { ok: true, message: null };
 }
 
 // ---------------------------------------------------------------------------

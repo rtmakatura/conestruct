@@ -55,11 +55,12 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
     });
   };
 
-  // UX-21: inline min-validation on the work-zone field.  The error
-  // text is blur-gated (``wzTouched``) so transient keystrokes don't
-  // flash it mid-entry; the GenerateButton disabled state (wired in
-  // GeneratorSidebar from the same validateWorkZone helper) is live
-  // regardless.
+  // UX-21: inline schema-bound validation on the work-zone field
+  // (required / ceiling).  The error text is blur-gated (``wzTouched``)
+  // so transient keystrokes don't flash it mid-entry; the GenerateButton
+  // disabled state (wired in GeneratorSidebar) is live regardless.  The
+  // MUTCD taper floor is backend-owned (engine-removal PR D) and
+  // surfaces via the StatusBar / Generate gate, not inline here.
   const [wzTouched, setWzTouched] = useState(false);
   const wzValidation = validateWorkZone(scenario);
   // Lanes x width drawable bound (schemas.py mirror).  Rendered live —

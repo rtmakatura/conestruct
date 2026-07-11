@@ -22,10 +22,7 @@ import {
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
-import {
-  buildCorridorSpec,
-  roadCategoryForRoadType,
-} from "@/lib/corridor-spacing";
+import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   buildCorridorPolyline,
   ZONE_COLOR,
@@ -428,43 +425,84 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
         null)
       : null);
 
+  // ---- Corridor spec lengths (backend-fed, engine-removal PR D) ----------
+  // The MUTCD zone lengths (taper/buffer/advance/downstream) come from
+  // POST /api/render/corridor-spec — the same backend tables the plan
+  // itself uses; the frontend mirror they replace is deleted.  The
+  // lengths depend only on (kind, speed, roadType), so pin drags,
+  // bearing edits, and work-zone typing redraw the polyline instantly
+  // from the cached lengths — only a speed or road-type change refetches
+  // (debounced 300 ms).  On failure the last lengths stay in use with an
+  // explicit "unavailable" note; nothing is ever computed locally.
+  //
+  // UX-01: the fetch uses the same domain-clamped speed Save will apply
+  // (snapSpeedToDomain), so the corridor the operator reviews is the one
+  // the form keeps — same invariant the retired local math enforced.
+  const previewSpeed = snapSpeedToDomain(
+    initial.scenarioKind,
+    effectiveSpeed ?? initial.speedMph ?? 35,
+  );
+  const [specLengths, setSpecLengths] = useState<CorridorSpecLengths | null>(
+    null,
+  );
+  const [specStatus, setSpecStatus] = useState<
+    "idle" | "loading" | "ready" | "error"
+  >("idle");
+  const specLengthsRef = useRef<CorridorSpecLengths | null>(null);
+  specLengthsRef.current = specLengths;
+  const specTokenRef = useRef(0);
+
+  useEffect(() => {
+    if (!open) return;
+    const myToken = ++specTokenRef.current;
+    setSpecStatus("loading");
+    const timer = setTimeout(async () => {
+      try {
+        const r = await fetch("/api/render/corridor-spec", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            kind: initial.scenarioKind,
+            speed: previewSpeed,
+            roadType: effectiveRoadType,
+          }),
+        });
+        if (specTokenRef.current !== myToken) return;
+        if (!r.ok) {
+          setSpecStatus("error");
+          return;
+        }
+        const j = (await r.json()) as CorridorSpecLengths;
+        if (specTokenRef.current !== myToken) return;
+        setSpecLengths(j);
+        setSpecStatus("ready");
+      } catch {
+        if (specTokenRef.current === myToken) setSpecStatus("error");
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [open, initial.scenarioKind, previewSpeed, effectiveRoadType]);
+
   // ---- Corridor projection ----------------------------------------------
+  // Geometry only — anchor, bearing, typed work-zone length; the zone
+  // lengths are the backend's (above).  Null until the first lengths
+  // arrive: the preview shows an explicit updating/unavailable note
+  // rather than a locally-derived extent.
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
     if (workZoneFt <= 0) return null;
-    // UX-01: the form clamps speed to the scenario kind's schema domain
-    // on Save (snapSpeedToDomain, inside applyClassification /
-    // applyOverridesToScenario).  Compute the in-modal preview with that
-    // same clamped value so the corridor numbers the operator reviews are
-    // the ones Save will actually apply — otherwise they implicitly
-    // approve a buffer/total the form then silently changes (the
-    // "approved 2,745, received 2,595" contradiction at the handoff).
-    const rawSpeed = effectiveSpeed ?? initial.speedMph ?? 35;
-    const speed = snapSpeedToDomain(initial.scenarioKind, rawSpeed);
-    const spec = buildCorridorSpec({
+    if (!specLengths) return null;
+    return buildCorridorPolyline({
       anchorLat: lat,
       anchorLng: lng,
       bearingDeg: bearing,
-      speedMph: speed,
+      advanceWarningFt: specLengths.advance_warning_ft,
+      taperFt: specLengths.taper_ft,
+      bufferFt: specLengths.buffer_ft,
       workZoneFt,
-      scenarioKind: initial.scenarioKind,
-      // Backend-faithful category mapping (schemas.py _map_road_type),
-      // including the speed-dependent urban_arterial split the previous
-      // inline ternary got wrong (it always picked urban_high).
-      roadCategory: roadCategoryForRoadType(effectiveRoadType, speed),
+      downstreamTaperFt: specLengths.downstream_taper_ft,
     });
-    return buildCorridorPolyline(spec);
-  }, [
-    hasPin,
-    lat,
-    lng,
-    bearing,
-    workZoneFt,
-    effectiveSpeed,
-    effectiveRoadType,
-    initial.scenarioKind,
-    initial.speedMph,
-  ]);
+  }, [hasPin, lat, lng, bearing, workZoneFt, specLengths]);
 
   // Sync the corridor onto the live map.  ``corridorDataRef`` is the
   // canonical "what should the line show" so the deferred installer
@@ -661,15 +699,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     lng: number;
     bearing: number;
     mainline: RoadCandidate | null;
-    speedMph: number;
-    workZoneFt: number;
   }>({
     lat: 0,
     lng: 0,
     bearing: 0,
     mainline: null,
-    speedMph: initial.speedMph,
-    workZoneFt: 0,
   });
   crossDetectCtxRef.current = {
     lat,
@@ -679,8 +713,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       selectedCandidateIdx !== null
         ? (bearingCandidates[selectedCandidateIdx] ?? null)
         : null,
-    speedMph: initial.speedMph,
-    workZoneFt,
   };
 
   const placeCrossPin = useCallback(async (qLat: number, qLng: number) => {
@@ -718,16 +750,17 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       if (crossTokenRef.current !== myToken) return;
       const ctx = crossDetectCtxRef.current;
       // The anchor pin sits one downstream-taper length below station
-      // 0, so the derivation needs the same spec the corridor preview
-      // draws from.
-      const spec = buildCorridorSpec({
-        anchorLat: ctx.lat,
-        anchorLng: ctx.lng,
-        bearingDeg: ctx.bearing,
-        speedMph: snapSpeedToDomain("near_intersection", ctx.speedMph),
-        workZoneFt: ctx.workZoneFt,
-        scenarioKind: "near_intersection",
-      });
+      // 0, so the derivation needs the same backend-fed length the
+      // corridor preview draws (engine-removal PR D — the local spec
+      // mirror is deleted).  If the lengths haven't arrived yet, the
+      // proposal degrades to the manual-entry path rather than deriving
+      // a station from a locally-guessed taper.
+      const lengths = specLengthsRef.current;
+      if (!lengths) {
+        setCrossStreet(null);
+        setCrossStatus("error");
+        return;
+      }
       const derived = deriveCrossStreet({
         detection: j,
         mainlineWayId: ctx.mainline?.way_id ?? null,
@@ -737,7 +770,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
         anchorLng: ctx.lng,
         crossLat: qLat,
         crossLng: qLng,
-        downstreamTaperFt: spec.downstreamTaperFt,
+        downstreamTaperFt: lengths.downstream_taper_ft,
       });
       setCrossStreet(derived);
       setCrossStatus(derived ? "detected" : "none");
@@ -1575,7 +1608,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                   onClear={clearCrossPin}
                 />
               )}
-              <CorridorPreviewPanel corridor={corridor} hasPin={hasPin} />
+              <CorridorPreviewPanel
+                corridor={corridor}
+                hasPin={hasPin}
+                specStatus={specStatus}
+              />
             </div>
           </div>
 
@@ -2386,9 +2423,14 @@ function CandidatePicker({
 function CorridorPreviewPanel({
   corridor,
   hasPin,
+  specStatus,
 }: {
   corridor: CorridorPolyline | null;
   hasPin: boolean;
+  // Backend corridor-spec fetch state (engine-removal PR D).  The zone
+  // lengths are server-computed; this panel names the wait/failure
+  // instead of ever drawing a locally-derived extent.
+  specStatus: "idle" | "loading" | "ready" | "error";
 }) {
   return (
     <div className="border-t border-[color:var(--rule)]">
@@ -2402,12 +2444,38 @@ function CorridorPreviewPanel({
             Drop a pin to compute the corridor.
           </div>
         )}
-        {hasPin && !corridor && (
+        {hasPin && !corridor && specStatus === "loading" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
+            Computing corridor extent…
+          </div>
+        )}
+        {hasPin && !corridor && specStatus === "error" && (
+          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] py-1">
+            Corridor preview unavailable — couldn&apos;t reach the spacing
+            service. You can still save; the plan is validated when
+            generated.
+          </div>
+        )}
+        {hasPin && !corridor && specStatus !== "loading" && specStatus !== "error" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
             Enter a work-zone length to compute the corridor.
           </div>
         )}
-        {corridor && <ExtentRows corridor={corridor} />}
+        {corridor && (
+          <>
+            <ExtentRows corridor={corridor} />
+            {specStatus === "loading" && (
+              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] pt-2">
+                Preview updating…
+              </div>
+            )}
+            {specStatus === "error" && (
+              <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--orange)] pt-2">
+                Preview may be stale — spacing service unreachable.
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

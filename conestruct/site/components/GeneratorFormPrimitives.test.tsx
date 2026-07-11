@@ -34,9 +34,14 @@ describe("GenerateButton (UX-17 CTA labels)", () => {
 
 // PR 7 (UX audit finding UX-21): invalid inputs gate generation — the
 // button disables and the reason renders adjacent (not hover-only).
+// The reason literal is the BACKEND's floor message (validators.py
+// phrasing) — since engine-removal PR D the frontend no longer words a
+// floor message of its own.
 describe("GenerateButton (UX-21 invalid-input gating)", () => {
-  const REASON = "Work zone must be at least 100 ft — the required " +
-    "one-lane two-way taper at 45 mph (MUTCD § 6C.08).";
+  const REASON =
+    "Work zone length (50 ft) is shorter than the required shoulder taper " +
+    "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
+    "or reduce the speed limit.";
 
   it("disabled state renders the reason adjacent to the button", () => {
     const html = renderToStaticMarkup(
@@ -49,7 +54,7 @@ describe("GenerateButton (UX-21 invalid-input gating)", () => {
     );
     expect(html).toContain("disabled");
     expect(html).toContain("Generate plan");
-    expect(html).toContain("at least 100 ft");
+    expect(html).toContain("at least 184 ft");
     expect(html).toContain("role=\"alert\"");
   });
 

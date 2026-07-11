@@ -29,10 +29,7 @@ import {
 } from "@/lib/scenarios/validation";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
-import {
-  buildCorridorSpec,
-  roadCategoryForRoadType,
-} from "@/lib/corridor-spacing";
+import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   buildCorridorPolyline,
   ZONE_COLOR,
@@ -66,6 +63,19 @@ interface Props {
   setScenario: (next: Scenario) => void;
   generating: boolean;
   onGenerate: () => void;
+  // Engine-removal PR D: the backend's verdict that the current input is
+  // invalid — the audit fetch's HTTP 400 message (geometry validation,
+  // e.g. the taper floor), stamped for the scenario on screen.  Null
+  // while a fetch is in flight (the CTA stays enabled through the
+  // sub-second race window; every render endpoint re-runs the validator
+  // server-side, so the worst case is a redundant error message, never a
+  // wrong plan).
+  auditInputError: string | null;
+  // Engine-removal PR D: backend-computed corridor zone lengths off the
+  // audit response (sections.corridor_spec).  Null before the first
+  // audit resolves or when the field is absent (deploy window) — the
+  // preview then reads unavailable; it is never computed locally.
+  corridorSpecLengths: CorridorSpecLengths | null;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -118,6 +128,8 @@ export function GeneratorSidebar({
   setScenario,
   generating,
   onGenerate,
+  auditInputError,
+  corridorSpecLengths,
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -266,6 +278,7 @@ export function GeneratorSidebar({
           setScenario={setScenario}
           onOpenPicker={() => setPickerOpen(true)}
           handoff={handoff}
+          corridorSpecLengths={corridorSpecLengths}
         />
 
         {/* Step 2 — Scenario gates every field below, so it precedes
@@ -315,9 +328,13 @@ export function GeneratorSidebar({
         />
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
-          {/* UX-21: generation is gated on the same validateWorkZone
-              mirror the forms render inline — the backend would 400
-              this input, so the CTA must not pretend otherwise. */}
+          {/* UX-21 / engine-removal PR D: generation is gated on the
+              schema-bound client mirrors (required/ceiling, lanes,
+              approaches) AND the backend's own invalid-input verdict —
+              the audit fetch's 400 (taper floor and the rest of
+              geometry validation).  While that fetch is in flight the
+              CTA stays enabled: the server re-validates every render
+              call, so the race window can't ship a wrong plan. */}
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
@@ -325,7 +342,8 @@ export function GeneratorSidebar({
               !wzValidation.ok ||
               !lanesValidation.ok ||
               !approachesValidation.ok ||
-              approachConfirm.pending
+              approachConfirm.pending ||
+              auditInputError !== null
             }
             disabledReason={
               wzValidation.message ??
@@ -333,7 +351,7 @@ export function GeneratorSidebar({
               approachesValidation.message ??
               (approachConfirm.pending
                 ? "Confirm the cross-street lane count first — it was filled from map data."
-                : undefined)
+                : (auditInputError ?? undefined))
             }
           />
 
@@ -461,12 +479,14 @@ function LocationCorridorSection({
   setScenario,
   onOpenPicker,
   handoff,
+  corridorSpecLengths,
 }: {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
   setScenario: (next: Scenario) => void;
   onOpenPicker: () => void;
   handoff: HandoffEvent[];
+  corridorSpecLengths: CorridorSpecLengths | null;
 }) {
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
@@ -479,6 +499,7 @@ function LocationCorridorSection({
           setMeta={setMeta}
           setScenario={setScenario}
           handoff={handoff}
+          corridorSpecLengths={corridorSpecLengths}
         />
       ) : (
         <UnsetLocation
@@ -565,12 +586,14 @@ function LocationSummary({
   setMeta,
   setScenario,
   handoff,
+  corridorSpecLengths,
 }: {
   scenario: Scenario;
   onOpenPicker: () => void;
   setMeta: (m: ScenarioMeta) => void;
   setScenario: (next: Scenario) => void;
   handoff: HandoffEvent[];
+  corridorSpecLengths: CorridorSpecLengths | null;
 }) {
   const meta = scenario.meta;
   const [showManual, setShowManual] = useState(false);
@@ -588,19 +611,26 @@ function LocationSummary({
   const roadType: RoadType | null =
     "roadType" in scenario ? (scenario.roadType as RoadType) : null;
 
+  // Engine-removal PR D: zone lengths come from the backend
+  // (sections.corridor_spec off the audit fetch the shell already makes
+  // per change); only the geometry — anchor, bearing, the typed
+  // work-zone length — is composed client-side.  When the lengths
+  // haven't arrived (first load, deploy window) the preview reads
+  // unavailable below; nothing is computed locally.
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!meta.lat || !meta.lng || !scenario.workLen) return null;
-    const spec = buildCorridorSpec({
+    if (!corridorSpecLengths) return null;
+    return buildCorridorPolyline({
       anchorLat: meta.lat,
       anchorLng: meta.lng,
       bearingDeg: meta.bearingDeg ?? 0,
-      speedMph: scenario.speed,
+      advanceWarningFt: corridorSpecLengths.advance_warning_ft,
+      taperFt: corridorSpecLengths.taper_ft,
+      bufferFt: corridorSpecLengths.buffer_ft,
       workZoneFt: scenario.workLen,
-      scenarioKind: scenario.kind,
-      roadCategory: roadCategoryForRoadType(roadType, scenario.speed),
+      downstreamTaperFt: corridorSpecLengths.downstream_taper_ft,
     });
-    return buildCorridorPolyline(spec);
-  }, [meta.lat, meta.lng, meta.bearingDeg, scenario.speed, scenario.workLen, scenario.kind, roadType]);
+  }, [meta.lat, meta.lng, meta.bearingDeg, scenario.workLen, corridorSpecLengths]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -662,7 +692,12 @@ function LocationSummary({
       {!corridor && (
         <SummaryRow label="Corridor extent">
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
-            Set work-zone length to compute
+            {!scenario.workLen
+              ? "Set work-zone length to compute"
+              : // Lengths are backend-fed (PR D); an audit response
+                // without them (first load / deploy window) degrades to
+                // an honest note, never a locally-computed extent.
+                "Corridor extent unavailable — awaiting verification"}
           </div>
         </SummaryRow>
       )}

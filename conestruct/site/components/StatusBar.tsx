@@ -14,8 +14,10 @@ export type Status = "idle" | "generating" | "done";
 //
 // The strip is now derived, in precedence order:
 //   1. generating          → COMPUTING (unchanged spinner state)
-//   2. invalid input       → red FAIL — client mirror (validateWorkZone)
-//                            or backend geometry 400
+//   2. invalid input       → red FAIL — backend geometry 400 (the taper
+//                            floor et al., engine-removal PR D) or the
+//                            schema-bound client checks (required /
+//                            ceiling / lanes)
 //   3. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
 //                            network blip is not a plan defect)
 //   4. verification        → VERIFYING (Decision 2, frontend-engine-

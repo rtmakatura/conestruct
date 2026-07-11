@@ -155,10 +155,13 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   });
 
   it("invalid input is red and blocks — never READY", () => {
+    // The literal is the BACKEND's floor message (validators.py phrasing)
+    // — since engine-removal PR D the frontend no longer words a floor
+    // message of its own; this prop carries the audit fetch's 400 detail.
     const html = renderToStaticMarkup(
       <StatusBar
         status="done"
-        inputError="Work zone must be at least 100 ft — the required one-lane two-way taper at 45 mph (MUTCD § 6C.08)."
+        inputError="Work zone length (50 ft) is shorter than the required shoulder taper (L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, or reduce the speed limit."
         audit={ready(makeAudit())}
       />,
     );

@@ -284,18 +284,31 @@ export function GeneratorShell({
             : auditState.lastReady,
       };
 
-  // UX-21: the strip's red input-error state.  Client mirror first
-  // (validateWorkZone — same helper that gates the GenerateButton);
-  // a backend geometry 400 (mirror drift) is the authoritative
-  // fallback.  Non-400 audit errors stay "verification unavailable"
-  // inside StatusBar.  Reads ``stripAudit`` so a 400 for an
-  // already-edited input can't show INVALID INPUT against the new one.
+  // UX-21 / engine-removal PR D: the strip's red input-error state.
+  // The client check covers only the schema bounds (workLen required /
+  // 20,000-ft ceiling — validateWorkZone no longer carries a MUTCD
+  // floor); the backend geometry 400 from the per-change audit fetch is
+  // THE source for the taper-floor verdict and its message
+  // (validators.py WORK_ZONE_SHORTER_THAN_TAPER).  Non-400 audit errors
+  // stay "verification unavailable" inside StatusBar.  Reads
+  // ``stripAudit`` so a 400 for an already-edited input can't show
+  // INVALID INPUT against the new one.
   const wzValidation = validateWorkZone(scenario);
   const auditInputError =
     stripAudit.state === "error" && stripAudit.httpStatus === 400
       ? stripAudit.message
       : null;
   const inputError = !wzValidation.ok ? wzValidation.message : auditInputError;
+
+  // Engine-removal PR D: the sidebar's corridor preview reads the
+  // backend's zone lengths off the audit response the shell already
+  // fetches per change (sections.corridor_spec, PR B).  Falls back to
+  // ``lastReady`` during refetch (stale-while-revalidate CONTENT, same
+  // pattern as AuditTrail — the verdict strip above is what never goes
+  // stale); null before the first audit resolves or when the field is
+  // absent (deploy window), in which case the preview shows an explicit
+  // unavailable note instead of computing anything locally.
+  const corridorSpecLengths = currentAudit?.sections?.corridor_spec ?? null;
 
   return (
     <div className="workbench min-h-screen">
@@ -327,6 +340,8 @@ export function GeneratorShell({
           setScenario={setScenario}
           generating={bundling}
           onGenerate={onGenerate}
+          auditInputError={auditInputError}
+          corridorSpecLengths={corridorSpecLengths}
           onClassification={(c, at) =>
             setLastDetection(c ? { classification: c, ...at } : null)
           }

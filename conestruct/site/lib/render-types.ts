@@ -84,6 +84,21 @@ export interface SiteAdjustmentRecord {
   devices_modified?: number;
 }
 
+// Engine-removal PR B/D — the corridor-preview zone lengths, backend-
+// computed (the audit's own numbers).  Geometry (anchor/bearing/work-zone
+// length) stays client-side: these are MUTCD lengths only.  The same
+// shape comes back from POST /api/render/corridor-spec (the picker
+// modal's source).  OPTIONAL on the audit sections: absent during a
+// deploy window / rollback, in which case the preview degrades to
+// "unavailable" — it is never recomputed client-side.
+export interface CorridorSpecLengths {
+  taper_ft: number;
+  buffer_ft: number;
+  advance_warning_ft: number;
+  downstream_taper_ft: number;
+  road_category: string | null;
+}
+
 export interface AuditResponse {
   summary: AuditSummary;
   plan_flags?: PlanFlags;
@@ -97,6 +112,9 @@ export interface AuditResponse {
     flagger: Record<string, unknown>;
     corridor_validation: Record<string, unknown>;
     geometry_validation: Record<string, unknown>;
+    // Engine-removal PR B: preview zone lengths (see CorridorSpecLengths).
+    // Absent only in a deploy window / rollback.
+    corridor_spec?: CorridorSpecLengths;
     // V1-Wide Item 3: Fines Double envelope section. Absent when the
     // work-zone posted speed is not reduced. Present with
     // ``applicable=true`` (envelope + Sheet 12 operational notes) for
