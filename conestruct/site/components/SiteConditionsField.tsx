@@ -73,6 +73,9 @@ const SCENARIO_KIND_TO_CLOSURE_TYPE: Record<ScenarioKind, string> = {
   work_beyond_shoulder: "shoulder",
   mobile_op_2lane: "mobile_op_2lane",
   mobile_op_multilane: "mobile_op_multilane",
+  // Full merging taper L ("lane" is in _LANE_KINDS) — matches the
+  // near_intersection layout's taper choice.
+  near_intersection: "lane",
 };
 
 type DetectionBucket = {

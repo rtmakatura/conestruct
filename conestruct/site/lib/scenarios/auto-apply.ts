@@ -60,6 +60,7 @@ const SPEED_RANGE: Record<Scenario["kind"], readonly [number, number]> = {
   work_beyond_shoulder: [20, 75],
   mobile_op_2lane: [25, 55],
   mobile_op_multilane: [45, 75],
+  near_intersection: [25, 55],
 };
 
 export function snapSpeedToDomain(
@@ -179,6 +180,21 @@ export function applyClassification(
       const delta = baseDelta(speedApplied, speedApplicable);
       if (MOBILE_MULTILANE_TYPES.has(c.roadType as MobileRoadTypeMultilane)) {
         next.roadType = c.roadType as MobileRoadTypeMultilane;
+        delta.roadTypeApplied = true;
+      }
+      return { scenario: next, delta };
+    }
+    case "near_intersection": {
+      // Mainline only — approaches are proposed via the picker's
+      // cross-street candidate, never silently written here.  Mainline
+      // lanes are deliberately NOT auto-applied: the kind needs >= 2
+      // lanes per direction and OSM lane counts are turn-lane-inflated
+      // near intersections (the parked mainline-confidence issue stays
+      // parked; the user sets the count).
+      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      const delta = baseDelta(speedApplied, speedApplicable);
+      if (FLAGGER_TYPES.has(c.roadType as FlaggerRoadType)) {
+        next.roadType = c.roadType as FlaggerRoadType;
         delta.roadTypeApplied = true;
       }
       return { scenario: next, delta };

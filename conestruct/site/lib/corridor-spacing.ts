@@ -127,6 +127,10 @@ const SCENARIO_TO_CLOSURE: Record<ScenarioKind, ClosureKind> = {
   work_beyond_shoulder: "shoulder",
   mobile_op_2lane: "lane",
   mobile_op_multilane: "lane",
+  // Cases 18/19 close a lane with the full merging taper L — same-
+  // direction merge, NOT the flagger one-lane two-way taper (the
+  // backend's near_intersection_stations uses taper_length()).
+  near_intersection: "lane",
 };
 
 export interface BuildCorridorInput {

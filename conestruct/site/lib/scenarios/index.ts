@@ -26,6 +26,8 @@ import type {
   MobileOp2LaneScenario,
   MobileOpMultilaneScenario,
   MobileWorkType,
+  NearIntersectionScenario,
+  NearIntersectionWorkType,
   RoadType,
   Scenario,
   ScenarioKind,
@@ -53,6 +55,11 @@ export type {
   MobileRoadType2Lane,
   MobileRoadTypeMultilane,
   MobileWorkType,
+  NearIntersectionApproach,
+  NearIntersectionResult,
+  NearIntersectionRoadType,
+  NearIntersectionScenario,
+  NearIntersectionWorkType,
   RoadType,
   Scenario,
   ScenarioKind,
@@ -180,6 +187,37 @@ export const DEFAULT_MOBILE_OP_MULTILANE: MobileOpMultilaneScenario = {
   secondTMA: false,
 };
 
+// GATED (near_intersection, #117): the picker never offers this kind
+// while it is absent from ENABLED_SCENARIO_KINDS; the default exists so
+// tests and the eventual enablement have a canonical starting point.
+// Values clear every backend rejection: speed within 25-55, 2 lanes per
+// direction (the layout requires >= 2), and a near-side cross street
+// whose curb-to-curb box stays outside the work zone.
+export const DEFAULT_NEAR_INTERSECTION: NearIntersectionScenario = {
+  kind: "near_intersection",
+  meta: { project: "", address: "", lat: 0, lng: 0 },
+  roadType: "urban_arterial",
+  speed: 35,
+  lanes: 2,
+  laneWidth: 12,
+  divided: false,
+  workType: "utility_cut",
+  duration: "short",
+  workLen: 500,
+  night: false,
+  approaches: [
+    {
+      id: "cross_a",
+      speed: 30,
+      roadType: "urban_arterial",
+      lanesPerDirection: 1,
+      laneWidth: 12,
+      signalized: false,
+      alongStationFt: -200,
+    },
+  ],
+};
+
 export const DEFAULT_SCENARIO: Scenario = DEFAULT_SHOULDER;
 
 // ---------------------------------------------------------------------------
@@ -218,6 +256,11 @@ export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> 
     v: "mobile_op_multilane",
     l: "Mobile op (multi-lane)",
     sub: "TA-26 · S-630-3",
+  },
+  {
+    v: "near_intersection",
+    l: "Lane closure near intersection",
+    sub: "Cases 18/19 · S-630-1",
   },
 ];
 
@@ -280,6 +323,17 @@ export const WORK_BEYOND_SHOULDER_WORK_TYPES: Array<{
   { v: "other", l: "Other" },
 ];
 
+export const NEAR_INTERSECTION_WORK_TYPES: Array<{
+  v: NearIntersectionWorkType;
+  l: string;
+}> = [
+  { v: "utility_cut", l: "Utility cut" },
+  { v: "water_main", l: "Water main" },
+  { v: "patching", l: "Pavement patching" },
+  { v: "signal_work", l: "Traffic signal work" },
+  { v: "other", l: "Other" },
+];
+
 export const MOBILE_WORK_TYPES: Array<{ v: MobileWorkType; l: string }> = [
   { v: "striping", l: "Pavement striping" },
   { v: "sweeping", l: "Street sweeping" },
@@ -311,6 +365,8 @@ export function defaultFor(kind: ScenarioKind): Scenario {
       return DEFAULT_MOBILE_OP_2LANE;
     case "mobile_op_multilane":
       return DEFAULT_MOBILE_OP_MULTILANE;
+    case "near_intersection":
+      return DEFAULT_NEAR_INTERSECTION;
   }
 }
 
@@ -348,6 +404,12 @@ export function asMobileOpMultilane(
   s: Scenario,
 ): MobileOpMultilaneScenario | null {
   return s.kind === "mobile_op_multilane" ? s : null;
+}
+
+export function asNearIntersection(
+  s: Scenario,
+): NearIntersectionScenario | null {
+  return s.kind === "near_intersection" ? s : null;
 }
 
 // Canonical flagger headcount the layout itself dictates.  Only the
@@ -402,7 +464,8 @@ export function isScenario(value: unknown): value is Scenario {
     v.kind === "lane_closure_divided" ||
     v.kind === "work_beyond_shoulder" ||
     v.kind === "mobile_op_2lane" ||
-    v.kind === "mobile_op_multilane"
+    v.kind === "mobile_op_multilane" ||
+    v.kind === "near_intersection"
   );
 }
 

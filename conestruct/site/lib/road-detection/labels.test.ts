@@ -23,7 +23,11 @@ function mkCandidate(over: Partial<RoadCandidate>): RoadCandidate {
       lanes: null,
       lanes_forward: null,
       lanes_backward: null,
+      turn_lanes: null,
+      turn_lanes_forward: null,
+      turn_lanes_backward: null,
     },
+    signal_distance_m: null,
     ...over,
   };
 }

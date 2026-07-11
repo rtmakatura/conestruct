@@ -41,7 +41,20 @@ export interface RoadCandidate {
     lanes: string | null;
     lanes_forward: string | null;
     lanes_backward: string | null;
+    // Turn-lane markers (near_intersection #117): presence signals
+    // that OSM's `lanes` count likely includes turn pockets, so a
+    // prefilled lane count needs user confirmation.
+    turn_lanes: string | null;
+    turn_lanes_forward: string | null;
+    turn_lanes_backward: string | null;
   };
+  /**
+   * Distance from this candidate's snapped point to the nearest
+   * highway=traffic_signals node in the same query, or null when none
+   * is within the search radius.  Drives the `signalized` default for
+   * cross-street approaches (near_intersection #117).
+   */
+  signal_distance_m: number | null;
 }
 
 // Full response from /api/road-bearing.  `isUrban` and `placeName`

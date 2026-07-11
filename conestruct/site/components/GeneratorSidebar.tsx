@@ -22,8 +22,13 @@ import {
   summarizeHandoff,
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
-import { validateLanes, validateWorkZone } from "@/lib/scenarios/validation";
+import {
+  validateApproaches,
+  validateLanes,
+  validateWorkZone,
+} from "@/lib/scenarios/validation";
 import type { RoadClassification } from "@/lib/road-detection/types";
+import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
 import {
   buildCorridorSpec,
   roadCategoryForRoadType,
@@ -48,6 +53,7 @@ import { LaneClosureForm } from "./LaneClosureForm";
 import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
+import { NearIntersectionForm } from "./NearIntersectionForm";
 import { SiteConditionsField } from "./SiteConditionsField";
 import {
   LocationPickerModal,
@@ -88,6 +94,7 @@ const KIND_HAS_FIFTH_STEP: Record<ScenarioKind, boolean> = {
   work_beyond_shoulder: false,
   mobile_op_2lane: true, // Protection
   mobile_op_multilane: true, // Protection
+  near_intersection: true, // Cross street
 };
 
 function siteStep(kind: ScenarioKind): number {
@@ -120,10 +127,22 @@ export function GeneratorSidebar({
   // scenario state or the backend payload.
   const [handoff, setHandoff] = useState<HandoffEvent[]>([]);
   const wzValidation = validateWorkZone(scenario);
-  // Lanes x width drawable bound (shoulder only) — same 422-mirror
-  // class as validateWorkZone; the CTA must not offer a plan the
-  // backend will reject.
+  // Lanes x width drawable bound (shoulder + near_intersection) — same
+  // 422-mirror class as validateWorkZone; the CTA must not offer a
+  // plan the backend will reject.
   const lanesValidation = validateLanes(scenario);
+  // Cross-street approach mirror (near_intersection only; ok:true for
+  // every other kind) — covers the schema 422s AND the generator
+  // ValueErrors the schema can't see (#117).
+  const approachesValidation = validateApproaches(scenario);
+  // Needs-confirmation hold on detection-filled approach lane counts:
+  // OSM lane totals near intersections routinely include turn pockets,
+  // so a detected count is a proposal until the user confirms or edits
+  // it — and the CTA stays gated while it's pending.
+  const [approachConfirm, setApproachConfirm] = useState<{
+    pending: boolean;
+    reason: string | null;
+  }>({ pending: false, reason: null });
 
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
@@ -137,12 +156,19 @@ export function GeneratorSidebar({
   // moved pin or changed OSM result produces different content and still
   // applies; in-modal overrides always apply (explicit user actions).
   const lastAppliedDetectionRef = useRef<string | null>(null);
+  // Same guard for the cross-street candidate (near_intersection):
+  // a re-Apply with an unchanged detection must not re-impose the
+  // proposed approaches over manual edits — the exact #112 clobber
+  // class, one seam over.
+  const lastAppliedCrossStreetRef = useRef<string | null>(null);
 
   const onKindChange = (kind: ScenarioKind) => {
     if (kind === scenario.kind) return;
     // The new kind starts from its defaults, so the same detection IS
     // new information for it — let the next Apply fill the fresh form.
     lastAppliedDetectionRef.current = null;
+    lastAppliedCrossStreetRef.current = null;
+    setApproachConfirm({ pending: false, reason: null });
     // The notes describe the previous kind's handoff — drop them so a
     // stale clamp note can't follow the operator into a different kind.
     setHandoff([]);
@@ -181,6 +207,26 @@ export function GeneratorSidebar({
       lastAppliedDetectionRef.current = detectionJson;
     }
     next = applyOverridesToScenario(next, r.overrides);
+    // Cross-street candidate → approaches (near_intersection, #117).
+    // Fresh-content guard mirrors the classification guard above: an
+    // unchanged candidate on re-Apply is NOT new information and must
+    // not overwrite approach fields the user has edited since.
+    if (next.kind === "near_intersection" && r.crossStreet) {
+      const crossJson = JSON.stringify(r.crossStreet);
+      if (crossJson !== lastAppliedCrossStreetRef.current) {
+        next = {
+          ...next,
+          approaches: approachesFromCrossStreet(r.crossStreet),
+        };
+        lastAppliedCrossStreetRef.current = crossJson;
+        setApproachConfirm({
+          // Only a detection-filled lane count needs confirming; when
+          // OSM had no lane tag the form's default is user territory.
+          pending: r.crossStreet.lanesPerDirection !== null,
+          reason: r.crossStreet.lanesSuspectReason,
+        });
+      }
+    }
     // Name what the handoff did to the values the operator reviewed, so
     // the clamp/skip isn't silent (UX-01/UX-02).  Derived from the raw
     // picker result + the applied scenario; pure frontend metadata.
@@ -251,6 +297,16 @@ export function GeneratorSidebar({
             setScenario={setScenario}
           />
         )}
+        {scenario.kind === "near_intersection" && (
+          <NearIntersectionForm
+            scenario={scenario}
+            setScenario={setScenario}
+            approachConfirm={approachConfirm}
+            clearApproachConfirm={() =>
+              setApproachConfirm({ pending: false, reason: null })
+            }
+          />
+        )}
 
         <SiteConditionsField
           scenario={scenario}
@@ -265,9 +321,19 @@ export function GeneratorSidebar({
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
-            disabled={!wzValidation.ok || !lanesValidation.ok}
+            disabled={
+              !wzValidation.ok ||
+              !lanesValidation.ok ||
+              !approachesValidation.ok ||
+              approachConfirm.pending
+            }
             disabledReason={
-              wzValidation.message ?? lanesValidation.message ?? undefined
+              wzValidation.message ??
+              lanesValidation.message ??
+              approachesValidation.message ??
+              (approachConfirm.pending
+                ? "Confirm the cross-street lane count first — it was filled from map data."
+                : undefined)
             }
           />
 

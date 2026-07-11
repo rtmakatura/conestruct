@@ -12,6 +12,10 @@ import type {
 } from "@/lib/road-detection/types";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import {
+  deriveCrossStreet,
+  type CrossStreetCandidate,
+} from "@/lib/road-detection/cross-street";
+import {
   bearingToDirectionLabel as bearingToDirectionLabelImpl,
   candidateLabel,
 } from "@/lib/road-detection/labels";
@@ -68,6 +72,15 @@ export interface LocationPickerResult {
   workZoneFt: number;
   classification: RoadClassification | null;
   overrides: RoadFieldOverrides;
+  /**
+   * Proposed cross street from the "mark the intersection" second pin
+   * (near_intersection kind only, #117).  Null when the kind doesn't
+   * apply, the pin wasn't placed, or detection found nothing — the
+   * approach form falls back to manual entry.  The parent applies it
+   * with the same fresh-detection guard as ``classification`` so a
+   * re-apply never clobbers user-edited approach fields (#112).
+   */
+  crossStreet: CrossStreetCandidate | null;
 }
 
 // Defined in lib/scenarios/overrides.ts (PR 4 extraction); imported
@@ -98,6 +111,9 @@ const DEFAULT_CENTER: [number, number] = [-105.5, 39.0]; // Colorado
 const DEFAULT_ZOOM = 6;
 const PIN_ZOOM = 16;
 const PIN_COLOR = "#E8710A";
+// Cross-street (second) pin — teal, matching the work-zone corridor
+// segment colour so the two pins read as different jobs on the map.
+const CROSS_PIN_COLOR = "#1EC8A5";
 
 const CORRIDOR_SOURCE_ID = "corridor-source";
 const CORRIDOR_LAYER_ID = "corridor-layer";
@@ -336,6 +352,27 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       : "",
   );
   const [workZoneError, setWorkZoneError] = useState<string | null>(null);
+
+  // ---- Cross street (near_intersection kind only, #117) ------------------
+  // Second pin marking the intersection.  The map's click handler
+  // routes here while ``intersectionMode`` is armed; detection then
+  // runs the same /api/road-bearing call at the intersection point and
+  // deriveCrossStreet turns it into one proposed approach prefill.
+  const isNearIntersectionKind = initial.scenarioKind === "near_intersection";
+  const [intersectionMode, setIntersectionMode] = useState(false);
+  const intersectionModeRef = useRef(false);
+  intersectionModeRef.current = intersectionMode;
+  const [crossPin, setCrossPin] = useState<{ lat: number; lng: number } | null>(
+    null,
+  );
+  const [crossStatus, setCrossStatus] = useState<
+    "idle" | "resolving" | "detected" | "none" | "error"
+  >("idle");
+  const [crossStreet, setCrossStreet] = useState<CrossStreetCandidate | null>(
+    null,
+  );
+  const crossMarkerRef = useRef<MapboxGL.Marker | null>(null);
+  const crossTokenRef = useRef(0);
 
   // ---- Map / basemap -----------------------------------------------------
   const [style, setStyle] = useState<MapStyle>("satellite");
@@ -616,6 +653,113 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const bearingInputRef = useRef(bearingInput);
   bearingInputRef.current = bearingInput;
 
+  // ---- Cross-street detection (near_intersection kind, #117) ------------
+  // Everything the second-pin derivation needs, mirrored into a ref:
+  // the map click handler that arms it is created once at map init.
+  const crossDetectCtxRef = useRef<{
+    lat: number;
+    lng: number;
+    bearing: number;
+    mainline: RoadCandidate | null;
+    speedMph: number;
+    workZoneFt: number;
+  }>({
+    lat: 0,
+    lng: 0,
+    bearing: 0,
+    mainline: null,
+    speedMph: initial.speedMph,
+    workZoneFt: 0,
+  });
+  crossDetectCtxRef.current = {
+    lat,
+    lng,
+    bearing,
+    mainline:
+      selectedCandidateIdx !== null
+        ? (bearingCandidates[selectedCandidateIdx] ?? null)
+        : null,
+    speedMph: initial.speedMph,
+    workZoneFt,
+  };
+
+  const placeCrossPin = useCallback(async (qLat: number, qLng: number) => {
+    if (!isValidLat(qLat) || !isValidLng(qLng)) return;
+    setCrossPin({ lat: qLat, lng: qLng });
+    setIntersectionMode(false);
+
+    const map = mapRef.current;
+    const mapbox = mapboxRef.current;
+    if (map && mapbox) {
+      if (!crossMarkerRef.current) {
+        crossMarkerRef.current = new mapbox.Marker({ color: CROSS_PIN_COLOR })
+          .setLngLat([qLng, qLat])
+          .addTo(map);
+      } else {
+        crossMarkerRef.current.setLngLat([qLng, qLat]);
+      }
+    }
+
+    const myToken = ++crossTokenRef.current;
+    setCrossStatus("resolving");
+    try {
+      const r = await fetch("/api/road-bearing", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lat: qLat, lng: qLng }),
+      });
+      if (crossTokenRef.current !== myToken) return;
+      if (!r.ok) {
+        setCrossStreet(null);
+        setCrossStatus("error");
+        return;
+      }
+      const j = (await r.json()) as RoadDetectResponse;
+      if (crossTokenRef.current !== myToken) return;
+      const ctx = crossDetectCtxRef.current;
+      // The anchor pin sits one downstream-taper length below station
+      // 0, so the derivation needs the same spec the corridor preview
+      // draws from.
+      const spec = buildCorridorSpec({
+        anchorLat: ctx.lat,
+        anchorLng: ctx.lng,
+        bearingDeg: ctx.bearing,
+        speedMph: snapSpeedToDomain("near_intersection", ctx.speedMph),
+        workZoneFt: ctx.workZoneFt,
+        scenarioKind: "near_intersection",
+      });
+      const derived = deriveCrossStreet({
+        detection: j,
+        mainlineWayId: ctx.mainline?.way_id ?? null,
+        mainlineName: ctx.mainline?.name ?? null,
+        mainlineBearingDeg: ctx.bearing,
+        anchorLat: ctx.lat,
+        anchorLng: ctx.lng,
+        crossLat: qLat,
+        crossLng: qLng,
+        downstreamTaperFt: spec.downstreamTaperFt,
+      });
+      setCrossStreet(derived);
+      setCrossStatus(derived ? "detected" : "none");
+    } catch {
+      if (crossTokenRef.current === myToken) {
+        setCrossStreet(null);
+        setCrossStatus("error");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const clearCrossPin = useCallback(() => {
+    crossTokenRef.current++;
+    setCrossPin(null);
+    setCrossStreet(null);
+    setCrossStatus("idle");
+    setIntersectionMode(false);
+    crossMarkerRef.current?.remove();
+    crossMarkerRef.current = null;
+  }, []);
+
   // ---- Marker / pin management ------------------------------------------
 
   const ensureMarker = useCallback(
@@ -755,6 +899,13 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
       map.on("click", (e: MapboxGL.MapMouseEvent) => {
         const { lat: clat, lng: clng } = e.lngLat;
+        // While "mark the intersection" is armed (near_intersection
+        // kind), a click places the cross-street pin instead of moving
+        // the work-zone pin.
+        if (intersectionModeRef.current) {
+          void placeCrossPin(clat, clng);
+          return;
+        }
         applyPinPosition(clat, clng, { detect: true, fly: false });
       });
 
@@ -1143,6 +1294,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       workZoneFt,
       classification: classify.state === "detected" ? classify.result : null,
       overrides,
+      crossStreet: isNearIntersectionKind ? crossStreet : null,
     });
   };
 
@@ -1412,6 +1564,17 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 onFlipDirection={onFlipDirection}
                 hasPin={hasPin}
               />
+              {isNearIntersectionKind && (
+                <CrossStreetPanel
+                  hasPin={hasPin}
+                  intersectionMode={intersectionMode}
+                  onToggleMode={() => setIntersectionMode((v) => !v)}
+                  crossPin={crossPin}
+                  crossStatus={crossStatus}
+                  crossStreet={crossStreet}
+                  onClear={clearCrossPin}
+                />
+              )}
               <CorridorPreviewPanel corridor={corridor} hasPin={hasPin} />
             </div>
           </div>
@@ -1444,6 +1607,97 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 // ---------------------------------------------------------------------------
 // Sub-panels (private to this file)
 // ---------------------------------------------------------------------------
+
+// Cross-street marking for the near_intersection kind (#117).  The
+// operator arms the mode, clicks the intersection on the map, and the
+// detected cross street is summarised here.  Every derived value is a
+// PROPOSAL — the approach form is where it lands, editable, with the
+// lane count held for explicit confirmation.
+function CrossStreetPanel({
+  hasPin,
+  intersectionMode,
+  onToggleMode,
+  crossPin,
+  crossStatus,
+  crossStreet,
+  onClear,
+}: {
+  hasPin: boolean;
+  intersectionMode: boolean;
+  onToggleMode: () => void;
+  crossPin: { lat: number; lng: number } | null;
+  crossStatus: "idle" | "resolving" | "detected" | "none" | "error";
+  crossStreet: CrossStreetCandidate | null;
+  onClear: () => void;
+}) {
+  return (
+    <div className="border-t border-[color:var(--rule)] px-5 py-3">
+      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)] mb-2">
+        Cross street
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onToggleMode}
+          disabled={!hasPin}
+          className={`px-3 py-1.5 font-sans text-[12px] border disabled:opacity-40 disabled:cursor-not-allowed ${
+            intersectionMode
+              ? "border-[color:var(--cyan)] text-[color:var(--cyan)]"
+              : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:text-white"
+          }`}
+        >
+          {intersectionMode
+            ? "Click the intersection on the map…"
+            : crossPin
+              ? "Move the intersection pin"
+              : "Mark the intersection on the map"}
+        </button>
+        {crossPin && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="px-2 py-1.5 font-sans text-[12px] text-[color:var(--ink-on-dark-faint)] hover:text-white"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+      {!hasPin && (
+        <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] mt-2 m-0">
+          Drop the work-zone pin first, then mark where the cross street
+          meets this road.
+        </p>
+      )}
+      {crossStatus === "resolving" && (
+        <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] mt-2 m-0">
+          Looking up the cross street…
+        </p>
+      )}
+      {crossStatus === "none" && (
+        <p className="text-[11px] text-[color:var(--orange)] mt-2 m-0">
+          No cross street found at that point. You can still describe the
+          approaches by hand in the form.
+        </p>
+      )}
+      {crossStatus === "error" && (
+        <p className="text-[11px] text-[color:var(--orange)] mt-2 m-0">
+          Couldn&apos;t reach the road-detection service. Describe the
+          approaches by hand in the form.
+        </p>
+      )}
+      {crossStatus === "detected" && crossStreet && (
+        <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0">
+          {crossStreet.name ?? "Unnamed road"} —{" "}
+          {crossStreet.legCount === 1 ? "one-way" : "two-way"}
+          {crossStreet.signalized ? ", signal detected" : ""}. Crossing
+          about {Math.abs(crossStreet.alongStationFt).toLocaleString("en-US")}{" "}
+          ft {crossStreet.alongStationFt < 0 ? "past" : "before"} the work
+          zone. You&apos;ll confirm the details in the form.
+        </p>
+      )}
+    </div>
+  );
+}
 
 // Static legend bar.  Positioning is owned by the parent — this is
 // rendered inside the bottom-right stack alongside the Recenter

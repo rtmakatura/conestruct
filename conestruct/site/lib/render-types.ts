@@ -106,6 +106,10 @@ export interface AuditResponse {
     // #104: absent when no site-condition flag fired AND during the
     // Vercel-leads-Modal deploy window (fallback: static table).
     site_adjustments?: SiteAdjustmentRecord[];
+    // #117: per-leg cross-street advance signing.  Present only for the
+    // (gated) near_intersection kind; the panel self-suppresses when
+    // absent.  Kept loose like the other sections (file-header note).
+    approaches?: Record<string, unknown>;
   };
   pending_verification: PendingVerification;
 }

@@ -106,6 +106,11 @@ function buildQuery(lat: number, lng: number): string {
     `["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];` +
     `node(around:${PLACE_RADIUS_M.toFixed(0)},${lat},${lng})` +
     `["place"~"^(city|town|suburb|neighbourhood|village|hamlet)$"];` +
+    // Signal nodes near the pin: the `signalized` default for
+    // cross-street approaches (near_intersection #117).  Same radius
+    // as the way search so a pin on the intersection sees its signals.
+    `node(around:${SEARCH_RADIUS_M.toFixed(0)},${lat},${lng})` +
+    `["highway"="traffic_signals"];` +
     `);out geom tags;`
   );
 }
@@ -268,6 +273,18 @@ function buildResponse(
   const isUrban = place !== null && URBAN_PLACE_CLASSES.has(place.tags?.place ?? "");
   const placeName = place ? strOrNull(place.tags?.name) : null;
 
+  // Signal nodes (highway=traffic_signals) from the same round trip.
+  // Kept as bare coordinates; each candidate records its distance to
+  // the nearest one below.
+  const signalNodes: Array<{ lat: number; lon: number }> = [];
+  for (const el of elements) {
+    if (el.type !== "node") continue;
+    const node = el as OverpassPlace;
+    if (node.tags?.highway !== "traffic_signals") continue;
+    if (typeof node.lat !== "number" || typeof node.lon !== "number") continue;
+    signalNodes.push({ lat: node.lat, lon: node.lon });
+  }
+
   const ways: OverpassWay[] = elements.filter(
     (el): el is OverpassWay =>
       el.type === "way" &&
@@ -299,6 +316,11 @@ function buildResponse(
 
     const tags = way.tags ?? {};
     const brg = bearingDeg(bestA.lat, bestA.lon, bestB.lat, bestB.lon);
+    let signalDistM: number | null = null;
+    for (const s of signalNodes) {
+      const d = haversineM(bestProj.lat, bestProj.lng, s.lat, s.lon);
+      if (signalDistM === null || d < signalDistM) signalDistM = d;
+    }
     candidates.push({
       way_id: String(way.id),
       highway_class: tags.highway ?? "unclassified",
@@ -314,7 +336,12 @@ function buildResponse(
         lanes: strOrNull(tags.lanes),
         lanes_forward: strOrNull(tags["lanes:forward"]),
         lanes_backward: strOrNull(tags["lanes:backward"]),
+        turn_lanes: strOrNull(tags["turn:lanes"]),
+        turn_lanes_forward: strOrNull(tags["turn:lanes:forward"]),
+        turn_lanes_backward: strOrNull(tags["turn:lanes:backward"]),
       },
+      signal_distance_m:
+        signalDistM === null ? null : Math.round(signalDistM * 100) / 100,
     });
   }
 

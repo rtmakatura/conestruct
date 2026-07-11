@@ -1145,12 +1145,110 @@ export function siteAdjustmentsItem(
 
 function buildAdditiveItems(data: AuditResponse): ItemSpec[] {
   const items: (ItemSpec | null)[] = [
+    approachesItem(data.sections.approaches),
     corridorValidationItem(data.sections.corridor_validation),
     geometryValidationItem(data.sections.geometry_validation),
     finesDoubleItem(data.sections.fines_double),
     pendingVerificationItem(data.pending_verification),
   ];
   return items.filter((x): x is ItemSpec => x !== null);
+}
+
+// Backend shape: src/api/audit.py approaches_section (near_intersection
+// kind, #117).  Mirrors the fields the PDF builder reads
+// (src/rendering/audit_blocks.py _approaches_blocks) so the panel and
+// the audit PDF speak the same section.
+interface ApproachRow {
+  id: string;
+  speed_mph: number;
+  road_type: string;
+  signalized: boolean;
+  key_text: string;
+  sign_table: Array<Record<string, string>>;
+}
+
+const APPROACH_SIGN_COLUMNS = [
+  "Code",
+  "Station (ft from curb line)",
+  "Placement rule",
+] as const;
+
+export function approachesItem(
+  section: Record<string, unknown> | undefined,
+): ItemSpec | null {
+  // Absent for every kind except near_intersection — self-suppress.
+  if (!section) return null;
+  const rows = (section.approaches as ApproachRow[] | undefined) ?? [];
+  const side = typeof section.side === "string" ? section.side : "—";
+  const alongFt =
+    typeof section.along_station_ft === "number"
+      ? section.along_station_ft
+      : null;
+  const narrative =
+    typeof section.narrative === "string" ? section.narrative : "";
+  const source = typeof section.source === "string" ? section.source : "";
+  const nSignalized = rows.filter((r) => r.signalized).length;
+
+  return {
+    title: "Cross-street approaches",
+    result: `${rows.length} leg${rows.length === 1 ? "" : "s"} · ${side}-side work`,
+    cite: "MUTCD § 6N.12",
+    body: (
+      <>
+        <p>
+          Intersection on the {side} side of the work zone
+          {alongFt !== null && (
+            <>
+              {" "}
+              (centerline crossing at mainline station{" "}
+              {alongFt.toLocaleString("en-US")} ft)
+            </>
+          )}
+          .
+        </p>
+        {narrative && <p>{narrative}</p>}
+        {rows.map((ap) => (
+          <div key={ap.id}>
+            <p>
+              Approach &lsquo;{ap.id}&rsquo; — {ap.speed_mph} mph,{" "}
+              {ap.road_type}
+              {ap.signalized && (
+                <span className="text-[color:var(--orange)]">
+                  {" "}
+                  — SIGNALIZED (signal operation review required)
+                </span>
+              )}
+              . {ap.key_text}.
+            </p>
+            {ap.sign_table.length > 0 && (
+              <table>
+                <thead>
+                  <tr>
+                    {APPROACH_SIGN_COLUMNS.map((c) => (
+                      <th key={c}>{c}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {ap.sign_table.map((row, i) => (
+                    <tr key={i}>
+                      {APPROACH_SIGN_COLUMNS.map((c) => (
+                        <td key={c}>{row[c] ?? "—"}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        ))}
+        <div className="citation">
+          <span className="check">{nSignalized > 0 ? "⚠" : "✓"}</span>
+          {source || "MUTCD § 6N.12; CDOT S-630-1 SHEET 10"}
+        </div>
+      </>
+    ),
+  };
 }
 
 interface FinesDoubleEnvelope {

@@ -117,6 +117,11 @@ export function scenarioTa(kind: Scenario["kind"]): string {
       return "TA-35";
     case "mobile_op_multilane":
       return "TA-26";
+    case "near_intersection":
+      // Kind-level family label like the shoulder case: CDOT S-630-1
+      // Cases 18/19 (near/far side derives per plan, so no single-case
+      // label here).
+      return "Cases 18/19";
   }
 }
 
@@ -136,6 +141,8 @@ export function scenarioNoun(kind: Scenario["kind"]): string {
       return "2-lane mobile";
     case "mobile_op_multilane":
       return "multi-lane mobile";
+    case "near_intersection":
+      return "near-intersection";
   }
 }
 

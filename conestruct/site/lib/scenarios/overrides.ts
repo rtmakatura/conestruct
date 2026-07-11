@@ -91,6 +91,12 @@ export function applyRoadTypeOverride(scenario: Scenario, rt: RoadType): Scenari
       return MOBILE_MULTILANE_TYPES.has(rt as MobileRoadTypeMultilane)
         ? { ...scenario, roadType: rt as MobileRoadTypeMultilane }
         : scenario;
+    case "near_intersection":
+      // Mainline road type shares the flagger domain (Cases 18/19 are
+      // undivided/arterial plates).
+      return FLAGGER_TYPES.has(rt as FlaggerRoadType)
+        ? { ...scenario, roadType: rt as FlaggerRoadType }
+        : scenario;
   }
 }
 
