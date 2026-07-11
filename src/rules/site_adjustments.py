@@ -75,81 +75,58 @@ def _adjust_adjacent_intersection(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
-    """Add ROAD WORK AHEAD signs facing each cross-street approach."""
-    midpoint = params.work_zone_length_ft / 2.0
-    # At least 6 ft beyond the road edge (so wide multi-lane roads don't
-    # swallow the sign into the travel lanes); 50 ft is the historical
-    # placement, kept whenever the road is narrow enough for it.
-    road_edge = params.num_lanes * params.lane_width_ft + _shoulder_width(params)
-    sign_offset = max(50.0, road_edge + 6.0)
-    new_signs = [
-        DevicePlacement(
-            device_type=DeviceType.SIGN_GENERIC,
-            station_ft=midpoint,
-            offset_ft=sign_offset,
-            label="W20-1",
-        ),
-        DevicePlacement(
-            device_type=DeviceType.SIGN_GENERIC,
-            station_ft=midpoint,
-            offset_ft=-sign_offset,
-            label="W20-1",
-        ),
-    ]
+    """Flag an adjacent at-grade intersection — no devices are added.
+
+    The legacy gesture (a mirrored ``W20-1`` pair stamped at the
+    work-zone midpoint) is retired (Refs #117): two signs facing a
+    cross street the tool does not model bought no real control while
+    inflating the device count and quote — the wrong-counts failure
+    mode the Option C framing cares about.  The record still fires so
+    the audit's ``intersection_layout_not_generated`` pending
+    disclosure (keyed off this flag) keeps flipping the plan amber;
+    real cross-street control is the gated ``near_intersection`` kind
+    (#117; corner-quadrant work at #128).
+    """
+    _ = params  # geometry no longer drives any placement here
     record = {
         "flag": "adjacent_intersection",
-        "action": "Added 2 ROAD WORK AHEAD (W20-1) signs facing cross-street traffic.",
-        "devices_added": 2,
+        "action": (
+            "No devices added — the cross-street approach layout is not "
+            "generated; see the pending-verification disclosure."
+        ),
+        "devices_added": 0,
         "rule": "MUTCD §6N.12 — signing for intersections within or adjacent to work zones",
     }
-    return placements + new_signs, record
+    return placements, record
 
 
 def _adjust_adjacent_interchange(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> tuple[list[DevicePlacement], dict[str, Any]]:
-    """Add upstream-ramp signing for an adjacent highway interchange.
+    """Flag an adjacent interchange — no devices are added.
 
-    Interchange cross-traffic enters the corridor via merging on/off
-    ramps rather than a stop bar, so the at-grade ``W20-1`` cross-street
-    pair (handled by :func:`_adjust_adjacent_intersection`) is the wrong
-    treatment.  V1 emits a generic upstream-ramp warning + a PCMS for
-    advance messaging; the precise per-ramp layout depends on which
-    ramps exist (entrance vs exit, NB vs SB) and is left to the field
-    TCS until the corridor module knows ramp geometry.
-
-    Adds:
-      * 1 ``W20-3`` LANE CLOSED AHEAD sign at offset +50 ft (gore side
-        of an upstream entrance ramp), station at the work-zone midpoint.
-      * 1 PCMS at offset +50 ft, 200 ft upstream of the work zone start
-        (``work_zone_length_ft + 200``) for advance ramp messaging.
+    The legacy gesture (one ``W20-3`` + one PCMS stamped single-side) is
+    retired with the intersection stamp (Refs #117, same gesture class):
+    the PCMS alone put a $175 phantom line on quotes for a per-ramp
+    layout the tool does not generate, and the unmirrored sign created a
+    false left/right-balance compliance failure on divided plans.  The
+    record still fires so the audit's
+    ``interchange_layout_not_generated`` pending disclosure (keyed off
+    this flag) keeps flipping the plan amber; ramp-aware support tracks
+    with the intersection work (#117).
     """
-    midpoint = params.work_zone_length_ft / 2.0
-    pcms_station = params.work_zone_length_ft + 200.0
-    new_devices = [
-        DevicePlacement(
-            device_type=DeviceType.SIGN_GENERIC,
-            station_ft=midpoint,
-            offset_ft=50.0,
-            label="W20-3",
-        ),
-        DevicePlacement(
-            device_type=DeviceType.PCMS,
-            station_ft=pcms_station,
-            offset_ft=50.0,
-        ),
-    ]
+    _ = params  # geometry no longer drives any placement here
     record = {
         "flag": "adjacent_interchange",
         "action": (
-            "Added 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for "
-            "upstream interchange ramp signaling."
+            "No devices added — the per-ramp interchange layout is not "
+            "generated; see the pending-verification disclosure."
         ),
-        "devices_added": 2,
+        "devices_added": 0,
         "rule": ("MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"),
     }
-    return placements + new_devices, record
+    return placements, record
 
 
 def _adjust_driveways_present() -> dict[str, Any]:

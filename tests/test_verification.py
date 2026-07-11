@@ -665,20 +665,22 @@ def test_site_adjustments_pedestrian_facility_adds_six() -> None:
     assert rec["devices_added"] == 6
 
 
-def test_site_adjustments_all_flags_add_fourteen() -> None:
-    """All site flags True → total +14 devices over baseline.
+def test_site_adjustments_all_flags_add_ten() -> None:
+    """All site flags True → total +10 devices over baseline.
 
-    Per ``site_adjustments.py`` adders:
+    Per ``site_adjustments.py`` adders (the legacy intersection /
+    interchange stamps are retired, Refs #117 — those flags now add
+    nothing and disclose instead):
       limited_sight_distance:  0 added (modifies in place)
-      adjacent_intersection:   2 (W20-1 cross-street pair)
-      adjacent_interchange:    2 (W20-3 + PCMS upstream ramp signaling)
+      adjacent_intersection:   0 (flag-and-disclose; stamp retired)
+      adjacent_interchange:    0 (flag-and-disclose; stamp retired)
       driveways_present:       0 (advisory only)
       pedestrian_facility:     6 (4 barricades + 2 R9-9)
       bicycle_facility:        2 (M4-9a pair)
       school_zone:             2 (S1-1 pair)
-      Total added: 14.
+      Total added: 10.
 
-    Baseline 30 + 14 = 44.
+    Baseline 31 + 10 = 41.
     """
     flags = {
         "limited_sight_distance": True,
@@ -692,33 +694,35 @@ def test_site_adjustments_all_flags_add_fourteen() -> None:
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(placements, params, flags=flags)
-    # 31 baseline + 14 add-ons (4 barricades + 2 R9-9 + 2 W20-1 + 2 W20-3/PCMS + ...)
-    assert len(adjusted) == 45
-    # Seven audit records, one per checked flag (driveways included even
-    # though it adds nothing).
+    assert len(adjusted) == 41
+    # Seven audit records, one per checked flag (the no-device flags
+    # included — their records drive the audit disclosures).
     flags_seen = {r["flag"] for r in records}
     assert flags_seen == set(flags.keys())
 
 
-def test_site_adjustments_intersection_only_adds_two() -> None:
-    """``adjacent_intersection=True`` alone adds the W20-1 cross-street pair.
+def test_site_adjustments_intersection_adds_nothing_but_records() -> None:
+    """``adjacent_intersection=True`` adds NO devices — flag-and-disclose.
 
-    Bug Fix 3 split the legacy ``adjacent_intersection`` flag into two —
-    this test pins the at-grade behavior (W20-1 facing cross-street
-    traffic) so a regression in the dispatcher fires here, not just in
-    the more general all-flags test.
+    The legacy W20-1 midpoint pair is retired (Refs #117): two signs
+    facing a cross street the tool does not model inflated the device
+    count and quote without buying real control.  The record must still
+    fire (it drives the ``intersection_layout_not_generated`` pending
+    disclosure) with ``devices_added == 0`` and no device-promising
+    action text.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"adjacent_intersection": True}
     )
-    # 31 baseline + 2 add-ons.
-    assert len(adjusted) == 33
+    assert adjusted == placements  # byte-identical device list
     rec = next(r for r in records if r["flag"] == "adjacent_intersection")
-    assert rec["devices_added"] == 2
-    assert "W20-1" in rec["action"]
-    # The two added devices are W20-1 SIGN_GENERIC at offsets ±50.
+    assert rec["devices_added"] == 0
+    assert "No devices added" in rec["action"]
+    assert "W20-1" not in rec["action"]
+    assert "6N.12" in rec["rule"]
+    # The retired stamp must not resurface: no off-road W20-1s.
     added_signs = [
         p
         for p in adjusted
@@ -726,62 +730,44 @@ def test_site_adjustments_intersection_only_adds_two() -> None:
         and p.label == "W20-1"
         and abs(p.offset_ft) > 40.0
     ]
-    assert len(added_signs) == 2
+    assert added_signs == []
 
 
-def test_site_adjustments_interchange_only_adds_w20_3_and_pcms() -> None:
-    """``adjacent_interchange=True`` adds 1 W20-3 sign + 1 PCMS — not W20-1.
+def test_site_adjustments_interchange_adds_nothing_but_records() -> None:
+    """``adjacent_interchange=True`` adds NO devices — flag-and-disclose.
 
-    Bug Fix 3: at-grade and interchange treatments must be distinct.  The
-    W20-3 LANE CLOSED AHEAD plus a PCMS for upstream ramp messaging is
-    correct for ramp-based cross-traffic; the W20-1 cross-street pair
-    (used by ``adjacent_intersection``) is not.
+    The legacy W20-3 + PCMS stamp is retired with the intersection pair
+    (Refs #117, same gesture class): the PCMS alone was a $175 phantom
+    quote line for a per-ramp layout the tool does not generate, and the
+    unmirrored sign created a false left/right-balance compliance fail
+    on divided plans.  The record must still fire (it drives the
+    ``interchange_layout_not_generated`` pending disclosure).
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
     adjusted, records = apply_site_adjustments(
         placements, params, flags={"adjacent_interchange": True}
     )
-    # 31 baseline + 2 add-ons.
-    assert len(adjusted) == 33
+    assert adjusted == placements  # byte-identical device list
 
     rec = next(r for r in records if r["flag"] == "adjacent_interchange")
-    assert rec["devices_added"] == 2
-    assert "W20-3" in rec["action"]
-    assert "PCMS" in rec["action"]
+    assert rec["devices_added"] == 0
+    assert "No devices added" in rec["action"]
+    assert "W20-3" not in rec["action"]
+    assert "PCMS" not in rec["action"]
     assert "6N.16" in rec["rule"]
 
-    # Exactly one W20-3 sign added at the work-zone midpoint.
-    w20_3 = [p for p in adjusted if p.device_type == DeviceType.SIGN_GENERIC and p.label == "W20-3"]
-    assert len(w20_3) == 1
-    assert w20_3[0].station_ft == pytest.approx(params.work_zone_length_ft / 2.0)
-
-    # Exactly one PCMS placement was added; its station is 200 ft past the
-    # upstream end of the work zone (where the gore signing belongs).
-    pcms = [p for p in adjusted if p.device_type == DeviceType.PCMS]
-    assert len(pcms) == 1
-    assert pcms[0].station_ft == pytest.approx(params.work_zone_length_ft + 200.0)
-
-    # Crucially: no W20-1 cross-street signs added (that's the at-grade
-    # treatment, and it must not fire when only the interchange flag is
-    # set — otherwise we'd be back in the bug we just fixed).
-    cross_street_w201 = [
-        p
-        for p in adjusted
-        if p.device_type == DeviceType.SIGN_GENERIC
-        and p.label == "W20-1"
-        and abs(p.offset_ft) > 40.0
-    ]
-    assert cross_street_w201 == []
+    # The retired stamp must not resurface.
+    assert [p for p in adjusted if p.label == "W20-3"] == []
+    assert [p for p in adjusted if p.device_type == DeviceType.PCMS] == []
 
 
 def test_site_adjustments_intersection_and_interchange_records_are_distinct() -> None:
     """Both flags can fire simultaneously and produce two distinct records.
 
     A frontage-road intersection near a freeway interchange is the
-    motivating real-world case: at-grade signing + ramp signing both
-    apply.  The audit trail must surface both rules separately so the
-    field crew installs both treatments.
+    motivating real-world case: both gaps apply.  The audit trail must
+    surface both rules separately so both pending disclosures fire.
     """
     params = _shoulder_divided_params()
     placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
@@ -790,8 +776,9 @@ def test_site_adjustments_intersection_and_interchange_records_are_distinct() ->
         params,
         flags={"adjacent_intersection": True, "adjacent_interchange": True},
     )
-    # 31 baseline + 2 (intersection) + 2 (interchange) = 35.
-    assert len(adjusted) == 35
+    # Both flags are flag-and-disclose (stamps retired, Refs #117):
+    # the device list is untouched, the two records both fire.
+    assert adjusted == placements
 
     by_flag = {r["flag"]: r for r in records}
     assert "adjacent_intersection" in by_flag
@@ -804,8 +791,8 @@ def test_site_adjustments_intersection_and_interchange_records_are_distinct() ->
     # regressed on the split.
     assert intersection_rec["action"] != interchange_rec["action"]
     assert intersection_rec["rule"] != interchange_rec["rule"]
-    assert "W20-1" in intersection_rec["action"]
-    assert "W20-3" in interchange_rec["action"]
+    assert "cross-street" in intersection_rec["action"]
+    assert "ramp" in interchange_rec["action"]
 
 
 # ===========================================================================

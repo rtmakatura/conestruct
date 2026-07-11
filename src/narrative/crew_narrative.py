@@ -24,7 +24,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.generation.layout import device_count_floors
+from src.generation.layout import device_count_floors, near_intersection_stations
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
@@ -41,6 +41,7 @@ from src.rules.spacing import (
     shoulder_taper_length,
 )
 from src.rules.validators import (
+    ApproachParams,
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
@@ -263,6 +264,7 @@ def build_narrative_context(
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
+    approaches: list[ApproachParams] | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -274,12 +276,38 @@ def build_narrative_context(
     ``pilot_car`` is threaded from the scenario (PR 3): the pilot
     vehicle and its rear-mounted G20-4 are field equipment with no
     placement trace post-PR-2, so the caller must say so explicitly.
+
+    ``approaches`` is required for the (gated) near_intersection kind
+    (Option C inc. 3, Refs #117) and forbidden otherwise: the kind's
+    mainline numbers come from ``near_intersection_stations`` (the same
+    single source the generator reads) and each cross-street leg gets
+    its own narrative block keyed to its own speed/road-type math.
     """
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     shoulder_width = params.shoulder_width_ft
 
     narrative_is_flagger = _is_flagger_scenario(params)
+    is_near_intersection = params.near_intersection
+    if is_near_intersection and not approaches:
+        # Rule 10: rendering this kind through the shoulder wording
+        # (L/3 taper, RIGHT ARROW, no cross-street steps) would be a
+        # confidently wrong document, not a degraded one.
+        raise ValueError(
+            "build_narrative_context: the near_intersection kind requires "
+            "the approaches list (same ApproachParams the generator got)."
+        )
+    if approaches and not is_near_intersection:
+        raise ValueError(
+            "build_narrative_context: approaches are only meaningful for "
+            "the near_intersection kind."
+        )
+    ni = near_intersection_stations(params, approaches) if is_near_intersection else None
+    # Mainline-frame placements — approach-frame stations are measured
+    # from the intersection curb line and must never be mixed into
+    # mainline math (DevicePlacement.approach_id contract).  Identity
+    # for every other kind, where all placements are mainline.
+    mainline_placements = [p for p in placements if p.approach_id == "mainline"]
 
     # Lateral landmarks.  Flagger runs on a 2-lane two-way road: the
     # closed-lane edge is one lane width from the centerline and the
@@ -300,6 +328,12 @@ def build_narrative_context(
     # the audit.
     if narrative_is_flagger:
         taper_len = one_lane_two_way_taper_length()
+    elif is_near_intersection:
+        # Full merging taper L off the closed lane width — the same
+        # value near_intersection_stations computed above (single
+        # source); the shoulder L/3 below would describe a taper a
+        # third the length of the one the layout deploys.
+        taper_len = ni["taper_len"]
     else:
         taper_len = shoulder_taper_length(speed, shoulder_width)
     buf_len = buffer_space(
@@ -308,6 +342,12 @@ def build_narrative_context(
 
     taper_end_station = wz_len + buf_len
     taper_start_station = taper_end_station + taper_len
+    if ni is not None:
+        # Far-side geometry can pull the taper further upstream than
+        # the midblock anchoring (§6N.12.12 companion closure) — read
+        # the stations the generator actually used.
+        taper_end_station = ni["taper_end"]
+        taper_start_station = ni["taper_start"]
 
     rt = params.road_type if params.road_type in _TABLE_6B_1_CATEGORIES else None
     spacing_abc = advance_warning_spacing(speed, rt)
@@ -329,10 +369,13 @@ def build_narrative_context(
     tangent_spacing = wz_len / (n_tangent - 1)
 
     # Extracted directly from the placement list so counts always match the
-    # workbook export and the plan-sheet PDF.
-    n_taper_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
+    # workbook export and the plan-sheet PDF.  Mainline frame only — the
+    # near_intersection kind's approach-frame signs get their own blocks.
+    n_taper_drums = sum(1 for p in mainline_placements if p.device_type == DeviceType.DRUM)
     n_tangent_cones = sum(
-        1 for p in placements if p.device_type == DeviceType.CONE and 0.0 <= p.station_ft <= wz_len
+        1
+        for p in mainline_placements
+        if p.device_type == DeviceType.CONE and 0.0 <= p.station_ft <= wz_len
     )
     # #96 — downstream-taper cones sit at negative stations (past the
     # downstream end of the work zone).  The equipment bill and XLSX count
@@ -341,19 +384,21 @@ def build_narrative_context(
     # shoulder generators place a fixed 2, the flagger layout computes the
     # count (pick_device_count over the §6B.08 run — typically 4).
     ds_cone_stations = [
-        p.station_ft for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0
+        p.station_ft
+        for p in mainline_placements
+        if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
     ds_taper_len_ft = -min(ds_cone_stations) if ds_cone_stations else 0.0
     ds_spacing_ft = ds_taper_len_ft / n_ds_cones if n_ds_cones else 0.0
     n_plaques_right = sum(
         1
-        for p in placements
+        for p in mainline_placements
         if p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-5P" and p.offset_ft > 0
     )
     plaque_interval = wz_len / n_plaques_right if n_plaques_right > 0 else wz_len
 
-    advance_signs = _advance_signs_from_placements(placements, taper_start_station, params)
+    advance_signs = _advance_signs_from_placements(mainline_placements, taper_start_station, params)
     # G1 — parametric descriptions for the W21-5aR-pair plaques.
     # ``description_for("W16-2a")`` / ``description_for("W7-3a")`` return
     # the generic ``NEXT XXX FT plaque`` / ``NEXT XX MILES plaque`` templates;
@@ -548,7 +593,7 @@ def build_narrative_context(
     end_sign_station = next(
         (
             p.station_ft
-            for p in placements
+            for p in mainline_placements
             if p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-2"
         ),
         0.0,
@@ -569,7 +614,7 @@ def build_narrative_context(
     # TEMPORARY_SIGNAL devices at the same stations.
     flagger_stations = sorted(
         p.station_ft
-        for p in placements
+        for p in mainline_placements
         if p.device_type == DeviceType.FLAGGER_STATION
         or (
             p.device_type == DeviceType.TEMPORARY_SIGNAL
@@ -592,6 +637,73 @@ def build_narrative_context(
             '\n- 1× Pilot car with G20-4 "PILOT CAR/FOLLOW ME" sign '
             "mounted on the rear of the vehicle (S-630-1 Sheet 26 — "
             "vehicle-mounted, not a roadside placement)"
+        )
+
+    # ------------------------------------------------------------------
+    # near_intersection blocks (Option C inc. 3, Refs #117).
+    # ------------------------------------------------------------------
+    # Everything below reads near_intersection_stations (the generator's
+    # own source) plus the placement list, so the prose numbers agree
+    # with the layout by construction.  The mainline R2-10/R2-11/G20-1
+    # get explicit schedule rows and steps here because this kind places
+    # them unconditionally (plate-driven) while the generic schedule only
+    # covers them via the reduced-speed Fines Double branch — a billed
+    # device with no instruction is the #96 failure mode.
+    ni_approaches: list[dict[str, Any]] = []
+    ni_companion_cones = 0
+    ni_lane_line_offset = 0.0
+    if ni is not None:
+        ni_lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
+        ni_companion_cones = sum(
+            1
+            for p in mainline_placements
+            if p.device_type == DeviceType.CONE and p.station_ft > wz_len
+        )
+        for a in approaches or []:
+            a_st = ni["approaches"][a.id]
+            ni_approaches.append(
+                {
+                    "id": a.id,
+                    "speed_mph": a.speed_mph,
+                    "road_type_human": _ROAD_TYPE_HUMAN.get(a.road_type, a.road_type),
+                    "signalized": a.signalized,
+                    "a_dist_ft": a_st["a_dist"],
+                    "w20_1_ft": a_st["w20_1"],
+                    "r2_10_ft": a_st["r2_10"],
+                    "r2_11_ft": a_st["r2_11"],
+                    "sign_offset_ft": a.num_lanes * a.lane_width_ft + 4.0,
+                }
+            )
+        # Mainline schedule rows for the plate-driven signs the generic
+        # advance list excludes (R2-10 is in _PLAQUE_AND_END_LABELS; the
+        # bookends sit downstream of the taper start).
+        sign_schedule.append(
+            {
+                "code": "R2-10",
+                "description": description_for("R2-10"),
+                "distance": (
+                    f"{ni['r2_10'] - taper_start_station:,.0f} ft upstream "
+                    "(1/2 C inside the outermost sign, per Case 18)"
+                ),
+            }
+        )
+        _, g20_1_desc = substitute_sign_description("G20-1", ni["g20_1"], params)
+        sign_schedule.append(
+            {
+                "code": "G20-1",
+                "description": g20_1_desc,
+                "distance": (
+                    f"{ni['g20_1'] - wz_len:,.0f} ft upstream of the work "
+                    "zone (within the buffer space)"
+                ),
+            }
+        )
+        sign_schedule.append(
+            {
+                "code": "R2-11",
+                "description": description_for("R2-11"),
+                "distance": (f"{-ni['r2_11']:,.0f} ft downstream of the work zone"),
+            }
         )
 
     return {
@@ -633,6 +745,19 @@ def build_narrative_context(
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
         "trigger_condition": trigger_condition,
+        # near_intersection (Refs #117) — always present so the template
+        # can gate on them; false/empty for every other kind.
+        "is_near_intersection": is_near_intersection,
+        "ni_approaches": ni_approaches,
+        "ni_side": ni["side"] if ni is not None else "",
+        "ni_extend_to_corner": bool(ni["extend_to_corner"]) if ni is not None else False,
+        "ni_upstream_curb_ft": ni["upstream_curb"] if ni is not None else 0.0,
+        "ni_downstream_curb_ft": ni["downstream_curb"] if ni is not None else 0.0,
+        "ni_companion_cones": ni_companion_cones,
+        "ni_lane_line_offset_ft": ni_lane_line_offset,
+        "ni_r2_10_station_ft": ni["r2_10"] if ni is not None else 0.0,
+        "ni_r2_11_station_ft": ni["r2_11"] if ni is not None else 0.0,
+        "ni_g20_1_station_ft": ni["g20_1"] if ni is not None else 0.0,
         "generation_date": datetime.now().strftime("%Y-%m-%d"),
     }
 
@@ -705,6 +830,7 @@ def render_crew_narrative_markdown(
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
+    approaches: list[ApproachParams] | None = None,
 ) -> str:
     """Build the crew-instructions Markdown string (no file I/O).
 
@@ -720,6 +846,7 @@ def render_crew_narrative_markdown(
         site_adjustments=site_adjustments,
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
+        approaches=approaches,
     )
     markdown = _render_template(context)
     if use_llm:
@@ -735,6 +862,7 @@ def generate_crew_narrative(
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
+    approaches: list[ApproachParams] | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -757,6 +885,7 @@ def generate_crew_narrative(
         site_adjustments=site_adjustments,
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
+        approaches=approaches,
     )
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
@@ -770,6 +899,7 @@ def generate_crew_narrative_pdf(
     site_adjustments: list[dict[str, Any]] | None = None,
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
+    approaches: list[ApproachParams] | None = None,
 ) -> str:
     """Render the crew narrative as a phone-readable PDF and write it to disk.
 
@@ -788,6 +918,7 @@ def generate_crew_narrative_pdf(
         site_adjustments=site_adjustments,
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
+        approaches=approaches,
     )
     blocks = markdown_to_blocks(markdown)
     return render_document_pdf(blocks, output_path, title="Crew Instructions")

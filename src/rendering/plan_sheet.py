@@ -46,6 +46,7 @@ from src.rules.spacing import (
     taper_length,
 )
 from src.rules.validators import (
+    ApproachParams,
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
@@ -1028,12 +1029,12 @@ def _sidewalk_strip_ft(params: ScenarioParams, shoulder_width_ft: float) -> tupl
 # retired label-scan inference, which reconstructed these by scanning
 # placement labels/offsets and false-triggered on any W20-1 beyond the
 # road edge — a hard blocker for real intersection devices (#117).
-# ``adjacent_interchange`` is deliberately absent: it has never driven
-# any drawn context, and adding it is a visible value change (rule #5).
+# ``adjacent_intersection`` and ``adjacent_interchange`` are absent:
+# the CROSS ST. stub is retired with the legacy device stamp (#117) —
+# neither flag draws context; both still fire the audit disclosure.
 _SITE_FLAG_KEYS: tuple[str, ...] = (
     "pedestrian_facility",
     "bicycle_facility",
-    "adjacent_intersection",
     "school_zone",
 )
 
@@ -1169,41 +1170,11 @@ def _draw_site_context(
         y_low_b, y_high_b = _strip_y_range(bike_inner_ft, bike_outer_ft, 1, params.is_divided)
         c.drawString(PLAN_LEFT + 4, (y_low_b + y_high_b) / 2 - 2, "BIKE LANE")
 
-    if flags["adjacent_intersection"]:
-        midpoint = wz_len / 2.0
-        x_mid = x_of(midpoint)
-        cross_half_w = 24.0  # ~14 ft wide cross street
-        cross_len = 30.0
-        y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
-        c.setFillColor(LANE_FILL)
-        c.setStrokeColor(ROAD_BORDER)
-        c.setLineWidth(0.5)
-        # Top stub (overwrites sidewalk/bike-lane strips at the intersection)
-        c.rect(
-            x_mid - cross_half_w,
-            y_road_top,
-            cross_half_w * 2,
-            cross_len,
-            fill=1,
-            stroke=1,
-        )
-        # Bottom stub
-        c.rect(
-            x_mid - cross_half_w,
-            y_road_bottom - cross_len,
-            cross_half_w * 2,
-            cross_len,
-            fill=1,
-            stroke=1,
-        )
-        # Yellow centerline up each stub
-        c.setStrokeColor(MEDIAN_EDGE)
-        c.setLineWidth(1.0)
-        c.line(x_mid, y_road_top, x_mid, y_road_top + cross_len)
-        c.line(x_mid, y_road_bottom, x_mid, y_road_bottom - cross_len)
-        c.setFillColor(colors.HexColor("#404040"))
-        c.setFont("Helvetica-Oblique", 6)
-        c.drawCentredString(x_mid, y_road_top + cross_len + 3, "CROSS ST.")
+    # ``adjacent_intersection`` no longer draws anything (Refs #117):
+    # the "CROSS ST." stub was a cosmetic gesture at an arbitrary
+    # midpoint — it implied a modeled intersection the tool does not
+    # generate.  The flag still fires the audit's pending disclosure;
+    # a real cross street is the gated near_intersection kind.
 
     if flags["school_zone"]:
         buf_len = buffer_space(
@@ -1791,6 +1762,12 @@ def _mutcd_ta_reference(params: ScenarioParams) -> str:
         # Road-type-aware (Refs #100): TA-3 generally, TA-5 on a freeway.
         # Shared with the audit summary via the single rules-layer helper.
         return shoulder_ta_reference(params.road_type)
+    if params.closure_type == "lane" and not params.is_divided and params.near_intersection:
+        # near_intersection: the side-aware TA-21/TA-22 chip is threaded
+        # by render_plan_sheet (it needs the approaches to know the
+        # side); the honest fallback for direct callers is the dash,
+        # never the flagger TA-10 this branch order would otherwise hit.
+        return "—"
     if params.closure_type == "lane" and not params.is_divided:
         return "TA-10"
     if params.closure_type == "lane" and params.is_divided:
@@ -1965,6 +1942,7 @@ def _draw_structured_title_block(
     scale_label: str,
     bearing_deg: float | None = None,
     aerial_page: str | None = None,
+    ta_override: str | None = None,
 ) -> None:
     """Boxed title block — third box of the equal-width footer row.
 
@@ -1984,7 +1962,9 @@ def _draw_structured_title_block(
     """
     standards_rows: list[tuple[str, str]] = [
         ("MHT TYPE", _scenario_label(params)),
-        ("MUTCD", _mutcd_ta_reference(params)),
+        # ``ta_override`` carries the side-aware near_intersection TA
+        # (TA-21 near / TA-22 far) threaded from render_plan_sheet.
+        ("MUTCD", ta_override or _mutcd_ta_reference(params)),
         ("CDOT", _cdot_standard_reference(params)),
     ]
     if bearing_deg is None:
@@ -2169,17 +2149,18 @@ _SIGN_CATEGORY_ORDER: tuple[str, ...] = (
     "school",
 )
 
+# "cross_street" retired with the CROSS ST. stub (Refs #117) — the
+# adjacent_intersection flag no longer draws context, so it earns no
+# legend row.
 _SITE_CONTEXT_LEGEND: dict[str, str] = {
     "sidewalk": "Sidewalk (hatched within work zone = closed)",
     "bike_lane": "Bike lane (hatched within work zone = closed)",
-    "cross_street": "Cross-street (intersecting work zone)",
     "school": "School building (S1-1 zone applies)",
 }
 
 _SITE_CONTEXT_ORDER: tuple[str, ...] = (
     "sidewalk",
     "bike_lane",
-    "cross_street",
     "school",
 )
 
@@ -2198,15 +2179,6 @@ def _draw_context_icon(c: canvas.Canvas, x: float, y: float, kind: str) -> None:
         c.setStrokeColor(BIKE_LANE_BORDER)
         c.setLineWidth(0.4)
         c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
-    elif kind == "cross_street":
-        w, h = 7.0, 12.0
-        c.setFillColor(LANE_FILL)
-        c.setStrokeColor(ROAD_BORDER)
-        c.setLineWidth(0.4)
-        c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
-        c.setStrokeColor(MEDIAN_EDGE)
-        c.setLineWidth(0.5)
-        c.line(x, y - h / 2, x, y + h / 2)
     elif kind == "school":
         w, h = 14.0, 7.0
         c.setFillColor(SCHOOL_FILL)
@@ -2261,10 +2233,11 @@ def _draw_legend(
     sign_cats_used = [c for c in _SIGN_CATEGORY_ORDER if c in sign_cats_present]
 
     flags = _resolve_site_flags(site_flags)
+    # adjacent_intersection draws no context (stub retired, Refs #117),
+    # so it maps to no legend kind.
     flag_to_kind = {
         "pedestrian_facility": "sidewalk",
         "bicycle_facility": "bike_lane",
-        "adjacent_intersection": "cross_street",
         "school_zone": "school",
     }
     context_kinds_used = [
@@ -2648,7 +2621,7 @@ def _draw_notes(
         ]
     elif is_off_road:
         advance = [("W21-5", "SHOULDER WORK", sign_a_dist)]
-    elif is_lane and not is_flagger:
+    elif is_lane and not is_flagger and not params.near_intersection:
         advance = [
             ("W4-2R", "RIGHT LANE ENDS", sign_a_dist),
             ("W20-5R", "RIGHT LANE CLOSED AHEAD", sign_b_dist),
@@ -2678,7 +2651,12 @@ def _draw_notes(
     x_right = x_box + width - 8
     y = [FOOTER_H - 24]
 
-    layout = _notes_layout(len(schedule_order or []), len(advance))
+    # near_intersection adds the Cases 18/19 citation note (a bold line
+    # + three fine-print disclosures) beneath the Reference footer —
+    # count those lines into the tier budget so the box tightens its
+    # padding instead of overflowing.  Zero for every other kind.
+    extra_note_lines = 5 if params.near_intersection else 0
+    layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
     def section_header(title: str) -> None:
         y[0] -= layout.section_header_pad[0]
@@ -2806,6 +2784,47 @@ def _draw_notes(
             "(effective 2026-01-18), Colorado Supplement."
         ),
     )
+    if params.near_intersection:
+        # Option C citation note (Refs #117): the sheet cites the plate
+        # instead of drawing the cross street — with the plate-vs-tool
+        # deltas in fine print (the #103 disclosure posture).  Lines
+        # wrap to the box width via the shared _wrap_to_width helper.
+        note_w = width - 16.0
+        for line in _wrap_to_width(
+            c,
+            (
+                "CROSS-STREET CONTROL PER CDOT S-630-1 SHEET 10, CASES "
+                "18/19 — NOT DRAWN. SEE DEVICE LIST, CREW NARRATIVE, AND AUDIT."
+            ),
+            "Helvetica-Bold",
+            6.5,
+            note_w,
+            max_lines=2,
+        ):
+            y[0] -= layout.footer_pads[1]
+            c.setFont("Helvetica-Bold", 6.5)
+            c.setFillColor(colors.black)
+            c.drawString(x, y[0], line)
+        c.setFont("Helvetica-Oblique", 6)
+        c.setFillColor(colors.HexColor("#666666"))
+        for fine_print in (
+            (
+                "Plate typifies corner-quadrant work with a cross-street "
+                "closure train; this plan places advance sets only (corner "
+                "work tracked at issue #128)."
+            ),
+            (
+                "Opposing mainline direction not signed (undivided "
+                "single-side convention; the plate signs both directions)."
+            ),
+            (
+                "Plate typifies rural sign placement; urban applications "
+                "require block-based placement (Sheet 10 Note 1)."
+            ),
+        ):
+            for line in _wrap_to_width(c, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=2):
+                y[0] -= layout.footer_pads[1]
+                c.drawString(x, y[0], line)
     y[0] -= layout.footer_pads[1]
     c.setFont("Helvetica-Bold", 6.5)
     c.setFillColor(colors.HexColor("#B05010"))
@@ -3322,6 +3341,7 @@ def render_plan_sheet(
     site_lng: float | None = None,
     site_address: str = "",
     site_flags: Mapping[str, bool] | None = None,
+    approaches: list[ApproachParams] | None = None,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -3354,6 +3374,31 @@ def render_plan_sheet(
     # _make_x_mapping with a clear message.
     if not placements:
         raise ValueError("No devices generated for scenario")
+    # Option C (Refs #117): the near_intersection kind draws the
+    # mainline frame only — approach-frame placements carry stations
+    # measured from the intersection curb line and would plot as
+    # phantom mainline devices if fed to the single-axis mapping.
+    # Cross-street control is tabulated (device list / quote / crew
+    # narrative / audit); the notes panel carries the S-630-1 Sheet 10
+    # Cases 18/19 citation note in place of a cross-street drawing.
+    ta_override: str | None = None
+    if params.near_intersection:
+        if not approaches:
+            # Rule 10: without the approaches the title block cannot
+            # print the side-correct TA-21/TA-22 chip and the sheet
+            # would carry a wrong citation, not a degraded one.
+            raise ValueError(
+                "render_plan_sheet: the near_intersection kind requires "
+                "the approaches list (same ApproachParams the generator got)."
+            )
+        placements = [p for p in placements if p.approach_id == "mainline"]
+        # Near/far derives from the shared along-station sign (schema
+        # contract; the generator validated consistency across legs).
+        # Both figures verified by subject: TA-21 "Lane Closure on the
+        # Near Side of an Intersection", TA-22 "Right-Hand Lane Closure
+        # on the Far Side of an Intersection".
+        _along = approaches[0].along_station_ft
+        ta_override = "TA-22" if _along > params.work_zone_length_ft else "TA-21"
     if shoulder_width_ft is None:
         shoulder_width_ft = params.shoulder_width_ft
     # Prefer params-supplied metadata; fall back to the per-call kwargs
@@ -3446,6 +3491,7 @@ def render_plan_sheet(
         title=title,
         aerial_page="2" if aerial_png is not None else None,
         site_flags=site_flags,
+        ta_override=ta_override,
     )
     _draw_sheet_border(c)
     c.showPage()
@@ -3489,6 +3535,7 @@ def _render_schematic_page(
     title: str,
     aerial_page: str | None,
     site_flags: Mapping[str, bool] | None = None,
+    ta_override: str | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -3578,6 +3625,7 @@ def _render_schematic_page(
         scale_label=scale_short,
         bearing_deg=bearing_deg,
         aerial_page=aerial_page,
+        ta_override=ta_override,
     )
 
     # No compass on page 1 — the schematic is a stylized layout where

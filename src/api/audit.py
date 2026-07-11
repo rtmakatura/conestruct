@@ -15,7 +15,11 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from src.generation.layout import device_count_floors, flagger_chain_stations
+from src.generation.layout import (
+    device_count_floors,
+    flagger_chain_stations,
+    near_intersection_stations,
+)
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
@@ -38,6 +42,7 @@ from src.rules.tables import (
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
 )
 from src.rules.validators import (
+    ApproachParams,
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
@@ -153,6 +158,7 @@ def build_audit_trail(
     shoulder_width_ft: float | None = None,
     site_lat: float | None = None,
     site_lng: float | None = None,
+    approaches: list[ApproachParams] | None = None,
 ) -> dict[str, Any]:
     """Recompute every audit-trail intermediate the verification UI needs.
 
@@ -175,7 +181,30 @@ def build_audit_trail(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
     is_lane = params.closure_type == "lane"
-    is_flagger = is_lane and not params.is_divided
+    # near_intersection (Option C inc. 3, Refs #117): an undivided lane
+    # closure that is NOT the flagger kind — same exclusion
+    # _is_flagger_scenario carries; without it this kind would get the
+    # flagger presentation (one-lane two-way taper, TA-10 case).
+    is_near = params.near_intersection
+    if is_near and not approaches:
+        # Rule 10: auditing this kind without its approach data would
+        # produce a confidently wrong document (no per-leg sections, no
+        # signal disclosure), not a degraded one.
+        raise ValueError(
+            "build_audit_trail: the near_intersection kind requires the "
+            "approaches list (same ApproachParams the generator got)."
+        )
+    if approaches and not is_near:
+        raise ValueError(
+            "build_audit_trail: approaches are only meaningful for the near_intersection kind."
+        )
+    ni = near_intersection_stations(params, approaches) if is_near else None
+    # Mainline-frame placements — approach-frame stations are measured
+    # from the intersection curb line and must never be mixed into
+    # mainline math (DevicePlacement.approach_id contract).  Identity
+    # for every other kind, where all placements are mainline.
+    mainline_placements = [p for p in placements if p.approach_id == "mainline"]
+    is_flagger = is_lane and not params.is_divided and not is_near
     offset_ft = params.lane_width_ft if is_lane else shoulder_width_ft
     offset_label = "lane width" if is_lane else "shoulder width"
     # Single source of truth for "work-zone speed is reduced from the
@@ -247,6 +276,18 @@ def build_audit_trail(
         )
         cdot_reference = (
             "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)"
+        )
+    elif is_near:
+        L_required = L_full
+        L_required_label = "L (full merging taper)"
+        L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
+        source_text = (
+            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the "
+            "full merging taper length L."
+        )
+        cdot_reference = (
+            "CDOT S-630-1 Case 18 (traffic control around a work area "
+            "near an intersection, one lane closed; Sheet 10)"
         )
     elif is_lane:
         L_required = L_full
@@ -444,15 +485,17 @@ def build_audit_trail(
     taper_interval = L_required / (n_taper_drums - 1)
     tangent_interval = wz_len / (n_tangent_cones - 1)
 
-    actual_drums = sum(1 for p in placements if p.device_type == DeviceType.DRUM)
-    actual_cones = sum(1 for p in placements if p.device_type == DeviceType.CONE)
+    actual_drums = sum(1 for p in mainline_placements if p.device_type == DeviceType.DRUM)
+    actual_cones = sum(1 for p in mainline_placements if p.device_type == DeviceType.CONE)
     # #96 — downstream-taper cones sit at negative stations (past the
     # downstream end of the work zone): a fixed 2 from the shoulder
     # generators, a computed count (typically 4) from the flagger layout.
     # The bill/XLSX count them, so the derivation must account for them
     # too or its only visible cone total disagrees with the bill.
     ds_cone_stations = [
-        p.station_ft for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0.0
+        p.station_ft
+        for p in mainline_placements
+        if p.device_type == DeviceType.CONE and p.station_ft < 0.0
     ]
     n_ds_cones = len(ds_cone_stations)
 
@@ -544,6 +587,16 @@ def build_audit_trail(
     sign_a_station = taper_start_station + a_ft
     sign_b_station = sign_a_station + b_ft
     sign_c_station = sign_b_station + c_ft
+    if ni is not None:
+        # Far-side geometry can pull the taper further upstream than the
+        # midblock anchoring (§6N.12.12 companion closure) — read the
+        # stations the generator actually used so the distances below
+        # match the layout.
+        taper_end_station = ni["taper_end"]
+        taper_start_station = ni["taper_start"]
+        sign_a_station = ni["sign_a"]
+        sign_b_station = ni["sign_b"]
+        sign_c_station = ni["sign_c"]
 
     # Flagger W3-4 anchor — only meaningful on the flagger series; kept
     # outside the branch so _position_label can reference it untyped.
@@ -591,6 +644,8 @@ def build_audit_trail(
     w21_5aR_downstream_st = (sign_a_station + (taper_start_station + 500.0)) / 2.0
 
     def _position_label(label: str, station_ft: float, w3_5_step: int) -> str:
+        if ni is not None and label == "R2-10" and abs(station_ft - ni["r2_10"]) <= 0.5:
+            return "1/2 C inside the outermost sign (Case 18)"
         if label == sign_codes["C"] and abs(station_ft - sign_c_station) <= 0.5:
             return "C (furthest)"
         if label == sign_codes["B"] and abs(station_ft - sign_b_station) <= 0.5:
@@ -613,7 +668,7 @@ def build_audit_trail(
 
     upstream_signs = [
         p
-        for p in placements
+        for p in mainline_placements
         if p.device_type == DeviceType.SIGN_GENERIC
         and p.label
         and p.station_ft > taper_start_station
@@ -760,10 +815,14 @@ def build_audit_trail(
     # 5. Colorado Supplement requirements
     # ------------------------------------------------------------------
     sign_left = sum(
-        1 for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft < 0
+        1
+        for p in mainline_placements
+        if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft < 0
     )
     sign_right = sum(
-        1 for p in placements if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft > 0
+        1
+        for p in mainline_placements
+        if p.device_type == DeviceType.SIGN_GENERIC and p.offset_ft > 0
     )
     both_sides_pass = sign_left == sign_right and sign_left > 0 if params.is_divided else True
     both_sides = {
@@ -777,7 +836,7 @@ def build_audit_trail(
 
     plaques_right = sum(
         1
-        for p in placements
+        for p in mainline_placements
         if p.device_type == DeviceType.SIGN_GENERIC and p.label == "G20-5P" and p.offset_ft > 0
     )
     total_signed_length = sign_c_station
@@ -821,7 +880,7 @@ def build_audit_trail(
         n_signs_required = co_speed_reduction_signs(speed, wz_speed)
         n_w3_5_placed = sum(
             1
-            for p in placements
+            for p in mainline_placements
             if p.device_type == DeviceType.SIGN_GENERIC
             and (p.label or "").upper().startswith("W3-5")
             and p.offset_ft > 0
@@ -855,7 +914,7 @@ def build_audit_trail(
     # (not required); night fails honestly (required, placed 0 — V1
     # does not emit lighting placements) and audit_projection mirrors
     # the gap as a flagger_lighting_manual_handling pending item.
-    n_flaggers = sum(1 for p in placements if p.device_type == DeviceType.FLAGGER_STATION)
+    n_flaggers = sum(1 for p in mainline_placements if p.device_type == DeviceType.FLAGGER_STATION)
     if n_flaggers == 0:
         flagger_lighting_section = {
             "pass": True,
@@ -1034,7 +1093,41 @@ def build_audit_trail(
     # branches are unchanged — they have their own case structure.
     case_routing: str | None
     trigger_condition: str | None = None
-    if is_flagger:
+    # ``narrative_2`` default (below) claims the plan follows the same
+    # device layout as the reference case — true for every other kind,
+    # deliberately false for near_intersection, which overrides it with
+    # its disclosure (the #103 posture: name the generalization).
+    case_narrative_2: str | None = None
+    if is_near:
+        case_routing = None
+        case_label = (
+            "Case 18: Traffic control around a work area near an intersection, one lane closed"
+        )
+        case_narrative = (
+            "This scenario follows CDOT Standard Plan S-630-1, Case 18 "
+            "(Sheet 10) — traffic control around a work area near an "
+            "intersection, one lane closed — applied to an undivided "
+            "highway with single-side mainline signing per CO Supplement "
+            "§6C.04(A), plus a cross-street advance-warning set on each "
+            "approach leg per MUTCD §6N.12 and the Sheet 10 "
+            "advance-signing key."
+        )
+        case_narrative_2 = (
+            "Three disclosed departures from the plate: (1) the Case 18 "
+            "plate typifies corner-quadrant work with a full cross-street "
+            "closure train; this plan confines the work space to the "
+            "mainline and places cross-street advance signing only — "
+            "corner-quadrant support is tracked at "
+            "https://github.com/rtmakatura/conestruct/issues/128. "
+            "(2) The opposing mainline direction is not signed "
+            "(single-side undivided convention; the plate signs both "
+            "directions). (3) The plate typifies rural sign placement; "
+            "urban applications require block-based placement per Sheet "
+            "10 Note 1. The plate's Type III corner barricade (work "
+            "lasting more than 3 days) encloses the corner work area and "
+            "is not placed, per departure (1)."
+        )
+    elif is_flagger:
         case_routing = None
         case_label = "MUTCD TA-10: Flagger one-lane two-way"
         case_narrative = (
@@ -1134,8 +1227,12 @@ def build_audit_trail(
         ),
         "narrative": case_narrative,
         "narrative_2": (
-            f"The generated plan follows the same device layout as the "
-            f"reference case with spacing computed for {speed} mph."
+            case_narrative_2
+            if case_narrative_2 is not None
+            else (
+                f"The generated plan follows the same device layout as the "
+                f"reference case with spacing computed for {speed} mph."
+            )
         ),
     }
     # Routing + trigger_condition surface only when populated (shoulder
@@ -1149,7 +1246,9 @@ def build_audit_trail(
     # ------------------------------------------------------------------
     # 8. Flagger placement (only meaningful when flaggers are present)
     # ------------------------------------------------------------------
-    flagger_placements = [p for p in placements if p.device_type == DeviceType.FLAGGER_STATION]
+    flagger_placements = [
+        p for p in mainline_placements if p.device_type == DeviceType.FLAGGER_STATION
+    ]
     flagger_rows = [
         {
             "Label": p.label or f"FLAGGER_{i + 1}",
@@ -1231,6 +1330,64 @@ def build_audit_trail(
         "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
     }
 
+    # ------------------------------------------------------------------
+    # 11. Cross-street approaches (near_intersection only, Refs #117)
+    # ------------------------------------------------------------------
+    # One entry per approach leg, with the Sheet 10 advance-signing key
+    # math shown per that leg's OWN speed/road type.  Stations come from
+    # near_intersection_stations — the generator's single source — so
+    # the audit and the layout agree by construction.  Nested uniform
+    # array (the sign_table/checks shape) so the AuditTrail UI and the
+    # audit PDF can carry it with existing machinery.
+    approaches_section: dict[str, Any] | None = None
+    if ni is not None:
+        approach_rows: list[dict[str, Any]] = []
+        for a in approaches or []:
+            a_st = ni["approaches"][a.id]
+            approach_rows.append(
+                {
+                    "id": a.id,
+                    "speed_mph": a.speed_mph,
+                    "road_type": a.road_type,
+                    "signalized": a.signalized,
+                    "a_dist_ft": a_st["a_dist"],
+                    "key_text": (
+                        f"Sheet 10 advance-signing key: A = {a_st['a_dist']:g} ft "
+                        f"at {a.speed_mph} mph ({a.road_type})"
+                    ),
+                    "sign_table": [
+                        {
+                            "Code": "W20-1",
+                            "Station (ft from curb line)": f"{a_st['w20_1']:,.0f}",
+                            "Placement rule": (f"2 x A = {2 * a_st['a_dist']:g} ft, approach side"),
+                        },
+                        {
+                            "Code": "R2-10",
+                            "Station (ft from curb line)": f"{a_st['r2_10']:,.0f}",
+                            "Placement rule": f"A = {a_st['a_dist']:g} ft, approach side",
+                        },
+                        {
+                            "Code": "R2-11",
+                            "Station (ft from curb line)": f"{a_st['r2_11']:,.0f}",
+                            "Placement rule": "100 ft, departure side (Case 18)",
+                        },
+                    ],
+                }
+            )
+        approaches_section = {
+            "side": ni["side"],
+            "along_station_ft": ni["along_station_ft"],
+            "narrative": (
+                "Each cross-street leg receives its own advance set "
+                "(W20-1, R2-10, R2-11), computed from that leg's own "
+                "speed and road type; stations are measured along the "
+                "leg from the intersection curb line, increasing away "
+                "from the intersection."
+            ),
+            "source": ("MUTCD §6N.12; CDOT S-630-1 Sheet 10, Cases 18/19 (advance-signing key)"),
+            "approaches": approach_rows,
+        }
+
     out: dict[str, Any] = {
         "taper": taper_section,
         "buffer": buffer_section,
@@ -1242,6 +1399,10 @@ def build_audit_trail(
         "corridor_validation": corridor_validation,
         "geometry_validation": geo_section,
     }
+    # Additive key, near_intersection only — every other kind's audit
+    # dict stays byte-identical (rule #5).
+    if approaches_section is not None:
+        out["approaches"] = approaches_section
     # Conditional inclusion of fines_double — when the section is None
     # (no work-zone speed reduction in effect), the key is entirely
     # absent so the audit dict stays byte-identical to pre-Item-3
@@ -1272,6 +1433,12 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
     # value referenced a CDOT safety standard this layout was never
     # verified against.
     "flagger_lane_closure": ("TA-10", "S-630-1"),
+    # near_intersection (gated, Refs #117): verified by SUBJECT against
+    # the local MUTCD PDF — Fig. 6P-21 / TA-21 "Lane Closure on the Near
+    # Side of an Intersection"; audit_projection overrides to TA-22
+    # ("Right-Hand Lane Closure on the Far Side of an Intersection") for
+    # far-side work.  CDOT anchor: S-630-1 Sheet 10, Cases 18/19.
+    "near_intersection": ("TA-21", "S-630-1"),
     # NOTE: the gated kinds below carry UNVERIFIED citations — they
     # triage with their respective enablement work (PR 3 Q3).
     "lane_closure_divided": ("TA-19", "S-630-3"),
@@ -1344,6 +1511,7 @@ def _compute_step_count(scenario: Any) -> int:
         LaneClosureDividedScenario,
         MobileOp2LaneScenario,
         MobileOpMultilaneScenario,
+        NearIntersectionScenario,
         ShoulderScenario,
         WorkBeyondShoulderScenario,
     )
@@ -1385,6 +1553,13 @@ def _compute_step_count(scenario: Any) -> int:
 
     if isinstance(scenario, WorkBeyondShoulderScenario):
         return 4 if scenario.duration == "short" else 6
+
+    if isinstance(scenario, NearIntersectionScenario):
+        # Duration-independent (same S-630 General Note 28 reasoning as
+        # shoulder/flagger): 8 setup + 8 takedown steps in the
+        # increment-3 narrative — the mainline lane-closure sequence
+        # plus the mainline regulatory step and one cross-street step.
+        return 16
 
     if isinstance(scenario, MobileOp2LaneScenario):
         return 6  # constant — mobile 2-lane has fixed lean setup
@@ -1469,6 +1644,11 @@ def audit_projection(
                 "kind (TA-3 vs TA-5 splits on the Table 6B-1 category)."
             )
         ta = shoulder_ta_reference(road_type)
+    # Side-aware near_intersection TA (both verified by subject): TA-21
+    # is the near-side figure, TA-22 the far-side one.  ``side`` derives
+    # from the approaches section build_audit_trail emitted.
+    if scenario_kind == "near_intersection" and audit.get("approaches", {}).get("side") == "far":
+        ta = "TA-22"
 
     taper = dict(audit["taper"])
     case = dict(audit["case"])
@@ -1533,27 +1713,27 @@ def audit_projection(
         )
 
     # Phase 0 intersection honesty (#117): the adjacent_intersection /
-    # adjacent_interchange site adjustments add the S-630 minimum signing
-    # only — no cross-street approach layout, no signal-operation review,
-    # no per-ramp layout.  Disclose the gap as a pending item so the plan
-    # reads amber honestly instead of green (rule #10).  Keyed off the
-    # fired site-adjustment records threaded through by the render-API
-    # caller — the same source #104 uses for sections.site_adjustments —
-    # so no-flag plans are byte-identical.
+    # adjacent_interchange flags add NO devices (the legacy two-sign
+    # gesture and the W20-3+PCMS stamp are retired) and no layout is
+    # generated.  Disclose the gap as a pending item so the plan reads
+    # amber honestly instead of green (rule #10).  Keyed off the fired
+    # site-adjustment records threaded through by the render-API caller
+    # — the same source #104 uses for sections.site_adjustments — so
+    # no-flag plans are byte-identical.
     _fired_site_flags = {str(rec.get("flag", "")) for rec in (site_records or [])}
     if "adjacent_intersection" in _fired_site_flags:
         items.append(
             {
                 "kind": "intersection_layout_not_generated",
                 "label": (
-                    "An adjacent intersection is flagged. Conestruct adds "
-                    "the W20-1 cross-street pair (the S-630 minimum) but "
-                    "does not generate the cross-street approach layout or "
-                    "evaluate traffic-signal operation. Cross-street "
-                    "control design and the signal-operation review "
-                    "(MUTCD §6N.12; Part 4 for signal-head visibility) "
-                    "remain with the traffic control supervisor until "
-                    "intersection support ships."
+                    "An adjacent intersection is flagged, but Conestruct "
+                    "does not generate the cross-street approach layout "
+                    "or evaluate traffic-signal operation, and adds no "
+                    "devices for it. Cross-street control design and the "
+                    "signal-operation review (MUTCD §6N.12; Part 4 for "
+                    "signal-head visibility) remain with the traffic "
+                    "control supervisor. Intersection support is tracked "
+                    "at issue #117; corner-quadrant work at issue #128."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
             }
@@ -1563,13 +1743,42 @@ def audit_projection(
             {
                 "kind": "interchange_layout_not_generated",
                 "label": (
-                    "An adjacent interchange is flagged. Conestruct adds "
-                    "a W20-3 sign and a PCMS for upstream ramp messaging "
-                    "(the S-630 minimum) but does not generate the "
-                    "per-ramp layout. Ramp-specific control design and "
+                    "An adjacent interchange is flagged, but Conestruct "
+                    "does not generate the per-ramp layout and adds no "
+                    "devices for it. Ramp-specific control design and "
                     "the ramp-access and coordination review (MUTCD "
-                    "§6N.16) remain with the traffic control supervisor "
-                    "until interchange support ships."
+                    "§6N.16) remain with the traffic control supervisor. "
+                    "Tracked at issue #117."
+                ),
+                "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
+            }
+        )
+
+    # Signals flag-and-cite (near_intersection kind, Refs #117): any
+    # signalized approach requires a signal-operation review that is an
+    # engineering-judgment duty, not a formula — same honest posture as
+    # the flagger-lighting gap above.  Keyed off the approaches section
+    # build_audit_trail emitted (audit_projection has no params), so
+    # every other kind — and every unsignalized intersection plan — is
+    # byte-identical.
+    _signalized_ids = [
+        str(a.get("id"))
+        for a in audit.get("approaches", {}).get("approaches", [])
+        if a.get("signalized")
+    ]
+    if _signalized_ids:
+        _ap_word = "approach" if len(_signalized_ids) == 1 else "approaches"
+        items.append(
+            {
+                "kind": "signal_operation_review_required",
+                "label": (
+                    f"Signalized {_ap_word} ({', '.join(_signalized_ids)}): "
+                    "Conestruct places cross-street advance signing only "
+                    "and does not evaluate traffic-signal operation. The "
+                    "signal-operation review — phasing, timing, and "
+                    "signal-head visibility per MUTCD §6N.12 (items 04 "
+                    "and 05) and MUTCD Part 4 — remains with the traffic "
+                    "control supervisor and the operating agency."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
             }

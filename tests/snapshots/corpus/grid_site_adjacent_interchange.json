@@ -4,15 +4,15 @@
     "items": [
       {
         "kind": "interchange_layout_not_generated",
-        "label": "An adjacent interchange is flagged. Conestruct adds a W20-3 sign and a PCMS for upstream ramp messaging (the S-630 minimum) but does not generate the per-ramp layout. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor until interchange support ships.",
+        "label": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor. Tracked at issue #117.",
         "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
       }
     ],
-    "note": "An adjacent interchange is flagged. Conestruct adds a W20-3 sign and a PCMS for upstream ramp messaging (the S-630 minimum) but does not generate the per-ramp layout. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor until interchange support ships.",
+    "note": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor. Tracked at issue #117.",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
   },
   "plan_flags": {
-    "compliance_fails": 1,
+    "compliance_fails": 0,
     "is_clean": false,
     "v1_limitations": 1,
     "validation_warnings": 0
@@ -61,13 +61,13 @@
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     },
     "colorado": {
-      "all_pass": false,
+      "all_pass": true,
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 7 left, 8 right.",
+          "detail": "Required: True. Signs placed: 7 left, 7 right.",
           "label": "Signs on both sides of divided highway",
-          "pass": false
+          "pass": true
         },
         {
           "citation": "CO Supplement Sec 6C.06(A)",
@@ -121,9 +121,9 @@
     },
     "site_adjustments": [
       {
-        "action": "Added 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for upstream interchange ramp signaling.",
+        "action": "No devices added — the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
         "citation": "MUTCD § 6N.16 + Ch. 6H",
-        "devices_added": 2,
+        "devices_added": 0,
         "flag": "adjacent_interchange",
         "rule": "MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"
       }

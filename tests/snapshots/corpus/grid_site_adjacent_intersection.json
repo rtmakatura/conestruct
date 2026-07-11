@@ -4,11 +4,11 @@
     "items": [
       {
         "kind": "intersection_layout_not_generated",
-        "label": "An adjacent intersection is flagged. Conestruct adds the W20-1 cross-street pair (the S-630 minimum) but does not generate the cross-street approach layout or evaluate traffic-signal operation. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor until intersection support ships.",
+        "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
         "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
       }
     ],
-    "note": "An adjacent intersection is flagged. Conestruct adds the W20-1 cross-street pair (the S-630 minimum) but does not generate the cross-street approach layout or evaluate traffic-signal operation. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor until intersection support ships.",
+    "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
   },
   "plan_flags": {
@@ -65,7 +65,7 @@
       "checks": [
         {
           "citation": "CO Supplement Sec 6C.04(A)",
-          "detail": "Required: True. Signs placed: 8 left, 8 right.",
+          "detail": "Required: True. Signs placed: 7 left, 7 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
@@ -121,9 +121,9 @@
     },
     "site_adjustments": [
       {
-        "action": "Added 2 ROAD WORK AHEAD (W20-1) signs facing cross-street traffic.",
+        "action": "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
         "citation": "MUTCD § 6N.12",
-        "devices_added": 2,
+        "devices_added": 0,
         "flag": "adjacent_intersection",
         "rule": "MUTCD §6N.12 — signing for intersections within or adjacent to work zones"
       }

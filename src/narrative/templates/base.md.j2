@@ -22,6 +22,14 @@
 {% for s in sign_schedule -%}
 | {{ s.code }} | {{ s.description }} | {{ s.distance }} |
 {% endfor %}
+{% if is_near_intersection %}
+
+### Cross-Street Signs (per approach leg; stations measured from the intersection curb line)
+
+{% for ap in ni_approaches %}
+- **{{ ap.id }} approach** ({{ ap.speed_mph }} mph, {{ ap.road_type_human }}{% if ap.signalized %}; signalized — signal operation review required before work begins, MUTCD §6N.12 / Part 4{% endif %}): W20-1 at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft (twice the key distance A) and R2-10 at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft (at A) on the approach side — the S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's speed and road type. R2-11 at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side.
+{% endfor %}
+{% endif %}
 
 ## Setup Procedure
 
@@ -29,6 +37,8 @@
 
 {% if is_flagger %}
 1. Identify both {% if is_afad %}AFAD{% else %}flagger{% endif %} station positions (do not staff yet — stations are staffed after all devices are in place, step 7): Station #1 at station {{ "{:,.0f}".format(flagger_station_1_ft) }} ft (approach side, 100 ft upstream of the taper start, closed-lane side); Station #2 at station {{ "{:,.0f}".format(flagger_station_2_ft) }} ft (opposing approach, 300 ft past the work-area end per CDOT S-630-1 Case 17).
+{% elif is_near_intersection %}
+1. Position arrow board at the upstream start of the merging taper (station {{ "{:,.0f}".format(taper_start_station) }} ft), centered in the closed right lane. Set to LEFT ARROW mode (traffic merges left, out of the closed lane). Activate flashing.
 {% else %}
 1. Position arrow board at the upstream start of the shoulder taper (station {{ "{:,.0f}".format(taper_start_station) }} ft). Set to RIGHT ARROW mode (for right shoulder closure). Activate flashing.
 {% endif %}
@@ -37,6 +47,8 @@
 
 {% if is_flagger %}
 3. {% if num_ds_cones > 0 %}Place {{ num_ds_cones }} traffic cones in the downstream taper, between station -{{ "{:,.0f}".format(ds_taper_len_ft) }} ft (right lane edge) and station 0 (centerline) at {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing — this taper returns right-direction traffic from the centerline back to the right lane edge past the work area (MUTCD §6B.08 ¶12; S-630-1 Case 17 annotates the run 100' MAX.). Then place{% else %}Place{% endif %} {{ num_tangent_cones }} traffic cones along the centerline boundary between the open opposing lane and the closed work lane at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft.
+{% elif is_near_intersection %}
+3. {% if ni_extend_to_corner %}Run the closed-lane cone line from the upstream curb line of the cross street (station {{ "{:,.0f}".format(ni_upstream_curb_ft) }} ft, past the downstream end of the work zone) up to station 0 — {{ num_ds_cones }} traffic cone{% if num_ds_cones != 1 %}s{% endif %} at approximately {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing. The closure extends to the corner and the lane reopens beyond the intersection; place no devices inside the intersection itself, curb line to curb line (MUTCD Fig. 6P-21 / S-630-1 Case 18). Then place{% elif num_ds_cones > 0 %}Place {{ num_ds_cones }} traffic cones in the downstream reopening taper, between station -{{ "{:,.0f}".format(ds_taper_len_ft) }} ft (lane edge) and station 0 (lane line) at {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing — this taper returns traffic into the reopened right lane past the work zone (MUTCD §6B.08 downstream taper). Then place{% else %}Place{% endif %} {{ num_tangent_cones }} traffic cones along the closed-lane line through the work zone at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft. Offset: {{ "{:.0f}".format(ni_lane_line_offset_ft) }} ft from centerline.{% if ni_companion_cones > 0 %} Then continue the closed-lane cone line upstream from the work zone to the downstream curb line of the cross street (station {{ "{:,.0f}".format(ni_downstream_curb_ft) }} ft), and again from the upstream curb line (station {{ "{:,.0f}".format(ni_upstream_curb_ft) }} ft) up to the taper — {{ ni_companion_cones }} cones total, with no devices inside the intersection itself. The lane must already be closed where it crosses the intersection (MUTCD §6N.12.12).{% endif +%}
 {% else %}
 3. {% if num_ds_cones > 0 %}Place {{ num_ds_cones }} traffic cones in the downstream taper, between station -{{ "{:,.0f}".format(ds_taper_len_ft) }} ft (shoulder edge) and station 0 (lane edge) at {{ "{:.0f}".format(ds_spacing_ft) }} ft spacing — this taper returns traffic from the lane edge back to the shoulder edge past the work zone (MUTCD §6B.08 downstream taper). Then place{% else %}Place{% endif %} {{ num_tangent_cones }} traffic cones along the right lane edge at {{ "{:.0f}".format(tangent_spacing_ft) }} ft spacing, starting at station 0 (downstream end of work zone) and working upstream to station {{ "{:,.0f}".format(params.work_zone_length_ft) }} ft. Offset: {{ "{:.0f}".format(lane_edge_offset_ft) }} ft from centerline.
 {% endif %}
@@ -45,6 +57,8 @@
 
 {% if is_flagger %}
 5. Place {{ num_taper_drums }} channelizing drums in the one-lane two-way taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals (approximately 20 ft per MUTCD §6B.08 — this taper stages stopped traffic behind the flagger; it must be short enough to not be mistaken for a transition). Drums transition from the right lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the centerline (0 ft).
+{% elif is_near_intersection %}
+5. Place {{ num_taper_drums }} channelizing drums in the merging taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals. Drums transition from the lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the lane line ({{ "{:.0f}".format(ni_lane_line_offset_ft) }} ft), closing the right lane.
 {% else %}
 5. Place {{ num_taper_drums }} channelizing drums in the shoulder taper, starting at station {{ "{:,.0f}".format(taper_end_station) }} ft and working upstream to station {{ "{:,.0f}".format(taper_start_station) }} ft. Space drums at {{ "{:.0f}".format(taper_spacing_ft) }} ft intervals. Drums transition from the lane edge ({{ "{:.0f}".format(lane_edge_offset_ft) }} ft) to the shoulder edge ({{ "{:.0f}".format(shoulder_edge_offset_ft) }} ft).
 {% endif %}
@@ -58,6 +72,17 @@
    Repeat the series for the opposing approach (left side, negative stations — S-630-1 Case 17: "SIGN SEQUENCE IS THE SAME FOR OPPOSITE DIRECTION").
 
 7. Staff both {% if is_afad %}AFAD{% else %}flagger{% endif %} stations{% if is_afad %} (position and activate the AFADs; the operator must maintain sight of both devices){% else %} (STOP/SLOW paddles, high-visibility apparel, radio or agreed hand-signal communication between stations){% endif %}{% if is_night %}, with station flood lighting per S-630-1 Sheet 2 Note 22{% endif %}. Verify each station is visible to approaching traffic from the full advance-warning distance and has an identified escape path. Begin the alternating one-way operation.
+{% endif %}
+{% if is_near_intersection %}
+
+7. Place the mainline regulatory and bookend signs, single side, {{ "{:.0f}".format(sign_offset_ft) }} ft from centerline: R2-10 BEGIN DOUBLE FINES ZONE at station {{ "{:,.0f}".format(ni_r2_10_station_ft) }} ft (half the C spacing inside the outermost W20-1, per S-630-1 Case 18); G20-1 at station {{ "{:,.0f}".format(ni_g20_1_station_ft) }} ft; R2-11 END DOUBLE FINES ZONE at station {{ "{:,.0f}".format(ni_r2_11_station_ft) }} ft (downstream, past the lane reopening).
+
+8. Place the cross-street advance sets — one set per approach leg. Stations for each set are measured along that leg FROM the intersection curb line, increasing away from the intersection:
+{% for ap in ni_approaches %}
+   - **{{ ap.id }} approach** ({{ ap.speed_mph }} mph, {{ ap.road_type_human }}): W20-1 ROAD WORK AHEAD at {{ "{:,.0f}".format(ap.w20_1_ft) }} ft and R2-10 BEGIN DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_10_ft) }} ft, both on the approach side {{ "{:.0f}".format(ap.sign_offset_ft) }} ft from that road's centerline — the W20-1 sits at twice the key distance A, the R2-10 at A, where the S-630-1 Sheet 10 advance-signing key gives A = {{ "{:,.0f}".format(ap.a_dist_ft) }} ft for this leg's own speed and road type. R2-11 END DOUBLE FINES ZONE at {{ "{:,.0f}".format(ap.r2_11_ft) }} ft on the departure side (facing traffic leaving the intersection).{% if ap.signalized %} This approach is signalized: signal operation must be reviewed before work begins (MUTCD §6N.12; Part 4) — see the audit trail.{% endif +%}
+{% endfor %}
+
+**Sequencing note:** The MUTCD does not prescribe the order of mainline versus cross-street setup. Whether the cross-street sets go up before, after, or interleaved with the mainline sequence is the Traffic Control Supervisor's determination for this site.
 {% endif %}
 
 ## Takedown Procedure
@@ -79,6 +104,10 @@
 4. Remove work zone cones from upstream to downstream.
 5. Remove G20-5P plaques.
 6. Remove G20-2 END ROAD WORK sign(s).
+{% if is_near_intersection %}
+7. Remove the mainline R2-10 / R2-11 DOUBLE FINES ZONE pair and the G20-1 sign.
+8. Remove each cross-street advance set (W20-1, R2-10, R2-11 per approach). The order of mainline versus cross-street takedown is the Traffic Control Supervisor's determination.
+{% endif %}
 {% endif %}
 
 ## Safety Notes

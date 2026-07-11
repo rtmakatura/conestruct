@@ -301,6 +301,42 @@ def _site_adjustments_blocks(records: list[dict[str, Any]]) -> list[Block]:
     return blocks
 
 
+def _approaches_blocks(approaches: dict[str, Any]) -> list[Block]:
+    """Cross-street approaches (near_intersection kind, Refs #117).
+
+    One sub-table per approach leg via the shared ``_table_from_dicts``
+    machinery — the Sheet 10 advance-signing key math travels in each
+    row's ``key_text`` line so a reviewer can trace every station to
+    the leg's own speed/road-type lookup.
+    """
+    if not approaches:
+        return []
+    blocks: list[Block] = [Heading(2, _cell("Cross-Street Approaches"))]
+    blocks.append(
+        _body(
+            f"Intersection on the {_str(approaches, 'side')} side of the "
+            f"work zone (centerline crossing at mainline station "
+            f"{_g(approaches, 'along_station_ft')} ft)."
+        )
+    )
+    blocks.append(_body(_str(approaches, "narrative")))
+    for ap in approaches.get("approaches", []):
+        signal_note = (
+            " — SIGNALIZED (signal operation review required)" if ap.get("signalized") else ""
+        )
+        blocks.append(
+            _body(
+                f"Approach '{_str(ap, 'id')}' — {_g(ap, 'speed_mph')} mph, "
+                f"{_str(ap, 'road_type')}{signal_note}. {_str(ap, 'key_text')}."
+            )
+        )
+        table = _table_from_dicts(ap.get("sign_table", []), weights=[1, 2, 2])
+        if table is not None:
+            blocks.append(table)
+    blocks.append(_body(f"Source: {_str(approaches, 'source')}"))
+    return blocks
+
+
 def _flagger_blocks(flagger: dict[str, Any]) -> list[Block]:
     if not flagger:
         return []
@@ -408,6 +444,7 @@ def audit_to_blocks(projection: dict[str, Any]) -> list[Block]:
     blocks += _geometry_blocks(sections.get("geometry_validation", {}))
     blocks += _corridor_blocks(sections.get("corridor_validation", {}))
     blocks += _site_adjustments_blocks(sections.get("site_adjustments", []))
+    blocks += _approaches_blocks(sections.get("approaches", {}))
     blocks += _flagger_blocks(sections.get("flagger", {}))
     if "fines_double" in sections:
         blocks += _fines_double_blocks(sections["fines_double"])

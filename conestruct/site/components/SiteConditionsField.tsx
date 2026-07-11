@@ -18,11 +18,11 @@ const FLAG_LABELS: Record<SiteConditionFlag, { label: string; desc: string }> =
     },
     adjacent_intersection: {
       label: "Adjacent at-grade intersection",
-      desc: "Signal/stop/uncontrolled cross street — adds 2 W20-1 ROAD WORK AHEAD signs facing cross-street traffic.",
+      desc: "Signal/stop/uncontrolled cross street — flags the plan for TCS review; the cross-street layout is not generated and no devices are added.",
     },
     adjacent_interchange: {
       label: "Adjacent interchange (highway ramps)",
-      desc: "Highway on/off-ramps within or adjacent to work zone — adds 1 W20-3 LANE CLOSED AHEAD sign and 1 PCMS for upstream ramp signaling.",
+      desc: "Highway on/off-ramps within or adjacent to work zone — flags the plan for TCS review; the per-ramp layout is not generated and no devices are added.",
     },
     driveways_present: {
       label: "Driveways present",

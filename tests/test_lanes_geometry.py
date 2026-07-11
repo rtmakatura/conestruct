@@ -163,18 +163,22 @@ def test_wide_road_does_not_phantom_detect_cross_street(tmp_path) -> None:
 
 
 @pytest.mark.parametrize("lanes", [2, 4])
-def test_cross_street_signs_off_the_road_and_context_drawn(lanes: int, tmp_path) -> None:
-    """The adjacent_intersection adjustment still places its W20-1 pair
-    beyond the road edge for every lane count, and the structured flag —
-    not the sign offsets — makes the sheet draw the cross-street stub."""
+def test_adjacent_intersection_flag_adds_no_devices_and_no_stub(lanes: int, tmp_path) -> None:
+    """The legacy adjacent_intersection gesture is retired (Refs #117):
+    the flag adds no W20-1 pair and the sheet draws no CROSS ST. stub —
+    the flag's only remaining effect is the audit's pending disclosure.
+    (Inverts the #121 outcome test that pinned the stamped pair + stub.)"""
     params = _params(lanes, divided=True)
     flags = {"adjacent_intersection": True}
-    adjusted, _ = apply_site_adjustments(generate_shoulder_closure_divided(params), params, flags)
+    baseline = generate_shoulder_closure_divided(params)
+    adjusted, records = apply_site_adjustments(baseline, params, flags)
+    assert adjusted == baseline  # no devices stamped
+    assert next(r for r in records if r["flag"] == "adjacent_intersection")
     road_edge = lanes * params.lane_width_ft + params.shoulder_width_ft
     xstreet = [p for p in adjusted if p.label == "W20-1" and abs(p.offset_ft) > road_edge]
-    assert len(xstreet) == 2  # one facing each cross-street approach
+    assert xstreet == []
     text = _plan_sheet_text(params, adjusted, tmp_path, site_flags=flags)
-    assert "CROSS ST." in text
+    assert "CROSS ST." not in text
 
 
 def test_flagger_pedestrian_access_still_draws_sidewalk(client: TestClient, tmp_path) -> None:
