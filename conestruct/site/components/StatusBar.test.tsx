@@ -249,7 +249,12 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("1 validation warnings");
   });
 
-  it("refetch derives from lastReady (stale-while-revalidate)", () => {
+  it("refetch shows VERIFYING — never the previous verdict as current (Decision 2)", () => {
+    // Frontend-engine-removal Decision 2 inverted the old
+    // stale-while-revalidate behavior for this strip: while the backend
+    // hasn't answered for the input on screen, the strip is explicitly
+    // indeterminate.  A lastReady verdict (here: amber with a warning)
+    // must NOT leak through — and a green lastReady must not either.
     const html = renderToStaticMarkup(
       <StatusBar
         status="done"
@@ -260,9 +265,20 @@ describe("StatusBar (UX-21/22 derived states)", () => {
         }}
       />,
     );
-    expect(html).toContain("status-bar caution");
-    expect(html).toContain("1 validation warning");
-    expect(html).not.toContain("VERIFYING");
+    expect(html).toContain("VERIFYING");
+    expect(html).not.toContain("status-bar caution");
+    expect(html).not.toContain("1 validation warning");
+
+    const greenStale = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={{ state: "loading", lastReady: makeAudit() }}
+      />,
+    );
+    expect(greenStale).toContain("VERIFYING");
+    expect(greenStale).not.toContain("status-bar pass");
+    expect(greenStale).not.toContain("READY FOR TCS REVIEW");
   });
 });
 
@@ -355,8 +371,13 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     expect(html).not.toContain("REVIEW FLAGS");
   });
 
-  describe("absent rollup (deploy window) falls back to pre-#60 behavior", () => {
-    it("no plan_flags + clean → green READY, never crashes", () => {
+  describe("absent rollup (deploy window) is honest unavailability, not a derived verdict", () => {
+    // Frontend-engine-removal PR A: the old fallback re-derived the
+    // clean/not-clean verdict from warning counts when plan_flags was
+    // absent — a frontend-computed compliance verdict (rule 3/10).  A
+    // response with no verdict now gets no verdict: the strip shows
+    // VERIFICATION UNAVAILABLE and is never green.
+    it("no plan_flags + clean warnings → UNAVAILABLE, never green, never crashes", () => {
       const html = renderToStaticMarkup(
         <StatusBar
           status="done"
@@ -364,11 +385,12 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
           audit={ready(makeAudit({ omitPlanFlags: true }))}
         />,
       );
-      expect(html).toContain("status-bar pass");
-      expect(html).toContain("READY FOR TCS REVIEW");
+      expect(html).toContain("VERIFICATION UNAVAILABLE");
+      expect(html).not.toContain("status-bar pass");
+      expect(html).not.toContain("READY FOR TCS REVIEW");
     });
 
-    it("no plan_flags + a validation warning → amber, as before", () => {
+    it("no plan_flags + a validation warning → UNAVAILABLE, no derived amber verdict", () => {
       const html = renderToStaticMarkup(
         <StatusBar
           status="done"
@@ -378,9 +400,10 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
           )}
         />,
       );
-      expect(html).toContain("status-bar caution");
-      expect(html).toContain("1 validation warning");
-      expect(html).toContain("REVIEW WARNINGS");
+      expect(html).toContain("VERIFICATION UNAVAILABLE");
+      expect(html).not.toContain("status-bar caution");
+      expect(html).not.toContain("REVIEW WARNINGS");
+      expect(html).not.toContain("READY FOR TCS REVIEW");
     });
   });
 });

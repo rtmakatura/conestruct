@@ -186,8 +186,9 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   // data via the shared item helpers (``taperItem``, ``bufferItem``,
   // ``spacingItem``, ``advanceItem``, ``coloradoItem``, ``referenceItem``).
   // Per-scenario builders thread ``audit`` through.  The only remaining
-  // TS-side heuristic is ``bufferFor`` for the flagger SSD block — gated
-  // off in V1 (ENABLED_SCENARIO_KINDS).
+  // TS-side heuristic is ``bufferFor`` for the flagger SSD block — LIVE
+  // in production (flagger_lane_closure is enabled); its backend-field
+  // migration is PR B/C of the frontend-engine-removal arc.
   const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
 
   // Conditional additive items from the backend audit response.  These
@@ -746,27 +747,22 @@ function taperItem(
   const taper = data.sections.taper as Record<string, unknown>;
   const isShoulder = taper.closure_type === "shoulder";
   const labelPrefix = isShoulder ? "L/3" : "L";
-  const lengthFt = Math.round(data.summary.taper_length_ft);
+  const lengthFt = data.summary.taper_length_ft;
   const formulaChoice = taper.formula_choice as string | undefined;
 
-  // Backend formats the math strings with ASCII "x" and one-decimal
-  // precision (L_third = `{:.1f}`).  Display fixes both: substitute the
-  // proper "×" glyph, and round the FINAL line's trailing value so the
-  // body agrees with the chip.  Which line is "final" depends on
-  // closure type — for shoulder, L_third; for lane, L (no L/3 row is
-  // shown).  The intermediate L row for shoulder keeps backend
-  // precision so the W × S product stays mathematically accurate.
+  // Backend emits every value in this family as whole feet (``_ft`` in
+  // src/api/audit.py) — the summary chip and the trailing number of
+  // each calc line are the same integer by construction.  Display work
+  // here is glyph-only: substitute "×" for the backend's ASCII " x ".
+  // (Frontend-engine-removal PR A deleted a client-side Math.round +
+  // trailing-number regex rewrite of the backend's derivation text —
+  // both numeric no-ops that duplicated the backend's rounding
+  // contract; the audit prose now renders as received.)
   const xify = (s: string) => s.replace(/ x /g, " × ");
-  const roundTrailing = (s: string) =>
-    s.replace(/[\d.]+ ft$/, `${lengthFt} ft`);
-
-  const lCalcRaw = (taper.L_calc_text as string | undefined) ?? "";
+  const lCalcText = xify((taper.L_calc_text as string | undefined) ?? "");
   const lThirdRaw = taper.L_third_calc_text as string | undefined;
-  const lCalcText = isShoulder
-    ? xify(lCalcRaw)
-    : xify(roundTrailing(lCalcRaw));
   const lThirdCalcText =
-    isShoulder && lThirdRaw ? xify(roundTrailing(lThirdRaw)) : undefined;
+    isShoulder && lThirdRaw ? xify(lThirdRaw) : undefined;
 
   const citation = sectionCitation(taper, TAPER_CITATION_FALLBACK);
   return {
@@ -1461,15 +1457,20 @@ interface ViolationSpec {
   mutcd_section: string;
 }
 
-function geometryValidationItem(
+export function geometryValidationItem(
   geo: Record<string, unknown>,
 ): ItemSpec | null {
   const violations = (geo.violations as ViolationSpec[] | undefined) ?? [];
   if (violations.length === 0) return null;
-  const hasError = violations.some((v) => v.severity === "error");
+  // The overall verdict is the backend's — ``all_pass`` (audit.py:
+  // all(v.severity != "error")) — not re-derived here from severities
+  // (frontend-engine-removal PR A).  In a 200 response error-severity
+  // violations can't occur (the API raises 400 first), so the
+  // absent-field default of WARNINGS matches every reachable case.
+  const failed = geo.all_pass === false;
   return {
     title: "Geometry validation",
-    result: hasError ? "✕ FAILED" : "⚠ WARNINGS",
+    result: failed ? "✕ FAILED" : "⚠ WARNINGS",
     cite: "MUTCD § 6C",
     body: (
       <>
@@ -1545,13 +1546,19 @@ export function pendingVerificationItem(
 }
 
 // ---------------------------------------------------------------------------
-// Display heuristic — flagger SSD only.
+// Display heuristic — flagger SSD only.  ⚠ LIVE IN PRODUCTION.
 //
 // All shoulder/lane-closure render paths are fully backend-sourced.
 // ``bufferFor`` survives solely for the flagger station sight-distance
-// lookup in ``buildFlaggerItems`` (cite §6E.06).  Flagger is gated off in
-// V1 (ENABLED_SCENARIO_KINDS = ["shoulder"]); the SSD migration is
-// deferred to whenever flagger ships.
+// lookup in ``buildFlaggerItems``.  A prior version of this comment
+// claimed flagger was gated off — it is NOT: flagger_lane_closure is in
+// ENABLED_SCENARIO_KINDS (lib/scenarios/index.ts) and this table renders
+// on production flagger plans.  The values match MUTCD 11th-ed Table
+// 6B-2 exactly, but the item's citation ("§ 6E.06" / "Table 6E-1") is
+// wrong-subject in the 11th edition — governing text is § 6D.06, which
+// points to Table 6B-2.  Migration to a backend-provided value +
+// corrected citation is PR B/C of the frontend-engine-removal arc;
+// tracked as its own correctness issue.
 // ---------------------------------------------------------------------------
 
 const BUFFER_TABLE: Record<number, number> = {

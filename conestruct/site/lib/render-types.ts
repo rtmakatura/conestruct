@@ -126,7 +126,18 @@ export interface AuditResponse {
  */
 export type AuditState =
   | { state: "loading"; lastReady: AuditResponse | null }
-  | { state: "ready"; data: AuditResponse }
+  | {
+      state: "ready";
+      data: AuditResponse;
+      // The scenario object this answer was fetched for (opaque, identity
+      // comparison only).  GeneratorShell uses it to tell "settled for
+      // the input on screen" from "settled for an input that has since
+      // been edited": the audit effect flips to ``loading`` only after
+      // paint, so without this stamp one rendered frame would present
+      // the previous verdict as current (frontend-engine-removal
+      // Decision 2 — the strip never shows a stale verdict).
+      forScenario?: unknown;
+    }
   | {
       state: "error";
       message: string;
@@ -136,4 +147,5 @@ export type AuditState =
       // input error rather than a neutral "verification unavailable".
       httpStatus?: number;
       lastReady: AuditResponse | null;
+      forScenario?: unknown;
     };

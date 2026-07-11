@@ -16,14 +16,19 @@ export type Status = "idle" | "generating" | "done";
 //   1. generating          → COMPUTING (unchanged spinner state)
 //   2. invalid input       → red FAIL — client mirror (validateWorkZone)
 //                            or backend geometry 400
-//   3. first audit load    → VERIFYING
-//   4. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
+//   3. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
 //                            network blip is not a plan defect)
-//   5. warnings > 0        → amber CAUTION, expandable disclosure
+//   4. verification        → VERIFYING (Decision 2, frontend-engine-
+//      in flight             removal: any in-flight state, not just the
+//                            first load — the strip never shows a stale
+//                            verdict as if it were current)
+//   5. plan_flags absent   → VERIFICATION UNAVAILABLE (a response with
+//                            no verdict gets no derived one)
+//   6. warnings > 0        → amber CAUTION, expandable disclosure
 //                            listing each warning with rule ID +
 //                            citation (UX-22: a count the user can't
 //                            inspect is worse than none)
-//   6. warnings == 0       → green PASS · READY FOR TCS REVIEW
+//   7. warnings == 0       → green PASS · READY FOR TCS REVIEW
 //
 // "GENERATED" became "VERIFIED" (the audit/breakdown are live-computed
 // per scenario; nothing is generated until the CTA is clicked) and the
@@ -40,9 +45,11 @@ export type Status = "idle" | "generating" | "done";
 // goes amber and the disclosure breaks the count down by category —
 // validation warnings (fix your input) kept distinct from compliance
 // fails and V1 limitations (capability gaps).  The rollup is OPTIONAL on
-// the response: during the brief deploy window where the frontend ships
-// before ``modal deploy``, ``plan_flags`` is absent and the strip falls
-// back to the pre-#60 validation-warnings-only behavior.
+// the response type: when ``plan_flags`` is absent (deploy window or
+// rollback) the strip shows VERIFICATION UNAVAILABLE rather than
+// re-deriving a verdict from warning counts (frontend-engine-removal
+// PR A — the pre-#60 derived-verdict fallback was itself the rule-3
+// pattern being retired).
 // ---------------------------------------------------------------------------
 
 export interface StripWarning {
@@ -136,10 +143,15 @@ export function StatusBar({ status, inputError, audit }: Props) {
     );
   }
 
-  // Stale-while-revalidate: during a refetch, derive from the previous
-  // audit (same pattern as AuditTrail) rather than flashing VERIFYING.
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
-  if (!data) {
+  // Frontend-engine-removal Decision 2: while a verification is in
+  // flight the strip shows an explicit checking state — never the
+  // previous verdict presented as current.  (This strip used to derive
+  // from ``lastReady`` here, stale-while-revalidate; AuditTrail keeps
+  // that pattern for its *content*, but a verdict is a claim — a green
+  // READY against an input the backend hasn't answered is a false one,
+  // rule 10.)  The failure state stays reachable from here: a fetch
+  // that errors flips to "error" → VERIFICATION UNAVAILABLE above.
+  if (audit.state !== "ready") {
     return (
       <div className="status-bar idle">
         <span className="indicator" />
@@ -147,18 +159,31 @@ export function StatusBar({ status, inputError, audit }: Props) {
       </div>
     );
   }
+  const data = audit.data;
 
   const warnings = collectValidationWarnings(data);
 
-  // #60: the green/off-green verdict is the backend's, not ours.  When
-  // the plan_flags rollup is present we read its ``is_clean`` verdict
-  // (single source — the strip and the audit panel can't disagree).
-  // When it's absent — the brief deploy window where Vercel ships the
-  // frontend before ``modal deploy`` lands the rollup — we fall back to
-  // the pre-#60 validation-warnings-only behavior so the strip never
-  // crashes or shows a wrong color (raw-dict robustness class).
+  // #60: the green/off-green verdict is the backend's, not ours — we
+  // read the ``plan_flags`` rollup's ``is_clean`` (single source; the
+  // strip and the audit panel can't disagree).  When the rollup is
+  // absent (a deploy window or rollback serving a pre-#60 response),
+  // the strip no longer re-derives a verdict from warning counts — a
+  // verdict we compute is one the audit panel can disagree with
+  // (frontend-engine-removal PR A; rule 10).  Honest unavailability
+  // instead: never green without a backend ``is_clean``.
   const flags = data.plan_flags;
-  const isClean = flags ? flags.is_clean : warnings.length === 0;
+  if (!flags) {
+    return (
+      <div className="status-bar idle">
+        <span className="indicator" />
+        <span>
+          VERIFICATION UNAVAILABLE · this response carries no plan verdict —
+          retry from the audit trail panel below
+        </span>
+      </div>
+    );
+  }
+  const isClean = flags.is_clean;
 
   if (isClean) {
     return (
@@ -171,12 +196,11 @@ export function StatusBar({ status, inputError, audit }: Props) {
   }
 
   // Not clean.  When the only flags are validation warnings (no
-  // compliance fails, no V1 limitations) — or the rollup is absent — the
-  // existing validation-warnings disclosure renders unchanged: the
-  // common path looks exactly as it did pre-#60.
+  // compliance fails, no V1 limitations) the existing
+  // validation-warnings disclosure renders unchanged: the common path
+  // looks exactly as it did pre-#60.
   const hasOtherCategories =
-    flags !== undefined &&
-    (flags.compliance_fails > 0 || flags.v1_limitations > 0);
+    flags.compliance_fails > 0 || flags.v1_limitations > 0;
 
   if (!hasOtherCategories) {
     return (

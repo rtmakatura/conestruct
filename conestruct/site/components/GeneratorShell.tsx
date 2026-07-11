@@ -172,17 +172,19 @@ export function GeneratorShell({
             // error instead of a neutral "verification unavailable".
             httpStatus: res.status,
             lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+            forScenario: scenario,
           }));
           return;
         }
         const data = (await res.json()) as AuditResponse;
-        setAuditState({ state: "ready", data });
+        setAuditState({ state: "ready", data, forScenario: scenario });
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         setAuditState((prev) => ({
           state: "error",
           message: "Network error",
           lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+          forScenario: scenario,
         }));
       }
     })();
@@ -259,15 +261,39 @@ export function GeneratorShell({
 
   const generated = status === "done";
 
+  // Frontend-engine-removal Decision 2: the verdict strip never presents
+  // an answer for an input the backend hasn't seen.  The audit effect
+  // flips to "loading" only after paint, so on the render where the
+  // scenario just changed, ``auditState`` still holds the answer for the
+  // PREVIOUS input.  ``forScenario`` (stamped at fetch time) detects
+  // that: when it isn't the scenario on screen, the strip gets an
+  // explicit checking state instead of the stale verdict.  This governs
+  // the StatusBar only — AuditTrail deliberately keeps its
+  // stale-while-revalidate *content* (prose can be visibly mid-refresh;
+  // a verdict presented as current cannot).
+  const auditSettled =
+    (auditState.state === "ready" || auditState.state === "error") &&
+    auditState.forScenario === scenario;
+  const stripAudit: AuditState = auditSettled
+    ? auditState
+    : {
+        state: "loading",
+        lastReady:
+          auditState.state === "ready"
+            ? auditState.data
+            : auditState.lastReady,
+      };
+
   // UX-21: the strip's red input-error state.  Client mirror first
   // (validateWorkZone — same helper that gates the GenerateButton);
   // a backend geometry 400 (mirror drift) is the authoritative
   // fallback.  Non-400 audit errors stay "verification unavailable"
-  // inside StatusBar.
+  // inside StatusBar.  Reads ``stripAudit`` so a 400 for an
+  // already-edited input can't show INVALID INPUT against the new one.
   const wzValidation = validateWorkZone(scenario);
   const auditInputError =
-    auditState.state === "error" && auditState.httpStatus === 400
-      ? auditState.message
+    stripAudit.state === "error" && stripAudit.httpStatus === 400
+      ? stripAudit.message
       : null;
   const inputError = !wzValidation.ok ? wzValidation.message : auditInputError;
 
@@ -334,7 +360,7 @@ export function GeneratorShell({
           <StatusBar
             status={bundling ? "generating" : status}
             inputError={inputError}
-            audit={auditState}
+            audit={stripAudit}
           />
           {/* Dev-only replication snapshot (Refs #102, TEMPORARY) — renders
               nothing without ?debug=1. Delete with DebugSnapshotButton. */}

@@ -6,6 +6,7 @@ import {
   buildFlaggerItems,
   buildShoulderItems,
   finesDoubleItem,
+  geometryValidationItem,
   pendingVerificationItem,
   referenceItem,
   siteAdjustmentsItem,
@@ -1052,5 +1053,129 @@ describe("#104 site-adjustment citations read the backend, static fallback", () 
     const spec = siteAdjustmentsItem(ALL_FLAGS, backendRecords());
     expect(spec!.cite).toBe("MUTCD — per-flag citations below");
     expect(spec!.cite).not.toContain("6C / § 6D");
+  });
+});
+
+// Frontend-engine-removal PR A: sentinel tests proving the panel DISPLAYS
+// backend values rather than recomputing them.  Each fixture plants a
+// value the retired frontend derivation would have altered; the assertion
+// passes only if the backend's bytes render unmodified.
+describe("taper derivation text renders as received (PR A sentinel)", () => {
+  const dummyShoulder = { kind: "shoulder" } as unknown as ShoulderScenario;
+
+  function auditWithTaper(
+    taperLengthFt: number,
+    taper: Record<string, unknown>,
+  ): AuditState {
+    return {
+      state: "ready",
+      data: {
+        summary: {
+          ta: "TA-3",
+          cdot_sheet: "S-630-1",
+          case_id: "Case 11",
+          taper_length_ft: taperLengthFt,
+          taper_label: "L/3 (shoulder taper)",
+          buffer_space_ft: 495,
+          device_spacing_taper_ft: 55,
+          device_spacing_tangent_ft: 110,
+          step_count: 8,
+        },
+        sections: {
+          taper,
+          buffer: {},
+          spacing: {},
+          advance: {},
+          colorado: {},
+          case: {},
+          flagger: {},
+          corridor_validation: { checked: false, warnings: [] },
+          geometry_validation: { violations: [], all_pass: true },
+        },
+        pending_verification: { count: 0, note: "", tracking_issue: null },
+      },
+    };
+  }
+
+  it("shoulder: L_third_calc_text trailing value is the backend's, not a client re-round", () => {
+    // Sentinel: summary chip says 999, the backend derivation text says
+    // 220.  The retired roundTrailing would have regex-rewritten the text
+    // to "999 ft"; the panel must now show the backend's "220 ft".
+    const audit = auditWithTaper(999, {
+      closure_type: "shoulder",
+      L_calc_text: "L = 12 x 55 = 660 ft",
+      L_third_calc_text: "L/3 = 660 / 3 = 220 ft",
+    });
+    const items = buildShoulderItems(dummyShoulder, audit, true, String);
+    const taperSpec = items[0];
+    expect(taperSpec.title).toBe("Taper length calculation");
+    const html = renderToStaticMarkup(taperSpec.body as ReactElement);
+    expect(html).toContain("220 ft");
+    expect(html).not.toContain("999 ft");
+    // The chip still reads the (equally backend-provided) summary value.
+    expect(taperSpec.result).toContain("999");
+  });
+
+  it("lane closure: L_calc_text trailing value is the backend's, not a client re-round", () => {
+    const audit = auditWithTaper(999, {
+      closure_type: "lane",
+      L_calc_text: "L = 12 x 55 = 660 ft",
+    });
+    const items = buildShoulderItems(dummyShoulder, audit, true, String);
+    const html = renderToStaticMarkup(items[0].body as ReactElement);
+    expect(html).toContain("660 ft");
+    expect(html).not.toContain("999 ft");
+  });
+
+  it("glyph substitution survives: ASCII ' x ' renders as ' × '", () => {
+    const audit = auditWithTaper(660, {
+      closure_type: "lane",
+      L_calc_text: "L = 12 x 55 = 660 ft",
+    });
+    const items = buildShoulderItems(dummyShoulder, audit, true, String);
+    const html = renderToStaticMarkup(items[0].body as ReactElement);
+    expect(html).toContain("12 × 55");
+    expect(html).not.toContain("12 x 55");
+  });
+});
+
+describe("geometry validation verdict is the backend's all_pass (PR A sentinel)", () => {
+  const WARN = {
+    rule_id: "WORK_ZONE_SHORT_VS_BUFFER",
+    severity: "warning",
+    message: "Work zone is unusually short relative to the buffer.",
+    mutcd_section: "6C.06",
+  };
+  const ERROR = {
+    rule_id: "WORK_ZONE_SHORTER_THAN_TAPER",
+    severity: "error",
+    message: "Work zone shorter than the required taper.",
+    mutcd_section: "6C.08",
+  };
+
+  it("all_pass=false → FAILED, even when no row carries error severity", () => {
+    // Sentinel: the retired derivation scanned severities and would have
+    // said WARNINGS here.  The verdict must follow the backend field.
+    const spec = geometryValidationItem({
+      violations: [WARN],
+      all_pass: false,
+    });
+    expect(spec!.result).toBe("✕ FAILED");
+  });
+
+  it("all_pass=true → WARNINGS, even when a row carries error severity", () => {
+    // Unreachable pairing in a live 200 (the API 400s on errors), planted
+    // to prove the field is read instead of the severity scan.
+    const spec = geometryValidationItem({
+      violations: [ERROR],
+      all_pass: true,
+    });
+    expect(spec!.result).toBe("⚠ WARNINGS");
+  });
+
+  it("no violations → item suppressed regardless of all_pass", () => {
+    expect(geometryValidationItem({ violations: [], all_pass: true })).toBe(
+      null,
+    );
   });
 });
