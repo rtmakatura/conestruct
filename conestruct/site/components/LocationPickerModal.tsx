@@ -326,12 +326,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const [selectedCandidateIdx, setSelectedCandidateIdx] = useState<
     number | null
   >(null);
-  // When true, the inline picker is rendered under the bearing row.
-  // Auto-opens on a fresh multi-candidate detection and on "Use
-  // Detected" when multiple candidates exist; closes after the
-  // operator picks one.
-  const [showCandidatePicker, setShowCandidatePicker] = useState(false);
-
   const [latInput, setLatInput] = useState(
     initialHasPin ? fmt4(initial.lat!) : "",
   );
@@ -687,7 +681,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setShowCandidatePicker(false);
           setClassify({
             state: "error",
             message: "Detection service unavailable",
@@ -704,7 +697,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setShowCandidatePicker(false);
           setClassify({
             state: "error",
             message: "No road detected at this point",
@@ -720,7 +712,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           const only = cands[0];
           const newBearing = normaliseBearing(only.bearing);
           setSelectedCandidateIdx(0);
-          setShowCandidatePicker(false);
           if (bearingInputRef.current.trim() === "") {
             setBearing(newBearing);
             setBearingInput(String(newBearing));
@@ -732,11 +723,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             result: classifyFromCandidate(only, j.isUrban, j.placeName),
           });
         } else {
-          // Multi-candidate: surface the picker, leave bearing alone,
-          // and hold the property panel in awaiting_pick until the
-          // operator commits to a road.
+          // Multi-candidate: leave bearing alone and hold the property
+          // panel in awaiting_pick until the operator commits to a
+          // road.  The rail-top card renders itself off the candidate
+          // data — no toggle to raise here.
           setSelectedCandidateIdx(null);
-          setShowCandidatePicker(true);
           setClassify({ state: "awaiting_pick" });
         }
       } catch {
@@ -746,7 +737,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           );
           setBearingCandidates([]);
           setSelectedCandidateIdx(null);
-          setShowCandidatePicker(false);
           setClassify({
             state: "error",
             message: "Detection service unavailable",
@@ -1282,7 +1272,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       setBearingInput(String(b));
       setBearingError(null);
       setMarkerBearingRef.current?.(b);
-      setShowCandidatePicker(false);
       setClassify({
         state: "detected",
         result: classifyFromCandidate(
@@ -1301,9 +1290,10 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       applyCandidate(0);
       return;
     }
-    // Multiple candidates — re-expand the picker so the operator can
-    // pick.  Don't pre-apply: that's the bug we're fixing.
-    setShowCandidatePicker(true);
+    // Multiple candidates: the decision lives in the rail-top card,
+    // not this row.  Don't pre-apply — that's the bug the picker
+    // exists to prevent.  (inc-5 reworks this button so the ambiguous
+    // unpicked case is disabled rather than a no-op.)
   };
 
   const onFlipDirection = () => {
@@ -1662,6 +1652,18 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
               Below md it renders beneath the map, as before. */}
           <div className="flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
             <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
+              {/* Disambiguation card — first block in the rail, present
+                  whenever detection is ambiguous (driven by the data,
+                  not a toggle).  Keyed on the candidate set so a fresh
+                  detection resets the card's collapse state. */}
+              {bearingCandidates.length > 1 && (
+                <WhichRoadCard
+                  key={bearingCandidates.map((c) => c.way_id).join("|")}
+                  candidates={bearingCandidates}
+                  selectedIdx={selectedCandidateIdx}
+                  onPick={applyCandidate}
+                />
+              )}
               <RoadPropertiesPanel
                 classify={classify}
                 overrides={overrides}
@@ -1679,8 +1681,6 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                   onBearingChange={onBearingChange}
                   bearingCandidates={bearingCandidates}
                   selectedCandidateIdx={selectedCandidateIdx}
-                  showCandidatePicker={showCandidatePicker}
-                  onApplyCandidate={applyCandidate}
                   onUseDetectedBearing={onUseDetectedBearing}
                   onFlipDirection={onFlipDirection}
                   hasPin={hasPin}
@@ -1883,7 +1883,7 @@ function RoadPropertiesPanel({
         )}
         {classify.state === "awaiting_pick" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] py-3">
-            Multiple roads detected — pick a direction above to load road
+            Multiple roads detected — pick a road above to load road
             properties.
           </div>
         )}
@@ -2288,8 +2288,6 @@ function WorkZonePanel({
   onBearingChange,
   bearingCandidates,
   selectedCandidateIdx,
-  showCandidatePicker,
-  onApplyCandidate,
   onUseDetectedBearing,
   onFlipDirection,
   hasPin,
@@ -2302,8 +2300,6 @@ function WorkZonePanel({
   onBearingChange: (v: string) => void;
   bearingCandidates: RoadCandidate[];
   selectedCandidateIdx: number | null;
-  showCandidatePicker: boolean;
-  onApplyCandidate: (idx: number) => void;
   onUseDetectedBearing: () => void;
   onFlipDirection: () => void;
   hasPin: boolean;
@@ -2419,13 +2415,72 @@ function WorkZonePanel({
             ⟲ Flip
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
 
-        {ambiguous && showCandidatePicker && (
-          <CandidatePicker
-            candidates={bearingCandidates}
-            selectedIdx={selectedCandidateIdx}
-            onPick={onApplyCandidate}
-          />
+// Rail-top disambiguation card (Concept A inc-3).  Rendered whenever
+// detection returned more than one candidate road — driven by the
+// candidate data itself, not a toggle.  Unpicked, it holds the full
+// picker, framed as the blocking decision it is: amber warning
+// treatment with a glyph and words, never hue alone (rule 13) — and
+// amber, not orange, because in the workbench orange means generated
+// output and this card is entirely controls.  Once picked it collapses
+// to a one-line confirmed summary (reusing CandidateCaption) with an
+// explicit Change affordance.
+function WhichRoadCard({
+  candidates,
+  selectedIdx,
+  onPick,
+}: {
+  candidates: RoadCandidate[];
+  selectedIdx: number | null;
+  onPick: (idx: number) => void;
+}) {
+  // Collapse/re-expand after a pick is card-local UI state; the parent
+  // keys this component on the candidate set, so a fresh detection
+  // mounts a fresh card and the state can never go stale.
+  const [reExpanded, setReExpanded] = useState(false);
+  const expanded = selectedIdx === null || reExpanded;
+  const picked =
+    selectedIdx !== null ? (candidates[selectedIdx] ?? null) : null;
+  return (
+    <div className="border-b border-[color:var(--rule)] px-5 py-3">
+      <div className="border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3.5 py-2.5">
+        <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--warn)]">
+          <span aria-hidden="true">⚠ </span>
+          Which road? · {candidates.length} detected
+        </div>
+        {expanded ? (
+          <div className="mt-2">
+            <CandidatePicker
+              candidates={candidates}
+              selectedIdx={selectedIdx}
+              onPick={(idx) => {
+                setReExpanded(false);
+                onPick(idx);
+              }}
+            />
+          </div>
+        ) : (
+          picked && (
+            <div className="mt-1.5 flex items-center justify-between gap-3">
+              <span className="min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark)]">
+                <CandidateCaption candidate={picked} multi={false} />
+              </span>
+              {/* act-bright, not act: on the amber-tinted card bg the
+                  base cyan measures 4.09:1 — under the 4.5 AA text
+                  floor.  act-bright measures 5.06:1 (hover fill 7.73). */}
+              <button
+                type="button"
+                onClick={() => setReExpanded(true)}
+                className="flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
+              >
+                Change
+              </button>
+            </div>
+          )
         )}
       </div>
     </div>
@@ -2455,11 +2510,13 @@ function CandidateCaption({
   );
 }
 
-// Inline picker shown when /api/road-bearing returns multiple
-// candidates within snap range (the divided-highway case).  Each
-// candidate is a button: clicking sets the bearing field, the arrow,
-// AND the road-property panel (via classifyFromCandidate in the parent
-// applyCandidate handler).
+// Picker rows shown inside the Which-road card when /api/road-bearing
+// returns multiple candidates within snap range (the divided-highway
+// case).  Each candidate is a button: clicking sets the bearing field,
+// the arrow, AND the road-property panel (via classifyFromCandidate in
+// the parent applyCandidate handler).  Snap distance + way id ride
+// visibly on each row so the operator can tell the carriageways apart
+// (previously tooltip-only).
 function CandidatePicker({
   candidates,
   selectedIdx,
@@ -2470,38 +2527,38 @@ function CandidatePicker({
   onPick: (idx: number) => void;
 }) {
   return (
-    <div className="border-t border-[color:var(--rule)]/40 pt-2 pb-2">
-      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
-        Select road:
-      </div>
-      <div className="flex flex-col gap-1.5">
-        {candidates.map((c, idx) => {
-          const lbl = candidateLabel(c);
-          const brg = normaliseBearing(c.bearing);
-          const selected = idx === selectedIdx;
-          return (
-            <button
-              key={`${c.way_id}-${idx}`}
-              type="button"
-              onClick={() => onPick(idx)}
-              className={`text-left px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
-                selected
-                  ? "border-[color:var(--act)] bg-[color:var(--act)]/15 text-white"
-                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--act)] hover:text-white"
-              }`}
-              title={`${c.snap_distance_m.toFixed(0)} m from pin · way ${c.way_id}`}
-            >
-              <span className="text-white">
-                {lbl.primary} {lbl.direction.toLowerCase()}
-              </span>
-              <span className="opacity-70">
-                {" "}
-                ({lbl.sub.toLowerCase()}, {brg}°)
-              </span>
-            </button>
-          );
-        })}
-      </div>
+    <div className="flex flex-col gap-1.5">
+      {candidates.map((c, idx) => {
+        const lbl = candidateLabel(c);
+        const brg = normaliseBearing(c.bearing);
+        const selected = idx === selectedIdx;
+        return (
+          <button
+            key={`${c.way_id}-${idx}`}
+            type="button"
+            onClick={() => onPick(idx)}
+            className={`text-left px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
+              selected
+                ? "border-[color:var(--act-bright)] bg-[color:var(--act)]/15 text-white"
+                : // faint border, not --rule: on the amber-tinted card bg
+                  // --rule measures 1.02:1 (invisible); faint is 4.04:1.
+                  // act-bright on hover/selected: 5.06:1 vs act's 4.09.
+                  "border-[color:var(--ink-on-dark-faint)] text-[color:var(--ink-on-dark)] hover:border-[color:var(--act-bright)] hover:text-white"
+            }`}
+          >
+            <span className="text-white">
+              {lbl.primary} {lbl.direction.toLowerCase()}
+            </span>
+            <span className="opacity-70">
+              {" "}
+              ({lbl.sub.toLowerCase()}, {brg}°)
+            </span>
+            <span className="block text-[10px] tracking-[0.04em] opacity-70">
+              {c.snap_distance_m.toFixed(0)} m from pin · way {c.way_id}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
