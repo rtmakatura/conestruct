@@ -247,6 +247,15 @@ def scenario_display_name(params: ScenarioParams) -> str:
 
     Branch order mirrors the former ``_scenario_label`` exactly so the
     same params resolve to the same string.
+
+    The undivided branches derive their lane count from
+    ``params.num_lanes`` (Refs #118) — total-lane naming, the CDOT
+    S-630-1 convention, so num_lanes=1 (one lane per direction) reads
+    "2-Lane".  The divided branches deliberately carry no count: they
+    never asserted one, so there is nothing false to correct there.
+    The gated mobile branch keeps its literal ("2-Lane Road" is true by
+    construction, num_lanes forced to 1 at the bridge) — re-audit it on
+    enablement day.
     """
     ct = params.closure_type
     divided = params.is_divided
@@ -257,12 +266,12 @@ def scenario_display_name(params: ScenarioParams) -> str:
     if ct == "lane" and not divided and params.near_intersection:
         return "Lane Closure Near Intersection — Undivided"
     if ct == "lane" and not divided:
-        return "Flagger Alternating Traffic — 2-Lane Undivided"
+        return f"Flagger Alternating Traffic — {2 * params.num_lanes}-Lane Undivided"
     if ct == "lane":
         return "Right-Lane Closure — Divided Highway"
     if divided:
         return "Shoulder Closure — Divided Highway"
-    return "Shoulder Closure — 2-Lane Undivided"
+    return f"Shoulder Closure — {2 * params.num_lanes}-Lane Undivided"
 
 
 def shoulder_ta_reference(road_type: str) -> str:

@@ -91,7 +91,9 @@ _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
 _ROAD_TYPE_HUMAN: dict[str, str] = {
     "urban_low": "Urban (low-speed)",
     "urban_high": "Urban (high-speed)",
-    "rural": "Rural two-lane",
+    # "Rural" only — Table 6B-1's category is speed/access, not a lane
+    # count; the road may carry any num_lanes (Refs #118).
+    "rural": "Rural",
     "expressway": "Expressway",
     "freeway": "Freeway",
 }

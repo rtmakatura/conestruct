@@ -28,12 +28,18 @@ import pytest
 from openpyxl import load_workbook
 
 from src.api.render_api import _build_device_breakdown
-from src.api.schemas import ShoulderScenario, scenario_to_call
+from src.api.schemas import FlaggerLaneClosureScenario, ShoulderScenario, scenario_to_call
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import build_narrative_context
+from src.rendering.plan_sheet import _scenario_label
 from src.rules.devices import DeviceType
-from src.rules.validators import DevicePlacement, ScenarioParams
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    scenario_display_name,
+    scenario_display_name_short,
+)
 
 from ._harness import (
     CASE_11_GENERAL_BODY,
@@ -320,3 +326,88 @@ def test_audit_sign_table_matches_upstream_placements(name: str) -> None:
         f"  missing from table: {sorted(expected - actual)}\n"
         f"  phantom rows:       {sorted(actual - expected)}"
     )
+
+
+# ---------------------------------------------------------------------------
+# T-03 — closure-type label reads the real lane count (Refs #118)
+#
+# scenario_display_name derives the undivided lane claim from
+# ``num_lanes`` (total-lane naming, so num_lanes=1 → "2-Lane") and the
+# single-sourced string must reach every full-label surface
+# byte-identically: plan-sheet title block, XLSX Summary, quote header,
+# crew narrative.  The PARAMETERS box short form never carries the
+# count — pinned here so a truncation change is a loud failure.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("lanes", [1, 2, 3, 4])
+def test_undivided_label_reads_lane_count_on_every_surface(lanes: int, tmp_path) -> None:
+    body = {
+        **CASE_11_GENERAL_BODY,
+        "roadType": "rural_undivided",
+        "divided": False,
+        "lanes": lanes,
+        # 10-ft lanes keep lanes=4 inside MAX_DRAWABLE_HALF_ROAD_FT.
+        "laneWidth": 10,
+    }
+    placements, params = _pipeline(body)
+    expected = f"Shoulder Closure — {2 * lanes}-Lane Undivided"
+
+    assert scenario_display_name(params) == expected
+    # Plan-sheet title block MHT TYPE row renders this wrapper.
+    assert _scenario_label(params) == expected.upper()
+    # PARAMETERS box short form drops the qualifier entirely.
+    assert scenario_display_name_short(params) == "Shoulder Closure"
+    # Crew narrative header.
+    assert build_narrative_context(placements, params)["closure_type_display"] == expected
+
+    # XLSX device list Summary sheet.
+    xlsx_path = tmp_path / "devices.xlsx"
+    export_device_list(placements, params, str(xlsx_path))
+    wb = load_workbook(str(xlsx_path), read_only=True)
+    summary = {str(r[0]): r[1] for r in wb["Summary"].iter_rows(values_only=True)}
+    wb.close()
+    assert summary["Closure type"] == expected
+
+    # Quote Summary header line.
+    quote_path = tmp_path / "quote.xlsx"
+    generate_quote(placements, params, output_path=str(quote_path))
+    qwb = load_workbook(str(quote_path), read_only=True)
+    header_row = next(
+        qwb["Quote Summary"].iter_rows(min_row=6, max_row=6, max_col=1, values_only=True)
+    )
+    qwb.close()
+    assert f"Closure: {expected}" in str(header_row[0])
+
+
+def test_flagger_label_unchanged_by_lane_count_derivation() -> None:
+    """The bridge forces flagger to num_lanes=1 (schemas.scenario_to_call),
+    so the derived label is byte-identical to the former literal."""
+    scenario = FlaggerLaneClosureScenario.model_validate(
+        {
+            "kind": "flagger_lane_closure",
+            "roadType": "rural_undivided",
+            "speed": 45,
+            "laneWidth": 12,
+            "workType": "utility_cut",
+            "duration": "short",
+            "workLen": 500,
+            "night": False,
+            "pilotCar": False,
+            "afad": False,
+            "pedestrianAccess": False,
+        }
+    )
+    params, _generator, _kwargs = scenario_to_call(scenario)
+    assert params.num_lanes == 1
+    assert scenario_display_name(params) == "Flagger Alternating Traffic — 2-Lane Undivided"
+
+
+def test_narrative_rural_road_type_makes_no_lane_claim() -> None:
+    """ "Rural two-lane" asserted a lane count Table 6B-1 does not carry —
+    the narrative road-type row must stay count-free (Refs #118)."""
+    placements, params = _pipeline(
+        {**CASE_11_GENERAL_BODY, "roadType": "rural_undivided", "divided": False, "lanes": 3}
+    )
+    assert params.road_type == "rural"
+    assert build_narrative_context(placements, params)["road_type_human"] == "Rural"
