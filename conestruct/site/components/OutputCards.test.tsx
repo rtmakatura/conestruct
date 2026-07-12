@@ -165,13 +165,14 @@ describe("OutputCards sheet index", () => {
       expect(b.className).toContain("w-[152px]");
     }
 
-    // The crew row's pair sits side by side (flex row, not flex-col),
-    // and every cell pins the shared fixed row height, middle-aligned.
+    // The crew row's pair is stacked (side-by-side overflowed a 1440px
+    // viewport), and every cell pins the shared fixed row height —
+    // sized to that stacked pair — middle-aligned.
     const crewButtonWrap = buttons[2].parentElement!;
-    expect(crewButtonWrap.className).not.toContain("flex-col");
+    expect(crewButtonWrap.className).toContain("flex-col");
     expect(crewButtonWrap.contains(buttons[3])).toBe(true);
     for (const cell of Array.from(container.querySelectorAll("tbody td"))) {
-      expect(cell.className).toContain("h-[72px]");
+      expect(cell.className).toContain("h-[96px]");
       expect(cell.className).toContain("align-middle");
     }
   });

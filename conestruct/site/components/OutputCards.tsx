@@ -252,11 +252,13 @@ function ctaClass(idx: number): string {
   return `${BTN_BASE} ${BTN_SIZE} ${idx === 0 ? BTN_PRIMARY : BTN_GHOST}`;
 }
 
-// One fixed height for every row (h-[72px] on each cell — table cells
-// treat height as a minimum, so an inline error message can still grow
-// the row rather than clip), content middle-aligned.  20px horizontal
-// padding per the sheet-index spec.
-const TD = "h-[72px] px-5 align-middle";
+// One fixed height for every row, sized to the tallest case — row C's
+// stacked button pair (34px + 34px + 6px gap = 74px content) plus
+// breathing room — so A and B grow to match rather than C standing
+// taller.  Table cells treat height as a minimum, so an inline error
+// message can still grow its row rather than clip.  Content
+// middle-aligned; 20px horizontal padding per the sheet-index spec.
+const TD = "h-[96px] px-5 align-middle";
 
 function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
@@ -345,10 +347,11 @@ function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
       <td className={`${TD} text-right`}>
         {mode.kind === "public" ? (
           <>
-            {/* Side by side, not stacked: with uniform 34px buttons the
-                pair fits inside the fixed 72px row, keeping row C the
-                same height as A and B. */}
-            <div className="flex items-center justify-end gap-1.5">
+            {/* Stacked, not side by side: two 152px buttons in one line
+                pushed the table past a 1440px viewport into horizontal
+                scroll.  Row height is uniform anyway — every cell pins
+                the stacked-pair height (see TD). */}
+            <div className="flex flex-col items-end gap-1.5">
               {kinds.map((k, idx) => (
                 <button
                   key={k}
@@ -373,7 +376,7 @@ function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
             )}
           </>
         ) : mode.planId ? (
-          <div className="flex items-center justify-end gap-1.5">
+          <div className="flex flex-col items-end gap-1.5">
             {kinds.map((k, idx) => (
               <a
                 key={k}
