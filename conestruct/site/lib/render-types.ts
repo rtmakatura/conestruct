@@ -12,6 +12,15 @@
  * safety on a one-way data flow.
  */
 
+// The files inside the "download all" MHT-package zip, in bundle order.
+// /api/render/bundle renders exactly these kinds (fetchAllRenderParts
+// spreads this list), and OutputCards derives its "MHT PACKAGE · N FILES"
+// header count from its length — one source, so the label can never
+// drift from what the zip actually contains.  Lives here rather than in
+// render-proxy.ts because render-proxy imports server-only modules
+// (Clerk, the DB) and can't be pulled into a client component.
+export const BUNDLE_PART_KINDS = ["pdf", "xlsx", "markdown", "quote"] as const;
+
 export interface AuditSummary {
   ta: string;
   cdot_sheet: string;

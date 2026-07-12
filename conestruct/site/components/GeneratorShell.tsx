@@ -420,6 +420,12 @@ export function GeneratorShell({
                 : { kind: "saved", planId }
             }
             breakdown={deviceBreakdown}
+            // The sheet-index header's "All (.zip)" re-download reuses the
+            // Generate button's bundle handler verbatim; OutputCards
+            // renders it in public mode only (saved plans have no bundle
+            // route).
+            onDownloadAll={onGenerate}
+            bundling={bundling}
           />
           {generated && (
             <QuotePanel

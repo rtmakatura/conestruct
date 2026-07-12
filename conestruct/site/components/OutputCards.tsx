@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
 import type { AuditSummary } from "@/lib/render-types";
+import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
 type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf";
@@ -19,22 +20,28 @@ interface SavedMode {
 type Mode = PublicMode | SavedMode;
 
 interface Props {
-  // Audit summary drives the per-card TA / CDOT-sheet labels and the
-  // step count.  Null only during the very first audit fetch (before
-  // any successful response); after that, GeneratorShell passes the
-  // last-known summary even during refetches.  Each card renders a
-  // brief placeholder while summary is null.
+  // Audit summary drives the plan-sheet spec sub-line (TA / CDOT sheet)
+  // and the step count.  Null only during the very first audit fetch
+  // (before any successful response); after that, GeneratorShell passes
+  // the last-known summary even during refetches.
   summary: AuditSummary | null;
   generated: boolean;
   mode: Mode;
   breakdown: DeviceBreakdownState;
+  // Re-download of the full MHT-package zip — GeneratorShell's existing
+  // bundle handler (the Generate button's action), threaded here so the
+  // header button reuses it verbatim.  Rendered in public mode only:
+  // saved plans have no bundle route, and a button that can't work
+  // shouldn't render.
+  onDownloadAll?: () => void;
+  bundling?: boolean;
 }
 
 const SIGNUP_HREF = "/app";
 
-// Map a backend-pulled stat into the card's display value. While the
+// Map a backend-pulled stat into the row's Qty value. While the
 // breakdown is loading, show an ellipsis (matches the panel's loading
-// state); on error, fall back to "—" so the card doesn't surface a stale
+// state); on error, fall back to "—" so the row doesn't surface a stale
 // number — same principle as the Plan Details panel: no TS-derived
 // silent fallback.
 function statFromBreakdown(
@@ -46,7 +53,18 @@ function statFromBreakdown(
   return "—";
 }
 
-export function OutputCards({ summary, generated, mode, breakdown }: Props) {
+// Mono column-header treatment per the sheet-index spec.
+const TH =
+  "font-mono font-normal text-[9.5px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] text-left px-5 py-2.5 border-b border-[color:var(--rule)] whitespace-nowrap";
+
+export function OutputCards({
+  summary,
+  generated,
+  mode,
+  breakdown,
+  onDownloadAll,
+  bundling,
+}: Props) {
   if (!generated) {
     return (
       <div className="empty-state">
@@ -56,58 +74,106 @@ export function OutputCards({ summary, generated, mode, breakdown }: Props) {
       </div>
     );
   }
-  const planMeta = summary
-    ? `PDF · 11×17 · ${summary.ta} · ${summary.cdot_sheet}`
-    : "PDF · 11×17";
+  const rows: SheetRowDef[] = [
+    {
+      letter: "A",
+      title: "Plan sheet",
+      spec: summary ? `11×17 · ${summary.ta} · ${summary.cdot_sheet}` : "11×17",
+      format: "PDF",
+      qtyLbl: "Devices",
+      qty: statFromBreakdown(breakdown, (d) => d.total_devices),
+      kind: "pdf",
+    },
+    {
+      letter: "B",
+      title: "Device list",
+      spec: "CDOT BID-READY",
+      format: "XLSX",
+      qtyLbl: "Types",
+      qty: statFromBreakdown(breakdown, (d) => d.unique_types),
+      kind: "xlsx",
+    },
+    {
+      letter: "C",
+      title: "Crew instructions",
+      spec: "SETUP + TAKEDOWN",
+      format: "PDF + MD",
+      qtyLbl: "Steps",
+      qty: summary?.step_count ?? "—",
+      kind: "crew-pdf",
+      secondaryKind: "markdown",
+    },
+  ];
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <OutputCard
-        ix="A"
-        n="01"
-        title="Plan sheet"
-        meta={planMeta}
-        statLbl="Devices"
-        statVal={statFromBreakdown(breakdown, (d) => d.total_devices)}
-        kind="pdf"
-        mode={mode}
-      />
-      <OutputCard
-        ix="B"
-        n="02"
-        title="Device list"
-        meta="XLSX · CDOT BID-READY"
-        statLbl="Unique types"
-        statVal={statFromBreakdown(breakdown, (d) => d.unique_types)}
-        kind="xlsx"
-        mode={mode}
-      />
-      <OutputCard
-        ix="C"
-        n="03"
-        title="Crew instructions"
-        meta="PDF + MD · SETUP + TAKEDOWN"
-        statLbl="Steps"
-        statVal={summary?.step_count ?? "—"}
-        kind="crew-pdf"
-        secondaryKind="markdown"
-        mode={mode}
-      />
+    <div className="mb-8 border border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
+      <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-b border-[color:var(--rule)]">
+        <div>
+          <h3 className="m-0 text-[13px] font-bold tracking-[0.02em] text-[color:var(--heading-on-paper)]">
+            SHEET INDEX
+          </h3>
+          {/* File count derives from the actual zip contents
+              (BUNDLE_PART_KINDS), not the visible row count: the bundle
+              also carries quote.xlsx, which lives in the QuotePanel
+              below rather than in this index.  "3 SHEETS" beside a
+              button that downloads 4 files would be a false label. */}
+          <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
+            MHT PACKAGE · {BUNDLE_PART_KINDS.length} FILES
+          </div>
+        </div>
+        {mode.kind === "public" && onDownloadAll && (
+          <button
+            type="button"
+            onClick={onDownloadAll}
+            disabled={bundling}
+            className={`${BTN_BASE} ${BTN_GHOST} disabled:opacity-60`}
+          >
+            <span className="font-mono">↓</span> All (.zip)
+          </button>
+        )}
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-[color:var(--canvas)]">
+              <th scope="col" className={TH}>
+                Sheet
+              </th>
+              <th scope="col" className={TH}>
+                Deliverable
+              </th>
+              <th scope="col" className={TH}>
+                Format
+              </th>
+              <th scope="col" className={`${TH} text-right`}>
+                Qty
+              </th>
+              <th scope="col" className={`${TH} text-right`}>
+                File
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <SheetRow key={row.letter} row={row} mode={mode} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
-interface CardProps {
-  ix: string;
-  n: string;
+interface SheetRowDef {
+  letter: string;
   title: string;
-  meta: string;
-  statLbl: string;
-  statVal: number | string;
+  spec: string;
+  format: string;
+  qtyLbl: string;
+  qty: number | string;
   kind: RenderKind;
-  // An optional second download offered on the same card (the crew card
+  // An optional second download offered on the same row (the crew row
   // offers the PDF as `kind` and the raw `.md` as `secondaryKind`).
   secondaryKind?: RenderKind;
-  mode: Mode;
 }
 
 const LABELS: Record<RenderKind, string> = {
@@ -166,35 +232,31 @@ async function extractValidationMessage(res: Response): Promise<string> {
 }
 
 // Shared button/anchor shape; the primary is solid, a secondary CTA is
-// rendered as a lighter outline so the two reads as primary + alternate.
-const CTA_BASE =
-  "w-full font-sans font-semibold text-[13px] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 transition-colors";
-const CTA_PRIMARY =
+// rendered as a lighter outline so the two read as primary + alternate.
+const BTN_BASE =
+  "font-sans font-semibold text-[12px] px-3 py-2 cursor-pointer inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap";
+const BTN_PRIMARY =
   "bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)]";
-const CTA_SECONDARY =
+const BTN_GHOST =
   "bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)]";
 
 function ctaClass(idx: number): string {
-  return `${CTA_BASE} ${idx === 0 ? CTA_PRIMARY : CTA_SECONDARY}`;
+  return `${BTN_BASE} ${idx === 0 ? BTN_PRIMARY : BTN_GHOST}`;
 }
 
-function OutputCard({
-  ix,
-  n,
-  title,
-  meta,
-  statLbl,
-  statVal,
-  kind,
-  secondaryKind,
-  mode,
-}: CardProps) {
+// Row cell padding per the sheet-index spec (~17px vertical / 20px
+// horizontal), shared so the five cells can't drift.
+const TD = "px-5 py-[17px] align-middle";
+
+function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
   const [error, setError] = useState<{ kind: RenderKind; msg: string } | null>(
     null,
   );
 
-  const kinds: RenderKind[] = secondaryKind ? [kind, secondaryKind] : [kind];
+  const kinds: RenderKind[] = row.secondaryKind
+    ? [row.kind, row.secondaryKind]
+    : [row.kind];
 
   const labelFor = (k: RenderKind) =>
     mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[k] : LABELS[k];
@@ -239,72 +301,85 @@ function OutputCard({
   };
 
   return (
-    <div className="output-card">
-      <span className="corner tl" />
-      <span className="corner br" />
-      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
-        <span className="text-[color:var(--dim)]">{ix}</span> · DELIVERABLE {n}
-      </div>
-      <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
-        {title}
-      </h3>
-      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-3.5">
-        {meta}
-      </div>
-      <div className="flex justify-between items-baseline my-3.5 py-2.5 border-t border-b border-dashed border-[color:var(--rule-soft)]">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
-          {statLbl}
-        </span>
-        <span className="font-mono text-[22px] text-[color:var(--dim)] font-semibold">
-          {statVal}
-        </span>
-      </div>
-      {mode.kind === "public" ? (
-        <>
-          <div className="flex flex-col gap-2">
+    <tr className="border-b border-[color:var(--rule-soft)] last:border-b-0 hover:bg-[color:var(--paper)] transition-colors">
+      {/* Sheet letter in neutral ink, deliberately NOT --dim: the color
+          system (1c7bde5) reserves orange for generated numbers, and a
+          sheet letter is a label.  --ink-mute measures 8.5:1 on
+          --canvas-tint and 7.2:1 on the --paper row hover. */}
+      <td
+        className={`${TD} font-mono text-[13px] text-[color:var(--ink-mute)]`}
+      >
+        {row.letter}
+      </td>
+      <td className={TD}>
+        <div className="text-[15px] font-bold tracking-[-0.01em] text-[color:var(--heading-on-paper)]">
+          {row.title}
+        </div>
+        <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] whitespace-nowrap">
+          {row.spec}
+        </div>
+      </td>
+      <td
+        className={`${TD} font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--ink-mute)] whitespace-nowrap`}
+      >
+        {row.format}
+      </td>
+      <td className={`${TD} text-right`}>
+        <div className="font-mono text-[18px] font-semibold leading-none text-[color:var(--dim)]">
+          {row.qty}
+        </div>
+        <div className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
+          {row.qtyLbl}
+        </div>
+      </td>
+      <td className={`${TD} text-right`}>
+        {mode.kind === "public" ? (
+          <>
+            <div className="flex flex-col items-end gap-1.5">
+              {kinds.map((k, idx) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => onPublicDownload(k)}
+                  disabled={busyKind !== null}
+                  className={`${ctaClass(idx)} disabled:opacity-60`}
+                >
+                  {busyKind === k
+                    ? "Rendering…"
+                    : error?.kind === k
+                      ? "Try again"
+                      : labelFor(k)}
+                  <span className="font-mono">↓</span>
+                </button>
+              ))}
+            </div>
+            {error && (
+              <div className="mt-2 text-[12px] leading-snug text-[color:var(--fail)] font-sans">
+                {error.msg}
+              </div>
+            )}
+          </>
+        ) : mode.planId ? (
+          <div className="flex flex-col items-end gap-1.5">
             {kinds.map((k, idx) => (
-              <button
+              <a
                 key={k}
-                type="button"
-                onClick={() => onPublicDownload(k)}
-                disabled={busyKind !== null}
-                className={`${ctaClass(idx)} disabled:opacity-60`}
+                href={`/api/plans/${mode.planId}/${k}`}
+                download
+                className={ctaClass(idx)}
               >
-                {busyKind === k
-                  ? "Rendering…"
-                  : error?.kind === k
-                    ? "Try again"
-                    : labelFor(k)}
+                {labelFor(k)}
                 <span className="font-mono">↓</span>
-              </button>
+              </a>
             ))}
           </div>
-          {error && (
-            <div className="mt-2 text-[12px] leading-snug text-[color:var(--fail)] font-sans">
-              {error.msg}
-            </div>
-          )}
-        </>
-      ) : mode.planId ? (
-        <div className="flex flex-col gap-2">
-          {kinds.map((k, idx) => (
-            <a
-              key={k}
-              href={`/api/plans/${mode.planId}/${k}`}
-              download
-              className={ctaClass(idx)}
-            >
-              {labelFor(k)}
-              <span className="font-mono">↓</span>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <Link href={SIGNUP_HREF} className={ctaClass(0)}>
-          {labelFor(kind)}
-          <span className="font-mono">↓</span>
-        </Link>
-      )}
-    </div>
+        ) : (
+          <Link href={SIGNUP_HREF} className={ctaClass(0)}>
+            {labelFor(row.kind)}
+            <span className="font-mono">↓</span>
+          </Link>
+        )}
+      </td>
+    </tr>
   );
 }

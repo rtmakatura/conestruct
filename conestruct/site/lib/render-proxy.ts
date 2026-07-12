@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb, plans } from "@/db";
 import { toScenario } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
+import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
@@ -324,7 +325,7 @@ export async function fetchAllRenderParts(
   if (!url || !secret) {
     throw new Error("Render service not configured");
   }
-  const kinds: RenderKind[] = ["pdf", "xlsx", "markdown", "quote"];
+  const kinds: RenderKind[] = [...BUNDLE_PART_KINDS];
   return Promise.all(
     kinds.map((kind) => fetchPartFromModal(scenario, kind, quoteSettings)),
   );
