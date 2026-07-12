@@ -240,13 +240,23 @@ const BTN_PRIMARY =
 const BTN_GHOST =
   "bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)]";
 
+// Uniform control size for every row download: one height, one width
+// sized to the longest label ("Download XLSX"), so the three rows'
+// buttons read as a column of equal controls.  Signup mode carries
+// longer labels ("Sign up to download XLSX") and gets its own uniform
+// width — same height.
+const BTN_SIZE = "h-[34px] w-[152px]";
+const BTN_SIGNUP_SIZE = "h-[34px] w-[228px]";
+
 function ctaClass(idx: number): string {
-  return `${BTN_BASE} ${idx === 0 ? BTN_PRIMARY : BTN_GHOST}`;
+  return `${BTN_BASE} ${BTN_SIZE} ${idx === 0 ? BTN_PRIMARY : BTN_GHOST}`;
 }
 
-// Row cell padding per the sheet-index spec (~17px vertical / 20px
-// horizontal), shared so the five cells can't drift.
-const TD = "px-5 py-[17px] align-middle";
+// One fixed height for every row (h-[72px] on each cell — table cells
+// treat height as a minimum, so an inline error message can still grow
+// the row rather than clip), content middle-aligned.  20px horizontal
+// padding per the sheet-index spec.
+const TD = "h-[72px] px-5 align-middle";
 
 function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
@@ -335,7 +345,10 @@ function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
       <td className={`${TD} text-right`}>
         {mode.kind === "public" ? (
           <>
-            <div className="flex flex-col items-end gap-1.5">
+            {/* Side by side, not stacked: with uniform 34px buttons the
+                pair fits inside the fixed 72px row, keeping row C the
+                same height as A and B. */}
+            <div className="flex items-center justify-end gap-1.5">
               {kinds.map((k, idx) => (
                 <button
                   key={k}
@@ -360,7 +373,7 @@ function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
             )}
           </>
         ) : mode.planId ? (
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center justify-end gap-1.5">
             {kinds.map((k, idx) => (
               <a
                 key={k}
@@ -374,7 +387,10 @@ function SheetRow({ row, mode }: { row: SheetRowDef; mode: Mode }) {
             ))}
           </div>
         ) : (
-          <Link href={SIGNUP_HREF} className={ctaClass(0)}>
+          <Link
+            href={SIGNUP_HREF}
+            className={`${BTN_BASE} ${BTN_SIGNUP_SIZE} ${BTN_PRIMARY}`}
+          >
             {labelFor(row.kind)}
             <span className="font-mono">↓</span>
           </Link>

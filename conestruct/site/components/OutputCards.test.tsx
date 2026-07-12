@@ -153,6 +153,29 @@ describe("OutputCards sheet index", () => {
     );
   });
 
+  it("every row download button shares one fixed size, and every row one fixed height", () => {
+    const { container } = renderPublic();
+
+    // All four download buttons (plan, devices, crew PDF, crew .md)
+    // carry the same fixed width and height class.
+    const buttons = Array.from(container.querySelectorAll("tbody button"));
+    expect(buttons).toHaveLength(4);
+    for (const b of buttons) {
+      expect(b.className).toContain("h-[34px]");
+      expect(b.className).toContain("w-[152px]");
+    }
+
+    // The crew row's pair sits side by side (flex row, not flex-col),
+    // and every cell pins the shared fixed row height, middle-aligned.
+    const crewButtonWrap = buttons[2].parentElement!;
+    expect(crewButtonWrap.className).not.toContain("flex-col");
+    expect(crewButtonWrap.contains(buttons[3])).toBe(true);
+    for (const cell of Array.from(container.querySelectorAll("tbody td"))) {
+      expect(cell.className).toContain("h-[72px]");
+      expect(cell.className).toContain("align-middle");
+    }
+  });
+
   it("public mode: renders the All (.zip) button wired to the bundle handler, disabled while bundling", () => {
     const onDownloadAll = vi.fn();
     renderPublic({ onDownloadAll });
