@@ -1285,15 +1285,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   );
 
   const onUseDetectedBearing = () => {
-    if (bearingCandidates.length === 0) return;
-    if (bearingCandidates.length === 1) {
-      applyCandidate(0);
+    // Re-apply the picked candidate (covers the single-candidate case
+    // too — detection auto-selects index 0 there).  Ambiguous-unpicked
+    // and zero-candidate cases render the button disabled: the pick
+    // lives in the rail-top card, and pre-applying is the bug the
+    // picker exists to prevent.
+    if (selectedCandidateIdx !== null) {
+      applyCandidate(selectedCandidateIdx);
       return;
     }
-    // Multiple candidates: the decision lives in the rail-top card,
-    // not this row.  Don't pre-apply — that's the bug the picker
-    // exists to prevent.  (inc-5 reworks this button so the ambiguous
-    // unpicked case is disabled rather than a no-op.)
+    if (bearingCandidates.length === 1) applyCandidate(0);
   };
 
   const onFlipDirection = () => {
@@ -2326,15 +2327,21 @@ function WorkZonePanel({
     selectedCandidateIdx !== null
       ? (bearingCandidates[selectedCandidateIdx] ?? null)
       : null;
-  // Disable "Use Detected" only when we have nothing to apply.  Multi-
-  // candidate case keeps it enabled — clicking re-opens the picker.
-  const useDetectedDisabled = bearingCandidates.length === 0;
+  // Disabled when there is nothing to apply: no candidates at all, or
+  // an ambiguous set with no pick yet — that decision lives in the
+  // rail-top Which-road card, not this row.  After a pick, the button
+  // re-applies the picked candidate's bearing.
+  const useDetectedDisabled =
+    bearingCandidates.length === 0 ||
+    (ambiguous && selectedCandidate === null);
   const useDetectedTitle =
     bearingCandidates.length === 0
       ? "No bearing detected at this pin"
-      : ambiguous
-        ? "Multiple roads detected — pick a direction"
-        : `Use ${normaliseBearing(bearingCandidates[0].bearing)}° detected from OSM`;
+      : ambiguous && selectedCandidate === null
+        ? "Pick a road above first"
+        : `Use ${normaliseBearing(
+            (selectedCandidate ?? bearingCandidates[0]).bearing,
+          )}° detected from OSM`;
   return (
     <div>
       <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
@@ -2383,10 +2390,6 @@ function WorkZonePanel({
             >
               {bearingError ? (
                 <span className="text-[color:var(--fail)]">{bearingError}</span>
-              ) : ambiguous && selectedCandidate === null ? (
-                <span className="text-[color:var(--warn)]">
-                  Multiple roads detected — pick a direction below
-                </span>
               ) : selectedCandidate ? (
                 <CandidateCaption
                   candidate={selectedCandidate}
@@ -2420,7 +2423,7 @@ function WorkZonePanel({
             title={useDetectedTitle}
             className="flex-1 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {ambiguous ? "Pick Road" : "Use Detected"}
+            Use Detected
           </button>
           <button
             type="button"
@@ -2520,9 +2523,9 @@ function CandidateCaption({
     <>
       Detected from OSM: {brg}° ({lbl.primary} {lbl.direction.toLowerCase()},{" "}
       {lbl.sub.toLowerCase()}) · way {candidate.way_id}
-      {multi && (
-        <span className="opacity-70"> · tap Pick Road to change</span>
-      )}
+      {/* inc-5: the hint used to read "tap Pick Road to change" — that
+          button is gone; the change affordance is the rail-top card. */}
+      {multi && <span className="opacity-70"> · change it above</span>}
     </>
   );
 }

@@ -132,6 +132,14 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(saveButton().disabled).toBe(true);
     expect(screen.getByText("Pick a road to continue")).toBeTruthy();
 
+    // inc-5: the Direction row's button is a plain disabled "Use
+    // Detected" while ambiguous-unpicked — never a live "Pick Road".
+    expect(screen.queryByText("Pick Road")).toBeNull();
+    const useDetected = screen.getByRole("button", {
+      name: "Use Detected",
+    }) as HTMLButtonElement;
+    expect(useDetected.disabled).toBe(true);
+
     // Picking a road resolves the block: Save enables, the hint leaves,
     // the card collapses to a summary, and road properties load.
     fireEvent.click(screen.getByRole("button", { name: /eastbound/i }));
@@ -140,6 +148,7 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(screen.queryByText(/8 m from pin · way 111001/i)).toBeNull();
     expect(screen.getByRole("button", { name: "Change" })).toBeTruthy();
     expect(screen.getByText("Speed limit (mph)")).toBeTruthy();
+    expect(useDetected.disabled).toBe(false); // re-applies the pick now
   });
 
   it("payload: Save after a pick carries the picked candidate's bearing and classification", async () => {
