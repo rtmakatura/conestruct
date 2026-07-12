@@ -766,6 +766,19 @@ body {
   font-family: var(--font-sans);
 }
 
+/* fix-spec-02 P1·05·01 — visible keyboard focus (WCAG 2.4.7).  One
+   ring for every interactive control in the workbench; mouse focus
+   stays ringless via :focus:not(:focus-visible).  Ring-vs-surface
+   contrast (measured): 7.74:1 on --canvas, 7.01:1 on --canvas-tint,
+   5.96:1 on the slate --paper cards (floor is 3:1). */
+.workbench :focus-visible {
+  outline: 2px solid var(--act-bright);
+  outline-offset: 2px;
+}
+.workbench :focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* technical-drawing frame around the entire app shell */
 .workbench-frame {
   position: fixed;

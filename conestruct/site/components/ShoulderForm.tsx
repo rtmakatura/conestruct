@@ -71,8 +71,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
     <>
       <FieldGroup label="Road" step={3}>
         <Field>
-          <LabelRow>Road type</LabelRow>
-          <select
+          <LabelRow htmlFor="sh-road-type">Road type</LabelRow>
+          <select id="sh-road-type"
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) => onRoadTypeChange(e.target.value as RoadType)}
@@ -86,8 +86,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input
+          <LabelRow htmlFor="sh-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
+          <input id="sh-speed"
             type="range"
             min="25"
             max="75"
@@ -127,8 +127,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input
+          <LabelRow htmlFor="sh-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
+          <input id="sh-lane-width"
             type="range"
             min="9"
             max="14"
@@ -164,8 +164,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
 
       <FieldGroup label="Work" step={4}>
         <Field>
-          <LabelRow>Work type</LabelRow>
-          <select
+          <LabelRow htmlFor="sh-work-type">Work type</LabelRow>
+          <select id="sh-work-type"
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
@@ -181,8 +181,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow>Work zone length (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="sh-work-len">Work zone length (ft)</LabelRow>
+          <input id="sh-work-len"
             type="number"
             className="field-input"
             value={scenario.workLen}
@@ -219,10 +219,10 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
           // — Field uses mb-3.5, CheckRow carries no margin).
           <div className="mt-3.5">
             <Field>
-              <LabelRow value={`${scenario.workZoneSpeed} mph`}>
+              <LabelRow htmlFor="sh-wz-speed" value={`${scenario.workZoneSpeed} mph`}>
                 Work-zone speed limit
               </LabelRow>
-              <input
+              <input id="sh-wz-speed"
                 type="number"
                 className="field-input"
                 min={20}

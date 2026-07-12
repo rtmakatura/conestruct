@@ -402,8 +402,8 @@ function ProjectGroup({
   return (
     <>
       <Field>
-        <LabelRow>Project name</LabelRow>
-        <input
+        <LabelRow htmlFor="proj-name">Project name</LabelRow>
+        <input id="proj-name"
           type="text"
           className="field-input"
           value={meta.project}
@@ -413,8 +413,8 @@ function ProjectGroup({
       </Field>
 
       <Field>
-        <LabelRow>Location description</LabelRow>
-        <input
+        <LabelRow htmlFor="proj-location">Location description</LabelRow>
+        <input id="proj-location"
           type="text"
           className="field-input"
           value={meta.locationDescription ?? ""}
@@ -424,8 +424,8 @@ function ProjectGroup({
       </Field>
 
       <Field>
-        <LabelRow>Address / intersection</LabelRow>
-        <input
+        <LabelRow htmlFor="proj-address">Address / intersection</LabelRow>
+        <input id="proj-address"
           type="text"
           className="field-input"
           value={meta.address}

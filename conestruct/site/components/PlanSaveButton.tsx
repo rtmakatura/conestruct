@@ -159,10 +159,14 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
           className="absolute right-0 top-full mt-px w-[340px] z-40 border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] p-4 shadow-xl"
         >
           <form onSubmit={onConfirm}>
-            <label className="block font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] mb-2">
+            <label
+              htmlFor="plan-name-input"
+              className="block font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] mb-2"
+            >
               Plan name
             </label>
             <input
+              id="plan-name-input"
               autoFocus
               type="text"
               value={nameDraft}

@@ -606,6 +606,52 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onCancel]);
 
+  // fix-spec-02 P1·05·04 — focus containment (the dialog role, aria-modal
+  // and Esc shipped in engine-removal PR D; trap/initial/restore did not):
+  //   * on open, move focus INTO the dialog (the container itself,
+  //     tabindex=-1, so the reader announces "Define work zone" without
+  //     scroll-jumping to a field),
+  //   * Tab / Shift+Tab wrap at the dialog's edges instead of escaping
+  //     to the page behind the overlay,
+  //   * on close, focus returns to the control that opened the modal.
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const opener = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    const onTrapKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const root = dialogRef.current;
+      if (!root) return;
+      // No visibility filter needed: this modal conditionally renders
+      // its sections (&&), it never display:none-hides a focusable.
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === root)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (active && !root.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onTrapKey);
+    return () => {
+      document.removeEventListener("keydown", onTrapKey);
+      opener?.focus();
+    };
+  }, [open]);
+
   // Lock background scroll while open.
   useEffect(() => {
     if (!open) return;
@@ -1365,7 +1411,9 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       onClick={onCancel}
     >
       <div
-        className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden"
+        ref={dialogRef}
+        tabIndex={-1}
+        className="border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -1411,6 +1459,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Address or intersection search"
             placeholder="Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"
             className="field-input flex-1"
           />
@@ -1456,6 +1505,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 inputMode="decimal"
                 value={latInput}
                 onChange={(e) => onLatChange(e.target.value)}
+                aria-label="Latitude"
                 placeholder="Latitude (e.g., 38.8862)"
                 className="field-input w-full"
               />
@@ -1471,6 +1521,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 inputMode="decimal"
                 value={lngInput}
                 onChange={(e) => onLngChange(e.target.value)}
+                aria-label="Longitude"
                 placeholder="Longitude (e.g., -104.8354)"
                 className="field-input w-full"
               />
@@ -2159,6 +2210,7 @@ function RoadTypeEditor({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as RoadType)}
+        aria-label="Road type"
         className="field-input field-select flex-1 min-w-0 text-[12px]"
       >
         {ROAD_TYPE_OPTIONS.map((o) => (
@@ -2286,6 +2338,7 @@ function WorkZonePanel({
               inputMode="numeric"
               value={workZoneInput}
               onChange={(e) => onWorkZoneChange(e.target.value)}
+              aria-label="Work zone length in feet"
               placeholder="200"
               className="field-input flex-1 min-w-0 text-right"
             />
@@ -2326,6 +2379,7 @@ function WorkZonePanel({
               inputMode="numeric"
               value={bearingInput}
               onChange={(e) => onBearingChange(e.target.value)}
+              aria-label="Direction of travel in degrees"
               placeholder="0–359"
               className="field-input flex-1 min-w-0 text-right"
             />

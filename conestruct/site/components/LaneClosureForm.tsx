@@ -40,8 +40,8 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
     <>
       <FieldGroup label="Road" step={3}>
         <Field>
-          <LabelRow>Road type</LabelRow>
-          <select
+          <LabelRow htmlFor="lc-road-type">Road type</LabelRow>
+          <select id="lc-road-type"
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
@@ -60,8 +60,8 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input
+          <LabelRow htmlFor="lc-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
+          <input id="lc-speed"
             type="range"
             min="45"
             max="75"
@@ -76,8 +76,8 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input
+          <LabelRow htmlFor="lc-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
+          <input id="lc-lane-width"
             type="range"
             min="10"
             max="14"
@@ -91,8 +91,8 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
 
       <FieldGroup label="Work" step={4}>
         <Field>
-          <LabelRow>Work type</LabelRow>
-          <select
+          <LabelRow htmlFor="lc-work-type">Work type</LabelRow>
+          <select id="lc-work-type"
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
@@ -117,8 +117,8 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow>Work zone length (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="lc-work-len">Work zone length (ft)</LabelRow>
+          <input id="lc-work-len"
             type="number"
             className="field-input"
             value={scenario.workLen}

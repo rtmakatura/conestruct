@@ -45,8 +45,14 @@ export function CheckRow({
   onToggle: () => void;
 }) {
   return (
+    // fix-spec-02 P1·05·02: the toggle exposes checkbox semantics —
+    // without them a screen reader hears an unnamed state-free button
+    // and the on/off state exists only as a fill color (hue-alone).
+    // The native <button> keeps Space/Enter activation and tab focus.
     <button
       type="button"
+      role="checkbox"
+      aria-checked={on}
       className={`check-row ${on ? "on" : ""}`}
       onClick={onToggle}
     >
@@ -69,9 +75,12 @@ export function ChipRow<T extends string | number>({
   return (
     <div className="chip-row">
       {options.map((o) => (
+        // fix-spec-02 P1·05·02: aria-pressed carries the selection state
+        // the cyan fill shows visually.
         <button
           key={String(o.v)}
           type="button"
+          aria-pressed={value === o.v}
           className={`chip ${value === o.v ? "on" : ""}`}
           onClick={() => onChange(o.v)}
         >
@@ -149,19 +158,33 @@ export function GenerateButton({
   );
 }
 
+// fix-spec-02 P1·05·03: pass ``htmlFor`` (with a matching ``id`` on the
+// control) to render a real <label> — the row was a bare <div>, so
+// every workbench select/slider/input had no programmatic name and no
+// click-to-focus.  Rows that caption a button group (ChipRow) stay
+// <div>s: a <label> may only name one form control.
 export function LabelRow({
   children,
   value,
+  htmlFor,
 }: {
   children: ReactNode;
   value?: ReactNode;
+  htmlFor?: string;
 }) {
-  return (
-    <div className="field-label-row">
+  const body = (
+    <>
       <span>{children}</span>
       {value !== undefined && (
         <span className="field-val text-[color:var(--act)]">{value}</span>
       )}
-    </div>
+    </>
+  );
+  return htmlFor ? (
+    <label className="field-label-row" htmlFor={htmlFor}>
+      {body}
+    </label>
+  ) : (
+    <div className="field-label-row">{body}</div>
   );
 }

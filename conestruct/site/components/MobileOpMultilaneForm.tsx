@@ -33,8 +33,8 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
     <>
       <FieldGroup label="Road" step={3}>
         <Field>
-          <LabelRow>Road type</LabelRow>
-          <select
+          <LabelRow htmlFor="mm-road-type">Road type</LabelRow>
+          <select id="mm-road-type"
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
@@ -53,8 +53,8 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input
+          <LabelRow htmlFor="mm-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
+          <input id="mm-speed"
             type="range"
             min="45"
             max="75"
@@ -66,8 +66,8 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input
+          <LabelRow htmlFor="mm-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
+          <input id="mm-lane-width"
             type="range"
             min="10"
             max="14"
@@ -81,8 +81,8 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
 
       <FieldGroup label="Operation" step={4}>
         <Field>
-          <LabelRow>Work type</LabelRow>
-          <select
+          <LabelRow htmlFor="mm-work-type">Work type</LabelRow>
+          <select id="mm-work-type"
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
@@ -98,8 +98,8 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow>Shadow trailing distance (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="mm-shadow-dist">Shadow trailing distance (ft)</LabelRow>
+          <input id="mm-shadow-dist"
             type="number"
             className="field-input"
             value={scenario.workLen}

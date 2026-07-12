@@ -104,8 +104,8 @@ export function NearIntersectionForm({
     <>
       <FieldGroup label="Road" step={3}>
         <Field>
-          <LabelRow>Road type</LabelRow>
-          <select
+          <LabelRow htmlFor="ni-road-type">Road type</LabelRow>
+          <select id="ni-road-type"
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
@@ -124,8 +124,8 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input
+          <LabelRow htmlFor="ni-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
+          <input id="ni-speed"
             type="range"
             min="25"
             max="55"
@@ -155,8 +155,8 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input
+          <LabelRow htmlFor="ni-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
+          <input id="ni-lane-width"
             type="range"
             min="9"
             max="14"
@@ -170,8 +170,8 @@ export function NearIntersectionForm({
 
       <FieldGroup label="Work" step={4}>
         <Field>
-          <LabelRow>Work type</LabelRow>
-          <select
+          <LabelRow htmlFor="ni-work-type">Work type</LabelRow>
+          <select id="ni-work-type"
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
@@ -187,8 +187,8 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow>Work zone length (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="ni-work-len">Work zone length (ft)</LabelRow>
+          <input id="ni-work-len"
             type="number"
             className="field-input"
             value={scenario.workLen}
@@ -222,8 +222,8 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow>Where is the intersection?</LabelRow>
-          <select
+          <LabelRow htmlFor="ni-side">Where is the intersection?</LabelRow>
+          <select id="ni-side"
             className="field-input field-select"
             value={sideUpstream ? "upstream" : "downstream"}
             onChange={(e) =>
@@ -244,8 +244,8 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow>Distance from the work zone (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="ni-distance">Distance from the work zone (ft)</LabelRow>
+          <input id="ni-distance"
             type="number"
             className="field-input"
             value={Math.round(distanceFt)}
@@ -268,8 +268,8 @@ export function NearIntersectionForm({
         />
 
         <Field>
-          <LabelRow>Cross-street type</LabelRow>
-          <select
+          <LabelRow htmlFor="ni-cross-type">Cross-street type</LabelRow>
+          <select id="ni-cross-type"
             className="field-input field-select"
             value={legs[0]?.roadType ?? "urban_arterial"}
             onChange={(e) =>
@@ -287,10 +287,10 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow value={`${legs[0]?.speed ?? 30} mph`}>
+          <LabelRow htmlFor="ni-cross-speed" value={`${legs[0]?.speed ?? 30} mph`}>
             Cross-street speed limit
           </LabelRow>
-          <input
+          <input id="ni-cross-speed"
             type="range"
             min="25"
             max="55"
@@ -302,10 +302,10 @@ export function NearIntersectionForm({
         </Field>
 
         <Field>
-          <LabelRow value={`${legs[0]?.laneWidth ?? 12} ft`}>
+          <LabelRow htmlFor="ni-cross-lane-width" value={`${legs[0]?.laneWidth ?? 12} ft`}>
             Cross-street lane width
           </LabelRow>
-          <input
+          <input id="ni-cross-lane-width"
             type="range"
             min="9"
             max="14"

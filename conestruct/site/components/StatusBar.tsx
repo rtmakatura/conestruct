@@ -114,7 +114,20 @@ interface Props {
   audit: AuditState;
 }
 
-export function StatusBar({ status, inputError, audit }: Props) {
+// fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
+// verdict surface, so its state changes are announced politely to
+// screen readers.  The live region is a stable wrapper — the state
+// elements inside it swap wholesale, which is exactly the change a
+// polite region reports.
+export function StatusBar(props: Props) {
+  return (
+    <div aria-live="polite">
+      <StatusBarState {...props} />
+    </div>
+  );
+}
+
+function StatusBarState({ status, inputError, audit }: Props) {
   if (status === "generating") {
     return (
       <div className="status-bar warn">

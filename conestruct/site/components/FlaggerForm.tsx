@@ -44,8 +44,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
     <>
       <FieldGroup label="Road" step={3}>
         <Field>
-          <LabelRow>Road type</LabelRow>
-          <select
+          <LabelRow htmlFor="fl-road-type">Road type</LabelRow>
+          <select id="fl-road-type"
             className="field-input field-select"
             value={scenario.roadType}
             onChange={(e) =>
@@ -64,8 +64,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input
+          <LabelRow htmlFor="fl-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
+          <input id="fl-speed"
             type="range"
             min="25"
             max="55"
@@ -80,8 +80,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input
+          <LabelRow htmlFor="fl-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
+          <input id="fl-lane-width"
             type="range"
             min="9"
             max="14"
@@ -95,8 +95,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
 
       <FieldGroup label="Work" step={4}>
         <Field>
-          <LabelRow>Work type</LabelRow>
-          <select
+          <LabelRow htmlFor="fl-work-type">Work type</LabelRow>
+          <select id="fl-work-type"
             className="field-input field-select"
             value={scenario.workType}
             onChange={(e) =>
@@ -112,8 +112,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
 
         <Field>
-          <LabelRow>Work zone length (ft)</LabelRow>
-          <input
+          <LabelRow htmlFor="fl-work-len">Work zone length (ft)</LabelRow>
+          <input id="fl-work-len"
             type="number"
             className="field-input"
             value={scenario.workLen}
