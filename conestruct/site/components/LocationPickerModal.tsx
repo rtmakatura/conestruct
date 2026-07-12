@@ -1369,6 +1369,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
   // ---- Save / cancel ----------------------------------------------------
 
+  // #139: an ambiguous detection is a decision the operator must make,
+  // not a suggestion Save may ignore.  Before this guard, Save could
+  // fire in awaiting_pick and silently commit the new pin coordinates
+  // with the PREVIOUS location's road properties.  Deliberate behavior
+  // change riding with the fix: a hand-typed bearing is no longer an
+  // escape from the pick — road properties stay unresolved either way.
+  // Zero-candidate and detection-error paths remain saveable.
+  const roadUnresolved =
+    bearingCandidates.length > 1 && selectedCandidateIdx === null;
+
   const canSave =
     hasPin &&
     isValidLat(lat) &&
@@ -1376,7 +1386,8 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     !latError &&
     !lngError &&
     !bearingError &&
-    !workZoneError;
+    !workZoneError &&
+    !roadUnresolved;
 
   const onClickSave = () => {
     if (!canSave) return;
@@ -1707,7 +1718,13 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 border-t border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
+        <div className="flex items-center justify-end gap-3 border-t border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
+          {roadUnresolved && (
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
+              <span aria-hidden="true">⚠ </span>
+              Pick a road to continue
+            </span>
+          )}
           <button
             type="button"
             onClick={onCancel}
