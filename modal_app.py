@@ -97,6 +97,16 @@ app = modal.App("conestruct-render")
         modal.Secret.from_name("sentry-dsn"),
     ],
     timeout=120,
+    # Cold-start fix (#122): one container stays up around the clock so
+    # no user eats the ~5.5 s cold boot on their first audit call.
+    # Worst-case cost ~$6/month at Modal's published rates — inside the
+    # Starter plan's $30/month included credits, which are a HARD stop
+    # (no payment method on file): this raises the monthly floor.
+    # enable_memory_snapshot was tried and reverted: measured cold
+    # starts were 5.4–14.5 s with it vs 5.54 s without (2026-07-12),
+    # because the heavy import below runs after the snapshot point.
+    # The import cost itself is #137.
+    min_containers=1,
 )
 @modal.asgi_app()
 def fastapi_app():
