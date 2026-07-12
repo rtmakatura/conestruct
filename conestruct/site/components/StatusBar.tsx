@@ -112,6 +112,14 @@ interface Props {
   /** Validation message blocking generation, or null when input is valid. */
   inputError: string | null;
   audit: AuditState;
+  /**
+   * Cold-start honesty (Refs #122, rule 10): true once the in-flight
+   * audit fetch has run unusually long (GeneratorShell's 2 s timer —
+   * warm round-trips measure 0.5–0.7 s, a Modal cold start ~5.5 s).
+   * Swaps the VERIFYING copy for one that says the server is waking up.
+   * Same chromeless treatment — a slow answer is not an error.
+   */
+  verifySlow?: boolean;
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -127,7 +135,7 @@ export function StatusBar(props: Props) {
   );
 }
 
-function StatusBarState({ status, inputError, audit }: Props) {
+function StatusBarState({ status, inputError, audit, verifySlow }: Props) {
   if (status === "generating") {
     return (
       <div className="status-bar warn">
@@ -173,7 +181,11 @@ function StatusBarState({ status, inputError, audit }: Props) {
     return (
       <div className="status-bar idle verifying">
         <span className="indicator" />
-        <span>VERIFYING · taper · buffer · spacing · sign placement</span>
+        <span>
+          {verifySlow
+            ? "VERIFYING · waking the verification server — the first check can take a few extra seconds"
+            : "VERIFYING · taper · buffer · spacing · sign placement"}
+        </span>
       </div>
     );
   }

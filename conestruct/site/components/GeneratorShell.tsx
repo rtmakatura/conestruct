@@ -28,6 +28,15 @@ import {
 
 type Mode = "sandbox" | "workbench";
 
+// Cold-start honesty (Refs #122, rule 10): a warm audit round-trip
+// measures 0.5–0.7 s; past 2 s the wait is almost certainly the Modal
+// container cold-starting (~5.5 s measured), and an unexplained
+// VERIFYING reads as a hang.  The strip can't know a call will be cold
+// — it can only observe one running long — so after this threshold it
+// escalates to copy that says the server is waking up.  Presentation
+// only: a timer and a flag, no frontend computation.
+const SLOW_VERIFY_MS = 2000;
+
 interface Props {
   mode?: Mode;
   initialScenario?: Scenario;
@@ -96,6 +105,9 @@ export function GeneratorShell({
     lastReady: null,
   });
   const [retryNonce, setRetryNonce] = useState(0);
+  // True once the in-flight audit fetch has run past SLOW_VERIFY_MS;
+  // reset whenever a new fetch starts or a response lands.
+  const [verifySlow, setVerifySlow] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -139,6 +151,8 @@ export function GeneratorShell({
 
   useEffect(() => {
     const controller = new AbortController();
+    setVerifySlow(false);
+    const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
     setAuditState((prev) => ({
       state: "loading",
       lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
@@ -151,6 +165,8 @@ export function GeneratorShell({
           body: JSON.stringify({ scenario }),
           signal: controller.signal,
         });
+        clearTimeout(slowTimer);
+        setVerifySlow(false);
         if (!res.ok) {
           let detail = "";
           try {
@@ -180,6 +196,8 @@ export function GeneratorShell({
         setAuditState({ state: "ready", data, forScenario: scenario });
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
+        clearTimeout(slowTimer);
+        setVerifySlow(false);
         setAuditState((prev) => ({
           state: "error",
           message: "Network error",
@@ -188,7 +206,10 @@ export function GeneratorShell({
         }));
       }
     })();
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      clearTimeout(slowTimer);
+    };
   }, [scenario, retryNonce]);
 
   // Shared retry: a single click refires BOTH fetches unconditionally.
@@ -376,6 +397,7 @@ export function GeneratorShell({
             status={bundling ? "generating" : status}
             inputError={inputError}
             audit={stripAudit}
+            verifySlow={verifySlow}
           />
           {/* Dev-only replication snapshot (Refs #102, TEMPORARY) — renders
               nothing without ?debug=1. Delete with DebugSnapshotButton. */}
