@@ -1450,249 +1450,260 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           </button>
         </div>
 
-        {/* Search bar */}
-        <form
-          onSubmit={onSubmitSearch}
-          className="flex gap-2 border-b border-[color:var(--rule)] px-5 py-2.5 flex-shrink-0"
-        >
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            aria-label="Address or intersection search"
-            placeholder="Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"
-            className="field-input flex-1"
-          />
-          <button
-            type="submit"
-            disabled={searchStatus.state === "resolving" || !searchQuery.trim()}
-            className="border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"
-          >
-            {searchStatus.state === "resolving" ? "Searching…" : "Search"}
-          </button>
-        </form>
-        {searchStatus.state === "error" && (
-          <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
-            {searchStatus.message}
-          </div>
-        )}
-
-        {/* Manual-coords toggle + collapsible row.  Sits directly under
-            the search bar so it reads as an alternative to address
-            search rather than a buried fallback at the modal foot.
-            Auto-expanded when the Mapbox token is missing. */}
-        <div className="border-b border-[color:var(--rule)] px-5 py-1.5 flex-shrink-0 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => setShowManualCoords((s) => !s)}
-            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
-          >
-            {showManualCoords
-              ? "− Hide coordinate entry"
-              : "+ Or enter coordinates manually"}
-          </button>
-          {showManualCoords && (
-            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-              Lat / Lng decimal degrees
-            </span>
-          )}
-        </div>
-        {showManualCoords && (
-          <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-5 py-2 flex-shrink-0">
-            <div>
-              <input
-                type="text"
-                inputMode="decimal"
-                value={latInput}
-                onChange={(e) => onLatChange(e.target.value)}
-                aria-label="Latitude"
-                placeholder="Latitude (e.g., 38.8862)"
-                className="field-input w-full"
-              />
-              {latError && (
-                <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
-                  {latError}
-                </div>
-              )}
-            </div>
-            <div>
-              <input
-                type="text"
-                inputMode="decimal"
-                value={lngInput}
-                onChange={(e) => onLngChange(e.target.value)}
-                aria-label="Longitude"
-                placeholder="Longitude (e.g., -104.8354)"
-                className="field-input w-full"
-              />
-              {lngError && (
-                <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
-                  {lngError}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Body: map (top) + panels (bottom). The body scrolls when the
-            viewport is small; the map keeps a minimum height so the
-            corridor preview is always readable. */}
-        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto">
-          {/* Map */}
-          {tokenAvailable ? (
-            <div
-              ref={containerRef}
-              className="relative bg-black/30 flex-shrink-0"
-              style={{ minHeight: 320, height: "44vh" }}
+        {/* Body: two columns at md — 980px in this repo's Tailwind config,
+            the closest breakpoint to the spec's ~900px (lg here is 1280,
+            NOT the stock 1024) — map column left, decision rail right,
+            rail scrolls on its own, map never leaves the viewport.  Below
+            md it collapses to today's stacked flow — map on top, panels
+            beneath, the whole body scrolls. */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden">
+          {/* Map column: search, manual coords, the map itself, and the
+              detection warning all live here so the rail isn't pushed
+              down by them. */}
+          <div className="flex flex-col md:flex-1 md:min-w-0">
+            {/* Search bar */}
+            <form
+              onSubmit={onSubmitSearch}
+              className="flex gap-2 border-b border-[color:var(--rule)] px-5 py-2.5 flex-shrink-0"
             >
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Address or intersection search"
+                placeholder="Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"
+                className="field-input flex-1"
+              />
+              <button
+                type="submit"
+                disabled={
+                  searchStatus.state === "resolving" || !searchQuery.trim()
+                }
+                className="border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"
+              >
+                {searchStatus.state === "resolving" ? "Searching…" : "Search"}
+              </button>
+            </form>
+            {searchStatus.state === "error" && (
+              <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
+                {searchStatus.message}
+              </div>
+            )}
+
+            {/* Manual-coords toggle + collapsible row.  Sits directly under
+                the search bar so it reads as an alternative to address
+                search rather than a buried fallback at the modal foot.
+                Auto-expanded when the Mapbox token is missing. */}
+            <div className="border-b border-[color:var(--rule)] px-5 py-1.5 flex-shrink-0 flex items-center justify-between">
               <button
                 type="button"
-                onClick={() =>
-                  setStyle(style === "satellite" ? "streets" : "satellite")
-                }
-                className="absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
+                onClick={() => setShowManualCoords((s) => !s)}
+                className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
               >
-                {style === "satellite" ? "Streets" : "Satellite"}
+                {showManualCoords
+                  ? "− Hide coordinate entry"
+                  : "+ Or enter coordinates manually"}
               </button>
-              {!hasPin && (
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none">
-                  Click the map or search to drop a pin
-                </div>
-              )}
-              {/* Bottom-right stack: Recenter button (above) + legend.
-                  Recenter is the explicit "show me the whole corridor"
-                  control; we no longer auto-refit on pin drags. */}
-              {corridor && (
-                <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => recenterToCorridor(corridor.bbox)}
-                    title="Recenter on corridor"
-                    aria-label="Recenter on corridor"
-                    className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--act)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <circle
-                        cx="8"
-                        cy="8"
-                        r="5.5"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                      <line
-                        x1="8"
-                        y1="0.5"
-                        x2="8"
-                        y2="3"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                      <line
-                        x1="8"
-                        y1="13"
-                        x2="8"
-                        y2="15.5"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                      <line
-                        x1="0.5"
-                        y1="8"
-                        x2="3"
-                        y2="8"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                      <line
-                        x1="13"
-                        y1="8"
-                        x2="15.5"
-                        y2="8"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                      />
-                      <circle cx="8" cy="8" r="1.25" fill="currentColor" />
-                    </svg>
-                    Recenter
-                  </button>
-                  <CorridorLegend />
-                </div>
+              {showManualCoords && (
+                <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+                  Lat / Lng decimal degrees
+                </span>
               )}
             </div>
-          ) : (
-            <div
-              className="relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0"
-              style={{ minHeight: 240, height: "30vh" }}
-            >
-              <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
-                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
-                  Map unavailable
+            {showManualCoords && (
+              <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-5 py-2 flex-shrink-0">
+                <div>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={latInput}
+                    onChange={(e) => onLatChange(e.target.value)}
+                    aria-label="Latitude"
+                    placeholder="Latitude (e.g., 38.8862)"
+                    className="field-input w-full"
+                  />
+                  {latError && (
+                    <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
+                      {latError}
+                    </div>
+                  )}
                 </div>
-                NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
-                map can&apos;t load — please enter coordinates manually below.
+                <div>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={lngInput}
+                    onChange={(e) => onLngChange(e.target.value)}
+                    aria-label="Longitude"
+                    placeholder="Longitude (e.g., -104.8354)"
+                    className="field-input w-full"
+                  />
+                  {lngError && (
+                    <div className="mt-1 font-mono text-[10px] text-[color:var(--fail)]">
+                      {lngError}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Bearing detection warning lives just below the map so it's
-              visible the moment classification surfaces a problem. */}
-          {bearingWarning && (
-            <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
-              {bearingWarning}
-            </div>
-          )}
+            {/* Map. Stacked mode keeps today's 44vh band; at md the pane
+                is flex-1 and fills whatever height the modal has. */}
+            {tokenAvailable ? (
+              <div
+                ref={containerRef}
+                className="relative bg-black/30 flex-shrink-0 min-h-[320px] h-[44vh] md:h-auto md:shrink md:flex-1"
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setStyle(style === "satellite" ? "streets" : "satellite")
+                  }
+                  className="absolute top-3 left-3 z-10 border border-white/30 bg-black/60 text-white font-mono text-[10px] uppercase tracking-[0.08em] px-3 py-1.5 hover:bg-black/80"
+                >
+                  {style === "satellite" ? "Streets" : "Satellite"}
+                </button>
+                {!hasPin && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white text-[12px] px-3 py-1.5 rounded font-mono uppercase tracking-[0.08em] pointer-events-none">
+                    Click the map or search to drop a pin
+                  </div>
+                )}
+                {/* Bottom-right stack: Recenter button (above) + legend.
+                    Recenter is the explicit "show me the whole corridor"
+                    control; we no longer auto-refit on pin drags. */}
+                {corridor && (
+                  <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => recenterToCorridor(corridor.bbox)}
+                      title="Recenter on corridor"
+                      aria-label="Recenter on corridor"
+                      className="bg-black/75 border border-white/20 text-white p-1.5 hover:bg-black/90 hover:border-[color:var(--act)] transition-colors flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em]"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <circle
+                          cx="8"
+                          cy="8"
+                          r="5.5"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                        />
+                        <line
+                          x1="8"
+                          y1="0.5"
+                          x2="8"
+                          y2="3"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                        />
+                        <line
+                          x1="8"
+                          y1="13"
+                          x2="8"
+                          y2="15.5"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                        />
+                        <line
+                          x1="0.5"
+                          y1="8"
+                          x2="3"
+                          y2="8"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                        />
+                        <line
+                          x1="13"
+                          y1="8"
+                          x2="15.5"
+                          y2="8"
+                          stroke="currentColor"
+                          strokeWidth="1.4"
+                        />
+                        <circle cx="8" cy="8" r="1.25" fill="currentColor" />
+                      </svg>
+                      Recenter
+                    </button>
+                    <CorridorLegend />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div
+                className="relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"
+              >
+                <div className="text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2">
+                    Map unavailable
+                  </div>
+                  NEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive
+                  map can&apos;t load — please enter coordinates manually below.
+                </div>
+              </div>
+            )}
 
-          {/* Panels: road properties (left, ~60%) + work zone & corridor
-              (right, ~40%) on wider screens; stacked below ~lg. */}
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-0 border-t border-[color:var(--rule)] flex-shrink-0">
-            <RoadPropertiesPanel
-              classify={classify}
-              overrides={overrides}
-              setOverrides={setOverrides}
-              scenarioKind={initial.scenarioKind}
-            />
-
-            <div className="border-l-0 lg:border-l border-t lg:border-t-0 border-[color:var(--rule)]">
-              <WorkZonePanel
-                workZoneInput={workZoneInput}
-                workZoneError={workZoneError}
-                onWorkZoneChange={onWorkZoneChange}
-                bearingInput={bearingInput}
-                bearingError={bearingError}
-                onBearingChange={onBearingChange}
-                bearingCandidates={bearingCandidates}
-                selectedCandidateIdx={selectedCandidateIdx}
-                showCandidatePicker={showCandidatePicker}
-                onApplyCandidate={applyCandidate}
-                onUseDetectedBearing={onUseDetectedBearing}
-                onFlipDirection={onFlipDirection}
-                hasPin={hasPin}
-              />
-              {isNearIntersectionKind && (
-                <CrossStreetPanel
-                  hasPin={hasPin}
-                  intersectionMode={intersectionMode}
-                  onToggleMode={() => setIntersectionMode((v) => !v)}
-                  crossPin={crossPin}
-                  crossStatus={crossStatus}
-                  crossStreet={crossStreet}
-                  onClear={clearCrossPin}
-                />
-              )}
-              <CorridorPreviewPanel
-                corridor={corridor}
-                hasPin={hasPin}
-                specStatus={specStatus}
-              />
-            </div>
+            {/* Bearing detection warning lives just below the map so it's
+                visible the moment classification surfaces a problem. */}
+            {bearingWarning && (
+              <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
+                {bearingWarning}
+              </div>
+            )}
           </div>
 
+          {/* Decision rail: everything the operator decides, stacked in
+              one fixed-width column that scrolls independently at md.
+              Below md it renders beneath the map, as before. */}
+          <div className="flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
+            <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
+              <RoadPropertiesPanel
+                classify={classify}
+                overrides={overrides}
+                setOverrides={setOverrides}
+                scenarioKind={initial.scenarioKind}
+              />
+
+              <div className="border-t border-[color:var(--rule)]">
+                <WorkZonePanel
+                  workZoneInput={workZoneInput}
+                  workZoneError={workZoneError}
+                  onWorkZoneChange={onWorkZoneChange}
+                  bearingInput={bearingInput}
+                  bearingError={bearingError}
+                  onBearingChange={onBearingChange}
+                  bearingCandidates={bearingCandidates}
+                  selectedCandidateIdx={selectedCandidateIdx}
+                  showCandidatePicker={showCandidatePicker}
+                  onApplyCandidate={applyCandidate}
+                  onUseDetectedBearing={onUseDetectedBearing}
+                  onFlipDirection={onFlipDirection}
+                  hasPin={hasPin}
+                />
+                {isNearIntersectionKind && (
+                  <CrossStreetPanel
+                    hasPin={hasPin}
+                    intersectionMode={intersectionMode}
+                    onToggleMode={() => setIntersectionMode((v) => !v)}
+                    crossPin={crossPin}
+                    crossStatus={crossStatus}
+                    crossStreet={crossStreet}
+                    onClear={clearCrossPin}
+                  />
+                )}
+                <CorridorPreviewPanel
+                  corridor={corridor}
+                  hasPin={hasPin}
+                  specStatus={specStatus}
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Footer */}
