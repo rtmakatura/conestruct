@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "source": "City of Englewood Traffic Control Details TC-1 (rev. 9/22/2020), tables read visually at 400 dpi",
+    "transcribed_from": "docs/research/02-JURISDICTION-DATA.md §ENGLEWOOD — TRAFFIC CONTROL DETAILS",
+    "purpose": "golden fixture: Englewood publishes a complete geometry set; these are the sheet's own numbers, hand-transcribed"
+  },
+  "sign_spacing_rows": [
+    { "max_speed_mph": 30, "distance_ft": 100 },
+    { "min_speed_mph": 35, "max_speed_mph": 40, "distance_ft": 350 },
+    { "min_speed_mph": 45, "distance_ft": 500 }
+  ],
+  "device_spacing": { "taper_ft": 25, "tangent_ft": 50 },
+  "min_lane_width_ft": 10,
+  "urban_high_speed_breakpoint_mph": 35
+}

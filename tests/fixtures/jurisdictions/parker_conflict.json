@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "source": "Town TC Manual + RDCCM §8.7.6.1 (Jan 2026) vs 2025 Overview — the one fully-real conflict object in the demo corpus (spec §1.4/§2.6, keep verbatim)",
+    "transcribed_from": "phase1-backend-spec.md §2.6; docs/research/05-COVERAGE-MATRIX #22 (Q-PRK-1)",
+    "purpose": "golden fixture: Parker's hours conflict renders 9:00-3:30 per the adopted manual, with both sources preserved for the footnote"
+  },
+  "expected_conflict": {
+    "label": "arterial work window",
+    "rendered": "9:00–3:30",
+    "sources": [
+      { "doc": "Town TC Manual + RDCCM (Jan 2026)", "value": "9:00–3:30" },
+      { "doc": "2025 Overview", "value": "8:30–3:00" }
+    ],
+    "verdict": "Rendering 9:00–3:30 per the adopted manual."
+  },
+  "expected_window": { "start": 9.0, "end": 15.5 }
+}

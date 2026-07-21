@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "LCUASS Ch.6 §6.1.B.2 (2021-08-01) + Loveland DRAFT 2026 Fee Schedule 'Fines & Fees for Permit Violations'",
+    "transcribed_from": "docs/research/02-JURISDICTION-DATA.md §LOVELAND (session-3 row); 05-COVERAGE-MATRIX #18,#27",
+    "purpose": "golden fixture: arterial work starting 8:00 AM on a weekday violates the 7:00-8:30 ban by 0.5 h; the arterial half-hour meter prices it at $700 per half-hour or portion"
+  },
+  "case": {
+    "jurisdiction_key": "loveland",
+    "street_class": "arterial",
+    "closure_type": "lane",
+    "schedule": { "date_mode": "single", "work_date": "2026-07-22", "start_time": 8.0, "end_time": 15.0 }
+  },
+  "expected": {
+    "status": "outside",
+    "violation_count": 1,
+    "overlap_hours": 0.5,
+    "violated_window": { "start": 7.0, "end": 8.5 },
+    "exposure_estimate_cents": 70000
+  }
+}

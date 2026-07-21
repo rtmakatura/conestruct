@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "source": "Littleton TCP templates (text layers, 2025) + LEDS 2025 §131",
+    "transcribed_from": "docs/research/02-JURISDICTION-DATA.md §LITTLETON — LEDS 2025 + TEMPLATES; 05-COVERAGE-MATRIX #8",
+    "purpose": "golden fixture: template geometry (cone spacing 25 ft flat, taper 100 ft max on flagger closures) and the preserved 10-vs-12-ft lane-width conflict"
+  },
+  "expected": {
+    "cone_spacing_taper_ft": 25,
+    "min_lane_width_ft": 10,
+    "lane_width_conflict_rendered": "10 ft general; 12 ft on flagger closures",
+    "afad_ban_rule_contains": "AFADs are not accepted"
+  }
+}

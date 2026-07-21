@@ -830,10 +830,13 @@ def _zone_geometry(params: ScenarioParams) -> dict[str, float]:
         jurisdiction=params.jurisdiction,
         work_zone_speed_mph=params.work_zone_speed_mph,
     )
+    # Whole-foot display precision, same convention as audit.py's ``_ft``
+    # (the single source of display precision) so this block, the audit
+    # summary, and the PDF can never show two different numbers.
     return {
-        "taper_l_ft": float(taper_l),
-        "buffer_b_ft": float(buffer_ft),
-        "device_spacing_ft": float(spacing),
+        "taper_l_ft": round(taper_l),
+        "buffer_b_ft": round(buffer_ft),
+        "device_spacing_ft": round(spacing),
         "work_len_ft": float(params.work_zone_length_ft),
     }
 
