@@ -24,12 +24,12 @@ dependencies = [
     "uvicorn>=0.32",
     "modal>=0.66",
     "sentry-sdk[fastapi]>=2.0",
+    "jsonschema>=4.21",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
-    "jsonschema>=4.21",
     "ruff==0.15.11",
     "mypy>=1.13",
     "pre-commit>=4.0",

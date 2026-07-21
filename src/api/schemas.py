@@ -75,6 +75,49 @@ class ScenarioMeta(BaseModel):
     siteConditions: dict[str, bool] = Field(default_factory=dict)
 
 
+# ---------------------------------------------------------------------------
+# Jurisdiction-layer extension (phase1-backend-spec §3.1) — additive, all
+# optional, snake_case (the spec's casing decision §1.1 #1; the TS side
+# adapts).  Absent ⇒ current behavior, untouched: no jurisdiction block is
+# computed and the plan renders exactly as today (baseline-only).
+# ---------------------------------------------------------------------------
+
+
+class WorkSchedule(BaseModel):
+    """When the work happens — consumed by the jurisdiction hours evaluation.
+
+    ``start_time``/``end_time`` are decimal hours (8.5 = 8:30 AM), same
+    convention as the jurisdiction data files' hours windows.
+    """
+
+    date_mode: Literal["single", "range", "tbd"]
+    work_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    work_date_end: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    start_time: float | None = Field(default=None, ge=0.0, le=24.0)
+    end_time: float | None = Field(default=None, ge=0.0, le=24.0)
+
+    @model_validator(mode="after")
+    def _check_time_order(self) -> Self:
+        if (
+            self.start_time is not None
+            and self.end_time is not None
+            and self.end_time <= self.start_time
+        ):
+            raise ValueError(
+                f"schedule end_time ({self.end_time}) must be after start_time "
+                f"({self.start_time}) — overnight schedules are not supported yet."
+            )
+        return self
+
+
+class JurisdictionScenarioFields(BaseModel):
+    """Mixin adding the optional jurisdiction-layer fields to every kind."""
+
+    jurisdiction_key: str | None = None
+    street_class: Literal["local", "collector", "arterial"] | None = None
+    schedule: WorkSchedule | None = None
+
+
 ShoulderRoadType = Literal["rural_undivided", "rural_divided", "urban_arterial", "freeway"]
 FlaggerRoadType = Literal["rural_undivided", "urban_arterial"]
 Duration = Literal["short", "long"]
@@ -114,7 +157,7 @@ MobileWorkType = Literal[
 ]
 
 
-class ShoulderScenario(BaseModel):
+class ShoulderScenario(JurisdictionScenarioFields):
     kind: Literal["shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -169,7 +212,7 @@ class ShoulderScenario(BaseModel):
         return self
 
 
-class FlaggerLaneClosureScenario(BaseModel):
+class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     kind: Literal["flagger_lane_closure"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -187,7 +230,7 @@ class FlaggerLaneClosureScenario(BaseModel):
     pedestrianAccess: bool
 
 
-class LaneClosureDividedScenario(BaseModel):
+class LaneClosureDividedScenario(JurisdictionScenarioFields):
     kind: Literal["lane_closure_divided"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -203,7 +246,7 @@ class LaneClosureDividedScenario(BaseModel):
     truckMountedAttenuator: bool
 
 
-class WorkBeyondShoulderScenario(BaseModel):
+class WorkBeyondShoulderScenario(JurisdictionScenarioFields):
     kind: Literal["work_beyond_shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -217,7 +260,7 @@ class WorkBeyondShoulderScenario(BaseModel):
     night: bool
 
 
-class MobileOp2LaneScenario(BaseModel):
+class MobileOp2LaneScenario(JurisdictionScenarioFields):
     kind: Literal["mobile_op_2lane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -232,7 +275,7 @@ class MobileOp2LaneScenario(BaseModel):
     arrowBoardOnShadow: bool
 
 
-class MobileOpMultilaneScenario(BaseModel):
+class MobileOpMultilaneScenario(JurisdictionScenarioFields):
     kind: Literal["mobile_op_multilane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -320,7 +363,7 @@ class IntersectionApproach(BaseModel):
     alongStationFt: float = Field(ge=-WORK_LEN_MAX_FT, le=WORK_LEN_MAX_FT)
 
 
-class NearIntersectionScenario(BaseModel):
+class NearIntersectionScenario(JurisdictionScenarioFields):
     """Work near (not within) an intersection — S-630-1 Cases 18/19.
 
     GATED: absent from ``ENABLED_SCENARIOS`` (render_api.py) and from

@@ -50,6 +50,18 @@ from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
+from src.rules.jurisdiction import (
+    UnknownJurisdictionError,
+    apply_count_deltas,
+    context_for_closure_type,
+    load_jurisdiction,
+)
+from src.rules.jurisdiction import (
+    WorkSchedule as JurisdictionWorkSchedule,
+)
+from src.rules.jurisdiction import (
+    evaluate as evaluate_jurisdiction,
+)
 from src.rules.night_adjustments import apply_night_adjustments
 from src.rules.sign_codes import schedule_key, substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
@@ -57,7 +69,9 @@ from src.rules.site_detection import detect_along_corridor, detect_site_conditio
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
+    device_spacing_in_taper,
     downstream_taper_length,
+    one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     shoulder_taper_length,
     taper_length,
@@ -792,13 +806,67 @@ def _build_device_breakdown(
     return rows
 
 
+def _zone_geometry(params: ScenarioParams) -> dict[str, float]:
+    """The §3.2 ``zone_geometry`` block, from the same rules the audit uses.
+
+    Branch selection mirrors ``build_audit_trail`` (audit.py): flagger
+    alternating flow → one-lane two-way taper at ~20 ft device spacing;
+    other lane closures → full merging taper L; shoulder closures → L/3.
+    """
+    is_lane = params.closure_type == "lane"
+    is_flagger = is_lane and not params.is_divided and not params.near_intersection
+    offset_ft = params.lane_width_ft if is_lane else params.shoulder_width_ft
+    if is_flagger:
+        taper_l = one_lane_two_way_taper_length()
+        spacing = one_lane_two_way_device_spacing()
+    elif is_lane:
+        taper_l = taper_length(params.speed_mph, offset_ft)
+        spacing = device_spacing_in_taper(params.speed_mph)
+    else:
+        taper_l = shoulder_taper_length(params.speed_mph, offset_ft)
+        spacing = device_spacing_in_taper(params.speed_mph)
+    buffer_ft = buffer_space(
+        params.speed_mph,
+        jurisdiction=params.jurisdiction,
+        work_zone_speed_mph=params.work_zone_speed_mph,
+    )
+    return {
+        "taper_l_ft": float(taper_l),
+        "buffer_b_ft": float(buffer_ft),
+        "device_spacing_ft": float(spacing),
+        "work_len_ft": float(params.work_zone_length_ft),
+    }
+
+
+def _jurisdiction_schedule(scenario: Scenario) -> JurisdictionWorkSchedule | None:
+    sched = getattr(scenario, "schedule", None)
+    if sched is None:
+        return None
+    from datetime import date as _date
+
+    def _parse(value: str | None) -> _date | None:
+        return _date.fromisoformat(value) if value else None
+
+    return JurisdictionWorkSchedule(
+        date_mode=sched.date_mode,
+        work_date=_parse(sched.work_date),
+        work_date_end=_parse(sched.work_date_end),
+        start_time=sched.start_time,
+        end_time=sched.end_time,
+    )
+
+
 @app.post("/render/device-breakdown")
 def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     """Return the aggregated device list that drives the Plan Details panel.
 
     Same placement source as /render/pdf so the panel and the PDF cannot
     drift.  Response shape: a flat list of ``{device, code, function, qty}``
-    rows plus running totals.
+    rows plus running totals, the §3.2 ``zone_geometry`` block, and — only
+    when the scenario names a ``jurisdiction_key`` — the evaluated
+    ``jurisdiction`` block.  Without a jurisdiction the payload differs
+    from the pre-extension shape only by the additive ``zone_geometry``
+    key (spec §5.3 regression contract).
     """
     _ensure_scenario_enabled(scenario)
     try:
@@ -809,13 +877,35 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
     rows = _build_device_breakdown(placements, params)
-    return JSONResponse(
-        {
-            "devices": rows,
-            "total_devices": len(placements),
-            "unique_types": len(rows),
-        }
-    )
+    payload: dict[str, Any] = {
+        "devices": rows,
+        "total_devices": len(placements),
+        "unique_types": len(rows),
+        "zone_geometry": _zone_geometry(params),
+    }
+
+    jurisdiction_key = getattr(scenario, "jurisdiction_key", None)
+    if jurisdiction_key:
+        try:
+            record = load_jurisdiction(jurisdiction_key)
+        except UnknownJurisdictionError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        ctx = context_for_closure_type(
+            params.closure_type,
+            street_class=getattr(scenario, "street_class", None),
+            night=params.is_night,
+            schedule=_jurisdiction_schedule(scenario),
+        )
+        jurisdiction = evaluate_jurisdiction(record, ctx)
+        # Count-affecting deltas modify quantities through the same row
+        # pipeline (spec §3.2) — never in the frontend.
+        rows = apply_count_deltas(rows, jurisdiction["applied_deltas"])
+        payload["devices"] = rows
+        payload["total_devices"] = sum(int(r["qty"]) for r in rows)
+        payload["unique_types"] = len(rows)
+        payload["jurisdiction"] = jurisdiction
+
+    return JSONResponse(payload)
 
 
 def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
