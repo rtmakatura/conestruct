@@ -16,6 +16,14 @@ await page.goto(`${base}/sandbox`, {
   timeout: 120000,
 });
 
+// Unstick the nav for full-page capture: Playwright's scroll-and-stitch
+// repaints position:sticky elements at a scroll offset, which prints a
+// phantom mid-page nav band that does NOT exist in the live DOM
+// (verified: scripts/verify-single-nav.mjs counts exactly one <nav>).
+await page.addStyleTag({
+  content: "nav { position: static !important; }",
+});
+
 // Give the audit/breakdown round-trips time to settle (cold backend can
 // take ~6s) so the status strip shows a real verdict, not VERIFYING.
 await page

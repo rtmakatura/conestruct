@@ -447,6 +447,10 @@ export function GeneratorShell({
             setStreetClass={(c: StreetClass) =>
               setScenario({ ...scenario, street_class: c })
             }
+            loading={
+              Boolean(scenario.jurisdiction_key) &&
+              deviceBreakdown.state === "loading"
+            }
           />
 
           {/* ——— Zone 1 · Setup ——— */}

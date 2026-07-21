@@ -15,7 +15,7 @@
 // pass/fail = --pass/--fail · no verdict = chromaless --none.  No signal
 // relies on hue alone — every state carries a glyph or a word.
 
-import { type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { ReferenceChip } from "./ReferenceChip";
 import {
   activeBandRow,
@@ -118,6 +118,10 @@ interface ContextBarProps {
   setJurisdictionKey: (k: string | null) => void;
   streetClass: StreetClass | null;
   setStreetClass: (c: StreetClass) => void;
+  /** True while a jurisdiction is selected but its evaluated block is
+   *  still in flight — the chain slot renders a skeleton at final size
+   *  so data landing causes zero reflow. */
+  loading?: boolean;
 }
 
 const STREET_CLASSES: [StreetClass, string][] = [
@@ -139,8 +143,19 @@ export function JurisdictionContextBar({
   setJurisdictionKey,
   streetClass,
   setStreetClass,
+  loading = false,
 }: ContextBarProps) {
   const chain = jurisdiction ? jurisdiction.chain : BASELINE_CHAIN;
+  // The chain slot is fixed-height with internal scroll (geometric
+  // stability); anchor to the END so the local override — rendered last
+  // & strongest — is the line that's always visible when a tall chain
+  // overflows.
+  const chainSlotRef = useRef<HTMLDivElement | null>(null);
+  const chainKey = jurisdiction?.key ?? "";
+  useEffect(() => {
+    const el = chainSlotRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [chainKey, loading]);
   return (
     <div className="jbar">
       <div className="jbar-main">
@@ -160,18 +175,22 @@ export function JurisdictionContextBar({
               </option>
             ))}
           </select>
-          {jurisdiction ? (
-            <div className="jbar-auth">
-              <b>{jurisdiction.name}</b> ·{" "}
-              {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
-              <span className="term">{jurisdiction.tcp_term}</span>, the ROW{" "}
-              <span className="term">{jurisdiction.row_term}</span>
-            </div>
-          ) : (
-            <div className="jbar-auth">
-              Statewide baseline — MUTCD + Colorado Supplement only.
-            </div>
-          )}
+          {/* Reserved-height slot: the helper line varies 1–2 lines by
+              jurisdiction — the slot never lets that resize the bar. */}
+          <div className="jbar-auth jbar-slot-auth">
+            {jurisdiction ? (
+              <>
+                <b>{jurisdiction.name}</b> ·{" "}
+                {jurisdiction.authority.replace("_", " & ")} · calls this plan
+                a <span className="term">{jurisdiction.tcp_term}</span>, the
+                ROW <span className="term">{jurisdiction.row_term}</span>
+              </>
+            ) : loading ? (
+              <span className="jbar-skel-line w-3/4" aria-hidden />
+            ) : (
+              <>Statewide baseline — MUTCD + Colorado Supplement only.</>
+            )}
+          </div>
         </div>
 
         <div className="jbar-cell">
@@ -193,49 +212,74 @@ export function JurisdictionContextBar({
               </button>
             ))}
           </div>
-          {jurisdiction?.class_required &&
-            (jurisdiction.classification_map_url ? (
-              <span className="mapchip">
-                <span aria-hidden>◎ </span>
-                <a
-                  href={jurisdiction.classification_map_url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  per {jurisdiction.name} functional classification map
-                </a>
-              </span>
+          {/* Reserved-height slot: the classification hint appears only
+              for class_required jurisdictions — the slot holds its space
+              either way. */}
+          <span className="mapchip jbar-slot-hint">
+            {jurisdiction?.class_required ? (
+              jurisdiction.classification_map_url ? (
+                <>
+                  <span aria-hidden>◎ </span>
+                  <a
+                    href={jurisdiction.classification_map_url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    per {jurisdiction.name} functional classification map
+                  </a>
+                </>
+              ) : (
+                <>
+                  ◎ {jurisdiction.name} classifies via its published map —
+                  look the street up before submitting
+                </>
+              )
             ) : (
-              <span className="mapchip">
-                ◎ {jurisdiction.name} classifies via its published map — look
-                the street up before submitting
-              </span>
-            ))}
+              " "
+            )}
+          </span>
         </div>
 
         <div className="jbar-cell">
           <span className="k">Governing spec chain</span>
-          <div className="chain">
-            {chain.map((seg, i) => (
-              <span key={seg} className="contents">
-                {i > 0 && (
-                  <span className="sep" aria-hidden>
-                    ›
+          {/* Reserved-height slot sized to the tallest launch-8 chain
+              (Denver, measured) so switching jurisdictions never
+              resizes the bar.  While the evaluated block is in flight
+              the slot shows a skeleton at final size — one reflow when
+              the bar first mounts, zero when data lands. */}
+          <div className="jbar-slot-chain" ref={chainSlotRef}>
+            {loading ? (
+              <div className="chain-skeleton" aria-hidden>
+                <span className="jbar-skel-line w-full" />
+                <span className="jbar-skel-line w-5/6" />
+                <span className="jbar-skel-line w-2/3" />
+              </div>
+            ) : (
+              <>
+                <div className="chain">
+                  {chain.map((seg, i) => (
+                    <span key={seg} className="contents">
+                      {i > 0 && (
+                        <span className="sep" aria-hidden>
+                          ›
+                        </span>
+                      )}
+                      <span
+                        className={`seg${i === chain.length - 1 && jurisdiction ? " local" : ""}`}
+                      >
+                        {seg}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+                {jurisdiction && (
+                  <span className="chain-note">
+                    local override rendered last &amp; strongest
                   </span>
                 )}
-                <span
-                  className={`seg${i === chain.length - 1 && jurisdiction ? " local" : ""}`}
-                >
-                  {seg}
-                </span>
-              </span>
-            ))}
+              </>
+            )}
           </div>
-          {jurisdiction && (
-            <span className="chain-note">
-              local override rendered last &amp; strongest
-            </span>
-          )}
         </div>
       </div>
 

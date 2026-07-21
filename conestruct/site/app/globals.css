@@ -1453,6 +1453,53 @@ input[type="number"] {
   text-transform: uppercase;
   color: var(--ink-on-dark-faint);
 }
+/* ─── jbar geometric stability ───
+   The bar's three variable regions get RESERVED heights so a
+   jurisdiction selection never resizes it: the picker helper line
+   (1–2 lines), the classification-hint slot (present only for
+   class_required jurisdictions), and the spec-chain slot sized to the
+   tallest launch-8 chain (Denver, measured at the md+ column width —
+   re-measure with scripts/verify-jbar-stability.mjs if a chain grows).
+   During the jurisdiction fetch the chain slot renders a skeleton at
+   final size: one reflow max, zero when data lands. */
+.workbench .jbar-slot-auth {
+  min-height: 36px; /* 2 lines @ 12px/1.5 */
+}
+.workbench .jbar-slot-hint {
+  display: block;
+  min-height: 17px; /* 1 line @ 11px/1.5 */
+}
+/* FIXED height (not min): the tallest launch-8 chains measure 260–300px
+   (Denver/Lakewood, viewport-dependent) — reserving that literally would
+   triple the bar into empty space for every other selection, and the
+   value shifts with width.  170px shows most chains whole; the five tall
+   ones scroll inside the slot, auto-anchored to the END so the local
+   override (last & strongest) is always the visible line. */
+.workbench .jbar-slot-chain {
+  height: 170px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.workbench .jbar-skel-line {
+  display: block;
+  height: 10px;
+  margin: 6px 0;
+  background: var(--rule-soft);
+  animation: sb-pulse 1.6s ease-in-out infinite;
+}
+.workbench .jbar-skel-line.w-full {
+  width: 100%;
+}
+.workbench .jbar-skel-line.w-5\/6 {
+  width: 83%;
+}
+.workbench .jbar-skel-line.w-3\/4 {
+  width: 75%;
+}
+.workbench .jbar-skel-line.w-2\/3 {
+  width: 66%;
+}
+
 /* reserved suggestion slot (Endeavor B) — deliberate inert space */
 .workbench .jbar-suggest {
   border-top: 1px dashed var(--rule);
