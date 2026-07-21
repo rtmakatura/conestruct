@@ -259,7 +259,12 @@ export function GeneratorSidebar({
 
   return (
     <>
-      <aside className="bg-[color:var(--canvas-tint)] border-r border-[color:var(--rule)] md:sticky md:top-[52px] md:self-start md:h-[calc(100vh-52px)] md:overflow-y-auto max-md:border-r-0 max-md:border-b">
+      {/* Generator restage (Endeavor A): Zone 1's dominant pre-generation
+          presentation.  The former 360px sticky sidebar becomes a
+          full-width setup panel; the same sections render in a
+          two-column grid (single column under 980px).  Post-generation
+          the shell swaps this for the slim SetupStrip. */}
+      <div className="setup-panel">
         <div className="flex justify-between items-baseline px-6 pt-6 pb-3">
           <h2 className="text-[15px] font-semibold text-white m-0 tracking-[-0.005em]">
             Plan
@@ -269,7 +274,13 @@ export function GeneratorSidebar({
           </span>
         </div>
 
-        {/* Step 1 — Location leads the panel; the optional project
+        {/* Step 2's kind selection gates which form sections render, so
+            the banner + picker span the full panel above the grid. */}
+        <DisabledScenarioBanner kind={scenario.kind} />
+        <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
+
+        <div className="setup-grid">
+        {/* Step 1 — Location leads the grid; the optional project
             metadata (name / description / address) is demoted into a
             collapsed disclosure inside it. */}
         <LocationCorridorSection
@@ -280,11 +291,6 @@ export function GeneratorSidebar({
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
         />
-
-        {/* Step 2 — Scenario gates every field below, so it precedes
-            Road / Work. */}
-        <DisabledScenarioBanner kind={scenario.kind} />
-        <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
         {scenario.kind === "shoulder" && (
           <ShoulderForm scenario={scenario} setScenario={setScenario} />
@@ -326,6 +332,7 @@ export function GeneratorSidebar({
           setMeta={setMeta}
           step={siteStep(scenario.kind)}
         />
+        </div>
 
         <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
           {/* UX-21 / engine-removal PR D: generation is gated on the
@@ -359,7 +366,7 @@ export function GeneratorSidebar({
             Output requires TCS review
           </div>
         </div>
-      </aside>
+      </div>
       {pickerOpen && (
         <LocationPickerModal
           open={pickerOpen}

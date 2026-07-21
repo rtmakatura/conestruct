@@ -29,7 +29,16 @@ vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
+// The restage moved the bundle POST from the Generate click to Zone 2's
+// "All (.zip)"; the stub exposes that trigger so the payload capture
+// stays at the submitted-bundle level.
+vi.mock("./OutputCards", () => ({
+  OutputCards: ({ onDownloadAll }: { onDownloadAll?: () => void }) => (
+    <button type="button" onClick={onDownloadAll}>
+      ALL_ZIP
+    </button>
+  ),
+}));
 vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
@@ -167,7 +176,10 @@ function lanesChip(label: string): HTMLElement {
 }
 
 async function generate(user: ReturnType<typeof userEvent.setup>) {
+  // Generate stages the page (restage lifecycle); the bundle POST that
+  // carries the payload under test fires from Zone 2's "All (.zip)".
   await user.click(screen.getByText("Generate plan"));
+  await user.click(screen.getByText("ALL_ZIP"));
   await waitFor(() => expect(bundleBody).not.toBeNull());
 }
 

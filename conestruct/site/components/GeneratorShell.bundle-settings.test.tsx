@@ -31,7 +31,15 @@ vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
+// The restage moved the bundle POST from the Generate click to Zone 2's
+// "All (.zip)"; the stub exposes that trigger.
+vi.mock("./OutputCards", () => ({
+  OutputCards: ({ onDownloadAll }: { onDownloadAll?: () => void }) => (
+    <button type="button" onClick={onDownloadAll}>
+      ALL_ZIP
+    </button>
+  ),
+}));
 vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
@@ -108,35 +116,46 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    // Restage lifecycle: QuotePanel mounts post-generation (Zone 2), so
+    // generate first, then edit, then download.
+    await user.click(screen.getByText("Generate package"));
+
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
     expect(overhead.value).toBe("25");
 
-    await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByText("ALL_ZIP"));
 
     await waitFor(() => expect(bundleBody).not.toBeNull());
     // 0.25, not the 0.10 default: the on-screen edit reached the bundle body.
     expect(bundleBody?.settings.overhead_pct).toBe(0.25);
   });
 
-  it("keeps the edited rate field after a generate cycle", async () => {
+  it("keeps the edited rate field across a reopen → regenerate cycle", async () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await user.click(screen.getByText("Generate package"));
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
 
+    // Reopening the setup panel unmounts QuotePanel (Zone 2 empties);
+    // regenerating remounts it.  The #74 contract: settings live in the
+    // shell, so the remount must NOT reinitialize them to DEFAULT.
+    await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByText("Generate package"));
-    await waitFor(() => expect(bundleBody).not.toBeNull());
 
-    // Old bug: the generate cycle unmounted QuotePanel, reinitializing its
-    // settings useState to DEFAULT and snapping this back to "10".
-    expect(overhead.value).toBe("25");
+    const overheadAfter = screen.getByLabelText(
+      /Overhead/i,
+    ) as HTMLInputElement;
+    expect(overheadAfter.value).toBe("25");
   });
 
-  it("preserves a manual flagger count and delivery distance through a generate cycle", async () => {
+  it("preserves a manual flagger count and delivery distance through the cycle", async () => {
     const user = userEvent.setup();
     await mountSandbox();
+
+    await user.click(screen.getByText("Generate package"));
 
     const flaggers = screen.getByLabelText(/Flaggers/i) as HTMLInputElement;
     const delivery = screen.getByLabelText(/Delivery/i) as HTMLInputElement;
@@ -148,16 +167,24 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     expect(flaggers.value).toBe("3");
     expect(delivery.value).toBe("99");
 
-    await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByText("ALL_ZIP"));
     await waitFor(() => expect(bundleBody).not.toBeNull());
 
     // The edits reach the bundle...
     expect(bundleBody?.settings.num_flaggers).toBe(3);
     expect(bundleBody?.settings.delivery_distance_miles).toBe(99);
-    // ...and survive the cycle. Old bug: the remount reset flaggerSource to
-    // "auto" and delivery to "idle", so the auto-flagger effect (-> 0) and the
-    // settings reinit (-> 20) re-clobbered the manual entries.
-    expect(flaggers.value).toBe("3");
-    expect(delivery.value).toBe("99");
+
+    // ...and survive a reopen → regenerate cycle. Old bug class: the
+    // remount reset flaggerSource to "auto" and delivery to "idle", so
+    // the auto-flagger effect (-> 0) and the settings reinit (-> 20)
+    // re-clobbered the manual entries.
+    await user.click(screen.getByText(/Edit full setup/));
+    await user.click(screen.getByText("Generate package"));
+    expect((screen.getByLabelText(/Flaggers/i) as HTMLInputElement).value).toBe(
+      "3",
+    );
+    expect((screen.getByLabelText(/Delivery/i) as HTMLInputElement).value).toBe(
+      "99",
+    );
   });
 });

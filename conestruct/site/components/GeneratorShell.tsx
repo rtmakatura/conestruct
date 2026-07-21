@@ -11,9 +11,14 @@ import {
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
+import { SetupStrip } from "./SetupStrip";
 import { StatusBar, type Status } from "./StatusBar";
 import { OutputCards } from "./OutputCards";
-import { QuotePanel } from "./QuotePanel";
+import {
+  QuotePanel,
+  type DeliveryStatus,
+  type FlaggerSource,
+} from "./QuotePanel";
 import { AuditTrail } from "./AuditTrail";
 import {
   DeviceBreakdown,
@@ -58,18 +63,35 @@ export function GeneratorShell({
   const [scenario, setScenario] = useState<Scenario>(
     initialScenario ?? DEFAULT_SCENARIO,
   );
-  // ``status`` keeps the deliverable panels visible from first paint and is
-  // intentionally never mutated by the bundle download. The generate cycle
-  // used to flip it to "generating", which unmounted QuotePanel and wiped its
-  // edited rates / flagger / delivery state; the in-progress spinner now
-  // rides on ``bundling`` instead.
-  const [status] = useState<Status>("done");
+  // Generator restage (Endeavor A): the page runs a real staged
+  // lifecycle again — ``generated`` flips on the Generate click and the
+  // rest of ``genState`` derives from the device-breakdown request the
+  // shell already makes per scenario change (no fake timer, no second
+  // reload path):
+  //   pre        → Generate not yet clicked; Zone 1 dominant, Zone 2 empty
+  //   generating → clicked, breakdown in flight; Zone 1 slim, placeholder
+  //   post       → breakdown ready; Zone 2 dominant
+  //   error      → breakdown failed; Zone 2 stale under a red ribbon
+  // Quote settings stay owned here (the #74 fix), so the pricing card
+  // unmounting across stage changes can never wipe edited rates.
+  const [generated, setGenerated] = useState(false);
   // Live quote settings owned here (the single source) so the bundle download
   // can read the user's edits and QuotePanel reads/writes the same store
   // through props — no second settings copy.
   const [settings, setSettings] = useState<QuoteSettings>(
     DEFAULT_QUOTE_SETTINGS,
   );
+  // Manual-override guards for the quote inputs, shell-owned (restage):
+  // the pricing card unmounts across reopen → regenerate cycles, and
+  // component-local guard state made the auto-effects re-clobber manual
+  // edits on remount (the #74 bug class).  Kind switches re-arm the
+  // flagger auto-fill, same as before.
+  const [flaggerSource, setFlaggerSource] = useState<FlaggerSource>("auto");
+  const [delivery, setDelivery] = useState<DeliveryStatus>({ state: "idle" });
+  const scenarioKind = scenario.kind;
+  useEffect(() => {
+    setFlaggerSource("auto");
+  }, [scenarioKind]);
   const [bundling, setBundling] = useState(false);
   // Dev-only replication snapshot (Refs #102, TEMPORARY): the last picker
   // classification + the pin it was captured at, surfaced by
@@ -247,11 +269,24 @@ export function GeneratorShell({
     return cleaned || "plan";
   };
 
+  // Generator restage: Generate stages the page (pre → generating →
+  // post); it no longer auto-downloads the zip.  The bundle download
+  // moved to Zone 2's "All (.zip)" — same endpoint, same
+  // { scenario, settings } body (the #74 contract), different trigger.
+  const onGenerate = () => {
+    setGenerated(true);
+  };
+
+  // Reopen the full setup panel from the strip (structural edits).
+  const onReopen = () => {
+    setGenerated(false);
+  };
+
   // Sandbox/public mode: build the deliverable zip on demand by hitting
   // /api/render/bundle (which fans out to all four Modal renderers in
   // parallel and zips the bytes server-side).  Saved/workbench mode just
   // re-uses the existing per-file download links exposed in OutputCards.
-  const onGenerate = async () => {
+  const onDownloadBundle = async () => {
     if (bundling) return;
     setBundling(true);
     setBundleError(null);
@@ -292,7 +327,15 @@ export function GeneratorShell({
     }
   };
 
-  const generated = status === "done";
+  const genState: "pre" | "generating" | "post" | "error" = !generated
+    ? "pre"
+    : deviceBreakdown.state === "loading"
+      ? "generating"
+      : deviceBreakdown.state === "error"
+        ? "error"
+        : "post";
+  const showResults = genState === "post" || genState === "error";
+  const status: Status = genState === "generating" ? "generating" : "done";
 
   // Frontend-engine-removal Decision 2: the verdict strip never presents
   // an answer for an input the backend hasn't seen.  The audit effect
@@ -367,20 +410,8 @@ export function GeneratorShell({
         cdotSheet={summary?.cdot_sheet ?? ""}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-[360px_1fr]">
-        <GeneratorSidebar
-          scenario={scenario}
-          setScenario={setScenario}
-          generating={bundling}
-          onGenerate={onGenerate}
-          auditInputError={auditInputError}
-          corridorSpecLengths={corridorSpecLengths}
-          onClassification={(c, at) =>
-            setLastDetection(c ? { classification: c, ...at } : null)
-          }
-        />
-
-        <main className="px-10 pt-8 pb-20 max-w-[1100px] max-md:px-6 max-md:pt-6">
+      <div>
+        <main className="px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6">
           <div className="mb-7">
             <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block">
               02 · GENERATOR
@@ -405,6 +436,9 @@ export function GeneratorShell({
             </div>
           </div>
 
+          {/* Persistent jurisdiction bar — the single source for
+              jurisdiction + street class, mounted above the zones in
+              every stage. */}
           <JurisdictionContextBar
             jurisdiction={jurisdictionBlock}
             jurisdictionKey={scenario.jurisdiction_key ?? null}
@@ -416,8 +450,44 @@ export function GeneratorShell({
               setScenario({ ...scenario, street_class: c })
             }
           />
+
+          {/* ——— Zone 1 · Setup ——— */}
+          <section className={`zone${genState === "pre" ? " dominant" : ""}`}>
+            <div className="zone-head">
+              <span className="zone-tag">
+                <span className="n">01</span>Setup
+              </span>
+              <h2 className="zone-title">
+                {genState === "pre" ? "Describe the work zone" : "Scenario"}
+              </h2>
+            </div>
+            {genState === "pre" ? (
+              <GeneratorSidebar
+                scenario={scenario}
+                setScenario={setScenario}
+                generating={false}
+                onGenerate={onGenerate}
+                auditInputError={auditInputError}
+                corridorSpecLengths={corridorSpecLengths}
+                onClassification={(c, at) =>
+                  setLastDetection(c ? { classification: c, ...at } : null)
+                }
+              />
+            ) : (
+              <SetupStrip
+                scenario={scenario}
+                setScenario={setScenario}
+                onReopen={onReopen}
+              />
+            )}
+          </section>
+
+          {/* The verification strip stays mounted in every stage — it is
+              the live per-input verdict surface (rule 10), not
+              post-generation chrome; the prototype's hidden-in-pre strip
+              had no live verification behind it. */}
           <StatusBar
-            status={bundling ? "generating" : status}
+            status={status}
             inputError={inputError}
             audit={stripAudit}
             verifySlow={verifySlow}
@@ -434,53 +504,107 @@ export function GeneratorShell({
               {bundleError}
             </div>
           )}
-          <OutputCards
-            summary={summary}
-            generated={generated}
-            mode={
-              mode === "sandbox"
-                ? { kind: "public", scenario }
-                : { kind: "saved", planId }
-            }
-            breakdown={deviceBreakdown}
-            // The sheet-index header's "All (.zip)" re-download reuses the
-            // Generate button's bundle handler verbatim; OutputCards
-            // renders it in public mode only (saved plans have no bundle
-            // route).
-            onDownloadAll={onGenerate}
-            bundling={bundling}
-          />
-          {generated && (
-            <QuotePanel
-              mode={
-                mode === "sandbox"
-                  ? { kind: "public", scenario }
-                  : { kind: "saved", planId }
-              }
-              settings={settings}
-              setSettings={setSettings}
-            />
-          )}
-          <JurisdictionSection
-            jurisdiction={jurisdictionBlock}
-            loading={
-              Boolean(scenario.jurisdiction_key) &&
-              deviceBreakdown.state === "loading"
-            }
-            streetClass={scenario.street_class ?? null}
-            schedule={scenario.schedule ?? null}
-            setSchedule={(s: WorkScheduleInput | null) =>
-              setScenario({ ...scenario, schedule: s })
-            }
-          />
-          <AuditTrail
-            scenario={scenario}
-            audit={auditState}
-            onRetry={onRetry}
-            generated={generated}
-          />
-          {generated && (
-            <DeviceBreakdown state={deviceBreakdown} onRetry={onRetry} />
+
+          {/* ——— Zone 2 · Results ——— */}
+          <section className={`zone${genState === "post" ? " dominant" : ""}`}>
+            <div className="zone-head">
+              <span className="zone-tag">
+                <span className="n">02</span>Results
+              </span>
+              <h2 className="zone-title">MHT package</h2>
+              {genState === "post" && (
+                <span className="zone-note">
+                  device &amp; type counts drive your estimate
+                </span>
+              )}
+            </div>
+            {genState === "generating" ? (
+              <div className="empty-state">
+                <span className="big text-[color:var(--act)]">Generating…</span>
+                Computing taper, buffer, device spacing, and sign placement.
+              </div>
+            ) : (
+              <div className={genState === "error" ? "results-stale" : ""}>
+                {genState === "error" && (
+                  <div className="stale-ribbon">
+                    ⚠ Device breakdown failed — values below may be stale. Fix
+                    the input or retry from the plan details panel.
+                  </div>
+                )}
+                <OutputCards
+                  summary={summary}
+                  generated={showResults}
+                  mode={
+                    mode === "sandbox"
+                      ? { kind: "public", scenario }
+                      : { kind: "saved", planId }
+                  }
+                  breakdown={deviceBreakdown}
+                  // Zone 2's "All (.zip)" is the bundle download — the
+                  // former Generate side effect, same endpoint and
+                  // { scenario, settings } body, explicit trigger.
+                  onDownloadAll={onDownloadBundle}
+                  bundling={bundling}
+                />
+                {showResults && (
+                  <QuotePanel
+                    mode={
+                      mode === "sandbox"
+                        ? { kind: "public", scenario }
+                        : { kind: "saved", planId }
+                    }
+                    settings={settings}
+                    setSettings={setSettings}
+                    flaggerSource={flaggerSource}
+                    setFlaggerSource={setFlaggerSource}
+                    delivery={delivery}
+                    setDelivery={setDelivery}
+                  />
+                )}
+              </div>
+            )}
+          </section>
+
+          {/* ——— Zone 3 · Reference ——— */}
+          {(jurisdictionBlock ||
+            Boolean(scenario.jurisdiction_key) ||
+            showResults ||
+            auditState.state === "error") && (
+            <section className="zone">
+              <div className="zone-head">
+                <span className="zone-tag">
+                  <span className="n">03</span>Reference
+                </span>
+                <h2 className="zone-title">Rules, permit &amp; audit</h2>
+              </div>
+              <JurisdictionSection
+                jurisdiction={jurisdictionBlock}
+                loading={
+                  Boolean(scenario.jurisdiction_key) &&
+                  deviceBreakdown.state === "loading"
+                }
+                streetClass={scenario.street_class ?? null}
+                schedule={scenario.schedule ?? null}
+                setSchedule={(s: WorkScheduleInput | null) =>
+                  setScenario({ ...scenario, schedule: s })
+                }
+              />
+              {/* AuditTrail joins the zone with results — plus the
+                  pre-generation audit-error case, because the strip's
+                  "retry from the audit trail panel below" must always
+                  point at a panel that exists (rule 10). */}
+              {(showResults || auditState.state === "error") && (
+                <AuditTrail
+                  scenario={scenario}
+                  audit={auditState}
+                  onRetry={onRetry}
+                  generated={showResults || auditState.state === "error"}
+                />
+              )}
+              {showResults && (
+                <DeviceBreakdown state={deviceBreakdown} onRetry={onRetry} />
+              )}
+            </section>
           )}
         </main>
       </div>

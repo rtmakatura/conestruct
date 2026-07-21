@@ -11,14 +11,19 @@ import Link from "next/link";
 import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 
-type DeliveryStatus =
+// Lifted to GeneratorShell (restage): the pricing card unmounts across
+// reopen → regenerate cycles now, so any state guarding a manual edit
+// must outlive this component — the #74 clobber class otherwise
+// resurfaces (a remount resets "manual" to "auto" and the auto-effects
+// re-impose detected values over the user's numbers).
+export type DeliveryStatus =
   | { state: "idle" }
   | { state: "resolving" }
   | { state: "auto"; miles: number }
   | { state: "manual" }
   | { state: "error" };
 
-type FlaggerSource = "auto" | "manual";
+export type FlaggerSource = "auto" | "manual";
 
 interface PublicMode {
   kind: "public";
@@ -37,6 +42,12 @@ interface Props {
   // keeps the user's edits alive across a generate cycle.
   settings: QuoteSettings;
   setSettings: Dispatch<SetStateAction<QuoteSettings>>;
+  // Manual-override guards, shell-owned for the same reason (see the
+  // type comment above).
+  flaggerSource: FlaggerSource;
+  setFlaggerSource: Dispatch<SetStateAction<FlaggerSource>>;
+  delivery: DeliveryStatus;
+  setDelivery: Dispatch<SetStateAction<DeliveryStatus>>;
 }
 
 interface EquipmentLine {
@@ -113,13 +124,19 @@ function safeFilename(name: string | undefined, ext: string): string {
   return `${cleaned || "plan"}.${ext}`;
 }
 
-export function QuotePanel({ mode, settings, setSettings }: Props) {
+export function QuotePanel({
+  mode,
+  settings,
+  setSettings,
+  flaggerSource,
+  setFlaggerSource,
+  delivery,
+  setDelivery,
+}: Props) {
   const [breakdown, setBreakdown] = useState<Breakdown | null>(null);
   const [busy, setBusy] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [delivery, setDelivery] = useState<DeliveryStatus>({ state: "idle" });
-  const [flaggerSource, setFlaggerSource] = useState<FlaggerSource>("auto");
 
   // Latest settings in a ref so the async distance handler can write back to
   // the current settings object instead of a stale closure value.
@@ -132,13 +149,10 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
   // Auto-fill the flagger headcount from the layout (only flagger
   // scenarios station flaggers; everything else returns 0).  Skip
   // the sync once the user has typed their own value — the manual
-  // override stays in place until they switch scenarios.
+  // override stays in place until they switch scenarios (the kind
+  // change resets flaggerSource in GeneratorShell, which owns it).
   const autoFlaggers =
     mode.kind === "public" ? expectedFlaggerCount(mode.scenario) : 0;
-  const scenarioKind = mode.kind === "public" ? mode.scenario.kind : null;
-  useEffect(() => {
-    setFlaggerSource("auto");
-  }, [scenarioKind]);
   useEffect(() => {
     if (mode.kind !== "public") return;
     if (flaggerSource === "manual") return;
@@ -152,6 +166,9 @@ export function QuotePanel({ mode, settings, setSettings }: Props) {
     if (mode.kind !== "public") return;
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
     if (lat === 0 && lng === 0) return;
+    // A manual distance survives a remount (the pricing card unmounts
+    // across reopen cycles now) — never auto-overwrite it.
+    if (delivery.state === "manual") return;
 
     const controller = new AbortController();
     setDelivery({ state: "resolving" });
