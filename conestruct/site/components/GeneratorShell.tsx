@@ -25,6 +25,11 @@ import {
   DebugSnapshotButton,
   type SnapshotDetection,
 } from "./DebugSnapshotButton";
+import {
+  JurisdictionContextBar,
+  JurisdictionSection,
+} from "./JurisdictionSection";
+import type { StreetClass, WorkScheduleInput } from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
 
@@ -227,6 +232,13 @@ export function GeneratorShell({
     auditState.state === "ready" ? auditState.data : auditState.lastReady;
   const summary = currentAudit?.summary ?? null;
 
+  // The evaluated jurisdiction block rides the device-breakdown response
+  // (spec §3.2) — present only when the scenario names a jurisdiction_key.
+  const jurisdictionBlock =
+    deviceBreakdown.state === "ready"
+      ? (deviceBreakdown.data.jurisdiction ?? null)
+      : null;
+
   const safeFilename = (name: string | undefined): string => {
     const cleaned = (name ?? "")
       .trim()
@@ -393,6 +405,17 @@ export function GeneratorShell({
             </div>
           </div>
 
+          <JurisdictionContextBar
+            jurisdiction={jurisdictionBlock}
+            jurisdictionKey={scenario.jurisdiction_key ?? null}
+            setJurisdictionKey={(k) =>
+              setScenario({ ...scenario, jurisdiction_key: k })
+            }
+            streetClass={scenario.street_class ?? null}
+            setStreetClass={(c: StreetClass) =>
+              setScenario({ ...scenario, street_class: c })
+            }
+          />
           <StatusBar
             status={bundling ? "generating" : status}
             inputError={inputError}
@@ -438,6 +461,18 @@ export function GeneratorShell({
               setSettings={setSettings}
             />
           )}
+          <JurisdictionSection
+            jurisdiction={jurisdictionBlock}
+            loading={
+              Boolean(scenario.jurisdiction_key) &&
+              deviceBreakdown.state === "loading"
+            }
+            streetClass={scenario.street_class ?? null}
+            schedule={scenario.schedule ?? null}
+            setSchedule={(s: WorkScheduleInput | null) =>
+              setScenario({ ...scenario, schedule: s })
+            }
+          />
           <AuditTrail
             scenario={scenario}
             audit={auditState}

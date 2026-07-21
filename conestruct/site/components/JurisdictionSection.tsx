@@ -1,0 +1,922 @@
+"use client";
+
+// Jurisdiction layer — the five app components from the design handoff
+// (docs/design/design_handoff_jurisdiction_layer), recreated in the
+// codebase's own patterns (TSX + Tailwind + the workbench role tokens).
+//
+// Every number, verdict, citation, tier, and dollar figure renders from
+// the backend's evaluated ``jurisdiction`` block (rule 3 — the frontend
+// computes nothing but presentation).  Band segments are derived here
+// from the semantic hours windows (spec §1.1 #3), and that is the only
+// derivation in the file.
+//
+// Color system (CLAUDE.md): interactive = --act cyan · generated output
+// and count-affecting = --dim orange · warning = --warn amber + glyph ·
+// pass/fail = --pass/--fail · no verdict = chromaless --none.  No signal
+// relies on hue alone — every state carries a glyph or a word.
+
+import { useState, type ReactNode } from "react";
+import {
+  activeBandRow,
+  dayLabel,
+  deriveBandRows,
+  dollars,
+  fmtDate,
+  hhmm,
+  leadNoticeLabel,
+  meterRateLabel,
+  startNoLaterThan,
+  JURISDICTION_OPTIONS,
+  type AppliedDelta,
+  type Chip,
+  type JurisdictionBlock,
+  type StreetClass,
+  type TriggerStatus,
+  type WorkScheduleInput,
+} from "@/lib/jurisdiction";
+
+// ---------------------------------------------------------------------------
+// Shared bits
+// ---------------------------------------------------------------------------
+
+function SourceLine({ source }: { source: AppliedDelta["source"] }) {
+  return (
+    <div className="font-mono text-[10px] tracking-[0.02em] text-[color:var(--ink-faint)] mt-1">
+      <span aria-hidden>✓ </span>
+      {source.doc}
+      {source.section ? ` · §${source.section}` : ""}
+      {source.date ? ` · ${source.date}` : ""}
+      {source.status !== "verified" && (
+        <span className="uppercase"> · {source.status}</span>
+      )}
+    </div>
+  );
+}
+
+export function ProvisionalBadge({ label = "Provisional" }: { label?: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
+      <span aria-hidden>◐</span> {label}
+    </span>
+  );
+}
+
+export function ConflictFootnote({
+  conflict,
+}: {
+  conflict: {
+    label: string;
+    rendered: string;
+    sources: { doc: string; value: string }[];
+    verdict: string;
+  } | null;
+}) {
+  if (!conflict) return null;
+  return (
+    <div className="mt-4 pl-3 border-l-2 border-[color:var(--warn)]">
+      <div className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--warn)] mb-1.5">
+        † Two adopted sources disagree — conservative value rendered
+      </div>
+      {conflict.sources.map((s) => (
+        <div
+          key={s.doc}
+          className="flex items-baseline justify-between gap-4 text-[12px] text-[color:var(--ink-mute)] py-0.5"
+        >
+          <span>{s.doc}</span>
+          <span className="font-mono">{s.value}</span>
+        </div>
+      ))}
+      <div className="text-[12px] text-[color:var(--ink)] mt-1.5">{conflict.verdict}</div>
+    </div>
+  );
+}
+
+const STATUS_LABEL: Record<TriggerStatus, string | null> = {
+  fires: null,
+  conditional: "conditional — surfaced, not auto-applied",
+  unknown: "needs input (set the street class)",
+};
+
+function StatusFlag({ status }: { status: TriggerStatus }) {
+  const label = STATUS_LABEL[status];
+  if (!label) return null;
+  return (
+    <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--none)]">
+      ◌ {label}
+    </span>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 1 · Context Bar (slate) — jurisdiction picker + street class + chain
+// ---------------------------------------------------------------------------
+
+interface ContextBarProps {
+  jurisdiction: JurisdictionBlock | null;
+  jurisdictionKey: string | null;
+  setJurisdictionKey: (k: string | null) => void;
+  streetClass: StreetClass | null;
+  setStreetClass: (c: StreetClass) => void;
+}
+
+const STREET_CLASSES: [StreetClass, string][] = [
+  ["local", "Local"],
+  ["collector", "Collector"],
+  ["arterial", "Arterial"],
+];
+
+export function JurisdictionContextBar({
+  jurisdiction,
+  jurisdictionKey,
+  setJurisdictionKey,
+  streetClass,
+  setStreetClass,
+}: ContextBarProps) {
+  return (
+    <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4 px-5 py-4 bg-[color:var(--canvas-tint)] border border-[color:var(--rule)]">
+      <div>
+        <label
+          htmlFor="jl-jurisdiction"
+          className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5"
+        >
+          Jurisdiction
+        </label>
+        <select
+          id="jl-jurisdiction"
+          value={jurisdictionKey ?? ""}
+          onChange={(e) => setJurisdictionKey(e.target.value || null)}
+          className="w-full bg-[color:var(--canvas)] border border-[color:var(--rule)] text-[13px] text-[color:var(--ink-on-dark)] px-2 py-1.5 focus:border-[color:var(--act)] outline-none"
+        >
+          <option value="">None — baseline (MUTCD + CDOT) only</option>
+          {JURISDICTION_OPTIONS.map((o) => (
+            <option key={o.key} value={o.key}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        {jurisdiction && (
+          <div className="mt-1.5 text-[12px] text-[color:var(--ink-on-dark-faint)]">
+            <span className="text-[color:var(--ink-on-dark)] font-semibold">
+              {jurisdiction.name}
+            </span>{" "}
+            · {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
+            <span className="font-mono">{jurisdiction.tcp_term}</span>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
+          Street classification
+        </span>
+        <div role="group" aria-label="Street classification" className="inline-flex">
+          {STREET_CLASSES.map(([v, l]) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={streetClass === v}
+              onClick={() => setStreetClass(v)}
+              className={`px-3 py-1.5 text-[12px] border first:border-l border-l-0 cursor-pointer ${
+                streetClass === v
+                  ? "border-[color:var(--act)] text-[color:var(--act)] bg-[color:var(--act-glow)]"
+                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--ink-on-dark)]"
+              }`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+        {jurisdiction?.class_required &&
+          (jurisdiction.classification_map_url ? (
+            <a
+              href={jurisdiction.classification_map_url}
+              target="_blank"
+              rel="noreferrer"
+              className="block mt-1.5 text-[11px] text-[color:var(--act)] hover:underline"
+            >
+              ◎ per {jurisdiction.name} functional classification map
+            </a>
+          ) : (
+            <span className="block mt-1.5 text-[11px] text-[color:var(--ink-on-dark-faint)]">
+              ◎ {jurisdiction.name} classifies via its published map — look the
+              street up before submitting
+            </span>
+          ))}
+      </div>
+
+      <div>
+        <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
+          Governing spec chain
+        </span>
+        {jurisdiction ? (
+          <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+            {jurisdiction.chain.map((seg, i) => (
+              <span key={seg} className="inline-flex items-center gap-1.5">
+                <span
+                  className={
+                    i === jurisdiction.chain.length - 1
+                      ? "text-[color:var(--dim)] border border-[color:var(--dim)] px-1.5 py-0.5"
+                      : "text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-1.5 py-0.5"
+                  }
+                >
+                  {seg}
+                </span>
+                {i < jurisdiction.chain.length - 1 && (
+                  <span aria-hidden className="text-[color:var(--ink-on-dark-faint)]">
+                    →
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="text-[12px] text-[color:var(--ink-on-dark-faint)]">
+            MUTCD 11th Ed. + Colorado Supplement → CDOT S-630
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 2 · Delta Panel — what this jurisdiction changes vs. the baseline
+// ---------------------------------------------------------------------------
+
+const SEV_BAR: Record<AppliedDelta["severity"], string> = {
+  count: "bg-[color:var(--dim)]",
+  op: "bg-[color:var(--act)]",
+  admin: "bg-[color:var(--none)]",
+};
+
+function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
+  if (d.severity === "count") {
+    if (d.effect.op === "swap_device") return { main: "→ swap", unit: d.effect.device };
+    const qty = d.effect.qty ?? 1;
+    return { main: `+${qty}`, unit: qty === 1 ? "device" : "devices" };
+  }
+  return { main: d.severity === "op" ? "method" : "admin" };
+}
+
+function DeltaPanel({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+  const [open, setOpen] = useState(false);
+  const deltas = jurisdiction.applied_deltas;
+  const countN = deltas.filter((d) => d.severity === "count" && d.status === "fires").length;
+  return (
+    <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] mb-5">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left cursor-pointer"
+      >
+        <span
+          aria-hidden
+          className={`text-[color:var(--ink-faint)] transition-transform ${open ? "rotate-90" : ""}`}
+        >
+          ›
+        </span>
+        <h3 className="text-[14px] font-semibold text-[color:var(--heading-on-paper)] m-0">
+          What <b>{jurisdiction.name}</b> changes
+        </h3>
+        <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">
+          {deltas.length} deltas · {countN} affect count
+        </span>
+      </button>
+
+      {open && (
+        <div className="px-4 pb-4">
+          <div className="flex gap-5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] pb-2 mb-1 border-b border-[color:var(--paper-line-soft)]">
+            <span>
+              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--dim)]" aria-hidden />
+              Changes device count
+            </span>
+            <span>
+              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--act)]" aria-hidden />
+              Rule / method
+            </span>
+            <span>
+              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--none)]" aria-hidden />
+              Administrative
+            </span>
+          </div>
+          {deltas.length === 0 && (
+            <div className="text-[12px] text-[color:var(--ink-faint)] py-3">
+              No deltas apply to this plan — the baseline layout satisfies{" "}
+              {jurisdiction.name}&apos;s published rules.
+            </div>
+          )}
+          {deltas.map((d) => {
+            const impact = deltaImpact(d);
+            return (
+              <div
+                key={d.rule}
+                className="grid grid-cols-[3px_1fr_auto] gap-3 py-3 border-b border-[color:var(--paper-line-soft)] last:border-b-0"
+              >
+                <span className={SEV_BAR[d.severity]} aria-hidden />
+                <div>
+                  <div className="text-[13px] text-[color:var(--ink)] leading-snug">{d.rule}</div>
+                  {d.baseline && (
+                    <div className="text-[11px] text-[color:var(--ink-faint)] mt-0.5">
+                      baseline: <b>{d.baseline}</b>
+                    </div>
+                  )}
+                  <StatusFlag status={d.status} />
+                  <SourceLine source={d.source} />
+                </div>
+                <div className="text-right min-w-[64px]">
+                  <span
+                    className={`font-mono text-[15px] ${
+                      d.severity === "count" && d.status === "fires"
+                        ? "text-[color:var(--dim)]"
+                        : "text-[color:var(--ink-faint)]"
+                    }`}
+                  >
+                    {impact.main}
+                  </span>
+                  {impact.unit && (
+                    <div className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
+                      {impact.unit}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 3 · Work-Hours Card — bands from semantic windows; verdict from hours_eval
+// ---------------------------------------------------------------------------
+
+interface WorkHoursProps {
+  jurisdiction: JurisdictionBlock;
+  streetClass: StreetClass | null;
+  schedule: WorkScheduleInput | null;
+  setSchedule: (s: WorkScheduleInput | null) => void;
+}
+
+function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: WorkHoursProps) {
+  const hours = jurisdiction.hours;
+  const hoursEval = jurisdiction.hours_eval;
+  const rows = deriveBandRows(hours);
+  const active = activeBandRow(rows, streetClass);
+  // Prefer the hours meter scoped to the active street class (matches the
+  // backend's exposure-meter selection); fall back to the first hours meter.
+  const hoursMeters = jurisdiction.meters.filter((m) => m.kind === "hours_violation");
+  const meter =
+    hoursMeters.find((m) => streetClass && m.classes?.includes(streetClass)) ??
+    hoursMeters.find((m) => !m.classes || m.classes.length === 0) ??
+    hoursMeters[0];
+
+  const sched = schedule ?? { date_mode: "tbd" as const };
+  const hoursKnown =
+    sched.date_mode !== "tbd" && sched.start_time != null && sched.end_time != null;
+
+  const patch = (p: Partial<WorkScheduleInput>) => setSchedule({ ...sched, ...p });
+
+  return (
+    <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] mb-5 px-4 py-4">
+      <div className="flex items-center gap-3 flex-wrap mb-1.5">
+        <h3 className="text-[14px] font-semibold text-[color:var(--heading-on-paper)] m-0">
+          Work hours — {jurisdiction.name}
+        </h3>
+        <div className="ml-auto flex gap-2">
+          {hours.holiday_rule === "holidays_and_eves_banned" && (
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
+              ◐ holiday-eve rule
+            </span>
+          )}
+          {meter && (
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 bg-[color:var(--dim-soft)] border border-[color:var(--dim)] text-[color:var(--dim)]">
+              Metered {meterRateLabel(meter)}
+              {meter.classes?.length ? ` ${meter.classes.join("/")}` : ""}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {hours.override_note && (
+        <p className="text-[12px] text-[color:var(--ink-mute)] mb-3 max-w-[640px]">
+          {hours.override_note}
+        </p>
+      )}
+      {hours.condition_note && (
+        <p className="text-[12px] text-[color:var(--ink-mute)] mb-3 max-w-[640px]">
+          <span className="text-[color:var(--warn)]" aria-hidden>
+            ⚠{" "}
+          </span>
+          {hours.condition_note}
+        </p>
+      )}
+
+      {hours.shape === "none" || rows.length === 0 ? (
+        <div className="text-[12px] text-[color:var(--none)] py-2">
+          ◌ {jurisdiction.name} publishes no work-hour windows — no restriction
+          shown because none is on record, not because none exists.
+        </div>
+      ) : (
+        <div>
+          {rows.map((r) => {
+            const isActive = active === r;
+            return (
+              <div
+                key={`${r.scope}-${r.days}`}
+                className="grid grid-cols-[130px_1fr] gap-2 items-center mb-1"
+              >
+                <div
+                  className={`text-[11px] leading-tight ${
+                    isActive
+                      ? "text-[color:var(--ink)] font-semibold"
+                      : "text-[color:var(--ink-faint)]"
+                  }`}
+                >
+                  {r.scope}
+                  <span className="block font-mono text-[9px] uppercase tracking-[0.06em] font-normal">
+                    {dayLabel(r.days)}
+                  </span>
+                </div>
+                <div
+                  className={`relative flex h-6 overflow-hidden ${
+                    isActive ? "outline outline-1 outline-[color:var(--act)]" : ""
+                  }`}
+                >
+                  {r.segments.map((s) => (
+                    <div
+                      key={`${s.startH}-${s.endH}`}
+                      style={{ width: `${((s.endH - s.startH) / 24) * 100}%` }}
+                      className={`flex items-center justify-center font-mono text-[8px] uppercase tracking-[0.1em] ${
+                        s.t === "ban"
+                          ? "bg-[repeating-linear-gradient(45deg,var(--paper-deep),var(--paper-deep)_4px,var(--paper-line-soft)_4px,var(--paper-line-soft)_8px)] text-[color:var(--ink-faint)]"
+                          : "bg-[color:var(--pass-soft)] text-[color:var(--pass)]"
+                      }`}
+                    >
+                      {s.endH - s.startH >= 3 ? (s.t === "ban" ? "banned" : "ok") : ""}
+                    </div>
+                  ))}
+                  {isActive && hoursKnown && (
+                    <div
+                      aria-hidden
+                      className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
+                      style={{
+                        left: `${((sched.start_time as number) / 24) * 100}%`,
+                        width: `${(((sched.end_time as number) - (sched.start_time as number)) / 24) * 100}%`,
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          <div className="grid grid-cols-[130px_1fr] gap-2">
+            <div />
+            <div className="flex justify-between font-mono text-[9px] text-[color:var(--ink-faint)]">
+              <span>12a</span>
+              <span>4a</span>
+              <span>8a</span>
+              <span>12p</span>
+              <span>4p</span>
+              <span>8p</span>
+              <span>12a</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Schedule inputs (design deviation: the prototype hosts these in
+          the sidebar; they live on the card pending a design pass). */}
+      <fieldset className="mt-4 border-t border-[color:var(--paper-line-soft)] pt-3">
+        <legend className="sr-only">Work schedule</legend>
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="text-[11px] text-[color:var(--ink-faint)]">
+            Work date
+            <input
+              type="date"
+              value={sched.work_date ?? ""}
+              onChange={(e) =>
+                patch({
+                  work_date: e.target.value || undefined,
+                  date_mode: e.target.value ? "single" : "tbd",
+                })
+              }
+              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
+            />
+          </label>
+          <label className="text-[11px] text-[color:var(--ink-faint)]">
+            Start
+            <input
+              type="time"
+              value={sched.start_time != null ? toTimeInput(sched.start_time) : ""}
+              onChange={(e) => patch({ start_time: fromTimeInput(e.target.value) })}
+              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
+            />
+          </label>
+          <label className="text-[11px] text-[color:var(--ink-faint)]">
+            End
+            <input
+              type="time"
+              value={sched.end_time != null ? toTimeInput(sched.end_time) : ""}
+              onChange={(e) => patch({ end_time: fromTimeInput(e.target.value) })}
+              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
+            />
+          </label>
+        </div>
+      </fieldset>
+
+      {/* Plan tie — the verdict comes from the backend hours_eval, never
+          recomputed here (rule 3 / rule 10: VERIFYING-style honesty is
+          handled upstream by the section's loading state). */}
+      <div className="mt-3">
+        {hoursEval.status === "unknown" && (
+          <div className="text-[12px] text-[color:var(--none)]">
+            ◌ {hoursEval.note ?? "Schedule not checked yet"} — set a date and
+            start/end times to check them against {jurisdiction.name}&apos;s
+            windows.
+          </div>
+        )}
+        {hoursEval.status === "inside" && (
+          <div className="text-[12px] text-[color:var(--pass)]">
+            ✓ Within the permitted window for this street class.
+            {hoursEval.note ? ` (${hoursEval.note})` : ""}
+          </div>
+        )}
+        {hoursEval.status === "outside" && (
+          <div className="pl-3 border-l-2 border-[color:var(--warn)]">
+            <div className="text-[12px] text-[color:var(--warn)]">
+              ⚠ Schedule conflicts with {jurisdiction.name}&apos;s windows:
+            </div>
+            <ul className="m-0 mt-1 pl-4 text-[12px] text-[color:var(--ink-mute)]">
+              {hoursEval.violations.map((v) => (
+                <li key={`${v.kind}-${v.window.start}`}>
+                  {v.kind === "ban_window_overlap"
+                    ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban (${dayLabel(v.window.days)})`
+                    : `${v.outside_hours} h falls outside the ${hhmm(v.window.start)}–${hhmm(v.window.end)} window (${dayLabel(v.window.days)})`}
+                </li>
+              ))}
+            </ul>
+            {hoursEval.exposure_estimate_cents != null && (
+              <div className="text-[12px] text-[color:var(--warn)] mt-1">
+                Metered exposure estimate ≈{" "}
+                <span className="font-mono">{dollars(hoursEval.exposure_estimate_cents)}</span>
+                {jurisdiction.provisional ? " (provisional schedule)" : ""} — trim the
+                schedule to avoid it.
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <ConflictFootnote conflict={hours.conflict} />
+    </div>
+  );
+}
+
+function toTimeInput(h: number): string {
+  const hr = Math.floor(h);
+  const m = Math.round((h - hr) * 60);
+  return `${hr.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+}
+
+function fromTimeInput(v: string): number | undefined {
+  if (!v) return undefined;
+  const [hr, m] = v.split(":").map(Number);
+  return hr + m / 60;
+}
+
+// ---------------------------------------------------------------------------
+// 4 · Permit & Fees FYI — courtesy reference, never a checkout
+// ---------------------------------------------------------------------------
+
+function PermitFYI({
+  jurisdiction,
+  workDate,
+}: {
+  jurisdiction: JurisdictionBlock;
+  workDate: string | null;
+}) {
+  const p = jurisdiction.permit;
+  const fees = jurisdiction.fees;
+  let n = 0;
+  const num = () => String(++n).padStart(2, "0");
+  const anyProvisionalFee = fees.items.some((i) => i.provisional) || fees.formula?.source.status === "provisional";
+
+  const Section = ({ title, badge, children }: { title: string; badge?: ReactNode; children: ReactNode }) => (
+    <div className="py-3 border-b border-[color:var(--paper-line-soft)] last:border-b-0">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="font-mono text-[10px] text-[color:var(--ink-faint)]">{num()}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-mute)]">
+          {title}
+        </span>
+        {badge}
+      </div>
+      {children}
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mb-2">
+        <span className="inline-block w-4 h-4 text-center border border-[color:var(--rule)] mr-1.5" aria-hidden>
+          i
+        </span>
+        Permit info — <b>FYI</b> · {jurisdiction.name} · fees are never quote line items
+      </div>
+      <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] px-4">
+        <Section title="Permit type / tier">
+          {p.tiers.length > 0 ? (
+            <>
+              <div className="flex gap-1.5 mb-1.5" aria-label="Permit tiers">
+                {p.tiers.map((t) => (
+                  <span
+                    key={t.label}
+                    className={`px-2 py-1 text-[11px] border ${
+                      t.label === p.tier_suggested
+                        ? "border-[color:var(--dim)] text-[color:var(--dim)]"
+                        : "border-[color:var(--paper-line)] text-[color:var(--ink-faint)]"
+                    }`}
+                  >
+                    {t.label}
+                  </span>
+                ))}
+              </div>
+              <div className="text-[12px] text-[color:var(--ink-mute)]">
+                {p.tier_suggested ? (
+                  <>
+                    suggested: <b className="text-[color:var(--ink)]">{p.tier_suggested}</b>
+                  </>
+                ) : (
+                  <span className="text-[color:var(--none)]">◌ no tier suggested</span>
+                )}{" "}
+                — {p.tier_reason}
+              </div>
+            </>
+          ) : (
+            <div className="text-[12px] text-[color:var(--ink-mute)]">{p.tier_reason}</div>
+          )}
+        </Section>
+
+        <Section title="Fee reference" badge={anyProvisionalFee ? <ProvisionalBadge /> : null}>
+          {fees.model === "unpublished" || fees.model === "post_approval" ? (
+            <div className="text-[12px] text-[color:var(--none)]">
+              ◌ {fees.note ?? "Fee amounts are not published for this jurisdiction."}
+            </div>
+          ) : (
+            <>
+              {fees.formula && (
+                <div className="font-mono text-[12px] text-[color:var(--ink)] mb-2 leading-relaxed">
+                  fee = f({fees.formula.inputs.join(", ")})
+                  <div className="font-sans text-[11px] text-[color:var(--ink-faint)] mt-1 max-w-[520px]">
+                    {fees.formula.note}
+                  </div>
+                </div>
+              )}
+              {p.fee_estimate_cents != null && (
+                <div className="text-[12px] text-[color:var(--ink-mute)] mb-2">
+                  suggested-tier fee:{" "}
+                  <span className="font-mono text-[color:var(--dim)]">
+                    {dollars(p.fee_estimate_cents)}
+                  </span>
+                </div>
+              )}
+              {fees.items.slice(0, 6).map((f) => (
+                <div
+                  key={f.label}
+                  className="flex items-baseline justify-between gap-4 text-[12px] py-0.5"
+                >
+                  <span className="text-[color:var(--ink-mute)]">
+                    {f.label}
+                    {f.provisional && (
+                      <span className="text-[color:var(--warn)]" aria-hidden>
+                        {" "}
+                        ◐
+                      </span>
+                    )}
+                  </span>
+                  <span className="font-mono text-[color:var(--ink)]">
+                    {dollars(f.amount_cents)}
+                    {f.per && f.per !== "flat" ? ` / ${f.per.replace("_", " ")}` : ""}
+                  </span>
+                </div>
+              ))}
+              {fees.note && (
+                <div className="text-[11px] text-[color:var(--ink-faint)] mt-1.5">{fees.note}</div>
+              )}
+            </>
+          )}
+        </Section>
+
+        <Section title="Lead times">
+          {p.leads.length === 0 ? (
+            <div className="text-[12px] text-[color:var(--none)]">◌ none on record</div>
+          ) : (
+            <table className="w-full text-[12px]">
+              <thead>
+                <tr className="font-mono text-[9px] uppercase tracking-[0.1em] text-[color:var(--ink-faint)] text-left">
+                  <th className="font-normal pb-1">Item</th>
+                  <th className="font-normal pb-1">Notice</th>
+                  <th className="font-normal pb-1">Start no later than</th>
+                </tr>
+              </thead>
+              <tbody>
+                {p.leads.map((l) => (
+                  <tr key={l.label} className="border-t border-[color:var(--paper-line-soft)]">
+                    <td className="py-1 pr-3 text-[color:var(--ink-mute)]">{l.label}</td>
+                    <td className="py-1 pr-3 font-mono text-[color:var(--ink)]">
+                      {leadNoticeLabel(l)}
+                    </td>
+                    <td className="py-1 font-mono text-[color:var(--ink)]">
+                      {workDate ? `≈ ${fmtDate(startNoLaterThan(workDate, l))}` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Section>
+
+        <Section title="Notices">
+          {p.notices.length === 0 ? (
+            <div className="text-[12px] text-[color:var(--none)]">◌ none on record</div>
+          ) : (
+            p.notices.map((x) => (
+              <div key={x.rule} className="text-[12px] text-[color:var(--ink-mute)] py-1">
+                <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-faint)]">
+                  {x.audience}
+                </span>
+                <div>{x.rule}</div>
+              </div>
+            ))
+          )}
+        </Section>
+
+        <Section title="On-site requirements">
+          {p.onsite.items.length === 0 ? (
+            <div className="text-[12px] text-[color:var(--none)]">◌ none on record</div>
+          ) : (
+            p.onsite.items.map((x) => (
+              <div key={x.rule} className="text-[12px] text-[color:var(--ink-mute)] py-1">
+                ▤ {x.rule}
+                {p.onsite.digital_ok && (
+                  <span className="text-[color:var(--pass)]"> ✓ digital copies accepted</span>
+                )}
+              </div>
+            ))
+          )}
+        </Section>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 5 · Compliance Chips — evaluated by the backend, three fixed groups
+// ---------------------------------------------------------------------------
+
+function ChipGroup({
+  label,
+  chips,
+  icon,
+  tone,
+  jurName,
+  showMeter,
+}: {
+  label: string;
+  chips: Chip[];
+  icon: string;
+  tone: string;
+  jurName: string;
+  showMeter?: boolean;
+}) {
+  if (chips.length === 0) return null;
+  return (
+    <>
+      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mt-3 first:mt-0 mb-1.5">
+        {label}
+      </div>
+      {chips.map((x) => (
+        <div
+          key={x.rule}
+          className={`flex gap-2.5 px-3 py-2.5 mb-1.5 border-l-2 bg-[color:var(--canvas-tint)] ${tone}`}
+        >
+          <span aria-hidden className="text-[13px]">
+            {icon}
+          </span>
+          <div>
+            <div className="text-[12px] text-[color:var(--ink-on-dark)] leading-snug">
+              {x.rule}
+              {showMeter && x.meter && (
+                <span className="font-mono text-[color:var(--fail)]"> {meterRateLabel(x.meter)}</span>
+              )}
+            </div>
+            <StatusFlag status={x.status} />
+            <div className="font-mono text-[9px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-0.5">
+              {jurName.toUpperCase()} · {x.source.doc}
+              {x.source.section ? ` §${x.source.section}` : ""}
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function ComplianceChips({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+  const c = jurisdiction.chips;
+  const empty = c.personnel.length + c.device.length + c.hazard.length === 0;
+  return (
+    <div>
+      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mb-2">
+        Compliance callouts
+      </div>
+      {empty && (
+        <div className="text-[12px] text-[color:var(--none)]">
+          ◌ No personnel, device, or hazard callouts on record for this plan.
+        </div>
+      )}
+      <ChipGroup
+        label="Personnel gates"
+        chips={c.personnel}
+        icon="◈"
+        tone="border-[color:var(--act)]"
+        jurName={jurisdiction.name}
+      />
+      <ChipGroup
+        label="Device mandates"
+        chips={c.device}
+        icon="▮"
+        tone="border-[color:var(--dim)]"
+        jurName={jurisdiction.name}
+      />
+      <ChipGroup
+        label="High-severity hazards"
+        chips={c.hazard}
+        icon="⚠"
+        tone="border-[color:var(--fail)]"
+        jurName={jurisdiction.name}
+        showMeter
+      />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// The section — DeltaPanel + WorkHoursCard + (PermitFYI | ComplianceChips)
+// ---------------------------------------------------------------------------
+
+interface SectionProps {
+  jurisdiction: JurisdictionBlock | null;
+  loading: boolean;
+  streetClass: StreetClass | null;
+  schedule: WorkScheduleInput | null;
+  setSchedule: (s: WorkScheduleInput | null) => void;
+}
+
+export function JurisdictionSection({
+  jurisdiction,
+  loading,
+  streetClass,
+  schedule,
+  setSchedule,
+}: SectionProps) {
+  if (!jurisdiction && !loading) return null;
+  return (
+    <section className="mt-9" aria-label="Jurisdiction rules">
+      <div className="flex items-baseline justify-between mb-1 pb-3 border-b border-[color:var(--rule)]">
+        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
+          {jurisdiction ? `${jurisdiction.name} — jurisdiction rules` : "Jurisdiction rules"}
+        </h2>
+        {jurisdiction?.provisional && <ProvisionalBadge label="Contains provisional facts" />}
+      </div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mt-0 mb-4">
+        informational · sourced corpus · never blocks generation
+      </p>
+
+      {loading || !jurisdiction ? (
+        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">
+          Loading jurisdiction rules…
+        </div>
+      ) : (
+        <>
+          <DeltaPanel jurisdiction={jurisdiction} />
+          <WorkHoursCard
+            jurisdiction={jurisdiction}
+            streetClass={streetClass}
+            schedule={schedule}
+            setSchedule={setSchedule}
+          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <PermitFYI
+              jurisdiction={jurisdiction}
+              workDate={schedule?.work_date ?? null}
+            />
+            <ComplianceChips jurisdiction={jurisdiction} />
+          </div>
+        </>
+      )}
+    </section>
+  );
+}

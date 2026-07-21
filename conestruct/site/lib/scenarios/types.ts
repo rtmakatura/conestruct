@@ -95,7 +95,7 @@ export interface NearIntersectionApproach {
   alongStationFt: number;
 }
 
-export interface NearIntersectionScenario {
+export interface NearIntersectionScenario extends JurisdictionPlanFields {
   kind: "near_intersection";
   meta: ScenarioMeta;
 
@@ -116,6 +116,24 @@ export interface NearIntersectionScenario {
 
   /** 1 leg (T-intersection) or 2 (both directions of one cross street). */
   approaches: NearIntersectionApproach[];
+}
+
+/**
+ * Jurisdiction-layer extension (phase1-backend-spec §3.1) — additive,
+ * all optional, snake_case (the scenario object IS the wire payload;
+ * the backend's field names are snake_case by the spec's casing
+ * decision §1.1 #1). Absent ⇒ baseline-only behavior, untouched.
+ */
+export interface JurisdictionPlanFields {
+  jurisdiction_key?: string | null;
+  street_class?: "local" | "collector" | "arterial" | null;
+  schedule?: {
+    date_mode: "single" | "range" | "tbd";
+    work_date?: string;
+    work_date_end?: string;
+    start_time?: number;
+    end_time?: number;
+  } | null;
 }
 
 export type SiteConditionFlag =
@@ -150,7 +168,7 @@ export interface ScenarioMeta {
   siteConditions?: SiteConditions;
 }
 
-export interface ShoulderScenario {
+export interface ShoulderScenario extends JurisdictionPlanFields {
   kind: "shoulder";
   meta: ScenarioMeta;
 
@@ -176,7 +194,7 @@ export interface ShoulderScenario {
 
 export type FlaggerRoadType = "rural_undivided" | "urban_arterial";
 
-export interface FlaggerLaneClosureScenario {
+export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
   kind: "flagger_lane_closure";
   meta: ScenarioMeta;
 
@@ -194,7 +212,7 @@ export interface FlaggerLaneClosureScenario {
   pedestrianAccess: boolean;
 }
 
-export interface LaneClosureDividedScenario {
+export interface LaneClosureDividedScenario extends JurisdictionPlanFields {
   kind: "lane_closure_divided";
   meta: ScenarioMeta;
 
@@ -210,7 +228,7 @@ export interface LaneClosureDividedScenario {
   truckMountedAttenuator: boolean;
 }
 
-export interface WorkBeyondShoulderScenario {
+export interface WorkBeyondShoulderScenario extends JurisdictionPlanFields {
   kind: "work_beyond_shoulder";
   meta: ScenarioMeta;
 
@@ -224,7 +242,7 @@ export interface WorkBeyondShoulderScenario {
   night: boolean;
 }
 
-export interface MobileOp2LaneScenario {
+export interface MobileOp2LaneScenario extends JurisdictionPlanFields {
   kind: "mobile_op_2lane";
   meta: ScenarioMeta;
 
@@ -239,7 +257,7 @@ export interface MobileOp2LaneScenario {
   arrowBoardOnShadow: boolean;
 }
 
-export interface MobileOpMultilaneScenario {
+export interface MobileOpMultilaneScenario extends JurisdictionPlanFields {
   kind: "mobile_op_multilane";
   meta: ScenarioMeta;
 

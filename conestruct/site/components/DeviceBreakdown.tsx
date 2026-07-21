@@ -1,14 +1,31 @@
+import type { JurisdictionBlock, SourceRef } from "@/lib/jurisdiction";
+
 export interface DeviceBreakdownRow {
   device: string;
   code: string;
   function: string;
   qty: number;
+  /** Present only on rows a jurisdiction count-delta added or topped up
+   *  (backend apply_count_deltas — spec §3.2). */
+  jurisdiction_required?: boolean;
+  jurisdiction_source?: SourceRef;
+}
+
+export interface ZoneGeometry {
+  taper_l_ft: number;
+  buffer_b_ft: number;
+  device_spacing_ft: number;
+  work_len_ft: number;
 }
 
 export interface DeviceBreakdownData {
   devices: DeviceBreakdownRow[];
   total_devices: number;
   unique_types: number;
+  /** Additive (spec §3.2); absent only against a pre-extension backend. */
+  zone_geometry?: ZoneGeometry;
+  /** Present only when the scenario named a jurisdiction_key. */
+  jurisdiction?: JurisdictionBlock;
 }
 
 export type DeviceBreakdownState =

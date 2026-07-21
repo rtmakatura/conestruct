@@ -1,0 +1,4131 @@
+{
+  "_meta": {
+    "generated_by": "scripts/regen_jurisdiction_demo_fixtures.py",
+    "source": "data/jurisdictions/*.json (the real corpus records)",
+    "casting": {
+      "context_bar": [
+        "castle_rock"
+      ],
+      "delta_panel": [
+        "greeley",
+        "englewood"
+      ],
+      "hours_cards": [
+        "loveland",
+        "thornton",
+        "greeley",
+        "castle_rock"
+      ],
+      "permit_fyi": [
+        "el_paso"
+      ],
+      "chips": [
+        "westminster",
+        "e470"
+      ],
+      "trust": [
+        "parker"
+      ]
+    },
+    "context": {
+      "street_class": "arterial",
+      "closure": "lane",
+      "night": false,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-07-22",
+        "start_time": 8.0,
+        "end_time": 15.0
+      }
+    }
+  },
+  "jurisdictions": {
+    "castle_rock": {
+      "key": "castle_rock",
+      "name": "Castle Rock",
+      "tcp_term": "TCP",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD (most recent edition) + Colorado Supplement",
+        "CDOT Standard Specifications as revised by Town Standard Special Provisions (Rev 7/22)",
+        "Model Traffic Code Nov 2024 Rev 1.0 (Ord. 2025-036)",
+        "Development Services Fee Schedule (eff. 2026-07-01)"
+      ],
+      "class_required": true,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "noise_conditioned",
+        "windows": [
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": null,
+            "start": 19.0,
+            "end": 24.0,
+            "source": {
+              "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": null,
+            "start": 0.0,
+            "end": 7.0,
+            "source": {
+              "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekend",
+            "classes": null,
+            "start": 18.0,
+            "end": 24.0,
+            "note": "Weekends and holidays.",
+            "source": {
+              "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekend",
+            "classes": null,
+            "start": 0.0,
+            "end": 8.0,
+            "note": "Weekends and holidays.",
+            "source": {
+              "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Holidays follow the weekend windows (6 PM-8 AM ban). Holiday set enumerated by replacement of CDOT 101.36, including observed-day rules (NY/July 4/Christmas on Sunday -> Monday holiday; on Saturday -> preceding Friday). Exceptions: equipment delivery/pickup, emergency work, §9.16.050 exemptions, variance per §9.16.070.E.",
+        "condition_note": "Hours are regulated through the noise ordinance, not a TC rule: tools/equipment operation banned only 'such that the sound therefrom creates a noise disturbance across a residential real property boundary' — commercial-area night work is arguably outside the ban.",
+        "conflict": null
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "ROW Permit",
+            "amount_cents": 25000,
+            "effective": "2026-07-01",
+            "note": "Limited to 1,000 LF of work per permit.",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Traffic Control Review",
+            "amount_cents": 20000,
+            "effective": "2026-07-01",
+            "note": "Standalone TCP-review fee (pairs with Parker's $300).",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Emergency ROW Permit",
+            "amount_cents": 30000,
+            "effective": "2026-07-01",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Sidewalk Closure Permit",
+            "amount_cents": 19500,
+            "effective": "2026-07-01",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Obstructions to Public ROW (incl. blocking sidewalks)",
+            "amount_cents": 7500,
+            "effective": "2026-07-01",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Boring in Public ROW",
+            "amount_cents": 100,
+            "per": "lin_ft",
+            "effective": "2026-07-01",
+            "note": "$10.00/LF if boring in Public ROW when an easement is available (2026 addition — a 10x stay-out-of-the-ROW price signal).",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Inspection",
+            "amount_cents": 19500,
+            "effective": "2026-07-01",
+            "note": "$65 each after the 3rd; not-ready-for-inspection $195.",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Working without locates",
+            "amount_cents": 30000,
+            "effective": "2026-07-01",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Striping damage",
+            "amount_cents": 3500,
+            "per": "sq_ft",
+            "effective": "2026-07-01",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "2026-07-01 schedule diffed against 2025-01-01: identical except the easement-available boring rate addition."
+      },
+      "meters": [
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 7500,
+          "escalated_amount_cents": 15000,
+          "escalation_trigger": "after permit expiration date",
+          "note": "Traffic Control per day; no refunds for early completion.",
+          "source": {
+            "doc": "Castle Rock Development Services Fee Schedule",
+            "date": "2026-07-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 100000,
+          "trigger": "extended_infrastructure_closure_up_to_7_days",
+          "note": "Extended Infrastructure Closure Penalty, <=7 days: $1,000/day minimum, subject to adjustment per the Director of Development Services.",
+          "source": {
+            "doc": "Castle Rock Development Services Fee Schedule",
+            "date": "2026-07-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 250000,
+          "trigger": "extended_infrastructure_closure_over_7_days",
+          "note": "Extended Infrastructure Closure Penalty, >7 days: $2,500/day minimum.",
+          "source": {
+            "doc": "Castle Rock Development Services Fee Schedule",
+            "date": "2026-07-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_violation",
+          "unit": "occurrence",
+          "amount_cents": 60000,
+          "escalated_amount_cents": 120000,
+          "escalation_trigger": "second offense",
+          "note": "ROW permit violation doubling ladder: $600 first offense, $1,200 second.",
+          "source": {
+            "doc": "Castle Rock Development Services Fee Schedule",
+            "date": "2026-07-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "damage",
+          "unit": "day",
+          "amount_cents": 7500,
+          "note": "ROW damage $75/day. Sidewalk/curb & gutter damage $55 + $1.00/SF (per-SF component in fees).",
+          "source": {
+            "doc": "Castle Rock Development Services Fee Schedule",
+            "date": "2026-07-01",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "admin",
+          "rule": "The TCP must show a plan view of the street and all detour roads (lane widths and nearby existing signs shown), the number and type of traffic control/detour signs needed to implement the plan, and the street classification per the Roadway Functional Classification map.",
+          "baseline": "MUTCD imposes no device-count-on-plan requirement",
+          "effect": {
+            "op": "admin",
+            "note": "explicit device count + type required on the TCP — Conestruct's exact output shape"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+            "date": "2026-07-19",
+            "status": "provisional"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "op",
+          "rule": "The Contractor will not be permitted to have construction equipment or materials in the lane(s) open to traffic; personal-vehicle and equipment parking prohibited where it conflicts with safety/access/flow.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "Castle Rock Standard Special Provisions",
+            "date": "2022-07-01",
+            "status": "provisional"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "admin",
+          "rule": "Contractor owns snow removal within work limits; the Town maintains roadway portions outside contract limits (104.04 revision).",
+          "effect": {
+            "op": "admin"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null,
+            "condition": "snow season"
+          },
+          "source": {
+            "doc": "Castle Rock Standard Special Provisions",
+            "section": "104.04",
+            "date": "2022-07-01",
+            "status": "provisional"
+          },
+          "status": "conditional"
+        }
+      ],
+      "chips": {
+        "personnel": [],
+        "device": [],
+        "hazard": [
+          {
+            "rule": "Traffic control is metered by the day ($75/day), doubling to $150/day after the permit expiration date — no refunds for early completion.",
+            "meter_kind": "tc_per_day",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "tc_per_day",
+              "unit": "day",
+              "amount_cents": 7500,
+              "escalated_amount_cents": 15000,
+              "escalation_trigger": "after permit expiration date",
+              "note": "Traffic Control per day; no refunds for early completion.",
+              "source": {
+                "doc": "Castle Rock Development Services Fee Schedule",
+                "date": "2026-07-01",
+                "status": "verified"
+              }
+            }
+          },
+          {
+            "rule": "Extended Infrastructure Closure Penalty: $1,000/day minimum (<=7 days), $2,500/day minimum (>7 days), subject to adjustment per the Director — the highest open-ended municipal closure penalty in the corpus.",
+            "meter_kind": "overrun",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "overrun",
+              "unit": "day",
+              "amount_cents": 100000,
+              "trigger": "extended_infrastructure_closure_up_to_7_days",
+              "note": "Extended Infrastructure Closure Penalty, <=7 days: $1,000/day minimum, subject to adjustment per the Director of Development Services.",
+              "source": {
+                "doc": "Castle Rock Development Services Fee Schedule",
+                "date": "2026-07-01",
+                "status": "verified"
+              }
+            }
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "inside",
+        "violations": []
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "jurisdiction publishes no permit tiers",
+        "tiers": [],
+        "notes": [
+          {
+            "rule": "'Every person who plans to work within the Town's ROW must have a traffic control plan approved by a Town traffic engineer.'",
+            "source": {
+              "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "Street classification is an applicant lookup step against the published Roadway Functional Classification map.",
+            "source": {
+              "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "eTRAKiT end-to-end (apply -> review -> email notice -> pay in portal); pre-construction meeting scheduled before issuance; Town registration (ICC-equivalent exam) required.",
+            "source": {
+              "doc": "Castle Rock ROW Permit Application Process Checklist",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "ROW Permit is limited to 1,000 linear feet of work per permit; excess case-by-case (a per-permit length cap, first in the corpus).",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Pavement excavation/cut fee is 'based on the loss of pavement service life due to the excavation' — computed per cut, no published rate table.",
+            "source": {
+              "doc": "Castle Rock Development Services Fee Schedule",
+              "date": "2026-07-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [],
+        "leads": [
+          {
+            "label": "Lane/shoulder/sidewalk closure — TCP + ROW application to the Town traffic engineer",
+            "lead_days": 7,
+            "lead_unit": "calendar_days",
+            "note": "'At least one week prior.'",
+            "source": {
+              "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Street closure application",
+            "lead_days": 21,
+            "lead_unit": "calendar_days",
+            "note": "Longest closure lead in the corpus — a two-tier closure lead structure.",
+            "source": {
+              "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          }
+        ],
+        "notices": [],
+        "onsite": {
+          "items": [
+            {
+              "rule": "Issued permit must remain on site at all times.",
+              "source": {
+                "doc": "Castle Rock ROW Permit Application Process Checklist",
+                "date": "2026-07-19",
+                "status": "provisional"
+              }
+            }
+          ],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [],
+      "provisional": true
+    },
+    "e470": {
+      "key": "e470",
+      "name": "E-470 Public Highway Authority",
+      "tcp_term": "MHT",
+      "row_term": "right-of-way",
+      "authority": "toll_authority",
+      "chain": [
+        "MUTCD + Colorado Supplement (current)",
+        "CDOT Standard Specifications + M&S Standards ('current versions at the date of the permit application')",
+        "E-470 Permit Manual (September 2025)",
+        "SPPO (2008/rev 2009 — superseded where in conflict)"
+      ],
+      "class_required": false,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "ban_windows",
+        "windows": [
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": null,
+            "start": 6.0,
+            "end": 9.0,
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": null,
+            "start": 15.0,
+            "end": 19.0,
+            "note": "Widest peak windows in the corpus (7 banned hours/weekday).",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "conflict"
+            }
+          }
+        ],
+        "holiday_rule": "holidays_and_eves_banned",
+        "override_note": "No night, Saturday, Sunday, or holiday work except as approved; the Authority may restrict for weather/visibility.",
+        "conflict": {
+          "label": "afternoon peak window",
+          "rendered": "3:00–7:00 PM",
+          "sources": [
+            {
+              "doc": "Permit Manual (Sept 2025)",
+              "value": "3:00–7:00 PM"
+            },
+            {
+              "doc": "SPPO (2008/rev 2009)",
+              "value": "3:00–6:00 PM"
+            }
+          ],
+          "verdict": "Rendering 3:00–7:00 PM; where the SPPO and the 2025 Manual conflict, the Manual governs."
+        }
+      },
+      "fees": {
+        "model": "formula",
+        "items": [
+          {
+            "label": "Access permit administration",
+            "amount_cents": 15000,
+            "source": {
+              "doc": "E-470 application page / Board Resolution 05-04 schedule",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Construction permit administration",
+            "amount_cents": 75000,
+            "note": "Capped at $750.",
+            "source": {
+              "doc": "E-470 application page / Board Resolution 05-04 schedule",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "formula": {
+          "inputs": [
+            "disturbance_acres"
+          ],
+          "note": "Permit Fee = $75,000 per acre of disturbance (published formula; e.g. a 1 ft x 15 ft disturbance = $25.83). Board Resolution 05-04. Inspection fees prepaid on projected schedule; consultant inspector reimbursed including travel time.",
+          "source": {
+            "doc": "E-470 Permit Manual / Board Resolution 05-04",
+            "date": "2025-09-01",
+            "status": "verified"
+          }
+        }
+      },
+      "meters": [
+        {
+          "kind": "damage",
+          "unit": "day",
+          "amount_cents": 5000000,
+          "trigger": "TBMS_fiber_line_damage",
+          "note": "$50,000 per day per occurrence liquidated damages.",
+          "source": {
+            "doc": "E-470 Permit Manual",
+            "date": "2025-09-01",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "op",
+          "rule": "No TC devices within 2 ft of the outermost solid white line during peak windows; no work impacting mainline lanes in peaks.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null,
+            "condition": "peak windows (weekdays 6-9 a.m., 3-7 p.m., holidays, day prior to holidays)"
+          },
+          "source": {
+            "doc": "E-470 Permit Manual",
+            "date": "2025-09-01",
+            "status": "verified"
+          },
+          "status": "conditional"
+        },
+        {
+          "severity": "op",
+          "rule": "Median crossing prohibited (drive to nearest interchange); no equipment on travel lanes without an approved MHT; workers' personal vehicles never on Authority Property; materials/equipment removed from ROW at close of daily operations.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "E-470 Permit Manual",
+            "date": "2025-09-01",
+            "status": "verified"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "admin",
+          "rule": "TCP must include emergency-vehicle passage provisions and shall conform to the requirements of the Americans with Disabilities Act.",
+          "effect": {
+            "op": "admin"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "E-470 Permit Manual",
+            "date": "2025-09-01",
+            "status": "verified"
+          },
+          "status": "fires"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "tcs_on_site",
+            "rule": "All TC-requiring work supervised by a registered professional traffic engineer OR an ATSSA/CCA-certified TCS additionally certified as 'Worksite Traffic Supervisor'; the TCS owns planning through inspection of the TCP. Strongest personnel gate in the corpus.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          },
+          {
+            "gate": "flagger_certs",
+            "rule": "All flaggers certified with current card.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "device": [
+          {
+            "rule": "Devices per MUTCD + Colorado Supplement; TCS monitors devices during closures and when left in place multiple days; damage to Authority TC devices repaired immediately before other work continues.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "hazard": [
+          {
+            "rule": "Damaging the TBMS fiber line: $50,000 per day per occurrence liquidated damages — the largest single penalty in the corpus. 4-ft clearance required; 48-hour witnessed-locate protocol; prescribed support/protection details.",
+            "meter_kind": "damage",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "damage",
+              "unit": "day",
+              "amount_cents": 5000000,
+              "trigger": "TBMS_fiber_line_damage",
+              "note": "$50,000 per day per occurrence liquidated damages.",
+              "source": {
+                "doc": "E-470 Permit Manual",
+                "date": "2025-09-01",
+                "status": "verified"
+              }
+            }
+          },
+          {
+            "rule": "Unpermitted work = trespass: fines up to 2x the permit fee per unauthorized entry (also against the Facility Owner/contractor); barring from property; 3rd-degree criminal trespass referral.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "ban_window_overlap",
+            "window": {
+              "start": 6.0,
+              "end": 9.0,
+              "days": "weekday"
+            },
+            "overlap_hours": 1.0,
+            "note": null,
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
+        "tiers": [
+          {
+            "label": "Construction Permit / Permit to Occupy",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Access Permit",
+            "definition": "Surveying / potholing / traffic control.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Annual Access Permit",
+            "definition": "Routine maintenance.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "Insurance certificate before any work (limits published on the Authority's website — not captured). Payment, Performance AND Warranty Bond, amount set by the Authority, dual-obligee acceptable, not released until As-Builts accepted.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "1-year warranty from Final Acceptance (As-Builts are the gate — no future permits processed until submitted); finished-work maintenance 24 months; landscaping maintained in perpetuity.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "PE-stamped plans on E-470 As-Builts in PDF and MicroStation V8; Quality Control Plan before work; testing per controlling municipality/county or CDOT, whichever is more stringent; results in 48 hrs, reports in 72.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "In-kind payment: the Authority may accept materials/services in lieu of cash — unique in the corpus.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [
+          {
+            "rule": "The TCP must be reviewed and approved by the appropriate cross-street jurisdictions — the Authority forces multi-jurisdiction TCP approval (reciprocal with Parker's checklist, which attaches E-470 permits).",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "leads": [
+          {
+            "label": "Permit review",
+            "lead_days": 20,
+            "lead_unit": "business_days",
+            "note": "10-20 business days; complex applications longer; dormant applications closed at 3 months.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Start / resume notice",
+            "lead_days": 2,
+            "lead_unit": "business_days",
+            "note": "2 working days notice before starting, or resuming after a 5+ day suspension.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Testing and TBMS locates",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Punchlist cure after final walkthrough",
+            "lead_days": 30,
+            "lead_unit": "calendar_days",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "cross-street jurisdictions",
+            "rule": "TCP reviewed and approved by the appropriate cross-street jurisdictions before Authority work.",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "UNCC 811",
+            "rule": "Locates two business days ahead (the Authority locates its own facilities).",
+            "lead_days": 2,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "E-470 Permit Manual",
+              "date": "2025-09-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [
+        {
+          "label": "afternoon peak window",
+          "rendered": "3:00–7:00 PM",
+          "sources": [
+            {
+              "doc": "Permit Manual (Sept 2025)",
+              "value": "3:00–7:00 PM"
+            },
+            {
+              "doc": "SPPO (2008/rev 2009)",
+              "value": "3:00–6:00 PM"
+            }
+          ],
+          "verdict": "Rendering 3:00–7:00 PM; where the SPPO and the 2025 Manual conflict, the Manual governs."
+        }
+      ],
+      "provisional": false
+    },
+    "el_paso": {
+      "key": "el_paso",
+      "name": "El Paso County",
+      "tcp_term": "TCP",
+      "row_term": "right-of-way",
+      "authority": "county",
+      "chain": [
+        "MUTCD 11th Ed. + Colorado Supplement",
+        "El Paso County ROW permit terms (epc-rowpermit.com)"
+      ],
+      "class_required": false,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "none",
+        "windows": [],
+        "holiday_rule": "none",
+        "override_note": "No published work-hour windows. The application captures 'Time Area will be Occupied/Closed (i.e. 9am-4pm)' — occupancy times are an application field, not a published restriction.",
+        "conflict": null
+      },
+      "fees": {
+        "model": "formula",
+        "items": [
+          {
+            "label": "Encroachment permit",
+            "amount_cents": 39000,
+            "provisional": true,
+            "note": "Undated worksheet — provisional.",
+            "source": {
+              "doc": "El Paso County fee schedule (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Excavation permit",
+            "amount_cents": 30000,
+            "provisional": true,
+            "source": {
+              "doc": "El Paso County fee schedule (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Obstruction permit",
+            "amount_cents": 18000,
+            "provisional": true,
+            "source": {
+              "doc": "El Paso County fee schedule (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Annual permit",
+            "amount_cents": 60000,
+            "provisional": true,
+            "source": {
+              "doc": "El Paso County fee schedule (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Administrative surcharge",
+            "amount_cents": 2500,
+            "provisional": true,
+            "note": "The flat $25 in 'Degradation + Traffic Management + Administration + $25'.",
+            "source": {
+              "doc": "El Paso County ROW fee worksheet",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Longitudinal cut, in-lane",
+            "amount_cents": 25,
+            "per": "lin_ft",
+            "provisional": true,
+            "source": {
+              "doc": "El Paso County ROW fee worksheet",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Longitudinal cut, in-shoulder",
+            "amount_cents": 10,
+            "per": "lin_ft",
+            "provisional": true,
+            "source": {
+              "doc": "El Paso County ROW fee worksheet",
+              "status": "provisional"
+            }
+          }
+        ],
+        "formula": {
+          "inputs": [
+            "lanes_closed",
+            "zone_length_ft",
+            "days"
+          ],
+          "note": "Total permit fee = Degradation + Traffic Management + Administration + $25 surcharge. The Traffic Management fee is keyed to shoulder vs. number of lanes closed per day, with closure length 'based on minimum Work Zone called out in the MUTCD' — the engine's computed zone length is a direct fee input. Degradation: asphalt priced per SF by pavement age x length x (width + 2 ft); separate schedules for asphalt/gravel/chip-seal. The lane count consumed here is the plan's real closed-lane count from the engine, never a literal.",
+          "source": {
+            "doc": "El Paso County ROW fee worksheet (epc-assets.elpasoco.com)",
+            "status": "provisional"
+          }
+        },
+        "note": "Fee worksheet is undated — every figure provisional."
+      },
+      "meters": [],
+      "applied_deltas": [],
+      "chips": {
+        "personnel": [],
+        "device": [],
+        "hazard": [
+          {
+            "rule": "Incomplete applications go back to the end of the review queue — a lead-time penalty rather than a fee.",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            },
+            "status": "fires"
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "unknown",
+        "violations": [],
+        "note": "jurisdiction publishes no work-hour windows"
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
+        "tiers": [
+          {
+            "label": "New installation with excavation",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Repair/replacement with excavation",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Placement of equipment/materials/TC devices in the ROW",
+            "definition": "A dedicated traffic-control-placement permit class.",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Maintenance/access, no ground disturbance",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "Permit life 30 days; exactly one 30-day extension, requested before expiration with a signed copy of the original permit; expired = reapply.",
+            "source": {
+              "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "Insurance: $1,000,000 liability certificate with EPC DPW as certificate holder; $20,000 construction/permit bond.",
+            "source": {
+              "doc": "El Paso County ROW portal FAQ + Permit Application",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "Road-closure justification statement required for full/through closures; the TCP must show the proposed detour route and detour signage for closures.",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "The application captures occupancy/closure times and the posted speed limit — speed is an application field and feeds device spacing directly.",
+            "source": {
+              "doc": "El Paso County ROW Permit Application",
+              "date": "2021-08-23",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "One fee worksheet per road; multiple roads per permit.",
+            "source": {
+              "doc": "El Paso County ROW fee worksheet",
+              "status": "provisional"
+            }
+          }
+        ],
+        "multi_agency": [],
+        "leads": [
+          {
+            "label": "Standard permit review",
+            "lead_days": 5,
+            "lead_unit": "business_days",
+            "note": "Complete applications; incomplete applications return to the back of the queue.",
+            "source": {
+              "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Full closures and detours",
+            "lead_days": 10,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Emergency work filing",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "note": "Proceed with immediate notification and TC in place; file the permit within 48 hours of completing the repair.",
+            "source": {
+              "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+              "date": "2026-07-19",
+              "status": "provisional"
+            }
+          }
+        ],
+        "notices": [],
+        "onsite": {
+          "items": [
+            {
+              "rule": "Approved permit and TCP(s) on site — 'paper, phone, tablet'. First jurisdiction in the corpus to explicitly authorize digital TCP copies on site.",
+              "source": {
+                "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)",
+                "date": "2026-07-19",
+                "status": "provisional"
+              }
+            }
+          ],
+          "digital_ok": true
+        }
+      },
+      "conflicts": [],
+      "provisional": true
+    },
+    "englewood": {
+      "key": "englewood",
+      "name": "Englewood",
+      "tcp_term": "TCP",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD (latest edition) + Colorado Supplement",
+        "EMC Title 11 Ch. 7 (Ord. 00-85, amended Ord. 53-2024)",
+        "2020 Design and Construction Standards (adopted by EMC 11-7-25)",
+        "Traffic Control Details TC-0–TC-10 (rev. 2020-09-22)",
+        "2026 Rate and Fee Schedule"
+      ],
+      "class_required": true,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "nested_envelope",
+        "windows": [
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 7.0,
+            "end": 9.0,
+            "note": "Statutory peak ban (law): no construction obstructing arterial/collector traffic.",
+            "source": {
+              "doc": "EMC 11-7-14(D)",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 15.5,
+            "end": 18.0,
+            "source": {
+              "doc": "EMC 11-7-14(D)",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "work",
+            "days": "all",
+            "classes": null,
+            "start": 7.0,
+            "end": 19.0,
+            "note": "Outer envelope: no work 7 p.m.-7 a.m. (noise, EMC 6-2-5(E); TC-1 T17).",
+            "source": {
+              "doc": "TC-1 T17 + EMC 6-2-5(E)",
+              "date": "2020-09-22",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "work",
+            "days": "weekday",
+            "classes": null,
+            "start": 8.5,
+            "end": 15.5,
+            "note": "ROW work default window unless the Traffic Engineer approves otherwise.",
+            "source": {
+              "doc": "Englewood ROW Permits Guide",
+              "date": "2024-06-14",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "work",
+            "days": "weekday",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 9.0,
+            "end": 15.0,
+            "note": "Lane closures on arterials and major collectors; all lanes re-opened by 3 pm (T06).",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-1",
+              "section": "T06",
+              "date": "2020-09-22",
+              "status": "conflict"
+            }
+          }
+        ],
+        "holiday_rule": "holidays_banned",
+        "override_note": "No work on any City-recognized holiday without prior permission from the Director of Public Works or designee; Public Works must be notified of any Saturday work. The four hours statements mostly NEST: statutory peak ban outermost, 8:30-3:30 general window, 9-3 arterial lane-closure window innermost.",
+        "conflict": {
+          "label": "arterial lane-closure reopen time",
+          "rendered": "9:00–3:00 (all lanes re-opened by 3:00 p.m.)",
+          "sources": [
+            {
+              "doc": "TC-1 note T06 (2020, adopted by EMC 11-7-25)",
+              "value": "9 a.m.–3 p.m., all lanes re-opened by 3 p.m."
+            },
+            {
+              "doc": "EMC 11-7-14(D)",
+              "value": "peak ban resumes at 3:30 p.m."
+            }
+          ],
+          "verdict": "Rendering the 3:00 p.m. reopen per TC-1 (conservative); the statute alone would allow until 3:30 (Q-ENG-9, narrowed to this half hour)."
+        }
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "Sidewalk closure",
+            "amount_cents": 45,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Bike lane closure",
+            "amount_cents": 99,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Transit lane closure",
+            "amount_cents": 312,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Parking lane closure",
+            "amount_cents": 350,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "1st lane closure",
+            "amount_cents": 600,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "2nd lane closure",
+            "amount_cents": 1200,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "3rd lane closure",
+            "amount_cents": 2400,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "4th lane closure",
+            "amount_cents": 3600,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "5th lane closure",
+            "amount_cents": 5400,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "6th lane closure",
+            "amount_cents": 8100,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "note": "Escalation x2, x2, x1.5, x1.5, x1.5 across lanes 1-6 — superlinear.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Alley closure",
+            "amount_cents": 800,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Detour fee, entire road closure",
+            "amount_cents": 505,
+            "per": "lf_day",
+            "effective": "2026-01-01",
+            "note": "Applied per LF per day IN ADDITION to lane closure fees; waived for Xcel Category 1/2 emergency gas repairs completed within 3 days.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Excavation Permit",
+            "amount_cents": 19500,
+            "effective": "2026-01-01",
+            "note": "Minimum, plus hourly rate; Concrete Permit same.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Permit Amendment Application Fee",
+            "amount_cents": 19000,
+            "effective": "2026-01-01",
+            "note": "Covers scope/duration expansion, permittee transfer, prompt re-application after denial, other.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Street Degradation / Restoration Fee",
+            "amount_cents": 1000,
+            "per": "lin_ft",
+            "effective": "2026-01-01",
+            "note": "Per LF of trench excavation.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Re-inspection Fee",
+            "amount_cents": 7500,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Administrative Review Fee",
+            "amount_cents": 12500,
+            "per": "hour",
+            "effective": "2026-01-01",
+            "note": "Superseded the prior $38/hr (Ord. 23-13).",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "The lane-closure ladder is the corpus's most encodable fee-responds-to-design instance: the engine already knows lane count, lane type, closure length, and duration — every input this table needs."
+      },
+      "meters": [
+        {
+          "kind": "restoration_failure",
+          "unit": "day",
+          "amount_cents": 50000,
+          "note": "Administrative penalties (EMC 11-7-23(E)): working without a valid permit, unlicensed contractor, and failure to timely remove temporary construction signage or TC devices upon completion of work that materially impacts travel.",
+          "source": {
+            "doc": "Englewood 2026 Rate and Fee Schedule + EMC 11-7-23(E)",
+            "date": "2026-01-01",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "count",
+          "rule": "Arrow boards are required for lane closures on arterial and collector city streets (T09).",
+          "baseline": "arrow board optional per MUTCD for most single-lane closures",
+          "effect": {
+            "op": "add_device",
+            "device": "arrow_board",
+            "qty": 1
+          },
+          "trigger": {
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "closure": [
+              "lane"
+            ],
+            "night": null
+          },
+          "source": {
+            "doc": "Englewood Traffic Control Details TC-1",
+            "section": "T09",
+            "date": "2020-09-22",
+            "status": "verified"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "op",
+          "rule": "At least one lane of traffic in each direction shall be open to public traffic at all times; all lane closures approved by the Engineer prior to closure. Contractor shall not have construction equipment or materials in lanes open to traffic at any time.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": [
+              "lane",
+              "full"
+            ],
+            "night": null
+          },
+          "source": {
+            "doc": "Englewood 2020 Standards §3.2.8.2 + ROW Permits Guide",
+            "date": "2024-06-14",
+            "status": "verified"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "admin",
+          "rule": "A Traffic Control Plan is required for each phase of the work; major changes to the approved TTCP reviewed by the City prior to implementation (T03).",
+          "effect": {
+            "op": "admin"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "Englewood ROW Permit checklist + TC-1 T03",
+            "date": "2024-06-14",
+            "status": "verified"
+          },
+          "status": "fires"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "tcs_on_site",
+            "rule": "'The Traffic Control Supervisor (TCS) shall be present on site (or be available) at all times during the duration of the project' (TC-1 T04).",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-1",
+              "section": "T04",
+              "date": "2020-09-22",
+              "status": "conflict"
+            },
+            "conflict": {
+              "label": "TCS: required or encouraged",
+              "rendered": "Required (TC-1 T04 carries the weight of law via EMC 11-7-25)",
+              "sources": [
+                {
+                  "doc": "TC-1 T04 (2020 drawings, adopted by EMC 11-7-25)",
+                  "value": "TCS shall be present on site (or be available) at all times"
+                },
+                {
+                  "doc": "2020 Standards §2.2.2.5 / ROW Permits Guide",
+                  "value": "trained individuals 'should' be assigned; City 'strongly encourages' ATSSA training"
+                }
+              ],
+              "verdict": "Precedence leans hard toward REQUIRED: TC-1 sits inside a document adopted into the municipal code; the softer wording is guidance beneath it. Open: what '(or be available)' means (Q-ENG-8)."
+            },
+            "status": "fires"
+          },
+          {
+            "gate": "flaggers_required",
+            "rule": "Flag persons 'when necessary for public safety'; the City may require them (EMC 11-7-14(C)). Flaggers at BOTH ends of the one-lane two-way closure, drawn as required on TC-3.",
+            "trigger": {
+              "classes": null,
+              "closure": [
+                "lane"
+              ],
+              "night": null,
+              "condition": "one-lane two-way operation"
+            },
+            "source": {
+              "doc": "EMC 11-7-14(C) + Traffic Control Details TC-3",
+              "date": "2024-01-01",
+              "status": "verified"
+            },
+            "status": "conditional"
+          }
+        ],
+        "device": [
+          {
+            "rule": "Devices supplied by the Permittee; at night: reflectorized AND illuminated, or barricade warning lights. Oil flares and kerosene lanterns prohibited as illumination.",
+            "source": {
+              "doc": "EMC 11-7-14(E),(F)",
+              "date": "2024-01-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          },
+          {
+            "rule": "Non-applicable construction signs set so traffic cannot see them during non-construction periods, per CDOT Spec 630; devices no longer appropriate removed or covered on work suspension.",
+            "source": {
+              "doc": "Englewood 2020 Standards §3.2.8.2",
+              "date": "2020-01-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "hazard": [
+          {
+            "rule": "$500/day administrative penalty explicitly covers 'failure to remove temporary construction signage or traffic control devices' — the first corpus penalty aimed squarely at the barricade company's own scope (law adds a 'materially impacts' qualifier the fee schedule omits; both preserved).",
+            "meter_kind": "restoration_failure",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule + EMC 11-7-23(E)",
+              "date": "2026-01-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "restoration_failure",
+              "unit": "day",
+              "amount_cents": 50000,
+              "note": "Administrative penalties (EMC 11-7-23(E)): working without a valid permit, unlicensed contractor, and failure to timely remove temporary construction signage or TC devices upon completion of work that materially impacts travel.",
+              "source": {
+                "doc": "Englewood 2026 Rate and Fee Schedule + EMC 11-7-23(E)",
+                "date": "2026-01-01",
+                "status": "verified"
+              }
+            }
+          },
+          {
+            "rule": "Device-maintenance failure: if the contractor is unavailable, the City corrects and the contractor pays actual costs + 50% penalty (EMC 11-7-14(G)).",
+            "source": {
+              "doc": "EMC 11-7-14(G)",
+              "date": "2024-01-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "ban_window_overlap",
+            "window": {
+              "start": 7.0,
+              "end": 9.0,
+              "days": "weekday"
+            },
+            "overlap_hours": 1.0,
+            "note": "Statutory peak ban (law): no construction obstructing arterial/collector traffic.",
+            "source": {
+              "doc": "EMC 11-7-14(D)",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 0.5,
+            "note": "ROW work default window unless the Traffic Engineer approves otherwise.",
+            "source": {
+              "doc": "Englewood ROW Permits Guide",
+              "date": "2024-06-14",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 9.0,
+              "end": 15.0,
+              "days": "weekday"
+            },
+            "outside_hours": 1.0,
+            "note": "Lane closures on arterials and major collectors; all lanes re-opened by 3 pm (T06).",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-1",
+              "section": "T06",
+              "date": "2020-09-22",
+              "status": "conflict"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "jurisdiction publishes no permit tiers",
+        "tiers": [],
+        "notes": [
+          {
+            "rule": "Unlawful to perform any work in the ROW without a City contractors license (EMC 11-7-4 — the strongest licensing language in the corpus). Excavation permits: Class A, B or D licensed contractor; concrete: D06. Subcontracting expressly allowed; Permittee remains responsible.",
+            "source": {
+              "doc": "EMC 11-7-4 + ROW Permits Guide",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Performance bond = total cost of construction (labor + materials) or $5,000, whichever is greater; in force >=2 years after completion and acceptance; City may waive for in-state financial stability. COI naming the City as additional insured AND certificate holder.",
+            "source": {
+              "doc": "EMC 11-7-9 + ROW Permits Guide",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Permit expires in 180 days or less; scope growth requires an amended permit BEFORE exceeding scope ($190 amendment fee, which also covers prompt re-application after denial). Work must start within 10 business days of issuance or the permit is invalid; all permit fees non-refundable. Work after expiry or without permit: 2x the calculated fee.",
+            "source": {
+              "doc": "EMC 11-7-4 + ROW Permits Guide + 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "All costs of developing, implementing, and maintaining the TCP are the Permittee's responsibility (EMC 11-7-14(I) — first jurisdiction to state TCP cost allocation in law).",
+            "source": {
+              "doc": "EMC 11-7-14(I)",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Fee-responds-to-design ambiguity preserved (Q-ENG-2): whether the Nth-lane rate applies only to that lane or replaces the rate for all closed lanes is unresolved.",
+            "source": {
+              "doc": "Englewood 2026 Rate and Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [
+          {
+            "rule": "Work within the US 285, Belleview Ave. and S. Federal Blvd. rights-of-way requires a CDOT permit (the contractor obtains it) and in most cases an Englewood permit; CDOT's M&S standards apply to work zones impacting state highways (T16). On Englewood city streets, Englewood's own TC standards govern — the city does NOT inherit the CDOT 28\"/36\" cone rule on city work.",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-1 T16 + ROW Permits Guide",
+              "date": "2020-09-22",
+              "status": "verified"
+            }
+          }
+        ],
+        "leads": [
+          {
+            "label": "Permit review",
+            "lead_days": 5,
+            "lead_unit": "business_days",
+            "note": "3-5 business days for all applications; Engineering Division reviews.",
+            "source": {
+              "doc": "Englewood ROW Permits Guide",
+              "date": "2024-06-14",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Inspection notice",
+            "lead_days": 24,
+            "lead_unit": "hours",
+            "note": "Call 303-762-2500; inspection window daily 8 AM-3 PM.",
+            "source": {
+              "doc": "Englewood ROW Permits Guide",
+              "date": "2024-06-14",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Lane/alley closure exact dates to Public Works",
+            "lead_days": 24,
+            "lead_unit": "hours",
+            "note": "TC-1 T05: at least 24 hours prior.",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-1",
+              "section": "T05",
+              "date": "2020-09-22",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "adjacent property owners, businesses, residents",
+            "rule": "Notify for any road closure or parking restriction impacting adjacent properties: description of work, times and duration, company name, emergency contact number. Street closures: notices to affected properties >=48 hours before (EMC 11-7-14(B)); coordinate with police, fire, ambulance, other governmental entities, and transit.",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "Englewood ROW Permits Guide + EMC 11-7-14(B)",
+              "date": "2024-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "residents and businesses (alley closures)",
+            "rule": "Contractor must give notice to all local residents and businesses prior to alley closure (TC-9/TC-10).",
+            "source": {
+              "doc": "Englewood Traffic Control Details TC-9/TC-10",
+              "date": "2020-09-22",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [
+        {
+          "label": "overnight excavations",
+          "rendered": "Prohibited (ROW Guide); flashing barricades required where the Engineer authorizes an exception",
+          "sources": [
+            {
+              "doc": "ROW Permits Guide, Gen. Cond. §6",
+              "value": "All work properly backfilled prior to end of workday; no open holes or plates overnight"
+            },
+            {
+              "doc": "2020 Standards §3.2.8.2",
+              "value": "When excavations must remain open overnight: properly marked, flashing barricades unless the Engineer authorizes otherwise in writing"
+            }
+          ],
+          "verdict": "Render the prohibition; the flashing-barricade rule applies only under a written Engineer exception (Q-ENG-3)."
+        },
+        {
+          "label": "arterial lane-closure reopen time",
+          "rendered": "9:00–3:00 (all lanes re-opened by 3:00 p.m.)",
+          "sources": [
+            {
+              "doc": "TC-1 note T06 (2020, adopted by EMC 11-7-25)",
+              "value": "9 a.m.–3 p.m., all lanes re-opened by 3 p.m."
+            },
+            {
+              "doc": "EMC 11-7-14(D)",
+              "value": "peak ban resumes at 3:30 p.m."
+            }
+          ],
+          "verdict": "Rendering the 3:00 p.m. reopen per TC-1 (conservative); the statute alone would allow until 3:30 (Q-ENG-9, narrowed to this half hour)."
+        },
+        {
+          "label": "TCS: required or encouraged",
+          "rendered": "Required (TC-1 T04 carries the weight of law via EMC 11-7-25)",
+          "sources": [
+            {
+              "doc": "TC-1 T04 (2020 drawings, adopted by EMC 11-7-25)",
+              "value": "TCS shall be present on site (or be available) at all times"
+            },
+            {
+              "doc": "2020 Standards §2.2.2.5 / ROW Permits Guide",
+              "value": "trained individuals 'should' be assigned; City 'strongly encourages' ATSSA training"
+            }
+          ],
+          "verdict": "Precedence leans hard toward REQUIRED: TC-1 sits inside a document adopted into the municipal code; the softer wording is guidance beneath it. Open: what '(or be available)' means (Q-ENG-8)."
+        }
+      ],
+      "provisional": false
+    },
+    "greeley": {
+      "key": "greeley",
+      "name": "Greeley",
+      "tcp_term": "MHT",
+      "row_term": "public space",
+      "authority": "city",
+      "chain": [
+        "MUTCD + Colorado Supplement",
+        "COG MHT/Barricade Manual (NOT LOCATED — dead link, upload wanted)",
+        "Greeley Permitting Requirements for Public Space (Mar 2025)",
+        "2026 Fee Schedule (eff. 2026-01-01)"
+      ],
+      "class_required": true,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "nested_envelope",
+        "windows": [
+          {
+            "kind": "work",
+            "days": "all",
+            "classes": null,
+            "start": 7.0,
+            "end": 19.0,
+            "note": "General Public Space work outer envelope, all streets. Weekend treatment not stated in read sources.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "work",
+            "days": "all",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 8.5,
+            "end": 16.0,
+            "note": "Inner window: no start before 8:30 AM, no work past 4:00 PM on arterials/collectors.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Exceptions via permit review / Public Works. Additional time restrictions may be placed on work in proximity to schools while school is in session. Permit dates may be denied for area events (e.g. Greeley Stampede).",
+        "conflict": null
+      },
+      "fees": {
+        "model": "degradation_indexed",
+        "items": [
+          {
+            "label": "Base permit application fee",
+            "amount_cents": 10000,
+            "effective": "2026-01-01",
+            "note": "Non-refundable.",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Trench cut — PQI High (>70)",
+            "amount_cents": 468,
+            "per": "sq_ft",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Trench cut — PQI Medium (40-70)",
+            "amount_cents": 233,
+            "per": "sq_ft",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Trench cut — PQI Low (<=40)",
+            "amount_cents": 39,
+            "per": "sq_ft",
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "High-impact transverse cut (<5 ft) — PQI High/Medium/Low",
+            "amount_cents": 2806,
+            "per": "sq_ft",
+            "effective": "2026-01-01",
+            "note": "High $28.06 / Medium $14.02 / Low $0.39 per SF (High encoded; tiers in note).",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Potholes — PQI High/Medium/Low",
+            "amount_cents": 6235,
+            "per": "each",
+            "effective": "2026-01-01",
+            "note": "High $62.35 / Medium $31.17 / Low $7.79 each (High encoded; tiers in note).",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Parking stall occupation — Green Zone",
+            "amount_cents": 800,
+            "per": "day",
+            "effective": "2026-01-01",
+            "note": "Orange Zone $10/day.",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "After-hours inspection",
+            "amount_cents": 6000,
+            "per": "hour",
+            "effective": "2026-01-01",
+            "note": "2-hour minimum.",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Re-inspection",
+            "amount_cents": 7500,
+            "effective": "2026-01-01",
+            "note": "Plus hourly — charged when called out more than twice without being ready.",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "Degradation fees are keyed to the published Pavement Quality Index map (High >70 / Medium 40-70 / Low <=40) — the most sophisticated street-cut pricing in the corpus. Card +2.8%; ACH free."
+      },
+      "meters": [
+        {
+          "kind": "tc_violation",
+          "unit": "occurrence",
+          "amount_cents_min": 12500,
+          "amount_cents_max": 150000,
+          "note": "'MHT Manual Violation Penalty: $125-$1,500 (based on violation type and number of offenses, see COG MHT Manual for more information).'",
+          "source": {
+            "doc": "Greeley 2026 Fee Schedule",
+            "date": "2026-01-01",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "count",
+          "rule": "Type C arrow boards must be used on all arterial and collector roadways for through lane closures.",
+          "baseline": "arrow board optional per MUTCD",
+          "effect": {
+            "op": "add_device",
+            "device": "arrow_board_type_c",
+            "qty": 1
+          },
+          "trigger": {
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "closure": [
+              "lane"
+            ],
+            "night": null
+          },
+          "source": {
+            "doc": "Greeley Permitting Requirements for Activities within Public Space",
+            "date": "2025-03-19",
+            "status": "verified"
+          },
+          "status": "fires"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "tcs_on_site",
+            "rule": "More extensive traffic control setups may require an approved TCS to remain on site (conditional, per permit review).",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null,
+              "condition": "extensive traffic control setup, per permit review"
+            },
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            },
+            "status": "conditional"
+          },
+          {
+            "gate": "named_contact",
+            "rule": "The Traffic Control Review Form signer attests being trained and/or certified in fundamental TTC principles and responsible for setup and maintenance for the duration, on the jobsite.",
+            "source": {
+              "doc": "Greeley Traffic Control Review Form (Rev 2-2011)",
+              "date": "2011-02-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "device": [],
+        "hazard": [
+          {
+            "rule": "MHT Manual violations carry a published, tiered dollar ladder ($125-$1,500 by violation type and offense count) — the first such ladder in the corpus.",
+            "meter_kind": "tc_violation",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "tc_violation",
+              "unit": "occurrence",
+              "amount_cents_min": 12500,
+              "amount_cents_max": 150000,
+              "note": "'MHT Manual Violation Penalty: $125-$1,500 (based on violation type and number of offenses, see COG MHT Manual for more information).'",
+              "source": {
+                "doc": "Greeley 2026 Fee Schedule",
+                "date": "2026-01-01",
+                "status": "verified"
+              }
+            }
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 16.0,
+              "days": "all"
+            },
+            "outside_hours": 0.5,
+            "note": "Inner window: no start before 8:30 AM, no work past 4:00 PM on arterials/collectors.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
+        "tiers": [
+          {
+            "label": "Public Space Traffic permit",
+            "definition": "Dedicated TC permit type — mobility impact alone triggers it, no ground disturbance needed (dumpsters/moving containers in ROW included; food trucks parking diagonally).",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "General Construction permit",
+            "definition": "Potholing scope completed BEFORE the permit for subsurface/boring work.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Development permit",
+            "definition": "Post-land-use-case; financial guarantee + PE-sealed Certification of Quantities.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "'Public Space' is Greeley's official term for the ROW — surfaces should say 'Public Space permit', not 'ROW permit'. TC plans are 'Method of Handling Traffic' (MHT) plans.",
+            "source": {
+              "doc": "Greeley Public Space Permitting page + TC Review Form",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Contractors need a Greeley Business License before Public Space work; permitting via the eTrakit portal; same-day issuance on payment.",
+            "source": {
+              "doc": "Greeley Public Space Permitting page",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Work completed without inspection: possible removal + corrective action + 20% of permit total penalty (percentage — not renderable as a fixed meter).",
+            "source": {
+              "doc": "Greeley 2026 Fee Schedule",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Extensions: up to 3, apply at least 5 days pre-expiration; expired = reapply (prior fees credited). Application void at 30 days if incomplete.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [],
+        "leads": [
+          {
+            "label": "Full road closures with complete detours — MHT plan review",
+            "lead_days": 5,
+            "lead_unit": "business_days",
+            "note": "5 working days advance notice; 72-hour pre-construction notice strongly recommended.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Start notice to the Civil Inspector",
+            "lead_days": 2,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "PW inspections call-ahead",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "note": "970-350-9359; grading 24-hour.",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "public",
+            "rule": "Full closures / significant access impacts: 7-day minimum advance public notification (matches the LCUASS 7-day rule — a Northern-Colorado closure-notice pattern).",
+            "lead_days": 7,
+            "lead_unit": "calendar_days",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "Police + COG.Permits (emergency)",
+            "rule": "Emergency process: call PD non-emergency 970-350-9600 + email COG.Permits immediately, work, then file within 24 hours of starting.",
+            "lead_days": 24,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "Greeley Permitting Requirements for Activities within Public Space",
+              "date": "2025-03-19",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [
+            {
+              "rule": "'This form and the (MHT) Plan SHALL be on the job site at all times.'",
+              "source": {
+                "doc": "Greeley Traffic Control Review Form (Rev 2-2011)",
+                "date": "2011-02-01",
+                "status": "verified"
+              }
+            }
+          ],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [],
+      "provisional": false
+    },
+    "loveland": {
+      "key": "loveland",
+      "name": "Loveland",
+      "tcp_term": "TCP",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD 11th Ed.",
+        "CDOT Standard Specs",
+        "LCUASS",
+        "Loveland fee schedule"
+      ],
+      "class_required": true,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "ban_windows",
+        "windows": [
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 7.0,
+            "end": 8.5,
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.2",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "kind": "ban",
+            "days": "weekday",
+            "classes": [
+              "arterial",
+              "collector"
+            ],
+            "start": 16.5,
+            "end": 17.5,
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.2",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Written Local Entity Engineer authorization required outside windows. These windows are metered in Loveland: time-restriction violations are fined per half-hour by street class (see meters). City-project practice runs 7 a.m.-6 p.m. M-F (practice, not rule); normal inspection hours defined as M-F 7:30-16:30 on the fee schedule.",
+        "conflict": null
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "Minor ROW Permit",
+            "amount_cents": 7500,
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Major ROW Permit",
+            "amount_cents": 45000,
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Excavation Permit (General)",
+            "amount_cents": 22500,
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Open cut, unpaved ROW",
+            "amount_cents": 50,
+            "per": "sq_ft",
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Open cut, streets older than 5 years",
+            "amount_cents": 350,
+            "per": "sq_ft",
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Open cut, streets 5 years and newer",
+            "amount_cents": 1500,
+            "per": "sq_ft",
+            "provisional": true,
+            "effective": "2026-01-01",
+            "note": "4.3x the older-street rate — the pricing enforcement of LCUASS's 'may deny excavation on <5-yr pavement'.",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Horizontal boring",
+            "amount_cents": 55,
+            "per": "lin_ft",
+            "provisional": true,
+            "effective": "2026-01-01",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "After-hours / re-inspection",
+            "amount_cents": 9000,
+            "per": "hour",
+            "provisional": true,
+            "effective": "2026-01-01",
+            "note": "1-hour minimum; normal hours defined as M-F 7:30-16:30.",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "The 2026 column is a DRAFT schedule (adopted-presumed — the ROW page's '2.85% card fee starting Jan 20, 2026' implies on-schedule adoption; confirm). 2.85% card-processing fee effective 2026-01-20; ACH/check to avoid."
+      },
+      "meters": [
+        {
+          "kind": "hours_violation",
+          "unit": "half_hour",
+          "amount_cents": 8000,
+          "classes": [
+            "local",
+            "collector"
+          ],
+          "note": "Time-restriction violation of work hours, per half-hour or portion thereof.",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "hours_violation",
+          "unit": "half_hour",
+          "amount_cents": 70000,
+          "classes": [
+            "arterial"
+          ],
+          "note": "Arterial/State/US-highway time-restriction violation of work hours, per half-hour or portion thereof.",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 175000,
+          "classes": [
+            "arterial"
+          ],
+          "trigger": "arterial_street_closure_past_completion",
+          "note": "ROW permit with arterial or State/US-highway street closure: exceeding completion date. Highest municipal per-day overrun recorded in the corpus.",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 75000,
+          "classes": [
+            "collector"
+          ],
+          "trigger": "collector_street_closure_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 40000,
+          "classes": [
+            "local"
+          ],
+          "trigger": "local_street_closure_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 75000,
+          "classes": [
+            "arterial"
+          ],
+          "trigger": "arterial_lane_closure_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 40000,
+          "classes": [
+            "collector"
+          ],
+          "trigger": "collector_lane_closure_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 15000,
+          "trigger": "concrete_work_permit_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "overrun",
+          "unit": "day",
+          "amount_cents": 40000,
+          "trigger": "excavation_permit_past_completion",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "notice_failure",
+          "unit": "occurrence",
+          "amount_cents": 25000,
+          "note": "Failure to give required 48-hour notice (inspection or commencing work). New line item in the 2026 draft.",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        },
+        {
+          "kind": "no_permit",
+          "unit": "occurrence",
+          "amount_cents": 50000,
+          "note": "Failure to obtain a ROW permit: double fees or $500, whichever is more.",
+          "source": {
+            "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+            "section": "Fines & Fees for Permit Violations",
+            "date": "2026-01-01",
+            "status": "provisional"
+          },
+          "provisional": true,
+          "effective": "2026-01-01"
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "admin",
+          "rule": "The TCP shall detail all devices, hours of work, days, dimensions of tapers and barricades, and the work area — and shall provide a device summary on the sheet.",
+          "baseline": "MUTCD imposes no on-sheet device summary requirement",
+          "effect": {
+            "op": "admin",
+            "note": "on-sheet device summary block required unconditionally"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "LCUASS Ch.6",
+            "section": "6.1.B.1",
+            "date": "2021-08-01",
+            "status": "verified"
+          },
+          "status": "fires"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "tcs_cert_attached",
+            "rule": "All work covered by a TCP shall be performed by a Traffic Control Supervisor, and a certificate for the TCS shall be submitted with the TCP.",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.1",
+              "date": "2021-08-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          },
+          {
+            "gate": "named_contact_24h",
+            "rule": "On all collector and arterial streets (and some locals per the Local Entity Engineer), a named individual responsible for traffic control must be contactable 24 hours/day and certified as a TCS by ATSSA and/or CCA.",
+            "trigger": {
+              "classes": [
+                "collector",
+                "arterial"
+              ],
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.1, 6.1.B.3",
+              "date": "2021-08-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "device": [],
+        "hazard": [
+          {
+            "rule": "Work-hours violations are metered per half-hour or portion thereof, priced by street class — up to $700 per half-hour on arterial/State/US-highway streets.",
+            "meter_kind": "hours_violation",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "section": "Fines & Fees for Permit Violations",
+              "date": "2026-01-01",
+              "status": "provisional"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "hours_violation",
+              "unit": "half_hour",
+              "amount_cents": 8000,
+              "classes": [
+                "local",
+                "collector"
+              ],
+              "note": "Time-restriction violation of work hours, per half-hour or portion thereof.",
+              "source": {
+                "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+                "section": "Fines & Fees for Permit Violations",
+                "date": "2026-01-01",
+                "status": "provisional"
+              },
+              "provisional": true,
+              "effective": "2026-01-01"
+            }
+          },
+          {
+            "rule": "Exceeding the permitted completion date is fined per day, graduated by street class and closure type — up to $1,750/day for an arterial street closure.",
+            "meter_kind": "overrun",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "section": "Fines & Fees for Permit Violations",
+              "date": "2026-01-01",
+              "status": "provisional"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "overrun",
+              "unit": "day",
+              "amount_cents": 175000,
+              "classes": [
+                "arterial"
+              ],
+              "trigger": "arterial_street_closure_past_completion",
+              "note": "ROW permit with arterial or State/US-highway street closure: exceeding completion date. Highest municipal per-day overrun recorded in the corpus.",
+              "source": {
+                "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+                "section": "Fines & Fees for Permit Violations",
+                "date": "2026-01-01",
+                "status": "provisional"
+              },
+              "provisional": true,
+              "effective": "2026-01-01"
+            }
+          },
+          {
+            "rule": "Loveland monetizes schedule integrity end to end: inaccurate dates on a ROW application are fine-bearing, and failure to give the required 48-hour notice is a separately priced line item.",
+            "meter_kind": "notice_failure",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "Loveland ROW Permits page (lovgov.org) + DRAFT 2026 Fee Schedule",
+              "date": "2026-07-19",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "notice_failure",
+              "unit": "occurrence",
+              "amount_cents": 25000,
+              "note": "Failure to give required 48-hour notice (inspection or commencing work). New line item in the 2026 draft.",
+              "source": {
+                "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+                "section": "Fines & Fees for Permit Violations",
+                "date": "2026-01-01",
+                "status": "provisional"
+              },
+              "provisional": true,
+              "effective": "2026-01-01"
+            }
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "ban_window_overlap",
+            "window": {
+              "start": 7.0,
+              "end": 8.5,
+              "days": "weekday"
+            },
+            "overlap_hours": 0.5,
+            "note": null,
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.2",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "exposure_estimate_cents": 70000
+      },
+      "permit": {
+        "tier_suggested": "Major ROW Permit",
+        "tier_reason": "Major ROW Permit: Major traffic control — e.g. arterial lane closures and/or detours.",
+        "tiers": [
+          {
+            "label": "Minor ROW Permit",
+            "definition": "Minimal traffic control — e.g. residential driveway cuts, shoulder work.",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "section": "Street Cut / ROW permit fees",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Major ROW Permit",
+            "definition": "Major traffic control — e.g. arterial lane closures and/or detours.",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "section": "Street Cut / ROW permit fees",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "The permit tier is defined by the traffic-control footprint: Minor = 'minimal traffic control', Major = 'major traffic control (arterial lane closures and/or detours)'. The computed closure type determines which Loveland permit applies.",
+            "source": {
+              "doc": "Loveland DRAFT 2026 Fee Schedule (council packet Att. 4)",
+              "date": "2026-01-01",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "ROW Contractor's license required (city limits), with endorsements by category; license bond $20,000 plus $10,000 per endorsement, continuous, 60-day cancellation notice, survives through warranty.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "Licensing in Fort Collins and Loveland (City Limits Only)",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Surety: Loveland exception — 15% of public-improvement cost (LCUASS default is 100%). Insurance: $1M CGL + $1M auto, Local Entity named insured, 30-day notice.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Residential streets inside city limits may not need a separate TCP; devices still per MUTCD Part 6.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.1",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Right-of-Way Permit expires 30 days from approval. Development Construction Permit: void if work not started in 60 days; 1-year life plus 90-day extensions (apply at least 2 weeks early). No fee refunds once collected, even if the permit expires unused.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.A.9, 6.1.A.12",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [],
+        "leads": [
+          {
+            "label": "Right-of-Way Permit review",
+            "lead_days": 5,
+            "lead_unit": "business_days",
+            "note": "Approval within 5 working days; permit expires 30 days from approval.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.A.9",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Development Construction Permit review",
+            "lead_days": 10,
+            "lead_unit": "business_days",
+            "note": "Up to 10 working days after complete application.",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.A.9",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Inspection call-ahead",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "note": "48-hour call-ahead to schedule inspection before starting work; failure to give the required 48-hour notice is a fined line item ($250, 2026 draft). Applications submitted after 4 p.m. are reviewed the next work day.",
+            "source": {
+              "doc": "Loveland ROW Permits page (lovgov.org)",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Utility locates (Colorado 811)",
+            "lead_days": 2,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.4.b",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "public (door hangers, VMS, press releases)",
+            "rule": "Road closures require written approval and public notification 7 days in advance.",
+            "lead_days": 7,
+            "lead_unit": "calendar_days",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "residents / newspaper",
+            "rule": "Newspaper/resident notice at least 48 hours, at Local Entity discretion by project size.",
+            "lead_days": 48,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "LCUASS Ch.6",
+              "section": "6.1.B.1",
+              "date": "2021-08-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [
+            {
+              "rule": "Permits and approved plans on the job site at all times during construction and placement of traffic control devices.",
+              "source": {
+                "doc": "LCUASS Ch.6",
+                "section": "6.1.A.10",
+                "date": "2021-08-01",
+                "status": "verified"
+              }
+            }
+          ],
+          "digital_ok": null
+        },
+        "fee_estimate_cents": 45000
+      },
+      "conflicts": [],
+      "provisional": true
+    },
+    "parker": {
+      "key": "parker",
+      "name": "Parker",
+      "tcp_term": "MHT",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD (latest Town adopted edition) + Colorado Supplement",
+        "CDOT Standard Specifications §630 (adopted and revised by the Town)",
+        "Parker RDCCM (Jan 2026 edition)",
+        "ROW Permit Fee Schedule (rev. Jan 2025)"
+      ],
+      "class_required": true,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "work_window",
+        "windows": [
+          {
+            "kind": "work",
+            "days": "weekday",
+            "classes": null,
+            "start": 9.0,
+            "end": 15.5,
+            "note": "Lane closures: 'Traffic lanes may be closed to traffic, Monday through Friday, within the hours of 9:00 a.m. to 3:30 p.m.' (RDCCM §8.7.6.1). No traffic control shall be present on the roadways outside these hours.",
+            "source": {
+              "doc": "Parker RDCCM",
+              "section": "8.7.6.1",
+              "date": "2026-01-01",
+              "status": "conflict"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Overnight closures not typically permitted — written case-by-case request to the Director; the Town may itself require night work. No traffic interruptions 3:30 p.m.-9:00 a.m. the following day without Director approval. Development construction hours: M-F 7-7, Sat 8-7, Sun 10-7 (weekend-permitted regime). ROW work requiring inspection: M-F 8-5. Emergency utility repairs permitted anytime with adequate MUTCD traffic control.",
+        "conflict": {
+          "label": "arterial work window",
+          "rendered": "9:00–3:30",
+          "sources": [
+            {
+              "doc": "Town TC Manual + RDCCM (Jan 2026)",
+              "value": "9:00–3:30"
+            },
+            {
+              "doc": "2025 Overview",
+              "value": "8:30–3:00"
+            }
+          ],
+          "verdict": "Rendering 9:00–3:30 per the adopted manual."
+        }
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "Application & Administration (incl. routine TCP review, pre-con meeting, final inspection)",
+            "amount_cents": 40000,
+            "effective": "2025-01-01",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Traffic Control Plan Review Fee (non-routine)",
+            "amount_cents": 30000,
+            "effective": "2025-01-01",
+            "note": "First standalone TCP-review line item in the corpus.",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Permit renewal",
+            "amount_cents": 10000,
+            "effective": "2025-01-01",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Pavement cut",
+            "amount_cents": 500,
+            "per": "sq_ft",
+            "note": "+$5/SF surcharge if the surface is less than 5 years old.",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Boring",
+            "amount_cents": 75,
+            "per": "lin_ft",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Test hole",
+            "amount_cents": 10000,
+            "per": "each",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Night/after-hours inspection",
+            "amount_cents": 15000,
+            "per": "each",
+            "note": "Per occurrence; re-inspection 50% of original.",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "Lane-closure and sidewalk-closure daily pricing lives in meters (tc_per_day) — it is duration-metered, not flat."
+      },
+      "meters": [
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 15000,
+          "classes": [
+            "arterial"
+          ],
+          "note": "Standard lane-closure fee, arterial/major collector, <=1000 LF; +$50/day per additional 500 LF.",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 10000,
+          "classes": [
+            "collector",
+            "local"
+          ],
+          "note": "Standard lane-closure fee, collector/local, <=1000 LF; local roads generally exempt unless significantly impacted.",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 5000,
+          "note": "Sidewalk closure.",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 50000,
+          "classes": [
+            "arterial"
+          ],
+          "trigger": "peak_hour_closure",
+          "note": "Peak-hour lane closure premium (3.3x standard).",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_per_day",
+          "unit": "day",
+          "amount_cents": 25000,
+          "classes": [
+            "collector"
+          ],
+          "trigger": "peak_hour_closure",
+          "note": "Peak-hour lane closure premium (2.5x standard).",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "no_permit",
+          "unit": "occurrence",
+          "amount_cents": 100000,
+          "note": "Work without permit $1,000; work without locates $1,000 (deducted from deposit).",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "tc_violation",
+          "unit": "occurrence",
+          "amount_cents_min": 50000,
+          "amount_cents_max": 200000,
+          "note": "TC violation ladder: arterial $1,000 (1st) / $2,000 (2nd); collector/local $500/$1,000; third offense = termination of permit.",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        },
+        {
+          "kind": "restoration_failure",
+          "unit": "occurrence",
+          "amount_cents": 50000,
+          "note": "Restoration-timeline failure; restoration due within 5 days of completion of work.",
+          "source": {
+            "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+            "date": "2025-01-01",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "count",
+          "rule": "Vertical panels required for any cut or fill of 2 inches or more within 5 feet of a travel lane, at MUTCD intervals, immediately behind grading/removal operations.",
+          "baseline": "MUTCD imposes no fixed vertical-panel trigger at this threshold",
+          "effect": {
+            "op": "add_device",
+            "device": "vertical_panel",
+            "note": "quantity per MUTCD intervals along the affected length"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null,
+            "condition": "cut/fill >= 2 in within 5 ft of a travel lane"
+          },
+          "source": {
+            "doc": "Parker RDCCM",
+            "date": "2026-01-01",
+            "status": "verified"
+          },
+          "status": "conditional"
+        },
+        {
+          "severity": "op",
+          "rule": "At least one lane in each direction shall remain open to traffic at all times in roadway excavations; the Town does not typically allow full roadway closures.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": [
+              "lane",
+              "full"
+            ],
+            "night": null
+          },
+          "source": {
+            "doc": "Parker RDCCM",
+            "date": "2026-01-01",
+            "status": "verified"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "op",
+          "rule": "Street plates are generally not permitted year-round — 'contractors should not plan to utilize them'; rare exceptions.",
+          "effect": {
+            "op": "method"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null,
+            "condition": "steel plate use proposed"
+          },
+          "source": {
+            "doc": "Parker RDCCM",
+            "date": "2026-01-01",
+            "status": "verified"
+          },
+          "status": "conditional"
+        },
+        {
+          "severity": "admin",
+          "rule": "All traffic control that may conflict with snow removal must be planned for removal from roadways in advance of snow events.",
+          "effect": {
+            "op": "admin"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null,
+            "condition": "snow season"
+          },
+          "source": {
+            "doc": "Parker RDCCM",
+            "date": "2026-01-01",
+            "status": "verified"
+          },
+          "status": "conditional"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "named_contact",
+            "rule": "Contractor provides the DTA the contact info of the appointed Traffic Control Supervisor, 'if other than the Project Superintendent' — no certification requirement; the Superintendent is the default TCS.",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          },
+          {
+            "gate": "police_fire_approval",
+            "rule": "Police and Parker Fire District approval is required for every MHT that closes a roadway for any length of time; coordinate police/fire/ambulance/transit on partial or full closures.",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null,
+              "condition": "any roadway closure, any duration"
+            },
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            },
+            "status": "conditional"
+          }
+        ],
+        "device": [
+          {
+            "rule": "Devices per MUTCD, supplied by the permittee; overnight excavations properly marked; the Town may maintain/remove failed traffic control at contractor cost.",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "hazard": [
+          {
+            "rule": "Peak-hour lane closures are priced, not banned: $500/day arterial, $250/day collector — 3.3x/2.5x the standard rate. When the closure is scheduled changes the fee.",
+            "meter_kind": "tc_per_day",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule",
+              "date": "2025-01-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "tc_per_day",
+              "unit": "day",
+              "amount_cents": 15000,
+              "classes": [
+                "arterial"
+              ],
+              "note": "Standard lane-closure fee, arterial/major collector, <=1000 LF; +$50/day per additional 500 LF.",
+              "source": {
+                "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+                "date": "2025-01-01",
+                "status": "verified"
+              }
+            }
+          },
+          {
+            "rule": "Deposit held to closeout; overrun days and violations deducted; no allowances for weather, staffing, or subcontractor delays — schedule risk sits entirely on the contractor. Third TC offense = termination of permit.",
+            "meter_kind": "tc_violation",
+            "source": {
+              "doc": "Parker Lane Closure Fee and Deposits Overview",
+              "date": "2025-01-01",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "tc_violation",
+              "unit": "occurrence",
+              "amount_cents_min": 50000,
+              "amount_cents_max": 200000,
+              "note": "TC violation ladder: arterial $1,000 (1st) / $2,000 (2nd); collector/local $500/$1,000; third offense = termination of permit.",
+              "source": {
+                "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)",
+                "date": "2025-01-01",
+                "status": "verified"
+              }
+            }
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 9.0,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 1.0,
+            "note": "Lane closures: 'Traffic lanes may be closed to traffic, Monday through Friday, within the hours of 9:00 a.m. to 3:30 p.m.' (RDCCM §8.7.6.1). No traffic control shall be present on the roadways outside these hours.",
+            "source": {
+              "doc": "Parker RDCCM",
+              "section": "8.7.6.1",
+              "date": "2026-01-01",
+              "status": "conflict"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "jurisdiction publishes no permit tiers",
+        "tiers": [],
+        "notes": [
+          {
+            "rule": "The ROW permit trigger is the broadest in the corpus: required for all work within public ROW 'or work that may affect public right-of-way'.",
+            "source": {
+              "doc": "Parker ROW Permits page (parkerco.gov)",
+              "date": "2026-07-18",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Written closure schedule filed with the application; the Town agrees a duration; lane-closure fee = duration x daily rate, collected up front. Deposits: arterial <=1000 LF = 50% of permit fee, collector = 25%, >1000 LF case-by-case; cash/check, held to closeout; schedule met = full refund less violations.",
+            "source": {
+              "doc": "Parker Lane Closure Fee and Deposits Overview",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Insurance: GL $1,000,000 each occurrence / $1,000,000 aggregate; WC/EL 100/100/500; Town of Parker = certificate holder + additional insured, 20120 E. Mainstreet. (Sample sheet drawn from the special-events context — events-sample provenance flag; a ROW-specific limits page supersedes if it surfaces. Auto/umbrella minimums not stated.)",
+            "source": {
+              "doc": "Town of Parker sample Certificate of Insurance (ACORD 25, form 3/22/2024)",
+              "date": "2024-03-22",
+              "status": "provisional"
+            }
+          },
+          {
+            "rule": "Cross-authority permits are Parker application attachments: 'Permits from any outside authorities (CDOT — working on Parker Rd, E-470, etc.)'.",
+            "source": {
+              "doc": "Parker Right of Way Upload Checklist",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "All restoration within public ROW must be completed within five days of completion of work unless alternate arrangements approved. 72-hour written startup notice; scope growth requires a supplementary application within one business day; subcontractors listed on the application; permits non-transferable without reissue; Equipment Declaration (sales tax) form required.",
+            "source": {
+              "doc": "Parker Right of Way Upload Checklist + RDCCM",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "'Overnight Work: TBD' is printed in the published fee schedule (preserved as published). RDCCM resolves the posture: overnight closures default-prohibited, written exception to the Director, and the Town may itself require night work.",
+            "source": {
+              "doc": "Parker ROW Permit Fee Schedule + RDCCM §8.7.6.2",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [
+          {
+            "rule": "Parker Rd = SH-83 = CDOT permit; E-470 work requires the Authority's permit; cross-authority permits attach to the Parker application. Parker Fire District notified of any closure of any length.",
+            "source": {
+              "doc": "Parker Right of Way Upload Checklist + RDCCM",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "leads": [
+          {
+            "label": "Written startup notice",
+            "lead_days": 72,
+            "lead_unit": "hours",
+            "note": "72-hour written notice before construction commencement.",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Work near signs/signals — DTA coordination",
+            "lead_days": 2,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Restoration deadline after completion",
+            "lead_days": 5,
+            "lead_unit": "calendar_days",
+            "note": "Unless alternate arrangements approved.",
+            "source": {
+              "doc": "Parker Right of Way Upload Checklist",
+              "date": "2025-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Emergency permit filing",
+            "lead_days": 1,
+            "lead_unit": "business_days",
+            "note": "Permit the first business day after emergency start; phone PW + Police (303-841-9800) + South Metro Fire (720-488-7200).",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "Parker Fire District",
+            "rule": "Notified of any closure of any length (MHT approval requirement).",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "Development Review Engineer",
+            "rule": "Monthly construction-schedule updates (mobilization through paving).",
+            "source": {
+              "doc": "Parker RDCCM",
+              "date": "2026-01-01",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [
+        {
+          "label": "arterial work window",
+          "rendered": "9:00–3:30",
+          "sources": [
+            {
+              "doc": "Town TC Manual + RDCCM (Jan 2026)",
+              "value": "9:00–3:30"
+            },
+            {
+              "doc": "2025 Overview",
+              "value": "8:30–3:00"
+            }
+          ],
+          "verdict": "Rendering 9:00–3:30 per the adopted manual."
+        }
+      ],
+      "provisional": true
+    },
+    "thornton": {
+      "key": "thornton",
+      "name": "Thornton",
+      "tcp_term": "TCP",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD latest edition + Model Traffic Code as adopted",
+        "Thornton Construction & TC Permit stipulations (34)",
+        "written and verbal directions of the traffic engineer"
+      ],
+      "class_required": false,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "work_window",
+        "windows": [
+          {
+            "kind": "work",
+            "days": "weekday",
+            "classes": null,
+            "start": 8.5,
+            "end": 15.5,
+            "note": "Stipulation #31: 'All work is for Monday through Friday, 8:30 a.m. until 3:30 p.m., unless noted otherwise in the Special Conditions.'",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "stipulation 31",
+              "status": "verified"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Deviation from Special Conditions needs Traffic Engineer pre-approval (#32); the permit text grants the traffic engineer written AND verbal directive authority.",
+        "conflict": null
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "TC permit processing",
+            "amount_cents": 5000,
+            "provisional": true,
+            "note": "'$50 processing + computed closure fee (by duration)' — undated handout, provisional.",
+            "source": {
+              "doc": "Thornton permit parameters (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "Development Engineering TCP review",
+            "amount_cents": 25000,
+            "provisional": true,
+            "source": {
+              "doc": "Thornton permit parameters (Research 5 capture)",
+              "status": "provisional"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "Duration-based closure fee computed per permit. Percent-based charges (inspection 1% of contract cost, plan review 0.5%, sewer TV 3%, $30 minimum) are not renderable as fixed items."
+      },
+      "meters": [
+        {
+          "kind": "extension",
+          "unit": "day",
+          "amount_cents": 50000,
+          "note": "TC permit extension beyond expiration date: $500.00/day.",
+          "source": {
+            "doc": "Thornton Construction & TC Permit handout",
+            "status": "verified"
+          }
+        }
+      ],
+      "applied_deltas": [
+        {
+          "severity": "count",
+          "rule": "CONSTRUCTION AHEAD and MEN WORKING signs required for each direction of travel affected (stipulation #6).",
+          "effect": {
+            "op": "add_device",
+            "device": "advance_warning_signs",
+            "note": "per affected direction"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "Thornton Construction & TC Permit handout",
+            "section": "stipulation 6",
+            "status": "verified"
+          },
+          "status": "fires"
+        },
+        {
+          "severity": "admin",
+          "rule": "All TC signs turned away from motorists' view when work is not occurring (#33); signs graffiti-free and visually maintained (#30); vehicles unattended no more than 5 minutes (#26); emergency vehicle access must be allowed (#3).",
+          "effect": {
+            "op": "admin"
+          },
+          "trigger": {
+            "classes": null,
+            "closure": null,
+            "night": null
+          },
+          "source": {
+            "doc": "Thornton Construction & TC Permit handout",
+            "section": "stipulations 3, 26, 30, 33",
+            "status": "verified"
+          },
+          "status": "fires"
+        }
+      ],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "flaggers_required",
+            "rule": "Flagger for each direction of travel affected (#12); safety vests on all ROW workers (#28). No TCS or flagger certification requirement stated — a notable gap vs. neighbors.",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null
+            },
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "stipulations 12, 28",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "device": [
+          {
+            "rule": "The 34-stipulation checkable device list: Type 'A' frame barricades w/ flashing lights (#2); Type I/II/III barricades w/ flashing lights (#13-15); channelization devices (#9); guide barrels/drums w/ flashing lights; ROAD CLOSED / ROAD CLOSED TO THROUGH TRAFFIC (#4-5); MERGE + LANE CLOSED AHEAD pairs (#7-8); turn-prohibition and KEEP LEFT/RIGHT signs (#10-11); detour as specified (#17).",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "TC permit stipulations",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "hazard": [
+          {
+            "rule": "TC permits requiring an extension beyond the permit expiration date are assessed $500.00 PER DAY (stated twice: process sheet + TC form).",
+            "meter_kind": "extension",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "status": "verified"
+            },
+            "status": "fires",
+            "meter": {
+              "kind": "extension",
+              "unit": "day",
+              "amount_cents": 50000,
+              "note": "TC permit extension beyond expiration date: $500.00/day.",
+              "source": {
+                "doc": "Thornton Construction & TC Permit handout",
+                "status": "verified"
+              }
+            }
+          }
+        ]
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 0.5,
+            "note": "Stipulation #31: 'All work is for Monday through Friday, 8:30 a.m. until 3:30 p.m., unless noted otherwise in the Special Conditions.'",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "stipulation 31",
+              "status": "verified"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": null,
+        "tier_reason": "tier assignment is not machine-decidable for this jurisdiction",
+        "tiers": [
+          {
+            "label": "Traffic Control Permit",
+            "definition": "Separate from the construction permit. Form checkboxes: Oversize Vehicle · Special ROW Usage · ROW Closure · Speed Limit Reduction (construction zone only) · Parking Restriction Change · Other. The municipal construction-zone speed-reduction permit type is the first in the corpus.",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "status": "verified"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "Licensed Thornton contractor required; General Conditions extend it: all contractors and/or subcontractors shall be licensed by the City before any work is commenced.",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout, General Conditions",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Performance surety = cash escrow or Letter of Credit ONLY for work within existing City ROW (Code 2-272(f)(3)), amount priced from the CDOT cost data manual, latest revision. 85% refund at 60 days post-initial-acceptance EXCEPT street cuts: 100% held to final acceptance; landscaping guaranteed at 150%.",
+            "source": {
+              "doc": "Thornton Code Sec. 2-272(f)(3) + permit handout",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Potholing required on ALL Thornton utilities — 'The contractor cannot proceed until all Thornton utilities are found.' Pre-marking within 10 ft of disturbance centerline before locates.",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Use tax 3.75% x 50% of contract valuation, prepaid at permit; equipment declarations for gear >=$2,500; reconciliation within 90 days; 36-month audit SOL with 10% penalty.",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout, use-tax sheet",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [
+          {
+            "rule": "Prairie-dog relocation letter for grading; CDPHE stormwater >1 acre; 404 permits; floodplain permit where applicable.",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "status": "verified"
+            }
+          }
+        ],
+        "leads": [
+          {
+            "label": "TC permit lead time",
+            "lead_days": 10,
+            "lead_unit": "business_days",
+            "note": "5 business days if no construction permit needed. Rendered conservative pending clarification.",
+            "source": {
+              "doc": "Thornton ROW page",
+              "status": "conflict"
+            },
+            "conflict": {
+              "label": "TC permit lead time",
+              "rendered": "10 business days (conservative)",
+              "sources": [
+                {
+                  "doc": "Thornton ROW page",
+                  "value": "10 business days minimum (5 if no construction permit)"
+                },
+                {
+                  "doc": "Construction & TC Permit handout",
+                  "value": "processed 2 business days (5 with street closure)"
+                }
+              ],
+              "verdict": "Handout may state processing time vs. the page's advance-notice ask; render 10 until the city clarifies."
+            }
+          },
+          {
+            "label": "Inspection notice",
+            "lead_days": 24,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [
+          {
+            "audience": "Police Department",
+            "rule": "Notify PD before each move: 720-977-5150 (#21).",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "stipulation 21",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "Traffic Engineering",
+            "rule": "Notify Traffic Engineering: 303-538-7341 (#22).",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout",
+              "section": "stipulation 22",
+              "status": "verified"
+            }
+          },
+          {
+            "audience": "residents",
+            "rule": "Residents contacted (#1) and must comply with posted parking (#25). High-impact TCP: VMS + resident/business notice >=5 business days.",
+            "lead_days": 5,
+            "lead_unit": "business_days",
+            "source": {
+              "doc": "Thornton Construction & TC Permit handout + ROW page",
+              "status": "verified"
+            }
+          }
+        ],
+        "onsite": {
+          "items": [
+            {
+              "rule": "Permit copy on site at all times, front AND back shown on request (#34).",
+              "source": {
+                "doc": "Thornton Construction & TC Permit handout",
+                "section": "stipulation 34",
+                "status": "verified"
+              }
+            }
+          ],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [
+        {
+          "label": "TC permit lead time",
+          "rendered": "10 business days (conservative)",
+          "sources": [
+            {
+              "doc": "Thornton ROW page",
+              "value": "10 business days minimum (5 if no construction permit)"
+            },
+            {
+              "doc": "Construction & TC Permit handout",
+              "value": "processed 2 business days (5 with street closure)"
+            }
+          ],
+          "verdict": "Handout may state processing time vs. the page's advance-notice ask; render 10 until the city clarifies."
+        }
+      ],
+      "provisional": true
+    },
+    "westminster": {
+      "key": "westminster",
+      "name": "Westminster",
+      "tcp_term": "MHT",
+      "row_term": "right-of-way",
+      "authority": "city",
+      "chain": [
+        "MUTCD (latest edition; §8.21.02 still cites 'Part VI' — ghost citation preserved)",
+        "Model Traffic Code + CRS + Westminster Code of Ordinances",
+        "Westminster Standards & Specifications Ch. 8 Traffic (April 2025), §8.28"
+      ],
+      "class_required": false,
+      "classification_map_url": null,
+      "hours": {
+        "shape": "work_window",
+        "windows": [
+          {
+            "kind": "work",
+            "days": "all",
+            "classes": null,
+            "start": 8.5,
+            "end": 15.5,
+            "note": "Phrased as a closure-window rule: 'CITY streets shall not be closed overnight and work shall not force road or lane closures before 8:30 a.m. or after 3:30 p.m.' Weekday/weekend scope not stated in the source.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.06",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          }
+        ],
+        "holiday_rule": "none",
+        "override_note": "Exceptions noted on the TCP + Traffic Engineer approval. Overnight complete/partial closures (removing 1+ travel lanes) need explicit Traffic Engineer approval (§8.28.07).",
+        "conflict": null
+      },
+      "fees": {
+        "model": "flat",
+        "items": [
+          {
+            "label": "Street cut",
+            "amount_cents": 1529,
+            "per": "sq_ft",
+            "provisional": true,
+            "effective": "2022-06-28",
+            "note": "Effective 6-28-2022 — stale risk.",
+            "source": {
+              "doc": "Westminster fee schedule (Research 5 capture)",
+              "date": "2022-06-28",
+              "status": "provisional"
+            }
+          }
+        ],
+        "formula": null,
+        "note": "TCP-review fee line items not located."
+      },
+      "meters": [],
+      "applied_deltas": [],
+      "chips": {
+        "personnel": [
+          {
+            "gate": "tcs_authorship",
+            "rule": "'Major projects shall require Traffic Control Plans prepared by a certified Traffic Control Supervisor' (§8.28.04(C)). The Traffic Engineer classifies plans minor/major.",
+            "trigger": {
+              "classes": null,
+              "closure": null,
+              "night": null,
+              "condition": "major TCP (Traffic Engineer classifies)"
+            },
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.04(C)",
+              "date": "2025-04-15",
+              "status": "verified"
+            },
+            "status": "conditional"
+          },
+          {
+            "gate": "named_contact_24h",
+            "rule": "Every TCP must name a 24-hour contact person responsible for TC devices, plus the firm responsible for traffic control.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.04",
+              "date": "2025-04-15",
+              "status": "verified"
+            },
+            "status": "fires"
+          }
+        ],
+        "device": [],
+        "hazard": []
+      },
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "all"
+            },
+            "outside_hours": 0.5,
+            "note": "Phrased as a closure-window rule: 'CITY streets shall not be closed overnight and work shall not force road or lane closures before 8:30 a.m. or after 3:30 p.m.' Weekday/weekend scope not stated in the source.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.06",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          }
+        ]
+      },
+      "permit": {
+        "tier_suggested": "Major TCP",
+        "tier_reason": "Major TCP: Devices identified by type, 'explicitly noted and dimensioned' on drawings; prepared by a certified TCS.",
+        "tiers": [
+          {
+            "label": "Minor TCP",
+            "definition": "Accepts 'a detailed MHT of the roadways and the proposed traffic control devices' OR 'a copy of a typical drawing of traffic device layout from an accepted source approved by the Traffic Engineer' — a jurisdiction that formally accepts third-party typicals for minor TCPs.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.04(B)",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Major TCP",
+            "definition": "Devices identified by type, 'explicitly noted and dimensioned' on drawings; prepared by a certified TCS.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.04",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          }
+        ],
+        "notes": [
+          {
+            "rule": "Class D Public Way Contractor's License required and in good standing to apply for a ROW permit.",
+            "source": {
+              "doc": "Westminster ROW Permits page (westminsterco.gov/746)",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Colorado 811 confirmation number required on the application; if a City utility can't be located, a mandatory on-site meeting gates any excavation.",
+            "source": {
+              "doc": "Westminster ROW Permits page (westminsterco.gov/746)",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Insurance: $1M CGL/auto/employer-liability structure with blasting/underground riders when applicable; maintained through the maintenance period.",
+            "source": {
+              "doc": "Westminster ROW Permits page (westminsterco.gov/746)",
+              "date": "2026-07-19",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Field modifications may occur without revision to the plan provided the general intent is satisfied; City Inspector notified of substantial changes only (§8.28.08 — the most lenient field-modification rule in the corpus).",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.08",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          },
+          {
+            "rule": "Copies of the approved TCP: 1 on site with the contractor, 1 with the City Inspector, 1 in the engineering file. Permit valid 9 months.",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8 + Research-5 permit parameters",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          }
+        ],
+        "multi_agency": [],
+        "leads": [
+          {
+            "label": "Permit review",
+            "lead_days": 14,
+            "lead_unit": "business_days",
+            "note": "Review within 14 business days.",
+            "source": {
+              "doc": "Westminster permit parameters (Research 5 capture)",
+              "status": "provisional"
+            }
+          },
+          {
+            "label": "TCP submittal",
+            "lead_days": 0,
+            "lead_unit": "calendar_days",
+            "note": "TCP submitted earliest with final construction plans, latest with the ROW/public-improvement permit application; no permit without an approved TCP (§8.28.02).",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.28.02",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          },
+          {
+            "label": "Signals projects — TCP to the Traffic Engineer",
+            "lead_days": 72,
+            "lead_unit": "hours",
+            "source": {
+              "doc": "Westminster Standards & Specifications Ch. 8",
+              "section": "8.21.02",
+              "date": "2025-04-15",
+              "status": "verified"
+            }
+          }
+        ],
+        "notices": [],
+        "onsite": {
+          "items": [
+            {
+              "rule": "Contractor keeps 1 approved TCP copy on site at all times.",
+              "source": {
+                "doc": "Westminster Standards & Specifications Ch. 8",
+                "section": "8.28.04",
+                "date": "2025-04-15",
+                "status": "verified"
+              }
+            }
+          ],
+          "digital_ok": null
+        }
+      },
+      "conflicts": [],
+      "provisional": true
+    }
+  }
+}

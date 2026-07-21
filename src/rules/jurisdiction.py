@@ -479,6 +479,9 @@ def evaluate(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     permit: dict[str, Any] = {
         "tier_suggested": tier,
         "tier_reason": tier_reason,
+        "tiers": record.get("permits", {}).get("tiers", []),
+        "notes": record.get("permits", {}).get("notes", []),
+        "multi_agency": record.get("permits", {}).get("multi_agency", []),
         "leads": record.get("leads", []),
         "notices": record.get("notices", []),
         "onsite": record.get("onsite", {"items": [], "digital_ok": None}),
@@ -495,6 +498,18 @@ def evaluate(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         "name": record["name"],
         "tcp_term": record["tcp_term"],
         "row_term": record["row_term"],
+        # Display sections passed through verbatim so the frontend renders
+        # (never recomputes) the record: chain/authority for the context
+        # bar, hours windows for the band display (the frontend derives
+        # segments from these semantic windows — spec §1.1 #3), fees for
+        # the FYI panel, meters for the metered badge.
+        "authority": record["authority"],
+        "chain": record["chain"],
+        "class_required": record["class_required"],
+        "classification_map_url": record["classification_map_url"],
+        "hours": record["hours"],
+        "fees": record["fees"],
+        "meters": record.get("meters", []),
         "applied_deltas": applied_deltas,
         "chips": chips,
         "hours_eval": evaluate_hours(record, ctx),
