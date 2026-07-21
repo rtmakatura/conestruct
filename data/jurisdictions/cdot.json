@@ -1,0 +1,155 @@
+{
+  "key": "cdot",
+  "name": "CDOT",
+  "authority": "state",
+  "tcp_term": "MHT",
+  "row_term": "right-of-way",
+  "adoption_class": "plan_adopter",
+  "chain": ["MUTCD 11th Ed. + Colorado Supplement (eff. 2026-01-18)", "CDOT Standard Specifications §630", "CDOT S-Standard Plans, S-630 series (July 2026 re-issue — editorial only per CDOT issuance memo)"],
+  "classification_map_url": null,
+  "class_required": false,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §CDOT + CORPUS BASELINE LAYER; 05-COVERAGE-MATRIX #16,#33",
+  "geometry": {
+    "status": "published",
+    "urban_high_speed_breakpoint_mph": 45,
+    "sign_spacing": [
+      {
+        "max_speed_mph": 40,
+        "distance_ft": 100,
+        "road_type": "urban",
+        "note": "Key to Advance Signing Distances: A=B=C=100 on urban <=40 mph. A=B=C on surface streets is the national convention (Table 6B-1), not a CDOT collapse.",
+        "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "Key to Advance Signing Distances", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "min_speed_mph": 45,
+        "distance_ft": 350,
+        "road_type": "urban",
+        "note": "CDOT draws the urban low/high-speed breakpoint at 40/45; the cities draw it at 30/35 — both lawful (Table 6B-1 delegates it to the agency).",
+        "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "Key to Advance Signing Distances", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "distance_ft": 500,
+        "road_type": "rural",
+        "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "Key to Advance Signing Distances", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "distance_ft": 1000,
+        "road_type": "expressway/freeway",
+        "note": "A=1000, B=1500, C=2640 — the progression is retained only on expressways/freeways.",
+        "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "Key to Advance Signing Distances", "date": "2026-07-01", "status": "verified" }
+      }
+    ],
+    "device_spacing": {
+      "taper_ft": null,
+      "tangent_ft": null,
+      "rule": "Tapers/transitions: spacing = speed limit in feet. Tangents: max 2x speed (General Note 18).",
+      "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Note 18", "date": "2026-07-01", "status": "verified" }
+    },
+    "buffer": {
+      "rule": "'Buffer space is optional' — site-specific, per the Engineer (General Note 24). CDOT's speed-keyed buffer values are more permissive than the national Table 6B-2 at high speed (650' @ 75 vs national 820'; 570' @ 65 vs 645') — jurisdiction-aware lookup required.",
+      "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Note 24", "date": "2026-07-01", "status": "verified" }
+    },
+    "other": [
+      {
+        "rule": "Termination taper = 100 ft (S-630-5, which also independently reprints the taper formulas L=WS >=45 / WS²/60 <45 and the same A/B/C table).",
+        "source": { "doc": "CDOT S-630-5", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "rule": "Speed reduction per CDOT Form 568; max 15 mph reduction per sign installation; Work Zone (G20-5p) + Fines Double (R2-6p) every 2640 ft (General Notes 3/4).",
+        "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Notes 3/4", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "rule": "Portable rumble strips placed within the advance-warning sign series; work zones <=75 mph only (S-630-5).",
+        "source": { "doc": "CDOT S-630-5", "date": "2026-07-01", "status": "verified" }
+      }
+    ],
+    "note": "Status: CONTRACT + PERMIT TERMS — not law absent a CDOT contract or permit. S-630-1 (19 sheets, ~26 typical-application layouts) is THE drawing-conventions reference."
+  },
+  "deltas": [
+    {
+      "severity": "count",
+      "rule": "Congestion beyond the sign sequence -> add advance signing beyond it (General Note 11).",
+      "effect": { "op": "add_device", "device": "advance_warning_signs" },
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "congestion extends beyond the advance sign sequence" },
+      "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Note 11", "date": "2026-07-01", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "ADA: construction impacting ramps at more than one crossing -> temporary ADA ramps SHALL be installed (detail per DS-630-2a); ped signal faces on closed crosswalks covered; temporary ped facilities shall replicate features of the existing facility; bypass adjacent to an open traffic lane -> concrete barrier protection; channelizing devices plastic or concrete with a compliant detectable edge.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["sidewalk"], "night": null },
+      "source": { "doc": "CDOT DS-630-1a / DS-630-2a", "date": "2026-07-01", "status": "verified" }
+    }
+  ],
+  "hours": {
+    "shape": "none",
+    "windows": [],
+    "holiday_rule": "none",
+    "override_note": "No statewide published work-hour windows; hours are set per contract/permit (Form 568 and project special provisions).",
+    "conflict": null
+  },
+  "personnel": [
+    {
+      "gate": "tcs_on_site",
+      "rule": "Spec 630.11: certified worksite traffic supervisor with current flagger cert required.",
+      "source": { "doc": "CDOT Standard Specifications", "section": "630.11", "status": "verified" }
+    },
+    {
+      "gate": "flagger_certs",
+      "rule": "Approved TCS certification vendors: ATSSA (80% exam, 4,000 field hrs, 4-yr recert), CCA (2,000 hrs, 3-yr), WCCA (2,000 hrs, 3-yr), NSC (2-yr).",
+      "source": { "doc": "CDOT TCS vendor list (research capture)", "status": "provisional" }
+    }
+  ],
+  "devices": [
+    {
+      "rule": "Cones >=28 in. SHALL be 36 in on freeways/expressways or nighttime. 'Should also be 36 inches' (guidance, not standard) on other high-speed roads: >=45 mph AND ADT >=6,000 (General Note 15).",
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "36-in mandatory: freeway/expressway or night; 36-in guidance: >=45 mph AND ADT >=6,000" },
+      "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Note 15", "date": "2026-07-01", "status": "verified" }
+    },
+    {
+      "rule": "Type 1 barricades prohibited on 55 mph+ roadways (General Note 16). Type 3 barricades must be crash-tested (S-630-2).",
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "posted speed >= 55 mph" },
+      "source": { "doc": "CDOT S-630-1 General Note 16 + S-630-2", "date": "2026-07-01", "status": "verified" }
+    },
+    {
+      "rule": "VMS: consider >=1 mile in advance for interstate/high-speed lane closures (General Note 25).",
+      "trigger": { "classes": null, "closure": ["lane"], "night": null, "condition": "interstate/high-speed facility" },
+      "source": { "doc": "CDOT S-630-1 (July 2026 set)", "section": "General Note 25", "date": "2026-07-01", "status": "verified" }
+    }
+  ],
+  "hazards": [],
+  "permits": {
+    "required": true,
+    "tiers": [],
+    "notes": [
+      {
+        "rule": "CDOT rules bind as contract or permit terms (Special Use / Access permits), not as law absent one. Rolling roadblocks (S-630-7): minimum 4 law-enforcement vehicles upstream, TMA + VMS required — the spec if that scenario ever ships.",
+        "source": { "doc": "CDOT S-630-1 set / S-630-7", "date": "2026-07-01", "status": "verified" }
+      },
+      {
+        "rule": "Work on state highways inside city limits requires a permit from EACH agency (the multi-agency answer is BOTH, not either/or — Colorado Springs Gen. Req. #20 states it concretely; Englewood/Wheat Ridge name specific CDOT roads).",
+        "source": { "doc": "corpus multi-agency findings (02-JURISDICTION-DATA)", "date": "2026-07-20", "status": "verified" }
+      }
+    ],
+    "multi_agency": []
+  },
+  "fees": {
+    "model": "unpublished",
+    "items": [],
+    "formula": null,
+    "note": "CDOT permit fees not researched (axis NC) — nothing encoded."
+  },
+  "meters": [],
+  "leads": [],
+  "notices": [],
+  "onsite": {
+    "items": [
+      {
+        "rule": "Permit, insurance certificate(s), and traffic control plan must be available on site during work (Special Use Permit conditions).",
+        "source": { "doc": "CDOT Special Use Permit conditions (incidental corroboration, Ingestion #30)", "date": "2026-07-19", "status": "provisional" }
+      }
+    ],
+    "digital_ok": null
+  }
+}

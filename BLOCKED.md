@@ -1,0 +1,78 @@
+# BLOCKED — jurisdiction facts not encodable from the research corpus
+
+Per the build ground rules: a value the spec or schema wants that is absent from
+`docs/research/02-JURISDICTION-DATA.md` / `05-COVERAGE-MATRIX.md` is left ABSENT
+in the data file and logged here. Nothing below was guessed or defaulted.
+
+## `urban_high_speed_breakpoint_mph` (spec §3.4a calls it "required per-jurisdiction")
+
+Encoded only where a read source documents the agency's determination:
+**cdot = 45** (S-630-1 Key table) · **englewood = 35** (TC-1 sign-spacing table) ·
+**littleton = 35** (template <35 mph key).
+
+Absent — no read source states the agency's urban speed-category determination:
+`loveland, parker, castle_rock, greeley, westminster, thornton, el_paso,
+centennial, denver, e470`. (Most are geometry-silent jurisdictions where MUTCD
+Table 6B-1 applies with the breakpoint delegated to the agency and never
+published. e470 is a freeway facility — the urban rows may simply not apply.)
+Resolution: per-agency ask, or engine falls back to "unknown — ask the agency"
+per the no-silent-defaults rule.
+
+## `classification_map_url`
+
+Spec §1.1 #12: Castle Rock and Greeley publish classification maps. Both maps
+are confirmed to exist (Castle Rock "Roadway Functional Classification map";
+Greeley "Street Classification Map") but **neither URL was captured in the
+corpus**. Both files carry `classification_map_url: null` until the URLs are
+fetched. (All other 11 files: no map known to exist → null is correct.)
+
+## Fee gaps
+
+- **centennial**: fee amounts live on a separate Fee Schedule never captured
+  (Q-CEN-3). `fees.model = "unpublished"`.
+- **denver**: rate-table unit basis (per-LF vs per-SF) is not recorded in the
+  corpus — items carry amounts with no `per` and an explanatory note. The 2024
+  schedule is the newest read; 2025/2026 schedules almost certainly exist
+  (staleness risk flagged in the file).
+- **loveland**: entire 2026 fee column is a council-packet DRAFT
+  (adopted-presumed; confirm adoption — optional phone item, 970-962-2524).
+- **el_paso**: fee worksheet is undated; every El Paso figure is provisional
+  (T2 row — official snippets, documents not read in full).
+- **westminster**: $15.29/SF street cut effective 2022-06-28 — stale risk; TCP
+  review fee line items never located.
+- **thornton**: "$50 processing + computed closure fee" from an undated handout
+  — provisional.
+- **cdot**: permit fees never researched (axis NC) — `fees.model = "unpublished"`.
+
+## Geometry gaps
+
+- **greeley**: geometry lives in the COG MHT/Barricade Manual — dead link (404),
+  upload wanted. `geometry.status = "not_located"`.
+- **castle_rock**: 10-ft lane / 2-ft device clearance rest on T2 extracts of the
+  Standard Special Provisions (document not read in full) — provisional.
+
+## Insurance / bond gaps
+
+- **parker**: auto and umbrella minimums blank on the Town's sample COI (GL and
+  WC captured); sample carries an events-context provenance flag.
+- **e470**: insurance limits "published on the Authority's website" — not
+  captured; bond amounts set per-permit by the Authority.
+- **littleton**: bond/insurance amounts for licensure not published.
+
+## Preserved conflicts rendered conservative (decided, not blocked — listed for review)
+
+- parker hours 9:00–3:30 (RDCCM) vs 8:30–3:00 (2025 Overview) → 9:00–3:30 per
+  the adopted manual (spec §1.4 casting keeps this the demo conflict block).
+- thornton TC-permit lead 10 business days (ROW page) vs 2/5 days (handout) → 10.
+- englewood TCS shall (TC-1 T04, adopted into EMC 11-7-25) vs should (Standards)
+  → required; arterial reopen 3:00 (TC-1) vs 3:30 (EMC) → 3:00; overnight
+  excavation prohibition (ROW Guide) vs flashing-barricade provision (Standards)
+  → prohibition, barricades only under written Engineer exception.
+- littleton min lane 10 ft (LEDS) vs 12 ft (flagger templates) → 10 general,
+  12 on flagger configurations.
+- e470 afternoon peak 3–7 PM (2025 Manual) vs 3–6 PM (SPPO) → Manual governs.
+
+## Baseline residual (spec §3.4)
+
+- FHWA **Revision 1 to the MUTCD 11th Edition (Dec 2025)** vs Part 6: likely
+  nil; **verify before ship** (the corpus's one standing baseline flag).

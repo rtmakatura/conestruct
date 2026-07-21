@@ -1,0 +1,251 @@
+{
+  "key": "denver",
+  "name": "Denver",
+  "authority": "city_county",
+  "tcp_term": "TCP",
+  "row_term": "right-of-way",
+  "adoption_class": "scoped",
+  "chain": ["MUTCD 2009 Rev 2 (pinned by PT-116.1, April 2022) — the statewide 11th-Ed mandate applies regardless", "DOTI PT-116.1 General Traffic Control Procedures (April 2022)", "Rule 22.3 — Issuance of Permits by the City Traffic Engineer (2022)", "ROWS 2024 Consolidated Fee Schedule (eff. 2024-01-01)"],
+  "classification_map_url": null,
+  "class_required": true,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §DENVER; 05-COVERAGE-MATRIX #15 (incidental), #29",
+  "geometry": {
+    "status": "published",
+    "other": [
+      {
+        "rule": "Bike lane closure taper: cones/delineators at a 7:1 taper, illuminated at night — a published ratio (Aurora uses a fixed 50 ft; bike-lane tapers are a real mini-axis). Bike closure advance signage >=125 ft upstream of the closure taper, clear of the bike lane (BIKE LANE CLOSED AHEAD + BICYCLES MAY USE FULL LANE).",
+        "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+      },
+      {
+        "rule": "Pedestrian accessible route (PAR): 5 ft desirable, 4 ft minimum at all times; 5'x5' passing area every 200 ft; measured wall to wall. Vertical clearance 80 inches. Bike facilities adjacent to curb/gutter: 6 ft unobstructed (inclusive of gutter pan) is highest priority.",
+        "source": { "doc": "DOTI PT-116.1 + Rule 22.3", "date": "2022-04-01", "status": "verified" }
+      }
+    ],
+    "note": "No taper/spacing tables beyond the bike ratio — MUTCD geometry governs. Steel plates: friction coefficient >=0.35, beveled edges; surface discontinuities on bike paths >1 inch sloped/shimmed."
+  },
+  "deltas": [
+    {
+      "severity": "count",
+      "rule": "Arrow board required if closing one or more lanes — Denver's trigger is >=1 lane (vs. Colorado Springs' 4+-lane roadway rule).",
+      "baseline": "arrow board optional per MUTCD for many single-lane closures",
+      "effect": { "op": "add_device", "device": "arrow_board", "qty": 1 },
+      "trigger": { "classes": null, "closure": ["lane"], "night": null },
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    },
+    {
+      "severity": "count",
+      "rule": "Parking lane closure: No Parking signs (R7-1/R7-2) >=24 hrs prior, spacing <=150 ft, consistent closure times.",
+      "effect": { "op": "add_device", "device": "no_parking_sign" },
+      "trigger": { "classes": null, "closure": ["parking_lane"], "night": null },
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    },
+    {
+      "severity": "admin",
+      "rule": "Bike lane closure definition: narrowed below 5 ft (excluding gutter pan) = closure; if already <5 ft, ANY narrowing = closure.",
+      "effect": { "op": "admin" },
+      "trigger": { "classes": null, "closure": ["bike_lane"], "night": null },
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "The full ped/bike detour regime (Figure 1) applies when the closure is >=72 hours OR inside the Premium High-Use Area. PHUA + >72 hrs: detouring peds/bikes outside the sidewalk area or adjacent lane is NOT PERMITTED (case-by-case CTE review, 'last resort'). Mid-block sidewalk closure >72 hrs without a temp PAR in the adjacent lane: NOT PERMITTED.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["sidewalk", "bike_lane"], "night": null, "min_duration_days": 3, "condition": ">=72 hours OR inside the Premium High-Use Area" },
+      "source": { "doc": "DOTI PT-116.1 Figure 1 + Rule 22.3 §IV.4", "date": "2022-04-01", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "PAR adjacent to a travel lane gets a continuous impact-rated anchored barricade where the CTE determines; water-filled to manufacturer spec; inspect every 24 hrs. Fence 7 ft min, construction-facing, continuous. Illumination continuous sunset to sunrise. Detour crossing active lanes -> controlled crossing only (signal, RRFB, flagger, or UTC, per CTE).",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["sidewalk"], "night": null },
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    }
+  ],
+  "hours": {
+    "shape": "work_window",
+    "windows": [
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 8.5,
+        "end": 15.5,
+        "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+        "source": { "doc": "Rule 22.3", "section": "IV.4", "date": "2022-04-22", "status": "verified" }
+      },
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 20.0,
+        "end": 24.0,
+        "note": "Night window 8:00pm-5:00am.",
+        "source": { "doc": "Rule 22.3", "section": "IV.4", "date": "2022-04-22", "status": "verified" }
+      },
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 0.0,
+        "end": 5.0,
+        "note": "Night-window continuation.",
+        "source": { "doc": "Rule 22.3", "section": "IV.4", "date": "2022-04-22", "status": "verified" }
+      }
+    ],
+    "holiday_rule": "none",
+    "override_note": "Sidewalk/bike blockage = lane closure (§III.1). Fees apply daily per day of occupancy (§V.1).",
+    "conflict": null
+  },
+  "personnel": [
+    {
+      "gate": "tcs_authorship",
+      "rule": "TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 §IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.",
+      "source": { "doc": "DOTI PT-116.1 + Rule 22.3 §IV.4.c", "date": "2022-04-01", "status": "verified" }
+    },
+    {
+      "gate": "utc_officer",
+      "rule": "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.",
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "signalized intersection affected" },
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    }
+  ],
+  "devices": [
+    {
+      "rule": "Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.",
+      "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+    }
+  ],
+  "hazards": [
+    {
+      "rule": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each — precisely the failure the tool exists to prevent.",
+      "meter_kind": "rejection",
+      "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" }
+    },
+    {
+      "rule": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+      "meter_kind": "no_permit",
+      "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" }
+    }
+  ],
+  "permits": {
+    "required": true,
+    "tiers": [],
+    "notes": [
+      {
+        "rule": "Denver is entity-gated: Contractor Licensing issues licenses to work in the ROW (720-865-2770), and the Street Occupancy Request Form requires a Contractor's license number.",
+        "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+      },
+      {
+        "rule": "Fee-design interaction (Rule 22.3 §IV.4.f, §IV.6.b): (1) maintain a temporary PAR or bike facility in the adjacent parking/travel lane -> that lane's closure fee is WAIVED; (2) fail to maintain 5 ft unobstructed width -> charged the FULL LENGTH OF A BLOCK for the sidewalk/bike closure; (3) covered walkway used as a detour with no added crossings -> reduced closure fee. The engine computes exactly the widths that decide this.",
+        "source": { "doc": "Rule 22.3", "section": "IV.4.f, IV.6.b", "date": "2022-04-22", "status": "verified" }
+      },
+      {
+        "rule": "Bus stops: temporary relocation/closure requires written approval from BOTH the City Traffic Engineer and RTD; all accommodation costs on the Permittee.",
+        "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+      },
+      {
+        "rule": "Paid-parking closure -> separate parking meter permit obtained with the RSOP; meter head removal only by Transportation Operations, billed daily. Unauthorized permanent meter removal: fee = (total yearly meter revenue + citation revenue) x 15 — the largest penalty multiplier in the corpus (not renderable as a fixed meter).",
+        "source": { "doc": "Rule 22.3", "section": "IV.7", "date": "2022-04-22", "status": "verified" }
+      },
+      {
+        "rule": "Sheet requirements are the deepest in the corpus: the TCP must depict existing conditions (north arrow, speed limit, geometry, markings, lane assignments, curb lines, sidewalks, PAR, all light/utility/signal poles, all posted signage, bus stops, all parking meters and kiosks with counts, tree lawns, racks, drop boxes) plus proposed items and closure math (taper lengths, advance signage with type/placement/distances, arrow board, work zone length AND width, width of reduced travel lanes). Engine values + a site-survey layer.",
+        "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+      },
+      {
+        "rule": "Conflicting permits: first-submitted, first-served; coordination with existing permits required.",
+        "source": { "doc": "Rule 22.3", "date": "2022-04-22", "status": "verified" }
+      }
+    ],
+    "multi_agency": [
+      {
+        "rule": "RTD approval for bus-stop changes; ROWS Construction Engineering reviews arterial/collector TCPs; Permit Operations may approve local/residential at the counter.",
+        "source": { "doc": "DOTI PT-116.1", "date": "2022-04-01", "status": "verified" }
+      }
+    ]
+  },
+  "fees": {
+    "model": "flat",
+    "items": [
+      { "label": "Issuance and inspection (one per application)", "amount_cents": 5000, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Residential — administrative review", "amount_cents": 12500, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Residential — street lane", "amount_cents": 22, "effective": "2024-01-01", "note": "Rate-table unit basis not recorded in the corpus; fees apply daily per day of occupancy (Rule 22.3 §V.1).", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Residential — complete closure", "amount_cents": 30, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "CBD/CCA — bike lane closure", "amount_cents": 85, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial NON-PEAK — 1st lane and parking lane", "amount_cents": 45, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial NON-PEAK — 2nd lane", "amount_cents": 90, "effective": "2024-01-01", "note": "The escalator is NOT a multiplier: each lane has its own rate; two lanes = $0.45 + $0.90.", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial NON-PEAK — 3rd lane", "amount_cents": 270, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial NON-PEAK — 4th/5th/6th lane", "amount_cents": 325, "effective": "2024-01-01", "note": "4th $3.25 / 5th $4.05 / 6th $6.00 (4th encoded; tiers in note).", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial PEAK — 1st lane and parking lane", "amount_cents": 50, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial PEAK — 2nd lane", "amount_cents": 100, "effective": "2024-01-01", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Collector & Arterial PEAK — 3rd lane", "amount_cents": 200, "effective": "2024-01-01", "note": "ANOMALY — preserve, do not smooth: the 3rd lane is MORE expensive non-peak ($2.70) than peak ($2.00); so are the 4th-6th at some tiers ($3.00/$4.50/$6.75 peak). It is what the schedule says. Do not normalize.", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Bike lane closure (residential / collector-arterial)", "amount_cents": 33, "effective": "2024-01-01", "note": "Two fees that stack: $0.33 bike-lane rate PLUS the $0.45 (non-peak) / $0.50 (peak) lane fee — verbatim 'Bike Lane closure (plus $.45 lane fee)'. Not competing values.", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } },
+      { "label": "Expedite (permit requested in a non-standard timeframe)", "amount_cents": 50000, "effective": "2024-01-01", "note": "Permit Fee + $500 each.", "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" } }
+    ],
+    "formula": null,
+    "note": "STALENESS RISK: this is the 2024 schedule; Denver publishes annually — 2025/2026 schedules almost certainly exist. Rate depends on road class x geographic zone (Residential / CBD-CCA / Collector-Arterial) x peak flag, with a per-lane escalator that is not a multiplier."
+  },
+  "meters": [
+    {
+      "kind": "rejection",
+      "unit": "occurrence",
+      "amount_cents": 10000,
+      "note": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+      "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" }
+    },
+    {
+      "kind": "no_permit",
+      "unit": "day",
+      "amount_cents": 50000,
+      "note": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+      "source": { "doc": "ROWS 2024 Consolidated Fee Schedule", "date": "2024-01-01", "status": "verified" }
+    }
+  ],
+  "leads": [
+    {
+      "label": "Standard RSOP",
+      "lead_days": 5,
+      "lead_unit": "calendar_days",
+      "note": "Published as '>=5 days' (unit as published; Rule 22.3 §IV.1).",
+      "source": { "doc": "Rule 22.3", "section": "IV.1", "date": "2022-04-22", "status": "verified" }
+    },
+    {
+      "label": "Any construction/demolition (incl. street cuts)",
+      "lead_days": 10,
+      "lead_unit": "calendar_days",
+      "note": "Published as '>=10 days'.",
+      "source": { "doc": "Rule 22.3", "section": "IV.1", "date": "2022-04-22", "status": "verified" }
+    },
+    {
+      "label": "Special Events",
+      "lead_days": 60,
+      "lead_unit": "calendar_days",
+      "source": { "doc": "Rule 22.3", "section": "IV.1", "date": "2022-04-22", "status": "verified" }
+    }
+  ],
+  "notices": [
+    {
+      "audience": "adjacent owners, businesses, residents",
+      "rule": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+      "lead_days": 48,
+      "lead_unit": "hours",
+      "source": { "doc": "Rule 22.3", "section": "IV.3", "date": "2022-04-22", "status": "verified" }
+    },
+    {
+      "audience": "public (full street closure)",
+      "rule": "Full street closure: >=2 weeks notice.",
+      "lead_days": 14,
+      "lead_unit": "calendar_days",
+      "source": { "doc": "Rule 22.3", "section": "IV.3", "date": "2022-04-22", "status": "verified" }
+    },
+    {
+      "audience": "press (CBD detours & emergency closures)",
+      "rule": "Press release, issued by the Permittee.",
+      "source": { "doc": "Rule 22.3", "section": "IV.3", "date": "2022-04-22", "status": "verified" }
+    }
+  ],
+  "onsite": {
+    "items": [],
+    "digital_ok": null
+  }
+}
