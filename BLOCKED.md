@@ -6,17 +6,24 @@ in the data file and logged here. Nothing below was guessed or defaulted.
 
 ## `urban_high_speed_breakpoint_mph` (spec §3.4a calls it "required per-jurisdiction")
 
-Encoded only where a read source documents the agency's determination:
+The corpus documents FIVE agency determinations:
 **cdot = 45** (S-630-1 Key table) · **englewood = 35** (TC-1 sign-spacing table) ·
-**littleton = 35** (template <35 mph key).
+**littleton = 35** (template <35 mph key) · **lakewood = 35** (its own typical
+sheets: A=100' ≤30 mph, A=350' ≥35 mph) · **aurora = 35** (spacing Table 1:
+0–30→100, 35–40→350 — identical placement to Englewood's; F19 pattern).
+Lakewood and Aurora are not in the 13 priority files; their records carry 35
+when authored in the remaining-rows pass.
 
 Absent — no read source states the agency's urban speed-category determination:
 `loveland, parker, castle_rock, greeley, westminster, thornton, el_paso,
 centennial, denver, e470`. (Most are geometry-silent jurisdictions where MUTCD
 Table 6B-1 applies with the breakpoint delegated to the agency and never
 published. e470 is a freeway facility — the urban rows may simply not apply.)
-Resolution: per-agency ask, or engine falls back to "unknown — ask the agency"
-per the no-silent-defaults rule.
+
+**Engine fallback rule (Ryan ruling, 2026-07-20):** when a jurisdiction has no
+documented breakpoint, the engine uses the CDOT determination (40/45) via the
+governing chain, and any UI/output labels it "per CDOT baseline" — never as the
+city's own rule.
 
 ## `classification_map_url`
 
@@ -37,7 +44,9 @@ fetched. (All other 11 files: no map known to exist → null is correct.)
 - **loveland**: entire 2026 fee column is a council-packet DRAFT
   (adopted-presumed; confirm adoption — optional phone item, 970-962-2524).
 - **el_paso**: fee worksheet is undated; every El Paso figure is provisional
-  (T2 row — official snippets, documents not read in full).
+  (T2 row — official snippets, documents not read in full). Note: provisional
+  on El Paso means THIN EVIDENCE (source not read end-to-end), not draft-status
+  — distinct from Loveland, where provisional means an unadopted DRAFT column.
 - **westminster**: $15.29/SF street cut effective 2022-06-28 — stale risk; TCP
   review fee line items never located.
 - **thornton**: "$50 processing + computed closure fee" from an undated handout

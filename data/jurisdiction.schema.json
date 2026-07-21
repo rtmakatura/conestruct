@@ -364,6 +364,8 @@
         "amount_cents_max": { "type": "integer", "minimum": 0 },
         "escalated_amount_cents": { "type": "integer", "minimum": 0 },
         "escalation_trigger": { "type": "string" },
+        "provisional": { "type": "boolean" },
+        "effective": { "type": "string" },
         "classes": { "type": ["array", "null"], "items": { "$ref": "#/$defs/streetClass" } },
         "trigger": { "type": "string" },
         "note": { "type": "string" },
