@@ -1,4 +1,5 @@
 import type { JurisdictionBlock, SourceRef } from "@/lib/jurisdiction";
+import { ReferenceChip } from "./ReferenceChip";
 
 export interface DeviceBreakdownRow {
   device: string;
@@ -38,23 +39,47 @@ interface Props {
   onRetry: () => void;
 }
 
+// Restage: the plan-details table lives in a Zone 3 density-contract
+// chip.  The collapsed summary carries the backend counts; an error
+// auto-expands so the Retry is never hidden behind a collapsed chip.
+// Rows a jurisdiction count-delta added carry the backend's
+// jurisdiction_required flag + source — highlighted with the JR tag,
+// never by hue alone (diff-note §2: already-present response fields the
+// old table ignored).
 export function DeviceBreakdown({ state, onRetry }: Props) {
-  return (
-    <section className="mt-9">
-      <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
-        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
-          Plan details
-        </h2>
-      </div>
+  const summary =
+    state.state === "loading" ? (
+      <>loading…</>
+    ) : state.state === "error" ? (
+      <span className="verdict-bad">unavailable — retry inside</span>
+    ) : (
+      <>
+        <b>{state.data.unique_types}</b> device types ·{" "}
+        <b>{state.data.total_devices}</b> total units
+      </>
+    );
+  const jrCount =
+    state.state === "ready"
+      ? state.data.devices.filter((r) => r.jurisdiction_required).length
+      : 0;
+  const jurName = state.state === "ready" ? state.data.jurisdiction?.name : undefined;
 
+  return (
+    <ReferenceChip
+      glyph="▤"
+      label="Plan details — device schedule"
+      sev={state.state === "error" ? "warn" : "info"}
+      autoExpand={state.state === "error"}
+      summary={summary}
+    >
       {state.state === "loading" && (
-        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">
+        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-4">
           Loading device breakdown…
         </div>
       )}
 
       {state.state === "error" && (
-        <div className="flex items-baseline gap-3 py-6">
+        <div className="flex items-baseline gap-3 py-4">
           <div className="font-mono text-[12px] text-[color:var(--fail)]">
             Device breakdown failed: {state.message}
           </div>
@@ -69,27 +94,48 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
       )}
 
       {state.state === "ready" && (
-        <table className="device-table">
-          <thead>
-            <tr>
-              <th>Device type</th>
-              <th>MUTCD code</th>
-              <th>Function</th>
-              <th style={{ textAlign: "right" }}>Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.data.devices.map((row) => (
-              <tr key={`${row.device}-${row.code}`}>
-                <td>{row.device}</td>
-                <td>{row.code}</td>
-                <td>{row.function}</td>
-                <td className="num">{row.qty}</td>
+        <>
+          {jrCount > 0 && jurName && (
+            <p className="text-[12px] text-[color:var(--ink-on-dark)] mt-1 mb-3 pl-2.5 border-l-2 border-[color:var(--dim)]">
+              Highlighted rows are jurisdiction-required — added by{" "}
+              {jurName}&apos;s published rules on top of the MUTCD baseline.
+            </p>
+          )}
+          <table className="device-table">
+            <thead>
+              <tr>
+                <th>Device type</th>
+                <th>MUTCD code</th>
+                <th>Function</th>
+                <th style={{ textAlign: "right" }}>Qty</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {state.data.devices.map((row) => (
+                <tr
+                  key={`${row.device}-${row.code}`}
+                  className={row.jurisdiction_required ? "jr" : undefined}
+                >
+                  <td>
+                    {row.device}
+                    {row.jurisdiction_required && (
+                      <span
+                        className="jr-tag"
+                        title={row.jurisdiction_source?.doc}
+                      >
+                        {jurName ?? "JR"}
+                      </span>
+                    )}
+                  </td>
+                  <td>{row.code}</td>
+                  <td>{row.function}</td>
+                  <td className="num">{row.qty}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
       )}
-    </section>
+    </ReferenceChip>
   );
 }

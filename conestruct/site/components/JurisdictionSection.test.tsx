@@ -50,9 +50,9 @@ describe("JurisdictionSection — real-data rendering", () => {
         setSchedule={noop}
       />,
     );
-    // Collapsed by default (wired-prototype behavior) with the count summary.
-    const head = screen.getByRole("button", { name: /what greeley changes/i });
-    expect(head.textContent).toMatch(/1 deltas · 1 affect count/i);
+    // Collapsed by default (density contract) with the count summary.
+    const head = screen.getByRole("button", { name: /greeley deltas/i });
+    expect(head.textContent).toMatch(/1 delta · 1 affect count/i);
     await userEvent.click(head);
     expect(
       screen.getByText(
@@ -116,7 +116,7 @@ describe("JurisdictionSection — real-data rendering", () => {
     ).toBeTruthy();
   });
 
-  it("El Paso permit FYI: formula structure + digital-on-site, all provisional-flagged", () => {
+  it("El Paso permit FYI: formula structure + digital-on-site, all provisional-flagged", async () => {
     render(
       <JurisdictionSection
         jurisdiction={jur("el_paso")}
@@ -125,6 +125,11 @@ describe("JurisdictionSection — real-data rendering", () => {
         schedule={{ date_mode: "single", work_date: "2026-07-22" }}
         setSchedule={noop}
       />,
+    );
+    // Density contract: the permit chip is collapsed by default (a
+    // permit reference is never plan-invalidating) — expand it.
+    await userEvent.click(
+      screen.getByRole("button", { name: /permit — el paso/i }),
     );
     expect(
       screen.getByText(/fee = f\(lanes_closed, zone_length_ft, days\)/i),
@@ -139,7 +144,7 @@ describe("JurisdictionSection — real-data rendering", () => {
     expect(screen.getByText(/≈ Wed, Jul 8/)).toBeTruthy();
   });
 
-  it("E-470 chips: personnel gates + the $50,000/day fiber hazard from the real meter", () => {
+  it("E-470 chips: personnel gates + the $50,000/day fiber hazard from the real meter", async () => {
     render(
       <JurisdictionSection
         jurisdiction={jur("e470")}
@@ -149,17 +154,23 @@ describe("JurisdictionSection — real-data rendering", () => {
         setSchedule={noop}
       />,
     );
-    expect(screen.getByText(/personnel gates/i)).toBeTruthy();
+    // The hazard chip's dollar figure joins from the meters list — never
+    // restated in the chip record (spec §2.4) — and surfaces on the
+    // COLLAPSED summary (worst meter), per the density contract.
+    const hazardHead = screen.getByRole("button", {
+      name: /public highway authority hazards/i,
+    });
+    expect(hazardHead.textContent).toMatch(/\$50,000 \/ day/);
+    // Body detail is one click away.
+    await userEvent.click(
+      screen.getByRole("button", { name: /personnel gates/i }),
+    );
     expect(
       screen.getByText(/registered professional traffic engineer OR an ATSSA\/CCA-certified TCS/i),
     ).toBeTruthy();
-    expect(screen.getByText(/high-severity hazards/i)).toBeTruthy();
-    // The hazard chip's dollar figure joins from the meters list —
-    // never restated in the chip record (spec §2.4).
-    expect(screen.getByText(/\$50,000 \/ day/)).toBeTruthy();
   });
 
-  it("Westminster chips: TCS-authorship gate rendered with its source", () => {
+  it("Westminster chips: TCS-authorship gate rendered with its source", async () => {
     render(
       <JurisdictionSection
         jurisdiction={jur("westminster")}
@@ -168,6 +179,9 @@ describe("JurisdictionSection — real-data rendering", () => {
         schedule={null}
         setSchedule={noop}
       />,
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /personnel gates/i }),
     );
     expect(
       screen.getByText(/prepared by a certified Traffic Control Supervisor/i),

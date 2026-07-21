@@ -593,20 +593,30 @@ export function GeneratorShell({
                   setScenario({ ...scenario, schedule: s })
                 }
               />
-              {/* AuditTrail joins the zone with results — plus the
-                  pre-generation audit-error case, because the strip's
-                  "retry from the audit trail panel below" must always
-                  point at a panel that exists (rule 10). */}
+              {/* Plan-verification chips join the zone with results —
+                  plus the pre-generation audit-error case, because the
+                  strip's "retry from the audit trail panel below" must
+                  always point at a panel that exists (rule 10). */}
               {(showResults || auditState.state === "error") && (
-                <AuditTrail
-                  scenario={scenario}
-                  audit={auditState}
-                  onRetry={onRetry}
-                  generated={showResults || auditState.state === "error"}
-                />
-              )}
-              {showResults && (
-                <DeviceBreakdown state={deviceBreakdown} onRetry={onRetry} />
+                <div className="ref-group mt-6">
+                  <div className="ref-group-label">
+                    Plan verification &amp; details
+                  </div>
+                  <div className="ref-stack">
+                    <AuditTrail
+                      scenario={scenario}
+                      audit={auditState}
+                      onRetry={onRetry}
+                      generated={showResults || auditState.state === "error"}
+                    />
+                    {showResults && (
+                      <DeviceBreakdown
+                        state={deviceBreakdown}
+                        onRetry={onRetry}
+                      />
+                    )}
+                  </div>
+                </div>
               )}
             </section>
           )}

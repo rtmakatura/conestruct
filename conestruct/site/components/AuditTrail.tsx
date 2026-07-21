@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { ReferenceChip } from "./ReferenceChip";
 import type {
   FlaggerLaneClosureScenario,
   LaneClosureDividedScenario,
@@ -232,40 +233,54 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const isFirstLoad =
     audit.state === "loading" && audit.lastReady === null;
 
+  // Density-contract chip summary (restage): the collapsed line carries
+  // the traced-value count; an audit failure auto-expands — the strip's
+  // "retry from the audit trail panel below" must land on a visible
+  // retry, never a collapsed one (rule 10).
+  const chipSummary =
+    audit.state === "error" ? (
+      <span className="verdict-bad">unavailable — retry inside</span>
+    ) : isFirstLoad ? (
+      <>computing…</>
+    ) : (
+      <>
+        <b>{items.length}</b> values traced ·{" "}
+        <span className="verdict-ok">each cited</span>
+      </>
+    );
+
   return (
-    <section className="mt-9">
-      <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[color:var(--rule)]">
-        <h2
-          className={`text-[20px] font-bold tracking-[-0.005em] text-white m-0 transition-opacity ${isRefreshing ? "opacity-60" : ""}`}
-        >
-          Verification &amp; audit trail
-          {isRefreshing && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] normal-case">
-              (refreshing…)
-            </span>
-          )}
-        </h2>
-        <div className="flex items-baseline gap-4">
-          <button
-            type="button"
-            onClick={onDownloadAuditPdf}
-            disabled={!generated || auditDl === "busy"}
-            className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer"
-          >
-            {auditDl === "busy"
-              ? "Rendering…"
-              : auditDl === "error"
-                ? "Try again"
-                : "↓ Audit PDF"}
-          </button>
-          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)]">
-            <span className="text-[color:var(--act)]">03</span> · SHOW THE WORK
+    <ReferenceChip
+      glyph="∑"
+      label="Verification & audit trail"
+      sev={audit.state === "error" ? "warn" : "info"}
+      autoExpand={audit.state === "error"}
+      summary={chipSummary}
+      badge={
+        isRefreshing ? (
+          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] whitespace-nowrap">
+            (refreshing…)
           </span>
+        ) : undefined
+      }
+    >
+      <div className="flex items-baseline justify-between gap-4 mb-3">
+        <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] max-w-[620px]">
+          Every calculation is traced to its MUTCD or Colorado Supplement
+          source. Verify before stamping.
         </div>
-      </div>
-      <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] mb-4 max-w-[620px]">
-        Every calculation is traced to its MUTCD or Colorado Supplement source.
-        Verify before stamping.
+        <button
+          type="button"
+          onClick={onDownloadAuditPdf}
+          disabled={!generated || auditDl === "busy"}
+          className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer whitespace-nowrap"
+        >
+          {auditDl === "busy"
+            ? "Rendering…"
+            : auditDl === "error"
+              ? "Try again"
+              : "↓ Audit PDF"}
+        </button>
       </div>
       <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-5 max-w-[620px] leading-relaxed">
         Scope: federal MUTCD + Colorado Supplement. Other jurisdictions may
@@ -307,7 +322,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
           </AuditItem>
         ))}
       </div>
-    </section>
+    </ReferenceChip>
   );
 }
 

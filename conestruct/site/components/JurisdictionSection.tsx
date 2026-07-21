@@ -15,7 +15,8 @@
 // pass/fail = --pass/--fail · no verdict = chromaless --none.  No signal
 // relies on hue alone — every state carries a glyph or a word.
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { ReferenceChip } from "./ReferenceChip";
 import {
   activeBandRow,
   dayLabel,
@@ -270,34 +271,31 @@ function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
   return { main: d.severity === "op" ? "method" : "admin" };
 }
 
-function DeltaPanel({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
-  const [open, setOpen] = useState(false);
+function DeltaChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
   const deltas = jurisdiction.applied_deltas;
   const countN = deltas.filter((d) => d.severity === "count" && d.status === "fires").length;
+  // Density contract: empty families render nothing.  (Fired deltas are
+  // still surfaced in the device table regardless — collapsing or
+  // omitting this chip hides detail, never the fact.)
+  if (deltas.length === 0) return null;
   return (
-    <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] mb-5">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left cursor-pointer"
-      >
-        <span
-          aria-hidden
-          className={`text-[color:var(--ink-faint)] transition-transform ${open ? "rotate-90" : ""}`}
-        >
-          ›
-        </span>
-        <h3 className="text-[14px] font-semibold text-[color:var(--heading-on-paper)] m-0">
-          What <b>{jurisdiction.name}</b> changes
-        </h3>
-        <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">
-          {deltas.length} deltas · {countN} affect count
-        </span>
-      </button>
-
-      {open && (
-        <div className="px-4 pb-4">
+    <ReferenceChip
+      glyph="Δ"
+      label={`${jurisdiction.name} deltas`}
+      summary={
+        <>
+          <b>{deltas.length}</b> delta{deltas.length === 1 ? "" : "s"} ·{" "}
+          {countN > 0 ? (
+            <>
+              <b>{countN}</b> affect count
+            </>
+          ) : (
+            "none affect count"
+          )}
+        </>
+      }
+    >
+        <div>
           <div className="flex gap-5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] pb-2 mb-1 border-b border-[color:var(--paper-line-soft)]">
             <span>
               <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--dim)]" aria-hidden />
@@ -312,12 +310,6 @@ function DeltaPanel({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
               Administrative
             </span>
           </div>
-          {deltas.length === 0 && (
-            <div className="text-[12px] text-[color:var(--ink-faint)] py-3">
-              No deltas apply to this plan — the baseline layout satisfies{" "}
-              {jurisdiction.name}&apos;s published rules.
-            </div>
-          )}
           {deltas.map((d) => {
             const impact = deltaImpact(d);
             return (
@@ -356,8 +348,7 @@ function DeltaPanel({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
             );
           })}
         </div>
-      )}
-    </div>
+    </ReferenceChip>
   );
 }
 
@@ -391,25 +382,48 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
 
   const patch = (p: Partial<WorkScheduleInput>) => setSchedule({ ...sched, ...p });
 
+  // The chip's collapsed verdict is the backend's hours_eval — never
+  // recomputed (rule 3).  Auto-expand is reserved for the ONE
+  // plan-invalidating state (schedule outside the window).
+  const status = hoursEval.status;
+  const summary =
+    status === "outside" ? (
+      <span className="verdict-bad">outside window · review schedule</span>
+    ) : status === "inside" ? (
+      <span className="verdict-ok">inside window ✓</span>
+    ) : (
+      <>
+        windows shown · <b>not checked</b>
+      </>
+    );
+
   return (
-    <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] mb-5 px-4 py-4">
-      <div className="flex items-center gap-3 flex-wrap mb-1.5">
-        <h3 className="text-[14px] font-semibold text-[color:var(--heading-on-paper)] m-0">
-          Work hours — {jurisdiction.name}
-        </h3>
-        <div className="ml-auto flex gap-2">
-          {hours.holiday_rule === "holidays_and_eves_banned" && (
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
-              ◐ holiday-eve rule
-            </span>
-          )}
-          {meter && (
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 bg-[color:var(--dim-soft)] border border-[color:var(--dim)] text-[color:var(--dim)]">
-              Metered {meterRateLabel(meter)}
-              {meter.classes?.length ? ` ${meter.classes.join("/")}` : ""}
-            </span>
-          )}
-        </div>
+    <ReferenceChip
+      glyph="◷"
+      label={`Work hours — ${jurisdiction.name}`}
+      sev={status === "outside" ? "warn" : "info"}
+      autoExpand={status === "outside"}
+      summary={summary}
+      badge={
+        hours.conflict ? (
+          <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)] whitespace-nowrap">
+            † source conflict
+          </span>
+        ) : undefined
+      }
+    >
+      <div className="flex gap-2 flex-wrap mb-2 empty:hidden">
+        {hours.holiday_rule === "holidays_and_eves_banned" && (
+          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
+            ◐ holiday-eve rule
+          </span>
+        )}
+        {meter && (
+          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 bg-[color:var(--dim-soft)] border border-[color:var(--dim)] text-[color:var(--dim)]">
+            Metered {meterRateLabel(meter)}
+            {meter.classes?.length ? ` ${meter.classes.join("/")}` : ""}
+          </span>
+        )}
       </div>
 
       {hours.override_note && (
@@ -583,7 +597,7 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
       </div>
 
       <ConflictFootnote conflict={hours.conflict} />
-    </div>
+    </ReferenceChip>
   );
 }
 
@@ -629,15 +643,43 @@ function PermitFYI({
     </div>
   );
 
+  // Density-contract summary: tiers + fee-line count + lead range.
+  const dayLeads = p.leads.filter((l) => l.lead_unit !== "hours");
+  const leadRange =
+    dayLeads.length > 0
+      ? (() => {
+          const dd = dayLeads.map((l) => l.lead_days);
+          const lo = Math.min(...dd);
+          const hi = Math.max(...dd);
+          return lo === hi ? `${lo} days` : `${lo}–${hi} days`;
+        })()
+      : p.leads.length > 0
+        ? "see below"
+        : "—";
+
   return (
-    <div>
+    <ReferenceChip
+      glyph="i"
+      label={`Permit — ${jurisdiction.name}`}
+      summary={
+        <>
+          {p.tiers.length > 0 ? (
+            <>
+              <b>{p.tiers.length}</b> permit type{p.tiers.length === 1 ? "" : "s"}
+            </>
+          ) : (
+            "no published tiers"
+          )}{" "}
+          · <b>{fees.items.length}</b> fee line{fees.items.length === 1 ? "" : "s"} ·
+          lead <b>{leadRange}</b>
+        </>
+      }
+      badge={anyProvisionalFee ? <ProvisionalBadge /> : undefined}
+    >
       <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mb-2">
-        <span className="inline-block w-4 h-4 text-center border border-[color:var(--rule)] mr-1.5" aria-hidden>
-          i
-        </span>
-        Permit info — <b>FYI</b> · {jurisdiction.name} · fees are never quote line items
+        Courtesy reference — <b>FYI</b> · fees are never quote line items
       </div>
-      <div className="border border-[color:var(--paper-line)] bg-[color:var(--paper)] px-4">
+      <div>
         <Section title="Permit type / tier">
           {p.tiers.length > 0 ? (
             <>
@@ -780,7 +822,7 @@ function PermitFYI({
           )}
         </Section>
       </div>
-    </div>
+    </ReferenceChip>
   );
 }
 
@@ -788,31 +830,25 @@ function PermitFYI({
 // 5 · Compliance Chips — evaluated by the backend, three fixed groups
 // ---------------------------------------------------------------------------
 
-function ChipGroup({
-  label,
+function FactRows({
   chips,
   icon,
   tone,
   jurName,
   showMeter,
 }: {
-  label: string;
   chips: Chip[];
   icon: string;
   tone: string;
   jurName: string;
   showMeter?: boolean;
 }) {
-  if (chips.length === 0) return null;
   return (
     <>
-      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mt-3 first:mt-0 mb-1.5">
-        {label}
-      </div>
       {chips.map((x) => (
         <div
           key={x.rule}
-          className={`flex gap-2.5 px-3 py-2.5 mb-1.5 border-l-2 bg-[color:var(--canvas-tint)] ${tone}`}
+          className={`flex gap-2.5 px-3 py-2.5 mb-1.5 last:mb-0 border-l-2 bg-[color:var(--canvas)] ${tone}`}
         >
           <span aria-hidden className="text-[13px]">
             {icon}
@@ -836,42 +872,102 @@ function ChipGroup({
   );
 }
 
-function ComplianceChips({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
-  const c = jurisdiction.chips;
-  const empty = c.personnel.length + c.device.length + c.hazard.length === 0;
+// Density contract: one chip per compliance family; empty families
+// render nothing.  CONDITIONAL rows carry the surfaced-not-auto-applied
+// flag (StatusFlag) and never change counts.
+function PersonnelChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+  const chips = jurisdiction.chips.personnel;
+  if (chips.length === 0) return null;
+  const cond = chips.filter((x) => x.status === "conditional").length;
   return (
-    <div>
-      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mb-2">
-        Compliance callouts
-      </div>
-      {empty && (
-        <div className="text-[12px] text-[color:var(--none)]">
-          ◌ No personnel, device, or hazard callouts on record for this plan.
-        </div>
-      )}
-      <ChipGroup
-        label="Personnel gates"
-        chips={c.personnel}
+    <ReferenceChip
+      glyph="◈"
+      label="Personnel gates"
+      summary={
+        <>
+          <b>{chips.length}</b>
+          {cond > 0 && (
+            <>
+              {" "}
+              · <b>{cond}</b> conditional
+            </>
+          )}
+        </>
+      }
+    >
+      <FactRows
+        chips={chips}
         icon="◈"
         tone="border-[color:var(--act)]"
         jurName={jurisdiction.name}
       />
-      <ChipGroup
-        label="Device mandates"
-        chips={c.device}
+    </ReferenceChip>
+  );
+}
+
+function DeviceMandatesChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+  const chips = jurisdiction.chips.device;
+  if (chips.length === 0) return null;
+  return (
+    <ReferenceChip
+      glyph="▮"
+      label="Device mandates"
+      summary={
+        <>
+          <b>{chips.length}</b> mandate{chips.length === 1 ? "" : "s"}
+        </>
+      }
+    >
+      <FactRows
+        chips={chips}
         icon="▮"
         tone="border-[color:var(--dim)]"
         jurName={jurisdiction.name}
       />
-      <ChipGroup
-        label="High-severity hazards"
-        chips={c.hazard}
+    </ReferenceChip>
+  );
+}
+
+function meterWorstCents(m: Chip["meter"]): number {
+  if (!m) return 0;
+  return m.amount_cents ?? m.amount_cents_max ?? 0;
+}
+
+function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+  const chips = jurisdiction.chips.hazard;
+  if (chips.length === 0) return null;
+  const worst = chips.reduce(
+    (a, b) => (meterWorstCents(b.meter) > meterWorstCents(a.meter) ? b : a),
+    chips[0],
+  );
+  return (
+    <ReferenceChip
+      glyph="⚠"
+      label={`${jurisdiction.name} hazards`}
+      sev="hazard"
+      summary={
+        <>
+          <b>{chips.length}</b> hazard{chips.length === 1 ? "" : "s"}
+          {worst.meter && (
+            <>
+              {" "}
+              — worst:{" "}
+              <span className="font-mono text-[color:var(--fail)]">
+                {meterRateLabel(worst.meter)}
+              </span>
+            </>
+          )}
+        </>
+      }
+    >
+      <FactRows
+        chips={chips}
         icon="⚠"
         tone="border-[color:var(--fail)]"
         jurName={jurisdiction.name}
         showMeter
       />
-    </div>
+    </ReferenceChip>
   );
 }
 
@@ -912,22 +1008,24 @@ export function JurisdictionSection({
           Loading jurisdiction rules…
         </div>
       ) : (
-        <>
-          <DeltaPanel jurisdiction={jurisdiction} />
+        /* Density contract: one collapsed summary chip per family; empty
+           families render nothing. */
+        <div className="ref-stack">
+          <DeltaChip jurisdiction={jurisdiction} />
+          <PersonnelChip jurisdiction={jurisdiction} />
+          <DeviceMandatesChip jurisdiction={jurisdiction} />
+          <HazardChip jurisdiction={jurisdiction} />
           <WorkHoursCard
             jurisdiction={jurisdiction}
             streetClass={streetClass}
             schedule={schedule}
             setSchedule={setSchedule}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <PermitFYI
-              jurisdiction={jurisdiction}
-              workDate={schedule?.work_date ?? null}
-            />
-            <ComplianceChips jurisdiction={jurisdiction} />
-          </div>
-        </>
+          <PermitFYI
+            jurisdiction={jurisdiction}
+            workDate={schedule?.work_date ?? null}
+          />
+        </div>
       )}
     </section>
   );

@@ -1849,6 +1849,140 @@ input[type="number"] {
   padding: 6px 18px 14px;
 }
 
+/* Zone 3 — the density-contract chip grammar.  Every reference family
+   is ONE collapsed summary chip; one click reveals full detail; only
+   plan-invalidating chips auto-expand; empty families render nothing.
+   (`.refchip` — the `.chip` name is taken by the form chip-row.) */
+.workbench .ref-group {
+  margin-bottom: 16px;
+}
+.workbench .ref-group-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.workbench .ref-group-label .ix {
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
+.workbench .ref-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.workbench .refchip {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .refchip .chip-sum {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 15px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+.workbench .refchip .chip-sum:hover {
+  background: var(--canvas);
+}
+.workbench .refchip .chip-sum .gl {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.workbench .refchip .chip-sum .label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.workbench .refchip .chip-sum .detail {
+  font-size: 12.5px;
+  color: var(--ink-on-dark-faint);
+  min-width: 0;
+}
+.workbench .refchip .chip-sum .detail b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .refchip .chip-sum .caret {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--ink-on-dark-faint);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.workbench .refchip.open .chip-sum .caret {
+  transform: rotate(90deg);
+}
+/* severity glyph coloring — one ramp; the left border is the expanded
+   accent (paired with the glyph, never hue alone) */
+.workbench .refchip.sev-hazard .chip-sum .gl {
+  color: var(--fail);
+}
+.workbench .refchip.sev-hazard.open {
+  border-left: 3px solid var(--fail);
+}
+.workbench .refchip.sev-warn .chip-sum .gl {
+  color: var(--warn);
+}
+.workbench .refchip.sev-warn.open {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.sev-info .chip-sum .gl {
+  color: var(--none);
+}
+.workbench .refchip.auto-expand {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.auto-expand.sev-hazard {
+  border-left-color: var(--fail);
+}
+.workbench .refchip .chip-sum .verdict-ok {
+  color: var(--pass);
+}
+.workbench .refchip .chip-sum .verdict-bad {
+  color: var(--warn);
+}
+.workbench .refchip .chip-body {
+  border-top: 1px solid var(--rule-soft);
+  padding: 10px 15px 14px;
+}
+
+/* jurisdiction-required device rows — output-orange wash + source tag
+   (the flag is backend data; the row must read distinct without hue
+   alone, so it also carries the bordered JR tag) */
+.workbench .device-table tr.jr td {
+  background: var(--dim-soft);
+}
+.workbench .device-table .jr-tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--dim);
+  padding: 1px 5px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
 /* Zone 2 error presentation: last successful results kept visible but
    visibly stale — dimmed and desaturated behind a red ribbon.  The
    ribbon carries the words; the wash is never the only signal. */
