@@ -1,0 +1,142 @@
+{
+  "key": "westminster",
+  "name": "Westminster",
+  "authority": "city",
+  "tcp_term": "MHT",
+  "row_term": "right-of-way",
+  "adoption_class": "scoped",
+  "chain": ["MUTCD (latest edition; §8.21.02 still cites 'Part VI' — ghost citation preserved)", "Model Traffic Code + CRS + Westminster Code of Ordinances", "Westminster Standards & Specifications Ch. 8 Traffic (April 2025), §8.28"],
+  "classification_map_url": null,
+  "class_required": false,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §WESTMINSTER (session-3 row); 05-COVERAGE-MATRIX #21,#24,#26",
+  "geometry": {
+    "status": "published",
+    "min_lane_width_ft": {
+      "value": 10,
+      "note": "'Minimum travel lane width in construction areas shall be ten feet (10 ft)' with proper controls incl. flagging; travel-way width may be restricted; on-street parking prohibition 'considered and noted'.",
+      "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.06", "date": "2025-04-15", "status": "verified" }
+    },
+    "note": "No taper/spacing tables — MUTCD latest edition is the design basis (§8.28.05: all necessary signing, striping, coning, barricading, flagging shown on the plan)."
+  },
+  "deltas": [],
+  "hours": {
+    "shape": "work_window",
+    "windows": [
+      {
+        "kind": "work",
+        "days": "all",
+        "classes": null,
+        "start": 8.5,
+        "end": 15.5,
+        "note": "Phrased as a closure-window rule: 'CITY streets shall not be closed overnight and work shall not force road or lane closures before 8:30 a.m. or after 3:30 p.m.' Weekday/weekend scope not stated in the source.",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.06", "date": "2025-04-15", "status": "verified" }
+      }
+    ],
+    "holiday_rule": "none",
+    "override_note": "Exceptions noted on the TCP + Traffic Engineer approval. Overnight complete/partial closures (removing 1+ travel lanes) need explicit Traffic Engineer approval (§8.28.07).",
+    "conflict": null
+  },
+  "personnel": [
+    {
+      "gate": "tcs_authorship",
+      "rule": "'Major projects shall require Traffic Control Plans prepared by a certified Traffic Control Supervisor' (§8.28.04(C)). The Traffic Engineer classifies plans minor/major.",
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "major TCP (Traffic Engineer classifies)" },
+      "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.04(C)", "date": "2025-04-15", "status": "verified" }
+    },
+    {
+      "gate": "named_contact_24h",
+      "rule": "Every TCP must name a 24-hour contact person responsible for TC devices, plus the firm responsible for traffic control.",
+      "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.04", "date": "2025-04-15", "status": "verified" }
+    }
+  ],
+  "devices": [],
+  "hazards": [],
+  "permits": {
+    "required": true,
+    "tiers": [
+      {
+        "label": "Minor TCP",
+        "definition": "Accepts 'a detailed MHT of the roadways and the proposed traffic control devices' OR 'a copy of a typical drawing of traffic device layout from an accepted source approved by the Traffic Engineer' — a jurisdiction that formally accepts third-party typicals for minor TCPs.",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.04(B)", "date": "2025-04-15", "status": "verified" }
+      },
+      {
+        "label": "Major TCP",
+        "definition": "Devices identified by type, 'explicitly noted and dimensioned' on drawings; prepared by a certified TCS.",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.04", "date": "2025-04-15", "status": "verified" }
+      }
+    ],
+    "notes": [
+      {
+        "rule": "Class D Public Way Contractor's License required and in good standing to apply for a ROW permit.",
+        "source": { "doc": "Westminster ROW Permits page (westminsterco.gov/746)", "date": "2026-07-19", "status": "verified" }
+      },
+      {
+        "rule": "Colorado 811 confirmation number required on the application; if a City utility can't be located, a mandatory on-site meeting gates any excavation.",
+        "source": { "doc": "Westminster ROW Permits page (westminsterco.gov/746)", "date": "2026-07-19", "status": "verified" }
+      },
+      {
+        "rule": "Insurance: $1M CGL/auto/employer-liability structure with blasting/underground riders when applicable; maintained through the maintenance period.",
+        "source": { "doc": "Westminster ROW Permits page (westminsterco.gov/746)", "date": "2026-07-19", "status": "verified" }
+      },
+      {
+        "rule": "Field modifications may occur without revision to the plan provided the general intent is satisfied; City Inspector notified of substantial changes only (§8.28.08 — the most lenient field-modification rule in the corpus).",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.08", "date": "2025-04-15", "status": "verified" }
+      },
+      {
+        "rule": "Copies of the approved TCP: 1 on site with the contractor, 1 with the City Inspector, 1 in the engineering file. Permit valid 9 months.",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8 + Research-5 permit parameters", "date": "2025-04-15", "status": "verified" }
+      }
+    ],
+    "multi_agency": []
+  },
+  "fees": {
+    "model": "flat",
+    "items": [
+      {
+        "label": "Street cut",
+        "amount_cents": 1529,
+        "per": "sq_ft",
+        "provisional": true,
+        "effective": "2022-06-28",
+        "note": "Effective 6-28-2022 — stale risk.",
+        "source": { "doc": "Westminster fee schedule (Research 5 capture)", "date": "2022-06-28", "status": "provisional" }
+      }
+    ],
+    "formula": null,
+    "note": "TCP-review fee line items not located."
+  },
+  "meters": [],
+  "leads": [
+    {
+      "label": "Permit review",
+      "lead_days": 14,
+      "lead_unit": "business_days",
+      "note": "Review within 14 business days.",
+      "source": { "doc": "Westminster permit parameters (Research 5 capture)", "status": "provisional" }
+    },
+    {
+      "label": "TCP submittal",
+      "lead_days": 0,
+      "lead_unit": "calendar_days",
+      "note": "TCP submitted earliest with final construction plans, latest with the ROW/public-improvement permit application; no permit without an approved TCP (§8.28.02).",
+      "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.02", "date": "2025-04-15", "status": "verified" }
+    },
+    {
+      "label": "Signals projects — TCP to the Traffic Engineer",
+      "lead_days": 72,
+      "lead_unit": "hours",
+      "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.21.02", "date": "2025-04-15", "status": "verified" }
+    }
+  ],
+  "notices": [],
+  "onsite": {
+    "items": [
+      {
+        "rule": "Contractor keeps 1 approved TCP copy on site at all times.",
+        "source": { "doc": "Westminster Standards & Specifications Ch. 8", "section": "8.28.04", "date": "2025-04-15", "status": "verified" }
+      }
+    ],
+    "digital_ok": null
+  }
+}

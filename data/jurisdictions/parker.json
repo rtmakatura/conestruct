@@ -1,0 +1,302 @@
+{
+  "key": "parker",
+  "name": "Parker",
+  "authority": "city",
+  "tcp_term": "MHT",
+  "row_term": "right-of-way",
+  "adoption_class": "spec_adopter",
+  "chain": ["MUTCD (latest Town adopted edition) + Colorado Supplement", "CDOT Standard Specifications §630 (adopted and revised by the Town)", "Parker RDCCM (Jan 2026 edition)", "ROW Permit Fee Schedule (rev. Jan 2025)"],
+  "classification_map_url": null,
+  "class_required": true,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §PARKER (session-3 row); 05-COVERAGE-MATRIX #13,#14,#22,#30,#31,#32",
+  "geometry": {
+    "status": "silent",
+    "note": "Genuine axis-1 SILENT, verified: no geometry tables, templates, or TC details in the RDCCM (taper/cone/flagger hits are permanent-design only). MHTs follow the current MUTCD. Edition caution: the Jan 2026 RDCCM still pins 'latest Town adopted edition' to 2009/2011 reference blocks — an explicit-policy pin in tension with the statewide 11th-Ed mandate (preserved, not resolved)."
+  },
+  "deltas": [
+    {
+      "severity": "count",
+      "rule": "Vertical panels required for any cut or fill of 2 inches or more within 5 feet of a travel lane, at MUTCD intervals, immediately behind grading/removal operations.",
+      "baseline": "MUTCD imposes no fixed vertical-panel trigger at this threshold",
+      "effect": { "op": "add_device", "device": "vertical_panel", "note": "quantity per MUTCD intervals along the affected length" },
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "cut/fill >= 2 in within 5 ft of a travel lane" },
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "At least one lane in each direction shall remain open to traffic at all times in roadway excavations; the Town does not typically allow full roadway closures.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["lane", "full"], "night": null },
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "Street plates are generally not permitted year-round — 'contractors should not plan to utilize them'; rare exceptions.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "steel plate use proposed" },
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "severity": "admin",
+      "rule": "All traffic control that may conflict with snow removal must be planned for removal from roadways in advance of snow events.",
+      "effect": { "op": "admin" },
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "snow season" },
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "hours": {
+    "shape": "work_window",
+    "windows": [
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": null,
+        "start": 9.0,
+        "end": 15.5,
+        "note": "Lane closures: 'Traffic lanes may be closed to traffic, Monday through Friday, within the hours of 9:00 a.m. to 3:30 p.m.' (RDCCM §8.7.6.1). No traffic control shall be present on the roadways outside these hours.",
+        "source": { "doc": "Parker RDCCM", "section": "8.7.6.1", "date": "2026-01-01", "status": "conflict" }
+      }
+    ],
+    "holiday_rule": "none",
+    "override_note": "Overnight closures not typically permitted — written case-by-case request to the Director; the Town may itself require night work. No traffic interruptions 3:30 p.m.-9:00 a.m. the following day without Director approval. Development construction hours: M-F 7-7, Sat 8-7, Sun 10-7 (weekend-permitted regime). ROW work requiring inspection: M-F 8-5. Emergency utility repairs permitted anytime with adequate MUTCD traffic control.",
+    "conflict": {
+      "label": "arterial work window",
+      "rendered": "9:00–3:30",
+      "sources": [
+        { "doc": "Town TC Manual + RDCCM (Jan 2026)", "value": "9:00–3:30" },
+        { "doc": "2025 Overview", "value": "8:30–3:00" }
+      ],
+      "verdict": "Rendering 9:00–3:30 per the adopted manual."
+    }
+  },
+  "personnel": [
+    {
+      "gate": "named_contact",
+      "rule": "Contractor provides the DTA the contact info of the appointed Traffic Control Supervisor, 'if other than the Project Superintendent' — no certification requirement; the Superintendent is the default TCS.",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "gate": "police_fire_approval",
+      "rule": "Police and Parker Fire District approval is required for every MHT that closes a roadway for any length of time; coordinate police/fire/ambulance/transit on partial or full closures.",
+      "trigger": { "classes": null, "closure": null, "night": null, "condition": "any roadway closure, any duration" },
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "devices": [
+    {
+      "rule": "Devices per MUTCD, supplied by the permittee; overnight excavations properly marked; the Town may maintain/remove failed traffic control at contractor cost.",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "hazards": [
+    {
+      "rule": "Peak-hour lane closures are priced, not banned: $500/day arterial, $250/day collector — 3.3x/2.5x the standard rate. When the closure is scheduled changes the fee.",
+      "meter_kind": "tc_per_day",
+      "source": { "doc": "Parker ROW Permit Fee Schedule", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "rule": "Deposit held to closeout; overrun days and violations deducted; no allowances for weather, staffing, or subcontractor delays — schedule risk sits entirely on the contractor. Third TC offense = termination of permit.",
+      "meter_kind": "tc_violation",
+      "source": { "doc": "Parker Lane Closure Fee and Deposits Overview", "date": "2025-01-01", "status": "verified" }
+    }
+  ],
+  "permits": {
+    "required": true,
+    "tiers": [],
+    "notes": [
+      {
+        "rule": "The ROW permit trigger is the broadest in the corpus: required for all work within public ROW 'or work that may affect public right-of-way'.",
+        "source": { "doc": "Parker ROW Permits page (parkerco.gov)", "date": "2026-07-18", "status": "verified" }
+      },
+      {
+        "rule": "Written closure schedule filed with the application; the Town agrees a duration; lane-closure fee = duration x daily rate, collected up front. Deposits: arterial <=1000 LF = 50% of permit fee, collector = 25%, >1000 LF case-by-case; cash/check, held to closeout; schedule met = full refund less violations.",
+        "source": { "doc": "Parker Lane Closure Fee and Deposits Overview", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "rule": "Insurance: GL $1,000,000 each occurrence / $1,000,000 aggregate; WC/EL 100/100/500; Town of Parker = certificate holder + additional insured, 20120 E. Mainstreet. (Sample sheet drawn from the special-events context — events-sample provenance flag; a ROW-specific limits page supersedes if it surfaces. Auto/umbrella minimums not stated.)",
+        "source": { "doc": "Town of Parker sample Certificate of Insurance (ACORD 25, form 3/22/2024)", "date": "2024-03-22", "status": "provisional" }
+      },
+      {
+        "rule": "Cross-authority permits are Parker application attachments: 'Permits from any outside authorities (CDOT — working on Parker Rd, E-470, etc.)'.",
+        "source": { "doc": "Parker Right of Way Upload Checklist", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "rule": "All restoration within public ROW must be completed within five days of completion of work unless alternate arrangements approved. 72-hour written startup notice; scope growth requires a supplementary application within one business day; subcontractors listed on the application; permits non-transferable without reissue; Equipment Declaration (sales tax) form required.",
+        "source": { "doc": "Parker Right of Way Upload Checklist + RDCCM", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "rule": "'Overnight Work: TBD' is printed in the published fee schedule (preserved as published). RDCCM resolves the posture: overnight closures default-prohibited, written exception to the Director, and the Town may itself require night work.",
+        "source": { "doc": "Parker ROW Permit Fee Schedule + RDCCM §8.7.6.2", "date": "2026-01-01", "status": "verified" }
+      }
+    ],
+    "multi_agency": [
+      {
+        "rule": "Parker Rd = SH-83 = CDOT permit; E-470 work requires the Authority's permit; cross-authority permits attach to the Parker application. Parker Fire District notified of any closure of any length.",
+        "source": { "doc": "Parker Right of Way Upload Checklist + RDCCM", "date": "2025-01-01", "status": "verified" }
+      }
+    ]
+  },
+  "fees": {
+    "model": "flat",
+    "items": [
+      {
+        "label": "Application & Administration (incl. routine TCP review, pre-con meeting, final inspection)",
+        "amount_cents": 40000,
+        "effective": "2025-01-01",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Traffic Control Plan Review Fee (non-routine)",
+        "amount_cents": 30000,
+        "effective": "2025-01-01",
+        "note": "First standalone TCP-review line item in the corpus.",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Permit renewal",
+        "amount_cents": 10000,
+        "effective": "2025-01-01",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Pavement cut",
+        "amount_cents": 500,
+        "per": "sq_ft",
+        "note": "+$5/SF surcharge if the surface is less than 5 years old.",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Boring",
+        "amount_cents": 75,
+        "per": "lin_ft",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Test hole",
+        "amount_cents": 10000,
+        "per": "each",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      },
+      {
+        "label": "Night/after-hours inspection",
+        "amount_cents": 15000,
+        "per": "each",
+        "note": "Per occurrence; re-inspection 50% of original.",
+        "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+      }
+    ],
+    "formula": null,
+    "note": "Lane-closure and sidewalk-closure daily pricing lives in meters (tc_per_day) — it is duration-metered, not flat."
+  },
+  "meters": [
+    {
+      "kind": "tc_per_day",
+      "unit": "day",
+      "amount_cents": 15000,
+      "classes": ["arterial"],
+      "note": "Standard lane-closure fee, arterial/major collector, <=1000 LF; +$50/day per additional 500 LF.",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "tc_per_day",
+      "unit": "day",
+      "amount_cents": 10000,
+      "classes": ["collector", "local"],
+      "note": "Standard lane-closure fee, collector/local, <=1000 LF; local roads generally exempt unless significantly impacted.",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "tc_per_day",
+      "unit": "day",
+      "amount_cents": 5000,
+      "note": "Sidewalk closure.",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "tc_per_day",
+      "unit": "day",
+      "amount_cents": 50000,
+      "classes": ["arterial"],
+      "trigger": "peak_hour_closure",
+      "note": "Peak-hour lane closure premium (3.3x standard).",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "tc_per_day",
+      "unit": "day",
+      "amount_cents": 25000,
+      "classes": ["collector"],
+      "trigger": "peak_hour_closure",
+      "note": "Peak-hour lane closure premium (2.5x standard).",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "no_permit",
+      "unit": "occurrence",
+      "amount_cents": 100000,
+      "note": "Work without permit $1,000; work without locates $1,000 (deducted from deposit).",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "tc_violation",
+      "unit": "occurrence",
+      "amount_cents_min": 50000,
+      "amount_cents_max": 200000,
+      "note": "TC violation ladder: arterial $1,000 (1st) / $2,000 (2nd); collector/local $500/$1,000; third offense = termination of permit.",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "kind": "restoration_failure",
+      "unit": "occurrence",
+      "amount_cents": 50000,
+      "note": "Restoration-timeline failure; restoration due within 5 days of completion of work.",
+      "source": { "doc": "Parker ROW Permit Fee Schedule (rev. Jan 2025)", "date": "2025-01-01", "status": "verified" }
+    }
+  ],
+  "leads": [
+    {
+      "label": "Written startup notice",
+      "lead_days": 72,
+      "lead_unit": "hours",
+      "note": "72-hour written notice before construction commencement.",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "label": "Work near signs/signals — DTA coordination",
+      "lead_days": 2,
+      "lead_unit": "business_days",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "label": "Restoration deadline after completion",
+      "lead_days": 5,
+      "lead_unit": "calendar_days",
+      "note": "Unless alternate arrangements approved.",
+      "source": { "doc": "Parker Right of Way Upload Checklist", "date": "2025-01-01", "status": "verified" }
+    },
+    {
+      "label": "Emergency permit filing",
+      "lead_days": 1,
+      "lead_unit": "business_days",
+      "note": "Permit the first business day after emergency start; phone PW + Police (303-841-9800) + South Metro Fire (720-488-7200).",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "notices": [
+    {
+      "audience": "Parker Fire District",
+      "rule": "Notified of any closure of any length (MHT approval requirement).",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "audience": "Development Review Engineer",
+      "rule": "Monthly construction-schedule updates (mobilization through paving).",
+      "source": { "doc": "Parker RDCCM", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "onsite": {
+    "items": [],
+    "digital_ok": null
+  }
+}
