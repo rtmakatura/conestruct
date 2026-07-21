@@ -1,0 +1,335 @@
+{
+  "key": "englewood",
+  "name": "Englewood",
+  "authority": "city",
+  "tcp_term": "TCP",
+  "row_term": "right-of-way",
+  "adoption_class": "scoped",
+  "chain": ["MUTCD (latest edition) + Colorado Supplement", "EMC Title 11 Ch. 7 (Ord. 00-85, amended Ord. 53-2024)", "2020 Design and Construction Standards (adopted by EMC 11-7-25)", "Traffic Control Details TC-0–TC-10 (rev. 2020-09-22)", "2026 Rate and Fee Schedule"],
+  "classification_map_url": null,
+  "class_required": true,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §ENGLEWOOD; 05-COVERAGE-MATRIX #4,#5,#6",
+  "geometry": {
+    "status": "published",
+    "urban_high_speed_breakpoint_mph": 35,
+    "min_lane_width_ft": {
+      "value": 10,
+      "note": "Measured from edge of pavement, excluding the gutter/pan — a measurement definition no other corpus jurisdiction gives; City staff may require greater (TC-1 T10).",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T10", "date": "2020-09-22", "status": "verified" }
+    },
+    "sign_spacing": [
+      {
+        "max_speed_mph": 30,
+        "distance_ft": 100,
+        "note": "Work Zone Sign Spacing (X); table gives minimum spacing — increase as needed (T08).",
+        "source": { "doc": "Englewood Traffic Control Details TC-1", "date": "2020-09-22", "status": "verified" }
+      },
+      {
+        "min_speed_mph": 35,
+        "max_speed_mph": 40,
+        "distance_ft": 350,
+        "source": { "doc": "Englewood Traffic Control Details TC-1", "date": "2020-09-22", "status": "verified" }
+      },
+      {
+        "min_speed_mph": 45,
+        "distance_ft": 500,
+        "note": "Identical to Aurora across the full range; the 30/35 breakpoint is the municipal pattern (CDOT draws it at 40/45 — both lawful, Table 6B-1 delegates it).",
+        "source": { "doc": "Englewood Traffic Control Details TC-1", "date": "2020-09-22", "status": "verified" }
+      }
+    ],
+    "device_spacing": {
+      "taper_ft": 25,
+      "tangent_ft": 50,
+      "rule": "Flat 25 ft taper / 50 ft tangent at EVERY speed (MUTCD: 1.0xS taper / 2.0xS tangent — agree at 25 mph, Englewood stricter above it; 1.8x MUTCD tangent device count at 45 mph). Published device-count formula: min devices = (length / spacing) + 1. The single most quote-relevant delta in the suburb pass.",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "date": "2020-09-22", "status": "verified" }
+    },
+    "taper": {
+      "rule": "L = W(S²)/60 at <=40 mph, L = WS at >=45 mph — MUTCD's own formulas, tabulated (105/115/125 @25 ... 270/295/320 @40). No delta.",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "date": "2020-09-22", "status": "verified" }
+    },
+    "buffer": {
+      "rule": "Buffer space MAY be placed in advance; recommended for high speed, high volume, or limited sight distance; may be required by City staff based on engineering judgement (T11). Published table matches MUTCD stopping-sight-distance values (155@25 / 200@30 / 250@35 / 305@40 / 360@45).",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T11", "date": "2020-09-22", "status": "verified" }
+    },
+    "other": [
+      {
+        "rule": "Local entrances: device spacing 10 ft (typ.) within '40-ft limits of reduced spacing' each side of the entrance — roughly nine devices where the general rule would place two or three; every local entrance along the zone carries this cost.",
+        "source": { "doc": "Englewood Traffic Control Details TC-7", "date": "2020-09-22", "status": "verified" }
+      },
+      {
+        "rule": "Bike lane taper L = 10 x A (A = bike lane width) — no MUTCD analogue; optional downstream taper 100 ft max; optional parking lane taper 20-50 ft.",
+        "source": { "doc": "Englewood Traffic Control Details TC-6", "date": "2020-09-22", "status": "verified" }
+      },
+      {
+        "rule": "Termination: 50 ft (<=30 mph) / 100 ft (>=35 mph) from work area to end of the channelizing device run (TC-2, TC-4); 500 ft from device-run end to the downstream END ROAD WORK sign (TC-4).",
+        "source": { "doc": "Englewood Traffic Control Details TC-2/TC-4", "date": "2020-09-22", "status": "verified" }
+      }
+    ],
+    "note": "TC-1 is the single source of truth for lengths and spacing — every other sheet defers to it explicitly."
+  },
+  "deltas": [
+    {
+      "severity": "count",
+      "rule": "Arrow boards are required for lane closures on arterial and collector city streets (T09).",
+      "baseline": "arrow board optional per MUTCD for most single-lane closures",
+      "effect": { "op": "add_device", "device": "arrow_board", "qty": 1 },
+      "trigger": { "classes": ["arterial", "collector"], "closure": ["lane"], "night": null },
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T09", "date": "2020-09-22", "status": "verified" }
+    },
+    {
+      "severity": "count",
+      "rule": "When work zone operations impact a parking lane, no-parking signs shall be installed a minimum of 24 hours prior to beginning work (T15).",
+      "effect": { "op": "add_device", "device": "no_parking_sign" },
+      "trigger": { "classes": null, "closure": ["parking_lane"], "night": null },
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T15", "date": "2020-09-22", "status": "verified" }
+    },
+    {
+      "severity": "count",
+      "rule": "Excavations left open overnight require flashing barricades, unless the Engineer authorizes otherwise in writing.",
+      "effect": { "op": "add_device", "device": "flashing_barricade" },
+      "trigger": { "classes": null, "closure": null, "night": true, "condition": "excavation left open overnight (only where the Engineer authorizes an exception to the overnight prohibition)" },
+      "source": { "doc": "Englewood 2020 Standards", "section": "3.2.8.2", "date": "2020-01-01", "status": "conflict" },
+      "conflict": {
+        "label": "overnight excavations",
+        "rendered": "Prohibited (ROW Guide); flashing barricades required where the Engineer authorizes an exception",
+        "sources": [
+          { "doc": "ROW Permits Guide, Gen. Cond. §6", "value": "All work properly backfilled prior to end of workday; no open holes or plates overnight" },
+          { "doc": "2020 Standards §3.2.8.2", "value": "When excavations must remain open overnight: properly marked, flashing barricades unless the Engineer authorizes otherwise in writing" }
+        ],
+        "verdict": "Render the prohibition; the flashing-barricade rule applies only under a written Engineer exception (Q-ENG-3)."
+      }
+    },
+    {
+      "severity": "op",
+      "rule": "Pedestrians shall not be directed across a road with more than 2 lanes without an existing marked crosswalk (TC-5B note 2, verbatim incl. drafting typo in the original) — a hard feasibility gate on ped detours.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["sidewalk"], "night": null, "condition": "pedestrian detour routed across >2 lanes without an existing marked crosswalk" },
+      "source": { "doc": "Englewood Traffic Control Details TC-5B", "section": "note 2", "date": "2020-09-22", "status": "verified" }
+    },
+    {
+      "severity": "op",
+      "rule": "At least one lane of traffic in each direction shall be open to public traffic at all times; all lane closures approved by the Engineer prior to closure. Contractor shall not have construction equipment or materials in lanes open to traffic at any time.",
+      "effect": { "op": "method" },
+      "trigger": { "classes": null, "closure": ["lane", "full"], "night": null },
+      "source": { "doc": "Englewood 2020 Standards §3.2.8.2 + ROW Permits Guide", "date": "2024-06-14", "status": "verified" }
+    },
+    {
+      "severity": "admin",
+      "rule": "A Traffic Control Plan is required for each phase of the work; major changes to the approved TTCP reviewed by the City prior to implementation (T03).",
+      "effect": { "op": "admin" },
+      "trigger": { "classes": null, "closure": null, "night": null },
+      "source": { "doc": "Englewood ROW Permit checklist + TC-1 T03", "date": "2024-06-14", "status": "verified" }
+    }
+  ],
+  "hours": {
+    "shape": "nested_envelope",
+    "windows": [
+      {
+        "kind": "ban",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 7.0,
+        "end": 9.0,
+        "note": "Statutory peak ban (law): no construction obstructing arterial/collector traffic.",
+        "source": { "doc": "EMC 11-7-14(D)", "date": "2024-01-01", "status": "verified" }
+      },
+      {
+        "kind": "ban",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 15.5,
+        "end": 18.0,
+        "source": { "doc": "EMC 11-7-14(D)", "date": "2024-01-01", "status": "verified" }
+      },
+      {
+        "kind": "work",
+        "days": "all",
+        "classes": null,
+        "start": 7.0,
+        "end": 19.0,
+        "note": "Outer envelope: no work 7 p.m.-7 a.m. (noise, EMC 6-2-5(E); TC-1 T17).",
+        "source": { "doc": "TC-1 T17 + EMC 6-2-5(E)", "date": "2020-09-22", "status": "verified" }
+      },
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": null,
+        "start": 8.5,
+        "end": 15.5,
+        "note": "ROW work default window unless the Traffic Engineer approves otherwise.",
+        "source": { "doc": "Englewood ROW Permits Guide", "date": "2024-06-14", "status": "verified" }
+      },
+      {
+        "kind": "work",
+        "days": "weekday",
+        "classes": ["arterial", "collector"],
+        "start": 9.0,
+        "end": 15.0,
+        "note": "Lane closures on arterials and major collectors; all lanes re-opened by 3 pm (T06).",
+        "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T06", "date": "2020-09-22", "status": "conflict" }
+      }
+    ],
+    "holiday_rule": "holidays_banned",
+    "override_note": "No work on any City-recognized holiday without prior permission from the Director of Public Works or designee; Public Works must be notified of any Saturday work. The four hours statements mostly NEST: statutory peak ban outermost, 8:30-3:30 general window, 9-3 arterial lane-closure window innermost.",
+    "conflict": {
+      "label": "arterial lane-closure reopen time",
+      "rendered": "9:00–3:00 (all lanes re-opened by 3:00 p.m.)",
+      "sources": [
+        { "doc": "TC-1 note T06 (2020, adopted by EMC 11-7-25)", "value": "9 a.m.–3 p.m., all lanes re-opened by 3 p.m." },
+        { "doc": "EMC 11-7-14(D)", "value": "peak ban resumes at 3:30 p.m." }
+      ],
+      "verdict": "Rendering the 3:00 p.m. reopen per TC-1 (conservative); the statute alone would allow until 3:30 (Q-ENG-9, narrowed to this half hour)."
+    }
+  },
+  "personnel": [
+    {
+      "gate": "tcs_on_site",
+      "rule": "'The Traffic Control Supervisor (TCS) shall be present on site (or be available) at all times during the duration of the project' (TC-1 T04).",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T04", "date": "2020-09-22", "status": "conflict" },
+      "conflict": {
+        "label": "TCS: required or encouraged",
+        "rendered": "Required (TC-1 T04 carries the weight of law via EMC 11-7-25)",
+        "sources": [
+          { "doc": "TC-1 T04 (2020 drawings, adopted by EMC 11-7-25)", "value": "TCS shall be present on site (or be available) at all times" },
+          { "doc": "2020 Standards §2.2.2.5 / ROW Permits Guide", "value": "trained individuals 'should' be assigned; City 'strongly encourages' ATSSA training" }
+        ],
+        "verdict": "Precedence leans hard toward REQUIRED: TC-1 sits inside a document adopted into the municipal code; the softer wording is guidance beneath it. Open: what '(or be available)' means (Q-ENG-8)."
+      }
+    },
+    {
+      "gate": "flaggers_required",
+      "rule": "Flag persons 'when necessary for public safety'; the City may require them (EMC 11-7-14(C)). Flaggers at BOTH ends of the one-lane two-way closure, drawn as required on TC-3.",
+      "trigger": { "classes": null, "closure": ["lane"], "night": null, "condition": "one-lane two-way operation" },
+      "source": { "doc": "EMC 11-7-14(C) + Traffic Control Details TC-3", "date": "2024-01-01", "status": "verified" }
+    }
+  ],
+  "devices": [
+    {
+      "rule": "Devices supplied by the Permittee; at night: reflectorized AND illuminated, or barricade warning lights. Oil flares and kerosene lanterns prohibited as illumination.",
+      "source": { "doc": "EMC 11-7-14(E),(F)", "date": "2024-01-01", "status": "verified" }
+    },
+    {
+      "rule": "Non-applicable construction signs set so traffic cannot see them during non-construction periods, per CDOT Spec 630; devices no longer appropriate removed or covered on work suspension.",
+      "source": { "doc": "Englewood 2020 Standards §3.2.8.2", "date": "2020-01-01", "status": "verified" }
+    }
+  ],
+  "hazards": [
+    {
+      "rule": "$500/day administrative penalty explicitly covers 'failure to remove temporary construction signage or traffic control devices' — the first corpus penalty aimed squarely at the barricade company's own scope (law adds a 'materially impacts' qualifier the fee schedule omits; both preserved).",
+      "meter_kind": "restoration_failure",
+      "source": { "doc": "Englewood 2026 Rate and Fee Schedule + EMC 11-7-23(E)", "date": "2026-01-01", "status": "verified" }
+    },
+    {
+      "rule": "Device-maintenance failure: if the contractor is unavailable, the City corrects and the contractor pays actual costs + 50% penalty (EMC 11-7-14(G)).",
+      "source": { "doc": "EMC 11-7-14(G)", "date": "2024-01-01", "status": "verified" }
+    }
+  ],
+  "permits": {
+    "required": true,
+    "tiers": [],
+    "term_days": 180,
+    "notes": [
+      {
+        "rule": "Unlawful to perform any work in the ROW without a City contractors license (EMC 11-7-4 — the strongest licensing language in the corpus). Excavation permits: Class A, B or D licensed contractor; concrete: D06. Subcontracting expressly allowed; Permittee remains responsible.",
+        "source": { "doc": "EMC 11-7-4 + ROW Permits Guide", "date": "2024-01-01", "status": "verified" }
+      },
+      {
+        "rule": "Performance bond = total cost of construction (labor + materials) or $5,000, whichever is greater; in force >=2 years after completion and acceptance; City may waive for in-state financial stability. COI naming the City as additional insured AND certificate holder.",
+        "source": { "doc": "EMC 11-7-9 + ROW Permits Guide", "date": "2024-01-01", "status": "verified" }
+      },
+      {
+        "rule": "Permit expires in 180 days or less; scope growth requires an amended permit BEFORE exceeding scope ($190 amendment fee, which also covers prompt re-application after denial). Work must start within 10 business days of issuance or the permit is invalid; all permit fees non-refundable. Work after expiry or without permit: 2x the calculated fee.",
+        "source": { "doc": "EMC 11-7-4 + ROW Permits Guide + 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" }
+      },
+      {
+        "rule": "All costs of developing, implementing, and maintaining the TCP are the Permittee's responsibility (EMC 11-7-14(I) — first jurisdiction to state TCP cost allocation in law).",
+        "source": { "doc": "EMC 11-7-14(I)", "date": "2024-01-01", "status": "verified" }
+      },
+      {
+        "rule": "Fee-responds-to-design ambiguity preserved (Q-ENG-2): whether the Nth-lane rate applies only to that lane or replaces the rate for all closed lanes is unresolved.",
+        "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" }
+      }
+    ],
+    "multi_agency": [
+      {
+        "rule": "Work within the US 285, Belleview Ave. and S. Federal Blvd. rights-of-way requires a CDOT permit (the contractor obtains it) and in most cases an Englewood permit; CDOT's M&S standards apply to work zones impacting state highways (T16). On Englewood city streets, Englewood's own TC standards govern — the city does NOT inherit the CDOT 28\"/36\" cone rule on city work.",
+        "source": { "doc": "Englewood Traffic Control Details TC-1 T16 + ROW Permits Guide", "date": "2020-09-22", "status": "verified" }
+      }
+    ]
+  },
+  "fees": {
+    "model": "flat",
+    "items": [
+      { "label": "Sidewalk closure", "amount_cents": 45, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Bike lane closure", "amount_cents": 99, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Transit lane closure", "amount_cents": 312, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Parking lane closure", "amount_cents": 350, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "1st lane closure", "amount_cents": 600, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "2nd lane closure", "amount_cents": 1200, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "3rd lane closure", "amount_cents": 2400, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "4th lane closure", "amount_cents": 3600, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "5th lane closure", "amount_cents": 5400, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "6th lane closure", "amount_cents": 8100, "per": "lf_day", "effective": "2026-01-01", "note": "Escalation x2, x2, x1.5, x1.5, x1.5 across lanes 1-6 — superlinear.", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Alley closure", "amount_cents": 800, "per": "lf_day", "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Detour fee, entire road closure", "amount_cents": 505, "per": "lf_day", "effective": "2026-01-01", "note": "Applied per LF per day IN ADDITION to lane closure fees; waived for Xcel Category 1/2 emergency gas repairs completed within 3 days.", "source": { "doc": "Englewood 2026 Rate and Fee Schedule (EMC 11-7-6)", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Excavation Permit", "amount_cents": 19500, "effective": "2026-01-01", "note": "Minimum, plus hourly rate; Concrete Permit same.", "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Permit Amendment Application Fee", "amount_cents": 19000, "effective": "2026-01-01", "note": "Covers scope/duration expansion, permittee transfer, prompt re-application after denial, other.", "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Street Degradation / Restoration Fee", "amount_cents": 1000, "per": "lin_ft", "effective": "2026-01-01", "note": "Per LF of trench excavation.", "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Re-inspection Fee", "amount_cents": 7500, "effective": "2026-01-01", "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" } },
+      { "label": "Administrative Review Fee", "amount_cents": 12500, "per": "hour", "effective": "2026-01-01", "note": "Superseded the prior $38/hr (Ord. 23-13).", "source": { "doc": "Englewood 2026 Rate and Fee Schedule", "date": "2026-01-01", "status": "verified" } }
+    ],
+    "formula": null,
+    "note": "The lane-closure ladder is the corpus's most encodable fee-responds-to-design instance: the engine already knows lane count, lane type, closure length, and duration — every input this table needs."
+  },
+  "meters": [
+    {
+      "kind": "restoration_failure",
+      "unit": "day",
+      "amount_cents": 50000,
+      "note": "Administrative penalties (EMC 11-7-23(E)): working without a valid permit, unlicensed contractor, and failure to timely remove temporary construction signage or TC devices upon completion of work that materially impacts travel.",
+      "source": { "doc": "Englewood 2026 Rate and Fee Schedule + EMC 11-7-23(E)", "date": "2026-01-01", "status": "verified" }
+    }
+  ],
+  "leads": [
+    {
+      "label": "Permit review",
+      "lead_days": 5,
+      "lead_unit": "business_days",
+      "note": "3-5 business days for all applications; Engineering Division reviews.",
+      "source": { "doc": "Englewood ROW Permits Guide", "date": "2024-06-14", "status": "verified" }
+    },
+    {
+      "label": "Inspection notice",
+      "lead_days": 24,
+      "lead_unit": "hours",
+      "note": "Call 303-762-2500; inspection window daily 8 AM-3 PM.",
+      "source": { "doc": "Englewood ROW Permits Guide", "date": "2024-06-14", "status": "verified" }
+    },
+    {
+      "label": "Lane/alley closure exact dates to Public Works",
+      "lead_days": 24,
+      "lead_unit": "hours",
+      "note": "TC-1 T05: at least 24 hours prior.",
+      "source": { "doc": "Englewood Traffic Control Details TC-1", "section": "T05", "date": "2020-09-22", "status": "verified" }
+    }
+  ],
+  "notices": [
+    {
+      "audience": "adjacent property owners, businesses, residents",
+      "rule": "Notify for any road closure or parking restriction impacting adjacent properties: description of work, times and duration, company name, emergency contact number. Street closures: notices to affected properties >=48 hours before (EMC 11-7-14(B)); coordinate with police, fire, ambulance, other governmental entities, and transit.",
+      "lead_days": 48,
+      "lead_unit": "hours",
+      "source": { "doc": "Englewood ROW Permits Guide + EMC 11-7-14(B)", "date": "2024-01-01", "status": "verified" }
+    },
+    {
+      "audience": "residents and businesses (alley closures)",
+      "rule": "Contractor must give notice to all local residents and businesses prior to alley closure (TC-9/TC-10).",
+      "source": { "doc": "Englewood Traffic Control Details TC-9/TC-10", "date": "2020-09-22", "status": "verified" }
+    }
+  ],
+  "onsite": {
+    "items": [],
+    "digital_ok": null
+  }
+}
