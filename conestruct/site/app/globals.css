@@ -1440,6 +1440,12 @@ input[type="number"] {
   color: #fff;
   font-weight: 700;
 }
+/* compact breadcrumb: full title on hover — the dotted underline is the
+   there's-more cue */
+.workbench .chain .seg[title] {
+  border-bottom: 1px dotted var(--rule);
+  cursor: help;
+}
 .workbench .chain .sep {
   color: var(--rule);
   font-size: 12px;
@@ -1463,22 +1469,23 @@ input[type="number"] {
    During the jurisdiction fetch the chain slot renders a skeleton at
    final size: one reflow max, zero when data lands. */
 .workbench .jbar-slot-auth {
-  min-height: 36px; /* 2 lines @ 12px/1.5 */
+  line-height: 18px; /* pinned — unpinned line boxes measured 19.5px and
+                        broke the 2-line reservation by 3px */
+  min-height: 36px; /* 2 lines */
 }
 .workbench .jbar-slot-hint {
   display: block;
-  min-height: 17px; /* 1 line @ 11px/1.5 */
+  line-height: 17px;
+  min-height: 34px; /* 2 lines — the look-it-up hint wraps at 1100px */
 }
-/* FIXED height (not min): the tallest launch-8 chains measure 260–300px
-   (Denver/Lakewood, viewport-dependent) — reserving that literally would
-   triple the bar into empty space for every other selection, and the
-   value shifts with width.  170px shows most chains whole; the five tall
-   ones scroll inside the slot, auto-anchored to the END so the local
-   override (last & strongest) is always the visible line. */
+/* FIXED height sized to the tallest launch-8 compact breadcrumb at the
+   1100px 3-column width (Ryan ruling, inc-9: chains render authored
+   display_names, full titles on hover) — every chain fits whole, no
+   internal scroll.  Re-measure with scripts/verify-jbar-stability.mjs
+   if a chain gains links. */
 .workbench .jbar-slot-chain {
-  height: 170px;
-  overflow-y: auto;
-  scrollbar-width: thin;
+  height: 108px; /* Englewood's 5-link breadcrumb + note at 1100px (105px
+                    measured) — the tallest; every chain fits, no scroll */
 }
 .workbench .jbar-skel-line {
   display: block;

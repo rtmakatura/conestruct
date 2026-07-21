@@ -151,13 +151,31 @@ export interface PermitBlock {
   onsite: { items: { rule: string; source: SourceRef }[]; digital_ok: boolean | null };
 }
 
+/** One governing-document link in the spec chain.  ``display_name`` is
+ *  the compact breadcrumb name (authored in the jurisdiction data files,
+ *  an abbreviation of the title — never new information); the full
+ *  ``title`` surfaces on hover. */
+export interface ChainLink {
+  title: string;
+  display_name: string;
+}
+
+/** Deploy-window adapter: a pre-display_name backend serves chain links
+ *  as plain strings — normalize to ChainLink (full title doubling as
+ *  the display name, the pre-inc-9 behavior) instead of crashing. */
+export function normalizeChainLink(link: ChainLink | string): ChainLink {
+  return typeof link === "string"
+    ? { title: link, display_name: link }
+    : link;
+}
+
 export interface JurisdictionBlock {
   key: string;
   name: string;
   tcp_term: string;
   row_term: string;
   authority: string;
-  chain: string[];
+  chain: (ChainLink | string)[];
   class_required: boolean;
   classification_map_url: string | null;
   hours: JurisdictionHours;

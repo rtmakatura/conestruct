@@ -5,7 +5,24 @@
   "tcp_term": "MHT",
   "row_term": "public space",
   "adoption_class": "plan_adopter",
-  "chain": ["MUTCD + Colorado Supplement", "COG MHT/Barricade Manual (NOT LOCATED — dead link, upload wanted)", "Greeley Permitting Requirements for Public Space (Mar 2025)", "2026 Fee Schedule (eff. 2026-01-01)"],
+  "chain": [
+    {
+      "title": "MUTCD + Colorado Supplement",
+      "display_name": "MUTCD + CO Suppl."
+    },
+    {
+      "title": "COG MHT/Barricade Manual (NOT LOCATED — dead link, upload wanted)",
+      "display_name": "MHT Manual (not located)"
+    },
+    {
+      "title": "Greeley Permitting Requirements for Public Space (Mar 2025)",
+      "display_name": "Public Space Reqs"
+    },
+    {
+      "title": "2026 Fee Schedule (eff. 2026-01-01)",
+      "display_name": "2026 Fee Sched."
+    }
+  ],
   "classification_map_url": null,
   "class_required": true,
   "currency_date": "2026-07-20",
@@ -19,9 +36,26 @@
       "severity": "count",
       "rule": "Type C arrow boards must be used on all arterial and collector roadways for through lane closures.",
       "baseline": "arrow board optional per MUTCD",
-      "effect": { "op": "add_device", "device": "arrow_board_type_c", "qty": 1 },
-      "trigger": { "classes": ["arterial", "collector"], "closure": ["lane"], "night": null },
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "effect": {
+        "op": "add_device",
+        "device": "arrow_board_type_c",
+        "qty": 1
+      },
+      "trigger": {
+        "classes": [
+          "arterial",
+          "collector"
+        ],
+        "closure": [
+          "lane"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -34,16 +68,27 @@
         "start": 7.0,
         "end": 19.0,
         "note": "General Public Space work outer envelope, all streets. Weekend treatment not stated in read sources.",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       },
       {
         "kind": "work",
         "days": "all",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 8.5,
         "end": 16.0,
         "note": "Inner window: no start before 8:30 AM, no work past 4:00 PM on arterials/collectors.",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       }
     ],
     "holiday_rule": "none",
@@ -54,13 +99,26 @@
     {
       "gate": "tcs_on_site",
       "rule": "More extensive traffic control setups may require an approved TCS to remain on site (conditional, per permit review).",
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "extensive traffic control setup, per permit review" },
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "extensive traffic control setup, per permit review"
+      },
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     },
     {
       "gate": "named_contact",
       "rule": "The Traffic Control Review Form signer attests being trained and/or certified in fundamental TTC principles and responsible for setup and maintenance for the duration, on the jobsite.",
-      "source": { "doc": "Greeley Traffic Control Review Form (Rev 2-2011)", "date": "2011-02-01", "status": "verified" }
+      "source": {
+        "doc": "Greeley Traffic Control Review Form (Rev 2-2011)",
+        "date": "2011-02-01",
+        "status": "verified"
+      }
     }
   ],
   "devices": [],
@@ -68,7 +126,11 @@
     {
       "rule": "MHT Manual violations carry a published, tiered dollar ladder ($125-$1,500 by violation type and offense count) — the first such ladder in the corpus.",
       "meter_kind": "tc_violation",
-      "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+      "source": {
+        "doc": "Greeley 2026 Fee Schedule",
+        "date": "2026-01-01",
+        "status": "verified"
+      }
     }
   ],
   "permits": {
@@ -77,35 +139,63 @@
       {
         "label": "Public Space Traffic permit",
         "definition": "Dedicated TC permit type — mobility impact alone triggers it, no ground disturbance needed (dumpsters/moving containers in ROW included; food trucks parking diagonally).",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       },
       {
         "label": "General Construction permit",
         "definition": "Potholing scope completed BEFORE the permit for subsurface/boring work.",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       },
       {
         "label": "Development permit",
         "definition": "Post-land-use-case; financial guarantee + PE-sealed Certification of Quantities.",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       }
     ],
     "notes": [
       {
         "rule": "'Public Space' is Greeley's official term for the ROW — surfaces should say 'Public Space permit', not 'ROW permit'. TC plans are 'Method of Handling Traffic' (MHT) plans.",
-        "source": { "doc": "Greeley Public Space Permitting page + TC Review Form", "date": "2026-07-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Public Space Permitting page + TC Review Form",
+          "date": "2026-07-19",
+          "status": "verified"
+        }
       },
       {
         "rule": "Contractors need a Greeley Business License before Public Space work; permitting via the eTrakit portal; same-day issuance on payment.",
-        "source": { "doc": "Greeley Public Space Permitting page", "date": "2026-07-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Public Space Permitting page",
+          "date": "2026-07-19",
+          "status": "verified"
+        }
       },
       {
         "rule": "Work completed without inspection: possible removal + corrective action + 20% of permit total penalty (percentage — not renderable as a fixed meter).",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Extensions: up to 3, apply at least 5 days pre-expiration; expired = reapply (prior fees credited). Application void at 30 days if incomplete.",
-        "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+        "source": {
+          "doc": "Greeley Permitting Requirements for Activities within Public Space",
+          "date": "2025-03-19",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": []
@@ -118,28 +208,44 @@
         "amount_cents": 10000,
         "effective": "2026-01-01",
         "note": "Non-refundable.",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Trench cut — PQI High (>70)",
         "amount_cents": 468,
         "per": "sq_ft",
         "effective": "2026-01-01",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Trench cut — PQI Medium (40-70)",
         "amount_cents": 233,
         "per": "sq_ft",
         "effective": "2026-01-01",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Trench cut — PQI Low (<=40)",
         "amount_cents": 39,
         "per": "sq_ft",
         "effective": "2026-01-01",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "High-impact transverse cut (<5 ft) — PQI High/Medium/Low",
@@ -147,7 +253,11 @@
         "per": "sq_ft",
         "effective": "2026-01-01",
         "note": "High $28.06 / Medium $14.02 / Low $0.39 per SF (High encoded; tiers in note).",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Potholes — PQI High/Medium/Low",
@@ -155,7 +265,11 @@
         "per": "each",
         "effective": "2026-01-01",
         "note": "High $62.35 / Medium $31.17 / Low $7.79 each (High encoded; tiers in note).",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Parking stall occupation — Green Zone",
@@ -163,7 +277,11 @@
         "per": "day",
         "effective": "2026-01-01",
         "note": "Orange Zone $10/day.",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "After-hours inspection",
@@ -171,14 +289,22 @@
         "per": "hour",
         "effective": "2026-01-01",
         "note": "2-hour minimum.",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Re-inspection",
         "amount_cents": 7500,
         "effective": "2026-01-01",
         "note": "Plus hourly — charged when called out more than twice without being ready.",
-        "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley 2026 Fee Schedule",
+          "date": "2026-01-01",
+          "status": "verified"
+        }
       }
     ],
     "formula": null,
@@ -191,7 +317,11 @@
       "amount_cents_min": 12500,
       "amount_cents_max": 150000,
       "note": "'MHT Manual Violation Penalty: $125-$1,500 (based on violation type and number of offenses, see COG MHT Manual for more information).'",
-      "source": { "doc": "Greeley 2026 Fee Schedule", "date": "2026-01-01", "status": "verified" }
+      "source": {
+        "doc": "Greeley 2026 Fee Schedule",
+        "date": "2026-01-01",
+        "status": "verified"
+      }
     }
   ],
   "leads": [
@@ -200,20 +330,32 @@
       "lead_days": 5,
       "lead_unit": "business_days",
       "note": "5 working days advance notice; 72-hour pre-construction notice strongly recommended.",
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     },
     {
       "label": "Start notice to the Civil Inspector",
       "lead_days": 2,
       "lead_unit": "business_days",
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     },
     {
       "label": "PW inspections call-ahead",
       "lead_days": 48,
       "lead_unit": "hours",
       "note": "970-350-9359; grading 24-hour.",
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     }
   ],
   "notices": [
@@ -222,21 +364,33 @@
       "rule": "Full closures / significant access impacts: 7-day minimum advance public notification (matches the LCUASS 7-day rule — a Northern-Colorado closure-notice pattern).",
       "lead_days": 7,
       "lead_unit": "calendar_days",
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     },
     {
       "audience": "Police + COG.Permits (emergency)",
       "rule": "Emergency process: call PD non-emergency 970-350-9600 + email COG.Permits immediately, work, then file within 24 hours of starting.",
       "lead_days": 24,
       "lead_unit": "hours",
-      "source": { "doc": "Greeley Permitting Requirements for Activities within Public Space", "date": "2025-03-19", "status": "verified" }
+      "source": {
+        "doc": "Greeley Permitting Requirements for Activities within Public Space",
+        "date": "2025-03-19",
+        "status": "verified"
+      }
     }
   ],
   "onsite": {
     "items": [
       {
         "rule": "'This form and the (MHT) Plan SHALL be on the job site at all times.'",
-        "source": { "doc": "Greeley Traffic Control Review Form (Rev 2-2011)", "date": "2011-02-01", "status": "verified" }
+        "source": {
+          "doc": "Greeley Traffic Control Review Form (Rev 2-2011)",
+          "date": "2011-02-01",
+          "status": "verified"
+        }
       }
     ],
     "digital_ok": null

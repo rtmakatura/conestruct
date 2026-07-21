@@ -47,11 +47,16 @@ for (const width of [1440, 1100]) {
 
   const measure = () =>
     page.evaluate(() => {
-      const bar = document.querySelector(".jbar");
+      const h = (sel) => {
+        const el = document.querySelector(sel);
+        return el ? Math.round(el.getBoundingClientRect().height) : -1;
+      };
       const chain = document.querySelector(".jbar-slot-chain");
       return {
-        bar: Math.round(bar.getBoundingClientRect().height),
-        chainSlot: Math.round(chain.getBoundingClientRect().height),
+        bar: h(".jbar"),
+        authSlot: h(".jbar-slot-auth"),
+        hintSlot: h(".jbar-slot-hint"),
+        chainSlot: h(".jbar-slot-chain"),
         chainContent: Math.round(
           (chain.firstElementChild?.getBoundingClientRect().height ?? 0) +
             (chain.lastElementChild !== chain.firstElementChild
@@ -87,7 +92,7 @@ for (const width of [1440, 1100]) {
   );
   for (const [k, h] of Object.entries(heights)) {
     console.log(
-      `  ${k.padEnd(20)} bar=${h.bar} chainSlot=${h.chainSlot} chainContent=${h.chainContent}`,
+      `  ${k.padEnd(20)} bar=${h.bar} auth=${h.authSlot} hint=${h.hintSlot} chainSlot=${h.chainSlot} chainContent=${h.chainContent}`,
     );
   }
   await page.close();

@@ -5,7 +5,24 @@
   "tcp_term": "TCP",
   "row_term": "right-of-way",
   "adoption_class": "spec_adopter",
-  "chain": ["MUTCD (most recent edition) + Colorado Supplement", "CDOT Standard Specifications as revised by Town Standard Special Provisions (Rev 7/22)", "Model Traffic Code Nov 2024 Rev 1.0 (Ord. 2025-036)", "Development Services Fee Schedule (eff. 2026-07-01)"],
+  "chain": [
+    {
+      "title": "MUTCD (most recent edition) + Colorado Supplement",
+      "display_name": "MUTCD + CO Suppl."
+    },
+    {
+      "title": "CDOT Standard Specifications as revised by Town Standard Special Provisions (Rev 7/22)",
+      "display_name": "CDOT Specs + Town SSP"
+    },
+    {
+      "title": "Model Traffic Code Nov 2024 Rev 1.0 (Ord. 2025-036)",
+      "display_name": "Model Traffic Code"
+    },
+    {
+      "title": "Development Services Fee Schedule (eff. 2026-07-01)",
+      "display_name": "Dev. Services Fee Sched."
+    }
+  ],
   "classification_map_url": null,
   "class_required": true,
   "currency_date": "2026-07-20",
@@ -15,12 +32,20 @@
     "min_lane_width_ft": {
       "value": 10,
       "note": "Minimum 10-ft lane width maintained past work zones (§630 special provisions).",
-      "source": { "doc": "Castle Rock Standard Special Provisions (§630 revisions)", "date": "2022-07-01", "status": "provisional" }
+      "source": {
+        "doc": "Castle Rock Standard Special Provisions (§630 revisions)",
+        "date": "2022-07-01",
+        "status": "provisional"
+      }
     },
     "device_clearance_ft": {
       "value": 2,
       "note": "Minimum 2-ft clearance between traffic control devices and the travel lane.",
-      "source": { "doc": "Castle Rock Standard Special Provisions (§630 revisions)", "date": "2022-07-01", "status": "provisional" }
+      "source": {
+        "doc": "Castle Rock Standard Special Provisions (§630 revisions)",
+        "date": "2022-07-01",
+        "status": "provisional"
+      }
     },
     "note": "No taper/spacing tables — MUTCD (most recent edition) governs. Geometry facts above are T2 (official-source extracts, document not read in full)."
   },
@@ -29,23 +54,56 @@
       "severity": "admin",
       "rule": "The TCP must show a plan view of the street and all detour roads (lane widths and nearby existing signs shown), the number and type of traffic control/detour signs needed to implement the plan, and the street classification per the Roadway Functional Classification map.",
       "baseline": "MUTCD imposes no device-count-on-plan requirement",
-      "effect": { "op": "admin", "note": "explicit device count + type required on the TCP — Conestruct's exact output shape" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)", "date": "2026-07-19", "status": "provisional" }
+      "effect": {
+        "op": "admin",
+        "note": "explicit device count + type required on the TCP — Conestruct's exact output shape"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+        "date": "2026-07-19",
+        "status": "provisional"
+      }
     },
     {
       "severity": "op",
       "rule": "The Contractor will not be permitted to have construction equipment or materials in the lane(s) open to traffic; personal-vehicle and equipment parking prohibited where it conflicts with safety/access/flow.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Castle Rock Standard Special Provisions", "date": "2022-07-01", "status": "provisional" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Castle Rock Standard Special Provisions",
+        "date": "2022-07-01",
+        "status": "provisional"
+      }
     },
     {
       "severity": "admin",
       "rule": "Contractor owns snow removal within work limits; the Town maintains roadway portions outside contract limits (104.04 revision).",
-      "effect": { "op": "admin" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "snow season" },
-      "source": { "doc": "Castle Rock Standard Special Provisions", "section": "104.04", "date": "2022-07-01", "status": "provisional" }
+      "effect": {
+        "op": "admin"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "snow season"
+      },
+      "source": {
+        "doc": "Castle Rock Standard Special Provisions",
+        "section": "104.04",
+        "date": "2022-07-01",
+        "status": "provisional"
+      }
     }
   ],
   "hours": {
@@ -57,7 +115,11 @@
         "classes": null,
         "start": 19.0,
         "end": 24.0,
-        "source": { "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "kind": "ban",
@@ -65,7 +127,11 @@
         "classes": null,
         "start": 0.0,
         "end": 7.0,
-        "source": { "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "kind": "ban",
@@ -74,7 +140,11 @@
         "start": 18.0,
         "end": 24.0,
         "note": "Weekends and holidays.",
-        "source": { "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "kind": "ban",
@@ -83,7 +153,11 @@
         "start": 0.0,
         "end": 8.0,
         "note": "Weekends and holidays.",
-        "source": { "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Muni Code 9.16 (noise ordinance) via crgov.com/2134",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       }
     ],
     "holiday_rule": "none",
@@ -97,12 +171,20 @@
     {
       "rule": "Traffic control is metered by the day ($75/day), doubling to $150/day after the permit expiration date — no refunds for early completion.",
       "meter_kind": "tc_per_day",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     },
     {
       "rule": "Extended Infrastructure Closure Penalty: $1,000/day minimum (<=7 days), $2,500/day minimum (>7 days), subject to adjustment per the Director — the highest open-ended municipal closure penalty in the corpus.",
       "meter_kind": "overrun",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     }
   ],
   "permits": {
@@ -111,23 +193,43 @@
     "notes": [
       {
         "rule": "'Every person who plans to work within the Town's ROW must have a traffic control plan approved by a Town traffic engineer.'",
-        "source": { "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "rule": "Street classification is an applicant lookup step against the published Roadway Functional Classification map.",
-        "source": { "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "rule": "eTRAKiT end-to-end (apply -> review -> email notice -> pay in portal); pre-construction meeting scheduled before issuance; Town registration (ICC-equivalent exam) required.",
-        "source": { "doc": "Castle Rock ROW Permit Application Process Checklist", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock ROW Permit Application Process Checklist",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       },
       {
         "rule": "ROW Permit is limited to 1,000 linear feet of work per permit; excess case-by-case (a per-permit length cap, first in the corpus).",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Pavement excavation/cut fee is 'based on the loss of pavement service life due to the excavation' — computed per cut, no published rate table.",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": []
@@ -140,32 +242,52 @@
         "amount_cents": 25000,
         "effective": "2026-07-01",
         "note": "Limited to 1,000 LF of work per permit.",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Traffic Control Review",
         "amount_cents": 20000,
         "effective": "2026-07-01",
         "note": "Standalone TCP-review fee (pairs with Parker's $300).",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Emergency ROW Permit",
         "amount_cents": 30000,
         "effective": "2026-07-01",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Sidewalk Closure Permit",
         "amount_cents": 19500,
         "effective": "2026-07-01",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Obstructions to Public ROW (incl. blocking sidewalks)",
         "amount_cents": 7500,
         "effective": "2026-07-01",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Boring in Public ROW",
@@ -173,27 +295,43 @@
         "per": "lin_ft",
         "effective": "2026-07-01",
         "note": "$10.00/LF if boring in Public ROW when an easement is available (2026 addition — a 10x stay-out-of-the-ROW price signal).",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Inspection",
         "amount_cents": 19500,
         "effective": "2026-07-01",
         "note": "$65 each after the 3rd; not-ready-for-inspection $195.",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Working without locates",
         "amount_cents": 30000,
         "effective": "2026-07-01",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Striping damage",
         "amount_cents": 3500,
         "per": "sq_ft",
         "effective": "2026-07-01",
-        "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+        "source": {
+          "doc": "Castle Rock Development Services Fee Schedule",
+          "date": "2026-07-01",
+          "status": "verified"
+        }
       }
     ],
     "formula": null,
@@ -207,7 +345,11 @@
       "escalated_amount_cents": 15000,
       "escalation_trigger": "after permit expiration date",
       "note": "Traffic Control per day; no refunds for early completion.",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     },
     {
       "kind": "overrun",
@@ -215,7 +357,11 @@
       "amount_cents": 100000,
       "trigger": "extended_infrastructure_closure_up_to_7_days",
       "note": "Extended Infrastructure Closure Penalty, <=7 days: $1,000/day minimum, subject to adjustment per the Director of Development Services.",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     },
     {
       "kind": "overrun",
@@ -223,7 +369,11 @@
       "amount_cents": 250000,
       "trigger": "extended_infrastructure_closure_over_7_days",
       "note": "Extended Infrastructure Closure Penalty, >7 days: $2,500/day minimum.",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     },
     {
       "kind": "tc_violation",
@@ -232,14 +382,22 @@
       "escalated_amount_cents": 120000,
       "escalation_trigger": "second offense",
       "note": "ROW permit violation doubling ladder: $600 first offense, $1,200 second.",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     },
     {
       "kind": "damage",
       "unit": "day",
       "amount_cents": 7500,
       "note": "ROW damage $75/day. Sidewalk/curb & gutter damage $55 + $1.00/SF (per-SF component in fees).",
-      "source": { "doc": "Castle Rock Development Services Fee Schedule", "date": "2026-07-01", "status": "verified" }
+      "source": {
+        "doc": "Castle Rock Development Services Fee Schedule",
+        "date": "2026-07-01",
+        "status": "verified"
+      }
     }
   ],
   "leads": [
@@ -248,14 +406,22 @@
       "lead_days": 7,
       "lead_unit": "calendar_days",
       "note": "'At least one week prior.'",
-      "source": { "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)", "date": "2026-07-19", "status": "provisional" }
+      "source": {
+        "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+        "date": "2026-07-19",
+        "status": "provisional"
+      }
     },
     {
       "label": "Street closure application",
       "lead_days": 21,
       "lead_unit": "calendar_days",
       "note": "Longest closure lead in the corpus — a two-tier closure lead structure.",
-      "source": { "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)", "date": "2026-07-19", "status": "provisional" }
+      "source": {
+        "doc": "Castle Rock Street/Lane Closures page (crgov.com/1829)",
+        "date": "2026-07-19",
+        "status": "provisional"
+      }
     }
   ],
   "notices": [],
@@ -263,7 +429,11 @@
     "items": [
       {
         "rule": "Issued permit must remain on site at all times.",
-        "source": { "doc": "Castle Rock ROW Permit Application Process Checklist", "date": "2026-07-19", "status": "provisional" }
+        "source": {
+          "doc": "Castle Rock ROW Permit Application Process Checklist",
+          "date": "2026-07-19",
+          "status": "provisional"
+        }
       }
     ],
     "digital_ok": null

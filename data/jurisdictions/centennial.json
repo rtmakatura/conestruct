@@ -5,7 +5,24 @@
   "tcp_term": "TCP",
   "row_term": "right-of-way",
   "adoption_class": "ta_pointer",
-  "chain": ["MUTCD 'as supplemented by CDOT' (dynamic)", "Centennial ROW Regulations (Ord. 2018-O-03)", "Roadway Design & Construction Standards Manual (2024 ed. of 2016-08-17 adoption)", "Gap-fill: AASHTO Green Book, CDOT Standard Specs, MUTCD, MGPEC (always latest editions)"],
+  "chain": [
+    {
+      "title": "MUTCD 'as supplemented by CDOT' (dynamic)",
+      "display_name": "MUTCD (CDOT-suppl.)"
+    },
+    {
+      "title": "Centennial ROW Regulations (Ord. 2018-O-03)",
+      "display_name": "ROW Regulations"
+    },
+    {
+      "title": "Roadway Design & Construction Standards Manual (2024 ed. of 2016-08-17 adoption)",
+      "display_name": "Roadway Standards Manual"
+    },
+    {
+      "title": "Gap-fill: AASHTO Green Book, CDOT Standard Specs, MUTCD, MGPEC (always latest editions)",
+      "display_name": "Gap-fill refs"
+    }
+  ],
   "classification_map_url": null,
   "class_required": true,
   "currency_date": "2026-07-20",
@@ -19,44 +36,119 @@
       "severity": "count",
       "rule": "Arrow panels required on arterial maintenance work; short-term stationary (>1 hr, one day) and short-duration (<=1 hr) work requires a rotating beacon/strobe (arrow board/stick substitutable).",
       "baseline": "arrow panel optional per MUTCD for many maintenance operations",
-      "effect": { "op": "add_device", "device": "arrow_panel", "qty": 1 },
-      "trigger": { "classes": ["arterial"], "closure": null, "night": null, "condition": "maintenance operations (MUTCD 6G classes)" },
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6", "date": "2024-01-01", "status": "verified" }
+      "effect": {
+        "op": "add_device",
+        "device": "arrow_panel",
+        "qty": 1
+      },
+      "trigger": {
+        "classes": [
+          "arterial"
+        ],
+        "closure": null,
+        "night": null,
+        "condition": "maintenance operations (MUTCD 6G classes)"
+      },
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "count",
       "rule": "All excavations: safety orange fence + Type 1 barriers with reflective lights.",
-      "effect": { "op": "add_device", "device": "type_1_barrier", "note": "plus safety orange fence, with reflective lights" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "any excavation" },
-      "source": { "doc": "Centennial ROW Regulations", "section": "5.3.1", "date": "2018-01-01", "status": "verified" }
+      "effect": {
+        "op": "add_device",
+        "device": "type_1_barrier",
+        "note": "plus safety orange fence, with reflective lights"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "any excavation"
+      },
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "5.3.1",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "count",
       "rule": "Cones are daytime-only; lighted barricades overnight — steady burn = delineation, flashing = hazard (near-verbatim Littleton LEDS §131 text; but AFAD rule diverges — see devices).",
-      "effect": { "op": "swap_device", "device": "lighted_barricade" },
-      "trigger": { "classes": null, "closure": null, "night": true },
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.4", "date": "2024-01-01", "status": "verified" }
+      "effect": {
+        "op": "swap_device",
+        "device": "lighted_barricade"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": true
+      },
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6.4",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "Steel plates not permitted unless specifically authorized by the Designated Rep; temporary cold-mix (or HMA) surface required at the end of EACH workday; millings/aggregates banned. No seasonal rule — discretionary-plus-daily-surface posture.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "steel plate use proposed" },
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6", "date": "2024-01-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "steel plate use proposed"
+      },
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "Pedestrians never diverted onto the roadway (accessible detour unless the City waives); open trenches prohibited after work hours without approval; no construction until all TC devices are in place per the approved TCP.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Centennial ROW Regulations + Manual §6.6.4", "date": "2024-01-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Centennial ROW Regulations + Manual §6.6.4",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "admin",
       "rule": "TC setup and removal must occur within work hours unless the TCP says otherwise (prep that doesn't interfere is allowed).",
-      "effect": { "op": "admin" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Centennial ROW Regulations", "section": "4.3", "date": "2018-01-01", "status": "verified" }
+      "effect": {
+        "op": "admin"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "4.3",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -65,37 +157,68 @@
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["local"],
+        "classes": [
+          "local"
+        ],
         "start": 8.0,
         "end": 17.0,
         "note": "Residential.",
-        "source": { "doc": "Centennial ROW Regulations", "section": "4.3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "4.3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 8.5,
         "end": 15.5,
-        "source": { "doc": "Centennial ROW Regulations", "section": "4.3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "4.3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 19.0,
         "end": 24.0,
         "note": "Permitted night work on arterials/collectors 7 p.m.-5 a.m. (continues 0:00-5:00 next day).",
-        "source": { "doc": "Centennial ROW Regulations", "section": "4.3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "4.3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 0.0,
         "end": 5.0,
         "note": "Night-window continuation.",
-        "source": { "doc": "Centennial ROW Regulations", "section": "4.3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "4.3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       }
     ],
     "holiday_rule": "holidays_banned",
@@ -106,29 +229,66 @@
     {
       "gate": "tcs_authorship",
       "rule": "Major TC: TCP shall be prepared by an ATSSA Certified Traffic Control Supervisor when ANY of: zone passes through an intersection · work within an intersection · full street closures · detours · when required by the City Traffic Engineer. (Authorship gate, not on-site-presence.)",
-      "trigger": { "classes": null, "closure": ["full", "detour"], "night": null, "condition": "work in/through an intersection, or City Traffic Engineer requires" },
-      "source": { "doc": "Centennial ROW Regulations", "section": "5.3.4", "date": "2018-01-01", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "full",
+          "detour"
+        ],
+        "night": null,
+        "condition": "work in/through an intersection, or City Traffic Engineer requires"
+      },
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "5.3.4",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     },
     {
       "gate": "utc_officer",
       "rule": "'When the normal operation of a traffic signal must be interrupted, uniformed officers SHALL be used to direct traffic. This shall be coordinated with the City and Arapahoe County Sheriff's Office prior to the work. The Contractor shall bear any expense.'",
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "traffic signal operation interrupted" },
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.4 #10", "date": "2024-01-01", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "traffic signal operation interrupted"
+      },
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6.4 #10",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "gate": "flaggers_required",
       "rule": "Flaggers per MUTCD procedures; ANSI Class 2 apparel (day) / Class 3 (night) — first explicit ANSI class spec in the corpus. No flagger-certification requirement stated (vs. Littleton's CDOT-cert rule).",
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     }
   ],
   "devices": [
     {
       "rule": "Maintenance TC (MUTCD 6G classes): >=5 cones from the vehicle rear, spaced = speed limit (ft), per adjacent lane. Mobile ops: TA-35 (>2 lanes) / TA-17 (2 lanes), shadow vehicles with arrow panels; cones/attenuators not required.",
-      "source": { "doc": "Centennial ROW Regulations §5.3.2 + Manual §6.6", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial ROW Regulations §5.3.2 + Manual §6.6",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "rule": "VMS may be required on arterials, placed >=48 hrs ahead. AFADs may be used at the discretion of the PW Director/designee in coordination with the City Traffic Engineer (opposite of Littleton's ban, in otherwise-copied text).",
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.5", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6.5",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     }
   ],
   "hazards": [],
@@ -138,36 +298,68 @@
       {
         "label": "Minor TC",
         "definition": "MUTCD Typical Application plans 'may be copied and submitted as traffic control plans' — enumerated TA 1, 3, 4, 6, 15, 16, 17, 18, 21-29 (TA numbering survives the 11th Ed intact; cite TAs by number, never by figure). Comply with the TA submitted; separate TCP where TAs don't fit; sidewalk closures always need a TCP.",
-        "source": { "doc": "Centennial ROW Regulations", "section": "5.3.3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "5.3.3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Major TC",
         "definition": "TCP authored by an ATSSA Certified TCS (triggers in personnel).",
-        "source": { "doc": "Centennial ROW Regulations", "section": "5.3.4", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "5.3.4",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       }
     ],
     "notes": [
       {
         "rule": "Review identity: City of Centennial / 'Public Works Director or designee' (the review, permit, NOV, and field-modification authority). No contract operator appears in any public document.",
-        "source": { "doc": "Centennial ROW Regulations (definitions) + Manual", "date": "2024-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations (definitions) + Manual",
+          "date": "2024-01-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Bond: $20,000 minimum for the permit term; Excepted Entities (gov agencies, utilities, water/san districts) may substitute a Letter of Responsibility and Agreement to Perform naming the City beneficiary.",
-        "source": { "doc": "Centennial ROW Regulations", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Application requires estimated quantities (fees computed from them); amendment mandatory when any permitted quantity grows >10%; extensions by written request >=10 working days pre-expiry, minimum fee = base fee. Punchlist + final inspection within 7 calendar days.",
-        "source": { "doc": "Centennial ROW Regulations", "section": "3", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "3",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Pavement restoration fee is OCI-based — charged when the permit holder elects NOT to do the required 2\" mill-and-overlay (length of cut x full lane width); OCI reset each Jan 1.",
-        "source": { "doc": "Centennial ROW Regulations", "section": "Appendix A", "date": "2018-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial ROW Regulations",
+          "section": "Appendix A",
+          "date": "2018-01-01",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": [
       {
         "rule": "GESC permits (standard and low-impact) are issued DIRECTLY through SEMSWA — an external authority issuing permits inside the city; SEMSWA approvals gate City permits (culverts/chase drains, SEMSWA-first). Signal interruptions coordinate with the Arapahoe County Sheriff's Office. MGPEC standards apply.",
-        "source": { "doc": "Centennial city pages + ROW Regulations", "date": "2026-07-18", "status": "verified" }
+        "source": {
+          "doc": "Centennial city pages + ROW Regulations",
+          "date": "2026-07-18",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -184,49 +376,83 @@
       "lead_days": 14,
       "lead_unit": "calendar_days",
       "note": "Up to 14 calendar days from accepted application.",
-      "source": { "doc": "Centennial ROW Regulations", "section": "3", "date": "2018-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "3",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     },
     {
       "label": "Completion inspection before leaving the site",
       "lead_days": 24,
       "lead_unit": "hours",
       "note": "Scheduled >=24 hrs before leaving; leaving without it is an NOV.",
-      "source": { "doc": "Centennial ROW Regulations", "section": "3", "date": "2018-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "3",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     },
     {
       "label": "Emergency permit",
       "lead_days": 2,
       "lead_unit": "business_days",
       "note": "Call 303-325-8000 first; permit within 2 business days; pickup within 5 working days.",
-      "source": { "doc": "Centennial ROW Regulations", "section": "3", "date": "2018-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial ROW Regulations",
+        "section": "3",
+        "date": "2018-01-01",
+        "status": "verified"
+      }
     }
   ],
   "notices": [
     {
       "audience": "Police, Fire, Public Works",
       "rule": "Notify before beginning construction (Manual §6.6.4 #12).",
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.4 #12", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6.4 #12",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "audience": "UNCC 811",
       "rule": "Locates >=48 hrs (Manual §6.6.4 #13).",
       "lead_days": 48,
       "lead_unit": "hours",
-      "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.4 #13", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial Roadway Design & Construction Standards Manual",
+        "section": "6.6.4 #13",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     },
     {
       "audience": "residents",
       "rule": "Door hangers/flyers >=48 hrs when required; news releases + HOA meetings may be required; signal/loop damage reported immediately to 303-325-8000.",
       "lead_days": 48,
       "lead_unit": "hours",
-      "source": { "doc": "Centennial ROW Regulations + Manual", "date": "2024-01-01", "status": "verified" }
+      "source": {
+        "doc": "Centennial ROW Regulations + Manual",
+        "date": "2024-01-01",
+        "status": "verified"
+      }
     }
   ],
   "onsite": {
     "items": [
       {
         "rule": "Signed TCP kept at the work area, available to City or State inspection (Manual §6.6.4 #14).",
-        "source": { "doc": "Centennial Roadway Design & Construction Standards Manual", "section": "6.6.4 #14", "date": "2024-01-01", "status": "verified" }
+        "source": {
+          "doc": "Centennial Roadway Design & Construction Standards Manual",
+          "section": "6.6.4 #14",
+          "date": "2024-01-01",
+          "status": "verified"
+        }
       }
     ],
     "digital_ok": null

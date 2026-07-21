@@ -5,7 +5,20 @@
   "tcp_term": "TCP",
   "row_term": "right-of-way",
   "adoption_class": "mutcd_deferral",
-  "chain": ["MUTCD latest edition + Model Traffic Code as adopted", "Thornton Construction & TC Permit stipulations (34)", "written and verbal directions of the traffic engineer"],
+  "chain": [
+    {
+      "title": "MUTCD latest edition + Model Traffic Code as adopted",
+      "display_name": "MUTCD + Model Traffic Code"
+    },
+    {
+      "title": "Thornton Construction & TC Permit stipulations (34)",
+      "display_name": "Permit stipulations (34)"
+    },
+    {
+      "title": "written and verbal directions of the traffic engineer",
+      "display_name": "Traffic engineer directions"
+    }
+  ],
   "classification_map_url": null,
   "class_required": false,
   "currency_date": "2026-07-20",
@@ -19,23 +32,57 @@
       "severity": "count",
       "rule": "Barrels/drums will be used on all night time operations (stipulation #16), with flashing lights.",
       "baseline": "MUTCD permits cones for many night operations with retroreflective banding",
-      "effect": { "op": "add_device", "device": "drum", "note": "drums replace cones on night ops" },
-      "trigger": { "classes": null, "closure": null, "night": true },
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 16", "status": "verified" }
+      "effect": {
+        "op": "add_device",
+        "device": "drum",
+        "note": "drums replace cones on night ops"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": true
+      },
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulation 16",
+        "status": "verified"
+      }
     },
     {
       "severity": "count",
       "rule": "CONSTRUCTION AHEAD and MEN WORKING signs required for each direction of travel affected (stipulation #6).",
-      "effect": { "op": "add_device", "device": "advance_warning_signs", "note": "per affected direction" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 6", "status": "verified" }
+      "effect": {
+        "op": "add_device",
+        "device": "advance_warning_signs",
+        "note": "per affected direction"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulation 6",
+        "status": "verified"
+      }
     },
     {
       "severity": "admin",
       "rule": "All TC signs turned away from motorists' view when work is not occurring (#33); signs graffiti-free and visually maintained (#30); vehicles unattended no more than 5 minutes (#26); emergency vehicle access must be allowed (#3).",
-      "effect": { "op": "admin" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulations 3, 26, 30, 33", "status": "verified" }
+      "effect": {
+        "op": "admin"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulations 3, 26, 30, 33",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -48,7 +95,11 @@
         "start": 8.5,
         "end": 15.5,
         "note": "Stipulation #31: 'All work is for Monday through Friday, 8:30 a.m. until 3:30 p.m., unless noted otherwise in the Special Conditions.'",
-        "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 31", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "section": "stipulation 31",
+          "status": "verified"
+        }
       }
     ],
     "holiday_rule": "none",
@@ -59,21 +110,36 @@
     {
       "gate": "flaggers_required",
       "rule": "Flagger for each direction of travel affected (#12); safety vests on all ROW workers (#28). No TCS or flagger certification requirement stated — a notable gap vs. neighbors.",
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulations 12, 28", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulations 12, 28",
+        "status": "verified"
+      }
     }
   ],
   "devices": [
     {
       "rule": "The 34-stipulation checkable device list: Type 'A' frame barricades w/ flashing lights (#2); Type I/II/III barricades w/ flashing lights (#13-15); channelization devices (#9); guide barrels/drums w/ flashing lights; ROAD CLOSED / ROAD CLOSED TO THROUGH TRAFFIC (#4-5); MERGE + LANE CLOSED AHEAD pairs (#7-8); turn-prohibition and KEEP LEFT/RIGHT signs (#10-11); detour as specified (#17).",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "TC permit stipulations", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "TC permit stipulations",
+        "status": "verified"
+      }
     }
   ],
   "hazards": [
     {
       "rule": "TC permits requiring an extension beyond the permit expiration date are assessed $500.00 PER DAY (stated twice: process sheet + TC form).",
       "meter_kind": "extension",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "status": "verified"
+      }
     }
   ],
   "permits": {
@@ -82,31 +148,49 @@
       {
         "label": "Traffic Control Permit",
         "definition": "Separate from the construction permit. Form checkboxes: Oversize Vehicle · Special ROW Usage · ROW Closure · Speed Limit Reduction (construction zone only) · Parking Restriction Change · Other. The municipal construction-zone speed-reduction permit type is the first in the corpus.",
-        "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "status": "verified"
+        }
       }
     ],
     "notes": [
       {
         "rule": "Licensed Thornton contractor required; General Conditions extend it: all contractors and/or subcontractors shall be licensed by the City before any work is commenced.",
-        "source": { "doc": "Thornton Construction & TC Permit handout, General Conditions", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout, General Conditions",
+          "status": "verified"
+        }
       },
       {
         "rule": "Performance surety = cash escrow or Letter of Credit ONLY for work within existing City ROW (Code 2-272(f)(3)), amount priced from the CDOT cost data manual, latest revision. 85% refund at 60 days post-initial-acceptance EXCEPT street cuts: 100% held to final acceptance; landscaping guaranteed at 150%.",
-        "source": { "doc": "Thornton Code Sec. 2-272(f)(3) + permit handout", "status": "verified" }
+        "source": {
+          "doc": "Thornton Code Sec. 2-272(f)(3) + permit handout",
+          "status": "verified"
+        }
       },
       {
         "rule": "Potholing required on ALL Thornton utilities — 'The contractor cannot proceed until all Thornton utilities are found.' Pre-marking within 10 ft of disturbance centerline before locates.",
-        "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "status": "verified"
+        }
       },
       {
         "rule": "Use tax 3.75% x 50% of contract valuation, prepaid at permit; equipment declarations for gear >=$2,500; reconciliation within 90 days; 36-month audit SOL with 10% penalty.",
-        "source": { "doc": "Thornton Construction & TC Permit handout, use-tax sheet", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout, use-tax sheet",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": [
       {
         "rule": "Prairie-dog relocation letter for grading; CDPHE stormwater >1 acre; 404 permits; floodplain permit where applicable.",
-        "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -118,13 +202,19 @@
         "amount_cents": 5000,
         "provisional": true,
         "note": "'$50 processing + computed closure fee (by duration)' — undated handout, provisional.",
-        "source": { "doc": "Thornton permit parameters (Research 5 capture)", "status": "provisional" }
+        "source": {
+          "doc": "Thornton permit parameters (Research 5 capture)",
+          "status": "provisional"
+        }
       },
       {
         "label": "Development Engineering TCP review",
         "amount_cents": 25000,
         "provisional": true,
-        "source": { "doc": "Thornton permit parameters (Research 5 capture)", "status": "provisional" }
+        "source": {
+          "doc": "Thornton permit parameters (Research 5 capture)",
+          "status": "provisional"
+        }
       }
     ],
     "formula": null,
@@ -136,7 +226,10 @@
       "unit": "day",
       "amount_cents": 50000,
       "note": "TC permit extension beyond expiration date: $500.00/day.",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "status": "verified"
+      }
     }
   ],
   "leads": [
@@ -145,13 +238,22 @@
       "lead_days": 10,
       "lead_unit": "business_days",
       "note": "5 business days if no construction permit needed. Rendered conservative pending clarification.",
-      "source": { "doc": "Thornton ROW page", "status": "conflict" },
+      "source": {
+        "doc": "Thornton ROW page",
+        "status": "conflict"
+      },
       "conflict": {
         "label": "TC permit lead time",
         "rendered": "10 business days (conservative)",
         "sources": [
-          { "doc": "Thornton ROW page", "value": "10 business days minimum (5 if no construction permit)" },
-          { "doc": "Construction & TC Permit handout", "value": "processed 2 business days (5 with street closure)" }
+          {
+            "doc": "Thornton ROW page",
+            "value": "10 business days minimum (5 if no construction permit)"
+          },
+          {
+            "doc": "Construction & TC Permit handout",
+            "value": "processed 2 business days (5 with street closure)"
+          }
         ],
         "verdict": "Handout may state processing time vs. the page's advance-notice ask; render 10 until the city clarifies."
       }
@@ -160,33 +262,51 @@
       "label": "Inspection notice",
       "lead_days": 24,
       "lead_unit": "hours",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "status": "verified"
+      }
     }
   ],
   "notices": [
     {
       "audience": "Police Department",
       "rule": "Notify PD before each move: 720-977-5150 (#21).",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 21", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulation 21",
+        "status": "verified"
+      }
     },
     {
       "audience": "Traffic Engineering",
       "rule": "Notify Traffic Engineering: 303-538-7341 (#22).",
-      "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 22", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "stipulation 22",
+        "status": "verified"
+      }
     },
     {
       "audience": "residents",
       "rule": "Residents contacted (#1) and must comply with posted parking (#25). High-impact TCP: VMS + resident/business notice >=5 business days.",
       "lead_days": 5,
       "lead_unit": "business_days",
-      "source": { "doc": "Thornton Construction & TC Permit handout + ROW page", "status": "verified" }
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout + ROW page",
+        "status": "verified"
+      }
     }
   ],
   "onsite": {
     "items": [
       {
         "rule": "Permit copy on site at all times, front AND back shown on request (#34).",
-        "source": { "doc": "Thornton Construction & TC Permit handout", "section": "stipulation 34", "status": "verified" }
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "section": "stipulation 34",
+          "status": "verified"
+        }
       }
     ],
     "digital_ok": null

@@ -5,7 +5,24 @@
   "tcp_term": "TCP",
   "row_term": "right-of-way",
   "adoption_class": "plan_adopter",
-  "chain": ["MUTCD (latest editions) + Colorado Supplement", "CDOT Standard Plans for Traffic Controls for Highway Construction (latest editions) — first city in the corpus to adopt them wholesale for municipal work", "LEDS 2025 (Res. 89-2025, adopted 2025-09-16)", "Littleton TCP templates (12)"],
+  "chain": [
+    {
+      "title": "MUTCD (latest editions) + Colorado Supplement",
+      "display_name": "MUTCD + CO Suppl."
+    },
+    {
+      "title": "CDOT Standard Plans for Traffic Controls for Highway Construction (latest editions) — first city in the corpus to adopt them wholesale for municipal work",
+      "display_name": "CDOT Std Plans"
+    },
+    {
+      "title": "LEDS 2025 (Res. 89-2025, adopted 2025-09-16)",
+      "display_name": "LEDS 2025"
+    },
+    {
+      "title": "Littleton TCP templates (12)",
+      "display_name": "TCP templates"
+    }
+  ],
   "classification_map_url": null,
   "class_required": true,
   "currency_date": "2026-07-20",
@@ -16,13 +33,24 @@
     "min_lane_width_ft": {
       "value": 10,
       "note": "LEDS §131: 'minimum of ten (10) feet unless otherwise authorized'. Flagger-closure templates require 12 ft — render 12 ft on flagger configurations (conservative).",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "conflict" },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "conflict"
+      },
       "conflict": {
         "label": "minimum travel lane width",
         "rendered": "10 ft general; 12 ft on flagger closures",
         "sources": [
-          { "doc": "LEDS §131 (2025)", "value": "10 ft" },
-          { "doc": "One/Two/Three Flagger Closure templates", "value": "Minimum 12 ft travel lane must be maintained at all times" }
+          {
+            "doc": "LEDS §131 (2025)",
+            "value": "10 ft"
+          },
+          {
+            "doc": "One/Two/Three Flagger Closure templates",
+            "value": "Minimum 12 ft travel lane must be maintained at all times"
+          }
         ],
         "verdict": "Both current, both Littleton. Plausible reconciliation (flagger closures carry two-way traffic through one lane) not adopted; render 10 ft general, 12 ft on flagger configurations."
       }
@@ -31,29 +59,50 @@
       "taper_ft": 25,
       "tangent_ft": null,
       "rule": "Cone spacing 25 ft flat on templates — no taper/tangent split stated.",
-      "source": { "doc": "Littleton TCP templates (flagger closures)", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "Littleton TCP templates (flagger closures)",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     "sign_spacing": [
       {
         "max_speed_mph": 35,
         "distance_ft": 100,
         "note": "'Approx. 100 ft, low-speed local streets (<35 mph)' — three-flagger template. Consistent with the regional 30/35 breakpoint family.",
-        "source": { "doc": "Littleton TCP templates (three-flagger)", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "Littleton TCP templates (three-flagger)",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       },
       {
         "distance_ft": 200,
         "note": "Approximate; intersection lane closure and full closure templates. Lower than the Aurora/Lakewood/Englewood 350 — recorded as published, not harmonized; LEDS defers to MUTCD/CDOT plans for what templates don't cover.",
-        "source": { "doc": "Littleton TCP templates (intersection/full closure)", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "Littleton TCP templates (intersection/full closure)",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       }
     ],
     "taper": {
       "rule": "Taper 100 ft max on flagger closures (templates).",
-      "source": { "doc": "Littleton TCP templates (flagger closures)", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "Littleton TCP templates (flagger closures)",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     "other": [
       {
         "rule": "Lane clearance >=5 ft from an open excavation and >=2 ft from curb/vertical obstruction; barricades mandatory if the 5-ft clearance fails.",
-        "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025",
+          "section": "131",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       }
     ],
     "note": "Street closures are organized by flagger count (One/Two/Three Flagger Closure) — the only personnel-taxonomized template set in the corpus; a direct labor-quantity lookup per closure type."
@@ -63,44 +112,119 @@
       "severity": "op",
       "rule": "Provide flaggers and UTC when required — AFADs are not accepted (first AFAD ban in the corpus; adjacent Centennial, in otherwise-copied text, permits them at discretion).",
       "baseline": "MUTCD §6L.02 permits AFADs",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "flagging operation" },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "flagging operation"
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "severity": "count",
       "rule": "Traffic cones are daytime-only. Lighted barricades for all overnight work — steady burn for delineation/channelization, flashing to denote a specific hazard.",
-      "effect": { "op": "swap_device", "device": "lighted_barricade", "note": "replaces cones on any overnight deployment" },
-      "trigger": { "classes": null, "closure": null, "night": true },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "swap_device",
+        "device": "lighted_barricade",
+        "note": "replaces cones on any overnight deployment"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": true
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "Construction limited to one-half the roadway at any time unless the TCP approves otherwise; intersection/alley/driveway access maintained at all times (intersection closure only with City Engineer approval, minimum duration).",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": ["lane", "full"], "night": null },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "lane",
+          "full"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "Steel plates are not to be utilized from September through May unless specifically approved by the City Engineer — a nine-month plate ban, the longest seasonal device rule in the corpus. Plates PE-designed, >=1 ft past trench edges, feathered.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "steel plate use, September through May" },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "steel plate use, September through May"
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "An accessible pedestrian and bicycle route, per MUTCD standards, shall be maintained adjacent to the work area at all times; pedestrians shall not be diverted onto the roadway unless a detour route has been previously approved on the TCP. Spoils: >=4 ft of sidewalk kept clear.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": ["sidewalk"], "night": null },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "sidewalk"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "severity": "admin",
       "rule": "TC removed within 48 hours of completion or the City corrects per Code 8-1-3. Existing pavement markings completely removed (black-out painting rejected); contractor installs, removes, and reinstates permanent markings.",
-      "effect": { "op": "admin" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "effect": {
+        "op": "admin"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -109,19 +233,34 @@
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["local"],
+        "classes": [
+          "local"
+        ],
         "start": 7.0,
         "end": 19.0,
         "note": "Residential streets/alleys.",
-        "source": { "doc": "LEDS 2025", "section": "117.01", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025",
+          "section": "117.01",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       },
       {
         "kind": "work",
         "days": "weekday",
-        "classes": ["collector", "arterial"],
+        "classes": [
+          "collector",
+          "arterial"
+        ],
         "start": 8.5,
         "end": 15.5,
-        "source": { "doc": "LEDS 2025", "section": "117.01", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025",
+          "section": "117.01",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       }
     ],
     "holiday_rule": "holidays_banned",
@@ -132,31 +271,66 @@
     {
       "gate": "flagger_certs",
       "rule": "Flaggers must hold proof of ACTIVE certification from a CDOT-accepted program (or as approved by the Traffic Engineer); MUTCD flagging procedures; orange/optic-yellow, reflectorized at night. No TCS-certification requirement anywhere in LEDS — the personnel gate is flagger-level.",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "gate": "utc_officer",
       "rule": "UTC SHALL be used whenever normal traffic-signal operation is interrupted; UTC may be required on arterial/collector jobs per the City Engineer; contractor bears the cost. Cleanest UTC trigger in the corpus.",
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "traffic signal operation interrupted" },
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "traffic signal operation interrupted"
+      },
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     }
   ],
   "devices": [
     {
       "rule": "Retro-reflective faces; barricades painted/clean/weighted; damaged faces replaced. Temporary pavement markings at City Engineer discretion.",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "rule": "No-parking signs >=24 hrs ahead with prescribed wording ('No parking anytime TOW AWAY ZONE at all times' / limited-hours variant); sign spacing 20-25 ft. Full closure: Type III barricades, ROAD CLOSED + DETOUR signing at 200-ft spacing.",
-      "trigger": { "classes": null, "closure": ["parking_lane", "full"], "night": null },
-      "source": { "doc": "Littleton TCP templates (no-parking, full closure)", "date": "2025-09-16", "status": "verified" }
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "parking_lane",
+          "full"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "Littleton TCP templates (no-parking, full closure)",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     }
   ],
   "hazards": [
     {
       "rule": "Work without required permitting: $250 non-compliance fee, first offense (escalation implied, unspecified); waived if the City Engineer determines the work was emergency (broken water lines, blocked sewer services qualify).",
       "meter_kind": "no_permit",
-      "source": { "doc": "Littleton ROW Permits page", "date": "2026-07-18", "status": "verified" }
+      "source": {
+        "doc": "Littleton ROW Permits page",
+        "date": "2026-07-18",
+        "status": "verified"
+      }
     }
   ],
   "permits": {
@@ -165,25 +339,45 @@
     "notes": [
       {
         "rule": "Job-specific TCP prepared by the Contractor, reviewed by the City Engineer per a TCP Checklist; no work without an approved TCP; changes approved in writing before implementation; non-compliance -> Stop Work Order. TTC in the field is 'accepted by the Municipal Inspector' — inspector-level acceptance.",
-        "source": { "doc": "LEDS 2025 §131 + Littleton ROW Permits page", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025 §131 + Littleton ROW Permits page",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       },
       {
         "rule": "City Contractor's License required (eTRAKiT); the license taxonomy includes a dedicated Municipal ROW class (ICC Class M exam, $400). Bonds + insurance required for licensure; amounts not published.",
-        "source": { "doc": "Littleton ROW Permits page + Development Application Fees (Res. 105-2025)", "date": "2025-12-21", "status": "verified" }
+        "source": {
+          "doc": "Littleton ROW Permits page + Development Application Fees (Res. 105-2025)",
+          "date": "2025-12-21",
+          "status": "verified"
+        }
       },
       {
         "rule": "Pre-construction meeting, where staff requires one, is a hard gate — no permit until completed. Permit fees = unit rates on the annual Fee Schedule, cumulative, paid in full before issuance; the per-unit ROW excavation rates are not published on either fee page (surfaced per-application inside eTRAKiT).",
-        "source": { "doc": "LEDS 2025 §149 + fee pages", "date": "2025-12-21", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025 §149 + fee pages",
+          "date": "2025-12-21",
+          "status": "verified"
+        }
       },
       {
         "rule": "Development-review resubmittals: all fees based on three rounds of review; 4th review = 50% of initial fees; 5th+ = 25% each (Res. 105-2025).",
-        "source": { "doc": "Littleton Development Application Fees (Res. 105-2025)", "date": "2025-12-21", "status": "verified" }
+        "source": {
+          "doc": "Littleton Development Application Fees (Res. 105-2025)",
+          "date": "2025-12-21",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": [
       {
         "rule": "Notify/coordinate utility companies, RTD, and CDOT; fire department approval for temporary surfaces; MHFD Criteria Manual Vol. 3 governs BMPs; Arapahoe County Open Space Tax (.00125 x valuation) collected on city permits.",
-        "source": { "doc": "LEDS 2025 §131 + fee pages", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025 §131 + fee pages",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -194,7 +388,11 @@
         "label": "Access Permit (ROW-permit subtype)",
         "amount_cents": 125000,
         "effective": "2025-12-21",
-        "source": { "doc": "Littleton Development Application Fees (Res. 105-2025)", "date": "2025-12-21", "status": "verified" }
+        "source": {
+          "doc": "Littleton Development Application Fees (Res. 105-2025)",
+          "date": "2025-12-21",
+          "status": "verified"
+        }
       },
       {
         "label": "After-hours inspection",
@@ -202,13 +400,21 @@
         "per": "hour",
         "effective": "2025-12-21",
         "note": "2-hour minimum, added to the permit, payable within 48 hrs.",
-        "source": { "doc": "Littleton ROW Permits page", "date": "2026-07-18", "status": "verified" }
+        "source": {
+          "doc": "Littleton ROW Permits page",
+          "date": "2026-07-18",
+          "status": "verified"
+        }
       },
       {
         "label": "ICC Test — Class M (Municipal ROW contractor license)",
         "amount_cents": 40000,
         "effective": "2025-12-21",
-        "source": { "doc": "Littleton Development Application Fees (Res. 105-2025)", "date": "2025-12-21", "status": "verified" }
+        "source": {
+          "doc": "Littleton Development Application Fees (Res. 105-2025)",
+          "date": "2025-12-21",
+          "status": "verified"
+        }
       }
     ],
     "formula": null,
@@ -220,7 +426,11 @@
       "unit": "occurrence",
       "amount_cents": 25000,
       "note": "Non-compliance fee, first offense; escalation implied, unspecified. Building-division scheme is separate: investigation (work without a building permit) = double the permit fee.",
-      "source": { "doc": "Littleton ROW Permits page", "date": "2026-07-18", "status": "verified" }
+      "source": {
+        "doc": "Littleton ROW Permits page",
+        "date": "2026-07-18",
+        "status": "verified"
+      }
     }
   ],
   "leads": [
@@ -229,42 +439,70 @@
       "lead_days": 5,
       "lead_unit": "calendar_days",
       "note": "'At least 5 days in advance' (LEDS).",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "label": "Inspection requests (eTRAKiT)",
       "lead_days": 24,
       "lead_unit": "hours",
       "note": "By 11:59 p.m. the prior business day; no same-day. After-hours inspections >=48 hrs by email.",
-      "source": { "doc": "Littleton ROW Permits page", "date": "2026-07-18", "status": "verified" }
+      "source": {
+        "doc": "Littleton ROW Permits page",
+        "date": "2026-07-18",
+        "status": "verified"
+      }
     },
     {
       "label": "TC removal after completion",
       "lead_days": 48,
       "lead_unit": "hours",
       "note": "Else the City corrects per Code 8-1-3.",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     }
   ],
   "notices": [
     {
       "audience": "occupants",
       "rule": "Inform occupants of access limitations; driveway closures coordinated with owners, City Engineer final approval.",
-      "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "LEDS 2025",
+        "section": "131",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     },
     {
       "audience": "parking",
       "rule": "No-parking signs posted >=24 hrs ahead with prescribed TOW AWAY ZONE wording.",
       "lead_days": 24,
       "lead_unit": "hours",
-      "source": { "doc": "Littleton TCP templates (no-parking)", "date": "2025-09-16", "status": "verified" }
+      "source": {
+        "doc": "Littleton TCP templates (no-parking)",
+        "date": "2025-09-16",
+        "status": "verified"
+      }
     }
   ],
   "onsite": {
     "items": [
       {
         "rule": "Signed TCP kept at the work area during work hours; available to City or State inspection.",
-        "source": { "doc": "LEDS 2025", "section": "131", "date": "2025-09-16", "status": "verified" }
+        "source": {
+          "doc": "LEDS 2025",
+          "section": "131",
+          "date": "2025-09-16",
+          "status": "verified"
+        }
       }
     ],
     "digital_ok": null

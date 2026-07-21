@@ -47,10 +47,22 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD (most recent edition) + Colorado Supplement",
-        "CDOT Standard Specifications as revised by Town Standard Special Provisions (Rev 7/22)",
-        "Model Traffic Code Nov 2024 Rev 1.0 (Ord. 2025-036)",
-        "Development Services Fee Schedule (eff. 2026-07-01)"
+        {
+          "title": "MUTCD (most recent edition) + Colorado Supplement",
+          "display_name": "MUTCD + CO Suppl."
+        },
+        {
+          "title": "CDOT Standard Specifications as revised by Town Standard Special Provisions (Rev 7/22)",
+          "display_name": "CDOT Specs + Town SSP"
+        },
+        {
+          "title": "Model Traffic Code Nov 2024 Rev 1.0 (Ord. 2025-036)",
+          "display_name": "Model Traffic Code"
+        },
+        {
+          "title": "Development Services Fee Schedule (eff. 2026-07-01)",
+          "display_name": "Dev. Services Fee Sched."
+        }
       ],
       "class_required": true,
       "classification_map_url": null,
@@ -490,10 +502,22 @@
       "row_term": "right-of-way",
       "authority": "toll_authority",
       "chain": [
-        "MUTCD + Colorado Supplement (current)",
-        "CDOT Standard Specifications + M&S Standards ('current versions at the date of the permit application')",
-        "E-470 Permit Manual (September 2025)",
-        "SPPO (2008/rev 2009 — superseded where in conflict)"
+        {
+          "title": "MUTCD + Colorado Supplement (current)",
+          "display_name": "MUTCD + CO Suppl."
+        },
+        {
+          "title": "CDOT Standard Specifications + M&S Standards ('current versions at the date of the permit application')",
+          "display_name": "CDOT Specs + M&S"
+        },
+        {
+          "title": "E-470 Permit Manual (September 2025)",
+          "display_name": "E-470 Permit Manual"
+        },
+        {
+          "title": "SPPO (2008/rev 2009 — superseded where in conflict)",
+          "display_name": "SPPO"
+        }
       ],
       "class_required": false,
       "classification_map_url": null,
@@ -910,8 +934,14 @@
       "row_term": "right-of-way",
       "authority": "county",
       "chain": [
-        "MUTCD 11th Ed. + Colorado Supplement",
-        "El Paso County ROW permit terms (epc-rowpermit.com)"
+        {
+          "title": "MUTCD 11th Ed. + Colorado Supplement",
+          "display_name": "MUTCD 11th + CO Suppl."
+        },
+        {
+          "title": "El Paso County ROW permit terms (epc-rowpermit.com)",
+          "display_name": "EPC ROW permit terms"
+        }
       ],
       "class_required": false,
       "classification_map_url": null,
@@ -1173,11 +1203,26 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD (latest edition) + Colorado Supplement",
-        "EMC Title 11 Ch. 7 (Ord. 00-85, amended Ord. 53-2024)",
-        "2020 Design and Construction Standards (adopted by EMC 11-7-25)",
-        "Traffic Control Details TC-0–TC-10 (rev. 2020-09-22)",
-        "2026 Rate and Fee Schedule"
+        {
+          "title": "MUTCD (latest edition) + Colorado Supplement",
+          "display_name": "MUTCD + CO Suppl."
+        },
+        {
+          "title": "EMC Title 11 Ch. 7 (Ord. 00-85, amended Ord. 53-2024)",
+          "display_name": "EMC Title 11 Ch. 7"
+        },
+        {
+          "title": "2020 Design and Construction Standards (adopted by EMC 11-7-25)",
+          "display_name": "2020 Design Standards"
+        },
+        {
+          "title": "Traffic Control Details TC-0–TC-10 (rev. 2020-09-22)",
+          "display_name": "TC-0–TC-10 Details"
+        },
+        {
+          "title": "2026 Rate and Fee Schedule",
+          "display_name": "2026 Fee Sched."
+        }
       ],
       "class_required": true,
       "classification_map_url": null,
@@ -1881,10 +1926,22 @@
       "row_term": "public space",
       "authority": "city",
       "chain": [
-        "MUTCD + Colorado Supplement",
-        "COG MHT/Barricade Manual (NOT LOCATED — dead link, upload wanted)",
-        "Greeley Permitting Requirements for Public Space (Mar 2025)",
-        "2026 Fee Schedule (eff. 2026-01-01)"
+        {
+          "title": "MUTCD + Colorado Supplement",
+          "display_name": "MUTCD + CO Suppl."
+        },
+        {
+          "title": "COG MHT/Barricade Manual (NOT LOCATED — dead link, upload wanted)",
+          "display_name": "MHT Manual (not located)"
+        },
+        {
+          "title": "Greeley Permitting Requirements for Public Space (Mar 2025)",
+          "display_name": "Public Space Reqs"
+        },
+        {
+          "title": "2026 Fee Schedule (eff. 2026-01-01)",
+          "display_name": "2026 Fee Sched."
+        }
       ],
       "class_required": true,
       "classification_map_url": null,
@@ -2301,10 +2358,22 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD 11th Ed.",
-        "CDOT Standard Specs",
-        "LCUASS",
-        "Loveland fee schedule"
+        {
+          "title": "MUTCD 11th Ed.",
+          "display_name": "MUTCD 11th Ed."
+        },
+        {
+          "title": "CDOT Standard Specs",
+          "display_name": "CDOT Standard Specs"
+        },
+        {
+          "title": "LCUASS",
+          "display_name": "LCUASS"
+        },
+        {
+          "title": "Loveland fee schedule",
+          "display_name": "Fee schedule"
+        }
       ],
       "class_required": true,
       "classification_map_url": null,
@@ -2983,10 +3052,22 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD (latest Town adopted edition) + Colorado Supplement",
-        "CDOT Standard Specifications §630 (adopted and revised by the Town)",
-        "Parker RDCCM (Jan 2026 edition)",
-        "ROW Permit Fee Schedule (rev. Jan 2025)"
+        {
+          "title": "MUTCD (latest Town adopted edition) + Colorado Supplement",
+          "display_name": "MUTCD (Town ed.)"
+        },
+        {
+          "title": "CDOT Standard Specifications §630 (adopted and revised by the Town)",
+          "display_name": "CDOT §630"
+        },
+        {
+          "title": "Parker RDCCM (Jan 2026 edition)",
+          "display_name": "RDCCM"
+        },
+        {
+          "title": "ROW Permit Fee Schedule (rev. Jan 2025)",
+          "display_name": "Fee Sched."
+        }
       ],
       "class_required": true,
       "classification_map_url": null,
@@ -3565,9 +3646,18 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD latest edition + Model Traffic Code as adopted",
-        "Thornton Construction & TC Permit stipulations (34)",
-        "written and verbal directions of the traffic engineer"
+        {
+          "title": "MUTCD latest edition + Model Traffic Code as adopted",
+          "display_name": "MUTCD + Model Traffic Code"
+        },
+        {
+          "title": "Thornton Construction & TC Permit stipulations (34)",
+          "display_name": "Permit stipulations (34)"
+        },
+        {
+          "title": "written and verbal directions of the traffic engineer",
+          "display_name": "Traffic engineer directions"
+        }
       ],
       "class_required": false,
       "classification_map_url": null,
@@ -3899,9 +3989,18 @@
       "row_term": "right-of-way",
       "authority": "city",
       "chain": [
-        "MUTCD (latest edition; §8.21.02 still cites 'Part VI' — ghost citation preserved)",
-        "Model Traffic Code + CRS + Westminster Code of Ordinances",
-        "Westminster Standards & Specifications Ch. 8 Traffic (April 2025), §8.28"
+        {
+          "title": "MUTCD (latest edition; §8.21.02 still cites 'Part VI' — ghost citation preserved)",
+          "display_name": "MUTCD (latest)"
+        },
+        {
+          "title": "Model Traffic Code + CRS + Westminster Code of Ordinances",
+          "display_name": "MTC + CRS + City Code"
+        },
+        {
+          "title": "Westminster Standards & Specifications Ch. 8 Traffic (April 2025), §8.28",
+          "display_name": "Standards Ch. 8 Traffic"
+        }
       ],
       "class_required": false,
       "classification_map_url": null,

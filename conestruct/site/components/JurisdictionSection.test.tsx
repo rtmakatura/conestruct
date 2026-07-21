@@ -236,7 +236,10 @@ describe("JurisdictionContextBar", () => {
         setStreetClass={noop}
       />,
     );
-    expect(screen.getByText(/MUTCD \(most recent edition\)/i)).toBeTruthy();
+    // Compact breadcrumb (inc-9): the authored display_name renders; the
+    // full title (edition included) rides the hover detail.
+    const mutcdSeg = screen.getByText("MUTCD + CO Suppl.");
+    expect(mutcdSeg.getAttribute("title")).toMatch(/most recent edition/i);
     // class_required with no captured URL → honest look-it-up note, not a dead link.
     expect(
       screen.getByText(/classifies via its published map/i),

@@ -5,7 +5,24 @@
   "tcp_term": "TCP",
   "row_term": "right-of-way",
   "adoption_class": "enumerator",
-  "chain": ["MUTCD (via state law — LMC 10.45.010 names no edition; the typicals cite 'Part VI', pre-2003 numbering)", "Lakewood Engineering Regulations, Construction Specifications and Design Standards (Sept 1986, updated through March 2021)", "Lakewood typical TCP sheets (3, undated)", "Public Way Inspections Fees (eff. 2021-01-01)"],
+  "chain": [
+    {
+      "title": "MUTCD (via state law — LMC 10.45.010 names no edition; the typicals cite 'Part VI', pre-2003 numbering)",
+      "display_name": "MUTCD (via state law)"
+    },
+    {
+      "title": "Lakewood Engineering Regulations, Construction Specifications and Design Standards (Sept 1986, updated through March 2021)",
+      "display_name": "Eng. Regs & Standards"
+    },
+    {
+      "title": "Lakewood typical TCP sheets (3, undated)",
+      "display_name": "Typical TCP sheets"
+    },
+    {
+      "title": "Public Way Inspections Fees (eff. 2021-01-01)",
+      "display_name": "Inspection Fees"
+    }
+  ],
   "classification_map_url": null,
   "class_required": true,
   "currency_date": "2026-07-20",
@@ -16,31 +33,47 @@
     "min_lane_width_ft": {
       "value": 10,
       "note": "'10 ft minimum lane widths' (sheet 1 note 5, dimensioned on the diagram). Third corpus instance of the 10-ft floor (Aurora, Douglas County).",
-      "source": { "doc": "Lakewood typical TCP sheet — Shoulder Work on All Roads", "section": "note 5", "status": "provisional" }
+      "source": {
+        "doc": "Lakewood typical TCP sheet — Shoulder Work on All Roads",
+        "section": "note 5",
+        "status": "provisional"
+      }
     },
     "sign_spacing": [
       {
         "max_speed_mph": 30,
         "distance_ft": 100,
         "note": "Single A value; no B or C published (consistent with the national A=B=C surface-street convention).",
-        "source": { "doc": "Lakewood typical TCP sheets (1, 2, 3)", "status": "provisional" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+          "status": "provisional"
+        }
       },
       {
         "min_speed_mph": 35,
         "distance_ft": 350,
         "note": "The delta is the BREAKPOINT, not the values: Lakewood draws the urban low/high split at 30/35 where CDOT draws it at 40/45 — both lawful agency determinations (Table 6B-1 delegates it). Practical consequence: at 35-40 mph, advance warning signs go out 350 ft instead of CDOT's 100 ft. Stricter than CDOT, MUTCD-compliant. Sheets are keyed to a pre-2003 edition — render with a staleness flag.",
-        "source": { "doc": "Lakewood typical TCP sheets (1, 3)", "status": "provisional" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets (1, 3)",
+          "status": "provisional"
+        }
       }
     ],
     "device_spacing": {
       "taper_ft": null,
       "tangent_ft": null,
       "rule": "'Spaced equal to the speed limit in feet (30 mph = 30 feet)' — NO taper/tangent distinction stated. Ambiguous and price-relevant (Q-LKWD-1): read literally it doubles tangent device count vs MUTCD's 2.0xS; read as shorthand for the MUTCD taper rule, tangents follow 2.0xS. Both readings preserved; not resolved by inference (Transportation Engineering, 303-987-7980).",
-      "source": { "doc": "Lakewood typical TCP sheets (1, 2, 3)", "status": "provisional" }
+      "source": {
+        "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+        "status": "provisional"
+      }
     },
     "taper": {
       "rule": "L = WS²/60 at <=40 mph, L = WS at >=45 mph — the MUTCD's own formulas; no delta. Shoulder/downstream taper = 1/3 L (diagrams). Signs on portable supports at least one foot above the roadway.",
-      "source": { "doc": "Lakewood typical TCP sheets (1, 3)", "status": "provisional" }
+      "source": {
+        "doc": "Lakewood typical TCP sheets (1, 3)",
+        "status": "provisional"
+      }
     },
     "note": "All three typical sheets are UNDATED — every geometry value is provisional-on-date and renders as 'verify with agency.' Lakewood is the third geometry-publishing jurisdiction in the launch footprint (after Aurora and Colorado Springs); its published geometry rests on a document keyed at least three editions stale ('Part VI', Figure TA-6/TA-18 numbering)."
   },
@@ -49,31 +82,83 @@
       "severity": "count",
       "rule": "Arrow board is required on state highways and arterial city streets (lane closure on a multi-lane street, note 7).",
       "baseline": "arrow board optional per MUTCD for most single-lane closures",
-      "effect": { "op": "add_device", "device": "arrow_board", "qty": 1 },
-      "trigger": { "classes": ["arterial"], "closure": ["lane"], "night": null },
-      "source": { "doc": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street", "section": "note 7", "status": "provisional" }
+      "effect": {
+        "op": "add_device",
+        "device": "arrow_board",
+        "qty": 1
+      },
+      "trigger": {
+        "classes": [
+          "arterial"
+        ],
+        "closure": [
+          "lane"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street",
+        "section": "note 7",
+        "status": "provisional"
+      }
     },
     {
       "severity": "count",
       "rule": "Double posting of signs is required on state highways with a median, optional on city streets.",
-      "effect": { "op": "add_device", "device": "advance_warning_signs", "note": "double-posted set" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "state highway with a median (CDOT-permit territory)" },
-      "source": { "doc": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street", "section": "note 6", "status": "provisional" }
+      "effect": {
+        "op": "add_device",
+        "device": "advance_warning_signs",
+        "note": "double-posted set"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "state highway with a median (CDOT-permit territory)"
+      },
+      "source": {
+        "doc": "Lakewood typical TCP sheet — Lane Closure on a Multi-Lane Street",
+        "section": "note 6",
+        "status": "provisional"
+      }
     },
     {
       "severity": "op",
       "rule": "No open overnight trenches/holes in the ROW — three independent sources (typical sheets, permit form standing conditions, Engineering Standards). Traffic plates permitted (contrast Englewood's overnight plate ban).",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "excavation left open overnight" },
-      "source": { "doc": "Lakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering Standards", "date": "2016-09-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "excavation left open overnight"
+      },
+      "source": {
+        "doc": "Lakewood typical TCP sheets + Permit Application to Work in the Public Way (rev. 9/16) + Engineering Standards",
+        "date": "2016-09-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "'No street closures' is a pre-printed default condition on every public way permit; the Engineering Standards state it affirmatively ('All streets shall be kept open to traffic by the Permittee unless otherwise approved by the City Engineer') — full closures are default-deny with a named escape hatch, source-triangulated across three layers.",
       "baseline": "MUTCD contemplates full closures with appropriate TTC",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": ["full"], "night": null },
-      "source": { "doc": "Lakewood Permit Application (rev. 9/16) + Engineering Standards (upd. 3/2021) + LMC 10.45.110", "date": "2021-03-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "full"
+        ],
+        "night": null
+      },
+      "source": {
+        "doc": "Lakewood Permit Application (rev. 9/16) + Engineering Standards (upd. 3/2021) + LMC 10.45.110",
+        "date": "2021-03-01",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -82,19 +167,31 @@
       {
         "kind": "ban",
         "days": "weekday",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 7.0,
         "end": 9.0,
         "note": "No arterial/collector lane closures 7:00-9:00 a.m., 'unless otherwise approved'. Confirmed by three independent documents; identical windows to Englewood's statutory peak ban (regional convergence).",
-        "source": { "doc": "Lakewood typical TCP sheets (1, 2, 3)", "status": "provisional" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+          "status": "provisional"
+        }
       },
       {
         "kind": "ban",
         "days": "weekday",
-        "classes": ["arterial", "collector"],
+        "classes": [
+          "arterial",
+          "collector"
+        ],
         "start": 15.5,
         "end": 18.0,
-        "source": { "doc": "Lakewood typical TCP sheets (1, 2, 3)", "status": "provisional" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets (1, 2, 3)",
+          "status": "provisional"
+        }
       }
     ],
     "holiday_rule": "none",
@@ -105,14 +202,29 @@
     {
       "gate": "flaggers_required",
       "rule": "'Flaggers are required where poor sight distance exists (e.g., hills or curves).' A sight-distance-triggered flagger requirement — no other corpus jurisdiction triggers personnel off a geometric field condition. No TCS-preparation or certification requirement found across six documents (axis trending SILENT).",
-      "trigger": { "classes": null, "closure": ["lane"], "night": null, "condition": "poor sight distance (hills or curves)" },
-      "source": { "doc": "Lakewood typical TCP sheet — One-Lane Closure on a Local Street", "section": "note 5", "status": "provisional" }
+      "trigger": {
+        "classes": null,
+        "closure": [
+          "lane"
+        ],
+        "night": null,
+        "condition": "poor sight distance (hills or curves)"
+      },
+      "source": {
+        "doc": "Lakewood typical TCP sheet — One-Lane Closure on a Local Street",
+        "section": "note 5",
+        "status": "provisional"
+      }
     }
   ],
   "devices": [
     {
       "rule": "Truck-mounted attenuator and trailer/truck flasher-or-arrow shown as (optional) on the shoulder and multi-lane typicals; END ROAD WORK sign (optional). Barricading must comply with 'City and M.U.T.C.D. Standards' (permit form standing condition — co-equal).",
-      "source": { "doc": "Lakewood typical TCP sheets + Permit Application (rev. 9/16)", "date": "2016-09-01", "status": "verified" }
+      "source": {
+        "doc": "Lakewood typical TCP sheets + Permit Application (rev. 9/16)",
+        "date": "2016-09-01",
+        "status": "verified"
+      }
     }
   ],
   "hazards": [],
@@ -122,41 +234,72 @@
       {
         "label": "Operation using typical traffic control plan",
         "definition": "Shoulder work (any street classification) or a one-lane closure on a local street, on the city's own fill-in typical — NO-FEE permit required. The typicals are optional and fee-advantaged, not mandatory ('may be useful for your submittal').",
-        "source": { "doc": "Lakewood Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Operation requiring traffic control plan approval",
         "definition": "Site-specific TCP review: $26.00 and a review cycle. Ambiguity preserved (Q-LKWD-6): the no-fee list names two of the three typicals — the multi-lane-closure typical is absent, and the conservative reading is that multi-lane closures require approval regardless.",
-        "source": { "doc": "Lakewood Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       }
     ],
     "term_days": 180,
     "notes": [
       {
         "rule": "Entity gate: Contractor REGISTRATION (Muni Code Ch. 14.11) — registration, not a license class. Form-field verified subcontractor gate: 'List All Sub-Contractors: ___ Lakewood Lic #: ___' — every subcontractor is named on the permit with a Lakewood license number. CBC appears on the permit by name.",
-        "source": { "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)", "date": "2016-09-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+          "date": "2016-09-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Surety: two structures — annual letter of credit / cash / guarantee letter, OR per-permit cash or LOC — with an UNPUBLISHED amount (blank field, set per permit). Render as 'surety required — amount set by the city.' An 'Investigation fee' line exists on the form with no published amount (conventionally a work-without-permit penalty; recorded, not priced).",
-        "source": { "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)", "date": "2016-09-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+          "date": "2016-09-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "The city's TCP form carries a named, dedicated 'Barricade Co. and Phone' field plus a 24-Hour Emergency Phone — the second Colorado jurisdiction whose official TCP artifact structurally assumes a barricade company in the loop.",
-        "source": { "doc": "Lakewood typical TCP sheets (field list)", "status": "provisional" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets (field list)",
+          "status": "provisional"
+        }
       },
       {
         "rule": "Submission runs through ETRAKiT (both a public way permit AND a traffic control plan required). Adoption posture: the Engineering Standards enumerate ten CDOT M-standards and ZERO S-series — Lakewood inherits no CDOT work-zone geometry; city standard beats CDOT standard where both speak ('the City of Lakewood Design Standard shall be used').",
-        "source": { "doc": "Lakewood TCP page + Engineering Standards §VI-B", "date": "2021-03-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood TCP page + Engineering Standards §VI-B",
+          "date": "2021-03-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "Permit valid 180 days; eleven-month inspection; one-year warranty effective after inspection and acceptance; hot patch same day (weather permitting).",
-        "source": { "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)", "date": "2016-09-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Permit Application to Work in the Public Way (rev. 9/16)",
+          "date": "2016-09-01",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": [
       {
         "rule": "The typicals distinguish state highways from city streets in two separate rules (arrow board; double posting) — state-highway work is CDOT-permit territory. A priced CDOT interface exists on the city schedule: CDOT Access Permit $75.00 each change in access.",
-        "source": { "doc": "Lakewood typical TCP sheets + Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood typical TCP sheets + Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -168,20 +311,32 @@
         "amount_cents": 0,
         "effective": "2021-01-01",
         "note": "No-fee permit required — matching a city typical costs $0 and skips the review cycle (F20: the second corpus jurisdiction whose fee responds to TCP design).",
-        "source": { "doc": "Lakewood Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Operation requiring traffic control plan approval",
         "amount_cents": 2600,
         "effective": "2021-01-01",
-        "source": { "doc": "Lakewood Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       },
       {
         "label": "CDOT Access Permit (each change in access)",
         "amount_cents": 7500,
         "per": "each",
         "effective": "2021-01-01",
-        "source": { "doc": "Lakewood Public Way Inspections Fees", "date": "2021-01-01", "status": "verified" }
+        "source": {
+          "doc": "Lakewood Public Way Inspections Fees",
+          "date": "2021-01-01",
+          "status": "verified"
+        }
       }
     ],
     "formula": null,
@@ -194,7 +349,11 @@
       "lead_days": 24,
       "lead_unit": "hours",
       "note": "'CALL INSPECTOR 24 HOURS IN ADVANCE OF WORK!!!' (303-987-7900) — three independent sources. This is an INSPECTION notice, not a submittal lead; conflating the two would be a material error. Plan-review turnaround is NOT PUBLISHED anywhere (five documents exhausted — genuine NL, phone-only).",
-      "source": { "doc": "Lakewood Permit Application (rev. 9/16) + Engineering Standards", "date": "2016-09-01", "status": "verified" }
+      "source": {
+        "doc": "Lakewood Permit Application (rev. 9/16) + Engineering Standards",
+        "date": "2016-09-01",
+        "status": "verified"
+      }
     }
   ],
   "notices": [],

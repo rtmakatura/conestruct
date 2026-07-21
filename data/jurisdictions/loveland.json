@@ -6,10 +6,22 @@
   "row_term": "right-of-way",
   "adoption_class": "plan_adopter",
   "chain": [
-    "MUTCD 11th Ed.",
-    "CDOT Standard Specs",
-    "LCUASS",
-    "Loveland fee schedule"
+    {
+      "title": "MUTCD 11th Ed.",
+      "display_name": "MUTCD 11th Ed."
+    },
+    {
+      "title": "CDOT Standard Specs",
+      "display_name": "CDOT Standard Specs"
+    },
+    {
+      "title": "LCUASS",
+      "display_name": "LCUASS"
+    },
+    {
+      "title": "Loveland fee schedule",
+      "display_name": "Fee schedule"
+    }
   ],
   "classification_map_url": null,
   "class_required": true,

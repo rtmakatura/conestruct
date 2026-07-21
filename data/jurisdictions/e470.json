@@ -5,7 +5,24 @@
   "tcp_term": "MHT",
   "row_term": "right-of-way",
   "adoption_class": "spec_adopter",
-  "chain": ["MUTCD + Colorado Supplement (current)", "CDOT Standard Specifications + M&S Standards ('current versions at the date of the permit application')", "E-470 Permit Manual (September 2025)", "SPPO (2008/rev 2009 — superseded where in conflict)"],
+  "chain": [
+    {
+      "title": "MUTCD + Colorado Supplement (current)",
+      "display_name": "MUTCD + CO Suppl."
+    },
+    {
+      "title": "CDOT Standard Specifications + M&S Standards ('current versions at the date of the permit application')",
+      "display_name": "CDOT Specs + M&S"
+    },
+    {
+      "title": "E-470 Permit Manual (September 2025)",
+      "display_name": "E-470 Permit Manual"
+    },
+    {
+      "title": "SPPO (2008/rev 2009 — superseded where in conflict)",
+      "display_name": "SPPO"
+    }
+  ],
   "classification_map_url": null,
   "class_required": false,
   "currency_date": "2026-07-20",
@@ -15,12 +32,20 @@
     "clear_zone_ft": {
       "value": 30,
       "note": "AASHTO Roadside Design Guide clear zone from edge stripe of nearest travel lane; no materials/equipment storage in it; excavations closed daily; no open excavation in the clear zone after dark.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     "other": [
       {
         "rule": "ROW = 300 ft (fee basis); MUE Utility Zone 50 ft / Landscape Zone 25 ft. No other geometry — MUTCD + Colorado Supplement + Authority requirements govern.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -28,23 +53,54 @@
     {
       "severity": "op",
       "rule": "No TC devices within 2 ft of the outermost solid white line during peak windows; no work impacting mainline lanes in peaks.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null, "condition": "peak windows (weekdays 6-9 a.m., 3-7 p.m., holidays, day prior to holidays)" },
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null,
+        "condition": "peak windows (weekdays 6-9 a.m., 3-7 p.m., holidays, day prior to holidays)"
+      },
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "op",
       "rule": "Median crossing prohibited (drive to nearest interchange); no equipment on travel lanes without an approved MHT; workers' personal vehicles never on Authority Property; materials/equipment removed from ROW at close of daily operations.",
-      "effect": { "op": "method" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "effect": {
+        "op": "method"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "severity": "admin",
       "rule": "TCP must include emergency-vehicle passage provisions and shall conform to the requirements of the Americans with Disabilities Act.",
-      "effect": { "op": "admin" },
-      "trigger": { "classes": null, "closure": null, "night": null },
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "effect": {
+        "op": "admin"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "hours": {
@@ -56,7 +112,11 @@
         "classes": null,
         "start": 6.0,
         "end": 9.0,
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "kind": "ban",
@@ -65,7 +125,11 @@
         "start": 15.0,
         "end": 19.0,
         "note": "Widest peak windows in the corpus (7 banned hours/weekday).",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "conflict" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "conflict"
+        }
       }
     ],
     "holiday_rule": "holidays_and_eves_banned",
@@ -74,8 +138,14 @@
       "label": "afternoon peak window",
       "rendered": "3:00–7:00 PM",
       "sources": [
-        { "doc": "Permit Manual (Sept 2025)", "value": "3:00–7:00 PM" },
-        { "doc": "SPPO (2008/rev 2009)", "value": "3:00–6:00 PM" }
+        {
+          "doc": "Permit Manual (Sept 2025)",
+          "value": "3:00–7:00 PM"
+        },
+        {
+          "doc": "SPPO (2008/rev 2009)",
+          "value": "3:00–6:00 PM"
+        }
       ],
       "verdict": "Rendering 3:00–7:00 PM; where the SPPO and the 2025 Manual conflict, the Manual governs."
     }
@@ -84,29 +154,49 @@
     {
       "gate": "tcs_on_site",
       "rule": "All TC-requiring work supervised by a registered professional traffic engineer OR an ATSSA/CCA-certified TCS additionally certified as 'Worksite Traffic Supervisor'; the TCS owns planning through inspection of the TCP. Strongest personnel gate in the corpus.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "gate": "flagger_certs",
       "rule": "All flaggers certified with current card.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "devices": [
     {
       "rule": "Devices per MUTCD + Colorado Supplement; TCS monitors devices during closures and when left in place multiple days; damage to Authority TC devices repaired immediately before other work continues.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "hazards": [
     {
       "rule": "Damaging the TBMS fiber line: $50,000 per day per occurrence liquidated damages — the largest single penalty in the corpus. 4-ft clearance required; 48-hour witnessed-locate protocol; prescribed support/protection details.",
       "meter_kind": "damage",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "rule": "Unpermitted work = trespass: fines up to 2x the permit fee per unauthorized entry (also against the Facility Owner/contractor); barring from property; 3rd-degree criminal trespass referral.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "permits": {
@@ -114,41 +204,73 @@
     "tiers": [
       {
         "label": "Construction Permit / Permit to Occupy",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Access Permit",
         "definition": "Surveying / potholing / traffic control.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Annual Access Permit",
         "definition": "Routine maintenance.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       }
     ],
     "notes": [
       {
         "rule": "Insurance certificate before any work (limits published on the Authority's website — not captured). Payment, Performance AND Warranty Bond, amount set by the Authority, dual-obligee acceptable, not released until As-Builts accepted.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "1-year warranty from Final Acceptance (As-Builts are the gate — no future permits processed until submitted); finished-work maintenance 24 months; landscaping maintained in perpetuity.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "PE-stamped plans on E-470 As-Builts in PDF and MicroStation V8; Quality Control Plan before work; testing per controlling municipality/county or CDOT, whichever is more stringent; results in 48 hrs, reports in 72.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "rule": "In-kind payment: the Authority may accept materials/services in lieu of cash — unique in the corpus.",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       }
     ],
     "multi_agency": [
       {
         "rule": "The TCP must be reviewed and approved by the appropriate cross-street jurisdictions — the Authority forces multi-jurisdiction TCP approval (reciprocal with Parker's checklist, which attaches E-470 permits).",
-        "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 Permit Manual",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       }
     ]
   },
@@ -158,19 +280,33 @@
       {
         "label": "Access permit administration",
         "amount_cents": 15000,
-        "source": { "doc": "E-470 application page / Board Resolution 05-04 schedule", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 application page / Board Resolution 05-04 schedule",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       },
       {
         "label": "Construction permit administration",
         "amount_cents": 75000,
         "note": "Capped at $750.",
-        "source": { "doc": "E-470 application page / Board Resolution 05-04 schedule", "date": "2025-09-01", "status": "verified" }
+        "source": {
+          "doc": "E-470 application page / Board Resolution 05-04 schedule",
+          "date": "2025-09-01",
+          "status": "verified"
+        }
       }
     ],
     "formula": {
-      "inputs": ["disturbance_acres"],
+      "inputs": [
+        "disturbance_acres"
+      ],
       "note": "Permit Fee = $75,000 per acre of disturbance (published formula; e.g. a 1 ft x 15 ft disturbance = $25.83). Board Resolution 05-04. Inspection fees prepaid on projected schedule; consultant inspector reimbursed including travel time.",
-      "source": { "doc": "E-470 Permit Manual / Board Resolution 05-04", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual / Board Resolution 05-04",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   },
   "meters": [
@@ -180,7 +316,11 @@
       "amount_cents": 5000000,
       "trigger": "TBMS_fiber_line_damage",
       "note": "$50,000 per day per occurrence liquidated damages.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "leads": [
@@ -189,40 +329,64 @@
       "lead_days": 20,
       "lead_unit": "business_days",
       "note": "10-20 business days; complex applications longer; dormant applications closed at 3 months.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "label": "Start / resume notice",
       "lead_days": 2,
       "lead_unit": "business_days",
       "note": "2 working days notice before starting, or resuming after a 5+ day suspension.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "label": "Testing and TBMS locates",
       "lead_days": 48,
       "lead_unit": "hours",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "label": "Punchlist cure after final walkthrough",
       "lead_days": 30,
       "lead_unit": "calendar_days",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "notices": [
     {
       "audience": "cross-street jurisdictions",
       "rule": "TCP reviewed and approved by the appropriate cross-street jurisdictions before Authority work.",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     },
     {
       "audience": "UNCC 811",
       "rule": "Locates two business days ahead (the Authority locates its own facilities).",
       "lead_days": 2,
       "lead_unit": "business_days",
-      "source": { "doc": "E-470 Permit Manual", "date": "2025-09-01", "status": "verified" }
+      "source": {
+        "doc": "E-470 Permit Manual",
+        "date": "2025-09-01",
+        "status": "verified"
+      }
     }
   ],
   "onsite": {

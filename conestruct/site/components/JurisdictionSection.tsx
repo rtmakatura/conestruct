@@ -15,7 +15,7 @@
 // pass/fail = --pass/--fail · no verdict = chromaless --none.  No signal
 // relies on hue alone — every state carries a glyph or a word.
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { ReferenceChip } from "./ReferenceChip";
 import {
   activeBandRow,
@@ -26,7 +26,9 @@ import {
   hhmm,
   leadNoticeLabel,
   meterRateLabel,
+  normalizeChainLink,
   startNoLaterThan,
+  type ChainLink,
   JURISDICTION_OPTIONS,
   type AppliedDelta,
   type Chip,
@@ -132,9 +134,15 @@ const STREET_CLASSES: [StreetClass, string][] = [
 
 // Statewide floor shown when no jurisdiction is selected — the mandate
 // every jurisdiction chain opens with.
-const BASELINE_CHAIN = [
-  "MUTCD 11th Ed. + Colorado Supplement",
-  "CDOT Standard Specifications §630",
+const BASELINE_CHAIN: ChainLink[] = [
+  {
+    title: "MUTCD 11th Ed. + Colorado Supplement",
+    display_name: "MUTCD 11th + CO Suppl.",
+  },
+  {
+    title: "CDOT Standard Specifications §630",
+    display_name: "CDOT Specs §630",
+  },
 ];
 
 export function JurisdictionContextBar({
@@ -145,17 +153,13 @@ export function JurisdictionContextBar({
   setStreetClass,
   loading = false,
 }: ContextBarProps) {
-  const chain = jurisdiction ? jurisdiction.chain : BASELINE_CHAIN;
-  // The chain slot is fixed-height with internal scroll (geometric
-  // stability); anchor to the END so the local override — rendered last
-  // & strongest — is the line that's always visible when a tall chain
-  // overflows.
-  const chainSlotRef = useRef<HTMLDivElement | null>(null);
-  const chainKey = jurisdiction?.key ?? "";
-  useEffect(() => {
-    const el = chainSlotRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [chainKey, loading]);
+  // Compact breadcrumb (Ryan ruling, inc-9): each link renders its
+  // authored display_name; the full title (edition, revision, dates)
+  // surfaces on hover via the title attribute.  normalizeChainLink
+  // covers the deploy window where the backend still serves strings.
+  const chain = (jurisdiction ? jurisdiction.chain : BASELINE_CHAIN).map(
+    normalizeChainLink,
+  );
   return (
     <div className="jbar">
       <div className="jbar-main">
@@ -247,18 +251,17 @@ export function JurisdictionContextBar({
               resizes the bar.  While the evaluated block is in flight
               the slot shows a skeleton at final size — one reflow when
               the bar first mounts, zero when data lands. */}
-          <div className="jbar-slot-chain" ref={chainSlotRef}>
+          <div className="jbar-slot-chain">
             {loading ? (
               <div className="chain-skeleton" aria-hidden>
                 <span className="jbar-skel-line w-full" />
-                <span className="jbar-skel-line w-5/6" />
                 <span className="jbar-skel-line w-2/3" />
               </div>
             ) : (
               <>
                 <div className="chain">
                   {chain.map((seg, i) => (
-                    <span key={seg} className="contents">
+                    <span key={seg.title} className="contents">
                       {i > 0 && (
                         <span className="sep" aria-hidden>
                           ›
@@ -266,8 +269,9 @@ export function JurisdictionContextBar({
                       )}
                       <span
                         className={`seg${i === chain.length - 1 && jurisdiction ? " local" : ""}`}
+                        title={seg.title}
                       >
-                        {seg}
+                        {seg.display_name}
                       </span>
                     </span>
                   ))}
