@@ -1,0 +1,170 @@
+{
+  "key": "el_paso",
+  "name": "El Paso County",
+  "authority": "county",
+  "tcp_term": "TCP",
+  "row_term": "right-of-way",
+  "adoption_class": "mutcd_deferral",
+  "chain": ["MUTCD 11th Ed. + Colorado Supplement", "El Paso County ROW permit terms (epc-rowpermit.com)"],
+  "classification_map_url": null,
+  "class_required": false,
+  "currency_date": "2026-07-20",
+  "corpus_ref": "02-JURISDICTION-DATA §EL PASO COUNTY (session-3 row); 05-COVERAGE-MATRIX #15,#25",
+  "geometry": {
+    "status": "silent",
+    "note": "Genuine MUTCD-deferral: no county work-zone geometry located; Engineering Criteria Manual Ch. 2 is permanent transportation design. Edition note: the county's Part-6 typical applications still reference the 2009 MUTCD (superseded reference; does not change the legal default)."
+  },
+  "deltas": [],
+  "hours": {
+    "shape": "none",
+    "windows": [],
+    "holiday_rule": "none",
+    "override_note": "No published work-hour windows. The application captures 'Time Area will be Occupied/Closed (i.e. 9am-4pm)' — occupancy times are an application field, not a published restriction.",
+    "conflict": null
+  },
+  "personnel": [],
+  "devices": [],
+  "hazards": [
+    {
+      "rule": "Incomplete applications go back to the end of the review queue — a lead-time penalty rather than a fee.",
+      "trigger": { "classes": null, "closure": null, "night": null },
+      "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+    }
+  ],
+  "permits": {
+    "required": true,
+    "tiers": [
+      {
+        "label": "New installation with excavation",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      },
+      {
+        "label": "Repair/replacement with excavation",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      },
+      {
+        "label": "Placement of equipment/materials/TC devices in the ROW",
+        "definition": "A dedicated traffic-control-placement permit class.",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      },
+      {
+        "label": "Maintenance/access, no ground disturbance",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      }
+    ],
+    "term_days": 30,
+    "notes": [
+      {
+        "rule": "Permit life 30 days; exactly one 30-day extension, requested before expiration with a signed copy of the original permit; expired = reapply.",
+        "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+      },
+      {
+        "rule": "Insurance: $1,000,000 liability certificate with EPC DPW as certificate holder; $20,000 construction/permit bond.",
+        "source": { "doc": "El Paso County ROW portal FAQ + Permit Application", "date": "2026-07-19", "status": "provisional" }
+      },
+      {
+        "rule": "Road-closure justification statement required for full/through closures; the TCP must show the proposed detour route and detour signage for closures.",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      },
+      {
+        "rule": "The application captures occupancy/closure times and the posted speed limit — speed is an application field and feeds device spacing directly.",
+        "source": { "doc": "El Paso County ROW Permit Application", "date": "2021-08-23", "status": "provisional" }
+      },
+      {
+        "rule": "One fee worksheet per road; multiple roads per permit.",
+        "source": { "doc": "El Paso County ROW fee worksheet", "status": "provisional" }
+      }
+    ],
+    "multi_agency": []
+  },
+  "fees": {
+    "model": "formula",
+    "items": [
+      {
+        "label": "Encroachment permit",
+        "amount_cents": 39000,
+        "provisional": true,
+        "note": "Undated worksheet — provisional.",
+        "source": { "doc": "El Paso County fee schedule (Research 5 capture)", "status": "provisional" }
+      },
+      {
+        "label": "Excavation permit",
+        "amount_cents": 30000,
+        "provisional": true,
+        "source": { "doc": "El Paso County fee schedule (Research 5 capture)", "status": "provisional" }
+      },
+      {
+        "label": "Obstruction permit",
+        "amount_cents": 18000,
+        "provisional": true,
+        "source": { "doc": "El Paso County fee schedule (Research 5 capture)", "status": "provisional" }
+      },
+      {
+        "label": "Annual permit",
+        "amount_cents": 60000,
+        "provisional": true,
+        "source": { "doc": "El Paso County fee schedule (Research 5 capture)", "status": "provisional" }
+      },
+      {
+        "label": "Administrative surcharge",
+        "amount_cents": 2500,
+        "provisional": true,
+        "note": "The flat $25 in 'Degradation + Traffic Management + Administration + $25'.",
+        "source": { "doc": "El Paso County ROW fee worksheet", "status": "provisional" }
+      },
+      {
+        "label": "Longitudinal cut, in-lane",
+        "amount_cents": 25,
+        "per": "lin_ft",
+        "provisional": true,
+        "source": { "doc": "El Paso County ROW fee worksheet", "status": "provisional" }
+      },
+      {
+        "label": "Longitudinal cut, in-shoulder",
+        "amount_cents": 10,
+        "per": "lin_ft",
+        "provisional": true,
+        "source": { "doc": "El Paso County ROW fee worksheet", "status": "provisional" }
+      }
+    ],
+    "formula": {
+      "inputs": ["lanes_closed", "zone_length_ft", "days"],
+      "note": "Total permit fee = Degradation + Traffic Management + Administration + $25 surcharge. The Traffic Management fee is keyed to shoulder vs. number of lanes closed per day, with closure length 'based on minimum Work Zone called out in the MUTCD' — the engine's computed zone length is a direct fee input. Degradation: asphalt priced per SF by pavement age x length x (width + 2 ft); separate schedules for asphalt/gravel/chip-seal. The lane count consumed here is the plan's real closed-lane count from the engine, never a literal.",
+      "source": { "doc": "El Paso County ROW fee worksheet (epc-assets.elpasoco.com)", "status": "provisional" }
+    },
+    "note": "Fee worksheet is undated — every figure provisional."
+  },
+  "meters": [],
+  "leads": [
+    {
+      "label": "Standard permit review",
+      "lead_days": 5,
+      "lead_unit": "business_days",
+      "note": "Complete applications; incomplete applications return to the back of the queue.",
+      "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+    },
+    {
+      "label": "Full closures and detours",
+      "lead_days": 10,
+      "lead_unit": "business_days",
+      "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+    },
+    {
+      "label": "Emergency work filing",
+      "lead_days": 48,
+      "lead_unit": "hours",
+      "note": "Proceed with immediate notification and TC in place; file the permit within 48 hours of completing the repair.",
+      "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+    }
+  ],
+  "notices": [],
+  "onsite": {
+    "items": [
+      {
+        "rule": "Approved permit and TCP(s) on site — 'paper, phone, tablet'. First jurisdiction in the corpus to explicitly authorize digital TCP copies on site.",
+        "source": { "doc": "El Paso County ROW portal FAQ (epc-rowpermit.com)", "date": "2026-07-19", "status": "provisional" }
+      }
+    ],
+    "digital_ok": true
+  }
+}
