@@ -529,10 +529,12 @@ export function GeneratorShell({
                     the input or retry from the plan details panel.
                   </div>
                 )}
-                <ResultsHero
-                  breakdown={deviceBreakdown}
-                  jurisdiction={jurisdictionBlock}
-                />
+                {showResults && (
+                  <ResultsHero
+                    breakdown={deviceBreakdown}
+                    jurisdiction={jurisdictionBlock}
+                  />
+                )}
                 <OutputCards
                   summary={summary}
                   generated={showResults}
