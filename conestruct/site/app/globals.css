@@ -1326,6 +1326,156 @@ input[type="number"] {
   margin-left: auto;
 }
 
+/* Persistent jurisdiction bar — selection, street class, spec-chain
+   breadcrumb, and the reserved Endeavor-B slot.  Single source for
+   jurisdiction + class; nothing below the bar repeats them. */
+.workbench .jbar {
+  background: var(--canvas-tint);
+  border: 1px solid var(--rule);
+  margin-bottom: 22px;
+}
+.workbench .jbar-main {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.1fr) auto minmax(260px, 1.3fr);
+  gap: 26px;
+  padding: 14px 18px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .workbench .jbar-main {
+    grid-template-columns: 1fr;
+  }
+}
+.workbench .jbar-cell .k {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-bottom: 7px;
+}
+.workbench .jbar select {
+  width: 100%;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 7px 30px 7px 10px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23c8d1dd' fill='none' stroke-width='1.2'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+}
+.workbench .jbar select:focus {
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .jbar-auth {
+  margin-top: 7px;
+  font-size: 12px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-auth b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .jbar-auth .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark);
+}
+.workbench .classpick {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+}
+.workbench .classpick button {
+  padding: 7px 14px;
+  font-size: 12px;
+  background: var(--canvas);
+  color: var(--ink-on-dark-faint);
+  border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+}
+.workbench .classpick button:last-child {
+  border-right: none;
+}
+.workbench .classpick button:hover {
+  color: var(--ink);
+}
+.workbench .classpick button.on {
+  background: var(--act-glow);
+  color: var(--act-bright);
+  box-shadow: inset 0 -2px 0 var(--act);
+}
+.workbench .mapchip {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .mapchip a {
+  color: var(--act);
+}
+/* spec-chain breadcrumb — single line, no boxes; the local override
+   renders last & strongest (white bold — a document name is not a
+   generated number, so it is NOT orange) */
+.workbench .chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.workbench .chain .seg {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .chain .seg.local {
+  color: #fff;
+  font-weight: 700;
+}
+.workbench .chain .sep {
+  color: var(--rule);
+  font-size: 12px;
+}
+.workbench .chain-note {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+/* reserved suggestion slot (Endeavor B) — deliberate inert space */
+.workbench .jbar-suggest {
+  border-top: 1px dashed var(--rule);
+  padding: 9px 18px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-on-dark-faint);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+}
+.workbench .jbar-suggest.reserved {
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.workbench .jbar-suggest.reserved .tag {
+  border: 1px dashed var(--rule);
+  padding: 2px 7px;
+  color: var(--ink-on-dark-faint);
+}
+
 /* Zone 1 dominant presentation: the setup form panel.  The panel hosts
    the existing form sections (FieldGroup blocks) in a responsive
    two-column grid; the section header rows and the generate footer span

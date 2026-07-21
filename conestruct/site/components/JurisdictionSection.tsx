@@ -125,6 +125,13 @@ const STREET_CLASSES: [StreetClass, string][] = [
   ["arterial", "Arterial"],
 ];
 
+// Statewide floor shown when no jurisdiction is selected — the mandate
+// every jurisdiction chain opens with.
+const BASELINE_CHAIN = [
+  "MUTCD 11th Ed. + Colorado Supplement",
+  "CDOT Standard Specifications §630",
+];
+
 export function JurisdictionContextBar({
   jurisdiction,
   jurisdictionKey,
@@ -132,108 +139,113 @@ export function JurisdictionContextBar({
   streetClass,
   setStreetClass,
 }: ContextBarProps) {
+  const chain = jurisdiction ? jurisdiction.chain : BASELINE_CHAIN;
   return (
-    <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4 px-5 py-4 bg-[color:var(--canvas-tint)] border border-[color:var(--rule)]">
-      <div>
-        <label
-          htmlFor="jl-jurisdiction"
-          className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5"
-        >
-          Jurisdiction
-        </label>
-        <select
-          id="jl-jurisdiction"
-          value={jurisdictionKey ?? ""}
-          onChange={(e) => setJurisdictionKey(e.target.value || null)}
-          className="w-full bg-[color:var(--canvas)] border border-[color:var(--rule)] text-[13px] text-[color:var(--ink-on-dark)] px-2 py-1.5 focus:border-[color:var(--act)] outline-none"
-        >
-          <option value="">None — baseline (MUTCD + CDOT) only</option>
-          {JURISDICTION_OPTIONS.map((o) => (
-            <option key={o.key} value={o.key}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        {jurisdiction && (
-          <div className="mt-1.5 text-[12px] text-[color:var(--ink-on-dark-faint)]">
-            <span className="text-[color:var(--ink-on-dark)] font-semibold">
-              {jurisdiction.name}
-            </span>{" "}
-            · {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
-            <span className="font-mono">{jurisdiction.tcp_term}</span>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
-          Street classification
-        </span>
-        <div role="group" aria-label="Street classification" className="inline-flex">
-          {STREET_CLASSES.map(([v, l]) => (
-            <button
-              key={v}
-              type="button"
-              aria-pressed={streetClass === v}
-              onClick={() => setStreetClass(v)}
-              className={`px-3 py-1.5 text-[12px] border first:border-l border-l-0 cursor-pointer ${
-                streetClass === v
-                  ? "border-[color:var(--act)] text-[color:var(--act)] bg-[color:var(--act-glow)]"
-                  : "border-[color:var(--rule)] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--ink-on-dark)]"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
-        </div>
-        {jurisdiction?.class_required &&
-          (jurisdiction.classification_map_url ? (
-            <a
-              href={jurisdiction.classification_map_url}
-              target="_blank"
-              rel="noreferrer"
-              className="block mt-1.5 text-[11px] text-[color:var(--act)] hover:underline"
-            >
-              ◎ per {jurisdiction.name} functional classification map
-            </a>
+    <div className="jbar">
+      <div className="jbar-main">
+        <div className="jbar-cell">
+          <label htmlFor="jl-jurisdiction" className="k">
+            Jurisdiction
+          </label>
+          <select
+            id="jl-jurisdiction"
+            value={jurisdictionKey ?? ""}
+            onChange={(e) => setJurisdictionKey(e.target.value || null)}
+          >
+            <option value="">None — baseline (MUTCD + CDOT) only</option>
+            {JURISDICTION_OPTIONS.map((o) => (
+              <option key={o.key} value={o.key}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          {jurisdiction ? (
+            <div className="jbar-auth">
+              <b>{jurisdiction.name}</b> ·{" "}
+              {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
+              <span className="term">{jurisdiction.tcp_term}</span>, the ROW{" "}
+              <span className="term">{jurisdiction.row_term}</span>
+            </div>
           ) : (
-            <span className="block mt-1.5 text-[11px] text-[color:var(--ink-on-dark-faint)]">
-              ◎ {jurisdiction.name} classifies via its published map — look the
-              street up before submitting
-            </span>
-          ))}
-      </div>
+            <div className="jbar-auth">
+              Statewide baseline — MUTCD + Colorado Supplement only.
+            </div>
+          )}
+        </div>
 
-      <div>
-        <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-on-dark-faint)] mb-1.5">
-          Governing spec chain
-        </span>
-        {jurisdiction ? (
-          <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-            {jurisdiction.chain.map((seg, i) => (
-              <span key={seg} className="inline-flex items-center gap-1.5">
+        <div className="jbar-cell">
+          <span className="k">Street classification</span>
+          <div
+            role="group"
+            aria-label="Street classification"
+            className="classpick"
+          >
+            {STREET_CLASSES.map(([v, l]) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={streetClass === v}
+                onClick={() => setStreetClass(v)}
+                className={streetClass === v ? "on" : ""}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+          {jurisdiction?.class_required &&
+            (jurisdiction.classification_map_url ? (
+              <span className="mapchip">
+                <span aria-hidden>◎ </span>
+                <a
+                  href={jurisdiction.classification_map_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  per {jurisdiction.name} functional classification map
+                </a>
+              </span>
+            ) : (
+              <span className="mapchip">
+                ◎ {jurisdiction.name} classifies via its published map — look
+                the street up before submitting
+              </span>
+            ))}
+        </div>
+
+        <div className="jbar-cell">
+          <span className="k">Governing spec chain</span>
+          <div className="chain">
+            {chain.map((seg, i) => (
+              <span key={seg} className="contents">
+                {i > 0 && (
+                  <span className="sep" aria-hidden>
+                    ›
+                  </span>
+                )}
                 <span
-                  className={
-                    i === jurisdiction.chain.length - 1
-                      ? "text-[color:var(--dim)] border border-[color:var(--dim)] px-1.5 py-0.5"
-                      : "text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-1.5 py-0.5"
-                  }
+                  className={`seg${i === chain.length - 1 && jurisdiction ? " local" : ""}`}
                 >
                   {seg}
                 </span>
-                {i < jurisdiction.chain.length - 1 && (
-                  <span aria-hidden className="text-[color:var(--ink-on-dark-faint)]">
-                    →
-                  </span>
-                )}
               </span>
             ))}
           </div>
-        ) : (
-          <span className="text-[12px] text-[color:var(--ink-on-dark-faint)]">
-            MUTCD 11th Ed. + Colorado Supplement → CDOT S-630
-          </span>
-        )}
+          {jurisdiction && (
+            <span className="chain-note">
+              local override rendered last &amp; strongest
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Reserved Endeavor-B seam: pin-based jurisdiction suggestion +
+          boundary warnings land here.  Deliberate inert space — A
+          guarantees the slot; B owns the behavior. */}
+      <div className="jbar-suggest reserved">
+        <span className="tag">reserved</span>
+        <span>
+          Pin-based jurisdiction suggestion &amp; boundary warnings — Endeavor B
+        </span>
       </div>
     </div>
   );
