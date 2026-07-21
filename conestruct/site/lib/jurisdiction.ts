@@ -179,12 +179,12 @@ export interface WorkScheduleInput {
   end_time?: number;
 }
 
-/** The jurisdictions the UI offers (spec §6 ship list ∩ authored data
- *  files).  Lakewood is on the ship list but its record is not yet
- *  authored (remaining-rows pass) — it joins here when the file lands. */
+/** The jurisdictions the UI offers — the full spec §6 launch-8 ship
+ *  list, every record authored from the research corpus. */
 export const JURISDICTION_OPTIONS: { key: string; label: string }[] = [
   { key: "cdot", label: "CDOT (state highway)" },
   { key: "denver", label: "Denver" },
+  { key: "lakewood", label: "Lakewood" },
   { key: "englewood", label: "Englewood" },
   { key: "littleton", label: "Littleton" },
   { key: "centennial", label: "Centennial" },

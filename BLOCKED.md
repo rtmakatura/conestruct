@@ -9,10 +9,11 @@ in the data file and logged here. Nothing below was guessed or defaulted.
 The corpus documents FIVE agency determinations:
 **cdot = 45** (S-630-1 Key table) · **englewood = 35** (TC-1 sign-spacing table) ·
 **littleton = 35** (template <35 mph key) · **lakewood = 35** (its own typical
-sheets: A=100' ≤30 mph, A=350' ≥35 mph) · **aurora = 35** (spacing Table 1:
-0–30→100, 35–40→350 — identical placement to Englewood's; F19 pattern).
-Lakewood and Aurora are not in the 13 priority files; their records carry 35
-when authored in the remaining-rows pass.
+sheets: A=100' ≤30 mph, A=350' ≥35 mph — AUTHORED 2026-07-20, Ryan ruling:
+its omission from §2.7 was a spec error; it is in the approved launch 8) ·
+**aurora = 35** (spacing Table 1: 0–30→100, 35–40→350 — identical placement
+to Englewood's; F19 pattern). Aurora's record is authored in the
+remaining-rows pass and carries 35.
 
 Absent — no read source states the agency's urban speed-category determination:
 `loveland, parker, castle_rock, greeley, westminster, thornton, el_paso,
@@ -80,6 +81,27 @@ fetched. (All other 11 files: no map known to exist → null is correct.)
 - littleton min lane 10 ft (LEDS) vs 12 ft (flagger templates) → 10 general,
   12 on flagger configurations.
 - e470 afternoon peak 3–7 PM (2025 Manual) vs 3–6 PM (SPPO) → Manual governs.
+
+## HARD GATE — print pipeline before wave 2 (Ryan ruling, 2026-07-20)
+
+**Spec §4 (on-sheet device summary + conflict footnote on the PDF, and §4.3
+killing the hard-coded W20-1/flagger-station quantities) is REQUIRED before
+Castle Rock, Loveland, or Thornton ever ship.** Those jurisdictions legally
+require the device summary on the plan sheet itself (LCUASS 6.1.B.1 device
+summary on the sheet; Castle Rock device count/type on the TCP; Thornton's
+stipulation checklist). **Wave 2 cannot start without it.** Deferring §4 was
+accepted for the launch-8 wave only.
+
+## Lakewood residuals (authored 2026-07-20)
+
+- Device-spacing taper/tangent ambiguity (Q-LKWD-1) and the multi-lane
+  no-fee-list ambiguity (Q-LKWD-6): preserved in the record, phone-only
+  (Transportation Engineering 303-987-7980).
+- Plan-review turnaround: genuinely not published (NL) — the 24-hour figure
+  in the record is an INSPECTION notice, never a submittal lead.
+- Surety amount: unpublished, set per permit (blank form field).
+- All typical-sheet geometry is provisional-on-date (sheets undated, keyed
+  to pre-2003 MUTCD numbering).
 
 ## Baseline residual (spec §3.4)
 
