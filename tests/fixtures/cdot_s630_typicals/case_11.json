@@ -1,7 +1,8 @@
 {
   "_meta": {
     "source": "CDOT Standard Plan S-630-1, Sheet 7 of 26",
-    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/design/s-standards",
+    "source_note": "2026-07-01 re-issue editorial-only per CDOT issuance memo; values verified against the July 2026 S-630-1 set (read 2026-07-16).",
     "verified_by": "Ryan, June 5 2026, manual extraction from diagram",
     "purpose": "validation fixture for Conestruct shoulder closure outputs against CDOT typical applications",
     "structural_relationship_to_cases_26_27": "Case 11 is the general/no-specific-speed shoulder work on freeway/expressway. Cases 26 and 27 are the 65 mph and 75 mph speed-specific variants. Speed limit signs in Case 11 show 'XX' placeholders; signs marked with diamond (♦) are mandatory only when work zone speed is reduced."

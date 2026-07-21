@@ -1,7 +1,8 @@
 {
   "_meta": {
     "source": "CDOT Standard Plan S-630-1, Sheet 14 of 26",
-    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/design/s-standards",
+    "source_note": "2026-07-01 re-issue editorial-only per CDOT issuance memo; values verified against the July 2026 S-630-1 set (read 2026-07-16).",
     "verified_by": "Ryan, June 5 2026, manual extraction from diagram",
     "purpose": "validation fixture for Conestruct shoulder closure outputs against CDOT typical applications",
     "structural_relationship_to_case_26": "Case 27 is the 75 mph variant of Case 26 (65 mph); structure identical, speed-dependent values differ"
