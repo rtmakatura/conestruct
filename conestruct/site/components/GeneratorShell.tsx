@@ -32,7 +32,7 @@ import {
   JurisdictionContextBar,
   JurisdictionSection,
 } from "./JurisdictionSection";
-import type { StreetClass, WorkScheduleInput } from "@/lib/jurisdiction";
+import type { StreetClass } from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
 
@@ -593,9 +593,6 @@ export function GeneratorShell({
                 }
                 streetClass={scenario.street_class ?? null}
                 schedule={scenario.schedule ?? null}
-                setSchedule={(s: WorkScheduleInput | null) =>
-                  setScenario({ ...scenario, schedule: s })
-                }
               />
               {/* Plan-verification chips join the zone with results —
                   plus the pre-generation audit-error case, because the

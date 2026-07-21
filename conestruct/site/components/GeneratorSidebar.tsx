@@ -52,6 +52,7 @@ import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
 import { SiteConditionsField } from "./SiteConditionsField";
+import { ScheduleField } from "./ScheduleField";
 import {
   LocationPickerModal,
   type LocationPickerResult,
@@ -93,10 +94,10 @@ const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   freeway: "Freeway / interstate",
 };
 
-// Site conditions is the final numbered step, so its index depends on
-// whether the active per-kind form contributed a fifth step (Flagger /
-// Protection) after the fixed Road (3) / Work (4). Location (1) and
-// Scenario (2) are constant.
+// Schedule then Site conditions close the panel, so their indices
+// depend on whether the active per-kind form contributed a fifth step
+// (Flagger / Protection) after the fixed Road (3) / Work (4).
+// Location (1) and Scenario (2) are constant.
 const KIND_HAS_FIFTH_STEP: Record<ScenarioKind, boolean> = {
   shoulder: false,
   flagger_lane_closure: true, // Flagger
@@ -107,8 +108,12 @@ const KIND_HAS_FIFTH_STEP: Record<ScenarioKind, boolean> = {
   near_intersection: true, // Cross street
 };
 
-function siteStep(kind: ScenarioKind): number {
+function scheduleStep(kind: ScenarioKind): number {
   return KIND_HAS_FIFTH_STEP[kind] ? 6 : 5;
+}
+
+function siteStep(kind: ScenarioKind): number {
+  return scheduleStep(kind) + 1;
 }
 
 function fmt6(n: number): string {
@@ -326,6 +331,15 @@ export function GeneratorSidebar({
             }
           />
         )}
+
+        {/* Schedule entry lives in Setup (gen2 inc-8) — the hours chip
+            reads the same scenario.schedule; the strip inline-edits it
+            post-generation. */}
+        <ScheduleField
+          scenario={scenario}
+          setScenario={setScenario}
+          step={scheduleStep(scenario.kind)}
+        />
 
         <SiteConditionsField
           scenario={scenario}

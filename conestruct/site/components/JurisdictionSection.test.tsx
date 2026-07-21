@@ -34,7 +34,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass={null}
         schedule={null}
-        setSchedule={noop}
       />,
     );
     expect(container.innerHTML).toBe("");
@@ -47,7 +46,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass="arterial"
         schedule={null}
-        setSchedule={noop}
       />,
     );
     // Collapsed by default (density contract) with the count summary.
@@ -77,7 +75,6 @@ describe("JurisdictionSection — real-data rendering", () => {
           start_time: 8.0,
           end_time: 15.0,
         }}
-        setSchedule={noop}
       />,
     );
     // The metered badge reads the real arterial half-hour meter ($700).
@@ -101,7 +98,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass="arterial"
         schedule={null}
-        setSchedule={noop}
       />,
     );
     expect(
@@ -123,7 +119,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass="arterial"
         schedule={{ date_mode: "single", work_date: "2026-07-22" }}
-        setSchedule={noop}
       />,
     );
     // Density contract: the permit chip is collapsed by default (a
@@ -151,7 +146,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass={null}
         schedule={null}
-        setSchedule={noop}
       />,
     );
     // The hazard chip's dollar figure joins from the meters list — never
@@ -177,7 +171,6 @@ describe("JurisdictionSection — real-data rendering", () => {
         loading={false}
         streetClass="arterial"
         schedule={null}
-        setSchedule={noop}
       />,
     );
     await userEvent.click(

@@ -35,7 +35,6 @@ function mount(j: JurisdictionBlock) {
         start_time: 8.0,
         end_time: 15.0,
       }}
-      setSchedule={noop}
     />,
   );
 }
@@ -120,19 +119,47 @@ describe("hours chip auto-expand — plan-invalidating states only", () => {
     expect(head.closest(".refchip")!.className).not.toContain("auto-expand");
   });
 
-  it("UNKNOWN (no schedule to check): collapsed, chromeless 'not checked' — absence of signal is not an error", () => {
+  it("UNKNOWN + user chose 'Not set': collapsed, chromeless 'not checked' — absence of signal is not an error", () => {
     const l = jur("loveland");
     const unknown: JurisdictionBlock = {
       ...l,
       hours_eval: { status: "unknown", violations: [] } as HoursEval,
     };
-    mount(unknown);
+    render(
+      <JurisdictionSection
+        jurisdiction={unknown}
+        loading={false}
+        streetClass="arterial"
+        schedule={{ date_mode: "tbd" }}
+      />,
+    );
     const head = screen.getByRole("button", { name: /work hours — loveland/i });
     expect(head.getAttribute("aria-expanded")).toBe("false");
+    // "not checked" is reserved for the deliberate choice (inc-8).
     expect(head.textContent).toMatch(/not checked/i);
     const chip = head.closest(".refchip")!;
     expect(chip.className).toContain("sev-info");
     expect(chip.className).not.toContain("auto-expand");
+  });
+
+  it("UNKNOWN + schedule merely unentered: collapsed, prompts Setup entry instead of claiming 'not checked'", () => {
+    const l = jur("loveland");
+    const unknown: JurisdictionBlock = {
+      ...l,
+      hours_eval: { status: "unknown", violations: [] } as HoursEval,
+    };
+    render(
+      <JurisdictionSection
+        jurisdiction={unknown}
+        loading={false}
+        streetClass="arterial"
+        schedule={null}
+      />,
+    );
+    const head = screen.getByRole("button", { name: /work hours — loveland/i });
+    expect(head.getAttribute("aria-expanded")).toBe("false");
+    expect(head.textContent).toMatch(/set date & times in Setup/i);
+    expect(head.textContent).not.toMatch(/not checked/i);
   });
 
   it("a manual collapse of an auto-expanded chip is respected", async () => {

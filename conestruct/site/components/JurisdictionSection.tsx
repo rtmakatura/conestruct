@@ -404,10 +404,9 @@ interface WorkHoursProps {
   jurisdiction: JurisdictionBlock;
   streetClass: StreetClass | null;
   schedule: WorkScheduleInput | null;
-  setSchedule: (s: WorkScheduleInput | null) => void;
 }
 
-function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: WorkHoursProps) {
+function WorkHoursCard({ jurisdiction, streetClass, schedule }: WorkHoursProps) {
   const hours = jurisdiction.hours;
   const hoursEval = jurisdiction.hours_eval;
   const rows = deriveBandRows(hours);
@@ -420,11 +419,16 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
     hoursMeters.find((m) => !m.classes || m.classes.length === 0) ??
     hoursMeters[0];
 
-  const sched = schedule ?? { date_mode: "tbd" as const };
+  const sched = schedule ?? null;
   const hoursKnown =
-    sched.date_mode !== "tbd" && sched.start_time != null && sched.end_time != null;
-
-  const patch = (p: Partial<WorkScheduleInput>) => setSchedule({ ...sched, ...p });
+    sched != null &&
+    sched.date_mode !== "tbd" &&
+    sched.start_time != null &&
+    sched.end_time != null;
+  // "Not set" is a deliberate user choice (ScheduleField's third date
+  // mode); an absent/incomplete schedule is merely unentered — the two
+  // read differently (inc-8: "not checked" only for the genuine choice).
+  const scheduleTbd = sched?.date_mode === "tbd";
 
   // The chip's collapsed verdict is the backend's hours_eval — never
   // recomputed (rule 3).  Auto-expand is reserved for the ONE
@@ -435,10 +439,12 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
       <span className="verdict-bad">outside window · review schedule</span>
     ) : status === "inside" ? (
       <span className="verdict-ok">inside window ✓</span>
-    ) : (
+    ) : scheduleTbd ? (
       <>
         windows shown · <b>not checked</b>
       </>
+    ) : (
+      <>set date &amp; times in Setup to check</>
     );
 
   return (
@@ -528,7 +534,7 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
                       {s.endH - s.startH >= 3 ? (s.t === "ban" ? "banned" : "ok") : ""}
                     </div>
                   ))}
-                  {isActive && hoursKnown && (
+                  {isActive && hoursKnown && sched && (
                     <div
                       aria-hidden
                       className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
@@ -557,57 +563,29 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
         </div>
       )}
 
-      {/* Schedule inputs (design deviation: the prototype hosts these in
-          the sidebar; they live on the card pending a design pass). */}
-      <fieldset className="mt-4 border-t border-[color:var(--paper-line-soft)] pt-3">
-        <legend className="sr-only">Work schedule</legend>
-        <div className="flex flex-wrap items-end gap-3">
-          <label className="text-[11px] text-[color:var(--ink-faint)]">
-            Work date
-            <input
-              type="date"
-              value={sched.work_date ?? ""}
-              onChange={(e) =>
-                patch({
-                  work_date: e.target.value || undefined,
-                  date_mode: e.target.value ? "single" : "tbd",
-                })
-              }
-              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
-            />
-          </label>
-          <label className="text-[11px] text-[color:var(--ink-faint)]">
-            Start
-            <input
-              type="time"
-              value={sched.start_time != null ? toTimeInput(sched.start_time) : ""}
-              onChange={(e) => patch({ start_time: fromTimeInput(e.target.value) })}
-              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
-            />
-          </label>
-          <label className="text-[11px] text-[color:var(--ink-faint)]">
-            End
-            <input
-              type="time"
-              value={sched.end_time != null ? toTimeInput(sched.end_time) : ""}
-              onChange={(e) => patch({ end_time: fromTimeInput(e.target.value) })}
-              className="block mt-1 bg-[color:var(--paper-deep)] border border-[color:var(--paper-line)] text-[12px] text-[color:var(--ink)] px-2 py-1 focus:border-[color:var(--act)] outline-none"
-            />
-          </label>
-        </div>
-      </fieldset>
-
       {/* Plan tie — the verdict comes from the backend hours_eval, never
           recomputed here (rule 3 / rule 10: VERIFYING-style honesty is
-          handled upstream by the section's loading state). */}
+          handled upstream by the section's loading state).  Schedule
+          ENTRY lives in Setup (ScheduleField) and the post-gen strip —
+          this chip only reads.  An unknown verdict distinguishes the
+          user's deliberate "Not set" from a schedule they simply
+          haven't finished entering. */}
       <div className="mt-3">
-        {hoursEval.status === "unknown" && (
-          <div className="text-[12px] text-[color:var(--none)]">
-            ◌ {hoursEval.note ?? "Schedule not checked yet"} — set a date and
-            start/end times to check them against {jurisdiction.name}&apos;s
-            windows.
-          </div>
-        )}
+        {hoursEval.status === "unknown" &&
+          (scheduleTbd ? (
+            <div className="text-[12px] text-[color:var(--none)]">
+              ◌ Schedule marked &ldquo;Not set&rdquo; — the windows above are
+              reference only. Choose a date mode in Setup to check a
+              schedule against {jurisdiction.name}&apos;s windows.
+            </div>
+          ) : (
+            <div className="text-[12px] text-[color:var(--none)]">
+              ◌ {hoursEval.note ?? "Schedule not checked yet"} — enter the
+              work date and start/end times in the Setup panel&apos;s
+              Schedule step to check them against {jurisdiction.name}&apos;s
+              windows.
+            </div>
+          ))}
         {hoursEval.status === "inside" && (
           <div className="text-[12px] text-[color:var(--pass)]">
             ✓ Within the permitted window for this street class.
@@ -643,18 +621,6 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule, setSchedule }: Wor
       <ConflictFootnote conflict={hours.conflict} />
     </ReferenceChip>
   );
-}
-
-function toTimeInput(h: number): string {
-  const hr = Math.floor(h);
-  const m = Math.round((h - hr) * 60);
-  return `${hr.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-}
-
-function fromTimeInput(v: string): number | undefined {
-  if (!v) return undefined;
-  const [hr, m] = v.split(":").map(Number);
-  return hr + m / 60;
 }
 
 // ---------------------------------------------------------------------------
@@ -1024,7 +990,6 @@ interface SectionProps {
   loading: boolean;
   streetClass: StreetClass | null;
   schedule: WorkScheduleInput | null;
-  setSchedule: (s: WorkScheduleInput | null) => void;
 }
 
 export function JurisdictionSection({
@@ -1032,7 +997,6 @@ export function JurisdictionSection({
   loading,
   streetClass,
   schedule,
-  setSchedule,
 }: SectionProps) {
   if (!jurisdiction && !loading) return null;
   return (
@@ -1063,7 +1027,6 @@ export function JurisdictionSection({
             jurisdiction={jurisdiction}
             streetClass={streetClass}
             schedule={schedule}
-            setSchedule={setSchedule}
           />
           <PermitFYI
             jurisdiction={jurisdiction}

@@ -187,6 +187,38 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".hero")).toBeNull();
   });
 
+  it("panel schedule entry reaches the POSTed scenario (payload-level, inc-8)", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" />);
+    await release(0, okBreakdown());
+
+    // The Setup panel's Schedule step: choose a work date, then flip to
+    // the deliberate "Not set" mode — both edits must ride the same
+    // scenario.schedule the strip and hours chip read.
+    const dateInput = document.getElementById("sched-date") as HTMLInputElement;
+    expect(dateInput).not.toBeNull();
+    await user.type(dateInput, "2026-08-04");
+    await release(1, okBreakdown());
+
+    let bodies = fetchMock.mock.calls
+      .filter(([u]) => String(u).includes("device-breakdown"))
+      .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
+    let last = bodies[bodies.length - 1] as {
+      scenario: { schedule?: { date_mode: string; work_date?: string } };
+    };
+    expect(last.scenario.schedule?.work_date).toBe("2026-08-04");
+    expect(last.scenario.schedule?.date_mode).toBe("single");
+
+    await user.click(screen.getByRole("button", { name: "Not set" }));
+    bodies = fetchMock.mock.calls
+      .filter(([u]) => String(u).includes("device-breakdown"))
+      .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
+    last = bodies[bodies.length - 1] as {
+      scenario: { schedule?: { date_mode: string } };
+    };
+    expect(last.scenario.schedule?.date_mode).toBe("tbd");
+  });
+
   it("strip inline edit writes the scenario and refires the request (payload-level)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" />);
