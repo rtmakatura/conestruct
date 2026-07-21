@@ -72,6 +72,7 @@ RENDER_DEPS = [
     "pyyaml>=6.0",
     "httpx>=0.28",
     "sentry-sdk[fastapi]>=2.0",
+    "jsonschema>=4.21",  # jurisdiction record validation (src/rules/jurisdiction.py)
 ]
 
 image = (
@@ -84,6 +85,12 @@ image = (
     # layers, so no build step may follow them.  Read at runtime by /healthz.
     .env({"GIT_SHA": _git_sha()})
     .add_local_dir("src", remote_path="/root/src")
+    # Jurisdiction layer: the schema + data records the rules engine loads
+    # at runtime (src/rules/jurisdiction.py resolves them relative to the
+    # repo root, /root in the image).  NEVER add_local_dir("data") itself —
+    # data/ holds the 20GB scraped-PDF corpus; only these two paths ship.
+    .add_local_file("data/jurisdiction.schema.json", "/root/data/jurisdiction.schema.json")
+    .add_local_dir("data/jurisdictions", remote_path="/root/data/jurisdictions")
 )
 
 app = modal.App("conestruct-render")
