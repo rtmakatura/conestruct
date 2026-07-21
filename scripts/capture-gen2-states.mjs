@@ -6,11 +6,12 @@ import { chromium } from "playwright";
 import { mkdirSync } from "fs";
 
 const outDir = process.argv[2] ?? "gen2-preview";
+const base = process.env.GEN2_BASE ?? "http://localhost:3000";
 mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch({ channel: "msedge", headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 950 } });
-await page.goto("http://localhost:3000/sandbox", {
+await page.goto(`${base}/sandbox`, {
   waitUntil: "networkidle",
   timeout: 120000,
 });
