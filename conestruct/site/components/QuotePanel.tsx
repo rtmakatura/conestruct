@@ -48,6 +48,13 @@ interface Props {
   setFlaggerSource: Dispatch<SetStateAction<FlaggerSource>>;
   delivery: DeliveryStatus;
   setDelivery: Dispatch<SetStateAction<DeliveryStatus>>;
+  // Restage: inside Zone 2's collapsed pricing card the outer card
+  // chrome (corner ticks, deliverable eyebrow, panel title) belongs to
+  // the card head, so the embedded panel drops its own.
+  embedded?: boolean;
+  // Reports the last previewed backend total so the collapsed card head
+  // can show it.  Null until a preview has run.
+  onTotalChange?: (total: number | null) => void;
 }
 
 interface EquipmentLine {
@@ -132,6 +139,8 @@ export function QuotePanel({
   setFlaggerSource,
   delivery,
   setDelivery,
+  embedded = false,
+  onTotalChange,
 }: Props) {
   const [breakdown, setBreakdown] = useState<Breakdown | null>(null);
   const [busy, setBusy] = useState(false);
@@ -216,6 +225,7 @@ export function QuotePanel({
       }
       const data = (await res.json()) as Breakdown;
       setBreakdown(data);
+      onTotalChange?.(data.total);
     } catch {
       setErr("Network error");
     } finally {
@@ -253,20 +263,8 @@ export function QuotePanel({
     }
   };
 
-  return (
-    <section className="output-card mb-8 !p-7">
-      <span className="corner tl" />
-      <span className="corner br" />
-      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
-        <span className="text-[color:var(--dim)]">D</span> · DELIVERABLE 04
-      </div>
-      <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
-        Pricing quote
-      </h3>
-      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-5">
-        XLSX · CONTRACTOR ESTIMATE · OVERHEAD + PROFIT
-      </div>
-
+  const body = (
+    <>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
         <NumberField
           label="Duration (days)"
@@ -564,6 +562,27 @@ export function QuotePanel({
           </BreakdownGroup>
         </div>
       )}
+    </>
+  );
+
+  if (embedded) {
+    return <div className="pt-3">{body}</div>;
+  }
+
+  return (
+    <section className="output-card mb-8 !p-7">
+      <span className="corner tl" />
+      <span className="corner br" />
+      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
+        <span className="text-[color:var(--dim)]">D</span> · DELIVERABLE 04
+      </div>
+      <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
+        Pricing quote
+      </h3>
+      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-5">
+        XLSX · CONTRACTOR ESTIMATE · OVERHEAD + PROFIT
+      </div>
+      {body}
     </section>
   );
 }

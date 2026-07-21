@@ -14,11 +14,9 @@ import { GeneratorSidebar } from "./GeneratorSidebar";
 import { SetupStrip } from "./SetupStrip";
 import { StatusBar, type Status } from "./StatusBar";
 import { OutputCards } from "./OutputCards";
-import {
-  QuotePanel,
-  type DeliveryStatus,
-  type FlaggerSource,
-} from "./QuotePanel";
+import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
+import { PricingCard } from "./PricingCard";
+import { ResultsHero } from "./ResultsHero";
 import { AuditTrail } from "./AuditTrail";
 import {
   DeviceBreakdown,
@@ -531,6 +529,10 @@ export function GeneratorShell({
                     the input or retry from the plan details panel.
                   </div>
                 )}
+                <ResultsHero
+                  breakdown={deviceBreakdown}
+                  jurisdiction={jurisdictionBlock}
+                />
                 <OutputCards
                   summary={summary}
                   generated={showResults}
@@ -547,7 +549,7 @@ export function GeneratorShell({
                   bundling={bundling}
                 />
                 {showResults && (
-                  <QuotePanel
+                  <PricingCard
                     mode={
                       mode === "sandbox"
                         ? { kind: "public", scenario }

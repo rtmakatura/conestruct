@@ -116,9 +116,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
-    // Restage lifecycle: QuotePanel mounts post-generation (Zone 2), so
-    // generate first, then edit, then download.
+    // Restage lifecycle: the quote inputs live in Zone 2's collapsed
+    // pricing card, so generate first, expand the card, then edit.
     await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
@@ -136,6 +137,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await mountSandbox();
 
     await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
 
@@ -144,6 +146,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // shell, so the remount must NOT reinitialize them to DEFAULT.
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const overheadAfter = screen.getByLabelText(
       /Overhead/i,
@@ -156,6 +159,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await mountSandbox();
 
     await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const flaggers = screen.getByLabelText(/Flaggers/i) as HTMLInputElement;
     const delivery = screen.getByLabelText(/Delivery/i) as HTMLInputElement;
@@ -180,6 +184,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // re-clobbered the manual entries.
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByText("Generate package"));
+    await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
     expect((screen.getByLabelText(/Flaggers/i) as HTMLInputElement).value).toBe(
       "3",
     );
