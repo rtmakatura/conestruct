@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://conestruct.com/schemas/jurisdiction.schema.json",
+  "title": "Conestruct jurisdiction record",
+  "description": "One JSON file per jurisdiction (data/jurisdictions/{key}.json). Shapes per docs/phase1-backend-spec.md §2. Every jurisdiction fact carries a source object (doc + status required); a fact whose source.status is 'conflict' must carry a sibling conflict block. Silent axes are absent, never defaulted. Enum extensions beyond the spec's illustrative lists (meter kinds tc_violation/restoration_failure/rejection; personnel gates utc_officer/police_fire_approval) exist because the corpus contains those rule shapes; each is used only where 02-JURISDICTION-DATA records the fact.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "key", "name", "authority", "tcp_term", "row_term", "adoption_class",
+    "chain", "classification_map_url", "class_required", "currency_date",
+    "corpus_ref", "geometry", "deltas", "hours", "personnel", "devices",
+    "hazards", "permits", "fees", "meters", "leads", "notices", "onsite"
+  ],
+  "properties": {
+    "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "authority": { "enum": ["city", "county", "city_county", "state", "toll_authority"] },
+    "tcp_term": { "enum": ["TCP", "MHT"] },
+    "row_term": { "enum": ["right-of-way", "public space"] },
+    "adoption_class": {
+      "enum": ["enumerator", "scoped", "plan_adopter", "spec_adopter", "ta_pointer", "mutcd_deferral"]
+    },
+    "chain": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Governing-document stack, outermost (MUTCD) first."
+    },
+    "classification_map_url": { "type": ["string", "null"], "format": "uri" },
+    "class_required": { "type": "boolean" },
+    "currency_date": { "type": "string", "format": "date", "description": "Date the corpus last verified this row." },
+    "corpus_ref": { "type": "string", "minLength": 1 },
+    "geometry": { "$ref": "#/$defs/geometry" },
+    "deltas": { "type": "array", "items": { "$ref": "#/$defs/delta" } },
+    "hours": { "$ref": "#/$defs/hours" },
+    "personnel": { "type": "array", "items": { "$ref": "#/$defs/personnelRecord" } },
+    "devices": { "type": "array", "items": { "$ref": "#/$defs/deviceRecord" } },
+    "hazards": { "type": "array", "items": { "$ref": "#/$defs/hazardRecord" } },
+    "permits": { "$ref": "#/$defs/permits" },
+    "fees": { "$ref": "#/$defs/fees" },
+    "meters": { "type": "array", "items": { "$ref": "#/$defs/meter" } },
+    "leads": { "type": "array", "items": { "$ref": "#/$defs/lead" } },
+    "notices": { "type": "array", "items": { "$ref": "#/$defs/notice" } },
+    "onsite": { "$ref": "#/$defs/onsite" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["doc", "status"],
+      "properties": {
+        "doc": { "type": "string", "minLength": 1 },
+        "section": { "type": "string" },
+        "date": { "type": "string", "description": "Document/effective date if known; absent when the source is undated (never guessed)." },
+        "status": { "enum": ["verified", "provisional", "conflict"] }
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "rendered", "sources", "verdict"],
+      "properties": {
+        "label": { "type": "string" },
+        "rendered": { "type": "string" },
+        "sources": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["doc", "value"],
+            "properties": {
+              "doc": { "type": "string" },
+              "value": { "type": "string" }
+            }
+          }
+        },
+        "verdict": { "type": "string" }
+      }
+    },
+    "streetClass": { "enum": ["local", "collector", "arterial"] },
+    "closureKind": { "enum": ["lane", "shoulder", "full", "sidewalk", "bike_lane", "parking_lane", "alley", "detour"] },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "classes": { "type": ["array", "null"], "items": { "$ref": "#/$defs/streetClass" } },
+        "closure": { "type": ["array", "null"], "items": { "$ref": "#/$defs/closureKind" } },
+        "night": { "type": ["boolean", "null"] },
+        "min_duration_days": { "type": ["number", "null"] },
+        "min_road_lanes": { "type": ["integer", "null"] },
+        "condition": {
+          "type": ["string", "null"],
+          "description": "Free-form predicate for trigger conditions the structured fields cannot express (e.g. 'signal operation interrupted', 'cut/fill >= 2 in within 5 ft of a travel lane'). Surfaced, not auto-evaluated."
+        }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["published", "silent", "not_located", "contact_only"],
+          "description": "silent = source-verified the jurisdiction publishes no work-zone geometry; not_located = a geometry document is known to exist but is unread (e.g. Greeley MHT manual)."
+        },
+        "urban_high_speed_breakpoint_mph": {
+          "type": "number",
+          "description": "Lowest posted speed treated as 'urban high speed' for MUTCD Table 6B-1 advance sign spacing. Delegated to each agency by the national manual (spec §3.4a); absent when the jurisdiction has not determined it in any read source."
+        },
+        "min_lane_width_ft": { "$ref": "#/$defs/numericRule" },
+        "device_clearance_ft": { "$ref": "#/$defs/numericRule" },
+        "clear_zone_ft": { "$ref": "#/$defs/numericRule" },
+        "sign_spacing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["distance_ft", "source"],
+            "properties": {
+              "min_speed_mph": { "type": ["number", "null"] },
+              "max_speed_mph": { "type": ["number", "null"] },
+              "distance_ft": { "type": "number" },
+              "road_type": { "type": ["string", "null"] },
+              "note": { "type": "string" },
+              "source": { "$ref": "#/$defs/source" },
+              "conflict": { "$ref": "#/$defs/conflict" }
+            }
+          }
+        },
+        "device_spacing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source"],
+          "properties": {
+            "taper_ft": { "type": ["number", "null"] },
+            "tangent_ft": { "type": ["number", "null"] },
+            "rule": { "type": "string" },
+            "source": { "$ref": "#/$defs/source" },
+            "conflict": { "$ref": "#/$defs/conflict" }
+          }
+        },
+        "taper": { "$ref": "#/$defs/textRule" },
+        "buffer": { "$ref": "#/$defs/textRule" },
+        "other": { "type": "array", "items": { "$ref": "#/$defs/textRule" } },
+        "note": { "type": "string" }
+      }
+    },
+    "numericRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "source"],
+      "properties": {
+        "value": { "type": "number" },
+        "note": { "type": "string" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "textRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "source"],
+      "properties": {
+        "rule": { "type": "string" },
+        "value": { "type": ["number", "string", "null"] },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "rule", "effect", "trigger", "source"],
+      "properties": {
+        "severity": { "enum": ["count", "op", "admin"] },
+        "rule": { "type": "string" },
+        "baseline": { "type": "string" },
+        "effect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op"],
+          "properties": {
+            "op": { "enum": ["add_device", "swap_device", "add_accessory", "method", "admin"] },
+            "device": { "type": "string" },
+            "qty": { "type": "integer" },
+            "note": { "type": "string" }
+          }
+        },
+        "trigger": { "$ref": "#/$defs/trigger" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "hours": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "windows", "holiday_rule", "conflict"],
+      "properties": {
+        "shape": { "enum": ["ban_windows", "work_window", "nested_envelope", "noise_conditioned", "none"] },
+        "windows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "days", "classes", "start", "end", "source"],
+            "properties": {
+              "kind": { "enum": ["ban", "work"] },
+              "days": { "enum": ["weekday", "weekend", "all"] },
+              "classes": {
+                "type": ["array", "null"],
+                "items": { "$ref": "#/$defs/streetClass" },
+                "description": "null = applies to all street classes"
+              },
+              "start": { "type": "number", "minimum": 0, "maximum": 24 },
+              "end": { "type": "number", "minimum": 0, "maximum": 24 },
+              "note": { "type": "string" },
+              "source": { "$ref": "#/$defs/source" }
+            }
+          }
+        },
+        "holiday_rule": { "enum": ["none", "holidays_banned", "holidays_and_eves_banned"] },
+        "override_note": { "type": "string" },
+        "condition_note": { "type": "string", "description": "Required in practice when shape = noise_conditioned (Castle Rock)." },
+        "conflict": {
+          "anyOf": [{ "$ref": "#/$defs/conflict" }, { "type": "null" }]
+        }
+      }
+    },
+    "personnelRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "rule", "source"],
+      "properties": {
+        "gate": {
+          "enum": [
+            "tcs_on_site", "tcs_cert_attached", "tcs_authorship",
+            "flagger_certs", "flaggers_required", "named_contact",
+            "named_contact_24h", "utc_officer", "police_fire_approval"
+          ]
+        },
+        "rule": { "type": "string" },
+        "baseline": { "type": "string" },
+        "trigger": { "$ref": "#/$defs/trigger" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "deviceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "source"],
+      "properties": {
+        "rule": { "type": "string" },
+        "trigger": { "$ref": "#/$defs/trigger" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "hazardRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "source"],
+      "properties": {
+        "rule": { "type": "string" },
+        "meter_kind": {
+          "type": "string",
+          "description": "Optional join key into this jurisdiction's meters[] list; the chip's dollar figure comes from the meter, never restated here."
+        },
+        "trigger": { "$ref": "#/$defs/trigger" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "permits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "source"],
+            "properties": {
+              "label": { "type": "string" },
+              "definition": { "type": "string" },
+              "source": { "$ref": "#/$defs/source" },
+              "conflict": { "$ref": "#/$defs/conflict" }
+            }
+          }
+        },
+        "term_days": { "type": "integer" },
+        "notes": { "type": "array", "items": { "$ref": "#/$defs/textRule" } },
+        "multi_agency": { "type": "array", "items": { "$ref": "#/$defs/textRule" } }
+      }
+    },
+    "fees": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "items", "formula"],
+      "properties": {
+        "model": { "enum": ["flat", "formula", "degradation_indexed", "post_approval", "unpublished"] },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "amount_cents", "source"],
+            "properties": {
+              "label": { "type": "string" },
+              "amount_cents": { "type": "integer", "minimum": 0 },
+              "per": {
+                "enum": ["flat", "sq_ft", "lin_ft", "lf_day", "day", "hour", "acre", "each"],
+                "description": "Unit the amount applies to; 'flat' (default) = one-time."
+              },
+              "provisional": { "type": "boolean" },
+              "effective": { "type": "string" },
+              "note": { "type": "string" },
+              "source": { "$ref": "#/$defs/source" },
+              "conflict": { "$ref": "#/$defs/conflict" }
+            }
+          }
+        },
+        "formula": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["inputs", "note", "source"],
+              "properties": {
+                "inputs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+                "note": { "type": "string" },
+                "source": { "$ref": "#/$defs/source" },
+                "conflict": { "$ref": "#/$defs/conflict" }
+              }
+            }
+          ]
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "meter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "unit", "source"],
+      "anyOf": [
+        { "required": ["amount_cents"] },
+        { "required": ["amount_cents_min", "amount_cents_max"] }
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "hours_violation", "overrun", "extension", "tc_per_day", "damage",
+            "no_permit", "notice_failure", "tc_violation", "restoration_failure", "rejection"
+          ]
+        },
+        "unit": { "enum": ["half_hour", "hour", "day", "occurrence"] },
+        "amount_cents": { "type": "integer", "minimum": 0 },
+        "amount_cents_min": { "type": "integer", "minimum": 0 },
+        "amount_cents_max": { "type": "integer", "minimum": 0 },
+        "escalated_amount_cents": { "type": "integer", "minimum": 0 },
+        "escalation_trigger": { "type": "string" },
+        "classes": { "type": ["array", "null"], "items": { "$ref": "#/$defs/streetClass" } },
+        "trigger": { "type": "string" },
+        "note": { "type": "string" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "lead": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "lead_days", "lead_unit", "source"],
+      "properties": {
+        "label": { "type": "string" },
+        "lead_days": { "type": "number", "minimum": 0 },
+        "lead_unit": { "enum": ["calendar_days", "business_days", "hours"] },
+        "note": { "type": "string" },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "notice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audience", "rule", "source"],
+      "properties": {
+        "audience": { "type": "string" },
+        "rule": { "type": "string" },
+        "lead_days": { "type": "number" },
+        "lead_unit": { "enum": ["calendar_days", "business_days", "hours"] },
+        "source": { "$ref": "#/$defs/source" },
+        "conflict": { "$ref": "#/$defs/conflict" }
+      }
+    },
+    "onsite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "items": { "type": "array", "items": { "$ref": "#/$defs/textRule" } },
+        "digital_ok": {
+          "type": ["boolean", "null"],
+          "description": "true only where the jurisdiction explicitly authorizes digital copies (El Paso: 'paper, phone, tablet'); null = not addressed."
+        }
+      }
+    }
+  }
+}

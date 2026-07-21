@@ -1,5 +1,7 @@
-# Data — PDFs are 20GB+, never commit
-data/
+# Data — PDFs are 20GB+, never commit (jurisdiction layer files are the carve-out)
+data/*
+!data/jurisdiction.schema.json
+!data/jurisdictions/
 
 # Model weights
 *.pt
