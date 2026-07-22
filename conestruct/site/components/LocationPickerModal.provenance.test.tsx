@@ -86,7 +86,7 @@ function caption(label: string): HTMLElement {
         el.tagName === "SPAN" && el.className.includes("font-medium"),
     ) as HTMLElement;
   const row = labelEl.closest("div.grid") as HTMLElement;
-  return within(row).getByText(/^OSM · /);
+  return within(row).getByText(/^(OSM · |operator-set$)/);
 }
 
 beforeEach(() => {
@@ -139,6 +139,27 @@ describe("road-property provenance lines (#152 follow-up)", () => {
     const roadType = caption("Road type");
     expect(roadType.title).toContain("class=residential");
     expect(roadType.title).toContain("inferred");
+  });
+
+  it("once the operator edits a field it reads 'operator-set' in the neutral tone, never amber (Ryan ruling)", async () => {
+    mountModal();
+    typeCoords();
+    await screen.findByText("Road type");
+
+    // Road type detected as an inference → amber to start.
+    expect(caption("Road type").textContent).toMatch(/^OSM · inferred$/);
+    expect(caption("Road type").className).toContain("--warn");
+
+    // Operator overrides it — the value is theirs now.
+    fireEvent.change(screen.getByLabelText("Road type"), {
+      target: { value: "freeway" },
+    });
+
+    const cap = caption("Road type");
+    expect(cap.textContent).toMatch(/^operator-set$/);
+    expect(cap.className).toContain("--ink-on-dark-faint");
+    expect(cap.className).not.toContain("--warn");
+    expect(cap.title).toMatch(/^Operator-set/);
   });
 
   it("the visible caption never carries the full sentence (nothing to truncate) or the truncate class", async () => {

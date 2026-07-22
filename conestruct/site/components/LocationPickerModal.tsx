@@ -733,6 +733,19 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       setSelectedCandidateIdx(null);
       setBearingWarning(null);
       confirmedMethodRef.current = null;
+      // #149 contract: a moved (or re-analyzed) pin invalidates
+      // everything from the previous pin — including the direction of
+      // travel, which was derived from the now-stale road.  Clear it so
+      // an unresolved detection never shows a bearing left over from the
+      // old location; a single-candidate result re-applies its own
+      // bearing below (the empty field passes the auto-adopt guard), and
+      // an operator re-picks or re-types otherwise.  The ref is cleared
+      // in step so the single-candidate guard reads the cleared value.
+      setBearing(0);
+      setBearingInput("");
+      bearingInputRef.current = "";
+      setBearingError(null);
+      setMarkerBearingRef.current?.(0);
       setClassify({ state: "resolving" });
       try {
         const r = await fetch("/api/road-bearing", {
@@ -2310,21 +2323,26 @@ function RoadFieldRow<T>({
   // method only ("OSM · MEASURED" / "OSM · INFERRED").  The full
   // sentence (the old visible line) plus the confidence word and raw
   // evidence move to the tooltip, same pattern as the spec-chain
-  // breadcrumb (title attribute: hover + tap, no extra tab stop).  The
-  // warning tone follows the METHOD, not the pip count: only an
-  // inferred value borrows amber, so a measured value — even at medium
+  // breadcrumb (title attribute: hover + tap, no extra tab stop).
+  //
+  // Provenance tracks WHO owns the value now.  Once the operator edits
+  // or accepts a field (``modified``), the value is theirs, not the
+  // detector's — it reads "OPERATOR-SET" in the neutral tone and is
+  // never inferred, because a value the operator confirmed is no longer
+  // a guess (Ryan ruling).  Otherwise the warning tone follows the
+  // detection METHOD, not the pip count: only an inferred detected
+  // value borrows amber, so a measured value — even at medium
   // confidence — reads neutral and never misuses the warning role.
-  const inferred = field.method === "inferred";
+  const inferred = !modified && field.method === "inferred";
   const confTone = inferred
     ? "text-[color:var(--warn)]"
     : "text-[color:var(--ink-on-dark-faint)]";
-  const provenanceTitle = [
-    field.source,
-    `${field.confidence} confidence`,
-    field.rawData,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const provenanceText = modified ? "operator-set" : `OSM · ${field.method}`;
+  const provenanceTitle = modified
+    ? `Operator-set — overrides the detected ${field.source}`
+    : [field.source, `${field.confidence} confidence`, field.rawData]
+        .filter(Boolean)
+        .join(" · ");
   return (
     <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 last:border-b-0 min-h-[52px]">
       <div className="min-w-0">
@@ -2343,7 +2361,7 @@ function RoadFieldRow<T>({
           className={`mt-1 font-mono text-[10px] uppercase tracking-[0.06em] leading-tight cursor-help ${confTone}`}
           title={provenanceTitle}
         >
-          OSM · {field.method}
+          {provenanceText}
         </div>
         {note && (
           <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">

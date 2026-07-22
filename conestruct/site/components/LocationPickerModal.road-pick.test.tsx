@@ -272,6 +272,40 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(await screen.findByText(/Detecting roads at pin…/i)).toBeTruthy();
   });
 
+  it("a moved pin to an unresolved location clears the stale direction of travel (#149)", async () => {
+    // First pin resolves to one road; a later pin move lands on an
+    // ambiguous location — the bearing from the first road is stale and
+    // must not linger while the pick is unresolved.
+    let phase = 0;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (String(url).includes("/api/road-bearing")) {
+          const body = phase === 0 ? detection([EASTBOUND]) : detection([EASTBOUND, WESTBOUND]);
+          return { ok: true, status: 200, json: async () => body };
+        }
+        return { ok: false, status: 500, json: async () => ({}) };
+      }),
+    );
+    mountModal();
+    typeCoords();
+
+    await screen.findByText("Speed limit (mph)");
+    const bearing = screen.getByLabelText(
+      "Direction of travel in degrees",
+    ) as HTMLInputElement;
+    expect(bearing.value).toBe("90");
+
+    phase = 1;
+    fireEvent.change(screen.getByLabelText("Latitude"), {
+      target: { value: "40.1000" },
+    });
+
+    await screen.findByText(/Which road\?/i);
+    expect(bearing.value).toBe("");
+    expect(saveButton().disabled).toBe(true); // unresolved gates Save
+  });
+
   it("a hand-typed differing bearing demotes the default: caption names the manual state, Use Detected restores it (#152 A)", async () => {
     stubDetection(detection([EASTBOUND]));
     mountModal();
