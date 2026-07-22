@@ -184,3 +184,23 @@ def test_toggle_off_removes_the_block(client, tmp_path) -> None:
     body["meta"]["includeDeviceSummary"] = False
     text = pdf_text(client, body, tmp_path)
     assert "TRAFFIC CONTROL DEVICE SUMMARY" not in text
+
+
+# ---------------------------------------------------------------------------
+# Task 6: the † conflict footnote
+# ---------------------------------------------------------------------------
+
+
+def test_conflict_footnote_renders_from_parker_record(client, tmp_path) -> None:
+    body = copy.deepcopy(SHOULDER_BODY)
+    body["jurisdiction_key"] = "parker"
+    flat = " ".join(pdf_text(client, body, tmp_path).split())
+    assert "†" in flat
+    assert "9:00–3:30" in flat  # rendered (conservative) value
+    assert "8:30–3:00" in flat  # the disagreeing source's value
+    assert "adopted manual" in flat  # verdict text (spec §4.2)
+
+
+def test_no_jurisdiction_means_no_dagger(client, tmp_path) -> None:
+    text = pdf_text(client, copy.deepcopy(SHOULDER_BODY), tmp_path)
+    assert "†" not in text

@@ -2698,6 +2698,7 @@ def _draw_notes(
     station_max_visible: float,
     box_x: float,
     box_w: float,
+    jurisdiction_conflicts: list[dict[str, Any]] | None = None,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -2939,6 +2940,35 @@ def _draw_notes(
             "(effective 2026-01-18), Colorado Supplement."
         ),
     )
+    if jurisdiction_conflicts:
+        # Spec §4.2 (issue #150): the † footnote — one line set per
+        # adopted-source conflict, verdict + both sources, glyph-carried
+        # (never color, rule 13).  If the box runs out of room the
+        # remainder collapses to an explicit aggregate line, never a
+        # silent drop (rule 10).
+        note_w = width - 16.0
+        floor_y = FOOTER_BOX_Y + 8.0
+        c.setFont("Helvetica-Oblique", 6)
+        c.setFillColor(colors.black)
+        for i, cf in enumerate(jurisdiction_conflicts):
+            srcs = "; ".join(f"{s['doc']}: {s['value']}" for s in cf.get("sources", []))
+            note = f"† {cf['label'].upper()} — {cf['verdict']} ({srcs})"
+            lines = _wrap_to_width(c, note, "Helvetica-Oblique", 6, note_w, max_lines=3)
+            needed = len(lines) * layout.footer_pads[1]
+            if y[0] - needed < floor_y and i < len(jurisdiction_conflicts) - 1:
+                y[0] -= layout.footer_pads[1]
+                c.drawString(
+                    x,
+                    y[0],
+                    (
+                        f"† {len(jurisdiction_conflicts) - i} ADOPTED-SOURCE CONFLICTS — "
+                        "CONSERVATIVE VALUES RENDERED; SEE JURISDICTION PANEL."
+                    ),
+                )
+                break
+            for line in lines:
+                y[0] -= layout.footer_pads[1]
+                c.drawString(x, y[0], line)
     if params.near_intersection:
         # Option C citation note (Refs #117): the sheet cites the plate
         # instead of drawing the cross street — with the plate-vs-tool
@@ -3787,6 +3817,7 @@ def _render_schematic_page(
         station_max_visible=station_max_visible,
         box_x=geom.notes_x,
         box_w=geom.notes_w,
+        jurisdiction_conflicts=jurisdiction_conflicts,
     )
     if geom.device_x is not None and geom.device_w is not None:
         _draw_device_summary(c, geom.device_x, geom.device_w, placements, params)
