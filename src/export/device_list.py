@@ -11,14 +11,14 @@ Authoritative sources:
 
 from __future__ import annotations
 
-from collections import Counter
 from datetime import datetime
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name, device_row_sort_key
-from src.rules.sign_codes import schedule_key, substitute_sign_description
+from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.sign_codes import substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
 # Light-gray header fill from the V1 spec.
@@ -73,24 +73,6 @@ _BARRICADE_TYPE_II_NOTE: str = (
 _CHANNELIZER_OPTIONAL_NOTE: str = (
     "Optional — apply probability weight as appropriate per engineer discretion."
 )
-
-
-def _row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:
-    """Aggregation key for one placement.
-
-    Signs are split out by schedule key (the bare label, except R2-1
-    which splits into entrance/restoration faces — see
-    :func:`src.rules.sign_codes.schedule_key`) so a W20-1 row and a
-    G20-5P row are counted separately, and the two R2-1 faces on a
-    reduced-speed plan each get their own row instead of one merged
-    "SPEED LIMIT XX" line.  Non-sign devices are aggregated solely by
-    type.  Unlabeled signs fall through to a single "(unlabeled)" group.
-    """
-    if placement.device_type == DeviceType.SIGN_GENERIC:
-        if placement.label is None:
-            return (DeviceType.SIGN_GENERIC, None)
-        return (DeviceType.SIGN_GENERIC, schedule_key(placement.label, placement.station_ft))
-    return (placement.device_type, None)
 
 
 def _row_for(
@@ -148,7 +130,7 @@ def _populate_device_list_sheet(
     sheet,
     placements: list[DevicePlacement],
     params: ScenarioParams,
-) -> list[tuple[DeviceType, str | None, int]]:
+) -> list[AggregatedDeviceRow]:
     """Write the Device-List sheet and return the aggregated rows."""
     sheet.title = "Device List"
     sheet.append(_DEVICE_LIST_HEADERS)
@@ -160,29 +142,16 @@ def _populate_device_list_sheet(
         cell.font = _HEADER_FONT
         cell.fill = _HEADER_FILL
 
-    counts: Counter[tuple[DeviceType, str | None]] = Counter()
-    # Lowest-station member of each group — deterministic representative
-    # for station-dependent substitutions in _row_for.
-    representatives: dict[tuple[DeviceType, str | None], DevicePlacement] = {}
-    for p in placements:
-        key = _row_key(p)
-        counts[key] += 1
-        current = representatives.get(key)
-        if current is None or p.station_ft < current.station_ft:
-            representatives[key] = p
+    # Aggregation + ordering live in the shared helper (issue #150) so the
+    # on-sheet device summary reads the same rows this sheet writes.
+    aggregated = aggregate_device_rows(placements)
 
-    # Sort via the shared device_row_sort_key helper (issue #88): signs
-    # first (by schedule key, unlabeled last), then channelizing devices,
-    # then equipment, each alphabetical by display name.  Same helper the
-    # UI breakdown and crew equipment list use, so the three agree.
-    aggregated: list[tuple[DeviceType, str | None, int]] = sorted(
-        ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda row: device_row_sort_key(row[0], row[1]),
-    )
-
-    for item_number, (device_type, label, quantity) in enumerate(aggregated, start=1):
-        representative = representatives.get((device_type, label))
-        sheet.append(_row_for(item_number, device_type, label, quantity, representative, params))
+    for item_number, row in enumerate(aggregated, start=1):
+        sheet.append(
+            _row_for(
+                item_number, row.device_type, row.label, row.quantity, row.representative, params
+            )
+        )
         sheet.cell(row=item_number + 1, column=6).number_format = "0"
 
     sheet.freeze_panes = "A2"
@@ -193,7 +162,7 @@ def _populate_summary_sheet(
     sheet,
     placements: list[DevicePlacement],
     params: ScenarioParams,
-    aggregated_rows: list[tuple[DeviceType, str | None, int]],
+    aggregated_rows: list[AggregatedDeviceRow],
 ) -> None:
     """Write the Summary sheet."""
     sheet.title = "Summary"
@@ -263,14 +232,10 @@ if __name__ == "__main__":
     print(f"Wrote {output} ({size_bytes} bytes)")
     print()
 
-    counts = Counter(_row_key(p) for p in placements)
-    aggregated = sorted(
-        ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda r: device_row_sort_key(r[0], r[1]),
-    )
+    aggregated = aggregate_device_rows(placements)
     print(f"{'#':>3}  {'Device Type':25s}  {'Label':12s}  {'Qty':>4s}")
     print("-" * 52)
-    for i, (device_type, label, n) in enumerate(aggregated, start=1):
-        print(f"{i:>3}  {device_type.value:25s}  {(label or '-'):12s}  {n:>4d}")
+    for i, row in enumerate(aggregated, start=1):
+        print(f"{i:>3}  {row.device_type.value:25s}  {(row.label or '-'):12s}  {row.quantity:>4d}")
     print("-" * 52)
     print(f"     {'TOTAL':25s}  {'':12s}  {len(placements):>4d}")
