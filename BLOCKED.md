@@ -84,13 +84,23 @@ fetched. (All other 11 files: no map known to exist → null is correct.)
 
 ## HARD GATE — print pipeline before wave 2 (Ryan ruling, 2026-07-20)
 
-**Spec §4 (on-sheet device summary + conflict footnote on the PDF, and §4.3
-killing the hard-coded W20-1/flagger-station quantities) is REQUIRED before
-Castle Rock, Loveland, or Thornton ever ship.** Those jurisdictions legally
-require the device summary on the plan sheet itself (LCUASS 6.1.B.1 device
-summary on the sheet; Castle Rock device count/type on the TCP; Thornton's
-stipulation checklist). **Wave 2 cannot start without it.** Deferring §4 was
-accepted for the launch-8 wave only.
+**SATISFIED 2026-07-21 (issue #150, commits 450be43..aa5ac75, verified live).**
+The device summary + † conflict footnote render on the production PDF
+(healthz sha == aa5ac75, smoke via conestruct.com/api/render/pdf: summary +
+bid-authority line on the default sheet; Parker † with verdict + both
+sources; Castle Rock/Loveland/Thornton render the block even when toggled
+off — pinned by tests/s630/test_cross_surface_device_summary.py). No
+hard-coded quantities exist: the sheet reads aggregate_device_rows, the
+XLSX's own aggregation. Wave 2 is unblocked on this gate.
+
+Original gate text (for the record): Spec §4 (on-sheet device summary +
+conflict footnote on the PDF, and §4.3 killing the hard-coded
+W20-1/flagger-station quantities) is REQUIRED before Castle Rock, Loveland,
+or Thornton ever ship. Those jurisdictions legally require the device
+summary on the plan sheet itself (LCUASS 6.1.B.1 device summary on the
+sheet; Castle Rock device count/type on the TCP; Thornton's stipulation
+checklist). Wave 2 cannot start without it. Deferring §4 was accepted for
+the launch-8 wave only.
 
 ## Lakewood residuals (authored 2026-07-20)
 
