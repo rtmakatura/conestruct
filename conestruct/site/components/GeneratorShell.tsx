@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
@@ -382,7 +382,16 @@ export function GeneratorShell({
   // post); it no longer auto-downloads the zip.  The bundle download
   // moved to Zone 2's "All (.zip)" — same endpoint, same
   // { scenario, settings } body (the #74 contract), different trigger.
+  // #152 E: scroll target + arming flag for the post-generate scroll —
+  // the results populate ABOVE the Generate button's viewport position,
+  // so without it the user scrolls up hunting for what they just made.
+  // Armed per Generate click; the effect below (after ``genState``)
+  // fires it once on ``post``.
+  const resultsRef = useRef<HTMLElement | null>(null);
+  const scrollPendingRef = useRef(false);
+
   const onGenerate = () => {
+    scrollPendingRef.current = true;
     setGenerated(true);
   };
 
@@ -445,6 +454,28 @@ export function GeneratorShell({
         : "post";
   const showResults = genState === "post" || genState === "error";
   const status: Status = genState === "generating" ? "generating" : "done";
+
+  // #152 E: on successful generation, land the viewport on the Zone-2
+  // hero.  Armed per Generate click (never on ordinary edits), fired
+  // once when the staged lifecycle reaches ``post``; a failed
+  // generation disarms instead — the error ribbon renders in place and
+  // yanking the viewport toward it helps nobody.  Reduced-motion users
+  // get an instant jump, not an animation.
+  useEffect(() => {
+    if (!scrollPendingRef.current) return;
+    if (genState === "post") {
+      scrollPendingRef.current = false;
+      const reduceMotion =
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      resultsRef.current?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    } else if (genState === "error") {
+      scrollPendingRef.current = false;
+    }
+  }, [genState]);
 
   // Frontend-engine-removal Decision 2: the verdict strip never presents
   // an answer for an input the backend hasn't seen.  The audit effect
@@ -632,7 +663,10 @@ export function GeneratorShell({
           )}
 
           {/* ——— Zone 2 · Results ——— */}
-          <section className={`zone${genState === "post" ? " dominant" : ""}`}>
+          <section
+            ref={resultsRef}
+            className={`zone${genState === "post" ? " dominant" : ""}`}
+          >
             <div className="zone-head">
               <span className="zone-tag">
                 <span className="n">02</span>Results
