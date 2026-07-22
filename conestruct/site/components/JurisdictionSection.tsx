@@ -29,6 +29,7 @@ import {
   normalizeChainLink,
   startNoLaterThan,
   type ChainLink,
+  type JurisdictionSuggestion,
   JURISDICTION_OPTIONS,
   type AppliedDelta,
   type Chip,
@@ -124,6 +125,16 @@ interface ContextBarProps {
    *  still in flight — the chain slot renders a skeleton at final size
    *  so data landing causes zero reflow. */
   loading?: boolean;
+  /** Pin-based suggestion (Endeavor B).  Advice only — the ONLY writer
+   *  of jurisdiction_key is onConfirmSuggestion, fired by the user's
+   *  Confirm click.  null/omitted ⇒ the slot renders its quiet state
+   *  (no pin, endpoint failed, or suggestion dismissed) — the picker is
+   *  exactly as functional either way (B is additive, never
+   *  load-bearing). */
+  suggest?: JurisdictionSuggestion | null;
+  suggestLoading?: boolean;
+  onConfirmSuggestion?: (key: string) => void;
+  onDismissSuggestion?: () => void;
 }
 
 const STREET_CLASSES: [StreetClass, string][] = [
@@ -152,6 +163,10 @@ export function JurisdictionContextBar({
   streetClass,
   setStreetClass,
   loading = false,
+  suggest = null,
+  suggestLoading = false,
+  onConfirmSuggestion,
+  onDismissSuggestion,
 }: ContextBarProps) {
   // Compact breadcrumb (Ryan ruling, inc-9): each link renders its
   // authored display_name; the full title (edition, revision, dates)
@@ -287,14 +302,110 @@ export function JurisdictionContextBar({
         </div>
       </div>
 
-      {/* Reserved Endeavor-B seam: pin-based jurisdiction suggestion +
-          boundary warnings land here.  Deliberate inert space — A
-          guarantees the slot; B owns the behavior. */}
-      <div className="jbar-suggest reserved">
-        <span className="tag">reserved</span>
-        <span>
-          Pin-based jurisdiction suggestion &amp; boundary warnings — Endeavor B
-        </span>
+      {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
+          boundary warnings.  Advice only — Confirm is the single writer
+          of jurisdiction_key; a differing manual pick demotes the
+          suggestion to a passive notice, never a prompt to switch. */}
+      <SuggestSlot
+        suggest={suggest}
+        loading={suggestLoading}
+        jurisdictionKey={jurisdictionKey}
+        onConfirm={onConfirmSuggestion}
+        onDismiss={onDismissSuggestion}
+      />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 1b · Pin-suggestion slot (Endeavor B §3)
+// ---------------------------------------------------------------------------
+
+function jurisdictionLabel(key: string): string {
+  return JURISDICTION_OPTIONS.find((o) => o.key === key)?.label ?? key;
+}
+
+function SuggestSlot({
+  suggest,
+  loading,
+  jurisdictionKey,
+  onConfirm,
+  onDismiss,
+}: {
+  suggest: JurisdictionSuggestion | null;
+  loading: boolean;
+  jurisdictionKey: string | null;
+  onConfirm?: (key: string) => void;
+  onDismiss?: () => void;
+}) {
+  // Quiet state: no pin yet, endpoint failed, or dismissed.  The bar
+  // keeps its band (fixed min-height) so the slot appearing later never
+  // surprises the layout; the picker above is fully functional
+  // regardless (B is additive, never load-bearing).
+  if (!suggest && !loading) {
+    return (
+      <div className="jbar-suggest quiet" aria-live="polite">
+        <span aria-hidden>◌</span>
+        <span>Drop a site pin for a jurisdiction suggestion</span>
+      </div>
+    );
+  }
+  if (loading || !suggest) {
+    return (
+      <div className="jbar-suggest quiet" aria-live="polite">
+        <span aria-hidden>◌</span>
+        <span>Checking boundary data…</span>
+      </div>
+    );
+  }
+
+  const key = suggest.suggestion;
+  const manualDiffers = Boolean(jurisdictionKey && key && jurisdictionKey !== key);
+  const agrees = Boolean(jurisdictionKey && key && jurisdictionKey === key);
+
+  return (
+    <div className="jbar-suggest live" aria-live="polite">
+      {key && !jurisdictionKey && (
+        <div className="sugg-row">
+          <span>
+            Pin suggests: <b className="sugg-name">{jurisdictionLabel(key)}</b>
+            {suggest.confidence === "near_boundary" && " (near a boundary)"}
+          </span>
+          <button
+            type="button"
+            className="confirm"
+            onClick={() => onConfirm?.(key)}
+          >
+            Confirm {jurisdictionLabel(key)}
+          </button>
+          <button type="button" className="ghost" onClick={() => onDismiss?.()}>
+            Dismiss
+          </button>
+        </div>
+      )}
+      {key && manualDiffers && (
+        <div className="sugg-row passive">
+          Pin appears to be in {jurisdictionLabel(key)} — you have{" "}
+          {jurisdictionLabel(jurisdictionKey as string)} selected.
+        </div>
+      )}
+      {key && agrees && (
+        <div className="sugg-row passive">
+          <span aria-hidden>✓ </span>
+          Pin agrees with your selection ({jurisdictionLabel(key)}).
+        </div>
+      )}
+      <div className="sugg-reason">{suggest.reason}</div>
+      {suggest.warnings.map((w) => (
+        <div key={`${w.kind}:${w.message}`} className="warnrow">
+          <span aria-hidden>⚠ </span>
+          {w.message}
+        </div>
+      ))}
+      <div className="honesty">
+        Boundary data is approximate ({suggest.boundary_source.source},{" "}
+        {suggest.boundary_source.vintage.split(" ")[0]}) — confirm jurisdiction
+        with the permitting authority.
       </div>
     </div>
   );

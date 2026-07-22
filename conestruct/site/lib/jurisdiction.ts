@@ -189,6 +189,30 @@ export interface JurisdictionBlock {
   provisional: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// Pin-based jurisdiction suggestion (Endeavor B §2) — advisory response
+// ---------------------------------------------------------------------------
+
+/** A boundary warning riding a suggestion.  B1 kinds: ``near_boundary``,
+ *  ``unsupported_area`` (B2 adds ``state_highway`` / ``e470_corridor``). */
+export interface SuggestWarning {
+  kind: string;
+  message: string;
+  source: SourceRef;
+}
+
+/** The ``POST /api/jurisdiction/suggest`` response, verbatim from the
+ *  backend.  Advice only: nothing in it is ever applied to the scenario
+ *  except through the user's explicit Confirm. */
+export interface JurisdictionSuggestion {
+  suggestion: string | null;
+  reason: string;
+  confidence: "inside" | "near_boundary" | "outside_supported";
+  distance_to_boundary_ft: number;
+  warnings: SuggestWarning[];
+  boundary_source: { source: string; vintage: string };
+}
+
 export interface WorkScheduleInput {
   date_mode: "single" | "range" | "tbd";
   work_date?: string;

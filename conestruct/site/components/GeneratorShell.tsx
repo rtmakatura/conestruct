@@ -32,7 +32,10 @@ import {
   JurisdictionContextBar,
   JurisdictionSection,
 } from "./JurisdictionSection";
-import type { StreetClass } from "@/lib/jurisdiction";
+import type {
+  JurisdictionSuggestion,
+  StreetClass,
+} from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
 
@@ -252,6 +255,59 @@ export function GeneratorShell({
     auditState.state === "ready" ? auditState.data : auditState.lastReady;
   const summary = currentAudit?.summary ?? null;
 
+  // --- Pin-based jurisdiction suggestion (Endeavor B) -----------------
+  // Advice only: this fetch NEVER writes to the scenario.  The single
+  // writer of jurisdiction_key from this feature is the user's Confirm
+  // click (onConfirmSuggestion below).  Endpoint absent or failing ⇒
+  // the slot goes quiet and the picker works exactly as today — B is
+  // additive, never load-bearing.
+  const [suggestState, setSuggestState] = useState<{
+    status: "idle" | "loading" | "ready" | "error";
+    data: JurisdictionSuggestion | null;
+  }>({ status: "idle", data: null });
+  const [suggestDismissed, setSuggestDismissed] = useState(false);
+  const pinLat = scenario.meta.lat;
+  const pinLng = scenario.meta.lng;
+  useEffect(() => {
+    // lat=lng=0 is the "no pin yet" default — nothing to suggest.
+    if (!pinLat && !pinLng) {
+      setSuggestState({ status: "idle", data: null });
+      setSuggestDismissed(false);
+      return;
+    }
+    // A moved pin clears a prior Dismiss (spec §3).
+    setSuggestDismissed(false);
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      setSuggestState((s) => ({ ...s, status: "loading" }));
+      try {
+        const res = await fetch("/api/jurisdiction/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lat: pinLat, lng: pinLng }),
+        });
+        if (!res.ok) throw new Error(`suggest ${res.status}`);
+        const data = (await res.json()) as JurisdictionSuggestion;
+        // A malformed body is an error, not advice — the slot goes
+        // quiet rather than rendering a broken suggestion (rule 10).
+        if (
+          typeof data?.reason !== "string" ||
+          !Array.isArray(data.warnings) ||
+          !data.boundary_source
+        ) {
+          throw new Error("suggest: malformed response");
+        }
+        if (!cancelled) setSuggestState({ status: "ready", data });
+      } catch {
+        if (!cancelled) setSuggestState({ status: "error", data: null });
+      }
+    }, 400); // debounce pin drags
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [pinLat, pinLng]);
+
   // The evaluated jurisdiction block rides the device-breakdown response
   // (spec §3.2) — present only when the scenario names a jurisdiction_key.
   const jurisdictionBlock =
@@ -451,6 +507,16 @@ export function GeneratorShell({
               Boolean(scenario.jurisdiction_key) &&
               deviceBreakdown.state === "loading"
             }
+            suggest={
+              suggestDismissed || suggestState.status !== "ready"
+                ? null
+                : suggestState.data
+            }
+            suggestLoading={suggestState.status === "loading"}
+            onConfirmSuggestion={(k) =>
+              setScenario({ ...scenario, jurisdiction_key: k })
+            }
+            onDismissSuggestion={() => setSuggestDismissed(true)}
           />
 
           {/* ——— Zone 1 · Setup ——— */}

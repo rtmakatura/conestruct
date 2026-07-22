@@ -397,6 +397,46 @@ export async function fetchSiteDetection(
   return new Response(upstream.body, { status: 200, headers });
 }
 
+export async function fetchJurisdictionSuggest(body: {
+  lat: number;
+  lng: number;
+}): Promise<Response> {
+  const url = process.env.MODAL_RENDER_URL;
+  const secret = process.env.MODAL_RENDER_SECRET;
+  if (!url || !secret) {
+    return new Response("Render service not configured", { status: 503 });
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${url.replace(/\/$/, "")}/jurisdiction/suggest`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    console.error("jurisdiction suggest fetch failed", err);
+    return new Response("Render service unreachable", { status: 502 });
+  }
+
+  if (!upstream.ok) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(`jurisdiction suggest upstream ${upstream.status}`, detail);
+    return new Response("Jurisdiction suggest failed", { status: 502 });
+  }
+
+  const headers = new Headers();
+  headers.set(
+    "content-type",
+    upstream.headers.get("content-type") ?? "application/json",
+  );
+  headers.set("cache-control", "private, no-store");
+  return new Response(upstream.body, { status: 200, headers });
+}
+
 export async function proxyRender(
   planId: string,
   kind: RenderKind,
