@@ -2,6 +2,9 @@
 data/*
 !data/jurisdiction.schema.json
 !data/jurisdictions/
+# Boundary layer (Endeavor B): built GeoJSON + provenance, ~400 KB — the
+# raw TIGER/DOLA downloads stay in data/raw/ (ignored).
+!data/boundaries/
 
 # Model weights
 *.pt
@@ -73,3 +76,6 @@ validation-artifacts/
 /CLAUDE.md
 /memory.md
 /handoff.md
+
+# Design-tool export artifact (never committed)
+design-bundle*

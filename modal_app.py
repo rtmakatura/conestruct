@@ -73,6 +73,7 @@ RENDER_DEPS = [
     "httpx>=0.28",
     "sentry-sdk[fastapi]>=2.0",
     "jsonschema>=4.21",  # jurisdiction record validation (src/rules/jurisdiction.py)
+    "shapely>=2.0",  # pin-based jurisdiction suggestion (src/rules/boundaries.py)
 ]
 
 image = (
@@ -91,6 +92,9 @@ image = (
     # data/ holds the 20GB scraped-PDF corpus; only these two paths ship.
     .add_local_file("data/jurisdiction.schema.json", "/root/data/jurisdiction.schema.json")
     .add_local_dir("data/jurisdictions", remote_path="/root/data/jurisdictions")
+    # Boundary layer for pin-based jurisdiction suggestion (Endeavor B) —
+    # built GeoJSON + _meta.json provenance, ~400 KB total.
+    .add_local_dir("data/boundaries", remote_path="/root/data/boundaries")
 )
 
 app = modal.App("conestruct-render")

@@ -1,0 +1,29 @@
+{
+  "places": {
+    "source": "US Census TIGER/Line 2025 Place boundaries, Colorado (tl_2025_08_place.zip)",
+    "publisher": "US Census Bureau",
+    "license": "Public domain (US federal government work)",
+    "vintage": "2025",
+    "retrieved": "2026-07-21",
+    "simplification_m": 10,
+    "verification": "Enclave gate: TIGER Denver carries 10 interior rings; a Glendale interior point tests OUTSIDE Denver, before and after 10 m simplification (scripts/build_boundaries.py hard-fails otherwise).",
+    "sources_evaluated": {
+      "dola_municipal_boundaries": {
+        "dataset": "Colorado DOLA municipal boundaries \u2014 Geospatial Portal feature service DOLA_Municipalities (ArcGIS item b02e634e5cfd4c32b1852e9fc4ba0012) / data.colorado.gov u943-ics6",
+        "license": "Public Domain (verified, licenseId PUBLIC_DOMAIN)",
+        "currency": "verified current \u2014 service modified 2026-07-17, Socrata mirror auto-updates monthly",
+        "verdict": "REJECTED on coverage",
+        "reason": "Served Denver polygon has zero interior rings \u2014 the Glendale enclave is silently absorbed (a Glendale interior point tested INSIDE Denver).  DOLA also self-describes as 'a best effort compilation and not an authoritative or official source'."
+      }
+    }
+  },
+  "counties": {
+    "source": "US Census TIGER/Line 2025 County boundaries (tl_2025_us_county.zip)",
+    "publisher": "US Census Bureau",
+    "license": "Public domain (US federal government work)",
+    "vintage": "2025",
+    "retrieved": "2026-07-21",
+    "simplification_m": 10
+  },
+  "display_note": "Boundary data is approximate \u2014 confirm jurisdiction with the permitting authority."
+}

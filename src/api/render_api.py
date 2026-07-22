@@ -458,6 +458,24 @@ def render_crew_pdf(scenario: Scenario) -> Response:
     )
 
 
+class JurisdictionSuggestRequest(BaseModel):
+    lat: float = Field(ge=-90.0, le=90.0)
+    lng: float = Field(ge=-180.0, le=180.0)
+
+
+@app.post("/jurisdiction/suggest")
+def jurisdiction_suggest(req: JurisdictionSuggestRequest) -> JSONResponse:
+    """Advisory pin-based jurisdiction suggestion (Endeavor B §2).
+
+    Point-in-polygon against the bundled boundary layer.  The response
+    is advice only — it never touches a scenario; the frontend's Confirm
+    button is the single writer of ``jurisdiction_key``.
+    """
+    from src.rules.boundaries import suggest
+
+    return JSONResponse(suggest(req.lat, req.lng))
+
+
 class DetectSiteRequest(BaseModel):
     lat: float = Field(ge=-90.0, le=90.0)
     lng: float = Field(ge=-180.0, le=180.0)

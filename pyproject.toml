@@ -25,11 +25,13 @@ dependencies = [
     "modal>=0.66",
     "sentry-sdk[fastapi]>=2.0",
     "jsonschema>=4.21",
+    "shapely>=2.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
+    "pyshp>=2.3",  # scripts/build_boundaries.py (TIGER shapefile reader)
     "ruff==0.15.11",
     "mypy>=1.13",
     "pre-commit>=4.0",
