@@ -53,8 +53,10 @@ from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
 from src.rules.jurisdiction import (
     UnknownJurisdictionError,
     apply_count_deltas,
+    collect_conflicts,
     context_for_closure_type,
     load_jurisdiction,
+    requires_on_sheet_summary,
 )
 from src.rules.jurisdiction import (
     WorkSchedule as JurisdictionWorkSchedule,
@@ -327,6 +329,25 @@ def _render_with(
 def render_pdf(scenario: Scenario) -> Response:
     """Render the MHT plan-sheet PDF for a scenario."""
     _ensure_scenario_enabled(scenario)
+
+    # Spec §4 (issue #150): resolve the device-summary toggle and the
+    # jurisdiction conflict blocks BEFORE rendering.  A bad key is an
+    # honest 400 (mirrors /render/device-breakdown), never a sheet
+    # silently missing a legally required block.
+    include_summary = scenario.meta.includeDeviceSummary
+    conflicts: list[dict[str, Any]] | None = None
+    jurisdiction_key = getattr(scenario, "jurisdiction_key", None)
+    if jurisdiction_key:
+        try:
+            record = load_jurisdiction(jurisdiction_key)
+        except UnknownJurisdictionError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        conflicts = collect_conflicts(record)
+        if requires_on_sheet_summary(record):
+            # Required-on-sheet jurisdictions (spec §4.1): the toggle
+            # cannot disable a legal requirement.
+            include_summary = True
+
     try:
         # Shoulder width is read from params.shoulder_width_ft inside the
         # renderer (single source of truth — set once at the schemas bridge).
@@ -343,6 +364,8 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_lng=scenario.meta.lng or None,
                     site_address=scenario.meta.address,
                     site_flags=_plan_sheet_site_flags(scenario),
+                    include_device_summary=include_summary,
+                    jurisdiction_conflicts=conflicts,
                 )
             ),
         )

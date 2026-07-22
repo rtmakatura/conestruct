@@ -73,6 +73,10 @@ class ScenarioMeta(BaseModel):
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)
+    # Spec §4.1 (issue #150): the on-sheet device summary is on by default;
+    # jurisdictions whose record carries requires=on_sheet_device_summary
+    # render it regardless of this toggle.
+    includeDeviceSummary: bool = True
 
 
 # ---------------------------------------------------------------------------

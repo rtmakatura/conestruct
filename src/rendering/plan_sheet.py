@@ -28,6 +28,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+from typing import Any
 from urllib.parse import quote as urllib_quote
 
 import httpx
@@ -3342,6 +3343,8 @@ def render_plan_sheet(
     site_address: str = "",
     site_flags: Mapping[str, bool] | None = None,
     approaches: list[ApproachParams] | None = None,
+    include_device_summary: bool = True,
+    jurisdiction_conflicts: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
