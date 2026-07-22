@@ -189,6 +189,87 @@ describe("classifyFromOsmTags", () => {
     expect(r.fields.lanes.confidence).toBe("medium");
   });
 
+  // #152 follow-up: every field carries a measured/inferred method,
+  // set where the tag-vs-fallback fact is known.  These pin the
+  // provenance color/label contract: amber marks inferred only.
+  describe("provenance method (measured vs inferred)", () => {
+    it("a real maxspeed tag is measured; a class fallback is inferred", () => {
+      const measured = classifyFromOsmTags(
+        { highwayClass: "primary", name: null, ref: null, tags: { ...baseTags, maxspeed: "45 mph" } },
+        false,
+        null,
+      );
+      expect(measured.fields.speed.method).toBe("measured");
+
+      const fallback = classifyFromOsmTags(
+        { highwayClass: "residential", name: null, ref: null, tags: baseTags },
+        true,
+        "Denver",
+      );
+      expect(fallback.fields.speed.method).toBe("inferred");
+    });
+
+    it("an un-parseable maxspeed tag is inferred even at medium confidence", () => {
+      const r = classifyFromOsmTags(
+        { highwayClass: "motorway", name: null, ref: "Autobahn", tags: { ...baseTags, maxspeed: "none" } },
+        false,
+        null,
+      );
+      expect(r.fields.speed.confidence).toBe("medium");
+      expect(r.fields.speed.method).toBe("inferred");
+    });
+
+    it("a lanes tag is measured even when only medium (no directional split)", () => {
+      const r = classifyFromOsmTags(
+        { highwayClass: "primary", name: null, ref: null, tags: { ...baseTags, lanes: "4" } },
+        false,
+        null,
+      );
+      expect(r.fields.lanes.confidence).toBe("medium");
+      expect(r.fields.lanes.method).toBe("measured");
+
+      const fallback = classifyFromOsmTags(
+        { highwayClass: "residential", name: null, ref: null, tags: baseTags },
+        true,
+        "Denver",
+      );
+      expect(fallback.fields.lanes.method).toBe("inferred");
+    });
+
+    it("motorway → freeway/divided is measured; every lesser class is inferred", () => {
+      const mw = classifyFromOsmTags(
+        { highwayClass: "motorway", name: null, ref: "I 25", tags: baseTags },
+        false,
+        null,
+      );
+      expect(mw.fields.roadType.method).toBe("measured");
+      expect(mw.fields.divided.method).toBe("measured");
+
+      const res = classifyFromOsmTags(
+        { highwayClass: "residential", name: null, ref: null, tags: baseTags },
+        true,
+        "Denver",
+      );
+      expect(res.fields.roadType.method).toBe("inferred");
+      expect(res.fields.divided.method).toBe("inferred");
+    });
+
+    it("a low-confidence field is never labelled measured (measured ⟹ not low)", () => {
+      // Sweep the fallback-heavy sparse-tag classes; any low field must
+      // read inferred so amber (the warning tone) can key off method.
+      for (const highwayClass of ["residential", "unclassified", "tertiary", "secondary"]) {
+        const r = classifyFromOsmTags(
+          { highwayClass, name: null, ref: null, tags: baseTags },
+          true,
+          "Denver",
+        );
+        for (const f of [r.fields.speed, r.fields.lanes, r.fields.roadType, r.fields.divided]) {
+          if (f.confidence === "low") expect(f.method).toBe("inferred");
+        }
+      }
+    });
+  });
+
   it("attributes source 'osm-tags' and preserves placeName + raw evidence", () => {
     const r = classifyFromOsmTags(
       {

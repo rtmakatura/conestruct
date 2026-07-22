@@ -43,11 +43,12 @@ function osmClassification(speedLimitMph: number): RoadClassification {
         value: speedLimitMph,
         confidence: "high",
         source: "OSM maxspeed tag",
+        method: "measured",
         rawData: `maxspeed=${speedLimitMph} mph`,
       },
-      lanes: { value: 1, confidence: "low", source: "fallback" },
-      roadType: { value: "rural_undivided", confidence: "low", source: "x" },
-      divided: { value: false, confidence: "low", source: "x" },
+      lanes: { value: 1, confidence: "low", source: "fallback", method: "inferred" },
+      roadType: { value: "rural_undivided", confidence: "low", source: "x", method: "inferred" },
+      divided: { value: false, confidence: "low", source: "x", method: "inferred" },
     },
   };
 }
@@ -75,11 +76,12 @@ function fallbackClassification(fallbackMph: number): RoadClassification {
         value: fallbackMph,
         confidence: "low",
         source: 'highway-class fallback ("tertiary")',
+        method: "inferred",
         rawData: "class=tertiary",
       },
-      lanes: { value: 1, confidence: "low", source: "fallback" },
-      roadType: { value: "rural_undivided", confidence: "low", source: "x" },
-      divided: { value: false, confidence: "low", source: "x" },
+      lanes: { value: 1, confidence: "low", source: "fallback", method: "inferred" },
+      roadType: { value: "rural_undivided", confidence: "low", source: "x", method: "inferred" },
+      divided: { value: false, confidence: "low", source: "x", method: "inferred" },
     },
   };
 }
@@ -103,10 +105,10 @@ function roadTypeClassification(roadType: RoadType): RoadClassification {
       osmMaxspeedTag: null,
     },
     fields: {
-      speed: { value: null, confidence: "high", source: "none" },
-      lanes: { value: null, confidence: "low", source: "fallback" },
-      roadType: { value: roadType, confidence: "high", source: "OSM highway tag" },
-      divided: { value: false, confidence: "high", source: "OSM oneway tag" },
+      speed: { value: null, confidence: "high", source: "none", method: "measured" },
+      lanes: { value: null, confidence: "low", source: "fallback", method: "inferred" },
+      roadType: { value: roadType, confidence: "high", source: "OSM highway tag", method: "measured" },
+      divided: { value: false, confidence: "high", source: "OSM oneway tag", method: "measured" },
     },
   };
 }

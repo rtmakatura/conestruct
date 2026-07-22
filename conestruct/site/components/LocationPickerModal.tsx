@@ -2306,10 +2306,25 @@ function RoadFieldRow<T>({
   // reads as a "heads up, this value will change" signal.
   note?: string | null;
 }) {
-  const confTone =
-    field.confidence === "low"
-      ? "text-[color:var(--warn)]"
-      : "text-[color:var(--ink-on-dark-faint)]";
+  // The visible provenance is a short, non-truncating token — source +
+  // method only ("OSM · MEASURED" / "OSM · INFERRED").  The full
+  // sentence (the old visible line) plus the confidence word and raw
+  // evidence move to the tooltip, same pattern as the spec-chain
+  // breadcrumb (title attribute: hover + tap, no extra tab stop).  The
+  // warning tone follows the METHOD, not the pip count: only an
+  // inferred value borrows amber, so a measured value — even at medium
+  // confidence — reads neutral and never misuses the warning role.
+  const inferred = field.method === "inferred";
+  const confTone = inferred
+    ? "text-[color:var(--warn)]"
+    : "text-[color:var(--ink-on-dark-faint)]";
+  const provenanceTitle = [
+    field.source,
+    `${field.confidence} confidence`,
+    field.rawData,
+  ]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 last:border-b-0 min-h-[52px]">
       <div className="min-w-0">
@@ -2325,10 +2340,10 @@ function RoadFieldRow<T>({
           )}
         </div>
         <div
-          className={`mt-1 font-mono text-[10px] uppercase tracking-[0.06em] truncate leading-tight ${confTone}`}
-          title={field.rawData ?? undefined}
+          className={`mt-1 font-mono text-[10px] uppercase tracking-[0.06em] leading-tight cursor-help ${confTone}`}
+          title={provenanceTitle}
         >
-          {field.source} · {field.confidence} confidence
+          OSM · {field.method}
         </div>
         {note && (
           <div className="mt-1 font-mono text-[10px] tracking-[0.04em] leading-snug text-[color:var(--warn)]">

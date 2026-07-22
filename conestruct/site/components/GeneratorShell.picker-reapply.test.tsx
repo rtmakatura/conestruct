@@ -72,14 +72,16 @@ function detection(
         value: speedLimitMph,
         confidence: "high",
         source: "OSM maxspeed tag",
+        method: "measured",
       },
       lanes: {
         value: lanesPerDirection,
         confidence: "medium",
         source: "OSM lanes tag",
+        method: "measured",
       },
-      roadType: { value: "rural_divided", confidence: "high", source: "class" },
-      divided: { value: true, confidence: "high", source: "oneway" },
+      roadType: { value: "rural_divided", confidence: "high", source: "class", method: "measured" },
+      divided: { value: true, confidence: "high", source: "oneway", method: "measured" },
     },
   } as RoadClassification;
 }

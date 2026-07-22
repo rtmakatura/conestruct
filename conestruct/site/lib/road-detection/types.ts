@@ -18,6 +18,18 @@ export interface DetectedField<T> {
   value: T;
   confidence: Confidence;
   source: string;
+  /**
+   * How the value was obtained, independent of the confidence pips:
+   * ``measured`` = read from a real OSM tag for this exact attribute (a
+   * posted maxspeed, a lanes count, an unambiguous class → type
+   * mapping); ``inferred`` = derived or fell back from the road class
+   * because OSM did not record the attribute.  Drives the short
+   * provenance label and its color — amber (the warning role) marks
+   * inferred values only, so a measured value never borrows the warning
+   * tone (#152 follow-up).  Set at classify time where the
+   * tag-vs-fallback fact is known; never re-derived downstream.
+   */
+  method: "measured" | "inferred";
   rawData?: string;
 }
 

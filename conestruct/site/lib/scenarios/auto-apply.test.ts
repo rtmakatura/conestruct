@@ -37,10 +37,11 @@ function classification(
         value: speedLimitMph ?? null,
         confidence: "high",
         source: "OSM maxspeed tag",
+        method: "measured",
       },
-      lanes: { value: null, confidence: "low", source: "n/a" },
-      roadType: { value: "freeway", confidence: "high", source: "n/a" },
-      divided: { value: true, confidence: "high", source: "n/a" },
+      lanes: { value: null, confidence: "low", source: "n/a", method: "inferred" },
+      roadType: { value: "freeway", confidence: "high", source: "n/a", method: "measured" },
+      divided: { value: true, confidence: "high", source: "n/a", method: "measured" },
     },
   };
 }

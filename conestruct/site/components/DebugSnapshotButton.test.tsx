@@ -38,10 +38,10 @@ const CLASSIFICATION: RoadClassification = {
     osmMaxspeedTag: "65 mph",
   },
   fields: {
-    speed: { value: 65, confidence: "high", source: "maxspeed tag" },
-    lanes: { value: 2, confidence: "high", source: "lanes tag" },
-    roadType: { value: "freeway", confidence: "high", source: "highway class" },
-    divided: { value: true, confidence: "medium", source: "oneway tag" },
+    speed: { value: 65, confidence: "high", source: "maxspeed tag", method: "measured" },
+    lanes: { value: 2, confidence: "high", source: "lanes tag", method: "measured" },
+    roadType: { value: "freeway", confidence: "high", source: "highway class", method: "measured" },
+    divided: { value: true, confidence: "medium", source: "oneway tag", method: "measured" },
   },
 };
 

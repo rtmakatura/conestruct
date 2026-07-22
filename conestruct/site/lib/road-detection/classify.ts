@@ -210,6 +210,8 @@ export function classifyFromOsmTags(
       value: speedFromOsm,
       confidence: "high",
       source: "OSM maxspeed tag",
+      // The value is the posted speed read straight off the tag.
+      method: "measured",
       rawData: `maxspeed=${tags.maxspeed}`,
     };
   } else if (tags.maxspeed !== null) {
@@ -217,6 +219,9 @@ export function classifyFromOsmTags(
       value: speedFallback,
       confidence: "medium",
       source: "OSM maxspeed tag (un-parseable)",
+      // A tag exists but couldn't be read — the value shown is the
+      // class fallback, so it is inferred, not measured.
+      method: "inferred",
       rawData: `maxspeed=${tags.maxspeed}`,
     };
   } else {
@@ -227,6 +232,7 @@ export function classifyFromOsmTags(
         speedFallback !== null
           ? `highway-class fallback ("${highwayClass}")`
           : "no fallback for this class",
+      method: "inferred",
       rawData: speedFallback !== null ? `class=${highwayClass}` : undefined,
     };
   }
@@ -243,6 +249,9 @@ export function classifyFromOsmTags(
       source: splitExplicit
         ? "OSM lanes:forward tag"
         : "OSM lanes tag (no directional split)",
+      // Read from a real lanes tag (halved for two-way roads, but still
+      // the tagged count) — measured even at medium confidence.
+      method: "measured",
       rawData: `lanes=${osmLanesTag}`,
     };
   } else {
@@ -253,6 +262,7 @@ export function classifyFromOsmTags(
         lanesFallback !== null
           ? `highway-class fallback ("${highwayClass}")`
           : "no fallback for this class",
+      method: "inferred",
       rawData: lanesFallback !== null ? `class=${highwayClass}` : undefined,
     };
   }
@@ -284,6 +294,10 @@ export function classifyFromOsmTags(
           fieldRoadTypeConf === "high"
             ? `OSM class=${highwayClass} (motorway → freeway)`
             : `OSM class=${highwayClass} + ${isUrban ? "urban" : "rural"} (inferred)`,
+        // Only the unambiguous motorway → freeway read counts as
+        // measured; every other class → type mapping folds in an
+        // urban/rural inference.
+        method: fieldRoadTypeConf === "high" ? "measured" : "inferred",
         rawData: `class=${highwayClass}, place=${isUrban ? "urban" : "rural"}, oneway=${oneway}`,
       },
       divided: {
@@ -295,6 +309,9 @@ export function classifyFromOsmTags(
             : oneway
               ? `OSM oneway=yes (couplet → divided)`
               : `inferred from class=${highwayClass}`,
+        // A motorway is definitively divided; a couplet or class guess
+        // is an inference.
+        method: fieldDividedConf === "high" ? "measured" : "inferred",
         rawData: `class=${highwayClass}, oneway=${oneway}`,
       },
     },
