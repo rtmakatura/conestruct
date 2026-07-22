@@ -335,7 +335,9 @@ def test_plan_sheet_carries_citation_note_and_side_aware_ta(tmp_path) -> None:
     assert "CROSS-STREET CONTROL PER CDOT S-630-1 SHEET 10, CASES" in text
     assert "corner work tracked at issue #128" in text
     assert "Opposing mainline direction not signed" in text
-    assert "Sheet 10 Note 1" in text
+    # Whitespace-normalized: the 4-box footer (issue #150) wraps the fine
+    # print so this phrase can span a line break — the copy is intact.
+    assert "Sheet 10 Note 1" in " ".join(text.split())
     assert "TA-21" in text
     assert "TA-10" not in text  # the flagger TA the branch order used to hit
     # The unconditional mainline R2-10 must surface in the off-page

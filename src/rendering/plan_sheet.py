@@ -1866,12 +1866,31 @@ def _draw_title_block(
 # Box origins are computed from MARGIN so the row aligns with the
 # outer sheet border at both ends.
 FOOTER_GUTTER: float = 12.0
-FOOTER_BOX_W: float = (PAGE_W - 2 * MARGIN - 2 * FOOTER_GUTTER) / 3.0
 FOOTER_BOX_H: float = FOOTER_H - 16.0
-LEGEND_BOX_X: float = MARGIN
-NOTES_BOX_X: float = MARGIN + FOOTER_BOX_W + FOOTER_GUTTER
-TITLE_BLOCK_X: float = MARGIN + 2 * (FOOTER_BOX_W + FOOTER_GUTTER)
 FOOTER_BOX_Y: float = MARGIN
+
+
+@dataclass(frozen=True)
+class _FooterGeometry:
+    """Footer-row box geometry.  ``device_x`` is None in the 3-box layout
+    (device summary toggled off for a non-required jurisdiction); with the
+    summary on (spec §4.1's default) the row is four equal boxes."""
+
+    box_w: float
+    legend_x: float
+    notes_x: float
+    device_x: float | None
+    title_x: float
+
+
+def _footer_geometry(include_device_summary: bool) -> _FooterGeometry:
+    n = 4 if include_device_summary else 3
+    w = (PAGE_W - 2 * MARGIN - (n - 1) * FOOTER_GUTTER) / n
+    xs = [MARGIN + i * (w + FOOTER_GUTTER) for i in range(n)]
+    if include_device_summary:
+        return _FooterGeometry(w, xs[0], xs[1], xs[2], xs[3])
+    return _FooterGeometry(w, xs[0], xs[1], None, xs[2])
+
 
 TITLE_BLOCK_PAD: float = 8.0
 TITLE_BLOCK_ROW_H: float = 11.0
@@ -1944,15 +1963,18 @@ def _draw_structured_title_block(
     bearing_deg: float | None = None,
     aerial_page: str | None = None,
     ta_override: str | None = None,
+    *,
+    box_x: float,
+    box_w: float,
 ) -> None:
-    """Boxed title block — third box of the equal-width footer row.
+    """Boxed title block — last box of the equal-width footer row.
 
     Engineering-plan conventions: PROJECT/LOCATION up top, MUTCD/CDOT
     references in the middle, SCALE/DATE/SHEET below, and DRAWN BY /
     STATUS at the foot.  Long values (project names, MHT-type labels,
     location prose) wrap to a second line so the full classification
     is preserved instead of being mid-word truncated.  The box itself
-    is sized to ``FOOTER_BOX_W × FOOTER_BOX_H`` so it lines up with
+    is sized to ``box_w × FOOTER_BOX_H`` so it lines up with
     the LEGEND and NOTES boxes; rows render top-down with whitespace
     slack accruing at the bottom of the box when content is short.
 
@@ -1998,9 +2020,9 @@ def _draw_structured_title_block(
         ),
     ]
 
-    w = FOOTER_BOX_W
+    w = box_w
     h = FOOTER_BOX_H
-    x_box = TITLE_BLOCK_X
+    x_box = box_x
     y_box = FOOTER_BOX_Y
 
     c.setStrokeColor(colors.black)
@@ -2214,6 +2236,9 @@ def _draw_legend(
     is_divided: bool = False,
     scale_note: str = "",
     site_flags: Mapping[str, bool] | None = None,
+    *,
+    box_x: float,
+    box_w: float,
 ) -> None:
     """Two-section legend: device-type icons (cone, drum, barricade, …)
     followed by sign-category icons keyed to the shape and color used on
@@ -2247,9 +2272,8 @@ def _draw_legend(
         if any(flags.get(flag) and flag_to_kind[flag] == kind for flag in flag_to_kind)
     ]
 
-    box_x = LEGEND_BOX_X
     box_y = FOOTER_BOX_Y
-    width = FOOTER_BOX_W
+    width = box_w
     height = FOOTER_BOX_H
 
     c.setStrokeColor(colors.black)
@@ -2550,6 +2574,8 @@ def _draw_notes(
     *,
     taper_start_station: float,
     station_max_visible: float,
+    box_x: float,
+    box_w: float,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -2563,10 +2589,10 @@ def _draw_notes(
     on-page sign filter uses, so the off-page table is the exact
     complement of the drawn glyphs by construction.
     """
-    # Middle box of the three-equal-width footer row.
-    x_box = NOTES_BOX_X
+    # Second box of the equal-width footer row.
+    x_box = box_x
     box_y = FOOTER_BOX_Y
-    width = FOOTER_BOX_W
+    width = box_w
     height = FOOTER_BOX_H
 
     c.setStrokeColor(colors.black)
@@ -2800,7 +2826,9 @@ def _draw_notes(
             "Helvetica-Bold",
             6.5,
             note_w,
-            max_lines=2,
+            # 3 lines for the 4-box footer's narrower width (issue #150) —
+            # the disclosure sentence must never ellipsis-truncate.
+            max_lines=3,
         ):
             y[0] -= layout.footer_pads[1]
             c.setFont("Helvetica-Bold", 6.5)
@@ -2823,7 +2851,10 @@ def _draw_notes(
                 "require block-based placement (Sheet 10 Note 1)."
             ),
         ):
-            for line in _wrap_to_width(c, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=2):
+            # max_lines=3: the 4-box footer's narrower width (spec §4,
+            # issue #150) wraps these onto a third line — allowed, so no
+            # citation text is ever ellipsis-truncated.
+            for line in _wrap_to_width(c, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=3):
                 y[0] -= layout.footer_pads[1]
                 c.drawString(x, y[0], line)
     y[0] -= layout.footer_pads[1]
@@ -3495,6 +3526,8 @@ def render_plan_sheet(
         aerial_page="2" if aerial_png is not None else None,
         site_flags=site_flags,
         ta_override=ta_override,
+        include_device_summary=include_device_summary,
+        jurisdiction_conflicts=jurisdiction_conflicts,
     )
     _draw_sheet_border(c)
     c.showPage()
@@ -3539,6 +3572,8 @@ def _render_schematic_page(
     aerial_page: str | None,
     site_flags: Mapping[str, bool] | None = None,
     ta_override: str | None = None,
+    include_device_summary: bool = True,
+    jurisdiction_conflicts: list[dict[str, Any]] | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -3599,6 +3634,9 @@ def _render_schematic_page(
         site_flags,
     )
     _draw_title_block(c, title, project_name, sheet_number, total_sheets, params, scale_short)
+    # Spec §4.1 (issue #150): the footer is four equal boxes when the
+    # device summary renders, three otherwise (today's layout).
+    geom = _footer_geometry(include_device_summary)
     _draw_legend(
         c,
         placements,
@@ -3608,6 +3646,8 @@ def _render_schematic_page(
         is_divided=params.is_divided,
         scale_note=scale_long,
         site_flags=site_flags,
+        box_x=geom.legend_x,
+        box_w=geom.box_w,
     )
     _draw_notes(
         c,
@@ -3617,6 +3657,8 @@ def _render_schematic_page(
         placements,
         taper_start_station=mapping["taper_start_station"],
         station_max_visible=station_max_visible,
+        box_x=geom.notes_x,
+        box_w=geom.box_w,
     )
     _draw_structured_title_block(
         c,
@@ -3629,6 +3671,8 @@ def _render_schematic_page(
         bearing_deg=bearing_deg,
         aerial_page=aerial_page,
         ta_override=ta_override,
+        box_x=geom.title_x,
+        box_w=geom.box_w,
     )
 
     # No compass on page 1 — the schematic is a stylized layout where
