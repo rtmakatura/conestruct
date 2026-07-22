@@ -1,4 +1,5 @@
 import type { RoadType } from "../scenarios";
+import type { StreetClass } from "../jurisdiction";
 import type {
   Confidence,
   DetectedField,
@@ -298,6 +299,37 @@ export function classifyFromOsmTags(
       },
     },
   };
+}
+
+// #152 C: OSM highway tier → suggested street class for the
+// jurisdiction layer (hours verdicts, class-scoped deltas).  The
+// mapping follows the FHWA functional-class convention OSM's own wiki
+// documents: primary/secondary ≈ arterials, tertiary ≈ collector,
+// residential/unclassified ≈ local.  A SUGGESTION only — jurisdictions
+// classify streets by their own adopted maps, so this value never
+// auto-applies; the UI renders it confirm-only with the
+// verify-against-the-map caveat where a classification map exists.
+const STREET_CLASS_BY_HIGHWAY: Record<string, StreetClass> = {
+  motorway: "arterial",
+  motorway_link: "arterial",
+  trunk: "arterial",
+  trunk_link: "arterial",
+  primary: "arterial",
+  primary_link: "arterial",
+  secondary: "arterial",
+  secondary_link: "arterial",
+  tertiary: "collector",
+  tertiary_link: "collector",
+  unclassified: "local",
+  residential: "local",
+  living_street: "local",
+  service: "local",
+};
+
+export function suggestStreetClass(
+  highwayClass: string,
+): StreetClass | null {
+  return STREET_CLASS_BY_HIGHWAY[highwayClass] ?? null;
 }
 
 // Convenience: derive a full RoadClassification from a picked

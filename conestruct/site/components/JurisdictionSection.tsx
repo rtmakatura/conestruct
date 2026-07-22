@@ -135,6 +135,16 @@ interface ContextBarProps {
   suggestLoading?: boolean;
   onConfirmSuggestion?: (key: string) => void;
   onDismissSuggestion?: () => void;
+  /** #152 C: street-class suggestion derived from the confirmed road's
+   *  OSM highway tier.  Advice only — the single writer of street_class
+   *  from this feature is onConfirmClassSuggestion (the user's Confirm
+   *  click).  null ⇒ no confirmed road at the current pin (or
+   *  dismissed): the row renders nothing, never a guess. */
+  classSuggest?: StreetClass | null;
+  /** The OSM highway tier the suggestion came from (provenance line). */
+  classSuggestTier?: string | null;
+  onConfirmClassSuggestion?: (c: StreetClass) => void;
+  onDismissClassSuggestion?: () => void;
 }
 
 const STREET_CLASSES: [StreetClass, string][] = [
@@ -167,6 +177,10 @@ export function JurisdictionContextBar({
   suggestLoading = false,
   onConfirmSuggestion,
   onDismissSuggestion,
+  classSuggest = null,
+  classSuggestTier = null,
+  onConfirmClassSuggestion,
+  onDismissClassSuggestion,
 }: ContextBarProps) {
   // Compact breadcrumb (Ryan ruling, inc-9): each link renders its
   // authored display_name; the full title (edition, revision, dates)
@@ -313,6 +327,104 @@ export function JurisdictionContextBar({
         onConfirm={onConfirmSuggestion}
         onDismiss={onDismissSuggestion}
       />
+      {/* #152 C: street-class suggestion off the confirmed road's OSM
+          tier — same confirm-only contract as the jurisdiction
+          suggestion above.  Absent (nothing rendered) when no road is
+          confirmed at the current pin. */}
+      <ClassSuggestSlot
+        classSuggest={classSuggest}
+        tier={classSuggestTier}
+        streetClass={streetClass}
+        jurisdiction={jurisdiction}
+        onConfirm={onConfirmClassSuggestion}
+        onDismiss={onDismissClassSuggestion}
+      />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 1c · Street-class suggestion row (#152 Surface C)
+// ---------------------------------------------------------------------------
+
+function classLabel(c: StreetClass): string {
+  return STREET_CLASSES.find(([v]) => v === c)?.[1] ?? c;
+}
+
+function ClassSuggestSlot({
+  classSuggest,
+  tier,
+  streetClass,
+  jurisdiction,
+  onConfirm,
+  onDismiss,
+}: {
+  classSuggest: StreetClass | null;
+  tier: string | null;
+  streetClass: StreetClass | null;
+  jurisdiction: JurisdictionBlock | null;
+  onConfirm?: (c: StreetClass) => void;
+  onDismiss?: () => void;
+}) {
+  // No confirmed road at the current pin (or dismissed): nothing to
+  // say.  The classpick above is exactly as functional either way —
+  // this row is additive, never load-bearing.
+  if (!classSuggest) return null;
+
+  const agrees = streetClass === classSuggest;
+  const differs = streetClass !== null && streetClass !== classSuggest;
+
+  return (
+    <div className="jbar-suggest live" aria-live="polite">
+      {!streetClass && (
+        <div className="sugg-row">
+          <span>
+            Detected road suggests street class:{" "}
+            <b className="sugg-name">{classLabel(classSuggest)}</b>
+            {tier && (
+              <span className="font-mono text-[10px]"> (OSM {tier})</span>
+            )}
+          </span>
+          <button
+            type="button"
+            className="confirm"
+            onClick={() => onConfirm?.(classSuggest)}
+          >
+            Confirm {classLabel(classSuggest)}
+          </button>
+          <button type="button" className="ghost" onClick={() => onDismiss?.()}>
+            Dismiss
+          </button>
+        </div>
+      )}
+      {agrees && (
+        <div className="sugg-row passive">
+          <span aria-hidden>✓ </span>
+          Street class matches the detected road tier (
+          {classLabel(classSuggest)}).
+        </div>
+      )}
+      {differs && (
+        <div className="sugg-row passive">
+          Detected road tier suggests {classLabel(classSuggest)} — you have{" "}
+          {classLabel(streetClass as StreetClass)} selected.
+        </div>
+      )}
+      {/* The tier is a proxy; the jurisdiction's adopted map is the
+          authority.  Caveat rides wherever a map is on record. */}
+      {jurisdiction?.classification_map_url && (
+        <div className="honesty">
+          Verify against{" "}
+          <a
+            href={jurisdiction.classification_map_url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {jurisdiction.name}&apos;s functional-classification map
+          </a>{" "}
+          — the road tier is a proxy, the adopted map governs.
+        </div>
+      )}
     </div>
   );
 }

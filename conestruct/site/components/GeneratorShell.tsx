@@ -28,6 +28,7 @@ import {
   DebugSnapshotButton,
   type SnapshotDetection,
 } from "./DebugSnapshotButton";
+import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionContextBar,
   JurisdictionSection,
@@ -267,6 +268,9 @@ export function GeneratorShell({
     data: JurisdictionSuggestion | null;
   }>({ status: "idle", data: null });
   const [suggestDismissed, setSuggestDismissed] = useState(false);
+  // #152 C: street-class suggestion, dismissed state.  Same lifecycle
+  // as the jurisdiction suggestion's Dismiss: cleared on pin move.
+  const [classSuggestDismissed, setClassSuggestDismissed] = useState(false);
   const pinLat = scenario.meta.lat;
   const pinLng = scenario.meta.lng;
   useEffect(() => {
@@ -274,10 +278,12 @@ export function GeneratorShell({
     if (!pinLat && !pinLng) {
       setSuggestState({ status: "idle", data: null });
       setSuggestDismissed(false);
+      setClassSuggestDismissed(false);
       return;
     }
     // A moved pin clears a prior Dismiss (spec §3).
     setSuggestDismissed(false);
+    setClassSuggestDismissed(false);
     let cancelled = false;
     const t = setTimeout(async () => {
       setSuggestState((s) => ({ ...s, status: "loading" }));
@@ -308,6 +314,26 @@ export function GeneratorShell({
       clearTimeout(t);
     };
   }, [pinLat, pinLng]);
+
+  // #152 C — street-class suggestion off the confirmed road's OSM tier.
+  // Advice only, exactly like the jurisdiction suggestion: the single
+  // writer of street_class from this feature is the user's Confirm
+  // click.  The confirmed road is the picker's committed choice
+  // (scenario.meta.confirmedRoad), keyed to the pin it was made at — a
+  // pin that no longer matches makes the suggestion vanish rather than
+  // ever suggesting from a stale road (#149's failure class).  Pure
+  // presentation derivation from the persisted OSM highway tier; no
+  // MUTCD math (rule 3).
+  const confirmedRoadMeta = scenario.meta.confirmedRoad ?? null;
+  const roadForPin =
+    confirmedRoadMeta &&
+    confirmedRoadMeta.pinLat === pinLat &&
+    confirmedRoadMeta.pinLng === pinLng
+      ? confirmedRoadMeta
+      : null;
+  const classSuggestion = roadForPin
+    ? suggestStreetClass(roadForPin.candidate.highway_class)
+    : null;
 
   // The evaluated jurisdiction block rides the device-breakdown response
   // (spec §3.2) — present only when the scenario names a jurisdiction_key.
@@ -543,6 +569,12 @@ export function GeneratorShell({
               setScenario({ ...scenario, jurisdiction_key: k })
             }
             onDismissSuggestion={() => setSuggestDismissed(true)}
+            classSuggest={classSuggestDismissed ? null : classSuggestion}
+            classSuggestTier={roadForPin?.candidate.highway_class ?? null}
+            onConfirmClassSuggestion={(c: StreetClass) =>
+              setScenario({ ...scenario, street_class: c })
+            }
+            onDismissClassSuggestion={() => setClassSuggestDismissed(true)}
           />
 
           {/* ——— Zone 1 · Setup ——— */}
