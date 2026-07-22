@@ -526,6 +526,12 @@
             },
             "note": {
               "type": "string"
+            },
+            "requires": {
+              "enum": [
+                "on_sheet_device_summary"
+              ],
+              "description": "Machine-readable obligation this admin delta imposes on Conestruct's output. on_sheet_device_summary: the device summary block must render on the plan sheet unconditionally (spec §4.1)."
             }
           }
         },

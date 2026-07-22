@@ -83,6 +83,26 @@
         "section": "stipulations 3, 26, 30, 33",
         "status": "verified"
       }
+    },
+    {
+      "severity": "admin",
+      "rule": "The TC permit's 34-stipulation checklist enumerates required devices by type; the TCP is reviewed against it, so the plan sheet must carry an explicit device count + type summary.",
+      "baseline": "MUTCD imposes no on-sheet device summary requirement",
+      "effect": {
+        "op": "admin",
+        "note": "on-sheet device summary block required unconditionally",
+        "requires": "on_sheet_device_summary"
+      },
+      "trigger": {
+        "classes": null,
+        "closure": null,
+        "night": null
+      },
+      "source": {
+        "doc": "Thornton Construction & TC Permit handout",
+        "section": "TC permit stipulations",
+        "status": "verified"
+      }
     }
   ],
   "hours": {

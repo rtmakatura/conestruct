@@ -38,7 +38,8 @@
       "baseline": "MUTCD imposes no on-sheet device summary requirement",
       "effect": {
         "op": "admin",
-        "note": "on-sheet device summary block required unconditionally"
+        "note": "on-sheet device summary block required unconditionally",
+        "requires": "on_sheet_device_summary"
       },
       "trigger": {
         "classes": null,

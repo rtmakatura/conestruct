@@ -433,6 +433,26 @@ def _collect_conflicts(node: Any, out: list[dict[str, Any]]) -> None:
             _collect_conflicts(v, out)
 
 
+ON_SHEET_DEVICE_SUMMARY = "on_sheet_device_summary"
+
+
+def collect_conflicts(record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every ``conflict`` block in ``record`` (spec §4.2 — the printed
+    sheet's † footnote source)."""
+    out: list[dict[str, Any]] = []
+    _collect_conflicts(record, out)
+    return out
+
+
+def requires_on_sheet_summary(record: dict[str, Any]) -> bool:
+    """True when an admin delta obliges the on-sheet device summary (spec
+    §4.1) — the toggle cannot disable the block for these jurisdictions."""
+    return any(
+        d.get("effect", {}).get("requires") == ON_SHEET_DEVICE_SUMMARY
+        for d in record.get("deltas", [])
+    )
+
+
 def _any_provisional(node: Any) -> bool:
     if isinstance(node, dict):
         if node.get("status") == "provisional" and "doc" in node:

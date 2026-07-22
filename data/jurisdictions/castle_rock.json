@@ -56,7 +56,8 @@
       "baseline": "MUTCD imposes no device-count-on-plan requirement",
       "effect": {
         "op": "admin",
-        "note": "explicit device count + type required on the TCP — Conestruct's exact output shape"
+        "note": "explicit device count + type required on the TCP — Conestruct's exact output shape",
+        "requires": "on_sheet_device_summary"
       },
       "trigger": {
         "classes": null,

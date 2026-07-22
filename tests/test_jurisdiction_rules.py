@@ -435,3 +435,27 @@ def test_zone_geometry_agrees_with_audit(client, scenario_json):
     assert zone["taper_l_ft"] == pytest.approx(audit["taper"]["L_required_ft"])
     assert zone["buffer_b_ft"] == pytest.approx(audit["buffer"]["buffer_ft"])
     assert zone["work_len_ft"] == scenario_json["workLen"]
+
+
+# ---------------------------------------------------------------------------
+# Spec §4 print pipeline (issue #150): required-on-sheet flag + conflicts
+# ---------------------------------------------------------------------------
+
+
+def test_required_on_sheet_jurisdictions_carry_the_flag() -> None:
+    """Wave-2 hard gate (BLOCKED.md): LCUASS/Castle Rock/Thornton require
+    the device summary on the sheet itself."""
+    from src.rules.jurisdiction import requires_on_sheet_summary
+
+    for key in ("loveland", "castle_rock", "thornton"):
+        assert requires_on_sheet_summary(load_jurisdiction(key)), key
+    for key in ("cdot", "denver", "parker"):
+        assert not requires_on_sheet_summary(load_jurisdiction(key)), key
+
+
+def test_collect_conflicts_public_wrapper_finds_parker_hours() -> None:
+    from src.rules.jurisdiction import collect_conflicts
+
+    conflicts = collect_conflicts(load_jurisdiction("parker"))
+    assert any(c["label"] == "arterial work window" for c in conflicts)
+    assert all(c.get("sources") for c in conflicts)
