@@ -37,7 +37,8 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
-from src.rules.devices import DeviceType, cone_display_name
+from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -1870,26 +1871,50 @@ FOOTER_BOX_H: float = FOOTER_H - 16.0
 FOOTER_BOX_Y: float = MARGIN
 
 
+# 4-box width shares (sum 4.0).  NOT equal quarters: the NOTES box
+# interior (the 110-pt parameter value columns and the tier-2 two-column
+# advance table, whose station labels were sized to a ~134-pt description
+# slot) was engineered for the old 388-pt third and cannot compress to a
+# 288-pt quarter without cross-box bleed or ellipsis-truncating safety
+# copy.  1.30 × 288 = 374 pt restores that engineered width; the legend,
+# device summary, and title block carry the slack (verified by visual QA
+# + the full text-assertion suite).
+_FOOTER_WEIGHTS_4: tuple[float, float, float, float] = (0.85, 1.30, 0.95, 0.90)
+
+
 @dataclass(frozen=True)
 class _FooterGeometry:
-    """Footer-row box geometry.  ``device_x`` is None in the 3-box layout
-    (device summary toggled off for a non-required jurisdiction); with the
-    summary on (spec §4.1's default) the row is four equal boxes."""
+    """Footer-row box geometry.  ``device_x``/``device_w`` are None in the
+    3-box layout (device summary toggled off for a non-required
+    jurisdiction); with the summary on (spec §4.1's default) the row is
+    four weighted boxes."""
 
-    box_w: float
     legend_x: float
+    legend_w: float
     notes_x: float
+    notes_w: float
     device_x: float | None
+    device_w: float | None
     title_x: float
+    title_w: float
 
 
 def _footer_geometry(include_device_summary: bool) -> _FooterGeometry:
-    n = 4 if include_device_summary else 3
-    w = (PAGE_W - 2 * MARGIN - (n - 1) * FOOTER_GUTTER) / n
-    xs = [MARGIN + i * (w + FOOTER_GUTTER) for i in range(n)]
     if include_device_summary:
-        return _FooterGeometry(w, xs[0], xs[1], xs[2], xs[3])
-    return _FooterGeometry(w, xs[0], xs[1], None, xs[2])
+        inner = PAGE_W - 2 * MARGIN - 3 * FOOTER_GUTTER
+        unit = inner / 4.0
+        widths = [w * unit for w in _FOOTER_WEIGHTS_4]
+        xs: list[float] = []
+        cursor = MARGIN
+        for w in widths:
+            xs.append(cursor)
+            cursor += w + FOOTER_GUTTER
+        return _FooterGeometry(
+            xs[0], widths[0], xs[1], widths[1], xs[2], widths[2], xs[3], widths[3]
+        )
+    w = (PAGE_W - 2 * MARGIN - 2 * FOOTER_GUTTER) / 3.0
+    xs3 = [MARGIN + i * (w + FOOTER_GUTTER) for i in range(3)]
+    return _FooterGeometry(xs3[0], w, xs3[1], w, None, None, xs3[2], w)
 
 
 TITLE_BLOCK_PAD: float = 8.0
@@ -2565,6 +2590,103 @@ def _notes_layout(schedule_rows: int, advance_rows: int) -> _NotesLayout:
     )
 
 
+_DEVICE_SUMMARY_TITLE: str = "TRAFFIC CONTROL DEVICE SUMMARY"
+_BID_AUTHORITY_LINE: str = "SEE DEVICE LIST (XLSX) FOR BID QUANTITIES."
+
+
+def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> tuple[str, str]:
+    """(code, name) cell text for one summary row.
+
+    Uses the same helpers that write the XLSX descriptions
+    (``substitute_sign_description`` / ``cone_display_name`` /
+    ``DEVICE_CATALOG``) so the two surfaces can never disagree on
+    wording.  Non-sign devices have no MUTCD code — "—" mirrors the
+    off-page table's convention for flagger rows (UX-09).
+    """
+    dt = row.device_type
+    if dt == DeviceType.SIGN_GENERIC:
+        if row.label is None:
+            return ("—", "Construction sign (unlabeled)")
+        code, human = substitute_sign_description(row.label, row.representative.station_ft, params)
+        return (code, human if human != code else "")
+    if dt == DeviceType.CONE:
+        return ("—", cone_display_name(params.speed_mph))
+    return ("—", DEVICE_CATALOG[dt].description)
+
+
+def _draw_device_summary(
+    c: canvas.Canvas,
+    box_x: float,
+    box_w: float,
+    placements: list[DevicePlacement],
+    params: ScenarioParams,
+) -> None:
+    """Spec §4.1 (issue #150): the on-sheet device summary.
+
+    Monochrome-safe (black + gray hairlines only — survives a mono
+    plotter), quantities from ``aggregate_device_rows`` — the XLSX's own
+    aggregation, so sheet == spreadsheet by construction — a bold totals
+    row, and the bid-authority line so the two surfaces never compete.
+    Overflow is an explicit pointer line, never a silent clip (rule 10).
+    """
+    rows = aggregate_device_rows(placements)
+
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.6)
+    c.rect(box_x, FOOTER_BOX_Y, box_w, FOOTER_BOX_H, fill=0, stroke=1)
+
+    x = box_x + 8
+    x_right = box_x + box_w - 8
+    y = FOOTER_BOX_Y + FOOTER_BOX_H - 16
+
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 9)
+    c.drawString(x, y, _DEVICE_SUMMARY_TITLE)
+    y -= 12
+
+    c.setFont("Helvetica-Bold", 6)
+    c.drawString(x, y, "MUTCD")
+    c.drawString(x + 44, y, "DEVICE")
+    c.drawRightString(x_right, y, "QTY")
+    y -= 3
+    c.setLineWidth(0.5)
+    c.line(x, y, x_right, y)
+    y -= 9
+
+    row_h = 9.0
+    # Room reserved below the rows for the totals rule + totals row +
+    # authority line.
+    floor = FOOTER_BOX_Y + 34
+    name_w = (x_right - 30) - (x + 44)
+
+    for drawn, row in enumerate(rows):
+        remaining = len(rows) - drawn
+        if y < floor + row_h and remaining > 1:
+            c.setFont("Helvetica-Oblique", 6.5)
+            c.drawString(x, y, f"+{remaining} MORE TYPES — SEE DEVICE LIST (XLSX)")
+            y -= row_h
+            break
+        code, name = _device_summary_cells(row, params)
+        c.setFont("Helvetica", 6.5)
+        c.drawString(x, y, code)
+        c.drawString(x + 44, y, _truncate_to_width(c, name, "Helvetica", 6.5, name_w))
+        c.drawRightString(x_right, y, str(row.quantity))
+        y -= row_h
+
+    y -= 2
+    c.setLineWidth(1.0)
+    c.line(x, y, x_right, y)
+    y -= 10
+    c.setFont("Helvetica-Bold", 7)
+    c.drawString(x, y, "TOTAL DEVICES")
+    c.drawRightString(x_right, y, str(len(placements)))
+    y -= 11
+    c.setFont("Helvetica-Oblique", 6)
+    c.setFillColor(colors.HexColor("#333333"))
+    c.drawString(x, y, _BID_AUTHORITY_LINE)
+    c.setFillColor(colors.black)
+
+
 def _draw_notes(
     c: canvas.Canvas,
     params: ScenarioParams,
@@ -2732,7 +2854,13 @@ def _draw_notes(
         c.setFillColor(colors.black)
         c.drawString(col_x[col], y[0], f"{label}:")
         c.setFont("Helvetica-Bold", 7)
-        c.drawString(val_x[col], y[0], val)
+        # A value that would run past the box's inner right edge (long
+        # closure display names) renders right-aligned inside the box
+        # instead — text must never bleed across a footer-box border.
+        if val_x[col] + c.stringWidth(val, "Helvetica-Bold", 7) > x_right:
+            c.drawRightString(x_right, y[0], val)
+        else:
+            c.drawString(val_x[col], y[0], val)
     y[0] -= layout.param_pitch
 
     # SIGN SCHEDULE — 3-column table (#, CODE, DESCRIPTION)
@@ -3647,7 +3775,7 @@ def _render_schematic_page(
         scale_note=scale_long,
         site_flags=site_flags,
         box_x=geom.legend_x,
-        box_w=geom.box_w,
+        box_w=geom.legend_w,
     )
     _draw_notes(
         c,
@@ -3658,8 +3786,10 @@ def _render_schematic_page(
         taper_start_station=mapping["taper_start_station"],
         station_max_visible=station_max_visible,
         box_x=geom.notes_x,
-        box_w=geom.box_w,
+        box_w=geom.notes_w,
     )
+    if geom.device_x is not None and geom.device_w is not None:
+        _draw_device_summary(c, geom.device_x, geom.device_w, placements, params)
     _draw_structured_title_block(
         c,
         params,
@@ -3672,7 +3802,7 @@ def _render_schematic_page(
         aerial_page=aerial_page,
         ta_override=ta_override,
         box_x=geom.title_x,
-        box_w=geom.box_w,
+        box_w=geom.title_w,
     )
 
     # No compass on page 1 — the schematic is a stylized layout where
