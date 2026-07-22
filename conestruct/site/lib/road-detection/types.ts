@@ -5,6 +5,7 @@
 // (modal) import from here so the contract is symmetric.
 
 import type { RoadType } from "../scenarios";
+import type { RoadFieldOverrides } from "../scenarios/overrides";
 
 export type Confidence = "high" | "medium" | "low";
 
@@ -72,6 +73,40 @@ export interface RoadDetectResponse {
 // property panel and applyClassification in lib/scenarios/auto-apply.ts.
 // Synthesized from the picked candidate's tags + the response-level
 // isUrban flag via classifyFromOsmTags.
+/**
+ * The road choice the operator committed at Save & Close, persisted on
+ * ``scenario.meta.confirmedRoad`` so it survives picker close/reopen
+ * and page reload (it rides the saved plan's ``data`` verbatim).  This
+ * is the root-cause fix for the lost-confirmations bug: the choice used
+ * to live only in picker-local state and evaporated at Save.
+ *
+ * The contract it carries: a confirmed choice is permanent until the
+ * pin moves.  Reopening the picker with an unmoved pin restores this
+ * state as-is and fires ZERO detect calls; ``pinLat``/``pinLng`` are
+ * the staleness key — a pin that no longer matches invalidates the
+ * record and re-detection runs as usual.
+ */
+export interface ConfirmedRoad {
+  /** The picked candidate — road identity (way id, name, ref) plus the
+   *  OSM tags needed to re-render the selection without a network call. */
+  candidate: RoadCandidate;
+  /** Classification synthesized from the candidate at confirm time. */
+  classification: RoadClassification;
+  /** How the road was determined: auto-adopted sole candidate, or an
+   *  explicit operator pick among multiple. */
+  method: "auto_single" | "operator_pick";
+  /** Operator edits on top of the classification at confirm time —
+   *  restored so the reopened picker shows exactly what was applied. */
+  overrides: RoadFieldOverrides;
+  /** Pin-level place context from the detection response, needed if the
+   *  operator re-picks from the restored state. */
+  isUrban: boolean;
+  placeName: string | null;
+  /** The pin this road was confirmed at — the staleness key. */
+  pinLat: number;
+  pinLng: number;
+}
+
 export interface RoadClassification {
   roadType: RoadType;
   divided: boolean;

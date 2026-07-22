@@ -48,5 +48,9 @@ export async function POST(req: NextRequest) {
   if (!result.ok) {
     return new Response(result.reason, { status: result.status });
   }
-  return Response.json({ lat: result.lat, lng: result.lng });
+  return Response.json({
+    lat: result.lat,
+    lng: result.lng,
+    placeType: result.placeType,
+  });
 }

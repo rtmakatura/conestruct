@@ -1,3 +1,5 @@
+import type { ConfirmedRoad } from "../road-detection/types";
+
 export type RoadType =
   | "rural_undivided"
   | "rural_divided"
@@ -166,6 +168,16 @@ export interface ScenarioMeta {
    */
   bearingDeg?: number;
   siteConditions?: SiteConditions;
+  /**
+   * The road choice confirmed in the location picker, keyed to the pin
+   * it was confirmed at (lib/road-detection/types.ts).  Persisted here —
+   * not as picker-local UI state — so it survives picker close/reopen
+   * and page reload; the reopened picker restores it without firing
+   * detection.  Provenance metadata only: the Python backend ignores it
+   * (extra meta keys are dropped by the Pydantic schema) and no plan
+   * math reads it.
+   */
+  confirmedRoad?: ConfirmedRoad | null;
 }
 
 export interface ShoulderScenario extends JurisdictionPlanFields {

@@ -3,7 +3,7 @@
 // helper (v5 places API, limit=1).
 
 export type GeocodeResult =
-  | { ok: true; lat: number; lng: number }
+  | { ok: true; lat: number; lng: number; placeType: string | null }
   | { ok: false; status: number; reason: string };
 
 export async function geocodeAddress(
@@ -40,13 +40,19 @@ export async function geocodeAddress(
   }
 
   const payload = (await upstream.json()) as {
-    features?: Array<{ center?: [number, number] }>;
+    features?: Array<{ center?: [number, number]; place_type?: string[] }>;
   };
-  const center = payload.features?.[0]?.center;
+  const feature = payload.features?.[0];
+  const center = feature?.center;
   if (!center || center.length !== 2) {
     return { ok: false, status: 404, reason: "no match" };
   }
 
   const [lng, lat] = center;
-  return { ok: true, lat, lng };
+  // Mapbox's precision class for the match ("address", "place",
+  // "locality", …).  Surfaced so the client can tell a street-level hit
+  // from a whole-town centroid — road detection at a town centroid
+  // produces a confidently wrong road (lib/geocode-precision.ts).
+  const placeType = feature?.place_type?.[0] ?? null;
+  return { ok: true, lat, lng, placeType };
 }

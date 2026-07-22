@@ -5,11 +5,13 @@ import type * as MapboxGL from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type {
   Confidence,
+  ConfirmedRoad,
   DetectedField,
   RoadCandidate,
   RoadClassification,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
+import { isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import {
   deriveCrossStreet,
@@ -53,6 +55,14 @@ export interface LocationPickerInitial {
   // before the in-modal classify resolves.  Mirrors whatever the
   // scenario currently carries.
   speedMph: number;
+  /**
+   * The road confirmed at the last Save & Close, from
+   * ``scenario.meta.confirmedRoad``.  When present AND its pin matches
+   * (lat, lng) exactly, the modal restores that selection as-is and
+   * fires ZERO detect calls on open — re-analysis triggers on pin
+   * movement only.  A mismatched pin invalidates it (stale record).
+   */
+  confirmedRoad?: ConfirmedRoad | null;
 }
 
 // What the modal hands back on save.  ``classification`` is null when
@@ -78,6 +88,15 @@ export interface LocationPickerResult {
    * re-apply never clobbers user-edited approach fields (#112).
    */
   crossStreet: CrossStreetCandidate | null;
+  /**
+   * The road choice as committed at Save: candidate identity,
+   * classification, determination method, and the pin it was confirmed
+   * at.  The parent persists this on ``scenario.meta`` so it survives
+   * picker close/reopen and page reload.  Null when no road is resolved
+   * (zero candidates, detection error) — an unresolved save honestly
+   * clears any previous confirmation.
+   */
+  confirmedRoad: ConfirmedRoad | null;
 }
 
 // Defined in lib/scenarios/overrides.ts (PR 4 extraction); imported
@@ -107,6 +126,9 @@ const MAPBOX_STYLES: Record<MapStyle, string> = {
 const DEFAULT_CENTER: [number, number] = [-105.5, 39.0]; // Colorado
 const DEFAULT_ZOOM = 6;
 const PIN_ZOOM = 16;
+// Zoom for an area-level geocode match (whole town): close enough to
+// see the street grid, far enough to show the whole area.
+const COARSE_ZOOM = 12;
 const PIN_COLOR = "#E8710A";
 // Cross-street (second) pin — teal, matching the work-zone corridor
 // segment colour so the two pins read as different jobs on the map.
@@ -299,6 +321,20 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     );
   }, [initial.lat, initial.lng]);
 
+  // Saved road confirmation to restore, or null.  Valid only when its
+  // pin matches the initial pin exactly — the confirmation's contract
+  // is "permanent until the pin moves", so a moved pin invalidates it.
+  // Fixed at mount: the modal unmounts on close, so this can't go
+  // stale within a lifetime.
+  const restoredRoad = useMemo<ConfirmedRoad | null>(() => {
+    const cr = initial.confirmedRoad;
+    if (!cr || !initialHasPin) return null;
+    if (cr.pinLat !== initial.lat || cr.pinLng !== initial.lng) return null;
+    if (!cr.candidate || !cr.classification) return null;
+    return cr;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // ---- Pin / coord state -------------------------------------------------
   const [address, setAddress] = useState(initial.address ?? "");
   const [hasPin, setHasPin] = useState(initialHasPin);
@@ -312,20 +348,31 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   // Length 0 → no road found; 1 → unambiguous (auto-fill behaviour);
   // 2+ → divided-highway or intersection ambiguity, operator must pick.
   const [bearingCandidates, setBearingCandidates] = useState<RoadCandidate[]>(
-    [],
+    restoredRoad ? [restoredRoad.candidate] : [],
   );
   // Pin-level place context returned alongside the candidates.  Drives
   // urban-vs-rural classification when the operator picks a candidate.
   const [detectionContext, setDetectionContext] = useState<{
     isUrban: boolean;
     placeName: string | null;
-  }>({ isUrban: false, placeName: null });
+  }>(
+    restoredRoad
+      ? { isUrban: restoredRoad.isUrban, placeName: restoredRoad.placeName }
+      : { isUrban: false, placeName: null },
+  );
   // Which candidate is currently reflected in the bearing field.  Null
   // means "no selection yet" (multi-candidate case before the operator
   // picks).  Single-candidate case auto-selects index 0.
   const [selectedCandidateIdx, setSelectedCandidateIdx] = useState<
     number | null
-  >(null);
+  >(restoredRoad ? 0 : null);
+  // Determination method of a restored confirmation.  A restored road
+  // renders as a single candidate even when it was originally an
+  // operator pick among several — this ref keeps the original method
+  // for the re-save.  Cleared the moment fresh detection runs.
+  const confirmedMethodRef = useRef<"auto_single" | "operator_pick" | null>(
+    restoredRoad?.method ?? null,
+  );
   const [latInput, setLatInput] = useState(
     initialHasPin ? fmt4(initial.lat!) : "",
   );
@@ -351,13 +398,22 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
   // ---- Bearing detection warning ----------------------------------------
   const [bearingWarning, setBearingWarning] = useState<string | null>(null);
+  // Guidance line for an area-level geocode match ("Lafayette, CO"):
+  // the map recentred but no pin was placed and no detection fired.
+  const [coarseNotice, setCoarseNotice] = useState<string | null>(null);
 
   // ---- Road-property classification --------------------------------------
-  const [classify, setClassify] = useState<ClassifyStatus>({ state: "idle" });
+  const [classify, setClassify] = useState<ClassifyStatus>(
+    restoredRoad
+      ? { state: "detected", result: restoredRoad.classification }
+      : { state: "idle" },
+  );
   // User overrides on top of the classification.  Keyed by field; an
   // undefined entry means "no override, use detected".  The values
   // here are committed to the parent on Save.
-  const [overrides, setOverrides] = useState<RoadFieldOverrides>({});
+  const [overrides, setOverrides] = useState<RoadFieldOverrides>(
+    restoredRoad?.overrides ?? {},
+  );
 
   // ---- Work zone length --------------------------------------------------
   const [workZoneFt, setWorkZoneFt] = useState(
@@ -667,6 +723,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const detectAt = useCallback(
     async (qLat: number, qLng: number) => {
       const myToken = ++bearingTokenRef.current;
+      // Contract: confirmed choices are permanent until the pin moves —
+      // and the moment it moves, nothing from the previous pin may
+      // render, not even dimmed.  A stale road selection silently feeds
+      // street class into jurisdiction rules downstream, so the list,
+      // the selection, and any restored confirmation all clear NOW; the
+      // loading skeleton (classify: resolving) takes their place.
+      setBearingCandidates([]);
+      setSelectedCandidateIdx(null);
+      setBearingWarning(null);
+      confirmedMethodRef.current = null;
       setClassify({ state: "resolving" });
       try {
         const r = await fetch("/api/road-bearing", {
@@ -905,6 +971,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     ) => {
       if (!isValidLat(newLat) || !isValidLng(newLng)) return;
       setHasPin(true);
+      setCoarseNotice(null);
       setLat(newLat);
       setLng(newLng);
       setLatInput(fmt4(newLat));
@@ -1083,9 +1150,15 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
       if (initialHasPin) {
         ensureMarker(initial.lat!, initial.lng!, bearing);
-        // Run detection so road properties + corridor populate on first
-        // open of an already-located plan.
-        void detectAt(initial.lat!, initial.lng!);
+        if (!restoredRoad) {
+          // No valid saved confirmation for this pin — run detection so
+          // road properties + corridor populate on first open of an
+          // already-located plan.  With a restored confirmation the
+          // selection is already in state and opening the dialog is NOT
+          // a re-analysis trigger: zero detect calls fire (use the
+          // explicit "Re-detect roads" affordance for a fresh look).
+          void detectAt(initial.lat!, initial.lng!);
+        }
       } else {
         const initialAddress = (initial.address ?? "").trim();
         if (initialAddress.length > 0) {
@@ -1098,13 +1171,31 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             });
             if (cancelled) return;
             if (r.ok) {
-              const j = (await r.json()) as { lat: number; lng: number };
+              const j = (await r.json()) as {
+                lat: number;
+                lng: number;
+                placeType?: string | null;
+              };
               setSearchStatus({ state: "idle" });
-              applyPinPosition(j.lat, j.lng, {
-                detect: true,
-                fly: true,
-                targetZoom: PIN_ZOOM,
-              });
+              if (!isPreciseGeocode(j.placeType ?? null)) {
+                // Area-level match (town/region centroid) — recenter
+                // only.  No pin, no detection: a road detected at a
+                // centroid is a confidently wrong road.
+                setCoarseNotice(
+                  "Area located — drop a pin on the road to detect roads.",
+                );
+                mapRef.current?.flyTo({
+                  center: [j.lng, j.lat],
+                  zoom: COARSE_ZOOM,
+                  essential: true,
+                });
+              } else {
+                applyPinPosition(j.lat, j.lng, {
+                  detect: true,
+                  fly: true,
+                  targetZoom: PIN_ZOOM,
+                });
+              }
             } else {
               const msg =
                 r.status === 503
@@ -1297,6 +1388,16 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     if (bearingCandidates.length === 1) applyCandidate(0);
   };
 
+  // Explicit fresh analysis at an unmoved pin — the ONLY way to re-run
+  // detection without moving the pin (reopening the dialog is not a
+  // trigger).  Same reset semantics as a pin move: overrides clear so
+  // the fresh detection is the baseline.
+  const onRedetect = () => {
+    if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return;
+    setOverrides({});
+    void detectAt(lat, lng);
+  };
+
   const onFlipDirection = () => {
     const flipped = normaliseBearing(bearing + 180);
     setBearing(flipped);
@@ -1337,6 +1438,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       const q = searchQuery.trim();
       if (!q) return;
       setSearchStatus({ state: "resolving" });
+      setCoarseNotice(null);
       try {
         const r = await fetch("/api/geocode", {
           method: "POST",
@@ -1353,8 +1455,27 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
           setSearchStatus({ state: "error", message: msg });
           return;
         }
-        const j = (await r.json()) as { lat: number; lng: number };
+        const j = (await r.json()) as {
+          lat: number;
+          lng: number;
+          placeType?: string | null;
+        };
         setSearchStatus({ state: "idle" });
+        if (!isPreciseGeocode(j.placeType ?? null)) {
+          // Coarse match (locality/place, e.g. "Lafayette, CO"):
+          // recenter the map and ask for a pin.  Detection fires only
+          // for address/intersection-precision results or a real pin
+          // drop — never for a town centroid.
+          setCoarseNotice(
+            "Area located — drop a pin on the road to detect roads.",
+          );
+          mapRef.current?.flyTo({
+            center: [j.lng, j.lat],
+            zoom: COARSE_ZOOM,
+            essential: true,
+          });
+          return;
+        }
         setAddress(q);
         applyPinPosition(j.lat, j.lng, {
           detect: true,
@@ -1392,6 +1513,30 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
 
   const onClickSave = () => {
     if (!canSave) return;
+    // The committed road choice, keyed to the pin it was made at.  A
+    // restored single-candidate list keeps its original determination
+    // method via confirmedMethodRef; fresh detection derives it from
+    // the candidate count.
+    const pickedCandidate =
+      classify.state === "detected" && selectedCandidateIdx !== null
+        ? (bearingCandidates[selectedCandidateIdx] ?? null)
+        : null;
+    const confirmedRoad: ConfirmedRoad | null =
+      pickedCandidate && classify.state === "detected"
+        ? {
+            candidate: pickedCandidate,
+            classification: classify.result,
+            method:
+              bearingCandidates.length > 1
+                ? "operator_pick"
+                : (confirmedMethodRef.current ?? "auto_single"),
+            overrides,
+            isUrban: detectionContext.isUrban,
+            placeName: detectionContext.placeName,
+            pinLat: lat,
+            pinLng: lng,
+          }
+        : null;
     onSave({
       address,
       lat,
@@ -1402,6 +1547,7 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
       classification: classify.state === "detected" ? classify.result : null,
       overrides,
       crossStreet: isNearIntersectionKind ? crossStreet : null,
+      confirmedRoad,
     });
   };
 
@@ -1489,6 +1635,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             {searchStatus.state === "error" && (
               <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
                 {searchStatus.message}
+              </div>
+            )}
+            {coarseNotice && (
+              <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark)] flex-shrink-0">
+                {coarseNotice}
               </div>
             )}
 
@@ -1681,6 +1832,8 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
                 overrides={overrides}
                 setOverrides={setOverrides}
                 scenarioKind={initial.scenarioKind}
+                canRedetect={hasPin}
+                onRedetect={onRedetect}
               />
 
               <div className="border-t border-[color:var(--rule)]">
@@ -1875,16 +2028,33 @@ function RoadPropertiesPanel({
   overrides,
   setOverrides,
   scenarioKind,
+  canRedetect,
+  onRedetect,
 }: {
   classify: ClassifyStatus;
   overrides: RoadFieldOverrides;
   setOverrides: (next: RoadFieldOverrides) => void;
   scenarioKind: ScenarioKind;
+  canRedetect: boolean;
+  onRedetect: () => void;
 }) {
   return (
     <div>
-      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        Road properties
+      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] flex items-center justify-between">
+        <span>Road properties</span>
+        {/* Explicit fresh-analysis affordance: reopening the dialog
+            never re-detects (a restored confirmation stays put), so
+            this is the one control that re-runs detection at an
+            unmoved pin. */}
+        {canRedetect && classify.state !== "resolving" && (
+          <button
+            type="button"
+            onClick={onRedetect}
+            className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-0.5 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
+          >
+            ↻ Re-detect roads
+          </button>
+        )}
       </div>
 
       <div className="px-5 py-1">

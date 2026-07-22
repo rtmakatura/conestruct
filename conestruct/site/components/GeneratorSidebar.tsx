@@ -208,6 +208,11 @@ export function GeneratorSidebar({
         lat: r.lat,
         lng: r.lng,
         bearingDeg: r.bearingDeg,
+        // The committed road choice, persisted with the scenario so it
+        // survives picker close/reopen and page reload (it rides the
+        // saved plan verbatim).  Null overwrites deliberately: a save
+        // with no resolved road invalidates a stale confirmation.
+        confirmedRoad: r.confirmedRoad,
       },
     } as Scenario;
     if (r.workZoneFt > 0) {
@@ -392,6 +397,7 @@ export function GeneratorSidebar({
             workZoneFt: scenario.workLen,
             scenarioKind: scenario.kind,
             speedMph: scenario.speed,
+            confirmedRoad: scenario.meta.confirmedRoad ?? null,
           }}
           onCancel={() => setPickerOpen(false)}
           onSave={onPickerSave}
