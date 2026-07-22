@@ -11,6 +11,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -71,16 +72,21 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
 }
 
 // The sidebar stub writes through the REAL setScenario — the same path
-// the map picker's Save uses.
+// the map picker's Save uses.  Surface B (#152): the class controls +
+// suggestion row render via the ``jurisdictionControls`` slot, so the
+// stub renders it.
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({
     scenario,
     setScenario,
+    jurisdictionControls,
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
+    jurisdictionControls?: ReactNode;
   }) => (
     <div>
+      {jurisdictionControls}
       <button
         type="button"
         onClick={() =>

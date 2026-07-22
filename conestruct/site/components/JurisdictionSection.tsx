@@ -166,7 +166,15 @@ const BASELINE_CHAIN: ChainLink[] = [
   },
 ];
 
-export function JurisdictionContextBar({
+// Interactive jurisdiction + street-class controls (Surface B, #152):
+// the dropdown, the class pills, and the two pin-derived suggestion
+// rows.  These moved OUT of the persistent top strip and INTO the setup
+// flow — the Location step pre-generation, the strip's inline edit
+// post-generation — so the controls sit downstream of the pin they
+// depend on (pin -> suggestions -> confirm).  The single writers of
+// jurisdiction_key / street_class remain the user's select, pill, and
+// Confirm actions; the top strip is now a read-only summary.
+export function JurisdictionControls({
   jurisdiction,
   jurisdictionKey,
   setJurisdictionKey,
@@ -182,104 +190,177 @@ export function JurisdictionContextBar({
   onConfirmClassSuggestion,
   onDismissClassSuggestion,
 }: ContextBarProps) {
-  // Compact breadcrumb (Ryan ruling, inc-9): each link renders its
-  // authored display_name; the full title (edition, revision, dates)
-  // surfaces on hover via the title attribute.  normalizeChainLink
-  // covers the deploy window where the backend still serves strings.
+  return (
+    <div className="jctl">
+      <div className="jctl-field">
+        <label htmlFor="jl-jurisdiction" className="k">
+          Jurisdiction
+        </label>
+        <select
+          id="jl-jurisdiction"
+          value={jurisdictionKey ?? ""}
+          onChange={(e) => setJurisdictionKey(e.target.value || null)}
+        >
+          <option value="">None — baseline (MUTCD + CDOT) only</option>
+          {JURISDICTION_OPTIONS.map((o) => (
+            <option key={o.key} value={o.key}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <div className="jbar-auth">
+          {jurisdiction ? (
+            <>
+              <b>{jurisdiction.name}</b> ·{" "}
+              {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
+              <span className="term">{jurisdiction.tcp_term}</span>, the ROW{" "}
+              <span className="term">{jurisdiction.row_term}</span>
+            </>
+          ) : loading ? (
+            <span className="jbar-skel-line w-3/4" aria-hidden />
+          ) : (
+            <>Statewide baseline — MUTCD + Colorado Supplement only.</>
+          )}
+        </div>
+      </div>
+
+      <div className="jctl-field">
+        <span className="k">Street classification</span>
+        <div
+          role="group"
+          aria-label="Street classification"
+          className="classpick"
+        >
+          {STREET_CLASSES.map(([v, l]) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={streetClass === v}
+              onClick={() => setStreetClass(v)}
+              className={streetClass === v ? "on" : ""}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+        <span className="mapchip">
+          {jurisdiction?.class_required ? (
+            jurisdiction.classification_map_url ? (
+              <>
+                <span aria-hidden>◎ </span>
+                <a
+                  href={jurisdiction.classification_map_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  per {jurisdiction.name} functional classification map
+                </a>
+              </>
+            ) : (
+              <>
+                ◎ {jurisdiction.name} classifies via its published map — look
+                the street up before submitting
+              </>
+            )
+          ) : (
+            " "
+          )}
+        </span>
+      </div>
+
+      {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
+          boundary warnings.  Advice only — Confirm is the single writer
+          of jurisdiction_key; a differing manual pick demotes the
+          suggestion to a passive notice, never a prompt to switch. */}
+      <SuggestSlot
+        suggest={suggest}
+        loading={suggestLoading}
+        jurisdictionKey={jurisdictionKey}
+        onConfirm={onConfirmSuggestion}
+        onDismiss={onDismissSuggestion}
+      />
+      {/* #152 C: street-class suggestion off the confirmed road's OSM
+          tier — same confirm-only contract as the jurisdiction
+          suggestion above.  Absent when no road is confirmed at the pin. */}
+      <ClassSuggestSlot
+        classSuggest={classSuggest}
+        tier={classSuggestTier}
+        streetClass={streetClass}
+        jurisdiction={jurisdiction}
+        onConfirm={onConfirmClassSuggestion}
+        onDismiss={onDismissClassSuggestion}
+      />
+    </div>
+  );
+}
+
+// Persistent top strip — now a READ-ONLY summary (Surface B, #152).
+// Name, street class, and the governing spec chain reflect the choices
+// made with JurisdictionControls in the setup flow.  No dropdown, no
+// pills, no Confirm — so it never reads as a dead control above the
+// input it depends on.  The reserved-height slots stay: name and chain
+// vary by jurisdiction and the bar must not resize on selection (the
+// 198 px stability gate).
+export function JurisdictionContextBar({
+  jurisdiction,
+  jurisdictionKey,
+  streetClass,
+  loading = false,
+}: {
+  jurisdiction: JurisdictionBlock | null;
+  jurisdictionKey: string | null;
+  streetClass: StreetClass | null;
+  loading?: boolean;
+}) {
   const chain = (jurisdiction ? jurisdiction.chain : BASELINE_CHAIN).map(
     normalizeChainLink,
   );
+  // A selected-but-not-yet-loaded jurisdiction shows the auth skeleton
+  // (same as loading) so the summary never flashes "None" for a chosen
+  // jurisdiction mid-fetch.
+  const pendingName = Boolean(jurisdictionKey) && !jurisdiction;
   return (
-    <div className="jbar">
+    <div className="jbar jbar-readonly">
       <div className="jbar-main">
         <div className="jbar-cell">
-          <label htmlFor="jl-jurisdiction" className="k">
-            Jurisdiction
-          </label>
-          <select
-            id="jl-jurisdiction"
-            value={jurisdictionKey ?? ""}
-            onChange={(e) => setJurisdictionKey(e.target.value || null)}
-          >
-            <option value="">None — baseline (MUTCD + CDOT) only</option>
-            {JURISDICTION_OPTIONS.map((o) => (
-              <option key={o.key} value={o.key}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-          {/* Reserved-height slot: the helper line varies 1–2 lines by
-              jurisdiction — the slot never lets that resize the bar. */}
+          <span className="k">Jurisdiction</span>
           <div className="jbar-auth jbar-slot-auth">
             {jurisdiction ? (
               <>
                 <b>{jurisdiction.name}</b> ·{" "}
-                {jurisdiction.authority.replace("_", " & ")} · calls this plan
-                a <span className="term">{jurisdiction.tcp_term}</span>, the
-                ROW <span className="term">{jurisdiction.row_term}</span>
+                {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
+                <span className="term">{jurisdiction.tcp_term}</span>, the ROW{" "}
+                <span className="term">{jurisdiction.row_term}</span>
               </>
-            ) : loading ? (
+            ) : loading || pendingName ? (
               <span className="jbar-skel-line w-3/4" aria-hidden />
             ) : (
-              <>Statewide baseline — MUTCD + Colorado Supplement only.</>
+              <>
+                <b>None — baseline</b> · MUTCD + Colorado Supplement only.
+              </>
             )}
           </div>
         </div>
 
         <div className="jbar-cell">
           <span className="k">Street classification</span>
-          <div
-            role="group"
-            aria-label="Street classification"
-            className="classpick"
-          >
-            {STREET_CLASSES.map(([v, l]) => (
-              <button
-                key={v}
-                type="button"
-                aria-pressed={streetClass === v}
-                onClick={() => setStreetClass(v)}
-                className={streetClass === v ? "on" : ""}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          {/* Reserved-height slot: the classification hint appears only
-              for class_required jurisdictions — the slot holds its space
-              either way. */}
-          <span className="mapchip jbar-slot-hint">
-            {jurisdiction?.class_required ? (
-              jurisdiction.classification_map_url ? (
-                <>
-                  <span aria-hidden>◎ </span>
-                  <a
-                    href={jurisdiction.classification_map_url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    per {jurisdiction.name} functional classification map
-                  </a>
-                </>
-              ) : (
-                <>
-                  ◎ {jurisdiction.name} classifies via its published map —
-                  look the street up before submitting
-                </>
-              )
+          <div className="jbar-auth jbar-slot-hint">
+            {streetClass ? (
+              <b>{classLabel(streetClass)}</b>
             ) : (
-              " "
+              <span className="none">◌ Not set — choose it in Setup</span>
             )}
-          </span>
+            {jurisdiction?.class_required && (
+              <span className="term">
+                {" "}
+                · {jurisdiction.name} classifies via its published map
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="jbar-cell">
           <span className="k">Governing spec chain</span>
-          {/* Reserved-height slot sized to the tallest launch-8 chain
-              (Denver, measured) so switching jurisdictions never
-              resizes the bar.  While the evaluated block is in flight
-              the slot shows a skeleton at final size — one reflow when
-              the bar first mounts, zero when data lands. */}
           <div className="jbar-slot-chain">
             {loading ? (
               <div className="chain-skeleton" aria-hidden>
@@ -315,30 +396,6 @@ export function JurisdictionContextBar({
           </div>
         </div>
       </div>
-
-      {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
-          boundary warnings.  Advice only — Confirm is the single writer
-          of jurisdiction_key; a differing manual pick demotes the
-          suggestion to a passive notice, never a prompt to switch. */}
-      <SuggestSlot
-        suggest={suggest}
-        loading={suggestLoading}
-        jurisdictionKey={jurisdictionKey}
-        onConfirm={onConfirmSuggestion}
-        onDismiss={onDismissSuggestion}
-      />
-      {/* #152 C: street-class suggestion off the confirmed road's OSM
-          tier — same confirm-only contract as the jurisdiction
-          suggestion above.  Absent (nothing rendered) when no road is
-          confirmed at the current pin. */}
-      <ClassSuggestSlot
-        classSuggest={classSuggest}
-        tier={classSuggestTier}
-        streetClass={streetClass}
-        jurisdiction={jurisdiction}
-        onConfirm={onConfirmClassSuggestion}
-        onDismiss={onDismissClassSuggestion}
-      />
     </div>
   );
 }

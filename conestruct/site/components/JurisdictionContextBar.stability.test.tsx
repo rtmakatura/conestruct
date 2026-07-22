@@ -28,9 +28,7 @@ function mount(j: JurisdictionBlock | null, key: string | null, loading = false)
     <JurisdictionContextBar
       jurisdiction={j}
       jurisdictionKey={key}
-      setJurisdictionKey={noop}
       streetClass={null}
-      setStreetClass={noop}
       loading={loading}
     />,
   );

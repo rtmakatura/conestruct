@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   applyClassification,
   carryMeta,
@@ -77,6 +77,12 @@ interface Props {
   // audit resolves or when the field is absent (deploy window) — the
   // preview then reads unavailable; it is never computed locally.
   corridorSpecLengths: CorridorSpecLengths | null;
+  // Surface B (#152): the interactive jurisdiction + street-class
+  // controls, rendered inside the Location step directly under the pin
+  // summary so the causality reads pin -> suggestions -> confirm.  Built
+  // by the shell (which owns the suggestion state); this component only
+  // places it.
+  jurisdictionControls?: ReactNode;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -135,6 +141,7 @@ export function GeneratorSidebar({
   onGenerate,
   auditInputError,
   corridorSpecLengths,
+  jurisdictionControls,
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -300,6 +307,7 @@ export function GeneratorSidebar({
           onOpenPicker={() => setPickerOpen(true)}
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
+          jurisdictionControls={jurisdictionControls}
         />
 
         {scenario.kind === "shoulder" && (
@@ -507,6 +515,7 @@ function LocationCorridorSection({
   onOpenPicker,
   handoff,
   corridorSpecLengths,
+  jurisdictionControls,
 }: {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
@@ -514,6 +523,7 @@ function LocationCorridorSection({
   onOpenPicker: () => void;
   handoff: HandoffEvent[];
   corridorSpecLengths: CorridorSpecLengths | null;
+  jurisdictionControls?: ReactNode;
 }) {
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
@@ -535,6 +545,12 @@ function LocationCorridorSection({
           setScenario={setScenario}
           onOpenPicker={onOpenPicker}
         />
+      )}
+      {/* Surface B (#152): jurisdiction + street-class controls sit
+          directly under the pin summary — pin -> suggestions -> confirm,
+          reading top to bottom. */}
+      {jurisdictionControls && (
+        <div className="jctl-host">{jurisdictionControls}</div>
       )}
       <ProjectDetailsDisclosure scenario={scenario} setMeta={setMeta} />
     </FieldGroup>

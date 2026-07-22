@@ -10,7 +10,10 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
 import { ResultsHero } from "./ResultsHero";
-import { JurisdictionContextBar } from "./JurisdictionSection";
+import {
+  JurisdictionContextBar,
+  JurisdictionControls,
+} from "./JurisdictionSection";
 import { PricingCard } from "./PricingCard";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -78,9 +81,7 @@ describe("severity-ramp role assignments", () => {
       <JurisdictionContextBar
         jurisdiction={JUR}
         jurisdictionKey="greeley"
-        setJurisdictionKey={noop}
         streetClass={null}
-        setStreetClass={noop}
       />,
     );
     const segs = Array.from(container.querySelectorAll(".chain .seg"));
@@ -92,8 +93,10 @@ describe("severity-ramp role assignments", () => {
   });
 
   it("street-class pills carry pressed state, not hue alone", () => {
+    // Pills live in the interactive controls now (Surface B), not the
+    // read-only top strip.
     const { container } = render(
-      <JurisdictionContextBar
+      <JurisdictionControls
         jurisdiction={null}
         jurisdictionKey={null}
         setJurisdictionKey={noop}

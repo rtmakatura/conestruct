@@ -9,6 +9,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
@@ -19,14 +20,19 @@ vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // The sidebar stub exposes pin-drop buttons wired to the REAL setScenario
-// — the same write path the map picker uses.
+// — the same write path the map picker uses.  Surface B (#152) moved the
+// jurisdiction controls (dropdown + suggestion rows) into the sidebar's
+// Location step via the ``jurisdictionControls`` slot, so the stub must
+// render that slot for the suggestion UI to appear under test.
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({
     scenario,
     setScenario,
+    jurisdictionControls,
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
+    jurisdictionControls?: ReactNode;
   }) => (
     <div>
       <button
@@ -51,6 +57,7 @@ vi.mock("./GeneratorSidebar", () => ({
       >
         stub-drop-pin-parker
       </button>
+      {jurisdictionControls}
     </div>
   ),
 }));

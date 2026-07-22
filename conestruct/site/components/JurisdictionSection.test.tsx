@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 
 import {
   JurisdictionContextBar,
+  JurisdictionControls,
   JurisdictionSection,
 } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -185,11 +186,13 @@ describe("JurisdictionSection — real-data rendering", () => {
   });
 });
 
-describe("JurisdictionContextBar", () => {
+// Surface B (#152): the dropdown, pills, and auth line moved into the
+// interactive JurisdictionControls; the top bar is a read-only summary.
+describe("JurisdictionControls", () => {
   it("offers the ship-list picker and echoes the local term (MHT for Parker)", async () => {
     let picked: string | null = null;
     render(
-      <JurisdictionContextBar
+      <JurisdictionControls
         jurisdiction={jur("parker")}
         jurisdictionKey="parker"
         setJurisdictionKey={(k) => {
@@ -210,7 +213,7 @@ describe("JurisdictionContextBar", () => {
   it("street-class pills expose pressed state (no hue-alone signal)", async () => {
     let cls: string | null = null;
     render(
-      <JurisdictionContextBar
+      <JurisdictionControls
         jurisdiction={null}
         jurisdictionKey={null}
         setJurisdictionKey={noop}
@@ -225,15 +228,15 @@ describe("JurisdictionContextBar", () => {
     await userEvent.click(screen.getByRole("button", { name: "Arterial" }));
     expect(cls).toBe("arterial");
   });
+});
 
+describe("JurisdictionContextBar (read-only summary)", () => {
   it("Castle Rock context: chain renders with the local override last", () => {
     render(
       <JurisdictionContextBar
         jurisdiction={jur("castle_rock")}
         jurisdictionKey="castle_rock"
-        setJurisdictionKey={noop}
         streetClass={null}
-        setStreetClass={noop}
       />,
     );
     // Compact breadcrumb (inc-9): the authored display_name renders; the

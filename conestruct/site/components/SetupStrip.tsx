@@ -13,7 +13,20 @@
 
 import { useState, type ReactNode } from "react";
 import { SCENARIO_KINDS, type RoadType, type Scenario } from "@/lib/scenarios";
-import { hhmm } from "@/lib/jurisdiction";
+import {
+  hhmm,
+  JURISDICTION_OPTIONS,
+  type JurisdictionBlock,
+  type StreetClass,
+} from "@/lib/jurisdiction";
+
+const STREET_CLASS_LABEL: Record<StreetClass, string> = {
+  local: "Local",
+  collector: "Collector",
+  arterial: "Arterial",
+};
+
+const STREET_CLASSES: StreetClass[] = ["local", "collector", "arterial"];
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   rural_undivided: "Rural — undivided",
@@ -50,9 +63,24 @@ interface Props {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   onReopen: () => void;
+  // Surface B (#152): a late jurisdiction / street-class change is a
+  // real estimator move, so the post-generate strip edits them inline —
+  // the Speed-edit treatment.  The evaluated block (when loaded) names
+  // the jurisdiction; the setters write the same scenario fields the
+  // full panel does.
+  jurisdiction?: JurisdictionBlock | null;
+  setJurisdictionKey?: (k: string | null) => void;
+  setStreetClass?: (c: StreetClass) => void;
 }
 
-export function SetupStrip({ scenario, setScenario, onReopen }: Props) {
+export function SetupStrip({
+  scenario,
+  setScenario,
+  onReopen,
+  jurisdiction = null,
+  setJurisdictionKey,
+  setStreetClass,
+}: Props) {
   const [edit, setEdit] = useState<string | null>(null);
   const done = () => setEdit(null);
 
@@ -80,6 +108,17 @@ export function SetupStrip({ scenario, setScenario, onReopen }: Props) {
 
   const roadType =
     "roadType" in scenario ? (scenario.roadType as RoadType) : null;
+
+  const jurisdictionKey = scenario.jurisdiction_key ?? null;
+  const jurisdictionLabel = jurisdictionKey
+    ? (jurisdiction?.name ??
+      JURISDICTION_OPTIONS.find((o) => o.key === jurisdictionKey)?.label ??
+      jurisdictionKey)
+    : "None";
+  const streetClass = scenario.street_class ?? null;
+  const classLabelText = streetClass
+    ? STREET_CLASS_LABEL[streetClass]
+    : "Not set";
   const speedMax = SPEED_MAX[scenario.kind] ?? 75;
   const speeds: number[] = [];
   for (let s = 25; s <= speedMax; s += 5) speeds.push(s);
@@ -132,6 +171,57 @@ export function SetupStrip({ scenario, setScenario, onReopen }: Props) {
     <div className="setup-strip">
       <Structural k="Scenario" val={kindLabel(scenario.kind)} />
       {roadType && <Structural k="Road" val={ROAD_TYPE_LABELS[roadType]} />}
+
+      {setJurisdictionKey && (
+        <Simple id="jurisdiction" k="Jurisdiction" val={jurisdictionLabel}>
+          <label className="k" htmlFor="strip-jurisdiction">
+            Jurisdiction
+          </label>
+          <select
+            id="strip-jurisdiction"
+            autoFocus
+            value={jurisdictionKey ?? ""}
+            onChange={(e) => {
+              setJurisdictionKey(e.target.value || null);
+              done();
+            }}
+            onBlur={done}
+          >
+            <option value="">None — baseline</option>
+            {JURISDICTION_OPTIONS.map((o) => (
+              <option key={o.key} value={o.key}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </Simple>
+      )}
+
+      {setStreetClass && (
+        <Simple id="class" k="Class" val={classLabelText}>
+          <span className="k">Street class</span>
+          <div
+            role="group"
+            aria-label="Street classification"
+            className="classpick"
+          >
+            {STREET_CLASSES.map((v) => (
+              <button
+                key={v}
+                type="button"
+                aria-pressed={streetClass === v}
+                onClick={() => {
+                  setStreetClass(v);
+                  done();
+                }}
+                className={streetClass === v ? "on" : ""}
+              >
+                {STREET_CLASS_LABEL[v]}
+              </button>
+            ))}
+          </div>
+        </Simple>
+      )}
 
       <Simple id="speed" k="Speed" val={`${scenario.speed} mph`}>
         <label className="k" htmlFor="strip-speed">

@@ -1346,7 +1346,8 @@ input[type="number"] {
     grid-template-columns: 1fr;
   }
 }
-.workbench .jbar-cell .k {
+.workbench .jbar-cell .k,
+.workbench .jctl-field .k {
   display: block;
   font-family: var(--font-mono);
   font-size: 9.5px;
@@ -1355,7 +1356,8 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
   margin-bottom: 7px;
 }
-.workbench .jbar select {
+.workbench .jbar select,
+.workbench .jctl select {
   width: 100%;
   background: var(--canvas);
   border: 1px solid var(--rule);
@@ -1370,7 +1372,8 @@ input[type="number"] {
   background-repeat: no-repeat;
   background-position: right 11px center;
 }
-.workbench .jbar select:focus {
+.workbench .jbar select:focus,
+.workbench .jctl select:focus {
   border-color: var(--act);
   box-shadow: 0 0 0 2px var(--act-glow);
 }
@@ -1421,6 +1424,50 @@ input[type="number"] {
 .workbench .mapchip a {
   color: var(--act);
 }
+
+/* ─── JurisdictionControls (Surface B) ───
+   The interactive dropdown + pills + suggestion rows, now hosted inside
+   the Location step of the setup panel (and, compactly, the strip's
+   inline edit).  A vertical stack sized for the narrow setup column,
+   framed so it reads as its own decision block under the pin summary. */
+.workbench .jctl-host {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.workbench .jctl {
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+}
+.workbench .jctl-field {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .jctl-field .classpick {
+  margin-top: 2px;
+}
+/* The suggestion rows sit flush under the fields, keeping their dashed
+   separator from the shared .jbar-suggest rules. */
+.workbench .jctl .jbar-suggest {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* Read-only summary strip: the class value + "not set" tone.  No
+   dropdown or pills — those live in .jctl now. */
+.workbench .jbar-readonly .none {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-readonly .jbar-slot-hint b {
+  color: #fff;
+  font-weight: 600;
+}
+.workbench .jbar-readonly .jbar-slot-hint .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+
 /* spec-chain breadcrumb — single line, no boxes; the local override
    renders last & strongest (white bold — a document name is not a
    generated number, so it is NOT orange) */

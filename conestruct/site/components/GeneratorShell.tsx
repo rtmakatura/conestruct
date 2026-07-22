@@ -31,6 +31,7 @@ import {
 import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionContextBar,
+  JurisdictionControls,
   JurisdictionSection,
 } from "./JurisdictionSection";
 import type {
@@ -526,6 +527,42 @@ export function GeneratorShell({
   // unavailable note instead of computing anything locally.
   const corridorSpecLengths = currentAudit?.sections?.corridor_spec ?? null;
 
+  // Surface B (#152): the interactive jurisdiction + street-class
+  // controls, built once here (so the suggestion state and the single
+  // setScenario writer stay owned by the shell) and rendered inside the
+  // Location step of the setup flow.  The persistent top strip is now a
+  // read-only summary of the same choices.
+  const jurisdictionControls = (
+    <JurisdictionControls
+      jurisdiction={jurisdictionBlock}
+      jurisdictionKey={scenario.jurisdiction_key ?? null}
+      setJurisdictionKey={(k) =>
+        setScenario({ ...scenario, jurisdiction_key: k })
+      }
+      streetClass={scenario.street_class ?? null}
+      setStreetClass={(c: StreetClass) =>
+        setScenario({ ...scenario, street_class: c })
+      }
+      loading={jurisdictionLoading}
+      suggest={
+        suggestDismissed || suggestState.status !== "ready"
+          ? null
+          : suggestState.data
+      }
+      suggestLoading={suggestState.status === "loading"}
+      onConfirmSuggestion={(k) =>
+        setScenario({ ...scenario, jurisdiction_key: k })
+      }
+      onDismissSuggestion={() => setSuggestDismissed(true)}
+      classSuggest={classSuggestDismissed ? null : classSuggestion}
+      classSuggestTier={roadForPin?.candidate.highway_class ?? null}
+      onConfirmClassSuggestion={(c: StreetClass) =>
+        setScenario({ ...scenario, street_class: c })
+      }
+      onDismissClassSuggestion={() => setClassSuggestDismissed(true)}
+    />
+  );
+
   return (
     <div className="workbench min-h-screen">
       <div className="workbench-frame" aria-hidden>
@@ -576,36 +613,16 @@ export function GeneratorShell({
             </div>
           </div>
 
-          {/* Persistent jurisdiction bar — the single source for
-              jurisdiction + street class, mounted above the zones in
-              every stage. */}
+          {/* Persistent jurisdiction summary — READ-ONLY (Surface B).
+              The interactive dropdown, pills, and suggestions moved into
+              the Location step below (pre-gen) and the strip's inline
+              edit (post-gen), so this strip never reads as a dead
+              control above the pin it depends on. */}
           <JurisdictionContextBar
             jurisdiction={jurisdictionBlock}
             jurisdictionKey={scenario.jurisdiction_key ?? null}
-            setJurisdictionKey={(k) =>
-              setScenario({ ...scenario, jurisdiction_key: k })
-            }
             streetClass={scenario.street_class ?? null}
-            setStreetClass={(c: StreetClass) =>
-              setScenario({ ...scenario, street_class: c })
-            }
             loading={jurisdictionLoading}
-            suggest={
-              suggestDismissed || suggestState.status !== "ready"
-                ? null
-                : suggestState.data
-            }
-            suggestLoading={suggestState.status === "loading"}
-            onConfirmSuggestion={(k) =>
-              setScenario({ ...scenario, jurisdiction_key: k })
-            }
-            onDismissSuggestion={() => setSuggestDismissed(true)}
-            classSuggest={classSuggestDismissed ? null : classSuggestion}
-            classSuggestTier={roadForPin?.candidate.highway_class ?? null}
-            onConfirmClassSuggestion={(c: StreetClass) =>
-              setScenario({ ...scenario, street_class: c })
-            }
-            onDismissClassSuggestion={() => setClassSuggestDismissed(true)}
           />
 
           {/* ——— Zone 1 · Setup ——— */}
@@ -626,6 +643,7 @@ export function GeneratorShell({
                 onGenerate={onGenerate}
                 auditInputError={auditInputError}
                 corridorSpecLengths={corridorSpecLengths}
+                jurisdictionControls={jurisdictionControls}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }
@@ -635,6 +653,13 @@ export function GeneratorShell({
                 scenario={scenario}
                 setScenario={setScenario}
                 onReopen={onReopen}
+                jurisdiction={jurisdictionBlock}
+                setJurisdictionKey={(k) =>
+                  setScenario({ ...scenario, jurisdiction_key: k })
+                }
+                setStreetClass={(c) =>
+                  setScenario({ ...scenario, street_class: c })
+                }
               />
             )}
           </section>

@@ -1,7 +1,11 @@
-// Verifies the jurisdiction bar is geometrically stable: its height must
-// be IDENTICAL across every selection (none + all launch-8) and during
-// the jurisdiction data fetch (skeleton state).  Run from the repo root
-// with the dev server up (cd conestruct/site && npm run dev):
+// Verifies the READ-ONLY jurisdiction summary strip (Surface B, #152)
+// is geometrically stable: its height must be IDENTICAL across every
+// selection (none + all launch-8) and during the jurisdiction data
+// fetch (skeleton state).  The interactive dropdown + class pills now
+// live in the Location step below; this gate drives them there
+// (#jl-jurisdiction, .classpick) and measures the top strip's
+// stability.  Run from the repo root with the dev server up (cd
+// conestruct/site && npm run dev):
 //   node scripts/verify-jbar-stability.mjs            (default :3000)
 //   GEN2_BASE=http://localhost:3001 node scripts/verify-jbar-stability.mjs
 // Exits 1 on any height mismatch.  Also prints the measured chain-slot
