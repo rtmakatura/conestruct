@@ -84,6 +84,34 @@ for (const width of [1440, 1100]) {
   heights["loading(skeleton)"] = await measure();
   for (const r of pending.splice(0)) await r.continue().catch(() => {});
 
+  // Class-switch stability (#152 D): with a jurisdiction selected and
+  // its block landed, switching street-class pills refires the
+  // breakdown fetch — the bar must hold BOTH height and content while
+  // that refetch is in flight (stale-while-revalidate).  A skeleton
+  // appearing here is the flicker the fix removes: fail loudly.
+  stall = false;
+  await page.selectOption("#jl-jurisdiction", "denver");
+  await page.waitForTimeout(1200);
+  for (const cls of ["Local", "Collector", "Arterial"]) {
+    stall = true;
+    await page.click(`.classpick button:has-text("${cls}")`);
+    await page.waitForTimeout(300);
+    heights[`class:${cls}(inflight)`] = await measure();
+    const skeleton = await page.evaluate(() =>
+      Boolean(document.querySelector(".jbar .chain-skeleton")),
+    );
+    if (skeleton) {
+      failed = true;
+      console.log(
+        `  class ${cls}: SKELETON FLASH during class-switch refetch`,
+      );
+    }
+    stall = false;
+    for (const r of pending.splice(0)) await r.continue().catch(() => {});
+    await page.waitForTimeout(800);
+    heights[`class:${cls}(settled)`] = await measure();
+  }
+
   const barHeights = new Set(Object.values(heights).map((h) => h.bar));
   const ok = barHeights.size === 1;
   if (!ok) failed = true;

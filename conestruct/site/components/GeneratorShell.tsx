@@ -33,6 +33,7 @@ import {
   JurisdictionSection,
 } from "./JurisdictionSection";
 import type {
+  JurisdictionBlock,
   JurisdictionSuggestion,
   StreetClass,
 } from "@/lib/jurisdiction";
@@ -310,10 +311,38 @@ export function GeneratorShell({
 
   // The evaluated jurisdiction block rides the device-breakdown response
   // (spec §3.2) — present only when the scenario names a jurisdiction_key.
+  //
+  // #152 D — stale-while-revalidate keyed by jurisdiction_key: a
+  // street-class (or any input) change refires the breakdown fetch, and
+  // flipping the whole bar/section to skeleton for that half-second was
+  // the flicker.  While a refetch for the SAME jurisdiction is in
+  // flight, the last evaluated block stays rendered as content;
+  // ``jurisdictionRevalidating`` tells the section to present the one
+  // class-dependent VERDICT (hours_eval) as checking, never as current
+  // (rule 10 — content may be visibly mid-refresh, a verdict cannot).
+  // A changed key has no matching block to hold, so it skeletons as
+  // before; an error clears to null (the error ribbon names it).
+  const [lastJurisdiction, setLastJurisdiction] =
+    useState<JurisdictionBlock | null>(null);
+  useEffect(() => {
+    if (deviceBreakdown.state === "ready") {
+      setLastJurisdiction(deviceBreakdown.data.jurisdiction ?? null);
+    }
+  }, [deviceBreakdown]);
   const jurisdictionBlock =
     deviceBreakdown.state === "ready"
       ? (deviceBreakdown.data.jurisdiction ?? null)
-      : null;
+      : deviceBreakdown.state === "loading" &&
+          lastJurisdiction &&
+          lastJurisdiction.key === scenario.jurisdiction_key
+        ? lastJurisdiction
+        : null;
+  const jurisdictionRevalidating =
+    deviceBreakdown.state === "loading" && jurisdictionBlock !== null;
+  const jurisdictionLoading =
+    Boolean(scenario.jurisdiction_key) &&
+    deviceBreakdown.state === "loading" &&
+    jurisdictionBlock === null;
 
   const safeFilename = (name: string | undefined): string => {
     const cleaned = (name ?? "")
@@ -503,10 +532,7 @@ export function GeneratorShell({
             setStreetClass={(c: StreetClass) =>
               setScenario({ ...scenario, street_class: c })
             }
-            loading={
-              Boolean(scenario.jurisdiction_key) &&
-              deviceBreakdown.state === "loading"
-            }
+            loading={jurisdictionLoading}
             suggest={
               suggestDismissed || suggestState.status !== "ready"
                 ? null
@@ -653,10 +679,8 @@ export function GeneratorShell({
               </div>
               <JurisdictionSection
                 jurisdiction={jurisdictionBlock}
-                loading={
-                  Boolean(scenario.jurisdiction_key) &&
-                  deviceBreakdown.state === "loading"
-                }
+                loading={jurisdictionLoading}
+                revalidating={jurisdictionRevalidating}
                 streetClass={scenario.street_class ?? null}
                 schedule={scenario.schedule ?? null}
               />

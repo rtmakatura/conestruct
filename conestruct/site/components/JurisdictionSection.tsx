@@ -519,9 +519,21 @@ interface WorkHoursProps {
   jurisdiction: JurisdictionBlock;
   streetClass: StreetClass | null;
   schedule: WorkScheduleInput | null;
+  /** #152 D: true while a same-jurisdiction refetch is in flight (e.g. a
+   *  street-class switch).  The card's CONTENT stays rendered — the
+   *  windows and bands are jurisdiction facts — but ``hours_eval`` is a
+   *  verdict computed for the previous input, so every verdict surface
+   *  presents as checking instead (rule 10: a stale verdict may never
+   *  display as current). */
+  verifying?: boolean;
 }
 
-function WorkHoursCard({ jurisdiction, streetClass, schedule }: WorkHoursProps) {
+function WorkHoursCard({
+  jurisdiction,
+  streetClass,
+  schedule,
+  verifying = false,
+}: WorkHoursProps) {
   const hours = jurisdiction.hours;
   const hoursEval = jurisdiction.hours_eval;
   const rows = deriveBandRows(hours);
@@ -549,25 +561,26 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule }: WorkHoursProps) 
   // recomputed (rule 3).  Auto-expand is reserved for the ONE
   // plan-invalidating state (schedule outside the window).
   const status = hoursEval.status;
-  const summary =
-    status === "outside" ? (
-      <span className="verdict-bad">outside window · review schedule</span>
-    ) : status === "inside" ? (
-      <span className="verdict-ok">inside window ✓</span>
-    ) : scheduleTbd ? (
-      <>
-        windows shown · <b>not checked</b>
-      </>
-    ) : (
-      <>set date &amp; times in Setup to check</>
-    );
+  const summary = verifying ? (
+    <>◌ checking…</>
+  ) : status === "outside" ? (
+    <span className="verdict-bad">outside window · review schedule</span>
+  ) : status === "inside" ? (
+    <span className="verdict-ok">inside window ✓</span>
+  ) : scheduleTbd ? (
+    <>
+      windows shown · <b>not checked</b>
+    </>
+  ) : (
+    <>set date &amp; times in Setup to check</>
+  );
 
   return (
     <ReferenceChip
       glyph="◷"
       label={`Work hours — ${jurisdiction.name}`}
-      sev={status === "outside" ? "warn" : "info"}
-      autoExpand={status === "outside"}
+      sev={!verifying && status === "outside" ? "warn" : "info"}
+      autoExpand={!verifying && status === "outside"}
       summary={summary}
       badge={
         hours.conflict ? (
@@ -686,7 +699,14 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule }: WorkHoursProps) 
           user's deliberate "Not set" from a schedule they simply
           haven't finished entering. */}
       <div className="mt-3">
-        {hoursEval.status === "unknown" &&
+        {verifying && (
+          <div className="text-[12px] text-[color:var(--none)]">
+            ◌ Checking the schedule against {jurisdiction.name}&apos;s windows
+            for the updated inputs…
+          </div>
+        )}
+        {!verifying &&
+          hoursEval.status === "unknown" &&
           (scheduleTbd ? (
             <div className="text-[12px] text-[color:var(--none)]">
               ◌ Schedule marked &ldquo;Not set&rdquo; — the windows above are
@@ -701,13 +721,13 @@ function WorkHoursCard({ jurisdiction, streetClass, schedule }: WorkHoursProps) 
               windows.
             </div>
           ))}
-        {hoursEval.status === "inside" && (
+        {!verifying && hoursEval.status === "inside" && (
           <div className="text-[12px] text-[color:var(--pass)]">
             ✓ Within the permitted window for this street class.
             {hoursEval.note ? ` (${hoursEval.note})` : ""}
           </div>
         )}
-        {hoursEval.status === "outside" && (
+        {!verifying && hoursEval.status === "outside" && (
           <div className="pl-3 border-l-2 border-[color:var(--warn)]">
             <div className="text-[12px] text-[color:var(--warn)]">
               ⚠ Schedule conflicts with {jurisdiction.name}&apos;s windows:
@@ -1103,6 +1123,9 @@ function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
 interface SectionProps {
   jurisdiction: JurisdictionBlock | null;
   loading: boolean;
+  /** #152 D: a same-jurisdiction refetch is in flight — content stays
+   *  mounted (no skeleton reflow); verdict surfaces present as checking. */
+  revalidating?: boolean;
   streetClass: StreetClass | null;
   schedule: WorkScheduleInput | null;
 }
@@ -1110,6 +1133,7 @@ interface SectionProps {
 export function JurisdictionSection({
   jurisdiction,
   loading,
+  revalidating = false,
   streetClass,
   schedule,
 }: SectionProps) {
@@ -1142,6 +1166,7 @@ export function JurisdictionSection({
             jurisdiction={jurisdiction}
             streetClass={streetClass}
             schedule={schedule}
+            verifying={revalidating}
           />
           <PermitFYI
             jurisdiction={jurisdiction}
