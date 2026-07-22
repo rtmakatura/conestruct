@@ -196,13 +196,17 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(onSave.mock.calls[0][0].bearingDeg).toBe(270);
   });
 
-  it("single candidate: no card, no hint, Save enabled, bearing auto-applied", async () => {
+  it("single candidate: confirmed card with the pre-selected row, no amber hint, Save enabled, bearing auto-applied (#152 A)", async () => {
     stubDetection(detection([EASTBOUND]));
     mountModal();
     typeCoords();
 
     await screen.findByText("Speed limit (mph)");
+    // The rail-top card shows the resolved outcome — a silent single
+    // match read as a hang before.
+    expect(screen.getByText(/Road detected · 1 match/i)).toBeTruthy();
     expect(screen.queryByText(/Which road\?/i)).toBeNull();
+    expect(screen.getByText(/8 m from pin · way 111001/i)).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
     expect(
@@ -210,14 +214,23 @@ describe("multi-candidate road pick gates Save (#139)", () => {
         "Direction of travel in degrees",
       ) as HTMLInputElement).value,
     ).toBe("90");
+    // The detected bearing reads as the labeled default on the
+    // Direction row.
+    expect(
+      screen.getByRole("button", { name: "✓ Detected (in use)" }),
+    ).toBeTruthy();
   });
 
-  it("zero candidates: Save stays enabled and the plan saves with null classification (accepted boundary)", async () => {
+  it("zero candidates: explicit empty-state card, Save stays enabled, null classification (accepted boundary)", async () => {
     stubDetection(detection([]));
     mountModal();
     typeCoords();
 
     await screen.findByText(/No road detected within 30 m/i);
+    // #152 A: the outcome card names the empty result — never nothing.
+    expect(
+      screen.getByText(/Set direction of travel and road properties manually/i),
+    ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
 
@@ -225,13 +238,59 @@ describe("multi-candidate road pick gates Save (#139)", () => {
     expect(onSave.mock.calls[0][0].classification).toBeNull();
   });
 
-  it("detection error: Save stays enabled (the operator falls back to manual entry)", async () => {
+  it("detection error: explicit empty-state card, Save stays enabled (manual fallback)", async () => {
     stubDetection({ status: 502 });
     mountModal();
     typeCoords();
 
     await screen.findByText(/Couldn't reach road-detection service/i);
+    expect(
+      screen.getByText(/Set direction of travel and road properties manually/i),
+    ).toBeTruthy();
     expect(screen.queryByText("Pick a road to continue")).toBeNull();
     expect(saveButton().disabled).toBe(false);
+  });
+
+  it("detection in flight: the outcome card shows the skeleton, never nothing (#152 A)", async () => {
+    // A never-resolving detect call pins the resolving state open.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) => {
+        if (String(url).includes("/api/road-bearing")) {
+          return new Promise(() => {});
+        }
+        return Promise.resolve({
+          ok: false,
+          status: 500,
+          json: async () => ({}),
+        });
+      }),
+    );
+    mountModal();
+    typeCoords();
+
+    expect(await screen.findByText(/Detecting roads at pin…/i)).toBeTruthy();
+  });
+
+  it("a hand-typed differing bearing demotes the default: caption names the manual state, Use Detected restores it (#152 A)", async () => {
+    stubDetection(detection([EASTBOUND]));
+    mountModal();
+    typeCoords();
+
+    await screen.findByText("Speed limit (mph)");
+    const input = screen.getByLabelText(
+      "Direction of travel in degrees",
+    ) as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "45" } });
+
+    expect(
+      screen.getByText(/Manual bearing — detected 90° available/i),
+    ).toBeTruthy();
+    const useDetected = screen.getByRole("button", { name: "Use Detected" });
+    fireEvent.click(useDetected);
+    expect(input.value).toBe("90");
+    expect(
+      screen.getByRole("button", { name: "✓ Detected (in use)" }),
+    ).toBeTruthy();
   });
 });

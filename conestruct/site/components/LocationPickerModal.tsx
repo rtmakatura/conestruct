@@ -1815,13 +1815,20 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
               Below md it renders beneath the map, as before. */}
           <div className="flex flex-col border-t md:border-t-0 md:border-l border-[color:var(--rule)] md:w-[456px] md:flex-none">
             <div className="md:flex-1 md:min-h-0 md:overflow-y-auto">
-              {/* Disambiguation card — first block in the rail, present
-                  whenever detection is ambiguous (driven by the data,
-                  not a toggle).  Keyed on the candidate set so a fresh
-                  detection resets the card's collapse state. */}
-              {bearingCandidates.length > 1 && (
-                <WhichRoadCard
+              {/* Detection-outcome card — first block in the rail.  Once
+                  a pin exists and detection has run (or is running), it
+                  always shows exactly one of: in-flight skeleton,
+                  single-match confirmed card, multi-candidate pick list,
+                  or an explicit empty state — never nothing (#152 A).
+                  Keyed on the candidate set so a fresh detection resets
+                  the card's collapse state. */}
+              {hasPin && classify.state !== "idle" && (
+                <DetectionOutcomeCard
                   key={bearingCandidates.map((c) => c.way_id).join("|")}
+                  classifyState={classify.state}
+                  emptyMessage={
+                    classify.state === "error" ? classify.message : null
+                  }
                   candidates={bearingCandidates}
                   selectedIdx={selectedCandidateIdx}
                   onPick={applyCandidate}
@@ -2504,14 +2511,27 @@ function WorkZonePanel({
   const useDetectedDisabled =
     bearingCandidates.length === 0 ||
     (ambiguous && selectedCandidate === null);
+  // #152 A: the detected bearing is the labeled DEFAULT, not a hidden
+  // action — when the field holds exactly the selected candidate's
+  // bearing, the row says so; a manual value names what it displaced.
+  const detectedBearing = selectedCandidate
+    ? normaliseBearing(selectedCandidate.bearing)
+    : null;
+  const usingDetected =
+    detectedBearing !== null &&
+    bearingInput.trim() !== "" &&
+    /^\d+$/.test(bearingInput.trim()) &&
+    normaliseBearing(parseInt(bearingInput, 10)) === detectedBearing;
   const useDetectedTitle =
     bearingCandidates.length === 0
       ? "No bearing detected at this pin"
       : ambiguous && selectedCandidate === null
         ? "Pick a road above first"
-        : `Use ${normaliseBearing(
-            (selectedCandidate ?? bearingCandidates[0]).bearing,
-          )}° detected from OSM`;
+        : usingDetected
+          ? `Detected bearing ${detectedBearing}° is in use`
+          : `Use ${normaliseBearing(
+              (selectedCandidate ?? bearingCandidates[0]).bearing,
+            )}° detected from OSM`;
   return (
     <div>
       <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
@@ -2560,11 +2580,16 @@ function WorkZonePanel({
             >
               {bearingError ? (
                 <span className="text-[color:var(--fail)]">{bearingError}</span>
-              ) : selectedCandidate ? (
+              ) : selectedCandidate && usingDetected ? (
                 <CandidateCaption
                   candidate={selectedCandidate}
                   multi={ambiguous}
                 />
+              ) : selectedCandidate ? (
+                <>
+                  Manual bearing — detected {detectedBearing}° available
+                  below
+                </>
               ) : (
                 <>0–359 clockwise from north</>
               )}
@@ -2591,9 +2616,14 @@ function WorkZonePanel({
             onClick={onUseDetectedBearing}
             disabled={useDetectedDisabled}
             title={useDetectedTitle}
-            className="flex-1 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            aria-pressed={usingDetected}
+            className={`flex-1 border border-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] py-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+              usingDetected
+                ? "bg-[color:var(--act)] text-[color:var(--on-act)]"
+                : "bg-transparent text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
+            }`}
           >
-            Use Detected
+            {usingDetected ? "✓ Detected (in use)" : "Use Detected"}
           </button>
           <button
             type="button"
@@ -2610,15 +2640,106 @@ function WorkZonePanel({
   );
 }
 
-// Rail-top disambiguation card (Concept A inc-3).  Rendered whenever
-// detection returned more than one candidate road — driven by the
-// candidate data itself, not a toggle.  Unpicked, it holds the full
-// picker, framed as the blocking decision it is: amber warning
-// treatment with a glyph and words, never hue alone (rule 13) — and
-// amber, not orange, because in the workbench orange means generated
-// output and this card is entirely controls.  Once picked it collapses
-// to a one-line confirmed summary (reusing CandidateCaption) with an
-// explicit Change affordance.
+// Rail-top detection-outcome card (#152 Surface A).  Once detection has
+// run at a pin, the operator always sees exactly one outcome here —
+// silence is indistinguishable from a hang, so every branch renders:
+//   resolving   → in-flight skeleton line
+//   0 candidates → explicit empty state ("set manually"), never nothing
+//   1 candidate  → the detected road as a pre-selected row — the same
+//                  confirm affordance the multi-list uses, already
+//                  applied (detection auto-picks the sole match)
+//   2+          → the WhichRoadCard pick flow, unchanged
+function DetectionOutcomeCard({
+  classifyState,
+  emptyMessage,
+  candidates,
+  selectedIdx,
+  onPick,
+}: {
+  classifyState: ClassifyStatus["state"];
+  emptyMessage: string | null;
+  candidates: RoadCandidate[];
+  selectedIdx: number | null;
+  onPick: (idx: number) => void;
+}) {
+  if (classifyState === "resolving") {
+    return (
+      <div className="border-b border-[color:var(--rule)] px-5 py-3">
+        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] flex items-center gap-2">
+            <span
+              aria-hidden
+              className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[color:var(--act)]/40 border-t-[color:var(--act)] animate-spin"
+            />
+            Detecting roads at pin…
+          </div>
+          <div
+            className="w-3/4 mt-2 h-[10px] bg-[color:var(--rule)] animate-pulse"
+            aria-hidden
+          />
+        </div>
+      </div>
+    );
+  }
+  if (candidates.length === 0) {
+    // Empty and error states are both explicit outcomes (rule 10): the
+    // chromeless ◌ marks "nothing found", not a failure color.
+    return (
+      <div className="border-b border-[color:var(--rule)] px-5 py-3">
+        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--none)]">
+            <span aria-hidden>◌ </span>
+            {emptyMessage ?? "No roads detected"}
+          </div>
+          <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
+            Set direction of travel and road properties manually below, or
+            move the pin closer to the roadway.
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (candidates.length === 1) {
+    return (
+      <div className="border-b border-[color:var(--rule)] px-5 py-3">
+        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)]">
+            <span aria-hidden className="text-[color:var(--pass)]">
+              ✓{" "}
+            </span>
+            Road detected · 1 match
+          </div>
+          <div className="mt-2">
+            {/* Same row affordance as the multi-list, pre-selected —
+                clicking re-applies the sole candidate's bearing and
+                properties (idempotent). */}
+            <CandidatePicker
+              candidates={candidates}
+              selectedIdx={selectedIdx ?? 0}
+              onPick={onPick}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <WhichRoadCard
+      candidates={candidates}
+      selectedIdx={selectedIdx}
+      onPick={onPick}
+    />
+  );
+}
+
+// Multi-candidate disambiguation card (Concept A inc-3).  Rendered by
+// DetectionOutcomeCard when detection returned more than one candidate
+// road.  Unpicked, it holds the full picker, framed as the blocking
+// decision it is: amber warning treatment with a glyph and words, never
+// hue alone (rule 13) — and amber, not orange, because in the workbench
+// orange means generated output and this card is entirely controls.
+// Once picked it collapses to a one-line confirmed summary (reusing
+// CandidateCaption) with an explicit Change affordance.
 function WhichRoadCard({
   candidates,
   selectedIdx,

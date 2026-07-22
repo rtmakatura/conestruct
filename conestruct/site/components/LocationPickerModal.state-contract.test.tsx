@@ -225,13 +225,13 @@ describe("stale suggestions: pin moves invalidate instantly", () => {
 
     // Fast new response renders.
     await respond(pendingDetects[1], detection([OTHER_ROAD]));
-    await screen.findByText(/way 222001/);
+    await screen.findAllByText(/way 222001/);
 
     // The old pin's response arrives late — dropped by the token guard.
     await respond(pendingDetects[0], detection([EASTBOUND, WESTBOUND]));
     expect(screen.queryByText(/Which road\?/i)).toBeNull();
     expect(screen.queryByText(/way 111001/)).toBeNull();
-    expect(screen.getByText(/way 222001/)).toBeTruthy();
+    expect(screen.getAllByText(/way 222001/).length).toBeGreaterThan(0);
   });
 
   it("a coarse geocode (locality) fires ZERO detect calls and asks for a pin", async () => {
@@ -280,7 +280,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
 
     // The confirmed road is on screen as-is: selection caption, road
     // properties, Save enabled — and no network round trip happened.
-    expect(screen.getByText(/way 111001/)).toBeTruthy();
+    expect(screen.getAllByText(/way 111001/).length).toBeGreaterThan(0);
     expect(screen.getByText("Speed limit (mph)")).toBeTruthy();
     expect(saveButton().disabled).toBe(false);
     expect(pendingDetects).toHaveLength(0);
@@ -321,7 +321,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     expect(screen.getByText(/Classifying road…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([WESTBOUND]));
-    await screen.findByText(/way 111002/);
+    await screen.findAllByText(/way 111002/);
   });
 
   it("a pin move after reopen clears the restored road and re-detects (rule 1 applies)", async () => {
@@ -337,7 +337,7 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     expect(screen.getByText(/Classifying road…/)).toBeTruthy();
 
     await respond(pendingDetects[0], detection([OTHER_ROAD]));
-    await screen.findByText(/way 222001/);
+    await screen.findAllByText(/way 222001/);
 
     // The re-save is keyed to the NEW pin with the new road.
     fireEvent.click(saveButton());
