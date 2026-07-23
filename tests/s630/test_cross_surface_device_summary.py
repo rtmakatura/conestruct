@@ -108,9 +108,13 @@ def test_thornton_night_lane_multi_delta_maps_and_honest_unmapped(client, tmp_pa
 
     rows, xlsx_total = _xlsx_device_rows(client, body)
 
-    # Drum topped up: keeps its catalog pay item + unit, gains a jurisdiction note.
+    # Drum topped up, NOT added: the flagger night-lane layout already carries
+    # 6 drums and the delta requires >= 1, so max(6, 1) == 6 — the row stays a
+    # single DRUM row at quantity 6 (proving no double-count on the bid
+    # document) and only gains the jurisdiction-required note.
     drum = [r for r in rows if r[3] == "630-80360"]
     assert len(drum) == 1
+    assert drum[0][5] == 6  # (Item#, DeviceType, Desc, PayItem, Unit, Qty, Notes)
     assert drum[0][4] == "EACH"
     assert "Jurisdiction-required" in (drum[0][6] or "")
 
