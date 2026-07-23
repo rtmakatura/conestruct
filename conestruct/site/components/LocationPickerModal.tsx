@@ -2726,7 +2726,7 @@ function DetectionOutcomeCard({
           </div>
           <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
             Set direction of travel and road properties manually below, or
-            move the pin closer to the roadway.
+            drag the pin closer to the roadway.
           </div>
         </div>
       </div>
