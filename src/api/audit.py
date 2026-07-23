@@ -217,11 +217,17 @@ def build_audit_trail(
     is_reduced = wz_speed is not None and wz_speed < speed
     # Exact Case 26/27 mandated step-down (65->60, 75->65) — the only
     # reductions that carry the CDOT supplement buffer minimum AND the
-    # Case 26/27 citation.  Derived from the same predicate the buffer
-    # lookup uses so the case/taper citations can never disagree with the
-    # buffer source.  A non-standard reduction (e.g. 65->55) is generic
-    # Case 11 with a reduction marker.
-    is_supplement_case = _cdot_buffer_or_none(speed, wz_speed) is not None
+    # Case 26/27 citation.  Gated on ``jurisdiction == "CDOT"`` — the same
+    # predicate the buffer source uses (``is_divergent``/``supplement_speed``
+    # below) — so case identity, taper citation, and buffer source can never
+    # disagree on the jurisdiction axis (#72; the #64/#63/#65 no-drift
+    # guarantee).  ``_cdot_buffer_or_none`` keys only on speed, so without
+    # the jurisdiction term a federal 65->60 scenario would take a Case 26
+    # label while its buffer source stayed federal Table 6B-2.  A non-standard
+    # reduction (e.g. 65->55) is generic Case 11 with a reduction marker.
+    is_supplement_case = (
+        params.jurisdiction == "CDOT" and _cdot_buffer_or_none(speed, wz_speed) is not None
+    )
 
     # ------------------------------------------------------------------
     # 1. Taper length

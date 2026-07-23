@@ -1432,6 +1432,54 @@ def test_audit_buffer_federal_at_65_uses_mutcd_value() -> None:
     assert "divergence" not in b
 
 
+def test_audit_supplement_case_gated_on_cdot_jurisdiction() -> None:
+    """#72 regression: the Case 26/27 supplement label shares the jurisdiction
+    predicate with the buffer source, so case identity and buffer source can
+    never disagree on the jurisdiction axis (the #64/#63/#65 no-drift guarantee).
+
+    ``is_supplement_case`` used to key only on speed (via ``_cdot_buffer_or_none``,
+    which is jurisdiction-blind), so a *federal* 65 -> 60 scenario took a
+    ``Case 26`` case label and a ``CDOT S-630-1 Case 26`` taper citation while
+    its buffer source correctly stayed federal Table 6B-2 — a label/source
+    disagreement.  A federal 65 -> 60 audit must therefore carry NO Case 26/27
+    supplement attribution anywhere and a federal buffer source; the CDOT 65 -> 60
+    audit is unchanged (still Case 26).  Not reachable via the CDOT-only endpoint
+    (jurisdiction is hardcoded in app.py) — exercised at the projection layer via
+    ``build_audit_trail`` directly, exactly as the #72 reproduction is.
+    """
+    from src.api.audit import build_audit_trail
+    from src.rules.validators import ScenarioParams
+
+    def _params(jurisdiction: str) -> ScenarioParams:
+        return ScenarioParams(
+            speed_mph=65,
+            num_lanes=2,
+            closure_type="shoulder",
+            road_type="rural",
+            work_zone_length_ft=1200.0,
+            lane_width_ft=12.0,
+            shoulder_width_ft=10.0,
+            is_divided=True,
+            jurisdiction=jurisdiction,
+            work_zone_speed_mph=60,  # the Case 26 mandated step-down
+        )
+
+    # Federal 65 -> 60: no CDOT supplement label anywhere; buffer source federal.
+    fed = build_audit_trail([], _params("federal"), shoulder_width_ft=10.0)
+    for field in (fed["case"]["case"], fed["taper"]["cdot_reference"]):
+        assert "Case 26" not in field, field
+        assert "Case 27" not in field, field
+    fed_source = fed["buffer"]["source"]
+    assert "Table 6B-2" in fed_source, fed_source
+    assert "Sheet 14" not in fed_source, fed_source  # no CDOT supplement source
+
+    # CDOT 65 -> 60: unchanged — still the Case 26 supplement.
+    cdot = build_audit_trail([], _params("CDOT"), shoulder_width_ft=10.0)
+    assert "Case 26 at 65 mph" in cdot["case"]["case"], cdot["case"]["case"]
+    assert "Case 26" in cdot["taper"]["cdot_reference"], cdot["taper"]["cdot_reference"]
+    assert "Sheet 14" in cdot["buffer"]["source"], cdot["buffer"]["source"]
+
+
 # --- Validator tolerance: CDOT minimum is strict ------------------------
 
 
