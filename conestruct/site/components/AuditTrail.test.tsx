@@ -45,7 +45,7 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     {
       kind: "cdot_case_number",
       label:
-        "CDOT S-630-1 case # is pending verification against the 19-page typical-application set.",
+        "CDOT S-630-1 case # is pending verification against the 26-sheet typical-application set (S-630-1, issued July 1, 2026).",
       tracking_issue: "https://github.com/rtmakatura/conestruct/issues/19",
     },
     {
@@ -74,7 +74,7 @@ describe("pendingVerificationItem renderer (Option B items[] iteration)", () => 
     // Substring matches — the full label contains '>' which gets
     // HTML-escaped to '&gt;' in the static markup.
     expect(html).toContain("CDOT S-630-1 case # is pending verification");
-    expect(html).toContain("19-page typical-application set");
+    expect(html).toContain("26-sheet typical-application set");
     expect(html).toContain("Stepped speed-reduction sign placement");
     expect(html).toContain("pending in the layout engine");
   });

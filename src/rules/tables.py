@@ -11,7 +11,7 @@ Authoritative sources:
     * Section 6B.08: Tapers
     * Section 6K.01: Channelizing Device Spacing
   - Colorado Supplement to MUTCD (effective 2026-01-18)
-  - CDOT Standard Plan S-630-1 (19-page set, 2019; revised 01/14/26)
+  - CDOT Standard Plan S-630-1 (26 sheets, issued July 1, 2026)
 """
 
 from __future__ import annotations
@@ -182,8 +182,8 @@ BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
 # Source: CDOT Standard Plan S-630-1, Sheet 14 (Cases 26 at 65 mph and
 # 27 at 75 mph) — the only two typical applications that post a specific
 # minimum buffer.  Other cases label buffer "VAR. BUFFER SPACE (SEE
-# GENERAL NOTE 23 ON SHEET 2)", deferring to project-specific
-# engineering judgment.  Sheet 2 General Note 23 verbatim: "BUFFER SPACE
+# GENERAL NOTE 24 ON SHEET 2)", deferring to project-specific
+# engineering judgment.  Sheet 2 General Note 24 verbatim: "BUFFER SPACE
 # IS OPTIONAL. NEED MUST BE DETERMINED ON A PROJECT OR SITE SPECIFIC
 # BASIS AS DIRECTED BY THE ENGINEER..."
 #
@@ -205,7 +205,7 @@ CDOT_BUFFER_SPACE: tuple[BufferSpaceRow, ...] = (
 # closure at 65/75 mph with no reduction — or a non-standard reduction
 # such as 65 -> 55 — is the generic Sheet 7 Case 11 ("SHOULDER WORK -
 # FREEWAY/EXPRESSWAY"), whose buffer is labeled "VARIES (SEE GENERAL
-# NOTE 23 ON SHEET 2)" with no posted minimum; those fall back to the
+# NOTE 24 ON SHEET 2)" with no posted minimum; those fall back to the
 # federal MUTCD Table 6B-2 value at the posted speed.  This map encodes
 # the qualifying (posted -> work-zone) step-down for each supplement row;
 # ``spacing._cdot_buffer_or_none`` returns the minimum only on a match.

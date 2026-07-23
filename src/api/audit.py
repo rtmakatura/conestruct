@@ -374,7 +374,7 @@ def build_audit_trail(
     #      65/75 mph) — divergent from MUTCD; emit full annotation with
     #      structured fields for parseable downstream consumption.
     #   B. CDOT + speed not in supplement (silent fallback) — falls
-    #      back to federal MUTCD value per Sheet 2 General Note 23;
+    #      back to federal MUTCD value per Sheet 2 General Note 24;
     #      flag the silence in lookup_text.
     #   C. federal jurisdiction — pure MUTCD baseline.
     # Structured divergence fields (jurisdiction/cdot_value_ft/
@@ -424,7 +424,7 @@ def build_audit_trail(
         # CDOT 65/75 mph but no qualifying Case 26/27 step-down: the
         # supplement minimum is SSD at the reduced work-zone speed, which is
         # not in effect, so MUTCD Table 6B-2 at the posted speed governs per
-        # Sheet 7 Case 11 (buffer "VARIES", General Note 23).
+        # Sheet 7 Case 11 (buffer "VARIES", General Note 24).
         required_wz = CDOT_BUFFER_STEPDOWN[speed]
         supplement_min = _cdot_buffer_or_none(speed, required_wz)
         _supplement_case = "Case 26" if speed == 65 else "Case 27"
@@ -436,12 +436,12 @@ def build_audit_trail(
                 f"{_supplement_case} mandatory speed step-down "
                 f"({speed} → {required_wz} mph); this plan has no qualifying "
                 f"reduction, so the federal posted-speed value governs (Sheet 7 "
-                f"Case 11: buffer VARIES per General Note 23)."
+                f"Case 11: buffer VARIES per General Note 24)."
             ),
             "buffer_ft": buf,
             "source": (
                 "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). "
-                "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 23)."
+                "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24)."
             ),
             "citation": _CITATION_BUFFER,
         }
@@ -1222,7 +1222,7 @@ def build_audit_trail(
         "case": case_label,
         "url": (
             "https://www.codot.gov/safety/traffic-safety/assets/"
-            "s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+            "s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
         ),
         "narrative": case_narrative,
         "narrative_2": (
@@ -1481,7 +1481,7 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
 
 # Tracking issue for the placeholder Case # references in this module
 # (the three TODO markers in the taper/case sections).  Until the
-# references are verified against the 19-page S-630-1 set, the audit
+# references are verified against the 26-sheet S-630-1 set (issued July 1, 2026), the audit
 # projection scrubs the TODO text from user-facing fields and surfaces
 # this URL on the rollup so a reviewer can see what's pending.
 AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/19"
@@ -1694,7 +1694,7 @@ def audit_projection(
                 "kind": "cdot_case_number",
                 "label": (
                     "CDOT S-630-1 case # is pending verification against the "
-                    "19-page typical-application set."
+                    "26-sheet typical-application set (S-630-1, issued July 1, 2026)."
                 ),
                 "tracking_issue": AUDIT_PENDING_VERIFICATION_ISSUE,
             }

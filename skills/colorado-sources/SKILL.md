@@ -34,7 +34,7 @@ The 26-sheet, 39-case standard plan set defining typical traffic control
 layouts for CDOT highway work zones. This is the core reference for the
 generation engine.
 
-- **URL:** https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf
+- **URL:** https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf
 - **Format:** PDF (26 sheets)
 - **Use:** Each case defines a road type, lane configuration, closure type,
   and the required device placement layout. The generation engine implements

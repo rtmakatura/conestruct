@@ -521,7 +521,7 @@ the proxy, verified by Modal) or per-org rate limiting on the
 backend. Neither exists today.
 
 **CDOT Case number TODOs.** `src/api/audit.py` has several `TODO:
-verify exact Case # in 19-page S-630-1 set` comments. The audit trail
+verify exact Case # in 26-sheet S-630-1 set` comments. The audit trail
 displays Case references that haven't all been cross-checked against
 the official template set. Cosmetic for a contractor reviewer who
 knows the rules, but a real reviewer's confidence dings if the Case

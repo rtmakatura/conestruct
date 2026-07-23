@@ -1,7 +1,8 @@
 {
   "_meta": {
     "source": "CDOT Standard Plan S-630-1, Sheet 25 of 26, Case No. 42 'TYPICAL APPLICATION - PILOT CAR - LANE CLOSURE, 2-LANE UNDIVIDED HIGHWAY' (added by revision: index note 'ADD CASE NUMBERS 40, 41, AND 42'; sheet revision 01/14/26 'REMOVED G20-10/11')",
-    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "edition_note": "2026-07-01 re-issue verified editorial-only per CDOT issuance memo; values unchanged.",
     "verified_by": "Claude (Fable 5 vision extraction at 300-500 dpi, dimension chain pinned tick-by-tick at 500 dpi), June 10 2026; re-verified June 11 2026 with fresh independent crops at 220-260 dpi (PR 2 Phase A) - both directions' chains, taper bracket, exit pairs, and annotations confirmed",
     "verification_changelog": "PR 2 Phase A re-verification: all Phase 1 dimensional values confirmed correct; three omissions added: (1) 200'-300' BUFFER PILOT TURNAROUND annotation, (2) 'SIGNING MAY STAY WHILE LANES ARE REOPENED.' note, (3) fuller cross-reference text including CDOT's 2009-MUTCD chapter citation",
     "purpose": "extraction record for the CDOT pilot-car flagger variant. Routing DEFERRED for V1 (pilotCar flag exists on the form but the variant is not the basic case). The dimension chain here is the crispest CDOT statement of the full flagger approach sequence and is cross-referenced by ta10_basic_flagger.json.",

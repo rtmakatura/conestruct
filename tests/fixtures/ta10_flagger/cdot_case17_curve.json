@@ -1,7 +1,8 @@
 {
   "_meta": {
     "source": "CDOT Standard Plan S-630-1, Sheet 9 of 26, Case No. 17 'TYPICAL APPLICATION - LANE CLOSURE, 2-LANE HIGHWAY, AT CURVE' (issued 07/31/2019; sheet revisions through 01/14/26: 'REMOVED G20-10/11', 01/20/23 'Replaced R52-6(b) with R2-10(11), Updated G20-11, Add Drum/VerticalPanelSymbol')",
-    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "source_url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "edition_note": "2026-07-01 re-issue verified editorial-only per CDOT issuance memo; values unchanged.",
     "verified_by": "Claude (Fable 5 vision extraction at 300 dpi), June 10 2026; re-verified June 11 2026 with fresh independent crops at 300/500 dpi (PR 2 Phase A) - series, gaps, taper bracket, warning note, and regulatory cluster confirmed",
     "verification_changelog": "PR 2 Phase A re-verification: all Phase 1 values confirmed correct; three omissions added: (1) opposing-flagger standoff '200' TO 300'' from work-area end, (2) downstream taper '100' MAX.' annotation, (3) the 500'/500' exit chain dimensions for R2-11 and the restoration R2-1",
     "purpose": "extraction record for CDOT's only direct 2-lane flagger lane-closure typical. Curve-specialized; routing DEFERRED for V1 (see match_rules.md) - extracted because it is the closest CDOT analog to TA-10 and documents the CDOT advance series and the short-taper warning.",

@@ -3,8 +3,9 @@
     "source": "MUTCD 11th Edition (December 2023), Part 6, Figure 6P-10 (TA-10) + Notes, Sect. 6P.01, PDF pages 878-879; supplemented by CDOT Standard Plan S-630-1 (07/31/2019, rev 01/20/23) Sheet 9 'KEY TO ADVANCE SIGNING DISTANCES', Sheet 2 General Notes 18/20/22/24, Sheet 12 'FINES DOUBLE SIGNING NOTES', Sheet 26 sign placement notes",
     "source_urls": [
       "https://mutcd.fhwa.dot.gov/pdfs/11th_Edition/part6.pdf",
-      "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
     ],
+    "edition_note": "2026-07-01 re-issue verified editorial-only per CDOT issuance memo; values unchanged.",
     "verified_by": "Claude (Fable 5 vision extraction from rendered diagram pages), June 10 2026; re-verified June 11 2026 (PR 2 Phase A): B-position sign, plaque/G20-2 optionality, flagger-to-taper dimension, and the CDOT A/B/C key re-read from fresh crops",
     "verification_changelog": "PR 2 Phase A re-verification: one addition - the figure's far-end '50 to 100 ft' dimension identified (450-dpi zoom) as work-space end -> end of the channelizing-device run (NOT the opposing flagger position, as the gitignored Phase 1 findings doc had guessed). Opposing-flagger standoff comes from CDOT Case 17 (200-300 ft); see opposing_end below.",
     "purpose": "validation fixture for Conestruct flagger-controlled alternating one-way traffic on a 2-lane undivided road (basic single work zone, one flagger station per approach)",

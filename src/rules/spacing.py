@@ -178,7 +178,7 @@ def buffer_space(
       when that exact step-down is supplied via ``work_zone_speed_mph``.
       A plain closure at 65/75 with no reduction — or a non-standard
       reduction like 65 -> 55 — is the generic Sheet 7 Case 11 (buffer
-      "VARIES", General Note 23) and falls back to the federal MUTCD value
+      "VARIES", General Note 24) and falls back to the federal MUTCD value
       at the posted speed, exactly as every other speed does.
     * ``"federal"`` — always uses MUTCD 11th Ed. Table 6B-2 at the posted
       speed; ``work_zone_speed_mph`` is ignored.  Reachable via direct
@@ -238,7 +238,7 @@ def _cdot_buffer_or_none(speed_mph: int, work_zone_speed_mph: int | None = None)
     Returns ``None`` otherwise — no supplement row, no reduction, or a
     non-standard reduction — because the 570/650 floors are SSD at the
     reduced work-zone speed and are meaningless without that step-down.
-    Sheet 7 Case 11 (buffer "VARIES", General Note 23) then governs and
+    Sheet 7 Case 11 (buffer "VARIES", General Note 24) then governs and
     the caller falls back to the federal posted-speed baseline.
     """
     required_wz = CDOT_BUFFER_STEPDOWN.get(speed_mph)

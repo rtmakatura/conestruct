@@ -1171,6 +1171,24 @@ def test_audit_buffer_at_65_no_reduction_uses_federal(client: TestClient) -> Non
     assert "Case 11" in b["source"]
 
 
+def test_audit_buffer_citation_pins_general_note_24(client: TestClient) -> None:
+    """#126 regression: the "buffer space is optional" provision on S-630-1
+    Sheet 2 is General Note 24 (Note 23 is temporary pavement markings; the
+    stale "General Note 23" pointer came from CDOT's own case-sheet legend).
+    Where the "buffer VARIES" Case 11 citation fires (CDOT 65/75 mph, no
+    qualifying step-down) the audit's buffer citation must say "General Note
+    24" and never "General Note 23", in both the lookup_text and the source.
+    Keyed to the corpus value so a future CDOT renumber fails loudly instead
+    of silently shipping a wrong pointer on a printed deliverable."""
+    for scenario in (_shoulder_at_65(), _shoulder_at_75()):
+        res = client.post("/render/audit", headers=_auth_headers(), json=scenario)
+        assert res.status_code == 200, res.text
+        b = _buffer_section(res.json())
+        for field in ("lookup_text", "source"):
+            assert "General Note 24" in b[field], (scenario["speed"], field, b[field])
+            assert "General Note 23" not in b[field], (scenario["speed"], field, b[field])
+
+
 def test_audit_buffer_at_65_with_case_26_stepdown_diverges(client: TestClient) -> None:
     """65 -> 60 (Case 26 mandated step-down): the CDOT supplement 570 ft
     minimum applies; full divergence annotation citing Case 26."""

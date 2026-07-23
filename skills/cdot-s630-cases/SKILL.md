@@ -12,8 +12,8 @@ claims — NOT an index of every case in the standard-plan sheet set.
 > "NEXT XXX FT" on Case 11). Treat every sheet/condition citation as
 > "claimed by code, pending PDF confirmation."
 
-Source: CDOT M&S Standard Plan S-630-1 (19-page set, 2019; revised 01/14/26)
-URL: https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/2019/s-630-1/S-630-01%20(19-Page%20Set).pdf
+Source: CDOT M&S Standard Plan S-630-1 (26 sheets, issued July 1, 2026)
+URL: https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf
 
 ---
 

@@ -237,7 +237,7 @@ def test_buffer_space_rejects_unknown_jurisdiction() -> None:
 def test_cdot_buffer_space_table_only_has_65_and_75() -> None:
     """CDOT_BUFFER_SPACE is intentionally sparse — only the two speeds
     that S-630-1 Sheet 14 posts as 'MIN' annotations. Other speeds are
-    silent per General Note 23 (engineer's judgment)."""
+    silent per General Note 24 (engineer's judgment)."""
     from src.rules.tables import CDOT_BUFFER_SPACE
 
     speeds = {row.speed_mph for row in CDOT_BUFFER_SPACE}
