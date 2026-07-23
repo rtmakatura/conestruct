@@ -8,6 +8,23 @@ The single biggest pitfall: **Vercel auto-deploys, Modal does not.**
 If you change Python code and forget to run `modal deploy`, the live
 site keeps calling the old backend until you do.
 
+> **The standard ship path is now `.\scripts\ship.ps1` (as of 747f0d1).**
+> Ryan ships with one command that merges `--ff-only`, pushes (Vercel
+> picks up the frontend automatically), deploys the backend to Modal, and
+> polls `/healthz` until the live sha matches HEAD — **SHIP VERIFIED**, or
+> **SHIP NOT VERIFIED — do not close the issue**. It refuses a dirty
+> working tree and refuses a non-fast-forward merge; a diverged branch
+> stops the ship and goes back to the chat.
+>
+> Reports and prompts should reference `.\scripts\ship.ps1 -Branch
+> <branch>` as the ship step, not raw merge/deploy/curl sequences.
+> **Claude Code never runs the script — shipping stays Ryan's.**
+>
+> The manual merge/push/`modal deploy`/curl sequences below are what the
+> script automates on the happy path, and the reference for the cases it
+> doesn't cover: rollback, secrets, dependency changes, first-time setup,
+> and troubleshooting.
+
 ---
 
 ## Section 1 — Quick reference

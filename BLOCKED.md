@@ -4,6 +4,16 @@ Per the build ground rules: a value the spec or schema wants that is absent from
 `docs/research/02-JURISDICTION-DATA.md` / `05-COVERAGE-MATRIX.md` is left ABSENT
 in the data file and logged here. Nothing below was guessed or defaulted.
 
+## Standing operational cautions
+
+Time-boxed session-level warnings. Remove each when the issue that motivates
+it ships. (Repo `CLAUDE.md` is gitignored, so standing cautions live here in
+the tracked caution register.)
+
+- **STANDING CAUTION (until #158 ships): do not demo or smoke flagger plans at
+  the Broadway/Civic Center pin (39.7389, -104.9862)** — it is a one-way street
+  and the flagger template is wrong there. Use a genuine two-way road.
+
 ## `urban_high_speed_breakpoint_mph` (spec §3.4a calls it "required per-jurisdiction")
 
 The corpus documents FIVE agency determinations:
