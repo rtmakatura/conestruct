@@ -714,6 +714,10 @@ def _run_quote(req: QuoteRequest):
             flagger_hourly_rate=req.settings.flagger_hourly_rate,
             tcs_hourly_rate=req.settings.tcs_hourly_rate,
             crew_hourly_rate=req.settings.crew_hourly_rate,
+            # Fired jurisdiction count deltas reach the priced quote through the
+            # same shared aggregation the XLSX/PDF use (issue #151/#154), so the
+            # bid document and the estimate can never disagree on device counts.
+            applied_deltas=_jurisdiction_eval(req.scenario, params)[1],
         )
         return path.read_bytes(), breakdown
     finally:
@@ -1101,6 +1105,8 @@ def render_quote_breakdown(req: QuoteRequest) -> JSONResponse:
                     "days": line.days,
                     "extended": line.extended,
                     "note": line.note,
+                    "jurisdiction_required": line.jurisdiction_required,
+                    "jurisdiction_unmapped": line.jurisdiction_unmapped,
                 }
                 for line in breakdown.equipment_lines
             ],

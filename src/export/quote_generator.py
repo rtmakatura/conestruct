@@ -12,15 +12,17 @@ Authoritative sources:
 
 from __future__ import annotations
 
-from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Any
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
-from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name, device_row_sort_key
-from src.rules.sign_codes import display_code, schedule_key, substitute_sign_description
+from src.rules.device_aggregation import AggregatedDeviceRow
+from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas
+from src.rules.sign_codes import display_code, substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
 # ---------------------------------------------------------------------------
@@ -118,6 +120,15 @@ class EquipmentLine:
     days: int
     extended: float
     note: str
+    # Jurisdiction count-delta provenance (issue #151/#154).  A row is
+    # jurisdiction_required when a fired add_device delta topped it up or
+    # added it.  jurisdiction_unmapped marks a delta device with no single
+    # daily rate (e.g. advance_warning_signs): its daily_rate/extended are
+    # 0.0 and excluded from the equipment total, and the sheet renders the
+    # rate/extended cells as "—" (never $0.00) so the priced document can
+    # never read the device as free (rule 10 / 2026-07-22 ruling).
+    jurisdiction_required: bool = False
+    jurisdiction_unmapped: bool = False
 
 
 @dataclass(frozen=True)
@@ -159,44 +170,31 @@ class QuoteBreakdown:
 
 
 # ---------------------------------------------------------------------------
-# Aggregation
+# Jurisdiction count-delta notes (issue #151/#154)
 # ---------------------------------------------------------------------------
 
+# The quote joins the shared aggregation path (aggregate_device_rows_with_deltas)
+# so a fired jurisdiction count delta is priced on the same rows the XLSX bid
+# document and on-sheet summary render.  Mapped delta devices price from
+# EQUIPMENT_DAILY_RATES via their catalog DeviceType; an unmapped device id
+# (e.g. advance_warning_signs — a set of W-series signs with no single daily
+# rate) renders an honest "—" line that is excluded from the total, never a
+# fabricated rate (rule 10 / 2026-07-22 ruling).
+_JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required — {doc}."
+# Follows the shipped device_list._JURISDICTION_UNMAPPED_NOTE convention and
+# reuses its "billed by SF" citation — no new citation.  The exclusion clause
+# is binding (2026-07-22 ruling): a reader must be able to tell from the sheet
+# that the grand total does NOT include this line.
+_JURISDICTION_UNMAPPED_NOTE: str = (
+    "Jurisdiction-required — {doc}. No single daily rate — NOT included in the "
+    "quote total; price separately. CDOT Spec 630 bills these as individual "
+    "W-series signs by SF — itemize per sign type."
+)
 
-def _row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:
-    """Match the device-list aggregation (device_list._row_key): signs
-    split by schedule key (so the two R2-1 faces on a reduced-speed plan
-    get separate rows), others merged by type."""
-    if placement.device_type == DeviceType.SIGN_GENERIC:
-        if placement.label is None:
-            return (DeviceType.SIGN_GENERIC, None)
-        return (DeviceType.SIGN_GENERIC, schedule_key(placement.label, placement.station_ft))
-    return (placement.device_type, None)
 
-
-def _aggregate(
-    placements: list[DevicePlacement],
-) -> tuple[
-    list[tuple[DeviceType, str | None, int]],
-    dict[tuple[DeviceType, str | None], DevicePlacement],
-]:
-    """Aggregate placements into quote rows, plus a lowest-station
-    representative per group for station-dependent substitutions —
-    mirroring device_list._populate_device_list_sheet so the two
-    workbooks agree row for row (Refs #101)."""
-    counts: Counter[tuple[DeviceType, str | None]] = Counter()
-    representatives: dict[tuple[DeviceType, str | None], DevicePlacement] = {}
-    for p in placements:
-        key = _row_key(p)
-        counts[key] += 1
-        current = representatives.get(key)
-        if current is None or p.station_ft < current.station_ft:
-            representatives[key] = p
-    aggregated = sorted(
-        ((dt, label, n) for (dt, label), n in counts.items()),
-        key=lambda row: device_row_sort_key(row[0], row[1]),
-    )
-    return aggregated, representatives
+def _jurisdiction_doc(source: dict[str, Any] | None) -> str:
+    """Human doc name from a delta ``source`` block, for the Notes column."""
+    return (source or {}).get("doc", "jurisdiction requirement")
 
 
 def _description_for(
@@ -243,34 +241,94 @@ def _style_header_row(sheet, row_index: int, num_cols: int) -> None:
         cell.alignment = Alignment(horizontal="center", vertical="center")
 
 
+def _equipment_line_for(
+    item_number: int,
+    row: AggregatedDeviceRow,
+    params: ScenarioParams,
+    project_duration_days: int,
+) -> EquipmentLine:
+    """Price one aggregated device row into an equipment line.
+
+    A jurisdiction delta-only add (no backing placement, ``display_override``
+    set) prices from its mapped ``DeviceType`` — a real ``EQUIPMENT_DAILY_RATES``
+    entry — or, for an unmapped device id, renders an honest "—" line excluded
+    from the total (issue #151/#154).  A topped-up real row prices normally and
+    gains a jurisdiction-required note.
+    """
+    device_type = row.device_type
+    qty = row.quantity
+
+    # Delta-only add (no backing placement).
+    if row.display_override is not None:
+        doc = _jurisdiction_doc(row.jurisdiction_source)
+        if device_type is not None:
+            rate = EQUIPMENT_DAILY_RATES.get(device_type, 0.0)
+            spec = DEVICE_CATALOG[device_type]
+            return EquipmentLine(
+                item_number=item_number,
+                device_type=row.display_override,
+                label="",
+                description=spec.description,
+                qty=qty,
+                unit=spec.unit,
+                daily_rate=rate,
+                days=project_duration_days,
+                extended=qty * rate * project_duration_days,
+                note=_JURISDICTION_MAPPED_NOTE.format(doc=doc),
+                jurisdiction_required=True,
+            )
+        # Unmapped device id: no single daily rate.  Honest "—" line,
+        # excluded from the total (daily_rate/extended stay 0.0 for the math;
+        # the sheet renders "—").
+        return EquipmentLine(
+            item_number=item_number,
+            device_type=f"{row.display_override} (jurisdiction-required)",
+            label="",
+            description=row.display_override,
+            qty=qty,
+            unit="EACH",
+            daily_rate=0.0,
+            days=project_duration_days,
+            extended=0.0,
+            note=_JURISDICTION_UNMAPPED_NOTE.format(doc=doc),
+            jurisdiction_required=True,
+            jurisdiction_unmapped=True,
+        )
+
+    # Normal row (possibly a delta-topped-up real row).
+    label = row.label
+    representative = row.representative
+    rate = EQUIPMENT_DAILY_RATES.get(device_type, 0.0)
+    note = _note_for(device_type)
+    if row.jurisdiction_required:
+        jur_note = _JURISDICTION_MAPPED_NOTE.format(doc=_jurisdiction_doc(row.jurisdiction_source))
+        note = f"{note} {jur_note}".strip() if note else jur_note
+    return EquipmentLine(
+        item_number=item_number,
+        device_type=device_type.value,
+        # display_code strips the internal R2-1@face split marker
+        # so both faces show "R2-1" (descriptions distinguish them).
+        label=display_code(label) if label else "",
+        description=_description_for(device_type, label, representative, params),
+        qty=qty,
+        unit=_unit_for(device_type),
+        daily_rate=rate,
+        days=project_duration_days,
+        extended=qty * rate * project_duration_days,
+        note=note,
+        jurisdiction_required=row.jurisdiction_required,
+    )
+
+
 def _compute_equipment_lines(
-    aggregated: list[tuple[DeviceType, str | None, int]],
-    representatives: dict[tuple[DeviceType, str | None], DevicePlacement],
+    rows: list[AggregatedDeviceRow],
     params: ScenarioParams,
     project_duration_days: int,
 ) -> list[EquipmentLine]:
-    lines: list[EquipmentLine] = []
-    for item_number, (device_type, label, qty) in enumerate(aggregated, start=1):
-        rate = EQUIPMENT_DAILY_RATES.get(device_type, 0.0)
-        extended = qty * rate * project_duration_days
-        representative = representatives.get((device_type, label))
-        lines.append(
-            EquipmentLine(
-                item_number=item_number,
-                device_type=device_type.value,
-                # display_code strips the internal R2-1@face split marker
-                # so both faces show "R2-1" (descriptions distinguish them).
-                label=display_code(label) if label else "",
-                description=_description_for(device_type, label, representative, params),
-                qty=qty,
-                unit=_unit_for(device_type),
-                daily_rate=rate,
-                days=project_duration_days,
-                extended=extended,
-                note=_note_for(device_type),
-            )
-        )
-    return lines
+    return [
+        _equipment_line_for(item_number, row, params, project_duration_days)
+        for item_number, row in enumerate(rows, start=1)
+    ]
 
 
 def _populate_equipment_sheet(sheet, lines: list[EquipmentLine]) -> None:
@@ -295,6 +353,12 @@ def _populate_equipment_sheet(sheet, lines: list[EquipmentLine]) -> None:
         sheet.column_dimensions[col_letter].width = width
 
     for line in lines:
+        # An unmapped jurisdiction row has no single daily rate: render "—"
+        # (never $0.00) in the rate/extended cells so the priced document can
+        # never read the device as free, and skip the currency format so the
+        # dash shows literally (issue #151/#154).
+        rate_cell = "—" if line.jurisdiction_unmapped else line.daily_rate
+        extended_cell = "—" if line.jurisdiction_unmapped else line.extended
         sheet.append(
             (
                 line.item_number,
@@ -303,15 +367,16 @@ def _populate_equipment_sheet(sheet, lines: list[EquipmentLine]) -> None:
                 line.description,
                 line.qty,
                 line.unit,
-                line.daily_rate,
+                rate_cell,
                 line.days,
-                line.extended,
+                extended_cell,
                 line.note,
             )
         )
         row_idx = line.item_number + 1
-        sheet.cell(row=row_idx, column=7).number_format = _CURRENCY_FMT
-        sheet.cell(row=row_idx, column=9).number_format = _CURRENCY_FMT
+        if not line.jurisdiction_unmapped:
+            sheet.cell(row=row_idx, column=7).number_format = _CURRENCY_FMT
+            sheet.cell(row=row_idx, column=9).number_format = _CURRENCY_FMT
 
     equipment_total = sum(line.extended for line in lines)
     subtotal_row = len(lines) + 2
@@ -618,18 +683,23 @@ def generate_quote(
     overhead_pct: float = 0.10,
     profit_pct: float = 0.10,
     night_multiplier: float = 1.5,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> tuple[str, QuoteBreakdown]:
     """Write a contractor pricing workbook for ``placements``.
+
+    ``applied_deltas`` are the fired jurisdiction count deltas (issue
+    #151/#154); the quote joins the shared aggregation path so a fired delta
+    is priced on the same rows the XLSX bid document and on-sheet summary
+    render.  Omit them (or pass ``None``) for a plain, delta-free quote —
+    identical to the pre-#154 output.
 
     Returns ``(output_path, breakdown)`` where ``breakdown`` is a structured
     ``QuoteBreakdown`` with all line items, subtotals, markup, and the final
     total — ready to drive a UI drill-down or further programmatic use.
     """
-    aggregated, representatives = _aggregate(placements)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas)
 
-    equipment_lines = _compute_equipment_lines(
-        aggregated, representatives, params, project_duration_days
-    )
+    equipment_lines = _compute_equipment_lines(rows, params, project_duration_days)
     labor_lines = _compute_labor_lines(
         is_night=params.is_night,
         project_duration_days=project_duration_days,
