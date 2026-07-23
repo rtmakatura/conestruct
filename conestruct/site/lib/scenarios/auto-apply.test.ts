@@ -10,7 +10,11 @@
 import { describe, expect, it } from "vitest";
 
 import type { RoadClassification } from "../road-detection/types";
-import type { Scenario, ShoulderScenario } from "./types";
+import type {
+  FlaggerLaneClosureScenario,
+  Scenario,
+  ShoulderScenario,
+} from "./types";
 import { applyClassification, snapSpeedToDomain } from "./auto-apply";
 
 function classification(
@@ -153,5 +157,41 @@ describe("applyClassification lanes clamping", () => {
     );
     expect((scenario as ShoulderScenario).lanes).toBe(2);
     expect(delta.lanesApplied).toBe(false);
+  });
+});
+
+describe("applyClassification detectedLanesTotal relay (issue #136)", () => {
+  function withDetectedTotal(total: number | undefined): RoadClassification {
+    return { ...classification(undefined), detectedLanesTotal: total };
+  }
+
+  const FLAGGER: FlaggerLaneClosureScenario = {
+    kind: "flagger_lane_closure",
+    meta: { project: "", address: "", lat: 0, lng: 0 },
+    roadType: "rural_undivided",
+    speed: 45,
+    laneWidth: 11,
+    workType: "utility_cut",
+    duration: "short",
+    workLen: 500,
+    night: false,
+    pilotCar: false,
+    afad: false,
+    pedestrianAccess: false,
+  };
+
+  it("relays the raw OSM total onto a shoulder scenario", () => {
+    const { scenario } = applyClassification(SHOULDER, withDetectedTotal(1));
+    expect((scenario as ShoulderScenario).detectedLanesTotal).toBe(1);
+  });
+
+  it("relays the raw OSM total onto a flagger scenario — its only lane relay", () => {
+    const { scenario } = applyClassification(FLAGGER, withDetectedTotal(1));
+    expect((scenario as FlaggerLaneClosureScenario).detectedLanesTotal).toBe(1);
+  });
+
+  it("relays a 2-lane detection unchanged (no false single-lane signal)", () => {
+    const { scenario } = applyClassification(SHOULDER, withDetectedTotal(2));
+    expect((scenario as ShoulderScenario).detectedLanesTotal).toBe(2);
   });
 });

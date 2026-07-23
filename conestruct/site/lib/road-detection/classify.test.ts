@@ -61,6 +61,43 @@ describe("lanesPerDirectionFromTags", () => {
   });
 });
 
+describe("classifyFromOsmTags detectedLanesTotal (issue #136)", () => {
+  const tags = {
+    oneway: null,
+    maxspeed: null,
+    lanes: null,
+    lanes_forward: null,
+    lanes_backward: null,
+  };
+
+  it("relays a genuine single-lane road as detectedLanesTotal 1", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "residential", name: "Narrow Ln", ref: null, tags: { ...tags, lanes: "1" } },
+      false,
+      null,
+    );
+    expect(r.detectedLanesTotal).toBe(1);
+  });
+
+  it("relays the raw OSM total unchanged for a 2-lane road", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "secondary", name: "Two Lane Rd", ref: null, tags: { ...tags, lanes: "2" } },
+      false,
+      null,
+    );
+    expect(r.detectedLanesTotal).toBe(2);
+  });
+
+  it("is undefined when OSM carried no lanes tag — never a false block", () => {
+    const r = classifyFromOsmTags(
+      { highwayClass: "residential", name: "Untagged", ref: null, tags },
+      false,
+      null,
+    );
+    expect(r.detectedLanesTotal).toBeUndefined();
+  });
+});
+
 describe("classifyFromOsmTags", () => {
   const baseTags = {
     oneway: null,

@@ -272,6 +272,13 @@ export function classifyFromOsmTags(
     divided,
     laneWidthFt: 12,
     lanesPerDirection: lanesFromOsm,
+    // Raw OSM `lanes` total (issue #136), relayed unchanged for the
+    // backend single-lane eligibility gate.  On an undivided road this is
+    // the physical lane count for both directions (1 = genuinely
+    // single-lane); on a divided carriageway it is per-carriageway and the
+    // backend ignores it.  Undefined when OSM carried no `lanes` tag, so a
+    // sparsely-tagged way never triggers a false block.
+    detectedLanesTotal: parseLaneNumber(tags.lanes) ?? undefined,
     speedLimitMph: speedFromOsm ?? undefined,
     confidence: topLevelConf,
     source: "osm-tags",

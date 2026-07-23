@@ -191,6 +191,19 @@ class ShoulderScenario(JurisdictionScenarioFields):
     # ``speed`` — posted limits are multiples of 5, and the stepped
     # W3-5 advisory math assumes the 5-mph grid.
     workZoneSpeed: int | None = Field(default=None, ge=20, le=75, multiple_of=5)
+    # Detection relay (issue #136) — the raw OSM total-lane count of the
+    # roadway as detected by the frontend, BEFORE the per-direction halving
+    # that fills ``lanes``.  A pure relayed fact: it drives no geometry and
+    # no label.  Its sole consumer is the single-lane eligibility gate
+    # (``_ensure_lane_eligible`` in render_api): the per-direction ``lanes``
+    # model has no honest representation of a road with one lane total
+    # (``lanes=1`` already means the classic 2-lane two-way road), so a
+    # genuinely single-lane undivided road is refused rather than silently
+    # drawn as 2-lane (rule 10).  None / omitted means "no detection
+    # signal" and never blocks — direct API callers and manual entry are
+    # unaffected.  The frontend clears it when the operator corrects the
+    # lane count, lifting the block.
+    detectedLanesTotal: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def _check_work_zone_speed(self) -> Self:
@@ -232,6 +245,11 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     pilotCar: bool
     afad: bool
     pedestrianAccess: bool
+    # Detection relay (issue #136) — raw OSM total-lane count; see the
+    # matching field on ``ShoulderScenario``.  A flagger is always
+    # undivided (TA-10, one lane each direction), so a detected total of 1
+    # is genuinely single-lane and refused by ``_ensure_lane_eligible``.
+    detectedLanesTotal: int | None = Field(default=None, ge=1)
 
 
 class LaneClosureDividedScenario(JurisdictionScenarioFields):

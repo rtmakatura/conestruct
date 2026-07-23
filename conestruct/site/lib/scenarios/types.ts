@@ -202,6 +202,14 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
    * or work type. See V1-Wide Item 1 (CO Supplement §2B.13(A)).
    */
   workZoneSpeed?: number;
+  /**
+   * Raw OSM total-lane count relayed from detection (issue #136), before
+   * the per-direction halving that fills ``lanes``. Pure relay — drives no
+   * geometry or label; the backend's single-lane eligibility gate refuses
+   * a genuinely single-lane undivided road (detectedLanesTotal === 1).
+   * Cleared when the operator edits the lane count, which lifts the block.
+   */
+  detectedLanesTotal?: number;
 }
 
 export type FlaggerRoadType = "rural_undivided" | "urban_arterial";
@@ -222,6 +230,13 @@ export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
   pilotCar: boolean;
   afad: boolean;
   pedestrianAccess: boolean;
+  /**
+   * Raw OSM total-lane count relayed from detection (issue #136). A
+   * flagger is always undivided (TA-10), so detectedLanesTotal === 1 is a
+   * genuinely single-lane road, which the backend refuses. Cleared when
+   * the operator confirms the road has a lane in each direction.
+   */
+  detectedLanesTotal?: number;
 }
 
 export interface LaneClosureDividedScenario extends JurisdictionPlanFields {

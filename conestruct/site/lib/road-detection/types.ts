@@ -124,6 +124,10 @@ export interface RoadClassification {
   divided: boolean;
   laneWidthFt: number;
   lanesPerDirection?: number;
+  /** Raw OSM `lanes` total (issue #136), relayed to the backend
+   *  single-lane eligibility gate.  Undefined when OSM had no `lanes`
+   *  tag.  See ShoulderScenario.detectedLanesTotal. */
+  detectedLanesTotal?: number;
   speedLimitMph?: number;
   confidence: Confidence;
   source: "osm-tags";

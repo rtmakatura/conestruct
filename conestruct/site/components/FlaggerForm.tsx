@@ -63,6 +63,23 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
           </div>
         </Field>
 
+        {/* Single-lane recovery (issue #136): a flagger has no lane-count
+            field (TA-10 is definitionally one lane each direction), so
+            when detection relays a genuinely single-lane road the backend
+            blocks generation.  This confirm is the operator's recovery
+            path — asserting the road has a lane in each direction clears
+            the relayed signal and lifts the block. */}
+        {scenario.detectedLanesTotal === 1 && (
+          <CheckRow
+            on={false}
+            label="Road has one lane in each direction"
+            desc="Detection saw a single-lane road — confirm to enable this plan"
+            onToggle={() =>
+              setScenario({ ...scenario, detectedLanesTotal: undefined })
+            }
+          />
+        )}
+
         <Field>
           <LabelRow htmlFor="fl-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
           <input id="fl-speed"

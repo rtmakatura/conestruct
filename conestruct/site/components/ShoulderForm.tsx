@@ -122,7 +122,12 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
           <ChipRow
             options={[1, 2, 3, 4].map((n) => ({ v: n, l: String(n) }))}
             value={scenario.lanes}
-            onChange={(v) => set("lanes", v)}
+            // Editing the lane count is the operator correcting detection,
+            // so clear the relayed single-lane signal — this lifts the
+            // backend single-lane block (issue #136).
+            onChange={(v) =>
+              setScenario({ ...scenario, lanes: v, detectedLanesTotal: undefined })
+            }
           />
         </Field>
 

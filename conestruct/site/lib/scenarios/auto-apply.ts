@@ -122,6 +122,9 @@ export function applyClassification(
           roadType: c.roadType,
           divided: c.divided,
           laneWidth: c.laneWidthFt,
+          // Relay the raw OSM total for the backend single-lane gate
+          // (issue #136).  Pure fact; drives no geometry here.
+          detectedLanesTotal: c.detectedLanesTotal,
           ...speedPatch,
           ...lanesPatch,
         },
@@ -140,7 +143,14 @@ export function applyClassification(
       };
     }
     case "flagger_lane_closure": {
-      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      // Relay the raw OSM total for the backend single-lane gate (#136);
+      // flagger has no `lanes` field, so this is its only lane-count relay.
+      const next = {
+        ...scenario,
+        laneWidth: c.laneWidthFt,
+        detectedLanesTotal: c.detectedLanesTotal,
+        ...speedPatch,
+      };
       const delta = baseDelta(speedApplied, speedApplicable);
       if (FLAGGER_TYPES.has(c.roadType as FlaggerRoadType)) {
         next.roadType = c.roadType as FlaggerRoadType;

@@ -169,6 +169,45 @@ def _ensure_scenario_enabled(scenario: Scenario) -> None:
         )
 
 
+def _ensure_lane_eligible(scenario: Scenario) -> None:
+    """Refuse a genuinely single-lane road (issue #136).
+
+    The per-direction ``lanes`` model cannot represent a road with one
+    lane total: ``lanes=1`` already means the classic 2-lane two-way road
+    (one lane each direction).  Detection relays the raw OSM total via
+    ``detectedLanesTotal``; when that total is 1 on an UNDIVIDED road the
+    roadway is genuinely single-lane and neither the flagger operation
+    (TA-10 needs a lane in each direction) nor the shoulder generator can
+    draw or label it honestly (rule 10) — so we refuse rather than emit a
+    phantom 2-lane plan with a false "2-Lane Undivided" label.
+
+    On a DIVIDED road ``lanes`` is per-carriageway, so a detected count of
+    1 is a normal narrow divided road, not single-lane — never blocked.
+
+    Raised as 400 (like :func:`_ensure_scenario_enabled`) so the Next.js
+    proxy surfaces the message to the operator; a 422 is swallowed to a
+    generic 502 and never shown.  The frontend clears ``detectedLanesTotal``
+    when the operator corrects the lane count, which lifts the block.
+    """
+    if getattr(scenario, "detectedLanesTotal", None) != 1:
+        return
+    # Divided carriageways tag ``lanes`` per-carriageway — 1 is normal there.
+    if getattr(scenario, "divided", False):
+        return
+    if scenario.kind == "flagger_lane_closure":
+        remedy = (
+            "A flagger operation (TA-10) needs a lane in each direction. "
+            "If the detection is wrong, confirm “Road has one lane in "
+            "each direction” in the form and regenerate."
+        )
+    else:
+        remedy = "If the detection is wrong, set the lane count in the form and regenerate."
+    raise HTTPException(
+        status_code=400,
+        detail="This looks like a single-lane road, which isn't supported yet. " + remedy,
+    )
+
+
 @app.middleware("http")
 async def require_bearer_secret(
     request: Request,
@@ -229,6 +268,11 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
     than a nonsensical PDF.  Soft warnings pass through silently — the
     audit trail surfaces them on the verification side.
     """
+    # Single-lane eligibility gate (issue #136) — the one chokepoint every
+    # render/quote/audit/breakdown path funnels through, so a genuinely
+    # single-lane road is refused uniformly across every surface, including
+    # the audit/breakdown that drives the StatusBar "GENERATION BLOCKED".
+    _ensure_lane_eligible(scenario)
     params, generator, kwargs = scenario_to_call(scenario)
     geo_violations = validate_corridor_geometry(params)
     geo_errors = [v for v in geo_violations if v.severity == "error"]
