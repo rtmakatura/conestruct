@@ -22,10 +22,18 @@ from src.rules.validators import DevicePlacement
 
 
 class AggregatedDeviceRow(NamedTuple):
-    device_type: DeviceType
+    device_type: DeviceType | None  # None only for an unmapped jurisdiction-required add
     label: str | None  # schedule key for signs; None for other devices
     quantity: int
-    representative: DevicePlacement  # lowest-station member of the group
+    representative: DevicePlacement | None  # lowest-station member; None for a delta-only row
+    # Jurisdiction count-delta provenance (issue #151).  A row is
+    # jurisdiction_required when a fired ``add_device`` delta topped it up
+    # or added it.  ``display_override`` carries the jurisdiction's device
+    # name for a row with no backing placement (a delta-only add); a
+    # topped-up real row leaves it None and keeps its catalog naming.
+    jurisdiction_required: bool = False
+    jurisdiction_source: dict | None = None
+    display_override: str | None = None
 
 
 def row_key(placement: DevicePlacement) -> tuple[DeviceType, str | None]:

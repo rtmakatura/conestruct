@@ -12,12 +12,14 @@ Authoritative sources:
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import substitute_sign_description
 from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
 
@@ -73,24 +75,77 @@ _BARRICADE_TYPE_II_NOTE: str = (
 _CHANNELIZER_OPTIONAL_NOTE: str = (
     "Optional — apply probability weight as appropriate per engineer discretion."
 )
+# Note for a fired jurisdiction count-delta whose device id has no single
+# CDOT pay item (e.g. ``advance_warning_signs`` — a set of W-series signs
+# billed per SF, issue #151).  Follows the shipped ``_SIGN_GENERIC_NOTE``
+# convention and reuses its "CDOT Spec 630 ... by SF" citation — no new
+# citation, no fabricated pay item (rule 10 / 2026-07-22 ruling).  Any
+# future unmapped device that fires must either join ``_DELTA_DEVICE_TYPE``
+# or have this wording checked against its own billing basis.
+_JURISDICTION_UNMAPPED_NOTE: str = (
+    "Jurisdiction-required — {doc}. Unit is EACH for V1; CDOT Spec 630 bills "
+    "these as individual W-series signs by SF — itemize per sign type; no "
+    "single pay item."
+)
+_JURISDICTION_MAPPED_NOTE: str = "Jurisdiction-required — {doc}."
+
+
+def _jurisdiction_doc(source: dict[str, Any] | None) -> str:
+    """Human doc name from a delta ``source`` block, for the Notes column."""
+    return (source or {}).get("doc", "jurisdiction requirement")
 
 
 def _row_for(
     item_number: int,
-    device_type: DeviceType,
-    label: str | None,
-    quantity: int,
-    representative: DevicePlacement | None,
+    row: AggregatedDeviceRow,
     params: ScenarioParams,
 ) -> tuple[int, str, str, str, str, int, str]:
     """Build a single Device-List row tuple in column order.
 
-    ``label`` is the aggregation key (schedule key for signs);
-    ``representative`` is one placement from the group (lowest station)
+    ``row.label`` is the aggregation key (schedule key for signs);
+    ``row.representative`` is one placement from the group (lowest station)
     so the shared substitution helper can resolve station-dependent
     parametric values — keeping the XLSX descriptions identical to the
     PDF schedule / off-page table.
+
+    Jurisdiction count-delta rows (issue #151): a delta-only add with no
+    backing placement (``display_override`` set) renders as a bid line
+    from its mapped ``DeviceType`` — a real CDOT pay item + unit — or, for
+    an unmapped device id (no single pay item, e.g. advance warning
+    signs), as an honest pay-item-less line rather than a fabricated one
+    (rule 10).  A topped-up real row renders normally and gains a
+    jurisdiction-required note.
     """
+    device_type = row.device_type
+    quantity = row.quantity
+
+    # Delta-only add (no backing placement).
+    if row.display_override is not None:
+        doc = _jurisdiction_doc(row.jurisdiction_source)
+        if device_type is not None:
+            spec = DEVICE_CATALOG[device_type]
+            return (
+                item_number,
+                row.display_override,
+                spec.description,
+                spec.cdot_pay_item_number or "TODO",
+                spec.unit,
+                quantity,
+                _JURISDICTION_MAPPED_NOTE.format(doc=doc),
+            )
+        # Unmapped device id: honest row, no fabricated pay item.
+        return (
+            item_number,
+            f"{row.display_override} (jurisdiction-required)",
+            row.display_override,
+            "—",
+            "EACH",
+            quantity,
+            _JURISDICTION_UNMAPPED_NOTE.format(doc=doc),
+        )
+
+    label = row.label
+    representative = row.representative
     spec = DEVICE_CATALOG[device_type]
     pay_item_number = spec.cdot_pay_item_number or "TODO"
 
@@ -123,6 +178,12 @@ def _row_for(
         unit = spec.unit
         notes = _CHANNELIZER_OPTIONAL_NOTE if device_type == DeviceType.CHANNELIZER_OPTIONAL else ""
 
+    # A real row a delta topped up (issue #151): keep its catalog identity,
+    # append the jurisdiction provenance to whatever note it already has.
+    if row.jurisdiction_required:
+        jur_note = _JURISDICTION_MAPPED_NOTE.format(doc=_jurisdiction_doc(row.jurisdiction_source))
+        notes = f"{notes} {jur_note}".strip() if notes else jur_note
+
     return (item_number, type_label, description, pay_item_number, unit, quantity, notes)
 
 
@@ -130,6 +191,7 @@ def _populate_device_list_sheet(
     sheet,
     placements: list[DevicePlacement],
     params: ScenarioParams,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> list[AggregatedDeviceRow]:
     """Write the Device-List sheet and return the aggregated rows."""
     sheet.title = "Device List"
@@ -142,16 +204,13 @@ def _populate_device_list_sheet(
         cell.font = _HEADER_FONT
         cell.fill = _HEADER_FILL
 
-    # Aggregation + ordering live in the shared helper (issue #150) so the
-    # on-sheet device summary reads the same rows this sheet writes.
-    aggregated = aggregate_device_rows(placements)
+    # Aggregation + ordering + fired jurisdiction count deltas live in the
+    # shared helper (issue #150/#151) so the screen breakdown, this bid
+    # document, and the on-sheet summary carry identical quantities.
+    aggregated = aggregate_device_rows_with_deltas(placements, applied_deltas)
 
     for item_number, row in enumerate(aggregated, start=1):
-        sheet.append(
-            _row_for(
-                item_number, row.device_type, row.label, row.quantity, row.representative, params
-            )
-        )
+        sheet.append(_row_for(item_number, row, params))
         sheet.cell(row=item_number + 1, column=6).number_format = "0"
 
     sheet.freeze_panes = "A2"
@@ -160,7 +219,6 @@ def _populate_device_list_sheet(
 
 def _populate_summary_sheet(
     sheet,
-    placements: list[DevicePlacement],
     params: ScenarioParams,
     aggregated_rows: list[AggregatedDeviceRow],
 ) -> None:
@@ -169,8 +227,12 @@ def _populate_summary_sheet(
     sheet.column_dimensions["A"].width = 28
     sheet.column_dimensions["B"].width = 30
 
+    # Sum of the aggregated (delta-aware) row quantities, not len(placements):
+    # a fired jurisdiction count-delta adds a required device with no backing
+    # placement, so the bid total must count the rows, not the raw layout
+    # (issue #151).  Equals len(placements) whenever no delta fires.
     rows = (
-        ("Total device count", len(placements)),
+        ("Total device count", sum(r.quantity for r in aggregated_rows)),
         ("Total unique device types", len(aggregated_rows)),
         ("Speed (mph)", params.speed_mph),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
@@ -194,16 +256,23 @@ def export_device_list(
     placements: list[DevicePlacement],
     params: ScenarioParams,
     output_path: str = "device_list.xlsx",
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> str:
     """Write a CDOT-format device-list workbook for ``placements``.
+
+    ``applied_deltas`` are the fired jurisdiction count deltas (issue
+    #151); a jurisdiction-required device with no backing placement is
+    added to the device list and the totals, so the bid document matches
+    the on-screen breakdown.  Omit them (or pass ``None``) for a plain,
+    delta-free workbook.
 
     Returns the absolute or relative path written, matching ``output_path``.
     """
     workbook = Workbook()
     device_sheet = workbook.active
-    aggregated = _populate_device_list_sheet(device_sheet, placements, params)
+    aggregated = _populate_device_list_sheet(device_sheet, placements, params, applied_deltas)
     summary_sheet = workbook.create_sheet("Summary")
-    _populate_summary_sheet(summary_sheet, placements, params, aggregated)
+    _populate_summary_sheet(summary_sheet, params, aggregated)
     for sheet in workbook.worksheets:
         _apply_left_align(sheet)
     workbook.save(output_path)

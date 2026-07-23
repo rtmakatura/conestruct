@@ -19,7 +19,6 @@ from __future__ import annotations
 import math
 import os
 import tempfile
-from collections import Counter
 from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Any
@@ -49,10 +48,11 @@ from src.narrative.crew_narrative import (
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
 from src.rules.corridor import build_corridor
-from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
+from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.devices import DeviceType, cone_display_name
 from src.rules.jurisdiction import (
     UnknownJurisdictionError,
-    apply_count_deltas,
+    aggregate_device_rows_with_deltas,
     collect_conflicts,
     context_for_closure_type,
     load_jurisdiction,
@@ -65,7 +65,7 @@ from src.rules.jurisdiction import (
     evaluate as evaluate_jurisdiction,
 )
 from src.rules.night_adjustments import apply_night_adjustments
-from src.rules.sign_codes import schedule_key, substitute_sign_description
+from src.rules.sign_codes import substitute_sign_description
 from src.rules.site_adjustments import apply_site_adjustments
 from src.rules.site_detection import detect_along_corridor, detect_site_conditions
 from src.rules.spacing import (
@@ -366,6 +366,9 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_flags=_plan_sheet_site_flags(scenario),
                     include_device_summary=include_summary,
                     jurisdiction_conflicts=conflicts,
+                    # Same fired count deltas the breakdown + XLSX apply, so
+                    # the on-sheet summary shows the same quantities (#151).
+                    applied_deltas=_jurisdiction_eval(scenario, params)[1],
                 )
             ),
         )
@@ -394,7 +397,15 @@ def render_xlsx(scenario: Scenario) -> Response:
             scenario,
             ".xlsx",
             lambda path, placements, params, _site, _night: Path(
-                export_device_list(placements, params, output_path=str(path))
+                export_device_list(
+                    placements,
+                    params,
+                    output_path=str(path),
+                    # Fired jurisdiction count deltas reach the bid document
+                    # via the shared aggregation (#151) — the XLSX is the
+                    # bid-quantity authority, so it must carry them.
+                    applied_deltas=_jurisdiction_eval(scenario, params)[1],
+                )
             ),
         )
     except HTTPException:
@@ -785,66 +796,73 @@ def _sign_function_category(code: str) -> str:
     return "Advance warning"
 
 
+def _format_breakdown_row(row: AggregatedDeviceRow, params: ScenarioParams) -> dict[str, object]:
+    """Format one shared aggregated row into a panel-ready dict.
+
+    Base rows read exactly as before the shared aggregation: signs carry
+    their MUTCD code and a resolved parametric description (via
+    :func:`substitute_sign_description`), CONE picks up the speed-aware
+    display name, other devices use the static ``_NON_SIGN_DISPLAY`` table.
+
+    Jurisdiction count-delta rows (issue #151): a delta-only add (no
+    backing placement, ``display_override`` set) renders as the retired
+    dict path did — display name, no MUTCD code, a "Jurisdiction-required"
+    function label.  A topped-up real row keeps its catalog display and
+    only gains the ``jurisdiction_required`` / ``jurisdiction_source``
+    provenance flags.
+    """
+    dt = row.device_type
+    if row.display_override is not None:
+        out: dict[str, object] = {
+            "device": row.display_override,
+            "code": "—",
+            "function": "Jurisdiction-required",
+            "qty": row.quantity,
+        }
+    elif dt == DeviceType.SIGN_GENERIC:
+        key = row.label if row.label is not None else "(unlabeled)"
+        station = row.representative.station_ft if row.representative is not None else 0.0
+        code, desc = substitute_sign_description(key, station, params)
+        out = {
+            "device": desc,
+            "code": code,
+            "function": _sign_function_category(code),
+            "qty": row.quantity,
+        }
+    elif dt == DeviceType.CONE:
+        out = {
+            "device": cone_display_name(params.speed_mph),
+            "code": "—",
+            "function": "Channelizing",
+            "qty": row.quantity,
+        }
+    else:
+        device_label, function_label = _NON_SIGN_DISPLAY.get(dt, (dt.value, "Other"))
+        out = {
+            "device": device_label,
+            "code": "—",
+            "function": function_label,
+            "qty": row.quantity,
+        }
+    if row.jurisdiction_required:
+        out["jurisdiction_required"] = True
+        out["jurisdiction_source"] = row.jurisdiction_source
+    return out
+
+
 def _build_device_breakdown(
     placements: list[DevicePlacement], params: ScenarioParams
 ) -> list[dict[str, object]]:
-    """Aggregate placements into panel-ready rows.
+    """Aggregate placements into panel-ready rows (no jurisdiction deltas).
 
-    Signs are split by schedule key (bare MUTCD code, except R2-1 which
-    splits into entrance/restoration faces — same convention as the PDF
-    schedule and XLSX device list) so each sign face gets its own row;
-    non-sign devices are merged by type.  Parametric descriptions
-    resolve via the shared :func:`substitute_sign_description` helper so
-    the panel reads the same numbers as the PDF.  CONE picks up the
-    speed-aware display name; everything else uses the static table above.
+    Thin formatter over the shared :func:`aggregate_device_rows` so the
+    panel, the XLSX device list, and the crew equipment list order and
+    name an identical device set identically (issue #88/#150).  The
+    delta-aware breakdown endpoint feeds delta rows through
+    :func:`_format_breakdown_row` directly; this wrapper keeps the
+    no-delta call sites (tests, cross-surface proofs) unchanged.
     """
-    non_sign_counts: Counter[DeviceType] = Counter()
-    sign_counts: Counter[str] = Counter()
-    # Lowest-station member per sign group — deterministic representative
-    # for station-dependent substitutions.
-    sign_reps: dict[str, DevicePlacement] = {}
-    for p in placements:
-        if p.device_type == DeviceType.SIGN_GENERIC:
-            key = schedule_key(p.label, p.station_ft) if p.label else "(unlabeled)"
-            sign_counts[key] += 1
-            current = sign_reps.get(key)
-            if current is None or p.station_ft < current.station_ft:
-                sign_reps[key] = p
-        else:
-            non_sign_counts[p.device_type] += 1
-
-    rows: list[dict[str, object]] = []
-
-    # Signs first (issue #88), keeping their existing schedule-key order.
-    for key, n in sorted(sign_counts.items()):
-        code, desc = substitute_sign_description(key, sign_reps[key].station_ft, params)
-        rows.append(
-            {
-                "device": desc,
-                "code": code,
-                "function": _sign_function_category(code),
-                "qty": n,
-            }
-        )
-
-    # Then non-signs: channelizing devices, then equipment, each alphabetical
-    # by display name — ordered via the shared device_row_sort_key helper so
-    # this panel, the XLSX device list, and the crew equipment list agree.
-    for dt, n in sorted(non_sign_counts.items(), key=lambda kv: device_row_sort_key(kv[0], None)):
-        if dt == DeviceType.CONE:
-            device_label = cone_display_name(params.speed_mph)
-            function_label = "Channelizing"
-        else:
-            device_label, function_label = _NON_SIGN_DISPLAY.get(dt, (dt.value, "Other"))
-        rows.append(
-            {
-                "device": device_label,
-                "code": "—",
-                "function": function_label,
-                "qty": n,
-            }
-        )
-    return rows
+    return [_format_breakdown_row(row, params) for row in aggregate_device_rows(placements)]
 
 
 def _zone_geometry(params: ScenarioParams) -> dict[str, float]:
@@ -900,6 +918,35 @@ def _jurisdiction_schedule(scenario: Scenario) -> JurisdictionWorkSchedule | Non
     )
 
 
+def _jurisdiction_eval(
+    scenario: Scenario, params: ScenarioParams
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Evaluate the scenario's jurisdiction once (issue #151).
+
+    Returns ``(jurisdiction_block, applied_deltas)`` — ``(None, [])`` when
+    the scenario names no jurisdiction.  This is the single evaluation the
+    breakdown JSON, the XLSX bid document, and the on-sheet summary share,
+    so a fired count delta reaches all three identically instead of only
+    the screen.  A bad key is an honest 400, mirroring the render
+    endpoints.
+    """
+    jurisdiction_key = getattr(scenario, "jurisdiction_key", None)
+    if not jurisdiction_key:
+        return None, []
+    try:
+        record = load_jurisdiction(jurisdiction_key)
+    except UnknownJurisdictionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    ctx = context_for_closure_type(
+        params.closure_type,
+        street_class=getattr(scenario, "street_class", None),
+        night=params.is_night,
+        schedule=_jurisdiction_schedule(scenario),
+    )
+    jurisdiction = evaluate_jurisdiction(record, ctx)
+    return jurisdiction, jurisdiction["applied_deltas"]
+
+
 @app.post("/render/device-breakdown")
 def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     """Return the aggregated device list that drives the Plan Details panel.
@@ -920,33 +967,19 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=f"render failed: {exc}") from exc
 
-    rows = _build_device_breakdown(placements, params)
+    # Count-affecting deltas modify quantities through the shared row
+    # pipeline (spec §3.2, issue #151) — the same aggregation the XLSX and
+    # on-sheet summary render, never a frontend computation.
+    jurisdiction, applied_deltas = _jurisdiction_eval(scenario, params)
+    structured = aggregate_device_rows_with_deltas(placements, applied_deltas)
+    rows = [_format_breakdown_row(row, params) for row in structured]
     payload: dict[str, Any] = {
         "devices": rows,
-        "total_devices": len(placements),
+        "total_devices": sum(int(r["qty"]) for r in rows),
         "unique_types": len(rows),
         "zone_geometry": _zone_geometry(params),
     }
-
-    jurisdiction_key = getattr(scenario, "jurisdiction_key", None)
-    if jurisdiction_key:
-        try:
-            record = load_jurisdiction(jurisdiction_key)
-        except UnknownJurisdictionError as exc:
-            raise HTTPException(status_code=400, detail=str(exc)) from exc
-        ctx = context_for_closure_type(
-            params.closure_type,
-            street_class=getattr(scenario, "street_class", None),
-            night=params.is_night,
-            schedule=_jurisdiction_schedule(scenario),
-        )
-        jurisdiction = evaluate_jurisdiction(record, ctx)
-        # Count-affecting deltas modify quantities through the same row
-        # pipeline (spec §3.2) — never in the frontend.
-        rows = apply_count_deltas(rows, jurisdiction["applied_deltas"])
-        payload["devices"] = rows
-        payload["total_devices"] = sum(int(r["qty"]) for r in rows)
-        payload["unique_types"] = len(rows)
+    if jurisdiction is not None:
         payload["jurisdiction"] = jurisdiction
 
     return JSONResponse(payload)

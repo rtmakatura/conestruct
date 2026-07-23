@@ -26,6 +26,7 @@ from fastapi.testclient import TestClient
 from src.api.audit import build_audit_trail
 from src.api.render_api import app
 from src.api.schemas import scenario_to_call
+from src.rules.devices import DeviceType
 from src.rules.jurisdiction import (
     ABSTAINS,
     CONDITIONAL,
@@ -33,7 +34,7 @@ from src.rules.jurisdiction import (
     UNKNOWN,
     PlanContext,
     WorkSchedule,
-    apply_count_deltas,
+    apply_count_deltas_structured,
     available_jurisdictions,
     context_for_closure_type,
     evaluate,
@@ -124,7 +125,11 @@ def test_golden_englewood_tc1_geometry():
 
 def test_golden_greeley_arterial_lane_closure_arrow_board_fires():
     """Greeley: Type C arrow board fires on an arterial through-lane closure
-    and lands in the device rows via the count pipeline."""
+    and lands in the shared aggregated rows via the count pipeline (#151).
+
+    The fired delta maps to ``DeviceType.ARROW_BOARD`` (so the XLSX bid line
+    can source pay item 630-80358) while keeping the jurisdiction's
+    "Arrow Board (Type C)" display name."""
     record = load_jurisdiction("greeley")
     ctx = context_for_closure_type("lane", street_class="arterial", night=False)
     result = evaluate(record, ctx)
@@ -134,17 +139,55 @@ def test_golden_greeley_arterial_lane_closure_arrow_board_fires():
     assert fired[0]["effect"] == {"op": "add_device", "device": "arrow_board_type_c", "qty": 1}
     assert fired[0]["source"]["doc"].startswith("Greeley Permitting Requirements")
 
-    rows = apply_count_deltas([], result["applied_deltas"])
-    assert rows == [
-        {
-            "device": "Arrow Board (Type C)",
-            "code": "—",
-            "function": "Jurisdiction-required",
-            "qty": 1,
-            "jurisdiction_required": True,
-            "jurisdiction_source": fired[0]["source"],
-        }
-    ]
+    rows = apply_count_deltas_structured([], result["applied_deltas"])
+    assert len(rows) == 1
+    row = rows[0]
+    assert row.device_type == DeviceType.ARROW_BOARD
+    assert row.label is None
+    assert row.quantity == 1
+    assert row.representative is None
+    assert row.jurisdiction_required is True
+    assert row.jurisdiction_source == fired[0]["source"]
+    assert row.display_override == "Arrow Board (Type C)"
+
+
+def test_apply_count_deltas_structured_topup_and_unmapped():
+    """A mapped delta tops up an existing catalog row (keeps its identity,
+    only flags it); an unmapped device id appends an honest typeless row with
+    no pay item to source (rule 10 / issue #151)."""
+    from src.rules.device_aggregation import AggregatedDeviceRow
+
+    src = {"doc": "Test doc", "date": "2026-01-01", "status": "verified"}
+
+    # Mapped 'drum' delta against an existing DRUM row already carrying 6.
+    base = [AggregatedDeviceRow(DeviceType.DRUM, None, 6, None)]
+    drum_add = {
+        "severity": "count",
+        "status": FIRES,
+        "effect": {"op": "add_device", "device": "drum", "qty": 1},
+        "source": src,
+    }
+    out = apply_count_deltas_structured(base, [drum_add])
+    assert len(out) == 1
+    r = out[0]
+    assert r.device_type == DeviceType.DRUM
+    assert r.quantity == 6  # 'requires >= 1' already satisfied — no double-count
+    assert r.jurisdiction_required is True
+    assert r.jurisdiction_source == src
+    assert r.display_override is None  # topped-up real row keeps catalog naming
+
+    # Unmapped 'advance_warning_signs' delta with no baseline row -> honest add.
+    aws_add = {
+        "severity": "count",
+        "status": FIRES,
+        "effect": {"op": "add_device", "device": "advance_warning_signs", "qty": 1},
+        "source": src,
+    }
+    (added,) = apply_count_deltas_structured([], [aws_add])
+    assert added.device_type is None  # no catalog device -> no fabricated pay item
+    assert added.display_override == "Advance Warning Signs"
+    assert added.quantity == 1
+    assert added.jurisdiction_required is True
 
 
 def test_golden_greeley_arrow_board_abstains_off_trigger():
@@ -394,7 +437,7 @@ def test_trigger_matrix_hand_cases():
     vp = next(d for d in parker["deltas"] if d["effect"].get("device") == "vertical_panel")
     verdict = evaluate_trigger(vp["trigger"], PlanContext("arterial", frozenset({"lane"}), False))
     assert verdict == CONDITIONAL
-    rows = apply_count_deltas([], [dict(vp, status=verdict)])
+    rows = apply_count_deltas_structured([], [dict(vp, status=verdict)])
     assert rows == []
 
 
@@ -405,7 +448,7 @@ def test_conditional_deltas_never_change_counts():
         record = load_jurisdiction(key)
         for delta in record.get("deltas", []):
             for status in (CONDITIONAL, UNKNOWN):
-                assert apply_count_deltas([], [dict(delta, status=status)]) == []
+                assert apply_count_deltas_structured([], [dict(delta, status=status)]) == []
 
 
 # ---------------------------------------------------------------------------

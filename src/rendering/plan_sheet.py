@@ -37,8 +37,9 @@ from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
-from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
+from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import PLAQUE_CODES, schedule_key, substitute_sign_description
 from src.rules.spacing import (
     advance_warning_spacing,
@@ -2604,6 +2605,11 @@ def _device_summary_cells(row: AggregatedDeviceRow, params: ScenarioParams) -> t
     off-page table's convention for flagger rows (UX-09).
     """
     dt = row.device_type
+    # Jurisdiction count-delta add with no backing placement (#151): the
+    # jurisdiction's device name, no MUTCD code — mirrors the screen
+    # breakdown's "Jurisdiction-required" row.
+    if row.display_override is not None:
+        return ("—", row.display_override)
     if dt == DeviceType.SIGN_GENERIC:
         if row.label is None:
             return ("—", "Construction sign (unlabeled)")
@@ -2620,16 +2626,18 @@ def _draw_device_summary(
     box_w: float,
     placements: list[DevicePlacement],
     params: ScenarioParams,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> None:
-    """Spec §4.1 (issue #150): the on-sheet device summary.
+    """Spec §4.1 (issue #150/#151): the on-sheet device summary.
 
     Monochrome-safe (black + gray hairlines only — survives a mono
-    plotter), quantities from ``aggregate_device_rows`` — the XLSX's own
-    aggregation, so sheet == spreadsheet by construction — a bold totals
-    row, and the bid-authority line so the two surfaces never compete.
-    Overflow is an explicit pointer line, never a silent clip (rule 10).
+    plotter), quantities from ``aggregate_device_rows_with_deltas`` — the
+    XLSX's own aggregation including fired jurisdiction count deltas, so
+    sheet == spreadsheet by construction — a bold totals row, and the
+    bid-authority line so the two surfaces never compete.  Overflow is an
+    explicit pointer line, never a silent clip (rule 10).
     """
-    rows = aggregate_device_rows(placements)
+    rows = aggregate_device_rows_with_deltas(placements, applied_deltas)
 
     c.setStrokeColor(colors.black)
     c.setLineWidth(0.6)
@@ -2679,7 +2687,10 @@ def _draw_device_summary(
     y -= 10
     c.setFont("Helvetica-Bold", 7)
     c.drawString(x, y, "TOTAL DEVICES")
-    c.drawRightString(x_right, y, str(len(placements)))
+    # Sum the (delta-aware) row quantities, not len(placements): a fired
+    # jurisdiction count-delta adds a required device with no backing
+    # placement (#151).  Equals len(placements) whenever no delta fires.
+    c.drawRightString(x_right, y, str(sum(row.quantity for row in rows)))
     y -= 11
     c.setFont("Helvetica-Oblique", 6)
     c.setFillColor(colors.HexColor("#333333"))
@@ -3534,6 +3545,7 @@ def render_plan_sheet(
     approaches: list[ApproachParams] | None = None,
     include_device_summary: bool = True,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -3686,6 +3698,7 @@ def render_plan_sheet(
         ta_override=ta_override,
         include_device_summary=include_device_summary,
         jurisdiction_conflicts=jurisdiction_conflicts,
+        applied_deltas=applied_deltas,
     )
     _draw_sheet_border(c)
     c.showPage()
@@ -3732,6 +3745,7 @@ def _render_schematic_page(
     ta_override: str | None = None,
     include_device_summary: bool = True,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
+    applied_deltas: list[dict[str, Any]] | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -3820,7 +3834,7 @@ def _render_schematic_page(
         jurisdiction_conflicts=jurisdiction_conflicts,
     )
     if geom.device_x is not None and geom.device_w is not None:
-        _draw_device_summary(c, geom.device_x, geom.device_w, placements, params)
+        _draw_device_summary(c, geom.device_x, geom.device_w, placements, params, applied_deltas)
     _draw_structured_title_block(
         c,
         params,

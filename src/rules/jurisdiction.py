@@ -17,9 +17,11 @@ Design rules (phase1-backend-spec §1–§3):
   ABSTAINS as ``"unknown"`` — it neither fires nor disappears.  A trigger
   carrying a free-form ``condition`` the engine cannot evaluate is
   ``"conditional"``: surfaced as a chip, never applied to device counts.
-* Count-affecting effects modify the device breakdown through the same
-  row-building pipeline (``apply_count_deltas``) — no post-hoc frontend
-  math (spec §3.2).
+* Count-affecting effects modify the shared aggregated device rows through
+  one pipeline (``aggregate_device_rows_with_deltas`` /
+  ``apply_count_deltas_structured``), so the screen breakdown, the XLSX bid
+  document, and the on-sheet summary shift together — no post-hoc frontend
+  math (spec §3.2, issue #151).
 * Every emitted record carries its ``source`` object through verbatim so
   the UI's provenance popovers read the same citation the corpus holds.
 """
@@ -35,6 +37,9 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+
+from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
+from src.rules.devices import DeviceType
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 SCHEMA_PATH = REPO_ROOT / "data" / "jurisdiction.schema.json"
@@ -563,21 +568,32 @@ def _display_name(device_id: str) -> str:
     return _JURISDICTION_DEVICE_DISPLAY.get(device_id, device_id.replace("_", " ").title())
 
 
-def apply_count_deltas(
-    rows: list[dict[str, Any]], applied_deltas: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    """Apply fired count deltas to the device-breakdown rows.
+# Jurisdiction ``effect.device`` id -> catalog DeviceType, so a fired
+# ``add_device`` delta tops up (or adds) the right aggregated row and the
+# XLSX bid line can source a real CDOT pay item + unit.  Corpus-backed and
+# deliberately conservative: only device ids that map to ONE catalog device
+# with ONE pay item are listed.  Ids like ``advance_warning_signs`` (a set
+# of W-series signs billed per SF, no single pay item) are intentionally
+# absent — they render as an honest, pay-item-less jurisdiction-required
+# row rather than being force-fit to a wrong pay item (rule 10, and the
+# 2026-07-22 ruling on issue #151).
+_DELTA_DEVICE_TYPE: dict[str, DeviceType] = {
+    "arrow_board": DeviceType.ARROW_BOARD,
+    "arrow_board_type_c": DeviceType.ARROW_BOARD,
+    "arrow_panel": DeviceType.ARROW_BOARD,
+    "drum": DeviceType.DRUM,
+}
 
-    Semantics: an ``add_device`` delta REQUIRES the device — the row set
-    must end with at least ``qty`` (default 1) of it.  If the baseline
-    layout already carries enough, nothing changes (the jurisdiction rule
-    is satisfied); otherwise the row is added/topped up and marked
-    ``jurisdiction_required`` with its source.  Only ``fires``-status
-    count deltas with a concrete device apply; conditional/unknown ones
-    surface in the panel without touching quantities (rule 10 — no
-    silently-guessed counts).
+
+def _iter_fired_count_adds(applied_deltas: list[dict[str, Any]]):
+    """Yield ``(device_id, qty, source)`` for every fired count add-device delta.
+
+    The single gate for count-effect application (issue #151): only
+    ``fires``-status ``count``-severity deltas whose effect is a concrete
+    ``add_device`` / ``add_accessory`` change quantities.  Conditional and
+    unknown deltas surface elsewhere in the jurisdiction block but never
+    touch device counts (rule 10 — no silently-guessed counts).
     """
-    out = [dict(r) for r in rows]
     for delta in applied_deltas:
         if delta.get("severity") != "count" or delta.get("status") != FIRES:
             continue
@@ -587,23 +603,72 @@ def apply_count_deltas(
         device_id = effect.get("device")
         if not device_id:
             continue
-        qty = effect.get("qty", 1)
-        name = _display_name(device_id)
-        existing = next((r for r in out if str(r.get("device", "")).lower() == name.lower()), None)
-        if existing is not None:
-            if int(existing["qty"]) < qty:
-                existing["qty"] = qty
-            existing["jurisdiction_required"] = True
-            existing["jurisdiction_source"] = delta["source"]
+        yield device_id, effect.get("qty", 1), delta["source"]
+
+
+def apply_count_deltas_structured(
+    rows: list[AggregatedDeviceRow], applied_deltas: list[dict[str, Any]]
+) -> list[AggregatedDeviceRow]:
+    """Apply fired count deltas to the shared aggregated rows (issue #151).
+
+    The single count-delta application, shared by the on-screen breakdown,
+    the XLSX bid document, and the on-sheet device summary (spec §4 target
+    state: one aggregation path, deltas applied once).
+
+    Semantics (unchanged from the retired dict path): an ``add_device``
+    delta REQUIRES the device — the row set must end with at least ``qty``
+    (default 1) of it.  A matching row is topped up only if it carries
+    fewer; a real topped-up row keeps its catalog identity (``device_type``
+    / naming) and just gains the jurisdiction provenance.  A device with no
+    matching baseline row is appended as a delta-only row: mapped ids carry
+    their ``DeviceType`` (so the bid line gets a real pay item), unmapped
+    ids carry ``device_type=None`` and only their jurisdiction display name.
+
+    Matching is by ``DeviceType`` (not display string), so a delta and its
+    baseline row can never miss each other on a naming mismatch.
+    """
+    out = list(rows)
+    for device_id, qty, source in _iter_fired_count_adds(applied_deltas):
+        dt = _DELTA_DEVICE_TYPE.get(device_id)
+        match_idx = None
+        if dt is not None:
+            match_idx = next(
+                (i for i, r in enumerate(out) if r.device_type == dt and r.label is None),
+                None,
+            )
+        if match_idx is not None:
+            r = out[match_idx]
+            out[match_idx] = r._replace(
+                quantity=max(r.quantity, qty),
+                jurisdiction_required=True,
+                jurisdiction_source=source,
+            )
         else:
             out.append(
-                {
-                    "device": name,
-                    "code": "—",
-                    "function": "Jurisdiction-required",
-                    "qty": qty,
-                    "jurisdiction_required": True,
-                    "jurisdiction_source": delta["source"],
-                }
+                AggregatedDeviceRow(
+                    device_type=dt,
+                    label=None,
+                    quantity=qty,
+                    representative=None,
+                    jurisdiction_required=True,
+                    jurisdiction_source=source,
+                    display_override=_display_name(device_id),
+                )
             )
     return out
+
+
+def aggregate_device_rows_with_deltas(
+    placements: list, applied_deltas: list[dict[str, Any]] | None
+) -> list[AggregatedDeviceRow]:
+    """Aggregate placements, then apply any fired jurisdiction count deltas.
+
+    The one entry point all three device surfaces call so they can never
+    disagree.  With ``applied_deltas`` empty or ``None`` this is exactly
+    ``aggregate_device_rows`` — zero change for a scenario with no firing
+    delta, which is the behavior-preservation contract (rule 5).
+    """
+    rows = aggregate_device_rows(placements)
+    if not applied_deltas:
+        return rows
+    return apply_count_deltas_structured(rows, applied_deltas)
