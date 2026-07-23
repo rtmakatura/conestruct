@@ -4,6 +4,8 @@
 #   .\scripts\ship.ps1                                       (ship whatever main already is)
 #
 # Stops loudly at the first problem. Never force-merges, never skips the health check.
+# Blocks only on MODIFIED TRACKED files; untracked local files (specs, notes,
+# scratch folders) are listed for awareness but never block a ship.
 
 param(
     [string]$Branch = ""
@@ -27,11 +29,20 @@ if ($current -ne "main") {
     git checkout main | Out-Null
 }
 
-$dirty = git status --porcelain
-if ($dirty) {
-    Write-Host "Uncommitted local changes:" -ForegroundColor Yellow
-    Write-Host $dirty
-    Fail "Working tree is not clean. Commit or discard these first (unexplained edits are how we chase ghosts)."
+# Split status into tracked changes (block) vs untracked files (inform only).
+$statusLines = git status --porcelain | Where-Object { $_ -ne "" }
+$trackedChanges = $statusLines | Where-Object { -not $_.StartsWith("??") }
+$untracked      = $statusLines | Where-Object { $_.StartsWith("??") }
+
+if ($untracked) {
+    Write-Host "Untracked local files (not blocking, just so you know):" -ForegroundColor DarkGray
+    $untracked | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
+}
+
+if ($trackedChanges) {
+    Write-Host "Modified tracked files:" -ForegroundColor Yellow
+    $trackedChanges | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
+    Fail "Tracked files have uncommitted changes. Commit or discard these first (unexplained edits are how we chase ghosts)."
 }
 
 git fetch origin | Out-Null
