@@ -27,11 +27,14 @@ import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   buildCorridorPolyline,
+  CORRIDOR_ZONES,
+  ZONE_CHANNEL,
   ZONE_COLOR,
   ZONE_LABEL,
   type CorridorPolyline,
   type CorridorZone,
 } from "@/lib/corridor-polyline";
+import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 
 type MapboxNamespace = typeof MapboxGL;
 
@@ -136,6 +139,7 @@ const CROSS_PIN_COLOR = "#1EC8A5";
 
 const CORRIDOR_SOURCE_ID = "corridor-source";
 const CORRIDOR_LAYER_ID = "corridor-layer";
+const CORRIDOR_LABEL_LAYER_ID = "corridor-labels";
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   rural_undivided: "Rural — undivided",
@@ -1115,32 +1119,71 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
               features: [],
             },
           });
+        }
+        // #131: one line layer per zone.  A mapbox-gl ``line-dasharray``
+        // can't be data-driven, so colour-alone (the old single match layer)
+        // is replaced by per-zone layers each carrying a distinct dash + a
+        // monotonic width from the shared ZONE_CHANNEL table — legible to a
+        // colour-blind reader and in grayscale.  Colour is kept as the
+        // redundant cue.
+        for (const zone of CORRIDOR_ZONES) {
+          const layerId = `${CORRIDOR_LAYER_ID}-${zone}`;
+          if (map.getLayer(layerId)) continue;
+          const ch = ZONE_CHANNEL[zone];
+          const dashed = ch.dash.length > 1;
           map.addLayer({
-            id: CORRIDOR_LAYER_ID,
+            id: layerId,
             type: "line",
             source: CORRIDOR_SOURCE_ID,
+            filter: ["==", ["get", "zone"], zone],
             layout: {
               "line-join": "round",
-              "line-cap": "round",
+              "line-cap": dashed ? "butt" : "round",
             },
             paint: {
-              "line-width": 6,
+              "line-width": 4 + ch.widthRank, // rank 1..5 → 5..9 px
               "line-opacity": 0.9,
-              "line-color": [
+              "line-color": ZONE_COLOR[zone],
+              ...(dashed ? { "line-dasharray": ch.dash } : {}),
+            },
+          });
+        }
+        // Midpoint zone labels — the strongest non-colour channel (#131).
+        // One label per segment at its centre.  Zoom-gated (minzoom 13) and
+        // collision-managed (mapbox drops overlapping labels by default) so
+        // they never blanket the roadway at overview zoom; below the gate
+        // the dash + width channel still carries zone identity.
+        if (!map.getLayer(CORRIDOR_LABEL_LAYER_ID)) {
+          map.addLayer({
+            id: CORRIDOR_LABEL_LAYER_ID,
+            type: "symbol",
+            source: CORRIDOR_SOURCE_ID,
+            minzoom: 13,
+            layout: {
+              "symbol-placement": "line-center",
+              "text-field": [
                 "match",
                 ["get", "zone"],
                 "advance_warning",
-                ZONE_COLOR.advance_warning,
+                ZONE_LABEL.advance_warning,
                 "transition",
-                ZONE_COLOR.transition,
+                ZONE_LABEL.transition,
                 "buffer",
-                ZONE_COLOR.buffer,
+                ZONE_LABEL.buffer,
                 "work_zone",
-                ZONE_COLOR.work_zone,
+                ZONE_LABEL.work_zone,
                 "downstream",
-                ZONE_COLOR.downstream,
-                /* default */ "#ffffff",
+                ZONE_LABEL.downstream,
+                /* default */ "",
               ],
+              "text-size": 11,
+              "text-letter-spacing": 0.05,
+              "text-padding": 4,
+            },
+            paint: {
+              "text-color": "#ffffff",
+              "text-halo-color": "#000000",
+              "text-halo-width": 1.4,
             },
           });
         }
@@ -2030,10 +2073,7 @@ function CorridorLegend() {
     <div className="bg-black/75 border border-white/15 px-3 py-2 flex flex-col gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-white max-w-[200px]">
       {rows.map((r) => (
         <div key={r.zone} className="flex items-center gap-2 whitespace-nowrap">
-          <span
-            className="inline-block w-3 h-1.5"
-            style={{ background: ZONE_COLOR[r.zone] }}
-          />
+          <ZoneChannelSwatch zone={r.zone} className="flex-shrink-0" />
           <span>{ZONE_LABEL[r.zone]}</span>
         </div>
       ))}
@@ -3019,10 +3059,7 @@ function ExtentRows({ corridor }: { corridor: CorridorPolyline }) {
           className="flex items-baseline justify-between gap-3 py-0.5"
         >
           <span className="flex items-center gap-2 min-w-0 flex-1">
-            <span
-              className="inline-block w-3 h-1.5 flex-shrink-0"
-              style={{ background: ZONE_COLOR[d.zone] }}
-            />
+            <ZoneChannelSwatch zone={d.zone} className="flex-shrink-0" />
             <span className="text-[12px] text-[color:var(--ink-on-dark)] truncate">
               {ZONE_LABEL[d.zone]}
             </span>

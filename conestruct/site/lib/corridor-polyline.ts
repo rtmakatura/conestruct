@@ -13,41 +13,23 @@
 
 import { destinationPoint, M_PER_FT } from "./geodesy";
 import type { CorridorSpec } from "./corridor-map";
+import {
+  CORRIDOR_ZONES,
+  ZONE_CHANNEL,
+  ZONE_COLOR,
+  ZONE_LABEL,
+  type CorridorZone,
+} from "./corridor-zones";
 
-export type CorridorZone =
-  | "advance_warning"
-  | "transition"
-  | "buffer"
-  | "work_zone"
-  | "downstream";
-
-// Hex with leading ``#`` (mapbox-gl expressions accept either form, but
-// the rest of our component palette uses ``#``-prefixed strings).
-export const ZONE_COLOR: Record<CorridorZone, string> = {
-  advance_warning: "#FFD166", // amber
-  transition: "#F3722C", // orange
-  buffer: "#FF7A00", // deeper orange (deceleration)
-  work_zone: "#1EC8A5", // teal
-  downstream: "#8A8A8A", // muted gray
-};
-
-export const ZONE_LABEL: Record<CorridorZone, string> = {
-  advance_warning: "Advance warning",
-  transition: "Taper",
-  buffer: "Buffer",
-  work_zone: "Work zone",
-  downstream: "Downstream",
-};
+// Zone identity (type, colours, labels, non-colour channel, order) is
+// single-sourced in ``./corridor-zones``; re-exported here so existing
+// importers of this module are unaffected (#131).
+export type { CorridorZone } from "./corridor-zones";
+export { CORRIDOR_ZONES, ZONE_CHANNEL, ZONE_COLOR, ZONE_LABEL };
 
 // Order matches the upstream-walking convention used by the static-image
 // route.  Anchor → downstream → work → buffer → transition → advance.
-const ZONE_ORDER: readonly CorridorZone[] = [
-  "downstream",
-  "work_zone",
-  "buffer",
-  "transition",
-  "advance_warning",
-];
+const ZONE_ORDER = CORRIDOR_ZONES;
 
 const SAMPLES_PER_SEGMENT = 4;
 

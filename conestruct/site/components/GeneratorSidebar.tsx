@@ -32,11 +32,11 @@ import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
   buildCorridorPolyline,
-  ZONE_COLOR,
   ZONE_LABEL,
   type CorridorPolyline,
   type CorridorZone,
 } from "@/lib/corridor-polyline";
+import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
 import {
   Field,
   FieldErrorLine,
@@ -856,10 +856,7 @@ function CorridorRows({ corridor }: { corridor: CorridorPolyline }) {
             className="flex items-baseline justify-between gap-2"
           >
             <span className="flex items-center gap-2 min-w-0 flex-1">
-              <span
-                className="inline-block w-2.5 h-1 flex-shrink-0"
-                style={{ background: ZONE_COLOR[zone] }}
-              />
+              <ZoneChannelSwatch zone={zone} className="flex-shrink-0" />
               <span className="text-[11px] text-[color:var(--ink-on-dark)] truncate">
                 ✓ {ZONE_LABEL[zone]}
               </span>

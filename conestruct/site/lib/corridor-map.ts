@@ -16,6 +16,7 @@
 // browser.
 
 import { destinationPoint, M_PER_FT } from "./geodesy";
+import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "./corridor-zones";
 
 export interface CorridorSpec {
   anchorLat: number;
@@ -49,16 +50,21 @@ const DEFAULTS: Required<Omit<CorridorMapOptions, "pinColor">> & { pinColor: str
   strokeWidth: 5,
 };
 
-// Zone colours (no leading `#`).  Brighter at the upstream end so the
-// motorist's first encounter (advance warning) reads loudest in the
-// preview, dimmer at the downstream taper.
-const ZONE_COLORS = {
-  advance_warning: "ffd166", // amber
-  transition: "f3722c", // orange
-  buffer: "ff7a00", // deeper orange (deceleration)
-  work_zone: "1ec8a5", // teal
-  downstream: "8a8a8a", // muted gray
-} as const;
+// Zone colours are single-sourced from ``./corridor-zones`` (#131 killed the
+// duplicate table here).  The Static Images API wants hex without a leading
+// ``#``.
+function zoneColorNoHash(zone: CorridorZone): string {
+  return ZONE_COLOR[zone].replace("#", "").toLowerCase();
+}
+
+// Static Images ``path`` overlays cannot dash, so the non-colour channel on
+// this surface is stroke WIDTH (#131): each zone's monotonic ``widthRank``
+// spread around the caller's base width, so a grayscale/CVD reader reads the
+// zones apart by thickness even when the hues are indistinguishable.  Colour
+// stays as the redundant channel.
+function zoneStrokeWidth(base: number, zone: CorridorZone): number {
+  return Math.max(1, base + (ZONE_CHANNEL[zone].widthRank - 3) * 2);
+}
 
 // Sample density for path overlays: more samples = smoother curve in
 // theory, but our segments are straight lines on a great-circle so 2
@@ -68,7 +74,7 @@ const ZONE_COLORS = {
 const SAMPLES_PER_SEGMENT = 4;
 
 interface SegmentSpec {
-  zone: keyof typeof ZONE_COLORS;
+  zone: CorridorZone;
   startStationFt: number;
   endStationFt: number;
 }
@@ -179,7 +185,13 @@ export function corridorMapUrl(
   for (const seg of segments) {
     const pts = samplePoints(corridor, seg);
     const encoded = encodePolyline(pts);
-    overlays.push(pathOverlay(ZONE_COLORS[seg.zone], opts.strokeWidth, encoded));
+    overlays.push(
+      pathOverlay(
+        zoneColorNoHash(seg.zone),
+        zoneStrokeWidth(opts.strokeWidth, seg.zone),
+        encoded,
+      ),
+    );
   }
 
   // Anchor pin last so it draws on top of the path overlays.
