@@ -1,14 +1,19 @@
 // #145 guards.  The anonymous render/geocode surface is bounded by a shared
 // Upstash limiter, but the sandbox is the top-of-funnel demo — so a limiter
-// outage (store unreachable, or env vars simply unset) must FAIL OPEN and let
-// the request through, never 429 the demo.  These pin both halves of that
-// contract: over-limit → 429, and every failure mode → allow.
+// problem must FAIL OPEN and let the request through, never take a route down.
+//
+// The centerpiece here is the CONSTRUCTOR-THROW test: the original build ran
+// `new Redis()` at module-load time, so a malformed env var (e.g. a URL saved
+// WITH surrounding quotes) threw during import and 500'd every route — the
+// per-request fail-open never engaged.  That exact case shipped broken and is
+// pinned below.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Controllable stand-in for `Ratelimit.limit()`.  `vi.hoisted` so the mock
-// factory (hoisted above imports) can close over it.
+// Controllable stand-ins for the Upstash SDK, resolved through vi.hoisted so
+// the (hoisted) mock factories can close over them.
 const h = vi.hoisted(() => ({
+  redisCtor: (_opts: { url: string; token: string }): void => {},
   limit: async (_key: string): Promise<{ success: boolean }> => ({
     success: true,
   }),
@@ -16,7 +21,9 @@ const h = vi.hoisted(() => ({
 
 vi.mock("@upstash/redis", () => ({
   Redis: class {
-    constructor(_opts: unknown) {}
+    constructor(opts: { url: string; token: string }) {
+      h.redisCtor(opts);
+    }
   },
 }));
 
@@ -32,7 +39,12 @@ vi.mock("@upstash/ratelimit", () => ({
   },
 }));
 
-// Minimal NextRequest stand-in — the helper only reads two headers off it.
+import {
+  rateLimitOr429,
+  sanitizeEnv,
+  __resetRateLimitStateForTests,
+} from "./rate-limit";
+
 function fakeReq(ip = "1.2.3.4"): import("next/server").NextRequest {
   return {
     headers: {
@@ -41,71 +53,119 @@ function fakeReq(ip = "1.2.3.4"): import("next/server").NextRequest {
   } as unknown as import("next/server").NextRequest;
 }
 
-// The module holds a load-time singleton Redis client, so each test must
-// re-import it fresh after stubbing env / resetting the mock.
-async function freshHelper() {
-  vi.resetModules();
-  return import("./rate-limit");
-}
-
-const CONFIGURED = {
+const VALID = {
   UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
   UPSTASH_REDIS_REST_TOKEN: "test-token",
 };
 
+function stubValidEnv() {
+  vi.stubEnv("UPSTASH_REDIS_REST_URL", VALID.UPSTASH_REDIS_REST_URL);
+  vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", VALID.UPSTASH_REDIS_REST_TOKEN);
+}
+
 beforeEach(() => {
+  h.redisCtor = () => {};
   h.limit = async () => ({ success: true });
+  __resetRateLimitStateForTests();
   vi.restoreAllMocks();
 });
 
 afterEach(() => {
   vi.unstubAllEnvs();
+  __resetRateLimitStateForTests();
 });
 
 describe("rateLimitOr429 — fail-open contract (#145)", () => {
+  it("fails open (returns null) when the Upstash CONSTRUCTOR THROWS — the #145 regression, never 500s the route", async () => {
+    // Models the synchronous UrlError the real Redis constructor raises on a
+    // malformed URL (e.g. one saved with surrounding quotes).
+    stubValidEnv();
+    h.redisCtor = () => {
+      throw new Error(
+        "Upstash Redis client was passed an invalid URL. You should pass a URL starting with https.",
+      );
+    };
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(rateLimitOr429(fakeReq(), "road-bearing", 30)).resolves.toBeNull();
+  });
+
   it("allows (returns null) when the store is UNCONFIGURED, no matter how many calls", async () => {
-    // No UPSTASH_* env → makeRedis() returns null → limiter is a no-op.
     vi.stubEnv("UPSTASH_REDIS_REST_URL", "");
     vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", "");
-    const { rateLimitOr429 } = await freshHelper();
-
     for (let i = 0; i < 50; i++) {
-      const res = await rateLimitOr429(fakeReq(), "geocode", 1);
-      expect(res).toBeNull();
+      expect(await rateLimitOr429(fakeReq(), "geocode", 1)).toBeNull();
     }
   });
 
-  it("allows (returns null) when the store THROWS — never blocks the demo", async () => {
-    vi.stubEnv("UPSTASH_REDIS_REST_URL", CONFIGURED.UPSTASH_REDIS_REST_URL);
-    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", CONFIGURED.UPSTASH_REDIS_REST_TOKEN);
+  it("allows (returns null) when the .limit() call THROWS — store unreachable", async () => {
+    stubValidEnv();
     h.limit = async () => {
       throw new Error("upstash unreachable");
     };
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const { rateLimitOr429 } = await freshHelper();
-
-    const res = await rateLimitOr429(fakeReq(), "render-bundle", 10);
-    expect(res).toBeNull();
+    expect(await rateLimitOr429(fakeReq(), "render-bundle", 10)).toBeNull();
   });
 
   it("returns a 429 when configured AND the limiter reports over-cap", async () => {
-    vi.stubEnv("UPSTASH_REDIS_REST_URL", CONFIGURED.UPSTASH_REDIS_REST_URL);
-    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", CONFIGURED.UPSTASH_REDIS_REST_TOKEN);
+    stubValidEnv();
     h.limit = async () => ({ success: false });
-    const { rateLimitOr429 } = await freshHelper();
-
     const res = await rateLimitOr429(fakeReq(), "render-bundle", 10);
     expect(res).not.toBeNull();
     expect(res?.status).toBe(429);
   });
 
   it("allows (returns null) when configured and under cap", async () => {
-    vi.stubEnv("UPSTASH_REDIS_REST_URL", CONFIGURED.UPSTASH_REDIS_REST_URL);
-    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", CONFIGURED.UPSTASH_REDIS_REST_TOKEN);
+    stubValidEnv();
     h.limit = async () => ({ success: true });
-    const { rateLimitOr429 } = await freshHelper();
+    expect(await rateLimitOr429(fakeReq(), "render-bundle", 10)).toBeNull();
+  });
+});
 
-    const res = await rateLimitOr429(fakeReq(), "render-bundle", 10);
-    expect(res).toBeNull();
+describe("sanitize-and-work — a quoted env yields a FUNCTIONING limiter (#145)", () => {
+  it("strips surrounding quotes before constructing, so the limiter still enforces", async () => {
+    // Env saved WITH quotes — the exact confound that broke the ship.
+    vi.stubEnv("UPSTASH_REDIS_REST_URL", `"${VALID.UPSTASH_REDIS_REST_URL}"`);
+    vi.stubEnv("UPSTASH_REDIS_REST_TOKEN", `"${VALID.UPSTASH_REDIS_REST_TOKEN}"`);
+    const seen: Array<{ url: string; token: string }> = [];
+    h.redisCtor = (opts) => {
+      seen.push(opts);
+    };
+    h.limit = async () => ({ success: false }); // prove enforcement is live
+
+    const res = await rateLimitOr429(fakeReq(), "geocode", 40);
+
+    // Construction happened with the UNQUOTED values...
+    expect(seen).toHaveLength(1);
+    expect(seen[0].url).toBe(VALID.UPSTASH_REDIS_REST_URL);
+    expect(seen[0].token).toBe(VALID.UPSTASH_REDIS_REST_TOKEN);
+    // ...and the limiter actually enforces (not silently disabled).
+    expect(res?.status).toBe(429);
+  });
+});
+
+describe("sanitizeEnv", () => {
+  it("strips matched double quotes", () => {
+    expect(sanitizeEnv('"https://x.io"')).toBe("https://x.io");
+  });
+  it("strips matched single quotes", () => {
+    expect(sanitizeEnv("'https://x.io'")).toBe("https://x.io");
+  });
+  it("trims surrounding whitespace", () => {
+    expect(sanitizeEnv("  https://x.io  ")).toBe("https://x.io");
+  });
+  it("trims inside stripped quotes too", () => {
+    expect(sanitizeEnv('" https://x.io "')).toBe("https://x.io");
+  });
+  it("leaves a clean value untouched", () => {
+    expect(sanitizeEnv("https://x.io")).toBe("https://x.io");
+  });
+  it("returns undefined for empty / missing", () => {
+    expect(sanitizeEnv("")).toBeUndefined();
+    expect(sanitizeEnv("   ")).toBeUndefined();
+    expect(sanitizeEnv(undefined)).toBeUndefined();
+  });
+  it("does not strip an unmatched leading quote", () => {
+    expect(sanitizeEnv('"https://x.io')).toBe('"https://x.io');
   });
 });
