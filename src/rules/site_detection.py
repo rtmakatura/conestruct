@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 DEFAULT_RADIUS_M = 500.0
 HTTP_TIMEOUT_S = 25.0
 # Overpass returns 406 to clients without an identifying User-Agent.
-USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://github.com/anthropics/claude-code)"
+USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)"
 
 # Public Overpass mirrors, tried in order.  The official endpoint at
 # overpass-api.de regularly returns 504 Gateway Timeout under load, so

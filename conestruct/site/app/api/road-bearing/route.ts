@@ -50,7 +50,7 @@ const OVERPASS_MIRRORS: readonly string[] = [
 ];
 const OVERPASS_TIMEOUT_MS = 6000;
 const OVERPASS_USER_AGENT =
-  "conestruct-traffic-control-tool/0.2 (+https://conestruct.com)";
+  "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)";
 
 interface OverpassNode {
   lat: number;

@@ -62,7 +62,6 @@ RENDER_DEPS = [
     "pydantic>=2.0",
     "reportlab>=4.0",
     "openpyxl>=3.1",
-    "pymupdf>=1.25",
     "pypdfium2>=4.30",
     "pillow>=11.0",
     "numpy>=2.0",

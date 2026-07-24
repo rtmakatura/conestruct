@@ -5,7 +5,6 @@ description = "Generate MHT/MOT traffic control plan packages from work zone des
 requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
-    "pymupdf>=1.25",
     "pypdfium2>=4.30",
     "pillow>=11.0",
     "numpy>=2.0",

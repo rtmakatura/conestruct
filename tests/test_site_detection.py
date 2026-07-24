@@ -383,3 +383,14 @@ def test_corridor_school_outside_extent_not_detected(
     )
     result = site_detection.detect_along_corridor(corridor)
     assert result["schools"]["detected"] is False
+
+
+def test_user_agent_identifies_conestruct_not_claude_code() -> None:
+    """#147 guard.  Overpass throttles and blocks by ``User-Agent``, so the
+    string must identify Conestruct (with a contact) and must never revert to
+    the ``anthropics/claude-code`` value that pooled our request budget with an
+    unrelated repository and could import a block earned elsewhere."""
+    ua = site_detection.USER_AGENT
+    assert "conestruct.com" in ua
+    assert "hello@conestruct.com" in ua
+    assert "anthropics/claude-code" not in ua
