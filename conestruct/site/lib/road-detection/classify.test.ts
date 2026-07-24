@@ -324,4 +324,37 @@ describe("classifyFromOsmTags", () => {
     expect(r.raw.osmMaxspeedTag).toBe("35 mph");
     expect(r.raw.osmLanesTag).toBe("3");
   });
+
+  it("relays the raw OSM oneway tag for the flagger gate (issue #158)", () => {
+    // Broadway/Civic Center demo pin: a 5-lane one-way arterial — the case
+    // #136's single-lane gate could never catch.
+    const broadway = classifyFromOsmTags(
+      {
+        highwayClass: "secondary",
+        name: "Broadway",
+        ref: null,
+        tags: { ...baseTags, oneway: "yes", lanes: "5" },
+      },
+      true,
+      "Denver",
+    );
+    expect(broadway.detectedOneway).toBe("yes");
+    expect(broadway.detectedLanesTotal).toBe(5);
+
+    // A two-way road relays the literal tag; undefined when OSM had none.
+    expect(
+      classifyFromOsmTags(
+        { highwayClass: "secondary", name: null, ref: null, tags: { ...baseTags, oneway: "no" } },
+        false,
+        null,
+      ).detectedOneway,
+    ).toBe("no");
+    expect(
+      classifyFromOsmTags(
+        { highwayClass: "secondary", name: null, ref: null, tags: { ...baseTags, oneway: null } },
+        false,
+        null,
+      ).detectedOneway,
+    ).toBeUndefined();
+  });
 });

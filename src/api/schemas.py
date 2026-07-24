@@ -250,6 +250,19 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     # undivided (TA-10, one lane each direction), so a detected total of 1
     # is genuinely single-lane and refused by ``_ensure_lane_eligible``.
     detectedLanesTotal: int | None = Field(default=None, ge=1)
+    # Detection relay (issue #158) — the raw OSM ``oneway`` tag value of the
+    # detected road, relayed unchanged (a pure fact; drives no geometry or
+    # label).  Its sole consumer is the directionality eligibility gate
+    # (``_ensure_direction_eligible`` in render_api): a flagger operation
+    # (TA-10) alternates traffic through one open lane between two OPPOSING
+    # directions, so on a one-way road there is no opposing direction to
+    # hold and the template would direct traffic that isn't there (rule 10)
+    # — the gate refuses the tag values that mean one-directional
+    # (``yes``/``-1``/``reversible``).  ``no`` / None / omitted means "two-way
+    # or no detection signal" and never blocks — direct API callers and
+    # manual entry are unaffected.  The frontend clears it when the operator
+    # confirms the road carries two-way traffic, lifting the block.
+    oneway: str | None = Field(default=None)
 
 
 class LaneClosureDividedScenario(JurisdictionScenarioFields):

@@ -279,6 +279,10 @@ export function classifyFromOsmTags(
     // backend ignores it.  Undefined when OSM carried no `lanes` tag, so a
     // sparsely-tagged way never triggers a false block.
     detectedLanesTotal: parseLaneNumber(tags.lanes) ?? undefined,
+    // Raw OSM `oneway` tag (issue #158), relayed unchanged for the backend
+    // flagger directionality gate.  Undefined when OSM carried no `oneway`
+    // tag, so a sparsely-tagged way never triggers a false block.
+    detectedOneway: tags.oneway ?? undefined,
     speedLimitMph: speedFromOsm ?? undefined,
     confidence: topLevelConf,
     source: "osm-tags",

@@ -26,6 +26,19 @@ const FLAGGER_TYPES = new Set<FlaggerRoadType>([
   "rural_undivided",
   "urban_arterial",
 ]);
+
+// OSM `oneway` tag values that make a road ineligible for a flagger plan
+// (issue #158): the road carries traffic in one direction only, so TA-10 has
+// no opposing direction to alternate with.  Mirrors `_ONEWAY_BLOCKING` in
+// src/api/render_api.py (the `_ensure_direction_eligible` gate) — the backend
+// is the authoritative gate; this drives only the recovery affordance's
+// visibility.
+// `no`/undefined is two-way and never blocks.
+export const ONEWAY_BLOCKING: ReadonlySet<string> = new Set([
+  "yes",
+  "-1",
+  "reversible",
+]);
 const LANE_CLOSURE_TYPES = new Set<LaneClosureRoadType>([
   "rural_divided",
   "freeway",
@@ -145,10 +158,14 @@ export function applyClassification(
     case "flagger_lane_closure": {
       // Relay the raw OSM total for the backend single-lane gate (#136);
       // flagger has no `lanes` field, so this is its only lane-count relay.
+      // Relay the raw OSM `oneway` tag for the directionality gate (#158) —
+      // detection folds `oneway` into `divided`/`roadType`, so the raw tag
+      // is carried separately for the flagger one-way refusal.
       const next = {
         ...scenario,
         laneWidth: c.laneWidthFt,
         detectedLanesTotal: c.detectedLanesTotal,
+        oneway: c.detectedOneway,
         ...speedPatch,
       };
       const delta = baseDelta(speedApplied, speedApplicable);

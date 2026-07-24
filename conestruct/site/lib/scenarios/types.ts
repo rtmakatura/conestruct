@@ -237,6 +237,15 @@ export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
    * the operator confirms the road has a lane in each direction.
    */
   detectedLanesTotal?: number;
+  /**
+   * Raw OSM `oneway` tag value relayed from detection (issue #158). A
+   * flagger (TA-10) alternates traffic between two opposing directions, so
+   * a one-directional value (`yes`/`-1`/`reversible`) is refused by the
+   * backend — there is no opposing direction to hold. `no`/undefined is
+   * two-way and never blocks. Cleared when the operator confirms the road
+   * carries two-way traffic.
+   */
+  oneway?: string;
 }
 
 export interface LaneClosureDividedScenario extends JurisdictionPlanFields {

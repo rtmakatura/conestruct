@@ -194,4 +194,21 @@ describe("applyClassification detectedLanesTotal relay (issue #136)", () => {
     const { scenario } = applyClassification(SHOULDER, withDetectedTotal(2));
     expect((scenario as ShoulderScenario).detectedLanesTotal).toBe(2);
   });
+
+  it("relays the raw OSM oneway tag onto a flagger scenario (issue #158)", () => {
+    const c: RoadClassification = { ...classification(undefined), detectedOneway: "yes" };
+    const { scenario } = applyClassification(FLAGGER, c);
+    expect((scenario as FlaggerLaneClosureScenario).oneway).toBe("yes");
+  });
+
+  it("relays a two-way (`no`) tag unchanged — never a false one-way signal", () => {
+    const c: RoadClassification = { ...classification(undefined), detectedOneway: "no" };
+    const { scenario } = applyClassification(FLAGGER, c);
+    expect((scenario as FlaggerLaneClosureScenario).oneway).toBe("no");
+  });
+
+  it("relays undefined when OSM carried no oneway tag", () => {
+    const { scenario } = applyClassification(FLAGGER, classification(undefined));
+    expect((scenario as FlaggerLaneClosureScenario).oneway).toBeUndefined();
+  });
 });

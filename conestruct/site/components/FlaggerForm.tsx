@@ -7,6 +7,7 @@ import {
   type FlaggerRoadType,
   type FlaggerWorkType,
 } from "@/lib/scenarios";
+import { ONEWAY_BLOCKING } from "@/lib/scenarios/auto-apply";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
   CheckRow,
@@ -77,6 +78,21 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             onToggle={() =>
               setScenario({ ...scenario, detectedLanesTotal: undefined })
             }
+          />
+        )}
+
+        {/* One-way recovery (issue #158): a flagger (TA-10) alternates
+            traffic between two opposing directions, so when detection relays
+            a one-way OSM tag the backend blocks generation.  This confirm is
+            the operator's recovery path for a misdetection — asserting the
+            road carries two-way traffic clears the relayed signal and lifts
+            the block. */}
+        {scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway) && (
+          <CheckRow
+            on={false}
+            label="Road carries two-way traffic"
+            desc="Detection saw a one-way street — confirm to enable this plan"
+            onToggle={() => setScenario({ ...scenario, oneway: undefined })}
           />
         )}
 

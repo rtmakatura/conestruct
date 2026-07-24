@@ -10,9 +10,9 @@ Time-boxed session-level warnings. Remove each when the issue that motivates
 it ships. (Repo `CLAUDE.md` is gitignored, so standing cautions live here in
 the tracked caution register.)
 
-- **STANDING CAUTION (until #158 ships): do not demo or smoke flagger plans at
-  the Broadway/Civic Center pin (39.7389, -104.9862)** — it is a one-way street
-  and the flagger template is wrong there. Use a genuine two-way road.
+- _(none currently active — the Broadway/Civic Center flagger caution was
+  retired when #158 shipped: one-way roads are now refused for flagger with a
+  user-visible message and a two-way-traffic recovery confirm.)_
 
 ## `urban_high_speed_breakpoint_mph` (spec §3.4a calls it "required per-jurisdiction")
 

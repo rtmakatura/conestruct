@@ -128,6 +128,10 @@ export interface RoadClassification {
    *  single-lane eligibility gate.  Undefined when OSM had no `lanes`
    *  tag.  See ShoulderScenario.detectedLanesTotal. */
   detectedLanesTotal?: number;
+  /** Raw OSM `oneway` tag value (issue #158), relayed to the backend
+   *  flagger directionality gate.  Undefined when OSM carried no `oneway`
+   *  tag.  See FlaggerLaneClosureScenario.oneway. */
+  detectedOneway?: string;
   speedLimitMph?: number;
   confidence: Confidence;
   source: "osm-tags";

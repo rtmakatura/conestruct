@@ -208,6 +208,55 @@ def _ensure_lane_eligible(scenario: Scenario) -> None:
     )
 
 
+# OSM ``oneway`` tag values that mean the road carries traffic in a single
+# direction — a flagger operation has no opposing direction to alternate with
+# on any of these.  ``-1`` is a one-way road digitized against its travel
+# direction; ``reversible`` alternates direction by time of day and is never a
+# steady two-way road a flagger could hold.  Mirrored on the frontend in
+# conestruct/site/lib/scenarios/auto-apply.ts (ONEWAY_BLOCKING).  ``no`` / None
+# / omitted are two-way (or no signal) and never block.
+_ONEWAY_BLOCKING = frozenset({"yes", "-1", "reversible"})
+
+
+def _ensure_direction_eligible(scenario: Scenario) -> None:
+    """Refuse a flagger plan on a one-way road (issue #158).
+
+    A flagger operation (TA-10) alternates traffic through a single open
+    lane between two OPPOSING directions — the opposing direction is
+    structural to the template.  On a one-way road there is no opposing
+    direction to hold, so the generated plan would station a flagger
+    directing traffic that isn't there: a wrong template on a field
+    document (rule 10).  Detection consumes the OSM ``oneway`` tag into
+    ``divided``/``roadType`` for classification, so the raw tag is relayed
+    separately via ``scenario.oneway`` for this gate.
+
+    Only ``flagger_lane_closure`` is gated.  A shoulder closure keeps
+    traffic in its own lane and models no opposing-direction control, so
+    shoulder work on a one-way road is valid and never blocked (issue #158
+    scope decision).
+
+    Raised as 400 (like :func:`_ensure_lane_eligible`) so the Next.js proxy
+    surfaces the message; a 422 is swallowed to a generic 502.  The frontend
+    clears ``scenario.oneway`` when the operator confirms the road carries
+    two-way traffic, lifting the block.
+    """
+    if scenario.kind != "flagger_lane_closure":
+        return
+    if getattr(scenario, "oneway", None) not in _ONEWAY_BLOCKING:
+        return
+    raise HTTPException(
+        status_code=400,
+        detail=(
+            "This looks like a one-way street. A flagger operation (TA-10) "
+            "alternates traffic through a single open lane between two opposing "
+            "directions — a one-way road has no opposing direction to hold, so "
+            "the plan would direct traffic that isn't there. If the detection is "
+            "wrong and this road carries two-way traffic, confirm “Road carries "
+            "two-way traffic” in the form and regenerate."
+        ),
+    )
+
+
 @app.middleware("http")
 async def require_bearer_secret(
     request: Request,
@@ -273,6 +322,9 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
     # single-lane road is refused uniformly across every surface, including
     # the audit/breakdown that drives the StatusBar "GENERATION BLOCKED".
     _ensure_lane_eligible(scenario)
+    # Directionality eligibility gate (issue #158) — refuse a flagger plan on
+    # a one-way road at the same chokepoint, for the same uniform coverage.
+    _ensure_direction_eligible(scenario)
     params, generator, kwargs = scenario_to_call(scenario)
     geo_violations = validate_corridor_geometry(params)
     geo_errors = [v for v in geo_violations if v.severity == "error"]
