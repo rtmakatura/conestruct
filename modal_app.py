@@ -118,6 +118,21 @@ app = modal.App("conestruct-render")
     # because the heavy import below runs after the snapshot point.
     # The import cost itself is #137.
     min_containers=1,
+    # Global spend backstop (#145 part C).  The /sandbox render proxy is
+    # anonymous by design (the homepage IS the public generator), so a
+    # distributed flood could otherwise scale render containers without
+    # bound and drain the Starter plan's $30/month credit — a HARD stop
+    # with no payment method on file — turning a cost problem into a
+    # service outage for everyone, including a live sales demo.  Capping
+    # concurrency bounds worst-case container-seconds regardless of how
+    # many callers hit the proxy.  8 containers is comfortably above any
+    # real demo burst (a handful of prospects rendering at once) yet caps
+    # the drain rate low enough that a flood can't exhaust the credit in
+    # minutes.  The per-IP limiter (conestruct/site/lib/rate-limit.ts,
+    # part B) throttles individual callers on top of this ceiling.  A
+    # daily spend alarm is NOT expressible here — set it in the Modal
+    # dashboard (Settings → Usage/Billing alerts).
+    max_containers=8,
 )
 @modal.asgi_app()
 def fastapi_app():

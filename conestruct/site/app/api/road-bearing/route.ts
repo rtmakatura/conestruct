@@ -19,9 +19,9 @@ import type {
   RoadCandidate,
   RoadDetectResponse,
 } from "@/lib/road-detection/types";
+import { rateLimitOr429 } from "@/lib/rate-limit";
 
 const MAX_BODY_BYTES = 256;
-const RATE_LIMIT_PER_MIN = 30;
 // Overpass search radius for ways.  Wider than SNAP_MAX_DISTANCE_M so
 // the per-way projection step has options to consider.
 const SEARCH_RADIUS_M = 50;
@@ -51,20 +51,6 @@ const OVERPASS_MIRRORS: readonly string[] = [
 const OVERPASS_TIMEOUT_MS = 6000;
 const OVERPASS_USER_AGENT =
   "conestruct-traffic-control-tool/0.2 (+https://conestruct.com)";
-
-const buckets = new Map<string, { count: number; reset: number }>();
-
-function rateLimit(ip: string): boolean {
-  const now = Date.now();
-  const cur = buckets.get(ip);
-  if (!cur || cur.reset < now) {
-    buckets.set(ip, { count: 1, reset: now + 60_000 });
-    return true;
-  }
-  if (cur.count >= RATE_LIMIT_PER_MIN) return false;
-  cur.count++;
-  return true;
-}
 
 interface OverpassNode {
   lat: number;
@@ -364,13 +350,8 @@ function buildResponse(
 }
 
 export async function POST(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    req.headers.get("x-real-ip") ??
-    "unknown";
-  if (!rateLimit(ip)) {
-    return new Response("Too many requests", { status: 429 });
-  }
+  const over = await rateLimitOr429(req, "road-bearing", 30);
+  if (over) return over;
 
   const len = Number(req.headers.get("content-length") ?? "0");
   if (len > MAX_BODY_BYTES) {

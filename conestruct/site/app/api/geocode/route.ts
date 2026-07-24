@@ -1,31 +1,12 @@
 import { NextRequest } from "next/server";
 import { geocodeAddress } from "@/lib/geocode";
+import { rateLimitOr429 } from "@/lib/rate-limit";
 
 const MAX_BODY_BYTES = 1024;
-const RATE_LIMIT_PER_MIN = 40;
-
-const buckets = new Map<string, { count: number; reset: number }>();
-
-function rateLimit(ip: string): boolean {
-  const now = Date.now();
-  const cur = buckets.get(ip);
-  if (!cur || cur.reset < now) {
-    buckets.set(ip, { count: 1, reset: now + 60_000 });
-    return true;
-  }
-  if (cur.count >= RATE_LIMIT_PER_MIN) return false;
-  cur.count++;
-  return true;
-}
 
 export async function POST(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    req.headers.get("x-real-ip") ??
-    "unknown";
-  if (!rateLimit(ip)) {
-    return new Response("Too many requests", { status: 429 });
-  }
+  const over = await rateLimitOr429(req, "geocode", 40);
+  if (over) return over;
 
   const len = Number(req.headers.get("content-length") ?? "0");
   if (len > MAX_BODY_BYTES) {
