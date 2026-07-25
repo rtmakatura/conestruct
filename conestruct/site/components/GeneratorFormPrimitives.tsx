@@ -24,13 +24,13 @@ export function FieldGroup({
         <span>{label}</span>
         {tag && <span className="text-[color:var(--act)]">{tag}</span>}
       </div>
-      <div className="px-6 py-5">{children}</div>
+      <div className="px-6 py-4">{children}</div>
     </div>
   );
 }
 
 export function Field({ children }: { children: ReactNode }) {
-  return <div className="mb-3.5 last:mb-0">{children}</div>;
+  return <div className="mb-3 last:mb-0">{children}</div>;
 }
 
 export function CheckRow({

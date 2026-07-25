@@ -134,7 +134,7 @@ export function NearIntersectionForm({
             onChange={(e) => set("speed", +e.target.value)}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
             MUTCD: ≥45 mph uses L=W·S
           </div>
         </Field>

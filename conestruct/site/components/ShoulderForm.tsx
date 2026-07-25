@@ -112,7 +112,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             }}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
+          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
             MUTCD: ≥45 mph uses L=W·S
           </div>
         </Field>
@@ -218,11 +218,11 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         />
 
         {scenario.workZoneSpeed !== undefined && (
-          // Top margin matches the form's per-Field 14 px rhythm so the
+          // Top margin matches the form's per-Field 12 px rhythm so the
           // conditional input clears the CheckRow group's bottom border
           // instead of butting up against it (see GeneratorFormPrimitives
-          // — Field uses mb-3.5, CheckRow carries no margin).
-          <div className="mt-3.5">
+          // — Field uses mb-3, CheckRow carries no margin).
+          <div className="mt-3">
             <Field>
               <LabelRow htmlFor="sh-wz-speed" value={`${scenario.workZoneSpeed} mph`}>
                 Work-zone speed limit

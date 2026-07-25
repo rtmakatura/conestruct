@@ -392,8 +392,8 @@ export function QuotePanel({
       )}
 
       {breakdown && (
-        <div className="mt-7">
-          <div className="flex justify-between items-baseline border-t border-b border-dashed border-[color:var(--rule-soft)] py-3 mb-5">
+        <div className="mt-6">
+          <div className="flex justify-between items-baseline border-t border-b border-dashed border-[color:var(--rule-soft)] py-3 mb-4">
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
               Total estimate
             </span>
@@ -570,7 +570,7 @@ export function QuotePanel({
   }
 
   return (
-    <section className="output-card mb-8 !p-7">
+    <section className="output-card mb-4 !p-6">
       <span className="corner tl" />
       <span className="corner br" />
       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)] mb-1.5">
@@ -579,7 +579,7 @@ export function QuotePanel({
       <h3 className="text-[16px] font-bold text-[color:var(--heading-on-paper)] m-0 mb-1.5 tracking-[-0.01em]">
         Pricing quote
       </h3>
-      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-5">
+      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] mb-4">
         XLSX · CONTRACTOR ESTIMATE · OVERHEAD + PROFIT
       </div>
       {body}

@@ -179,7 +179,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 0;
+    padding: 12px 0;
     cursor: pointer;
     border-top: 1px solid var(--line-soft);
   }
@@ -364,7 +364,7 @@ body {
   .output-card {
     background: white;
     border: 1px solid var(--line);
-    padding: 20px;
+    padding: 16px;
     position: relative;
   }
   .output-card .corner {
@@ -404,7 +404,7 @@ body {
     grid-template-columns: 36px 1fr auto auto auto;
     gap: 16px;
     align-items: center;
-    padding: 14px 18px;
+    padding: 12px 16px;
     cursor: pointer;
     user-select: none;
     width: 100%;
@@ -452,8 +452,11 @@ body {
   .audit-item.open .audit-head .chev {
     transform: rotate(90deg);
   }
+  /* Left inset aligns to the .audit-head number column: 16px padding-left
+     + 36px grid column + 16px gap = 68px (issue #165 — tracks .audit-head
+     padding, not a spacing-scale step). */
   .audit-body {
-    padding: 0 18px 20px 70px;
+    padding: 0 16px 16px 68px;
     border-top: 1px dashed var(--line);
     background: var(--paper);
     font-size: 14px;
@@ -620,7 +623,7 @@ body {
   .empty-state {
     background: var(--paper);
     border: 1px dashed var(--line);
-    padding: 60px 32px;
+    padding: 32px 24px;
     text-align: center;
     font-family: var(--font-mono);
     font-size: 12px;
@@ -1288,7 +1291,7 @@ input[type="number"] {
    pre-generation Setup panel and the post-generation Results zone get
    the larger title. */
 .workbench .zone {
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 .workbench .zone-head {
   display: flex;
@@ -1332,7 +1335,7 @@ input[type="number"] {
 .workbench .jbar {
   background: var(--canvas-tint);
   border: 1px solid var(--rule);
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 .workbench .jbar-main {
   display: grid;
@@ -1816,7 +1819,7 @@ input[type="number"] {
   border-top: none;
 }
 .workbench .hero-cell {
-  padding: 22px 26px;
+  padding: 24px;
   border-right: 1px solid var(--rule-soft);
 }
 .workbench .hero-cell .k {
@@ -1846,7 +1849,7 @@ input[type="number"] {
   font-weight: 600;
 }
 .workbench .hero-meta {
-  padding: 22px 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1901,7 +1904,7 @@ input[type="number"] {
 .workbench .dl-card {
   border: 1px solid var(--rule);
   background: var(--canvas-tint);
-  padding: 15px 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1970,7 +1973,7 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 18px;
+  padding: 12px 16px;
   cursor: pointer;
   width: 100%;
   background: transparent;
@@ -2016,7 +2019,7 @@ input[type="number"] {
 }
 .workbench .price-body {
   border-top: 1px solid var(--rule-soft);
-  padding: 6px 18px 14px;
+  padding: 8px 16px 16px;
 }
 
 /* Zone 3 — the density-contract chip grammar.  Every reference family
@@ -2058,7 +2061,7 @@ input[type="number"] {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 15px;
+  padding: 12px 16px;
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -2132,7 +2135,7 @@ input[type="number"] {
 }
 .workbench .refchip .chip-body {
   border-top: 1px solid var(--rule-soft);
-  padding: 10px 15px 14px;
+  padding: 12px 16px;
 }
 
 /* jurisdiction-required device rows — output-orange wash + source tag
@@ -2166,7 +2169,7 @@ input[type="number"] {
   border-left-width: 3px;
   color: var(--fail);
   font-size: 12.5px;
-  padding: 9px 14px;
-  margin-bottom: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
   font-weight: 500;
 }

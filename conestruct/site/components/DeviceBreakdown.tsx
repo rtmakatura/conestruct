@@ -96,7 +96,7 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
       {state.state === "ready" && (
         <>
           {jrCount > 0 && jurName && (
-            <p className="text-[12px] text-[color:var(--ink-on-dark)] mt-1 mb-3 pl-2.5 border-l-2 border-[color:var(--dim)]">
+            <p className="text-[12px] text-[color:var(--ink-on-dark)] mt-1 mb-3 pl-3 border-l-2 border-[color:var(--dim)]">
               Highlighted rows are jurisdiction-required — added by{" "}
               {jurName}&apos;s published rules on top of the MUTCD baseline.
             </p>

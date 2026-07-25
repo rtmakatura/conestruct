@@ -589,7 +589,7 @@ export function GeneratorShell({
 
       <div>
         <main className="px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6">
-          <div className="mb-7">
+          <div className="mb-6">
             <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block">
               02 · GENERATOR
             </div>
@@ -603,7 +603,7 @@ export function GeneratorShell({
             </p>
           </div>
 
-          <div className="mb-7 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
+          <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
               Draft — not a sealed plan
             </div>
@@ -682,7 +682,7 @@ export function GeneratorShell({
             detection={lastDetection}
           />
           {bundleError && (
-            <div className="mb-5 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
+            <div className="mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
               {bundleError}
             </div>
           )}
@@ -780,7 +780,7 @@ export function GeneratorShell({
                   strip's "retry from the audit trail panel below" must
                   always point at a panel that exists (rule 10). */}
               {(showResults || auditState.state === "error") && (
-                <div className="ref-group mt-6">
+                <div className="ref-group mt-4">
                   <div className="ref-group-label">
                     Plan verification &amp; details
                   </div>

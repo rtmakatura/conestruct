@@ -282,13 +282,13 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
               : "↓ Audit PDF"}
         </button>
       </div>
-      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-5 max-w-[620px] leading-relaxed">
+      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-4 max-w-[620px] leading-relaxed">
         Scope: federal MUTCD + Colorado Supplement. Other jurisdictions may
         impose additional requirements not yet captured.
       </div>
 
       {audit.state === "error" && (
-        <div className="flex items-baseline gap-3 mb-5 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
+        <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
           <span>Audit trail failed: {audit.message}</span>
           <button
             type="button"

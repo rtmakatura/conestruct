@@ -1162,7 +1162,7 @@ function FactRows({
       {chips.map((x) => (
         <div
           key={x.rule}
-          className={`flex gap-2.5 px-3 py-2.5 mb-1.5 last:mb-0 border-l-2 bg-[color:var(--canvas)] ${tone}`}
+          className={`flex gap-2.5 px-3 py-2 mb-1.5 last:mb-0 border-l-2 bg-[color:var(--canvas)] ${tone}`}
         >
           <span aria-hidden className="text-[13px]">
             {icon}
@@ -1308,7 +1308,7 @@ export function JurisdictionSection({
 }: SectionProps) {
   if (!jurisdiction && !loading) return null;
   return (
-    <section className="mt-9" aria-label="Jurisdiction rules">
+    <section className="mt-4" aria-label="Jurisdiction rules">
       <div className="flex items-baseline justify-between mb-1 pb-3 border-b border-[color:var(--rule)]">
         <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
           {jurisdiction ? `${jurisdiction.name} — jurisdiction rules` : "Jurisdiction rules"}
