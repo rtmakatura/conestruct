@@ -2,6 +2,10 @@ import { NextRequest } from "next/server";
 import { fetchCorridorSpec } from "@/lib/render-proxy";
 import { rateLimitOr429 } from "@/lib/rate-limit";
 
+// #122: give cold-start / heavy renders headroom under Vercel's function
+// limit (60s < the backend's 120s cap) instead of an opaque NetworkError.
+export const maxDuration = 60;
+
 // Engine-removal PR D: proxy for the picker modal's corridor-preview
 // zone lengths (POST /render/corridor-spec on Modal).  Same rate-limit
 // posture as the audit proxy; the body is shape-checked here and

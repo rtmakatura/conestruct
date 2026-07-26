@@ -4,6 +4,10 @@ import { coerceQuoteSettings } from "@/lib/quote-settings";
 import { isScenario } from "@/lib/scenarios";
 import { rateLimitOr429 } from "@/lib/rate-limit";
 
+// #122: give cold-start / heavy renders headroom under Vercel's function
+// limit (60s < the backend's 120s cap) instead of an opaque NetworkError.
+export const maxDuration = 60;
+
 const MAX_BODY_BYTES = 32 * 1024;
 
 export async function POST(req: NextRequest) {
