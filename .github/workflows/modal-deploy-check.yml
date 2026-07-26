@@ -25,6 +25,15 @@ on:
     # Public repo — 15-minute cadence (a reminder doesn't need tighter).
     - cron: "*/15 * * * *"
   workflow_dispatch:
+    inputs:
+      healthz_url_override:
+        description: >-
+          Base URL to probe instead of the MODAL_RENDER_URL repo variable.
+          Test hook: point it at an unreachable host (e.g. https://127.0.0.1:1)
+          or a non-200 endpoint to prove the run fails loudly. Leave blank for
+          the real backend.
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -48,23 +57,59 @@ jobs:
         shell: bash
         env:
           MODAL_URL: ${{ vars.MODAL_RENDER_URL }}
+          URL_OVERRIDE: ${{ github.event.inputs.healthz_url_override }}
         run: |
+          # A manual run may override the target (test hook, #134); otherwise
+          # use the repo variable.
+          if [ -n "$URL_OVERRIDE" ]; then
+            MODAL_URL="$URL_OVERRIDE"
+            echo "Using workflow_dispatch override URL: $MODAL_URL"
+          fi
           if [ -z "$MODAL_URL" ]; then
             echo "::error::Repo variable MODAL_RENDER_URL is not set — run: gh variable set MODAL_RENDER_URL --body '<modal-base-url>'"
             exit 1
           fi
 
-          # --max-time covers a Modal cold start.  If /healthz is
-          # unreachable (timeout, network, HTTP error) we cannot read the
-          # live state — skip the run, touch no issues, exit success.
-          set +e
-          BODY="$(curl -fsS --max-time 30 "$MODAL_URL/healthz")"
-          RC=$?
-          set -e
-          if [ "$RC" -ne 0 ]; then
-            echo "Could not reach $MODAL_URL/healthz (curl exit $RC) — skipping this run."
-            echo "reachable=false" >> "$GITHUB_OUTPUT"
-            exit 0
+          # Probe /healthz, capturing the HTTP status separately from the body
+          # so we can tell "no response at all" from "reachable but non-200".
+          # --max-time covers a Modal cold start.  Retry a few times so a
+          # single network hiccup doesn't cry wolf; a genuine outage still
+          # fails the run within this step (#134).
+          ATTEMPTS=3
+          SLEEP=10
+          CODE=""
+          BODY=""
+          for i in $(seq 1 "$ATTEMPTS"); do
+            set +e
+            BODY="$(curl -sS --max-time 30 -w '\n%{http_code}' "$MODAL_URL/healthz")"
+            RC=$?
+            set -e
+            if [ "$RC" -eq 0 ]; then
+              CODE="$(printf '%s' "$BODY" | tail -n1)"
+              BODY="$(printf '%s' "$BODY" | sed '$d')"
+              if [ "$CODE" = "200" ]; then
+                break
+              fi
+              echo "Attempt $i/$ATTEMPTS: /healthz returned HTTP $CODE."
+            else
+              CODE=""
+              echo "Attempt $i/$ATTEMPTS: could not reach $MODAL_URL/healthz (curl exit $RC)."
+            fi
+            if [ "$i" -lt "$ATTEMPTS" ]; then
+              sleep "$SLEEP"
+            fi
+          done
+
+          # An unreachable or non-200 /healthz means we CANNOT read the live
+          # backend state.  That is the exact scenario this monitor exists for,
+          # so fail loudly (red run -> notification) instead of exiting green.
+          if [ -z "$CODE" ]; then
+            echo "::error::Modal /healthz unreachable at $MODAL_URL after $ATTEMPTS attempts (network/timeout/DNS). Cannot verify the deployed backend — investigate the backend or the MODAL_RENDER_URL variable."
+            exit 1
+          fi
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Modal /healthz returned HTTP $CODE at $MODAL_URL after $ATTEMPTS attempts. Cannot verify the deployed backend — investigate the backend or the MODAL_RENDER_URL variable."
+            exit 1
           fi
 
           SERVED="$(echo "$BODY" | jq -r '.sha // "unknown"')"
