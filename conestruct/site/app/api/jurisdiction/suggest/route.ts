@@ -2,6 +2,10 @@ import { NextRequest } from "next/server";
 import { fetchJurisdictionSuggest } from "@/lib/render-proxy";
 import { rateLimitOr429 } from "@/lib/rate-limit";
 
+// #122: give cold-start / heavy renders headroom under Vercel's function
+// limit (60s < the backend's 120s cap) instead of an opaque NetworkError.
+export const maxDuration = 60;
+
 const MAX_BODY_BYTES = 512;
 
 function isFiniteNumber(v: unknown): v is number {
