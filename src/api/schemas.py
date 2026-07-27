@@ -410,7 +410,9 @@ class IntersectionApproach(BaseModel):
     # (0 = downstream end of the work zone, increasing upstream).
     # Both approaches of one cross street carry the same value.
     # Near/far side derives from it: < 0 → intersection downstream of
-    # the work → near-side work (§6N.12.08, Fig. 6P-21); > workLen →
+    # the work → near-side work per §6N.12.08 (its Fig. 6P-21 draws
+    # the situation as a center-lane variant; the emitted right-lane
+    # train is Fig. 6P-22's near-side approach); > workLen →
     # intersection upstream → far-side work (§6N.12.12).  Values
     # inside [0, workLen] are rejected on the scenario (in-intersection
     # work is Phase 2).  Bounds keep the value finite and inside the

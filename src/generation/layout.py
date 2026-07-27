@@ -1162,10 +1162,15 @@ def near_intersection_stations(
 
     Near-side vs. far-side derives from the shared ``along_station_ft``
     sign (schema contract): ``< 0`` → intersection downstream of the
-    work → near-side work handled as a midblock closure (§6N.12.08,
-    Fig. 6P-21); ``> workLen`` → far-side work, and the §6N.12.12
-    companion closure moves the merging taper upstream of the
-    intersection so the lane is already closed where it crosses.
+    work → near-side work handled as a midblock closure per §6N.12.08
+    (p. 849), whose own text names Fig. 6P-21 as the near-side
+    depiction.  Precision on that figure: it draws a CENTER-lane
+    variant (W9-3L / W12-1, p. 901); the right-lane train emitted here
+    is the one drawn in Fig. 6P-22's near-side approach (p. 903), per
+    its note 3's "normal procedure" of closing the lane on the near
+    side.  ``> workLen`` → far-side work, and the §6N.12.12 companion
+    closure moves the merging taper upstream of the intersection so the
+    lane is already closed where it crosses.
     """
     if params.num_lanes < 2:
         raise ValueError(
@@ -1257,9 +1262,11 @@ def near_intersection_stations(
         # §6N.12.08: near-side work is handled as a midblock closure —
         # but only when the standard reopening hardware (downstream
         # taper + END signage) fits upstream of the intersection.  When
-        # it does not, Fig. 6P-21 / Case 18 run the closure to the
-        # corner instead: channelizers continue to the upstream curb
-        # line and the lane reopens beyond the intersection.
+        # it does not, the closure runs to the corner instead, the
+        # work-space-at-the-crosswalk shape Fig. 6P-21 draws (in its
+        # center-lane variant) and Case 18 draws for this right-lane
+        # train: channelizers continue to the upstream curb line and
+        # the lane reopens beyond the intersection.
         far_gap = -along - half_cross_ft  # work-zone end to upstream curb
         extend_to_corner = far_gap < ds_taper_len + _INTERSECTION_R2_11_SETBACK_FT
         if extend_to_corner:
@@ -1353,6 +1360,10 @@ def generate_near_intersection(
     wz_len = params.work_zone_length_ft
 
     # Lateral landmarks — closed lane is the rightmost of num_lanes.
+    # Modeling assumption, not an MUTCD rule: no Chapter 6P figure or
+    # section selects which lane gets closed (the work location does),
+    # and this tool models right-side work only.  Issue #176 carries
+    # the product question (document / refuse / model other lanes).
     lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
     lane_edge_offset = params.num_lanes * params.lane_width_ft
     arrow_board_offset = lane_line_offset + params.lane_width_ft / 2.0
@@ -1457,9 +1468,11 @@ def generate_near_intersection(
 
     # 7. Downstream end.  Midblock branches reopen the lane with the
     # standard short taper; the extend-to-corner branch (near side,
-    # intersection immediately downstream — Fig. 6P-21 / Case 18) runs
-    # the closure to the upstream curb line instead, and the lane
-    # reopens beyond the intersection with no devices in the box.
+    # intersection immediately downstream — the work-space-at-the-
+    # crosswalk shape drawn by Fig. 6P-21 in its center-lane variant
+    # and by Case 18 for this right-lane train) runs the closure to
+    # the upstream curb line instead, and the lane reopens beyond the
+    # intersection with no devices in the box.
     if st["extend_to_corner"]:
         placements.append(
             DevicePlacement(

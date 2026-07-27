@@ -3599,8 +3599,11 @@ def render_plan_sheet(
         # Near/far derives from the shared along-station sign (schema
         # contract; the generator validated consistency across legs).
         # Both figures verified by subject: TA-21 "Lane Closure on the
-        # Near Side of an Intersection", TA-22 "Right-Hand Lane Closure
-        # on the Far Side of an Intersection".
+        # Near Side of an Intersection" (the near-side typical per
+        # §6N.12.08's own text; its drawing is a center-lane variant —
+        # the emitted right-lane train is Fig. 6P-22's near-side
+        # approach, note 3), TA-22 "Right-Hand Lane Closure on the Far
+        # Side of an Intersection".
         _along = approaches[0].along_station_ft
         ta_override = "TA-22" if _along > params.work_zone_length_ft else "TA-21"
     if shoulder_width_ft is None:

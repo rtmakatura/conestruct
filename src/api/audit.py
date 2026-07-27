@@ -1471,10 +1471,14 @@ _SCENARIO_TA_CDOT: dict[str, tuple[str, str]] = {
     # verified against.
     "flagger_lane_closure": ("TA-10", "S-630-1"),
     # near_intersection (gated, Refs #117): verified by SUBJECT against
-    # the local MUTCD PDF — Fig. 6P-21 / TA-21 "Lane Closure on the Near
-    # Side of an Intersection"; audit_projection overrides to TA-22
-    # ("Right-Hand Lane Closure on the Far Side of an Intersection") for
-    # far-side work.  CDOT anchor: S-630-1 Sheet 10, Cases 18/19.
+    # the local MUTCD PDF — TA-21 "Lane Closure on the Near Side of an
+    # Intersection" is the typical for the situation (§6N.12.08's own
+    # text names Fig. 6P-21, p. 849); the figure draws a center-lane
+    # variant, and the emitted right-lane train is Fig. 6P-22's
+    # near-side approach (p. 903, note 3).  audit_projection overrides
+    # to TA-22 ("Right-Hand Lane Closure on the Far Side of an
+    # Intersection") for far-side work.  CDOT anchor: S-630-1 Sheet 10,
+    # Cases 18/19.
     "near_intersection": ("TA-21", "S-630-1"),
     # NOTE: the gated kinds below carry UNVERIFIED citations — they
     # triage with their respective enablement work (PR 3 Q3).
