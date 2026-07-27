@@ -138,6 +138,12 @@ export function applyClassification(
           // Relay the raw OSM total for the backend single-lane gate
           // (issue #136).  Pure fact; drives no geometry here.
           detectedLanesTotal: c.detectedLanesTotal,
+          // Relay the per-direction lane tags for the backend lane-count
+          // consistency caution (issue #120).  Pure facts; the audit
+          // flags total != forward + backward + both_ways.
+          detectedLanesForward: c.detectedLanesForward,
+          detectedLanesBackward: c.detectedLanesBackward,
+          detectedLanesBothWays: c.detectedLanesBothWays,
           ...speedPatch,
           ...lanesPatch,
         },
@@ -166,6 +172,12 @@ export function applyClassification(
         laneWidth: c.laneWidthFt,
         detectedLanesTotal: c.detectedLanesTotal,
         oneway: c.detectedOneway,
+        // Per-direction lane relays (issue #120) — same consistency
+        // caution as shoulder; flagger has no lane field, so the audit
+        // item is the only consumer.
+        detectedLanesForward: c.detectedLanesForward,
+        detectedLanesBackward: c.detectedLanesBackward,
+        detectedLanesBothWays: c.detectedLanesBothWays,
         ...speedPatch,
       };
       const delta = baseDelta(speedApplied, speedApplicable);

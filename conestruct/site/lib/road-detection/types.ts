@@ -54,6 +54,11 @@ export interface RoadCandidate {
     lanes: string | null;
     lanes_forward: string | null;
     lanes_backward: string | null;
+    // Center turn lane / two-way-left-turn-lane count (issue #120): a
+    // correctly tagged TWLTL road has lanes = forward + backward +
+    // both_ways, so the lane-count consistency check must include this
+    // term or it flags most center-turn-lane arterials as defective.
+    lanes_both_ways: string | null;
     // Turn-lane markers (near_intersection #117): presence signals
     // that OSM's `lanes` count likely includes turn pockets, so a
     // prefilled lane count needs user confirmation.
@@ -132,6 +137,15 @@ export interface RoadClassification {
    *  flagger directionality gate.  Undefined when OSM carried no `oneway`
    *  tag.  See FlaggerLaneClosureScenario.oneway. */
   detectedOneway?: string;
+  /** Parsed OSM `lanes:forward` / `lanes:backward` / `lanes:both_ways`
+   *  counts (issue #120), relayed unchanged to the backend lane-count
+   *  consistency check alongside `detectedLanesTotal`.  Pure facts —
+   *  they drive no geometry or label here.  Each is undefined when OSM
+   *  carried no such tag, so a sparsely-tagged way never trips the
+   *  check (the check needs total, forward, AND backward to fire). */
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
   speedLimitMph?: number;
   confidence: Confidence;
   source: "osm-tags";

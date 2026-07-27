@@ -22,7 +22,7 @@ function mkCandidate(over: Partial<RoadCandidate>): RoadCandidate {
       maxspeed: null,
       lanes: null,
       lanes_forward: null,
-      lanes_backward: null,
+      lanes_backward: null, lanes_both_ways: null,
       turn_lanes: null,
       turn_lanes_forward: null,
       turn_lanes_backward: null,
@@ -74,7 +74,7 @@ describe("dedupCandidates", () => {
         highway_class: "tertiary",
         bearing: 44.61,
         snap_distance_m: 25,
-        tags: { oneway: "yes", maxspeed: null, lanes: null, lanes_forward: null, lanes_backward: null, turn_lanes: null, turn_lanes_forward: null, turn_lanes_backward: null },
+        tags: { oneway: "yes", maxspeed: null, lanes: null, lanes_forward: null, lanes_backward: null, lanes_both_ways: null, turn_lanes: null, turn_lanes_forward: null, turn_lanes_backward: null },
       }),
       mkCandidate({
         way_id: "missing-oneway",
@@ -82,7 +82,7 @@ describe("dedupCandidates", () => {
         highway_class: "tertiary",
         bearing: 43.72,
         snap_distance_m: 12,
-        tags: { oneway: null, maxspeed: null, lanes: null, lanes_forward: null, lanes_backward: null, turn_lanes: null, turn_lanes_forward: null, turn_lanes_backward: null },
+        tags: { oneway: null, maxspeed: null, lanes: null, lanes_forward: null, lanes_backward: null, lanes_both_ways: null, turn_lanes: null, turn_lanes_forward: null, turn_lanes_backward: null },
       }),
     ]);
     expect(result).toHaveLength(1);

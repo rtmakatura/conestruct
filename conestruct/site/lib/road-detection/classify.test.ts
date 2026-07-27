@@ -67,7 +67,7 @@ describe("classifyFromOsmTags detectedLanesTotal (issue #136)", () => {
     maxspeed: null,
     lanes: null,
     lanes_forward: null,
-    lanes_backward: null,
+    lanes_backward: null, lanes_both_ways: null,
   };
 
   it("relays a genuine single-lane road as detectedLanesTotal 1", () => {
@@ -98,13 +98,64 @@ describe("classifyFromOsmTags detectedLanesTotal (issue #136)", () => {
   });
 });
 
+describe("classifyFromOsmTags per-direction lane relays (issue #120)", () => {
+  const tags = {
+    oneway: null,
+    maxspeed: null,
+    lanes: null,
+    lanes_forward: null,
+    lanes_backward: null,
+    lanes_both_ways: null,
+  };
+
+  it("relays forward/backward/both_ways parsed, alongside the total", () => {
+    const r = classifyFromOsmTags(
+      {
+        highwayClass: "secondary",
+        name: "TWLTL Ave",
+        ref: null,
+        tags: {
+          ...tags,
+          lanes: "3",
+          lanes_forward: "1",
+          lanes_backward: "1",
+          lanes_both_ways: "1",
+        },
+      },
+      true,
+      null,
+    );
+    expect(r.detectedLanesTotal).toBe(3);
+    expect(r.detectedLanesForward).toBe(1);
+    expect(r.detectedLanesBackward).toBe(1);
+    expect(r.detectedLanesBothWays).toBe(1);
+  });
+
+  it("each relay is undefined when its tag is absent — never a false signal", () => {
+    const r = classifyFromOsmTags(
+      {
+        highwayClass: "secondary",
+        name: "Sparse Rd",
+        ref: null,
+        tags: { ...tags, lanes: "2" },
+      },
+      true,
+      null,
+    );
+    expect(r.detectedLanesTotal).toBe(2);
+    expect(r.detectedLanesForward).toBeUndefined();
+    expect(r.detectedLanesBackward).toBeUndefined();
+    expect(r.detectedLanesBothWays).toBeUndefined();
+  });
+});
+
 describe("classifyFromOsmTags", () => {
   const baseTags = {
     oneway: null,
     maxspeed: null,
     lanes: null,
     lanes_forward: null,
-    lanes_backward: null,
+    lanes_backward: null, lanes_both_ways: null,
   };
 
   it("classifies motorway as freeway/divided/high", () => {

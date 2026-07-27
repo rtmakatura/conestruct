@@ -204,6 +204,20 @@ class ShoulderScenario(JurisdictionScenarioFields):
     # unaffected.  The frontend clears it when the operator corrects the
     # lane count, lifting the block.
     detectedLanesTotal: int | None = Field(default=None, ge=1)
+    # Detection relays (issue #120) — the parsed OSM ``lanes:forward`` /
+    # ``lanes:backward`` / ``lanes:both_ways`` tag values, relayed unchanged
+    # (pure facts; they drive no geometry and no label).  Sole consumer is
+    # the lane-count consistency check (``lanes_arithmetic_mismatch``
+    # below): when total, forward, and backward all exist and
+    # total != forward + backward + both_ways, the OSM lane data
+    # contradicts itself and the detected count can't be trusted.  On this
+    # kind the check only feeds the audit's non-blocking "verify lane
+    # count" caution — never a block.  None / omitted means "no detection
+    # signal" and the check never fires; the frontend clears all of them
+    # when the operator edits the lane count.
+    detectedLanesForward: int | None = Field(default=None, ge=1)
+    detectedLanesBackward: int | None = Field(default=None, ge=1)
+    detectedLanesBothWays: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def _check_work_zone_speed(self) -> Self:
@@ -263,6 +277,12 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     # manual entry are unaffected.  The frontend clears it when the operator
     # confirms the road carries two-way traffic, lifting the block.
     oneway: str | None = Field(default=None)
+    # Detection relays (issue #120) — see the matching fields on
+    # ``ShoulderScenario``.  Audit-caution-only on this kind (a flagger has
+    # no lane field to correct); never blocks.
+    detectedLanesForward: int | None = Field(default=None, ge=1)
+    detectedLanesBackward: int | None = Field(default=None, ge=1)
+    detectedLanesBothWays: int | None = Field(default=None, ge=1)
 
 
 class LaneClosureDividedScenario(JurisdictionScenarioFields):
@@ -397,6 +417,22 @@ class IntersectionApproach(BaseModel):
     # same envelope as workLen itself.
     alongStationFt: float = Field(ge=-WORK_LEN_MAX_FT, le=WORK_LEN_MAX_FT)
 
+    # Detection relays (issue #120) — the parsed OSM lane tags of the
+    # cross-street way (raw total plus per-direction and center-turn-lane
+    # counts), relayed unchanged.  Sole consumer is the lane-count
+    # consistency gate (``_ensure_lane_confidence`` in render_api): when
+    # total != forward + backward + both_ways the OSM lane data
+    # contradicts itself, the detected approach lane count can't be
+    # trusted, and generation is refused with an honest 400 (Ruling B,
+    # #120 — intersection approaches get the hard gate).  None / omitted
+    # means "no detection signal" and never blocks — direct API callers
+    # and manual entry are unaffected.  The frontend clears all four when
+    # the operator confirms or edits the approach lane count.
+    detectedLanesTotal: int | None = Field(default=None, ge=1)
+    detectedLanesForward: int | None = Field(default=None, ge=1)
+    detectedLanesBackward: int | None = Field(default=None, ge=1)
+    detectedLanesBothWays: int | None = Field(default=None, ge=1)
+
 
 class NearIntersectionScenario(JurisdictionScenarioFields):
     """Work near (not within) an intersection — S-630-1 Cases 18/19.
@@ -494,6 +530,45 @@ Scenario = Annotated[
     | NearIntersectionScenario,
     Field(discriminator="kind"),
 ]
+
+
+def lanes_arithmetic_mismatch(
+    total: int | None,
+    forward: int | None,
+    backward: int | None,
+    both_ways: int | None,
+) -> bool:
+    """The #120 lane-count consistency predicate — the ONE definition.
+
+    True when the OSM lane tags contradict themselves: ``lanes``,
+    ``lanes:forward``, and ``lanes:backward`` all exist and
+    ``total != forward + backward + both_ways`` (``lanes:both_ways`` is a
+    center turn lane / TWLTL and counts toward the total on a correctly
+    tagged road; treating it as 0 only when absent).  Without the
+    both_ways term the check would flag most correctly-tagged
+    center-turn-lane arterials — a Denver-metro Overpass survey
+    (2026-07-27) measured 13.3% of fully-lane-tagged ways as naive
+    mismatches but only 1.28% once both_ways is honored, and the residue
+    is genuine data defects.
+
+    Any of total/forward/backward absent ⇒ indeterminate ⇒ False — the
+    relay-omitted case never fires, so direct API callers and manual
+    entry are unaffected (the #136/#158 principle).
+
+    DELIBERATELY NARROWER than the frontend ``lanesSuspicion`` heuristic
+    (conestruct/site/lib/road-detection/cross-street.ts), which also
+    keys on ``turn:lanes*`` presence for confirm-copy purposes.
+    Turn-lane tags belong to the whole way, not the work location, so
+    they are excluded here by ruling (#120, 2026-07-27) — do not widen
+    this to match the frontend.
+
+    Consumers: ``_ensure_lane_confidence`` (render_api — honest 400 on
+    near_intersection approaches) and the audit's non-blocking "verify
+    lane count" caution (audit_projection).
+    """
+    if total is None or forward is None or backward is None:
+        return False
+    return total != forward + backward + (both_ways or 0)
 
 
 # ---------------------------------------------------------------------------

@@ -211,4 +211,23 @@ describe("applyClassification detectedLanesTotal relay (issue #136)", () => {
     const { scenario } = applyClassification(FLAGGER, classification(undefined));
     expect((scenario as FlaggerLaneClosureScenario).oneway).toBeUndefined();
   });
+
+  it("relays the per-direction lane tags onto shoulder and flagger (issue #120)", () => {
+    const c: RoadClassification = {
+      ...classification(undefined),
+      detectedLanesTotal: 2,
+      detectedLanesForward: 1,
+      detectedLanesBackward: 2,
+    };
+    const shoulder = applyClassification(SHOULDER, c)
+      .scenario as ShoulderScenario;
+    expect(shoulder.detectedLanesForward).toBe(1);
+    expect(shoulder.detectedLanesBackward).toBe(2);
+    expect(shoulder.detectedLanesBothWays).toBeUndefined();
+    const flagger = applyClassification(FLAGGER, c)
+      .scenario as FlaggerLaneClosureScenario;
+    expect(flagger.detectedLanesForward).toBe(1);
+    expect(flagger.detectedLanesBackward).toBe(2);
+    expect(flagger.detectedLanesBothWays).toBeUndefined();
+  });
 });

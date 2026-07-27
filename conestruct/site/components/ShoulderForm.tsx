@@ -126,7 +126,17 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             // so clear the relayed single-lane signal — this lifts the
             // backend single-lane block (issue #136).
             onChange={(v) =>
-              setScenario({ ...scenario, lanes: v, detectedLanesTotal: undefined })
+              setScenario({
+                ...scenario,
+                lanes: v,
+                // Editing the count takes ownership of it: clear the
+                // #136 single-lane relay and the #120 per-direction
+                // relays together, lifting the block and the caution.
+                detectedLanesTotal: undefined,
+                detectedLanesForward: undefined,
+                detectedLanesBackward: undefined,
+                detectedLanesBothWays: undefined,
+              })
             }
           />
         </Field>

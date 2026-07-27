@@ -95,6 +95,20 @@ export interface NearIntersectionApproach {
    * Both legs of the one cross street carry the same value.
    */
   alongStationFt: number;
+  /**
+   * Parsed OSM lane tags of the cross-street way, relayed from detection
+   * (issue #120): raw total, forward, backward, and center-turn-lane
+   * counts. Pure relays — the backend's lane-count consistency gate 400s
+   * a near_intersection plan when total ≠ forward + backward + both_ways
+   * (OSM data defect ⇒ the detected approach lane count can't be
+   * trusted). Cleared when the operator confirms or edits the approach
+   * lane count, which lifts the block. All undefined when OSM lacked the
+   * tags — an absent relay never blocks.
+   */
+  detectedLanesTotal?: number;
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
 }
 
 export interface NearIntersectionScenario extends JurisdictionPlanFields {
@@ -210,6 +224,17 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
    * Cleared when the operator edits the lane count, which lifts the block.
    */
   detectedLanesTotal?: number;
+  /**
+   * Parsed OSM `lanes:forward` / `lanes:backward` / `lanes:both_ways`
+   * counts relayed from detection (issue #120). Pure relays — no geometry
+   * or label reads them; the backend audit emits a non-blocking "verify
+   * lane count" caution when total ≠ forward + backward + both_ways.
+   * Cleared alongside `detectedLanesTotal` when the operator edits the
+   * lane count — an operator-owned count is no longer a detection claim.
+   */
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
 }
 
 export type FlaggerRoadType = "rural_undivided" | "urban_arterial";
@@ -246,6 +271,15 @@ export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
    * carries two-way traffic.
    */
   oneway?: string;
+  /**
+   * Parsed OSM per-direction lane counts relayed from detection (issue
+   * #120) — see the matching fields on ShoulderScenario. Non-blocking:
+   * the flagger has no lane field to correct, so the audit caution is the
+   * only consumer.
+   */
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
 }
 
 export interface LaneClosureDividedScenario extends JurisdictionPlanFields {

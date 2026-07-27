@@ -37,6 +37,7 @@ from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     Scenario,
     _map_road_type,
+    lanes_arithmetic_mismatch,
     scenario_to_call,
 )
 from src.export.device_list import export_device_list
@@ -257,6 +258,59 @@ def _ensure_direction_eligible(scenario: Scenario) -> None:
     )
 
 
+def _ensure_lane_confidence(scenario: Scenario) -> None:
+    """Refuse a near_intersection plan built on self-contradicting OSM
+    lane data (issue #120, Ruling B).
+
+    Turn-lane inflation is an intersection-approach phenomenon: OSM's
+    ``lanes`` counts turn pockets at approaches, so a wrong lane count is
+    worst exactly where this kind works.  Detection relays the raw parsed
+    lane tags on each approach (``detectedLanesTotal`` / ``…Forward`` /
+    ``…Backward`` / ``…BothWays``); when
+    :func:`~src.api.schemas.lanes_arithmetic_mismatch` finds
+    total != forward + backward + both_ways, the map data contradicts
+    itself and the detected approach lane count cannot be trusted — the
+    plan would size cross-street control to a number nothing verifies
+    (rule 10), so we refuse rather than guess.
+
+    Only ``near_intersection`` is gated, and only on its approaches (the
+    mainline count is operator-entered, never auto-applied).  Everywhere
+    else the same mismatch feeds the audit's NON-blocking "verify lane
+    count" caution (``audit_projection``) — Ruling B's split: the highest
+    blast-radius surface gets the hard gate.  Known limitation, by
+    ruling: a flagger/shoulder plan physically near an intersection gets
+    the caution, not the gate — the only approach predicate the payload
+    carries today is the scenario kind.
+
+    Raised as 400 (like the #136/#158 gates) so the Next.js proxy
+    surfaces the message; omitted relays never block, and the frontend
+    clears all four relays when the operator confirms or edits the
+    approach lane count ("Lane count is right"), lifting the block.
+    """
+    if scenario.kind != "near_intersection":
+        return
+    for approach in scenario.approaches:
+        if lanes_arithmetic_mismatch(
+            approach.detectedLanesTotal,
+            approach.detectedLanesForward,
+            approach.detectedLanesBackward,
+            approach.detectedLanesBothWays,
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "The map data's lane counts for the cross street "
+                    "contradict each other (the total doesn't match the "
+                    "per-direction counts), so the detected lane count "
+                    "can't be trusted this close to an intersection. "
+                    "Check the through-lane count in the field or on "
+                    "imagery, then confirm “Lane count is right” (or set "
+                    "the count yourself) in the Approaches section and "
+                    "regenerate."
+                ),
+            )
+
+
 @app.middleware("http")
 async def require_bearer_secret(
     request: Request,
@@ -325,6 +379,9 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
     # Directionality eligibility gate (issue #158) — refuse a flagger plan on
     # a one-way road at the same chokepoint, for the same uniform coverage.
     _ensure_direction_eligible(scenario)
+    # Lane-count consistency gate (issue #120) — refuse a near_intersection
+    # plan whose approach lane tags contradict each other, same chokepoint.
+    _ensure_lane_confidence(scenario)
     params, generator, kwargs = scenario_to_call(scenario)
     geo_violations = validate_corridor_geometry(params)
     geo_errors = [v for v in geo_violations if v.severity == "error"]
@@ -1112,6 +1169,17 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
         # narrative path; pass them through so the projection carries the
         # per-flag citations the panel reads (no second computation).
         site_records=site_records,
+        # #120 — the non-blocking lane-count caution: the same arithmetic
+        # predicate the near_intersection gate uses, evaluated over the
+        # enabled kinds' top-level relays.  getattr because only shoulder
+        # and flagger carry the fields; every other kind reads None and
+        # the predicate never fires.
+        lane_count_suspect=lanes_arithmetic_mismatch(
+            getattr(scenario, "detectedLanesTotal", None),
+            getattr(scenario, "detectedLanesForward", None),
+            getattr(scenario, "detectedLanesBackward", None),
+            getattr(scenario, "detectedLanesBothWays", None),
+        ),
     )
 
 

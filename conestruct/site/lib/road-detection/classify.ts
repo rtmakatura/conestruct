@@ -63,7 +63,7 @@ export function parseMaxspeedToMph(raw: string | null): number | null {
   return Math.round(value);
 }
 
-function parseLaneNumber(raw: string | null): number | null {
+export function parseLaneNumber(raw: string | null): number | null {
   if (!raw) return null;
   const n = Number(raw);
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
@@ -159,6 +159,7 @@ export interface ClassifyInput {
     lanes: string | null;
     lanes_forward: string | null;
     lanes_backward: string | null;
+    lanes_both_ways: string | null;
   };
 }
 
@@ -283,6 +284,14 @@ export function classifyFromOsmTags(
     // flagger directionality gate.  Undefined when OSM carried no `oneway`
     // tag, so a sparsely-tagged way never triggers a false block.
     detectedOneway: tags.oneway ?? undefined,
+    // Per-direction lane tags (issue #120), relayed unchanged for the
+    // backend lane-count consistency check: low confidence only when
+    // total, forward, and backward all exist and
+    // total != forward + backward + (both_ways or 0).  Any absent tag
+    // leaves the check indeterminate — it never fires.
+    detectedLanesForward: parseLaneNumber(tags.lanes_forward) ?? undefined,
+    detectedLanesBackward: parseLaneNumber(tags.lanes_backward) ?? undefined,
+    detectedLanesBothWays: parseLaneNumber(tags.lanes_both_ways) ?? undefined,
     speedLimitMph: speedFromOsm ?? undefined,
     confidence: topLevelConf,
     source: "osm-tags",

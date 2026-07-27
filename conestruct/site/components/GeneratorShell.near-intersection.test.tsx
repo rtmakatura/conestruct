@@ -59,6 +59,10 @@ function crossStreet(over: Partial<CrossStreetCandidate>): CrossStreetCandidate 
       "often lower.",
     roadType: "urban_arterial",
     bearingDeg: 90,
+    detectedLanesTotal: null,
+    detectedLanesForward: null,
+    detectedLanesBackward: null,
+    detectedLanesBothWays: null,
     ...over,
   };
 }

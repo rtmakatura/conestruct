@@ -31,7 +31,7 @@ function mkCandidate(over: Partial<RoadCandidate>): RoadCandidate {
       maxspeed: null,
       lanes: null,
       lanes_forward: null,
-      lanes_backward: null,
+      lanes_backward: null, lanes_both_ways: null,
       turn_lanes: null,
       turn_lanes_forward: null,
       turn_lanes_backward: null,
@@ -116,7 +116,7 @@ describe("lanesSuspicion", () => {
       ...mkCandidate({}).tags,
       lanes: "5",
       lanes_forward: "2",
-      lanes_backward: "2",
+      lanes_backward: "2", lanes_both_ways: null,
     });
     expect(suspect).toBe(true);
   });
@@ -125,7 +125,7 @@ describe("lanesSuspicion", () => {
       ...mkCandidate({}).tags,
       lanes: "4",
       lanes_forward: "2",
-      lanes_backward: "2",
+      lanes_backward: "2", lanes_both_ways: null,
     });
     expect(suspect).toBe(false);
     expect(reason).toBeNull();
@@ -240,7 +240,22 @@ describe("approachesFromCrossStreet", () => {
     lanesSuspectReason: "turn lanes",
     roadType: "urban_arterial",
     bearingDeg: 90,
+    detectedLanesTotal: 4,
+    detectedLanesForward: 2,
+    detectedLanesBackward: 2,
+    detectedLanesBothWays: null,
   };
+
+  it("relays the lane tags onto every leg (issue #120) — both legs are the same way", () => {
+    const legs = approachesFromCrossStreet(cs);
+    for (const leg of legs) {
+      expect(leg.detectedLanesTotal).toBe(4);
+      expect(leg.detectedLanesForward).toBe(2);
+      expect(leg.detectedLanesBackward).toBe(2);
+      // Absent tag rides as undefined (omitted on the wire), not null.
+      expect(leg.detectedLanesBothWays).toBeUndefined();
+    }
+  });
 
   it("generates both legs with form-owned ids and mirrored bearings", () => {
     const legs = approachesFromCrossStreet(cs);

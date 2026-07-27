@@ -68,6 +68,34 @@ export function NearIntersectionForm({
   const updateLeg = (i: number, patch: Partial<NearIntersectionApproach>) =>
     setLegs(legs.map((l, idx) => (idx === i ? { ...l, ...patch } : l)));
 
+  // Lane-relay clear (issue #120): confirming or editing the approach
+  // lane count strips the detection's raw lane-tag relays from EVERY
+  // leg (both legs carry the same way's tags), which lifts the
+  // backend's lane-count consistency 400.  An operator-owned count is
+  // no longer a detection claim — same provenance rule as the #136/#158
+  // clears on the other forms.
+  const laneRelayClear = {
+    detectedLanesTotal: undefined,
+    detectedLanesForward: undefined,
+    detectedLanesBackward: undefined,
+    detectedLanesBothWays: undefined,
+  } as const;
+  const updateLegAndClearRelays = (
+    i: number,
+    patch: Partial<NearIntersectionApproach>,
+  ) =>
+    setLegs(
+      legs.map((l, idx) => ({
+        ...l,
+        ...(idx === i ? patch : {}),
+        ...laneRelayClear,
+      })),
+    );
+  const confirmLaneCounts = () => {
+    setLegs(legs.map((l) => ({ ...l, ...laneRelayClear })));
+    clearApproachConfirm();
+  };
+
   // The one supported cross street, presented in plain language: a
   // side (past vs before the work zone, in the direction of travel)
   // plus a distance.  Both map onto the shared alongStationFt the
@@ -329,7 +357,7 @@ export function NearIntersectionForm({
               options={[1, 2, 3, 4].map((n) => ({ v: n, l: String(n) }))}
               value={leg.lanesPerDirection}
               onChange={(v) => {
-                updateLeg(i, { lanesPerDirection: v });
+                updateLegAndClearRelays(i, { lanesPerDirection: v });
                 // A manual lane edit IS the confirmation.
                 clearApproachConfirm();
               }}
@@ -350,7 +378,7 @@ export function NearIntersectionForm({
             </p>
             <button
               type="button"
-              onClick={clearApproachConfirm}
+              onClick={confirmLaneCounts}
               className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
               Lane count is right

@@ -322,6 +322,7 @@ function buildResponse(
         lanes: strOrNull(tags.lanes),
         lanes_forward: strOrNull(tags["lanes:forward"]),
         lanes_backward: strOrNull(tags["lanes:backward"]),
+        lanes_both_ways: strOrNull(tags["lanes:both_ways"]),
         turn_lanes: strOrNull(tags["turn:lanes"]),
         turn_lanes_forward: strOrNull(tags["turn:lanes:forward"]),
         turn_lanes_backward: strOrNull(tags["turn:lanes:backward"]),

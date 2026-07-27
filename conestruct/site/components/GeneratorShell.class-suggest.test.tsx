@@ -43,7 +43,7 @@ function confirmedRoad(highwayClass: string): ConfirmedRoad {
       maxspeed: "35 mph",
       lanes: "2",
       lanes_forward: null,
-      lanes_backward: null,
+      lanes_backward: null, lanes_both_ways: null,
       turn_lanes: null,
       turn_lanes_forward: null,
       turn_lanes_backward: null,

@@ -22,7 +22,7 @@ function mkCandidate(over: Partial<RoadCandidate>): RoadCandidate {
       maxspeed: null,
       lanes: null,
       lanes_forward: null,
-      lanes_backward: null,
+      lanes_backward: null, lanes_both_ways: null,
       turn_lanes: null,
       turn_lanes_forward: null,
       turn_lanes_backward: null,

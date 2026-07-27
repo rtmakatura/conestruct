@@ -12,7 +12,11 @@ import { M_PER_FT, haversineM, initialBearingDeg } from "../geodesy";
 import { snapSpeedToDomain } from "../scenarios/auto-apply";
 import type { NearIntersectionApproach } from "../scenarios/types";
 import { clampLanesToDomain } from "../scenarios/validation";
-import { lanesPerDirectionFromTags, parseMaxspeedToMph } from "./classify";
+import {
+  lanesPerDirectionFromTags,
+  parseLaneNumber,
+  parseMaxspeedToMph,
+} from "./classify";
 import type { RoadCandidate, RoadDetectResponse } from "./types";
 
 // A signal node this close to the cross street's snapped point means
@@ -56,6 +60,15 @@ export interface CrossStreetCandidate {
   roadType: "rural_undivided" | "urban_arterial";
   /** Approach bearing (the OSM way's direction at the crossing). */
   bearingDeg: number;
+  /**
+   * Raw parsed OSM lane tags of the cross-street way (issue #120),
+   * relayed onto each approach for the backend's lane-count consistency
+   * gate.  Null when OSM lacked the tag.
+   */
+  detectedLanesTotal: number | null;
+  detectedLanesForward: number | null;
+  detectedLanesBackward: number | null;
+  detectedLanesBothWays: number | null;
 }
 
 export interface DeriveCrossStreetInput {
@@ -138,6 +151,14 @@ function pickCrossCandidate(
  * the symmetric forward+backward sum, are the strong markers; either
  * upgrades the needs-confirmation copy from "verify this" to "OSM
  * counts turn pockets here".
+ *
+ * DELIBERATELY BROADER than the backend's lane-count consistency
+ * predicate (#120 ruling): turn:lanes* tags belong to the whole way,
+ * not the work location, so the backend gate/caution keys ONLY on the
+ * arithmetic mismatch (total != forward + backward + both_ways).  This
+ * heuristic drives copy on a confirm the operator is already required
+ * to make, where over-breadth costs nothing.  Do not "fix" the
+ * divergence by narrowing this or widening the backend.
  */
 export function lanesSuspicion(tags: RoadCandidate["tags"]): {
   suspect: boolean;
@@ -196,6 +217,14 @@ export function approachesFromCrossStreet(
     laneWidth: 12,
     signalized: cs.signalized,
     alongStationFt: cs.alongStationFt,
+    // Lane-tag relays (issue #120): both legs carry the same way's tags.
+    // Undefined (not null) when absent — the scenario IS the wire
+    // payload, and an omitted field is the "no signal" the backend gate
+    // treats as never-blocking.
+    detectedLanesTotal: cs.detectedLanesTotal ?? undefined,
+    detectedLanesForward: cs.detectedLanesForward ?? undefined,
+    detectedLanesBackward: cs.detectedLanesBackward ?? undefined,
+    detectedLanesBothWays: cs.detectedLanesBothWays ?? undefined,
   };
   const legA: NearIntersectionApproach = {
     id: "cross_a",
@@ -253,5 +282,10 @@ export function deriveCrossStreet(
     lanesSuspectReason: reason,
     roadType: input.detection.isUrban ? "urban_arterial" : "rural_undivided",
     bearingDeg: cand.bearing,
+    // Raw lane-tag relays (issue #120) for the backend consistency gate.
+    detectedLanesTotal: parseLaneNumber(cand.tags.lanes),
+    detectedLanesForward: parseLaneNumber(cand.tags.lanes_forward),
+    detectedLanesBackward: parseLaneNumber(cand.tags.lanes_backward),
+    detectedLanesBothWays: parseLaneNumber(cand.tags.lanes_both_ways),
   };
 }

@@ -1499,6 +1499,15 @@ AUDIT_PENDING_VERIFICATION_ISSUE: str | None = "https://github.com/rtmakatura/co
 # signal-operation review are not generated.
 INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/117"
 
+# Tracking issue for lane-count trust (#120): when detection relays OSM
+# lane tags that contradict each other (lanes != lanes:forward +
+# lanes:backward + lanes:both_ways), the pending item keyed to this URL
+# tells the reviewer the plan was sized to a lane count the map data
+# itself disputes.  Non-blocking on the enabled kinds; the
+# near_intersection kind hard-gates on the same predicate instead
+# (render_api._ensure_lane_confidence).
+LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/120"
+
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
     """Port of ``mergingTaperLength`` from conestruct/site/lib/scenarios/shared.ts.
@@ -1634,6 +1643,7 @@ def audit_projection(
     step_count: int = 0,
     road_type: str | None = None,
     site_records: list[dict[str, Any]] | None = None,
+    lane_count_suspect: bool = False,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -1818,6 +1828,33 @@ def audit_projection(
                     "control supervisor and the operating agency."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
+            }
+        )
+
+    # Lane-count consistency caution (#120, Ruling B) — the NON-blocking
+    # half of the lane-confidence split: the render-API caller computes
+    # ``lanes_arithmetic_mismatch`` over the scenario's relayed OSM lane
+    # tags and threads the verdict here (audit_projection has no
+    # scenario, same convention as ``road_type``/``site_records``).  The
+    # single emission point: this item rides ``pending_verification``
+    # into ``plan_flags`` and every surface that prints audit blocks, so
+    # the strip, the panel, and the deliverables cannot disagree
+    # (the #93 drift class).  The near_intersection kind never reaches
+    # here with a mismatch — it is refused 400 at the chokepoint.
+    if lane_count_suspect:
+        items.append(
+            {
+                "kind": "lane_count_low_confidence",
+                "label": (
+                    "Low confidence — verify lane count. The map data's "
+                    "lane tags contradict each other (the total doesn't "
+                    "match the per-direction counts), so the detected "
+                    "count this plan was sized to may include turn "
+                    "pockets or reflect a mapping error. Confirm the "
+                    "through-lane count in the field or on imagery "
+                    "before deploying."
+                ),
+                "tracking_issue": LANE_CONFIDENCE_ISSUE,
             }
         )
 
