@@ -39,6 +39,26 @@ export const ONEWAY_BLOCKING: ReadonlySet<string> = new Set([
   "-1",
   "reversible",
 ]);
+
+// Flagger multi-lane eligibility ceiling (issue #86): TA-10 applies where one
+// through lane runs in each direction, so a detected total of 4+ is refused
+// unconditionally and a total of 3 is eligible only as a consistently
+// decomposed center-turn-lane road (1 forward + 1 backward + 1 both_ways).
+// Mirrors `flagger_lane_ineligible_high` in src/api/schemas.py (consumed by
+// the `_ensure_lane_eligible` gate) — the backend is the authoritative gate;
+// this drives only the recovery affordance's visibility.
+// An absent total never blocks.
+export function flaggerLaneIneligibleHigh(
+  total: number | undefined,
+  forward: number | undefined,
+  backward: number | undefined,
+  bothWays: number | undefined,
+): boolean {
+  if (total === undefined) return false;
+  if (total >= 4) return true;
+  if (total === 3) return !(forward === 1 && backward === 1 && bothWays === 1);
+  return false;
+}
 const LANE_CLOSURE_TYPES = new Set<LaneClosureRoadType>([
   "rural_divided",
   "freeway",

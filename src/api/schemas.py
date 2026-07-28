@@ -573,6 +573,63 @@ def lanes_arithmetic_mismatch(
     return total != forward + backward + (both_ways or 0)
 
 
+def flagger_lane_ineligible_high(
+    total: int | None,
+    forward: int | None,
+    backward: int | None,
+    both_ways: int | None,
+) -> bool:
+    """The #86 flagger multi-lane eligibility ceiling — the ONE definition.
+
+    True when the detected road carries more lanes than a flagger
+    alternating operation (TA-10) covers.  Eligibility is geometric, not
+    classificational (#86 ruling, 2026-07-27): TA-10 applies where one
+    through lane runs in each direction — MUTCD Figure 6P-10 "Lane
+    Closure on a Two-Lane Road Using Flaggers" — and no source draws a
+    flagger-alternating typical for a road with two or more lanes per
+    direction.  MUTCD §6N.11 "Work within the Traveled Way of a
+    Multi-Lane, Non-Access Controlled Highway" (11th Ed., printed p. 847
+    / PDF p. 83) routes those roads to the merge-taper closure family:
+    "When a lane is closed on a multi-lane road for other than a mobile
+    operation, a transition area containing a merging taper shall be
+    used." (Standard, ¶03).
+
+    The ceiling (#86 plan, approved 2026-07-27):
+
+    - total >= 4 — two or more through lanes somewhere under any real
+      tagging.  Refused unconditionally.
+    - total == 3 — eligible ONLY when the relays decompose consistently
+      as one through lane each way plus a center turn lane
+      (forward == 1 and backward == 1 and both_ways == 1, which is
+      arithmetic-consistent by construction and stays within 6P-10's
+      shape: the through movement is one lane per direction).  A bare 3
+      (no directional tags) cannot be told apart from a 2+1 directional
+      split, and the gate does not guess — refused, with the recovery
+      confirm as the operator's path.
+    - total <= 2 — never fires (the classic 2-lane two-way road; the
+      genuinely single-lane total of 1 is the LOW side, refused by
+      ``_ensure_lane_eligible`` directly).
+
+    ``total`` absent ⇒ no detection signal ⇒ False — direct API callers
+    and manual entry are unaffected (the #136/#158 principle).
+
+    Mirrored on the frontend in
+    conestruct/site/lib/scenarios/auto-apply.ts
+    (``flaggerLaneIneligibleHigh``) to drive the recovery CheckRow.
+
+    Sole backend consumer: ``_ensure_lane_eligible`` (render_api) —
+    flagger_lane_closure only; shoulder work on a multi-lane road is
+    valid and never touched by this predicate.
+    """
+    if total is None:
+        return False
+    if total >= 4:
+        return True
+    if total == 3:
+        return not (forward == 1 and backward == 1 and both_ways == 1)
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Bridge — Scenario → (ScenarioParams, generator, kwargs)
 # ---------------------------------------------------------------------------

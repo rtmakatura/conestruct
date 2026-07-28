@@ -58,22 +58,30 @@ def client():
 
 def test_oneway_multilane_flagger_blocked_400(client: TestClient) -> None:
     """The Broadway pin (5-lane one-way) is refused — the case #136's
-    single-lane gate could never catch (detectedLanesTotal != 1)."""
+    single-lane gate could never catch (detectedLanesTotal != 1).
+
+    The fixture carries BOTH refusal signals (detectedLanesTotal=5 and
+    oneway="yes"); ``_ensure_lane_eligible`` runs before
+    ``_ensure_direction_eligible`` at the chokepoint, so by current order
+    the #86 multi-lane refusal answers first (#86 Amendment 1: no gate
+    reorder).  The one-way-only refusal is pinned separately below by
+    ``test_all_one_directional_tags_blocked``."""
     resp = client.post("/render/pdf", json=BROADWAY_ONEWAY_MULTILANE, headers=AUTH)
     assert resp.status_code == 400, resp.text
     detail = resp.json()["detail"]
-    assert "one-way street" in detail
+    assert "more lanes than a flagger operation covers" in detail
     # The remedy names the recovery control that actually exists on the
-    # flagger form (issue #158 affordance a).
-    assert "Road carries two-way traffic" in detail
+    # flagger form (issue #86 affordance).
+    assert "Road has one through lane in each direction" in detail
 
 
 def test_oneway_flagger_blocks_device_breakdown_too(client: TestClient) -> None:
     """The StatusBar path (/render/device-breakdown) blocks identically —
-    the gate lives at the shared chokepoint, not one endpoint."""
+    the gate lives at the shared chokepoint, not one endpoint.  Same
+    both-signals fixture: the lane gate answers first (#86 Amendment 1)."""
     resp = client.post("/render/device-breakdown", json=BROADWAY_ONEWAY_MULTILANE, headers=AUTH)
     assert resp.status_code == 400, resp.text
-    assert "one-way street" in resp.json()["detail"]
+    assert "more lanes than a flagger operation covers" in resp.json()["detail"]
 
 
 @pytest.mark.parametrize("tag", ["yes", "-1", "reversible"])

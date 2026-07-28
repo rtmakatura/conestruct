@@ -37,6 +37,7 @@ from src.api.replication_snapshot import build_snapshot_markdown
 from src.api.schemas import (
     Scenario,
     _map_road_type,
+    flagger_lane_ineligible_high,
     lanes_arithmetic_mismatch,
     scenario_to_call,
 )
@@ -171,25 +172,52 @@ def _ensure_scenario_enabled(scenario: Scenario) -> None:
 
 
 def _ensure_lane_eligible(scenario: Scenario) -> None:
-    """Refuse a genuinely single-lane road (issue #136).
+    """Refuse a road outside the lane-eligibility window (issues #136/#86).
 
-    The per-direction ``lanes`` model cannot represent a road with one
-    lane total: ``lanes=1`` already means the classic 2-lane two-way road
-    (one lane each direction).  Detection relays the raw OSM total via
-    ``detectedLanesTotal``; when that total is 1 on an UNDIVIDED road the
-    roadway is genuinely single-lane and neither the flagger operation
-    (TA-10 needs a lane in each direction) nor the shoulder generator can
-    draw or label it honestly (rule 10) — so we refuse rather than emit a
-    phantom 2-lane plan with a false "2-Lane Undivided" label.
+    LOW side (issue #136): the per-direction ``lanes`` model cannot
+    represent a road with one lane total: ``lanes=1`` already means the
+    classic 2-lane two-way road (one lane each direction).  Detection
+    relays the raw OSM total via ``detectedLanesTotal``; when that total
+    is 1 on an UNDIVIDED road the roadway is genuinely single-lane and
+    neither the flagger operation (TA-10 needs a lane in each direction)
+    nor the shoulder generator can draw or label it honestly (rule 10) —
+    so we refuse rather than emit a phantom 2-lane plan with a false
+    "2-Lane Undivided" label.
 
     On a DIVIDED road ``lanes`` is per-carriageway, so a detected count of
     1 is a normal narrow divided road, not single-lane — never blocked.
 
+    HIGH side (issue #86, flagger only): a detected total above the
+    TA-10 eligibility ceiling means the flagger template is the wrong
+    template for the road, and the generated plan would print a false
+    "2-Lane Undivided" road description on a field document (rule 10) —
+    the #136 defect in the opposite direction.  The ceiling and its
+    spec authority (MUTCD §6N.11) live in ONE place:
+    :func:`~src.api.schemas.flagger_lane_ineligible_high`.  Shoulder
+    work on a multi-lane road is valid and never touched by this side.
+
     Raised as 400 (like :func:`_ensure_scenario_enabled`) so the Next.js
     proxy surfaces the message to the operator; a 422 is swallowed to a
-    generic 502 and never shown.  The frontend clears ``detectedLanesTotal``
-    when the operator corrects the lane count, which lifts the block.
+    generic 502 and never shown.  The frontend clears the lane relays
+    when the operator corrects the lane count or confirms the road's
+    true shape, which lifts the block.
     """
+    if scenario.kind == "flagger_lane_closure" and flagger_lane_ineligible_high(
+        getattr(scenario, "detectedLanesTotal", None),
+        getattr(scenario, "detectedLanesForward", None),
+        getattr(scenario, "detectedLanesBackward", None),
+        getattr(scenario, "detectedLanesBothWays", None),
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "This road appears to carry more lanes than a flagger "
+                "operation covers — TA-10 applies where one through lane "
+                "runs in each direction. If detection is wrong, confirm "
+                "'Road has one through lane in each direction' in the "
+                "form and regenerate."
+            ),
+        )
     if getattr(scenario, "detectedLanesTotal", None) != 1:
         return
     # Divided carriageways tag ``lanes`` per-carriageway — 1 is normal there.

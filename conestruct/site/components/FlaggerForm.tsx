@@ -7,7 +7,10 @@ import {
   type FlaggerRoadType,
   type FlaggerWorkType,
 } from "@/lib/scenarios";
-import { ONEWAY_BLOCKING } from "@/lib/scenarios/auto-apply";
+import {
+  ONEWAY_BLOCKING,
+  flaggerLaneIneligibleHigh,
+} from "@/lib/scenarios/auto-apply";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
   CheckRow,
@@ -60,7 +63,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             ))}
           </select>
           <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
-            TA-10 applies to 2-lane 2-way roadways only
+            TA-10 applies to roads with one through lane in each direction
           </div>
         </Field>
 
@@ -77,6 +80,35 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             desc="Detection saw a single-lane road — confirm to enable this plan"
             onToggle={() =>
               setScenario({ ...scenario, detectedLanesTotal: undefined })
+            }
+          />
+        )}
+
+        {/* Multi-lane recovery (issue #86): TA-10 applies where one through
+            lane runs in each direction, so when detection relays a total
+            above the eligibility ceiling (4+, or an undecomposable 3) the
+            backend blocks generation.  This confirm is the operator's
+            recovery path — asserting the road's true shape clears ALL four
+            lane relays (leaving a per-direction relay behind after the
+            operator asserts 1+1 would be contradictory data). */}
+        {flaggerLaneIneligibleHigh(
+          scenario.detectedLanesTotal,
+          scenario.detectedLanesForward,
+          scenario.detectedLanesBackward,
+          scenario.detectedLanesBothWays,
+        ) && (
+          <CheckRow
+            on={false}
+            label="Road has one through lane in each direction"
+            desc="Detection saw a multi-lane road — confirm to enable this plan"
+            onToggle={() =>
+              setScenario({
+                ...scenario,
+                detectedLanesTotal: undefined,
+                detectedLanesForward: undefined,
+                detectedLanesBackward: undefined,
+                detectedLanesBothWays: undefined,
+              })
             }
           />
         )}
