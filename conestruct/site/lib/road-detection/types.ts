@@ -151,12 +151,25 @@ export interface RoadClassification {
   source: "osm-tags";
   raw: {
     class: string;
+    /** Folded boolean (`oneway=yes` or `-1`); the raw tag string is
+     *  `osmOnewayTag`. */
     oneway: boolean;
     roadName: string | null;
     roadRef: string | null;
     placeName: string | null;
+    /** The OSM `lanes` tag only — never a `lanes:forward` stand-in
+     *  (issue #178); the directional tags have their own members. */
     osmLanesTag: string | null;
     osmMaxspeedTag: string | null;
+    /** Raw directional lane tags and the raw `oneway` string (issue
+     *  #178) — the evidence behind the #120/#158 relays, printed in the
+     *  replication snapshot so the relays are cross-referenceable.
+     *  Optional (not `| null` only) so pre-existing fixtures compile;
+     *  classifyFromOsmTags always populates them. */
+    osmLanesForwardTag?: string | null;
+    osmLanesBackwardTag?: string | null;
+    osmLanesBothWaysTag?: string | null;
+    osmOnewayTag?: string | null;
   };
   fields: {
     speed: DetectedField<number | null>;

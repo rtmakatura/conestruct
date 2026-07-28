@@ -20,7 +20,11 @@
 // deliverables use (rule #3).
 
 import { useEffect, useState } from "react";
-import { defaultFor, type Scenario } from "@/lib/scenarios";
+import {
+  defaultFor,
+  type DetectionOverride,
+  type Scenario,
+} from "@/lib/scenarios";
 import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
@@ -75,6 +79,82 @@ function diffTable(
   return lines.join("\n");
 }
 
+// Exported for tests: one line per relay field where the last detection
+// reported a value and the payload carries something different (issue
+// #178). Detection and payload were printed side by side but never
+// compared — the Colfax case (detection said lanes=5, payload carried
+// nothing) required a reader to cross-reference by eye and know to look.
+// When a #177 override marker preserves the erased value, the line is
+// ANNOTATED, never suppressed: this is a diagnostic artifact, and
+// suppression would re-hide the exact disagreement it exists to expose.
+// Scoped to the kinds that carry the top-level relays (shoulder /
+// flagger); near_intersection legs are relayed from CROSS-STREET
+// detection, which `detection` (the mainline classification) cannot be
+// compared against.
+export function divergenceLines(
+  scenario: Scenario,
+  classification: RoadClassification,
+): string[] {
+  if (scenario.kind !== "shoulder" && scenario.kind !== "flagger_lane_closure") {
+    return [];
+  }
+  const overrides: DetectionOverride[] = scenario.detectionOverrides ?? [];
+  const explained = (markerField: keyof DetectionOverride): string => {
+    const marker = overrides.find((m) => m[markerField] !== undefined);
+    return marker ? ` — explained by a recorded override (${marker.via})` : "";
+  };
+  const pairs: Array<{
+    tag: string;
+    detected: number | string | undefined;
+    payload: number | string | undefined;
+    markerField: keyof DetectionOverride;
+  }> = [
+    {
+      tag: "lanes",
+      detected: classification.detectedLanesTotal,
+      payload: scenario.detectedLanesTotal,
+      markerField: "detectedLanesTotal",
+    },
+    {
+      tag: "lanes:forward",
+      detected: classification.detectedLanesForward,
+      payload: scenario.detectedLanesForward,
+      markerField: "detectedLanesForward",
+    },
+    {
+      tag: "lanes:backward",
+      detected: classification.detectedLanesBackward,
+      payload: scenario.detectedLanesBackward,
+      markerField: "detectedLanesBackward",
+    },
+    {
+      tag: "lanes:both_ways",
+      detected: classification.detectedLanesBothWays,
+      payload: scenario.detectedLanesBothWays,
+      markerField: "detectedLanesBothWays",
+    },
+    ...(scenario.kind === "flagger_lane_closure"
+      ? [
+          {
+            tag: "oneway",
+            detected: classification.detectedOneway,
+            payload: scenario.oneway,
+            markerField: "detectedOneway" as const,
+          },
+        ]
+      : []),
+  ];
+  const lines: string[] = [];
+  for (const p of pairs) {
+    if (p.detected === undefined || p.detected === p.payload) continue;
+    lines.push(
+      `**DIVERGENCE: detection said ${p.tag}=${p.detected}, payload ` +
+        `carries ${p.payload ?? "(none)"}${explained(p.markerField)}**`,
+    );
+  }
+  return lines;
+}
+
 // Exported for tests: the frontend-only sections of the snapshot.
 export function buildFrontendSections(
   scenario: Scenario,
@@ -111,8 +191,20 @@ export function buildFrontendSections(
       `- Detected speed: ${classification.fields.speed.value ?? "(none)"} (${classification.fields.speed.confidence}, ${classification.fields.speed.source})`,
       `- Detected lanes: ${classification.fields.lanes.value ?? "(none)"} (${classification.fields.lanes.confidence}, ${classification.fields.lanes.source})`,
       `- Detected divided: ${classification.fields.divided.value} (${classification.fields.divided.confidence}, ${classification.fields.divided.source})`,
-      `- Raw OSM tags: lanes=${classification.raw.osmLanesTag ?? "-"} maxspeed=${classification.raw.osmMaxspeedTag ?? "-"} oneway=${classification.raw.oneway}`,
+      // All four #120/#158 relay sources plus the raw oneway string —
+      // the folded boolean is a derivative, not the evidence (#178).
+      `- Raw OSM tags: lanes=${classification.raw.osmLanesTag ?? "-"} ` +
+        `lanes:forward=${classification.raw.osmLanesForwardTag ?? "-"} ` +
+        `lanes:backward=${classification.raw.osmLanesBackwardTag ?? "-"} ` +
+        `lanes:both_ways=${classification.raw.osmLanesBothWaysTag ?? "-"} ` +
+        `maxspeed=${classification.raw.osmMaxspeedTag ?? "-"} ` +
+        `oneway=${classification.raw.osmOnewayTag ?? "-"} ` +
+        `(folded: ${classification.raw.oneway})`,
     );
+    const divergence = divergenceLines(scenario, classification);
+    if (divergence.length > 0) {
+      location.push("", ...divergence);
+    }
   } else {
     location.push(
       "No road detection ran this session (values below may be manual or loaded from a saved plan).",
@@ -147,6 +239,13 @@ export function buildFrontendSections(
   return [
     `# Replication snapshot — ${meta.project || "untitled"} (${new Date().toISOString()})`,
     "",
+    // Version/environment stamp (#178). The build sha is inlined at
+    // build time only when Vercel exposes its system env vars; the
+    // fallback is an honest sentinel, never a fabricated id. The
+    // hostname is runtime-real (production vs preview vs localhost).
+    // The backend's own GIT_SHA is stamped in section 3.
+    `> Frontend build: ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "(build id not exposed)"} — host: ${window.location.hostname}`,
+    ">",
     "> Dev-only diagnostic dump (Refs #102). The plan-sheet PDF's visual",
     "> rendering is deliberately excluded; its textual content (TA, case,",
     "> parameters, sign schedule) appears in the audit projection below.",

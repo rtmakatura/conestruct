@@ -7,12 +7,13 @@
 
 import { render, screen, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { DEFAULT_SHOULDER } from "@/lib/scenarios";
+import { DEFAULT_SHOULDER, defaultFor } from "@/lib/scenarios";
 import { DEFAULT_QUOTE_SETTINGS } from "@/lib/quote-settings";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import {
   DebugSnapshotButton,
   buildFrontendSections,
+  divergenceLines,
 } from "./DebugSnapshotButton";
 
 afterEach(() => {
@@ -157,5 +158,112 @@ describe("buildFrontendSections", () => {
       null,
     );
     expect(md.toLowerCase()).toContain("plan-sheet");
+  });
+
+  it("stamps the frontend build id (or its honest sentinel) and the host (#178)", () => {
+    const md = buildFrontendSections(
+      DEFAULT_SHOULDER,
+      DEFAULT_QUOTE_SETTINGS,
+      null,
+    );
+    // The env is not set in tests — the sentinel proves the fallback
+    // path, never a fabricated id. Hostname is runtime-real.
+    expect(md).toContain("> Frontend build: ");
+    expect(md).toContain(`host: ${window.location.hostname}`);
+  });
+
+  it("prints all four relay-source tags and the raw oneway string (#178)", () => {
+    const md = buildFrontendSections(DEFAULT_SHOULDER, DEFAULT_QUOTE_SETTINGS, {
+      classification: DETECTING_CLASSIFICATION,
+      lat: DEFAULT_SHOULDER.meta.lat,
+      lng: DEFAULT_SHOULDER.meta.lng,
+    });
+    expect(md).toContain(
+      "lanes=5 lanes:forward=3 lanes:backward=2 lanes:both_ways=- " +
+        "maxspeed=65 mph oneway=yes (folded: true)",
+    );
+  });
+});
+
+// #178 item 3 — detection and payload were printed side by side but
+// never compared; the Colfax case required a reader to cross-reference
+// by eye and know to look.
+const DETECTING_CLASSIFICATION: RoadClassification = {
+  ...CLASSIFICATION,
+  detectedLanesTotal: 5,
+  detectedLanesForward: 3,
+  detectedOneway: "yes",
+  raw: {
+    ...CLASSIFICATION.raw,
+    osmLanesTag: "5",
+    osmLanesForwardTag: "3",
+    osmLanesBackwardTag: "2",
+    osmLanesBothWaysTag: null,
+    osmOnewayTag: "yes",
+  },
+};
+
+describe("divergenceLines (#178)", () => {
+  it("flags each relay the payload no longer carries", () => {
+    const lines = divergenceLines(DEFAULT_SHOULDER, DETECTING_CLASSIFICATION);
+    expect(lines).toContain(
+      "**DIVERGENCE: detection said lanes=5, payload carries (none)**",
+    );
+    expect(lines).toContain(
+      "**DIVERGENCE: detection said lanes:forward=3, payload carries (none)**",
+    );
+  });
+
+  it("stays silent when detection and payload agree", () => {
+    const scenario = {
+      ...DEFAULT_SHOULDER,
+      detectedLanesTotal: 5,
+      detectedLanesForward: 3,
+    };
+    expect(divergenceLines(scenario, DETECTING_CLASSIFICATION)).toEqual([]);
+  });
+
+  it("annotates — never suppresses — a divergence a #177 marker explains", () => {
+    const scenario = {
+      ...DEFAULT_SHOULDER,
+      detectionOverrides: [
+        {
+          via: "shoulder_lane_edit" as const,
+          detectedLanesTotal: 5,
+          asserted: "2 lanes per direction",
+        },
+      ],
+    };
+    const lines = divergenceLines(scenario, DETECTING_CLASSIFICATION);
+    const lanesLine = lines.find((l) => l.includes("lanes=5"));
+    expect(lanesLine).toContain(
+      "explained by a recorded override (shoulder_lane_edit)",
+    );
+    // The marker carries no lanes:forward value — that line stays plain.
+    const forwardLine = lines.find((l) => l.includes("lanes:forward=3"));
+    expect(forwardLine).not.toContain("explained by");
+  });
+
+  it("compares the raw oneway relay for flagger payloads", () => {
+    const scenario = defaultFor("flagger_lane_closure");
+    const lines = divergenceLines(scenario, DETECTING_CLASSIFICATION);
+    expect(lines).toContain(
+      "**DIVERGENCE: detection said oneway=yes, payload carries (none)**",
+    );
+  });
+
+  it("returns nothing for kinds without the top-level relays", () => {
+    expect(
+      divergenceLines(defaultFor("near_intersection"), DETECTING_CLASSIFICATION),
+    ).toEqual([]);
+  });
+
+  it("embeds the divergence lines in section 1", () => {
+    const md = buildFrontendSections(DEFAULT_SHOULDER, DEFAULT_QUOTE_SETTINGS, {
+      classification: DETECTING_CLASSIFICATION,
+      lat: DEFAULT_SHOULDER.meta.lat,
+      lng: DEFAULT_SHOULDER.meta.lng,
+    });
+    expect(md).toContain("**DIVERGENCE: detection said lanes=5");
   });
 });

@@ -31,6 +31,8 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from fastapi import HTTPException
+
 if TYPE_CHECKING:  # imported for type hints only — avoids the runtime cycle
     from src.api.render_api import QuoteRequest
 
@@ -66,8 +68,48 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
 
     scenario = req.scenario
 
-    # The shared validated pipeline — the same 400s as every deliverable.
-    placements, params, site_adj, night_adj = _placements_for(scenario)
+    # Baked into the Modal image at deploy time (modal_app.py ._git_sha);
+    # "unknown" when unstamped — same honest sentinel as /healthz.
+    git_sha = os.environ.get("GIT_SHA", "unknown")
+
+    # The shared validated pipeline — the same gates as every deliverable.
+    # A 400 refusal (eligibility gates, geometry validation) is a state
+    # the snapshot exists to document, not an error: emit a REFUSED
+    # section quoting the detail verbatim instead of dying (issue #178).
+    # Anything else propagates unchanged.
+    try:
+        placements, params, site_adj, night_adj = _placements_for(scenario)
+    except HTTPException as exc:
+        if exc.status_code != 400:
+            raise
+        detail = exc.detail
+        detail_text = (
+            json.dumps(detail, indent=2, sort_keys=True, ensure_ascii=False)
+            if isinstance(detail, (dict, list))
+            else str(detail)
+        )
+        return "\n".join(
+            [
+                "<!-- Backend sections of the replication snapshot (Refs #102)."
+                " Generation was refused; see below. -->",
+                "",
+                "## 3 GENERATION REFUSED",
+                "",
+                f"Backend: GIT_SHA={git_sha}",
+                "",
+                "The generation pipeline refused this scenario (HTTP 400).",
+                "The refusal detail, verbatim:",
+                "",
+                "```json",
+                detail_text,
+                "```",
+                "",
+                "Sections 4-6 (quote, device list, crew narrative) are"
+                " underivable: every backend section derives from the same"
+                " pipeline that refused; nothing here re-computes what the"
+                " deliverables would not produce.",
+            ]
+        )
 
     # Section 3 — the complete audit projection, verbatim.
     projection = _audit_projection_for(scenario)
@@ -182,6 +224,8 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
             " its textual content appears in the audit projection below. -->",
             "",
             "## 3 Audit projection (backend, verbatim)",
+            "",
+            f"Backend: GIT_SHA={git_sha}",
             "",
             "```json",
             projection_json,

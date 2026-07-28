@@ -408,4 +408,51 @@ describe("classifyFromOsmTags", () => {
       ).detectedOneway,
     ).toBeUndefined();
   });
+
+  it("exposes the raw directional lane tags and oneway string (issue #178)", () => {
+    const r = classifyFromOsmTags(
+      {
+        highwayClass: "secondary",
+        name: "E Colfax Ave",
+        ref: null,
+        tags: {
+          ...baseTags,
+          lanes: "5",
+          lanes_forward: "3",
+          lanes_backward: "2",
+          oneway: "yes",
+        },
+      },
+      true,
+      "Denver",
+    );
+    expect(r.raw.osmLanesTag).toBe("5");
+    expect(r.raw.osmLanesForwardTag).toBe("3");
+    expect(r.raw.osmLanesBackwardTag).toBe("2");
+    expect(r.raw.osmLanesBothWaysTag).toBe(null);
+    expect(r.raw.osmOnewayTag).toBe("yes");
+  });
+
+  it("never presents lanes:forward as the lanes total (#178 amendment 1)", () => {
+    // Pre-#178, raw.osmLanesTag fell back to lanes:forward — the one
+    // raw lanes string could print a directional tag under a `lanes=`
+    // label. The lanes FIELD still reads the forward tag as evidence
+    // (behavior preserved); only the raw label is now honest.
+    const r = classifyFromOsmTags(
+      {
+        highwayClass: "primary",
+        name: "Main St",
+        ref: null,
+        tags: { ...baseTags, lanes_forward: "3" },
+      },
+      false,
+      null,
+    );
+    expect(r.raw.osmLanesTag).toBe(null);
+    expect(r.raw.osmLanesForwardTag).toBe("3");
+    expect(r.lanesPerDirection).toBe(3);
+    expect(r.fields.lanes.confidence).toBe("high");
+    expect(r.fields.lanes.method).toBe("measured");
+    expect(r.fields.lanes.rawData).toBe("lanes:forward=3");
+  });
 });

@@ -239,11 +239,14 @@ export function classifyFromOsmTags(
   }
 
   let lanes: DetectedField<number | null>;
-  const osmLanesTag = tags.lanes ?? tags.lanes_forward ?? null;
-  if (osmLanesTag !== null && lanesFromOsm !== undefined) {
+  // The evidence for the lanes field is either tag; raw.osmLanesTag is
+  // the `lanes` tag ONLY (issue #178 — printing a lanes:forward value
+  // under a `lanes=` label misread the directional tag as a total).
+  const lanesEvidenceTag = tags.lanes ?? tags.lanes_forward ?? null;
+  if (lanesEvidenceTag !== null && lanesFromOsm !== undefined) {
     const splitExplicit =
       tags.lanes_forward !== null ||
-      osmLanesTag !== String(lanesFromOsm * 2);
+      lanesEvidenceTag !== String(lanesFromOsm * 2);
     lanes = {
       value: lanesFromOsm,
       confidence: splitExplicit ? "high" : "medium",
@@ -253,7 +256,10 @@ export function classifyFromOsmTags(
       // Read from a real lanes tag (halved for two-way roads, but still
       // the tagged count) — measured even at medium confidence.
       method: "measured",
-      rawData: `lanes=${osmLanesTag}`,
+      rawData:
+        tags.lanes !== null
+          ? `lanes=${tags.lanes}`
+          : `lanes:forward=${tags.lanes_forward}`,
     };
   } else {
     lanes = {
@@ -301,8 +307,13 @@ export function classifyFromOsmTags(
       roadName: name,
       roadRef: ref,
       placeName,
-      osmLanesTag,
+      osmLanesTag: tags.lanes,
       osmMaxspeedTag: tags.maxspeed,
+      // Issue #178 — the raw evidence behind the #120/#158 relays.
+      osmLanesForwardTag: tags.lanes_forward,
+      osmLanesBackwardTag: tags.lanes_backward,
+      osmLanesBothWaysTag: tags.lanes_both_ways,
+      osmOnewayTag: tags.oneway,
     },
     fields: {
       speed,

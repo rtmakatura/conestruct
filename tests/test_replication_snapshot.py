@@ -161,10 +161,43 @@ def test_snapshot_gated_kind_rejected(client: TestClient) -> None:
     assert res.status_code == 400
 
 
-def test_snapshot_invalid_geometry_rejected(client: TestClient) -> None:
-    """Geometry validation 400s pass through unchanged (shared
-    _placements_for gate)."""
+def test_snapshot_invalid_geometry_survives_as_refused(client: TestClient) -> None:
+    """#178 item 1: a geometry-refused scenario produces a snapshot that
+    says so instead of a 400 — the diagnostic must not die in exactly the
+    states it exists to document.  (Inverts the pre-#178 pin that
+    asserted the 400 passed through.)"""
     body = {**_shoulder_body(), "workLen": 10}
     res = _post_snapshot(client, body=body)
-    assert res.status_code == 400
+    assert res.status_code == 200, res.text
+    assert "## 3 GENERATION REFUSED" in res.text
+    # The structured 400 detail is quoted verbatim, not summarized.
     assert "geometry_validation_failed" in res.text
+    # Nothing downstream of the refused pipeline is fabricated.
+    for header in ("## 4 Quote", "## 5 Device list", "## 6 Crew narrative"):
+        assert header not in res.text
+
+
+def test_snapshot_survives_gate_refusal_with_verbatim_detail(client: TestClient) -> None:
+    """#178 item 1, the Colfax shape: the #86 multilane flagger gate
+    refuses, and the snapshot carries the refusal message verbatim —
+    before this arc, attempting the Colfax snapshot pre-confirm returned
+    an error, not evidence."""
+    from tests.test_plan_sheet_device_summary import FLAGGER_BODY
+
+    body = {**FLAGGER_BODY, "detectedLanesTotal": 5, "detectedLanesForward": 3}
+    res = _post_snapshot(client, body=body)
+    assert res.status_code == 200, res.text
+    assert "## 3 GENERATION REFUSED" in res.text
+    # The #86 gate's own words, not a paraphrase.
+    assert "more lanes than a flagger" in res.text
+    assert "## 4 Quote" not in res.text
+
+
+def test_snapshot_carries_backend_sha_in_both_paths(client: TestClient) -> None:
+    """#178 item 2: the backend sha line appears under the section-3
+    header on the normal path AND the refused path (same GIT_SHA sentinel
+    convention as /healthz — "unknown" when unstamped, never fabricated)."""
+    normal = _post_snapshot(client)
+    assert "Backend: GIT_SHA=" in normal.text
+    refused = _post_snapshot(client, body={**_shoulder_body(), "workLen": 10})
+    assert "Backend: GIT_SHA=" in refused.text
