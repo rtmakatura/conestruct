@@ -1512,6 +1512,13 @@ INTERSECTION_SUPPORT_ISSUE: str | None = "https://github.com/rtmakatura/conestru
 # (render_api._ensure_lane_confidence).
 LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/120"
 
+# Tracking issue for override provenance (#177): when a user confirm/edit
+# superseded a disputed detection (the erased relays were driving a live
+# refusal or caution), the pending item keyed to this URL states both
+# sides — what the map data reported and what the human asserted — so a
+# reviewer can re-check the one decision the system used to erase.
+DETECTION_OVERRIDE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/177"
+
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
     """Port of ``mergingTaperLength`` from conestruct/site/lib/scenarios/shared.ts.
@@ -1641,6 +1648,36 @@ def _site_citation(rule: str) -> str:
     return rule.split(" — ")[0].replace("§", "§ ")
 
 
+def _override_detected_clause(record: dict[str, Any]) -> str:
+    """The 'map data reported …' clause of a detection_overridden item.
+
+    Built from the marker's PRESENT fields only — the marker records just
+    the relays that existed at erase time (#177), so the clause never
+    states a value detection didn't report.
+    """
+    parts: list[str] = []
+    total = record.get("detectedLanesTotal")
+    if total is not None:
+        lanes_word = "lane" if total == 1 else "lanes"
+        directional = [
+            f"{record[key]} {label}"
+            for key, label in (
+                ("detectedLanesForward", "forward"),
+                ("detectedLanesBackward", "backward"),
+                ("detectedLanesBothWays", "both-ways"),
+            )
+            if record.get(key) is not None
+        ]
+        clause = f"{total} total {lanes_word}"
+        if directional:
+            clause += f" ({', '.join(directional)})"
+        parts.append(clause)
+    oneway = record.get("detectedOneway")
+    if oneway is not None:
+        parts.append(f"a one-way road (oneway={oneway})")
+    return "; ".join(parts)
+
+
 def audit_projection(
     audit: dict[str, Any],
     scenario_kind: str,
@@ -1648,6 +1685,7 @@ def audit_projection(
     road_type: str | None = None,
     site_records: list[dict[str, Any]] | None = None,
     lane_count_suspect: bool = False,
+    override_records: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -1859,6 +1897,34 @@ def audit_projection(
                     "before deploying."
                 ),
                 "tracking_issue": LANE_CONFIDENCE_ISSUE,
+            }
+        )
+
+    # Override provenance (#177) — the render-API caller threads the
+    # scenario's ``detectionOverrides`` markers here (audit_projection has
+    # no scenario, same convention as ``lane_count_suspect`` above).  The
+    # single emission point: one item per marker rides
+    # ``pending_verification`` into ``plan_flags`` and every surface that
+    # prints audit blocks, so the strip, the panel, and the deliverables
+    # cannot disagree (the #93 drift class).  Markers exist only for
+    # DISPUTED erasures (the relays were driving a live refusal or
+    # caution), so this cannot double-fire with the #120 caution above:
+    # that one needs the relays present, a marker exists only after they
+    # were erased, and re-detection resets the markers as it re-attaches
+    # relays.  Informational only — the backend never re-blocks a
+    # confirmed payload.
+    for record in override_records or []:
+        items.append(
+            {
+                "kind": "detection_overridden",
+                "label": (
+                    f"Detection override — map data reported "
+                    f"{_override_detected_clause(record)}; the user asserted "
+                    f"{record.get('asserted', '')}. The plan is built to the "
+                    "assertion — verify it in the field or on imagery before "
+                    "deploying."
+                ),
+                "tracking_issue": DETECTION_OVERRIDE_ISSUE,
             }
         )
 

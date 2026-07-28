@@ -1208,6 +1208,16 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
             getattr(scenario, "detectedLanesBackward", None),
             getattr(scenario, "detectedLanesBothWays", None),
         ),
+        # #177 — override provenance: the scenario's detection-override
+        # markers, threaded as plain dicts (audit_projection has no
+        # scenario).  exclude_none so the audit clause is built from the
+        # relay fields that were actually present at erase time.  getattr
+        # because only shoulder / flagger / near_intersection carry the
+        # field.
+        override_records=[
+            r.model_dump(exclude_none=True)
+            for r in (getattr(scenario, "detectionOverrides", None) or [])
+        ],
     )
 
 

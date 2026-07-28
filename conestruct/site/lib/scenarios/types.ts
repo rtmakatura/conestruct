@@ -132,6 +132,12 @@ export interface NearIntersectionScenario extends JurisdictionPlanFields {
 
   /** 1 leg (T-intersection) or 2 (both directions of one cross street). */
   approaches: NearIntersectionApproach[];
+  /**
+   * Override provenance (issue #177) — see `DetectionOverride`. Lives on
+   * the scenario, not the approach: both legs carry the same way's tags,
+   * so the erased detection is one fact, not one per leg.
+   */
+  detectionOverrides?: DetectionOverride[];
 }
 
 /**
@@ -150,6 +156,44 @@ export interface JurisdictionPlanFields {
     start_time?: number;
     end_time?: number;
   } | null;
+}
+
+/**
+ * A user confirm/edit that superseded a disputed detection (issue #177).
+ * Mirrors `DetectionOverride` in src/api/schemas.py.
+ *
+ * The recovery affordances (#136/#158/#86 confirms, the #120 lane-edit
+ * clears) lift a gate refusal or caution by erasing the detection
+ * relays — which made a confirmed override byte-identical to a road
+ * that was never detected. This marker preserves the disagreement:
+ * only the relay fields that were actually present at erase time, plus
+ * what the human asserted (the confirm's proposition, or the value the
+ * user entered — never a fabricated number).
+ *
+ * Recorded ONLY for disputed erasures — the erased relays were driving
+ * a live refusal or caution at that moment. An ordinary post-detection
+ * lane edit with consistent relays is the established manual-supersede
+ * convention (#112) and stays silent; absent detection records nothing,
+ * ever. Informational only: the backend never re-blocks a confirmed
+ * payload — the sole consumer is the audit's `detection_overridden`
+ * item. No manual un-confirm exists (the rows are stateless and vanish
+ * once the relay clears); re-running detection resets the list in the
+ * same patch that re-attaches relays (applyClassification).
+ */
+export interface DetectionOverride {
+  via:
+    | "flagger_single_lane_confirm"
+    | "flagger_multilane_confirm"
+    | "flagger_twoway_confirm"
+    | "shoulder_lane_edit"
+    | "approach_lane_confirm"
+    | "approach_lane_edit";
+  detectedLanesTotal?: number;
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
+  detectedOneway?: string;
+  asserted: string;
 }
 
 export type SiteConditionFlag =
@@ -235,6 +279,8 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
   detectedLanesForward?: number;
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
+  /** Override provenance (issue #177) — see `DetectionOverride`. */
+  detectionOverrides?: DetectionOverride[];
 }
 
 export type FlaggerRoadType = "rural_undivided" | "urban_arterial";
@@ -280,6 +326,8 @@ export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
   detectedLanesForward?: number;
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
+  /** Override provenance (issue #177) — see `DetectionOverride`. */
+  detectionOverrides?: DetectionOverride[];
 }
 
 export interface LaneClosureDividedScenario extends JurisdictionPlanFields {

@@ -9,6 +9,7 @@ import {
 } from "@/lib/scenarios";
 import {
   ONEWAY_BLOCKING,
+  appendDetectionOverride,
   flaggerLaneIneligibleHigh,
 } from "@/lib/scenarios/auto-apply";
 import { validateWorkZone } from "@/lib/scenarios/validation";
@@ -79,7 +80,20 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             label="Road has one lane in each direction"
             desc="Detection saw a single-lane road — confirm to enable this plan"
             onToggle={() =>
-              setScenario({ ...scenario, detectedLanesTotal: undefined })
+              setScenario({
+                ...scenario,
+                detectedLanesTotal: undefined,
+                // Record what this confirm erased (#177) — the row only
+                // renders in the disputed (gate-refused) state.
+                detectionOverrides: appendDetectionOverride(
+                  scenario.detectionOverrides,
+                  {
+                    via: "flagger_single_lane_confirm",
+                    detectedLanesTotal: scenario.detectedLanesTotal,
+                    asserted: "one lane in each direction",
+                  },
+                ),
+              })
             }
           />
         )}
@@ -108,6 +122,21 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                 detectedLanesForward: undefined,
                 detectedLanesBackward: undefined,
                 detectedLanesBothWays: undefined,
+                // Record what this confirm erased (#177) — the row only
+                // renders in the disputed (gate-refused) state.  Only
+                // the relays present at erase time land on the marker
+                // (undefined fields drop at JSON serialization).
+                detectionOverrides: appendDetectionOverride(
+                  scenario.detectionOverrides,
+                  {
+                    via: "flagger_multilane_confirm",
+                    detectedLanesTotal: scenario.detectedLanesTotal,
+                    detectedLanesForward: scenario.detectedLanesForward,
+                    detectedLanesBackward: scenario.detectedLanesBackward,
+                    detectedLanesBothWays: scenario.detectedLanesBothWays,
+                    asserted: "one through lane in each direction",
+                  },
+                ),
               })
             }
           />
@@ -124,7 +153,22 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             on={false}
             label="Road carries two-way traffic"
             desc="Detection saw a one-way street — confirm to enable this plan"
-            onToggle={() => setScenario({ ...scenario, oneway: undefined })}
+            onToggle={() =>
+              setScenario({
+                ...scenario,
+                oneway: undefined,
+                // Record what this confirm erased (#177) — the row only
+                // renders in the disputed (gate-refused) state.
+                detectionOverrides: appendDetectionOverride(
+                  scenario.detectionOverrides,
+                  {
+                    via: "flagger_twoway_confirm",
+                    detectedOneway: scenario.oneway,
+                    asserted: "two-way traffic",
+                  },
+                ),
+              })
+            }
           />
         )}
 

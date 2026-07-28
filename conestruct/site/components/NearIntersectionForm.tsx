@@ -22,6 +22,11 @@ import {
   validateWorkZone,
 } from "@/lib/scenarios/validation";
 import {
+  appendDetectionOverride,
+  lanesArithmeticMismatch,
+} from "@/lib/scenarios/auto-apply";
+import type { DetectionOverride } from "@/lib/scenarios";
+import {
   CheckRow,
   ChipRow,
   Field,
@@ -80,19 +85,67 @@ export function NearIntersectionForm({
     detectedLanesBackward: undefined,
     detectedLanesBothWays: undefined,
   } as const;
+  // Disputed-only override record (#177): the erased relays were driving
+  // the #120 mismatch 400 or the needs-confirmation hold.  Both legs
+  // carry the same way's tags, so leg 0 is the one detection fact.  An
+  // erase with nothing present records nothing — absence and override
+  // must not look alike.
+  const recordedOverrides = (
+    via: "approach_lane_confirm" | "approach_lane_edit",
+    asserted: string,
+  ): DetectionOverride[] | undefined => {
+    const leg = legs[0];
+    const hasSignal =
+      leg !== undefined &&
+      (leg.detectedLanesTotal !== undefined ||
+        leg.detectedLanesForward !== undefined ||
+        leg.detectedLanesBackward !== undefined ||
+        leg.detectedLanesBothWays !== undefined);
+    const disputed =
+      approachConfirm.pending ||
+      (leg !== undefined &&
+        lanesArithmeticMismatch(
+          leg.detectedLanesTotal,
+          leg.detectedLanesForward,
+          leg.detectedLanesBackward,
+          leg.detectedLanesBothWays,
+        ));
+    if (!hasSignal || !disputed) return scenario.detectionOverrides;
+    return appendDetectionOverride(scenario.detectionOverrides, {
+      via,
+      detectedLanesTotal: leg.detectedLanesTotal,
+      detectedLanesForward: leg.detectedLanesForward,
+      detectedLanesBackward: leg.detectedLanesBackward,
+      detectedLanesBothWays: leg.detectedLanesBothWays,
+      asserted,
+    });
+  };
   const updateLegAndClearRelays = (
     i: number,
-    patch: Partial<NearIntersectionApproach>,
+    patch: { lanesPerDirection: number },
   ) =>
-    setLegs(
-      legs.map((l, idx) => ({
+    setScenario({
+      ...scenario,
+      approaches: legs.map((l, idx) => ({
         ...l,
         ...(idx === i ? patch : {}),
         ...laneRelayClear,
       })),
-    );
+      detectionOverrides: recordedOverrides(
+        "approach_lane_edit",
+        `approach lane count ${patch.lanesPerDirection}`,
+      ),
+    });
   const confirmLaneCounts = () => {
-    setLegs(legs.map((l) => ({ ...l, ...laneRelayClear })));
+    const counts = [...new Set(legs.map((l) => l.lanesPerDirection))].join("/");
+    setScenario({
+      ...scenario,
+      approaches: legs.map((l) => ({ ...l, ...laneRelayClear })),
+      detectionOverrides: recordedOverrides(
+        "approach_lane_confirm",
+        `approach lane count ${counts}`,
+      ),
+    });
     clearApproachConfirm();
   };
 

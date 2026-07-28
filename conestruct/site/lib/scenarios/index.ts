@@ -39,6 +39,7 @@ import type {
 } from "./types";
 
 export type {
+  DetectionOverride,
   Duration,
   FlaggerLaneClosureScenario,
   FlaggerResult,

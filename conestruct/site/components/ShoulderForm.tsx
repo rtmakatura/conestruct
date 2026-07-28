@@ -10,6 +10,10 @@ import {
 import { validateLanes, validateWorkZone } from "@/lib/scenarios/validation";
 import { dividedForShoulderRoadType } from "@/lib/scenarios/overrides";
 import {
+  appendDetectionOverride,
+  lanesArithmeticMismatch,
+} from "@/lib/scenarios/auto-apply";
+import {
   ChipRow,
   CheckRow,
   Field,
@@ -125,7 +129,20 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             // Editing the lane count is the operator correcting detection,
             // so clear the relayed single-lane signal — this lifts the
             // backend single-lane block (issue #136).
-            onChange={(v) =>
+            onChange={(v) => {
+              // Disputed-only override record (#177): the erased relays
+              // were driving the #136 refusal (total === 1) or the #120
+              // caution (arithmetic mismatch).  An ordinary edit over
+              // consistent relays is the manual-supersede convention
+              // (#112) and stays silent.
+              const disputed =
+                scenario.detectedLanesTotal === 1 ||
+                lanesArithmeticMismatch(
+                  scenario.detectedLanesTotal,
+                  scenario.detectedLanesForward,
+                  scenario.detectedLanesBackward,
+                  scenario.detectedLanesBothWays,
+                );
               setScenario({
                 ...scenario,
                 lanes: v,
@@ -136,8 +153,18 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
                 detectedLanesForward: undefined,
                 detectedLanesBackward: undefined,
                 detectedLanesBothWays: undefined,
-              })
-            }
+                detectionOverrides: disputed
+                  ? appendDetectionOverride(scenario.detectionOverrides, {
+                      via: "shoulder_lane_edit",
+                      detectedLanesTotal: scenario.detectedLanesTotal,
+                      detectedLanesForward: scenario.detectedLanesForward,
+                      detectedLanesBackward: scenario.detectedLanesBackward,
+                      detectedLanesBothWays: scenario.detectedLanesBothWays,
+                      asserted: `${v} lane${v === 1 ? "" : "s"} per direction`,
+                    })
+                  : scenario.detectionOverrides,
+              });
+            }}
           />
         </Field>
 

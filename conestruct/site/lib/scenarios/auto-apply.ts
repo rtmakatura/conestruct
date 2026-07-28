@@ -13,6 +13,7 @@
 import type { RoadClassification } from "../road-detection/types";
 import { clampLanesToDomain } from "./validation";
 import type {
+  DetectionOverride,
   Scenario,
   RoadType,
   FlaggerRoadType,
@@ -58,6 +59,37 @@ export function flaggerLaneIneligibleHigh(
   if (total >= 4) return true;
   if (total === 3) return !(forward === 1 && backward === 1 && bothWays === 1);
   return false;
+}
+
+// Lane-count consistency predicate (issue #120): the OSM lane tags
+// dispute themselves when total, forward, and backward all exist and
+// total != forward + backward + both_ways.  Mirrors
+// `lanes_arithmetic_mismatch` in src/api/schemas.py (the backend audit
+// caution / near-intersection gate) — the backend is authoritative; this
+// mirror only decides whether an erased relay set was DISPUTED at erase
+// time, which gates recording a DetectionOverride marker (issue #177).
+// Sparse tags never count as disputed.
+export function lanesArithmeticMismatch(
+  total: number | undefined,
+  forward: number | undefined,
+  backward: number | undefined,
+  bothWays: number | undefined,
+): boolean {
+  if (total === undefined || forward === undefined || backward === undefined) {
+    return false;
+  }
+  return total !== forward + backward + (bothWays ?? 0);
+}
+
+// Append a DetectionOverride marker (issue #177), keeping the newest 8 —
+// the backend schema caps the list (max_length=8), and on a session deep
+// enough to hit the cap the oldest markers describe relays that have
+// since been re-detected and re-erased.
+export function appendDetectionOverride(
+  existing: DetectionOverride[] | undefined,
+  marker: DetectionOverride,
+): DetectionOverride[] {
+  return [...(existing ?? []), marker].slice(-8);
 }
 const LANE_CLOSURE_TYPES = new Set<LaneClosureRoadType>([
   "rural_divided",
@@ -164,6 +196,9 @@ export function applyClassification(
           detectedLanesForward: c.detectedLanesForward,
           detectedLanesBackward: c.detectedLanesBackward,
           detectedLanesBothWays: c.detectedLanesBothWays,
+          // Fresh detection supersedes any recorded override (#177):
+          // the old dispute was about relays this patch just replaced.
+          detectionOverrides: undefined,
           ...speedPatch,
           ...lanesPatch,
         },
@@ -198,6 +233,9 @@ export function applyClassification(
         detectedLanesForward: c.detectedLanesForward,
         detectedLanesBackward: c.detectedLanesBackward,
         detectedLanesBothWays: c.detectedLanesBothWays,
+        // Fresh detection supersedes any recorded override (#177):
+        // the old dispute was about relays this patch just replaced.
+        detectionOverrides: undefined,
         ...speedPatch,
       };
       const delta = baseDelta(speedApplied, speedApplicable);

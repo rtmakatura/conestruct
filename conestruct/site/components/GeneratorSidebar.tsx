@@ -246,6 +246,10 @@ export function GeneratorSidebar({
         next = {
           ...next,
           approaches: approachesFromCrossStreet(r.crossStreet),
+          // Fresh cross-street detection supersedes any recorded
+          // override (#177) — the old dispute was about approach relays
+          // this patch just replaced.
+          detectionOverrides: undefined,
         };
         lastAppliedCrossStreetRef.current = crossJson;
         setApproachConfirm({

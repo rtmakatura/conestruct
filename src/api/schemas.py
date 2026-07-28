@@ -122,6 +122,50 @@ class JurisdictionScenarioFields(BaseModel):
     schedule: WorkSchedule | None = None
 
 
+class DetectionOverride(BaseModel):
+    """A user confirm/edit that superseded a disputed detection (issue #177).
+
+    The recovery affordances (#136/#158/#86 confirms, the #120 lane-edit
+    clears) lift a gate refusal or caution by erasing the detection relays
+    — which made a confirmed override byte-identical to a road that was
+    never detected.  This marker preserves the disagreement as a fact:
+    what detection reported (only the relay fields that were actually
+    present at erase time) and what the human asserted.
+
+    Recorded ONLY for disputed erasures — the erased relays were driving a
+    live refusal or caution at that moment.  An ordinary post-detection
+    lane edit with consistent relays is the established manual-supersede
+    convention (#112) and stays silent; a road with genuinely absent
+    detection carries no marker, ever (absence and override must not look
+    alike).
+
+    Sole consumer is the audit's ``detection_overridden`` item (one
+    emission point in ``audit_projection``): informational only — the
+    backend never re-blocks a confirmed payload.  There is no manual
+    un-confirm (the confirm rows are stateless and vanish once the relay
+    clears); the only removal path is re-running detection, which resets
+    ``detectionOverrides`` in the same patch that re-attaches relays.
+    """
+
+    via: Literal[
+        "flagger_single_lane_confirm",  # the #136 row
+        "flagger_multilane_confirm",  # the #86 row
+        "flagger_twoway_confirm",  # the #158 row
+        "shoulder_lane_edit",
+        "approach_lane_confirm",
+        "approach_lane_edit",
+    ]
+    detectedLanesTotal: int | None = Field(default=None, ge=1)
+    detectedLanesForward: int | None = Field(default=None, ge=1)
+    detectedLanesBackward: int | None = Field(default=None, ge=1)
+    detectedLanesBothWays: int | None = Field(default=None, ge=1)
+    detectedOneway: str | None = Field(default=None, max_length=16)
+    # The human side, verbatim per affordance: the confirm's proposition
+    # ("one through lane in each direction") or the value the user entered
+    # ("3 lanes per direction").  Never a fabricated number.
+    asserted: str = Field(max_length=120)
+
+
 ShoulderRoadType = Literal["rural_undivided", "rural_divided", "urban_arterial", "freeway"]
 FlaggerRoadType = Literal["rural_undivided", "urban_arterial"]
 Duration = Literal["short", "long"]
@@ -218,6 +262,8 @@ class ShoulderScenario(JurisdictionScenarioFields):
     detectedLanesForward: int | None = Field(default=None, ge=1)
     detectedLanesBackward: int | None = Field(default=None, ge=1)
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
+    # Override provenance (issue #177) — see ``DetectionOverride``.
+    detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
     @model_validator(mode="after")
     def _check_work_zone_speed(self) -> Self:
@@ -283,6 +329,8 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     detectedLanesForward: int | None = Field(default=None, ge=1)
     detectedLanesBackward: int | None = Field(default=None, ge=1)
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
+    # Override provenance (issue #177) — see ``DetectionOverride``.
+    detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
 
 class LaneClosureDividedScenario(JurisdictionScenarioFields):
@@ -469,6 +517,10 @@ class NearIntersectionScenario(JurisdictionScenarioFields):
     # A second cross street inside one work zone is multi-road scope;
     # raising the max is a deliberate, schema-visible act.
     approaches: list[IntersectionApproach] = Field(min_length=1, max_length=2)
+    # Override provenance (issue #177) — see ``DetectionOverride``.  Lives
+    # on the scenario, not the approach: both legs carry the same way's
+    # tags, so the erased detection is one fact, not one per leg.
+    detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
     @model_validator(mode="after")
     def _check_not_divided(self) -> Self:
