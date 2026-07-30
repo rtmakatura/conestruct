@@ -1,0 +1,83 @@
+================ #181 kind-switch ================
+--- #181 A1: after detection on SHOULDER kind (payload BEFORE kind switch)
+relay slice: {
+  "kind": "shoulder",
+  "speed": 35,
+  "detectedLanesTotal": 5,
+  "detectedLanesForward": 2,
+  "detectedLanesBackward": 2,
+  "detectedLanesBothWays": 1
+}
+gate mirror verdict: "flagger gates not applicable (kind=shoulder)"
+full wire payload: {"scenario":{"kind":"shoulder","meta":{"project":"","address":"E Colfax Ave & Race St, Denver","lat":39.73997,"lng":-104.96632},"roadType":"urban_arterial","speed":35,"lanes":2,"laneWidth":12,"divided":false,"workType":"utility_locate","duration":"short","workLen":1000,"night":false,"detectedLanesTotal":5,"detectedLanesForward":2,"detectedLanesBackward":2,"detectedLanesBothWays":1}}
+
+--- #181 A2 PRE-FIX (carryMeta, the defect): payload AFTER the switch — the bypass
+relay slice: {
+  "kind": "flagger_lane_closure",
+  "speed": 45
+}
+gate mirror verdict: {
+  "mirror_flagger_lane_ineligible_high": false,
+  "mirror_oneway_blocking": false,
+  "mirror_single_lane": false,
+  "refusalAffordance": null,
+  "note": "mirrors of the backend gates at render_api.py:406-412; backend authoritative"
+}
+full wire payload: {"scenario":{"kind":"flagger_lane_closure","meta":{"project":"","address":"E Colfax Ave & Race St, Denver","lat":39.73997,"lng":-104.96632},"roadType":"rural_undivided","speed":45,"laneWidth":12,"workType":"utility_cut","duration":"long","workLen":400,"night":false,"pilotCar":false,"afad":false,"pedestrianAccess":false}}
+
+--- #181 A3 POST-FIX (carryAcrossKinds + re-apply, GeneratorSidebar.onKindChange): relays re-armed
+relay slice: {
+  "kind": "flagger_lane_closure",
+  "speed": 35,
+  "detectedLanesTotal": 5,
+  "detectedLanesForward": 2,
+  "detectedLanesBackward": 2,
+  "detectedLanesBothWays": 1
+}
+gate mirror verdict: {
+  "mirror_flagger_lane_ineligible_high": true,
+  "mirror_oneway_blocking": false,
+  "mirror_single_lane": false,
+  "refusalAffordance": "flagger_multilane",
+  "note": "mirrors of the backend gates at render_api.py:406-412; backend authoritative"
+}
+full wire payload: {"scenario":{"kind":"flagger_lane_closure","meta":{"project":"","address":"E Colfax Ave & Race St, Denver","lat":39.73997,"lng":-104.96632},"roadType":"urban_arterial","speed":35,"laneWidth":12,"workType":"utility_cut","duration":"long","workLen":1000,"night":false,"pilotCar":false,"afad":false,"pedestrianAccess":false,"detectedLanesTotal":5,"detectedLanesForward":2,"detectedLanesBackward":2,"detectedLanesBothWays":1}}
+
+--- #181 B CONTROL: flagger-first, same detection — the gate arms
+relay slice: {
+  "kind": "flagger_lane_closure",
+  "speed": 35,
+  "detectedLanesTotal": 5,
+  "detectedLanesForward": 2,
+  "detectedLanesBackward": 2,
+  "detectedLanesBothWays": 1
+}
+gate mirror verdict: {
+  "mirror_flagger_lane_ineligible_high": true,
+  "mirror_oneway_blocking": false,
+  "mirror_single_lane": false,
+  "refusalAffordance": "flagger_multilane",
+  "note": "mirrors of the backend gates at render_api.py:406-412; backend authoritative"
+}
+full wire payload: {"scenario":{"kind":"flagger_lane_closure","meta":{"project":"","address":"E Colfax Ave & Race St, Denver","lat":39.73997,"lng":-104.96632},"roadType":"urban_arterial","speed":35,"laneWidth":12,"workType":"utility_cut","duration":"long","workLen":400,"night":false,"pilotCar":false,"afad":false,"pedestrianAccess":false,"detectedLanesTotal":5,"detectedLanesForward":2,"detectedLanesBackward":2,"detectedLanesBothWays":1}}
+
+================ #189 mid-detection Save ================
+--- #189: payload after a mid-flight Save (classification null) — no relays ever arrive; post-fix, canSave blocks this state (LocationPickerModal)
+relay slice: {
+  "kind": "flagger_lane_closure",
+  "speed": 45
+}
+gate mirror verdict: {
+  "mirror_flagger_lane_ineligible_high": false,
+  "mirror_oneway_blocking": false,
+  "mirror_single_lane": false,
+  "refusalAffordance": null,
+  "note": "mirrors of the backend gates at render_api.py:406-412; backend authoritative"
+}
+full wire payload: {"scenario":{"kind":"flagger_lane_closure","meta":{"project":"","address":"E Colfax Ave & Race St, Denver","lat":39.73997,"lng":-104.96632,"confirmedRoad":null},"roadType":"rural_undivided","speed":45,"laneWidth":12,"workType":"utility_cut","duration":"long","workLen":400,"night":false,"pilotCar":false,"afad":false,"pedestrianAccess":false}}
+
+================ #190 re-save reverts manual edit ================
+#190 1: first save, picker override speed 40 -> speed=40
+#190 2: manual form edit -> speed=25  (payload BEFORE re-save)
+#190 3 PRE-FIX: unconditional re-apply on a no-change re-save -> speed=40  (manual 25 reverted; no marker recorded)
+#190 4 POST-FIX: GeneratorSidebar.onPickerSave now compares the overrides JSON (lastAppliedOverridesRef) and skips the unchanged re-emit -> speed stays 25 (pinned by GeneratorShell.picker-reapply.test.tsx).

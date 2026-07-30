@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   applyClassification,
-  carryMeta,
+  carryAcrossKinds,
   defaultFor,
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
@@ -189,15 +189,50 @@ export function GeneratorSidebar({
 
   const onKindChange = (kind: ScenarioKind) => {
     if (kind === scenario.kind) return;
-    // The new kind starts from its defaults, so the same detection IS
-    // new information for it — let the next Apply fill the fresh form.
+    // The new kind's form starts from its defaults, so the same
+    // detection IS new information for it — the re-application below
+    // re-arms the ref, and a later picker Apply still compares content.
     lastAppliedDetectionRef.current = null;
     lastAppliedCrossStreetRef.current = null;
     setApproachConfirm({ pending: false, reason: null });
-    // The notes describe the previous kind's handoff — drop them so a
-    // stale clamp note can't follow the operator into a different kind.
-    setHandoff([]);
-    setScenario(carryMeta(scenario, defaultFor(kind)));
+    // #181: a kind switch is not an erase site.  Shared inputs carry
+    // (carryAcrossKinds), and the safety relays re-derive from the
+    // confirmed detection so the new kind gets its own relay shape —
+    // flagger gains `oneway` (#158) here even though the shoulder
+    // branch never captured it.  No detection on record → no relays:
+    // absence renders as absence (rule 10).
+    let next = carryAcrossKinds(scenario, defaultFor(kind));
+    const confirmed = scenario.meta.confirmedRoad;
+    if (confirmed) {
+      const prior = next;
+      const applied = applyClassification(next, confirmed.classification);
+      // The operator's in-effect speed outranks the re-applied detection
+      // speed — same override-over-detection order as onPickerSave.  The
+      // re-application exists to rebuild the relays for the new kind,
+      // not to revert a value the operator already reviewed.
+      next = applyOverridesToScenario(applied.scenario, {
+        speedMph: scenario.speed,
+      });
+      lastAppliedDetectionRef.current = JSON.stringify(
+        confirmed.classification,
+      );
+      // Fresh notes for the new kind's handoff (e.g. the speed clamp a
+      // narrower domain forces) — the old kind's notes no longer apply.
+      setHandoff(
+        summarizeHandoff({
+          prior,
+          classification: confirmed.classification,
+          overrides: { speedMph: scenario.speed },
+          final: next,
+          delta: applied.delta,
+        }),
+      );
+    } else {
+      // The notes describe the previous kind's handoff — drop them so a
+      // stale clamp note can't follow the operator into a different kind.
+      setHandoff([]);
+    }
+    setScenario(next);
   };
 
   const setMeta = (meta: ScenarioMeta) => {

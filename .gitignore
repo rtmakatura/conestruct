@@ -64,8 +64,11 @@ node_modules/
 
 # Local validation/walkthrough harnesses and their render outputs (PDFs,
 # screenshots, throwaway Playwright scripts) — kept on disk for debugging,
-# never committed.
-validation-artifacts/
+# never committed.  EXCEPT committed/: the tracked verification-evidence
+# home (#160 ruling, 2026-07-30) — diff-verifier citations must point at
+# tracked paths, and this is where they live.
+validation-artifacts/*
+!validation-artifacts/committed/
 
 # Claude Code local workspace (settings, transcripts, scratch). Nothing in
 # here is shared state — if a tracked, shared .claude/settings.json is ever

@@ -18,7 +18,9 @@
 // engine-removal PR C (the flagger SSD ``bufferFor`` table — the last
 // TS-side heuristic — is deleted; the row reads
 // ``sections.flagger.sight_distance_ft``, cite §6D.06 → Table 6B-2).
+import { snapSpeedToDomain } from "./auto-apply";
 import type {
+  DetectionOverride,
   FlaggerLaneClosureScenario,
   FlaggerWorkType,
   LaneClosureDividedScenario,
@@ -373,6 +375,49 @@ export function defaultFor(kind: ScenarioKind): Scenario {
 
 export function carryMeta(prev: Scenario, next: Scenario): Scenario {
   return { ...next, meta: prev.meta } as Scenario;
+}
+
+// #181: the kind-switch carry.  carryMeta alone made a kind switch an
+// unmarked erase site — every kind-agnostic input AND the detection
+// relays vanished, which turned the shipped #86/#136/#158 gates into
+// order-dependent gates (detect-then-switch produced a payload the
+// backend had nothing to refuse on).
+//
+// Scope is shared-fields-only (ruling 2026-07-30): the fields below are
+// kind-agnostic user/state inputs no detection owns.  Kind-specific
+// fields (pilotCar, lanes, duration where absent) start from the target
+// kind's defaults, and the relay fields are deliberately NOT copied
+// here — each kind carries its own relay shape (flagger alone has
+// `oneway`), so the sidebar re-derives them by re-running
+// applyClassification from the confirmed detection after this carry.
+// Speed snaps to the target kind's server schema domain (the B-04
+// clamp class — never hand the user a 422 for an app-moved value).
+export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
+  const carried = {
+    ...next,
+    meta: prev.meta,
+    speed: snapSpeedToDomain(next.kind, prev.speed),
+    workLen: prev.workLen,
+    night: prev.night,
+    jurisdiction_key: prev.jurisdiction_key,
+    street_class: prev.street_class,
+    schedule: prev.schedule,
+  } as Scenario;
+  // Override provenance (#177) rides along only where the target kind
+  // declares the field — attaching it to a kind whose schema (and TS
+  // shape) lacks it would put an undeclared key on the wire.
+  const prevOverrides = (
+    prev as { detectionOverrides?: DetectionOverride[] }
+  ).detectionOverrides;
+  if (
+    prevOverrides !== undefined &&
+    (carried.kind === "shoulder" ||
+      carried.kind === "flagger_lane_closure" ||
+      carried.kind === "near_intersection")
+  ) {
+    return { ...carried, detectionOverrides: prevOverrides } as Scenario;
+  }
+  return carried;
 }
 
 // Narrow helpers — useful in form components so each sub-form receives
