@@ -15,6 +15,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   act,
   cleanup,
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -86,7 +87,14 @@ function detection(
   } as RoadClassification;
 }
 
-function result(classification: RoadClassification) {
+// #190: the fixture carries REAL overrides when a case needs them — the
+// old hardcoded `overrides: {}` was exactly why the re-save revert
+// (restored overrides re-imposed over manual form edits) never failed
+// a test here.
+function result(
+  classification: RoadClassification,
+  overrides: Record<string, unknown> = {},
+) {
   return {
     address: "Lafayette, CO",
     lat: 39.9936,
@@ -94,7 +102,7 @@ function result(classification: RoadClassification) {
     bearingDeg: 90,
     workZoneFt: 1000,
     classification,
-    overrides: {},
+    overrides,
   };
 }
 
@@ -106,6 +114,21 @@ vi.mock("./LocationPickerModal", () => ({
       </button>
       <button type="button" onClick={() => onSave(result(detection(1, 65)))}>
         APPLY_PIN_B
+      </button>
+      {/* Pin A with a picker-set speed override — clicked twice it
+          replays the reopened modal restoring its saved overrides
+          verbatim and re-emitting them at Save (#190's channel). */}
+      <button
+        type="button"
+        onClick={() => onSave(result(detection(2, 75), { speedMph: 40 }))}
+      >
+        APPLY_PIN_A_SPEED40
+      </button>
+      <button
+        type="button"
+        onClick={() => onSave(result(detection(2, 75), { speedMph: 45 }))}
+      >
+        APPLY_PIN_A_SPEED45
       </button>
     </>
   ),
@@ -229,6 +252,51 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     await user.click(lanesChip("3"));
     await generate(user);
     expect(bundleBody?.scenario.lanes).toBe(3);
+  });
+
+  // #190: the same guard, one seam over — the reopened picker restores
+  // its saved overrides and re-emits them verbatim at Save; the apply
+  // used to run unconditionally, snapping a manually-refined value back
+  // to the picker-set one with no record anywhere.
+  it("REGRESSION (#190): a no-change re-save does not re-impose restored overrides over manual edits", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+
+    // Picker sets speed 40 (an override), saved and applied.
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
+
+    // The operator refines to 25 in the form.
+    fireEvent.change(
+      document.getElementById("sh-speed") as HTMLInputElement,
+      { target: { value: "25" } },
+    );
+
+    // Reopen just to look; Save & Close with nothing changed re-emits
+    // the restored {speedMph: 40} — it must NOT reapply.
+    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
+
+    await generate(user);
+    expect(bundleBody?.scenario.speed).toBe(25);
+  });
+
+  it("control (#190): a CHANGED override still applies — explicit picker edits win", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
+    fireEvent.change(
+      document.getElementById("sh-speed") as HTMLInputElement,
+      { target: { value: "25" } },
+    );
+
+    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("APPLY_PIN_A_SPEED45"));
+
+    await generate(user);
+    expect(bundleBody?.scenario.speed).toBe(45);
   });
 
   it("a CHANGED detection still applies over manual edits (new information wins)", async () => {
