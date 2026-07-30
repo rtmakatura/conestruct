@@ -81,6 +81,71 @@ export function lanesArithmeticMismatch(
   return total !== forward + backward + (bothWays ?? 0);
 }
 
+// One refusal, one voice (issue #180): associate a backend gate 400 with
+// the confirm affordance that remedies it — WITHOUT string-matching the
+// message text.  The banner shortens to ``pointer`` when this returns a
+// match; the affordance row's own note stays the primary voice.
+//
+// Correctness rests on two facts, both quoted in the #180 plan:
+//   1. The row predicates below are exact mirrors of the backend gates
+//      (flaggerLaneIneligibleHigh ↔ flagger_lane_ineligible_high;
+//      ONEWAY_BLOCKING ↔ _ONEWAY_BLOCKING; total === 1 ↔ the single-lane
+//      gate, exact because FlaggerLaneClosureScenario has no ``divided``).
+//   2. The evaluation ORDER below replicates the backend gate order in
+//      render_api._placements_for (#86 high → #136 single-lane → #158
+//      one-way, all before geometry validation), so the first true
+//      predicate names the gate that actually fired.
+//
+// Drift is fail-safe: a future gate shipped WITHOUT a mirror row matches
+// nothing here, so the banner renders that gate's full 400 once (the
+// no-affordance shape) — never a wrong pointer.  If a gate ever ships
+// without its mirror row and needs a pointer anyway, that is the moment
+// machine-readable codes on the backend 400 earn their test churn
+// (option (i) in the #180 plan) — do not extend this matcher with
+// message-text sniffing.
+//
+// near_intersection's "Lane count is right" confirm joins this table
+// when #117 enablement lands.
+export interface RefusalAffordance {
+  code: "flagger_multilane" | "flagger_single_lane" | "flagger_oneway";
+  pointer: string;
+}
+
+export function matchRefusalAffordance(
+  scenario: Scenario,
+): RefusalAffordance | null {
+  if (scenario.kind !== "flagger_lane_closure") return null;
+  if (
+    flaggerLaneIneligibleHigh(
+      scenario.detectedLanesTotal,
+      scenario.detectedLanesForward,
+      scenario.detectedLanesBackward,
+      scenario.detectedLanesBothWays,
+    )
+  ) {
+    return {
+      code: "flagger_multilane",
+      pointer:
+        "Detection saw a multi-lane road — confirm the lane count in the Road section to proceed.",
+    };
+  }
+  if (scenario.detectedLanesTotal === 1) {
+    return {
+      code: "flagger_single_lane",
+      pointer:
+        "Detection saw a single-lane road — confirm the lane count in the Road section to proceed.",
+    };
+  }
+  if (scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway)) {
+    return {
+      code: "flagger_oneway",
+      pointer:
+        "Detection saw a one-way street — confirm two-way traffic in the Road section to proceed.",
+    };
+  }
+  return null;
+}
+
 // Append a DetectionOverride marker (issue #177), keeping the newest 8 —
 // the backend schema caps the list (max_length=8), and on a session deep
 // enough to hit the cap the oldest markers describe relays that have

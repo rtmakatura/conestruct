@@ -154,14 +154,14 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("READY FOR TCS REVIEW");
   });
 
-  it("invalid input is red and blocks — never READY", () => {
-    // The literal is the BACKEND's floor message (validators.py phrasing)
-    // — since engine-removal PR D the frontend no longer words a floor
-    // message of its own; this prop carries the audit fetch's 400 detail.
+  it("invalid input (client schema-bounds) is red and blocks — never READY", () => {
+    // #180: this prop now carries ONLY the client schema-bounds message
+    // (required / ceiling).  A backend 400 arrives via ``refusal`` and
+    // renders with the declined vocabulary instead — see below.
     const html = renderToStaticMarkup(
       <StatusBar
         status="done"
-        inputError="Work zone length (50 ft) is shorter than the required shoulder taper (L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, or reduce the speed limit."
+        inputError="Work zone length is required."
         audit={ready(makeAudit())}
       />,
     );
@@ -170,6 +170,67 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).toContain("GENERATION BLOCKED");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("VERIFIED");
+  });
+
+  // #180 — one refusal, one voice: a backend 400 is DECLINED, not broken
+  // and not invalid input.
+  const FLOOR_400 =
+    "Work zone length (50 ft) is shorter than the required shoulder taper " +
+    "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
+    "or reduce the speed limit.";
+
+  it("refusal without an affordance renders the full 400 with declined vocabulary", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        refusal={{ message: FLOOR_400, pointer: null }}
+        audit={{ state: "error", message: FLOOR_400, httpStatus: 400, lastReady: null }}
+      />,
+    );
+    expect(html).toContain("status-bar fail");
+    expect(html).toContain("PLAN DECLINED");
+    expect(html).toContain("at least 184 ft");
+    expect(html).toContain("NEEDS INPUT");
+    // The error-framing vocabulary is retired on this surface.
+    expect(html).not.toContain("INVALID INPUT");
+    expect(html).not.toContain("GENERATION BLOCKED");
+    expect(html).not.toContain("VERIFICATION UNAVAILABLE");
+  });
+
+  it("refusal with an affordance renders the short pointer, never the 400 text", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        refusal={{
+          message:
+            "This road appears to carry more lanes than a flagger operation covers…",
+          pointer:
+            "Detection saw a multi-lane road — confirm the lane count in the Road section to proceed.",
+        }}
+        audit={{ state: "error", message: "…", httpStatus: 400, lastReady: null }}
+      />,
+    );
+    expect(html).toContain("PLAN DECLINED");
+    expect(html).toContain("confirm the lane count in the Road section");
+    expect(html).toContain("NEEDS REVIEW");
+    // The verbatim 400 must not render here — the row note is the voice.
+    expect(html).not.toContain("more lanes than a flagger operation covers");
+    expect(html).not.toContain("NEEDS INPUT");
+  });
+
+  it("client bounds win over a refusal (matches the shell's precedence)", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError="Work zone length is required."
+        refusal={{ message: FLOOR_400, pointer: null }}
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain("INVALID INPUT");
+    expect(html).not.toContain("PLAN DECLINED");
   });
 
   it("first load shows VERIFYING, not a verdict", () => {

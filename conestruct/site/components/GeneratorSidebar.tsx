@@ -29,7 +29,7 @@ import {
 } from "@/lib/scenarios/validation";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
-import type { CorridorSpecLengths } from "@/lib/render-types";
+import type { CorridorSpecLengths, Refusal } from "@/lib/render-types";
 import {
   buildCorridorPolyline,
   ZONE_LABEL,
@@ -64,14 +64,15 @@ interface Props {
   setScenario: (next: Scenario) => void;
   generating: boolean;
   onGenerate: () => void;
-  // Engine-removal PR D: the backend's verdict that the current input is
-  // invalid — the audit fetch's HTTP 400 message (geometry validation,
-  // e.g. the taper floor), stamped for the scenario on screen.  Null
-  // while a fetch is in flight (the CTA stays enabled through the
-  // sub-second race window; every render endpoint re-runs the validator
-  // server-side, so the worst case is a redundant error message, never a
-  // wrong plan).
-  auditInputError: string | null;
+  // Engine-removal PR D, reshaped by #180: the backend's refusal of the
+  // current input — the audit fetch's HTTP 400, stamped for the scenario
+  // on screen.  Null while a fetch is in flight (the CTA stays enabled
+  // through the sub-second race window; every render endpoint re-runs
+  // the validator server-side, so the worst case is a redundant error
+  // message, never a wrong plan).  The full 400 text is never rendered
+  // here (#180: the StatusBar owns the single verbatim render when no
+  // affordance exists); the under-Generate line is a short pointer only.
+  refusal: Refusal | null;
   // Engine-removal PR D: backend-computed corridor zone lengths off the
   // audit response (sections.corridor_spec).  Null before the first
   // audit resolves or when the field is absent (deploy window) — the
@@ -139,7 +140,7 @@ export function GeneratorSidebar({
   setScenario,
   generating,
   onGenerate,
-  auditInputError,
+  refusal,
   corridorSpecLengths,
   jurisdictionControls,
   onClassification,
@@ -381,7 +382,7 @@ export function GeneratorSidebar({
               !lanesValidation.ok ||
               !approachesValidation.ok ||
               approachConfirm.pending ||
-              auditInputError !== null
+              refusal !== null
             }
             disabledReason={
               wzValidation.message ??
@@ -389,7 +390,11 @@ export function GeneratorSidebar({
               approachesValidation.message ??
               (approachConfirm.pending
                 ? "Confirm the cross-street lane count first — it was filled from map data."
-                : (auditInputError ?? undefined))
+                : refusal
+                  ? // #180: short pointer, never the verbatim 400 — the
+                    // StatusBar below carries the refusal's one voice.
+                    "Generation declined — see the notice below."
+                  : undefined)
             }
           />
 

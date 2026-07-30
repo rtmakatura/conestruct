@@ -150,18 +150,28 @@ function generateButton(): HTMLButtonElement {
 }
 
 describe("input gating rides the backend 400 (engine-removal PR D)", () => {
-  it("audit 400 → red INVALID INPUT with the backend's message, Generate disabled", async () => {
+  it("audit 400 → red PLAN DECLINED with the backend's message exactly once, Generate disabled", async () => {
+    // #180: the geometry floor 400 has no confirm affordance, so the
+    // strip is the refusal's ONE voice — full message, declined
+    // vocabulary, and no other surface repeats the text verbatim.
     render(<GeneratorShell mode="sandbox" />);
     await releaseAudit(0, floor400());
 
-    expect(strip()).toContain("INVALID INPUT");
+    expect(strip()).toContain("PLAN DECLINED");
     expect(strip()).toContain(BACKEND_FLOOR_MSG);
+    expect(strip()).toContain("NEEDS INPUT");
+    expect(strip()).not.toContain("INVALID INPUT");
     expect(document.querySelector(".status-bar.fail")).not.toBeNull();
     expect(generateButton().disabled).toBe(true);
-    // The disabled CTA names the same backend reason adjacent to it.
+    // The disabled CTA points at the strip instead of re-quoting the 400.
     expect(screen.getAllByRole("alert").some((el) =>
-      (el.textContent ?? "").includes(BACKEND_FLOOR_MSG),
+      (el.textContent ?? "").includes("Generation declined — see the notice below."),
     )).toBe(true);
+    // One voice: the verbatim 400 renders exactly once on the screen.
+    const occurrences = (document.body.textContent ?? "").split(
+      BACKEND_FLOOR_MSG,
+    ).length - 1;
+    expect(occurrences).toBe(1);
   });
 
   it("audit 200 → READY and Generate enabled", async () => {
@@ -194,6 +204,8 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
     expect(page).not.toContain("must be at least");
     expect(page).not.toContain("MUTCD § 6C.08");
     expect(strip()).not.toContain("INVALID INPUT");
+    // #180: broken is not declined — a network failure is never reframed.
+    expect(strip()).not.toContain("PLAN DECLINED");
     // Not blocked either — the server re-validates every render call.
     expect(generateButton().disabled).toBe(false);
   });

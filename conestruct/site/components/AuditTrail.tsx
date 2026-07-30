@@ -233,13 +233,25 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const isFirstLoad =
     audit.state === "loading" && audit.lastReady === null;
 
+  // #180 — one refusal, one voice: a 400 means the backend DECLINED the
+  // scenario for a stated reason.  The trail never re-quotes that reason
+  // (the StatusBar owns the refusal's single voice) and offers no Retry
+  // for it — retrying an unchanged input re-earns the same 400.  Network
+  // and 5xx failures keep the existing failed + Retry line, unreframed.
+  const declined = audit.state === "error" && audit.httpStatus === 400;
+
   // Density-contract chip summary (restage): the collapsed line carries
   // the traced-value count; an audit failure auto-expands — the strip's
   // "retry from the audit trail panel below" must land on a visible
-  // retry, never a collapsed one (rule 10).
+  // retry, never a collapsed one (rule 10).  The declined chip must not
+  // promise a retry it doesn't offer (rule 10 again).
   const chipSummary =
     audit.state === "error" ? (
-      <span className="verdict-bad">unavailable — retry inside</span>
+      declined ? (
+        <span className="verdict-bad">unavailable — generation declined</span>
+      ) : (
+        <span className="verdict-bad">unavailable — retry inside</span>
+      )
     ) : isFirstLoad ? (
       <>computing…</>
     ) : (
@@ -287,18 +299,26 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
         impose additional requirements not yet captured.
       </div>
 
-      {audit.state === "error" && (
-        <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
-          <span>Audit trail failed: {audit.message}</span>
-          <button
-            type="button"
-            onClick={onRetry}
-            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
-          >
-            Retry
-          </button>
-        </div>
-      )}
+      {audit.state === "error" &&
+        (declined ? (
+          <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
+            <span>
+              Audit trail unavailable while generation is declined — see the
+              notice above.
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
+            <span>Audit trail failed: {audit.message}</span>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        ))}
 
       {isFirstLoad && items.length === 0 && (
         <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">

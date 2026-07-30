@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
-import type { AuditResponse, AuditState } from "@/lib/render-types";
+import { matchRefusalAffordance } from "@/lib/scenarios/auto-apply";
+import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
 import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
@@ -515,7 +516,23 @@ export function GeneratorShell({
     stripAudit.state === "error" && stripAudit.httpStatus === 400
       ? stripAudit.message
       : null;
-  const inputError = !wzValidation.ok ? wzValidation.message : auditInputError;
+  // #180 — one refusal, one voice.  The backend 400 is a REFUSAL (the
+  // tool declining for a stated reason), kept distinct from the client
+  // schema-bounds message (genuinely invalid input) so the two never
+  // share a vocabulary.  ``stripAudit`` is stamped for the scenario on
+  // screen, so the affordance match below interrogates the same input
+  // the 400 answered.  When a confirm affordance matches, ``pointer``
+  // carries the short banner line and the full 400 renders nowhere;
+  // with no affordance, ``pointer`` is null and the banner renders the
+  // full message exactly once.
+  const inputError = !wzValidation.ok ? wzValidation.message : null;
+  const refusal: Refusal | null =
+    wzValidation.ok && auditInputError !== null
+      ? {
+          message: auditInputError,
+          pointer: matchRefusalAffordance(scenario)?.pointer ?? null,
+        }
+      : null;
 
   // Engine-removal PR D: the sidebar's corridor preview reads the
   // backend's zone lengths off the audit response the shell already
@@ -641,7 +658,7 @@ export function GeneratorShell({
                 setScenario={setScenario}
                 generating={false}
                 onGenerate={onGenerate}
-                auditInputError={auditInputError}
+                refusal={refusal}
                 corridorSpecLengths={corridorSpecLengths}
                 jurisdictionControls={jurisdictionControls}
                 onClassification={(c, at) =>
@@ -671,6 +688,7 @@ export function GeneratorShell({
           <StatusBar
             status={status}
             inputError={inputError}
+            refusal={refusal}
             audit={stripAudit}
             verifySlow={verifySlow}
           />

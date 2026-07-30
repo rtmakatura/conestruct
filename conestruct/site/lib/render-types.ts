@@ -176,3 +176,20 @@ export type AuditState =
       lastReady: AuditResponse | null;
       forScenario?: unknown;
     };
+
+/**
+ * One refusal, one voice (issue #180): the view-model for a backend gate
+ * 400 — the tool DECLINING for a stated reason, distinct from invalid
+ * input (client schema-bounds) and from broken (network/5xx, which stay
+ * on their existing error paths, never reframed).
+ *
+ * ``pointer`` is non-null when the refusal has a matching confirm
+ * affordance on screen (matchRefusalAffordance): the banner then renders
+ * the short pointer and the full 400 text renders NOWHERE — the row's
+ * own note is the primary voice.  ``pointer`` null means no affordance
+ * exists; the banner renders ``message`` (the full 400) exactly once.
+ */
+export interface Refusal {
+  message: string;
+  pointer: string | null;
+}

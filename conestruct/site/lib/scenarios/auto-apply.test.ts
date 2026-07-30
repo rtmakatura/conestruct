@@ -15,7 +15,11 @@ import type {
   Scenario,
   ShoulderScenario,
 } from "./types";
-import { applyClassification, snapSpeedToDomain } from "./auto-apply";
+import {
+  applyClassification,
+  matchRefusalAffordance,
+  snapSpeedToDomain,
+} from "./auto-apply";
 
 function classification(
   speedLimitMph: number | undefined,
@@ -229,5 +233,85 @@ describe("applyClassification detectedLanesTotal relay (issue #136)", () => {
     expect(flagger.detectedLanesForward).toBe(1);
     expect(flagger.detectedLanesBackward).toBe(2);
     expect(flagger.detectedLanesBothWays).toBeUndefined();
+  });
+});
+
+// #180 — one refusal, one voice: the matcher associates a backend gate
+// 400 with its confirm affordance WITHOUT string-matching message text.
+// Predicates and evaluation order replicate the backend gates
+// (render_api._placements_for: #86 high → #136 single-lane → #158
+// one-way), so the first true predicate names the gate that fired.
+describe("matchRefusalAffordance (issue #180)", () => {
+  const FLAGGER: FlaggerLaneClosureScenario = {
+    kind: "flagger_lane_closure",
+    meta: { project: "", address: "", lat: 0, lng: 0 },
+    roadType: "rural_undivided",
+    speed: 45,
+    laneWidth: 11,
+    workType: "utility_cut",
+    duration: "short",
+    workLen: 500,
+    night: false,
+    pilotCar: false,
+    afad: false,
+    pedestrianAccess: false,
+  };
+
+  it("matches the #86 multilane affordance on a 4-lane detection", () => {
+    const m = matchRefusalAffordance({ ...FLAGGER, detectedLanesTotal: 4 });
+    expect(m?.code).toBe("flagger_multilane");
+    expect(m?.pointer).toContain("multi-lane road");
+    expect(m?.pointer).toContain("Road section");
+  });
+
+  it("matches the #136 single-lane affordance on a 1-lane detection", () => {
+    const m = matchRefusalAffordance({ ...FLAGGER, detectedLanesTotal: 1 });
+    expect(m?.code).toBe("flagger_single_lane");
+    expect(m?.pointer).toContain("single-lane road");
+  });
+
+  it("matches the #158 one-way affordance on each blocking tag", () => {
+    for (const tag of ["yes", "-1", "reversible"]) {
+      const m = matchRefusalAffordance({ ...FLAGGER, oneway: tag });
+      expect(m?.code).toBe("flagger_oneway");
+      expect(m?.pointer).toContain("one-way street");
+    }
+  });
+
+  it("both-signals: lane gate answers first, matching backend gate order (#86 Amendment 1)", () => {
+    // Broadway fixture shape: one-way AND multilane.  The backend fires
+    // the lane gate first (test_oneway_flagger_block.py pins the 400
+    // message), so the pointer must name the multilane row.
+    const m = matchRefusalAffordance({
+      ...FLAGGER,
+      detectedLanesTotal: 4,
+      oneway: "yes",
+    });
+    expect(m?.code).toBe("flagger_multilane");
+  });
+
+  it("consistently decomposed center-turn-lane 3-total does not match (#86 carve-out)", () => {
+    const m = matchRefusalAffordance({
+      ...FLAGGER,
+      detectedLanesTotal: 3,
+      detectedLanesForward: 1,
+      detectedLanesBackward: 1,
+      detectedLanesBothWays: 1,
+    });
+    expect(m).toBeNull();
+  });
+
+  it("no relays → no match (a geometry 400 keeps its full voice)", () => {
+    expect(matchRefusalAffordance(FLAGGER)).toBeNull();
+  });
+
+  it("two-way / no-signal oneway values never match", () => {
+    expect(matchRefusalAffordance({ ...FLAGGER, oneway: "no" })).toBeNull();
+  });
+
+  it("non-flagger kinds never match — shoulder has no confirm row", () => {
+    expect(
+      matchRefusalAffordance({ ...SHOULDER, detectedLanesTotal: 1 }),
+    ).toBeNull();
   });
 });

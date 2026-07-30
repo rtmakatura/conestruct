@@ -1,4 +1,4 @@
-import type { AuditResponse, AuditState } from "@/lib/render-types";
+import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
 
 export type Status = "idle" | "generating" | "done";
 
@@ -14,10 +14,15 @@ export type Status = "idle" | "generating" | "done";
 //
 // The strip is now derived, in precedence order:
 //   1. generating          → COMPUTING (unchanged spinner state)
-//   2. invalid input       → red FAIL — backend geometry 400 (the taper
-//                            floor et al., engine-removal PR D) or the
-//                            schema-bound client checks (required /
-//                            ceiling / lanes)
+//   2. invalid input       → red FAIL — the schema-bound client checks
+//                            (required / ceiling / lanes).  Client
+//                            bounds ONLY since #180; a backend 400 is
+//                            the next state, not this one.
+//   2b. plan declined      → red PLAN DECLINED (#180) — any backend 400
+//                            (gate refusals, the geometry taper floor).
+//                            With a confirm affordance on screen the
+//                            line is a short pointer to it; without one
+//                            it is the full 400, rendered exactly once.
 //   3. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
 //                            network blip is not a plan defect)
 //   4. verification        → VERIFYING (Decision 2, frontend-engine-
@@ -109,8 +114,22 @@ export function collectValidationWarnings(
 
 interface Props {
   status: Status;
-  /** Validation message blocking generation, or null when input is valid. */
+  /**
+   * Client schema-bounds message (required / ceiling — genuinely invalid
+   * input), or null.  Since #180 this NEVER carries a backend 400: a
+   * refusal is a different state with a different vocabulary (below).
+   */
   inputError: string | null;
+  /**
+   * #180 — a backend gate/geometry 400: the tool DECLINING for a stated
+   * reason, not broken and not invalid input.  ``pointer`` non-null means
+   * a confirm affordance is on screen — render the short pointer, never
+   * the full 400 (the row's note is the primary voice).  ``pointer`` null
+   * means no affordance — render the full ``message`` here, exactly once
+   * on the whole screen.  Network/5xx failures never arrive here; they
+   * stay on the VERIFICATION UNAVAILABLE path below, unreframed.
+   */
+  refusal?: Refusal | null;
   audit: AuditState;
   /**
    * Cold-start honesty (Refs #122, rule 10): true once the in-flight
@@ -135,7 +154,13 @@ export function StatusBar(props: Props) {
   );
 }
 
-function StatusBarState({ status, inputError, audit, verifySlow }: Props) {
+function StatusBarState({
+  status,
+  inputError,
+  refusal = null,
+  audit,
+  verifySlow,
+}: Props) {
   if (status === "generating") {
     return (
       <div className="status-bar warn">
@@ -151,6 +176,25 @@ function StatusBarState({ status, inputError, audit, verifySlow }: Props) {
         <span className="indicator" />
         <span>INVALID INPUT · {inputError}</span>
         <span className="pill fail">GENERATION BLOCKED</span>
+      </div>
+    );
+  }
+
+  // #180 — declined, not broken.  With an affordance the pointer routes
+  // the reader to the control that resolves the dispute (the pill says
+  // NEEDS REVIEW, not "confirm" — detection might be right, and honest
+  // resolutions include fixing the location or walking away).  Without
+  // an affordance the full 400 renders here, the only place it does.
+  // This branch must precede the audit-error branch below: a refusal IS
+  // an audit-fetch error state (httpStatus 400).
+  if (refusal) {
+    return (
+      <div className="status-bar fail">
+        <span className="indicator" />
+        <span>PLAN DECLINED · {refusal.pointer ?? refusal.message}</span>
+        <span className="pill fail">
+          {refusal.pointer ? "NEEDS REVIEW" : "NEEDS INPUT"}
+        </span>
       </div>
     );
   }
