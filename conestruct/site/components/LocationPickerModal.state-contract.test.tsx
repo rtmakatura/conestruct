@@ -379,3 +379,32 @@ describe("lost confirmations: reopen restores, pin move re-arms", () => {
     expect(onSave.mock.calls[0][0].confirmedRoad).toBeNull();
   });
 });
+
+describe("in-flight detection gates Save (#189)", () => {
+  it("Save is disabled with a note while classification resolves; enabled the moment it settles", async () => {
+    mountModal();
+    typeCoords();
+    // Detection is in flight (the request is parked, unanswered) — this
+    // is the window where Save used to silently discard the
+    // classification and, on gated kinds, the safety relays.
+    expect(pendingDetects).toHaveLength(1);
+    expect(saveButton().disabled).toBe(true);
+    expect(screen.getByText(/Detecting road…/)).toBeTruthy();
+
+    await respond(pendingDetects[0], detection([EASTBOUND]));
+    await screen.findByText("Speed limit (mph)");
+    expect(saveButton().disabled).toBe(false);
+    expect(screen.queryByText(/Detecting road…/)).toBeNull();
+  });
+
+  it("a resolved-failed detection (zero candidates) still permits save — only in-flight blocks", async () => {
+    mountModal();
+    typeCoords();
+    await respond(pendingDetects[0], detection([]));
+    await screen.findByText(/No road detected within 30 m/i);
+    expect(saveButton().disabled).toBe(false);
+    expect(screen.queryByText(/Detecting road…/)).toBeNull();
+    fireEvent.click(saveButton());
+    expect(onSave.mock.calls[0][0].classification).toBeNull();
+  });
+});

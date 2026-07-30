@@ -1557,6 +1557,12 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
   const roadUnresolved =
     bearingCandidates.length > 1 && selectedCandidateIdx === null;
 
+  // #189: an in-flight classification blocks Save — the road facts (and
+  // on gated kinds, the safety relays that arm the backend refusals) are
+  // genuinely unknown for the moment, and saving would commit
+  // ``classification: null`` as if detection had never run.  Only
+  // in-flight blocks: a settled failure (error / zero candidates) keeps
+  // its existing messaging and stays saveable.
   const canSave =
     hasPin &&
     isValidLat(lat) &&
@@ -1565,7 +1571,8 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     !lngError &&
     !bearingError &&
     !workZoneError &&
-    !roadUnresolved;
+    !roadUnresolved &&
+    classify.state !== "resolving";
 
   const onClickSave = () => {
     if (!canSave) return;
@@ -1940,6 +1947,11 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
               <span aria-hidden="true">⚠ </span>
               Pick a road to continue
+            </span>
+          )}
+          {classify.state === "resolving" && (
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+              Detecting road… — Save enables when detection settles
             </span>
           )}
           <button
