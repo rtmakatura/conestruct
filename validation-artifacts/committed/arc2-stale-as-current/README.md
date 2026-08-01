@@ -23,3 +23,10 @@ Regression pins (in-tree):
 - `conestruct/site/components/GeneratorShell.regenerate-mounted.test.tsx` (#192, mounted + StatusBar precedence units)
 - `conestruct/site/components/GeneratorShell.confirm-window.test.tsx` (#196, mounted)
 - `conestruct/site/components/GeneratorShell.picker-reapply.test.tsx` "#189-3" cases + `lib/scenarios/clear-detection-relays.test.ts` (#189-3, payload + unit)
+
+`live-checks/` — post-deploy live-site verification: headless-Chromium
+run against the production sandbox at build `217a641` (frontend bundle +
+backend healthz + git all agree), 30/30 assertions passed, read-only,
+including the cent-exact screen/XLSX agreement for #185. #183 blocked
+(needs a saved DB row — Ryan decides on seeding). See
+`live-checks/transcript.md`.
