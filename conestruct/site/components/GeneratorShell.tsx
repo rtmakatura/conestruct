@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import { matchRefusalAffordance } from "@/lib/scenarios/auto-apply";
+import { stampMatches } from "@/lib/answer-stamp";
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
 import {
   DEFAULT_QUOTE_SETTINGS,
@@ -485,13 +486,14 @@ export function GeneratorShell({
   // scenario just changed, ``auditState`` still holds the answer for the
   // PREVIOUS input.  ``forScenario`` (stamped at fetch time) detects
   // that: when it isn't the scenario on screen, the strip gets an
-  // explicit checking state instead of the stale verdict.  This governs
-  // the StatusBar only — AuditTrail deliberately keeps its
+  // explicit checking state instead of the stale verdict.  The check is
+  // the #197 idiom (lib/answer-stamp.ts) — this surface is its template.
+  // This governs the StatusBar only — AuditTrail deliberately keeps its
   // stale-while-revalidate *content* (prose can be visibly mid-refresh;
   // a verdict presented as current cannot).
   const auditSettled =
     (auditState.state === "ready" || auditState.state === "error") &&
-    auditState.forScenario === scenario;
+    stampMatches([auditState.forScenario], [scenario]);
   const stripAudit: AuditState = auditSettled
     ? auditState
     : {

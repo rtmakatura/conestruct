@@ -162,7 +162,9 @@ export type AuditState =
       // been edited": the audit effect flips to ``loading`` only after
       // paint, so without this stamp one rendered frame would present
       // the previous verdict as current (frontend-engine-removal
-      // Decision 2 — the strip never shows a stale verdict).
+      // Decision 2 — the strip never shows a stale verdict).  This field
+      // is the original instance of the #197 input-identity stamp; the
+      // shared idiom and its full contract live in lib/answer-stamp.ts.
       forScenario?: unknown;
     }
   | {
