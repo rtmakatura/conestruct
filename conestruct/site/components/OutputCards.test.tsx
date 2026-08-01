@@ -198,3 +198,76 @@ describe("OutputCards download cards", () => {
     expect(document.querySelector(".dl-card")).toBeNull();
   });
 });
+
+// #197 (umbrella instance, no standalone issue): a download error is an
+// ANSWER — it was computed for the scenario that was POSTed.  When the
+// scenario changes, presenting the old error (and its "Try again" label)
+// as current is the stale-as-current class.  The error carries the #197
+// input-identity stamp and renders only while its scenario is on screen.
+describe("download errors carry their input identity (#197)", () => {
+  const FLOOR_400 =
+    "Work zone length (50 ft) is shorter than the required shoulder taper.";
+
+  function fail400() {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: false,
+          status: 400,
+          json: async () => ({ detail: { message: FLOOR_400 } }),
+        } as unknown as Response),
+      ),
+    );
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("shows the error for the scenario it answered, then drops it when the scenario changes", async () => {
+    fail400();
+    const s1 = { meta: { project: "A" } } as unknown as Scenario;
+    const s2 = { meta: { project: "A" } } as unknown as Scenario;
+    const view = render(
+      <OutputCards
+        summary={SUMMARY}
+        generated={true}
+        mode={{ kind: "public", scenario: s1 }}
+        breakdown={READY_BREAKDOWN}
+      />,
+    );
+    fireEvent.click(document.querySelector(".dl-btn") as HTMLButtonElement);
+    expect(await screen.findByText(FLOOR_400)).toBeTruthy();
+    expect(screen.getByText("Try again")).toBeTruthy();
+
+    // The input changes (every edit replaces the scenario object): the
+    // stale error and its Try-again label must not survive.
+    view.rerender(
+      <OutputCards
+        summary={SUMMARY}
+        generated={true}
+        mode={{ kind: "public", scenario: s2 }}
+        breakdown={READY_BREAKDOWN}
+      />,
+    );
+    expect(screen.queryByText(FLOOR_400)).toBeNull();
+    expect(screen.queryByText("Try again")).toBeNull();
+  });
+
+  it("the error stays while its own scenario stays (unchanged input keeps the honest failure)", async () => {
+    fail400();
+    const s1 = { meta: { project: "A" } } as unknown as Scenario;
+    render(
+      <OutputCards
+        summary={SUMMARY}
+        generated={true}
+        mode={{ kind: "public", scenario: s1 }}
+        breakdown={READY_BREAKDOWN}
+      />,
+    );
+    fireEvent.click(document.querySelector(".dl-btn") as HTMLButtonElement);
+    expect(await screen.findByText(FLOOR_400)).toBeTruthy();
+    expect(screen.getByText("Try again")).toBeTruthy();
+  });
+});

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
 import type { AuditSummary } from "@/lib/render-types";
+import { stampMatches } from "@/lib/answer-stamp";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 
@@ -196,9 +197,22 @@ export function OutputCards({
 
 function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
-  const [error, setError] = useState<{ kind: RenderKind; msg: string } | null>(
-    null,
-  );
+  // #197: the error is an answer — stamped with the scenario the failed
+  // request POSTed (``for``), and presented only while that scenario is
+  // still the one on screen.  Without the stamp a 400's message (and its
+  // "Try again" label) survived every subsequent edit, contradicting the
+  // now-valid inputs.
+  const [error, setError] = useState<{
+    kind: RenderKind;
+    msg: string;
+    for: unknown;
+  } | null>(null);
+  const currentError =
+    error !== null &&
+    mode.kind === "public" &&
+    stampMatches([error.for], [mode.scenario])
+      ? error
+      : null;
 
   const kinds: RenderKind[] = card.secondaryKind
     ? [card.kind, card.secondaryKind]
@@ -227,7 +241,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
           res.status === 400
             ? await extractValidationMessage(res)
             : `Render failed (${res.status})`;
-        setError({ kind: dlKind, msg });
+        setError({ kind: dlKind, msg, for: mode.scenario });
         return;
       }
       const blob = await res.blob();
@@ -240,7 +254,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
       a.remove();
       URL.revokeObjectURL(url);
     } catch {
-      setError({ kind: dlKind, msg: "Network error" });
+      setError({ kind: dlKind, msg: "Network error", for: mode.scenario });
     } finally {
       setBusyKind(null);
     }
@@ -271,15 +285,15 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
             >
               {busyKind === k
                 ? "Rendering…"
-                : error?.kind === k
+                : currentError?.kind === k
                   ? "Try again"
                   : labelFor(k)}
               <span className="font-mono">↓</span>
             </button>
           ))}
-          {error && (
+          {currentError && (
             <div className="text-[12px] leading-snug text-[color:var(--fail)] font-sans">
-              {error.msg}
+              {currentError.msg}
             </div>
           )}
         </>
