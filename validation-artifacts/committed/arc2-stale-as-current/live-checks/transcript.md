@@ -48,8 +48,8 @@ ship.ps1.
 
 ## Results
 
-**30/30 PASS** (27 in-page assertions in `assertions-raw.md`, verbatim
-with timestamps, + the build gate + the XLSX agreement parse):
+**31/31 PASS** (29 in-page assertions in `assertions-raw.md`, verbatim
+with timestamps, + the triple build gate + the XLSX agreement parse):
 
 - **#185**: settings edit replaces all figures with "Inputs changed —
   preview again" (headline included); re-preview restores; **screen

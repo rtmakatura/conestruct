@@ -26,7 +26,7 @@ Regression pins (in-tree):
 
 `live-checks/` — post-deploy live-site verification: headless-Chromium
 run against the production sandbox at build `217a641` (frontend bundle +
-backend healthz + git all agree), 30/30 assertions passed, read-only,
+backend healthz + git all agree), 31/31 assertions passed (29 in-page + build gate + XLSX parse), read-only,
 including the cent-exact screen/XLSX agreement for #185. #183 blocked
 (needs a saved DB row — Ryan decides on seeding). See
 `live-checks/transcript.md`.
