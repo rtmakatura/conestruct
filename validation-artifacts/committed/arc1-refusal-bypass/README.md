@@ -9,6 +9,11 @@ ruling, 2026-07-30; the `.gitignore` carve-out lands with this arc).
 | `payload-captures.txt` | Its committed output: #181 pre-fix payload loses all four lane relays on a kind switch (A2) and re-arms them post-fix (A3); #189's mid-flight save payload never receives relays; #190's no-change re-save reverts a manual speed edit pre-fix. |
 | `live-backend-transcript.md` | The end-to-end proof against the deployed backend (`1513fbc`, healthz-verified): the bypass payload → HTTP 200 (plan generates); the relays-intact control and the post-fix payload → HTTP 400 (the #86 refusal). Same road, opposite outcomes by click order — closed by this arc. |
 
+`live-checks/` — post-deploy live-site verification of checks 2 (#189)
+and 3 (#190): headless-Chromium run against the production sandbox at
+build `5416976` (frontend bundle + backend healthz + git all agree),
+10/10 assertions passed, read-only. See `live-checks/transcript.md`.
+
 Regression pins (in-tree):
 - `conestruct/site/components/GeneratorShell.kind-switch.test.tsx` (#181, payload-level)
 - `conestruct/site/components/LocationPickerModal.state-contract.test.tsx` — "in-flight detection gates Save" (#189, mounted)
