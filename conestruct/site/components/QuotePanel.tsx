@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
+import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
 
 // Lifted to GeneratorShell (restage): the pricing card unmounts across
 // reopen → regenerate cycles now, so any state guarding a manual edit
@@ -142,7 +143,17 @@ export function QuotePanel({
   embedded = false,
   onTotalChange,
 }: Props) {
-  const [breakdown, setBreakdown] = useState<Breakdown | null>(null);
+  // #185 — the previewed breakdown carries the #197 input-identity stamp
+  // (lib/answer-stamp.ts): the settings + scenario objects the preview
+  // POST was built from.  It renders as current only while BOTH are still
+  // the objects on screen; any edit replaces one of them (spread-write)
+  // and the figures below give way to an explicit re-preview note instead
+  // of stale money.  The XLSX download reads live settings at click time,
+  // so this is what keeps screen and file from disagreeing.
+  const [stamped, setStamped] = useState<{
+    data: Breakdown;
+    for: AnswerStamp;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -151,6 +162,20 @@ export function QuotePanel({
   // the current settings object instead of a stale closure value.
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+
+  const breakdown =
+    stamped !== null &&
+    mode.kind === "public" &&
+    stampMatches(stamped.for, [settings, mode.scenario])
+      ? stamped.data
+      : null;
+  const breakdownStale = stamped !== null && breakdown === null;
+  // The collapsed card headline mirrors the previewed total; a stale
+  // preview must clear it too (PricingCard renders its explicit unset
+  // note on null — never the old figure).
+  useEffect(() => {
+    if (breakdownStale) onTotalChange?.(null);
+  }, [breakdownStale, onTotalChange]);
 
   const lat = mode.kind === "public" ? mode.scenario.meta.lat : 0;
   const lng = mode.kind === "public" ? mode.scenario.meta.lng : 0;
@@ -224,7 +249,7 @@ export function QuotePanel({
         return;
       }
       const data = (await res.json()) as Breakdown;
-      setBreakdown(data);
+      setStamped({ data, for: [settings, mode.scenario] });
       onTotalChange?.(data.total);
     } catch {
       setErr("Network error");
@@ -388,6 +413,18 @@ export function QuotePanel({
       {err && (
         <div className="mt-3 font-mono text-[11px] text-[color:var(--fail)]">
           {err}
+        </div>
+      )}
+
+      {breakdownStale && (
+        <div className="mt-6 border-t border-b border-dashed border-[color:var(--rule-soft)] py-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
+            Inputs changed
+          </span>
+          <div className="font-sans text-[13px] text-[color:var(--ink-faint)] mt-1">
+            The previewed figures were computed for earlier inputs and no
+            longer apply. Preview again for current totals.
+          </div>
         </div>
       )}
 
