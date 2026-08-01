@@ -66,13 +66,20 @@ interface Props {
   onGenerate: () => void;
   // Engine-removal PR D, reshaped by #180: the backend's refusal of the
   // current input — the audit fetch's HTTP 400, stamped for the scenario
-  // on screen.  Null while a fetch is in flight (the CTA stays enabled
-  // through the sub-second race window; every render endpoint re-runs
-  // the validator server-side, so the worst case is a redundant error
-  // message, never a wrong plan).  The full 400 text is never rendered
-  // here (#180: the StatusBar owns the single verbatim render when no
-  // affordance exists); the under-Generate line is a short pointer only.
+  // on screen.  Null while a fetch is in flight.  The full 400 text is
+  // never rendered here (#180: the StatusBar owns the single verbatim
+  // render when no affordance exists); the under-Generate line is a
+  // short pointer only.
   refusal: Refusal | null;
+  // #196: true while the audit is re-fetching AND the previous settled
+  // answer was a refusal.  The window is up to ~5.5 s on a Modal cold
+  // start (measured — the old "sub-second race" assumption here was
+  // wrong), long enough for a Generate click that latches the
+  // post-generate layout and leaves the SECOND refusal pointing at an
+  // unmounted confirm row.  The CTA stays gated until the next verdict
+  // settles; the server still re-validates every render call — this
+  // gate closes the dead-end UX, it is not the safety boundary.
+  refusalPending: boolean;
   // Engine-removal PR D: backend-computed corridor zone lengths off the
   // audit response (sections.corridor_spec).  Null before the first
   // audit resolves or when the field is absent (deploy window) — the
@@ -141,6 +148,7 @@ export function GeneratorSidebar({
   generating,
   onGenerate,
   refusal,
+  refusalPending,
   corridorSpecLengths,
   jurisdictionControls,
   onClassification,
@@ -424,9 +432,12 @@ export function GeneratorSidebar({
               schema-bound client mirrors (required/ceiling, lanes,
               approaches) AND the backend's own invalid-input verdict —
               the audit fetch's 400 (taper floor and the rest of
-              geometry validation).  While that fetch is in flight the
-              CTA stays enabled: the server re-validates every render
-              call, so the race window can't ship a wrong plan. */}
+              geometry validation).  #196: while that fetch is in flight
+              AFTER a settled refusal the CTA stays gated too — the
+              re-fetch window is ~5.5 s on a cold start, and a Generate
+              click inside it dead-ends (post-generate layout, second
+              refusal pointing at an unmounted row).  The server still
+              re-validates every render call. */}
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
@@ -435,7 +446,8 @@ export function GeneratorSidebar({
               !lanesValidation.ok ||
               !approachesValidation.ok ||
               approachConfirm.pending ||
-              refusal !== null
+              refusal !== null ||
+              refusalPending
             }
             disabledReason={
               wzValidation.message ??
@@ -447,7 +459,9 @@ export function GeneratorSidebar({
                   ? // #180: short pointer, never the verbatim 400 — the
                     // StatusBar below carries the refusal's one voice.
                     "Generation declined — see the notice below."
-                  : undefined)
+                  : refusalPending
+                    ? "Re-checking the declined input — Generate re-enables when the verdict settles."
+                    : undefined)
             }
           />
 

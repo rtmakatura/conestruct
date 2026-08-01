@@ -551,6 +551,17 @@ export function GeneratorShell({
   // to checking above and must not blank the trail for the new input).
   const auditDeclined =
     stripAudit.state === "error" && stripAudit.httpStatus === 400;
+  // #196 — the confirm-tick window.  ``refusal`` derives from the
+  // stamped view, so it nulls for the whole re-fetch (up to ~5.5 s on a
+  // Modal cold start, measured — see SLOW_VERIFY_MS above) and the CTA
+  // used to re-enable against a road whose last settled verdict was a
+  // 400.  Remember that last settled verdict; the sidebar keeps the CTA
+  // gated while the next answer is still in flight.
+  const [prevSettled400, setPrevSettled400] = useState(false);
+  useEffect(() => {
+    if (auditSettled) setPrevSettled400(auditDeclined);
+  }, [auditSettled, auditDeclined]);
+  const refusalPending = !auditSettled && prevSettled400;
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
   // The client check covers only the schema bounds (workLen required /
@@ -709,6 +720,7 @@ export function GeneratorShell({
                 generating={false}
                 onGenerate={onGenerate}
                 refusal={refusal}
+                refusalPending={refusalPending}
                 corridorSpecLengths={corridorSpecLengths}
                 jurisdictionControls={jurisdictionControls}
                 onClassification={(c, at) =>
@@ -869,7 +881,12 @@ export function GeneratorShell({
                   <div className="ref-stack">
                     <AuditTrail
                       scenario={scenario}
-                      audit={auditState}
+                      // #196: the STAMPED view — the same one the strip
+                      // reads — so panel and strip cannot disagree on
+                      // declined.  A settled answer for a superseded
+                      // input reaches the panel as loading-with-content
+                      // ("(refreshing…)"), never as a verdict.
+                      audit={stripAudit}
                       onRetry={onRetry}
                       generated={showResults && !auditDeclined}
                     />
