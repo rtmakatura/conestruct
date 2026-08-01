@@ -420,6 +420,25 @@ export function carryAcrossKinds(prev: Scenario, next: Scenario): Scenario {
   return carried;
 }
 
+// #189-3 (Refs #197 — the clear-on-invalidate variant, lib/answer-stamp.ts):
+// a picker save with no resolved road invalidates the applied detection.
+// The relay facts ride the wire, so a stale answer here is REMOVED, not
+// decorated — absence renders as absence (Rule 10), and the backend
+// gates receive the same honest nothing a fresh no-detection pin sends.
+// Reviewed FORM values (speed, lanes, roadType…) are not detection
+// facts and are untouched; the #177 override markers go with the
+// detection they disputed.
+export function clearDetectionRelays(s: Scenario): Scenario {
+  const rest = { ...s } as Scenario & Record<string, unknown>;
+  delete rest.detectedLanesTotal;
+  delete rest.detectedLanesForward;
+  delete rest.detectedLanesBackward;
+  delete rest.detectedLanesBothWays;
+  delete rest.oneway;
+  delete rest.detectionOverrides;
+  return rest as Scenario;
+}
+
 // Narrow helpers — useful in form components so each sub-form receives
 // a guaranteed-shape scenario rather than the union.
 export function asShoulder(s: Scenario): ShoulderScenario | null {

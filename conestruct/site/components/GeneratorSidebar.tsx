@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   applyClassification,
   carryAcrossKinds,
+  clearDetectionRelays,
   defaultFor,
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
@@ -286,6 +287,16 @@ export function GeneratorSidebar({
       next = applied.scenario;
       delta = applied.delta;
       lastAppliedDetectionRef.current = detectionJson;
+    } else if (!r.classification) {
+      // #189-3 (Refs #197, clear-on-invalidate): a save with NO resolved
+      // road invalidates the applied detection.  Without this branch the
+      // previous pin's relays survived under the new coordinates — stale
+      // facts riding the wire as if detected here, arming/disarming the
+      // backend gates on a road nobody detected.  The relays are removed
+      // (absence renders as absence) and the apply-guard resets so a
+      // future detection of even the same road is new information.
+      next = clearDetectionRelays(next);
+      lastAppliedDetectionRef.current = null;
     }
     // #190: apply only CHANGED overrides — mirrors the classification
     // guard above.  A no-change re-save re-emits the restored overrides

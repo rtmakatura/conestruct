@@ -130,6 +130,44 @@ vi.mock("./LocationPickerModal", () => ({
       >
         APPLY_PIN_A_SPEED45
       </button>
+      {/* #189-3: pin A's detection carrying the raw lane relays the
+          backend gates consume — the facts that must not survive a
+          later no-road save. */}
+      <button
+        type="button"
+        onClick={() =>
+          onSave(
+            result({
+              ...detection(2, 75),
+              detectedLanesTotal: 4,
+              detectedLanesForward: 2,
+              detectedLanesBackward: 2,
+            } as RoadClassification),
+          )
+        }
+      >
+        APPLY_PIN_A_RELAYS
+      </button>
+      {/* #189-3: a settled zero-candidate save at a NEW pin —
+          classification null, confirmedRoad null, exactly what the
+          modal emits after "No road detected within 30 m". */}
+      <button
+        type="button"
+        onClick={() =>
+          onSave({
+            address: "Cheesman Park lawn",
+            lat: 39.7312,
+            lng: -104.9665,
+            bearingDeg: 0,
+            workZoneFt: 0,
+            classification: null,
+            confirmedRoad: null,
+            overrides: {},
+          })
+        }
+      >
+        SAVE_NULL_PIN_C
+      </button>
     </>
   ),
 }));
@@ -316,5 +354,77 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     await generate(user);
     expect(bundleBody?.scenario.lanes).toBe(1);
     expect(bundleBody?.scenario.speed).toBe(65);
+  });
+});
+
+// #189-3 (Refs #197, the clear-on-invalidate variant): a picker save
+// with classification null (settled zero-candidate / resolve failure)
+// while a PREVIOUS pin's detection is applied used to leave the old
+// pin's raw lane relays on the scenario under the new coordinates —
+// stale facts riding the wire as if detected at the new pin, arming or
+// disarming backend gates on a road nobody detected.  A no-road save
+// now REMOVES the relays: absence renders as absence (Rule 10).
+describe("settled-null save clears the prior pin's relays (#189-3)", () => {
+  type RelayScenario = ShoulderScenario & {
+    detectedLanesTotal?: number;
+    detectedLanesForward?: number;
+    detectedLanesBackward?: number;
+    detectedLanesBothWays?: number;
+    oneway?: string;
+    detectionOverrides?: unknown[];
+    meta: ShoulderScenario["meta"] & { confirmedRoad?: unknown };
+  };
+  const wireScenario = () => bundleBody?.scenario as RelayScenario;
+
+  it("control: pin A's relays reach the payload while its detection stands", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+    await generate(user);
+    expect(wireScenario().detectedLanesTotal).toBe(4);
+    expect(wireScenario().detectedLanesForward).toBe(2);
+  });
+
+  it("REGRESSION: a no-road save at a new pin removes every relay from the wire payload", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+
+    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("SAVE_NULL_PIN_C"));
+
+    await generate(user);
+    const s = wireScenario();
+    expect(s.meta.lat).toBe(39.7312);
+    expect(s.meta.lng).toBe(-104.9665);
+    expect(s.meta.confirmedRoad ?? null).toBeNull();
+    expect(s.detectedLanesTotal).toBeUndefined();
+    expect(s.detectedLanesForward).toBeUndefined();
+    expect(s.detectedLanesBackward).toBeUndefined();
+    expect(s.detectedLanesBothWays).toBeUndefined();
+    expect(s.oneway).toBeUndefined();
+    expect(s.detectionOverrides).toBeUndefined();
+    // Reviewed FORM values are not detection facts — they stay.
+    expect(s.speed).toBe(75);
+    expect(s.lanes).toBe(2);
+  });
+
+  it("a fresh detection after the clear re-arms the relays (new information)", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("SAVE_NULL_PIN_C"));
+
+    // Same road re-detected: after a clear this IS new information and
+    // must re-apply (the apply-guard resets with the clear).
+    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+
+    await generate(user);
+    expect(wireScenario().detectedLanesTotal).toBe(4);
   });
 });
