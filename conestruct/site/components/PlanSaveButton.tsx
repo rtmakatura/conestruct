@@ -11,7 +11,11 @@ interface Props {
   scenario: Scenario;
   planId: string | null;
   planName: string | null;
-  onSaved: (id: string, name: string) => void;
+  // #183: ``saved`` is the exact scenario object this save persisted —
+  // the shell keeps it as the dirty-detection baseline (#197
+  // baseline-ref variant), so it must be the object the PUT/POST body
+  // was built from, never a re-read or a clone.
+  onSaved: (id: string, name: string, saved: Scenario) => void;
 }
 
 interface MeResponse {
@@ -86,7 +90,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
         return;
       }
       const row = await res.json();
-      onSaved(row.id, row.name);
+      onSaved(row.id, row.name, scenario);
       setStatus("saved");
     } catch {
       setStatus("error");
@@ -107,7 +111,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
         return;
       }
       const row = await res.json();
-      onSaved(row.id, row.name);
+      onSaved(row.id, row.name, scenario);
       setStatus("saved");
     } catch {
       setStatus("error");

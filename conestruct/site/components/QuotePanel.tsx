@@ -33,6 +33,10 @@ interface PublicMode {
 interface SavedMode {
   kind: "saved";
   planId: string | null;
+  // #183: on-screen scenario diverged from the saved row (shell's #197
+  // baseline-ref comparison) — the row-backed quote anchor gives way to
+  // a save-first affordance.
+  dirty?: boolean;
 }
 type Mode = PublicMode | SavedMode;
 
@@ -392,14 +396,24 @@ export function QuotePanel({
           </button>
         </div>
       ) : mode.planId ? (
-        <a
-          href={`/api/plans/${mode.planId}/quote`}
-          download
-          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
-        >
-          Download Quote (XLSX)
-          <span className="font-mono">↓</span>
-        </a>
+        mode.dirty ? (
+          <button
+            type="button"
+            disabled
+            className="block w-full font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink-faint)] px-3 py-3 flex items-center justify-center gap-2.5 cursor-default"
+          >
+            Save to download the edited plan
+          </button>
+        ) : (
+          <a
+            href={`/api/plans/${mode.planId}/quote`}
+            download
+            className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
+          >
+            Download Quote (XLSX)
+            <span className="font-mono">↓</span>
+          </a>
+        )
       ) : (
         <Link
           href={SIGNUP_HREF}

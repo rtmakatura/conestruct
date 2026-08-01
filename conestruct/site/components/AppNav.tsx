@@ -19,7 +19,7 @@ interface Props {
   scenario: Scenario;
   planId: string | null;
   planName: string | null;
-  onSaved: (id: string, name: string) => void;
+  onSaved: (id: string, name: string, saved: Scenario) => void;
 }
 
 export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSaved }: Props) {

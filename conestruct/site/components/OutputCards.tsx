@@ -17,6 +17,11 @@ interface PublicMode {
 interface SavedMode {
   kind: "saved";
   planId: string | null;
+  // #183: the on-screen scenario no longer matches the saved row (the
+  // shell's #197 baseline-ref comparison).  The row-backed anchors give
+  // way to a save-first affordance — an edited-but-unsaved plan must not
+  // silently download stale output.
+  dirty?: boolean;
 }
 type Mode = PublicMode | SavedMode;
 
@@ -298,17 +303,32 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
           )}
         </>
       ) : mode.planId ? (
-        kinds.map((k) => (
-          <a
-            key={k}
-            href={`/api/plans/${mode.planId}/${k}`}
-            download
-            className="dl-btn"
-          >
-            {labelFor(k)}
-            <span className="font-mono">↓</span>
-          </a>
-        ))
+        mode.dirty ? (
+          <>
+            {kinds.map((k) => (
+              <button key={k} type="button" className="dl-btn" disabled>
+                {labelFor(k)}
+                <span className="font-mono">↓</span>
+              </button>
+            ))}
+            <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
+              Unsaved edits — Save to download the plan on screen. The saved
+              copy no longer matches it.
+            </div>
+          </>
+        ) : (
+          kinds.map((k) => (
+            <a
+              key={k}
+              href={`/api/plans/${mode.planId}/${k}`}
+              download
+              className="dl-btn"
+            >
+              {labelFor(k)}
+              <span className="font-mono">↓</span>
+            </a>
+          ))
+        )
       ) : (
         <Link href={SIGNUP_HREF} className="dl-btn">
           {labelFor(card.kind)}

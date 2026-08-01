@@ -107,11 +107,28 @@ export function GeneratorShell({
   );
   const [planId, setPlanId] = useState<string | null>(initialPlanId);
   const [planName, setPlanName] = useState<string | null>(initialPlanName);
+  // #183 — the #197 baseline-ref variant (lib/answer-stamp.ts): the last
+  // scenario object PERSISTED to the plan row.  Seeded with the object the
+  // server page loaded (the same one the scenario state starts from, so an
+  // unedited open reads clean) and replaced only by a successful save.
+  // Compared by identity: any edit spread-replaces ``scenario`` and the
+  // row-backed downloads stop presenting as downloads of the screen.
+  // Edit-then-undo therefore reads dirty — CHOSEN: it errs toward asking
+  // for a save, never toward serving a stale crew document.
+  const [savedScenario, setSavedScenario] = useState<Scenario | null>(
+    initialScenario ?? null,
+  );
 
-  const onSaved = (id: string, name: string) => {
+  const onSaved = (id: string, name: string, saved: Scenario) => {
     setPlanId(id);
     setPlanName(name);
+    setSavedScenario(saved);
   };
+  // Rows only exist to be downloaded in workbench mode with a saved plan;
+  // everywhere else the flag is inert (public mode POSTs the live
+  // scenario, so it can't go stale).
+  const planDirty =
+    mode === "workbench" && planId !== null && scenario !== savedScenario;
 
   // OutputCards stay visible from first paint (original behavior); the
   // Generate button now performs a real bundled-zip download rather than
@@ -748,7 +765,7 @@ export function GeneratorShell({
                   mode={
                     mode === "sandbox"
                       ? { kind: "public", scenario }
-                      : { kind: "saved", planId }
+                      : { kind: "saved", planId, dirty: planDirty }
                   }
                   breakdown={deviceBreakdown}
                   // Zone 2's "All (.zip)" is the bundle download — the
@@ -762,7 +779,7 @@ export function GeneratorShell({
                     mode={
                       mode === "sandbox"
                         ? { kind: "public", scenario }
-                        : { kind: "saved", planId }
+                        : { kind: "saved", planId, dirty: planDirty }
                     }
                     settings={settings}
                     setSettings={setSettings}
