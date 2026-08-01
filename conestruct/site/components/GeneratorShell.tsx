@@ -161,7 +161,19 @@ export function GeneratorShell({
 
   useEffect(() => {
     const controller = new AbortController();
-    setDeviceBreakdown({ state: "loading" });
+    // #192: carry the previous breakdown through the refetch so the
+    // results zone dims in place instead of unmounting (presented only
+    // under the recomputing ribbon).  An error drops the carry — after a
+    // failure there is no last-known-good to hold.
+    setDeviceBreakdown((prev) => ({
+      state: "loading",
+      lastReady:
+        prev.state === "ready"
+          ? prev.data
+          : prev.state === "loading"
+            ? (prev.lastReady ?? null)
+            : null,
+    }));
     (async () => {
       try {
         const res = await fetch("/api/render/device-breakdown", {
@@ -472,7 +484,18 @@ export function GeneratorShell({
       : deviceBreakdown.state === "error"
         ? "error"
         : "post";
-  const showResults = genState === "post" || genState === "error";
+  // #192: a regenerate WITH prior results on screen dims and refreshes
+  // in place (stale-while-revalidate under an explicit ribbon) instead
+  // of unmounting the whole subtree — unmounting destroyed panel-local
+  // state and punished the designed post-generate edit path.  The
+  // empty-state swap remains only for a first generate with nothing to
+  // hold.
+  const regenerating =
+    genState === "generating" &&
+    deviceBreakdown.state === "loading" &&
+    (deviceBreakdown.lastReady ?? null) !== null;
+  const showResults =
+    genState === "post" || genState === "error" || regenerating;
   const status: Status = genState === "generating" ? "generating" : "done";
 
   // #152 E: on successful generation, land the viewport on the Zone-2
@@ -748,17 +771,27 @@ export function GeneratorShell({
                 </span>
               )}
             </div>
-            {genState === "generating" ? (
+            {genState === "generating" && !regenerating ? (
               <div className="empty-state">
                 <span className="big text-[color:var(--act)]">Generating…</span>
                 Computing taper, buffer, device spacing, and sign placement.
               </div>
             ) : (
-              <div className={genState === "error" ? "results-stale" : ""}>
+              <div
+                className={
+                  genState === "error" || regenerating ? "results-stale" : ""
+                }
+              >
                 {genState === "error" && (
                   <div className="stale-ribbon">
                     ⚠ Device breakdown failed — values below may be stale. Fix
                     the input or retry from the plan details panel.
+                  </div>
+                )}
+                {regenerating && (
+                  <div className="stale-ribbon">
+                    ⟳ Recomputing for the edited input — values below are the
+                    previous answer until this settles.
                   </div>
                 )}
                 {showResults && (

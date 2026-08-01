@@ -112,29 +112,30 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".hero")).toBeNull();
   });
 
-  it("generating: Generate with the answer in flight shows the strip + placeholder", async () => {
+  it("generating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" />);
     await release(0, okBreakdown());
 
-    // Edit-free generate while a NEW breakdown fetch is pending: force
-    // one by clicking Generate before any refetch resolves.  The mount
-    // fetch already resolved, so genState=post would be instant — so
-    // instead assert the generating presentation by regenerating after
-    // a scenario-change fetch is left pending.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     // Post (breakdown already ready).
     expect(document.querySelector(".setup-strip")).not.toBeNull();
 
-    // A strip edit (speed) refires the breakdown fetch → generating.
+    // A strip edit (speed) refires the breakdown fetch → the subtree
+    // stays mounted, dimmed under the recomputing ribbon, hero holding
+    // the carried previous answer (#192 — no empty-state swap, no
+    // panel-state destruction).
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    expect(screen.getByText("Generating…")).toBeTruthy();
-    expect(document.querySelector(".hero")).toBeNull();
-
-    // Resolve → back to post with the hero mounted.
-    await release(1, okBreakdown());
     expect(screen.queryByText("Generating…")).toBeNull();
+    expect(document.querySelector(".results-stale")).not.toBeNull();
+    expect(screen.getByText(/Recomputing/)).toBeTruthy();
+    expect(document.querySelector(".hero")).not.toBeNull();
+
+    // Resolve → back to post, ribbon and dim gone.
+    await release(1, okBreakdown());
+    expect(screen.queryByText(/Recomputing/)).toBeNull();
+    expect(document.querySelector(".results-stale")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
   });
 

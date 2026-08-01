@@ -18,8 +18,16 @@ interface Props {
 }
 
 export function ResultsHero({ breakdown, jurisdiction }: Props) {
-  if (breakdown.state !== "ready") return null;
-  const d = breakdown.data;
+  // #192: during a refetch the hero holds the carried previous answer —
+  // the parent renders it dimmed under an explicit recomputing ribbon,
+  // so the stale values are marked, never presented as current.
+  const d =
+    breakdown.state === "ready"
+      ? breakdown.data
+      : breakdown.state === "loading"
+        ? (breakdown.lastReady ?? null)
+        : null;
+  if (d === null) return null;
   // Defensive against a malformed/partial response: a hero that crashes
   // takes the whole results zone with it.
   const jrCount = (d.devices ?? []).filter(

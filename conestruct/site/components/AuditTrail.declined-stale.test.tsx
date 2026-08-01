@@ -152,11 +152,10 @@ afterEach(() => {
 
 describe("audit rows never present a prior input's numbers under a declined banner (#187)", () => {
   it("refetch (loading) keeps last-known rows with the refreshing cue — the sanctioned fallback", async () => {
-    const user = await generateThenEdit();
-    // The regenerate frame remounts Zone 3, collapsing the chip —
-    // re-expand to reach the rows under test.
-    await user.click(screen.getByText("Verification & audit trail"));
-    // Audit re-fetch in flight: prior values + "(refreshing…)".
+    await generateThenEdit();
+    // Zone 3 stays mounted through the regenerate since #192, so the
+    // chip is still expanded.  Audit re-fetch in flight: prior values +
+    // "(refreshing…)".
     expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0);
     expect(screen.getByText(/refreshing…/)).toBeTruthy();
   });

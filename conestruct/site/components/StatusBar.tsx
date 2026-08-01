@@ -13,16 +13,21 @@ export type Status = "idle" | "generating" | "done";
 // dropped the data.  It was a fiction, not a coercion bug.
 //
 // The strip is now derived, in precedence order:
-//   1. generating          → COMPUTING (unchanged spinner state)
-//   2. invalid input       → red FAIL — the schema-bound client checks
+//   1. invalid input       → red FAIL — the schema-bound client checks
 //                            (required / ceiling / lanes).  Client
 //                            bounds ONLY since #180; a backend 400 is
 //                            the next state, not this one.
-//   2b. plan declined      → red PLAN DECLINED (#180) — any backend 400
+//   1b. plan declined      → red PLAN DECLINED (#180) — any backend 400
 //                            (gate refusals, the geometry taper floor).
 //                            With a confirm affordance on screen the
 //                            line is a short pointer to it; without one
 //                            it is the full 400, rendered exactly once.
+//   2. generating          → COMPUTING (the spinner state).  #192: this
+//                            branch sits BELOW the two above — "no
+//                            answer yet" must never mask "answer
+//                            refused"; a computing line over a refused
+//                            or invalid input inverts the strip's
+//                            honesty contract.
 //   3. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
 //                            network blip is not a plan defect)
 //   4. verification        → VERIFYING (Decision 2, frontend-engine-
@@ -161,15 +166,6 @@ function StatusBarState({
   audit,
   verifySlow,
 }: Props) {
-  if (status === "generating") {
-    return (
-      <div className="status-bar warn">
-        <span className="indicator" />
-        <span>COMPUTING · taper · buffer · spacing · sign placement</span>
-      </div>
-    );
-  }
-
   if (inputError) {
     return (
       <div className="status-bar fail">
@@ -195,6 +191,17 @@ function StatusBarState({
         <span className="pill fail">
           {refusal.pointer ? "NEEDS REVIEW" : "NEEDS INPUT"}
         </span>
+      </div>
+    );
+  }
+
+  // #192: below inputError/refusal on purpose — the spinner never masks
+  // a refused or invalid input (see the precedence block up top).
+  if (status === "generating") {
+    return (
+      <div className="status-bar warn">
+        <span className="indicator" />
+        <span>COMPUTING · taper · buffer · spacing · sign placement</span>
       </div>
     );
   }

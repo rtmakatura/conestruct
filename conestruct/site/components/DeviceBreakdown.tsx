@@ -30,7 +30,16 @@ export interface DeviceBreakdownData {
 }
 
 export type DeviceBreakdownState =
-  | { state: "loading" }
+  | {
+      state: "loading";
+      // #192: the previous successful breakdown, carried through a
+      // refetch so the results zone can dim-and-refresh in place instead
+      // of unmounting (same stale-while-revalidate contract as
+      // AuditState.lastReady — presented only under an explicit
+      // recomputing ribbon, never as current).  Absent/null on the first
+      // load and after an error.
+      lastReady?: DeviceBreakdownData | null;
+    }
   | { state: "ready"; data: DeviceBreakdownData }
   | { state: "error"; message: string };
 
