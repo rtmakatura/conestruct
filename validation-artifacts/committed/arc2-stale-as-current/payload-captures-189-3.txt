@@ -1,0 +1,41 @@
+pin A applied: {
+  "lat": 39.73997,
+  "lng": -104.96632,
+  "confirmedRoad": {
+    "classification": {
+      "roadType": "urban_arterial",
+      "divided": false,
+      "laneWidthFt": 12,
+      "speedLimitMph": 35,
+      "lanesPerDirection": 2,
+      "detectedLanesTotal": 5,
+      "detectedLanesForward": 2,
+      "detectedLanesBackward": 2,
+      "detectedLanesBothWays": 1
+    },
+    "wayId": 600545947
+  },
+  "detectedLanesTotal": 5,
+  "detectedLanesForward": 2,
+  "detectedLanesBackward": 2,
+  "detectedLanesBothWays": 1
+}
+A PRE-FIX — pin B settled-null save: {
+  "lat": 39.7312,
+  "lng": -104.9665,
+  "confirmedRoad": null,
+  "detectedLanesTotal": 5,
+  "detectedLanesForward": 2,
+  "detectedLanesBackward": 2,
+  "detectedLanesBothWays": 1
+}
+A PRE-FIX wire payload: {"scenario":{"kind":"shoulder","meta":{"project":"","address":"Cheesman Park lawn","lat":39.7312,"lng":-104.9665,"confirmedRoad":null},"roadType":"urban_arterial","speed":35,"lanes":2,"laneWidth":12,"divided":false,"workType":"utility_locate","duration":"short","workLen":1000,"night":false,"detectedLanesTotal":5,"detectedLanesForward":2,"detectedLanesBackward":2,"detectedLanesBothWays":1}}
+A: REPRODUCES — pin A's relays ride under pin B's coordinates.
+
+B POST-FIX — same save through clearDetectionRelays: {
+  "lat": 39.7312,
+  "lng": -104.9665,
+  "confirmedRoad": null
+}
+B POST-FIX wire payload: {"scenario":{"kind":"shoulder","meta":{"project":"","address":"Cheesman Park lawn","lat":39.7312,"lng":-104.9665,"confirmedRoad":null},"roadType":"urban_arterial","speed":35,"lanes":2,"laneWidth":12,"divided":false,"workType":"utility_locate","duration":"short","workLen":1000,"night":false}}
+B: FIXED — no relay field crosses the wire; absence renders as absence.

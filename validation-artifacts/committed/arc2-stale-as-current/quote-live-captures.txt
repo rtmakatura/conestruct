@@ -1,0 +1,21 @@
+# 185 live capture — run 2026-08-01 against the deployed backend (healthz sha cb0472e, verified at capture time — PRE-rounding build; the #135 fix in this arc lands at its deploy)
+A: breakdown @ overhead 10% -> HTTP 200; total=1794.4300 subtotal=1483.0000 overhead=148.3000 profit=163.1300
+B: quote XLSX @ overhead 20% -> HTTP 200; 10118 bytes
+   XLSX row: 'SUBTOTAL' -> [1483]
+   XLSX row: 'Overhead (20%)' -> [296.6]
+   XLSX row: 'TOTAL ESTIMATE' -> [1957.56]
+C: breakdown @ overhead 20% (correct recompute) -> HTTP 200; total=1957.5600 subtotal=1483.0000 overhead=296.6000
+
+SCREEN after edit (stale, per code trace): total 1794.43 with 'Markup - overhead 10%' header
+FILE after edit (live settings):           total 1957.56
+Divergence: +163.13 - screen and XLSX disagree in opposite directions from current inputs
+#135 [A] equipment: sum(rounded lines)=148.00 vs group_total(2dp)=148.00
+#135 [A] labor: sum(rounded lines)=1035.00 vs group_total(2dp)=1035.00
+#135 [A] delivery: sum(rounded lines)=300.00 vs group_total(2dp)=300.00
+#135 [A] total: subtotal+overhead+profit (each 2dp) = 1794.43 vs total(2dp)=1794.43
+#135 [A] raw floats: total=1794.4299999999998
+#135 [B] equipment: sum(rounded lines)=148.00 vs group_total(2dp)=148.00
+#135 [B] labor: sum(rounded lines)=1035.00 vs group_total(2dp)=1035.00
+#135 [B] delivery: sum(rounded lines)=300.00 vs group_total(2dp)=300.00
+#135 [B] total: subtotal+overhead+profit (each 2dp) = 1957.56 vs total(2dp)=1957.56
+#135 [B] raw floats: total=1957.56

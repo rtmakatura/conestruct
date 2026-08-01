@@ -1,0 +1,13 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-181-relay-preservation/conestruct/site[39m
+
+ [32m✓[39m components/__arc2_step2_repro.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1306[2mms[22m[39m
+   [33m[2m✓[22m[39m Arc 2 Step 2 repro captures (defective behavior at HEAD)[2m > [22m#187: declined audit keeps previous input's cited numbers + live Audit PDF [33m 486[2mms[22m[39m
+   [33m[2m✓[22m[39m Arc 2 Step 2 repro captures (defective behavior at HEAD)[2m > [22m#192: post-generate edit unmounts results (total dies) and COMPUTING masks the refusal [33m 387[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 10:25:28
+[2m   Duration [22m 3.25s[2m (transform 427ms, setup 0ms, collect 817ms, tests 1.31s, environment 416ms, prepare 122ms)[22m
+
