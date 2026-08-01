@@ -146,6 +146,33 @@ function auditFilename(name: string | undefined): string {
   return `${cleaned || "plan"}.audit.pdf`;
 }
 
+// #187 — the loading-only stale-while-revalidate rule (the #197 idiom's
+// principle applied to carried-forward answers).  ``lastReady`` carries
+// no input-identity stamp, so the ONLY state in which presenting it is
+// honest is ``loading``, where the "(refreshing…)" cue marks it as
+// mid-refresh.  On ``error`` — a refusal or failure for the input on
+// screen — a prior input's numbers must not render beneath the banner:
+// builders receive null and blank their values with a stated reason.
+function settledData(audit: AuditState): AuditResponse | null {
+  return audit.state === "ready"
+    ? audit.data
+    : audit.state === "loading"
+      ? audit.lastReady
+      : null;
+}
+
+// The row-level placeholder must distinguish "no answer yet" from
+// "answer refused/failed" (#192's masking rule, applied at row scope).
+function placeholderBody(audit: AuditState) {
+  return (
+    <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+      {audit.state === "error"
+        ? "Values unavailable — the audit for this input did not succeed. See the notice above."
+        : "Computing…"}
+    </p>
+  );
+}
+
 export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   const [openIdx, setOpenIdx] = useState<number>(0);
   const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
@@ -156,7 +183,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   // (it always has the scenario), so it needs no mode/planId threading.
   const [auditDl, setAuditDl] = useState<"idle" | "busy" | "error">("idle");
   const onDownloadAuditPdf = async () => {
-    if (!generated || auditDl === "busy") return;
+    if (!generated || audit.state === "error" || auditDl === "busy") return;
     setAuditDl("busy");
     try {
       const res = await fetch("/api/render/audit-pdf", {
@@ -211,10 +238,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   // very first load — or during the deploy window where the backend
   // doesn't ship the field yet — the static fallback renders identical
   // values, so there is no flicker.
-  const siteRecords =
-    audit.state === "ready"
-      ? audit.data.sections.site_adjustments
-      : audit.lastReady?.sections.site_adjustments;
+  const siteRecords = settledData(audit)?.sections.site_adjustments;
   const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions, siteRecords);
 
   const items: ItemSpec[] = [
@@ -284,7 +308,14 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
         <button
           type="button"
           onClick={onDownloadAuditPdf}
-          disabled={!generated || auditDl === "busy"}
+          disabled={!generated || audit.state === "error" || auditDl === "busy"}
+          title={
+            declined
+              ? "Unavailable — generation declined for this input"
+              : audit.state === "error"
+                ? "Unavailable — the audit failed; retry first"
+                : undefined
+          }
           className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer whitespace-nowrap"
         >
           {auditDl === "busy"
@@ -387,7 +418,7 @@ export function buildShoulderItems(
   // trigger condition from the backend audit summary instead of the
   // historical TS-side Case 1A/1B placeholder, which silently masked
   // the Case 11 vs Case 26/27 routing distinction.
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   const caseId = data?.summary.case_id ?? "—";
   const triggerCondition = data?.summary.trigger_condition;
   return [
@@ -494,7 +525,7 @@ export function buildFlaggerItems(
   // PR 3: read the case label from the backend audit summary (same S1
   // pattern as buildShoulderItems) instead of the historical "Case 2B"
   // placeholder, which never corresponded to a real S-630-1 case.
-  const flaggerData = audit.state === "ready" ? audit.data : audit.lastReady;
+  const flaggerData = settledData(audit);
   const flaggerCaseId = flaggerData?.summary.case_id ?? "—";
   const ssdItem = flaggerSightDistanceItem(flaggerData, scenario, generated, r);
 
@@ -792,21 +823,18 @@ function taperItem(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
-  // Stale-while-revalidate: fall back to the previous successful response
-  // during refetch / error so the row keeps rendering with last-known
-  // good data while the global header shows the (refreshing…) cue.
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  // Stale-while-revalidate is loading-only (#187): during refetch the row
+  // keeps last-known good data under the (refreshing…) cue; on error the
+  // row blanks — a prior input's numbers never render under a declined
+  // or failed banner.
+  const data = settledData(audit);
 
   if (!data) {
     return {
       title: "Taper length calculation",
       result: "L = —",
       cite: TAPER_CITATION_FALLBACK.cite,
-      body: (
-        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Computing…
-        </p>
-      ),
+      body: placeholderBody(audit),
     };
   }
 
@@ -856,17 +884,13 @@ function bufferItem(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   if (!data) {
     return {
       title: "Buffer space calculation",
       result: "B = — ft",
       cite: BUFFER_CITATION_FALLBACK.cite,
-      body: (
-        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Computing…
-        </p>
-      ),
+      body: placeholderBody(audit),
     };
   }
   const buffer = data.sections.buffer as Record<string, unknown>;
@@ -898,17 +922,13 @@ function spacingItem(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   if (!data) {
     return {
       title: "Channelizing device spacing",
       result: "— devices",
       cite: SPACING_CITATION_FALLBACK.cite,
-      body: (
-        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Computing…
-        </p>
-      ),
+      body: placeholderBody(audit),
     };
   }
   const spacing = data.sections.spacing as Record<string, unknown>;
@@ -961,17 +981,13 @@ function advanceItem(
   generated: boolean,
   r: (n: number | string) => string,
 ): ItemSpec {
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   if (!data) {
     return {
       title: "Advance warning sign set",
       result: "— signs",
       cite: "MUTCD TABLE 6B-1",
-      body: (
-        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Computing…
-        </p>
-      ),
+      body: placeholderBody(audit),
     };
   }
   const advance = data.sections.advance as Record<string, unknown>;
@@ -1035,17 +1051,13 @@ export function coloradoItem(
   audit: AuditState,
   cdotSheet: string,
 ): ItemSpec {
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   if (!data) {
     return {
       title: "Colorado supplement requirements",
       result: "— checks",
       cite: `CDOT ${cdotSheet}`,
-      body: (
-        <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
-          Computing…
-        </p>
-      ),
+      body: placeholderBody(audit),
     };
   }
   const colorado = data.sections.colorado as Record<string, unknown>;
@@ -1104,7 +1116,7 @@ export function referenceItem(
   caseId: string,
   triggerCondition?: string,
 ): ItemSpec {
-  const data = audit.state === "ready" ? audit.data : audit.lastReady;
+  const data = settledData(audit);
   // UX-19: the backend case section carries two narrative strings the UI
   // previously dropped — ``narrative`` (which CDOT case this matches and
   // how closely; e.g. the flagger closest-analog framing) and

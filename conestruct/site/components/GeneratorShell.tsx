@@ -505,9 +505,12 @@ export function GeneratorShell({
   // that: when it isn't the scenario on screen, the strip gets an
   // explicit checking state instead of the stale verdict.  The check is
   // the #197 idiom (lib/answer-stamp.ts) — this surface is its template.
-  // This governs the StatusBar only — AuditTrail deliberately keeps its
-  // stale-while-revalidate *content* (prose can be visibly mid-refresh;
-  // a verdict presented as current cannot).
+  // Scope, as narrowed by #187 (recorded decision, Arc 2): AuditTrail
+  // keeps its stale-while-revalidate *content* during LOADING only —
+  // prose can be visibly mid-refresh under the (refreshing…) cue.  On an
+  // audit ERROR the trail blanks its values instead: a prior input's
+  // numbers never render under a declined or failed banner.  The strip's
+  // verdict itself is governed here as before.
   const auditSettled =
     (auditState.state === "ready" || auditState.state === "error") &&
     stampMatches([auditState.forScenario], [scenario]);
@@ -520,6 +523,11 @@ export function GeneratorShell({
             ? auditState.data
             : auditState.lastReady,
       };
+  // #187 — declined, from the STAMPED view: true only when the 400 is
+  // the settled answer for the scenario on screen (a stale 400 downgrades
+  // to checking above and must not blank the trail for the new input).
+  const auditDeclined =
+    stripAudit.state === "error" && stripAudit.httpStatus === 400;
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
   // The client check covers only the schema bounds (workLen required /
@@ -815,7 +823,11 @@ export function GeneratorShell({
               {/* Plan-verification chips join the zone with results —
                   plus the pre-generation audit-error case, because the
                   strip's "retry from the audit trail panel below" must
-                  always point at a panel that exists (rule 10). */}
+                  always point at a panel that exists (rule 10).  #187:
+                  the panel MOUNTS on an error but ``generated`` no
+                  longer forces value-unmasking there — a declined or
+                  failed audit renders "—" rows, never a prior input's
+                  numbers presented as current. */}
               {(showResults || auditState.state === "error") && (
                 <div className="ref-group mt-4">
                   <div className="ref-group-label">
@@ -826,7 +838,7 @@ export function GeneratorShell({
                       scenario={scenario}
                       audit={auditState}
                       onRetry={onRetry}
-                      generated={showResults || auditState.state === "error"}
+                      generated={showResults && !auditDeclined}
                     />
                     {showResults && (
                       <DeviceBreakdown
