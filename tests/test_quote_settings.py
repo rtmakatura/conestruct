@@ -112,20 +112,23 @@ def test_default_rates_reproduce_no_kwarg_quote() -> None:
 
 
 def test_overhead_pct_flows_through() -> None:
+    # Markup values are cent-rounded AT computation since the #135 ruling
+    # landed on the quote path (Refs #185; see test_quote_rounding.py), so
+    # the documented formula compares at cent resolution.
     qb = _quote(overhead_pct=0.20)
     assert qb.overhead_pct == 0.20
-    assert qb.overhead == pytest.approx(qb.subtotal * 0.20)
+    assert qb.overhead == pytest.approx(qb.subtotal * 0.20, abs=0.005)
     # Profit still rides on subtotal + overhead (Colorado vendor convention),
     # so a bigger overhead lifts profit too.
-    assert qb.profit == pytest.approx((qb.subtotal + qb.overhead) * qb.profit_pct)
-    assert qb.total == pytest.approx(qb.subtotal + qb.overhead + qb.profit)
+    assert qb.profit == pytest.approx((qb.subtotal + qb.overhead) * qb.profit_pct, abs=0.005)
+    assert qb.total == pytest.approx(qb.subtotal + qb.overhead + qb.profit, abs=1e-6)
 
 
 def test_profit_pct_flows_through() -> None:
     qb = _quote(profit_pct=0.25)
     assert qb.profit_pct == 0.25
-    assert qb.profit == pytest.approx((qb.subtotal + qb.overhead) * 0.25)
-    assert qb.total == pytest.approx(qb.subtotal + qb.overhead + qb.profit)
+    assert qb.profit == pytest.approx((qb.subtotal + qb.overhead) * 0.25, abs=0.005)
+    assert qb.total == pytest.approx(qb.subtotal + qb.overhead + qb.profit, abs=1e-6)
 
 
 # ---------------------------------------------------------------------------

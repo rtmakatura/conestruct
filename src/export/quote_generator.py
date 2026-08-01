@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
 from openpyxl import Workbook
@@ -192,6 +193,15 @@ _JURISDICTION_UNMAPPED_NOTE: str = (
 )
 
 
+def _cents(x: float) -> float:
+    """#135 ruling (Refs #185): money rounds to cents at computation;
+    every downstream sum consumes rounded values.  Half-cent cases round
+    half away from zero — CHOSEN (Rule 12): standard invoice convention,
+    not sourced from a spec — via Decimal(str(x)) so the decision is made
+    on the decimal value, not on its binary float representation."""
+    return float(Decimal(str(x)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
 def _jurisdiction_doc(source: dict[str, Any] | None) -> str:
     """Human doc name from a delta ``source`` block, for the Notes column."""
     return (source or {}).get("doc", "jurisdiction requirement")
@@ -273,7 +283,7 @@ def _equipment_line_for(
                 unit=spec.unit,
                 daily_rate=rate,
                 days=project_duration_days,
-                extended=qty * rate * project_duration_days,
+                extended=_cents(qty * rate * project_duration_days),
                 note=_JURISDICTION_MAPPED_NOTE.format(doc=doc),
                 jurisdiction_required=True,
             )
@@ -314,7 +324,7 @@ def _equipment_line_for(
         unit=_unit_for(device_type),
         daily_rate=rate,
         days=project_duration_days,
-        extended=qty * rate * project_duration_days,
+        extended=_cents(qty * rate * project_duration_days),
         note=note,
         jurisdiction_required=row.jurisdiction_required,
     )
@@ -411,11 +421,13 @@ def _compute_labor_lines(
             hours_per_day=_FLAGGER_HOURS_PER_DAY,
             days=project_duration_days,
             rate=flagger_hourly_rate,
-            extended=num_flaggers
-            * _FLAGGER_HOURS_PER_DAY
-            * project_duration_days
-            * flagger_hourly_rate
-            * multiplier,
+            extended=_cents(
+                num_flaggers
+                * _FLAGGER_HOURS_PER_DAY
+                * project_duration_days
+                * flagger_hourly_rate
+                * multiplier
+            ),
         ),
         LaborLine(
             role="TCS Supervisor",
@@ -423,7 +435,9 @@ def _compute_labor_lines(
             hours_per_day=tcs_hours_per_day,
             days=project_duration_days,
             rate=tcs_hourly_rate,
-            extended=1 * tcs_hours_per_day * project_duration_days * tcs_hourly_rate * multiplier,
+            extended=_cents(
+                1 * tcs_hours_per_day * project_duration_days * tcs_hourly_rate * multiplier
+            ),
         ),
         LaborLine(
             role="Setup Crew",
@@ -431,7 +445,7 @@ def _compute_labor_lines(
             hours_per_day=setup_hours,
             days=1,
             rate=crew_hourly_rate,
-            extended=num_setup_crew * setup_hours * 1 * crew_hourly_rate * multiplier,
+            extended=_cents(num_setup_crew * setup_hours * 1 * crew_hourly_rate * multiplier),
         ),
         LaborLine(
             role="Takedown Crew",
@@ -439,7 +453,7 @@ def _compute_labor_lines(
             hours_per_day=takedown_hours,
             days=1,
             rate=crew_hourly_rate,
-            extended=num_setup_crew * takedown_hours * 1 * crew_hourly_rate * multiplier,
+            extended=_cents(num_setup_crew * takedown_hours * 1 * crew_hourly_rate * multiplier),
         ),
     ]
 
@@ -509,8 +523,8 @@ def _compute_delivery_lines(
     mileage_rate: float,
     min_trip_charge: float,
 ) -> list[DeliveryLine]:
-    per_trip = max(delivery_distance_miles * mileage_rate, min_trip_charge)
-    extended = delivery_trips * per_trip
+    per_trip = _cents(max(delivery_distance_miles * mileage_rate, min_trip_charge))
+    extended = _cents(delivery_trips * per_trip)
     return [
         DeliveryLine(
             item="Equipment Delivery",
@@ -720,13 +734,18 @@ def generate_quote(
         min_trip_charge=min_trip_charge,
     )
 
-    equipment_total = sum(line.extended for line in equipment_lines)
-    labor_total = sum(line.extended for line in labor_lines)
-    delivery_total = sum(line.extended for line in delivery_lines)
-    subtotal = equipment_total + labor_total + delivery_total
-    overhead = subtotal * overhead_pct
-    profit = (subtotal + overhead) * profit_pct
-    total = subtotal + overhead + profit
+    # #135 ruling (Refs #185): every line.extended above is already a
+    # cent value; the sums below therefore combine rounded values, and the
+    # markup products are themselves decided at cent resolution.  _cents on
+    # the sums re-normalizes binary float residue (0.01-step values are not
+    # exactly representable), never changes the decimal amount.
+    equipment_total = _cents(sum(line.extended for line in equipment_lines))
+    labor_total = _cents(sum(line.extended for line in labor_lines))
+    delivery_total = _cents(sum(line.extended for line in delivery_lines))
+    subtotal = _cents(equipment_total + labor_total + delivery_total)
+    overhead = _cents(subtotal * overhead_pct)
+    profit = _cents((subtotal + overhead) * profit_pct)
+    total = _cents(subtotal + overhead + profit)
 
     breakdown = QuoteBreakdown(
         equipment_lines=equipment_lines,
