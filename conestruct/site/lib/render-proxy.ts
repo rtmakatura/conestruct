@@ -33,6 +33,57 @@ const EXT: Record<RenderKind, string> = {
   "audit-pdf": "audit.pdf",
 };
 
+// #184 — an upstream validation rejection must reach the client as the
+// validation it is, not as an outage.  Two upstream shapes qualify:
+//
+//   400 — an HTTPException the render API raised deliberately (gate
+//   refusals, the geometry taper floor).  Forwarded body-intact, as the
+//   audit/device/download paths always have.
+//
+//   422 — FastAPI's automatic Pydantic rejection (schema bounds and the
+//   cross-field validators, e.g. the drawable-half-road check).  The body
+//   is a ``detail`` ARRAY of error objects the client has no parser for;
+//   collapsing it to 502 presented the user's input problem as a server
+//   outage with a Retry that could never succeed.  Translated here to a
+//   400 whose body is the ``{"detail": "<message>"}`` shape backend 400s
+//   already use, so the existing PLAN DECLINED path (#180) renders the
+//   validation message with no client change.  Pydantic prefixes
+//   model-validator messages with "Value error, " — stripped, it isn't
+//   part of the sentence the validator wrote.
+//
+// Returns null for every other status (including an unparseable 422 —
+// a body we can't quote honestly stays an honest 502 at the call site).
+export function validationPassthrough(
+  status: number,
+  detail: string,
+): Response | null {
+  if (status === 400) {
+    return new Response(detail || "Invalid scenario", {
+      status: 400,
+      headers: { "content-type": "application/json" },
+    });
+  }
+  if (status !== 422) return null;
+  let message: string;
+  try {
+    const body = JSON.parse(detail) as {
+      detail?: { msg?: unknown }[];
+    };
+    const msgs = (body.detail ?? [])
+      .map((e) => (typeof e.msg === "string" ? e.msg : ""))
+      .filter(Boolean)
+      .map((m) => m.replace(/^Value error, /, ""));
+    if (msgs.length === 0) return null;
+    message = msgs.join(" · ");
+  } catch {
+    return null;
+  }
+  return new Response(JSON.stringify({ detail: message }), {
+    status: 400,
+    headers: { "content-type": "application/json" },
+  });
+}
+
 function safeFilename(name: string, ext: string): string {
   const cleaned = name
     .trim()
@@ -78,12 +129,9 @@ export async function renderScenarioToResponse(
     // 400 = validation error (e.g., work zone shorter than required taper).
     // Pass the structured detail through so the UI can show the user *why*
     // their config was rejected, instead of a generic "Render failed".
-    if (upstream.status === 400) {
-      return new Response(detail || "Invalid scenario", {
-        status: 400,
-        headers: { "content-type": "application/json" },
-      });
-    }
+    // 422 = schema rejection, translated to the same shape (#184).
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
     return new Response("Render failed", { status: 502 });
   }
 
@@ -129,6 +177,11 @@ export async function fetchQuoteBreakdown(
   if (!upstream.ok) {
     const detail = await upstream.text().catch(() => "");
     console.error(`quote breakdown upstream ${upstream.status}`, detail);
+    // #184: this path used to collapse even deliberate 400s to 502 — on
+    // the money surface, a gate refusal read as an outage.  Same
+    // validation passthrough as the audit/device/download paths.
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
     return new Response("Render failed", { status: 502 });
   }
 
@@ -171,12 +224,8 @@ export async function fetchDeviceBreakdown(
   if (!upstream.ok) {
     const detail = await upstream.text().catch(() => "");
     console.error(`device breakdown upstream ${upstream.status}`, detail);
-    if (upstream.status === 400) {
-      return new Response(detail || "Invalid scenario", {
-        status: 400,
-        headers: { "content-type": "application/json" },
-      });
-    }
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
     return new Response("Device breakdown failed", { status: 502 });
   }
 
@@ -216,12 +265,8 @@ export async function fetchAuditTrail(
   if (!upstream.ok) {
     const detail = await upstream.text().catch(() => "");
     console.error(`audit trail upstream ${upstream.status}`, detail);
-    if (upstream.status === 400) {
-      return new Response(detail || "Invalid scenario", {
-        status: 400,
-        headers: { "content-type": "application/json" },
-      });
-    }
+    const validation = validationPassthrough(upstream.status, detail);
+    if (validation) return validation;
     return new Response("Audit trail failed", { status: 502 });
   }
 
