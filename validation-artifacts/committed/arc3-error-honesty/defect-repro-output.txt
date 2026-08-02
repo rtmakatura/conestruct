@@ -1,0 +1,11 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-181-relay-preservation/conestruct/site
+
+ ✓ components/defect-repro-arc3.test.tsx (3 tests) 487ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  09:20:54
+   Duration  2.20s (transform 370ms, setup 0ms, collect 648ms, tests 487ms, environment 421ms, prepare 118ms)
+

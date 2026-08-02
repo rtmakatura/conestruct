@@ -1,0 +1,10 @@
+== A: Modal backend /render/audit direct ==
+status: 422
+body: {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{"kind":"shoulder","meta":{"project":"","address":"","lat":39.73997,"lng":-104.96632},"roadType":"urban_arterial","speed":35,"lanes":4,"laneWidth":14.0,"divided":false,"workType":"other","duration":"short","workLen":1500.0,"night":false},"ctx":{"error":{}}}]}
+
+== B: prod proxy /api/render/audit ==
+status: 502
+body: Audit trail failed
+
+== C: prod proxy retry (identical request — the Retry button's exact behavior) ==
+status: 502 body: Audit trail failed
