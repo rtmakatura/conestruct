@@ -1,0 +1,33 @@
+- `2026-08-02T15:42:01.471Z` healthz sha: a1f5f71cf6a25f3de9f44c65e0b87b065d4d9341
+- `2026-08-02T15:42:01.471Z` expected (git rev-parse origin/main): a1f5f71cf6a25f3de9f44c65e0b87b065d4d9341
+- `2026-08-02T15:42:03.129Z` served bundle sha: a1f5f71cf6a25f3de9f44c65e0b87b065d4d9341
+- `2026-08-02T15:42:03.129Z` **PASS** — build gate: healthz == origin/main == served bundle (a1f5f71cf6a25f3de9f44c65e0b87b065d4d9341)
+- `2026-08-02T15:42:04.554Z` **PASS** — 1a. strip INVALID INPUT with the form's own message (INVALID INPUT · 4 lanes × 14 ft + 10 ft shoulder is wider than the plan sheet can draw (52 ft per direction). Use a lane)
+- `2026-08-02T15:42:04.555Z` **PASS** — 1b. VERIFICATION UNAVAILABLE nowhere
+- `2026-08-02T15:42:04.560Z` **PASS** — 1c. form inline error agrees (strip + inline)
+- `2026-08-02T15:42:04.563Z` **PASS** — 1d. no Retry anywhere
+- `2026-08-02T15:42:04.655Z` screenshot: 01-mirrored-422-invalid-input.png
+- `2026-08-02T15:42:05.934Z` **PASS** — 2a. non-mirrored 422 → PLAN DECLINED with the validator's sentence (PLAN DECLINED · workZoneSpeed (70) must be <= posted speed (65).NEEDS INPUT)
+- `2026-08-02T15:42:05.934Z` **PASS** — 2b. sentence rendered exactly once (count=1)
+- `2026-08-02T15:42:05.938Z` **PASS** — 2c. no Retry anywhere
+- `2026-08-02T15:42:05.938Z` **PASS** — 2d. not presented as an outage
+- `2026-08-02T15:42:06.150Z` screenshot: 02-nonmirrored-422-plan-declined.png
+- `2026-08-02T15:42:06.978Z` **PASS** — 3a. device chip declined line (real geometry 400)
+- `2026-08-02T15:42:06.982Z` **PASS** — 3b. no Retry anywhere under declined
+- `2026-08-02T15:42:07.090Z` screenshot: 03-device-chip-declined.png
+- `2026-08-02T15:42:08.683Z` **PASS** — 4a. genuine 5xx keeps UNAVAILABLE + failed line
+- `2026-08-02T15:42:08.690Z` **PASS** — 4b. Retry offered for the 5xx
+- `2026-08-02T15:42:08.898Z` screenshot: 04-synthetic-502-unavailable-retry.png
+- `2026-08-02T15:42:13.253Z` request counts for the 12-step drag: audit=2, device-breakdown=2 (pre-fix: 12 + 12)
+- `2026-08-02T15:42:13.253Z` **PASS** — 5a. ≤2 audit requests for a 12-step drag (leading + trailing) (audit=2)
+- `2026-08-02T15:42:13.253Z` **PASS** — 5b. ≤2 device-breakdown requests for the same drag (bd=2)
+- `2026-08-02T15:42:13.253Z` **PASS** — 5c. trailing request carries the FINAL value ({"scenario":{"kind":"shoulder","meta":{"project":"","address":"","lat":0,"lng":0)
+- `2026-08-02T15:42:14.034Z` **PASS** — 6. discrete edit dispatches within 150 ms (leading edge) (audit +1)
+- `2026-08-02T15:42:15.916Z` **PASS** — 7a. 429 renders VERIFICATION PAUSED + 'too many updates' on the strip
+- `2026-08-02T15:42:15.916Z` **PASS** — 7b. panel paused line
+- `2026-08-02T15:42:15.916Z` **PASS** — 7c. outage voice nowhere
+- `2026-08-02T15:42:15.922Z` **PASS** — 7d. Retry present
+- `2026-08-02T15:42:16.137Z` screenshot: 07-synthetic-429-paused.png
+- `2026-08-02T15:42:16.385Z` **PASS** — 8a. Retry re-fetches immediately (no debounce delay) (audit +1)
+- `2026-08-02T15:42:16.427Z` **PASS** — 8b. recovery — strip settles on a real verdict (VERIFIED · 0 validation warningsREADY FOR TCS REVIEW)
+- `2026-08-02T15:42:16.493Z` screenshot: 08-retry-recovery.png
