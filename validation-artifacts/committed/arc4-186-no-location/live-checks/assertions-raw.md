@@ -1,0 +1,35 @@
+- `2026-08-02T17:47:50.150Z` healthz sha: c9eebe92b36686b3d91ffdcdebccacb7d957c82b
+- `2026-08-02T17:47:50.151Z` expected (git rev-parse origin/main): c9eebe92b36686b3d91ffdcdebccacb7d957c82b
+- `2026-08-02T17:47:51.838Z` served bundle sha: c9eebe92b36686b3d91ffdcdebccacb7d957c82b
+- `2026-08-02T17:47:51.838Z` **PASS** — build gate: healthz == origin/main == served bundle (c9eebe92b36686b3d91ffdcdebccacb7d957c82b)
+- `2026-08-02T17:47:53.256Z` **PASS** — 1a. strip renders the AWAITING LOCATION copy verbatim (AWAITING LOCATION · pick a location on the map to verify this plan)
+- `2026-08-02T17:47:53.259Z` **PASS** — 1b. strip is the chromeless no-verdict treatment (idle unavail) (status-bar idle unavail)
+- `2026-08-02T17:47:53.261Z` **PASS** — 1c. READY nowhere in the DOM
+- `2026-08-02T17:47:53.261Z` **PASS** — 1d. no verdict voice anywhere (VERIFIED / CAUTION pill / INVALID INPUT / PLAN DECLINED)
+- `2026-08-02T17:47:53.269Z` **PASS** — 1e. Generate disabled
+- `2026-08-02T17:47:53.274Z` **PASS** — 1f. disabled reason is the stated sentence (title attribute) (title="Set a location first — pick on map or enter manually.")
+- `2026-08-02T17:47:53.277Z` **PASS** — 1g. reason also visible as text under the CTA
+- `2026-08-02T17:47:53.451Z` screenshot: 01-fresh-load-awaiting.png
+- `2026-08-02T17:47:54.473Z` **PASS** — 2a. no API request of any kind from the click (render/PDF included) (0 API requests)
+- `2026-08-02T17:47:54.475Z` **PASS** — 2b. no post-generate package (results hero absent)
+- `2026-08-02T17:47:54.552Z` **PASS** — 3a. 4×14 without a pin → INVALID INPUT outranks AWAITING LOCATION (INVALID INPUT · 4 lanes × 14 ft + 10 ft shoulder is wider than the plan sheet can draw (52 ft per direction). Use a lane)
+- `2026-08-02T17:47:54.553Z` **PASS** — 3b. still no verdict while invalid (READY nowhere)
+- `2026-08-02T17:47:54.648Z` screenshot: 03a-prepin-invalid-outranks.png
+- `2026-08-02T17:47:55.472Z` **PASS** — 3c. valid-again inputs return the strip to AWAITING LOCATION (AWAITING LOCATION · pick a location on the map to verify this plan)
+- `2026-08-02T17:47:55.472Z` **PASS** — 3d. the settled clean audit never surfaces as a verdict (READY/VERIFIED nowhere)
+- `2026-08-02T17:47:55.558Z` screenshot: 03b-prepin-restored-awaiting.png
+- `2026-08-02T17:48:11.377Z` candidate picker shown; picked: "East Colfax Avenue eastbound (primary, 90°)5 m from pin · way 600545947"
+- `2026-08-02T17:48:15.010Z` **PASS** — 4a. after Save the strip is a real verification state, not AWAITING (VERIFIED · 0 validation warningsREADY FOR TCS REVIEW)
+- `2026-08-02T17:48:15.017Z` downstream state at E Colfax: strip="VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" generateDisabled=false title=""
+- `2026-08-02T17:48:15.017Z` **PASS** — 4b. Generate enabled ↔ strip carries a verdict (detection produced no gate) (VERIFIED · 0 validation warningsREADY FOR TCS REVIEW)
+- `2026-08-02T17:48:15.182Z` screenshot: 04-colfax-saved-downstream.png
+- `2026-08-02T17:48:17.471Z` **PASS** — 5a. latitude alone keeps AWAITING LOCATION (both-coordinates rule) (AWAITING LOCATION · pick a location on the map to verify this plan)
+- `2026-08-02T17:48:17.476Z` **PASS** — 5b. Generate still disabled with the location reason
+- `2026-08-02T17:48:17.477Z` **PASS** — 5c. no verdict leaked (READY/VERIFIED nowhere)
+- `2026-08-02T17:48:17.637Z` screenshot: 05a-lat-only-still-awaiting.png
+- `2026-08-02T17:48:17.958Z` **PASS** — 5d. adding longitude flips the strip to a real verdict (VERIFIED · 0 validation warningsREADY FOR TCS REVIEW)
+- `2026-08-02T17:48:17.961Z` **PASS** — 5e. Generate enabled
+- `2026-08-02T17:48:18.044Z` screenshot: 05b-both-coords-verdict.png
+- `2026-08-02T17:48:20.341Z` **PASS** — 6a. quiet pin → a verdict renders (VERIFIED · 0 validation warningsREADY FOR TCS REVIEW)
+- `2026-08-02T17:48:20.434Z` **PASS** — 6b. Generate produces the package as before (results hero rendered)
+- `2026-08-02T17:48:20.566Z` screenshot: 06-quiet-pin-generated.png
