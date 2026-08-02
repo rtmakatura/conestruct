@@ -1,0 +1,8 @@
+defect reproduction run at pre-fix HEAD 4f34754 (detached checkout, 2026-08-02):
+
+CAPTURE audit POST meta: lat=0 lng=0
+CAPTURE device POST meta: lat=0 lng=0
+CAPTURE strip verdict: VERIFIED - READY FOR TCS REVIEW at 0/0
+CAPTURE Generate: enabled at 0/0; click flipped to the post-generate stage (results hero rendered)
+ ✓ components/GeneratorShell.no-location-repro.test.tsx (2 tests) 223ms
+      Tests  2 passed (2)
