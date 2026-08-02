@@ -41,7 +41,15 @@ export type DeviceBreakdownState =
       lastReady?: DeviceBreakdownData | null;
     }
   | { state: "ready"; data: DeviceBreakdownData }
-  | { state: "error"; message: string };
+  | {
+      state: "error";
+      message: string;
+      // #184 — the HTTP status when the failure was an HTTP response
+      // (absent on network errors).  400 = the backend declined the
+      // scenario: the chip mirrors AuditTrail's declined line and offers
+      // no Retry (retrying an unchanged input re-earns the same 400).
+      httpStatus?: number;
+    };
 
 interface Props {
   state: DeviceBreakdownState;
@@ -56,11 +64,20 @@ interface Props {
 // never by hue alone (diff-note §2: already-present response fields the
 // old table ignored).
 export function DeviceBreakdown({ state, onRetry }: Props) {
+  // #184 — declined, not broken (same contract as AuditTrail): a 400 is
+  // the backend refusing the input for a stated reason.  The StatusBar
+  // owns that reason's single voice; this chip neither re-quotes it nor
+  // offers a Retry that would re-earn the same 400.
+  const declined = state.state === "error" && state.httpStatus === 400;
   const summary =
     state.state === "loading" ? (
       <>loading…</>
     ) : state.state === "error" ? (
-      <span className="verdict-bad">unavailable — retry inside</span>
+      declined ? (
+        <span className="verdict-bad">unavailable — generation declined</span>
+      ) : (
+        <span className="verdict-bad">unavailable — retry inside</span>
+      )
     ) : (
       <>
         <b>{state.data.unique_types}</b> device types ·{" "}
@@ -87,20 +104,28 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
         </div>
       )}
 
-      {state.state === "error" && (
-        <div className="flex items-baseline gap-3 py-4">
-          <div className="font-mono text-[12px] text-[color:var(--fail)]">
-            Device breakdown failed: {state.message}
+      {state.state === "error" &&
+        (declined ? (
+          <div className="flex items-baseline gap-3 py-4">
+            <div className="font-mono text-[12px] text-[color:var(--fail)]">
+              Device schedule unavailable while generation is declined — see
+              the notice above.
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={onRetry}
-            className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
-          >
-            Retry
-          </button>
-        </div>
-      )}
+        ) : (
+          <div className="flex items-baseline gap-3 py-4">
+            <div className="font-mono text-[12px] text-[color:var(--fail)]">
+              Device breakdown failed: {state.message}
+            </div>
+            <button
+              type="button"
+              onClick={onRetry}
+              className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        ))}
 
       {state.state === "ready" && (
         <>

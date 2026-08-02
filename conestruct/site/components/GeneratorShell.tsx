@@ -202,6 +202,9 @@ export function GeneratorShell({
           setDeviceBreakdown({
             state: "error",
             message: detail || `HTTP ${res.status}`,
+            // #184: 400 = declined — the chip renders its declined line
+            // and offers no Retry (see DeviceBreakdownState).
+            httpStatus: res.status,
           });
           return;
         }
