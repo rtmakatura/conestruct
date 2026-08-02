@@ -31,8 +31,14 @@ export type Status = "idle" | "generating" | "done";
 //                            refused"; a computing line over a refused
 //                            or invalid input inverts the strip's
 //                            honesty contract.
-//   3. audit fetch error   → VERIFICATION UNAVAILABLE (neutral — a
-//                            network blip is not a plan defect)
+//   3. audit fetch 429     → VERIFICATION PAUSED (#182) — the rate
+//                            limiter answered; the actual cause (edit
+//                            pace) is named, never presented as an
+//                            outage.  Same chromeless neutral treatment
+//                            (rule 13: the words carry the distinction).
+//   3b. audit fetch error  → VERIFICATION UNAVAILABLE (neutral — a
+//                            network blip is not a plan defect; reserved
+//                            for GENUINE unavailability since #182)
 //   4. verification        → VERIFYING (Decision 2, frontend-engine-
 //      in flight             removal: any in-flight state, not just the
 //                            first load — the strip never shows a stale
@@ -213,6 +219,20 @@ function StatusBarState({
   // modifiers on the ``idle`` base (spinner vs. chromaless hollow dot);
   // the derivation order and every string of copy are unchanged.
   if (audit.state === "error") {
+    // #182 — a 429 is the app's own rate limiter, not an outage: name
+    // the actual cause.  Retrying helps once the minute rolls, so the
+    // pointer to the panel's Retry stays.
+    if (audit.httpStatus === 429) {
+      return (
+        <div className="status-bar idle unavail">
+          <span className="indicator" />
+          <span>
+            VERIFICATION PAUSED · too many updates in the last minute —
+            retry from the audit trail panel in a moment
+          </span>
+        </div>
+      );
+    }
     return (
       <div className="status-bar idle unavail">
         <span className="indicator" />

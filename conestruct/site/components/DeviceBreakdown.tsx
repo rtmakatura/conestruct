@@ -69,12 +69,16 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
   // owns that reason's single voice; this chip neither re-quotes it nor
   // offers a Retry that would re-earn the same 400.
   const declined = state.state === "error" && state.httpStatus === 400;
+  // #182 — a 429 is the app's own rate limiter: say so.  Retry stays.
+  const throttled = state.state === "error" && state.httpStatus === 429;
   const summary =
     state.state === "loading" ? (
       <>loading…</>
     ) : state.state === "error" ? (
       declined ? (
         <span className="verdict-bad">unavailable — generation declined</span>
+      ) : throttled ? (
+        <span className="verdict-bad">paused — retry inside</span>
       ) : (
         <span className="verdict-bad">unavailable — retry inside</span>
       )
@@ -115,7 +119,9 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
         ) : (
           <div className="flex items-baseline gap-3 py-4">
             <div className="font-mono text-[12px] text-[color:var(--fail)]">
-              Device breakdown failed: {state.message}
+              {throttled
+                ? "Device schedule paused: too many updates in the last minute — retry in a moment."
+                : `Device breakdown failed: ${state.message}`}
             </div>
             <button
               type="button"

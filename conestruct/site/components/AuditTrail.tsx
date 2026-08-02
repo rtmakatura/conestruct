@@ -263,6 +263,9 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
   // for it — retrying an unchanged input re-earns the same 400.  Network
   // and 5xx failures keep the existing failed + Retry line, unreframed.
   const declined = audit.state === "error" && audit.httpStatus === 400;
+  // #182 — a 429 is the app's own rate limiter: say so.  Retry stays
+  // (it genuinely helps once the minute rolls).
+  const throttled = audit.state === "error" && audit.httpStatus === 429;
 
   // Density-contract chip summary (restage): the collapsed line carries
   // the traced-value count; an audit failure auto-expands — the strip's
@@ -273,6 +276,8 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
     audit.state === "error" ? (
       declined ? (
         <span className="verdict-bad">unavailable — generation declined</span>
+      ) : throttled ? (
+        <span className="verdict-bad">paused — retry inside</span>
       ) : (
         <span className="verdict-bad">unavailable — retry inside</span>
       )
@@ -340,7 +345,11 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
           </div>
         ) : (
           <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
-            <span>Audit trail failed: {audit.message}</span>
+            <span>
+              {throttled
+                ? "Audit trail paused: too many updates in the last minute — retry in a moment."
+                : `Audit trail failed: ${audit.message}`}
+            </span>
             <button
               type="button"
               onClick={onRetry}

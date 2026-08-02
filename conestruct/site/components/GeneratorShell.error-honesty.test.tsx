@@ -151,6 +151,34 @@ describe("strip error honesty (#184)", () => {
     expect(screen.queryByRole("button", { name: /^Retry$/ })).toBeNull();
   });
 
+  it("a 429 names the throttle — VERIFICATION PAUSED with a working Retry, never the outage voice (#182)", async () => {
+    render(
+      <GeneratorShell mode="sandbox" initialScenario={DEFAULT_SHOULDER} />,
+    );
+    await release(bdCalls, 0, okBd());
+    await release(auditCalls, 0, {
+      ok: false,
+      status: 429,
+      json: async () => {
+        throw new Error("not json");
+      },
+      text: async () => {
+        throw new Error("body consumed");
+      },
+    } as unknown as Response);
+
+    expect(document.body.textContent).toContain("VERIFICATION PAUSED");
+    expect(document.body.textContent).toContain(
+      "too many updates in the last minute",
+    );
+    expect(document.body.textContent).not.toContain(
+      "VERIFICATION UNAVAILABLE",
+    );
+    expect(screen.getByText(/Audit trail paused/)).toBeTruthy();
+    // Retry stays — it genuinely helps once the minute rolls.
+    expect(screen.getByRole("button", { name: /^Retry$/ })).toBeTruthy();
+  });
+
   it("clearing the invalid combination returns the strip to the verifying path", async () => {
     render(
       <GeneratorShell mode="sandbox" initialScenario={FOUR_BY_FOURTEEN} />,

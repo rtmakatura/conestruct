@@ -55,6 +55,21 @@ describe("DeviceBreakdown error honesty (#184)", () => {
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
+  it("a 429 names the throttle and keeps Retry (#182)", () => {
+    render(
+      <DeviceBreakdown
+        state={{ state: "error", message: "HTTP 429", httpStatus: 429 }}
+        onRetry={() => {}}
+      />,
+    );
+    expect(screen.getByText(/paused — retry inside/)).toBeTruthy();
+    expect(
+      screen.getByText(/Device schedule paused: too many updates/),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Device breakdown failed/)).toBeNull();
+    expect(screen.getByRole("button", { name: /^Retry$/ })).toBeTruthy();
+  });
+
   it("a network error (no httpStatus) keeps the failed line and Retry", () => {
     render(
       <DeviceBreakdown
