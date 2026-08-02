@@ -233,6 +233,65 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("PLAN DECLINED");
   });
 
+  // #186 — no site chosen: never a verdict for a location nobody set.
+  it("locationUnset renders AWAITING LOCATION — chromeless, no verdict, even over a clean audit", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        locationUnset
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain("AWAITING LOCATION");
+    // Chromeless neutral (rule 13 no-verdict), not an error voice.
+    expect(html).toContain("status-bar idle unavail");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("VERIFIED");
+    expect(html).not.toContain("status-bar fail");
+    expect(html).not.toContain("INVALID INPUT");
+  });
+
+  it("locationUnset outranks COMPUTING — the spinner never masks the missing pin", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="generating"
+        inputError={null}
+        locationUnset
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain("AWAITING LOCATION");
+    expect(html).not.toContain("COMPUTING");
+  });
+
+  it("a genuine input error outranks the missing pin", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError="Work zone length is required."
+        locationUnset
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain("INVALID INPUT");
+    expect(html).not.toContain("AWAITING LOCATION");
+  });
+
+  it("a refusal outranks the missing pin", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        refusal={{ message: FLOOR_400, pointer: null }}
+        locationUnset
+        audit={ready(makeAudit())}
+      />,
+    );
+    expect(html).toContain("PLAN DECLINED");
+    expect(html).not.toContain("AWAITING LOCATION");
+  });
+
   it("first load shows VERIFYING, not a verdict", () => {
     const html = renderToStaticMarkup(
       <StatusBar

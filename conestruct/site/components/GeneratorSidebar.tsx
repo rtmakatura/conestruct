@@ -6,6 +6,7 @@ import {
   carryAcrossKinds,
   clearDetectionRelays,
   defaultFor,
+  hasLocation,
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
   SCENARIO_KINDS,
@@ -447,8 +448,11 @@ export function GeneratorSidebar({
               AFTER a settled refusal the CTA stays gated too — the
               re-fetch window is ~5.5 s on a cold start, and a Generate
               click inside it dead-ends (post-generate layout, second
-              refusal pointing at an unmounted row).  The server still
-              re-validates every render call. */}
+              refusal pointing at an unmounted row).  #186: and on a
+              location existing at all — before a pin the package would
+              certify lat 0 / lng 0 (the unset sentinel; hasLocation).
+              Ranked last: problems with actual edits state their reason
+              first.  The server still re-validates every render call. */}
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
@@ -458,7 +462,8 @@ export function GeneratorSidebar({
               !approachesValidation.ok ||
               approachConfirm.pending ||
               refusal !== null ||
-              refusalPending
+              refusalPending ||
+              !hasLocation(scenario.meta)
             }
             disabledReason={
               wzValidation.message ??
@@ -472,7 +477,9 @@ export function GeneratorSidebar({
                     "Generation declined — see the notice below."
                   : refusalPending
                     ? "Re-checking the declined input — Generate re-enables when the verdict settles."
-                    : undefined)
+                    : !hasLocation(scenario.meta)
+                      ? "Set a location first — pick on map or enter manually."
+                      : undefined)
             }
           />
 

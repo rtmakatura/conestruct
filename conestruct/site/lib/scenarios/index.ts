@@ -439,6 +439,20 @@ export function clearDetectionRelays(s: Scenario): Scenario {
   return rest as Scenario;
 }
 
+// #186 — the one location-presence predicate.  ``lat: 0, lng: 0`` is the
+// documented unset sentinel (every DEFAULT_* starts there; neither the TS
+// type nor the backend ScenarioMeta admits null, and the backend already
+// reads ``meta.lat or None``).  Literal 0/0 is never a legitimate site in
+// scope — it is the Gulf of Guinea — so absence and 0/0 are the same
+// state.  BOTH coordinates must be nonzero: a lat without a lng (reachable
+// through the manual-entry fallback) is not a usable location.  The strip
+// and the Generate gate read only this helper; other, older sentinel
+// spellings (GeneratorSidebar hasPin, QuotePanel, SiteConditionsField)
+// consolidate onto it when next touched.
+export function hasLocation(meta: ScenarioMeta): boolean {
+  return meta.lat !== 0 && meta.lng !== 0;
+}
+
 // Narrow helpers — useful in form components so each sub-form receives
 // a guaranteed-shape scenario rather than the union.
 export function asShoulder(s: Scenario): ShoulderScenario | null {

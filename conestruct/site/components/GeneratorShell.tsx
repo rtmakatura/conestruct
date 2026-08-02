@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
+import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
 import {
   validateApproaches,
   validateLanes,
@@ -838,6 +838,7 @@ export function GeneratorShell({
             status={status}
             inputError={inputError}
             refusal={refusal}
+            locationUnset={!hasLocation(scenario.meta)}
             audit={stripAudit}
             verifySlow={verifySlow}
           />

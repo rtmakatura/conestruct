@@ -25,6 +25,17 @@ export type Status = "idle" | "generating" | "done";
 //                            With a confirm affordance on screen the
 //                            line is a short pointer to it; without one
 //                            it is the full 400, rendered exactly once.
+//   1c. awaiting location  → AWAITING LOCATION (#186) — no site has ever
+//                            been chosen (meta.lat/lng at the 0/0 unset
+//                            sentinel; ``hasLocation``).  Below the two
+//                            above: a genuine problem with what the user
+//                            actually edited outranks the missing pin.
+//                            Above COMPUTING and every verdict branch:
+//                            the strip can never certify — or even show
+//                            a verdict for — a site nobody chose (rule
+//                            10; the pre-#186 strip rendered green READY
+//                            on a fresh, untouched /sandbox load).
+//                            Chromeless neutral (rule 13 no-verdict).
 //   2. generating          → COMPUTING (the spinner state).  #192: this
 //                            branch sits BELOW the two above — "no
 //                            answer yet" must never mask "answer
@@ -144,6 +155,14 @@ interface Props {
    * stay on the VERIFICATION UNAVAILABLE path below, unreframed.
    */
   refusal?: Refusal | null;
+  /**
+   * #186 — true when no site has ever been chosen (``!hasLocation(meta)``,
+   * the 0/0 unset sentinel).  Renders AWAITING LOCATION instead of any
+   * verdict: never green — never any verdict — for a site nobody chose.
+   * Ranked below inputError/refusal (problems with actual edits win) and
+   * above everything else.
+   */
+  locationUnset?: boolean;
   audit: AuditState;
   /**
    * Cold-start honesty (Refs #122, rule 10): true once the in-flight
@@ -172,6 +191,7 @@ function StatusBarState({
   status,
   inputError,
   refusal = null,
+  locationUnset = false,
   audit,
   verifySlow,
 }: Props) {
@@ -199,6 +219,24 @@ function StatusBarState({
         <span>PLAN DECLINED · {refusal.pointer ?? refusal.message}</span>
         <span className="pill fail">
           {refusal.pointer ? "NEEDS REVIEW" : "NEEDS INPUT"}
+        </span>
+      </div>
+    );
+  }
+
+  // #186 — no site has ever been chosen.  Below inputError/refusal (a
+  // genuine problem with what the user actually edited outranks the
+  // missing pin), above COMPUTING and every verdict branch: whatever the
+  // audit fetch answered about the geometry, the strip renders no verdict
+  // for a site nobody chose.  Chromeless neutral — absence is not an
+  // error the user made (rule 13 no-verdict treatment; the words carry
+  // the distinction, same as the 429 state below).
+  if (locationUnset) {
+    return (
+      <div className="status-bar idle unavail">
+        <span className="indicator" />
+        <span>
+          AWAITING LOCATION · pick a location on the map to verify this plan
         </span>
       </div>
     );

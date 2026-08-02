@@ -210,6 +210,12 @@ export type SiteConditions = Partial<Record<SiteConditionFlag, boolean>>;
 export interface ScenarioMeta {
   project: string;
   address: string;
+  /**
+   * Site coordinates.  ``lat: 0, lng: 0`` is the UNSET sentinel (#186):
+   * the type admits no null, every DEFAULT_* scenario starts at 0/0, and
+   * literal 0/0 is never a legitimate site in scope.  Presence is asked
+   * through ``hasLocation(meta)`` (lib/scenarios) — never re-derive it.
+   */
   lat: number;
   lng: number;
   /**

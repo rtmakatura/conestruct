@@ -58,6 +58,14 @@ MAX_DRAWABLE_HALF_ROAD_FT = 52.0
 class ScenarioMeta(BaseModel):
     project: str = ""
     address: str = ""
+    # 0.0/0.0 is the UNSET sentinel (#186): no null in the shape, and the
+    # consumers below already read ``meta.lat or None``.  The frontend
+    # mirrors this in ``hasLocation`` (lib/scenarios) and refuses to
+    # certify or Generate without a location; the backend deliberately
+    # does NOT gate on it — coordinate-less renders are legitimate (CLI
+    # path, ``--location``) and every coordinate consumer here already
+    # renders absence as absence (LOCATION "—", no aerial, corridor
+    # validation unchecked).
     lat: float = 0.0
     lng: float = 0.0
     # Engineering-style location text shown on the title block (e.g.
