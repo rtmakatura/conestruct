@@ -267,6 +267,7 @@ def build_narrative_context(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
+    jurisdiction_name: str | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -710,6 +711,11 @@ def build_narrative_context(
 
     return {
         "params": params,
+        # #156: the header shows the RESOLVED jurisdiction record's name
+        # when the scenario carries one; params.jurisdiction stays the
+        # engine-math switch (always "CDOT" today) and doubles as the
+        # display fallback when no jurisdiction_key is set.
+        "jurisdiction_display": jurisdiction_name or params.jurisdiction,
         "road_type_human": _ROAD_TYPE_HUMAN.get(params.road_type, params.road_type),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
         "closure_type_display": scenario_display_name(params),
@@ -833,6 +839,7 @@ def render_crew_narrative_markdown(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
+    jurisdiction_name: str | None = None,
 ) -> str:
     """Build the crew-instructions Markdown string (no file I/O).
 
@@ -849,6 +856,7 @@ def render_crew_narrative_markdown(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
+        jurisdiction_name=jurisdiction_name,
     )
     markdown = _render_template(context)
     if use_llm:
@@ -865,6 +873,7 @@ def generate_crew_narrative(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
+    jurisdiction_name: str | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -888,6 +897,7 @@ def generate_crew_narrative(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
+        jurisdiction_name=jurisdiction_name,
     )
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
@@ -902,6 +912,7 @@ def generate_crew_narrative_pdf(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
+    jurisdiction_name: str | None = None,
 ) -> str:
     """Render the crew narrative as a phone-readable PDF and write it to disk.
 
@@ -921,6 +932,7 @@ def generate_crew_narrative_pdf(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
+        jurisdiction_name=jurisdiction_name,
     )
     blocks = markdown_to_blocks(markdown)
     return render_document_pdf(blocks, output_path, title="Crew Instructions")
