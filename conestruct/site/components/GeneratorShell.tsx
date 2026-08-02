@@ -57,6 +57,57 @@ type Mode = "sandbox" | "workbench";
 // only: a timer and a flag, no frontend computation.
 const SLOW_VERIFY_MS = 2000;
 
+// #182 — the verification fetches used to re-fire on EVERY scenario
+// write: a slider drag plus a few typed digits dispatched one audit +
+// one device-breakdown request per step against two 30/min/IP rate
+// buckets (rateLimitOr429), so ordinary editing self-DOSed the app into
+// VERIFICATION UNAVAILABLE for the rest of the minute.  The scenario
+// value feeding both effects is now debounced, leading + trailing: the
+// first edit after a quiet period fires immediately (a discrete edit
+// still verifies promptly), a burst collapses to that leading fetch
+// plus one trailing fetch for the final value once the burst pauses.
+// 350 ms is CHOSEN, not traced (Rule 12): comfortably above typing
+// inter-key gaps (~150 ms) and slider-step cadence, below perceptible
+// lag on a settled edit.  ``retryNonce`` bypasses (Retry is deliberate).
+const FETCH_DEBOUNCE_MS = 350;
+
+function useDebouncedScenario(value: Scenario, ms: number): Scenario {
+  const [debounced, setDebounced] = useState(value);
+  const lastFireRef = useRef(Date.now());
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingRef = useRef(value);
+
+  useEffect(() => {
+    if (value === debounced) return;
+    pendingRef.current = value;
+    if (
+      timerRef.current === null &&
+      Date.now() - lastFireRef.current >= ms
+    ) {
+      // Leading edge: quiet period over, fire now.
+      lastFireRef.current = Date.now();
+      setDebounced(value);
+      return;
+    }
+    // Mid-burst: (re)arm the trailing timer for the latest value.
+    if (timerRef.current !== null) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      lastFireRef.current = Date.now();
+      setDebounced(pendingRef.current);
+    }, ms);
+  }, [value, debounced, ms]);
+
+  useEffect(
+    () => () => {
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
+    },
+    [],
+  );
+
+  return debounced;
+}
+
 interface Props {
   mode?: Mode;
   initialScenario?: Scenario;
@@ -141,9 +192,11 @@ export function GeneratorShell({
 
   // Both Plan Details and AuditTrail are server-driven: fetch from the
   // matching Modal endpoint so the panels read from the same placements
-  // list that feeds the PDF, XLSX, and crew narrative.  Refetch on every
-  // scenario change; ``retryNonce`` lets a single Retry button re-trigger
-  // both effects (shared by design — an underlying network failure
+  // list that feeds the PDF, XLSX, and crew narrative.  Refetch per
+  // scenario change through the #182 debounce (``fetchScenario`` below —
+  // a burst of writes collapses to a leading + one trailing fetch);
+  // ``retryNonce`` lets a single Retry button re-trigger both effects
+  // immediately (shared by design — an underlying network failure
   // usually affects both).
   const [deviceBreakdown, setDeviceBreakdown] = useState<DeviceBreakdownState>({
     state: "loading",
@@ -162,6 +215,12 @@ export function GeneratorShell({
   // True once the in-flight audit fetch has run past SLOW_VERIFY_MS;
   // reset whenever a new fetch starts or a response lands.
   const [verifySlow, setVerifySlow] = useState(false);
+  // #182: the debounced scenario BOTH fetch effects key on and POST.
+  // The answer stamps (``forScenario``) carry this value — it is the
+  // input the backend actually saw; the strip's stamp comparison against
+  // the live ``scenario`` keeps the deferred window an explicit
+  // VERIFYING, never a stale verdict presented as current.
+  const fetchScenario = useDebouncedScenario(scenario, FETCH_DEBOUNCE_MS);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -183,7 +242,7 @@ export function GeneratorShell({
         const res = await fetch("/api/render/device-breakdown", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario }),
+          body: JSON.stringify({ scenario: fetchScenario }),
           signal: controller.signal,
         });
         if (!res.ok) {
@@ -216,7 +275,7 @@ export function GeneratorShell({
       }
     })();
     return () => controller.abort();
-  }, [scenario, retryNonce]);
+  }, [fetchScenario, retryNonce]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -231,7 +290,7 @@ export function GeneratorShell({
         const res = await fetch("/api/render/audit", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ scenario }),
+          body: JSON.stringify({ scenario: fetchScenario }),
           signal: controller.signal,
         });
         clearTimeout(slowTimer);
@@ -257,12 +316,12 @@ export function GeneratorShell({
             // error instead of a neutral "verification unavailable".
             httpStatus: res.status,
             lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
-            forScenario: scenario,
+            forScenario: fetchScenario,
           }));
           return;
         }
         const data = (await res.json()) as AuditResponse;
-        setAuditState({ state: "ready", data, forScenario: scenario });
+        setAuditState({ state: "ready", data, forScenario: fetchScenario });
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         clearTimeout(slowTimer);
@@ -271,7 +330,7 @@ export function GeneratorShell({
           state: "error",
           message: "Network error",
           lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
-          forScenario: scenario,
+          forScenario: fetchScenario,
         }));
       }
     })();
@@ -279,7 +338,7 @@ export function GeneratorShell({
       controller.abort();
       clearTimeout(slowTimer);
     };
-  }, [scenario, retryNonce]);
+  }, [fetchScenario, retryNonce]);
 
   // Shared retry: a single click refires BOTH fetches unconditionally.
   // No smart-retry that targets only the failed call — a network
@@ -394,19 +453,28 @@ export function GeneratorShell({
       setLastJurisdiction(deviceBreakdown.data.jurisdiction ?? null);
     }
   }, [deviceBreakdown]);
+  // #182: the debounce's deferred window is part of the in-flight window
+  // for VERDICT derivations — a deferred fetch must not present the last
+  // answer's verdict as current for up to 350 ms (rule 10).  Same
+  // identity comparison as the #197 stamps (every writer spread-replaces).
+  // Content surfaces keep #187's loading-only stale-while-revalidate.
+  const fetchDeferred = scenario !== fetchScenario;
+  const breakdownInFlight =
+    deviceBreakdown.state === "loading" ||
+    (deviceBreakdown.state === "ready" && fetchDeferred);
   const jurisdictionBlock =
-    deviceBreakdown.state === "ready"
+    deviceBreakdown.state === "ready" && !fetchDeferred
       ? (deviceBreakdown.data.jurisdiction ?? null)
-      : deviceBreakdown.state === "loading" &&
+      : breakdownInFlight &&
           lastJurisdiction &&
           lastJurisdiction.key === scenario.jurisdiction_key
         ? lastJurisdiction
         : null;
   const jurisdictionRevalidating =
-    deviceBreakdown.state === "loading" && jurisdictionBlock !== null;
+    breakdownInFlight && jurisdictionBlock !== null;
   const jurisdictionLoading =
     Boolean(scenario.jurisdiction_key) &&
-    deviceBreakdown.state === "loading" &&
+    breakdownInFlight &&
     jurisdictionBlock === null;
 
   const safeFilename = (name: string | undefined): string => {

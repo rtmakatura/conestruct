@@ -74,6 +74,14 @@ function errBreakdown(): Response {
   } as unknown as Response;
 }
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function release(index: number, response: Response) {
   await act(async () => {
     breakdownCalls[index].resolve(response);
@@ -127,6 +135,7 @@ describe("zone staging lifecycle", () => {
     // panel-state destruction).
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
     expect(screen.queryByText("Generating…")).toBeNull();
     expect(document.querySelector(".results-stale")).not.toBeNull();
     expect(screen.getByText(/Recomputing/)).toBeTruthy();
@@ -167,6 +176,7 @@ describe("zone staging lifecycle", () => {
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
     await release(1, errBreakdown());
 
     expect(document.querySelector(".stale-ribbon")).not.toBeNull();
@@ -199,6 +209,7 @@ describe("zone staging lifecycle", () => {
     const dateInput = document.getElementById("sched-date") as HTMLInputElement;
     expect(dateInput).not.toBeNull();
     await user.type(dateInput, "2026-08-04");
+    await flushDebounce();
     await release(1, okBreakdown());
 
     let bodies = fetchMock.mock.calls
@@ -211,6 +222,7 @@ describe("zone staging lifecycle", () => {
     expect(last.scenario.schedule?.date_mode).toBe("single");
 
     await user.click(screen.getByRole("button", { name: "Not set" }));
+    await flushDebounce();
     bodies = fetchMock.mock.calls
       .filter(([u]) => String(u).includes("device-breakdown"))
       .map(([, init]) => JSON.parse(String((init as RequestInit).body)));
@@ -228,6 +240,7 @@ describe("zone staging lifecycle", () => {
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
 
     // The refetch carries the edited speed in the POSTed scenario.
     const bodies = fetchMock.mock.calls

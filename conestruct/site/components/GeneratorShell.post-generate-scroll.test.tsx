@@ -69,6 +69,14 @@ function errBreakdown(): Response {
   } as unknown as Response;
 }
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function release(index: number, response: Response) {
   await act(async () => {
     breakdownCalls[index].resolve(response);
@@ -133,6 +141,7 @@ describe("post-generate scroll (#152 E)", () => {
     // only when it lands.
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     // #192: with prior results the in-flight state dims in place under
@@ -165,6 +174,7 @@ describe("post-generate scroll (#152 E)", () => {
     // A strip edit refetches and re-lands on post — no new scroll.
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
     await release(1, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
   });
@@ -180,6 +190,7 @@ describe("post-generate scroll (#152 E)", () => {
     // fetch then FAILS: no scroll on the error.
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await release(1, errBreakdown());

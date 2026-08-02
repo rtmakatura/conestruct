@@ -73,6 +73,14 @@ const refusal400 = () =>
     }),
   }) as unknown as Response;
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function release(q: Deferred[], index: number, response: Response) {
   await act(async () => {
     q[index].resolve(response);
@@ -93,6 +101,7 @@ async function generateThenEdit() {
   expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
   await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
   await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await flushDebounce();
   return user;
 }
 

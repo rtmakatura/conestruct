@@ -108,6 +108,14 @@ function okAudit(): Response {
   } as unknown as Response;
 }
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function releaseAudit(index: number, response: Response) {
   await act(async () => {
     auditCalls[index].resolve(response);
@@ -159,6 +167,7 @@ describe("StatusBar checking state across the change→response window (Decision
     expect(document.querySelector(".status-bar.pass")).toBeNull();
 
     // The backend answers for the edited scenario → verdict returns.
+    await flushDebounce();
     expect(auditCalls.length).toBe(2);
     await releaseAudit(1, okAudit());
     expect(strip()).toContain("READY FOR TCS REVIEW");
@@ -167,8 +176,13 @@ describe("StatusBar checking state across the change→response window (Decision
   it("a stale answer for a superseded input never lands as current", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await releaseAudit(0, okAudit());
+    // Two edits, each flushed through the debounce so each earns its own
+    // fetch — the point here is a STALE RESPONSE arriving late, not the
+    // debounce's own collapsing (GeneratorShell.debounce.test.tsx).
     fireEvent.click(screen.getByText("Edit input"));
+    await flushDebounce();
     fireEvent.click(screen.getByText("Edit input"));
+    await flushDebounce();
     expect(auditCalls.length).toBe(3);
 
     // Release the SECOND call (fetched for the first edit, superseded by
@@ -189,6 +203,7 @@ describe("StatusBar checking state across the change→response window (Decision
 
     fireEvent.click(screen.getByText("Edit input"));
     expect(strip()).toContain("VERIFYING");
+    await flushDebounce();
 
     await act(async () => {
       auditCalls[1].reject(new Error("boom"));

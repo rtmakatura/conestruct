@@ -117,6 +117,14 @@ const okAudit = () =>
     }),
   }) as unknown as Response;
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function release(q: Deferred[], index: number, response: Response) {
   await act(async () => {
     q[index].resolve(response);
@@ -140,6 +148,7 @@ async function settleRefusalThenEdit() {
       target: { value: String(Number(range.value) + 5) },
     });
   });
+  await flushDebounce();
   await release(bdCalls, 1, okBd());
   expect(auditCalls.length).toBe(2); // audit re-fetch in flight
 }
@@ -178,6 +187,7 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
         target: { value: String(Number(range.value) + 5) },
       });
     });
+    await flushDebounce();
     await release(bdCalls, 2, okBd());
     expect(generate().disabled).toBe(false); // clean-prior window: open
     await release(auditCalls, 2, refusal400());

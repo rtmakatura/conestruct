@@ -76,6 +76,14 @@ function okBreakdown(withJurisdiction: boolean): Response {
   } as unknown as Response;
 }
 
+// #182: edits reach the wire through the fetch debounce (leading +
+// trailing, 350 ms) — wait it out so the deferred request dispatches.
+async function flushDebounce() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+}
+
 async function release(index: number, response: Response) {
   await act(async () => {
     breakdownCalls[index].resolve(response);
@@ -113,6 +121,7 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   await user.selectOptions(select, "parker");
   // First load of the key: skeleton is CORRECT here (no block to hold).
   expect(chainSkeleton()).not.toBeNull();
+  await flushDebounce();
   await release(1, okBreakdown(true));
   expect(chainSkeleton()).toBeNull();
   expect(chainSegs()).toBeGreaterThan(1);
@@ -126,6 +135,7 @@ describe("class-switch stability (#152 D)", () => {
     expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
+    await flushDebounce();
     // Refetch pending (index 2) — nothing may flip to skeleton.
     expect(breakdownCalls.length).toBe(3);
     expect(chainSkeleton()).toBeNull();
@@ -143,12 +153,16 @@ describe("class-switch stability (#152 D)", () => {
     expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
-    // The stale "outside" verdict may not display as current.
+    // The stale "outside" verdict may not display as current — including
+    // DURING the #182 debounce's deferred window, before the fetch has
+    // even dispatched.
     expect(
       screen.queryByText(/outside window · review schedule/),
     ).toBeNull();
     expect(screen.getByText(/◌ checking…/)).toBeTruthy();
 
+    await flushDebounce();
+    expect(screen.getByText(/◌ checking…/)).toBeTruthy();
     await release(2, okBreakdown(true));
     expect(screen.queryByText(/◌ checking…/)).toBeNull();
     expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
@@ -160,7 +174,10 @@ describe("class-switch stability (#152 D)", () => {
       "#jl-jurisdiction",
     ) as HTMLSelectElement;
     await user.selectOptions(select, "denver");
-    // No held content from parker; the chain slot skeletons as before.
+    // No held content from parker; the chain slot skeletons as before —
+    // already in the deferred window, before the fetch dispatches.
+    expect(chainSkeleton()).not.toBeNull();
+    await flushDebounce();
     expect(chainSkeleton()).not.toBeNull();
     expect(screen.queryByText(/Parker — jurisdiction rules/)).toBeNull();
   });
@@ -168,6 +185,7 @@ describe("class-switch stability (#152 D)", () => {
   it("a breakdown ERROR clears the held block rather than presenting it as live", async () => {
     const user = await mountWithParker();
     await user.click(screen.getByRole("button", { name: "Collector" }));
+    await flushDebounce();
     await release(2, {
       ok: false,
       status: 500,
