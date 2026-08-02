@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
-import { validateWorkZone } from "@/lib/scenarios/validation";
+import {
+  validateApproaches,
+  validateLanes,
+  validateWorkZone,
+} from "@/lib/scenarios/validation";
 import { matchRefusalAffordance } from "@/lib/scenarios/auto-apply";
 import { stampMatches } from "@/lib/answer-stamp";
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
@@ -564,15 +568,21 @@ export function GeneratorShell({
   const refusalPending = !auditSettled && prevSettled400;
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
-  // The client check covers only the schema bounds (workLen required /
-  // 20,000-ft ceiling — validateWorkZone no longer carries a MUTCD
-  // floor); the backend geometry 400 from the per-change audit fetch is
-  // THE source for the taper-floor verdict and its message
+  // The client checks cover the schema-bound mirrors only — workLen
+  // required / 20,000-ft ceiling, and (#184) the lanes/approaches
+  // mirrors that already gate the CTA and render inline in the forms.
+  // Before #184 only workLen reached the strip: a 4-lane x 14-ft edit
+  // showed its inline form error while the strip contradicted it with
+  // VERIFICATION UNAVAILABLE (the 422's old 502 collapse).  MUTCD math
+  // stays the backend's: the geometry 400 from the per-change audit
+  // fetch is THE source for the taper-floor verdict and its message
   // (validators.py WORK_ZONE_SHORTER_THAN_TAPER).  Non-400 audit errors
   // stay "verification unavailable" inside StatusBar.  Reads
   // ``stripAudit`` so a 400 for an already-edited input can't show
   // INVALID INPUT against the new one.
   const wzValidation = validateWorkZone(scenario);
+  const lanesValidation = validateLanes(scenario);
+  const approachesValidation = validateApproaches(scenario);
   const auditInputError =
     stripAudit.state === "error" && stripAudit.httpStatus === 400
       ? stripAudit.message
@@ -586,9 +596,15 @@ export function GeneratorShell({
   // carries the short banner line and the full 400 renders nowhere;
   // with no affordance, ``pointer`` is null and the banner renders the
   // full message exactly once.
-  const inputError = !wzValidation.ok ? wzValidation.message : null;
+  const inputError = !wzValidation.ok
+    ? wzValidation.message
+    : !lanesValidation.ok
+      ? lanesValidation.message
+      : !approachesValidation.ok
+        ? approachesValidation.message
+        : null;
   const refusal: Refusal | null =
-    wzValidation.ok && auditInputError !== null
+    inputError === null && auditInputError !== null
       ? {
           message: auditInputError,
           pointer: matchRefusalAffordance(scenario)?.pointer ?? null,

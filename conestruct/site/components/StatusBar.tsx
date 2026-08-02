@@ -14,9 +14,12 @@ export type Status = "idle" | "generating" | "done";
 //
 // The strip is now derived, in precedence order:
 //   1. invalid input       → red FAIL — the schema-bound client checks
-//                            (required / ceiling / lanes).  Client
-//                            bounds ONLY since #180; a backend 400 is
-//                            the next state, not this one.
+//                            (workLen required / ceiling, and since #184
+//                            the lanes + approaches mirrors, which
+//                            previously gated the CTA and rendered
+//                            inline but never reached this strip).
+//                            Client bounds ONLY since #180; a backend
+//                            400 is the next state, not this one.
 //   1b. plan declined      → red PLAN DECLINED (#180) — any backend 400
 //                            (gate refusals, the geometry taper floor).
 //                            With a confirm affordance on screen the
