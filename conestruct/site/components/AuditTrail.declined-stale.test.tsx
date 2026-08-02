@@ -135,6 +135,15 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0); // sanity
   await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
   await user.selectOptions(screen.getByLabelText("Speed"), "35");
+  // #182: the edit's refetch reaches the wire through the 350 ms fetch
+  // debounce.  Wait it out so auditCalls[1] deterministically exists —
+  // without this the suite was timing-marginal (the refetch fired on the
+  // leading edge only when the prior interactions happened to take
+  // >350 ms).  The audit is dispatched but UNRESOLVED here, so the
+  // refetch-in-flight assertions below still see the loading window.
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
   return user;
 }
 
