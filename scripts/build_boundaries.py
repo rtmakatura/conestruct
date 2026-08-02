@@ -49,8 +49,11 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "boundaries"
 OUT = ROOT / "data" / "boundaries"
 
-# Supported set = the launch-8 picker keys that have a place polygon.
+# Supported set = the picker keys that have a place polygon.
 # (cdot and e470 are road/corridor authorities — phase B2 layers.)
+# Greeley + Thornton added for #155: their rule records shipped in
+# data/jurisdictions/ but neither was reachable — no polygon here, no
+# picker entry.  Same TIGER 2025 vintage; no re-download.
 SUPPORTED: dict[str, str] = {
     "denver": "Denver",
     "lakewood": "Lakewood",
@@ -58,6 +61,8 @@ SUPPORTED: dict[str, str] = {
     "littleton": "Littleton",
     "centennial": "Centennial",
     "parker": "Parker",
+    "greeley": "Greeley",
+    "thornton": "Thornton",
 }
 
 # Metro places we do NOT carry: the warning layer (spec §2
@@ -75,7 +80,6 @@ UNSUPPORTED: dict[str, str] = {
     "foxfield": "Foxfield",
     "castle_pines": "Castle Pines",
     "castle_rock": "Castle Rock",
-    "thornton": "Thornton",
     "westminster": "Westminster",
     "wheat_ridge": "Wheat Ridge",
     "edgewater": "Edgewater",

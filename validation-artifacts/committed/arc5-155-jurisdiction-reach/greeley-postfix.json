@@ -1,0 +1,17 @@
+{
+  "pin": {
+    "lat": 40.404292,
+    "lng": -104.715863
+  },
+  "response": {
+    "suggestion": "greeley",
+    "reason": "Pin is inside Greeley municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+    "confidence": "inside",
+    "distance_to_boundary_ft": 6500.9,
+    "warnings": [],
+    "boundary_source": {
+      "source": "US Census TIGER/Line Place boundaries",
+      "vintage": "2025"
+    }
+  }
+}

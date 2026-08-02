@@ -1,0 +1,27 @@
+{
+  "pin": {
+    "lat": 40.404292,
+    "lng": -104.715863
+  },
+  "response": {
+    "suggestion": null,
+    "reason": "Pin is in unincorporated Weld County \u2014 no municipal boundary contains it (US Census TIGER/Line, 2025 vintage).",
+    "confidence": "outside_supported",
+    "distance_to_boundary_ft": 178823.3,
+    "warnings": [
+      {
+        "kind": "unsupported_area",
+        "message": "Pin is in unincorporated Weld County \u2014 not in the supported set; baseline rules will apply unless you pick manually.",
+        "source": {
+          "doc": "US Census TIGER/Line 2025 County boundaries (tl_2025_us_county.zip)",
+          "date": "2025",
+          "status": "verified"
+        }
+      }
+    ],
+    "boundary_source": {
+      "source": "US Census TIGER/Line Place boundaries",
+      "vintage": "2025"
+    }
+  }
+}

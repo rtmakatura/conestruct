@@ -1,0 +1,27 @@
+{
+  "pin": {
+    "lat": 39.868,
+    "lng": -104.9847
+  },
+  "response": {
+    "suggestion": null,
+    "reason": "Pin is inside Thornton municipal limits \u2014 a jurisdiction Conestruct does not carry yet (US Census TIGER/Line Place boundaries, 2025 vintage).",
+    "confidence": "outside_supported",
+    "distance_to_boundary_ft": 25678.9,
+    "warnings": [
+      {
+        "kind": "unsupported_area",
+        "message": "Pin is in Thornton \u2014 not in the supported set; baseline rules will apply unless you pick manually.",
+        "source": {
+          "doc": "US Census TIGER/Line 2025 Place boundaries, Colorado (tl_2025_08_place.zip)",
+          "date": "2025",
+          "status": "verified"
+        }
+      }
+    ],
+    "boundary_source": {
+      "source": "US Census TIGER/Line Place boundaries",
+      "vintage": "2025"
+    }
+  }
+}

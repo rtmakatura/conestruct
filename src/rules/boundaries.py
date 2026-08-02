@@ -192,9 +192,9 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
             {
                 "kind": "unsupported_area",
                 "message": (
-                    f"Pin is in unincorporated {county.name} County — not in "
-                    "the supported set; baseline rules will apply unless you "
-                    "pick manually."
+                    f"Pin is in {county.name} County, outside the mapped "
+                    "municipal boundaries — not in the supported set; "
+                    "baseline rules will apply unless you pick manually."
                 ),
                 "source": {
                     "doc": layers["meta"]["counties"]["source"],
@@ -203,9 +203,14 @@ def suggest(lat: float, lng: float) -> dict[str, Any]:
                 },
             },
         )
+        # Honesty (#155): the layer maps metro places plus the supported
+        # set, not every municipality in the county — "unincorporated" is
+        # a claim this branch cannot make.  Say what we know: the county,
+        # and that no MAPPED municipal boundary contains the pin.
         reason = (
-            f"Pin is in unincorporated {county.name} County — no municipal "
-            f"boundary contains it (US Census TIGER/Line, {vintage} vintage)."
+            f"Pin is in {county.name} County, outside the municipal "
+            f"boundaries Conestruct maps (US Census TIGER/Line, {vintage} "
+            "vintage)."
         )
     else:
         reason = (

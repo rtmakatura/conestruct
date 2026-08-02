@@ -59,6 +59,15 @@ INSIDE_PINS = [
     ("littleton", 39.6133, -105.0166, "Downtown Littleton, Main St"),
     ("centennial", 39.5920, -104.8620, "Near Centennial Center Park"),
     ("parker", 39.5186, -104.7614, "Parker Mainstreet, downtown core"),
+    # #155 reachability pins: both records shipped in data/jurisdictions/
+    # while the boundary layer and picker never learned the keys.
+    (
+        "greeley",
+        40.404292,
+        -104.715863,
+        "Central Greeley — was falsely 'unincorporated Weld County'",
+    ),
+    ("thornton", 39.8680, -104.9847, "Thornton Civic Center — was falsely 'not carried yet'"),
 ]
 
 
@@ -121,7 +130,12 @@ def test_centennial_pocket_pair() -> None:
     assert b["suggestion"] is None
     assert b["confidence"] == "outside_supported"
     unsupported = next(w for w in b["warnings"] if w["kind"] == "unsupported_area")
-    assert "unincorporated Arapahoe County" in unsupported["message"]
+    # #155 county-copy honesty: the layer cannot distinguish
+    # unincorporated ground from an unmapped municipality, so the copy
+    # names the county and says the pin is outside the MAPPED boundaries.
+    assert "Arapahoe County" in unsupported["message"]
+    assert "outside the mapped municipal boundaries" in unsupported["message"]
+    assert "unincorporated" not in unsupported["message"]
     assert "baseline rules" in unsupported["message"]
 
 
@@ -149,6 +163,19 @@ def test_englewood_littleton_straddle_pair() -> None:
         w["kind"] == "near_boundary" and "Littleton" in w["message"]
         for w in englewood_side["warnings"]
     )
+
+
+def test_northglenn_thornton_seam() -> None:
+    """#155 near-boundary control: a pin in Northglenn ~292 ft from the
+    Thornton line.  Northglenn stays unsupported (no back-suggestion of
+    the neighbor), and the jigsaw warning still names Thornton now that
+    Thornton is a SUPPORTED polygon rather than a warning-layer one."""
+    r = suggest(39.886, -104.9811)
+    assert r["suggestion"] is None
+    assert r["confidence"] == "outside_supported"
+    unsupported = next(w for w in r["warnings"] if w["kind"] == "unsupported_area")
+    assert "Northglenn" in unsupported["message"]
+    assert any(w["kind"] == "near_boundary" and "Thornton" in w["message"] for w in r["warnings"])
 
 
 def test_near_boundary_500ft_threshold() -> None:
@@ -259,7 +286,16 @@ def test_meta_provenance_required() -> None:
 
 
 def test_boundary_file_per_supported_key() -> None:
-    for key in ("denver", "lakewood", "englewood", "littleton", "centennial", "parker"):
+    for key in (
+        "denver",
+        "lakewood",
+        "englewood",
+        "littleton",
+        "centennial",
+        "parker",
+        "greeley",
+        "thornton",
+    ):
         path = BOUNDARY_DIR / f"{key}.geojson"
         assert path.is_file(), f"missing boundary file for supported key {key}"
         feat = json.loads(path.read_text(encoding="utf-8"))

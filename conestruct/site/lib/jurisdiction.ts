@@ -221,8 +221,10 @@ export interface WorkScheduleInput {
   end_time?: number;
 }
 
-/** The jurisdictions the UI offers — the full spec §6 launch-8 ship
- *  list, every record authored from the research corpus. */
+/** The jurisdictions the UI offers — the spec §6 launch-8 ship list
+ *  plus Greeley and Thornton (#155: their records shipped in
+ *  data/jurisdictions/ but the fixed list left them unpickable), every
+ *  record authored from the research corpus. */
 export const JURISDICTION_OPTIONS: { key: string; label: string }[] = [
   { key: "cdot", label: "CDOT (state highway)" },
   { key: "denver", label: "Denver" },
@@ -231,6 +233,8 @@ export const JURISDICTION_OPTIONS: { key: string; label: string }[] = [
   { key: "littleton", label: "Littleton" },
   { key: "centennial", label: "Centennial" },
   { key: "parker", label: "Parker" },
+  { key: "greeley", label: "Greeley" },
+  { key: "thornton", label: "Thornton" },
   { key: "e470", label: "E-470" },
 ];
 

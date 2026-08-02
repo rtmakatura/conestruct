@@ -1,0 +1,17 @@
+{
+  "pin": {
+    "lat": 39.868,
+    "lng": -104.9847
+  },
+  "response": {
+    "suggestion": "thornton",
+    "reason": "Pin is inside Thornton municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+    "confidence": "inside",
+    "distance_to_boundary_ft": 1230.2,
+    "warnings": [],
+    "boundary_source": {
+      "source": "US Census TIGER/Line Place boundaries",
+      "vintage": "2025"
+    }
+  }
+}
