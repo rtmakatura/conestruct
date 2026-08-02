@@ -23,6 +23,8 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
+// #186: the 429/refusal mounts assert strip voices past the pin.
+import { PINNED_SHOULDER } from "./test-fixtures";
 import type { ShoulderScenario } from "@/lib/scenarios";
 
 // The issue's reproduction: each chip value valid alone, the combination
@@ -132,7 +134,7 @@ describe("strip error honesty (#184)", () => {
 
   it("a non-mirrored translated 422 takes the PLAN DECLINED no-affordance shape: message once, no Retry", async () => {
     render(
-      <GeneratorShell mode="sandbox" initialScenario={DEFAULT_SHOULDER} />,
+      <GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />,
     );
     await release(bdCalls, 0, okBd());
     await release(auditCalls, 0, translated400(TRANSLATED_422_MSG));
@@ -153,7 +155,7 @@ describe("strip error honesty (#184)", () => {
 
   it("a 429 names the throttle — VERIFICATION PAUSED with a working Retry, never the outage voice (#182)", async () => {
     render(
-      <GeneratorShell mode="sandbox" initialScenario={DEFAULT_SHOULDER} />,
+      <GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />,
     );
     await release(bdCalls, 0, okBd());
     await release(auditCalls, 0, {

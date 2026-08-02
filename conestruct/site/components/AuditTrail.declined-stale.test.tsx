@@ -26,6 +26,8 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 import type { AuditResponse } from "../lib/render-types";
 
 // Breakdown geometry numbers deliberately differ from the audit's cited
@@ -124,7 +126,7 @@ async function releaseAudit(index: number, response: Response) {
 
 async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   const user = userEvent.setup();
-  render(<GeneratorShell mode="sandbox" />);
+  render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await releaseAudit(0, okAudit());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
   // The trail lives in a collapsed ReferenceChip — expand it so the rows

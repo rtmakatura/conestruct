@@ -21,6 +21,8 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 
 const BREAKDOWN = {
   devices: [],
@@ -114,7 +116,7 @@ afterEach(() => {
 describe("post-generate scroll (#152 E)", () => {
   it("Generate scrolls the results zone into view once, smoothly", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
 
@@ -131,7 +133,7 @@ describe("post-generate scroll (#152 E)", () => {
 
   it("waits for a pending breakdown: scroll fires when generating resolves to post", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     scrollSpy.mockClear();
@@ -156,7 +158,7 @@ describe("post-generate scroll (#152 E)", () => {
   it("respects prefers-reduced-motion: instant jump, no animation", async () => {
     reducedMotion = true;
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
@@ -166,7 +168,7 @@ describe("post-generate scroll (#152 E)", () => {
 
   it("ordinary edits never scroll — only a Generate click arms it", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     scrollSpy.mockClear();
@@ -181,7 +183,7 @@ describe("post-generate scroll (#152 E)", () => {
 
   it("a failed generation disarms the scroll instead of yanking the viewport", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     scrollSpy.mockClear();

@@ -25,6 +25,10 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
+// #186: located — the suite asserts verdict states around the debounce.
+import { pinned } from "./test-fixtures";
+
+const PINNED_FLAGGER = pinned(DEFAULT_FLAGGER);
 
 type Deferred = { resolve: (r: Response) => void; body: string };
 let auditCalls: Deferred[] = [];
@@ -79,7 +83,7 @@ afterEach(() => {
 
 describe("fetch debounce (#182)", () => {
   it("a 12-step burst collapses to leading + one trailing pair carrying the final value", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_FLAGGER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
     expect(auditCalls.length).toBe(1); // mount
     expect(bdCalls.length).toBe(1);
 
@@ -106,7 +110,7 @@ describe("fetch debounce (#182)", () => {
   });
 
   it("a discrete edit after a quiet period verifies immediately (leading edge)", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_FLAGGER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
     await advance(1000);
     await drag(40);
     // No timer advance needed — the fetch is already dispatched.
@@ -115,7 +119,7 @@ describe("fetch debounce (#182)", () => {
   });
 
   it("the strip shows VERIFYING through the deferred window — never the previous verdict as current", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_FLAGGER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
     await advance(400);
     await drag(45);
     await drag(50); // second write inside the window → deferred
@@ -127,7 +131,7 @@ describe("fetch debounce (#182)", () => {
   });
 
   it("Retry bypasses the debounce", async () => {
-    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_FLAGGER} />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
     await act(async () => {
       auditCalls[0].resolve({
         ok: false,

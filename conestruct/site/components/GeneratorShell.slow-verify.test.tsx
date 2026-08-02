@@ -40,6 +40,8 @@ vi.mock("./GeneratorSidebar", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 
 const CLEAN_AUDIT: AuditResponse = {
   summary: {
@@ -140,7 +142,7 @@ function strip(): string {
 
 describe("StatusBar cold-start escalation (Refs #122)", () => {
   it("escalates VERIFYING past the 2 s threshold and clears when the answer lands", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     expect(strip()).toContain("VERIFYING");
     expect(strip()).not.toContain(SLOW_COPY);
 
@@ -163,7 +165,7 @@ describe("StatusBar cold-start escalation (Refs #122)", () => {
   });
 
   it("a warm-speed answer never shows the escalated copy", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await advance(500);
     await releaseAudit(0, okAudit());
     expect(strip()).toContain("READY FOR TCS REVIEW");
@@ -175,7 +177,7 @@ describe("StatusBar cold-start escalation (Refs #122)", () => {
   });
 
   it("an input change resets the clock — the refetch starts from plain VERIFYING", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await advance(2500);
     expect(strip()).toContain(SLOW_COPY);
     await releaseAudit(0, okAudit());

@@ -27,6 +27,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario } from "@/lib/scenarios";
+import { pinned } from "./test-fixtures";
 
 // A road whose relays refuse: the #86 multilane gate message, with the
 // matching confirm affordance on the flagger form.
@@ -37,7 +38,8 @@ const MULTILANE_400 =
   "direction' in the form and regenerate.";
 
 const FLAGGER_MULTILANE: FlaggerLaneClosureScenario = {
-  ...DEFAULT_FLAGGER,
+  // #186: located — the suite asserts CTA gating semantics past the pin.
+  ...pinned(DEFAULT_FLAGGER),
   detectedLanesTotal: 4,
 };
 

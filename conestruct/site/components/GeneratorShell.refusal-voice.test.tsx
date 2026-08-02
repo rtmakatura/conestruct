@@ -26,6 +26,8 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario } from "@/lib/scenarios";
 
@@ -165,7 +167,7 @@ describe("one refusal, one voice (#180)", () => {
 
   it("without-affordance refusal: the full 400 renders exactly once, declined vocabulary", async () => {
     // DEFAULT shoulder scenario — the geometry floor has no confirm row.
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, refusal400(FLOOR_400));
 
     expect(strip()).toContain("PLAN DECLINED");
@@ -185,7 +187,7 @@ describe("one refusal, one voice (#180)", () => {
   });
 
   it("a 500 is broken, not declined — unreframed, with the audit trail's Retry intact", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, server500());
 
     expect(strip()).toContain("VERIFICATION UNAVAILABLE");

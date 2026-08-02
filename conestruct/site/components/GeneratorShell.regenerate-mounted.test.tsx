@@ -27,6 +27,8 @@ vi.mock("./QuotePanel", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 import { StatusBar } from "./StatusBar";
 import type { AuditState } from "../lib/render-types";
 
@@ -95,7 +97,7 @@ function stripText(): string {
 
 async function generateThenEdit() {
   const user = userEvent.setup();
-  render(<GeneratorShell mode="sandbox" />);
+  render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await release(bdCalls, 0, okBd());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
   expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
@@ -138,7 +140,7 @@ describe("results stay mounted through regeneration (#192)", () => {
 
   it("first generate with the answer still in flight keeps the empty-state (no prior results to hold)", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     // Click Generate while the mount fetch is still pending.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(screen.getByText("Generating…")).toBeTruthy();

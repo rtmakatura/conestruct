@@ -34,6 +34,7 @@ vi.mock("./AppNav", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { pinned } from "./test-fixtures";
 import { PlanSaveButton } from "./PlanSaveButton";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 
@@ -70,7 +71,8 @@ function pdfAnchor(): HTMLAnchorElement | null {
 }
 
 async function mountSavedPlan() {
-  const saved = { ...DEFAULT_SCENARIO } as Scenario;
+  // #186: a saved plan carries its site; unpinned meta would gate the CTA.
+  const saved = pinned({ ...DEFAULT_SCENARIO } as Scenario);
   render(
     <GeneratorShell
       mode="workbench"
@@ -109,6 +111,10 @@ describe("workbench downloads gate on dirty state (#183)", () => {
     const user = await mountSavedPlan();
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    // #182: the edit reaches the wire through the 350 ms fetch debounce.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 360));
+    });
 
     // The screen recomputes from the live scenario…
     const bodies = fetchMock.mock.calls

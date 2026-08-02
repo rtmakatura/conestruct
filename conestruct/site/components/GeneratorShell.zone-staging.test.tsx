@@ -19,6 +19,8 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 
 const BREAKDOWN = {
   devices: [
@@ -107,7 +109,7 @@ function zones(): HTMLElement[] {
 
 describe("zone staging lifecycle", () => {
   it("pre: dominant setup panel, empty results, no strip", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
     const [setup, results] = zones();
@@ -122,7 +124,7 @@ describe("zone staging lifecycle", () => {
 
   it("generating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
@@ -150,7 +152,7 @@ describe("zone staging lifecycle", () => {
 
   it("post: results zone is dominant with hero numerals and geometry rendered verbatim", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
 
@@ -170,7 +172,7 @@ describe("zone staging lifecycle", () => {
 
   it("error: breakdown failure after generate shows the stale ribbon, not a silent blank", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
 
@@ -185,7 +187,7 @@ describe("zone staging lifecycle", () => {
 
   it("reopen: Edit full setup returns to the dominant panel and empties results", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(document.querySelector(".hero")).not.toBeNull();
@@ -200,7 +202,7 @@ describe("zone staging lifecycle", () => {
 
   it("panel schedule entry reaches the POSTed scenario (payload-level, inc-8)", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
     // The Setup panel's Schedule step: choose a work date, then flip to
@@ -234,7 +236,7 @@ describe("zone staging lifecycle", () => {
 
   it("strip inline edit writes the scenario and refires the request (payload-level)", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
 

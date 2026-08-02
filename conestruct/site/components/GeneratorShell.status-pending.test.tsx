@@ -44,6 +44,8 @@ vi.mock("./GeneratorSidebar", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 
 const CLEAN_AUDIT: AuditResponse = {
   summary: {
@@ -146,7 +148,7 @@ function strip(): string {
 
 describe("StatusBar checking state across the change→response window (Decision 2)", () => {
   it("shows VERIFYING until the first answer, then the verdict", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     expect(strip()).toContain("VERIFYING");
     expect(strip()).not.toContain("READY FOR TCS REVIEW");
 
@@ -155,7 +157,7 @@ describe("StatusBar checking state across the change→response window (Decision
   });
 
   it("is NOT green in the window between an input change and the backend's answer", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, okAudit());
     expect(strip()).toContain("READY FOR TCS REVIEW");
 
@@ -174,7 +176,7 @@ describe("StatusBar checking state across the change→response window (Decision
   });
 
   it("a stale answer for a superseded input never lands as current", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, okAudit());
     // Two edits, each flushed through the debounce so each earns its own
     // fetch — the point here is a STALE RESPONSE arriving late, not the
@@ -197,7 +199,7 @@ describe("StatusBar checking state across the change→response window (Decision
   });
 
   it("the failure state is reachable from checking: a failed refetch shows UNAVAILABLE, not the old verdict", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, okAudit());
     expect(strip()).toContain("READY FOR TCS REVIEW");
 

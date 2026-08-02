@@ -30,6 +30,8 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+// #186: mounts assert a verdict / enabled Generate — start located.
+import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 
 // The backend's own floor message (validators.py:1490-1496 phrasing) —
@@ -154,7 +156,7 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
     // #180: the geometry floor 400 has no confirm affordance, so the
     // strip is the refusal's ONE voice — full message, declined
     // vocabulary, and no other surface repeats the text verbatim.
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, floor400());
 
     expect(strip()).toContain("PLAN DECLINED");
@@ -175,7 +177,7 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
   });
 
   it("audit 200 → READY and Generate enabled", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await releaseAudit(0, okAudit());
 
     expect(strip()).toContain("READY FOR TCS REVIEW");
@@ -183,14 +185,14 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
   });
 
   it("while the answer is in flight Generate stays enabled (no flicker; server backstop)", () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     // Nothing released — the audit call is pending.
     expect(strip()).toContain("VERIFYING");
     expect(generateButton().disabled).toBe(false);
   });
 
   it("network failure → VERIFICATION UNAVAILABLE, never a locally-derived floor message", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await act(async () => {
       auditCalls[0].reject(new Error("boom"));
       await Promise.resolve();
@@ -211,9 +213,11 @@ describe("input gating rides the backend 400 (engine-removal PR D)", () => {
   });
 
   it("payload-level: the POST body carries the typed scenario unchanged", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     expect(auditBodies.length).toBe(1);
     const sent = JSON.parse(auditBodies[0]) as { scenario: unknown };
-    expect(sent.scenario).toEqual(DEFAULT_SCENARIO);
+    // #186: the mount is the pinned default — the body must carry it
+    // verbatim, coordinates included.
+    expect(sent.scenario).toEqual(PINNED_SHOULDER);
   });
 });
