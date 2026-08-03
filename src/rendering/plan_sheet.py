@@ -375,6 +375,12 @@ def _draw_road(
     # Work-side (closed) shoulder — pink for a shoulder closure, neutral for lane closure.
     c.setFillColor(SHOULDER_CLOSED_FILL if not is_lane_closure else SHOULDER_OPEN_FILL)
     c.rect(x_left, y_closed_shldr_outer, width, shoulder_h, fill=1, stroke=0)
+    if not is_lane_closure:
+        # Closed-meaning hatch over the pink (Rule 13, Refs #159): the
+        # pink fill alone grayscales to ~1.07:1 against the open
+        # shoulder.  Same extent as the fill; spacing 6.0 matches the
+        # closed sidewalk/bike hatch, not the median's 8.0.
+        _draw_diagonal_hatch(c, x_left, x_right, y_closed_shldr_outer, y_closed_lane_outer)
     # Opposing shoulder — always neutral gray (no closure on this side).
     c.setFillColor(SHOULDER_OPEN_FILL)
     c.rect(x_left, y_open_lane_outer, width, shoulder_h, fill=1, stroke=0)
