@@ -135,6 +135,8 @@ SIGN_BORDER = colors.white
 ARROW_FILL = colors.Color(1.00, 0.85, 0.00)
 ARROW_GLYPH = colors.black
 FLAG_RED = colors.red
+PCMS_PANEL = colors.HexColor("#1A1A1A")  # near-black display housing
+PCMS_TEXT = colors.Color(1.00, 0.72, 0.00)  # amber LED message rows
 
 DIM_LINE = colors.Color(0.20, 0.25, 0.55)
 TITLE_BORDER = colors.black
@@ -799,6 +801,30 @@ def _draw_arrow_board(c: canvas.Canvas, x: float, y: float, direction: str = "ri
     c.drawPath(p, stroke=0, fill=1)
 
 
+def _draw_pcms(c: canvas.Canvas, x: float, y: float) -> None:
+    """Portable Changeable Message Sign — dark panel, three light
+    message-row bars.
+
+    Deliberately polarity-inverted from ``_draw_arrow_board`` (light
+    panel, black arrow): interior shape (text rows vs. arrow) and
+    light/dark polarity are the two hue-free channels, so the two
+    devices survive a grayscale photocopy (Rule 13, Refs #144 — they
+    previously shared the arrow-board glyph, a label-only distinction
+    that could load the wrong truck).  Same 20×12 footprint as the
+    arrow board so de-overlap and legend row metrics are unchanged.
+    """
+    w, h = 20.0, 12.0
+    c.setFillColor(PCMS_PANEL)
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.7)
+    c.rect(x - w / 2, y - h / 2, w, h, fill=1, stroke=1)
+    # Ragged row widths so the interior reads as message text, not a bar code.
+    c.setFillColor(PCMS_TEXT)
+    row_h = 1.6
+    for dy, row_w in ((3.0, 12.0), (0.0, 14.0), (-3.0, 10.0)):
+        c.rect(x - row_w / 2, y + dy - row_h / 2, row_w, row_h, fill=1, stroke=0)
+
+
 def _draw_flagger(c: canvas.Canvas, x: float, y: float) -> None:
     s = 6.0  # half-length → 12 pt total
     c.setStrokeColor(FLAG_RED)
@@ -858,7 +884,7 @@ _DEVICE_GLYPHS: dict[DeviceType, Callable[[canvas.Canvas, float, float], None]] 
     DeviceType.BARRICADE_TYPE_II: _draw_barricade_ii,
     DeviceType.BARRICADE_TYPE_III: _draw_barricade_iii,
     DeviceType.LONGITUDINAL_CHANNELIZER: _draw_drum,
-    DeviceType.PCMS: _draw_arrow_board,
+    DeviceType.PCMS: _draw_pcms,
     DeviceType.TRUCK_MOUNTED_ATTENUATOR: _draw_tma,
     DeviceType.TEMPORARY_BARRIER: _draw_drum,
     DeviceType.TEMPORARY_SIGNAL: _draw_sign,
