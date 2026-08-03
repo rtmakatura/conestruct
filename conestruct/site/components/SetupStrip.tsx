@@ -11,7 +11,13 @@
 // Presentation only: every edit writes the same Scenario fields the
 // full panel writes; no new state shape, no new requests.
 
-import { useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MutableRefObject,
+  type ReactNode,
+} from "react";
 import { SCENARIO_KINDS, type RoadType, type Scenario } from "@/lib/scenarios";
 import {
   hhmm,
@@ -44,6 +50,76 @@ const SPEED_MAX: Partial<Record<Scenario["kind"], number>> = {
 };
 
 const HALF_HOURS = Array.from({ length: 48 }, (_, i) => i * 0.5);
+
+// #193: Simple/Structural live at module level ON PURPOSE.  As inner
+// components they were re-created every render, so React remounted
+// every cell on every keystroke — which detached the focused node
+// (masked by autoFocus refiring) and made any focus restore target a
+// dead button.  Stable identity keeps cells (and the caret) alive
+// across scenario writes.
+function Simple({
+  id,
+  k,
+  val,
+  edit,
+  open,
+  cellRefs,
+  children,
+}: {
+  id: string;
+  k: string;
+  val: ReactNode;
+  edit: string | null;
+  open: (id: string) => void;
+  cellRefs: MutableRefObject<Record<string, HTMLButtonElement | null>>;
+  children: ReactNode;
+}) {
+  return edit === id ? (
+    <div className="sv-editor">{children}</div>
+  ) : (
+    <button
+      type="button"
+      ref={(el) => {
+        cellRefs.current[id] = el;
+      }}
+      className="sv"
+      onClick={() => open(id)}
+      aria-label={`Edit ${k}`}
+    >
+      <span className="k">{k}</span>
+      <span className="val">{val}</span>
+      <span className="edit-ic" aria-hidden>
+        ✎
+      </span>
+    </button>
+  );
+}
+
+function Structural({
+  k,
+  val,
+  onReopen,
+}: {
+  k: string;
+  val: ReactNode;
+  onReopen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="sv structural"
+      onClick={onReopen}
+      title="Reopen full setup to change"
+      aria-label={`${k} — reopen full setup to change`}
+    >
+      <span className="k">{k}</span>
+      <span className="val">{val}</span>
+      <span className="edit-ic" aria-hidden>
+        ⤢
+      </span>
+    </button>
+  );
+}
 
 function kindLabel(kind: Scenario["kind"]): string {
   return SCENARIO_KINDS.find((k) => k.v === kind)?.l ?? kind;
@@ -82,7 +158,27 @@ export function SetupStrip({
   setStreetClass,
 }: Props) {
   const [edit, setEdit] = useState<string | null>(null);
-  const done = () => setEdit(null);
+  // #193: closing an editor unmounts the focused control (autoFocus
+  // handled the way IN; nothing handled the way out — focus fell to
+  // <body> on every inline edit).  Remember which cell opened the
+  // editor and put focus back on its button once it remounts.
+  const cellRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const restoreRef = useRef<string | null>(null);
+  const done = () => {
+    restoreRef.current = edit;
+    setEdit(null);
+  };
+  useEffect(() => {
+    if (edit !== null || restoreRef.current === null) return;
+    const id = restoreRef.current;
+    restoreRef.current = null;
+    // Restore only when the close actually dropped focus (change/blur
+    // to nowhere) — a user who tabbed or clicked onto another control
+    // moved focus deliberately, and yanking it back would be its own
+    // focus bug.
+    const active = document.activeElement;
+    if (!active || active === document.body) cellRefs.current[id]?.focus();
+  }, [edit]);
 
   const schedule = scenario.schedule ?? null;
   const dateLabel =
@@ -125,57 +221,30 @@ export function SetupStrip({
   const speeds: number[] = [];
   for (let s = 25; s <= speedMax; s += 5) speeds.push(s);
 
-  const Simple = ({
-    id,
-    k,
-    val,
-    children,
-  }: {
-    id: string;
-    k: string;
-    val: ReactNode;
-    children: ReactNode;
-  }) =>
-    edit === id ? (
-      <div className="sv-editor">{children}</div>
-    ) : (
-      <button
-        type="button"
-        className="sv"
-        onClick={() => setEdit(id)}
-        aria-label={`Edit ${k}`}
-      >
-        <span className="k">{k}</span>
-        <span className="val">{val}</span>
-        <span className="edit-ic" aria-hidden>
-          ✎
-        </span>
-      </button>
-    );
-
-  const Structural = ({ k, val }: { k: string; val: ReactNode }) => (
-    <button
-      type="button"
-      className="sv structural"
-      onClick={onReopen}
-      title="Reopen full setup to change"
-      aria-label={`${k} — reopen full setup to change`}
-    >
-      <span className="k">{k}</span>
-      <span className="val">{val}</span>
-      <span className="edit-ic" aria-hidden>
-        ⤢
-      </span>
-    </button>
-  );
-
   return (
     <div className="setup-strip">
-      <Structural k="Scenario" val={kindLabel(scenario.kind)} />
-      {roadType && <Structural k="Road" val={ROAD_TYPE_LABELS[roadType]} />}
+      <Structural
+        k="Scenario"
+        val={kindLabel(scenario.kind)}
+        onReopen={onReopen}
+      />
+      {roadType && (
+        <Structural
+          k="Road"
+          val={ROAD_TYPE_LABELS[roadType]}
+          onReopen={onReopen}
+        />
+      )}
 
       {setJurisdictionKey && (
-        <Simple id="jurisdiction" k="Jurisdiction" val={jurisdictionLabel}>
+        <Simple
+          id="jurisdiction"
+          k="Jurisdiction"
+          val={jurisdictionLabel}
+          edit={edit}
+          open={setEdit}
+          cellRefs={cellRefs}
+        >
           <label className="k" htmlFor="strip-jurisdiction">
             Jurisdiction
           </label>
@@ -200,7 +269,14 @@ export function SetupStrip({
       )}
 
       {setStreetClass && (
-        <Simple id="class" k="Class" val={classLabelText}>
+        <Simple
+          id="class"
+          k="Class"
+          val={classLabelText}
+          edit={edit}
+          open={setEdit}
+          cellRefs={cellRefs}
+        >
           <span className="k">Street class</span>
           <div
             role="group"
@@ -225,7 +301,14 @@ export function SetupStrip({
         </Simple>
       )}
 
-      <Simple id="speed" k="Speed" val={`${scenario.speed} mph`}>
+      <Simple
+        id="speed"
+        k="Speed"
+        val={`${scenario.speed} mph`}
+        edit={edit}
+        open={setEdit}
+        cellRefs={cellRefs}
+      >
         <label className="k" htmlFor="strip-speed">
           Speed
         </label>
@@ -248,7 +331,14 @@ export function SetupStrip({
       </Simple>
 
       {"laneWidth" in scenario && (
-        <Simple id="width" k="Lane W" val={`${scenario.laneWidth} ft`}>
+        <Simple
+          id="width"
+          k="Lane W"
+          val={`${scenario.laneWidth} ft`}
+          edit={edit}
+          open={setEdit}
+          cellRefs={cellRefs}
+        >
           <label className="k" htmlFor="strip-width">
             Lane width
           </label>
@@ -278,6 +368,9 @@ export function SetupStrip({
         id="work"
         k="Work zone"
         val={`${scenario.workLen.toLocaleString("en-US")} ft`}
+        edit={edit}
+        open={setEdit}
+        cellRefs={cellRefs}
       >
         <label className="k" htmlFor="strip-worklen">
           Work zone (ft)
@@ -301,7 +394,14 @@ export function SetupStrip({
         />
       </Simple>
 
-      <Simple id="date" k="Date" val={dateLabel}>
+      <Simple
+        id="date"
+        k="Date"
+        val={dateLabel}
+        edit={edit}
+        open={setEdit}
+        cellRefs={cellRefs}
+      >
         <label className="k" htmlFor="strip-date">
           Work date
         </label>
@@ -319,7 +419,14 @@ export function SetupStrip({
         />
       </Simple>
 
-      <Simple id="hours" k="Hours" val={hoursLabel}>
+      <Simple
+        id="hours"
+        k="Hours"
+        val={hoursLabel}
+        edit={edit}
+        open={setEdit}
+        cellRefs={cellRefs}
+      >
         <label className="k" htmlFor="strip-start">
           Hours
         </label>

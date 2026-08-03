@@ -502,8 +502,17 @@ export function GeneratorShell({
     setGenerated(true);
   };
 
+  // #193: reopening swaps the strip out from under the keyboard — the
+  // control that was clicked unmounts, so focus is moved deliberately
+  // to the Setup zone instead of falling to <body>.  Armed per Reopen
+  // click, same shape as the Generate arming above: only the
+  // user-initiated swap moves focus, never a background re-render.
+  const setupRef = useRef<HTMLElement | null>(null);
+  const reopenPendingRef = useRef(false);
+
   // Reopen the full setup panel from the strip (structural edits).
   const onReopen = () => {
+    reopenPendingRef.current = true;
     setGenerated(false);
   };
 
@@ -579,6 +588,15 @@ export function GeneratorShell({
   // generation disarms instead — the error ribbon renders in place and
   // yanking the viewport toward it helps nobody.  Reduced-motion users
   // get an instant jump, not an animation.
+  // #193: the armed Generate click also owns the next FOCUS move — the
+  // sidebar (and the Generate button under the keyboard) unmounts the
+  // moment the lifecycle leaves "pre", so without this, focus falls to
+  // <body> and the next Tab restarts at the nav.  Focus lands on the
+  // results zone on BOTH settles: post (alongside the scroll) and error
+  // (no scroll — the #152 E no-yank ruling stands — but the region now
+  // holds the failure alert, so focus belongs there too).  preventScroll
+  // keeps the focus move from double-scrolling; background settles are
+  // excluded by the arming, same as the scroll.
   useEffect(() => {
     if (!scrollPendingRef.current) return;
     if (genState === "post") {
@@ -590,8 +608,21 @@ export function GeneratorShell({
         behavior: reduceMotion ? "auto" : "smooth",
         block: "start",
       });
+      resultsRef.current?.focus({ preventScroll: true });
     } else if (genState === "error") {
       scrollPendingRef.current = false;
+      resultsRef.current?.focus({ preventScroll: true });
+    }
+  }, [genState]);
+
+  // #193: the Reopen half — focus the Setup zone once the sidebar is
+  // back.  Armed by onReopen only; ordinary re-renders in "pre" never
+  // re-fire it.
+  useEffect(() => {
+    if (!reopenPendingRef.current) return;
+    if (genState === "pre") {
+      reopenPendingRef.current = false;
+      setupRef.current?.focus({ preventScroll: true });
     }
   }, [genState]);
 
@@ -791,7 +822,13 @@ export function GeneratorShell({
           />
 
           {/* ——— Zone 1 · Setup ——— */}
-          <section className={`zone${genState === "pre" ? " dominant" : ""}`}>
+          {/* tabIndex -1: programmatic focus target for the Reopen
+              swap (#193) — never in the Tab order. */}
+          <section
+            ref={setupRef}
+            tabIndex={-1}
+            className={`zone outline-none${genState === "pre" ? " dominant" : ""}`}
+          >
             <div className="zone-head">
               <span className="zone-tag">
                 <span className="n">01</span>Setup
@@ -856,9 +893,12 @@ export function GeneratorShell({
           )}
 
           {/* ——— Zone 2 · Results ——— */}
+          {/* tabIndex -1: programmatic focus target for the armed
+              Generate settle (#193) — never in the Tab order. */}
           <section
             ref={resultsRef}
-            className={`zone${genState === "post" ? " dominant" : ""}`}
+            tabIndex={-1}
+            className={`zone outline-none${genState === "post" ? " dominant" : ""}`}
           >
             <div className="zone-head">
               <span className="zone-tag">

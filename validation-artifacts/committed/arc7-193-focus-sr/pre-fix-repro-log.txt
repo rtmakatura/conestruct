@@ -1,0 +1,41 @@
+﻿
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > A: keyboard Generate (success, breakdown settled)
+A regions before: [{"role":null,"live":"polite","text":"◌Drop a site pin for a jurisdiction suggestion"},{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"}]
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > A: keyboard Generate (success, breakdown settled)
+A focus after Generate: <body>
+A regions after: [{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"}]
+A results mounted: true
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > B: failed generation
+B focus after failed generate: <body>
+B regions: [{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"}]
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > C: strip inline editor close
+C focus with editor open: <select strip-speed>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > C: strip inline editor close
+C focus after done(): <body>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > D: reopen full setup
+D focus after reopen: <body>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > E: background settle never moves focus (control)
+E focus before settle: <input strip-worklen> | after settle: <input strip-worklen>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — picker restore > F: close with detached opener
+F focus on open: <div Define work zone>
+F focus after close with detached opener: <body>
+
+ ✓ components/A11yCapture193.scratch.test.tsx (6 tests) 2567ms
+   ✓ #193 capture — focus + announcements > B: failed generation  760ms
+   ✓ #193 capture — focus + announcements > C: strip inline editor close  597ms
+   ✓ #193 capture — focus + announcements > E: background settle never moves focus (control)  683ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  22:07:30
+   Duration  4.21s (transform 547ms, setup 0ms, collect 691ms, tests 2.57s, environment 396ms, prepare 301ms)
+
