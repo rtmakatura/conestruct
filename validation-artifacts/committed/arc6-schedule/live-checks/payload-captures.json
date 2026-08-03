@@ -1,0 +1,367 @@
+{
+  "cold_load_posts": [
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": null,
+      "jurisdiction_key": null,
+      "hours_eval": null
+    }
+  ],
+  "denver_posts": [
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": null,
+      "jurisdiction_key": null,
+      "hours_eval": null
+    },
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": null,
+      "jurisdiction_key": null,
+      "hours_eval": null
+    },
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": null,
+      "jurisdiction_key": null,
+      "hours_eval": null
+    },
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": null,
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "unknown",
+        "violations": [],
+        "note": "no work schedule provided"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": null,
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "unknown",
+        "violations": [],
+        "note": "no work schedule provided"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 9,
+        "end_time": 15
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "inside",
+        "violations": []
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 10,
+        "end_time": 16
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 0.5,
+            "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+            "source": {
+              "doc": "Rule 22.3",
+              "section": "IV.4",
+              "date": "2022-04-22",
+              "status": "verified"
+            },
+            "windows": [
+              {
+                "start": 8.5,
+                "end": 15.5,
+                "days": "weekday"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "days": "weekday"
+              },
+              {
+                "start": 0,
+                "end": 5,
+                "days": "weekday"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 20,
+        "end_time": 5
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "inside",
+        "violations": [],
+        "note": "overnight shift — evaluated across midnight against the work date's windows"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 8,
+        "end_time": 5
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 5,
+            "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+            "source": {
+              "doc": "Rule 22.3",
+              "section": "IV.4",
+              "date": "2022-04-22",
+              "status": "verified"
+            },
+            "windows": [
+              {
+                "start": 8.5,
+                "end": 15.5,
+                "days": "weekday"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "days": "weekday"
+              },
+              {
+                "start": 0,
+                "end": 5,
+                "days": "weekday"
+              }
+            ]
+          }
+        ],
+        "note": "overnight shift — evaluated across midnight against the work date's windows"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 8,
+        "end_time": 10
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 0.5,
+            "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+            "source": {
+              "doc": "Rule 22.3",
+              "section": "IV.4",
+              "date": "2022-04-22",
+              "status": "verified"
+            },
+            "windows": [
+              {
+                "start": 8.5,
+                "end": 15.5,
+                "days": "weekday"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "days": "weekday"
+              },
+              {
+                "start": 0,
+                "end": 5,
+                "days": "weekday"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 11,
+        "end_time": 10
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 8,
+            "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+            "source": {
+              "doc": "Rule 22.3",
+              "section": "IV.4",
+              "date": "2022-04-22",
+              "status": "verified"
+            },
+            "windows": [
+              {
+                "start": 8.5,
+                "end": 15.5,
+                "days": "weekday"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "days": "weekday"
+              },
+              {
+                "start": 0,
+                "end": 5,
+                "days": "weekday"
+              }
+            ]
+          }
+        ],
+        "note": "overnight shift — evaluated across midnight against the work date's windows"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "tbd",
+        "work_date": "2026-08-05",
+        "start_time": 11,
+        "end_time": 10
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "unknown",
+        "violations": [],
+        "note": "schedule marked Not set — hours not evaluated"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 11,
+        "end_time": 10
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "outside",
+        "violations": [
+          {
+            "kind": "outside_work_window",
+            "window": {
+              "start": 8.5,
+              "end": 15.5,
+              "days": "weekday"
+            },
+            "outside_hours": 8,
+            "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.4, verbatim-confirmed).",
+            "source": {
+              "doc": "Rule 22.3",
+              "section": "IV.4",
+              "date": "2022-04-22",
+              "status": "verified"
+            },
+            "windows": [
+              {
+                "start": 8.5,
+                "end": 15.5,
+                "days": "weekday"
+              },
+              {
+                "start": 20,
+                "end": 24,
+                "days": "weekday"
+              },
+              {
+                "start": 0,
+                "end": 5,
+                "days": "weekday"
+              }
+            ]
+          }
+        ],
+        "note": "overnight shift — evaluated across midnight against the work date's windows"
+      }
+    },
+    {
+      "http_status": 200,
+      "schedule": {
+        "date_mode": "single",
+        "work_date": "2026-08-05",
+        "start_time": 20,
+        "end_time": 5
+      },
+      "street_class": "arterial",
+      "jurisdiction_key": "denver",
+      "hours_eval": {
+        "status": "inside",
+        "violations": [],
+        "note": "overnight shift — evaluated across midnight against the work date's windows"
+      }
+    }
+  ]
+}

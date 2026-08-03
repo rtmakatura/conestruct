@@ -1,0 +1,38 @@
+- `2026-08-03T03:43:49.555Z` healthz sha: 3f0628302d06078a05a6db35604121463dd7354f
+- `2026-08-03T03:43:49.556Z` expected (git rev-parse origin/main): 3f0628302d06078a05a6db35604121463dd7354f
+- `2026-08-03T03:43:51.723Z` served bundle sha: 3f0628302d06078a05a6db35604121463dd7354f
+- `2026-08-03T03:43:51.723Z` **PASS** — build gate: healthz == origin/main == served bundle (3f0628302d06078a05a6db35604121463dd7354f)
+- `2026-08-03T03:43:53.470Z` **PASS** — 1a. cold load: 'Not set' chip presented as selected
+- `2026-08-03T03:43:53.474Z` **PASS** — 1b. 'Single day' not asserted
+- `2026-08-03T03:43:53.478Z` **PASS** — 1c. no date/time inputs mounted for the unentered schedule
+- `2026-08-03T03:43:54.888Z` **PASS** — 1d. no fresh POST carries a schedule key (display-only default) (1 breakdown POST(s), 0 with schedule)
+- `2026-08-03T03:43:55.034Z` screenshot: 01-cold-notset.png
+- `2026-08-03T03:43:59.722Z` **PASS** — 2a. hours chip (no schedule): 'not checked', no verdict (◷Work hours — Denverwindows shown · not checked›)
+- `2026-08-03T03:43:59.722Z` **PASS** — 2b. backend hours_eval is the honest unknown arm ({"status":"unknown","violations":[],"note":"no work schedule provided"})
+- `2026-08-03T03:43:59.911Z` screenshot: 02-denver-noschedule.png
+- `2026-08-03T03:44:01.601Z` **PASS** — 7a. Denver 9:00–15:00 weekday arterial: INSIDE (◷Work hours — Denverinside window ✓›)
+- `2026-08-03T03:44:01.602Z` **PASS** — 7b. the pre-fix false 'outside window · review schedule' appears nowhere
+- `2026-08-03T03:44:01.602Z` **PASS** — 7c. payload-level: hours_eval inside, zero violations ({"date_mode":"single","work_date":"2026-08-05","start_time":9,"end_time":15})
+- `2026-08-03T03:44:01.788Z` screenshot: 07-denver-day-inside.png
+- `2026-08-03T03:44:03.223Z` **PASS** — 8a. Denver 10:00–16:00: OUTSIDE (union is not amnesty)
+- `2026-08-03T03:44:03.223Z` **PASS** — 8b. violation names the alternative-window set (0.5 h falls outside the permitted 8:30 AM–3:30 PM / 8:00 PM–12:00 AM / 12:00 AM–5:00 AM windows (Weekday)iPermit — Denverno published tiers · 14 fee lines · lead 5–60 days›© 2026 Conestruct · Built in)
+- `2026-08-03T03:44:03.223Z` **PASS** — 8c. payload-level: one violation, 0.5 h, 3-window alternatives list ({"kind":"outside_work_window","window":{"start":8.5,"end":15.5,"days":"weekday"},"outside_hours":0.5,"note":"Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 §IV.)
+- `2026-08-03T03:44:03.425Z` screenshot: 08-denver-genuine-violation.png
+- `2026-08-03T03:44:03.448Z` **PASS** — 4a. end select offers '5:00 AM (next day)' with start 20:00 (options: 48 (was 48))
+- `2026-08-03T03:44:04.859Z` **PASS** — 4b. 20:00→05:00 POSTs and returns 200 (no 422) ({"date_mode":"single","work_date":"2026-08-05","start_time":20,"end_time":5})
+- `2026-08-03T03:44:04.859Z` **PASS** — 4c. verdict INSIDE with the overnight note ({"status":"inside","violations":[],"note":"overnight shift — evaluated across midnight against the work date's windows"})
+- `2026-08-03T03:44:04.863Z` **PASS** — 4d. chip renders 'inside window ✓' for the night shift (◷Work hours — Denverinside window ✓›)
+- `2026-08-03T03:44:05.169Z` **PASS** — 4e. band overlay renders TWO segments (20→24 and 0→5) ([{"left":"83.3333%","width":"16.6667%"},{"left":"0%","width":"20.8333%"}])
+- `2026-08-03T03:44:05.362Z` screenshot: 04-denver-overnight-inside.png
+- `2026-08-03T03:44:08.216Z` **PASS** — 5a. end select displays the wrap, not a blank (10:00 AM (next day))
+- `2026-08-03T03:44:08.216Z` **PASS** — 5b. POST matches the display: {11, 10}, no stale contradiction ({"date_mode":"single","work_date":"2026-08-05","start_time":11,"end_time":10})
+- `2026-08-03T03:44:08.327Z` screenshot: 05-stranded-end-wrap.png
+- `2026-08-03T03:44:09.787Z` **PASS** — 3a. 'Not set' after entered times: chip reads 'not checked', no verdict (◷Work hours — Denverwindows shown · not checked›)
+- `2026-08-03T03:44:09.787Z` **PASS** — 3b. residual times ride the payload yet the backend refuses to judge them ({"schedule":{"date_mode":"tbd","work_date":"2026-08-05","start_time":11,"end_time":10},"hours_eval":{"status":"unknown","violations":[],"note":"schedule marked Not set — hours not evaluated"}})
+- `2026-08-03T03:44:09.972Z` screenshot: 03-tbd-residual-notevaluated.png
+- `2026-08-03T03:44:11.729Z` **PASS** — 6a. strip cell reads '8:00 PM–5:00 AM (+1 day)' (Hours8:00 PM–5:00 AM (+1 day)✎)
+- `2026-08-03T03:44:11.837Z` screenshot: 06-strip-plus-one-day.png
+- `2026-08-03T03:44:17.280Z` **PASS** — 9a. Greeley 7:30–15:00 arterial: OUTSIDE the inner envelope
+- `2026-08-03T03:44:17.280Z` **PASS** — 9b. violation is the inner 8:30 AM–4:00 PM window, 1 h (1 h falls outside the permitted 8:30 AM–4:00 PM window (All days)iPermit — Greeley3 permit types · 9 fee lines · lead 2–5 days›© 2026 Conestruct · Built in Colo)
+- `2026-08-03T03:44:17.280Z` **PASS** — 9c. payload-level: exactly one violation, 1.0 h (outer envelope satisfied) ([{"kind":"outside_work_window","window":{"start":8.5,"end":16,"days":"all"},"outside_hours":1,"note":"Inner window: no start before 8:30 AM, no work past 4:00 PM on arterials/collectors.","source":{"doc":"Greeley Permitt)
+- `2026-08-03T03:44:17.501Z` screenshot: 09-greeley-cumulative.png
