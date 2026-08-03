@@ -497,8 +497,19 @@ export function GeneratorShell({
   const resultsRef = useRef<HTMLElement | null>(null);
   const scrollPendingRef = useRef(false);
 
+  // #193 (WCAG 4.1.3): the results render without any announcement —
+  // the strip's live region covers VERIFICATION states, not generation.
+  // This region announces the package itself.  Content derives from
+  // the SAME settled deviceBreakdown the hero renders, and only at the
+  // armed settle (rule 10: never an announcement for an input the
+  // backend hasn't answered).  Cleared at the click so a repeat
+  // Generate with identical counts still announces (aria-live fires on
+  // change).
+  const [genAnnouncement, setGenAnnouncement] = useState("");
+
   const onGenerate = () => {
     scrollPendingRef.current = true;
+    setGenAnnouncement("");
     setGenerated(true);
   };
 
@@ -609,11 +620,20 @@ export function GeneratorShell({
         block: "start",
       });
       resultsRef.current?.focus({ preventScroll: true });
+      const d =
+        deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
+      setGenAnnouncement(
+        d && d.total_devices != null && d.unique_types != null
+          ? `Plan generated — ${d.total_devices} devices, ${d.unique_types} types.`
+          : "Plan generated — MHT package ready.",
+      );
     } else if (genState === "error") {
       scrollPendingRef.current = false;
       resultsRef.current?.focus({ preventScroll: true });
+      // No status text on failure: the error ribbon is role="alert"
+      // and announces itself (assertively, as an error should).
     }
-  }, [genState]);
+  }, [genState, deviceBreakdown]);
 
   // #193: the Reopen half — focus the Setup zone once the sidebar is
   // back.  Armed by onReopen only; ordinary re-renders in "pre" never
@@ -879,6 +899,12 @@ export function GeneratorShell({
             audit={stripAudit}
             verifySlow={verifySlow}
           />
+          {/* #193 — generation-lifecycle announcements (WCAG 4.1.3).
+              Visually hidden, persistently mounted; content set only at
+              the armed Generate settle, from the settled breakdown. */}
+          <div role="status" className="sr-only">
+            {genAnnouncement}
+          </div>
           {/* Dev-only replication snapshot (Refs #102, TEMPORARY) — renders
               nothing without ?debug=1. Delete with DebugSnapshotButton. */}
           <DebugSnapshotButton
@@ -887,7 +913,10 @@ export function GeneratorShell({
             detection={lastDetection}
           />
           {bundleError && (
-            <div className="mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
+            <div
+              role="alert"
+              className="mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]"
+            >
               {bundleError}
             </div>
           )}
@@ -922,12 +951,18 @@ export function GeneratorShell({
                   genState === "error" || regenerating ? "results-stale" : ""
                 }
               >
+                {/* role=alert (#193): a failed generation reaches the
+                    strip's live region never (the breakdown pipeline is
+                    separate from audit) — the ribbon announces itself. */}
                 {genState === "error" && (
-                  <div className="stale-ribbon">
+                  <div role="alert" className="stale-ribbon">
                     ⚠ Device breakdown failed — values below may be stale. Fix
                     the input or retry from the plan details panel.
                   </div>
                 )}
+                {/* Deliberately visual-only (#193): the strip already
+                    announces COMPUTING for this state; a second polite
+                    region saying the same thing is noise. */}
                 {regenerating && (
                   <div className="stale-ribbon">
                     ⟳ Recomputing for the edited input — values below are the
