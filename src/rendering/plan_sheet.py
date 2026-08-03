@@ -3183,6 +3183,15 @@ _AERIAL_OVERLAY_STROKE_W: int = 3
 _AERIAL_OVERLAY_COLOR: str = "e8710a"
 _AERIAL_OVERLAY_OPACITY: str = "0.7"
 
+# Mapbox style for the page-2 aerial (#141).  satellite-streets-v12
+# composites road labels and highway shields over the imagery —
+# chosen to match the frontend's existing style (corridor-map.ts
+# DEFAULTS and the picker map), and because the white-halo labels stay
+# legible when the sheet is photocopied in grayscale (measured in the
+# Arc 10 evidence pair).  The bare satellite style it replaces named
+# nothing: location without identity on a crew document.
+_AERIAL_STYLE: str = "satellite-streets-v12"
+
 # Image dimensions for the Mapbox Static request.  Used both for the
 # URL request size and for the per-pixel zoom calculation below.
 #
@@ -3328,7 +3337,7 @@ def _fetch_mapbox_aerial(
         overlays = ""
 
     url = (
-        f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/"
+        f"https://api.mapbox.com/styles/v1/mapbox/{_AERIAL_STYLE}/static/"
         f"{overlays}{viewport}/{_AERIAL_IMG_W_PX}x{_AERIAL_IMG_H_PX}@2x"
     )
     try:
@@ -3559,13 +3568,13 @@ def _render_aerial_page(
         disclaimer = (
             f"Work zone ({corridor.work_zone_ft:,.0f} ft) shown in orange.  "
             "Advance warning, taper, and buffer not depicted.  "
-            "Mapbox satellite imagery — for context only.  "
+            "Mapbox satellite imagery with street labels — for context only.  "
             "Not a survey product.  Verify all field conditions on site."
         )
     else:
         disclaimer = (
-            "Mapbox satellite imagery.  For context only.  Not a survey product.  "
-            "Verify all field conditions on site."
+            "Mapbox satellite imagery with street labels — for context only.  "
+            "Not a survey product.  Verify all field conditions on site."
         )
     c.drawString(caption_x, cap_y - 32.0, disclaimer)
 
