@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import type * as MapboxGL from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import type {
@@ -113,6 +120,14 @@ interface Props {
   initial: LocationPickerInitial;
   onCancel: () => void;
   onSave: (result: LocationPickerResult) => void;
+  /**
+   * #193 — where focus goes on close when the opener no longer exists.
+   * The first successful save swaps UnsetLocation ("Pick Location on
+   * Map") for the pin summary, detaching the captured opener; without
+   * a connected target, focus fell to <body>.  Caller supplies the
+   * element that survives that swap (the location block, tabIndex -1).
+   */
+  restoreFallbackRef?: RefObject<HTMLElement | null>;
 }
 
 // ---------------------------------------------------------------------------
@@ -311,7 +326,13 @@ function buildMarkerEl(): {
 // Main component
 // ---------------------------------------------------------------------------
 
-export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) {
+export function LocationPickerModal({
+  open,
+  initial,
+  onCancel,
+  onSave,
+  restoreFallbackRef,
+}: Props) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
   const tokenAvailable = token.length > 0;
 
@@ -702,9 +723,14 @@ export function LocationPickerModal({ open, initial, onCancel, onSave }: Props) 
     document.addEventListener("keydown", onTrapKey);
     return () => {
       document.removeEventListener("keydown", onTrapKey);
-      opener?.focus();
+      // #193: restore to the opener only if it still exists — after the
+      // first successful save it doesn't (UnsetLocation swaps to the
+      // pin summary), and focusing a detached node silently no-ops,
+      // stranding focus on <body>.
+      if (opener?.isConnected) opener.focus();
+      else restoreFallbackRef?.current?.focus();
     };
-  }, [open]);
+  }, [open, restoreFallbackRef]);
 
   // Lock background scroll while open.
   useEffect(() => {

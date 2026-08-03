@@ -1,6 +1,12 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  type MutableRefObject,
+  type ReactNode,
+} from "react";
 import {
   applyClassification,
   carryAcrossKinds,
@@ -156,6 +162,10 @@ export function GeneratorSidebar({
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  // #193: focus target for the picker's close-restore when the opener
+  // is gone (the first save swaps "Pick Location on Map" for the pin
+  // summary).  Attached to the location block, which survives the swap.
+  const locationBlockRef = useRef<HTMLDivElement | null>(null);
   // UX-01/UX-02: the transformations the picker → form handoff applied
   // (speed clamp/snap; later, low-confidence skip/accept).  Frontend-only
   // metadata held here and rendered in LocationSummary — never written to
@@ -386,6 +396,7 @@ export function GeneratorSidebar({
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
           jurisdictionControls={jurisdictionControls}
+          blockRef={locationBlockRef}
         />
 
         {scenario.kind === "shoulder" && (
@@ -503,6 +514,7 @@ export function GeneratorSidebar({
           }}
           onCancel={() => setPickerOpen(false)}
           onSave={onPickerSave}
+          restoreFallbackRef={locationBlockRef}
         />
       )}
     </>
@@ -610,6 +622,7 @@ function LocationCorridorSection({
   handoff,
   corridorSpecLengths,
   jurisdictionControls,
+  blockRef,
 }: {
   scenario: Scenario;
   setMeta: (m: ScenarioMeta) => void;
@@ -618,28 +631,33 @@ function LocationCorridorSection({
   handoff: HandoffEvent[];
   corridorSpecLengths: CorridorSpecLengths | null;
   jurisdictionControls?: ReactNode;
+  blockRef?: MutableRefObject<HTMLDivElement | null>;
 }) {
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
   return (
     <FieldGroup label="Location" step={1}>
-      {hasPin ? (
-        <LocationSummary
-          scenario={scenario}
-          onOpenPicker={onOpenPicker}
-          setMeta={setMeta}
-          setScenario={setScenario}
-          handoff={handoff}
-          corridorSpecLengths={corridorSpecLengths}
-        />
-      ) : (
-        <UnsetLocation
-          scenario={scenario}
-          setMeta={setMeta}
-          setScenario={setScenario}
-          onOpenPicker={onOpenPicker}
-        />
-      )}
+      {/* tabIndex -1: the picker's close-restore fallback (#193) —
+          present in both pin states, never in the Tab order. */}
+      <div ref={blockRef} tabIndex={-1} className="outline-none">
+        {hasPin ? (
+          <LocationSummary
+            scenario={scenario}
+            onOpenPicker={onOpenPicker}
+            setMeta={setMeta}
+            setScenario={setScenario}
+            handoff={handoff}
+            corridorSpecLengths={corridorSpecLengths}
+          />
+        ) : (
+          <UnsetLocation
+            scenario={scenario}
+            setMeta={setMeta}
+            setScenario={setScenario}
+            onOpenPicker={onOpenPicker}
+          />
+        )}
+      </div>
       {/* Surface B (#152): jurisdiction + street-class controls sit
           directly under the pin summary — pin -> suggestions -> confirm,
           reading top to bottom. */}

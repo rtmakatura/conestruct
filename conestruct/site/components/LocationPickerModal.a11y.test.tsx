@@ -54,6 +54,49 @@ describe("LocationPickerModal focus containment", () => {
     expect(document.activeElement).toBe(opener);
   });
 
+  // #193 — the first successful save swaps UnsetLocation ("Pick
+  // Location on Map") for the pin summary, so the captured opener is a
+  // detached node by close time.
+  it("restores to the fallback ref when the opener is detached", () => {
+    const fallback = document.createElement("div");
+    fallback.tabIndex = -1;
+    document.body.appendChild(fallback);
+    const fallbackRef = { current: fallback };
+    const { unmount } = render(
+      <LocationPickerModal
+        open
+        initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+        onCancel={() => {}}
+        onSave={() => {}}
+        restoreFallbackRef={fallbackRef}
+      />,
+    );
+    expect(document.activeElement).toBe(screen.getByRole("dialog"));
+    opener.remove();
+    unmount();
+    expect(document.activeElement).toBe(fallback);
+    fallback.remove();
+  });
+
+  it("still prefers the opener when it remains connected", () => {
+    const fallback = document.createElement("div");
+    fallback.tabIndex = -1;
+    document.body.appendChild(fallback);
+    const fallbackRef = { current: fallback };
+    const { unmount } = render(
+      <LocationPickerModal
+        open
+        initial={{ scenarioKind: "shoulder", speedMph: 65 }}
+        onCancel={() => {}}
+        onSave={() => {}}
+        restoreFallbackRef={fallbackRef}
+      />,
+    );
+    unmount();
+    expect(document.activeElement).toBe(opener);
+    fallback.remove();
+  });
+
   it("Tab on the last focusable wraps to the first", () => {
     mountModal();
     const dialog = screen.getByRole("dialog");

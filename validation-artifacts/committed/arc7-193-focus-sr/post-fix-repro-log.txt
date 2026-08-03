@@ -1,0 +1,41 @@
+﻿
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > A: keyboard Generate (success, breakdown settled)
+A regions before: [{"role":null,"live":"polite","text":"◌Drop a site pin for a jurisdiction suggestion"},{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"},{"role":"status","live":null,"text":""}]
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > A: keyboard Generate (success, breakdown settled)
+A focus after Generate: <section zone>
+A regions after: [{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"},{"role":"status","live":null,"text":"Plan generated — 42 devices, 6 types."}]
+A results mounted: true
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > B: failed generation
+B focus after failed generate: <section zone>
+B regions: [{"role":null,"live":"polite","text":"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"},{"role":"status","live":null,"text":""},{"role":"alert","live":null,"text":"⚠ Device breakdown failed — values below may be stale. Fix the input or retry from the pla"}]
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > C: strip inline editor close
+C focus with editor open: <select strip-speed>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > C: strip inline editor close
+C focus after done(): <button Edit Speed>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > D: reopen full setup
+D focus after reopen: <section zone>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — focus + announcements > E: background settle never moves focus (control)
+E focus before settle: <input strip-worklen> | after settle: <input strip-worklen>
+
+stdout | components/A11yCapture193.scratch.test.tsx > #193 capture — picker restore > F: close with detached opener
+F focus on open: <div Define work zone>
+F focus after close with detached opener: <body>
+
+ ✓ components/A11yCapture193.scratch.test.tsx (6 tests) 2601ms
+   ✓ #193 capture — focus + announcements > B: failed generation  767ms
+   ✓ #193 capture — focus + announcements > C: strip inline editor close  600ms
+   ✓ #193 capture — focus + announcements > E: background settle never moves focus (control)  680ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  22:17:59
+   Duration  4.29s (transform 568ms, setup 0ms, collect 734ms, tests 2.60s, environment 400ms, prepare 305ms)
+
