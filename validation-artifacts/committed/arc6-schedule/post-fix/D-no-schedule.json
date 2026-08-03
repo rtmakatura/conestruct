@@ -1,0 +1,12 @@
+{
+  "captured_at_sha": "101c2eb79abb0f4bb158bbb63a7dda3dc1d826e9",
+  "request_schedule": null,
+  "jurisdiction_key": "denver",
+  "street_class": "arterial",
+  "status_code": 200,
+  "hours_eval": {
+    "status": "unknown",
+    "violations": [],
+    "note": "no work schedule provided"
+  }
+}

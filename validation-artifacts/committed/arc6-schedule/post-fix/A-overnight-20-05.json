@@ -1,0 +1,17 @@
+{
+  "captured_at_sha": "101c2eb79abb0f4bb158bbb63a7dda3dc1d826e9",
+  "request_schedule": {
+    "date_mode": "single",
+    "work_date": "2026-08-05",
+    "start_time": 20.0,
+    "end_time": 5.0
+  },
+  "jurisdiction_key": "denver",
+  "street_class": "arterial",
+  "status_code": 200,
+  "hours_eval": {
+    "status": "inside",
+    "violations": [],
+    "note": "overnight shift \u2014 evaluated across midnight against the work date's windows"
+  }
+}

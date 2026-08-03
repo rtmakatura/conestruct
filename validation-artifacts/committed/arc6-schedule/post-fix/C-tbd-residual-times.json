@@ -1,0 +1,16 @@
+{
+  "captured_at_sha": "101c2eb79abb0f4bb158bbb63a7dda3dc1d826e9",
+  "request_schedule": {
+    "date_mode": "tbd",
+    "start_time": 4.0,
+    "end_time": 6.0
+  },
+  "jurisdiction_key": "thornton",
+  "street_class": "arterial",
+  "status_code": 200,
+  "hours_eval": {
+    "status": "unknown",
+    "violations": [],
+    "note": "schedule marked Not set \u2014 hours not evaluated"
+  }
+}
