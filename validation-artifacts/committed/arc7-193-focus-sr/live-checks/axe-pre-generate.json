@@ -1,0 +1,25 @@
+[
+  {
+    "id": "label",
+    "impact": "critical",
+    "tags": [
+      "wcag2a",
+      "wcag412"
+    ],
+    "help": "Form elements must have labels",
+    "nodes": [
+      {
+        "target": [
+          "input[value=\"39.7266\"]"
+        ],
+        "html": "<input step=\"0.000001\" class=\"field-input w-full\" type=\"number\" value=\"39.7266\">"
+      },
+      {
+        "target": [
+          "input[value=\"-104.9532\"]"
+        ],
+        "html": "<input step=\"0.000001\" class=\"field-input w-full\" type=\"number\" value=\"-104.9532\">"
+      }
+    ]
+  }
+]

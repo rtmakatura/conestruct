@@ -1,0 +1,29 @@
+- `2026-08-03T04:29:34.964Z` healthz sha: 384c9c80631e76fa2b3b8f8b441dd7d703d44b63
+- `2026-08-03T04:29:34.965Z` expected (git rev-parse origin/main): 384c9c80631e76fa2b3b8f8b441dd7d703d44b63
+- `2026-08-03T04:29:36.784Z` served bundle sha: 384c9c80631e76fa2b3b8f8b441dd7d703d44b63
+- `2026-08-03T04:29:36.785Z` **PASS** — build gate: healthz == origin/main == served bundle (384c9c80631e76fa2b3b8f8b441dd7d703d44b63)
+- `2026-08-03T04:29:41.045Z` axe axe-pre-generate: 1 violation rule(s) — label[critical]×2
+- `2026-08-03T04:29:42.505Z` **PASS** — 1a. keyboard Generate: focus lands on the results zone ({"tag":"SECTION","id":null,"label":null,"text":"02ResultsMHT packagedevice & type counts drive your estimateTotal devi","isBody":false,"isSection":true,"zoneTitle":"MHT package","tabindex":"-1"})
+- `2026-08-03T04:29:42.603Z` screenshot: 01-post-generate-focus.png
+- `2026-08-03T04:29:42.606Z` **PASS** — 7a. role=status announces the package with the hero's counts (region="Plan generated — 31 devices, 9 types." hero=[31,9])
+- `2026-08-03T04:29:42.608Z` **PASS** — 1b. next Tab proceeds into the results zone (not the nav logo) ({"tag":"BUTTON","id":null,"label":null,"text":"↓ All (.zip)","isBody":false,"isSection":false,"zoneTitle":"MHT package","tabindex":null})
+- `2026-08-03T04:29:42.652Z` **PASS** — 10a. tab-walk: no dead-end (never two consecutive <body> stops) (23 stops logged)
+- `2026-08-03T04:29:42.653Z` **PASS** — 10b. tab-walk: package content reachable by keyboard
+- `2026-08-03T04:29:43.101Z` axe axe-post-generate: 0 violation rule(s) — none
+- `2026-08-03T04:29:43.148Z` **PASS** — 3a-i. speed editor opens focused (autoFocus in) ({"tag":"SELECT","id":"strip-speed","label":null,"text":"25 mph30 mph35 mph40 mph45 mph50 mph55 mph60 mph65 mph70 mph75 mph","isBody":false,"isSection":false,"zoneTitle":"Scenario","tabindex":null})
+- `2026-08-03T04:29:43.156Z` **PASS** — 3a-ii. closing via selection restores the Speed cell button ({"tag":"BUTTON","id":null,"label":"Edit Speed","text":"Speed35 mph✎","isBody":false,"isSection":false,"zoneTitle":"Scenario","tabindex":null})
+- `2026-08-03T04:29:43.289Z` screenshot: 03-strip-restore.png
+- `2026-08-03T04:29:43.670Z` **PASS** — 3b. deliberate move: focus sits in the newly opened Speed editor, not yanked back ({"tag":"SELECT","id":"strip-speed","label":null,"text":"25 mph30 mph35 mph40 mph45 mph50 mph55 mph60 mph65 mph70 mph75 mph","isBody":false,"isSection":false,"zoneTitle":"Scenario","tabindex":null})
+- `2026-08-03T04:29:46.532Z` **PASS** — 6. background debounce settle: focus stays in the strip input ({"tag":"INPUT","id":"strip-worklen","label":null,"text":"","isBody":false,"isSection":false,"zoneTitle":"Scenario","tabindex":null})
+- `2026-08-03T04:29:46.969Z` **PASS** — 4. Reopen: focus lands on the Setup zone section ({"tag":"SECTION","id":null,"label":null,"text":"01SetupDescribe the work zonePlanINPUTScenarioSTEP 2Shoulder workTA-3/","isBody":false,"isSection":true,"zoneTitle":"Describe the work zone","tabindex":"-1"})
+- `2026-08-03T04:29:47.070Z` screenshot: 04-reopen-focus.png
+- `2026-08-03T04:29:48.496Z` **PASS** — 7b. repeat Generate re-announces the package (region="Plan generated — 170 devices, 9 types.")
+- `2026-08-03T04:29:51.362Z` **PASS** — 8a-i. background failure: breakdown ribbon renders with role=alert (⚠ Device breakdown failed — values below may be stale. Fix the input or retry from the plan details )
+- `2026-08-03T04:29:51.363Z` **PASS** — 8a-ii. the background error settle did not move focus (strip cell keeps it) ({"tag":"BUTTON","id":null,"label":"Edit Speed","text":"Speed40 mph✎","isBody":false,"isSection":false,"zoneTitle":"Scenario","tabindex":null})
+- `2026-08-03T04:29:54.646Z` **PASS** — 2a. armed error settle: focus lands on the results zone (holding the alert) ({"tag":"SECTION","id":null,"label":null,"text":"02ResultsMHT package⚠ Device breakdown failed — values below may be st","isBody":false,"isSection":true,"zoneTitle":"MHT package","tabindex":"-1"})
+- `2026-08-03T04:29:54.647Z` **PASS** — 2b. no scroll fired on the error settle (scrollIntoView count 2 → 2)
+- `2026-08-03T04:29:54.648Z` **PASS** — 8a-iii. the ribbon (role=alert) is on screen at the armed error settle (⚠ Device breakdown failed — values below may be stale. Fix the input or retry from the plan details )
+- `2026-08-03T04:29:54.737Z` screenshot: 02-error-focus-alert.png
+- `2026-08-03T04:29:57.257Z` **PASS** — 8b. bundle failure carries role=alert (Bundle failed (500))
+- `2026-08-03T04:30:17.519Z` **PASS** — 5. picker first save (opener detached): focus on the location block, not <body> ({"tag":"DIV","id":null,"label":null,"text":"Location—39.127821, -105.620850Road properties65 mph · 2 lanes per dir","isBody":false,"isSection":false,"zoneTitle":"Describe the work zone","tabindex":"-1"})
+- `2026-08-03T04:30:17.629Z` screenshot: 05-picker-fallback-focus.png

@@ -1,0 +1,232 @@
+[
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "↓ All (.zip)",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "Download PDF↓",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "Download XLSX↓",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "Download PDF↓",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "Download .md↓",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "›Pricing quoteFYI · contractor estimate — not a permit feeexpand to co",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "∑Verification & audit trail6 values traced · each cited›",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Rules, permit & audit",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "▤Plan details — device schedule9 device types · 31 total units›",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Rules, permit & audit",
+    "tabindex": null
+  },
+  {
+    "tag": "A",
+    "id": null,
+    "label": null,
+    "text": "Terms",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": null,
+    "tabindex": null
+  },
+  {
+    "tag": "A",
+    "id": null,
+    "label": null,
+    "text": "Privacy",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": null,
+    "tabindex": null
+  },
+  {
+    "tag": "BODY",
+    "id": null,
+    "label": null,
+    "text": "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOTM",
+    "isBody": true,
+    "isSection": false,
+    "zoneTitle": null,
+    "tabindex": null
+  },
+  {
+    "tag": "A",
+    "id": null,
+    "label": null,
+    "text": "conestruct.v0.4",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": null,
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Scenario — reopen full setup to change",
+    "text": "ScenarioShoulder work⤢",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Road — reopen full setup to change",
+    "text": "RoadRural — divided⤢",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Jurisdiction",
+    "text": "JurisdictionNone✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Class",
+    "text": "ClassNot set✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Speed",
+    "text": "Speed65 mph✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Lane W",
+    "text": "Lane W12 ft✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Work zone",
+    "text": "Work zone1,000 ft✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Date",
+    "text": "DateTBD✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": "Edit Hours",
+    "text": "Hours—✎",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "Edit full setup ⤢",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "Scenario",
+    "tabindex": null
+  },
+  {
+    "tag": "BUTTON",
+    "id": null,
+    "label": null,
+    "text": "↓ All (.zip)",
+    "isBody": false,
+    "isSection": false,
+    "zoneTitle": "MHT package",
+    "tabindex": null
+  }
+]

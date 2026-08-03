@@ -1,0 +1,31 @@
+{
+  "before": [
+    {
+      "role": null,
+      "live": "polite",
+      "text": "Pin suggests: DenverConfirm DenverDismissPin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2"
+    },
+    {
+      "role": null,
+      "live": "polite",
+      "text": "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"
+    },
+    {
+      "role": "status",
+      "live": null,
+      "text": ""
+    }
+  ],
+  "after": [
+    {
+      "role": null,
+      "live": "polite",
+      "text": "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW"
+    },
+    {
+      "role": "status",
+      "live": null,
+      "text": "Plan generated — 31 devices, 9 types."
+    }
+  ]
+}
