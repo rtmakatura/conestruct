@@ -69,8 +69,13 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
         </span>
       </div>
       <div className="flex items-stretch">
+        {/* Deliberately no status dot here (#132): the green pulse that
+            used to sit beside this badge was hardcoded chrome derived
+            from nothing — under Rule 10 the honest render of no signal
+            is absence.  The edition text is the badge; if a real nav
+            status ever exists, it derives from real verification state
+            and carries a non-hue second channel. */}
         <span className="hidden md:flex items-center px-5 border-l border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span className="w-1.5 h-1.5 bg-[color:var(--pass)] inline-block mr-2 animate-pulse" />
           MUTCD 2023 · CDOT
         </span>
         {AUTH_UI_ENABLED && (
