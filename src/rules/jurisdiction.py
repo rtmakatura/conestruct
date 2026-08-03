@@ -274,7 +274,23 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
             "note": "jurisdiction publishes no work-hour windows",
         }
     sched = ctx.schedule
-    if sched is None or sched.start_time is None or sched.end_time is None:
+    if sched is None:
+        return {
+            "status": "unknown",
+            "violations": [],
+            "note": "no work schedule provided",
+        }
+    # #199: "Not set" is a deliberate choice — nothing is evaluated, even
+    # when residual times survive in the payload (the user un-set the
+    # schedule; a verdict computed from disavowed times is a stale answer
+    # presented as current, rule 10).
+    if sched.date_mode == "tbd":
+        return {
+            "status": "unknown",
+            "violations": [],
+            "note": "schedule marked Not set — hours not evaluated",
+        }
+    if sched.start_time is None or sched.end_time is None:
         return {
             "status": "unknown",
             "violations": [],

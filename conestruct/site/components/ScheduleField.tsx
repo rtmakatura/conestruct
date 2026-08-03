@@ -24,9 +24,13 @@ interface Props {
 
 export function ScheduleField({ scenario, setScenario, step }: Props) {
   const sched = scenario.schedule ?? null;
-  // Untouched scenario: present "Single day" with empty fields; nothing
-  // is written until the user interacts (the payload stays unchanged).
-  const mode: DateMode = sched?.date_mode ?? "single";
+  // Untouched scenario: present "Not set" (#199) — the honest default
+  // for a schedule nobody entered, matching what the hours card reports.
+  // Display-only: nothing is written until the user interacts (the
+  // payload stays unchanged).  Pre-fix this presented "Single day" as
+  // chosen — an asserted shape under a caption promising that windows
+  // and lead times compute from it.
+  const mode: DateMode = sched?.date_mode ?? "tbd";
 
   const patch = (p: Partial<Sched>) =>
     setScenario({

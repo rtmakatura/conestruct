@@ -735,10 +735,11 @@ function WorkHoursCard({
     sched.date_mode !== "tbd" &&
     sched.start_time != null &&
     sched.end_time != null;
-  // "Not set" is a deliberate user choice (ScheduleField's third date
-  // mode); an absent/incomplete schedule is merely unentered — the two
-  // read differently (inc-8: "not checked" only for the genuine choice).
-  const scheduleTbd = sched?.date_mode === "tbd";
+  // #199: an absent schedule and an explicit "Not set" read the same —
+  // Setup now PRESENTS "Not set" for an untouched scenario, so the card
+  // must speak the same words.  A single/range schedule with missing
+  // times is different: that one is mid-entry ("set date & times…").
+  const scheduleTbd = sched == null || sched.date_mode === "tbd";
 
   // The chip's collapsed verdict is the backend's hours_eval — never
   // recomputed (rule 3).  Auto-expand is reserved for the ONE
@@ -1363,7 +1364,14 @@ export function JurisdictionSection({
           />
           <PermitFYI
             jurisdiction={jurisdiction}
-            workDate={schedule?.work_date ?? null}
+            // #199: a residual work_date under "Not set" is disavowed —
+            // lead-time deadlines render "—", not dates computed from a
+            // value the user un-set.
+            workDate={
+              schedule && schedule.date_mode !== "tbd"
+                ? (schedule.work_date ?? null)
+                : null
+            }
           />
         </div>
       )}

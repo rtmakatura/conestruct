@@ -217,6 +217,45 @@ def test_greeley_nested_envelope_stays_cumulative():
     assert v["window"] == {"start": 8.5, "end": 16.0, "days": "all"}
 
 
+# ---------------------------------------------------------------------------
+# #199 — "Not set" is a deliberate choice: nothing is evaluated
+# ---------------------------------------------------------------------------
+
+
+def test_tbd_with_residual_times_is_not_evaluated(client):
+    """The #199 backend defect (pre-fix capture C): enter times, choose
+    "Not set" — the residual times still produced a live "outside"
+    verdict.  date_mode tbd now gates the whole evaluation."""
+    ev = _hours_eval(
+        client,
+        _shoulder_scenario(
+            jurisdiction_key="thornton",
+            street_class="arterial",
+            schedule={"date_mode": "tbd", "start_time": 4.0, "end_time": 6.0},
+        ),
+    )
+    assert ev == {
+        "status": "unknown",
+        "violations": [],
+        "note": "schedule marked Not set — hours not evaluated",
+    }
+
+
+def test_tbd_without_times_reads_the_same_gate(client):
+    """ "Not set" with nothing residual carries the same note — the choice
+    is what gates, not what happens to survive in the payload."""
+    ev = _hours_eval(
+        client,
+        _shoulder_scenario(
+            jurisdiction_key="thornton",
+            street_class="arterial",
+            schedule={"date_mode": "tbd"},
+        ),
+    )
+    assert ev["status"] == "unknown"
+    assert ev["note"] == "schedule marked Not set — hours not evaluated"
+
+
 def test_no_schedule_stays_unknown():
     """Control: the honest unset arm is unchanged."""
     record = load_jurisdiction("denver")

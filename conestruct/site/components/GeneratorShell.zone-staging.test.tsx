@@ -205,14 +205,19 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
-    // The Setup panel's Schedule step: choose a work date, then flip to
-    // the deliberate "Not set" mode — both edits must ride the same
-    // scenario.schedule the strip and hours chip read.
+    // The Setup panel's Schedule step: pick "Single day" (the #199
+    // default is now "Not set", so the date input mounts on the choice),
+    // choose a work date, then flip back to the deliberate "Not set" —
+    // every edit must ride the same scenario.schedule the strip and
+    // hours chip read.
+    await user.click(screen.getByRole("button", { name: "Single day" }));
+    await flushDebounce();
+    await release(1, okBreakdown());
     const dateInput = document.getElementById("sched-date") as HTMLInputElement;
     expect(dateInput).not.toBeNull();
     await user.type(dateInput, "2026-08-04");
     await flushDebounce();
-    await release(1, okBreakdown());
+    await release(2, okBreakdown());
 
     let bodies = fetchMock.mock.calls
       .filter(([u]) => String(u).includes("device-breakdown"))

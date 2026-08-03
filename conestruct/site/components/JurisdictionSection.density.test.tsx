@@ -153,7 +153,10 @@ describe("hours chip auto-expand — plan-invalidating states only", () => {
         jurisdiction={unknown}
         loading={false}
         streetClass="arterial"
-        schedule={null}
+        // #199 moved the "merely unentered" line: a NULL schedule now
+        // reads as "Not set" (Setup presents that default), so mid-entry
+        // is a chosen date mode whose times aren't in yet.
+        schedule={{ date_mode: "single" }}
       />,
     );
     const head = screen.getByRole("button", { name: /work hours — loveland/i });
