@@ -73,6 +73,18 @@ export interface RoadCandidate {
    * cross-street approaches (near_intersection #117).
    */
   signal_distance_m: number | null;
+  /**
+   * Road centerline as [lat, lng] vertices (#140): this candidate's OSM
+   * way geometry, extended server-side by walking connected
+   * same-name/ref ways to ±1 mi along-road of the snapped point and
+   * capped at 300 nodes.  A raw relayed fact — it drives the drawn
+   * corridor (picker preview, static preview, and via
+   * ``meta.centerline`` the PDF page-2 overlay); no classification or
+   * MUTCD math reads it.  Null when geometry could not be kept (and
+   * optional so pre-#140 persisted candidates restore unchanged —
+   * their corridors simply stay on the straight frame).
+   */
+  geometry?: Array<[number, number]> | null;
 }
 
 // Full response from /api/road-bearing.  `isUrban` and `placeName`

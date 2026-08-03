@@ -34,6 +34,15 @@ const SNAP_MAX_DISTANCE_M = 30;
 // classification — matches the Mapbox-tilequery `place_label` radius
 // that the previous /api/road-classify used (3000 m).
 const PLACE_RADIUS_M = 3000;
+// Centerline capture (#140).  The corridor's advance-warning end can sit
+// most of a mile upstream of the pin, so candidate geometry is extended
+// by a second Overpass fetch of same-name/ref ways within this radius
+// and stitched into one chain.  1,700 m ≈ 1.06 mi — chosen to cover the
+// longest corridor (freeway advance warning) with margin.  The node cap
+// bounds the relayed payload and the encoded Static-URL path (chosen —
+// see meta.centerline / WorkCorridor.centerline consumers).
+const GEOMETRY_RADIUS_M = 1700;
+const GEOMETRY_MAX_NODES = 300;
 
 // Treat these OSM `place=*` classes as "urban" for road-type assignment.
 const URBAN_PLACE_CLASSES: ReadonlySet<string> = new Set([
@@ -106,7 +115,13 @@ async function overpassQuery(
   lng: number,
   signal: AbortSignal | undefined,
 ): Promise<OverpassResponse | null> {
-  const data = buildQuery(lat, lng);
+  return overpassPost(buildQuery(lat, lng), signal);
+}
+
+async function overpassPost(
+  data: string,
+  signal: AbortSignal | undefined,
+): Promise<OverpassResponse | null> {
   for (const url of OVERPASS_MIRRORS) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), OVERPASS_TIMEOUT_MS);
@@ -329,6 +344,10 @@ function buildResponse(
       },
       signal_distance_m:
         signalDistM === null ? null : Math.round(signalDistM * 100) / 100,
+      // Own-way geometry as the baseline (#140); extended to the
+      // stitched same-road chain after dedup.  This is the array the
+      // pre-#140 pipeline fetched and threw away.
+      geometry: geom.map((n): [number, number] => [n.lat, n.lon]),
     });
   }
 
@@ -348,6 +367,140 @@ function buildResponse(
     isUrban,
     placeName,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Centerline extension (#140)
+// ---------------------------------------------------------------------------
+
+function endpointKey(n: OverpassNode): string {
+  return `${n.lat.toFixed(7)},${n.lon.toFixed(7)}`;
+}
+
+// Walk connected same-road ways into one node chain, starting from the
+// candidate's own way.  Joins on shared endpoint nodes only.  A wrong
+// branch at a fork is bounded by the ±GEOMETRY_RADIUS_M trim below and,
+// downstream, by the station frame projecting the anchor — worst case
+// is reduced coverage (disclosed), never a wrong drawing at the anchor.
+function stitchChain(startWay: OverpassWay, pool: OverpassWay[]): OverpassNode[] {
+  let chain = [...(startWay.geometry ?? [])];
+  const used = new Set<number>([startWay.id]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    const head = endpointKey(chain[0]);
+    const tail = endpointKey(chain[chain.length - 1]);
+    for (const w of pool) {
+      if (used.has(w.id)) continue;
+      const g = w.geometry ?? [];
+      if (g.length < 2) continue;
+      const s = endpointKey(g[0]);
+      const e = endpointKey(g[g.length - 1]);
+      if (s === tail) {
+        chain = chain.concat(g.slice(1));
+      } else if (e === tail) {
+        chain = chain.concat([...g].reverse().slice(1));
+      } else if (e === head) {
+        chain = g.slice(0, -1).concat(chain);
+      } else if (s === head) {
+        chain = [...g].reverse().slice(0, -1).concat(chain);
+      } else {
+        continue;
+      }
+      used.add(w.id);
+      grew = true;
+    }
+  }
+  return chain;
+}
+
+// Trim the chain to ±GEOMETRY_RADIUS_M of along-arc distance from the
+// point nearest (refLat, refLng), then cap the node count by uniform
+// interior decimation (ends always kept).
+function trimChain(
+  chain: OverpassNode[],
+  refLat: number,
+  refLng: number,
+): Array<[number, number]> {
+  const cum: number[] = [0];
+  for (let i = 0; i < chain.length - 1; i++) {
+    cum.push(
+      cum[i] + haversineM(chain[i].lat, chain[i].lon, chain[i + 1].lat, chain[i + 1].lon),
+    );
+  }
+  let refIdx = 0;
+  let refDist = Infinity;
+  for (let i = 0; i < chain.length; i++) {
+    const d = haversineM(refLat, refLng, chain[i].lat, chain[i].lon);
+    if (d < refDist) {
+      refDist = d;
+      refIdx = i;
+    }
+  }
+  const refArc = cum[refIdx];
+  let kept = chain.filter((_, i) => Math.abs(cum[i] - refArc) <= GEOMETRY_RADIUS_M);
+  if (kept.length > GEOMETRY_MAX_NODES) {
+    const interior = kept.slice(1, -1);
+    const stride = interior.length / (GEOMETRY_MAX_NODES - 2);
+    kept = [
+      kept[0],
+      ...Array.from(
+        { length: GEOMETRY_MAX_NODES - 2 },
+        (_, i) => interior[Math.floor(i * stride)],
+      ),
+      kept[kept.length - 1],
+    ];
+  }
+  return kept.map((n): [number, number] => [n.lat, n.lon]);
+}
+
+// Second Overpass round trip: same-name/ref ways within
+// GEOMETRY_RADIUS_M, stitched per candidate.  Best-effort — on any
+// failure candidates keep their own-way geometry from buildResponse.
+async function extendCandidateGeometry(
+  candidates: RoadCandidate[],
+  lat: number,
+  lng: number,
+  signal: AbortSignal | undefined,
+): Promise<void> {
+  const filters = new Map<string, string>();
+  for (const c of candidates) {
+    // Quotes/backslashes in a name would need Overpass escaping; such
+    // names are vanishingly rare — those candidates keep own-way
+    // geometry.
+    if (c.name && !/["\\]/.test(c.name)) {
+      filters.set(`name:${c.name}`, `["name"="${c.name}"]`);
+    } else if (!c.name && c.ref && !/["\\]/.test(c.ref)) {
+      filters.set(`ref:${c.ref}`, `["ref"="${c.ref}"]`);
+    }
+  }
+  if (filters.size === 0) return;
+  const parts = [...filters.values()]
+    .map(
+      (f) =>
+        `way(around:${GEOMETRY_RADIUS_M.toFixed(0)},${lat},${lng})["highway"]${f};`,
+    )
+    .join("");
+  const payload = await overpassPost(`[out:json][timeout:10];(${parts});out geom tags;`, signal);
+  const ways = (payload?.elements ?? []).filter(
+    (el): el is OverpassWay =>
+      el.type === "way" &&
+      Array.isArray((el as OverpassWay).geometry) &&
+      ((el as OverpassWay).geometry?.length ?? 0) >= 2,
+  );
+  if (ways.length === 0) return;
+
+  for (const c of candidates) {
+    const pool = ways.filter((w) =>
+      c.name ? w.tags?.name === c.name : !w.tags?.name && w.tags?.ref === c.ref,
+    );
+    const own = pool.find((w) => String(w.id) === c.way_id);
+    if (!own) continue;
+    const chain = stitchChain(own, pool);
+    if (chain.length >= 2) {
+      c.geometry = trimChain(chain, c.snapped_lat, c.snapped_lng);
+    }
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -390,5 +543,16 @@ export async function POST(req: NextRequest) {
     payload = null;
   }
 
-  return Response.json(buildResponse(payload, lat, lng));
+  const response = buildResponse(payload, lat, lng);
+  if (response.candidates.length > 0) {
+    try {
+      await extendCandidateGeometry(response.candidates, lat, lng, req.signal);
+    } catch (err) {
+      if ((err as Error).name === "AbortError") {
+        return new Response("Aborted", { status: 499 });
+      }
+      // Best-effort: candidates keep own-way geometry.
+    }
+  }
+  return Response.json(response);
 }

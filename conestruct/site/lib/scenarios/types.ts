@@ -242,6 +242,15 @@ export interface ScenarioMeta {
    * math reads it.
    */
   confirmedRoad?: ConfirmedRoad | null;
+  /**
+   * Road centerline as [lat, lng] vertices (#140) — a WIRE-ONLY field
+   * materialized by ``withRelayedCenterline`` at serialization time
+   * from ``confirmedRoad.candidate.geometry`` (behind the same exact
+   * pinLat/pinLng staleness key the picker uses).  Never set on stored
+   * scenario state; the backend reads it to draw the PDF corridor
+   * along the road.  Absent ⇒ the straight-chord frame.
+   */
+  centerline?: Array<[number, number]>;
 }
 
 export interface ShoulderScenario extends JurisdictionPlanFields {

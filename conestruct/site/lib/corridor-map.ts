@@ -15,8 +15,13 @@
 // `app/api/corridor-map/route.ts`, which never returns the token to the
 // browser.
 
-import { destinationPoint, M_PER_FT } from "./geodesy";
-import { ZONE_CHANNEL, ZONE_COLOR, type CorridorZone } from "./corridor-zones";
+import { buildStationFrame, zonePointsAlongFrame, type StationFrame } from "./centerline";
+import {
+  CORRIDOR_ZONES,
+  ZONE_CHANNEL,
+  ZONE_COLOR,
+  type CorridorZone,
+} from "./corridor-zones";
 
 export interface CorridorSpec {
   anchorLat: number;
@@ -27,6 +32,33 @@ export interface CorridorSpec {
   bufferFt: number;
   workZoneFt: number;
   downstreamTaperFt: number;
+  /**
+   * Optional road centerline [lat, lng] vertices (#140) — the confirmed
+   * candidate's relayed OSM geometry.  When present the drawn corridor
+   * follows the road through curves; absent keeps the straight frame.
+   */
+  centerline?: Array<[number, number]> | null;
+}
+
+/**
+ * Zone → length field on the spec.  Single-sourced here (next to
+ * CorridorSpec) for every surface that cuts the corridor into zones —
+ * the duplicated inline table this file used to carry is gone (#140
+ * rider on the #131 single-sourcing).
+ */
+export function zoneLengthFt(spec: CorridorSpec, zone: CorridorZone): number {
+  switch (zone) {
+    case "downstream":
+      return spec.downstreamTaperFt;
+    case "work_zone":
+      return spec.workZoneFt;
+    case "buffer":
+      return spec.bufferFt;
+    case "transition":
+      return spec.taperFt;
+    case "advance_warning":
+      return spec.advanceWarningFt;
+  }
 }
 
 export interface CorridorMapOptions {
@@ -66,11 +98,9 @@ function zoneStrokeWidth(base: number, zone: CorridorZone): number {
   return Math.max(1, base + (ZONE_CHANNEL[zone].widthRank - 3) * 2);
 }
 
-// Sample density for path overlays: more samples = smoother curve in
-// theory, but our segments are straight lines on a great-circle so 2
-// points is enough for the math.  We render 4 to give the renderer a
-// midpoint anchor in case it ever wants to split the line for label
-// avoidance.
+// Sample density for straight-frame path overlays (5 points per zone —
+// collinear, kept for renderer label-avoidance).  With a centerline the
+// samples are the real road vertices via zonePointsAlongFrame instead.
 const SAMPLES_PER_SEGMENT = 4;
 
 interface SegmentSpec {
@@ -88,15 +118,11 @@ function segmentsFromCorridor(c: CorridorSpec): SegmentSpec[] {
   //   advance warning → total length.
   //
   // Render each segment as its own overlay so each gets its own colour.
+  // Zone identity/order is single-sourced from CORRIDOR_ZONES (#131).
   let cursor = 0;
   const out: SegmentSpec[] = [];
-  for (const [zone, length] of [
-    ["downstream", c.downstreamTaperFt],
-    ["work_zone", c.workZoneFt],
-    ["buffer", c.bufferFt],
-    ["transition", c.taperFt],
-    ["advance_warning", c.advanceWarningFt],
-  ] as const) {
+  for (const zone of CORRIDOR_ZONES) {
+    const length = zoneLengthFt(c, zone);
     if (length <= 0) {
       cursor += length;
       continue;
@@ -111,16 +137,8 @@ function segmentsFromCorridor(c: CorridorSpec): SegmentSpec[] {
   return out;
 }
 
-function samplePoints(c: CorridorSpec, seg: SegmentSpec): Array<[number, number]> {
-  const pts: Array<[number, number]> = [];
-  for (let i = 0; i <= SAMPLES_PER_SEGMENT; i++) {
-    const station =
-      seg.startStationFt + ((seg.endStationFt - seg.startStationFt) * i) / SAMPLES_PER_SEGMENT;
-    const distM = station * M_PER_FT;
-    const [lat, lng] = destinationPoint(c.anchorLat, c.anchorLng, c.bearingDeg, distM);
-    pts.push([lat, lng]);
-  }
-  return pts;
+function samplePoints(frame: StationFrame, seg: SegmentSpec): Array<[number, number]> {
+  return zonePointsAlongFrame(frame, seg.startStationFt, seg.endStationFt, SAMPLES_PER_SEGMENT);
 }
 
 // Google polyline encoder, precision 5.  Returns the raw encoded string
@@ -180,10 +198,16 @@ export function corridorMapUrl(
   const opts = { ...DEFAULTS, ...options };
 
   const segments = segmentsFromCorridor(corridor);
+  const frame = buildStationFrame(
+    corridor.anchorLat,
+    corridor.anchorLng,
+    corridor.bearingDeg,
+    corridor.centerline,
+  );
   const overlays: string[] = [];
 
   for (const seg of segments) {
-    const pts = samplePoints(corridor, seg);
+    const pts = samplePoints(frame, seg);
     const encoded = encodePolyline(pts);
     overlays.push(
       pathOverlay(

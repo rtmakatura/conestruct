@@ -11,8 +11,8 @@
 //   anchor(0) → downstream taper → work zone → buffer → transition →
 //   advance warning → total length.
 
-import { destinationPoint, M_PER_FT } from "./geodesy";
-import type { CorridorSpec } from "./corridor-map";
+import { buildStationFrame, zonePointsAlongFrame } from "./centerline";
+import { zoneLengthFt, type CorridorSpec } from "./corridor-map";
 import {
   CORRIDOR_ZONES,
   ZONE_CHANNEL,
@@ -54,21 +54,6 @@ export interface CorridorPolyline {
   bbox: [number, number, number, number];
 }
 
-function zoneLengthFt(spec: CorridorSpec, zone: CorridorZone): number {
-  switch (zone) {
-    case "downstream":
-      return spec.downstreamTaperFt;
-    case "work_zone":
-      return spec.workZoneFt;
-    case "buffer":
-      return spec.bufferFt;
-    case "transition":
-      return spec.taperFt;
-    case "advance_warning":
-      return spec.advanceWarningFt;
-  }
-}
-
 export function buildCorridorPolyline(spec: CorridorSpec): CorridorPolyline {
   const segments: CorridorPolylineSegment[] = [];
   let cursor = 0;
@@ -77,6 +62,16 @@ export function buildCorridorPolyline(spec: CorridorSpec): CorridorPolyline {
   let maxLat = spec.anchorLat;
   let minLng = spec.anchorLng;
   let maxLng = spec.anchorLng;
+
+  // One frame for the whole corridor (#140): with spec.centerline the
+  // stations walk the road's arc; without it, the identical straight
+  // dead-reckon as before.
+  const frame = buildStationFrame(
+    spec.anchorLat,
+    spec.anchorLng,
+    spec.bearingDeg,
+    spec.centerline,
+  );
 
   for (const zone of ZONE_ORDER) {
     const length = zoneLengthFt(spec, zone);
@@ -87,15 +82,7 @@ export function buildCorridorPolyline(spec: CorridorSpec): CorridorPolyline {
     const start = cursor;
     const end = cursor + length;
     const coords: Array<[number, number]> = [];
-    for (let i = 0; i <= SAMPLES_PER_SEGMENT; i++) {
-      const station = start + ((end - start) * i) / SAMPLES_PER_SEGMENT;
-      const distM = station * M_PER_FT;
-      const [lat, lng] = destinationPoint(
-        spec.anchorLat,
-        spec.anchorLng,
-        spec.bearingDeg,
-        distM,
-      );
+    for (const [lat, lng] of zonePointsAlongFrame(frame, start, end, SAMPLES_PER_SEGMENT)) {
       coords.push([lng, lat]);
       if (lat < minLat) minLat = lat;
       if (lat > maxLat) maxLat = lat;

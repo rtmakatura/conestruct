@@ -593,6 +593,14 @@ export function LocationPickerModal({
     if (!hasPin || !isValidLat(lat) || !isValidLng(lng)) return null;
     if (workZoneFt <= 0) return null;
     if (!specLengths) return null;
+    // #140: the picked candidate's relayed OSM geometry makes the
+    // preview follow the road through curves — the same source the
+    // render POST relays (preview must equal applied).  No pick yet
+    // (or a pre-#140 restored candidate) → straight frame, as before.
+    const pickedCenterline =
+      selectedCandidateIdx !== null
+        ? (bearingCandidates[selectedCandidateIdx]?.geometry ?? null)
+        : null;
     return buildCorridorPolyline({
       anchorLat: lat,
       anchorLng: lng,
@@ -602,8 +610,9 @@ export function LocationPickerModal({
       bufferFt: specLengths.buffer_ft,
       workZoneFt,
       downstreamTaperFt: specLengths.downstream_taper_ft,
+      centerline: pickedCenterline,
     });
-  }, [hasPin, lat, lng, bearing, workZoneFt, specLengths]);
+  }, [hasPin, lat, lng, bearing, workZoneFt, specLengths, selectedCandidateIdx, bearingCandidates]);
 
   // Sync the corridor onto the live map.  ``corridorDataRef`` is the
   // canonical "what should the line show" so the deferred installer

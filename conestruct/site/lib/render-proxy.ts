@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb, plans } from "@/db";
 import { toScenario } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
+import { withRelayedCenterline } from "@/lib/scenarios/centerline-relay";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import {
   DEFAULT_QUOTE_SETTINGS,
@@ -103,10 +104,13 @@ export async function renderScenarioToResponse(
     return new Response("Render service not configured", { status: 503 });
   }
 
+  // #140: materialize meta.centerline from the confirmed road at the
+  // wire boundary (same at every upstream POST site in this module).
+  const wireScenario = withRelayedCenterline(scenario);
   const requestBody =
     kind === "quote"
-      ? { scenario, settings: opts.quoteSettings ?? DEFAULT_QUOTE_SETTINGS }
-      : scenario;
+      ? { scenario: wireScenario, settings: opts.quoteSettings ?? DEFAULT_QUOTE_SETTINGS }
+      : wireScenario;
 
   let upstream: Response;
   try {
@@ -166,7 +170,7 @@ export async function fetchQuoteBreakdown(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify({ scenario, settings }),
+        body: JSON.stringify({ scenario: withRelayedCenterline(scenario), settings }),
       },
     );
   } catch (err) {
@@ -213,7 +217,7 @@ export async function fetchDeviceBreakdown(
           "content-type": "application/json",
           authorization: `Bearer ${secret}`,
         },
-        body: JSON.stringify(scenario),
+        body: JSON.stringify(withRelayedCenterline(scenario)),
       },
     );
   } catch (err) {
@@ -255,7 +259,7 @@ export async function fetchAuditTrail(
         "content-type": "application/json",
         authorization: `Bearer ${secret}`,
       },
-      body: JSON.stringify(scenario),
+      body: JSON.stringify(withRelayedCenterline(scenario)),
     });
   } catch (err) {
     console.error("audit trail fetch failed", err);
