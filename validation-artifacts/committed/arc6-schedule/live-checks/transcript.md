@@ -18,7 +18,7 @@ Gate PASSED — all three equal. Backend-first ordering was honored this
 arc (validation relaxation: the old backend 422s overnight payloads);
 both surfaces are at the same sha, so the lag window is closed.
 
-## Results — 24/24 PASS, 0 failures (23 checks + gate)
+## Results — 26/26 PASS, 0 failures (25 checks + gate)
 
 **#199 — honest unset.**
 - **Check 1, cold load:** "Not set" chip presented as selected
