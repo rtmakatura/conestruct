@@ -2010,6 +2010,21 @@ def _wrap_to_width(
     return lines
 
 
+def _format_latlng(lat: float | None, lng: float | None) -> str:
+    """Coordinate pair at 5 decimal places, or an em dash when absent.
+
+    5 decimals is the ceiling ruled on #157 (2026-07-30): beyond that
+    implies survey-grade precision a map pin doesn't have.  One format
+    for every coordinate the sheet prints — the title-block COORDINATES
+    row, the page-2 site caption, and the CORRIDOR DETAILS Anchor row.
+    ``None`` (and the 0/0 unset sentinel, #186) renders absence as
+    absence (Rule 10): an em dash, never "0.00000".
+    """
+    if lat is None or lng is None or (lat == 0.0 and lng == 0.0):
+        return "—"
+    return f"{lat:.5f}, {lng:.5f}"
+
+
 def _draw_structured_title_block(
     c: canvas.Canvas,
     params: ScenarioParams,
@@ -2021,6 +2036,8 @@ def _draw_structured_title_block(
     bearing_deg: float | None = None,
     aerial_page: str | None = None,
     ta_override: str | None = None,
+    site_lat: float | None = None,
+    site_lng: float | None = None,
     *,
     box_x: float,
     box_w: float,
@@ -2057,6 +2074,12 @@ def _draw_structured_title_block(
             [
                 ("PROJECT", project_name or "Untitled Project"),
                 ("LOCATION", location_description or "—"),
+                # #157 (ruled 2026-07-30: print both).  LOCATION stays
+                # the human-readable typed string; this row is the pin
+                # the plan was actually generated from — the one value
+                # here that cannot be stale.  A mismatch between the
+                # two is now visible on the sheet itself.
+                ("COORDINATES", _format_latlng(site_lat, site_lng)),
             ],
         ),
         ("STANDARDS", standards_rows),
@@ -3409,7 +3432,7 @@ def _draw_corridor_details_box(
     total_ft = corridor.total_length_ft
     total_mi = total_ft / 5280.0
     rows: list[tuple[str, str]] = [
-        ("Anchor", f"{corridor.anchor_lat:.4f}, {corridor.anchor_lng:.4f}"),
+        ("Anchor", _format_latlng(corridor.anchor_lat, corridor.anchor_lng)),
         ("Bearing", bearing_str),
         ("Total corridor", f"{total_ft:,.0f} ft ({total_mi:.2f} mi)"),
         ("Advance warning", f"{corridor.advance_warning_ft:,.0f} ft"),
@@ -3557,11 +3580,17 @@ def _render_aerial_page(
     cap_y = img_y - AERIAL_PAGE_BELOW_IMAGE_GAP
     c.setFillColor(colors.HexColor("#1A1A1A"))
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(caption_x, cap_y, f"SITE: {lat:.4f}, {lng:.4f}")
+    # #157 ruled order: the typed address stays the human-readable
+    # label, the pin's coordinates print beneath it as the authoritative
+    # location (5 decimals — _format_latlng).  Without an address the
+    # coordinates take the label line.
     if location_description:
+        c.drawString(caption_x, cap_y, f"SITE: {location_description}")
         c.setFont("Helvetica", 9)
         c.setFillColor(colors.HexColor("#333333"))
-        c.drawString(caption_x, cap_y - 14.0, location_description)
+        c.drawString(caption_x, cap_y - 14.0, _format_latlng(lat, lng))
+    else:
+        c.drawString(caption_x, cap_y, f"SITE: {_format_latlng(lat, lng)}")
     c.setFont("Helvetica-Oblique", 8)
     c.setFillColor(colors.HexColor("#555555"))
     if corridor is not None:
@@ -3770,6 +3799,8 @@ def render_plan_sheet(
         include_device_summary=include_device_summary,
         jurisdiction_conflicts=jurisdiction_conflicts,
         applied_deltas=applied_deltas,
+        site_lat=site_lat,
+        site_lng=site_lng,
     )
     _draw_sheet_border(c)
     c.showPage()
@@ -3817,6 +3848,8 @@ def _render_schematic_page(
     include_device_summary: bool = True,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
     applied_deltas: list[dict[str, Any]] | None = None,
+    site_lat: float | None = None,
+    site_lng: float | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -3917,6 +3950,8 @@ def _render_schematic_page(
         bearing_deg=bearing_deg,
         aerial_page=aerial_page,
         ta_override=ta_override,
+        site_lat=site_lat,
+        site_lng=site_lng,
         box_x=geom.title_x,
         box_w=geom.title_w,
     )
