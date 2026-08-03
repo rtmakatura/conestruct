@@ -232,6 +232,31 @@ def _overlap_hours(a0: float, a1: float, b0: float, b1: float) -> float:
     return max(0.0, min(a1, b1) - max(a0, b0))
 
 
+def _schedule_segments(s0: float, s1: float) -> list[tuple[float, float]]:
+    """Split a schedule into same-day segments, wrapping past midnight.
+
+    ``end < start`` is an overnight shift (#188): 20.0→5.0 becomes
+    [(20,24), (0,5)] — the exact convention the jurisdiction data files
+    use for midnight-crossing windows (e.g. Denver's night window is
+    stored as 20–24 + 0–5, the second tagged "Night-window continuation").
+    """
+    if s1 > s0:
+        return [(s0, s1)]
+    return [(s0, 24.0), (0.0, s1)]
+
+
+def _merged_union(windows: list[dict[str, Any]]) -> list[tuple[float, float]]:
+    """Merge a scope group's windows into disjoint sorted intervals."""
+    spans = sorted((w["start"], w["end"]) for w in windows)
+    merged: list[tuple[float, float]] = []
+    for start, end in spans:
+        if merged and start <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+        else:
+            merged.append((start, end))
+    return merged
+
+
 def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
     """Evaluate the plan's schedule against the jurisdiction's hours block.
 
@@ -256,14 +281,24 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
             "note": "no work schedule provided",
         }
 
-    day_note = None
+    notes: list[str] = []
     if sched.work_date is not None:
         day_kind = "weekday" if sched.work_date.weekday() < 5 else "weekend"
     else:
         day_kind = "weekday"
-        day_note = "work date TBD — weekday windows assumed (conservative)"
+        notes.append("work date TBD — weekday windows assumed (conservative)")
 
     s0, s1 = sched.start_time, sched.end_time
+    # Overnight shifts (#188): end < start wraps past midnight.  Both
+    # segments evaluate against the work date's OWN day-kind — chosen
+    # (rule 12) to match the data convention, where a midnight-crossing
+    # window's continuation carries the same ``days`` tag as its opening
+    # segment (Denver's 0–5 continuation is tagged "weekday").
+    segments = _schedule_segments(s0, s1)
+    if len(segments) > 1:
+        notes.append("overnight shift — evaluated across midnight against the work date's windows")
+    total_hours = sum(b - a for a, b in segments)
+
     violations: list[dict[str, Any]] = []
     indeterminate = False
     applicable_work_windows: list[dict[str, Any]] = []
@@ -276,7 +311,7 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         if applies == ABSTAINS:
             continue
         if w["kind"] == "ban":
-            ov = _overlap_hours(s0, s1, w["start"], w["end"])
+            ov = sum(_overlap_hours(a, b, w["start"], w["end"]) for a, b in segments)
             if ov > 0:
                 violations.append(
                     {
@@ -290,20 +325,45 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         else:
             applicable_work_windows.append(w)
 
-    # Work-window shapes: the schedule must sit inside every applicable
-    # work window (nested envelopes are cumulative constraints).
+    # Work-window composition (#206): windows sharing a (days, classes)
+    # scope are ALTERNATIVES — one rule offering several time windows
+    # (Denver's day window + split night pair) — so the schedule needs to
+    # sit inside their UNION.  Distinct scopes are separate rules and
+    # remain cumulative constraints (nested envelopes: Greeley/Englewood),
+    # so every group must be satisfied.  The pre-#206 code intersected
+    # everything, flagging compliant Denver day shifts as outside their
+    # own night windows.
+    groups: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
     for w in applicable_work_windows:
-        outside = round(max(0.0, w["start"] - s0) + max(0.0, s1 - w["end"]), 2)
+        key = (w["days"], tuple(w.get("classes") or ()))
+        groups.setdefault(key, []).append(w)
+
+    for group in groups.values():
+        union = _merged_union(group)
+        covered = sum(_overlap_hours(a, b, u0, u1) for a, b in segments for u0, u1 in union)
+        outside = round(total_hours - covered, 2)
         if outside > 0:
-            violations.append(
-                {
-                    "kind": "outside_work_window",
-                    "window": {"start": w["start"], "end": w["end"], "days": w["days"]},
-                    "outside_hours": outside,
-                    "note": w.get("note"),
-                    "source": w["source"],
-                }
-            )
+            first = group[0]
+            violation: dict[str, Any] = {
+                "kind": "outside_work_window",
+                "window": {
+                    "start": first["start"],
+                    "end": first["end"],
+                    "days": first["days"],
+                },
+                "outside_hours": outside,
+                "note": first.get("note"),
+                "source": first["source"],
+            }
+            if len(group) > 1:
+                # Additive field: the full alternative set, so the card can
+                # say "outside 8:30–15:30 / 20:00–05:00" instead of naming
+                # one window of a pair.  ``window`` stays populated (first
+                # of group) for payload compatibility.
+                violation["windows"] = [
+                    {"start": w["start"], "end": w["end"], "days": w["days"]} for w in group
+                ]
+            violations.append(violation)
 
     if violations:
         status = "outside"
@@ -313,8 +373,8 @@ def evaluate_hours(record: dict[str, Any], ctx: PlanContext) -> dict[str, Any]:
         status = "inside"
 
     result: dict[str, Any] = {"status": status, "violations": violations}
-    if day_note:
-        result["note"] = day_note
+    if notes:
+        result["note"] = "; ".join(notes)
 
     exposure = _exposure_estimate_cents(record, ctx, violations, sched)
     if exposure is not None:

@@ -1,0 +1,49 @@
+{
+  "captured_at_sha": "cdf03738408054bb5b5adda6bb79e3a239abe880",
+  "request_schedule": {
+    "date_mode": "single",
+    "work_date": "2026-08-05",
+    "start_time": 9.0,
+    "end_time": 15.0
+  },
+  "jurisdiction_key": "denver",
+  "street_class": "arterial",
+  "status_code": 200,
+  "hours_eval": {
+    "status": "outside",
+    "violations": [
+      {
+        "kind": "outside_work_window",
+        "window": {
+          "start": 20.0,
+          "end": 24.0,
+          "days": "weekday"
+        },
+        "outside_hours": 11.0,
+        "note": "Night window 8:00pm-5:00am.",
+        "source": {
+          "doc": "Rule 22.3",
+          "section": "IV.4",
+          "date": "2022-04-22",
+          "status": "verified"
+        }
+      },
+      {
+        "kind": "outside_work_window",
+        "window": {
+          "start": 0.0,
+          "end": 5.0,
+          "days": "weekday"
+        },
+        "outside_hours": 10.0,
+        "note": "Night-window continuation.",
+        "source": {
+          "doc": "Rule 22.3",
+          "section": "IV.4",
+          "date": "2022-04-22",
+          "status": "verified"
+        }
+      }
+    ]
+  }
+}

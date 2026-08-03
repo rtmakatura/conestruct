@@ -99,7 +99,10 @@ class WorkSchedule(BaseModel):
     """When the work happens — consumed by the jurisdiction hours evaluation.
 
     ``start_time``/``end_time`` are decimal hours (8.5 = 8:30 AM), same
-    convention as the jurisdiction data files' hours windows.
+    convention as the jurisdiction data files' hours windows.  ``end_time``
+    strictly less than ``start_time`` means the shift wraps past midnight
+    (an overnight shift, e.g. 20.0 → 5.0) — issue #188.  Equal times stay
+    rejected: a zero-length shift is ambiguous with a full 24-hour wrap.
     """
 
     date_mode: Literal["single", "range", "tbd"]
@@ -113,11 +116,12 @@ class WorkSchedule(BaseModel):
         if (
             self.start_time is not None
             and self.end_time is not None
-            and self.end_time <= self.start_time
+            and self.end_time == self.start_time
         ):
             raise ValueError(
-                f"schedule end_time ({self.end_time}) must be after start_time "
-                f"({self.start_time}) — overnight schedules are not supported yet."
+                f"schedule end_time ({self.end_time}) must differ from start_time "
+                f"({self.start_time}) — a zero-length shift is ambiguous; an "
+                f"end_time before start_time means the shift wraps past midnight."
             )
         return self
 

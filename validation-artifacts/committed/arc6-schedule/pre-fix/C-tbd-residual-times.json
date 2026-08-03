@@ -1,0 +1,32 @@
+{
+  "captured_at_sha": "cdf03738408054bb5b5adda6bb79e3a239abe880",
+  "request_schedule": {
+    "date_mode": "tbd",
+    "start_time": 4.0,
+    "end_time": 6.0
+  },
+  "jurisdiction_key": "thornton",
+  "street_class": "arterial",
+  "status_code": 200,
+  "hours_eval": {
+    "status": "outside",
+    "violations": [
+      {
+        "kind": "outside_work_window",
+        "window": {
+          "start": 8.5,
+          "end": 15.5,
+          "days": "weekday"
+        },
+        "outside_hours": 4.5,
+        "note": "Stipulation #31: 'All work is for Monday through Friday, 8:30 a.m. until 3:30 p.m., unless noted otherwise in the Special Conditions.'",
+        "source": {
+          "doc": "Thornton Construction & TC Permit handout",
+          "section": "stipulation 31",
+          "status": "verified"
+        }
+      }
+    ],
+    "note": "work date TBD \u2014 weekday windows assumed (conservative)"
+  }
+}

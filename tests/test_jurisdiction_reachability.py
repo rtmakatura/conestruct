@@ -24,14 +24,14 @@ BOUNDARY_DIR = REPO_ROOT / "data" / "boundaries"
 FRONTEND_OPTIONS = REPO_ROOT / "conestruct" / "site" / "lib" / "jurisdiction.ts"
 
 # Authored records deliberately NOT yet reachable — each waits on the
-# coverage-expansion follow-up issue (Ryan filing; GO ruling 2026-08-02,
+# coverage-expansion follow-up issue #205 (GO ruling 2026-08-02,
 # confirmation 2: this arc wires exactly Greeley + Thornton).  Remove a
 # key from this list in the arc that wires its polygon/dropdown entry.
 KNOWN_UNREACHABLE: set[str] = {
-    "westminster",  # coverage-expansion follow-up
-    "castle_rock",  # coverage-expansion follow-up
-    "loveland",  # coverage-expansion follow-up
-    "el_paso",  # coverage-expansion follow-up
+    "westminster",  # coverage-expansion follow-up (#205)
+    "castle_rock",  # coverage-expansion follow-up (#205)
+    "loveland",  # coverage-expansion follow-up (#205)
+    "el_paso",  # coverage-expansion follow-up (#205)
 }
 
 

@@ -1,0 +1,34 @@
+{
+  "captured_at_sha": "cdf03738408054bb5b5adda6bb79e3a239abe880",
+  "request_schedule": {
+    "date_mode": "single",
+    "work_date": "2026-08-05",
+    "start_time": 20.0,
+    "end_time": 5.0
+  },
+  "jurisdiction_key": "denver",
+  "street_class": "arterial",
+  "status_code": 422,
+  "error_body": {
+    "detail": [
+      {
+        "type": "value_error",
+        "loc": [
+          "body",
+          "shoulder",
+          "schedule"
+        ],
+        "msg": "Value error, schedule end_time (5.0) must be after start_time (20.0) \u2014 overnight schedules are not supported yet.",
+        "input": {
+          "date_mode": "single",
+          "work_date": "2026-08-05",
+          "start_time": 20.0,
+          "end_time": 5.0
+        },
+        "ctx": {
+          "error": {}
+        }
+      }
+    ]
+  }
+}
