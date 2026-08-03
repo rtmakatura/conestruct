@@ -1,0 +1,40 @@
+- `2026-08-03T02:29:35.096Z` healthz sha: 75827effe23ec7d1d50c72ef59e68b0680eba458
+- `2026-08-03T02:29:35.097Z` expected (git rev-parse origin/main): 75827effe23ec7d1d50c72ef59e68b0680eba458
+- `2026-08-03T02:29:37.011Z` served bundle sha: 75827effe23ec7d1d50c72ef59e68b0680eba458
+- `2026-08-03T02:29:37.011Z` **PASS** — build gate: healthz == origin/main == served bundle (75827effe23ec7d1d50c72ef59e68b0680eba458)
+- `2026-08-03T02:29:40.251Z` **PASS** — 1a. Greeley pin: suggest slot offers Greeley (Pin suggests: GreeleyConfirm GreeleyDismissPin is inside Greeley municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).Boundary data is approxi)
+- `2026-08-03T02:29:40.253Z` **PASS** — 1b. Confirm Greeley button present
+- `2026-08-03T02:29:40.254Z` **PASS** — 1c. reason cites Greeley municipal limits + TIGER (not county copy) (Pin suggests: GreeleyConfirm GreeleyDismissPin is inside Greeley municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).Boundary data is approximate (US Census TIGER/Line Place boundar)
+- `2026-08-03T02:29:40.255Z` **PASS** — 1d. no 'unincorporated Weld County' falsehood anywhere
+- `2026-08-03T02:29:40.454Z` screenshot: 01a-greeley-suggested.png
+- `2026-08-03T02:29:40.494Z` **PASS** — 1e. select shows greeley as the active jurisdiction_key
+- `2026-08-03T02:29:41.231Z` **PASS** — 1f. jurisdiction section renders the Greeley record (authority + terms), not baseline (Greeley · city · calls this plan a MHT, the ROW public space)
+- `2026-08-03T02:29:41.442Z` screenshot: 01b-greeley-confirmed.png
+- `2026-08-03T02:29:42.157Z` **PASS** — 7a. markdown download returned 200
+- `2026-08-03T02:29:42.157Z` **PASS** — 7b. header renders 'Jurisdiction: Greeley' (**Jurisdiction:** Greeley)
+- `2026-08-03T02:29:42.157Z` **PASS** — 7c. header does NOT say CDOT
+- `2026-08-03T02:29:42.267Z` screenshot: 07-greeley-generated.png
+- `2026-08-03T02:29:45.964Z` **PASS** — 2a. Thornton pin: suggest slot offers Thornton (Pin suggests: ThorntonConfirm ThorntonDismissPin is inside Thornton municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).Boundary data is appr)
+- `2026-08-03T02:29:45.967Z` **PASS** — 2b. Confirm Thornton button present
+- `2026-08-03T02:29:45.967Z` **PASS** — 2c. no 'does not carry' falsehood (Pin suggests: ThorntonConfirm ThorntonDismissPin is inside Thornton municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).Boundary data is approximate (US Census TIGER/Line Place boun)
+- `2026-08-03T02:29:46.697Z` **PASS** — 2d. select shows thornton; record content renders (Thornton · city · calls this plan a TCP, the ROW right-of-way)
+- `2026-08-03T02:29:47.020Z` screenshot: 02-thornton-confirmed.png
+- `2026-08-03T02:29:50.218Z` **PASS** — 3a. Lakewood control still suggests Lakewood (inside) (Pin suggests: LakewoodConfirm LakewoodDismissPin is inside Lakewood municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).Boundary data is approximate (US Census TIGER/Line Place boun)
+- `2026-08-03T02:29:50.220Z` **PASS** — 3b. Confirm Lakewood offered
+- `2026-08-03T02:29:50.315Z` screenshot: 03-lakewood-control.png
+- `2026-08-03T02:29:53.466Z` **PASS** — 4a. unsupported_area names Northglenn (Pin is inside Northglenn municipal limits — a jurisdiction Conestruct does not carry yet (US Census TIGER/Line Place boundaries, 2025 vintage).⚠ Pin is in Northglenn — not in the supported set; baseline rules will apply unless you pick manu)
+- `2026-08-03T02:29:53.466Z` **PASS** — 4b. jigsaw warning names Thornton at ~292 ft (292 ft from the Thornton boundary)
+- `2026-08-03T02:29:53.467Z` **PASS** — 4c. no suggestion offered (no Confirm button) — suggest-never-set
+- `2026-08-03T02:29:53.470Z` **PASS** — 4d. jurisdiction_key untouched (select empty, baseline line shown)
+- `2026-08-03T02:29:53.667Z` screenshot: 04-northglenn-jigsaw.png
+- `2026-08-03T02:29:55.554Z` dropdown options: [{"value":"","label":"None — baseline (MUTCD + CDOT) only"},{"value":"cdot","label":"CDOT (state highway)"},{"value":"denver","label":"Denver"},{"value":"lakewood","label":"Lakewood"},{"value":"englewood","label":"Englewood"},{"value":"littleton","label":"Littleton"},{"value":"centennial","label":"Centennial"},{"value":"parker","label":"Parker"},{"value":"greeley","label":"Greeley"},{"value":"thornton","label":"Thornton"},{"value":"e470","label":"E-470"}]
+- `2026-08-03T02:29:55.554Z` **PASS** — 5a. dropdown has greeley with label 'Greeley' (not a raw key) ({"value":"greeley","label":"Greeley"})
+- `2026-08-03T02:29:55.554Z` **PASS** — 5b. dropdown has thornton with label 'Thornton' ({"value":"thornton","label":"Thornton"})
+- `2026-08-03T02:29:55.634Z` screenshot: 05-dropdown.png
+- `2026-08-03T02:29:59.376Z` **PASS** — 6a. county copy names Arapahoe County + 'outside the mapped municipal boundaries' (Pin is in Arapahoe County, outside the municipal boundaries Conestruct maps (US Census TIGER/Line, 2025 vintage).⚠ Pin is in Arapahoe County, outside the mapped municipal boundaries — not in the supported set; baseline rules will apply unless you pick manually)
+- `2026-08-03T02:29:59.377Z` **PASS** — 6b. no 'unincorporated' assertion anywhere in the slot
+- `2026-08-03T02:29:59.651Z` screenshot: 06-county-copy.png
+- `2026-08-03T02:30:03.390Z` **PASS** — 8a. jurisdiction_key still null (select empty)
+- `2026-08-03T02:30:04.307Z` **PASS** — 8b. markdown download returned 200
+- `2026-08-03T02:30:04.308Z` **PASS** — 8c. null key → header renders CDOT (honest baseline) (**Jurisdiction:** CDOT)
+- `2026-08-03T02:30:04.481Z` screenshot: 08-nullkey-generated.png
