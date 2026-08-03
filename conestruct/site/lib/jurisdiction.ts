@@ -52,6 +52,10 @@ export interface JurisdictionHours {
 export interface HoursViolation {
   kind: "ban_window_overlap" | "outside_work_window";
   window: { start: number; end: number; days: string };
+  /** #206: when a scope group offers alternative windows (Denver's day
+   *  window + split night pair), the full set — render the union, not
+   *  one window of a pair.  ``window`` stays the first for compat. */
+  windows?: { start: number; end: number; days: string }[];
   overlap_hours?: number;
   outside_hours?: number;
   note?: string | null;

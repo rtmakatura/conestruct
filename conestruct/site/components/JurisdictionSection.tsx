@@ -684,6 +684,20 @@ function DeltaChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
 // 3 · Work-Hours Card — bands from semantic windows; verdict from hours_eval
 // ---------------------------------------------------------------------------
 
+/** Same-day overlay segments for the schedule band; end < start wraps
+ *  past midnight (#188), matching the backend's segment convention. */
+function scheduleOverlaySegments(
+  start: number,
+  end: number,
+): [number, number][] {
+  return end > start
+    ? [[start, end]]
+    : [
+        [start, 24],
+        [0, end],
+      ];
+}
+
 interface WorkHoursProps {
   jurisdiction: JurisdictionBlock;
   streetClass: StreetClass | null;
@@ -831,16 +845,26 @@ function WorkHoursCard({
                       {s.endH - s.startH >= 3 ? (s.t === "ban" ? "banned" : "ok") : ""}
                     </div>
                   ))}
-                  {isActive && hoursKnown && sched && (
-                    <div
-                      aria-hidden
-                      className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
-                      style={{
-                        left: `${((sched.start_time as number) / 24) * 100}%`,
-                        width: `${(((sched.end_time as number) - (sched.start_time as number)) / 24) * 100}%`,
-                      }}
-                    />
-                  )}
+                  {isActive &&
+                    hoursKnown &&
+                    sched &&
+                    // An overnight schedule (#188: end < start wraps past
+                    // midnight) overlays as two segments, mirroring how the
+                    // window bands themselves split at midnight.
+                    scheduleOverlaySegments(
+                      sched.start_time as number,
+                      sched.end_time as number,
+                    ).map(([a, b]) => (
+                      <div
+                        key={`sched-${a}`}
+                        aria-hidden
+                        className="absolute top-0 bottom-0 border-x-2 border-[color:var(--act)] bg-[color:var(--act-glow)]"
+                        style={{
+                          left: `${(a / 24) * 100}%`,
+                          width: `${((b - a) / 24) * 100}%`,
+                        }}
+                      />
+                    ))}
                 </div>
               </div>
             );
@@ -906,7 +930,7 @@ function WorkHoursCard({
                 <li key={`${v.kind}-${v.window.start}`}>
                   {v.kind === "ban_window_overlap"
                     ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban (${dayLabel(v.window.days)})`
-                    : `${v.outside_hours} h falls outside the ${hhmm(v.window.start)}–${hhmm(v.window.end)} window (${dayLabel(v.window.days)})`}
+                    : `${v.outside_hours} h falls outside the permitted ${(v.windows ?? [v.window]).map((w) => `${hhmm(w.start)}–${hhmm(w.end)}`).join(" / ")} ${v.windows && v.windows.length > 1 ? "windows" : "window"} (${dayLabel(v.window.days)})`}
                 </li>
               ))}
             </ul>

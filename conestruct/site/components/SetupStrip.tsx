@@ -94,7 +94,9 @@ export function SetupStrip({
     schedule.date_mode !== "tbd" &&
     schedule.start_time != null &&
     schedule.end_time != null
-      ? `${hhmm(schedule.start_time)}–${hhmm(schedule.end_time)}`
+      ? `${hhmm(schedule.start_time)}–${hhmm(schedule.end_time)}${
+          schedule.end_time < schedule.start_time ? " (+1 day)" : ""
+        }`
       : "—";
 
   const setSchedule = (
@@ -321,12 +323,23 @@ export function SetupStrip({
         <label className="k" htmlFor="strip-start">
           Hours
         </label>
+        {/* The selects display exactly what the scenario holds — the old
+            7:00/15:30 placeholder values were never written, so the strip
+            showed a schedule the payload didn't carry (#188 defect 3). */}
         <select
           id="strip-start"
           autoFocus
-          value={schedule?.start_time ?? 7}
-          onChange={(e) => setSchedule({ start_time: +e.target.value })}
+          value={schedule?.start_time ?? ""}
+          onChange={(e) => {
+            const v = e.target.value === "" ? undefined : +e.target.value;
+            setSchedule(
+              v != null && schedule?.end_time === v
+                ? { start_time: v, end_time: undefined }
+                : { start_time: v },
+            );
+          }}
         >
+          <option value="">—</option>
           {HALF_HOURS.map((h) => (
             <option key={h} value={h}>
               {hhmm(h)}
@@ -336,20 +349,25 @@ export function SetupStrip({
         <span aria-hidden>–</span>
         <select
           aria-label="End time"
-          value={schedule?.end_time ?? 15.5}
+          value={schedule?.end_time ?? ""}
           onChange={(e) => {
-            setSchedule({ end_time: +e.target.value });
+            setSchedule({
+              end_time: e.target.value === "" ? undefined : +e.target.value,
+            });
             done();
           }}
           onBlur={done}
         >
-          {HALF_HOURS.filter((h) => h > (schedule?.start_time ?? 0)).map(
-            (h) => (
-              <option key={h} value={h}>
-                {hhmm(h)}
-              </option>
-            ),
-          )}
+          <option value="">—</option>
+          {/* end < start wraps past midnight (#188); only end == start is
+              excluded (ambiguous, rejected at the wire). */}
+          {HALF_HOURS.filter((h) => h !== schedule?.start_time).map((h) => (
+            <option key={h} value={h}>
+              {schedule?.start_time != null && h < schedule.start_time
+                ? `${hhmm(h)} (next day)`
+                : hhmm(h)}
+            </option>
+          ))}
         </select>
       </Simple>
 

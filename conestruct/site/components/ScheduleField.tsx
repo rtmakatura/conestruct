@@ -90,12 +90,19 @@ export function ScheduleField({ scenario, setScenario, step }: Props) {
                 id="sched-start"
                 className="field-input w-full"
                 value={sched?.start_time ?? ""}
-                onChange={(e) =>
-                  patch({
-                    start_time:
-                      e.target.value === "" ? undefined : +e.target.value,
-                  })
-                }
+                onChange={(e) => {
+                  const v =
+                    e.target.value === "" ? undefined : +e.target.value;
+                  // end == start is rejected at the wire (ambiguous:
+                  // zero-length vs 24 h wrap) — clear the end in the same
+                  // patch rather than POSTing a value the select can no
+                  // longer display (#188's stranded-end bug).
+                  patch(
+                    v != null && sched?.end_time === v
+                      ? { start_time: v, end_time: undefined }
+                      : { start_time: v },
+                  );
+                }}
               >
                 <option value="">—</option>
                 {HALF_HOURS.map((h) => (
@@ -119,11 +126,15 @@ export function ScheduleField({ scenario, setScenario, step }: Props) {
                 }
               >
                 <option value="">—</option>
-                {HALF_HOURS.filter(
-                  (h) => sched?.start_time == null || h > sched.start_time,
-                ).map((h) => (
+                {/* An end at/before the start wraps past midnight (#188):
+                    every half hour stays selectable, labeled "(next day)"
+                    when it lands after midnight.  Only end == start is
+                    excluded (rejected at the wire as ambiguous). */}
+                {HALF_HOURS.filter((h) => h !== sched?.start_time).map((h) => (
                   <option key={h} value={h}>
-                    {hhmm(h)}
+                    {sched?.start_time != null && h < sched.start_time
+                      ? `${hhmm(h)} (next day)`
+                      : hhmm(h)}
                   </option>
                 ))}
               </select>
