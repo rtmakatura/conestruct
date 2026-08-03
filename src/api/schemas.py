@@ -78,6 +78,16 @@ class ScenarioMeta(BaseModel):
     # north relative to the page; otherwise the schematic falls back
     # to "up = north" with a verify-bearing caveat.
     bearingDeg: float | None = None
+    # Road centerline as [lat, lng] vertices (#140) — the confirmed OSM
+    # road candidate's way geometry, relayed as a raw fact (relay
+    # pattern: the frontend captures it, each surface derives its own
+    # station frame from it, the backend stays authoritative for every
+    # MUTCD length).  Drives ONLY the drawn corridor (PDF page-2
+    # overlay); absent ⇒ the straight-chord frame, i.e. every pre-#140
+    # render unchanged.  A backend that predates this field drops it
+    # silently (Pydantic) and renders the chord — graceful, but the
+    # reason backend-first is the deploy order for this arc.
+    centerline: list[tuple[float, float]] | None = None
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)
@@ -766,6 +776,8 @@ def _meta_params(meta: ScenarioMeta) -> dict:
         "project_name": meta.project or "Untitled Project",
         "location_description": meta.locationDescription or meta.address or "",
         "bearing_deg": meta.bearingDeg,
+        # Tuple-of-tuples so it can live on the frozen ScenarioParams.
+        "centerline": tuple(tuple(p) for p in meta.centerline) if meta.centerline else None,
     }
 
 

@@ -3219,7 +3219,15 @@ def _aerial_zoom_for_work_zone(corridor: WorkCorridor) -> int:
     """
     import math
 
-    work_zone_m = corridor.work_zone_ft * M_PER_FT
+    # With a centerline the endpoints sit on the road, so the span to
+    # frame is the true-endpoint chord (shorter than the along-road
+    # length on a curve).  Without one the chord equals work_zone_ft by
+    # construction — kept on the original expression so the no-centerline
+    # URL stays byte-identical (#140 regression bar).
+    if corridor.centerline:
+        work_zone_m = corridor.work_zone_chord_m()
+    else:
+        work_zone_m = corridor.work_zone_ft * M_PER_FT
     # We want target_fraction of the image width to equal work_zone_m,
     # so image_width_m = work_zone_m / target_fraction.
     image_width_m = max(1.0, work_zone_m / _AERIAL_TARGET_POLYLINE_FRACTION)
@@ -3270,10 +3278,11 @@ def _fetch_mapbox_aerial(
     """Fetch a Mapbox satellite tile, optionally with a work-zone overlay.
 
     When ``corridor`` is supplied the URL carries a single overlay: a
-    2-vertex polyline tracing **only** the work-zone segment (between
-    ``corridor.work_zone_endpoints()``).  Advance warning, taper, and
-    buffer are not depicted — the closure region is the actionable
-    information for a reviewer.
+    polyline tracing **only** the work-zone segment (between
+    ``corridor.work_zone_endpoints()``, following the road centerline
+    through curves when one is attached — #140).  Advance warning,
+    taper, and buffer are not depicted — the closure region is the
+    actionable information for a reviewer.
 
     A best-effort OSM bearing-conflict check runs alongside: if the
     declared corridor bearing diverges from the road OSM reports at
@@ -3293,8 +3302,10 @@ def _fetch_mapbox_aerial(
     """
     if corridor is not None:
         _validate_corridor_bearing(corridor)
-        downstream_ll, upstream_ll = corridor.work_zone_endpoints()
-        polyline = encode_polyline([downstream_ll, upstream_ll])
+        # Without a centerline this is exactly [downstream, upstream] —
+        # the pre-#140 two-vertex chord; with one, the path tracks the
+        # road through the work zone.
+        polyline = encode_polyline(corridor.work_zone_path_points())
         # urllib.parse.quote with safe="" so backslashes etc. in the
         # polyline are percent-encoded; otherwise Mapbox will misparse
         # the path overlay.
@@ -3341,7 +3352,10 @@ AERIAL_PAGE_FOOTER_H: float = 36.0  # footer band height (above bottom margin)
 AERIAL_PAGE_TOP_GAP: float = 24.0  # vertical gap between subtitle and image
 AERIAL_PAGE_CAPTION_BLOCK_H: float = 50.0  # space reserved for caption + disclaimer
 AERIAL_PAGE_BELOW_IMAGE_GAP: float = 14.0  # gap between image bottom and caption top
-AERIAL_PAGE_DETAILS_BLOCK_H: float = 132.0  # corridor details panel height
+# Corridor details panel height.  132 pt fits the eight standing rows;
+# +12 pt hosts the conditional Centerline row (#140) without the last
+# baseline crowding the border.
+AERIAL_PAGE_DETAILS_BLOCK_H: float = 144.0
 AERIAL_PAGE_DETAILS_GAP: float = 14.0  # gap between caption block and details box
 AERIAL_PAGE_DETAILS_FRAC: float = 0.50  # details box width = 50% of page width
 
@@ -3395,6 +3409,18 @@ def _draw_corridor_details_box(
         ("Work zone", f"{corridor.work_zone_ft:,.0f} ft"),
         ("Downstream", f"{corridor.downstream_taper_ft:,.0f} ft"),
     ]
+    # Centerline provenance row (#140) — rendered only when road
+    # geometry is attached (its absence is the pre-#140 straight frame,
+    # already fully described by the Anchor + Bearing rows above).
+    # Partial coverage is disclosed, never silently truncated: beyond
+    # the covered station the drawn corridor continues on the end
+    # tangent.
+    if corridor.centerline:
+        covered_ft = corridor.centerline_coverage_ft() or 0.0
+        if covered_ft >= corridor.total_length_ft:
+            rows.append(("Centerline", "OSM, full corridor"))
+        else:
+            rows.append(("Centerline", f"covers 0–{covered_ft:,.0f} ft, bearing beyond"))
 
     label_x = box_x + pad
     value_x = box_x + pad + 110.0  # leaves the value column ~150 pt wide in a 50 % box
@@ -3699,6 +3725,7 @@ def render_plan_sheet(
                         lane_width_ft=params.lane_width_ft,
                         shoulder_width_ft=params.shoulder_width_ft,
                         jurisdiction=params.jurisdiction,
+                        centerline=getattr(params, "centerline", None),
                     )
                 except Exception as exc:  # noqa: BLE001
                     print(

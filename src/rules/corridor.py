@@ -157,6 +157,33 @@ def _along_cross_track_m(
     return along_track, cross_track
 
 
+def _project_onto_segment_m(
+    p_lat: float,
+    p_lng: float,
+    a_lat: float,
+    a_lng: float,
+    b_lat: float,
+    b_lng: float,
+) -> tuple[float, float]:
+    """Project ``p`` onto segment ``a→b``; return ``(distance_m, t)``.
+
+    Local-equirectangular projection with ``t`` clamped to [0, 1] —
+    the same math as the frontend's ``projectOnSegment``
+    (road-bearing/route.ts); this is its documented backend mirror
+    for the centerline station frame.  Adequate at corridor scales
+    (segment lengths ≪ 1 km).
+    """
+    kx = math.cos(math.radians(p_lat)) * 111_320.0
+    ky = 110_540.0
+    ax, ay = (a_lng - p_lng) * kx, (a_lat - p_lat) * ky
+    bx, by = (b_lng - p_lng) * kx, (b_lat - p_lat) * ky
+    dx, dy = bx - ax, by - ay
+    seg_len_sq = dx * dx + dy * dy
+    t = 0.0 if seg_len_sq == 0.0 else max(0.0, min(1.0, -(ax * dx + ay * dy) / seg_len_sq))
+    px, py = ax + t * dx, ay + t * dy
+    return math.hypot(px, py), t
+
+
 # ---------------------------------------------------------------------------
 # Corridor dataclass
 # ---------------------------------------------------------------------------
@@ -180,6 +207,20 @@ class WorkCorridor:
     buffer_ft: float
     work_zone_ft: float
     downstream_taper_ft: float
+
+    # Road centerline as (lat, lng) vertices — the relayed OSM way
+    # geometry of the confirmed road candidate (#140).  When present,
+    # :meth:`point_at_station_ft` follows this polyline by arc length
+    # instead of dead-reckoning along ``bearing_deg``, so the drawn
+    # corridor tracks the road through curves.  None ⇒ the straight
+    # frame (every pre-#140 behavior, unchanged).
+    #
+    # Scope (#207): only the DRAWING frame is centerline-aware.  Zone
+    # classification (:meth:`along_station_ft`, :meth:`classify_distance`)
+    # and :meth:`corridor_bbox` deliberately stay on the straight frame
+    # this arc — the drawn-vs-classified disagreement on curves is
+    # tracked in #207.
+    centerline: tuple[tuple[float, float], ...] | None = None
 
     # ------------------------------------------------------------------
     # Length math
@@ -241,10 +282,133 @@ class WorkCorridor:
         ``station_ft = 0`` returns the anchor (downstream end);
         ``station_ft = total_length_ft`` returns :meth:`upstream_point`.
         Negative or out-of-range values are accepted and extrapolated.
+
+        With a :attr:`centerline`, the station is walked along the
+        polyline's arc length (so zone boundaries land at the correct
+        along-road distance, #140); past either end of the geometry the
+        walk continues on the end segment's tangent — never a silent
+        truncation (the CORRIDOR DETAILS panel discloses partial
+        coverage).  Without a centerline this is the original
+        great-circle dead-reckon, byte-for-byte.
         """
-        return _destination_point(
-            self.anchor_lat, self.anchor_lng, self.bearing_deg, station_ft * M_PER_FT
-        )
+        frame = self._centerline_frame()
+        if frame is None:
+            return _destination_point(
+                self.anchor_lat, self.anchor_lng, self.bearing_deg, station_ft * M_PER_FT
+            )
+        cum_m, anchor_arc_m, sign = frame
+        assert self.centerline is not None
+        pts = self.centerline
+        s_m = anchor_arc_m + sign * station_ft * M_PER_FT
+        if s_m <= 0.0:
+            # Tangent continuation past the downstream end of the geometry.
+            tangent = _initial_bearing_deg(*pts[1], *pts[0])
+            return _destination_point(*pts[0], tangent, -s_m)
+        if s_m >= cum_m[-1]:
+            tangent = _initial_bearing_deg(*pts[-2], *pts[-1])
+            return _destination_point(*pts[-1], tangent, s_m - cum_m[-1])
+        for i in range(len(cum_m) - 1):
+            if cum_m[i] <= s_m <= cum_m[i + 1]:
+                seg_m = cum_m[i + 1] - cum_m[i]
+                t = 0.0 if seg_m == 0.0 else (s_m - cum_m[i]) / seg_m
+                return (
+                    pts[i][0] + t * (pts[i + 1][0] - pts[i][0]),
+                    pts[i][1] + t * (pts[i + 1][1] - pts[i][1]),
+                )
+        return pts[-1]  # unreachable; loop bounds cover [0, cum[-1]]
+
+    def _centerline_frame(self) -> tuple[list[float], float, float] | None:
+        """Arc-length frame over :attr:`centerline`: ``(cum_m, anchor_arc_m, sign)``.
+
+        ``cum_m`` is the cumulative arc length at each vertex;
+        ``anchor_arc_m`` is the anchor's projection onto the polyline;
+        ``sign`` maps corridor stations to arc direction (+1 when
+        walking toward higher vertex indices heads upstream — i.e. the
+        local tangent is within ±90° of ``bearing_deg``).  Computed
+        once and cached on the instance.  None when no usable
+        centerline is attached.
+        """
+        if self.centerline is None or len(self.centerline) < 2:
+            return None
+        cached = self.__dict__.get("_frame_cache")
+        if cached is not None:
+            return cached
+        pts = self.centerline
+        cum_m: list[float] = [0.0]
+        for i in range(len(pts) - 1):
+            cum_m.append(cum_m[-1] + _haversine_m(*pts[i], *pts[i + 1]))
+        best_d = math.inf
+        anchor_arc_m = 0.0
+        anchor_seg = 0
+        for i in range(len(pts) - 1):
+            d, t = _project_onto_segment_m(self.anchor_lat, self.anchor_lng, *pts[i], *pts[i + 1])
+            if d < best_d:
+                best_d = d
+                anchor_arc_m = cum_m[i] + t * (cum_m[i + 1] - cum_m[i])
+                anchor_seg = i
+        tangent = _initial_bearing_deg(*pts[anchor_seg], *pts[anchor_seg + 1])
+        diff = ((tangent - self.bearing_deg + 540.0) % 360.0) - 180.0
+        sign = 1.0 if abs(diff) <= 90.0 else -1.0
+        frame = (cum_m, anchor_arc_m, sign)
+        self.__dict__["_frame_cache"] = frame
+        return frame
+
+    def centerline_coverage_ft(self) -> float | None:
+        """Corridor station (ft, from the anchor) still covered by real geometry.
+
+        Stations beyond this fall on the tangent continuation.  None
+        when no centerline is attached.  Station 0 (the anchor) is
+        always covered — the anchor projects onto the polyline.
+        """
+        frame = self._centerline_frame()
+        if frame is None:
+            return None
+        cum_m, anchor_arc_m, sign = frame
+        arc_room_m = (cum_m[-1] - anchor_arc_m) if sign > 0 else anchor_arc_m
+        return arc_room_m * FT_PER_M
+
+    def work_zone_path_points(self, max_points: int = 100) -> list[tuple[float, float]]:
+        """Vertices of the work-zone overlay path, downstream → upstream.
+
+        Without a centerline: exactly the two
+        :meth:`work_zone_endpoints` — the pre-#140 chord, unchanged.
+        With one: both endpoints plus every centerline vertex whose
+        station falls strictly inside the work zone, so the overlay
+        tracks the road.  ``max_points`` (chosen: keeps the encoded
+        polyline comfortably inside Mapbox Static URL limits at
+        precision 5) uniformly decimates interior vertices only —
+        endpoints are always exact.
+        """
+        downstream_ll, upstream_ll = self.work_zone_endpoints()
+        frame = self._centerline_frame()
+        if frame is None:
+            return [downstream_ll, upstream_ll]
+        cum_m, anchor_arc_m, sign = frame
+        assert self.centerline is not None
+        a_ft = self.downstream_taper_ft
+        b_ft = self.downstream_taper_ft + self.work_zone_ft
+        interior: list[tuple[float, tuple[float, float]]] = []
+        for i, pt in enumerate(self.centerline):
+            station_ft = sign * (cum_m[i] - anchor_arc_m) * FT_PER_M
+            if a_ft < station_ft < b_ft:
+                interior.append((station_ft, pt))
+        interior.sort(key=lambda item: item[0])
+        pts = [pt for _, pt in interior]
+        if len(pts) > max_points - 2:
+            stride = len(pts) / float(max_points - 2)
+            pts = [pts[int(i * stride)] for i in range(max_points - 2)]
+        return [downstream_ll, *pts, upstream_ll]
+
+    def work_zone_chord_m(self) -> float:
+        """Straight-line distance between the true work-zone endpoints, meters.
+
+        With a centerline the endpoints sit on the road, so this chord
+        is what the aerial camera must frame (the along-road length
+        exceeds it on a curve).  Without one it equals
+        ``work_zone_ft`` by construction.
+        """
+        downstream_ll, upstream_ll = self.work_zone_endpoints()
+        return _haversine_m(*downstream_ll, *upstream_ll)
 
     # ------------------------------------------------------------------
     # Bounding box (for Overpass queries)
@@ -421,6 +585,7 @@ def build_corridor(
     anchor_description: str = "user-supplied anchor",
     downstream_taper_use_max: bool = True,
     jurisdiction: str = "CDOT",
+    centerline: tuple[tuple[float, float], ...] | None = None,
 ) -> WorkCorridor:
     """Build a :class:`WorkCorridor` from user inputs and MUTCD/CDOT distances.
 
@@ -454,6 +619,9 @@ def build_corridor(
             upper bound of the 50–100 ft-per-lane MUTCD range for the
             downstream taper.  The longer figure produces a more
             conservative corridor for site-detection bboxes.
+        centerline: optional (lat, lng) road-geometry vertices — see
+            :attr:`WorkCorridor.centerline`.  Drawing frame only (#140);
+            zone lengths above are unaffected.
 
     Returns:
         A populated :class:`WorkCorridor`.
@@ -475,6 +643,7 @@ def build_corridor(
         buffer_ft=float(buffer_ft),
         work_zone_ft=float(work_zone_ft),
         downstream_taper_ft=float(downstream_ft),
+        centerline=centerline,
     )
 
 

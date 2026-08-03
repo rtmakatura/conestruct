@@ -209,6 +209,13 @@ class ScenarioParams:
     # indistinguishable from the flagger kind and would validate against
     # the 100-ft one-lane-two-way taper instead of the full merging L.
     near_intersection: bool = False
+    # Road centerline (lat, lng) vertices relayed from the confirmed OSM
+    # candidate (#140).  Consumed only by the plan-sheet aerial's drawn
+    # corridor (WorkCorridor.centerline — drawing frame, not MUTCD math);
+    # no validator reads it.  Appended with a default so every existing
+    # constructor is untouched (same zero-churn move as
+    # ``near_intersection`` above).
+    centerline: tuple[tuple[float, float], ...] | None = None
 
 
 @dataclass(frozen=True)
