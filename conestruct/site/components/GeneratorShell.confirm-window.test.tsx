@@ -178,9 +178,14 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
     await release(auditCalls, 1, okAudit());
     expect(generate().disabled).toBe(false);
 
-    // Second edit → window: the previous settled answer was CLEAN, so
-    // the gate deliberately does not hold (it exists only to bridge a
-    // refusal to its next verdict).  The second 400 then re-arms it.
+    // Second edit → window: the previous settled answer was CLEAN, but
+    // this scenario still carries the refusing relay (detectedLanesTotal
+    // 4), so the #86 recovery affordance is armed — and #179 extended
+    // the gate to hold while ANY armed affordance's verdict is in
+    // flight (the untick's mirror image; deliberate behavior change,
+    // predicted in the Arc 8 plan).  The clean-prior window only opens
+    // with no affordance armed — GeneratorShell.confirm-undo-loop
+    // asserts that side.  The second 400 keeps the gate.
     const range = document.querySelector(
       'input[type="range"]',
     ) as HTMLInputElement;
@@ -191,7 +196,7 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
     });
     await flushDebounce();
     await release(bdCalls, 2, okBd());
-    expect(generate().disabled).toBe(false); // clean-prior window: open
+    expect(generate().disabled).toBe(true); // armed affordance: gated (#179)
     await release(auditCalls, 2, refusal400());
     expect(generate().disabled).toBe(true);
     expect(

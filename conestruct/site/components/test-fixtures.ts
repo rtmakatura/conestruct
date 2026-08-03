@@ -7,8 +7,12 @@
 // (memory.md: 39.73997, -104.96632).  ``pinned`` preserves the kind, so
 // per-kind fixtures stay per-kind.
 
-import { DEFAULT_SHOULDER } from "@/lib/scenarios";
-import type { Scenario, ShoulderScenario } from "@/lib/scenarios";
+import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
+import type {
+  FlaggerLaneClosureScenario,
+  Scenario,
+  ShoulderScenario,
+} from "@/lib/scenarios";
 
 export const TEST_PIN = { lat: 39.73997, lng: -104.96632 };
 
@@ -17,3 +21,6 @@ export function pinned<S extends Scenario>(s: S): S {
 }
 
 export const PINNED_SHOULDER: ShoulderScenario = pinned(DEFAULT_SHOULDER);
+// #179: the confirm-undo loop mounts a located flagger.
+export const PINNED_FLAGGER: FlaggerLaneClosureScenario =
+  pinned(DEFAULT_FLAGGER);

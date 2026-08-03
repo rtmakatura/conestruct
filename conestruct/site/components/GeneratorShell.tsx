@@ -687,7 +687,18 @@ export function GeneratorShell({
   useEffect(() => {
     if (auditSettled) setPrevSettled400(auditDeclined);
   }, [auditSettled, auditDeclined]);
-  const refusalPending = !auditSettled && prevSettled400;
+  // #179 extends the window to the untick's mirror image: undoing a
+  // confirm restores refusing relays while the LAST settled verdict was
+  // clean, so ``prevSettled400`` alone left the CTA enabled for the
+  // whole re-fetch against a road whose incoming verdict is a 400.
+  // While any recovery affordance is armed (the mirror predicate the
+  // rows already render from) and the verdict is in flight, the CTA
+  // waits.  The mirror decides gating-during-flight only — the backend
+  // verdict remains authoritative at settle, and the server still
+  // re-validates every render call (rule 3 posture unchanged).
+  const refusalPending =
+    !auditSettled &&
+    (prevSettled400 || matchRefusalAffordance(scenario) !== null);
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
   // The client checks cover the schema-bound mirrors only — workLen
