@@ -156,6 +156,82 @@ export function appendDetectionOverride(
 ): DetectionOverride[] {
   return [...(existing ?? []), marker].slice(-8);
 }
+
+// The tick's inverse (issue #179): remove the LAST marker of the given
+// via and hand it back so the caller can restore the recorded relay
+// fields.  Marker-reversal IS exact snapshot restore here: every
+// confirm's erase set (detection relays) is disjoint from every
+// user-editable field — flagger has no lane or oneway inputs, and the
+// near-intersection approach relays are not editable — so restoring the
+// marker's fields reconstructs the exact pre-tick payload (byte-identical
+// after JSON serialization; asserted in tests) while intervening manual
+// edits survive untouched.  An emptied list returns undefined so the
+// wire key drops entirely: a payload after tick-then-untick is
+// indistinguishable from one that was never confirmed.
+export function undoDetectionOverride(
+  existing: DetectionOverride[] | undefined,
+  via: DetectionOverride["via"],
+): {
+  overrides: DetectionOverride[] | undefined;
+  marker: DetectionOverride | null;
+} {
+  const list = existing ?? [];
+  for (let i = list.length - 1; i >= 0; i--) {
+    if (list[i].via !== via) continue;
+    const rest = [...list.slice(0, i), ...list.slice(i + 1)];
+    return { overrides: rest.length > 0 ? rest : undefined, marker: list[i] };
+  }
+  return { overrides: existing, marker: null };
+}
+
+// The last recorded marker for a via (issue #179) — drives the
+// confirmed-row render: a matching marker means the row's confirm is in
+// effect, so the row stays mounted, checked, describing what it
+// overrode.  Relay-present and marker-present are mutually exclusive per
+// via by construction (only a tick erases relays while appending its
+// marker; re-detection, a settled-null save, and a kind switch with a
+// confirmed road all reset the list in the same patch that rewrites
+// relays), so armed and confirmed states cannot collide.
+export function lastDetectionOverride(
+  existing: DetectionOverride[] | undefined,
+  via: DetectionOverride["via"],
+): DetectionOverride | null {
+  const list = existing ?? [];
+  for (let i = list.length - 1; i >= 0; i--) {
+    if (list[i].via === via) return list[i];
+  }
+  return null;
+}
+
+// Display clause for a confirmed row (issue #179), built ONLY from the
+// marker's present fields — the marker records just the relays that
+// existed at erase time (#177), so the clause never states a value
+// detection didn't report.  Mirrors ``_override_detected_clause`` in
+// src/api/audit.py (display-only mirror: the audit's
+// detection_overridden item stays backend-composed; this string decides
+// nothing but the row's description text).
+export function overrideDetectedClause(m: DetectionOverride): string {
+  const parts: string[] = [];
+  if (m.detectedLanesTotal !== undefined) {
+    const lanesWord = m.detectedLanesTotal === 1 ? "lane" : "lanes";
+    const directional = (
+      [
+        [m.detectedLanesForward, "forward"],
+        [m.detectedLanesBackward, "backward"],
+        [m.detectedLanesBothWays, "both-ways"],
+      ] as const
+    )
+      .filter(([v]) => v !== undefined)
+      .map(([v, label]) => `${v} ${label}`);
+    let clause = `${m.detectedLanesTotal} total ${lanesWord}`;
+    if (directional.length > 0) clause += ` (${directional.join(", ")})`;
+    parts.push(clause);
+  }
+  if (m.detectedOneway !== undefined) {
+    parts.push(`a one-way road (oneway=${m.detectedOneway})`);
+  }
+  return parts.join("; ");
+}
 const LANE_CLOSURE_TYPES = new Set<LaneClosureRoadType>([
   "rural_divided",
   "freeway",
