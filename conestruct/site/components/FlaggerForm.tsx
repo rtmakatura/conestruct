@@ -11,6 +11,9 @@ import {
   ONEWAY_BLOCKING,
   appendDetectionOverride,
   flaggerLaneIneligibleHigh,
+  lastDetectionOverride,
+  overrideDetectedClause,
+  undoDetectionOverride,
 } from "@/lib/scenarios/auto-apply";
 import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
@@ -45,6 +48,49 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
   const [wzTouched, setWzTouched] = useState(false);
   const wzValidation = validateWorkZone(scenario);
 
+  // #179: each confirm row is two-state now — armed (the relay is
+  // present and the backend gate refuses) or confirmed (the tick's #177
+  // marker is on record).  The states are mutually exclusive per via by
+  // construction: only the tick erases relays while appending its
+  // marker, and every path that re-attaches relays (re-detection,
+  // settled-null save, kind switch with a confirmed road) resets the
+  // marker list in the same patch.  A confirmed row stays mounted,
+  // checked, describing what it overrode; unticking removes the marker
+  // and restores its recorded relay values, so the original refusal
+  // honestly re-derives (strip → VERIFYING → the 400 returns).
+  //
+  // Announcements are deliberately left to the two existing channels
+  // (#179 ruling): the row's native role="checkbox" + aria-checked flip
+  // speaks the state change, and the StatusBar's polite live region
+  // (fix-spec-02 P1·05) speaks the consequence (VERIFYING → the verdict).
+  // No third voice.  Focus never moves: the row no longer unmounts on
+  // tick, so tick and untick keep the keyboard where it was.
+  const singleLaneMarker = lastDetectionOverride(
+    scenario.detectionOverrides,
+    "flagger_single_lane_confirm",
+  );
+  const multilaneMarker = lastDetectionOverride(
+    scenario.detectionOverrides,
+    "flagger_multilane_confirm",
+  );
+  const twowayMarker = lastDetectionOverride(
+    scenario.detectionOverrides,
+    "flagger_twoway_confirm",
+  );
+  const singleLaneArmed = scenario.detectedLanesTotal === 1;
+  const multilaneArmed = flaggerLaneIneligibleHigh(
+    scenario.detectedLanesTotal,
+    scenario.detectedLanesForward,
+    scenario.detectedLanesBackward,
+    scenario.detectedLanesBothWays,
+  );
+  const twowayArmed =
+    scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway);
+  // Confirmed-row description: built ONLY from the marker's recorded
+  // fields — never a value detection didn't report.
+  const confirmedDesc = (m: NonNullable<typeof singleLaneMarker>) =>
+    `Map data reported ${overrideDetectedClause(m)} — untick to restore detection`;
+
   return (
     <>
       <FieldGroup label="Road" step={3}>
@@ -74,17 +120,35 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             blocks generation.  This confirm is the operator's recovery
             path — asserting the road has a lane in each direction clears
             the relayed signal and lifts the block. */}
-        {scenario.detectedLanesTotal === 1 && (
+        {(singleLaneArmed || singleLaneMarker !== null) && (
           <CheckRow
-            on={false}
+            on={!singleLaneArmed && singleLaneMarker !== null}
             label="Road has one lane in each direction"
-            desc="Detection saw a single-lane road — confirm to enable this plan"
-            onToggle={() =>
+            desc={
+              singleLaneArmed || singleLaneMarker === null
+                ? "Detection saw a single-lane road — confirm to enable this plan"
+                : confirmedDesc(singleLaneMarker)
+            }
+            onToggle={() => {
+              if (!singleLaneArmed && singleLaneMarker !== null) {
+                // Untick (#179): remove the marker, restore the recorded
+                // relay — the single-lane refusal honestly re-derives.
+                const undo = undoDetectionOverride(
+                  scenario.detectionOverrides,
+                  "flagger_single_lane_confirm",
+                );
+                setScenario({
+                  ...scenario,
+                  detectedLanesTotal: undo.marker?.detectedLanesTotal,
+                  detectionOverrides: undo.overrides,
+                });
+                return;
+              }
               setScenario({
                 ...scenario,
                 detectedLanesTotal: undefined,
                 // Record what this confirm erased (#177) — the row only
-                // renders in the disputed (gate-refused) state.
+                // arms in the disputed (gate-refused) state.
                 detectionOverrides: appendDetectionOverride(
                   scenario.detectionOverrides,
                   {
@@ -93,8 +157,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                     asserted: "one lane in each direction",
                   },
                 ),
-              })
-            }
+              });
+            }}
           />
         )}
 
@@ -105,17 +169,33 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             recovery path — asserting the road's true shape clears ALL four
             lane relays (leaving a per-direction relay behind after the
             operator asserts 1+1 would be contradictory data). */}
-        {flaggerLaneIneligibleHigh(
-          scenario.detectedLanesTotal,
-          scenario.detectedLanesForward,
-          scenario.detectedLanesBackward,
-          scenario.detectedLanesBothWays,
-        ) && (
+        {(multilaneArmed || multilaneMarker !== null) && (
           <CheckRow
-            on={false}
+            on={!multilaneArmed && multilaneMarker !== null}
             label="Road has one through lane in each direction"
-            desc="Detection saw a multi-lane road — confirm to enable this plan"
-            onToggle={() =>
+            desc={
+              multilaneArmed || multilaneMarker === null
+                ? "Detection saw a multi-lane road — confirm to enable this plan"
+                : confirmedDesc(multilaneMarker)
+            }
+            onToggle={() => {
+              if (!multilaneArmed && multilaneMarker !== null) {
+                // Untick (#179): restore all four recorded lane relays —
+                // fields absent from the marker restore as absent.
+                const undo = undoDetectionOverride(
+                  scenario.detectionOverrides,
+                  "flagger_multilane_confirm",
+                );
+                setScenario({
+                  ...scenario,
+                  detectedLanesTotal: undo.marker?.detectedLanesTotal,
+                  detectedLanesForward: undo.marker?.detectedLanesForward,
+                  detectedLanesBackward: undo.marker?.detectedLanesBackward,
+                  detectedLanesBothWays: undo.marker?.detectedLanesBothWays,
+                  detectionOverrides: undo.overrides,
+                });
+                return;
+              }
               setScenario({
                 ...scenario,
                 detectedLanesTotal: undefined,
@@ -123,7 +203,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                 detectedLanesBackward: undefined,
                 detectedLanesBothWays: undefined,
                 // Record what this confirm erased (#177) — the row only
-                // renders in the disputed (gate-refused) state.  Only
+                // arms in the disputed (gate-refused) state.  Only
                 // the relays present at erase time land on the marker
                 // (undefined fields drop at JSON serialization).
                 detectionOverrides: appendDetectionOverride(
@@ -137,8 +217,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                     asserted: "one through lane in each direction",
                   },
                 ),
-              })
-            }
+              });
+            }}
           />
         )}
 
@@ -148,17 +228,35 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
             the operator's recovery path for a misdetection — asserting the
             road carries two-way traffic clears the relayed signal and lifts
             the block. */}
-        {scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway) && (
+        {(twowayArmed || twowayMarker !== null) && (
           <CheckRow
-            on={false}
+            on={!twowayArmed && twowayMarker !== null}
             label="Road carries two-way traffic"
-            desc="Detection saw a one-way street — confirm to enable this plan"
-            onToggle={() =>
+            desc={
+              twowayArmed || twowayMarker === null
+                ? "Detection saw a one-way street — confirm to enable this plan"
+                : confirmedDesc(twowayMarker)
+            }
+            onToggle={() => {
+              if (!twowayArmed && twowayMarker !== null) {
+                // Untick (#179): restore the recorded oneway tag — the
+                // directionality refusal honestly re-derives.
+                const undo = undoDetectionOverride(
+                  scenario.detectionOverrides,
+                  "flagger_twoway_confirm",
+                );
+                setScenario({
+                  ...scenario,
+                  oneway: undo.marker?.detectedOneway,
+                  detectionOverrides: undo.overrides,
+                });
+                return;
+              }
               setScenario({
                 ...scenario,
                 oneway: undefined,
                 // Record what this confirm erased (#177) — the row only
-                // renders in the disputed (gate-refused) state.
+                // arms in the disputed (gate-refused) state.
                 detectionOverrides: appendDetectionOverride(
                   scenario.detectionOverrides,
                   {
@@ -167,8 +265,8 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                     asserted: "two-way traffic",
                   },
                 ),
-              })
-            }
+              });
+            }}
           />
         )}
 

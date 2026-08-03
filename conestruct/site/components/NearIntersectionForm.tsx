@@ -24,6 +24,9 @@ import {
 import {
   appendDetectionOverride,
   lanesArithmeticMismatch,
+  lastDetectionOverride,
+  overrideDetectedClause,
+  undoDetectionOverride,
 } from "@/lib/scenarios/auto-apply";
 import type { DetectionOverride } from "@/lib/scenarios";
 import {
@@ -147,6 +150,40 @@ export function NearIntersectionForm({
       ),
     });
     clearApproachConfirm();
+  };
+  // #179: the confirm's inverse.  A recorded approach_lane_confirm
+  // marker renders the confirmed note below the lane fields; Undo
+  // removes the marker and restores its recorded relays onto EVERY leg
+  // (both legs carry the same way's tags — one fact), so the #120
+  // mismatch 400 honestly re-derives when the relays still refuse.
+  // The sidebar's one-time needs-confirmation hold is UI state and does
+  // not return — the restored relays re-engage the backend gate, which
+  // is the only blocking path.  A no-dispute confirm recorded no marker
+  // (nothing was erased), so it leaves no note and nothing to undo.
+  // Manual lane edits made after the confirm survive: the restore
+  // touches only the relay fields, never lanesPerDirection.
+  const approachConfirmMarker = lastDetectionOverride(
+    scenario.detectionOverrides,
+    "approach_lane_confirm",
+  );
+  const undoConfirmLaneCounts = () => {
+    const undo = undoDetectionOverride(
+      scenario.detectionOverrides,
+      "approach_lane_confirm",
+    );
+    const m = undo.marker;
+    if (m === null) return;
+    setScenario({
+      ...scenario,
+      approaches: legs.map((l) => ({
+        ...l,
+        detectedLanesTotal: m.detectedLanesTotal,
+        detectedLanesForward: m.detectedLanesForward,
+        detectedLanesBackward: m.detectedLanesBackward,
+        detectedLanesBothWays: m.detectedLanesBothWays,
+      })),
+      detectionOverrides: undo.overrides,
+    });
   };
 
   // The one supported cross street, presented in plain language: a
@@ -435,6 +472,25 @@ export function NearIntersectionForm({
               className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
             >
               Lane count is right
+            </button>
+          </div>
+        )}
+
+        {/* #179: the confirmed state stays visible with its undo — text
+            + button, no hue-only signal (rule 13); description built
+            only from the marker's recorded fields. */}
+        {!approachConfirm.pending && approachConfirmMarker !== null && (
+          <div className="mt-1 border border-[color:var(--line-soft)] px-3 py-2">
+            <p className="text-[11px] text-[color:var(--ink-on-dark-faint)] m-0">
+              ✓ Cross-street lane count confirmed — map data reported{" "}
+              {overrideDetectedClause(approachConfirmMarker)}.
+            </p>
+            <button
+              type="button"
+              onClick={undoConfirmLaneCounts}
+              className="mt-1.5 px-3 py-1 font-sans text-[12px] border border-[color:var(--act)] text-[color:var(--act)] hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)]"
+            >
+              Undo — restore detected lane data
             </button>
           </div>
         )}
