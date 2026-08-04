@@ -232,14 +232,17 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     return TestClient(app, raise_server_exceptions=False)
 
 
-def test_render_pdf_near_intersection_is_gated_400(client: TestClient) -> None:
+def test_render_pdf_near_intersection_serves_post_enablement(client: TestClient) -> None:
+    # Arc 11 flip (Refs #117): the kind is live; the old gated-400 pin
+    # inverts to a 200 through the same endpoint.  workLen 700 clears
+    # the 540-ft merging taper at 45 mph (the file's default 500-ft
+    # body predates the geometry validator answering on this kind).
     res = client.post(
         "/render/pdf",
         headers={"Authorization": f"Bearer {_SECRET}"},
-        json=_body(),
+        json=_body(workLen=700.0),
     )
-    assert res.status_code == 400, res.text
-    assert "not yet available" in res.json()["detail"]
+    assert res.status_code == 200, res.text
 
 
 def test_scenario_to_call_bridges_near_intersection() -> None:

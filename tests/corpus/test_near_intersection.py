@@ -233,9 +233,16 @@ def test_boundary_rejects_422(
     assert res.status_code == 422, res.text
 
 
-def test_valid_body_still_gated_400(client: TestClient, auth_headers: dict[str, str]) -> None:
-    # The increment must not move the gate: a schema-valid body keeps
-    # drawing the standard gated-kind 400 over HTTP.
+def test_valid_body_renders_200_post_enablement(
+    client: TestClient, auth_headers: dict[str, str]
+) -> None:
+    # Arc 11 flip (Refs #117): the gate opened, so the REAL pipeline
+    # answers this body now.  The boundary body's 300-ft work zone was
+    # crafted only to clear the schema — behind the gate it never met
+    # the geometry validator; today that validator refuses it honestly
+    # (zone shorter than the 540-ft taper at 45 mph).  The pin is that
+    # the gated-kind 400 is gone and the pipeline's own gate speaks.
     res = client.post("/render/audit", headers=auth_headers, json=_body("ni-gate-pin"))
     assert res.status_code == 400, res.text
-    assert "not yet available" in res.json()["detail"]
+    assert "not yet available" not in res.text
+    assert res.json()["detail"]["error"] == "geometry_validation_failed"

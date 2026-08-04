@@ -96,7 +96,12 @@ ENV_SECRET_VAR = "RENDER_API_SECRET"
 #   * shoulder — S-630-1 Cases 11/11b/26/27 (Phase 5 harness, tests/s630/)
 #   * flagger_lane_closure — MUTCD TA-10 + S-630-1 Cases 17/42
 #     (PR 3 gate flip; harness at tests/s630/test_ta10_flagger.py)
-ENABLED_SCENARIOS: frozenset[str] = frozenset({"shoulder", "flagger_lane_closure"})
+#   * near_intersection — S-630-1 Sheet 10 Case 18 + MUTCD Fig 6P-21/22
+#     (Arc 11 flip, Refs #117; harness at tests/s630/test_case_18.py,
+#     enablement bar in validation-artifacts/committed/arc11-117-enablement/)
+ENABLED_SCENARIOS: frozenset[str] = frozenset(
+    {"shoulder", "flagger_lane_closure", "near_intersection"}
+)
 
 
 def _drop_expected_http_errors(
@@ -168,11 +173,12 @@ def _ensure_scenario_enabled(scenario: Scenario) -> None:
     """
     if scenario.kind not in ENABLED_SCENARIOS:
         enabled = ", ".join(sorted(ENABLED_SCENARIOS))
+        # Grammar rider (Arc 11 flip): the old string appended a bare
+        # "closure" after the enum list, which read oddly at two kinds
+        # and worse at three.
         raise HTTPException(
             status_code=400,
-            detail=(
-                f"This scenario type is not yet available. Currently supported: {enabled} closure."
-            ),
+            detail=(f"This scenario type is not yet available. Currently supported: {enabled}."),
         )
 
 

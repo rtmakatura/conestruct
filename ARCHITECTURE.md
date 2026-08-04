@@ -539,12 +539,14 @@ daily rates and labor rates are not from a real Colorado contractor
 invoice. The math is right; the inputs are guesses. Marked for
 replacement before the first paid pilot.
 
-**V1 scenario gating.** Only `"shoulder"` is enabled today, gated by
+**V1 scenario gating.** Three kinds are enabled today — `"shoulder"`
+(S-630-1 Cases 11/26/27), `"flagger_lane_closure"` (TA-10 + Cases
+17/42), and `"near_intersection"` (Case 18, Arc 11 / #117) — gated by
 two parallel constants: `ENABLED_SCENARIOS` in
 `src/api/render_api.py` (backend rejects anything else with 400 via
 `_ensure_scenario_enabled`) and `ENABLED_SCENARIO_KINDS` in
 `conestruct/site/lib/scenarios/index.ts` (frontend hides the
-disabled options from the picker). The flagger, lane closure, mobile
+disabled options from the picker). The lane closure, mobile
 op, and work-beyond-shoulder generators all exist and have tests but
 are not exposed to users. They'll re-enable individually as each is
 verified against the CDOT S-630 typical sheets — both constants need

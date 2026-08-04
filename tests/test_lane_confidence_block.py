@@ -205,15 +205,18 @@ def test_consistent_or_omitted_relays_pass_the_gate(client: TestClient, ni_enabl
     assert resp.status_code == 200, resp.text
 
 
-def test_gated_kind_400_still_first_without_enablement(
+def test_confidence_gate_answers_without_any_enablement_patch(
     client: TestClient,
 ) -> None:
-    """Without the enablement patch the standard gated-kind 400 answers
-    first — pinning that this file's other tests genuinely needed the
-    monkeypatch to reach the confidence gate."""
+    """Arc 11 flip (Refs #117): the kind is live, so the #120 gate — not
+    the gated-kind 400 — now answers a disputed-relay payload on the
+    unpatched app.  (Pre-flip this test pinned the inverse: the
+    gated-kind 400 answered first.)"""
     resp = client.post("/render/pdf", json=_ni_body(**MISMATCH_RELAYS), headers=AUTH)
     assert resp.status_code == 400, resp.text
-    assert "not yet available" in resp.json()["detail"]
+    detail = resp.json()["detail"]
+    assert "not yet available" not in detail
+    assert "Lane count is right" in detail
 
 
 # ---------------------------------------------------------------------------

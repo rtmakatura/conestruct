@@ -276,10 +276,14 @@ export const SCENARIO_KINDS: Array<{ v: ScenarioKind; l: string; sub: string }> 
 // typical sheets — extending the array re-enables the rest without
 // touching any other code. flagger_lane_closure enabled in PR 3
 // (TA-10 + S-630-1 Cases 17/42; harness at tests/s630/
-// test_ta10_flagger.py). Must match render_api.py ENABLED_SCENARIOS.
+// test_ta10_flagger.py). near_intersection enabled in Arc 11 (#117:
+// S-630-1 Sheet 10 Case 18 harness at tests/s630/test_case_18.py;
+// ten-item enablement bar evidenced in validation-artifacts/committed/
+// arc11-117-enablement/). Must match render_api.py ENABLED_SCENARIOS.
 export const ENABLED_SCENARIO_KINDS = [
   "shoulder",
   "flagger_lane_closure",
+  "near_intersection",
 ] as const satisfies readonly ScenarioKind[];
 
 export function isScenarioKindEnabled(kind: ScenarioKind): boolean {
