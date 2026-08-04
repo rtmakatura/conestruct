@@ -104,16 +104,43 @@ export function lanesArithmeticMismatch(
 // (option (i) in the #180 plan) — do not extend this matcher with
 // message-text sniffing.
 //
-// near_intersection's "Lane count is right" confirm joins this table
-// when #117 enablement lands.
 export interface RefusalAffordance {
-  code: "flagger_multilane" | "flagger_single_lane" | "flagger_oneway";
+  code:
+    | "flagger_multilane"
+    | "flagger_single_lane"
+    | "flagger_oneway"
+    | "ni_lane_confidence";
   pointer: string;
 }
 
 export function matchRefusalAffordance(
   scenario: Scenario,
 ): RefusalAffordance | null {
+  // near_intersection (#117 enablement, #120's gate): exact mirror of
+  // render_api._ensure_lane_confidence — the backend refuses when ANY
+  // approach's relayed lane tags dispute themselves.  The remedy is the
+  // form's "Lane count is right" confirm (NearIntersectionForm), which
+  // clears the relays on every leg.  This row replaces the transient
+  // sidebar hold as the refusal's mirror: the hold is one-time UI state
+  // and does not return after an untick — the relays and this predicate
+  // do (#179).
+  if (scenario.kind === "near_intersection") {
+    const disputed = scenario.approaches.some((a) =>
+      lanesArithmeticMismatch(
+        a.detectedLanesTotal,
+        a.detectedLanesForward,
+        a.detectedLanesBackward,
+        a.detectedLanesBothWays,
+      ),
+    );
+    return disputed
+      ? {
+          code: "ni_lane_confidence",
+          pointer:
+            "The map's lane counts for the cross street contradict each other — confirm “Lane count is right” in the Cross street section to proceed.",
+        }
+      : null;
+  }
   if (scenario.kind !== "flagger_lane_closure") return null;
   if (
     flaggerLaneIneligibleHigh(

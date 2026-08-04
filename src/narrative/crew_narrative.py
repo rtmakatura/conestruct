@@ -745,6 +745,12 @@ def build_narrative_context(
         "advance_spacing_abc": spacing_abc,
         "is_night": params.is_night,
         "is_divided": params.is_divided,
+        # #176's visible right-side note (ruled 2026-08-03): fires only
+        # where a lane CHOICE exists — num_lanes >= 2 lane closures
+        # (near_intersection now, lane_closure_divided on enablement).
+        # The flagger's one lane per direction offers no choice; shoulder
+        # closures close no lane.  Mirrors the plan-sheet footer note.
+        "rightmost_lane_assumed": params.closure_type == "lane" and params.num_lanes >= 2,
         "is_flagger": narrative_is_flagger,
         "is_afad": is_afad,
         "flagger_station_1_ft": flagger_station_1_ft,

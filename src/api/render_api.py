@@ -338,7 +338,7 @@ def _ensure_lane_confidence(scenario: Scenario) -> None:
                     "can't be trusted this close to an intersection. "
                     "Check the through-lane count in the field or on "
                     "imagery, then confirm “Lane count is right” (or set "
-                    "the count yourself) in the Approaches section and "
+                    "the count yourself) in the Cross street section and "
                     "regenerate."
                 ),
             )

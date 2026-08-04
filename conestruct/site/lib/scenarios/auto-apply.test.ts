@@ -20,6 +20,7 @@ import {
   matchRefusalAffordance,
   snapSpeedToDomain,
 } from "./auto-apply";
+import { DEFAULT_NEAR_INTERSECTION } from "./index";
 
 function classification(
   speedLimitMph: number | undefined,
@@ -313,5 +314,59 @@ describe("matchRefusalAffordance (issue #180)", () => {
     expect(
       matchRefusalAffordance({ ...SHOULDER, detectedLanesTotal: 1 }),
     ).toBeNull();
+  });
+});
+
+describe("matchRefusalAffordance — near_intersection entry (#117, #120)", () => {
+  // Mirror of render_api._ensure_lane_confidence: the gate fires when
+  // ANY approach's relayed lane tags dispute themselves; the remedy is
+  // the form's "Lane count is right" confirm in the Cross street
+  // section.
+  const disputedLeg = {
+    ...DEFAULT_NEAR_INTERSECTION.approaches[0],
+    // East Colfax shape: total 2, forward 1 + backward 2 (schemas.py
+    // survey fixture) — the map disputes itself.
+    detectedLanesTotal: 2,
+    detectedLanesForward: 1,
+    detectedLanesBackward: 2,
+  };
+
+  it("matches the #120 gate on a disputed approach relay", () => {
+    const m = matchRefusalAffordance({
+      ...DEFAULT_NEAR_INTERSECTION,
+      approaches: [disputedLeg],
+    });
+    expect(m?.code).toBe("ni_lane_confidence");
+    expect(m?.pointer).toContain("Lane count is right");
+    expect(m?.pointer).toContain("Cross street section");
+  });
+
+  it("matches when EITHER of two legs is disputed (backend iterates all)", () => {
+    const clean = DEFAULT_NEAR_INTERSECTION.approaches[0];
+    const m = matchRefusalAffordance({
+      ...DEFAULT_NEAR_INTERSECTION,
+      approaches: [clean, { ...disputedLeg, id: "cross_b" }],
+    });
+    expect(m?.code).toBe("ni_lane_confidence");
+  });
+
+  it("no relays → no match (absent tags never block, #136/#158 principle)", () => {
+    expect(matchRefusalAffordance(DEFAULT_NEAR_INTERSECTION)).toBeNull();
+  });
+
+  it("consistent TWLTL decomposition never matches (both_ways honored)", () => {
+    const m = matchRefusalAffordance({
+      ...DEFAULT_NEAR_INTERSECTION,
+      approaches: [
+        {
+          ...DEFAULT_NEAR_INTERSECTION.approaches[0],
+          detectedLanesTotal: 3,
+          detectedLanesForward: 1,
+          detectedLanesBackward: 1,
+          detectedLanesBothWays: 1,
+        },
+      ],
+    });
+    expect(m).toBeNull();
   });
 });

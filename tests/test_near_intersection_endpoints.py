@@ -181,3 +181,43 @@ def test_crew_narrative_carries_the_cross_street_section(client):
     assert resp.status_code == 200
     text = resp.text
     assert "Cross-Street Signs" in text
+
+
+# ---------------------------------------------------------------------------
+# #176's visible right-side note (ruled 2026-08-03): rendered-output
+# assertions on both surfaces (rule 11).  Fires only where a lane CHOICE
+# exists — num_lanes >= 2 lane closures.
+# ---------------------------------------------------------------------------
+
+_RIGHTMOST_NARRATIVE = "draws the closure on the RIGHTMOST lane"
+_RIGHTMOST_SHEET = "CLOSED LANE DRAWN AS THE RIGHTMOST LANE"
+
+
+def test_rightmost_lane_note_renders_on_ni_narrative(client):
+    resp = client.post("/render/markdown", json=_ni_body(), headers=AUTH)
+    assert resp.status_code == 200
+    assert _RIGHTMOST_NARRATIVE in resp.text
+    assert "does not apply as drawn" in resp.text
+
+
+def test_rightmost_lane_note_renders_on_ni_sheet(client):
+    import pypdfium2 as pdfium
+
+    resp = client.post("/render/pdf", json=_ni_body(), headers=AUTH)
+    assert resp.status_code == 200
+    doc = pdfium.PdfDocument(resp.content)
+    all_text = "\n".join(doc[i].get_textpage().get_text_range() for i in range(len(doc)))
+    assert _RIGHTMOST_SHEET in all_text
+
+
+def test_rightmost_lane_note_absent_where_no_lane_choice_exists(client):
+    """Flagger (one lane per direction) and shoulder (no lane closed)
+    must NOT carry the note — a disclosure that fires everywhere warns
+    of nothing."""
+    from tests.test_plan_sheet_device_summary import FLAGGER_BODY, SHOULDER_BODY
+
+    for body in (FLAGGER_BODY, SHOULDER_BODY):
+        resp = client.post("/render/markdown", json=body, headers=AUTH)
+        assert resp.status_code == 200, body["kind"]
+        assert _RIGHTMOST_NARRATIVE not in resp.text, body["kind"]
+        assert "RIGHTMOST" not in resp.text, body["kind"]

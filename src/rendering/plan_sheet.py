@@ -2871,7 +2871,10 @@ def _draw_notes(
     # + three fine-print disclosures) beneath the Reference footer —
     # count those lines into the tier budget so the box tightens its
     # padding instead of overflowing.  Zero for every other kind.
-    extra_note_lines = 5 if params.near_intersection else 0
+    # Lane-closure plans with a lane CHOICE (num_lanes >= 2) also add
+    # the #176 rightmost-lane assumption note (2 wrapped lines).
+    rightmost_lane_note = params.closure_type == "lane" and params.num_lanes >= 2
+    extra_note_lines = (5 if params.near_intersection else 0) + (2 if rightmost_lane_note else 0)
     layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
     def section_header(title: str) -> None:
@@ -3081,6 +3084,32 @@ def _draw_notes(
             for line in _wrap_to_width(c, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=3):
                 y[0] -= layout.footer_pads[1]
                 c.drawString(x, y[0], line)
+    if rightmost_lane_note:
+        # #176's visible right-side note (ruled 2026-08-03): the closed
+        # lane is a modeling assumption, and the sheet must say so —
+        # a crew reading this plan for left- or center-lane work would
+        # otherwise set up the wrong closure with no signal (rule 10).
+        # Fires only where a lane CHOICE exists (num_lanes >= 2 lane
+        # closures: near_intersection now, lane_closure_divided on its
+        # enablement); the flagger's single lane per direction offers no
+        # choice, and shoulder closures close no lane.
+        c.setFont("Helvetica-Bold", 6.5)
+        c.setFillColor(colors.black)
+        for line in _wrap_to_width(
+            c,
+            (
+                "CLOSED LANE DRAWN AS THE RIGHTMOST LANE — MODELING "
+                "ASSUMPTION; NO MUTCD RULE SELECTS THE LANE (THE WORK "
+                "LOCATION DOES). IF THE WORK OCCUPIES A DIFFERENT LANE, "
+                "THIS PLAN DOES NOT APPLY AS DRAWN."
+            ),
+            "Helvetica-Bold",
+            6.5,
+            width - 16.0,
+            max_lines=3,
+        ):
+            y[0] -= layout.footer_pads[1]
+            c.drawString(x, y[0], line)
     y[0] -= layout.footer_pads[1]
     c.setFont("Helvetica-Bold", 6.5)
     c.setFillColor(colors.HexColor("#B05010"))
