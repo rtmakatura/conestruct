@@ -773,6 +773,40 @@ def build_narrative_context(
             }
         )
 
+    # -----------------------------------------------------------------
+    # Emergency access (#124) — a required MHT minimum element per CDOT
+    # 630.10(a).  Computable facts only; everything else is assigned to
+    # the TCS honestly (630.11 duty 4).  No invented procedure.
+    # -----------------------------------------------------------------
+    if params.closure_type == "shoulder":
+        emergency_access_fact = (
+            "All travel lanes remain open — the closure occupies the "
+            "shoulder only. Emergency vehicles pass through the work zone "
+            "in the open lanes."
+        )
+    elif params.closure_type == "off_road":
+        emergency_access_fact = (
+            "All travel lanes and shoulders remain open — the work is beyond the roadway."
+        )
+    elif params.closure_type == "mobile":
+        emergency_access_fact = (
+            "The operation is mobile: the closure moves with the work "
+            "vehicles and the lane reopens behind them."
+        )
+    elif narrative_is_flagger:
+        emergency_access_fact = (
+            "The roadway is reduced to one alternating lane; access "
+            "through the closure is controlled at the flagger stations."
+        )
+    else:
+        open_lanes = params.num_lanes - 1
+        emergency_access_fact = (
+            f"{open_lanes} of {params.num_lanes} same-direction travel "
+            f"{'lanes remain' if open_lanes != 1 else 'lane remains'} open "
+            f"({open_lanes * params.lane_width_ft:,.0f} ft of traversable "
+            "width) past the closed lane."
+        )
+
     return {
         "params": params,
         # #156: the header shows the RESOLVED jurisdiction record's name
@@ -831,6 +865,9 @@ def build_narrative_context(
         "r9_9_count": r9_9_count,
         "m4_9a_count": m4_9a_count,
         "ped_bike_rules": ped_bike_rules,
+        # Emergency access (#124) — always present; the template renders
+        # the section on every plan (same rule-10 posture as #125).
+        "emergency_access_fact": emergency_access_fact,
         # near_intersection (Refs #117) — always present so the template
         # can gate on them; false/empty for every other kind.
         "is_near_intersection": is_near_intersection,

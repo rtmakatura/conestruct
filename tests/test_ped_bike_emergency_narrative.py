@@ -18,7 +18,9 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
+import src.api.render_api as render_api
 from src.api.render_api import app
+from tests.test_lane_confidence_block import _ni_body
 from tests.test_plan_sheet_device_summary import FLAGGER_BODY, SHOULDER_BODY
 
 AUTH = {"Authorization": "Bearer test-secret"}
@@ -51,8 +53,32 @@ def _markdown(client, body) -> str:
 def test_both_sections_render_on_a_plain_plan_with_explicit_statements(client):
     text = _markdown(client, SHOULDER_BODY)
     assert PED_HEADING in text
+    assert EA_HEADING in text
     # No facility flagged -> the explicit statement, never silence.
     assert "No pedestrian or bicycle facility is flagged as affected" in text
+    # Shoulder closure's computable fact.
+    assert "the closure occupies the shoulder only" in text
+    # The MHT-minimum element named, and the TCS assignment cited.
+    assert "CDOT 630.10(a)" in text
+    assert "630.11, TCS duty 4" in text
+
+
+def test_flagger_emergency_access_states_the_flagger_gate(client):
+    text = _markdown(client, FLAGGER_BODY)
+    assert EA_HEADING in text
+    assert "controlled at the flagger stations" in text
+
+
+def test_near_intersection_states_open_lane_traversability(client, monkeypatch):
+    monkeypatch.setattr(
+        render_api,
+        "ENABLED_SCENARIOS",
+        frozenset({"shoulder", "flagger_lane_closure", "near_intersection"}),
+    )
+    text = _markdown(client, _ni_body())
+    # Default NI mainline: 2 lanes per direction, rightmost closed.
+    assert "1 of 2 same-direction travel lane remains open" in text
+    assert "traversable width" in text
 
 
 # ---------------------------------------------------------------------------
@@ -149,3 +175,5 @@ def test_crew_pdf_carries_both_sections(client):
     doc = pdfium.PdfDocument(resp.content)
     all_text = "\n".join(doc[i].get_textpage().get_text_range() for i in range(len(doc)))
     assert "Pedestrian and Bicycle Accommodation" in all_text
+    assert "Emergency Access" in all_text
+    assert "630.10(a)" in all_text
