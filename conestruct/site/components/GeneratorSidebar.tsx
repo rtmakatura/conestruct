@@ -335,10 +335,18 @@ export function GeneratorSidebar({
         };
         lastAppliedCrossStreetRef.current = crossJson;
         setApproachConfirm({
-          // Only a detection-filled lane count needs confirming; when
-          // OSM had no lane tag the form's default is user territory.
-          pending: r.crossStreet.lanesPerDirection !== null,
-          reason: r.crossStreet.lanesSuspectReason,
+          // #174 ruling (option d, 2026-08-03): confirm-on-default.  A
+          // substituted count renders identically to a detected one, so
+          // the no-tag case holds for confirmation too — the hold's
+          // reason says the 1 was assumed, making the acknowledgment
+          // (and the minLanes floor, when it bites) explicable.
+          pending: true,
+          reason:
+            r.crossStreet.lanesPerDirection !== null
+              ? r.crossStreet.lanesSuspectReason
+              : "The map data carries no lane tag for the cross street — " +
+                "the lane count was assumed 1 per direction, not detected. " +
+                "Confirm it or set the real count.",
         });
       }
     }

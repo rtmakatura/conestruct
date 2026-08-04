@@ -97,6 +97,22 @@ vi.mock("./LocationPickerModal", () => ({
       >
         APPLY_PIN_B
       </button>
+      <button
+        type="button"
+        onClick={() =>
+          onSave(
+            result(
+              crossStreet({
+                lanesPerDirection: null,
+                lanesSuspect: false,
+                lanesSuspectReason: null,
+              }),
+            ),
+          )
+        }
+      >
+        APPLY_PIN_NOTAG
+      </button>
     </>
   ),
 }));
@@ -252,6 +268,28 @@ describe("near_intersection picker → form → payload", () => {
     expect(
       bundleBody?.scenario.approaches.map((a) => a.lanesPerDirection),
     ).toEqual([2, 2]);
+  });
+
+  it("gates Generate when OSM had NO lane tag — the substituted 1 needs acknowledging (#174)", async () => {
+    const user = userEvent.setup();
+    await mountSandbox();
+
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN_NOTAG"));
+
+    // #174 ruling (option d): the substituted count holds for
+    // confirmation too, with a reason naming the assumption — a
+    // substituted value must not render identically to a detected one.
+    expect(screen.getByText(/assumed 1 per direction, not detected/i)).toBeTruthy();
+    expect(generateButton().hasAttribute("disabled")).toBe(true);
+
+    // A manual edit IS the confirmation (existing convention): setting
+    // the count clears the hold without ticking the confirm.
+    await user.click(chipIn("Cross-street lanes — direction A", "2"));
+    expect(generateButton().hasAttribute("disabled")).toBe(false);
+
+    await generate(user);
+    expect(bundleBody?.scenario.approaches[0].lanesPerDirection).toBe(2);
   });
 
   it("a CHANGED cross-street detection applies over manual edits (new information wins)", async () => {

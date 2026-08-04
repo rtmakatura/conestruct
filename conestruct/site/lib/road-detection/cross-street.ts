@@ -205,7 +205,15 @@ export function lanesSuspicion(tags: RoadCandidate["tags"]): {
  * unrepresentable.  A missing speed or lane tag falls back to the
  * form's conservative defaults (30 mph, 1 lane); both remain fully
  * editable, and the lane count is additionally held for explicit
- * confirmation by the form when it was detection-filled.
+ * confirmation by the form whether it was detection-filled OR
+ * substituted (#174 ruling, option d: a substituted value must be
+ * distinguishable from a detected one, so the no-tag case holds for
+ * confirmation with a reason naming the assumption).  Standing rule
+ * for any future substitution site outside near_intersection: a
+ * provenance marker + a non-blocking audit item at the single
+ * emission point in src/api/audit.py (the lane_count_low_confidence
+ * machinery), never a silent default — near_intersection alone gets
+ * the hard hold, matching the #120 blast-radius split.
  */
 export function approachesFromCrossStreet(
   cs: CrossStreetCandidate,
