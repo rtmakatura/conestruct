@@ -60,7 +60,7 @@ def test_both_sections_render_on_a_plain_plan_with_explicit_statements(client):
     assert "the closure occupies the shoulder only" in text
     # The MHT-minimum element named, and the TCS assignment cited.
     assert "CDOT 630.10(a)" in text
-    assert "630.11, TCS duty 4" in text
+    assert "CDOT Standard Specifications 630.11" in text
 
 
 def test_flagger_emergency_access_states_the_flagger_gate(client):

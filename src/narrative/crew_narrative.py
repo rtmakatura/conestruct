@@ -776,7 +776,10 @@ def build_narrative_context(
     # -----------------------------------------------------------------
     # Emergency access (#124) — a required MHT minimum element per CDOT
     # 630.10(a).  Computable facts only; everything else is assigned to
-    # the TCS honestly (630.11 duty 4).  No invented procedure.
+    # the TCS honestly (CDOT Standard Specifications 630.11 -- the
+    # corpus-grounded TCS section; the duty ENUMERATION in #124's body
+    # is not in-repo-verifiable, so the narrative cites the section
+    # generally).  No invented procedure.
     # -----------------------------------------------------------------
     if params.closure_type == "shoulder":
         emergency_access_fact = (
