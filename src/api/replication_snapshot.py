@@ -78,7 +78,7 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
     # section quoting the detail verbatim instead of dying (issue #178).
     # Anything else propagates unchanged.
     try:
-        placements, params, site_adj, night_adj = _placements_for(scenario)
+        placements, params, site_adj, night_adj, approaches = _placements_for(scenario)
     except HTTPException as exc:
         if exc.status_code != 400:
             raise
@@ -215,6 +215,9 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
         site_adjustments=site_adj,
         night_adjustments=night_adj,
         pilot_car=getattr(scenario, "pilotCar", False),
+        # Same ApproachParams the generator got (near_intersection only);
+        # the builder raises rather than emit a partial narrative (#117).
+        approaches=approaches,
     )
 
     return "\n".join(

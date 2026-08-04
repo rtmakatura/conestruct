@@ -80,7 +80,12 @@ from src.rules.spacing import (
     shoulder_taper_length,
     taper_length,
 )
-from src.rules.validators import DevicePlacement, ScenarioParams, validate_corridor_geometry
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    validate_corridor_geometry,
+    validate_layout,
+)
 
 ENV_SECRET_VAR = "RENDER_API_SECRET"
 
@@ -380,13 +385,20 @@ def _safe_filename(scenario: Scenario, ext: str) -> str:
     return f"{cleaned}.{ext}"
 
 
-def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[dict]]:
+def _placements_for(
+    scenario: Scenario,
+) -> tuple[list, object, list[dict], list[dict], list | None]:
     """Run the generator and apply site- and night-condition adjustments.
 
-    Returns ``(placements, params, site_records, night_records)``.  The
-    record lists describe each flag that fired and the MUTCD section
-    behind it; the markdown narrative consumes both, the other render
-    paths discard them but still benefit from the modified placements.
+    Returns ``(placements, params, site_records, night_records,
+    approaches)``.  The record lists describe each flag that fired and
+    the MUTCD section behind it; the markdown narrative consumes both,
+    the other render paths discard them but still benefit from the
+    modified placements.  ``approaches`` is the ApproachParams list the
+    generator received (near_intersection only, else ``None``) — the
+    plan sheet, crew narrative, and audit builders all require the same
+    list the generator got and raise rather than render a partial
+    document without it (#117).
 
     Night adjustments fire after site adjustments so warning lights
     decorate every taper drum — including any drums added by an earlier
@@ -458,11 +470,38 @@ def _placements_for(scenario: Scenario) -> tuple[list, object, list[dict], list[
                 ],
             },
         )
+    # Layout validation in the production path (#117 enablement item 2).
+    # Every generator's output is invariant-tested to validate clean
+    # (tests/test_generators.py), so an error-severity Violation here
+    # means the generator and the rules engine disagree — a regression,
+    # not a user input problem.  Fail closed with a 5xx rather than
+    # render a plan the tool's own validator rejects (ruled 2026-08-03:
+    # fail-closed, no wire change; audit surfacing is a possible later
+    # issue).  Runs on the RAW generator output — that is the tested
+    # invariant; site/night adjustments below add decoration devices
+    # the invariant does not cover.
+    approaches = kwargs.get("approaches")
+    approach_params = {ap.id: ap for ap in approaches} if approaches else None
+    layout_errors = [
+        v for v in validate_layout(placements, params, approach_params) if v.severity == "error"
+    ]
+    if layout_errors:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_layout_validation_failed",
+                "message": (
+                    "Internal layout validation failed; the generated plan "
+                    "violates the tool's own MUTCD checks and will not be "
+                    "rendered. " + " ".join(f"[{v.rule_id}] {v.message}" for v in layout_errors)
+                ),
+            },
+        )
     placements, site_records = apply_site_adjustments(
         placements, params, scenario.meta.siteConditions or {}
     )
     placements, night_records = apply_night_adjustments(placements, params)
-    return placements, params, site_records, night_records
+    return placements, params, site_records, night_records, approaches
 
 
 def _plan_sheet_site_flags(scenario: Scenario) -> dict[str, bool]:
@@ -486,21 +525,21 @@ def _plan_sheet_site_flags(scenario: Scenario) -> dict[str, bool]:
 def _render_with(
     scenario: Scenario,
     suffix: str,
-    write: Callable[[Path, list, object, list[dict], list[dict]], Path],
+    write: Callable[[Path, list, object, list[dict], list[dict], list | None], Path],
 ) -> bytes:
     """Run scenario_to_call, invoke ``write``, return the file bytes.
 
-    ``write(path, placements, params, site_adj, night_adj)`` writes the
-    artifact at ``path`` and returns the same path.  Cleanup happens
-    regardless of outcome.
+    ``write(path, placements, params, site_adj, night_adj, approaches)``
+    writes the artifact at ``path`` and returns the same path.  Cleanup
+    happens regardless of outcome.
     """
-    placements, params, site_adj, night_adj = _placements_for(scenario)
+    placements, params, site_adj, night_adj, approaches = _placements_for(scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=suffix)
     os.close(fd)
     path = Path(raw_path)
     try:
-        write(path, placements, params, site_adj, night_adj)
+        write(path, placements, params, site_adj, night_adj, approaches)
         return path.read_bytes()
     finally:
         path.unlink(missing_ok=True)
@@ -535,7 +574,7 @@ def render_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, _site, _night: Path(
+            lambda path, placements, params, _site, _night, approaches: Path(
                 render_plan_sheet(
                     placements,
                     params,
@@ -550,6 +589,9 @@ def render_pdf(scenario: Scenario) -> Response:
                     # Same fired count deltas the breakdown + XLSX apply, so
                     # the on-sheet summary shows the same quantities (#151).
                     applied_deltas=_jurisdiction_eval(scenario, params)[1],
+                    # near_intersection title block (TA-21/22 by side) —
+                    # same ApproachParams the generator got (#117).
+                    approaches=approaches,
                 )
             ),
         )
@@ -577,7 +619,7 @@ def render_xlsx(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".xlsx",
-            lambda path, placements, params, _site, _night: Path(
+            lambda path, placements, params, _site, _night, _approaches: Path(
                 export_device_list(
                     placements,
                     params,
@@ -629,7 +671,7 @@ def render_markdown(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".md",
-            lambda path, placements, params, site_adj, night_adj: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches: Path(
                 generate_crew_narrative(
                     placements,
                     params,
@@ -641,6 +683,9 @@ def render_markdown(scenario: Scenario) -> Response:
                     # Sheet 26) — threaded from the scenario (PR 3).
                     pilot_car=getattr(scenario, "pilotCar", False),
                     jurisdiction_name=jurisdiction_name,
+                    # Cross-street steps need the same ApproachParams the
+                    # generator got (#117); None for every other kind.
+                    approaches=approaches,
                 )
             ),
         )
@@ -669,7 +714,7 @@ def render_crew_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, site_adj, night_adj: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches: Path(
                 generate_crew_narrative_pdf(
                     placements,
                     params,
@@ -678,6 +723,7 @@ def render_crew_pdf(scenario: Scenario) -> Response:
                     night_adjustments=night_adj,
                     pilot_car=getattr(scenario, "pilotCar", False),
                     jurisdiction_name=jurisdiction_name,
+                    approaches=approaches,
                 )
             ),
         )
@@ -898,7 +944,7 @@ class QuoteRequest(BaseModel):
 
 
 def _run_quote(req: QuoteRequest):
-    placements, params, _site_adj, _night_adj = _placements_for(req.scenario)
+    placements, params, _site_adj, _night_adj, _approaches = _placements_for(req.scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=".xlsx")
     os.close(fd)
@@ -1168,7 +1214,7 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        placements, params, _site, _night = _placements_for(scenario)
+        placements, params, _site, _night, _approaches = _placements_for(scenario)
     except HTTPException:
         raise
     except Exception as exc:  # noqa: BLE001
@@ -1200,7 +1246,7 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
     Same placement source as ``/render/pdf`` so the audit cannot drift from
     the rendered plan.
     """
-    placements, params, site_records, _night = _placements_for(scenario)
+    placements, params, site_records, _night, approaches = _placements_for(scenario)
     # Shoulder width is read from params.shoulder_width_ft inside the
     # audit builder (single source of truth — set once at the schemas bridge).
     audit = build_audit_trail(
@@ -1208,6 +1254,10 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
         params,
         site_lat=scenario.meta.lat or None,
         site_lng=scenario.meta.lng or None,
+        # Approaches section (near_intersection) — same ApproachParams
+        # the generator got; the builder raises rather than emit a
+        # partial audit without them (#117).
+        approaches=approaches,
     )
     step_count = _compute_step_count(scenario)
     return audit_projection(

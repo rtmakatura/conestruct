@@ -422,7 +422,16 @@ def _extract_taper_indices(
             cur_sign = sign
         else:
             cur_len += 1
-        if cur_len > best_len:
+        # >= not >: ties go to the most upstream run.  Every consumer of
+        # this function means the MERGING taper (§6B.08), which sits
+        # upstream of the work zone; the downstream taper is a shorter
+        # mirror at the zone's downstream end.  At low speeds the two
+        # can tie in device count (shoulder-divided at 20-35 mph: three
+        # drums vs the three downstream cones), and the old first-wins
+        # scan picked the downstream run — the buffer check then
+        # measured -850 ft against the wrong taper (#117 phase-2
+        # discovery, 2026-08-03).
+        if cur_len >= best_len and cur_len > 0:
             best_len = cur_len
             best_start = cur_start
 
