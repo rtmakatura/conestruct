@@ -403,6 +403,26 @@ def test_flagger_label_unchanged_by_lane_count_derivation() -> None:
     assert scenario_display_name(params) == "Flagger Alternating Traffic — 2-Lane Undivided"
 
 
+def test_flagger_label_states_drawn_geometry_not_input_count() -> None:
+    """The flagger label is a literal, not 2 * num_lanes (#117 enablement
+    item): generate_flagger_alternating_2lane draws a 2-lane road
+    unconditionally, so a direct caller passing num_lanes=2 must not get
+    a "4-Lane Undivided" claim about a plan nobody drew.  Unreachable
+    through the wire (the bridge forces num_lanes=1) — this pins the
+    direct-construction path the old formula lied on."""
+    params = ScenarioParams(
+        speed_mph=45,
+        num_lanes=2,
+        lane_width_ft=12.0,
+        closure_type="lane",
+        road_type="rural",
+        work_zone_length_ft=500.0,
+        is_divided=False,
+        jurisdiction="CDOT",
+    )
+    assert scenario_display_name(params) == "Flagger Alternating Traffic — 2-Lane Undivided"
+
+
 def test_narrative_rural_road_type_makes_no_lane_claim() -> None:
     """ "Rural two-lane" asserted a lane count Table 6B-1 does not carry —
     the narrative road-type row must stay count-free (Refs #118)."""

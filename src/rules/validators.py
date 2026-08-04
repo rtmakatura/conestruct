@@ -255,14 +255,20 @@ def scenario_display_name(params: ScenarioParams) -> str:
     Branch order mirrors the former ``_scenario_label`` exactly so the
     same params resolve to the same string.
 
-    The undivided branches derive their lane count from
-    ``params.num_lanes`` (Refs #118) — total-lane naming, the CDOT
-    S-630-1 convention, so num_lanes=1 (one lane per direction) reads
-    "2-Lane".  The divided branches deliberately carry no count: they
-    never asserted one, so there is nothing false to correct there.
-    The gated mobile branch keeps its literal ("2-Lane Road" is true by
-    construction, num_lanes forced to 1 at the bridge) — re-audit it on
-    enablement day.
+    Lane counts in labels state what the generator DRAWS, not what the
+    caller passed (rule 10 — a label is a claim about the plan).  The
+    shoulder-undivided branch derives ``2 * params.num_lanes`` (Refs
+    #118: total-lane naming, the CDOT S-630-1 convention) because its
+    generator models ``num_lanes`` lanes per direction.  The flagger
+    branch is a literal: ``generate_flagger_alternating_2lane`` is
+    hard-coded to a 2-lane road, so "2-Lane Undivided" is true by
+    construction and any other count would describe a plan nobody drew
+    (#117 enablement item; the wire bridge forces num_lanes=1, so the
+    old ``2 * num_lanes`` formula could only lie for direct callers).
+    The divided branches deliberately carry no count: they never
+    asserted one, so there is nothing false to correct there.  The
+    gated mobile branch keeps its literal on the same true-by-
+    construction basis — re-audit it on enablement day.
     """
     ct = params.closure_type
     divided = params.is_divided
@@ -273,7 +279,10 @@ def scenario_display_name(params: ScenarioParams) -> str:
     if ct == "lane" and not divided and params.near_intersection:
         return "Lane Closure Near Intersection — Undivided"
     if ct == "lane" and not divided:
-        return f"Flagger Alternating Traffic — {2 * params.num_lanes}-Lane Undivided"
+        # Literal, not 2 * num_lanes: the flagger generator draws a
+        # 2-lane road unconditionally (generate_flagger_alternating_2lane
+        # docstring), so the label states the drawn geometry.
+        return "Flagger Alternating Traffic — 2-Lane Undivided"
     if ct == "lane":
         return "Right-Lane Closure — Divided Highway"
     if divided:
