@@ -1,0 +1,44 @@
+# Arc 11 smoke — raw assertion log
+
+- `2026-08-04T15:44:53.999Z` healthz sha: 9bcc3ca950b6f3d6c170edc7998e32c9fd2e2670
+- `2026-08-04T15:44:56.046Z` served bundle sha: 9bcc3ca950b6f3d6c170edc7998e32c9fd2e2670
+- `2026-08-04T15:44:56.046Z` **PASS** — gate. healthz == origin/main == served bundle (9bcc3ca950b6f3d6c170edc7998e32c9fd2e2670)
+- `2026-08-04T15:44:56.385Z` **PASS** — e1. /landing DimStrip reads 3 scenarios supported
+- `2026-08-04T15:44:57.919Z` **PASS** — a1. picker offers 'Lane closure near intersection · Cases 18/19 · S-630-1'
+- `2026-08-04T15:44:58.577Z` **PASS** — a2. AWAITING LOCATION before any pin
+- `2026-08-04T15:45:26.020Z` **PASS** — a3. detection offers the East Colfax candidate
+- `2026-08-04T15:45:32.497Z` marker lookup posted: 39.740085, -104.960319
+- `2026-08-04T15:45:50.556Z` marker lookup posted: 39.740085, -104.959845
+- `2026-08-04T15:46:15.772Z` calibrated aim: (-267.0, 33.9) px from center
+- `2026-08-04T15:46:17.645Z` marker lookup posted: 39.739775, -104.963483
+- `2026-08-04T15:46:20.684Z` **PASS** — a4. cross street detected from the map marker (Move the intersection pinClearRace Street — two-way, signal detected. Crossing about 100 ft past the work zone. You'll confirm the details)
+- `2026-08-04T15:46:20.684Z` **PASS** — a4b. marker lookup posted the crossing's own coordinates (±50 m) (39.739775, -104.963483)
+- `2026-08-04T15:46:20.799Z` screenshot: 01-picker-cross-marked.png
+- `2026-08-04T15:46:22.412Z` **PASS** — a5. lane-count hold renders with the DISPUTED-relay reason
+- `2026-08-04T15:46:22.416Z` **PASS** — a6. Generate blocked while the hold is pending
+- `2026-08-04T15:46:22.417Z` d1 (observed): relayed crossing landed outside the zone this run — in-zone state not materialized
+- `2026-08-04T15:46:22.603Z` screenshot: 02-form-hold.png
+- `2026-08-04T15:46:25.379Z` **PASS** — b1. #179 confirmed note stays visible with what detection reported
+- `2026-08-04T15:46:25.383Z` **PASS** — a7. confirm clears the hold; Generate enabled
+- `2026-08-04T15:46:27.072Z` screenshot: 03-post-generate.png
+- `2026-08-04T15:46:27.075Z` **PASS** — a8. package rendered with the side-aware TA chip (chip: TA-21)
+- `2026-08-04T15:46:28.831Z` axe NI post-generate: 0 violation(s) — classified against the shoulder control below
+- `2026-08-04T15:47:04.490Z` downloaded: served-ni-plan.pdf (815990 B)
+- `2026-08-04T15:47:04.490Z` render payload detectionOverrides: detectionOverrides":[{"via":"approach_lane_confirm","detectedLanesTotal":2,"asserted":"approach lane count 1"}]}}
+- `2026-08-04T15:47:04.490Z` **PASS** — b2. the served render payload carries the #177 confirm marker, relays cleared off the legs (https://www.conestruct.com/api/render/pdf)
+- `2026-08-04T15:47:04.983Z` downloaded: served-ni-crew.md (8390 B)
+- `2026-08-04T15:47:05.015Z` **PASS** — a9. audit panel renders the Cross-street approaches section
+- `2026-08-04T15:47:05.015Z` **PASS** — a10. approaches panel cites MUTCD § 6N.12 + Sheet 10 and flags the signal
+- `2026-08-04T15:47:05.149Z` screenshot: 04-audit-approaches.png
+- `2026-08-04T15:47:06.726Z` **PASS** — b3. reopened form shows the confirmed note with its undo
+- `2026-08-04T15:47:09.275Z` **PASS** — b4. undo removes the confirmed note (no phantom override on screen)
+- `2026-08-04T15:47:09.438Z` screenshot: 05-post-undo.png
+- `2026-08-04T15:47:12.575Z` **PASS** — b5. undo restores the marker's recorded relay onto BOTH legs, marker gone (wire-level) (marker recorded 2; post-undo legs relay [2,2])
+- `2026-08-04T15:47:16.183Z` **PASS** — d2. curb-box overlap refused through the form (mirror voice or served 400)
+- `2026-08-04T15:47:16.360Z` screenshot: 06-curb-overlap-refusal.png
+- `2026-08-04T15:47:16.360Z` **PASS** — d3. single-lane mainline unrepresentable (chips start at 2, 'NEEDS 2+')
+- `2026-08-04T15:47:36.647Z` **PASS** — e2. Shoulder work still generates end-to-end post-flip
+- `2026-08-04T15:47:55.596Z` **PASS** — e2. Flagger lane closure still generates end-to-end post-flip
+- `2026-08-04T15:47:55.596Z` **PASS** — f. axe: zero NI-only violations (findings also on the untouched shoulder surface are pre-existing triage input) (NI: none · shoulder control: none)
+
+**0 FAIL**

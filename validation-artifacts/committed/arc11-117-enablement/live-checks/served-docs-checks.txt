@@ -1,0 +1,13 @@
+PASS - P1 Cases 18/19 NOT-DRAWN sheet note
+PASS - P2 corner-quadrant departure fine print names #128
+PASS - P3 rightmost-lane assumption note (#176)
+PASS - P4 COORDINATES row printed (#157)
+PASS - P5 urban block-based placement disclosure (Sheet 10 Note 1)
+PASS - M1 Cross-Street Signs per-leg section
+PASS - M2 sequencing note (TCS determination, judgment not arithmetic)
+PASS - M3 ped/bike accommodation section (#125)
+PASS - M4 emergency access section naming CDOT 630.10(a) (#124)
+PASS - M5 rightmost-lane safety note (#176)
+PASS - M6 corner-extension variant cites Fig. 6P-21 / Case 18
+PASS - M7 signalized approach flag-and-cite
+12/12 PASS
