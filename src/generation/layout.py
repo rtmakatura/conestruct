@@ -1419,7 +1419,16 @@ def generate_near_intersection(
     # skipping the intersection's curb-to-curb box (no devices inside
     # the intersection).  Deliberate divergence from the midblock
     # "buffer is device-empty" convention: an undelineated closed lane
-    # across an intersection is not an option.
+    # across an intersection is not an option.  The continuous-
+    # channelizer shape (and the absence of the turn-bay conversion's
+    # RIGHT LANE MUST TURN RIGHT signs) is Fig. 6P-22's own note 7
+    # option (p. 903), verified by subject 2026-08-03: "If dimension
+    # 'A' is not available to create a temporary right-turn lane,
+    # continuous channelizers may be installed from the end of the
+    # taper to the intersection and, as a result, the RIGHT LANE MUST
+    # TURN RIGHT signs would not be installed."  The far-side citation
+    # basis is therefore Fig. 6P-22 substance via note 7, not only the
+    # §6N.12.12 prose (Refs #117, #108).
     tangent_spacing_target = device_spacing_on_tangent(speed)
     if st["side"] == "far":
         s = st["taper_end"] - tangent_spacing_target
