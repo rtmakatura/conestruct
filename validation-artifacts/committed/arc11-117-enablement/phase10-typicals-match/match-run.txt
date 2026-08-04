@@ -1,0 +1,16 @@
+rootdir: C:\Users\rtmak\Documents\traffic-control-tool
+configfile: pyproject.toml
+plugins: anyio-4.13.0
+collecting ... collected 9 items
+
+tests/s630/test_case_18.py::test_mainline_train_matches_the_feeding_train_sign_sequence PASSED [ 11%]
+tests/s630/test_case_18.py::test_mainline_gaps_are_the_rural_key_and_r2_10_sits_half_c_inside PASSED [ 22%]
+tests/s630/test_case_18.py::test_merging_taper_length_matches_the_legend_formula PASSED [ 33%]
+tests/s630/test_case_18.py::test_cross_leg_matches_the_plate_drawn_dims_verbatim PASSED [ 44%]
+tests/s630/test_case_18.py::test_urban_cross_leg_substitutes_its_key_row_per_note_1 PASSED [ 55%]
+tests/s630/test_case_18.py::test_documented_departures_are_disclosed_not_emitted PASSED [ 66%]
+tests/s630/test_case_18.py::test_far_side_companion_is_the_note_7_continuous_channelizer_shape PASSED [ 77%]
+tests/s630/test_case_18.py::test_far_side_taper_sits_upstream_of_the_intersection PASSED [ 88%]
+tests/s630/test_case_18.py::test_audit_cites_case_18_sheet_10 PASSED     [100%]
+
+============================== 9 passed in 0.19s ==============================

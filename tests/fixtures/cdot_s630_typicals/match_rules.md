@@ -89,6 +89,59 @@ Phase 2 decisions, locked June 5 2026.
 - Sheet 7 Case 11 position 5 prescribes literal "1500 FT" plaque text. Conestruct emits `sign_a_station - wz_start_station` (1678 / 1787 / 1900 ft at 55 / 65 / 75 mph respectively per Table 6B-1 freeway A=1000 plus speed-dependent taper + buffer).
 - Match: code-level (W16-2a family). Variance: literal plaque text vs geometric-distance text.
 
+## Case 18 (near_intersection) — added 2026-08-04, Arc 11 phase 10
+
+Fixture: `case_18.json` (July 2026 26-sheet edition only; extraction
+provenance inside the fixture).  Bar: the amended Rule-8 ruling
+(2026-07-27) — generated `near_intersection` output matches the
+published intersection typicals.
+
+### Mapping: tool model ↔ plate
+
+- The tool models ONE street (the mainline) with the right lane closed
+  near a cross street.  The plate's corner-quadrant work area has TWO
+  feeding streets.  Match rule: the tool's mainline train is asserted
+  against the plate's feeding-train sign sequence and gap markers (the
+  horizontal-train reading, incl. R2-10 at ½C inside the outermost
+  sign); the SECOND feeding train is Documented Departure 1 (below).
+- The tool's cross-street legs are asserted against the plate's
+  OPPOSING-approach advance sets, read through the key: R2-10 at A from
+  the curb line, W20-1 at 2A, R2-11 at 100′ departure side (the plate's
+  drawn 500′/500′/100′ = the RURAL key row; other road types substitute
+  their row per Sheet 10 Note 1's rural-typification).
+- Near side: the tool's near-side emission (§6N.12.08 midblock closure
+  + corner termination when the reopening does not fit) is the TA-21
+  shape; the plate's own corner geometry is the anchor for stations.
+- Far side: the plate does not draw a far-side variant (Case 18 is the
+  corner/near shape).  The far-side assertion target is MUTCD Fig.
+  6P-22 via its note-7 option (continuous channelizers taper→curb,
+  resume curb→work zone, NO turn-bay R3-7 family), plus the §6N.12.12
+  companion-closure position — the note-7 basis is cited in
+  `layout.py` step 4 (phase 5).
+- Numeric tolerance: the standing ±10 ft for computed stations; key
+  lookups exact.
+
+### Documented departures (disclosed on every rendered surface)
+
+1. **Corner-quadrant closure train.** The plate typifies corner work
+   whose SECOND street also receives a full closure train (W20-1,
+   R2-10, W20-5(R), W4-2(R), taper); the tool places advance sets only
+   on the cross street (approaches carry no work extent — spike
+   decision D4).  Disclosed in the sheet fine print, audit
+   `case_narrative_2`, and tracked as #128.  The harness asserts the
+   cross legs match the OPPOSING-set reading and does NOT expect the
+   second closure train.
+2. **Opposing mainline direction not signed.** The plate signs both
+   directions of both streets; the tool signs the work direction only
+   (undivided single-side convention).  Disclosed in the same fine
+   print.  The harness does not assert opposing-mainline signs.
+3. **Rural vs urban placement.** The plate's drawn dims typify rural
+   placement (Sheet 10 Note 1); urban applications are block-based,
+   which no station formula can express.  The tool substitutes the
+   key row for the approach's road type and the disclosure carries
+   Note 1.  The harness asserts key-scaled stations, never the drawn
+   rural dims directly, except on a rural-keyed scenario.
+
 ## G20-5P §6C.06(A) plaque check label
 
 - The `colorado.checks` §6C.06(A) entry labels and counts **G20-5P construction plaques alone**. The case fixtures' "every 2,640 ft" frequency note pairs G20-5P with R2-6P; that pairing is **not** a §6C.06(A) requirement (§6C.06(A) governs G20-5P construction plaques at half-mile intervals). Accepted variance: fixture pairs, check counts G20-5P only.

@@ -1,0 +1,73 @@
+{
+  "_meta": {
+    "source": "CDOT Standard Plan S-630-1, Standard Sheet No. 10 of 26 (Cases 18/19/20)",
+    "source_edition": "July 2026 26-sheet edition ONLY (title block: Last Modification Date 07/01/26, 'Issued by the Traffic Safety & Engineering Services: July 01, 2026'). Repo copy: validation-artifacts/s630-1-2026.pdf, S-630-1 at PDF pp. 149-174; Sheet 10 = PDF p. 158. Sheet/case numbering re-confirmed against the reissue in Arc 11 phase 5 (validation-artifacts/committed/arc11-117-enablement/phase5-citations.md row 10) - cited, not re-derived.",
+    "verified_by": "Hand extraction from the rendered sheet (pypdfium2 3x render, full + quadrant crops), 2026-08-04, Arc 11 phase 10; cross-checked against the design spike's plate zoom (validation-artifacts/intersections-spike/s630_case18_zoom.png, spike decision D1).",
+    "purpose": "Typicals-match fixture for the near_intersection kind's enablement bar (amended Rule-8 ruling, 2026-07-27: generated output matches the published intersection typicals).",
+    "extraction_provenance": "Every value below names the sheet region it was read from. Regions: 'C18-vert' = Case 18's vertical (north-south) street, left half of sheet, top; 'C18-horiz' = Case 18's horizontal (east-west) street, left half, middle band; 'C18-departure' = the opposing-approach / departure sign sets flanking the intersection; 'key' = the '* Key to Advance Signing Distances' table, bottom right; 'legend' = right-edge legend column; 'notes' = the Case 18 Notes block, bottom left."
+  },
+  "case_18": {
+    "title": "Typical Application - Traffic Control Around a Work Area Near an Intersection, One Lane Closed",
+    "title_provenance": "Case 18 caption block, bottom-left of the left half (verbatim, three lines under 'Case No. 18').",
+    "case_number": 18,
+    "sheet_number": 10,
+    "scenario": {
+      "shape": "corner-quadrant work area at the intersection of two two-way streets; the hatched Work Area symbol sits at the corner, inside the curb returns, with Type III barricades closing it off",
+      "shape_provenance": "C18-horiz/C18-vert junction: hatched box at the SE corner of the drawn intersection with 'TYPE III BARRICADE' callouts and '10' MIN.' lateral clearances",
+      "side": "right lane of each feeding approach closed"
+    },
+    "feeding_approach_closure_train": {
+      "provenance": "Two trains drawn, one per street feeding the corner. C18-horiz (eastbound, drawn left-to-right): W20-1, R2-10, W20-5(R), W4-2(R) with gap markers *C (with *1/2C sub-dimension to R2-10), *B, *A, then VARIES (buffer) and L (merging taper, drum symbols) into the work area. C18-vert (southbound, drawn top-to-bottom): W20-1, *C, W20-5(R), *B, R2-10, *A, W4-2(R), then L, 100' to the corner.",
+      "sign_sequence_outermost_first": ["W20-1", "R2-10", "W20-5(R)", "W4-2(R)"],
+      "r2_10_position_note": "On the horizontal train R2-10 is dimensioned *1/2C inside the outermost W20-1; on the vertical train it is drawn between the B and A gaps. The two drawings disagree on R2-10's slot - drawing liberty on a not-to-scale plate. The tool follows the 1/2C reading (the increment-2 anchor), which is also Case 11's R2-10 convention.",
+      "taper": "L (merging taper, drums) per the legend formula: L = S x W at >= 45 mph, WS^2/60 at <= 40 mph",
+      "taper_provenance": "legend: 'Transition Taper Length' block; drum symbols along the taper per the small-square channelizing-device legend",
+      "buffer": "VARIES",
+      "buffer_provenance": "C18-horiz dimension label between *A and L; legend maps VARIES to 'Buffer Space (see General Note 23 on Sheet 2)'. KNOWN UPSTREAM DISCREPANCY (do not correct, per standing memory note): the buffer note on Sheet 2 is actually note 24; the legend's 17/23 references are S-630-1's own error."
+    },
+    "opposing_approach_advance_set": {
+      "provenance": "C18-departure: on each street's opposing (non-feeding) approach the plate draws W20-1 (ROAD WORK AHEAD) then R2-10 (BEGIN DOUBLE FINES ZONE), dimensioned 500' + 500' approaching the intersection, with R2-11 (END DOUBLE FINES ZONE) 100' past the intersection on the departure side. Read on the vertical street's northbound approach (dimension column '100' / 500' / 500'' right of the southbound lanes) and mirrored on the horizontal street.",
+      "sign_sequence_outermost_first": ["W20-1", "R2-10"],
+      "departure_sign": "R2-11",
+      "drawn_dimensions_ft": { "w20_1_to_intersection": 1000, "r2_10_to_intersection": 500, "r2_11_past_intersection": 100 },
+      "key_reading": "The drawn 500'/500' equals the RURAL key row (A = B = C = 500) read as: R2-10 at A from the crossing, W20-1 at 2A. Per Sheet 10 Note 1 the drawn dims typify RURAL placement; other road types substitute their key row (urban <= 40: A = 100; urban >= 45: A = 350). The 100' departure R2-11 is a fixed dimension, not keyed.",
+      "key_reading_provenance": "key table (bottom right) + notes item 1"
+    },
+    "advance_signing_key": {
+      "provenance": "'* Key to Advance Signing Distances' table, bottom right of the sheet, verbatim",
+      "rows": {
+        "urban_lte_40mph": { "A": 100, "B": 100, "C": 100 },
+        "urban_gte_45mph": { "A": 350, "B": 350, "C": 350 },
+        "rural": { "A": 500, "B": 500, "C": 500 },
+        "expressway_freeway": { "A": 1000, "B": 1500, "C": 2640 }
+      }
+    },
+    "notes_verbatim": [
+      "1. Sign placement shown on cases 18 and 19 typifies rural applications. Urban applications require the signs to be placed within one, or perhaps two, blocks.",
+      "2. Truck-mounted attenuators (TMA) optional for all cases as determined by the Engineer."
+    ],
+    "notes_provenance": "Notes block under the Case 18 caption (verbatim; note 1 is the 'Sheet 10 Note 1' already cited by the sheet's urban-placement disclosure fine print)",
+    "fines_double_envelope": {
+      "provenance": "star symbols on R2-10/R2-11 throughout; legend: 'See Fines Double Signing Notes On Sheet 12'",
+      "note": "R2-10/R2-11 carry the star marker on every drawn set - envelope semantics come from Sheet 12, matched per the existing match_rules Fines Double section, not re-asserted here."
+    },
+    "other_devices": {
+      "type_iii_barricades": "close the corner work area (provenance: 'TYPE III BARRICADE' callouts at the hatched area)",
+      "flashing_beacons": "sunburst symbol on W20-1/W20-4/W20-5(R)/W4-2(R)/W20-7 warning signs (provenance: legend 'Flashing Beacon'; triangle = optional device)",
+      "mobile_attenuator": "drawn on the horizontal approach upstream of the taper with the optional triangle (provenance: C18-horiz, TMA symbol; notes item 2 makes it engineer-optional)"
+    },
+    "validation_notes": {
+      "exact_match_required": [
+        "feeding-train sign codes W20-1, R2-10, W20-5(R), W4-2(R) on the tool's mainline (the one street the tool models)",
+        "opposing-set sign codes W20-1, R2-10 + departure R2-11 on each cross-street leg, at key-scaled stations (R2-10 at A from the curb line, W20-1 at 2A, R2-11 at 100' departure side)",
+        "R2-10 at 1/2C inside the outermost mainline sign (the horizontal-train reading)"
+      ],
+      "informational_only_not_assertions": [
+        "drawn device counts along tapers (diagram-illustrative; actual counts by spacing rules)",
+        "TMA presence (optional per notes item 2)",
+        "the vertical train's alternate R2-10 slot (see r2_10_position_note)"
+      ],
+      "documented_departures": "see match_rules.md 'Case 18 (near_intersection)' - three departures, disclosed on every rendered surface"
+    }
+  }
+}
