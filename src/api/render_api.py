@@ -701,6 +701,9 @@ def render_markdown(scenario: Scenario) -> Response:
                     # Sheet 26) — threaded from the scenario (PR 3).
                     pilot_car=getattr(scenario, "pilotCar", False),
                     jurisdiction_name=jurisdiction_name,
+                    # Jurisdiction-scoped ped/bike rules (#125) key off the
+                    # record key, not the display name.
+                    jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
                     # Cross-street steps need the same ApproachParams the
                     # generator got (#117); None for every other kind.
                     approaches=approaches,
@@ -741,6 +744,7 @@ def render_crew_pdf(scenario: Scenario) -> Response:
                     night_adjustments=night_adj,
                     pilot_car=getattr(scenario, "pilotCar", False),
                     jurisdiction_name=jurisdiction_name,
+                    jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
                     approaches=approaches,
                 )
             ),

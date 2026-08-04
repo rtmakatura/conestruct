@@ -218,6 +218,9 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
         # Same ApproachParams the generator got (near_intersection only);
         # the builder raises rather than emit a partial narrative (#117).
         approaches=approaches,
+        # #125: jurisdiction-scoped ped/bike rules — must match the
+        # /render/markdown output verbatim (snapshot contract, #102).
+        jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
     )
 
     return "\n".join(

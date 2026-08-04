@@ -268,6 +268,7 @@ def build_narrative_context(
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
+    jurisdiction_key: str | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -709,6 +710,69 @@ def build_narrative_context(
             }
         )
 
+    # -----------------------------------------------------------------
+    # Pedestrian/bicycle accommodation (#125) — statements derive from
+    # what the plan ACTUALLY carries (placements + fired adjustment
+    # records), never from input flags alone, so the section cannot
+    # claim devices nobody placed (rule 11's payload-vs-rendered gap).
+    # -----------------------------------------------------------------
+    site_records = site_adjustments or []
+    fired_flags = {str(r.get("flag")) for r in site_records}
+    r9_9_count = sum(1 for p in placements if p.label == "R9-9")
+    m4_9a_count = sum(1 for p in placements if p.label == "M4-9a")
+    ped_affected = "pedestrian_facility" in fired_flags or r9_9_count > 0
+    bike_affected = "bicycle_facility" in fired_flags or m4_9a_count > 0
+
+    # Jurisdiction-specific ped/bike rules: quoted from the corpus
+    # (docs/research/02-JURISDICTION-DATA.md) with citations, re-verified
+    # by subject 2026-08-03.  Rendered ONLY for the matching
+    # jurisdiction_key — an inapplicable rule is noise (phase-4 ruling).
+    ped_bike_rules: list[dict[str, str]] = []
+    if jurisdiction_key == "littleton":
+        ped_bike_rules.append(
+            {
+                "citation": "Littleton LEDS §131",
+                "text": (
+                    '"An accessible pedestrian and bicycle route, per MUTCD '
+                    "standards, shall be maintained adjacent to the work "
+                    "area, at all times. Pedestrians shall not be diverted "
+                    "onto the roadway ... unless a detour route has been "
+                    'previously approved on the Traffic Control Plan."'
+                ),
+            }
+        )
+    elif jurisdiction_key == "denver":
+        ped_bike_rules.append(
+            {
+                "citation": "Denver TCP sheet requirements",
+                "text": (
+                    "The submitted TCP must depict sidewalks, pedestrian "
+                    "accessible routes, and bike-lane assignments as "
+                    "existing conditions, plus the proposed pedestrian "
+                    "accessible route, bike facilities, and a sidewalk/bike "
+                    "closure detail. That existing-conditions inventory is "
+                    "site-survey content this generated draft does not "
+                    "carry — the TCS supplies it on the submitted TCP."
+                ),
+            }
+        )
+    elif jurisdiction_key == "englewood" and 2 * params.num_lanes > 2:
+        # Conditional on the geometry that trips it (phase-4 ruling):
+        # total drawn lanes exceed 2.  TC-5B note 2 quoted verbatim,
+        # including the original sheet's drafting typo.
+        ped_bike_rules.append(
+            {
+                "citation": "Englewood TC-5B, note 2",
+                "text": (
+                    "This road draws more than 2 total lanes. Verbatim: "
+                    '"PEDESTRIANS SHALL NOT BE DIRECTED PEDESTRIAN ACROSS A '
+                    "ROAD WITH MORE THAN 2 LANES WITHOUT AN EXISTING MARKED "
+                    'CROSSWALK." (typo in the original sheet). Route any '
+                    "pedestrian crossing via an existing marked crosswalk."
+                ),
+            }
+        )
+
     return {
         "params": params,
         # #156: the header shows the RESOLVED jurisdiction record's name
@@ -759,6 +823,14 @@ def build_narrative_context(
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
         "trigger_condition": trigger_condition,
+        # Ped/bike accommodation (#125) — always present; the template
+        # renders the section on every plan (rule 10: the no-facility
+        # case states itself, never silence).
+        "ped_affected": ped_affected,
+        "bike_affected": bike_affected,
+        "r9_9_count": r9_9_count,
+        "m4_9a_count": m4_9a_count,
+        "ped_bike_rules": ped_bike_rules,
         # near_intersection (Refs #117) — always present so the template
         # can gate on them; false/empty for every other kind.
         "is_near_intersection": is_near_intersection,
@@ -846,6 +918,7 @@ def render_crew_narrative_markdown(
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
+    jurisdiction_key: str | None = None,
 ) -> str:
     """Build the crew-instructions Markdown string (no file I/O).
 
@@ -863,6 +936,7 @@ def render_crew_narrative_markdown(
         pilot_car=pilot_car,
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
+        jurisdiction_key=jurisdiction_key,
     )
     markdown = _render_template(context)
     if use_llm:
@@ -880,6 +954,7 @@ def generate_crew_narrative(
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
+    jurisdiction_key: str | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -904,6 +979,7 @@ def generate_crew_narrative(
         pilot_car=pilot_car,
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
+        jurisdiction_key=jurisdiction_key,
     )
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
@@ -919,6 +995,7 @@ def generate_crew_narrative_pdf(
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
+    jurisdiction_key: str | None = None,
 ) -> str:
     """Render the crew narrative as a phone-readable PDF and write it to disk.
 
@@ -939,6 +1016,7 @@ def generate_crew_narrative_pdf(
         pilot_car=pilot_car,
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
+        jurisdiction_key=jurisdiction_key,
     )
     blocks = markdown_to_blocks(markdown)
     return render_document_pdf(blocks, output_path, title="Crew Instructions")
