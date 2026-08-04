@@ -14,7 +14,10 @@ import re
 
 import pypdfium2 as pdfium
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out11")
+# The run wrote into out11/ (uncommitted working dir); the committed
+# pack carries the artifacts beside this script.
+_here = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(_here, "out11") if os.path.isdir(os.path.join(_here, "out11")) else _here
 
 doc = pdfium.PdfDocument(os.path.join(OUT, "served-ni-plan.pdf"))
 txt = "\n".join(doc[i].get_textpage().get_text_range() for i in range(len(doc)))
