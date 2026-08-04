@@ -87,9 +87,13 @@ export type { AutoApplyDelta } from "./auto-apply";
 // workbench or switches scenario kind.  Inlined from the deleted per-scenario
 // .ts files (previously DEFAULT_SHOULDER lived in shoulder.ts, etc.).
 //
-// Only DEFAULT_SHOULDER is reachable in v1 (ENABLED_SCENARIO_KINDS gates the
-// rest off).  The other five are kept as the canonical starting points for
-// when those scenarios get enabled.
+// Reachability follows ENABLED_SCENARIO_KINDS (shoulder and
+// flagger_lane_closure live today; near_intersection flips with #117).
+// Gated kinds' defaults are kept as the canonical starting points for
+// when those scenarios enable; per #26, each default is verified
+// against its own backend bounds as a pre-enablement check (the
+// near_intersection check lives in
+// tests/test_near_intersection_endpoints.py::test_default_scenario_clears_every_backend_rejection).
 // ---------------------------------------------------------------------------
 
 export const DEFAULT_SHOULDER: ShoulderScenario = {

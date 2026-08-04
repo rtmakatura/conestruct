@@ -76,6 +76,49 @@ def test_replication_snapshot_serves_near_intersection(client):
     assert "Cross-Street Signs" in resp.text
 
 
+def test_default_scenario_clears_every_backend_rejection(client):
+    """#26's standing pre-enablement check, recorded for near_intersection.
+
+    Byte-for-byte mirror of DEFAULT_NEAR_INTERSECTION
+    (conestruct/site/lib/scenarios/index.ts:199) — the first form a user
+    sees when the kind enables.  It must clear the schema bounds, the
+    generator's geometry ValueErrors, AND the production validate_layout
+    gate on every deliverable-driving surface, or the kind fails on
+    first paint (#26's original prediction, which did not hold for
+    flagger — this pins that it cannot hold for NI either).
+    """
+    default_scenario = {
+        "kind": "near_intersection",
+        "meta": {"project": "", "address": "", "lat": 0, "lng": 0},
+        "roadType": "urban_arterial",
+        "speed": 35,
+        "lanes": 2,
+        "laneWidth": 12,
+        "divided": False,
+        "workType": "utility_cut",
+        "duration": "short",
+        "workLen": 500,
+        "night": False,
+        "approaches": [
+            {
+                "id": "cross_a",
+                "speed": 30,
+                "roadType": "urban_arterial",
+                "lanesPerDirection": 1,
+                "laneWidth": 12,
+                "signalized": False,
+                "alongStationFt": -200,
+            }
+        ],
+    }
+    for endpoint in ("/render/markdown", "/render/audit", "/render/pdf"):
+        resp = client.post(endpoint, json=default_scenario, headers=AUTH)
+        assert resp.status_code == 200, (
+            endpoint,
+            resp.json() if resp.status_code != 200 else "",
+        )
+
+
 # ---------------------------------------------------------------------------
 # Generator ValueErrors -> honest 400s (#117 enablement item 3).  The
 # schema admits these shapes (lanes ge=1; alongStationFt bounds don't
