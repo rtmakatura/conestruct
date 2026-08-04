@@ -445,7 +445,25 @@ def _placements_for(
                 ],
             },
         )
-    placements = generator(params, **kwargs)
+    try:
+        placements = generator(params, **kwargs)
+    except ValueError as exc:
+        # Generator geometry rejections (#117 enablement item 3) — the
+        # near_intersection ValueErrors the schema cannot see (mainline
+        # lanes >= 2, legs sharing one crossing point, the cross street's
+        # curb-to-curb box overlapping the work zone).  The messages are
+        # written for the user; surface them as an honest 400 instead of
+        # the bare 500 the endpoint's catch-all would produce.  The
+        # frontend mirrors these pre-flight (validation.ts, #117 inc. 4);
+        # this is the backend's own voice when a non-mirrored client, a
+        # drifted mirror, or a direct API call sends the geometry anyway.
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "generator_rejected",
+                "message": str(exc),
+            },
+        ) from exc
     if not placements:
         # The generator produced zero devices — no valid layout exists to
         # render (a blank schematic would be a degraded, dishonest plan).

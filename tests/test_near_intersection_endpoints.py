@@ -76,6 +76,52 @@ def test_replication_snapshot_serves_near_intersection(client):
     assert "Cross-Street Signs" in resp.text
 
 
+# ---------------------------------------------------------------------------
+# Generator ValueErrors -> honest 400s (#117 enablement item 3).  The
+# schema admits these shapes (lanes ge=1; alongStationFt bounds don't
+# know the cross street's width), so only the generator can refuse them.
+# Before the chokepoint catch they surfaced as bare 500s.
+# ---------------------------------------------------------------------------
+
+
+def test_single_lane_mainline_is_an_honest_400(client):
+    body = _ni_body()
+    body["lanes"] = 1
+    resp = client.post("/render/markdown", json=body, headers=AUTH)
+    assert resp.status_code == 400
+    detail = resp.json()["detail"]
+    assert detail["error"] == "generator_rejected"
+    assert "num_lanes >= 2" in detail["message"]
+
+
+@pytest.mark.parametrize(
+    ("along", "expected_fragment"),
+    [
+        # 4 lanes/direction x 12 ft => the cross street's half-width is
+        # 48 ft, so a crossing point 30 ft from the zone puts the curb
+        # line inside it — near side (negative along) and far side.
+        (-30.0, "upstream curb line"),
+        (730.0, "downstream curb line"),
+    ],
+)
+def test_curb_box_overlap_is_an_honest_400(client, along, expected_fragment):
+    body = _ni_body(alongStationFt=along, lanesPerDirection=4)
+    resp = client.post("/render/markdown", json=body, headers=AUTH)
+    assert resp.status_code == 400, resp.json()
+    detail = resp.json()["detail"]
+    assert detail["error"] == "generator_rejected"
+    assert expected_fragment in detail["message"]
+
+
+def test_generator_rejection_reaches_the_audit_surface_too(client):
+    """Same chokepoint, same honest 400 on the verdict-driving path."""
+    body = _ni_body()
+    body["lanes"] = 1
+    resp = client.post("/render/audit", json=body, headers=AUTH)
+    assert resp.status_code == 400
+    assert resp.json()["detail"]["error"] == "generator_rejected"
+
+
 def test_audit_carries_the_approaches_section(client):
     """The served audit includes the per-approach section — the builder
     got the real ApproachParams, not a silently-omitted None."""
