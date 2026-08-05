@@ -765,7 +765,8 @@ def validate_arrow_board_present(
 ) -> list[Violation]:
     """Verify an arrow board is present at or near the taper start.
 
-    Source: MUTCD 11th Ed. §6F.63 (Arrow Boards).
+    Source: MUTCD 11th Ed. §6L.06 (Arrow Boards), p. 832.  (§6F.63
+    was the pre-11th-Ed number — retired, Refs #70.)
 
     Skipped for mobile, full-road, and off-road closures.  Also skipped
     when flagger stations or AFAD-labeled portable signals are present,
@@ -800,7 +801,7 @@ def validate_arrow_board_present(
                     "An arrow board (or PCMS, where jurisdiction permits) is "
                     "expected at or near the start of the taper."
                 ),
-                mutcd_section="6F.63",
+                mutcd_section="6L.06",
                 device_index=None,
             )
         ]
@@ -824,7 +825,7 @@ def validate_arrow_board_present(
                     f"{ARROW_BOARD_TAPER_PROXIMITY_FT:.0f} ft of the taper "
                     "start."
                 ),
-                mutcd_section="6F.63",
+                mutcd_section="6L.06",
                 device_index=arrow_indices[0],
             )
         )
@@ -894,9 +895,13 @@ def validate_begin_end_road_work_pair(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Verify G20-1 BEGIN ROAD WORK accompanies G20-2 END ROAD WORK.
+    """Verify G20-1 (ROAD WORK NEXT XX MILES) accompanies G20-2 END ROAD WORK.
 
-    Source: MUTCD 11th Ed. §6F.55 / CDOT S-630-1 typical sheet.  The two
+    Source: MUTCD 11th Ed. §6H.35 (G20-1) / §6H.36 (G20-2), p. 810,
+    and the CDOT S-630-1 typical sheets.  (§6F.55 was the pre-11th-Ed
+    number — retired, Refs #70.  The 11th Ed names G20-1 "ROAD WORK
+    NEXT XX MILES"; this codebase emits it as the upstream work-zone
+    bookend.)  The two
     guide signs are bookends of the work zone; END without BEGIN is
     asymmetric and disorients drivers.  Mobile and off-road operations
     are exempt because they have no fixed work area to bookend.
@@ -926,10 +931,11 @@ def validate_begin_end_road_work_pair(
                 rule_id="MISSING_BEGIN_ROAD_WORK",
                 severity="error",
                 message=(
-                    "G20-2 END ROAD WORK is present but G20-1 BEGIN ROAD WORK "
+                    "G20-2 END ROAD WORK is present but G20-1 (ROAD WORK NEXT "
+                    "XX MILES, the upstream bookend) "
                     "is missing — the two guide signs must bookend the work zone."
                 ),
-                mutcd_section="6F.55",
+                mutcd_section="6H.35/6H.36",
                 device_index=None,
             )
         ]

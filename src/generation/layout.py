@@ -396,7 +396,7 @@ def generate_shoulder_closure_divided(
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
     # zone, just past the buffer.  Pairs with G20-2 as bookends per
-    # MUTCD §6F.55.  Mirrored on both sides per S-630-1 Sheet 2 General Note 8.
+    # MUTCD §6H.35/§6H.36.  Mirrored on both sides per S-630-1 Sheet 2 General Note 8.
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
@@ -731,7 +731,7 @@ def generate_shoulder_closure_undivided(
     )
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
-    # zone, just past the buffer.  Pairs with G20-2 per MUTCD §6F.55.
+    # zone, just past the buffer.  Pairs with G20-2 per MUTCD §6H.35/§6H.36.
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
@@ -1005,7 +1005,7 @@ def generate_lane_closure_divided(
 
     # 9. BEGIN ROAD WORK sign (G20-1) at the upstream end of the work
     # zone, just past the buffer.  Pairs with G20-2 as bookends per
-    # MUTCD §6F.55.  Mirrored on both sides per S-630-1 Sheet 2 General Note 8.
+    # MUTCD §6H.35/§6H.36.  Mirrored on both sides per S-630-1 Sheet 2 General Note 8.
     begin_sign_station = wz_start_station + 100.0
     placements.append(
         DevicePlacement(
@@ -1505,7 +1505,7 @@ def generate_near_intersection(
                 )
             )
 
-    # 8/9. Road-work bookends (G20-1 / G20-2, §6F.55) and the mainline
+    # 8/9. Road-work bookends (G20-1 / G20-2, §6H.35/§6H.36) and the mainline
     # END DOUBLE FINES ZONE (R2-11), single side.
     for label, station in (
         ("G20-1", st["g20_1"]),
@@ -1968,7 +1968,7 @@ def generate_flagger_alternating_2lane(
     )
 
     # 10a. BEGIN ROAD WORK signs (G20-1) — one per direction, paired with
-    # G20-2 per MUTCD §6F.55.  Right-direction sees BEGIN at the upstream
+    # G20-2 per MUTCD §6H.35/§6H.36.  Right-direction sees BEGIN at the upstream
     # end of the work zone; opposing direction sees it at the downstream end.
     placements.append(
         DevicePlacement(
