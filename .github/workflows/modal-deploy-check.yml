@@ -70,52 +70,12 @@ jobs:
             exit 1
           fi
 
-          # Probe /healthz, capturing the HTTP status separately from the body
-          # so we can tell "no response at all" from "reachable but non-200".
-          # --max-time covers a Modal cold start.  Retry a few times so a
-          # single network hiccup doesn't cry wolf; a genuine outage still
-          # fails the run within this step (#134).
-          ATTEMPTS=3
-          SLEEP=10
-          CODE=""
-          BODY=""
-          for i in $(seq 1 "$ATTEMPTS"); do
-            set +e
-            BODY="$(curl -sS --max-time 30 -w '\n%{http_code}' "$MODAL_URL/healthz")"
-            RC=$?
-            set -e
-            if [ "$RC" -eq 0 ]; then
-              CODE="$(printf '%s' "$BODY" | tail -n1)"
-              BODY="$(printf '%s' "$BODY" | sed '$d')"
-              if [ "$CODE" = "200" ]; then
-                break
-              fi
-              echo "Attempt $i/$ATTEMPTS: /healthz returned HTTP $CODE."
-            else
-              CODE=""
-              echo "Attempt $i/$ATTEMPTS: could not reach $MODAL_URL/healthz (curl exit $RC)."
-            fi
-            if [ "$i" -lt "$ATTEMPTS" ]; then
-              sleep "$SLEEP"
-            fi
-          done
-
-          # An unreachable or non-200 /healthz means we CANNOT read the live
-          # backend state.  That is the exact scenario this monitor exists for,
-          # so fail loudly (red run -> notification) instead of exiting green.
-          if [ -z "$CODE" ]; then
-            echo "::error::Modal /healthz unreachable at $MODAL_URL after $ATTEMPTS attempts (network/timeout/DNS). Cannot verify the deployed backend — investigate the backend or the MODAL_RENDER_URL variable."
-            exit 1
-          fi
-          if [ "$CODE" != "200" ]; then
-            echo "::error::Modal /healthz returned HTTP $CODE at $MODAL_URL after $ATTEMPTS attempts. Cannot verify the deployed backend — investigate the backend or the MODAL_RENDER_URL variable."
-            exit 1
-          fi
-
-          SERVED="$(echo "$BODY" | jq -r '.sha // "unknown"')"
-          echo "Served SHA: $SERVED"
-          echo "reachable=true" >> "$GITHUB_OUTPUT"
-          echo "served_sha=$SERVED" >> "$GITHUB_OUTPUT"
+          # The probe itself (retry loop, http-code capture, exit-code
+          # taxonomy from #168: unreachable -> red, non-200 -> red with
+          # a distinct message, 200 -> served sha to GITHUB_OUTPUT)
+          # lives in scripts/modal-healthz-probe.mjs so vitest covers
+          # it (#169) instead of a manual dispatch being the only proof.
+          node scripts/modal-healthz-probe.mjs "$MODAL_URL"
 
       - name: Determine whether a backend deploy is owed
         id: owed
