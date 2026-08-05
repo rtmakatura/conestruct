@@ -1,0 +1,1430 @@
+{
+  "flagger_day": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "2,100 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "3,060"
+          },
+          {
+            "Code": "W20-4",
+            "Distance from Taper (ft)": "1,600 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,560"
+          },
+          {
+            "Code": "W3-4",
+            "Distance from Taper (ft)": "1,100 upstream",
+            "Position": "between A and B (TA-10 note 8)",
+            "Station (ft)": "2,060"
+          },
+          {
+            "Code": "W20-7",
+            "Distance from Taper (ft)": "600 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "1,560"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      },
+      "buffer": {
+        "buffer_ft": 360.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+        "speed_mph": 45
+      },
+      "case": {
+        "case": "MUTCD TA-10: Flagger one-lane two-way",
+        "narrative": "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 45 mph.",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: False. Signs placed: 6 left, 8 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 3,060 ft. Required: 2. Placed: 2.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "No work-zone speed reduction. Posted speed 45 mph applies throughout the zone.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "2 flagger station(s); lighting not required (daytime operation; S-630-1 Sheet 2 Note 22 applies to night flagging).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1500,
+        "buffer_ft": 360,
+        "downstream_taper_ft": 50,
+        "road_category": "rural",
+        "taper_ft": 100
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "flagger": {
+        "applicable": true,
+        "count": 2,
+        "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+        "required": 2,
+        "sight_distance_citation": {
+          "cite": "MUTCD § 6D.06",
+          "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+        },
+        "sight_distance_ft": 360,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": [
+          {
+            "Label": "FLAGGER_1",
+            "Offset (ft)": "+17.0",
+            "Side": "right shoulder",
+            "Station (ft)": "1,060"
+          },
+          {
+            "Label": "FLAGGER_2",
+            "Offset (ft)": "-17.0",
+            "Side": "left shoulder",
+            "Station (ft)": "-300"
+          }
+        ]
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 360.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 45,
+        "taper_ft": 100,
+        "taper_label": "one-lane two-way taper",
+        "violations": [],
+        "work_zone_ft": 500.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 4 downstream = 11 cones total",
+        "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 4,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 7,
+        "n_taper_drums_actual": 6,
+        "n_taper_drums_required": 6,
+        "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
+        "speed_mph": 45,
+        "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
+        "taper_count_text": "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
+        "L_full_ft": 495,
+        "L_required_ft": 100,
+        "L_required_label": "one-lane two-way taper",
+        "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
+        "L_third_ft": 100,
+        "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "lane",
+        "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+        "formula_latex": "50 \\le L \\le 100",
+        "offset_ft": 11.0,
+        "offset_label": "lane width",
+        "shoulder_width_ft": 11.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.",
+        "speed_mph": 45
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 360.0,
+      "case_id": "MUTCD TA-10: Flagger one-lane two-way",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 90.0,
+      "device_spacing_taper_ft": 20.0,
+      "step_count": 16,
+      "ta": "TA-10",
+      "taper_label": "one-lane two-way taper",
+      "taper_length_ft": 100
+    }
+  },
+  "flagger_night_reduced": {
+    "pending_verification": {
+      "count": 1,
+      "items": [
+        {
+          "kind": "flagger_lighting_manual_handling",
+          "label": "Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.",
+          "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+        }
+      ],
+      "note": "Flagger station lighting is required for night operations per CDOT S-630-1 Sheet 2 Note 22. V1's flagger generator does not emit lighting equipment placements; the traffic control supervisor must add flood lights per project requirements until generator support ships.",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 1,
+      "is_clean": false,
+      "v1_limitations": 1,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 45 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "2,100 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "3,060"
+          },
+          {
+            "Code": "W20-4",
+            "Distance from Taper (ft)": "1,600 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,560"
+          },
+          {
+            "Code": "W3-4",
+            "Distance from Taper (ft)": "1,100 upstream",
+            "Position": "between A and B (TA-10 note 8)",
+            "Station (ft)": "2,060"
+          },
+          {
+            "Code": "W20-7",
+            "Distance from Taper (ft)": "600 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "1,560"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      },
+      "buffer": {
+        "buffer_ft": 360.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+        "speed_mph": 45
+      },
+      "case": {
+        "case": "MUTCD TA-10: Flagger one-lane two-way",
+        "narrative": "This scenario matches MUTCD 11th Ed. Part 6 TA-10 (the federal standard for flagger-controlled alternating one-way traffic on a 2-lane undivided highway). CDOT S-630-1 does not include a general flagger one-lane two-way case; Case 17 (lane closure at a curve) is the closest CDOT analog but is curve-specialized.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 45 mph.",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": false,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: False. Signs placed: 6 left, 8 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 3,060 ft. Required: 2. Placed: 2.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "No work-zone speed reduction. Posted speed 45 mph applies throughout the zone.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "2 flagger station(s) at night. Required: flood lighting (500W min @ 8 ft min) at each station per S-630-1 Sheet 2 Note 22. Placed: 0 (V1 does not emit lighting equipment placements).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": false
+          }
+        ],
+        "fail_count": 1,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1500,
+        "buffer_ft": 360,
+        "downstream_taper_ft": 50,
+        "road_category": "rural",
+        "taper_ft": 100
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "flagger": {
+        "applicable": true,
+        "count": 2,
+        "narrative": "Two flagger stations are required for alternating one-way operations: one 100 ft upstream of the one-lane two-way taper (MUTCD Fig. 6P-10 50-100 ft band) to stop right-direction traffic, one 300 ft past the work-area end (CDOT S-630-1 Case 17 \"200' TO 300'\" standoff) to stop opposing traffic.  Flagger stations should be visible to approaching drivers from the full advance-warning distance.",
+        "required": 2,
+        "sight_distance_citation": {
+          "cite": "MUTCD § 6D.06",
+          "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE"
+        },
+        "sight_distance_ft": 360,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": [
+          {
+            "Label": "FLAGGER_1",
+            "Offset (ft)": "+17.0",
+            "Side": "right shoulder",
+            "Station (ft)": "1,060"
+          },
+          {
+            "Label": "FLAGGER_2",
+            "Offset (ft)": "-17.0",
+            "Side": "left shoulder",
+            "Station (ft)": "-300"
+          }
+        ]
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 360.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 45,
+        "taper_ft": 100,
+        "taper_label": "one-lane two-way taper",
+        "violations": [],
+        "work_zone_ft": 500.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~12.5 ft spacing -> 4 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 7 tangent + 4 downstream = 11 cones total",
+        "in_taper_text": "20 ft spacing in the one-lane two-way taper (MUTCD Sec 6B.08: approximately 20 ft, taper-specific guidance overriding the Sec 6K.01 speed-based rule)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 4,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 7,
+        "n_taper_drums_actual": 6,
+        "n_taper_drums_required": 6,
+        "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)",
+        "speed_mph": 45,
+        "tangent_count_text": "500 ft / 90 ft max spacing -> 7 cones at 83.3 ft intervals",
+        "taper_count_text": "one-lane two-way taper = 100 ft / 20 ft max spacing -> 6 drums at 20.0 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "One-lane two-way taper = 100 ft (Sec 6B.08 50-100 ft band)",
+        "L_full_ft": 495,
+        "L_required_ft": 100,
+        "L_required_label": "one-lane two-way taper",
+        "L_third_calc_text": "Required: 100 ft (one-lane two-way taper, 50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft maximum)",
+        "L_third_ft": 100,
+        "cdot_reference": "MUTCD 11th Ed. Part 6 TA-10 (flagger-controlled one-lane two-way operation)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "lane",
+        "formula_choice": "Flagger alternating-flow: one-lane two-way taper (50-100 ft fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; the merging-taper L = W x S formula does not apply",
+        "formula_latex": "50 \\le L \\le 100",
+        "offset_ft": 11.0,
+        "offset_label": "lane width",
+        "shoulder_width_ft": 11.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic control): 50-100 ft taper with channelizing devices at approximately 20 ft spacing. CDOT S-630-1 Case 17 warns the taper must be short enough to not be mistaken for a transition.",
+        "speed_mph": 45
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 360.0,
+      "case_id": "MUTCD TA-10: Flagger one-lane two-way",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 90.0,
+      "device_spacing_taper_ft": 20.0,
+      "step_count": 16,
+      "ta": "TA-10",
+      "taper_label": "one-lane two-way taper",
+      "taper_length_ft": 100
+    }
+  },
+  "freeway_shoulder_g1_plaques": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 65 mph, road_type = 'freeway' -> Table 6B-1 category: freeway",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "5,140 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "7,002"
+          },
+          {
+            "Code": "W20-2",
+            "Distance from Taper (ft)": "2,500 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "4,362"
+          },
+          {
+            "Code": "W21-5aR",
+            "Distance from Taper (ft)": "1,000 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "2,862"
+          },
+          {
+            "Code": "W16-2a",
+            "Distance from Taper (ft)": "NEXT 1,862 FT (under W21-5aR at A)",
+            "Position": "A plaque",
+            "Station (ft)": "2,862"
+          },
+          {
+            "Code": "W21-5aR",
+            "Distance from Taper (ft)": "750 upstream",
+            "Position": "A2 (second W21-5aR)",
+            "Station (ft)": "2,612"
+          },
+          {
+            "Code": "W7-3a",
+            "Distance from Taper (ft)": "NEXT 1 MILE (under second W21-5aR)",
+            "Position": "A2 plaque",
+            "Station (ft)": "2,612"
+          },
+          {
+            "Code": "W5-1",
+            "Distance from Taper (ft)": "500 upstream",
+            "Position": "Supplemental (W5-1)",
+            "Station (ft)": "2,362"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 1000 ft, B = 1500 ft, C = 2640 ft"
+      },
+      "buffer": {
+        "buffer_ft": 645.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 645 ft. CDOT S-630-1 Sheet 14 posts a 570 ft minimum at 65 mph, but only as part of the Case 26 mandatory speed step-down (65 → 60 mph); this plan has no qualifying reduction, so the federal posted-speed value governs (Sheet 7 Case 11: buffer VARIES per General Note 24).",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24).",
+        "speed_mph": 65
+      },
+      "case": {
+        "case": "Case 11: Shoulder closure on divided highway",
+        "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 65 mph.",
+        "routing": "shoulder_no_reduction",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: True. Signs placed: 12 left, 12 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 7,002 ft. Required: 3. Placed: 3.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "No work-zone speed reduction. Posted speed 65 mph applies throughout the zone.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "Not applicable (no flaggers).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 5140,
+        "buffer_ft": 645,
+        "downstream_taper_ft": 50,
+        "road_category": "freeway",
+        "taper_ft": 217
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "flagger": {
+        "applicable": false,
+        "count": 0,
+        "narrative": "Not applicable for this scenario.",
+        "required": 0,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": []
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 645.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 65,
+        "taper_ft": 217,
+        "taper_label": "L/3 (shoulder taper)",
+        "violations": [],
+        "work_zone_ft": 1000.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 9 tangent + 2 downstream = 11 cones total",
+        "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 2,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 9,
+        "n_taper_drums_actual": 5,
+        "n_taper_drums_required": 5,
+        "on_tangent_text": "65 mph -> 130 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6K.01",
+        "speed_mph": 65,
+        "tangent_count_text": "1000 ft / 130 ft max spacing -> 9 cones at 125.0 ft intervals",
+        "taper_count_text": "L/3 = 217 ft / 65 ft max spacing -> 5 drums at 54.2 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "L = 10 x 65 = 650 ft",
+        "L_full_ft": 650,
+        "L_required_ft": 217,
+        "L_required_label": "L/3 (shoulder taper)",
+        "L_third_calc_text": "L/3 = 650 / 3 = 217 ft",
+        "L_third_ft": 217,
+        "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "shoulder",
+        "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
+        "formula_latex": "L = W \\times S",
+        "offset_ft": 10.0,
+        "offset_label": "shoulder width",
+        "shoulder_width_ft": 10.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+        "speed_mph": 65
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 645.0,
+      "case_id": "Case 11: Shoulder closure on divided highway",
+      "case_routing": "shoulder_no_reduction",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 130.0,
+      "device_spacing_taper_ft": 65.0,
+      "step_count": 11,
+      "ta": "TA-5",
+      "taper_label": "L/3 (shoulder taper)",
+      "taper_length_ft": 217
+    }
+  },
+  "near_intersection": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 45 mph, road_type = 'urban_high' -> Table 6B-1 category: urban_high",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "1,050 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "2,750"
+          },
+          {
+            "Code": "R2-10",
+            "Distance from Taper (ft)": "875 upstream",
+            "Position": "1/2 C inside the outermost sign (Case 18)",
+            "Station (ft)": "2,575"
+          },
+          {
+            "Code": "W20-5R",
+            "Distance from Taper (ft)": "700 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,400"
+          },
+          {
+            "Code": "W4-2R",
+            "Distance from Taper (ft)": "350 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "2,050"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 350 ft, B = 350 ft, C = 350 ft"
+      },
+      "approaches": {
+        "along_station_ft": -60.0,
+        "approaches": [
+          {
+            "a_dist_ft": 100.0,
+            "id": "cross_n",
+            "key_text": "Sheet 10 advance-signing key: A = 100 ft at 30 mph (urban_low)",
+            "road_type": "urban_low",
+            "sign_table": [
+              {
+                "Code": "W20-1",
+                "Placement rule": "2 x A = 200 ft, approach side",
+                "Station (ft from curb line)": "200"
+              },
+              {
+                "Code": "R2-10",
+                "Placement rule": "A = 100 ft, approach side",
+                "Station (ft from curb line)": "100"
+              },
+              {
+                "Code": "R2-11",
+                "Placement rule": "100 ft, departure side (Case 18)",
+                "Station (ft from curb line)": "100"
+              }
+            ],
+            "signalized": false,
+            "speed_mph": 30
+          }
+        ],
+        "narrative": "Each cross-street leg receives its own advance set (W20-1, R2-10, R2-11), computed from that leg's own speed and road type; stations are measured along the leg from the intersection curb line, increasing away from the intersection.",
+        "side": "near",
+        "source": "MUTCD §6N.12; CDOT S-630-1 Sheet 10, Cases 18/19 (advance-signing key)"
+      },
+      "buffer": {
+        "buffer_ft": 360.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 360 ft (CDOT supplement silent at this speed)",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+        "speed_mph": 45
+      },
+      "case": {
+        "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+        "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10) — traffic control around a work area near an intersection, one lane closed — applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach leg per MUTCD §6N.12 and the Sheet 10 advance-signing key.",
+        "narrative_2": "Three disclosed departures from the plate: (1) the Case 18 plate typifies corner-quadrant work with a full cross-street closure train; this plan confines the work space to the mainline and places cross-street advance signing only — corner-quadrant support is tracked at https://github.com/rtmakatura/conestruct/issues/128. (2) The opposing mainline direction is not signed (single-side undivided convention; the plate signs both directions). (3) The plate typifies rural sign placement; urban applications require block-based placement per Sheet 10 Note 1. The plate's Type III corner barricade (work lasting more than 3 days) encloses the corner work area and is not placed, per departure (1).",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: False. Signs placed: 0 left, 9 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 2,750 ft. Required: 2. Placed: 2.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "No work-zone speed reduction. Posted speed 45 mph applies throughout the zone.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "Not applicable (no flaggers).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1050,
+        "buffer_ft": 360,
+        "downstream_taper_ft": 48,
+        "road_category": "urban_high",
+        "taper_ft": 540
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "flagger": {
+        "applicable": false,
+        "count": 0,
+        "narrative": "Not applicable for this scenario.",
+        "required": 0,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": []
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 360.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 45,
+        "taper_ft": 540,
+        "taper_label": "L (full merging taper)",
+        "violations": [],
+        "work_zone_ft": 800.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 48 ft at ~48 ft spacing -> 1 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 10 tangent + 1 downstream = 11 cones total",
+        "in_taper_text": "45 mph -> 45 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 1,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 10,
+        "n_taper_drums_actual": 13,
+        "n_taper_drums_required": 13,
+        "on_tangent_text": "45 mph -> 90 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6K.01",
+        "speed_mph": 45,
+        "tangent_count_text": "800 ft / 90 ft max spacing -> 10 cones at 88.9 ft intervals",
+        "taper_count_text": "L = 540 ft / 45 ft max spacing -> 13 drums at 45.0 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "L = 12 x 45 = 540 ft",
+        "L_full_ft": 540,
+        "L_required_ft": 540,
+        "L_required_label": "L (full merging taper)",
+        "L_third_calc_text": "Required: L = 540 ft (full taper for lane closure)",
+        "L_third_ft": 540,
+        "cdot_reference": "CDOT S-630-1 Case 18 (traffic control around a work area near an intersection, one lane closed; Sheet 10)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "lane",
+        "formula_choice": "Speed 45 mph >= 45 mph threshold -> using L = W x S",
+        "formula_latex": "L = W \\times S",
+        "offset_ft": 12.0,
+        "offset_label": "lane width",
+        "shoulder_width_ft": 12.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the full merging taper length L.",
+        "speed_mph": 45
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 360.0,
+      "case_id": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 90.0,
+      "device_spacing_taper_ft": 45.0,
+      "step_count": 16,
+      "ta": "TA-21",
+      "taper_label": "L (full merging taper)",
+      "taper_length_ft": 540
+    }
+  },
+  "shoulder_divided_case26_stepdown": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 65 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "1,500 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "3,087"
+          },
+          {
+            "Code": "W20-2",
+            "Distance from Taper (ft)": "1,000 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,587"
+          },
+          {
+            "Code": "W21-5aR",
+            "Distance from Taper (ft)": "500 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "2,087"
+          },
+          {
+            "Code": "W3-5(60)",
+            "Distance from Taper (ft)": "243 upstream",
+            "Position": "W3-5 step 1",
+            "Station (ft)": "1,830"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      },
+      "buffer": {
+        "buffer_ft": 570.0,
+        "cdot_value_ft": 570,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "divergence": true,
+        "jurisdiction": "CDOT",
+        "lookup_text": "CDOT supplement: 570 ft. MUTCD Table 6B-2: 645 ft. Plan uses CDOT supplement value. Note: CDOT supplement permits shorter buffer than federal table. Verify against project-specific engineering judgment.",
+        "mutcd_value_ft": 645,
+        "source": "CDOT S-630-1 Standard Plan, Sheet 14 (Case 26 at 65 mph). MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline).",
+        "speed_mph": 65
+      },
+      "case": {
+        "case": "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+        "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 65 → 60 mph; Fines Double envelope applies per S-630-1 Sheet 12, Fines Double Signing Notes.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 65 mph.",
+        "routing": "shoulder_reduced_speed",
+        "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: True. Signs placed: 14 left, 14 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 3,087 ft. Required: 2. Placed: 3.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "Work-zone speed reduced 65 → 60 mph (Δ5 mph). Required: 1. Placed: 1.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "Not applicable (no flaggers).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1500,
+        "buffer_ft": 570,
+        "downstream_taper_ft": 50,
+        "road_category": "rural",
+        "taper_ft": 217
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "fines_double": {
+        "applicable": true,
+        "citation": "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes",
+        "envelope": {
+          "downstream_r2_1_label": "SPEED LIMIT 65",
+          "downstream_r2_1_station_ft": -1000.0,
+          "entrance_r2_1_label": "SPEED LIMIT 60",
+          "entrance_r2_1_station_ft": 600.0,
+          "length_ft": 1800.0,
+          "n_assemblies": 1,
+          "r2_10_station_ft": 1300.0,
+          "r2_11_station_ft": -500.0
+        },
+        "operational_notes": [
+          {
+            "action": "Install Fines Double signs no more than 4 hours before the start of the work day. Do not leave signs up overnight when work is not active.",
+            "citation": "S-630-1 Sheet 12, Note 1"
+          },
+          {
+            "action": "Remove or cover Fines Double signs when work concludes; doubled fines apply only when workers or work activity are present in the zone.",
+            "citation": "S-630-1 Sheet 12, Note 2"
+          },
+          {
+            "action": "Relocate the R2-10/R2-11 envelope to follow the actual work area as the project progresses; do not leave Fines Double signs in place beyond the active work zone.",
+            "citation": "S-630-1 Sheet 12, Note 3"
+          },
+          {
+            "action": "Maintain a 250 ft minimum spacing between Fines Double signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and other warning or regulatory signs. Engineer may adjust placement to satisfy this minimum.",
+            "citation": "S-630-1 Sheet 12, Note 4"
+          }
+        ],
+        "source": "CDOT S-630-1 Standard Plan, Sheet 12"
+      },
+      "flagger": {
+        "applicable": false,
+        "count": 0,
+        "narrative": "Not applicable for this scenario.",
+        "required": 0,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": []
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 570.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 65,
+        "taper_ft": 217,
+        "taper_label": "L/3 (shoulder taper)",
+        "violations": [],
+        "work_zone_ft": 800.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 8 tangent + 2 downstream = 10 cones total",
+        "in_taper_text": "65 mph -> 65 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+        "n_cones_placed_total": 10,
+        "n_downstream_taper_cones": 2,
+        "n_tangent_cones_actual": 10,
+        "n_tangent_cones_required": 8,
+        "n_taper_drums_actual": 5,
+        "n_taper_drums_required": 5,
+        "on_tangent_text": "65 mph -> 130 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6K.01",
+        "speed_mph": 65,
+        "tangent_count_text": "800 ft / 130 ft max spacing -> 8 cones at 114.3 ft intervals",
+        "taper_count_text": "L/3 = 217 ft / 65 ft max spacing -> 5 drums at 54.2 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "L = 10 x 65 = 650 ft",
+        "L_full_ft": 650,
+        "L_required_ft": 217,
+        "L_required_label": "L/3 (shoulder taper)",
+        "L_third_calc_text": "L/3 = 650 / 3 = 217 ft",
+        "L_third_ft": 217,
+        "cdot_reference": "CDOT S-630-1 Case 26 (shoulder closure on freeway/expressway, 65 mph posted with reduced work-zone speed; Sheet 14)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "shoulder",
+        "formula_choice": "Speed 65 mph >= 45 mph threshold -> using L = W x S",
+        "formula_latex": "L = W \\times S",
+        "offset_ft": 10.0,
+        "offset_label": "shoulder width",
+        "shoulder_width_ft": 10.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+        "speed_mph": 65
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 570.0,
+      "case_id": "Case 26 at 65 mph: Shoulder closure with reduced work-zone speed",
+      "case_routing": "shoulder_reduced_speed",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 130.0,
+      "device_spacing_taper_ft": 65.0,
+      "step_count": 11,
+      "ta": "TA-3",
+      "taper_label": "L/3 (shoulder taper)",
+      "taper_length_ft": 217,
+      "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 8 FT OF TRAVEL WAY"
+    }
+  },
+  "shoulder_divided_no_reduction": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "1,500 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "2,978"
+          },
+          {
+            "Code": "W20-2",
+            "Distance from Taper (ft)": "1,000 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,478"
+          },
+          {
+            "Code": "W21-5aR",
+            "Distance from Taper (ft)": "500 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "1,978"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      },
+      "buffer": {
+        "buffer_ft": 495.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 495 ft (CDOT supplement silent at this speed)",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+        "speed_mph": 55
+      },
+      "case": {
+        "case": "Case 11: Shoulder closure on divided highway",
+        "narrative": "This scenario matches CDOT Standard Plan S-630-1, Case 11: shoulder closure on a divided highway.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
+        "routing": "shoulder_no_reduction",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: True. Signs placed: 7 left, 7 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 2,978 ft. Required: 2. Placed: 2.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "No work-zone speed reduction. Posted speed 55 mph applies throughout the zone.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "Not applicable (no flaggers).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1500,
+        "buffer_ft": 495,
+        "downstream_taper_ft": 50,
+        "road_category": "rural",
+        "taper_ft": 183
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "flagger": {
+        "applicable": false,
+        "count": 0,
+        "narrative": "Not applicable for this scenario.",
+        "required": 0,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": []
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 495.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 55,
+        "taper_ft": 183,
+        "taper_label": "L/3 (shoulder taper)",
+        "violations": [],
+        "work_zone_ft": 800.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 9 tangent + 2 downstream = 11 cones total",
+        "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 2,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 9,
+        "n_taper_drums_actual": 5,
+        "n_taper_drums_required": 5,
+        "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6K.01",
+        "speed_mph": 55,
+        "tangent_count_text": "800 ft / 110 ft max spacing -> 9 cones at 100.0 ft intervals",
+        "taper_count_text": "L/3 = 183 ft / 55 ft max spacing -> 5 drums at 45.8 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "L = 10 x 55 = 550 ft",
+        "L_full_ft": 550,
+        "L_required_ft": 183,
+        "L_required_label": "L/3 (shoulder taper)",
+        "L_third_calc_text": "L/3 = 550 / 3 = 183 ft",
+        "L_third_ft": 183,
+        "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure on divided highway)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "shoulder",
+        "formula_choice": "Speed 55 mph >= 45 mph threshold -> using L = W x S",
+        "formula_latex": "L = W \\times S",
+        "offset_ft": 10.0,
+        "offset_label": "shoulder width",
+        "shoulder_width_ft": 10.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+        "speed_mph": 55
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 495.0,
+      "case_id": "Case 11: Shoulder closure on divided highway",
+      "case_routing": "shoulder_no_reduction",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 110.0,
+      "device_spacing_taper_ft": 55.0,
+      "step_count": 11,
+      "ta": "TA-3",
+      "taper_label": "L/3 (shoulder taper)",
+      "taper_length_ft": 183
+    }
+  },
+  "shoulder_undivided_reduced": {
+    "pending_verification": {
+      "count": 0,
+      "note": "",
+      "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/19"
+    },
+    "plan_flags": {
+      "compliance_fails": 0,
+      "is_clean": true,
+      "v1_limitations": 0,
+      "validation_warnings": 0
+    },
+    "sections": {
+      "advance": {
+        "road_type_text": "Speed 55 mph, road_type = 'rural' -> Table 6B-1 category: rural",
+        "sign_table": [
+          {
+            "Code": "W20-1",
+            "Distance from Taper (ft)": "1,500 upstream",
+            "Position": "C (furthest)",
+            "Station (ft)": "2,942"
+          },
+          {
+            "Code": "W20-2",
+            "Distance from Taper (ft)": "1,000 upstream",
+            "Position": "B (middle)",
+            "Station (ft)": "2,442"
+          },
+          {
+            "Code": "W21-5aR",
+            "Distance from Taper (ft)": "500 upstream",
+            "Position": "A (nearest)",
+            "Station (ft)": "1,942"
+          },
+          {
+            "Code": "W3-5(45)",
+            "Distance from Taper (ft)": "388 upstream",
+            "Position": "W3-5 step 1",
+            "Station (ft)": "1,830"
+          }
+        ],
+        "source": "MUTCD 11th Ed. Table 6B-1",
+        "spacing_text": "A = 500 ft, B = 500 ft, C = 500 ft"
+      },
+      "buffer": {
+        "buffer_ft": 495.0,
+        "citation": {
+          "cite": "MUTCD § 6B.06",
+          "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE"
+        },
+        "lookup_text": "MUTCD Table 6B-2: 495 ft (CDOT supplement silent at this speed)",
+        "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+        "speed_mph": 55
+      },
+      "case": {
+        "case": "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway",
+        "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 — the general shoulder-work typical (drawn for freeway/expressway) — applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8, with a reduced work-zone posted speed (55 → 45 mph) that does not match the Case 26/27 mandated step-down. Fines Double envelope applies per S-630-1 Sheet 12, Fines Double Signing Notes.",
+        "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
+        "routing": "shoulder_reduced_speed",
+        "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
+      },
+      "colorado": {
+        "all_pass": true,
+        "checks": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+            "detail": "Required: False. Signs placed: 0 left, 14 right.",
+            "label": "Signs on both sides of divided highway",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+            "detail": "Zone length: 2,942 ft. Required: 2. Placed: 3.",
+            "label": "G20-5P Work Zone signs every 2,640 ft",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+            "detail": "Work-zone speed reduced 55 → 45 mph (Δ10 mph). Required: 1. Placed: 1.",
+            "label": "Speed reduction <= 15 mph per sign installation",
+            "pass": true
+          },
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+            "detail": "Not applicable (no flaggers).",
+            "label": "Flagger station lighting 500W @ 8 ft",
+            "pass": true
+          }
+        ],
+        "fail_count": 0,
+        "info_items": [
+          {
+            "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+            "detail": "Not applicable (not a mobile operation).",
+            "info": true,
+            "label": "AADT threshold for mobile operations (<= 2,000)"
+          }
+        ]
+      },
+      "corridor_spec": {
+        "advance_warning_ft": 1500,
+        "buffer_ft": 495,
+        "downstream_taper_ft": 50,
+        "road_category": "rural",
+        "taper_ft": 147
+      },
+      "corridor_validation": {
+        "checked": false,
+        "warnings": []
+      },
+      "fines_double": {
+        "applicable": true,
+        "citation": "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes",
+        "envelope": {
+          "downstream_r2_1_label": "SPEED LIMIT 55",
+          "downstream_r2_1_station_ft": -1000.0,
+          "entrance_r2_1_label": "SPEED LIMIT 45",
+          "entrance_r2_1_station_ft": 600.0,
+          "length_ft": 1800.0,
+          "n_assemblies": 1,
+          "r2_10_station_ft": 1300.0,
+          "r2_11_station_ft": -500.0
+        },
+        "operational_notes": [
+          {
+            "action": "Install Fines Double signs no more than 4 hours before the start of the work day. Do not leave signs up overnight when work is not active.",
+            "citation": "S-630-1 Sheet 12, Note 1"
+          },
+          {
+            "action": "Remove or cover Fines Double signs when work concludes; doubled fines apply only when workers or work activity are present in the zone.",
+            "citation": "S-630-1 Sheet 12, Note 2"
+          },
+          {
+            "action": "Relocate the R2-10/R2-11 envelope to follow the actual work area as the project progresses; do not leave Fines Double signs in place beyond the active work zone.",
+            "citation": "S-630-1 Sheet 12, Note 3"
+          },
+          {
+            "action": "Maintain a 250 ft minimum spacing between Fines Double signs (R2-10, R2-11, G20-5P/R2-6P assemblies) and other warning or regulatory signs. Engineer may adjust placement to satisfy this minimum.",
+            "citation": "S-630-1 Sheet 12, Note 4"
+          }
+        ],
+        "source": "CDOT S-630-1 Standard Plan, Sheet 12"
+      },
+      "flagger": {
+        "applicable": false,
+        "count": 0,
+        "narrative": "Not applicable for this scenario.",
+        "required": 0,
+        "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+        "table": []
+      },
+      "geometry_validation": {
+        "all_pass": true,
+        "buffer_ft": 495.0,
+        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "speed_mph": 55,
+        "taper_ft": 147,
+        "taper_label": "L/3 (shoulder taper)",
+        "violations": [],
+        "work_zone_ft": 800.0
+      },
+      "spacing": {
+        "citation": {
+          "cite": "MUTCD § 6K.01",
+          "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING"
+        },
+        "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 9 tangent + 2 downstream = 11 cones total",
+        "in_taper_text": "55 mph -> 55 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+        "n_cones_placed_total": 11,
+        "n_downstream_taper_cones": 2,
+        "n_tangent_cones_actual": 11,
+        "n_tangent_cones_required": 9,
+        "n_taper_drums_actual": 4,
+        "n_taper_drums_required": 4,
+        "on_tangent_text": "55 mph -> 110 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+        "source": "MUTCD 11th Ed. Sec 6K.01",
+        "speed_mph": 55,
+        "tangent_count_text": "800 ft / 110 ft max spacing -> 9 cones at 100.0 ft intervals",
+        "taper_count_text": "L/3 = 147 ft / 55 ft max spacing -> 4 drums at 48.9 ft intervals"
+      },
+      "taper": {
+        "L_calc_text": "L = 8 x 55 = 440 ft",
+        "L_full_ft": 440,
+        "L_required_ft": 147,
+        "L_required_label": "L/3 (shoulder taper)",
+        "L_third_calc_text": "L/3 = 440 / 3 = 147 ft",
+        "L_third_ft": 147,
+        "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway, reduced work-zone speed)",
+        "citation": {
+          "cite": "MUTCD § 6B.08",
+          "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3"
+        },
+        "closure_type": "shoulder",
+        "formula_choice": "Speed 55 mph >= 45 mph threshold -> using L = W x S",
+        "formula_latex": "L = W \\times S",
+        "offset_ft": 8.0,
+        "offset_label": "shoulder width",
+        "shoulder_width_ft": 8.0,
+        "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+        "speed_mph": 55
+      }
+    },
+    "summary": {
+      "buffer_space_ft": 495.0,
+      "case_id": "Case 11 (reduced work-zone speed): Shoulder closure on undivided highway",
+      "case_routing": "shoulder_reduced_speed",
+      "cdot_sheet": "S-630-1",
+      "device_spacing_tangent_ft": 110.0,
+      "device_spacing_taper_ft": 55.0,
+      "step_count": 11,
+      "ta": "TA-3",
+      "taper_label": "L/3 (shoulder taper)",
+      "taper_length_ft": 147
+    }
+  }
+}
