@@ -40,6 +40,7 @@ from src.rules.spacing import (
 )
 from src.rules.tables import (
     CDOT_BUFFER_STEPDOWN,
+    CO_CITATIONS,
     COLORADO_OVERRIDES,
     TAPER_LENGTH_FORMULA_THRESHOLD_MPH,
 )
@@ -836,7 +837,7 @@ def build_audit_trail(
     both_sides = {
         "pass": both_sides_pass,
         "label": "Signs on both sides of divided highway",
-        "citation": "CO Supplement Sec 6C.04(A)",
+        "citation": CO_CITATIONS.signs_both_sides,
         "detail": (
             f"Required: {params.is_divided}. Signs placed: {sign_left} left, {sign_right} right."
         ),
@@ -852,7 +853,7 @@ def build_audit_trail(
     plaques_section = {
         "pass": plaques_right >= plaques_required,
         "label": "G20-5P construction plaques every 2,640 ft",
-        "citation": "CO Supplement Sec 6C.06(A)",
+        "citation": CO_CITATIONS.construction_zone_plaques,
         "detail": (
             f"Zone length: {total_signed_length:,.0f} ft. "
             f"Required: {plaques_required}. Placed: {plaques_right}."
@@ -877,7 +878,7 @@ def build_audit_trail(
         speed_reduction_section = {
             "pass": True,
             "label": "Speed reduction <= 15 mph per sign installation",
-            "citation": "CO Supplement Sec 2B.13(A)",
+            "citation": CO_CITATIONS.speed_reduction,
             "detail": (
                 f"No work-zone speed reduction. Posted speed {speed} mph "
                 f"applies throughout the zone."
@@ -909,7 +910,7 @@ def build_audit_trail(
         speed_reduction_section = {
             "pass": n_w3_5_placed >= n_signs_required,
             "label": "Speed reduction <= 15 mph per sign installation",
-            "citation": "CO Supplement Sec 2B.13(A)",
+            "citation": CO_CITATIONS.speed_reduction,
             "detail": detail,
         }
 
@@ -931,7 +932,7 @@ def build_audit_trail(
                 f"{COLORADO_OVERRIDES.flagger_station_light_watts}W "
                 f"@ {COLORADO_OVERRIDES.flagger_station_light_height_ft} ft"
             ),
-            "citation": "CO Supplement Sec 6E.02(A)",
+            "citation": CO_CITATIONS.flagger_station_lighting,
             "detail": "Not applicable (no flaggers).",
         }
     elif not params.is_night:
@@ -942,7 +943,7 @@ def build_audit_trail(
                 f"{COLORADO_OVERRIDES.flagger_station_light_watts}W "
                 f"@ {COLORADO_OVERRIDES.flagger_station_light_height_ft} ft"
             ),
-            "citation": "CO Supplement Sec 6E.02(A)",
+            "citation": CO_CITATIONS.flagger_station_lighting,
             "detail": (
                 f"{n_flaggers} flagger station(s); lighting not required "
                 "(daytime operation; S-630-1 Sheet 2 Note 22 applies to "
@@ -957,7 +958,7 @@ def build_audit_trail(
                 f"{COLORADO_OVERRIDES.flagger_station_light_watts}W "
                 f"@ {COLORADO_OVERRIDES.flagger_station_light_height_ft} ft"
             ),
-            "citation": "CO Supplement Sec 6E.02(A)",
+            "citation": CO_CITATIONS.flagger_station_lighting,
             "detail": (
                 f"{n_flaggers} flagger station(s) at night. Required: "
                 f"flood lighting "
@@ -975,7 +976,7 @@ def build_audit_trail(
             f"AADT threshold for mobile operations "
             f"(<= {COLORADO_OVERRIDES.mobile_operation_aadt_threshold:,})"
         ),
-        "citation": "CO Supplement Sec 6G.02(A)",
+        "citation": CO_CITATIONS.mobile_operation_aadt,
         "detail": "Not applicable (not a mobile operation).",
     }
 
@@ -1015,7 +1016,7 @@ def build_audit_trail(
         env = flagger_chain_stations(params)
         fines_double_section = {
             "applicable": True,
-            "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
+            "citation": CO_CITATIONS.fines_double,
             "gating": (
                 "S-630-1 Sheet 12 gates Fines Double signing on worker "
                 "presence in the roadway/clear zone or hazards in the "
@@ -1073,7 +1074,7 @@ def build_audit_trail(
         entrance_r2_1_st = (n_plaques_for_entrance - 0.5) * wz_len / n_plaques_for_entrance
         fines_double_section = {
             "applicable": True,
-            "citation": ("CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"),
+            "citation": CO_CITATIONS.fines_double,
             "envelope": {
                 "r2_10_station_ft": r2_10_st,
                 "r2_11_station_ft": r2_11_st,

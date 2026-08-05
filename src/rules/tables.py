@@ -286,3 +286,27 @@ class ColoradoOverrides:
 
 # Singleton instance for import convenience.
 COLORADO_OVERRIDES: ColoradoOverrides = ColoradoOverrides()
+
+
+@dataclass(frozen=True)
+class ColoradoCitations:
+    """Citation text for each Colorado requirement the audit renders.
+
+    Single source (#83): ``audit.py`` reads these instead of carrying
+    parallel string literals.  Each enforced value lives on
+    ``ColoradoOverrides`` above; its rendered citation lives here — one
+    section number, one definition.  ``fines_double`` has no value
+    field (the envelope is geometry, not a scalar) but its citation is
+    single-sourced the same way.
+    """
+
+    signs_both_sides: str = "CO Supplement Sec 6C.04(A)"
+    construction_zone_plaques: str = "CO Supplement Sec 6C.06(A)"
+    speed_reduction: str = "CO Supplement Sec 2B.13(A)"
+    flagger_station_lighting: str = "CO Supplement Sec 6E.02(A)"
+    mobile_operation_aadt: str = "CO Supplement Sec 6G.02(A)"
+    fines_double: str = "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"
+
+
+# Singleton instance for import convenience.
+CO_CITATIONS: ColoradoCitations = ColoradoCitations()
