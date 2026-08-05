@@ -1,0 +1,10 @@
+ ❯ scripts/modal-healthz-probe.test.ts (6 tests | 1 failed) 872ms
+   × modal-healthz-probe exit-code taxonomy (#169 / PR #168) > dead port -> exit 1, unreachable error 79ms
+     → expected +0 to be 1 // Object.is equality
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 500 -> exit 1, distinct non-200 error 171ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a DRIFTED sha -> exit 0, sha faithfully extracted 157ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with the MATCHING sha -> exit 0, sha faithfully extracted 155ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 without a sha field -> exit 0, served_sha=unknown (jq `.sha // "unknown"` preserved) 154ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a non-JSON body -> exit 1 (deliberately red) 154ms
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
