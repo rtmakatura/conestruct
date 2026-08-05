@@ -339,6 +339,45 @@ def test_crew_narrative_freeway_includes_w16_2a_and_w7_3a_rows() -> None:
     assert "XXX" not in markdown
 
 
+def test_crew_narrative_plaque_values_equal_shared_helper_and_audit() -> None:
+    """#51 — the narrative's W16-2a / W7-3a schedule values derive from
+    ``substitute_sign_description`` (the same call the audit sign table
+    makes), so the two surfaces render the identical plaque value.
+    Value-agnostic: asserts cross-surface equality, not a number, so a
+    deliberate future change to the helper's semantics moves both
+    surfaces together instead of forking them."""
+    import re
+
+    from src.api.audit import build_audit_trail
+
+    params = ScenarioParams(
+        speed_mph=65,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="freeway",
+        work_zone_length_ft=1000.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+        work_zone_speed_mph=None,
+    )
+    placements = generate_shoulder_closure_divided(params)
+    markdown = _render_template(build_narrative_context(placements, params))
+    trail = build_audit_trail(placements, params)
+
+    audit_rows = {r["Code"]: r for r in trail["advance"]["sign_table"]}
+    w16_audit = re.fullmatch(
+        r"(NEXT [\d,]+ FT) \(under W21-5aR at A\)",
+        audit_rows["W16-2a"]["Distance from Taper (ft)"],
+    )
+    w7_audit = re.fullmatch(
+        r"(NEXT \d+ MILES?) \(under second W21-5aR\)",
+        audit_rows["W7-3a"]["Distance from Taper (ft)"],
+    )
+    assert w16_audit and w7_audit, "audit sign table lost its G1 plaque rows"
+    assert f"| W16-2a | {w16_audit.group(1)} (under upstream W21-5aR) |" in markdown
+    assert f"| W7-3a | {w7_audit.group(1)} (under downstream W21-5aR) |" in markdown
+
+
 def test_crew_narrative_freeway_reduced_includes_w21_5aR_pair() -> None:
     """Reduced-speed shoulder closure (Sheet 14 Cases 26/27) keeps the
     W21-5aR pair + plaques — emission gate is freeway-shoulder, not
