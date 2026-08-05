@@ -854,16 +854,21 @@ def render_detect_site(req: DetectSiteRequest) -> JSONResponse:
             # diagnostic and fall back to legacy point-and-radius scan so
             # the UI still gets a useful result.
             result = detect_site_conditions(req.lat, req.lng, radius_m=req.radius_m)
-            result["mode"] = "point"
-            result["corridor_unavailable_reason"] = str(exc)
-            return JSONResponse(result)
+            # API-boundary keys are spread into a fresh dict, never grafted
+            # onto site_detection's return in place — the mutation pattern
+            # blocked TypedDict precision on the detector's shape (#35).
+            return JSONResponse(
+                {
+                    **result,
+                    "mode": "point",
+                    "corridor_unavailable_reason": str(exc),
+                }
+            )
         result = detect_along_corridor(corridor)
-        result["mode"] = "corridor"
-        return JSONResponse(result)
+        return JSONResponse({**result, "mode": "corridor"})
 
     result = detect_site_conditions(req.lat, req.lng, radius_m=req.radius_m)
-    result["mode"] = "point"
-    return JSONResponse(result)
+    return JSONResponse({**result, "mode": "point"})
 
 
 class CorridorSpecRequest(BaseModel):
