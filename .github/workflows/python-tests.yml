@@ -16,10 +16,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        # Exact tag by necessity, not style: setup-uv stopped
+        # publishing major tags at v8 — `@v9` does not exist (#170).
+        uses: astral-sh/setup-uv@v9.0.0
 
       - name: Set up Python
         run: uv python install 3.11
