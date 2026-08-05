@@ -1,0 +1,4 @@
+# Evidence PDFs are byte-exact artifacts — never EOL-normalize them.
+# (git's text heuristic can misdetect a small mostly-ASCII PDF as text
+# and CRLF-mangle its xref offsets on checkout.)
+*.pdf -text

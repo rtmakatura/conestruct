@@ -1,0 +1,22 @@
+- `2026-08-05T14:12:29.286Z` healthz sha: b6d0b7f7073263158ecfd7732a455dc32048d9c2
+- `2026-08-05T14:12:29.287Z` expected (git rev-parse origin/main): b6d0b7f7073263158ecfd7732a455dc32048d9c2
+- `2026-08-05T14:12:31.109Z` served bundle sha: b6d0b7f7073263158ecfd7732a455dc32048d9c2
+- `2026-08-05T14:12:31.109Z` **PASS** — gate. healthz == origin/main == served bundle (b6d0b7f)
+- `2026-08-05T14:12:31.695Z` kind: shoulder work
+- `2026-08-05T14:12:47.182Z` candidate picked: "South Wadsworth Boulevard southbound (primary, 176°)7 m from pin · way 132831821"
+- `2026-08-05T14:12:49.478Z` scenario set: freeway / 65 mph / 3 lanes / 1,000 ft
+- `2026-08-05T14:13:24.096Z` generated
+- `2026-08-05T14:13:28.720Z` screenshot: 02-advance-sign-table.png
+- `2026-08-05T14:13:29.474Z` **PASS** — 1a. taper cite chip "MUTCD § 6B.08" + footer "TABLE 6B-3"
+- `2026-08-05T14:13:29.475Z` **PASS** — 1b. buffer cite chip "MUTCD § 6B.06"
+- `2026-08-05T14:13:29.475Z` **PASS** — 1c. spacing cite chip "MUTCD § 6K.01"
+- `2026-08-05T14:13:35.481Z` downloaded: served-audit.pdf (6589 B)
+- `2026-08-05T14:13:35.653Z` **PASS** — 1d. taper source prose (audit PDF surface) == committed after-98 baseline
+- `2026-08-05T14:13:35.653Z` **PASS** — 1e. audit sign table: "NEXT 1,862 FT (under W21-5aR at A)" + "NEXT 1 MILE (under second W21-5aR)"
+- `2026-08-05T14:13:35.804Z` screenshot: 01-freeway-audit-trail.png
+- `2026-08-05T14:13:36.589Z` downloaded: served-freeway-narrative.md (5582 B)
+- `2026-08-05T14:13:36.589Z` **PASS** — 2a. narrative W16-2a schedule row == committed baseline row
+- `2026-08-05T14:13:36.589Z` **PASS** — 2b. narrative W7-3a schedule row == committed baseline row
+- `2026-08-05T14:13:36.589Z` **PASS** — 2c. cross-surface: narrative plaque VALUES equal the audit sign table's
+
+**Total failures: 0**
