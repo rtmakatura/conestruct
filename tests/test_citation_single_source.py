@@ -45,6 +45,82 @@ def test_no_parallel_citation_literals_in_audit_source() -> None:
         )
 
 
+def test_no_parallel_federal_section_literals_in_audit_source() -> None:
+    """#98 — the federal taper/buffer/spacing section and table numbers
+    (``_SEC_TAPER``/``_SEC_BUFFER``/``_SEC_SPACING``/``_TBL_TAPER``/
+    ``_TBL_BUFFER``) have exactly one definition in ``audit.py``: their
+    own assignments.  Every prose sentence and panel dict interpolates
+    them, so no other *rendered* string literal may spell a section or
+    table number out.  Docstrings are exempt (explanatory text, never
+    rendered).  Value-agnostic: reads the tokens from the module rather
+    than restating them, so a verified renumber moves everything
+    together."""
+    tokens = {
+        audit_module._SEC_TAPER,
+        audit_module._SEC_BUFFER,
+        audit_module._SEC_SPACING,
+        audit_module._TBL_TAPER,
+        audit_module._TBL_BUFFER,
+    }
+    tree = ast.parse(_AUDIT_SOURCE)
+    docstrings: set[int] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            body = node.body
+            if (
+                body
+                and isinstance(body[0], ast.Expr)
+                and isinstance(body[0].value, ast.Constant)
+                and isinstance(body[0].value.value, str)
+            ):
+                docstrings.add(id(body[0].value))
+    offenders = [
+        (node.lineno, node.value)
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Constant)
+        and isinstance(node.value, str)
+        and id(node) not in docstrings
+        and node.value not in tokens  # the single-definition assignments
+        and any(tok in node.value for tok in tokens)
+    ]
+    assert not offenders, (
+        "federal section/table numbers spelled as literals outside the "
+        f"_SEC_*/_TBL_* constants (#98): {offenders!r}"
+    )
+
+
+def test_rendered_federal_sources_derive_from_constants() -> None:
+    """#98 positive half — the rendered taper/buffer/spacing ``source``
+    prose and panel citations actually carry the constants' values."""
+    from src.generation.layout import generate_shoulder_closure_divided
+    from src.rules.validators import ScenarioParams
+
+    params = ScenarioParams(
+        speed_mph=55,
+        num_lanes=2,
+        closure_type="shoulder",
+        road_type="rural",
+        work_zone_length_ft=800.0,
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        is_divided=True,
+        jurisdiction="CDOT",
+    )
+    placements = generate_shoulder_closure_divided(params, shoulder_width_ft=10.0)
+    trail = audit_module.build_audit_trail(placements, params)
+
+    sec = audit_module
+    assert f"Sec {sec._SEC_TAPER}, Table {sec._TBL_TAPER}" in trail["taper"]["source"]
+    assert f"Sec {sec._SEC_BUFFER}, Table {sec._TBL_BUFFER}" in trail["buffer"]["source"]
+    assert trail["spacing"]["source"] == f"MUTCD 11th Ed. Sec {sec._SEC_SPACING}"
+    assert trail["taper"]["citation"] == {
+        "cite": f"MUTCD § {sec._SEC_TAPER}",
+        "footer": f"MUTCD 2023 EDITION · CHAPTER 6B · TABLE {sec._TBL_TAPER}",
+    }
+    assert trail["buffer"]["citation"]["cite"] == f"MUTCD § {sec._SEC_BUFFER}"
+    assert trail["spacing"]["citation"]["cite"] == f"MUTCD § {sec._SEC_SPACING}"
+
+
 def test_rendered_colorado_citations_derive_from_single_source() -> None:
     """The audit's Colorado checks render exactly the CO_CITATIONS values."""
     from src.generation.layout import generate_shoulder_closure_divided

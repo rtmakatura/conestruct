@@ -76,21 +76,31 @@ _TABLE_6B_1_CATEGORIES: frozenset[str] = frozenset(
 # in its prose ``source``/body text (pre-existing imprecision in the table
 # chip, neither introduced nor worsened here).
 #
-# FOLLOW-UP: the prose ``source`` sentences still spell these section
-# numbers out independently; consolidating them onto these constants would
-# kill the last drift seam but churns PDF snapshot strings, so it is left
-# to its own behavior-preserving PR (rule #5).
+# #98 — the section/table numbers below are the single definition for the
+# federal taper/buffer/spacing citation family: the ``_CITATION_*`` panel
+# dicts AND every prose ``source``/lookup/formula sentence interpolate
+# them, so the number cannot drift between the panel and the PDF prose
+# (test_citation_single_source.py pins no-literal-spelling outside these
+# assignments).  Subject-verified against MUTCD 11th Ed. Part 6
+# (arc13-citation-tail-2/arc13-citations.md): §6B.08 Tapers (printed
+# p. 775), §6B.06 Activity Area ¶11 buffer → Table 6B-2 SSD (printed
+# p. 773), §6K.01 ¶04 1x/2x speed spacing.
+_SEC_TAPER: str = "6B.08"
+_SEC_BUFFER: str = "6B.06"
+_SEC_SPACING: str = "6K.01"
+_TBL_TAPER: str = "6B-3"
+_TBL_BUFFER: str = "6B-2"
 _CITATION_TAPER: dict[str, str] = {
-    "cite": "MUTCD § 6B.08",
-    "footer": "MUTCD 2023 EDITION · CHAPTER 6B · TABLE 6B-3",
+    "cite": f"MUTCD § {_SEC_TAPER}",
+    "footer": f"MUTCD 2023 EDITION · CHAPTER 6B · TABLE {_TBL_TAPER}",
 }
 _CITATION_BUFFER: dict[str, str] = {
-    "cite": "MUTCD § 6B.06",
-    "footer": "MUTCD § 6B.06 · STOPPING SIGHT DISTANCE",
+    "cite": f"MUTCD § {_SEC_BUFFER}",
+    "footer": f"MUTCD § {_SEC_BUFFER} · STOPPING SIGHT DISTANCE",
 }
 _CITATION_SPACING: dict[str, str] = {
-    "cite": "MUTCD § 6K.01",
-    "footer": "MUTCD § 6K.01 · CHANNELIZING DEVICE SPACING",
+    "cite": f"MUTCD § {_SEC_SPACING}",
+    "footer": f"MUTCD § {_SEC_SPACING} · CHANNELIZING DEVICE SPACING",
 }
 
 # Sheet 12 FINES DOUBLE SIGNING NOTES — operational rules attached to
@@ -266,18 +276,20 @@ def build_audit_trail(
         L_required_label = "one-lane two-way taper"
         L_required_calc_text = (
             f"Required: {L_required:g} ft (one-lane two-way taper, "
-            "50-100 ft band per MUTCD Sec 6B.08; plan uses the 100 ft "
+            f"50-100 ft band per MUTCD Sec {_SEC_TAPER}; plan uses the 100 ft "
             "maximum)"
         )
         formula_choice = (
             "Flagger alternating-flow: one-lane two-way taper (50-100 ft "
-            "fixed band per MUTCD Sec 6B.08) -> using 100 ft maximum; "
+            f"fixed band per MUTCD Sec {_SEC_TAPER}) -> using 100 ft maximum; "
             "the merging-taper L = W x S formula does not apply"
         )
         formula_latex = r"50 \le L \le 100"
-        L_calc_text = f"One-lane two-way taper = {L_required:g} ft (Sec 6B.08 50-100 ft band)"
+        L_calc_text = (
+            f"One-lane two-way taper = {L_required:g} ft (Sec {_SEC_TAPER} 50-100 ft band)"
+        )
         source_text = (
-            "MUTCD 11th Ed. Sec 6B.08 (one-lane, two-way traffic "
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER} (one-lane, two-way traffic "
             "control): 50-100 ft taper with channelizing devices at "
             "approximately 20 ft spacing. CDOT S-630-1 Case 17 warns "
             "the taper must be short enough to not be mistaken for a "
@@ -291,7 +303,7 @@ def build_audit_trail(
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
         source_text = (
-            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the "
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Lane closures use the "
             "full merging taper length L."
         )
         cdot_reference = (
@@ -303,7 +315,7 @@ def build_audit_trail(
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
         source_text = (
-            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the "
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Lane closures use the "
             "full merging taper length L."
         )
         cdot_reference = "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
@@ -312,8 +324,8 @@ def build_audit_trail(
         L_required_label = "L/3 (shoulder taper)"
         L_required_calc_text = f"L/3 = {_ft(L_full)} / 3 = {_ft(L_third)} ft"
         source_text = (
-            "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 "
-            "per Sec 6B.08 (Table 6B-3)."
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Shoulder closures use L/3 "
+            f"per Sec {_SEC_TAPER} (Table {_TBL_TAPER})."
         )
         # Routing-aware taper cdot_reference (V1-Wide S1). Only the exact
         # Case 26/27 mandated step-down (65->60, 75->65) maps to the Sheet
@@ -411,7 +423,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"CDOT supplement: {buf:g} ft. MUTCD Table 6B-2: {mutcd_value:g} ft. "
+                f"CDOT supplement: {buf:g} ft. MUTCD Table {_TBL_BUFFER}: {mutcd_value:g} ft. "
                 f"Plan uses CDOT supplement value. Note: CDOT supplement permits "
                 f"shorter buffer than federal table. Verify against project-specific "
                 f"engineering judgment."
@@ -419,7 +431,7 @@ def build_audit_trail(
             "buffer_ft": buf,
             "source": (
                 f"CDOT S-630-1 Standard Plan, Sheet 14 ({_supplement_row_label}). "
-                f"MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (federal baseline)."
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (federal baseline)."
             ),
             "jurisdiction": params.jurisdiction,
             "cdot_value_ft": int(buf),
@@ -438,7 +450,7 @@ def build_audit_trail(
         buffer_section = {
             "speed_mph": speed,
             "lookup_text": (
-                f"MUTCD Table 6B-2: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
+                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft. CDOT S-630-1 Sheet 14 posts a "
                 f"{supplement_min:g} ft minimum at {speed} mph, but only as part of the "
                 f"{_supplement_case} mandatory speed step-down "
                 f"({speed} → {required_wz} mph); this plan has no qualifying "
@@ -447,7 +459,8 @@ def build_audit_trail(
             ),
             "buffer_ft": buf,
             "source": (
-                "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance). "
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} "
+                "(stopping sight distance). "
                 "CDOT S-630-1 Sheet 7 Case 11 (buffer VARIES per General Note 24)."
             ),
             "citation": _CITATION_BUFFER,
@@ -455,17 +468,23 @@ def build_audit_trail(
     elif params.jurisdiction == "CDOT":
         buffer_section = {
             "speed_mph": speed,
-            "lookup_text": (f"MUTCD Table 6B-2: {buf:g} ft (CDOT supplement silent at this speed)"),
+            "lookup_text": (
+                f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft (CDOT supplement silent at this speed)"
+            ),
             "buffer_ft": buf,
-            "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+            "source": (
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (stopping sight distance)"
+            ),
             "citation": _CITATION_BUFFER,
         }
     else:  # jurisdiction == "federal"
         buffer_section = {
             "speed_mph": speed,
-            "lookup_text": f"MUTCD Table 6B-2: {buf:g} ft",
+            "lookup_text": f"MUTCD Table {_TBL_BUFFER}: {buf:g} ft",
             "buffer_ft": buf,
-            "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+            "source": (
+                f"MUTCD 11th Ed. Sec {_SEC_BUFFER}, Table {_TBL_BUFFER} (stopping sight distance)"
+            ),
             "citation": _CITATION_BUFFER,
         }
 
@@ -512,21 +531,21 @@ def build_audit_trail(
         taper_label = "one-lane two-way taper"
         in_taper_text = (
             f"{in_taper:g} ft spacing in the one-lane two-way taper "
-            "(MUTCD Sec 6B.08: approximately 20 ft, taper-specific "
-            "guidance overriding the Sec 6K.01 speed-based rule)"
+            f"(MUTCD Sec {_SEC_TAPER}: approximately 20 ft, taper-specific "
+            f"guidance overriding the Sec {_SEC_SPACING} speed-based rule)"
         )
     else:
         taper_label = "L" if is_lane else "L/3"
         in_taper_text = (
             f"{speed} mph -> {in_taper:g} ft spacing "
-            "(MUTCD Sec 6K.01: spacing equals speed in feet)"
+            f"(MUTCD Sec {_SEC_SPACING}: spacing equals speed in feet)"
         )
     spacing_section = {
         "speed_mph": speed,
         "in_taper_text": in_taper_text,
         "on_tangent_text": (
             f"{speed} mph -> {on_tan:g} ft spacing "
-            "(MUTCD Sec 6K.01: spacing equals 2x speed in feet)"
+            f"(MUTCD Sec {_SEC_SPACING}: spacing equals 2x speed in feet)"
         ),
         "taper_count_text": (
             f"{taper_label} = {_ft(L_required)} ft / {in_taper:g} ft max spacing "
@@ -550,9 +569,10 @@ def build_audit_trail(
         # honestly-named total is ``n_cones_placed_total`` below.
         "n_tangent_cones_actual": actual_cones,
         "source": (
-            "MUTCD 11th Ed. Sec 6B.08 (one-lane two-way taper) + Sec 6K.01 (tangent)"
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER} (one-lane two-way taper) "
+            f"+ Sec {_SEC_SPACING} (tangent)"
             if is_flagger
-            else "MUTCD 11th Ed. Sec 6K.01"
+            else f"MUTCD 11th Ed. Sec {_SEC_SPACING}"
         ),
         # #97 — §6K.01 is the channelizing-device-spacing section in both
         # branches; the flagger in-taper §6B.08 override is named in the
@@ -569,7 +589,7 @@ def build_audit_trail(
         n_tangent_actual = actual_cones - n_ds_cones
         spacing_section["downstream_count_text"] = (
             f"Downstream taper: {ds_len:g} ft at ~{ds_spacing:g} ft spacing "
-            f"-> {n_ds_cones} cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); "
+            f"-> {n_ds_cones} cones (MUTCD Sec {_SEC_TAPER}: 50-100 ft downstream taper); "
             f"{n_tangent_actual} tangent + {n_ds_cones} downstream = "
             f"{actual_cones} cones total"
         )
@@ -1299,7 +1319,7 @@ def build_audit_trail(
         flagger_section["sight_distance_ft"] = _ft(stopping_sight_distance_ft(speed))
         flagger_section["sight_distance_citation"] = {
             "cite": "MUTCD § 6D.06",
-            "footer": "MUTCD § 6D.06 · TABLE 6B-2 · STOPPING SIGHT DISTANCE",
+            "footer": f"MUTCD § 6D.06 · TABLE {_TBL_BUFFER} · STOPPING SIGHT DISTANCE",
         }
 
     # ------------------------------------------------------------------
@@ -1349,7 +1369,7 @@ def build_audit_trail(
             for v in geo_violations
         ],
         "all_pass": all(v.severity != "error" for v in geo_violations),
-        "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)",
+        "source": (f"MUTCD 11th Ed. Sec {_SEC_BUFFER} (buffer) and Sec {_SEC_TAPER} (taper)"),
     }
 
     # ------------------------------------------------------------------
