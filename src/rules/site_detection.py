@@ -229,10 +229,9 @@ def detect_site_conditions(
         "schools": _empty(),
         "railroad_crossings": _empty(),
         "hospitals": _empty(),
-        "road_curvature": {
-            "detected": False,
-            "details": "Road curvature analysis not implemented; assume straight.",
-        },
+        # Placeholder until curvature analysis exists — carries the standard
+        # bucket shape so generic iteration over buckets is safe (#34).
+        "road_curvature": _empty("Road curvature analysis not implemented; assume straight."),
     }
     # Interchange exit numbers, deduplicated, populated only when a
     # motorway_junction node carries a ``ref`` tag.  Surfaced to the UI
@@ -386,8 +385,11 @@ out center tags;
 """
 
 
-def _empty_corridor_bucket() -> dict[str, Any]:
-    return {"detected": False, "count": 0, "details": [], "features": []}
+def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
+    out: dict[str, Any] = {"detected": False, "count": 0, "details": [], "features": []}
+    if detail_msg:
+        out["details"] = [detail_msg]
+    return out
 
 
 def detect_along_corridor(
@@ -422,10 +424,11 @@ def detect_along_corridor(
         "schools": _empty_corridor_bucket(),
         "railroad_crossings": _empty_corridor_bucket(),
         "hospitals": _empty_corridor_bucket(),
-        "road_curvature": {
-            "detected": False,
-            "details": "Road curvature analysis not implemented; assume straight.",
-        },
+        # Placeholder until curvature analysis exists — carries the standard
+        # corridor bucket shape so generic iteration over buckets is safe (#34).
+        "road_curvature": _empty_corridor_bucket(
+            "Road curvature analysis not implemented; assume straight."
+        ),
     }
     buckets["interchanges"]["junction_refs"] = []
 

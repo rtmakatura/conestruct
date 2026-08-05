@@ -394,3 +394,73 @@ def test_user_agent_identifies_conestruct_not_claude_code() -> None:
     assert "conestruct.com" in ua
     assert "hello@conestruct.com" in ua
     assert "anthropics/claude-code" not in ua
+
+
+# ---------------------------------------------------------------------------
+# Bucket shape uniformity (#34): road_curvature must carry the standard shape
+# ---------------------------------------------------------------------------
+#
+# Before the #34 fix, ``road_curvature`` was the one bucket with
+# ``details: str`` (and no ``count``) in both constructors — invisible to
+# mypy under ``dict[str, Any]``, and a landmine for any consumer iterating
+# buckets generically.  These tests pin every bucket in both detectors to
+# the standard shape, positively per key, and exercise the exact generic
+# pattern that used to crash (``bucket["details"].append``).
+
+_STANDARD_BUCKET_KEYS = (
+    "intersections",
+    "interchanges",
+    "sidewalks",
+    "bike_facilities",
+    "schools",
+    "railroad_crossings",
+    "hospitals",
+    "road_curvature",
+)
+
+
+def test_point_buckets_all_carry_standard_shape(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    result = site_detection.detect_site_conditions(38.886, -104.835, radius_m=500.0)
+    for key in _STANDARD_BUCKET_KEYS:
+        bucket = result[key]
+        assert isinstance(bucket["detected"], bool), key
+        assert isinstance(bucket["count"], int), key
+        assert isinstance(bucket["details"], list), key
+    # The placeholder message survives the shape change, as a list entry.
+    assert result["road_curvature"]["details"] == [
+        "Road curvature analysis not implemented; assume straight."
+    ]
+    assert result["road_curvature"]["count"] == 0
+
+
+def test_corridor_buckets_all_carry_standard_shape(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    result = site_detection.detect_along_corridor(_test_corridor())
+    for key in _STANDARD_BUCKET_KEYS:
+        bucket = result[key]
+        assert isinstance(bucket["detected"], bool), key
+        assert isinstance(bucket["count"], int), key
+        assert isinstance(bucket["details"], list), key
+        # Corridor mode's extra per-bucket key applies to all eight alike.
+        assert isinstance(bucket["features"], list), key
+    assert result["road_curvature"]["details"] == [
+        "Road curvature analysis not implemented; assume straight."
+    ]
+
+
+def test_generic_details_append_safe_on_every_bucket(
+    stub_overpass: list[dict[str, Any]],
+) -> None:
+    """The filed landmine: ``bucket["details"].append`` across all buckets
+    raised ``AttributeError: 'str' object has no attribute 'append'`` on
+    ``road_curvature`` before the fix.  Must succeed on all eight now."""
+    result = site_detection.detect_site_conditions(38.886, -104.835, radius_m=500.0)
+    appended = 0
+    for key in _STANDARD_BUCKET_KEYS:
+        result[key]["details"].append("generic-consumer note")
+        appended += 1
+    assert appended == len(_STANDARD_BUCKET_KEYS)
+    assert result["road_curvature"]["details"][-1] == "generic-consumer note"
