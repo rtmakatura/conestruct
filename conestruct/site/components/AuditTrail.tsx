@@ -1111,7 +1111,7 @@ export function coloradoItem(
         </div>
         <div className="citation">
           <span className="check">✓</span>
-          CDOT {cdotSheet} · COLORADO SUPPLEMENT
+          CDOT {cdotSheet} · STANDARD PLAN
         </div>
       </>
     ),

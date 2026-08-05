@@ -530,3 +530,21 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     });
   });
 });
+
+// Arc 12 coda (Refs #70): the compliance-fails row counts failing
+// COLORADO checks (backend fail_count of the CDOT S-630-1 checks) —
+// its source tag must attribute them to the standard plan, not the
+// Colorado Supplement (which contains none of the cited sections).
+describe("arc12 coda — compliance-fails source tag cites CDOT S-630-1", () => {
+  it("src tag reads CDOT S-630-1; no Supplement attribution", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        status="done"
+        inputError={null}
+        audit={ready(makeAudit({ coloradoFails: 2 }))}
+      />,
+    );
+    expect(html).toContain("CDOT S-630-1");
+    expect(html).not.toMatch(/colorado supplement/i);
+  });
+});

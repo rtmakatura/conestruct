@@ -435,7 +435,7 @@ function StatusBarState({
                 </strong>{" "}
                 — see the audit trail below for details
               </span>
-              <span className="check-list-src">COLORADO SUPPLEMENT</span>
+              <span className="check-list-src">CDOT S-630-1</span>
             </div>
           )}
           {flags.v1_limitations > 0 && (

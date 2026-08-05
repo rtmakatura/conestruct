@@ -1337,3 +1337,91 @@ describe("engine-removal PR C — backend-fed flagger SSD + colorado fail_count"
     expect(item.result).toBe("ALL CHECKS PASS");
   });
 });
+
+// Arc 12 coda (Refs #70) — the expanded-body attribution chips. The
+// live check caught the Colorado body's footer chip still reading
+// "CDOT S-630-1 · COLORADO SUPPLEMENT" after the recite: it renders
+// only when the accordion row expands, and nothing pinned it. These
+// tests render the item BODIES (the expanded content) and guard the
+// defect class: S-630-1 content must never be attributed to the
+// Colorado Supplement.
+//
+// Scope note for future sweeps: JurisdictionSection's statewide-
+// baseline line ("MUTCD + Colorado Supplement only") is a TRUE
+// legal-layer claim about which documents govern statewide — it is
+// NOT this defect class and must not be "fixed" to match this guard.
+describe("arc12 coda — expanded-body chips cite the standard plan, not the Supplement", () => {
+  function coloradoBodyHtml(): string {
+    const audit: AuditResponse = {
+      summary: {
+        ta: "TA-3",
+        cdot_sheet: "S-630-1",
+        case_id: "Case 11: Shoulder closure on divided highway",
+        taper_length_ft: 183,
+        taper_label: "L/3 (shoulder taper)",
+        buffer_space_ft: 495,
+        device_spacing_taper_ft: 55,
+        device_spacing_tangent_ft: 110,
+        step_count: 8,
+      },
+      sections: {
+        taper: {},
+        buffer: {},
+        spacing: {},
+        advance: {},
+        colorado: {
+          checks: [
+            {
+              label: "Speed reduction <= 15 mph per sign installation",
+              detail: "No work-zone speed reduction.",
+              citation: "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+              pass: true,
+            },
+          ],
+          info_items: [],
+          all_pass: true,
+          fail_count: 0,
+        },
+        case: {},
+        flagger: {},
+        corridor_validation: { checked: false, warnings: [] },
+        geometry_validation: { violations: [], all_pass: true },
+      },
+      pending_verification: { count: 0, note: "", tracking_issue: null },
+    } as unknown as AuditResponse;
+    const item = coloradoItem({ state: "ready", data: audit }, "S-630-1");
+    return renderToStaticMarkup(item.body as ReactElement);
+  }
+
+  it("Colorado body footer chip reads 'CDOT S-630-1 · STANDARD PLAN'", () => {
+    const html = coloradoBodyHtml();
+    expect(html).toContain("CDOT S-630-1 · STANDARD PLAN");
+    // The per-check citation tags are the backend's recited strings.
+    expect(html).toContain("CDOT S-630-1 (July 2026) Sheet 2, General Note 3");
+  });
+
+  it("defect-class guard: no Supplement attribution anywhere in the Colorado body", () => {
+    const html = coloradoBodyHtml();
+    expect(html).not.toMatch(/colorado supplement/i);
+    expect(html).not.toMatch(/CO SUPPLEMENT/i);
+  });
+
+  it("reference body names S-630-1 as CDOT's standard plan set (the sibling recite), pinned", () => {
+    const audit = {
+      summary: {},
+      sections: {
+        case: { url: "https://www.codot.gov/example.pdf" },
+      },
+      pending_verification: { count: 0, note: "", tracking_issue: null },
+    } as unknown as AuditResponse;
+    const item = referenceItem(
+      { state: "ready", data: audit },
+      "TA-3",
+      "S-630-1",
+      "Case 11",
+    );
+    const html = renderToStaticMarkup(item.body as ReactElement);
+    expect(html).toContain("standard plan set for temporary traffic control");
+    expect(html).not.toMatch(/colorado supplement/i);
+  });
+});
