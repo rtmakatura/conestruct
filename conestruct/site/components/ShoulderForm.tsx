@@ -277,8 +277,8 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
               />
               <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
                 {scenario.speed - scenario.workZoneSpeed > 15
-                  ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
-                  : `Δ${scenario.speed - scenario.workZoneSpeed} mph · CO §2B.13(A): 1 advance sign`}
+                  ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · S-630-1 Sheet 2 Note 3: ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
+                  : `Δ${scenario.speed - scenario.workZoneSpeed} mph · S-630-1 Sheet 2 Note 3: 1 advance sign`}
               </div>
             </Field>
           </div>

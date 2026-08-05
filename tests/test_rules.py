@@ -2394,7 +2394,7 @@ def test_validate_fines_double_envelope_error_when_entrance_r2_1_missing() -> No
     assert len(violations) == 1
     assert violations[0].rule_id == "MISSING_R2_1_ENTRANCE"
     assert violations[0].severity == "error"
-    assert violations[0].mutcd_section == "CO Supplement §2B.13(A)"
+    assert violations[0].mutcd_section == "CDOT S-630-1 Sheet 2, General Note 3"
 
 
 def test_validate_fines_double_envelope_entrance_r2_1_outside_wz_does_not_satisfy() -> None:
@@ -2432,7 +2432,7 @@ def test_validate_fines_double_envelope_error_when_w3_5_missing() -> None:
     assert len(violations) == 1
     assert violations[0].rule_id == "MISSING_W3_5"
     assert violations[0].severity == "error"
-    assert violations[0].mutcd_section == "CO Supplement §2B.13(A)"
+    assert violations[0].mutcd_section == "CDOT S-630-1 Sheet 2, General Note 3"
 
 
 def test_validate_fines_double_envelope_error_when_w3_5_count_insufficient() -> None:

@@ -826,7 +826,7 @@ export function GeneratorShell({
             <p className="text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]">
               Generate a CDOT-compliant MHT package: PDF plan sheet, device
               list, and crew instructions. Every dimension cited to MUTCD or
-              the Colorado Supplement.
+              CDOT standards.
             </p>
           </div>
 

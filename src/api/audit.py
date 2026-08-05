@@ -821,7 +821,7 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 5. Colorado Supplement requirements
+    # 5. Colorado (CDOT S-630-1) requirements
     # ------------------------------------------------------------------
     sign_left = sum(
         1
@@ -852,7 +852,7 @@ def build_audit_trail(
     plaques_required = co_construction_plaques(total_signed_length)
     plaques_section = {
         "pass": plaques_right >= plaques_required,
-        "label": "G20-5P construction plaques every 2,640 ft",
+        "label": "G20-5P Work Zone signs every 2,640 ft",
         "citation": CO_CITATIONS.construction_zone_plaques,
         "detail": (
             f"Zone length: {total_signed_length:,.0f} ft. "
@@ -860,15 +860,15 @@ def build_audit_trail(
         ),
     }
 
-    # Work-zone speed reduction (CO Supplement §2B.13(A)).
+    # Work-zone speed reduction (S-630-1 Sheet 2, General Note 3).
     #
     # ``pass`` now reflects actual placement compliance: the layout
     # engine emits W3-5 advisory-speed sign(s) on every reduction
     # (V1-Wide G5), so the check counts deployed W3-5 placements
-    # against the §2B.13(A) required count from
+    # against the Note-3 required count from
     # ``co_speed_reduction_signs`` and passes iff placed ≥ required.
     # Flagger scenarios flow through the same computation (Item 3
-    # retroactive correction): §2B.13(A) carries no road-class
+    # retroactive correction): Note 3 carries no road-class
     # scoping, so a reduced-speed flagger plan with zero W3-5
     # placements honestly reports pass=False until the flagger
     # layout emits the reduced-speed signing package; the
@@ -904,8 +904,8 @@ def build_audit_trail(
             detail = (
                 f"Work-zone speed reduced {speed} → {wz_speed} mph "
                 f"(Δ{delta} mph). Required: {n_signs_required} stepped "
-                f"sign installations per CO Supplement §2B.13(A) "
-                f"(max 15 mph per sign). Placed: {n_w3_5_placed}."
+                f"sign installations per CDOT S-630-1 Sheet 2 General "
+                f"Note 3 (max 15 mph per sign). Placed: {n_w3_5_placed}."
             )
         speed_reduction_section = {
             "pass": n_w3_5_placed >= n_signs_required,
@@ -914,8 +914,8 @@ def build_audit_trail(
             "detail": detail,
         }
 
-    # Flagger-station lighting (CO Supplement §6E.02(A) / S-630-1
-    # Sheet 2 Note 22): flood lighting is required at night only.
+    # Flagger-station lighting (S-630-1 Sheet 2, General Note 22):
+    # flood lighting is required at night only.
     # PR 3 B5 correction — the prior check was inverted
     # (``pass = params.is_night``): daytime plans failed a check that
     # did not apply, and night plans passed despite the layout
@@ -992,8 +992,8 @@ def build_audit_trail(
     }
 
     # ------------------------------------------------------------------
-    # 6. Fines Double envelope (V1-Wide Item 3 — CO Supplement §2B.13 +
-    #    S-630-1 Sheet 12).
+    # 6. Fines Double envelope (V1-Wide Item 3 — S-630-1 Sheet 12,
+    #    Fines Double Signing Notes).
     # ------------------------------------------------------------------
     # Three shapes, structurally distinct:
     #   A. Speed reduced AND layout emits the envelope → applicable=True
@@ -1065,7 +1065,7 @@ def build_audit_trail(
         env_len = r2_10_st - r2_11_st
         n_asm = max(1, math.ceil(env_len / 2640.0))
         # G4 entrance R2-1 station — mirrors the layout's anchor on the
-        # upstream-most §6C.06(A) construction plaque so the audit field
+        # upstream-most Note-4 (G20-5P) plaque so the audit field
         # tracks whatever the generators emit.  Re-derive ``n_plaques``
         # against the same ``total_signed_length`` (= sign_c_station)
         # the layout uses; ``sign_c_station`` was computed at the
@@ -1113,10 +1113,11 @@ def build_audit_trail(
             "This scenario follows CDOT Standard Plan S-630-1, Case 18 "
             "(Sheet 10) — traffic control around a work area near an "
             "intersection, one lane closed — applied to an undivided "
-            "highway with single-side mainline signing per CO Supplement "
-            "§6C.04(A), plus a cross-street advance-warning set on each "
-            "approach leg per MUTCD §6N.12 and the Sheet 10 "
-            "advance-signing key."
+            "highway with single-side mainline signing (both-sides "
+            "posting applies to divided highways, multi-lane ramps, and "
+            "one-way streets per CDOT S-630-1 Sheet 2 General Note 8), "
+            "plus a cross-street advance-warning set on each approach "
+            "leg per MUTCD §6N.12 and the Sheet 10 advance-signing key."
         )
         case_narrative_2 = (
             "Three disclosed departures from the plate: (1) the Case 18 "
@@ -1175,8 +1176,8 @@ def build_audit_trail(
             f"This scenario matches CDOT Standard Plan S-630-1 shoulder closure "
             f"typical applications with a reduced work-zone posted speed "
             f"(Cases 26/27, Sheet 14). Posted speed reduced from {speed} → "
-            f"{wz_speed} mph; Fines Double envelope applies per CO Supplement "
-            f"§2B.13 and S-630-1 Sheet 12."
+            f"{wz_speed} mph; Fines Double envelope applies per S-630-1 "
+            f"Sheet 12, Fines Double Signing Notes."
         )
     elif is_reduced:
         # Reduced work-zone speed but NOT the Case 26/27 mandated step-down
@@ -1192,7 +1193,7 @@ def build_audit_trail(
                 f"shoulder closure on a divided highway, with a reduced work-zone "
                 f"posted speed ({speed} → {wz_speed} mph) that does not match the "
                 f"Case 26/27 mandated step-down. Fines Double envelope applies per "
-                f"CO Supplement §2B.13 and S-630-1 Sheet 12."
+                f"S-630-1 Sheet 12, Fines Double Signing Notes."
             )
         else:
             # Case 11 is CDOT's general shoulder-work typical, drawn for
@@ -1203,11 +1204,11 @@ def build_audit_trail(
                 f"This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
                 f"the general shoulder-work typical (drawn for "
                 f"freeway/expressway) — applied to an undivided highway with "
-                f"single-side signing per CO Supplement §6C.04(A), with a "
-                f"reduced work-zone posted speed ({speed} → {wz_speed} mph) "
-                f"that does not match the Case 26/27 mandated step-down. "
-                f"Fines Double envelope applies per CO Supplement §2B.13 and "
-                f"S-630-1 Sheet 12."
+                f"single-side signing per CDOT S-630-1 Sheet 2 General "
+                f"Note 8, with a reduced work-zone posted speed ({speed} → "
+                f"{wz_speed} mph) that does not match the Case 26/27 "
+                f"mandated step-down. Fines Double envelope applies per "
+                f"S-630-1 Sheet 12, Fines Double Signing Notes."
             )
     else:
         case_routing = "shoulder_no_reduction"
@@ -1223,7 +1224,7 @@ def build_audit_trail(
                 "This scenario follows CDOT Standard Plan S-630-1, Case 11 — "
                 "the general shoulder-work typical (drawn for "
                 "freeway/expressway) — applied to an undivided highway with "
-                "single-side signing per CO Supplement §6C.04(A)."
+                "single-side signing per CDOT S-630-1 Sheet 2 General Note 8."
             )
     case_section: dict[str, Any] = {
         "case": case_label,

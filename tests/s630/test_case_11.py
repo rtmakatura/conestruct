@@ -184,10 +184,10 @@ def test_case_11_general_2640_frequency_check_label(
     case_11_general: tuple[list[DevicePlacement], dict[str, Any]],
 ) -> None:
     # The "every 2,640 ft" frequency note from Sheet 7 / 14 surfaces
-    # as the CO §6C.06(A) check label.
+    # as the Sheet 2 General Note 4 check label.
     _, audit = case_11_general
     label = audit["colorado"]["checks"][1]["label"]
-    assert label == "G20-5P construction plaques every 2,640 ft"
+    assert label == "G20-5P Work Zone signs every 2,640 ft"
 
 
 def test_case_11_general_second_w21_5aR_with_plaques(

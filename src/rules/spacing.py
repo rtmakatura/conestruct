@@ -477,15 +477,16 @@ def pick_device_count(
 
 
 # ---------------------------------------------------------------------------
-# Colorado Supplement helpers
+# Colorado (CDOT S-630-1) helpers
 # ---------------------------------------------------------------------------
 
 
 def co_speed_reduction_signs(current_speed: int, target_speed: int) -> int:
     """Number of advance speed-reduction sign installations.
 
-    Source: CO Supplement §2B.13(A) — a single advance sign may reduce
-    the posted speed by no more than 15 mph
+    Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3 — a
+    single advance sign may reduce the posted speed by no more than
+    15 mph
     (``COLORADO_OVERRIDES.max_speed_reduction_per_sign_mph``); larger
     reductions require a stepped sequence of signs.
 
@@ -505,10 +506,11 @@ def co_speed_reduction_signs(current_speed: int, target_speed: int) -> int:
 
 
 def co_construction_plaques(zone_length_ft: float) -> int:
-    """Number of CONSTRUCTION ZONE plaque sets within a long work zone.
+    """Number of Work Zone (G20-5p) sign sets within a long work zone.
 
-    Source: CO Supplement §6C.06(A) — plaques shall be repeated at
-    half-mile intervals
+    Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4 — Work
+    Zone (G20-5p) and Fines Double (R2-6p) signs repeat at half-mile
+    intervals between R2-10 and R2-11
     (``COLORADO_OVERRIDES.construction_zone_plaque_interval_ft`` = 2640
     ft).  At least one plaque set is required regardless of zone length.
     """

@@ -174,7 +174,7 @@ def test_case_27_2640_frequency_check_label(
 ) -> None:
     _, audit = case_27
     label = audit["colorado"]["checks"][1]["label"]
-    assert label == "G20-5P construction plaques every 2,640 ft"
+    assert label == "G20-5P Work Zone signs every 2,640 ft"
 
 
 def test_case_27_co_2b13_delta_10_check_passes(

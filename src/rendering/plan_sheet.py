@@ -999,7 +999,7 @@ def _on_road_max_offset_ft(
 def _is_median_sign(p: DevicePlacement, params: ScenarioParams, on_road_max: float) -> bool:
     """True when a sign is a divided-highway median-side mirror copy that
     gets snapped into the median band (see _draw_devices).  Negative
-    offset within the on-road threshold means the §6C.04(A) mirror that
+    offset within the on-road threshold means the Sheet-2-Note-8 mirror that
     would otherwise draw in the opposing carriageway's lanes."""
     return (
         params.is_divided
@@ -1544,7 +1544,7 @@ def _layout_device_positions(
 #
 # Mirroring on divided highways: every sign emitted by the layout engine is
 # paired (positive offset_ft on the work-side shoulder, negative offset_ft
-# on the median side) per CO Supplement §6C.04(A).  Both placements render
+# on the median side) per S-630-1 Sheet 2 General Note 8.  Both placements render
 # on the on-page schematic (see _layout_device_positions): positive-offset
 # signs land in the work-side shoulder band (lower y) and de-overlap
 # vertically; negative-offset signs snap to the median band
@@ -2328,7 +2328,7 @@ def _draw_legend(
 
     On divided highways an extra ROAD GEOMETRY section calls out the
     median band symbol and notes that left-side advance warning signs
-    are placed in the median (CO Supplement §6C.04(A))."""
+    are placed in the median (S-630-1 Sheet 2 General Note 8)."""
     device_types_used = sorted(
         {p.device_type for p in placements if p.device_type != DeviceType.SIGN_GENERIC},
         key=lambda dt: dt.value,
@@ -2444,7 +2444,7 @@ def _draw_legend(
         y -= 9
         if _bail():
             return
-        c.drawString(box_x + 8, y, "per CO Supplement §6C.04(A).")
+        c.drawString(box_x + 8, y, "per S-630-1 Sheet 2 General Note 8.")
         y -= row_h
 
     # Scale-convention footnote — pinned to the bottom of the LEGEND

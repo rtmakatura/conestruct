@@ -69,8 +69,7 @@ def test_rendered_colorado_citations_derive_from_single_source() -> None:
     by_label = {c["label"]: c["citation"] for c in colorado["checks"]}
     assert by_label["Signs on both sides of divided highway"] == CO_CITATIONS.signs_both_sides
     assert (
-        by_label["G20-5P construction plaques every 2,640 ft"]
-        == CO_CITATIONS.construction_zone_plaques
+        by_label["G20-5P Work Zone signs every 2,640 ft"] == CO_CITATIONS.construction_zone_plaques
     )
     assert (
         by_label["Speed reduction <= 15 mph per sign installation"] == CO_CITATIONS.speed_reduction

@@ -1587,7 +1587,7 @@ def test_audit_fines_double_emitted_when_speed_reduced_shoulder_divided(
     body = res.json()
     fd = body["sections"]["fines_double"]
     assert fd["applicable"] is True
-    assert fd["citation"] == "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"
+    assert fd["citation"] == "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes"
     assert "envelope" in fd
     assert len(fd["operational_notes"]) == 4
     # All four notes carry the Sheet 12 citation prefix.
@@ -1891,7 +1891,7 @@ def test_case_label_undivided_shoulder_says_undivided(client: TestClient) -> Non
     """Undivided shoulder plan → case label and taper cdot_reference say
     "undivided", and the narrative discloses the Case 11 generalization
     (freeway/expressway general typical, single-side signing per CO
-    §6C.04(A)) instead of claiming a divided highway (Refs #103)."""
+    S-630-1 Sheet 2 General Note 8) instead of claiming a divided highway (Refs #103)."""
     s = _shoulder_scenario()
     s["roadType"] = "rural_undivided"
     s["divided"] = False
@@ -1903,7 +1903,7 @@ def test_case_label_undivided_shoulder_says_undivided(client: TestClient) -> Non
     assert case["case"] == "Case 11: Shoulder closure on undivided highway"
     assert "undivided highway" in case["narrative"]
     assert "freeway/expressway" in case["narrative"]
-    assert "6C.04(A)" in case["narrative"]
+    assert "Sheet 2 General Note 8" in case["narrative"]
     # No leftover divided claim ("undivided highway" contains the substring
     # "divided highway", so anchor on the article).
     assert " a divided highway" not in case["narrative"]
@@ -1930,7 +1930,7 @@ def test_case_label_undivided_shoulder_reduced_variant(client: TestClient) -> No
     )
     case = _case_section(body)
     assert "undivided highway" in case["narrative"]
-    assert "6C.04(A)" in case["narrative"]
+    assert "Sheet 2 General Note 8" in case["narrative"]
     assert " a divided highway" not in case["narrative"]
     # The reduced-speed sentence survives alongside the disclosure.
     assert "55 → 45 mph" in case["narrative"]

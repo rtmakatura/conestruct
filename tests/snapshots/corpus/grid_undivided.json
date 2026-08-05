@@ -48,7 +48,7 @@
     },
     "case": {
       "case": "Case 11: Shoulder closure on undivided highway",
-      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 — the general shoulder-work typical (drawn for freeway/expressway) — applied to an undivided highway with single-side signing per CO Supplement §6C.04(A).",
+      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 — the general shoulder-work typical (drawn for freeway/expressway) — applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 55 mph.",
       "routing": "shoulder_no_reduction",
       "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf"
@@ -57,25 +57,25 @@
       "all_pass": true,
       "checks": [
         {
-          "citation": "CO Supplement Sec 6C.04(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
           "detail": "Required: False. Signs placed: 0 left, 7 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 6C.06(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
           "detail": "Zone length: 4,142 ft. Required: 2. Placed: 2.",
-          "label": "G20-5P construction plaques every 2,640 ft",
+          "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 2B.13(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
           "detail": "No work-zone speed reduction. Posted speed 55 mph applies throughout the zone.",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 6E.02(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
           "detail": "Not applicable (no flaggers).",
           "label": "Flagger station lighting 500W @ 8 ft",
           "pass": true
@@ -84,7 +84,7 @@
       "fail_count": 0,
       "info_items": [
         {
-          "citation": "CO Supplement Sec 6G.02(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
           "detail": "Not applicable (not a mobile operation).",
           "info": true,
           "label": "AADT threshold for mobile operations (<= 2,000)"

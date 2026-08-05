@@ -307,7 +307,7 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
     >
       <div className="flex items-baseline justify-between gap-4 mb-3">
         <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] max-w-[620px]">
-          Every calculation is traced to its MUTCD or Colorado Supplement
+          Every calculation is traced to its MUTCD or CDOT standard-plan
           source. Verify before stamping.
         </div>
         <button
@@ -331,8 +331,8 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
         </button>
       </div>
       <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-4 max-w-[620px] leading-relaxed">
-        Scope: federal MUTCD + Colorado Supplement. Other jurisdictions may
-        impose additional requirements not yet captured.
+        Scope: federal MUTCD + CDOT standards (S-630-1). Other jurisdictions
+        may impose additional requirements not yet captured.
       </div>
 
       {audit.state === "error" &&
@@ -1063,7 +1063,7 @@ export function coloradoItem(
   const data = settledData(audit);
   if (!data) {
     return {
-      title: "Colorado supplement requirements",
+      title: "Colorado requirements (CDOT S-630-1)",
       result: "— checks",
       cite: `CDOT ${cdotSheet}`,
       body: placeholderBody(audit),
@@ -1080,7 +1080,7 @@ export function coloradoItem(
   const failCount =
     typeof colorado.fail_count === "number" ? colorado.fail_count : null;
   return {
-    title: "Colorado supplement requirements",
+    title: "Colorado requirements (CDOT S-630-1)",
     result: allPass
       ? "ALL CHECKS PASS"
       : failCount !== null
@@ -1149,8 +1149,8 @@ export function referenceItem(
       <>
         <p>
           Plan matched against MUTCD Typical Application <strong>{ta}</strong>{" "}
-          and CDOT Standard Plan <strong>{cdotSheet}</strong>, the official
-          Colorado supplement to MUTCD Part 6.
+          and CDOT Standard Plan <strong>{cdotSheet}</strong>, CDOT&apos;s
+          standard plan set for temporary traffic control.
         </p>
         {narrative && <p>{narrative}</p>}
         {narrative2 && <p>{narrative2}</p>}
@@ -1388,7 +1388,7 @@ export function finesDoubleItem(
           <p>{reason}</p>
           <div className="citation">
             <span className="check">ℹ</span>
-            CO SUPPLEMENT § 2B.13 · S-630-1 SHEET 12
+            CDOT S-630-1 SHEET 12 · FINES DOUBLE SIGNING NOTES
           </div>
         </>
       ),
@@ -1407,7 +1407,7 @@ export function finesDoubleItem(
   const citation =
     typeof section.citation === "string"
       ? section.citation
-      : "CO Supplement Sec 2B.13 + S-630-1 Sheet 12";
+      : "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes";
 
   const r210 = envelope?.r2_10_station_ft;
   const r211 = envelope?.r2_11_station_ft;
@@ -1436,7 +1436,7 @@ export function finesDoubleItem(
       <>
         <p>
           Work-zone posted speed is reduced — Fines Double signing
-          applies per CO Supplement § 2B.13 and CDOT S-630-1 Sheet 12.
+          applies per CDOT S-630-1 Sheet 12, Fines Double Signing Notes.
           The R2-10/R2-11 envelope spans the work zone with G20-5P/R2-6P
           assemblies at 2,640 ft intervals; the entrance R2-1 posts the
           reduced limit as drivers enter the zone, and the downstream

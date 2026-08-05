@@ -1,4 +1,4 @@
-"""MUTCD Part 6 lookup tables and Colorado Supplement constants.
+"""MUTCD Part 6 lookup tables and Colorado (CDOT) constants.
 
 Encodes the raw reference data that the spacing/layout engines consume.
 No calculation logic lives here — only named constants, typed table rows,
@@ -239,7 +239,8 @@ def on_tangent_spacing_ft(speed_mph: int) -> int:
 
 
 # ---------------------------------------------------------------------------
-# Colorado Supplement overrides
+# Colorado (CDOT) overrides — sourced from S-630-1 general notes; see
+# validation-artifacts/committed/arc12-citation-tail/arc12-citations.md
 # ---------------------------------------------------------------------------
 
 
@@ -251,31 +252,48 @@ class ColoradoOverrides:
     could not be confirmed, it is set to None with a TODO.
     """
 
-    # Source: CO Supplement §2B.13(A) — speed limit reduction in construction
-    # zones shall not exceed 15 mph per posted advance sign.
+    # Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 3 (final ¶):
+    # "The regulatory or advisory speed reduction displayed shall not
+    # exceed 15 mph per sign installation."  (Formerly cited to CO
+    # Supplement §2B.13(A) — the current Supplement, effective
+    # 2026-01-18, contains no §2B.13; see arc12-citations.md.)
     max_speed_reduction_per_sign_mph: int = 15
 
-    # Source: CO Supplement §6C.06(A) — "CONSTRUCTION ZONE" plaque (G20-4a)
-    # shall be placed at ½-mile intervals within long work zones.
+    # Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4: "Work
+    # Zone (G20-5p) and Fines Double (R2-6p) signs shall be provided
+    # every 2640' between R2-10 and R2-11 signs."  The sheet names
+    # G20-5p the Work Zone sign (an earlier comment here called it the
+    # "CONSTRUCTION ZONE" G20-4a plaque — wrong subject).
     construction_zone_plaque_interval_ft: int = 2640  # ½ mile = 2640 ft
 
-    # Source: CO Supplement §6E.02(A) — flagger stations on CDOT projects
-    # require a minimum 500-watt light plant during nighttime operations.
+    # Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22 —
+    # flagger-station flood lighting during hours of darkness: quartz
+    # light source, 500 watt minimum.
     flagger_station_light_watts: int = 500
 
-    # Source: CO Supplement §6E.02(A) — light plant mounting height.
+    # Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 22 —
+    # "variable light height from a minimum of eight feet above the
+    # roadway."
     flagger_station_light_height_ft: int = 8
 
-    # Source: CO Supplement §6G.02(A) — mobile operations on roads with
-    # AADT ≥ 2,000 require a shadow vehicle with TMA.
+    # Source: CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1: "In
+    # roadway where the aadt is 2,000 or less, a single work vehicle
+    # with appropriate warning devices on the vehicle may be used" —
+    # above the threshold, the drawn configuration (mobile attenuator
+    # train) applies.  Stated on Case 38 (mobile striping, multi-lane);
+    # applied here to all mobile kinds — a documented generalization.
     mobile_operation_aadt_threshold: int = 2000
 
-    # Source: CO Supplement §4D.01 — horizontal signal face orientation
-    # is permitted only for bicycle signal faces in Colorado.
+    # CHOSEN default (Rule 12): formerly cited to CO Supplement §4D.01,
+    # which the current Supplement does not contain; no in-repo source
+    # identified (#70).  No consumer reads this field today.
     horizontal_signal_faces_allowed: bool = False
 
-    # Source: CO Supplement §6C.04(A) — advance warning signs must be
-    # placed on both sides of the roadway on these road types.
+    # Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8: "All
+    # warning and regulatory signs shall be posted on both sides of the
+    # roadway on divided highways, multi-lane ramps, one-way streets,
+    # and as directed by the Engineer, except where only one shoulder
+    # is closed (ex: Case 11 on Sheet 7)."
     # Divided highways are covered separately by ``ScenarioParams.is_divided``
     # and are not listed here (divided-ness is not a road_type).
     both_sides_signage_required_on: tuple[str, ...] = (
@@ -300,12 +318,12 @@ class ColoradoCitations:
     single-sourced the same way.
     """
 
-    signs_both_sides: str = "CO Supplement Sec 6C.04(A)"
-    construction_zone_plaques: str = "CO Supplement Sec 6C.06(A)"
-    speed_reduction: str = "CO Supplement Sec 2B.13(A)"
-    flagger_station_lighting: str = "CO Supplement Sec 6E.02(A)"
-    mobile_operation_aadt: str = "CO Supplement Sec 6G.02(A)"
-    fines_double: str = "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes"
+    signs_both_sides: str = "CDOT S-630-1 (July 2026) Sheet 2, General Note 8"
+    construction_zone_plaques: str = "CDOT S-630-1 (July 2026) Sheet 2, General Note 4"
+    speed_reduction: str = "CDOT S-630-1 (July 2026) Sheet 2, General Note 3"
+    flagger_station_lighting: str = "CDOT S-630-1 (July 2026) Sheet 2, General Note 22"
+    mobile_operation_aadt: str = "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1"
+    fines_double: str = "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes"
 
 
 # Singleton instance for import convenience.

@@ -228,7 +228,7 @@ def test_audit_case_section_carries_the_three_part_disclosure() -> None:
     audit = build_audit_trail(placements, params, approaches=approaches)
     case = audit["case"]
     assert case["case"].startswith("Case 18:")
-    assert "§6C.04(A)" in case["narrative"]
+    assert "Sheet 2 General Note 8" in case["narrative"]
     disclosure = case["narrative_2"]
     assert "corner-quadrant" in disclosure
     assert "issues/128" in disclosure

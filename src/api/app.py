@@ -511,7 +511,7 @@ if generate_button:
 
         st.subheader("Verification & Audit Trail")
         st.caption(
-            "Every calculation traced to its MUTCD or Colorado Supplement "
+            "Every calculation traced to its MUTCD or CDOT standard-plan "
             "source. Verify before stamping."
         )
 
@@ -563,7 +563,7 @@ if generate_button:
 
         co = audit["colorado"]
         co_summary = "all checks pass" if co["all_pass"] else "review required"
-        with st.expander(f"Colorado Supplement Requirements ({co_summary})"):
+        with st.expander(f"Colorado Requirements — CDOT S-630-1 ({co_summary})"):
             for check in co["checks"]:
                 icon = "✅" if check["pass"] else "❌"
                 st.write(f"{icon} **{check['label']}** ({check['citation']}) — {check['detail']}")
@@ -655,7 +655,7 @@ if generate_button:
                     icon = "🔴" if v.severity == "error" else "🟡"
                     st.write(f"{icon} **{v.rule_id}** ({v.mutcd_section}): {v.message}")
             else:
-                st.success("All MUTCD and Colorado Supplement checks passed.")
+                st.success("All MUTCD and Colorado (CDOT S-630-1) checks passed.")
 
         with st.expander("Device Breakdown"):
             st.dataframe(_device_breakdown_df(placements), use_container_width=True)

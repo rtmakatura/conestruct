@@ -191,7 +191,7 @@ def _advance_blocks(advance: dict[str, Any]) -> list[Block]:
 def _colorado_blocks(colorado: dict[str, Any]) -> list[Block]:
     if not colorado:
         return []
-    blocks: list[Block] = [Heading(2, _cell("Colorado Supplement Requirements"))]
+    blocks: list[Block] = [Heading(2, _cell("Colorado Requirements (CDOT S-630-1)"))]
     checks = colorado.get("checks", [])
     if checks:
         rows = [

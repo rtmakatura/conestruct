@@ -272,7 +272,7 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
    * reduction is in effect. Server rejects values > posted speed;
    * values equal to posted are normalized to "no reduction" at the
    * Python bridge. Operator-set only — never auto-applied from OSM
-   * or work type. See V1-Wide Item 1 (CO Supplement §2B.13(A)).
+   * or work type. See V1-Wide Item 1 (CDOT S-630-1 Sheet 2, General Note 3).
    */
   workZoneSpeed?: number;
   /**

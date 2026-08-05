@@ -32,8 +32,8 @@ export default function TermsPage() {
               field.
             </li>
             <li>
-              Conestruct&rsquo;s MUTCD references currently cover federal MUTCD
-              and the Colorado Supplement only. Other jurisdictions may impose
+              Conestruct&rsquo;s references currently cover the federal MUTCD
+              and CDOT standards (S-630-1) only. Other jurisdictions may impose
               additional requirements not yet captured.
             </li>
             <li>

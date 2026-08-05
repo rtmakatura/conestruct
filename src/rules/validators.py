@@ -77,8 +77,8 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
         "G20-4",  # PILOT CAR FOLLOW ME — co-located with flagger station
         "R9-9",  # SIDEWALK CLOSED — at work-zone boundary
         # Fines Double envelope signs (V1-Wide Item 3) — regulatory signs
-        # in the speed-reduction Fines Double envelope per CO Supplement
-        # §2B.13 + S-630-1 Sheet 12.  Excluded from A/B/C cluster math so
+        # in the speed-reduction Fines Double envelope per S-630-1
+        # Sheet 12 Fines Double Signing Notes.  Excluded from A/B/C cluster math so
         # R2-10 sitting upstream of the taper doesn't corrupt the
         # advance-warning spacing analysis.
         "R2-1",  # SPEED LIMIT — downstream restoration sign past R2-11
@@ -86,7 +86,7 @@ _NON_ADVANCE_WARNING_SIGN_LABELS: frozenset[str] = frozenset(
         "R2-10",  # BEGIN DOUBLE FINES ZONE — upstream envelope boundary
         "R2-11",  # END DOUBLE FINES ZONE — downstream envelope boundary
         # W3-5 advisory-speed sign (V1-Wide G5) — sits upstream of R2-10
-        # per CO Supplement §2B.13(A); excluded from A/B/C cluster math
+        # per S-630-1 Sheet 2 General Note 3; excluded from A/B/C cluster math
         # for the same reason as R2-10.
         "W3-5",
         # W5-1 ROAD NARROWS (V1-Wide G2) — emitted 500 ft upstream of
@@ -197,7 +197,7 @@ class ScenarioParams:
     # no reduction is in effect.  Taper, buffer, and advance-warning math
     # stay keyed to ``speed_mph`` — drivers enter the zone at posted
     # speed before reading the reduction sign.  This field drives only
-    # the CO Supplement §2B.13(A) audit check today; stepped-sign
+    # the S-630-1 Note-3 speed-reduction audit check today; stepped-sign
     # placement for >15 mph reductions is tracked separately (see #36).
     work_zone_speed_mph: int | None = None
     # True only for the (gated) near_intersection kind — a mainline lane
@@ -323,7 +323,7 @@ class Violation:
     """A single validation finding.
 
     severity is "error" (must fix) or "warning" (should review).
-    mutcd_section cites the MUTCD or CO Supplement reference.
+    mutcd_section cites the MUTCD or CDOT S-630-1 reference.
     device_index is the index into the placements list, or None if
     the violation is zone-level rather than device-level.
     """
@@ -837,8 +837,8 @@ def validate_co_signs_both_sides(
 ) -> list[Violation]:
     """Colorado: signs required on both sides of the roadway.
 
-    Source: CO Supplement §6C.04(A).  Triggered when the road is
-    divided.  Each sign on one side must have a mirror at approximately
+    Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 8.
+    Triggered when the road is divided.  Each sign on one side must have a mirror at approximately
     the same station on the opposite side (matching label), within
     ``CO_BOTH_SIDES_STATION_TOLERANCE_FT``.
 
@@ -846,7 +846,7 @@ def validate_co_signs_both_sides(
     right shoulder is non-compliant and the UI must surface that
     failure rather than passing the layout silently.
 
-    NOTE: §6C.04(A) also extends to one-way streets and multi-lane
+    NOTE: General Note 8 also extends to one-way streets and multi-lane
     ramps, but those facilities are not currently expressible through
     ``ScenarioParams`` (they are not Table 6B-1 road categories).
     Re-introduce them as separate ``ScenarioParams`` flags before
@@ -883,7 +883,7 @@ def validate_co_signs_both_sides(
                         f"(offset {p.offset_ft:+.1f} ft) has no mirror sign "
                         "on the opposite side of the roadway."
                     ),
-                    mutcd_section="CO Supplement §6C.04(A)",
+                    mutcd_section="CDOT S-630-1 Sheet 2, General Note 8",
                     device_index=i,
                 )
             )
@@ -1173,9 +1173,9 @@ def validate_co_construction_plaques(
     placements: list[DevicePlacement],
     params: ScenarioParams,
 ) -> list[Violation]:
-    """Colorado: CONSTRUCTION ZONE plaques at half-mile intervals.
+    """Colorado: Work Zone (G20-5p) signs at half-mile intervals.
 
-    Source: CO Supplement §6C.06(A).  Counts plaque-bearing
+    Source: CDOT S-630-1 (July 2026) Sheet 2, General Note 4.  Counts plaque-bearing
     SIGN_GENERIC placements (label ``G20-5P`` or ``R2-6P``) and
     compares to ``co_construction_plaques(zone_length)``.  Position is
     not enforced — only count.
@@ -1201,12 +1201,12 @@ def validate_co_construction_plaques(
                 rule_id="CO_INSUFFICIENT_PLAQUES",
                 severity="warning",
                 message=(
-                    f"Found {plaque_count} CONSTRUCTION ZONE plaque(s); "
+                    f"Found {plaque_count} Work Zone (G20-5P/R2-6P) sign(s); "
                     f"{required} required for a "
                     f"{params.work_zone_length_ft:.0f}-ft zone "
                     "(½-mile interval)."
                 ),
-                mutcd_section="CO Supplement §6C.06(A)",
+                mutcd_section="CDOT S-630-1 Sheet 2, General Note 4",
                 device_index=None,
             )
         ]
@@ -1274,7 +1274,8 @@ def validate_fines_double_envelope(
 ) -> list[Violation]:
     """Verify the R2-10/R2-11 envelope when work-zone speed is reduced.
 
-    Source: CO Supplement §2B.13 + CDOT S-630-1 Sheet 12.  When the
+    Source: CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing
+    Notes.  When the
     work-zone posted speed is reduced below the nominal posted speed
     and the closure type is shoulder or lane, the layout must emit
     R2-10 (BEGIN DOUBLE FINES ZONE) upstream of the work zone and
@@ -1309,8 +1310,9 @@ def validate_fines_double_envelope(
         for p in placements
     )
     # G4: entrance R2-1 posts the reduced limit as drivers enter the
-    # zone (CO Supplement §2B.13(A)).  Entrance R2-1 is currently
-    # anchored to the §6C.06(A) plaque, always inside wz
+    # zone (S-630-1 Sheet 2 General Note 3: R2-1 signs at the
+    # typical-case locations).  Entrance R2-1 is currently
+    # anchored to the Note-4 G20-5P assembly, always inside wz
     # (0 < station <= wz_len).  If anchor changes in future, update
     # station bounds here.
     has_entrance_r2_1 = any(
@@ -1319,7 +1321,7 @@ def validate_fines_double_envelope(
         and 0 < p.station_ft <= params.work_zone_length_ft
         for p in placements
     )
-    # G5: W3-5 advisory-speed sign(s) per CO Supplement §2B.13(A).
+    # G5: W3-5 advisory-speed sign(s) per S-630-1 Sheet 2 General Note 3.
     # Count by label prefix so stepped placements (W3-5(60), W3-5(45),
     # ...) all aggregate to one family code.  Required count tracks
     # ``co_speed_reduction_signs`` — 1 for Δ ≤ 15, ceil(Δ/15) for
@@ -1341,11 +1343,11 @@ def validate_fines_double_envelope(
                 message=(
                     "Work-zone speed reduced below posted speed but no "
                     "R2-10 (BEGIN DOUBLE FINES ZONE) placement found. "
-                    "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
+                    "S-630-1 Sheet 12 Fines Double Signing Notes require "
                     "the Fines Double envelope whenever the work-zone "
                     "speed is reduced and Sheet 12 hazards are present."
                 ),
-                mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
+                mutcd_section="CDOT S-630-1 Sheet 12, Fines Double Signing Notes",
                 device_index=None,
             )
         )
@@ -1357,11 +1359,11 @@ def validate_fines_double_envelope(
                 message=(
                     "Work-zone speed reduced below posted speed but no "
                     "R2-11 (END DOUBLE FINES ZONE) placement found. "
-                    "CO Supplement §2B.13 and S-630-1 Sheet 12 require "
+                    "S-630-1 Sheet 12 Fines Double Signing Notes require "
                     "the Fines Double envelope whenever the work-zone "
                     "speed is reduced and Sheet 12 hazards are present."
                 ),
-                mutcd_section="CO Supplement §2B.13 / S-630-1 Sheet 12",
+                mutcd_section="CDOT S-630-1 Sheet 12, Fines Double Signing Notes",
                 device_index=None,
             )
         )
@@ -1373,13 +1375,14 @@ def validate_fines_double_envelope(
                 message=(
                     "Work-zone speed reduced below posted speed but no "
                     "entrance R2-1 (work-zone SPEED LIMIT posting) found "
-                    "inside the work zone. CO Supplement §2B.13(A) "
-                    "requires the reduced limit be posted as drivers "
-                    "enter the zone; without it, drivers have no "
+                    "inside the work zone. S-630-1 Sheet 2 General "
+                    "Note 3 (R2-1 signs at the typical-case locations) "
+                    "and the Sheet 12 typical require the reduced limit "
+                    "posted as drivers enter; without it, drivers have no "
                     "regulatory indication of the reduced limit until "
                     "they exit past R2-11."
                 ),
-                mutcd_section="CO Supplement §2B.13(A)",
+                mutcd_section="CDOT S-630-1 Sheet 2, General Note 3",
                 device_index=None,
             )
         )
@@ -1391,11 +1394,12 @@ def validate_fines_double_envelope(
                 message=(
                     "Work-zone speed reduced below posted speed but no "
                     "W3-5 (ADVISORY SPEED) advance warning sign found. "
-                    "CO Supplement §2B.13(A) requires at least one W3-5 "
-                    "advisory upstream of the reduced-speed work zone "
+                    "S-630-1 Sheet 2 General Note 3 requires the "
+                    "reduction displayed in advance — at least one W3-5 "
+                    "upstream of the reduced-speed work zone "
                     "(stepped sequence when the reduction exceeds 15 mph)."
                 ),
-                mutcd_section="CO Supplement §2B.13(A)",
+                mutcd_section="CDOT S-630-1 Sheet 2, General Note 3",
                 device_index=None,
             )
         )
@@ -1408,10 +1412,10 @@ def validate_fines_double_envelope(
                     f"Found {n_w3_5} W3-5 advisory-speed sign(s); "
                     f"{required_w3_5} required for a "
                     f"{params.speed_mph} → {params.work_zone_speed_mph} mph "
-                    "reduction per CO Supplement §2B.13(A) (max 15 mph "
-                    "per sign installation)."
+                    "reduction per S-630-1 Sheet 2 General Note 3 "
+                    "(max 15 mph per sign installation)."
                 ),
-                mutcd_section="CO Supplement §2B.13(A)",
+                mutcd_section="CDOT S-630-1 Sheet 2, General Note 3",
                 device_index=None,
             )
         )
@@ -1592,7 +1596,7 @@ def validate_shoulder_warning_pair(
     # Mirrored emission on divided highways doubles the per-sign count;
     # ``required_w21_5aR`` is 4 on divided (two per side) and 2 on
     # undivided (one upstream + one downstream, single-side per
-    # §6C.04(A)).  The same per-side mirror count drives plaque
+    # Sheet 2 Note 8).  The same per-side mirror count drives plaque
     # presence: divided needs ≥ 2 W16-2a / ≥ 2 W7-3a, undivided ≥ 1 each.
     required_w21_5aR = 4 if params.is_divided else 2
 

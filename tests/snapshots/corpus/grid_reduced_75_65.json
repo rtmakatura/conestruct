@@ -58,7 +58,7 @@
     },
     "case": {
       "case": "Case 27 at 75 mph: Shoulder closure with reduced work-zone speed",
-      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 75 → 65 mph; Fines Double envelope applies per CO Supplement §2B.13 and S-630-1 Sheet 12.",
+      "narrative": "This scenario matches CDOT Standard Plan S-630-1 shoulder closure typical applications with a reduced work-zone posted speed (Cases 26/27, Sheet 14). Posted speed reduced from 75 → 65 mph; Fines Double envelope applies per S-630-1 Sheet 12, Fines Double Signing Notes.",
       "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 75 mph.",
       "routing": "shoulder_reduced_speed",
       "trigger_condition": "WHEN HAZARDS (WORKERS, EQUIPMENT, OR TEMPORARY BARRIER) ARE WITHIN 10 FT OF TRAVEL WAY",
@@ -68,25 +68,25 @@
       "all_pass": true,
       "checks": [
         {
-          "citation": "CO Supplement Sec 6C.04(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
           "detail": "Required: True. Signs placed: 16 left, 16 right.",
           "label": "Signs on both sides of divided highway",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 6C.06(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
           "detail": "Zone length: 4,400 ft. Required: 2. Placed: 4.",
-          "label": "G20-5P construction plaques every 2,640 ft",
+          "label": "G20-5P Work Zone signs every 2,640 ft",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 2B.13(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
           "detail": "Work-zone speed reduced 75 → 65 mph (Δ10 mph). Required: 1. Placed: 1.",
           "label": "Speed reduction <= 15 mph per sign installation",
           "pass": true
         },
         {
-          "citation": "CO Supplement Sec 6E.02(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
           "detail": "Not applicable (no flaggers).",
           "label": "Flagger station lighting 500W @ 8 ft",
           "pass": true
@@ -95,7 +95,7 @@
       "fail_count": 0,
       "info_items": [
         {
-          "citation": "CO Supplement Sec 6G.02(A)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
           "detail": "Not applicable (not a mobile operation).",
           "info": true,
           "label": "AADT threshold for mobile operations (<= 2,000)"
@@ -115,7 +115,7 @@
     },
     "fines_double": {
       "applicable": true,
-      "citation": "CO Supplement Sec 2B.13 + S-630-1 Sheet 12 Fines Double Signing Notes",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 12, Fines Double Signing Notes",
       "envelope": {
         "downstream_r2_1_label": "SPEED LIMIT 75",
         "downstream_r2_1_station_ft": -1000.0,
