@@ -624,7 +624,7 @@ function DeltaChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
       }
     >
         <div>
-          <div className="flex gap-5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] pb-2 mb-1 border-b border-[color:var(--paper-line-soft)]">
+          <div className="flex gap-4 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] pb-2 mb-1 border-b border-[color:var(--paper-line-soft)]">
             <span>
               <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--dim)]" aria-hidden />
               Changes device count

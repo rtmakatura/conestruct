@@ -294,7 +294,7 @@ export function QuotePanel({
 
   const body = (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
         <NumberField
           label="Duration (days)"
           value={settings.project_duration_days}

@@ -186,6 +186,13 @@ body {
   .check-row:last-of-type {
     border-bottom: 1px solid var(--line-soft);
   }
+  /* A field following a check-row run re-enters the 12px row rhythm
+     symmetrically: the run is entered at 12px (Field mb) + 12px (row
+     padding), but Field margins are bottom-only, so without this the
+     exit gap is half the entry gap (#200). */
+  .check-row + :not(.check-row) {
+    margin-top: 12px;
+  }
   .check-box {
     width: 16px;
     height: 16px;
@@ -623,14 +630,14 @@ body {
   .empty-state {
     background: var(--paper);
     border: 1px dashed var(--line);
-    padding: 32px 24px;
+    padding: 24px;
     text-align: center;
     font-family: var(--font-mono);
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--ink-faint);
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
   .empty-state .big {
     display: block;

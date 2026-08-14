@@ -458,7 +458,7 @@ export function GeneratorSidebar({
         />
         </div>
 
-        <div className="px-6 pt-5 pb-7 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
+        <div className="px-6 pt-6 pb-6 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
           {/* UX-21 / engine-removal PR D: generation is gated on the
               schema-bound client mirrors (required/ceiling, lanes,
               approaches) AND the backend's own invalid-input verdict —
@@ -1110,7 +1110,7 @@ function ScenarioPicker({
           <span>Scenario</span>
           <span className="text-[color:var(--act)]">STEP 2</span>
         </div>
-        <div className="px-6 pb-5 pt-2">
+        <div className="px-6 pb-4 pt-2">
           <div className="px-3 py-2.5 border border-[color:var(--act)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
             <span className="text-[13px] font-medium text-white">
               {only.l}
@@ -1133,7 +1133,7 @@ function ScenarioPicker({
         <span>Scenario</span>
         <span className="text-[color:var(--act)]">STEP 2</span>
       </div>
-      <div className="px-6 pb-5 pt-2 flex flex-col gap-2">
+      <div className="px-6 pb-4 pt-2 flex flex-col gap-2">
         {enabledKinds.map((k) => {
           const active = value === k.v;
           return (
