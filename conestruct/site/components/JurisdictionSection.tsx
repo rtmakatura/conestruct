@@ -222,6 +222,19 @@ export function JurisdictionControls({
             <>Statewide baseline — MUTCD + Colorado Supplement only.</>
           )}
         </div>
+        {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
+            boundary warnings.  Advice only — Confirm is the single writer
+            of jurisdiction_key; a differing manual pick demotes the
+            suggestion to a passive notice, never a prompt to switch.
+            Rendered inside the jurisdiction field (#201): proximity is
+            how a user knows which control a confirm applies to. */}
+        <SuggestSlot
+          suggest={suggest}
+          loading={suggestLoading}
+          jurisdictionKey={jurisdictionKey}
+          onConfirm={onConfirmSuggestion}
+          onDismiss={onDismissSuggestion}
+        />
       </div>
 
       <div className="jctl-field">
@@ -266,30 +279,20 @@ export function JurisdictionControls({
             " "
           )}
         </span>
+        {/* #152 C: street-class suggestion off the confirmed road's OSM
+            tier — same confirm-only contract as the jurisdiction
+            suggestion in the field above.  Absent when no road is
+            confirmed at the pin.  Rendered inside the classification
+            field (#201), directly under the chips it confirms. */}
+        <ClassSuggestSlot
+          classSuggest={classSuggest}
+          tier={classSuggestTier}
+          streetClass={streetClass}
+          jurisdiction={jurisdiction}
+          onConfirm={onConfirmClassSuggestion}
+          onDismiss={onDismissClassSuggestion}
+        />
       </div>
-
-      {/* Endeavor-B slot, live: pin-based jurisdiction suggestion +
-          boundary warnings.  Advice only — Confirm is the single writer
-          of jurisdiction_key; a differing manual pick demotes the
-          suggestion to a passive notice, never a prompt to switch. */}
-      <SuggestSlot
-        suggest={suggest}
-        loading={suggestLoading}
-        jurisdictionKey={jurisdictionKey}
-        onConfirm={onConfirmSuggestion}
-        onDismiss={onDismissSuggestion}
-      />
-      {/* #152 C: street-class suggestion off the confirmed road's OSM
-          tier — same confirm-only contract as the jurisdiction
-          suggestion above.  Absent when no road is confirmed at the pin. */}
-      <ClassSuggestSlot
-        classSuggest={classSuggest}
-        tier={classSuggestTier}
-        streetClass={streetClass}
-        jurisdiction={jurisdiction}
-        onConfirm={onConfirmClassSuggestion}
-        onDismiss={onDismissClassSuggestion}
-      />
     </div>
   );
 }

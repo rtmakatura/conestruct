@@ -1456,11 +1456,14 @@ input[type="number"] {
 .workbench .jctl-field .classpick {
   margin-top: 2px;
 }
-/* The suggestion rows sit flush under the fields, keeping their dashed
-   separator from the shared .jbar-suggest rules. */
+/* #201: each suggestion strip renders inside its subject's field, so it
+   inherits the field's 14px inset and sheds its own; the row step (12px)
+   separates it from the control it confirms.  The dashed separator now
+   spans the field content instead of the full section width. */
 .workbench .jctl .jbar-suggest {
-  padding-left: 14px;
-  padding-right: 14px;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 12px;
 }
 
 /* Read-only summary strip: the class value + "not set" tone.  No
