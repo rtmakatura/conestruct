@@ -35,6 +35,9 @@ since the last verified state.
   files)`** — exactly the pre-existing baseline (#208), no new errors.
 - `site_detection.py`: **0 mypy errors** (zero lines of the mypy
   output mention it).
+- `npx tsc --noEmit` (conestruct/site) → **exit 0, no diagnostics**
+  (in the recorded approved scope per `arc15-types.md`, though the
+  frontend is untouched by this arc).
 
 ## Prod wire check
 
