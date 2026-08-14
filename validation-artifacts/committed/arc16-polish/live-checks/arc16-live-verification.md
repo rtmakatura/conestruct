@@ -12,7 +12,7 @@ healthz `8c45d27…` == `git rev-parse origin/main` == served-bundle sha
 (found in the served `_next/static` chunks). Passed first probe; no
 mid-propagation retry needed.
 
-## Results — 13 PASS, 2 FAIL (one pre-existing node), 2 stated-unreachable
+## Results — 11 PASS (gate included), 2 FAIL (one pre-existing node), 1 stated-unreachable
 
 | # | check | result |
 |---|---|---|
