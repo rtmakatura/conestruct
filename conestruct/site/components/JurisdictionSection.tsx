@@ -59,7 +59,7 @@ function SourceLine({ source }: { source: AppliedDelta["source"] }) {
 
 export function ProvisionalBadge({ label = "Provisional" }: { label?: string }) {
   return (
-    <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
+    <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-1 border border-[color:var(--warn)] text-[color:var(--warn)]">
       <span aria-hidden>◐</span> {label}
     </span>
   );
@@ -649,7 +649,7 @@ function DeltaChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
                 <div>
                   <div className="text-[13px] text-[color:var(--ink)] leading-snug">{d.rule}</div>
                   {d.baseline && (
-                    <div className="text-[11px] text-[color:var(--ink-faint)] mt-0.5">
+                    <div className="text-[11px] text-[color:var(--ink-faint)] mt-1">
                       baseline: <b>{d.baseline}</b>
                     </div>
                   )}
@@ -768,7 +768,7 @@ function WorkHoursCard({
       summary={summary}
       badge={
         hours.conflict ? (
-          <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)] whitespace-nowrap">
+          <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-1 border border-[color:var(--warn)] text-[color:var(--warn)] whitespace-nowrap">
             † source conflict
           </span>
         ) : undefined
@@ -776,12 +776,12 @@ function WorkHoursCard({
     >
       <div className="flex gap-2 flex-wrap mb-2 empty:hidden">
         {hours.holiday_rule === "holidays_and_eves_banned" && (
-          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 border border-[color:var(--warn)] text-[color:var(--warn)]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-1 border border-[color:var(--warn)] text-[color:var(--warn)]">
             ◐ holiday-eve rule
           </span>
         )}
         {meter && (
-          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-0.5 bg-[color:var(--dim-soft)] border border-[color:var(--dim)] text-[color:var(--dim)]">
+          <span className="font-mono text-[10px] uppercase tracking-[0.08em] px-1.5 py-1 bg-[color:var(--dim-soft)] border border-[color:var(--dim)] text-[color:var(--dim)]">
             Metered {meterRateLabel(meter)}
             {meter.classes?.length ? ` ${meter.classes.join("/")}` : ""}
           </span>
@@ -1187,7 +1187,7 @@ function FactRows({
       {chips.map((x) => (
         <div
           key={x.rule}
-          className={`flex gap-2.5 px-3 py-2 mb-1.5 last:mb-0 border-l-2 bg-[color:var(--canvas)] ${tone}`}
+          className={`flex gap-2 px-3 py-2 mb-1.5 last:mb-0 border-l-2 bg-[color:var(--canvas)] ${tone}`}
         >
           <span aria-hidden className="text-[13px]">
             {icon}
@@ -1200,7 +1200,7 @@ function FactRows({
               )}
             </div>
             <StatusFlag status={x.status} />
-            <div className="font-mono text-[9px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-0.5">
+            <div className="font-mono text-[9px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
               {jurName.toUpperCase()} · {x.source.doc}
               {x.source.section ? ` §${x.source.section}` : ""}
             </div>

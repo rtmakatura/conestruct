@@ -381,7 +381,7 @@ export function QuotePanel({
             type="button"
             onClick={onPreview}
             disabled={busy}
-            className="md:flex-1 font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
+            className="md:flex-1 font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
             {busy ? "Calculating…" : "Preview breakdown"}
           </button>
@@ -389,7 +389,7 @@ export function QuotePanel({
             type="button"
             onClick={onDownload}
             disabled={downloading}
-            className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
+            className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
           >
             {downloading ? "Rendering…" : "Download Quote (XLSX)"}
             <span className="font-mono">↓</span>
@@ -400,7 +400,7 @@ export function QuotePanel({
           <button
             type="button"
             disabled
-            className="block w-full font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink-faint)] px-3 py-3 flex items-center justify-center gap-2.5 cursor-default"
+            className="block w-full font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink-faint)] px-3 py-3 flex items-center justify-center gap-2 cursor-default"
           >
             Save to download the edited plan
           </button>
@@ -408,7 +408,7 @@ export function QuotePanel({
           <a
             href={`/api/plans/${mode.planId}/quote`}
             download
-            className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
+            className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors"
           >
             Download Quote (XLSX)
             <span className="font-mono">↓</span>
@@ -417,7 +417,7 @@ export function QuotePanel({
       ) : (
         <Link
           href={SIGNUP_HREF}
-          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[color:var(--act-bright)] transition-colors"
+          className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors"
         >
           Sign up to download Quote
           <span className="font-mono">↓</span>

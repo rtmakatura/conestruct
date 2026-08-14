@@ -87,7 +87,7 @@ export function ScheduleField({ scenario, setScenario, step }: Props) {
               />
             </Field>
           )}
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-3">
             <Field>
               <LabelRow htmlFor="sched-start">Start time</LabelRow>
               <select

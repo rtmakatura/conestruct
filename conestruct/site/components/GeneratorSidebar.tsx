@@ -802,7 +802,7 @@ function LocationSummary({
         <div className="text-[13px] text-white leading-tight">
           {meta.address || "—"}
         </div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-0.5">
+        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
           {fmt6(meta.lat)}, {fmt6(meta.lng)}
           {meta.bearingDeg !== undefined && (
             <span> · bearing {Math.round(meta.bearingDeg)}°</span>
@@ -816,7 +816,7 @@ function LocationSummary({
           {scenario.speed} mph
           {lanes !== null && <span> · {lanes} lanes per direction</span>}
         </div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-0.5">
+        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
           {roadType ? ROAD_TYPE_LABELS[roadType] : "—"}
           {divided !== null && (
             <span> · {divided ? "Divided" : "Undivided"}</span>
@@ -966,7 +966,7 @@ function CorridorRows({ corridor }: { corridor: CorridorPolyline }) {
     "downstream",
   ];
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className="flex flex-col gap-1">
       {ORDER.map((zone) => {
         const seg = corridor.segments.find((s) => s.zone === zone);
         const length = seg?.lengthFt ?? 0;
@@ -1111,7 +1111,7 @@ function ScenarioPicker({
           <span className="text-[color:var(--act)]">STEP 2</span>
         </div>
         <div className="px-6 pb-4 pt-2">
-          <div className="px-3 py-2.5 border border-[color:var(--act)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
+          <div className="px-3 py-3 border border-[color:var(--act)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
             <span className="text-[13px] font-medium text-white">
               {only.l}
             </span>
@@ -1142,7 +1142,7 @@ function ScenarioPicker({
               type="button"
               onClick={() => onChange(k.v)}
               className={[
-                "flex items-baseline justify-between text-left px-3 py-2.5 border transition-colors",
+                "flex items-baseline justify-between text-left px-3 py-3 border transition-colors",
                 active
                   ? "border-[color:var(--act)] bg-[color:var(--canvas-tint)]"
                   : "border-[color:var(--rule)] hover:border-[color:var(--ink-on-dark-faint)]",
