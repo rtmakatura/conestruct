@@ -25,5 +25,17 @@ Exceptions (documented, deliberate):
 - **`.jbar` internals** — pixel-measured geometric-stability slots
   (`.jbar-slot-*` in `globals.css`). Re-measure with
   `scripts/verify-jbar-stability.mjs` before touching any `.jbar` padding.
-- **LocationPickerModal** — a modal, not a generator page section. Out of
-  scope for this scale (tracked as a follow-up).
+## LocationPickerModal (issue #166)
+
+The modal is on the same six steps. Its roles map onto the page's:
+
+- **modal gutter** — `px-6` (section 24), matching the generator page's
+  panel gutter; the header, tab bar, status lines, footer, and every
+  full-width strip share it.
+- **nested road-candidate cards** — inset `8×12` (tight × row). The one
+  role the page lacks: candidate cards stack inside an already-inset
+  section, so they take a deliberately denser inset than the page's
+  16px card step.
+- Everything else (chips, hint nudges, row gaps) uses the page's role
+  table above. Negative pull-ups (`-mt-1`) are allowed at on-scale
+  magnitudes.

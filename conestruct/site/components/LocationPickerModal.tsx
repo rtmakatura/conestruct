@@ -236,7 +236,7 @@ function ConfPips({ c }: { c: Confidence }) {
   const filled = confPipCount(c);
   return (
     <span
-      className="inline-flex items-center gap-[3px]"
+      className="inline-flex items-center gap-1"
       title={`${c} confidence`}
     >
       {[0, 1, 2].map((i) => (
@@ -1666,7 +1666,7 @@ export function LocationPickerModal({
         aria-label="Define work zone"
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
+        <div className="flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
           <div>
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1">
               Work zone · Define
@@ -1674,7 +1674,7 @@ export function LocationPickerModal({
             <h2 className="text-white text-[17px] font-semibold m-0">
               Define Work Zone
             </h2>
-            <p className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-0.5 m-0">
+            <p className="text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0">
               Drop a pin, review the detected road properties, and set the
               work-zone length.
             </p>
@@ -1710,7 +1710,7 @@ export function LocationPickerModal({
             {/* Search bar */}
             <form
               onSubmit={onSubmitSearch}
-              className="flex gap-2 border-b border-[color:var(--rule)] px-5 py-2.5 flex-shrink-0"
+              className="flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"
             >
               <input
                 type="text"
@@ -1731,12 +1731,12 @@ export function LocationPickerModal({
               </button>
             </form>
             {searchStatus.state === "error" && (
-              <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
+              <div className="px-6 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--fail)] flex-shrink-0">
                 {searchStatus.message}
               </div>
             )}
             {coarseNotice && (
-              <div className="px-5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark)] flex-shrink-0">
+              <div className="px-6 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark)] flex-shrink-0">
                 {coarseNotice}
               </div>
             )}
@@ -1745,7 +1745,7 @@ export function LocationPickerModal({
                 the search bar so it reads as an alternative to address
                 search rather than a buried fallback at the modal foot.
                 Auto-expanded when the Mapbox token is missing. */}
-            <div className="border-b border-[color:var(--rule)] px-5 py-1.5 flex-shrink-0 flex items-center justify-between">
+            <div className="border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setShowManualCoords((s) => !s)}
@@ -1762,7 +1762,7 @@ export function LocationPickerModal({
               )}
             </div>
             {showManualCoords && (
-              <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-5 py-2 flex-shrink-0">
+              <div className="grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0">
                 <div>
                   <input
                     type="text"
@@ -1902,7 +1902,7 @@ export function LocationPickerModal({
             {/* Bearing detection warning lives just below the map so it's
                 visible the moment classification surfaces a problem. */}
             {bearingWarning && (
-              <div className="border-t border-[color:var(--rule)] px-5 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
+              <div className="border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0">
                 {bearingWarning}
               </div>
             )}
@@ -1977,7 +1977,7 @@ export function LocationPickerModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-[color:var(--rule)] px-5 py-3 flex-shrink-0">
+        <div className="flex items-center justify-end gap-3 border-t border-[color:var(--rule)] px-6 py-3 flex-shrink-0">
           {roadUnresolved && (
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)]">
               <span aria-hidden="true">⚠ </span>
@@ -2000,7 +2000,7 @@ export function LocationPickerModal({
             type="button"
             onClick={onClickSave}
             disabled={!canSave}
-            className="px-5 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-6 py-2 font-sans text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] hover:bg-[color:var(--act-bright)] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Save &amp; Close
           </button>
@@ -2037,7 +2037,7 @@ function CrossStreetPanel({
   onClear: () => void;
 }) {
   return (
-    <div className="border-t border-[color:var(--rule)] px-5 py-3">
+    <div className="border-t border-[color:var(--rule)] px-6 py-3">
       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)] mb-2">
         Cross street
       </div>
@@ -2147,7 +2147,7 @@ function RoadPropertiesPanel({
 }) {
   return (
     <div>
-      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] flex items-center justify-between">
+      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] flex items-center justify-between">
         <span>Road properties</span>
         {/* Explicit fresh-analysis affordance: reopening the dialog
             never re-detects (a restored confirmation stays put), so
@@ -2157,14 +2157,14 @@ function RoadPropertiesPanel({
           <button
             type="button"
             onClick={onRedetect}
-            className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-0.5 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
+            className="border border-[color:var(--rule)] bg-transparent text-[color:var(--ink-on-dark)] font-mono text-[9px] uppercase tracking-[0.08em] px-2 py-1 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors"
           >
             ↻ Re-detect roads
           </button>
         )}
       </div>
 
-      <div className="px-5 py-1">
+      <div className="px-6 py-1">
         {classify.state === "idle" && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-3">
             Drop a pin on the map to auto-detect road properties.
@@ -2297,7 +2297,7 @@ function DetectedRows({
                 speedMph: speedDetected ?? undefined,
               })
             }
-            className="flex-shrink-0 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors"
+            className="flex-shrink-0 border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors"
           >
             Use {speedDetected} mph
           </button>
@@ -2439,7 +2439,7 @@ function RoadFieldRow<T>({
           </span>
           <ConfPips c={field.confidence} />
           {modified && (
-            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-mute)] border border-dashed border-[color:var(--ink-faint)] px-1 leading-none py-px">
+            <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-mute)] border border-dashed border-[color:var(--ink-faint)] px-1 leading-none py-1">
               modified
             </span>
           )}
@@ -2654,11 +2654,11 @@ function WorkZonePanel({
             )}° detected from OSM`;
   return (
     <div>
-      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         Work zone
       </div>
 
-      <div className="px-5 py-1">
+      <div className="px-6 py-1">
         {/* Work zone length — matches RoadFieldRow's 2-col rhythm */}
         <div className="grid grid-cols-[1fr_150px] gap-3 items-center py-2 border-b border-[color:var(--rule)]/40 min-h-[52px]">
           <div className="min-w-0">
@@ -2784,8 +2784,8 @@ function DetectionOutcomeCard({
 }) {
   if (classifyState === "resolving") {
     return (
-      <div className="border-b border-[color:var(--rule)] px-5 py-3">
-        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+      <div className="border-b border-[color:var(--rule)] px-6 py-3">
+        <div className="border border-[color:var(--rule)] px-3 py-2">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] flex items-center gap-2">
             <span
               aria-hidden
@@ -2805,8 +2805,8 @@ function DetectionOutcomeCard({
     // Empty and error states are both explicit outcomes (rule 10): the
     // chromeless ◌ marks "nothing found", not a failure color.
     return (
-      <div className="border-b border-[color:var(--rule)] px-5 py-3">
-        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+      <div className="border-b border-[color:var(--rule)] px-6 py-3">
+        <div className="border border-[color:var(--rule)] px-3 py-2">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--none)]">
             <span aria-hidden>◌ </span>
             {emptyMessage ?? "No roads detected"}
@@ -2821,8 +2821,8 @@ function DetectionOutcomeCard({
   }
   if (candidates.length === 1) {
     return (
-      <div className="border-b border-[color:var(--rule)] px-5 py-3">
-        <div className="border border-[color:var(--rule)] px-3.5 py-2.5">
+      <div className="border-b border-[color:var(--rule)] px-6 py-3">
+        <div className="border border-[color:var(--rule)] px-3 py-2">
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)]">
             <span aria-hidden className="text-[color:var(--pass)]">
               ✓{" "}
@@ -2877,8 +2877,8 @@ function WhichRoadCard({
   const picked =
     selectedIdx !== null ? (candidates[selectedIdx] ?? null) : null;
   return (
-    <div className="border-b border-[color:var(--rule)] px-5 py-3">
-      <div className="border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3.5 py-2.5">
+    <div className="border-b border-[color:var(--rule)] px-6 py-3">
+      <div className="border border-[color:var(--warn)] bg-[color:var(--warn-soft)] px-3 py-2">
         <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--warn)]">
           <span aria-hidden="true">⚠ </span>
           Which road? · {candidates.length} detected
@@ -2906,7 +2906,7 @@ function WhichRoadCard({
               <button
                 type="button"
                 onClick={() => setReExpanded(true)}
-                className="flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2.5 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
+                className="flex-shrink-0 border border-[color:var(--act-bright)] bg-transparent text-[color:var(--act-bright)] font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-1 hover:bg-[color:var(--act-bright)] hover:text-[color:var(--on-act)] transition-colors"
               >
                 Change
               </button>
@@ -2968,7 +2968,7 @@ function CandidatePicker({
             key={`${c.way_id}-${idx}`}
             type="button"
             onClick={() => onPick(idx)}
-            className={`text-left px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
+            className={`text-left px-2 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] border transition-colors ${
               selected
                 ? "border-[color:var(--act-bright)] bg-[color:var(--act)]/15 text-white"
                 : // faint border, not --rule: on the amber-tinted card bg
@@ -3010,11 +3010,11 @@ function CorridorPreviewPanel({
 }) {
   return (
     <div className="border-t border-[color:var(--rule)]">
-      <div className="px-5 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+      <div className="px-6 py-2 border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         Corridor extent
       </div>
 
-      <div className="px-5 py-3">
+      <div className="px-6 py-3">
         {!hasPin && (
           <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
             Drop a pin to compute the corridor.
@@ -3103,7 +3103,7 @@ function ExtentRows({ corridor }: { corridor: CorridorPolyline }) {
       {display.map((d) => (
         <div
           key={d.zone}
-          className="flex items-baseline justify-between gap-3 py-0.5"
+          className="flex items-baseline justify-between gap-3 py-1"
         >
           <span className="flex items-center gap-2 min-w-0 flex-1">
             <ZoneChannelSwatch zone={d.zone} className="flex-shrink-0" />
