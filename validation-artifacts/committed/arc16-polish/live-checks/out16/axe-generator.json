@@ -1,0 +1,9 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "targets": [
+      ".jbar-suggest > span:nth-child(2)"
+    ]
+  }
+]
