@@ -69,6 +69,20 @@ parked contrast items. **This is also triage-candidate input**: the
 quiet/faint register (`--ink-on-dark-faint` at reduced opacity) likely
 fails AA anywhere it renders on canvas.
 
+## Addendum (2026-08-16) — the axe finding's disposition landed
+
+Ryan ruled: fix this one demo-path instance now as a coda; the wider
+faint-register class goes to the a11y triage pile. The coda
+(`arc16-coda-contrast`, Refs #200) removes the quiet band's
+`opacity: 0.7` — the text renders at its token value, `#93a0b0` on
+`--canvas #14202e` = **6.19:1** computed (was 3.76:1 composited).
+No new color introduced; `.reserved` and the rest of the faint
+register deliberately untouched. Pinned by
+`components/quiet-band-contrast.test.tsx` (paired fixture: computed
+contrast from the tokens actually in globals.css + mounted binding
+proof). Live re-verification (axe clean on the pre-pin page) follows
+post-ship and will be recorded below the ship.
+
 ## Verdict
 
 Arc 16 is live and verified at `8c45d27`: gate green, every reachable

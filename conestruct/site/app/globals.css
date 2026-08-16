@@ -1594,7 +1594,11 @@ input[type="number"] {
    amber+glyph warnings, and the honesty line. */
 .workbench .jbar-suggest.quiet {
   text-transform: uppercase;
-  opacity: 0.7;
+  /* No opacity reduction: at 0.7 the faint ink composited to ~3.76:1
+     on --canvas, under the 4.5:1 AA floor (arc16 axe finding, coda
+     Refs #200).  At the token's full value: #93a0b0 on #14202e =
+     6.19:1.  This band only — the wider faint-register family
+     (.reserved etc.) stays on the a11y triage pile by ruling. */
 }
 .workbench .jbar-suggest.live {
   flex-direction: column;
