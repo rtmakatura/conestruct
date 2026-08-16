@@ -83,6 +83,16 @@ contrast from the tokens actually in globals.css + mounted binding
 proof). Live re-verification (axe clean on the pre-pin page) follows
 post-ship and will be recorded below the ship.
 
+**Re-verified live, 2026-08-16, at `f14576a`** (`coda-recheck.js`; raw
+log `out16/coda-assertions-raw.md`): gate green first probe (healthz ==
+origin/main == served bundle); the quiet band measured in-page at
+`rgb(147,160,176)` / `opacity: 1` over `rgb(20,32,46)` → effective
+**6.189:1** (matches the 6.19:1 computed pre-ship); axe
+wcag2a/aa/21aa/22aa on the pre-pin generator page — the exact state
+that carried the FAIL — **zero violations**
+(`out16/coda-axe-generator.json`). The FAIL → coda → re-verified arc is
+closed; the faint-register family remains on the a11y triage pile.
+
 ## Verdict
 
 Arc 16 is live and verified at `8c45d27`: gate green, every reachable
