@@ -98,16 +98,33 @@ function roadTypeAndDivided(
   highwayClass: string,
   oneway: boolean,
   isUrban: boolean,
-): { roadType: RoadType; divided: boolean; topLevelConf: Confidence } {
+): {
+  roadType: RoadType;
+  divided: boolean;
+  topLevelConf: Confidence;
+  // #123: true ONLY on the branch where the oneway tag genuinely drove
+  // divided (the primary couplet inference).  The rationale string keys
+  // on this instead of re-deriving the branch: a trunk's divided: true
+  // comes from its class regardless of oneway, and secondary/tertiary/
+  // unclassified one-ways return divided: false — neither may claim the
+  // couplet → divided inference.
+  dividedFromOneway: boolean;
+} {
   const cls = highwayClass;
   if (cls === "motorway" || cls === "motorway_link") {
-    return { roadType: "freeway", divided: true, topLevelConf: "high" };
+    return {
+      roadType: "freeway",
+      divided: true,
+      topLevelConf: "high",
+      dividedFromOneway: false,
+    };
   }
   if (cls === "trunk" || cls === "trunk_link") {
     return {
       roadType: isUrban ? "urban_arterial" : "rural_divided",
       divided: true,
       topLevelConf: "medium",
+      dividedFromOneway: false,
     };
   }
   if (cls === "primary" || cls === "primary_link") {
@@ -116,12 +133,14 @@ function roadTypeAndDivided(
         roadType: isUrban ? "urban_arterial" : "rural_divided",
         divided: true,
         topLevelConf: "medium",
+        dividedFromOneway: true,
       };
     }
     return {
       roadType: isUrban ? "urban_arterial" : "rural_undivided",
       divided: false,
       topLevelConf: "medium",
+      dividedFromOneway: false,
     };
   }
   if (cls === "secondary" || cls === "secondary_link") {
@@ -129,6 +148,7 @@ function roadTypeAndDivided(
       roadType: isUrban ? "urban_arterial" : "rural_undivided",
       divided: false,
       topLevelConf: "medium",
+      dividedFromOneway: false,
     };
   }
   if (
@@ -140,12 +160,14 @@ function roadTypeAndDivided(
       roadType: isUrban ? "urban_arterial" : "rural_undivided",
       divided: false,
       topLevelConf: "low",
+      dividedFromOneway: false,
     };
   }
   return {
     roadType: isUrban ? "urban_arterial" : "rural_undivided",
     divided: false,
     topLevelConf: "low",
+    dividedFromOneway: false,
   };
 }
 
@@ -176,11 +198,8 @@ export function classifyFromOsmTags(
   const { highwayClass, name, ref, tags } = input;
   const oneway = tags.oneway === "yes" || tags.oneway === "-1";
 
-  const { roadType, divided, topLevelConf } = roadTypeAndDivided(
-    highwayClass,
-    oneway,
-    isUrban,
-  );
+  const { roadType, divided, topLevelConf, dividedFromOneway } =
+    roadTypeAndDivided(highwayClass, oneway, isUrban);
 
   const speedFromOsm = parseMaxspeedToMph(tags.maxspeed);
   const lanesFromOsm = lanesPerDirectionFromTags(tags);
@@ -334,10 +353,16 @@ export function classifyFromOsmTags(
       divided: {
         value: divided,
         confidence: fieldDividedConf,
+        // #123: the couplet claim is emitted ONLY on the branch where
+        // the oneway tag actually drove divided: true (primary).  A
+        // trunk one-way's divided comes from its class; a secondary/
+        // tertiary/unclassified one-way returns divided: false — the
+        // rationale must describe the value that was returned, never a
+        // decision that wasn't made.
         source:
           fieldDividedConf === "high"
             ? `OSM class=${highwayClass} (always divided)`
-            : oneway
+            : dividedFromOneway
               ? `OSM oneway=yes (couplet → divided)`
               : `inferred from class=${highwayClass}`,
         // A motorway is definitively divided; a couplet or class guess

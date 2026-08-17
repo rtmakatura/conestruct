@@ -456,3 +456,79 @@ describe("classifyFromOsmTags", () => {
     expect(r.fields.lanes.rawData).toBe("lanes:forward=3");
   });
 });
+
+// #123: the divided rationale must describe the value that was actually
+// returned.  The couplet → divided claim is emitted only on the primary
+// branch, where the oneway tag genuinely drives divided: true; a trunk
+// one-way's divided attributes to its class (the GO's tightening); the
+// secondary/tertiary/unclassified one-ways return divided: false and
+// must not claim the inference.
+describe("divided rationale/value agreement (#123)", () => {
+  const onewayTags = {
+    oneway: "yes",
+    maxspeed: null,
+    lanes: null,
+    lanes_forward: null,
+    lanes_backward: null,
+    lanes_both_ways: null,
+  };
+  const classify = (highwayClass: string) =>
+    classifyFromOsmTags(
+      { highwayClass, name: "One Way St", ref: null, tags: onewayTags },
+      true,
+      "Denver",
+    );
+
+  it("primary one-way: divided true, couplet rationale (the branch that earns it)", () => {
+    const r = classify("primary");
+    expect(r.divided).toBe(true);
+    expect(r.fields.divided.source).toBe("OSM oneway=yes (couplet → divided)");
+  });
+
+  it("trunk one-way: divided true attributes to the class, not the couplet", () => {
+    const r = classify("trunk");
+    expect(r.divided).toBe(true);
+    expect(r.fields.divided.source).toBe("inferred from class=trunk");
+  });
+
+  it.each(["secondary", "tertiary", "unclassified"])(
+    "%s one-way: divided false, no couplet claim",
+    (hc) => {
+      const r = classify(hc);
+      expect(r.divided).toBe(false);
+      expect(r.fields.divided.source).toBe(`inferred from class=${hc}`);
+    },
+  );
+
+  it("invariant: the couplet claim never accompanies divided: false (all one-way classes)", () => {
+    for (const hc of [
+      "motorway",
+      "trunk",
+      "primary",
+      "secondary",
+      "tertiary",
+      "unclassified",
+      "residential",
+    ]) {
+      const r = classify(hc);
+      if (r.fields.divided.source.includes("couplet")) {
+        expect(r.divided).toBe(true);
+      }
+    }
+  });
+
+  it("two-way roads keep their existing rationale (no churn off the oneway path)", () => {
+    const r = classifyFromOsmTags(
+      {
+        highwayClass: "secondary",
+        name: "Main St",
+        ref: null,
+        tags: { ...onewayTags, oneway: null },
+      },
+      true,
+      "Denver",
+    );
+    expect(r.divided).toBe(false);
+    expect(r.fields.divided.source).toBe("inferred from class=secondary");
+  });
+});
