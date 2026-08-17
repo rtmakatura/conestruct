@@ -12,23 +12,29 @@ healthz `46a0df8…` == `git rev-parse origin/main` == served-bundle sha
 (found in the served `_next/static` chunks). Passed first probe; no
 mid-propagation retry needed.
 
-## Results — 14 PASS (gate included), 2 FAIL (both pre-existing nodes)
+## Results — 14 checks: 12 PASS (gate included), 2 FAIL (both pre-existing nodes)
 
-| # | check | result |
-|---|---|---|
-| gate | healthz == origin/main == served bundle | PASS |
-| F3a | in-modal clamp annotation on the lanes row (6 entered → "plans draw at most 4… Plan will use 4.") | PASS |
-| F3b | seam note after save: "Lanes 4/direction (clamped from 6 manual entry…)" | PASS |
-| F1 | changed detection (Lakewood → Greeley) names the laneWidth overwrite: "Lane width set to 12 ft (OSM detection — was 10.5 ft)." | PASS |
-| F1+ | sibling family-1 note also live: "Lanes set to 2/direction (OSM detection — was 4)." (logged, not asserted) | — |
-| F2a | flagger + picker lanes override → "Lanes setting 3/direction from the picker not applied — flagger plans don't take a lane count." | PASS |
-| F2b | flagger + picker divided override → "Divided setting from the picker not applied…" | PASS |
-| F4a | reduction 55 under posted 65, Colfax pick lowers posted → "Work-zone speed reduction removed (was 55 mph…)" | PASS |
-| F4b | reduction input gone (workZoneSpeed cleared from the payload state) | PASS |
-| F4c | no INVALID INPUT / `workZoneSpeed must be <= posted speed` anywhere on the page | PASS |
-| #123 ×3 | couplet-never-with-undivided invariant on three real roads (below) | PASS |
-| AX1 | axe, open modal post-candidate-pick | **FAIL — pre-existing (below)** |
-| AX2 | axe, page with seam notes visible | **FAIL — pre-existing (below)** |
+The raw log records check names; the exact rendered note sentences are
+asserted by the runner's text locators (`s2a1-live-checks.js`) and
+visible in the numbered screenshots — the log's PASS means the locator
+found that sentence on the page. One sentence IS quoted verbatim in the
+log itself: the F1 sibling note (a `log()` line, not an assertion).
+
+| # | check (assertion target in the runner) | evidence | result |
+|---|---|---|---|
+| gate | healthz == origin/main == served bundle | log | PASS |
+| F3a | in-modal clamp annotation on the lanes row (locator: `plans draw at most 4 lanes per direction. Plan will use 4.`) | `01-…png` | PASS |
+| F3b | seam note after save (locator: `Lanes 4/direction (clamped from 6 manual entry`) | `02-…png` | PASS |
+| F1 | changed detection (Lakewood → Greeley) names the laneWidth overwrite (locator: `Lane width set to 12 ft (OSM detection — was 10.5 ft).`) | `03-…png` | PASS |
+| F1+ | sibling family-1 note, quoted verbatim in the log: "Lanes set to 2/direction (OSM detection — was 4)." (logged, not asserted) | log | — |
+| F2a | flagger + picker lanes override skipped note (locator: `Lanes setting 3/direction from the picker not applied — flagger plans don't take a lane count.`) | `04-…png` | PASS |
+| F2b | flagger + picker divided override skipped note (locator: `Divided setting from the picker not applied — flagger plans don't take a divided toggle.`) | `04-…png` | PASS |
+| F4a | reduction 55 under posted 65, Colfax pick lowers posted (locator: `Work-zone speed reduction removed (was 55 mph`) | `05-…png` | PASS |
+| F4b | reduction input gone (workZoneSpeed cleared from form state) | log | PASS |
+| F4c | no `workZoneSpeed … must be <= posted speed` text anywhere on the page | log | PASS |
+| #123 ×3 | couplet-never-with-undivided invariant on three real roads; measured provenance strings quoted verbatim in the log (below) | log + `06-…png` | PASS |
+| AX1 | axe, open modal post-candidate-pick | `axe-modal-clamp-note.json` | **FAIL — pre-existing (below)** |
+| AX2 | axe, page with seam notes visible | `axe-seam-notes.json` | **FAIL — pre-existing (below)** |
 
 ## The #123 measurements
 
@@ -68,9 +74,10 @@ them there when it's filed keeps the pile complete.
 
 ## Verdict
 
-s2-arc1 is live and verified at `46a0df8`: gate green first probe, all
-four #198 families speaking on production with the exact planned
-wording, family 4's app-created 400 gone from the flow, and the #123
-correction measured on two real one-ways including the filed secondary
-case. Two honest FAILs on record, both pre-existing and pile-bound.
+s2-arc1 is live and verified at `46a0df8`: gate green first probe, 12
+of 14 checks PASS — all four #198 families speaking on production with
+the planned wording (locator-asserted, screenshot-evidenced), family
+4's app-created 400 gone from the flow, and the #123 correction
+measured on two real one-ways including the filed secondary case. Two
+honest FAILs on record, both pre-existing and pile-bound.
 Refs #198, #123.
