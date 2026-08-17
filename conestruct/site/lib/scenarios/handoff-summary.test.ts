@@ -382,18 +382,242 @@ describe("summarizeHandoff — roadType applied/skipped (#62)", () => {
     expect(unchanged).toEqual([]);
   });
 
-  it("emits NO roadType event for a divided/lanes-only handoff (deliberately not surfaced)", () => {
-    // divided + lanes cross the seam but neither has a detect-then-override
-    // path worth naming; only roadType does.  Locks that decision against a
-    // future refactor manufacturing no-op noise.
+  // Formerly the a61f5f3 negative guard ("divided/lanes have no
+  // detect-then-override path worth naming").  #198 disproved that claim
+  // — the changed-detection clobber and the non-shoulder drop are
+  // exactly such paths — so the lock-the-silence purpose is retired and
+  // the fixture flips positive below (#198 families).  What survives of
+  // the old intent: an UNCHANGED landing stays silent, same as speed and
+  // roadType.
+  it("stays silent when divided/lanes land unchanged (no no-op noise)", () => {
     const events = summarizeHandoff({
-      prior: DEFAULT_SHOULDER,
+      prior: DEFAULT_SHOULDER, // already lanes: 2, divided: true
       classification: null,
       overrides: { divided: true, lanesPerDirection: 2 },
       final: { ...DEFAULT_SHOULDER, divided: true, lanes: 2 } as Scenario,
       delta: null,
     });
     expect(events).toEqual([]);
+  });
+
+  it("names divided/lanes overrides that land AND change the prior value (#198 family 1)", () => {
+    const events = summarizeHandoff({
+      prior: { ...DEFAULT_SHOULDER, lanes: 3, divided: false } as Scenario,
+      classification: null,
+      overrides: { divided: true, lanesPerDirection: 2 },
+      final: { ...DEFAULT_SHOULDER, divided: true, lanes: 2 } as Scenario,
+      delta: null,
+    });
+    expect(events).toContainEqual({
+      field: "lanes",
+      kind: "applied",
+      from: 3,
+      to: 2,
+      source: "manual",
+    });
+    expect(events).toContainEqual({
+      field: "divided",
+      kind: "applied",
+      from: false,
+      to: true,
+      source: "manual",
+    });
+  });
+});
+
+describe("summarizeHandoff — #198 families (lanes/divided/laneWidth/workZoneSpeed)", () => {
+  it("family 1: a changed detection that clobbers lanes/divided/laneWidth is named per field", () => {
+    const c = {
+      ...osmClassification(35),
+      lanesPerDirection: 2,
+      divided: false,
+      laneWidthFt: 12,
+    } as RoadClassification;
+    const prior = {
+      ...DEFAULT_SHOULDER,
+      lanes: 3,
+      divided: true,
+      laneWidth: 11,
+      speed: 45,
+    } as Scenario;
+    // What applyClassification produces for this input.
+    const final = {
+      ...prior,
+      roadType: "rural_undivided",
+      lanes: 2,
+      divided: false,
+      laneWidth: 12,
+      speed: 35,
+    } as Scenario;
+    const events = summarizeHandoff({
+      prior,
+      classification: c,
+      overrides: {},
+      final,
+      delta: null,
+    });
+    expect(events).toContainEqual({
+      field: "lanes",
+      kind: "applied",
+      from: 3,
+      to: 2,
+      source: "osm",
+    });
+    expect(events).toContainEqual({
+      field: "divided",
+      kind: "applied",
+      from: true,
+      to: false,
+      source: "osm",
+    });
+    expect(events).toContainEqual({
+      field: "laneWidth",
+      kind: "applied",
+      fromFt: 11,
+      toFt: 12,
+    });
+  });
+
+  it("family 2: picker lanes/divided overrides on a non-shoulder kind are named as not applicable", () => {
+    const events = summarizeHandoff({
+      prior: DEFAULT_FLAGGER,
+      classification: null,
+      overrides: { lanesPerDirection: 2, divided: true },
+      final: DEFAULT_FLAGGER,
+      delta: null,
+    });
+    expect(events).toContainEqual({
+      field: "lanes",
+      kind: "skipped_not_applicable",
+      value: 2,
+    });
+    expect(events).toContainEqual({
+      field: "divided",
+      kind: "skipped_not_applicable",
+      value: true,
+    });
+  });
+
+  it("family 3: an out-of-domain lane count is named as clamped, not applied (precedence)", () => {
+    const events = summarizeHandoff({
+      prior: DEFAULT_SHOULDER,
+      classification: null,
+      overrides: { lanesPerDirection: 6 },
+      final: { ...DEFAULT_SHOULDER, lanes: 4 } as Scenario,
+      delta: null,
+    });
+    expect(events).toEqual([
+      { field: "lanes", kind: "clamped", from: 6, to: 4, source: "manual" },
+    ]);
+  });
+
+  it("family 3: detection-side clamp carries the osm source", () => {
+    const c = {
+      ...osmClassification(35),
+      lanesPerDirection: 5,
+    } as RoadClassification;
+    const events = summarizeHandoff({
+      prior: { ...DEFAULT_SHOULDER, speed: 35, laneWidth: 12 } as Scenario,
+      classification: c,
+      overrides: {},
+      final: { ...DEFAULT_SHOULDER, speed: 35, lanes: 4, divided: false, roadType: "rural_undivided" } as Scenario,
+      delta: null,
+    });
+    expect(events).toContainEqual({
+      field: "lanes",
+      kind: "clamped",
+      from: 5,
+      to: 4,
+      source: "osm",
+    });
+  });
+
+  it("family 4: a reduction dropped by a lowered posted speed is named as cleared", () => {
+    const prior = {
+      ...DEFAULT_SHOULDER,
+      speed: 55,
+      workZoneSpeed: 45,
+    } as Scenario;
+    const final = {
+      ...DEFAULT_SHOULDER,
+      speed: 35,
+      workZoneSpeed: undefined,
+      roadType: "rural_undivided",
+      divided: false,
+      lanes: 1,
+      laneWidth: 12,
+    } as Scenario;
+    const events = summarizeHandoff({
+      prior,
+      classification: osmClassification(35),
+      overrides: {},
+      final,
+      delta: null,
+    });
+    expect(events).toContainEqual({
+      field: "workZoneSpeed",
+      kind: "cleared",
+      wasMph: 45,
+      postedMph: 35,
+    });
+  });
+
+  it("family 4: no cleared event when the handoff didn't write speed", () => {
+    const prior = {
+      ...DEFAULT_SHOULDER,
+      speed: 55,
+      workZoneSpeed: undefined,
+    } as Scenario;
+    const events = summarizeHandoff({
+      prior,
+      classification: null,
+      overrides: { roadType: "urban_arterial" as RoadType },
+      final: { ...prior, roadType: "urban_arterial" } as Scenario,
+      delta: null,
+    });
+    expect(events.some((e) => e.field === "workZoneSpeed")).toBe(false);
+  });
+});
+
+describe("handoffEventIsCurrent — #198 members self-hide", () => {
+  it("lanes applied/clamped: current while lanes holds, hides once edited away", () => {
+    const applied = { field: "lanes", kind: "applied", from: 3, to: 2, source: "osm" } as const;
+    expect(handoffEventIsCurrent(applied, { ...DEFAULT_SHOULDER, lanes: 2 } as Scenario)).toBe(true);
+    expect(handoffEventIsCurrent(applied, { ...DEFAULT_SHOULDER, lanes: 3 } as Scenario)).toBe(false);
+    const clamped = { field: "lanes", kind: "clamped", from: 6, to: 4, source: "manual" } as const;
+    expect(handoffEventIsCurrent(clamped, { ...DEFAULT_SHOULDER, lanes: 4 } as Scenario)).toBe(true);
+    expect(handoffEventIsCurrent(clamped, { ...DEFAULT_SHOULDER, lanes: 3 } as Scenario)).toBe(false);
+  });
+
+  it("divided applied: tracks the divided toggle", () => {
+    const ev = { field: "divided", kind: "applied", from: true, to: false, source: "osm" } as const;
+    expect(handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, divided: false } as Scenario)).toBe(true);
+    expect(handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, divided: true } as Scenario)).toBe(false);
+  });
+
+  it("laneWidth applied: tracks the width field", () => {
+    const ev = { field: "laneWidth", kind: "applied", fromFt: 11, toFt: 12 } as const;
+    expect(handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, laneWidth: 12 } as Scenario)).toBe(true);
+    expect(handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, laneWidth: 11 } as Scenario)).toBe(false);
+  });
+
+  it("skipped_not_applicable: current off-shoulder, stale after a switch to shoulder", () => {
+    const ev = { field: "lanes", kind: "skipped_not_applicable", value: 2 } as const;
+    expect(handoffEventIsCurrent(ev, DEFAULT_FLAGGER)).toBe(true);
+    expect(handoffEventIsCurrent(ev, DEFAULT_SHOULDER)).toBe(false);
+  });
+
+  it("workZoneSpeed cleared: current while no reduction and the noted posted speed stand", () => {
+    const ev = { field: "workZoneSpeed", kind: "cleared", wasMph: 45, postedMph: 35 } as const;
+    expect(
+      handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, speed: 35, workZoneSpeed: undefined } as Scenario),
+    ).toBe(true);
+    expect(
+      handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, speed: 35, workZoneSpeed: 25 } as Scenario),
+    ).toBe(false);
+    expect(
+      handoffEventIsCurrent(ev, { ...DEFAULT_SHOULDER, speed: 45, workZoneSpeed: undefined } as Scenario),
+    ).toBe(false);
   });
 });
 

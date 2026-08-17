@@ -20,6 +20,7 @@
 
 import { snapSpeedToDomain } from "./auto-apply";
 import type { AutoApplyDelta } from "./auto-apply";
+import { clampLanesToDomain } from "./validation";
 import type { RoadClassification } from "../road-detection/types";
 import type { RoadFieldOverrides } from "./overrides";
 import type { RoadType, Scenario } from "./types";
@@ -86,6 +87,69 @@ export type HandoffEvent =
       detected: RoadType;
       inEffect: RoadType;
       source: SpeedSource;
+    }
+  // #198 family 1: a CHANGED detection re-applies and overwrites lanes /
+  // divided / laneWidth — including manual form edits made since the
+  // last apply.  Applying new information is by design (the re-apply
+  // guards in GeneratorSidebar already skip unchanged content); the
+  // defect was the silence.  Same convention as roadType "applied":
+  // emitted only when the value actually changed prior -> final.
+  | {
+      field: "lanes";
+      kind: "applied";
+      from: number;
+      to: number;
+      source: SpeedSource;
+    }
+  | {
+      field: "divided";
+      kind: "applied";
+      from: boolean;
+      to: boolean;
+      source: SpeedSource;
+    }
+  | {
+      field: "laneWidth";
+      kind: "applied";
+      fromFt: number;
+      toFt: number;
+    }
+  // #198 family 3: the lane count was clamped into the schema domain
+  // (1..MAX_LANES_PER_DIRECTION) — the lanes twin of the speed "clamped"
+  // member.  Takes precedence over "applied" for the same handoff: the
+  // clamp note already names the value that landed.
+  | {
+      field: "lanes";
+      kind: "clamped";
+      from: number;
+      to: number;
+      source: SpeedSource;
+    }
+  // #198 family 2: a picker-set lanes/divided override arrived on a kind
+  // that has no such field (only shoulder carries them), so the apply
+  // path discarded it.  The roadType "skipped_not_in_domain" shape,
+  // minus an in-effect value — the kind has nothing to show instead.
+  | {
+      field: "lanes";
+      kind: "skipped_not_applicable";
+      value: number;
+    }
+  | {
+      field: "divided";
+      kind: "skipped_not_applicable";
+      value: boolean;
+    }
+  // #198 family 4: the handoff lowered the posted speed below (or equal
+  // to) the standing work-zone reduction, so the reduction was cleared
+  // at the seam — the same reduction >= posted -> "no reduction" rule
+  // ShoulderForm applies on a manual speed edit and the backend bridge
+  // applies at scenario_to_call.  Without the clear, the payload is one
+  // the backend validator rejects for a state the app itself created.
+  | {
+      field: "workZoneSpeed";
+      kind: "cleared";
+      wasMph: number;
+      postedMph: number;
     };
 
 export interface SummarizeHandoffArgs {
@@ -248,6 +312,107 @@ export function summarizeHandoff(args: SummarizeHandoffArgs): HandoffEvent[] {
     }
   }
 
+  // --- Lanes / divided / laneWidth (#198 families 1-3) -------------------
+  // Same source order as the apply path: override wins over detection.
+  // Only shoulder carries lanes/divided; every other kind discards a
+  // picker override of them (family 2).  laneWidth exists on every kind
+  // and applyClassification writes it unconditionally (family 1).
+  const sourceLanes = overrides.lanesPerDirection ?? classification?.lanesPerDirection;
+  const lanesSource: SpeedSource =
+    overrides.lanesPerDirection !== undefined ? "manual" : "osm";
+
+  if (final.kind === "shoulder" && prior.kind === "shoulder") {
+    if (sourceLanes !== undefined) {
+      const appliedLanes = clampLanesToDomain(sourceLanes);
+      if (appliedLanes !== sourceLanes && final.lanes === appliedLanes) {
+        // Family 3: the clamp fired.  Precedence over "applied" — the
+        // note names both the raw value and the one that landed.
+        events.push({
+          field: "lanes",
+          kind: "clamped",
+          from: sourceLanes,
+          to: appliedLanes,
+          source: lanesSource,
+        });
+      } else if (final.lanes === sourceLanes && prior.lanes !== sourceLanes) {
+        // Family 1: landed in-domain AND changed the prior value.
+        events.push({
+          field: "lanes",
+          kind: "applied",
+          from: prior.lanes,
+          to: final.lanes,
+          source: lanesSource,
+        });
+      }
+    }
+
+    const sourceDivided = overrides.divided ?? classification?.divided;
+    if (
+      sourceDivided !== undefined &&
+      final.divided === sourceDivided &&
+      prior.divided !== sourceDivided
+    ) {
+      events.push({
+        field: "divided",
+        kind: "applied",
+        from: prior.divided,
+        to: final.divided,
+        source: overrides.divided !== undefined ? "manual" : "osm",
+      });
+    }
+  } else if (final.kind !== "shoulder") {
+    // Family 2: the picker offered the editors, the kind has no field.
+    if (overrides.lanesPerDirection !== undefined) {
+      events.push({
+        field: "lanes",
+        kind: "skipped_not_applicable",
+        value: overrides.lanesPerDirection,
+      });
+    }
+    if (overrides.divided !== undefined) {
+      events.push({
+        field: "divided",
+        kind: "skipped_not_applicable",
+        value: overrides.divided,
+      });
+    }
+  }
+
+  // laneWidth (family 1): written by applyClassification on every kind;
+  // overrides carry no laneWidth, so detection is the only source.
+  if (
+    classification !== null &&
+    final.laneWidth !== prior.laneWidth &&
+    final.laneWidth === classification.laneWidthFt
+  ) {
+    events.push({
+      field: "laneWidth",
+      kind: "applied",
+      fromFt: prior.laneWidth,
+      toFt: final.laneWidth,
+    });
+  }
+
+  // --- workZoneSpeed (#198 family 4) -------------------------------------
+  // The apply paths normalize a standing reduction that the handoff's
+  // lower posted speed invalidated (reduction >= posted -> undefined).
+  // Name the clear whenever this handoff both wrote speed and dropped
+  // the reduction.
+  if (
+    prior.kind === "shoulder" &&
+    final.kind === "shoulder" &&
+    prior.workZoneSpeed !== undefined &&
+    final.workZoneSpeed === undefined &&
+    sourceRaw !== undefined
+  ) {
+    events.push({
+      field: "workZoneSpeed",
+      kind: "cleared",
+      wasMph: prior.workZoneSpeed,
+      postedMph: final.speed,
+    });
+  }
+
   return events;
 }
 
@@ -259,17 +424,48 @@ export function handoffEventIsCurrent(
   event: HandoffEvent,
   scenario: Scenario,
 ): boolean {
-  switch (event.kind) {
-    case "clamped":
-    case "snapped":
-      return scenario.speed === event.toMph;
-    case "accepted_low_confidence":
-      return scenario.speed === event.valueMph;
-    case "skipped_low_confidence":
-      return scenario.speed === event.inEffectMph;
-    case "applied":
-      return scenario.roadType === event.to;
-    case "skipped_not_in_domain":
-      return scenario.roadType === event.inEffect;
+  // Discriminate on field first: "applied" and "clamped" are shared
+  // across fields since #198 extended the union.
+  switch (event.field) {
+    case "speed":
+      switch (event.kind) {
+        case "clamped":
+        case "snapped":
+          return scenario.speed === event.toMph;
+        case "accepted_low_confidence":
+          return scenario.speed === event.valueMph;
+        case "skipped_low_confidence":
+          return scenario.speed === event.inEffectMph;
+      }
+      break;
+    case "roadType":
+      return event.kind === "applied"
+        ? scenario.roadType === event.to
+        : scenario.roadType === event.inEffect;
+    case "lanes":
+      if (event.kind === "skipped_not_applicable") {
+        // The note claims the kind has no lane field; a switch to
+        // shoulder makes that claim stale.
+        return scenario.kind !== "shoulder";
+      }
+      return scenario.kind === "shoulder" && scenario.lanes === event.to;
+    case "divided":
+      if (event.kind === "skipped_not_applicable") {
+        return scenario.kind !== "shoulder";
+      }
+      return scenario.kind === "shoulder" && scenario.divided === event.to;
+    case "laneWidth":
+      return scenario.laneWidth === event.toFt;
+    case "workZoneSpeed":
+      // Current while no reduction is set and the posted speed the note
+      // names still stands; re-enabling a reduction or editing speed
+      // retires it.
+      return (
+        scenario.kind === "shoulder" &&
+        scenario.workZoneSpeed === undefined &&
+        scenario.speed === event.postedMph
+      );
   }
+  // Exhaustive above; TS needs the terminator for the nested switch.
+  return false;
 }

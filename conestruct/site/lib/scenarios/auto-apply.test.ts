@@ -370,3 +370,32 @@ describe("matchRefusalAffordance — near_intersection entry (#117, #120)", () =
     expect(m).toBeNull();
   });
 });
+
+describe("applyClassification workZoneSpeed normalization (#198 family 4)", () => {
+  it("clears a reduction the lowered detected speed invalidated (>= posted rule)", () => {
+    const prior: ShoulderScenario = { ...SHOULDER, speed: 55, workZoneSpeed: 45 };
+    const { scenario: next } = applyClassification(prior, classification(35));
+    expect(next.kind === "shoulder" && next.speed).toBe(35);
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBeUndefined();
+  });
+
+  it("keeps a reduction still strictly below the new posted speed", () => {
+    const prior: ShoulderScenario = { ...SHOULDER, speed: 55, workZoneSpeed: 30 };
+    const { scenario: next } = applyClassification(prior, classification(35));
+    expect(next.kind === "shoulder" && next.speed).toBe(35);
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBe(30);
+  });
+
+  it("clears an equal-to-posted reduction (equal means no reduction, matching the bridge)", () => {
+    const prior: ShoulderScenario = { ...SHOULDER, speed: 55, workZoneSpeed: 35 };
+    const { scenario: next } = applyClassification(prior, classification(35));
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBeUndefined();
+  });
+
+  it("leaves the reduction alone when OSM carried no speed", () => {
+    const prior: ShoulderScenario = { ...SHOULDER, speed: 55, workZoneSpeed: 45 };
+    const { scenario: next } = applyClassification(prior, classification(undefined));
+    expect(next.kind === "shoulder" && next.speed).toBe(55);
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBe(45);
+  });
+});

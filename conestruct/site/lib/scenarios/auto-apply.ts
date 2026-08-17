@@ -349,6 +349,21 @@ export function applyClassification(
         lanesApplied && c.lanesPerDirection !== undefined
           ? { lanes: clampLanesToDomain(c.lanesPerDirection) }
           : {};
+      // #198 family 4: a lowered posted speed drags the work-zone
+      // reduction with it — reduction >= posted means "no reduction in
+      // effect", the same rule ShoulderForm applies on a manual speed
+      // edit and the backend bridge applies in scenario_to_call.
+      // Without this, the handoff builds a payload the backend
+      // validator rejects for a state the app itself created.
+      const nextSpeed =
+        speedApplied && c.speedLimitMph !== undefined
+          ? snapSpeedToDomain(scenario.kind, c.speedLimitMph)
+          : scenario.speed;
+      const wzPatch =
+        scenario.workZoneSpeed !== undefined &&
+        scenario.workZoneSpeed >= nextSpeed
+          ? { workZoneSpeed: undefined }
+          : {};
       return {
         scenario: {
           ...scenario,
@@ -369,6 +384,7 @@ export function applyClassification(
           detectionOverrides: undefined,
           ...speedPatch,
           ...lanesPatch,
+          ...wzPatch,
         },
         delta: {
           roadTypeApplied: true,

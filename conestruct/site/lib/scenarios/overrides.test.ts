@@ -62,3 +62,18 @@ describe("applyOverridesToScenario lanes clamp", () => {
     expect(next).toEqual(DEFAULT_FLAGGER);
   });
 });
+
+describe("applyOverridesToScenario workZoneSpeed normalization (#198 family 4)", () => {
+  it("clears a reduction the lowered override speed invalidated", () => {
+    const prior = { ...DEFAULT_SHOULDER, speed: 55, workZoneSpeed: 45 };
+    const next = applyOverridesToScenario(prior, { speedMph: 35 });
+    expect(next.kind === "shoulder" && next.speed).toBe(35);
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBeUndefined();
+  });
+
+  it("keeps a reduction still strictly below the new posted speed", () => {
+    const prior = { ...DEFAULT_SHOULDER, speed: 55, workZoneSpeed: 30 };
+    const next = applyOverridesToScenario(prior, { speedMph: 35 });
+    expect(next.kind === "shoulder" && next.workZoneSpeed).toBe(30);
+  });
+});

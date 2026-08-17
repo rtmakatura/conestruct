@@ -112,6 +112,17 @@ export function applyOverridesToScenario(
       ...next,
       speed: snapSpeedToDomain(next.kind, overrides.speedMph),
     } as Scenario;
+    // #198 family 4: the same reduction >= posted normalization as the
+    // classification path and ShoulderForm's manual speed edit — a
+    // picker-lowered posted speed clears a now-invalid work-zone
+    // reduction instead of shipping a payload the backend rejects.
+    if (
+      next.kind === "shoulder" &&
+      next.workZoneSpeed !== undefined &&
+      next.workZoneSpeed >= next.speed
+    ) {
+      next = { ...next, workZoneSpeed: undefined };
+    }
   }
   if (overrides.roadType !== undefined) {
     next = applyRoadTypeOverride(next, overrides.roadType);

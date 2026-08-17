@@ -31,6 +31,7 @@ import {
   type HandoffEvent,
 } from "@/lib/scenarios/handoff-summary";
 import {
+  MAX_LANES_PER_DIRECTION,
   validateApproaches,
   validateLanes,
   validateWorkZone,
@@ -897,26 +898,59 @@ function LocationSummary({
 // renders the speed clamp/snap events; commit 3 (UX-02) extends the
 // switch with the low-confidence skip/accept events.
 function handoffNoteText(event: HandoffEvent, kind: Scenario["kind"]): string {
-  switch (event.kind) {
-    case "clamped": {
-      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-      return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel} — ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
-    }
-    case "snapped": {
-      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-      return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
-    }
-    case "accepted_low_confidence":
-      return `Speed ${event.valueMph} mph — accepted low-confidence fallback (${event.sourceLabel}).`;
-    case "skipped_low_confidence":
-      return `Speed fallback ${event.detectedMph} mph not applied — plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
-    case "applied": {
-      const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
-      return `Road type set to ${ROAD_TYPE_LABELS[event.to]} (from detected ${ROAD_TYPE_LABELS[event.from]}, ${srcLabel}).`;
-    }
-    case "skipped_not_in_domain":
+  // Discriminated on field first: "applied" and "clamped" are shared
+  // across fields since #198 extended the union.
+  switch (event.field) {
+    case "speed":
+      switch (event.kind) {
+        case "clamped": {
+          const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+          return `Speed ${event.toMph} mph (clamped from ${event.fromMph} mph ${srcLabel} — ${scenarioNoun(kind)} plans cap at ${event.toMph} mph per ${scenarioTa(kind)}).`;
+        }
+        case "snapped": {
+          const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+          return `Speed ${event.toMph} mph (snapped from ${event.fromMph} mph ${srcLabel} to the 5-mph grid).`;
+        }
+        case "accepted_low_confidence":
+          return `Speed ${event.valueMph} mph — accepted low-confidence fallback (${event.sourceLabel}).`;
+        case "skipped_low_confidence":
+          return `Speed fallback ${event.detectedMph} mph not applied — plan uses ${event.inEffectMph} mph (${event.sourceLabel}). Accept it in the picker to use it.`;
+      }
+      break;
+    case "roadType": {
+      if (event.kind === "applied") {
+        const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+        return `Road type set to ${ROAD_TYPE_LABELS[event.to]} (from detected ${ROAD_TYPE_LABELS[event.from]}, ${srcLabel}).`;
+      }
       return `Detected ${ROAD_TYPE_LABELS[event.detected]} not valid for ${scenarioNoun(kind)} plans — kept ${ROAD_TYPE_LABELS[event.inEffect]}. Switch scenario kind to use it.`;
+    }
+    // #198 families 1-3: lanes / divided / laneWidth cross the seam.
+    case "lanes": {
+      if (event.kind === "clamped") {
+        const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+        return `Lanes ${event.to}/direction (clamped from ${event.from} ${srcLabel} — plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction).`;
+      }
+      if (event.kind === "applied") {
+        const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+        return `Lanes set to ${event.to}/direction (${srcLabel} — was ${event.from}).`;
+      }
+      return `Lanes setting ${event.value}/direction from the picker not applied — ${scenarioNoun(kind)} plans don't take a lane count.`;
+    }
+    case "divided": {
+      if (event.kind === "applied") {
+        const srcLabel = event.source === "osm" ? "OSM detection" : "manual entry";
+        return `Road set to ${event.to ? "divided" : "undivided"} (${srcLabel} — was ${event.from ? "divided" : "undivided"}).`;
+      }
+      return `Divided setting from the picker not applied — ${scenarioNoun(kind)} plans don't take a divided toggle.`;
+    }
+    case "laneWidth":
+      return `Lane width set to ${event.toFt} ft (OSM detection — was ${event.fromFt} ft).`;
+    // #198 family 4: the reduction cleared by a lowered posted speed.
+    case "workZoneSpeed":
+      return `Work-zone speed reduction removed (was ${event.wasMph} mph — the posted speed is now ${event.postedMph} mph, at or below it).`;
   }
+  // Exhaustive above; TS needs the terminator for the nested switch.
+  return "";
 }
 
 function HandoffNote({

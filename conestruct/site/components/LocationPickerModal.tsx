@@ -30,6 +30,10 @@ import {
 } from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
+import {
+  clampLanesToDomain,
+  MAX_LANES_PER_DIRECTION,
+} from "@/lib/scenarios/validation";
 import { scenarioNoun, scenarioTa } from "@/lib/scenarios/handoff-summary";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import {
@@ -2243,6 +2247,21 @@ function DetectedRows({
       : `${speedValue} mph ${speedSourceWord} snaps to the ${speedClampedTo} mph grid. Plan will use ${speedClampedTo}.`;
   }
 
+  // #198 family 3: the lanes twin of the speed clamp note above — name
+  // the domain clamp at the field before Save.  Shoulder-only: it is the
+  // one kind that carries a lanes field, so "Plan will use N" is only
+  // true there (a non-shoulder kind discards the value entirely; the
+  // form-side skipped_not_applicable note covers that seam).
+  const lanesSourceWord =
+    overrides.lanesPerDirection !== undefined ? "entered" : "detected (OSM)";
+  let lanesNote: string | null = null;
+  if (scenarioKind === "shoulder" && lanesValue != null) {
+    const lanesClampedTo = clampLanesToDomain(lanesValue);
+    if (lanesClampedTo !== lanesValue) {
+      lanesNote = `${lanesValue} lanes/direction ${lanesSourceWord} — plans draw at most ${MAX_LANES_PER_DIRECTION} lanes per direction. Plan will use ${lanesClampedTo}.`;
+    }
+  }
+
   // UX-02: a low-confidence speed (highway-class fallback, no OSM tag)
   // does not auto-apply.  Offer an explicit click-to-accept so the
   // reviewed value can be kept in one click (Pattern B) instead of
@@ -2311,6 +2330,7 @@ function DetectedRows({
           overrides.lanesPerDirection !== undefined &&
           overrides.lanesPerDirection !== lanesDetected
         }
+        note={lanesNote}
       >
         <NumericFieldEditor
           value={lanesValue}
