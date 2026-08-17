@@ -1,0 +1,15 @@
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\GeneratorShell.tsx:74:69)
+
+ [32m✓[39m components/GeneratorShell.handoff-provenance.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 930[2mms[22m[39m
+   [33m[2m✓[22m[39m #198 handoff provenance — the four families produce visible notes[2m > [22mfamily 1: a changed detection overwriting a manual lane edit is named [33m 380[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m116 passed[39m[22m[90m (116)[39m
+[2m   Start at [22m 10:52:55
+[2m   Duration [22m 2.87s[2m (transform 661ms, setup 0ms, collect 1.26s, tests 968ms, environment 509ms, prepare 569ms)[22m
+

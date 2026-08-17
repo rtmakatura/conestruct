@@ -1,0 +1,45 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/conestruct/site[39m
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2mfamily 1 — changed-detection re-pick clobbers lanes/divided/laneWidth silently[2m > [22m[2mcaptures before/after + empty event set
+[22m[39mF1 BEFORE: {"lanes":3,"divided":true,"laneWidth":11}
+F1 AFTER:  {"lanes":2,"divided":false,"laneWidth":12}
+F1 EVENTS: [{"field":"roadType","kind":"applied","from":"rural_divided","to":"urban_arterial","source":"osm"}]
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2mfamily 2 — picker lanes/divided overrides dropped on non-shoulder kinds[2m > [22m[2mcaptures the drop + empty event set
+[22m[39mF2 AFTER === PRIOR: [33mtrue[39m
+F2 EVENTS: []
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2mfamily 3 — lane clamp applied with no note (speed clamp's equivalent has one)[2m > [22m[2mdetection path: OSM 5/direction -> 4, silent
+[22m[39mF3a lanes: [33m4[39m EVENTS: []
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2mfamily 3 — lane clamp applied with no note (speed clamp's equivalent has one)[2m > [22m[2moverride path: picker editor allows 6 -> clamped to 4, silent
+[22m[39mF3b lanes: [33m4[39m EVENTS: []
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2mfamily 4 — picker-lowered speed leaves workZoneSpeed above it (server-rejection state)[2m > [22m[2mcaptures the invalid pair + empty event set
+[22m[39mF4 AFTER: {"speed":35,"workZoneSpeed":45}
+F4 EVENTS: [{"field":"roadType","kind":"applied","from":"rural_divided","to":"urban_arterial","source":"osm"}]
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2m#123 — rationale claims couplet -> divided while divided: false[2m > [22m[2msecondary one-way: divided=false yet couplet rationale
+[22m[39m#123 secondary: divided=false source="OSM oneway=yes (couplet → divided)"
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2m#123 — rationale claims couplet -> divided while divided: false[2m > [22m[2mtertiary one-way: divided=false yet couplet rationale
+[22m[39m#123 tertiary: divided=false source="OSM oneway=yes (couplet → divided)"
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2m#123 — rationale claims couplet -> divided while divided: false[2m > [22m[2munclassified one-way: divided=false yet couplet rationale
+[22m[39m#123 unclassified: divided=false source="OSM oneway=yes (couplet → divided)"
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2m#123 — rationale claims couplet -> divided while divided: false[2m > [22m[2mprimary one-way: agreement (fixed half)
+[22m[39m#123 primary: divided=true source="OSM oneway=yes (couplet → divided)"
+
+[90mstdout[2m | lib/scenarios/__repro-198-123.test.ts[2m > [22m[2m#123 — rationale claims couplet -> divided while divided: false[2m > [22m[2mtrunk one-way: true-but-misattributed (couplet string while class drives divided)
+[22m[39m#123 trunk: divided=true source="OSM oneway=yes (couplet → divided)"
+
+ [32m✓[39m lib/scenarios/__repro-198-123.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 10:42:55
+[2m   Duration [22m 1.05s[2m (transform 101ms, setup 0ms, collect 117ms, tests 10ms, environment 0ms, prepare 688ms)[22m
+

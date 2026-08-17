@@ -1,0 +1,138 @@
+// TEMPORARY pre-fix capture for s2-arc1 (#198 / #123). Runs at the arc
+// branch's base (pre-fix) to put each family's silence on the record.
+// The file itself is preserved under validation-artifacts/committed/
+// s2-arc1-sandbox-honesty/ and removed from lib/ before any fix commit.
+import { describe, expect, it } from "vitest";
+import { applyClassification } from "./auto-apply";
+import { applyOverridesToScenario } from "./overrides";
+import { summarizeHandoff } from "./handoff-summary";
+import { defaultFor } from "./index";
+import { classifyFromOsmTags } from "../road-detection/classify";
+import type { RoadClassification } from "../road-detection/types";
+import type { Scenario } from "./types";
+
+function cls(over: Partial<RoadClassification> = {}): RoadClassification {
+  const base = classifyFromOsmTags(
+    {
+      highwayClass: "secondary",
+      name: "Test Rd",
+      ref: null,
+      tags: {
+        oneway: null,
+        maxspeed: "35 mph",
+        lanes: "4",
+        lanes_forward: "2",
+        lanes_backward: "2",
+        lanes_both_ways: null,
+      },
+    },
+    true,
+    "Lakewood",
+  );
+  return { ...base, ...over };
+}
+
+describe("family 1 — changed-detection re-pick clobbers lanes/divided/laneWidth silently", () => {
+  it("captures before/after + empty event set", () => {
+    const prior = {
+      ...defaultFor("shoulder"),
+      lanes: 3, // manual edit since first pick
+      divided: true, // manual edit since first pick
+      laneWidth: 11, // manual edit since first pick
+      speed: 45,
+    } as Scenario;
+    const c = cls(); // changed detection: lanesPerDirection=2, divided=false, laneWidthFt=12
+    const { scenario: after, delta } = applyClassification(prior, c);
+    console.log("F1 BEFORE:", JSON.stringify({ lanes: (prior as any).lanes, divided: (prior as any).divided, laneWidth: prior.laneWidth }));
+    console.log("F1 AFTER: ", JSON.stringify({ lanes: (after as any).lanes, divided: (after as any).divided, laneWidth: after.laneWidth }));
+    const events = summarizeHandoff({ prior, classification: c, overrides: {}, final: after, delta });
+    console.log("F1 EVENTS:", JSON.stringify(events));
+    expect((after as any).lanes).toBe(2); // clobbered 3 -> 2
+    expect((after as any).divided).toBe(false); // clobbered true -> false
+    expect(after.laneWidth).toBe(12); // clobbered 11 -> 12
+    expect(events.filter((e) => e.field !== "speed" && e.field !== "roadType")).toEqual([]); // silence
+  });
+});
+
+describe("family 2 — picker lanes/divided overrides dropped on non-shoulder kinds", () => {
+  it("captures the drop + empty event set", () => {
+    const prior = defaultFor("flagger_lane_closure");
+    const overrides = { lanesPerDirection: 2, divided: true };
+    const after = applyOverridesToScenario(prior, overrides);
+    console.log("F2 AFTER === PRIOR:", after === prior);
+    const events = summarizeHandoff({ prior, classification: null, overrides, final: after, delta: null });
+    console.log("F2 EVENTS:", JSON.stringify(events));
+    expect(after).toBe(prior); // both overrides evaporated, object untouched
+    expect(events).toEqual([]); // silence (locked by the a61f5f3 negative-guard test)
+  });
+});
+
+describe("family 3 — lane clamp applied with no note (speed clamp's equivalent has one)", () => {
+  it("detection path: OSM 5/direction -> 4, silent", () => {
+    const prior = defaultFor("shoulder");
+    const c = cls({ lanesPerDirection: 5 });
+    const { scenario: after, delta } = applyClassification(prior, c);
+    const events = summarizeHandoff({ prior, classification: c, overrides: {}, final: after, delta });
+    console.log("F3a lanes:", (after as any).lanes, "EVENTS:", JSON.stringify(events.filter((e: any) => e.field === "lanes")));
+    expect((after as any).lanes).toBe(4);
+    expect(events.some((e: any) => e.field === "lanes")).toBe(false);
+  });
+  it("override path: picker editor allows 6 -> clamped to 4, silent", () => {
+    const prior = defaultFor("shoulder");
+    const after = applyOverridesToScenario(prior, { lanesPerDirection: 6 });
+    const events = summarizeHandoff({ prior, classification: null, overrides: { lanesPerDirection: 6 }, final: after, delta: null });
+    console.log("F3b lanes:", (after as any).lanes, "EVENTS:", JSON.stringify(events));
+    expect((after as any).lanes).toBe(4);
+    expect(events).toEqual([]);
+  });
+});
+
+describe("family 4 — picker-lowered speed leaves workZoneSpeed above it (server-rejection state)", () => {
+  it("captures the invalid pair + empty event set", () => {
+    const prior = {
+      ...defaultFor("shoulder"),
+      speed: 55,
+      workZoneSpeed: 45,
+    } as Scenario;
+    const c = cls(); // maxspeed=35 detected
+    const { scenario: after, delta } = applyClassification(prior, c);
+    console.log("F4 AFTER:", JSON.stringify({ speed: after.speed, workZoneSpeed: (after as any).workZoneSpeed }));
+    const events = summarizeHandoff({ prior, classification: c, overrides: {}, final: after, delta });
+    console.log("F4 EVENTS:", JSON.stringify(events));
+    expect(after.speed).toBe(35);
+    expect((after as any).workZoneSpeed).toBe(45); // now > speed: the backend validator rejects this payload
+    expect(events.some((e: any) => e.field === "workZoneSpeed")).toBe(false);
+  });
+});
+
+describe("#123 — rationale claims couplet -> divided while divided: false", () => {
+  const mk = (highwayClass: string) =>
+    classifyFromOsmTags(
+      {
+        highwayClass,
+        name: "One Way St",
+        ref: null,
+        tags: { oneway: "yes", maxspeed: null, lanes: null, lanes_forward: null, lanes_backward: null, lanes_both_ways: null },
+      },
+      true,
+      "Denver",
+    );
+  it.each(["secondary", "tertiary", "unclassified"])("%s one-way: divided=false yet couplet rationale", (hc) => {
+    const r = mk(hc);
+    console.log(`#123 ${hc}: divided=${r.divided} source="${r.fields.divided.source}"`);
+    expect(r.divided).toBe(false);
+    expect(r.fields.divided.source).toBe("OSM oneway=yes (couplet → divided)"); // the contradiction
+  });
+  it("primary one-way: agreement (fixed half)", () => {
+    const r = mk("primary");
+    console.log(`#123 primary: divided=${r.divided} source="${r.fields.divided.source}"`);
+    expect(r.divided).toBe(true);
+    expect(r.fields.divided.source).toBe("OSM oneway=yes (couplet → divided)"); // true claim
+  });
+  it("trunk one-way: true-but-misattributed (couplet string while class drives divided)", () => {
+    const r = mk("trunk");
+    console.log(`#123 trunk: divided=${r.divided} source="${r.fields.divided.source}"`);
+    expect(r.divided).toBe(true);
+    expect(r.fields.divided.source).toBe("OSM oneway=yes (couplet → divided)"); // misattribution (GO ruling 1)
+  });
+});
