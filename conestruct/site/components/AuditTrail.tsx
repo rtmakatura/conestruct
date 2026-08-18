@@ -78,13 +78,19 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   },
   adjacent_intersection: {
     label: "Intersection within work zone",
-    rule: "MUTCD § 6N.12",
+    // #16 — page-cited by real subject (11th Ed. "Work within the
+    // Traveled Way at an Intersection"); byte-identical to the chip the
+    // backend derives from site_adjustments.py's rule string.
+    rule: "MUTCD § 6N.12 p. 848",
     action:
       "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
   },
   adjacent_interchange: {
     label: "Adjacent interchange (highway ramps)",
-    rule: "MUTCD § 6N.16 + Ch. 6H",
+    // #16 — page-cited by real subject (11th Ed. "Interchanges"); the
+    // "+ Ch. 6H" rider is dropped (Ch. 6H is TTC Zone Warning Signs
+    // generally, not interchange signing).
+    rule: "MUTCD § 6N.16 p. 851",
     action:
       "No devices added — the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
   },

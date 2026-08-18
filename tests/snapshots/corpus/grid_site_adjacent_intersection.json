@@ -4,11 +4,11 @@
     "items": [
       {
         "kind": "intersection_layout_not_generated",
-        "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+        "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
         "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
       }
     ],
-    "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+    "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD §6N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
   },
   "plan_flags": {
@@ -130,10 +130,10 @@
     "site_adjustments": [
       {
         "action": "No devices added — the cross-street approach layout is not generated; see the pending-verification disclosure.",
-        "citation": "MUTCD § 6N.12",
+        "citation": "MUTCD § 6N.12 p. 848",
         "devices_added": 0,
         "flag": "adjacent_intersection",
-        "rule": "MUTCD §6N.12 — signing for intersections within or adjacent to work zones"
+        "rule": "MUTCD §6N.12 p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)"
       }
     ],
     "spacing": {

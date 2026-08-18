@@ -659,9 +659,12 @@ class WorkCorridor:
         rather than the straight chord (roughly half a typical arterial
         section: lanes + shoulder + curb zone).  ``outside_tolerance_ft
         = 25.0`` — endpoint jitter tolerance at the corridor ends.
-        Neither traces to an MUTCD distance; both are expressly
-        value-revisitable at #16's threshold pass, and that deferral is
-        what this marking records.
+        Neither traces to an MUTCD distance.  #16's threshold pass ran
+        2026-08-18 (s2-arc4) and HELD both values: the road frame made
+        the same numbers more truthful (the chord error they once
+        absorbed is gone — s2-arc3 round-2 live evidence, zero zone
+        mismatches at 50/25 on production), and no source demands
+        different ones.  The s2-arc3 deferral is discharged.
         """
         along_ft = self.along_station_ft(lat, lng)
         lateral_ft = self.lateral_offset_ft(lat, lng)

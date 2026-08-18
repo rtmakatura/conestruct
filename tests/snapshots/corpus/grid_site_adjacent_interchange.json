@@ -4,11 +4,11 @@
     "items": [
       {
         "kind": "interchange_layout_not_generated",
-        "label": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor. Tracked at issue #117.",
+        "label": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16, 11th Ed. p. 851) remain with the traffic control supervisor. Tracked at issue #117.",
         "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
       }
     ],
-    "note": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16) remain with the traffic control supervisor. Tracked at issue #117.",
+    "note": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD §6N.16, 11th Ed. p. 851) remain with the traffic control supervisor. Tracked at issue #117.",
     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
   },
   "plan_flags": {
@@ -130,10 +130,10 @@
     "site_adjustments": [
       {
         "action": "No devices added — the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
-        "citation": "MUTCD § 6N.16 + Ch. 6H",
+        "citation": "MUTCD § 6N.16 p. 851",
         "devices_added": 0,
         "flag": "adjacent_interchange",
-        "rule": "MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"
+        "rule": "MUTCD §6N.16 p. 851 — Interchanges (11th Ed.)"
       }
     ],
     "spacing": {

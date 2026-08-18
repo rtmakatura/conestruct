@@ -2585,8 +2585,8 @@ def test_taper_formula_choice_uses_quadratic_at_40() -> None:
 # the frontend's SITE_ADJUSTMENT_DETAIL entries — behavior-preserving).
 _SITE_PANEL_CITATIONS = {
     "limited_sight_distance": "MUTCD § 6B.04",
-    "adjacent_intersection": "MUTCD § 6N.12",
-    "adjacent_interchange": "MUTCD § 6N.16 + Ch. 6H",
+    "adjacent_intersection": "MUTCD § 6N.12 p. 848",
+    "adjacent_interchange": "MUTCD § 6N.16 p. 851",
     "driveways_present": "MUTCD § 6K.01",
     "pedestrian_facility": "MUTCD § 6C.02",
     "bicycle_facility": "MUTCD § 9C.101",

@@ -897,17 +897,20 @@ describe("#97 audit-panel citation edition guard", () => {
     expect(spec).not.toBeNull();
     const html = renderToStaticMarkup(spec!.body as ReactElement);
     expect(html).not.toContain("6C.10");
-    expect(html).toContain("§ 6N.12");
+    expect(html).toContain("§ 6N.12 p. 848");
   });
 
-  it("interchange rule cites §6N.16 + Ch. 6H, not the stale §6C.10 + §6F.60", () => {
+  it("interchange rule cites §6N.16 with its page, not the stale §6C.10 + §6F.60 nor Ch. 6H", () => {
+    // #16 — page-cited by subject (11th Ed. §6N.16 = Interchanges,
+    // p. 851); the "+ Ch. 6H" rider is dropped (Ch. 6H is TTC Zone
+    // Warning Signs generally, not interchange signing).
     const spec = siteAdjustmentsItem({ adjacent_interchange: true } as SiteConditions);
     expect(spec).not.toBeNull();
     const html = renderToStaticMarkup(spec!.body as ReactElement);
     expect(html).not.toContain("6C.10");
     expect(html).not.toContain("6F.60");
-    expect(html).toContain("§ 6N.16");
-    expect(html).toContain("Ch. 6H");
+    expect(html).not.toContain("Ch. 6H");
+    expect(html).toContain("§ 6N.16 p. 851");
   });
 
   it("pedestrian rule cites §6C.02, not the stale §6D.01", () => {
@@ -1005,8 +1008,8 @@ describe("#104 site-adjustment citations read the backend, static fallback", () 
   // derivation pinned in tests/test_audit_endpoint.py).
   const EXPECTED: Record<string, string> = {
     limited_sight_distance: "MUTCD § 6B.04",
-    adjacent_intersection: "MUTCD § 6N.12",
-    adjacent_interchange: "MUTCD § 6N.16 + Ch. 6H",
+    adjacent_intersection: "MUTCD § 6N.12 p. 848",
+    adjacent_interchange: "MUTCD § 6N.16 p. 851",
     driveways_present: "MUTCD § 6K.01",
     pedestrian_facility: "MUTCD § 6C.02",
     bicycle_facility: "MUTCD § 9C.101",

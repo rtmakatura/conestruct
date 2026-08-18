@@ -1841,8 +1841,9 @@ def audit_projection(
                     "does not generate the cross-street approach layout "
                     "or evaluate traffic-signal operation, and adds no "
                     "devices for it. Cross-street control design and the "
-                    "signal-operation review (MUTCD §6N.12; Part 4 for "
-                    "signal-head visibility) remain with the traffic "
+                    "signal-operation review (MUTCD §6N.12, 11th Ed. "
+                    "p. 848; Part 4 for signal-head visibility) remain "
+                    "with the traffic "
                     "control supervisor. Intersection support is tracked "
                     "at issue #117; corner-quadrant work at issue #128."
                 ),
@@ -1858,7 +1859,8 @@ def audit_projection(
                     "does not generate the per-ramp layout and adds no "
                     "devices for it. Ramp-specific control design and "
                     "the ramp-access and coordination review (MUTCD "
-                    "§6N.16) remain with the traffic control supervisor. "
+                    "§6N.16, 11th Ed. p. 851) remain with the traffic "
+                    "control supervisor. "
                     "Tracked at issue #117."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,
@@ -1888,7 +1890,8 @@ def audit_projection(
                     "and does not evaluate traffic-signal operation. The "
                     "signal-operation review — phasing, timing, and "
                     "signal-head visibility per MUTCD §6N.12 (items 04 "
-                    "and 05) and MUTCD Part 4 — remains with the traffic "
+                    "and 05; 11th Ed. p. 848) and MUTCD Part 4 — remains "
+                    "with the traffic "
                     "control supervisor and the operating agency."
                 ),
                 "tracking_issue": INTERSECTION_SUPPORT_ISSUE,

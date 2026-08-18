@@ -26,6 +26,10 @@ import httpx
 if TYPE_CHECKING:
     from src.rules.corridor import WorkCorridor
 
+# Point-mode scan radius.  CHOSEN (#16): legacy point-and-radius reach —
+# a few city blocks in every direction; no MUTCD distance governs a
+# generic "nearby features" scan.  Corridor mode ignores this and scans
+# the corridor bbox instead.
 DEFAULT_RADIUS_M = 500.0
 HTTP_TIMEOUT_S = 25.0
 # Overpass returns 406 to clients without an identifying User-Agent.
@@ -303,11 +307,26 @@ _RELEVANT_ZONES: frozenset[str] = frozenset(
 #   signing must face the cross-traffic — a T-junction 30 ft past the most
 #   upstream sign is still a real intersection that needs treatment.
 #
-# Numbers are tunable; the lateral 150 ft covers a typical 4-lane arterial
-# section (lanes + shoulders + furnish) with margin, and the 250 ft / 500 ft
-# longitudinal extents match the urban A-spacing / ramp-signing distances
-# called out in MUTCD §6N.12 + §6N.16 (11th-ed intersection/interchange
-# work-zone sections; formerly cited via the stale §6C.10 + §6F.60).
+# Threshold sourcing (#16 closure, s2-arc4, 2026-08-18): all three values
+# are CHOSEN.  Neither MUTCD §6N.12 (Work within the Traveled Way at an
+# Intersection, 11th Ed. p. 848) nor §6N.16 (Interchanges, p. 851) assigns
+# any proximity distance — both sections are distance-free, and the prior
+# attribution of these numbers to them was wrong (negative scan on record:
+# validation-artifacts/committed/s2-arc4-16-thresholds/).  Rationales,
+# expressly tunable, all distances measured in the road frame post-#207:
+#
+# * 150.0 ft (sidewalks / bike_facilities lateral acceptance) — spans a
+#   typical 4-lane arterial half-section (lanes + shoulders + furnishing
+#   zone) with margin, so a curbside path past the corridor's 50 ft
+#   lateral band still counts.
+# * 250.0 ft (intersections outside tolerance) — about one advance-sign
+#   interval at urban scale; Table 6B-1's urban A dimensions are
+#   100–350 ft (11th Ed. p. 773, cited as scale context only, NOT as a
+#   source — the table has no 250 ft row).
+# * 500.0 ft (interchanges outside tolerance) — Table 6B-1's rural A
+#   dimension (p. 773, again context, not source), double the
+#   intersection tolerance because ramp geometry strings junctions
+#   farther from the mainline.
 _BUCKET_RELEVANCE_OVERRIDES: dict[str, dict[str, float]] = {
     "intersections": {"outside_tolerance_ft": 250.0},
     "interchanges": {"outside_tolerance_ft": 500.0},
@@ -320,6 +339,15 @@ _BUCKET_RELEVANCE_OVERRIDES: dict[str, dict[str, float]] = {
 # features eligible to count via the tolerance override are inside the
 # query bbox in the first place.  500 ft ≈ 152.4 m.
 _CORRIDOR_LONGITUDINAL_BUFFER_M: float = 152.4
+
+# Lateral Overpass-bbox pad, in meters.  CHOSEN (#16): the value is
+# tunable, but it carries the invariant twin of the longitudinal pad
+# above — it must be ≥ the widest ``accept_lateral_within_ft`` (150 ft ≈
+# 45.7 m) or features eligible to count via the lateral override never
+# enter the query bbox at all.  100 m ≈ 328 ft holds that bound with
+# room.  The code has obeyed this invariant since corridor mode shipped
+# but never stated it; written down at #16's threshold pass.
+_CORRIDOR_LATERAL_BUFFER_M: float = 100.0
 
 
 def _is_feature_relevant(
@@ -394,7 +422,7 @@ def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
 
 def detect_along_corridor(
     corridor: WorkCorridor,
-    lateral_buffer_m: float = 100.0,
+    lateral_buffer_m: float = _CORRIDOR_LATERAL_BUFFER_M,
 ) -> dict[str, Any]:
     """Query Overpass over the corridor's bounding box and bucket detections.
 
@@ -487,7 +515,14 @@ def detect_along_corridor(
         if feature["relevant"]:
             bucket["count"] += 1
             bucket["detected"] = True
-            display = f"{label} [{feature['zone']} @ {feature['along_station_ft']:.0f} ft]"
+            # A lateral-zone feature is relevant *because of* its lateral
+            # offset (the per-bucket override) — state that margin, not
+            # the station that hides it (#16: a path 140 ft out and one
+            # 10 ft out must not read alike).
+            if feature["zone"] == "lateral":
+                display = f"{label} [lateral {feature['lateral_offset_ft']:.0f} ft off centerline]"
+            else:
+                display = f"{label} [{feature['zone']} @ {feature['along_station_ft']:.0f} ft]"
             if len(bucket["details"]) < 5:
                 bucket["details"].append(display)
             anchor_dist_m = feature["distance_to_anchor_m"]

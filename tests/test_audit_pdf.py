@@ -73,8 +73,8 @@ _PANEL_ONLY_CITATIONS = frozenset(
         # by _site_citation): panel-only; the PDF renders the full ``rule``
         # prose in the Site Adjustments table instead.
         "MUTCD § 6B.04",
-        "MUTCD § 6N.12",
-        "MUTCD § 6N.16 + Ch. 6H",
+        "MUTCD § 6N.12 p. 848",
+        "MUTCD § 6N.16 p. 851",
         "MUTCD § 6C.02",
         "MUTCD § 9C.101",
         "MUTCD § 7B.08",

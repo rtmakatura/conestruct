@@ -95,7 +95,12 @@ def _adjust_adjacent_intersection(
             "generated; see the pending-verification disclosure."
         ),
         "devices_added": 0,
-        "rule": "MUTCD §6N.12 — signing for intersections within or adjacent to work zones",
+        # Cited by real title + printed page (#16; subject-verified,
+        # 11th Ed.): the section governs work at/adjacent to
+        # intersections but assigns no proximity distance — the
+        # detection tolerances that decide when this flag auto-checks
+        # are CHOSEN, recorded at site_detection._BUCKET_RELEVANCE_OVERRIDES.
+        "rule": "MUTCD §6N.12 p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)",
     }
     return placements, record
 
@@ -124,7 +129,11 @@ def _adjust_adjacent_interchange(
             "generated; see the pending-verification disclosure."
         ),
         "devices_added": 0,
-        "rule": ("MUTCD §6N.16 + Ch. 6H — work zone signing for interchanges and ramp areas"),
+        # Cited by real title + printed page (#16; subject-verified,
+        # 11th Ed.).  The former "+ Ch. 6H" rider is dropped: Ch. 6H is
+        # "TTC Zone Warning Signs" generally, not an interchange-signing
+        # chapter — §6N.16 carries the claim alone.
+        "rule": "MUTCD §6N.16 p. 851 — Interchanges (11th Ed.)",
     }
     return placements, record
 

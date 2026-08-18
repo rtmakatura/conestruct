@@ -432,8 +432,9 @@ def test_crew_narrative_non_freeway_omits_w21_5aR_pair_plaques() -> None:
 # legitimate (different document) — a blanket guard would collide with
 # them.  Every rendered V1-surface citation is now subject-verified
 # against the 11th-ed Part 6 PDF (#71): §6N.12 (Work within the Traveled
-# Way at an Intersection), §6N.16 (Interchanges) + Ch. 6H (TTC warning
-# signs), §6C.02 (Pedestrian Considerations), §6L.07 (Flashing Beacons
+# Way at an Intersection, p. 848), §6N.16 (Interchanges, p. 851 — the
+# former "+ Ch. 6H" rider dropped at #16: Ch. 6H is TTC Zone Warning
+# Signs generally), §6C.02 (Pedestrian Considerations), §6L.07 (Flashing Beacons
 # and Warning Lights), and §6F.01 ¶11 + §6K.01 ¶10 (sign / channelizing-
 # device retroreflectivity).  Still stale but NOT rendered on a V1
 # surface (rides with #71/#104): the gated-path validator literals and
@@ -483,17 +484,19 @@ def test_crew_narrative_adjacent_intersection_emits_6n12_citation() -> None:
     not the stale §6C.10 (2009-ed one-lane two-way — wrong subject)."""
     markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"adjacent_intersection": True})
     assert "## Site-Specific Notes" in markdown
-    assert "MUTCD §6N.12" in markdown
+    assert "MUTCD §6N.12 p. 848" in markdown
     assert "§6C.10" not in markdown
 
 
 def test_crew_narrative_adjacent_interchange_emits_6n16_citation() -> None:
-    """adjacent_interchange note cites §6N.16 (interchanges) + Ch. 6H (TTC
-    warning signs), not the stale §6C.10 + §6F.60."""
+    """adjacent_interchange note cites §6N.16 (Interchanges) with its
+    printed page, not the stale §6C.10 + §6F.60 — and not Ch. 6H (TTC
+    Zone Warning Signs generally, not interchange signing; rider dropped
+    at #16's citation pass)."""
     markdown = _render_with_flags(_SITE_ADJ_PARAMS, {"adjacent_interchange": True})
     assert "## Site-Specific Notes" in markdown
-    assert "MUTCD §6N.16" in markdown
-    assert "Ch. 6H" in markdown
+    assert "MUTCD §6N.16 p. 851" in markdown
+    assert "Ch. 6H" not in markdown
     assert "§6C.10" not in markdown
     assert "§6F.60" not in markdown
 
