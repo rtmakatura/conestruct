@@ -173,6 +173,7 @@ class DetectionOverride(BaseModel):
         "flagger_single_lane_confirm",  # the #136 row
         "flagger_multilane_confirm",  # the #86 row
         "flagger_twoway_confirm",  # the #158 row
+        "flagger_lane_count_confirm",  # the #173 row (lane-consistency)
         "shoulder_lane_edit",
         "approach_lane_confirm",
         "approach_lane_edit",
@@ -277,13 +278,29 @@ class ShoulderScenario(JurisdictionScenarioFields):
     # below): when total, forward, and backward all exist and
     # total != forward + backward + both_ways, the OSM lane data
     # contradicts itself and the detected count can't be trusted.  On this
-    # kind the check only feeds the audit's non-blocking "verify lane
-    # count" caution — never a block.  None / omitted means "no detection
-    # signal" and the check never fires; the frontend clears all of them
-    # when the operator edits the lane count.
+    # kind the check feeds the audit's non-blocking "verify lane count"
+    # caution — and, when ``signalDistanceM`` puts the site on a
+    # signalized-intersection approach, the lane-confidence gate (issue
+    # #173; ``_ensure_lane_confidence`` in render_api).  None / omitted
+    # means "no detection signal" and the check never fires; the frontend
+    # clears all of them when the operator edits the lane count, lifting
+    # the gate.
     detectedLanesForward: int | None = Field(default=None, ge=1)
     detectedLanesBackward: int | None = Field(default=None, ge=1)
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
+    # Detection relay (issue #173) — meters from the detected road's
+    # snapped point to the nearest OSM ``traffic_signals`` node, relayed
+    # unchanged (a pure fact; drives no geometry or label).  Sole consumer
+    # is the lane-confidence gate's signal-proximity branch
+    # (``_ensure_lane_confidence``): within ``SIGNAL_GATE_NEARBY_M`` the
+    # site is an intersection approach, where OSM turn pockets routinely
+    # inflate lane counts — so self-contradicting lane relays refuse there
+    # instead of cautioning.  None / omitted means "no signal detected /
+    # no detection ran" and NEVER blocks — direct API callers and manual
+    # entry are unaffected.  ``near_intersection`` deliberately does not
+    # carry this field: that kind is already gated by kind (the user
+    # declared the approach; no geometric inference needed).
+    signalDistanceM: float | None = Field(default=None, ge=0)
     # Override provenance (issue #177) — see ``DetectionOverride``.
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
@@ -346,11 +363,18 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     # confirms the road carries two-way traffic, lifting the block.
     oneway: str | None = Field(default=None)
     # Detection relays (issue #120) — see the matching fields on
-    # ``ShoulderScenario``.  Audit-caution-only on this kind (a flagger has
-    # no lane field to correct); never blocks.
+    # ``ShoulderScenario``.  On this kind the mismatch feeds the audit
+    # caution and, when ``signalDistanceM`` puts the site on a
+    # signalized-intersection approach, the lane-confidence gate (issue
+    # #173); the recovery is the form's "Lane count is right" confirm,
+    # which clears these relays.
     detectedLanesForward: int | None = Field(default=None, ge=1)
     detectedLanesBackward: int | None = Field(default=None, ge=1)
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
+    # Detection relay (issue #173) — see the matching field on
+    # ``ShoulderScenario``: meters to the nearest detected traffic-signal
+    # node; omitted means "no signal detected" and never blocks.
+    signalDistanceM: float | None = Field(default=None, ge=0)
     # Override provenance (issue #177) — see ``DetectionOverride``.
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 

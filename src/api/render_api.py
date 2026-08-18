@@ -257,6 +257,26 @@ def _ensure_lane_eligible(scenario: Scenario) -> None:
 # / omitted are two-way (or no signal) and never block.
 _ONEWAY_BLOCKING = frozenset({"yes", "-1", "reversible"})
 
+# CHOSEN — empirical, tunable (issue #173; s2-arc2 GO ruling 1, 2026-08-17).
+# A detected traffic-signal node within this many meters of the road's
+# snapped point means the site is a signalized-intersection approach for
+# lane-trust purposes: ~98 ft spans a wide urban intersection (a signal
+# head across the intersection still counts) while staying under a ~100 m
+# Denver block (a signal at the next block over does not) — the same
+# geometry class as the detection route's SNAP_MAX_DISTANCE_M = 30.
+# NO held source assigns a distance to this subject: the MUTCD Part 6 scan
+# found only different-subject signal distances (1/4-mile temporary-signal
+# interconnection; 200-ft grade-crossing preemption), and S-630-1 Sheet 2
+# Note 21 ("Only a uniformed police officer may direct traffic in a
+# signalized intersection") is qualitative authority that signal proximity
+# deserves scrutiny — cited as basis for the gate existing, expressly NOT
+# as a source for this number.  Scan record:
+# validation-artifacts/committed/s2-arc2-gates/source-scan-negative.txt.
+# Boundary is inclusive (<=).  Backend-owned (rule 3); the frontend's
+# SIGNAL_NEARBY_M (cross-street.ts) is a different consumer (a checkbox
+# default), not a mirror of this gate.
+SIGNAL_GATE_NEARBY_M = 30.0
+
 
 def _ensure_direction_eligible(scenario: Scenario) -> None:
     """Refuse a flagger plan on a one-way road (issue #158).
@@ -298,8 +318,8 @@ def _ensure_direction_eligible(scenario: Scenario) -> None:
 
 
 def _ensure_lane_confidence(scenario: Scenario) -> None:
-    """Refuse a near_intersection plan built on self-contradicting OSM
-    lane data (issue #120, Ruling B).
+    """Refuse a plan built on self-contradicting OSM lane data at an
+    intersection approach (issue #120, Ruling B; extended by #173).
 
     Turn-lane inflation is an intersection-approach phenomenon: OSM's
     ``lanes`` counts turn pockets at approaches, so a wrong lane count is
@@ -312,42 +332,83 @@ def _ensure_lane_confidence(scenario: Scenario) -> None:
     plan would size cross-street control to a number nothing verifies
     (rule 10), so we refuse rather than guess.
 
-    Only ``near_intersection`` is gated, and only on its approaches (the
-    mainline count is operator-entered, never auto-applied).  Everywhere
-    else the same mismatch feeds the audit's NON-blocking "verify lane
-    count" caution (``audit_projection``) — Ruling B's split: the highest
-    blast-radius surface gets the hard gate.  Known limitation, by
-    ruling: a flagger/shoulder plan physically near an intersection gets
-    the caution, not the gate — the only approach predicate the payload
-    carries today is the scenario kind.
+    Two branches decide "intersection approach" (issue #173 closed the
+    kind-blindness the first branch shipped with):
+
+    * ``near_intersection`` — gated by KIND, on its approach relays (the
+      mainline count is operator-entered, never auto-applied).  The user
+      declared the approach; no geometric inference is needed.
+    * ``shoulder`` / ``flagger_lane_closure`` — gated by GEOMETRY: when
+      the relayed ``signalDistanceM`` puts the site within
+      ``SIGNAL_GATE_NEARBY_M`` of a detected traffic signal, the site is
+      a signalized-intersection approach by position rather than by
+      dropdown, and the same self-contradiction in the MAINLINE lane
+      relays refuses instead of cautioning.  The refusal states the
+      measured distance (rule 12 — the fact, not "nearby").
+
+    Everywhere else the mismatch feeds the audit's NON-blocking "verify
+    lane count" caution (``audit_projection``) — Ruling B's split: the
+    highest blast-radius surfaces get the hard gate.
 
     Raised as 400 (like the #136/#158 gates) so the Next.js proxy
-    surfaces the message; omitted relays never block, and the frontend
-    clears all four relays when the operator confirms or edits the
-    approach lane count ("Lane count is right"), lifting the block.
+    surfaces the message; omitted relays never block (``signalDistanceM``
+    omitted means "no signal detected / no detection ran"), and the
+    frontend lifts each block by clearing the lane relays: the NI
+    approach confirm/edit, the shoulder lane edit, and the flagger's
+    "Lane count is right" confirm (#173 row).
     """
-    if scenario.kind != "near_intersection":
+    if scenario.kind == "near_intersection":
+        for approach in scenario.approaches:
+            if lanes_arithmetic_mismatch(
+                approach.detectedLanesTotal,
+                approach.detectedLanesForward,
+                approach.detectedLanesBackward,
+                approach.detectedLanesBothWays,
+            ):
+                raise HTTPException(
+                    status_code=400,
+                    detail=(
+                        "The map data's lane counts for the cross street "
+                        "contradict each other (the total doesn't match the "
+                        "per-direction counts), so the detected lane count "
+                        "can't be trusted this close to an intersection. "
+                        "Check the through-lane count in the field or on "
+                        "imagery, then confirm “Lane count is right” (or set "
+                        "the count yourself) in the Cross street section and "
+                        "regenerate."
+                    ),
+                )
         return
-    for approach in scenario.approaches:
-        if lanes_arithmetic_mismatch(
-            approach.detectedLanesTotal,
-            approach.detectedLanesForward,
-            approach.detectedLanesBackward,
-            approach.detectedLanesBothWays,
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    "The map data's lane counts for the cross street "
-                    "contradict each other (the total doesn't match the "
-                    "per-direction counts), so the detected lane count "
-                    "can't be trusted this close to an intersection. "
-                    "Check the through-lane count in the field or on "
-                    "imagery, then confirm “Lane count is right” (or set "
-                    "the count yourself) in the Cross street section and "
-                    "regenerate."
-                ),
-            )
+    if scenario.kind not in ("shoulder", "flagger_lane_closure"):
+        return
+    signal_m = getattr(scenario, "signalDistanceM", None)
+    if signal_m is None or signal_m > SIGNAL_GATE_NEARBY_M:
+        return
+    if lanes_arithmetic_mismatch(
+        getattr(scenario, "detectedLanesTotal", None),
+        getattr(scenario, "detectedLanesForward", None),
+        getattr(scenario, "detectedLanesBackward", None),
+        getattr(scenario, "detectedLanesBothWays", None),
+    ):
+        signal_ft = round(signal_m * 3.28084)
+        recovery = (
+            "set Lanes per direction in the Road section"
+            if scenario.kind == "shoulder"
+            else "confirm “Lane count is right” in the Road section"
+        )
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"A signalized intersection is about {signal_ft} ft from "
+                "this location, and the map data's lane counts for this "
+                "road contradict each other (the total doesn't match the "
+                "per-direction counts). This close to an intersection, "
+                "turn pockets routinely inflate map lane counts, so the "
+                "detected count can't be trusted. Check the through-lane "
+                f"count in the field or on imagery, then {recovery} and "
+                "regenerate."
+            ),
+        )
 
 
 @app.middleware("http")
@@ -425,8 +486,10 @@ def _placements_for(
     # Directionality eligibility gate (issue #158) — refuse a flagger plan on
     # a one-way road at the same chokepoint, for the same uniform coverage.
     _ensure_direction_eligible(scenario)
-    # Lane-count consistency gate (issue #120) — refuse a near_intersection
-    # plan whose approach lane tags contradict each other, same chokepoint.
+    # Lane-count consistency gate (issue #120; extended by #173) — refuse a
+    # near_intersection plan whose approach lane tags contradict each other,
+    # and a shoulder/flagger plan whose mainline tags do the same within
+    # SIGNAL_GATE_NEARBY_M of a detected traffic signal, same chokepoint.
     _ensure_lane_confidence(scenario)
     params, generator, kwargs = scenario_to_call(scenario)
     geo_violations = validate_corridor_geometry(params)
