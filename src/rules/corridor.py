@@ -184,6 +184,38 @@ def _project_onto_segment_m(
     return math.hypot(px, py), t
 
 
+def _project_onto_line_m(
+    p_lat: float,
+    p_lng: float,
+    a_lat: float,
+    a_lng: float,
+    b_lat: float,
+    b_lng: float,
+) -> tuple[float, float]:
+    """Project ``p`` onto the infinite line through ``a→b``; return ``(distance_m, t)``.
+
+    Same local-equirectangular math as :func:`_project_onto_segment_m`
+    but with ``t`` unclamped — ``distance_m`` is the perpendicular
+    distance to the line, and ``t`` can fall outside [0, 1].  Used for
+    the tangent-extension projection past either end of a centerline
+    (#207), the inverse of the unclamped station walk in
+    :meth:`WorkCorridor.point_at_station_ft`.  A zero-length segment
+    degenerates to the distance to ``a`` at ``t = 0``, matching the
+    clamped sibling.
+    """
+    kx = math.cos(math.radians(p_lat)) * 111_320.0
+    ky = 110_540.0
+    ax, ay = (a_lng - p_lng) * kx, (a_lat - p_lat) * ky
+    bx, by = (b_lng - p_lng) * kx, (b_lat - p_lat) * ky
+    dx, dy = bx - ax, by - ay
+    seg_len_sq = dx * dx + dy * dy
+    if seg_len_sq == 0.0:
+        return math.hypot(ax, ay), 0.0
+    t = -(ax * dx + ay * dy) / seg_len_sq
+    px, py = ax + t * dx, ay + t * dy
+    return math.hypot(px, py), t
+
+
 # ---------------------------------------------------------------------------
 # Corridor dataclass
 # ---------------------------------------------------------------------------
@@ -210,16 +242,15 @@ class WorkCorridor:
 
     # Road centerline as (lat, lng) vertices — the relayed OSM way
     # geometry of the confirmed road candidate (#140).  When present,
-    # :meth:`point_at_station_ft` follows this polyline by arc length
-    # instead of dead-reckoning along ``bearing_deg``, so the drawn
-    # corridor tracks the road through curves.  None ⇒ the straight
-    # frame (every pre-#140 behavior, unchanged).
-    #
-    # Scope (#207): only the DRAWING frame is centerline-aware.  Zone
-    # classification (:meth:`along_station_ft`, :meth:`classify_distance`)
-    # and :meth:`corridor_bbox` deliberately stay on the straight frame
-    # this arc — the drawn-vs-classified disagreement on curves is
-    # tracked in #207.
+    # BOTH frames follow this polyline by arc length instead of
+    # dead-reckoning along ``bearing_deg``: the drawing frame
+    # (:meth:`point_at_station_ft`, #140) and, since #207, the
+    # classification frame (:meth:`along_station_ft`,
+    # :meth:`lateral_offset_ft`, :meth:`classify_distance`) and
+    # :meth:`corridor_bbox` — so a detected feature's drawn position
+    # and its classified station/zone agree through curves.  None ⇒
+    # the straight frame everywhere (every pre-#140 behavior,
+    # unchanged — the compat path is structural, not a flag).
     centerline: tuple[tuple[float, float], ...] | None = None
 
     # ------------------------------------------------------------------
@@ -468,20 +499,87 @@ class WorkCorridor:
     # Zone classification
     # ------------------------------------------------------------------
 
+    def _project_point(self, lat: float, lng: float) -> tuple[float, float] | None:
+        """Project (lat, lng) into the centerline station frame (#207).
+
+        Returns ``(station_ft, lateral_ft)``: the corridor station of
+        the nearest point on the centerline polyline (measured from the
+        anchor, positive toward upstream — the same frame
+        :meth:`point_at_station_ft` walks) and the absolute
+        perpendicular distance to it in feet.  None when no usable
+        centerline is attached.
+
+        Past either end of the geometry the projection continues on the
+        end segment's tangent — the exact inverse of the tangent
+        continuation in :meth:`point_at_station_ft`, so the two
+        directions round-trip.  Tangent extension rather than honest
+        exclusion is deliberate (Rule 10): the OSM way geometry ending
+        mid-corridor is absence of *geometry*, not absence of the
+        feature, and partial coverage is already disclosed via
+        :meth:`centerline_coverage_ft` on the CORRIDOR DETAILS panel.
+        """
+        frame = self._centerline_frame()
+        if frame is None:
+            return None
+        cum_m, anchor_arc_m, sign = frame
+        pts = self.centerline
+        assert pts is not None
+        best_d = math.inf
+        best_arc_m = 0.0
+        for i in range(len(pts) - 1):
+            d, t = _project_onto_segment_m(lat, lng, *pts[i], *pts[i + 1])
+            if d < best_d:
+                best_d = d
+                best_arc_m = cum_m[i] + t * (cum_m[i + 1] - cum_m[i])
+        # Tangent extension: when the clamped winner sits at the
+        # polyline's very first or last vertex, re-project unclamped on
+        # that end segment so the station keeps growing past the
+        # geometry instead of the end vertex absorbing the overshoot
+        # into ``lateral``.
+        if best_arc_m <= 0.0:
+            d, t = _project_onto_line_m(lat, lng, *pts[0], *pts[1])
+            if t < 0.0:
+                best_d = d
+                best_arc_m = t * (cum_m[1] - cum_m[0])
+        elif best_arc_m >= cum_m[-1]:
+            d, t = _project_onto_line_m(lat, lng, *pts[-2], *pts[-1])
+            if t > 1.0:
+                best_d = d
+                best_arc_m = cum_m[-2] + t * (cum_m[-1] - cum_m[-2])
+        station_ft = sign * (best_arc_m - anchor_arc_m) * FT_PER_M
+        return station_ft, abs(best_d) * FT_PER_M
+
     def along_station_ft(self, lat: float, lng: float) -> float:
         """Along-corridor station of (lat, lng) in feet, measured from anchor.
 
         Positive values lie in the bearing direction (toward upstream);
         negative values lie behind the anchor (further downstream than
         the anchor).  Lateral offset is ignored.
+
+        With a :attr:`centerline` the station is measured along the
+        road's arc (#207) — the same frame the drawing uses, so a
+        feature's classified station matches its drawn position through
+        curves.  Without one: the original straight-frame projection,
+        unchanged.
         """
+        projected = self._project_point(lat, lng)
+        if projected is not None:
+            return projected[0]
         along_m, _ = _along_cross_track_m(
             self.anchor_lat, self.anchor_lng, self.bearing_deg, lat, lng
         )
         return along_m * FT_PER_M
 
     def lateral_offset_ft(self, lat: float, lng: float) -> float:
-        """Absolute perpendicular distance from the corridor centerline, in feet."""
+        """Absolute perpendicular distance from the corridor centerline, in feet.
+
+        With a :attr:`centerline` this is the distance to the road
+        polyline itself (#207); without one, to the straight bearing
+        line — unchanged.
+        """
+        projected = self._project_point(lat, lng)
+        if projected is not None:
+            return projected[1]
         _, cross_m = _along_cross_track_m(
             self.anchor_lat, self.anchor_lng, self.bearing_deg, lat, lng
         )
@@ -513,6 +611,17 @@ class WorkCorridor:
         Lateral classification takes precedence only for points whose
         along-station falls inside the corridor extent — a point both
         beyond an end *and* far to the side is classified ``'outside'``.
+
+        Threshold sourcing (#207 ruling, s2-arc3): both defaults are
+        CHOSEN, values deliberately unchanged when the frame joined the
+        centerline.  ``lateral_threshold_ft = 50.0`` — the on-road +
+        curbside acceptance band, now measured from the road polyline
+        rather than the straight chord (roughly half a typical arterial
+        section: lanes + shoulder + curb zone).  ``outside_tolerance_ft
+        = 25.0`` — endpoint jitter tolerance at the corridor ends.
+        Neither traces to an MUTCD distance; both are expressly
+        value-revisitable at #16's threshold pass, and that deferral is
+        what this marking records.
         """
         along_ft = self.along_station_ft(lat, lng)
         lateral_ft = self.lateral_offset_ft(lat, lng)
