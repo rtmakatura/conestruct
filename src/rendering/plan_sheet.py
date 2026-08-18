@@ -36,6 +36,7 @@ from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
+from src.generation.layout import rightmost_lane_assumption_active
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
 from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
@@ -2871,9 +2872,11 @@ def _draw_notes(
     # + three fine-print disclosures) beneath the Reference footer —
     # count those lines into the tier budget so the box tightens its
     # padding instead of overflowing.  Zero for every other kind.
-    # Lane-closure plans with a lane CHOICE (num_lanes >= 2) also add
-    # the #176 rightmost-lane assumption note (2 wrapped lines).
-    rightmost_lane_note = params.closure_type == "lane" and params.num_lanes >= 2
+    # Lane-closure plans with a lane CHOICE also add the #176
+    # rightmost-lane assumption note (2 wrapped lines); the predicate is
+    # single-sourced in ``rightmost_lane_assumption_active`` (layout.py)
+    # so the note fires everywhere the assumption operates.
+    rightmost_lane_note = rightmost_lane_assumption_active(params)
     extra_note_lines = (5 if params.near_intersection else 0) + (2 if rightmost_lane_note else 0)
     layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
@@ -3089,10 +3092,12 @@ def _draw_notes(
         # lane is a modeling assumption, and the sheet must say so —
         # a crew reading this plan for left- or center-lane work would
         # otherwise set up the wrong closure with no signal (rule 10).
-        # Fires only where a lane CHOICE exists (num_lanes >= 2 lane
-        # closures: near_intersection now, lane_closure_divided on its
-        # enablement); the flagger's single lane per direction offers no
-        # choice, and shoulder closures close no lane.
+        # Fires only where a lane CHOICE exists, per the single-sourced
+        # ``rightmost_lane_assumption_active`` predicate (num_lanes >= 2
+        # lane closures: near_intersection, lane_closure_divided, and
+        # the multilane mobile op); the flagger's and 2-lane mobile op's
+        # one lane per direction offer no choice, and shoulder closures
+        # close no lane.
         c.setFont("Helvetica-Bold", 6.5)
         c.setFillColor(colors.black)
         for line in _wrap_to_width(

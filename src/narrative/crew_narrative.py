@@ -24,7 +24,11 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.generation.layout import device_count_floors, near_intersection_stations
+from src.generation.layout import (
+    device_count_floors,
+    near_intersection_stations,
+    rightmost_lane_assumption_active,
+)
 from src.rendering.document import render_document_pdf
 from src.rendering.markdown_blocks import markdown_to_blocks
 from src.rules.devices import DeviceType, cone_display_name, device_row_sort_key
@@ -848,11 +852,13 @@ def build_narrative_context(
         "is_night": params.is_night,
         "is_divided": params.is_divided,
         # #176's visible right-side note (ruled 2026-08-03): fires only
-        # where a lane CHOICE exists — num_lanes >= 2 lane closures
-        # (near_intersection now, lane_closure_divided on enablement).
-        # The flagger's one lane per direction offers no choice; shoulder
-        # closures close no lane.  Mirrors the plan-sheet footer note.
-        "rightmost_lane_assumed": params.closure_type == "lane" and params.num_lanes >= 2,
+        # where a lane CHOICE exists, per the single-sourced
+        # ``rightmost_lane_assumption_active`` predicate (num_lanes >= 2
+        # lane closures: near_intersection, lane_closure_divided, the
+        # multilane mobile op).  The flagger's and 2-lane mobile op's one
+        # lane per direction offer no choice; shoulder closures close no
+        # lane.  Same predicate as the plan-sheet footer note.
+        "rightmost_lane_assumed": rightmost_lane_assumption_active(params),
         "is_flagger": narrative_is_flagger,
         "is_afad": is_afad,
         "flagger_station_1_ft": flagger_station_1_ft,

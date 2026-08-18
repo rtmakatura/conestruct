@@ -14,7 +14,7 @@ Authoritative sources:
 from __future__ import annotations
 
 import math
-from typing import Any
+from typing import Any, NamedTuple
 
 from src.rules.devices import DeviceType
 from src.rules.spacing import (
@@ -102,6 +102,70 @@ def device_count_floors(params: ScenarioParams) -> tuple[int, int]:
     taper_min = 4 if params.closure_type == "shoulder" and not params.is_divided else 2
     tangent_min = 3 if is_lane and not params.is_divided else 2
     return taper_min, tangent_min
+
+
+class ClosedLaneLateral(NamedTuple):
+    """Lateral landmarks of the closed/occupied travel lane (issue #176)."""
+
+    lane_line_offset: float
+    """Boundary between the open lane(s) and the closed lane."""
+    lane_edge_offset: float
+    """Right edge of the closed lane (= right edge of the traveled way)."""
+    closed_lane_center: float
+    """Mid-closed-lane — arrow boards and work/shadow trucks sit here."""
+
+
+def closed_lane_lateral(num_lanes: int, lane_width_ft: float) -> ClosedLaneLateral:
+    """Lateral geometry of the closed (or occupied) travel lane.
+
+    The closed lane is the RIGHTMOST of ``num_lanes`` per direction —
+    CHOSEN: a modeling assumption, not an MUTCD rule.  The #117 typicals
+    comparison (2026-07-27) scanned every Chapter 6P figure title: no
+    figure or section selects which lane gets closed — the work location
+    does — and MUTCD publishes the alternatives this tool cannot express
+    (Figure 6P-21 draws a CENTER-lane closure, printed p. 901; Figure
+    6P-23 a LEFT-hand closure on the far side of an intersection,
+    printed p. 905).  This tool models right-side work only; issue #176
+    carries the product question (document / refuse / model other
+    lanes).  Wherever this assumption could silently substitute a lane
+    (``rightmost_lane_assumption_active``), the plan sheet and crew
+    narrative say so.
+
+    Offsets are positive right of the centerline (the work side):
+
+    * ``lane_line_offset``  = ``(num_lanes - 1) * lane_width_ft``
+    * ``lane_edge_offset``  = ``num_lanes * lane_width_ft``
+    * ``closed_lane_center`` = ``(num_lanes - 0.5) * lane_width_ft``
+
+    Single source for the five lane-occupying generators (divided lane
+    closure, near_intersection, flagger, both mobile ops), which
+    previously each hard-coded an instance of these formulas.  Sign
+    lateral setbacks (the +4.0 / +6.0 ft offsets beside these landmarks)
+    are deliberately NOT absorbed here — they are separate unsourced
+    values, left on their original site lines and queued for their own
+    threshold pass (s2-arc2 GO ruling 3, 2026-08-17).
+    """
+    return ClosedLaneLateral(
+        lane_line_offset=(num_lanes - 1) * lane_width_ft,
+        lane_edge_offset=num_lanes * lane_width_ft,
+        closed_lane_center=(num_lanes - 0.5) * lane_width_ft,
+    )
+
+
+def rightmost_lane_assumption_active(params: ScenarioParams) -> bool:
+    """True where the rightmost-lane assumption could silently pick a lane.
+
+    The single source for the #176 visible-note predicate (ruled
+    2026-08-03): a lane CHOICE exists only on ``num_lanes >= 2`` lane
+    closures — near_intersection, lane_closure_divided, and the
+    multilane mobile op all qualify; the flagger's and 2-lane mobile
+    op's one lane per direction offer no choice, and shoulder closures
+    close no lane.  Both note surfaces (the plan-sheet footer note and
+    the crew narrative's closed-lane bullet) consume this predicate, so
+    the note renders everywhere the assumption operates — alignment by
+    construction, not by parallel maintenance.
+    """
+    return params.closure_type == "lane" and params.num_lanes >= 2
 
 
 def generate_shoulder_closure_divided(
@@ -842,11 +906,14 @@ def generate_lane_closure_divided(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
-    # Lateral landmarks (positive = right of centerline, work side)
-    lane_line_offset = params.lane_width_ft  # boundary between open and closed lanes
-    lane_edge_offset = 2.0 * params.lane_width_ft  # right edge of the closed right lane
+    # Lateral landmarks (positive = right of centerline, work side).
+    # Closed lane per ``closed_lane_lateral`` (issue #176) — this
+    # generator's 2-per-direction carriageway is the n=2 instance.
+    lat = closed_lane_lateral(2, params.lane_width_ft)
+    lane_line_offset = lat.lane_line_offset
+    lane_edge_offset = lat.lane_edge_offset
     shoulder_edge_offset = lane_edge_offset + shoulder_width_ft
-    arrow_board_offset = lane_line_offset + params.lane_width_ft / 2.0  # mid-closed-lane
+    arrow_board_offset = lat.closed_lane_center
     sign_offset_right = lane_edge_offset + 4.0
     sign_offset_left = -sign_offset_right
 
@@ -1359,14 +1426,13 @@ def generate_near_intersection(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
-    # Lateral landmarks — closed lane is the rightmost of num_lanes.
-    # Modeling assumption, not an MUTCD rule: no Chapter 6P figure or
-    # section selects which lane gets closed (the work location does),
-    # and this tool models right-side work only.  Issue #176 carries
-    # the product question (document / refuse / model other lanes).
-    lane_line_offset = (params.num_lanes - 1) * params.lane_width_ft
-    lane_edge_offset = params.num_lanes * params.lane_width_ft
-    arrow_board_offset = lane_line_offset + params.lane_width_ft / 2.0
+    # Lateral landmarks — closed lane is the rightmost of num_lanes,
+    # per ``closed_lane_lateral`` (issue #176; the CHOSEN rationale
+    # lives on the helper).
+    lat = closed_lane_lateral(params.num_lanes, params.lane_width_ft)
+    lane_line_offset = lat.lane_line_offset
+    lane_edge_offset = lat.lane_edge_offset
+    arrow_board_offset = lat.closed_lane_center
     sign_offset = lane_edge_offset + 4.0
 
     placements: list[DevicePlacement] = []
@@ -1742,8 +1808,11 @@ def generate_flagger_alternating_2lane(
     speed = params.speed_mph
     wz_len = params.work_zone_length_ft
 
-    # Lateral landmarks
-    lane_edge_right = params.lane_width_ft  # right edge of closed right lane
+    # Lateral landmarks.  The closed (work-side) lane per
+    # ``closed_lane_lateral`` (issue #176), n=1: one lane per direction,
+    # so the assumption offers no lane choice here.
+    lat = closed_lane_lateral(1, params.lane_width_ft)
+    lane_edge_right = lat.lane_edge_offset  # right edge of closed right lane
     lane_edge_left = -params.lane_width_ft  # outer edge of opposing lane
     sign_offset_right = lane_edge_right + 4.0
     sign_offset_left = lane_edge_left - 4.0
@@ -2182,9 +2251,12 @@ def generate_mobile_op_2lane(
     the road — the layout is short-lived and follows the truck.
     """
     _ = shoulder_width_ft  # parameter kept for signature parity; mobile ops don't use shoulder
-    lane_edge_right = params.lane_width_ft
+    # Occupied lane per ``closed_lane_lateral`` (issue #176), n=1: one
+    # lane per direction, so the assumption offers no lane choice here.
+    lat = closed_lane_lateral(1, params.lane_width_ft)
+    lane_edge_right = lat.lane_edge_offset
     sign_offset = lane_edge_right + 4.0
-    truck_offset = lane_edge_right / 2.0  # mid-lane
+    truck_offset = lat.closed_lane_center  # mid-lane
 
     # MUTCD §6G.05 typical: shadow trails the work truck at ~100 ft on
     # 2-lane roads — close enough for drivers to read the pair as one
@@ -2262,9 +2334,13 @@ def generate_mobile_op_multilane(
     Geometry assumes a 2-lane-per-direction work-side carriageway with
     the right lane occupied by the moving operation.
     """
-    lane_line_offset = params.lane_width_ft
-    closed_lane_center = 1.5 * params.lane_width_ft
-    sign_offset = 2.0 * params.lane_width_ft + 4.0
+    # Occupied lane per ``closed_lane_lateral`` (issue #176) — this
+    # generator's 2-per-direction carriageway is the n=2 instance, the
+    # moving operation occupying the rightmost lane.
+    lat = closed_lane_lateral(2, params.lane_width_ft)
+    lane_line_offset = lat.lane_line_offset
+    closed_lane_center = lat.closed_lane_center
+    sign_offset = lat.lane_edge_offset + 4.0
 
     work_truck_station = 0.0
     shadow_trailing = max(150.0, params.work_zone_length_ft)
