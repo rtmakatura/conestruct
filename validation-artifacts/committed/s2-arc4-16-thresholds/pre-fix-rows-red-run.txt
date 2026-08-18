@@ -1,0 +1,25 @@
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/SiteConditionsField.rows.test.tsx[2m > [22m#16 site-conditions rows render the detection margin[2m > [22munchecking the auto-checked row hides its evidence with it
+[31m[1mAssertionError[22m: expected 'Site conditionsSTEP 5Detect nearby si…' to contain '2 found, nearest ~122 m'[39m
+
+Expected: [32m"2 found, nearest ~122 m"[39m
+Received: [31m"Site conditionsSTEP 5Detect nearby site conditionsCorridor scan: 1 flag(s) auto-checkedLimited sight distanceCurve, hill crest — moves advance signs 50% farther upstream.Adjacent at-grade intersectionSignal/stop/uncontrolled cross street — flags the plan for TCS review; the cross-street layout is not generated and no devices are added.Adjacent interchange (highway ramps)Highway on/off-ramps within or adjacent to work zone — flags the plan for TCS review; the per-ramp layout is not generated and no devices are added.Driveways presentAdvisory: maintain access gaps in channelization.Pedestrian sidewalks presentAdds 4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs.Bike lane / cycleway presentAdds 2 M4-9a BIKE DETOUR signs.School zone nearbyAdds 2 S1-1 SCHOOL signs upstream of advance warnings."[39m
+
+[36m [2m❯[22m components/SiteConditionsField.rows.test.tsx:[2m132:41[22m[39m
+    [90m130| [39m      sidewalks[33m:[39m [33mSIDEWALKS_BUCKET[39m[33m,[39m
+    [90m131| [39m    })[33m;[39m
+    [90m132| [39m    expect(utils.container.textContent).toContain("2 found, nearest ~1…
+    [90m   | [39m                                        [31m^[39m
+    [90m133| [39m    fireEvent[33m.[39m[34mclick[39m(
+    [90m134| [39m      utils.getByRole("checkbox", { name: /Pedestrian sidewalks presen…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 07:48:39
+[2m   Duration [22m 1.73s[2m (transform 92ms, setup 0ms, collect 383ms, tests 122ms, environment 541ms, prepare 101ms)[22m
+

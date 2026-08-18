@@ -1,0 +1,37 @@
+placed offsets, measured back through the corridor frame:
+  near (10 ft): zone=work_zone, lateral=10.0 ft, along=400.0 ft
+  far (140 ft): zone=lateral, lateral=139.8 ft, along=400.0 ft
+
+sidewalks bucket as the wire carries it:
+{
+  "detected": true,
+  "count": 2,
+  "details": [
+    "Curbside Walk [work_zone @ 400 ft]",
+    "Setback Path [lateral 140 ft off centerline]"
+  ],
+  "features": [
+    {
+      "label": "Curbside Walk",
+      "zone": "work_zone",
+      "relevant": true,
+      "along_station_ft": 400.0,
+      "lateral_offset_ft": 10.0,
+      "distance_to_anchor_m": 122.0
+    },
+    {
+      "label": "Setback Path",
+      "zone": "lateral",
+      "relevant": true,
+      "along_station_ft": 400.0,
+      "lateral_offset_ft": 139.8,
+      "distance_to_anchor_m": 129.2
+    }
+  ],
+  "nearest_distance_m": 122.0
+}
+
+the boolean the UI renders from: detected = True
+details strings (what a margin display would have to work with):
+  - Curbside Walk [work_zone @ 400 ft]
+  - Setback Path [lateral 140 ft off centerline]

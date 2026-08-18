@@ -1,0 +1,152 @@
+== s2-arc4 (#16) source scan record — MUTCD 11th Ed. Part 6 (local mutcd_part6.pdf) ==
+== Run 2026-08-18, scripts scan-6n-sections.py + scan-6b1-6h.py (pypdf; case-insensitive, U+2011-normalized) ==
+
+=== 'Section 6N.12' heading found on 0-based PDF pages: [83, 93]
+=== 'Section 6N.16' heading found on 0-based PDF pages: [86]
+
+----- page 83 (0-based), heading context for 6N.12 -----
+adapted for use on five-lane roads. Figure 6P-35 can be used on a five-lane road for short-duration and mobile 
+operations.
+Section 6N.12  Work within the Traveled Way at an Intersection
+Support:
+01  Chapter 6C and Sections 6M.04 and 6N.04 contain additional information regarding the steps to follow when 
+pedestrian or bicycle facilities are affected by the worksite.
+02  The typical applications for intersections are classified according to the location of the work space with respect 
+to the intersection area (as defined by the extension of the curb or edge lines). The three classifications are near 
+side, far side, and in-the-intersection. Work spaces often extend into more than one portion of the intersection. 
+For example, work in one quadrant often creates a near-side work space on one street and a far-side work space 
+on the cross street. In such instances, an appropriate TTC plan is obtained by combining features shown in two or 
+more of the intersection and pedestrian typical applications.
+03  TTC zones in the vicinity of intersections might block movements and interfere with normal road user flows. 
+Such conflicts frequently occur at more complex signalized intersections having such features as traffic signal 
+heads over particular lanes, lanes allocated to specific movements, multiple signal phases, signal detectors for 
+actuated control, and accessible pedestrian signals and detectors.
+Page 848 MUTCD 11th Edition
+
+----- page 93 (0-based), heading context for 6N.12 -----
+Detour for One Travel Direction TA-19
+Detour for a Closed Street TA-20
+Work within the Traveled Way at an Intersection and on Sidewalks (see Section 6N.12)
+Lane Closure on the Near Side of an Intersection TA-21
+Right-Hand Lane Closure on the Far Side of an Intersection TA-22
+Left-Hand Lane Closure on the Far Side of an Intersection TA-23
+Half Road Closure on the Far Side of an Intersection TA-24
+Multiple Lane Closures at an Intersection TA-25
+Closure in the Center of an Intersection TA-26
+Closure at the Side of an Intersection TA-27
+Sidewalk Detour or Diversion TA-28
+Crosswalk Closures and Pedestrian Detours TA-29
+Work within the Traveled Way of a Multi-Lane, Non-Access Controlled Highway (see Section 6N.11)
+Interior Lane Closure on a Multi-Lane Street TA-30
+Lane Closure on a Street with Uneven Directional Volumes TA-31
+Half Road Closure on a Multi-Lane, High-Speed Highway TA-32
+Stationary Lane Closure on a Divided Highway TA-33
+Lane Closure with a Temporary Traffic Barrier TA-34
+Mobile Operation on a Multi-Lane Road TA-35
+Page 858 MUTCD 11th Edition
+
+----- page 86 (0-based), heading context for 6N.16 -----
+02  Temporary traffic barriers and the excessive use of TTC devices cannot compensate for poor geometric and 
+roadway cross-section design of crossovers.
+Section 6N.16  Interchanges
+Guidance:
+01  Access to interchange ramps on limited-access highways should be maintained even if the work space is in 
+the lane adjacent to the ramps. Access to exit ramps should be clearly marked and delineated with channelizing 
+devices. For long-term projects, conflicting pavement markings should be removed and new ones placed. Early 
+coordination with officials having jurisdiction over the affected cross streets and providing emergency services 
+should occur before ramp closings.
+Option:
+02  If access is not possible, ramps may be closed by using signs and Type 3 Barricades. As the work space 
+changes, the access area may be changed, as shown in Figure 6P-42. A TTC zone in the exit ramp may be handled 
+as shown in Figure 6P-43.
+03  When a work space interferes with an entrance ramp, a lane may need to be closed on the freeway (see Figure 
+6P-44). A TTC zone in the entrance ramp may require shifting ramp vehicular traffic (see Figure 6P-44).
+Section 6N.17  Work in the Vicinity of a Grade Crossing
+Standard:
+01  When grade crossings exist either within or in the vicinity of a TTC zone, lane restrictions, flagging, or 
+other operations shall not create conditions where vehicles can be queued across the tracks. If the queuing 
+of vehicles across the tracks cannot be avoided, a uniformed law enforcement officer or flagger shall be 
+provided at the crossing to prevent vehicles from stopping on the tracks, even if automatic warning devices 
+are in place.
+Support:
+02  Figure 6P-46 shows work in the vicinity of a grade crossing.
+03  Section 8A.13 contains additional information regarding TTC zones in the vicinity of grade crossings.
+Guidance:
+04  Early coordination with the railroad company or transit agency should occur before work starts.
+Section 6N.18  Work during Nighttime Hours
+Support:
+01  Section 6A.05 contains additional information regarding considerations for conducting work operations during 
+nighttime hours.
+Guidance:
+02  Considering the safety issues inherent to night work, consideration should be given to enhancing traffic 
+controls (see Section 6N.03) to provide added visibility and driver guidance, and increased protection 
+for workers.
+03  In addition to the enhancements listed in Section 6N.03, consideration should be given to providing 
+additional lights and retroreflective markings to workers, work vehicles, and equipment.
+Option:
+04  Where reduced traffic volumes at night make it feasible, the entire roadway may be closed by detouring traffic 
+to alternate facilities, thus removing the traffic risk from the activity area.
+Guidance:
+05  Consideration should be given to stationing uniformed law enforcement officers and lighted patrol cars at 
+night work locations where there is a concern that high speeds or impaired drivers might result in undue risks for 
+workers or other drivers.
+Standard:
+06  Except in emergencies, temporary lighting shall be provided at all flagger stations used during 
+nighttime work.
+
+===== distance scan for 6N.12 on pages [83, 84, 85, 93, 94, 95] =====
+[p85] /ramp/: …-39 shows the procedure for two-lane, two-way operation. Treatments for entrance and exit ramps  within the two-way roadway segment of this type of work are shown in Figures 6P-40 and …
+[p94] /ramp/: …e on a Freeway TA-38 Median Crossover on a Freeway TA-39 Median Crossover for an Entrance Ramp TA-40 Median Crossover for an Exit Ramp TA-41 Work in the Vicinity of an Exit Ramp TA-42 …
+[p94] /ramp/: … a Freeway TA-39 Median Crossover for an Entrance Ramp TA-40 Median Crossover for an Exit Ramp TA-41 Work in the Vicinity of an Exit Ramp TA-42 Partial Exit Ramp Closure TA-43 Work in …
+[p94] /ramp/: …trance Ramp TA-40 Median Crossover for an Exit Ramp TA-41 Work in the Vicinity of an Exit Ramp TA-42 Partial Exit Ramp Closure TA-43 Work in the Vicinity of an Entrance Ramp TA-44 Temp…
+[p94] /ramp/: … Crossover for an Exit Ramp TA-41 Work in the Vicinity of an Exit Ramp TA-42 Partial Exit Ramp Closure TA-43 Work in the Vicinity of an Entrance Ramp TA-44 Temporary Reversible Lane Us…
+[p94] /ramp/: …of an Exit Ramp TA-42 Partial Exit Ramp Closure TA-43 Work in the Vicinity of an Entrance Ramp TA-44 Temporary Reversible Lane Using Movable Barriers TA-45 Work in the Vicinity of a Gr…
+
+===== distance scan for 6N.16 on pages [86, 87, 88] =====
+[p86] /ramp/: …ion design of crossovers. Section 6N.16  Interchanges Guidance: 01  Access to interchange ramps on limited-access highways should be maintained even if the work space is in  the lane a…
+[p86] /ramp/: …cess highways should be maintained even if the work space is in  the lane adjacent to the ramps. Access to exit ramps should be clearly marked and delineated with channelizing  devices…
+[p86] /ramp/: …e maintained even if the work space is in  the lane adjacent to the ramps. Access to exit ramps should be clearly marked and delineated with channelizing  devices. For long-term projec…
+[p86] /ramp/: …ion over the affected cross streets and providing emergency services  should occur before ramp closings. Option: 02  If access is not possible, ramps may be closed by using signs and T…
+[p86] /ramp/: …gency services  should occur before ramp closings. Option: 02  If access is not possible, ramps may be closed by using signs and Type 3 Barricades. As the work space  changes, the acce…
+[p86] /ramp/: …changes, the access area may be changed, as shown in Figure 6P-42. A TTC zone in the exit ramp may be handled  as shown in Figure 6P-43. 03  When a work space interferes with an entran…
+[p86] /ramp/: …y be handled  as shown in Figure 6P-43. 03  When a work space interferes with an entrance ramp, a lane may need to be closed on the freeway (see Figure  6P-44). A TTC zone in the entra…
+[p86] /ramp/: …lane may need to be closed on the freeway (see Figure  6P-44). A TTC zone in the entrance ramp may require shifting ramp vehicular traffic (see Figure 6P-44). Section 6N.17  Work in th…
+[p86] /ramp/: … on the freeway (see Figure  6P-44). A TTC zone in the entrance ramp may require shifting ramp vehicular traffic (see Figure 6P-44). Section 6N.17  Work in the Vicinity of a Grade Cros…
+[p88] /\b500\b/: …December 2023      Sect. 6N.19 A B C Late Merge Signing 500 ft G20-2 (optional) W9-2a R9-4a W4-2 W20-5 W20-1 Legend Direction of travel Channelizing …
+
+== Table 6B-1 + Chapter 6H scan ==
+----- page 8 (0-based) Table 6B-2 context -----
+flow. The activity area may contain one or more lateral or longitudinal buffer spaces.
+09  A longitudinal buffer space may be placed in advance of a work space.
+10  The longitudinal buffer space may also be used to separate opposing road user flows that use portions of the 
+same traffic lane, as shown in Figure 6B-2.
+11  If a longitudinal buffer space is used, the values shown in Table 6B-2 may be used to determine the length of 
+the longitudinal buffer space.
+Support:
+12  Typically, the buffer space is formed as a traffic island and defined by channelizing devices.
+13  When a shadow vehicle, arrow board, or changeable message sign is placed in a closed lane in advance of 
+a work space, only the area upstream of the vehicle, arrow board, or changeable message sign constitutes the 
+buffer space.
+Option:
+14  The lateral buffer space may be used to separate the traffic space from the work space, as shown in Figures 
+6B-1 and 6B-2, or such areas as excavations or pavement-edge drop-offs. A lateral buffer space also may be used 
+between two travel lanes, especially those carrying opposing flows.
+Table 6B-1.  Recommended Advance  
+Warning Sign Minimum Spacing
+Road Type
+Distance between Signs **
+A B C
+ Urban (low speed) * 100 feet 100 feet 100 feet
+ Urban (high speed) * 350 feet 350 feet 350 feet
+ Rural 500 feet 500 feet 500 feet
+ Expressway / Freeway 1,000 feet 1,500 feet 2,640 feet
+ *  Speed category to be determined by the highway agency or owner of site roadways open 
+to public travel.
+ **  The column headings A, B, and C are the dimensions shown in Figures 6P-1 through 
+6P-54 The A dimension is the distance from the transition or point of restriction to the 
+first sign. The B dimension is the distance between the first and second signs. The C 
+dimension is the distance between the second and third signs. (The “first sign” is the 
+sign in a three-sign series that is closest to the TTC zone. The “third sign” is the sign that 
+is furthest upstream from the TTC zone.)
+
+[p33] Chapter 6H line: CHAPTER 6H.  TTC ZONE WARNING SIGNS

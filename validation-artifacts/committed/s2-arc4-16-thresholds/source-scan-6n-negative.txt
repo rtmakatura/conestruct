@@ -1,0 +1,68 @@
+== s2-arc4 (#16) — the §6N.12 / §6N.16 attribution, verified by subject ==
+Source: MUTCD 11th Edition Part 6, local mutcd_part6.pdf
+(validation-artifacts/ta10_flagger/mutcd_part6.pdf).  Scan hygiene:
+case-insensitive, U+2011 normalized to ASCII hyphen.  Raw extractor
+output: scan-raw-output.txt (scripts scan-6n-sections.py,
+scan-6b1-6h.py in this directory; run with a python that has pypdf —
+the repo venv does not carry it).
+
+THE CLAIM UNDER TEST (site_detection.py, pre-fix): the 250 ft / 500 ft
+outside tolerances "match the urban A-spacing / ramp-signing distances
+called out in MUTCD §6N.12 + §6N.16".
+
+FINDINGS (all negative for the claim; positives beside each negative):
+
+1. Section 6N.12 exists and is titled "Work within the Traveled Way at
+   an Intersection" (printed p. 848, PDF 0-based p. 83; body runs
+   printed 848-850).  POSITIVE: the section governs work at/adjacent to
+   intersections — the flag's subject holds.  NEGATIVE: the section
+   assigns NO proximity distance of any kind; the strings "250", "500",
+   and "A-spacing" do not occur in its text (distance scan over PDF
+   pp. 83-85 and the 6P index pages, zero hits for /\b250\b/ and
+   /\b500\b/).  This re-confirms s2-arc2's independent negative record
+   (s2-arc2-gates/source-scan-negative.txt, finding 1: "Section 6N.12
+   ... defines no proximity band").
+
+2. Section 6N.16 exists and is titled "Interchanges" (printed p. 851,
+   PDF 0-based p. 86).  POSITIVE: its ¶01 is ramp access + early
+   coordination — the audit label's "ramp-access and coordination
+   review (MUTCD §6N.16)" is an exact subject match.  NEGATIVE: the
+   section contains NO distance anywhere (its three paragraphs cite
+   Figures 6P-42/43/44 only).  The lone "500" hit in the scanned range
+   sits in §6N.19 Late Merge signing — a different subject.
+
+3. "Urban A-spacing 250 ft" does not exist.  Table 6B-1 (Recommended
+   Advance Warning Sign Minimum Spacing, printed p. 773, PDF 0-based
+   p. 8) rows: Urban (low speed) A=100 ft; Urban (high speed) A=350 ft;
+   Rural A=500 ft; Expressway/Freeway A=1,000 ft.  No 250 ft row.  The
+   500 ft interchange tolerance coincides with the RURAL A value — a
+   coincidence, not a citation.
+
+4. Chapter 6H is titled "TTC ZONE WARNING SIGNS" (PDF 0-based p. 33) —
+   warning signs generally, not an interchange-signing chapter.  The
+   rendered "+ Ch. 6H — work zone signing for interchanges and ramp
+   areas" descriptor misdescribed it.
+
+DISPOSITIONS (ruled at the s2-arc4 GO, 2026-08-18):
+- The attribution comment: remove-and-state; 150/250/500 CHOSEN-marked
+  with rationales; Table 6B-1 p. 773 cited as scale context only,
+  expressly not as a source (no 250 row exists).
+- site_adjustments rules: cite-with-page by real title — "MUTCD §6N.12
+  p. 848 — Work within the Traveled Way at an Intersection (11th Ed.)"
+  and "MUTCD §6N.16 p. 851 — Interchanges (11th Ed.)"; the "+ Ch. 6H"
+  rider dropped.
+- audit.py pending_verification labels: page cites added (subjects
+  verified holding, §6N.16 ¶01 exact-match noted).
+- classify_distance 50/25 (CHOSEN at s2-arc3): revisited in the road
+  frame and HELD — no source demands different values; s2-arc3 round-2
+  live evidence shows zero zone mismatches at 50/25 on production.
+- The corridor bbox lateral pad (100 m): CHOSEN-marked with its
+  previously-unstated invariant recorded (≥ widest
+  accept_lateral_within_ft, 150 ft ≈ 45.7 m).  Point-mode 500 m radius:
+  CHOSEN-marked.
+- Zero threshold values changed ⇒ zero classification churn predicted.
+
+Citation counter: proposed 17 → 18 (this arc's defect: the
+§6N.12/§6N.16 distance attribution — #16's residual suspected the
+missing page cite; the scan measured the attribution itself false).
+Ryan confirms the increment in the close.
