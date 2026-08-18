@@ -1,0 +1,18 @@
+﻿fixture: 166 vertices, bearing 171.8
+corridor: total 2344 ft (dt 100 / wz 800 / buf 305 / taper 89 / adv 1050)
+
+=== PRODUCT FRAME (centerline attached) ===
+sampled 23 on-road stations (50 + 100k ft, 0..2344)
+max along-station error: 0.0 ft
+max lateral offset of an on-road point: 0.0 ft
+misclassified zones: 0/23
+drawn points outside frame's Overpass bbox: 0/23
+
+=== CHORD TWIN (centerline withheld — the pre-#207 repro) ===
+sampled 23 on-road stations (50 + 100k ft, 0..2344)
+max along-station error: 844.8 ft
+max lateral offset of an on-road point: 1478.4 ft
+misclassified zones: 22/23
+drawn points outside frame's Overpass bbox: 16/23
+
+VERDICT: agreement holds; chord twin reproduces the defect

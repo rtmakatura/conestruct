@@ -1,0 +1,38 @@
+﻿fixture: 166 vertices, bearing 171.8
+corridor: total 2344 ft (dt 100 / wz 800 / buf 305 / taper 89 / adv 1050)
+centerline coverage: 3996 ft of 2344 ft
+
+station | true zone       | chord along (err)   | chord lat | chord zone      | in bbox
+      0 | downstream      |        0 (     0) |         0 | downstream      | yes
+    100 | downstream      |       92 (     8) |        29 | downstream      | yes
+    200 | work_zone       |      158 (    42) |       104 | lateral         | yes  <-- MISCLASSIFIED
+    300 | work_zone       |      247 (    53) |       150 | lateral         | yes  <-- MISCLASSIFIED
+    400 | work_zone       |      337 (    63) |       191 | lateral         | yes  <-- MISCLASSIFIED
+    500 | work_zone       |      403 (    97) |       264 | lateral         | yes  <-- MISCLASSIFIED
+    600 | work_zone       |      437 (   163) |       357 | lateral         | yes  <-- MISCLASSIFIED
+    700 | work_zone       |      461 (   239) |       455 | lateral         | yes  <-- MISCLASSIFIED
+    800 | work_zone       |      482 (   318) |       552 | lateral         |  NO  <-- MISCLASSIFIED
+    900 | work_zone       |      500 (   400) |       651 | lateral         |  NO  <-- MISCLASSIFIED
+   1000 | buffer          |      520 (   480) |       748 | lateral         |  NO  <-- MISCLASSIFIED
+   1100 | buffer          |      551 (   549) |       844 | lateral         |  NO  <-- MISCLASSIFIED
+   1200 | buffer          |      601 (   599) |       929 | lateral         |  NO  <-- MISCLASSIFIED
+   1300 | advance_warning |      676 (   624) |       995 | lateral         |  NO  <-- MISCLASSIFIED
+   1400 | advance_warning |      742 (   658) |      1070 | lateral         |  NO  <-- MISCLASSIFIED
+   1500 | advance_warning |      805 (   695) |      1147 | lateral         |  NO  <-- MISCLASSIFIED
+   1600 | advance_warning |      899 (   701) |      1171 | lateral         |  NO  <-- MISCLASSIFIED
+   1700 | advance_warning |      998 (   702) |      1158 | lateral         |  NO  <-- MISCLASSIFIED
+   1800 | advance_warning |     1097 (   703) |      1157 | lateral         |  NO  <-- MISCLASSIFIED
+   1900 | advance_warning |     1175 (   725) |      1217 | lateral         |  NO  <-- MISCLASSIFIED
+   2000 | advance_warning |     1250 (   750) |      1284 | lateral         |  NO  <-- MISCLASSIFIED
+   2100 | advance_warning |     1320 (   780) |      1355 | lateral         |  NO  <-- MISCLASSIFIED
+   2200 | advance_warning |     1378 (   822) |      1436 | lateral         |  NO  <-- MISCLASSIFIED
+   2300 | advance_warning |     1432 (   868) |      1521 | lateral         |  NO  <-- MISCLASSIFIED
+
+sampled 24 on-road stations at 100 ft steps (0..2344)
+max along-station error: 868 ft at station 2300
+misclassified zones: 22/24
+drawn corridor points OUTSIDE the current Overpass bbox: 16/24
+max chord lateral offset of an on-road point: 1521 ft
+
+=== straight control (synthetic due-north centerline) ===
+24 stations: max along error 0.00 ft, max lateral 0.00 ft, misclassified 1
