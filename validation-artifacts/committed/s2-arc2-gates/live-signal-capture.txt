@@ -1,0 +1,11 @@
+# s2-arc2 live signal-fact capture -- 2026-08-17, prod (read-only detection POST)
+# POST https://www.conestruct.com/api/road-bearing  body: {"lat":39.73997,"lng":-104.96632}
+# (the E Colfax reference pin; served bundle == healthz == origin/main == 30b3a5c at capture time)
+
+candidates: 3  primary_index: 0
+  [0] East Colfax Avenue (primary) snap_distance_m=0.77 signal_distance_m=26.84
+  [1] East Colfax Avenue (primary) snap_distance_m=11.01 signal_distance_m=26.88
+  [2] Williams Street (residential) snap_distance_m=26.84 signal_distance_m=0.54
+
+PRIMARY candidate signal_distance_m = 26.84 (<= 30 m: the non-NI signal-proximity case, live)
+This value is computed at road-bearing/route.ts and today dies at cross-street.ts (checkbox default only) -- it never reaches a scenario payload.

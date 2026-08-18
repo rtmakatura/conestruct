@@ -1,0 +1,16 @@
+git HEAD: 30b3a5c7961ef6372eda215f57de6e2f227ba465
+
+mobile_op_multilane: closure_type='lane' num_lanes=2 -> predicate True
+narrative context rightmost_lane_assumed: True
+rendered narrative note line(s):
+  - Closed lane: this plan draws the closure on the RIGHTMOST lane. That is a modeling assumption, not an MUTCD rule — the work location dictates the la
+
+mobile_op_2lane: closure_type='lane' num_lanes=1 -> predicate False
+(mobile_op_2lane: num_lanes=1 -- one lane per direction, no lane choice;
+ matches the note's own carve-out, same as the flagger.)
+
+CONCLUSION: predicate coverage is complete today across all seven
+generators (the three num_lanes>=2 lane closures all note; the two n=1
+paths offer no choice; shoulder closures close no lane).  The #176
+residual is centralization + comment truth, not a predicate gap -- the
+#175 lesson (premise-can-be-wrong) applied to our own triage.

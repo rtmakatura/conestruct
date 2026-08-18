@@ -1,0 +1,13 @@
+git HEAD: 30b3a5c7961ef6372eda215f57de6e2f227ba465
+
+shoulder: lanes_arithmetic_mismatch on the relays -> True
+shoulder: all three gates PASSED (no HTTPException raised)
+shoulder: generator produced 22 placements -- full plan
+
+flagger: lanes_arithmetic_mismatch on the relays -> True
+flagger: all three gates PASSED (no HTTPException raised)
+flagger: generator produced 33 placements -- full plan
+
+CONCLUSION: the lane-confidence gate is kind-blind (issue #173's premise,
+verified at this HEAD): the identical arithmetic mismatch that refuses a
+near_intersection payload generates straight through on shoulder and flagger.

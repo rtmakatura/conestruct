@@ -1,0 +1,18 @@
+git HEAD: cf77584b6f58ee1e2ad336aa6d26e1837ef46ddd
+
+shoulder near-signal + mismatch -> HTTP 400
+detail: A signalized intersection is about 88 ft from this location, and the map data's lane counts for this road contradict each other (the total doesn't match the per-direction counts). This close to an intersection, turn pockets routinely inflate map lane counts, so the detected count can't be trusted. Check the through-lane count in the field or on imagery, then set Lanes per direction in the Road section and regenerate.
+shoulder mismatch alone -> 200; signal alone -> 200
+
+flagger near-signal + mismatch -> HTTP 400
+detail: A signalized intersection is about 88 ft from this location, and the map data's lane counts for this road contradict each other (the total doesn't match the per-direction counts). This close to an intersection, turn pockets routinely inflate map lane counts, so the detected count can't be trusted. Check the through-lane count in the field or on imagery, then confirm “Lane count is right” in the Road section and regenerate.
+flagger mismatch alone -> 200; signal alone -> 200
+
+boundary: 30.00 m -> 400 (refuses, inclusive); 30.01 m -> 200 (passes)
+
+# Full-suite state at cf77584:
+1878 passed, 2 skipped in 11.48s
+# frontend (vitest, from conestruct/site):
+ Test Files  85 passed (85)
+      Tests  670 passed (670)
+# tsc --noEmit: clean; next lint: pre-existing restoreFallbackRef warning only (same code on main)
