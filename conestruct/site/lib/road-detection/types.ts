@@ -158,6 +158,11 @@ export interface RoadClassification {
   detectedLanesForward?: number;
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
+  /** Meters from the snapped road point to the nearest detected
+   *  traffic-signal node (issue #173), relayed to the backend's
+   *  signal-proximity lane-confidence gate.  Undefined when the
+   *  detection route reported no signal near the candidate. */
+  signalDistanceM?: number;
   speedLimitMph?: number;
   confidence: Confidence;
   source: "osm-tags";

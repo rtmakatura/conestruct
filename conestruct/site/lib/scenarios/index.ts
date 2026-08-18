@@ -443,6 +443,7 @@ export function clearDetectionRelays(s: Scenario): Scenario {
   delete rest.detectedLanesBackward;
   delete rest.detectedLanesBothWays;
   delete rest.oneway;
+  delete rest.signalDistanceM;
   delete rest.detectionOverrides;
   return rest as Scenario;
 }

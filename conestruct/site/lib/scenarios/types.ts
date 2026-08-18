@@ -185,6 +185,7 @@ export interface DetectionOverride {
     | "flagger_single_lane_confirm"
     | "flagger_multilane_confirm"
     | "flagger_twoway_confirm"
+    | "flagger_lane_count_confirm"
     | "shoulder_lane_edit"
     | "approach_lane_confirm"
     | "approach_lane_edit";
@@ -294,6 +295,14 @@ export interface ShoulderScenario extends JurisdictionPlanFields {
   detectedLanesForward?: number;
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
+  /**
+   * Meters to the nearest detected traffic-signal node (issue #173),
+   * relayed unchanged to the backend's signal-proximity branch of the
+   * lane-confidence gate: within the backend's CHOSEN threshold, a
+   * mismatch in the per-direction relays refuses instead of cautioning.
+   * Undefined means "no signal detected" and never blocks.
+   */
+  signalDistanceM?: number;
   /** Override provenance (issue #177) — see `DetectionOverride`. */
   detectionOverrides?: DetectionOverride[];
 }
@@ -334,13 +343,20 @@ export interface FlaggerLaneClosureScenario extends JurisdictionPlanFields {
   oneway?: string;
   /**
    * Parsed OSM per-direction lane counts relayed from detection (issue
-   * #120) — see the matching fields on ShoulderScenario. Non-blocking:
-   * the flagger has no lane field to correct, so the audit caution is the
-   * only consumer.
+   * #120) — see the matching fields on ShoulderScenario. The audit
+   * caution consumes the mismatch everywhere; beside a detected signal
+   * (issue #173) it refuses instead, recovered by the "Lane count is
+   * right" confirm row, which clears these relays.
    */
   detectedLanesForward?: number;
   detectedLanesBackward?: number;
   detectedLanesBothWays?: number;
+  /**
+   * Meters to the nearest detected traffic-signal node (issue #173) —
+   * see the matching field on ShoulderScenario. Undefined means "no
+   * signal detected" and never blocks.
+   */
+  signalDistanceM?: number;
   /** Override provenance (issue #177) — see `DetectionOverride`. */
   detectionOverrides?: DetectionOverride[];
 }

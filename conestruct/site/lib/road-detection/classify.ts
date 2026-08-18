@@ -183,6 +183,9 @@ export interface ClassifyInput {
     lanes_backward: string | null;
     lanes_both_ways: string | null;
   };
+  /** Meters to the nearest detected traffic-signal node (issue #173);
+   *  undefined when the route reported none. */
+  signalDistanceM?: number;
 }
 
 // Pure: tags + place context → full RoadClassification.  Used both by
@@ -317,6 +320,11 @@ export function classifyFromOsmTags(
     detectedLanesForward: parseLaneNumber(tags.lanes_forward) ?? undefined,
     detectedLanesBackward: parseLaneNumber(tags.lanes_backward) ?? undefined,
     detectedLanesBothWays: parseLaneNumber(tags.lanes_both_ways) ?? undefined,
+    // Meters to the nearest detected traffic-signal node (issue #173),
+    // relayed unchanged for the backend's signal-proximity branch of the
+    // lane-confidence gate.  Undefined when the route reported no signal,
+    // so a signal-free site never trips a false block.
+    signalDistanceM: input.signalDistanceM,
     speedLimitMph: speedFromOsm ?? undefined,
     confidence: topLevelConf,
     source: "osm-tags",
@@ -418,6 +426,7 @@ export function classifyFromCandidate(
       name: candidate.name,
       ref: candidate.ref,
       tags: candidate.tags,
+      signalDistanceM: candidate.signal_distance_m ?? undefined,
     },
     isUrban,
     placeName,

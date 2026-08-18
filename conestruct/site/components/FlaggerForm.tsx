@@ -13,6 +13,7 @@ import {
   flaggerLaneIneligibleHigh,
   lastDetectionOverride,
   overrideDetectedClause,
+  signalProximityLaneConfidence,
   undoDetectionOverride,
 } from "@/lib/scenarios/auto-apply";
 import { validateWorkZone } from "@/lib/scenarios/validation";
@@ -86,6 +87,11 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
   );
   const twowayArmed =
     scenario.oneway !== undefined && ONEWAY_BLOCKING.has(scenario.oneway);
+  const laneCountMarker = lastDetectionOverride(
+    scenario.detectionOverrides,
+    "flagger_lane_count_confirm",
+  );
+  const laneCountArmed = signalProximityLaneConfidence(scenario);
   // Confirmed-row description: built ONLY from the marker's recorded
   // fields — never a value detection didn't report.
   const confirmedDesc = (m: NonNullable<typeof singleLaneMarker>) =>
@@ -263,6 +269,65 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
                     via: "flagger_twoway_confirm",
                     detectedOneway: scenario.oneway,
                     asserted: "two-way traffic",
+                  },
+                ),
+              });
+            }}
+          />
+        )}
+
+        {/* Lane-consistency recovery (issue #173): beside a detected
+            traffic signal, self-contradicting OSM lane tags refuse
+            generation (turn pockets inflate counts exactly there).  The
+            flagger has no lane field to edit, so this confirm is the
+            operator's recovery path — asserting the count was checked
+            clears the four lane relays and lifts the block.  The
+            signal-distance fact itself stays: it is true regardless,
+            and alone it never blocks. */}
+        {(laneCountArmed || laneCountMarker !== null) && (
+          <CheckRow
+            on={!laneCountArmed && laneCountMarker !== null}
+            label="Lane count is right"
+            desc={
+              laneCountArmed || laneCountMarker === null
+                ? "The map's lane counts contradict each other beside a signalized intersection — confirm to enable this plan"
+                : confirmedDesc(laneCountMarker)
+            }
+            onToggle={() => {
+              if (!laneCountArmed && laneCountMarker !== null) {
+                // Untick (#179): restore all four recorded lane relays —
+                // the proximity refusal honestly re-derives.
+                const undo = undoDetectionOverride(
+                  scenario.detectionOverrides,
+                  "flagger_lane_count_confirm",
+                );
+                setScenario({
+                  ...scenario,
+                  detectedLanesTotal: undo.marker?.detectedLanesTotal,
+                  detectedLanesForward: undo.marker?.detectedLanesForward,
+                  detectedLanesBackward: undo.marker?.detectedLanesBackward,
+                  detectedLanesBothWays: undo.marker?.detectedLanesBothWays,
+                  detectionOverrides: undo.overrides,
+                });
+                return;
+              }
+              setScenario({
+                ...scenario,
+                detectedLanesTotal: undefined,
+                detectedLanesForward: undefined,
+                detectedLanesBackward: undefined,
+                detectedLanesBothWays: undefined,
+                // Record what this confirm erased (#177) — the row only
+                // arms in the disputed (gate-refused) state.
+                detectionOverrides: appendDetectionOverride(
+                  scenario.detectionOverrides,
+                  {
+                    via: "flagger_lane_count_confirm",
+                    detectedLanesTotal: scenario.detectedLanesTotal,
+                    detectedLanesForward: scenario.detectedLanesForward,
+                    detectedLanesBackward: scenario.detectedLanesBackward,
+                    detectedLanesBothWays: scenario.detectedLanesBothWays,
+                    asserted: "lane count is right",
                   },
                 ),
               });

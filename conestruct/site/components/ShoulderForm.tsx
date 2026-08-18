@@ -131,10 +131,13 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
             // backend single-lane block (issue #136).
             onChange={(v) => {
               // Disputed-only override record (#177): the erased relays
-              // were driving the #136 refusal (total === 1) or the #120
-              // caution (arithmetic mismatch).  An ordinary edit over
-              // consistent relays is the manual-supersede convention
-              // (#112) and stays silent.
+              // were driving the #136 refusal (total === 1), the #120
+              // caution, or the #173 signal-proximity refusal (both
+              // arithmetic mismatch — the edit is the shoulder kind's
+              // recovery affordance for that gate; the signal-distance
+              // fact itself stays, and alone it never blocks).  An
+              // ordinary edit over consistent relays is the
+              // manual-supersede convention (#112) and stays silent.
               const disputed =
                 scenario.detectedLanesTotal === 1 ||
                 lanesArithmeticMismatch(

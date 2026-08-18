@@ -90,11 +90,14 @@ export function lanesArithmeticMismatch(
 //   1. The row predicates below are exact mirrors of the backend gates
 //      (flaggerLaneIneligibleHigh ↔ flagger_lane_ineligible_high;
 //      ONEWAY_BLOCKING ↔ _ONEWAY_BLOCKING; total === 1 ↔ the single-lane
-//      gate, exact because FlaggerLaneClosureScenario has no ``divided``).
+//      gate, exact because FlaggerLaneClosureScenario has no ``divided``;
+//      signalProximityLaneConfidence ↔ the #173 branch of
+//      _ensure_lane_confidence).
 //   2. The evaluation ORDER below replicates the backend gate order in
 //      render_api._placements_for (#86 high → #136 single-lane → #158
-//      one-way, all before geometry validation), so the first true
-//      predicate names the gate that actually fired.
+//      one-way → #120/#173 lane-confidence, all before geometry
+//      validation), so the first true predicate names the gate that
+//      actually fired.
 //
 // Drift is fail-safe: a future gate shipped WITHOUT a mirror row matches
 // nothing here, so the banner renders that gate's full 400 once (the
@@ -109,8 +112,40 @@ export interface RefusalAffordance {
     | "flagger_multilane"
     | "flagger_single_lane"
     | "flagger_oneway"
+    | "flagger_lane_confidence"
+    | "shoulder_lane_confidence"
     | "ni_lane_confidence";
   pointer: string;
+}
+
+// Mirror of render_api.SIGNAL_GATE_NEARBY_M (issue #173) — display-only:
+// the backend owns the predicate (rule 3); this copy only decides which
+// recovery pointer the refusal banner shows.  The value's CHOSEN
+// rationale lives on the backend constant.
+const SIGNAL_GATE_NEARBY_M = 30.0;
+
+// Mirror of the backend's signal-proximity lane-confidence branch
+// (issue #173): a relayed signal within SIGNAL_GATE_NEARBY_M plus
+// self-contradicting per-direction lane relays.  Exported for the
+// FlaggerForm confirm row's arming predicate (the row arms exactly in
+// the gate-refused state, like its #136/#86/#158 siblings).
+export function signalProximityLaneConfidence(s: {
+  signalDistanceM?: number;
+  detectedLanesTotal?: number;
+  detectedLanesForward?: number;
+  detectedLanesBackward?: number;
+  detectedLanesBothWays?: number;
+}): boolean {
+  return (
+    s.signalDistanceM !== undefined &&
+    s.signalDistanceM <= SIGNAL_GATE_NEARBY_M &&
+    lanesArithmeticMismatch(
+      s.detectedLanesTotal,
+      s.detectedLanesForward,
+      s.detectedLanesBackward,
+      s.detectedLanesBothWays,
+    )
+  );
 }
 
 export function matchRefusalAffordance(
@@ -141,6 +176,18 @@ export function matchRefusalAffordance(
         }
       : null;
   }
+  // shoulder (#173): the signal-proximity lane-confidence gate is the
+  // kind's only refusal; the remedy is the Road section's lane edit,
+  // which clears all four lane relays (shoulder_lane_edit).
+  if (scenario.kind === "shoulder") {
+    return signalProximityLaneConfidence(scenario)
+      ? {
+          code: "shoulder_lane_confidence",
+          pointer:
+            "The map's lane counts contradict each other beside a signalized intersection — set Lanes per direction in the Road section to proceed.",
+        }
+      : null;
+  }
   if (scenario.kind !== "flagger_lane_closure") return null;
   if (
     flaggerLaneIneligibleHigh(
@@ -168,6 +215,16 @@ export function matchRefusalAffordance(
       code: "flagger_oneway",
       pointer:
         "Detection saw a one-way street — confirm two-way traffic in the Road section to proceed.",
+    };
+  }
+  // #173: after the #86/#136/#158 rows, matching the backend gate order
+  // (_ensure_lane_confidence runs last at the chokepoint).  The remedy
+  // is the "Lane count is right" confirm row, which clears the relays.
+  if (signalProximityLaneConfidence(scenario)) {
+    return {
+      code: "flagger_lane_confidence",
+      pointer:
+        "The map's lane counts contradict each other beside a signalized intersection — confirm “Lane count is right” in the Road section to proceed.",
     };
   }
   return null;
@@ -379,6 +436,10 @@ export function applyClassification(
           detectedLanesForward: c.detectedLanesForward,
           detectedLanesBackward: c.detectedLanesBackward,
           detectedLanesBothWays: c.detectedLanesBothWays,
+          // Relay the signal-proximity fact for the backend's
+          // signal-proximity lane-confidence gate (issue #173).  Pure
+          // fact; drives no geometry here.
+          signalDistanceM: c.signalDistanceM,
           // Fresh detection supersedes any recorded override (#177):
           // the old dispute was about relays this patch just replaced.
           detectionOverrides: undefined,
@@ -412,11 +473,14 @@ export function applyClassification(
         detectedLanesTotal: c.detectedLanesTotal,
         oneway: c.detectedOneway,
         // Per-direction lane relays (issue #120) — same consistency
-        // caution as shoulder; flagger has no lane field, so the audit
-        // item is the only consumer.
+        // caution as shoulder; beside a detected signal the backend
+        // gate refuses instead (issue #173), recovered by the "Lane
+        // count is right" confirm row.
         detectedLanesForward: c.detectedLanesForward,
         detectedLanesBackward: c.detectedLanesBackward,
         detectedLanesBothWays: c.detectedLanesBothWays,
+        // Signal-proximity fact for the #173 gate.  Pure relay.
+        signalDistanceM: c.signalDistanceM,
         // Fresh detection supersedes any recorded override (#177):
         // the old dispute was about relays this patch just replaced.
         detectionOverrides: undefined,
