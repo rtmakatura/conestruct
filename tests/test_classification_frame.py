@@ -297,3 +297,93 @@ class TestNoCenterlineIsPreFix:
         assert one_pt.along_station_ft(*probe) == bare.along_station_ft(*probe)
         assert one_pt.lateral_offset_ft(*probe) == bare.lateral_offset_ft(*probe)
         assert one_pt.classify_distance(*probe) == bare.classify_distance(*probe)
+
+
+# ---------------------------------------------------------------------------
+# corridor_bbox — the superset invariant (#207 centerpiece proof)
+# ---------------------------------------------------------------------------
+
+# The site_detection call shape: 100 m lateral, 152.4 m (500 ft)
+# longitudinal — _CORRIDOR_LONGITUDINAL_BUFFER_M.
+LATERAL_BUFFER_M = 100.0
+LONGITUDINAL_BUFFER_M = 152.4
+
+
+def _assert_bbox_superset(corridor: WorkCorridor) -> None:
+    """The invariant, post-#207 form: for every station in the buffered
+    window, the drawn point AND its full lateral acceptance band lie
+    inside the box.  Pre-#207 measurement on the Lookout fixture: 16 of
+    24 in-corridor drawn stations fell OUTSIDE the chord-derived box."""
+    south, west, north, east = corridor.corridor_bbox(
+        lateral_buffer_m=LATERAL_BUFFER_M,
+        longitudinal_buffer_m=LONGITUDINAL_BUFFER_M,
+    )
+    lo = -LONGITUDINAL_BUFFER_M * FT_PER_M
+    hi = corridor.total_length_ft + LONGITUDINAL_BUFFER_M * FT_PER_M
+    station = lo
+    while station <= hi:
+        on_road = corridor.point_at_station_ft(station)
+        perp = (_local_tangent_deg(corridor, station) + 90.0) % 360.0
+        for probe in (
+            on_road,
+            _destination_point(*on_road, perp, LATERAL_BUFFER_M),
+            _destination_point(*on_road, (perp + 180.0) % 360.0, LATERAL_BUFFER_M),
+        ):
+            assert south <= probe[0] <= north and west <= probe[1] <= east, (
+                f"station {station:.0f} (lateral band) escapes the bbox"
+            )
+        station += 50.0
+
+
+class TestCorridorBboxSuperset:
+    def test_curved_fixture_containment(self) -> None:
+        _assert_bbox_superset(_lookout_corridor())
+
+    def test_synthetic_arc_containment(self) -> None:
+        _assert_bbox_superset(_arc_corridor(_arc_centerline()))
+
+    def test_chord_twin_box_actually_leaks_here(self) -> None:
+        """Non-vacuity: the same probe walk against the chord twin's box
+        fails on the curved fixture (the pre-#207 16/24 leak)."""
+        corridor = _lookout_corridor()
+        chord = _chord_twin(corridor)
+        south, west, north, east = chord.corridor_bbox(
+            lateral_buffer_m=LATERAL_BUFFER_M,
+            longitudinal_buffer_m=LONGITUDINAL_BUFFER_M,
+        )
+        leaks = 0
+        station = 0.0
+        while station <= corridor.total_length_ft:
+            lat, lng = corridor.point_at_station_ft(station)
+            if not (south <= lat <= north and west <= lng <= east):
+                leaks += 1
+            station += 100.0
+        assert leaks >= 10
+
+    def test_no_centerline_bbox_is_the_original_corner_math(self) -> None:
+        """Compat bar: without a centerline the box is byte-identical to
+        the pre-#207 endpoint/perpendicular corner construction."""
+        corridor = _arc_corridor(None)
+        for long_buf in (0.0, LONGITUDINAL_BUFFER_M):
+            upstream = corridor.upstream_point()
+            downstream = corridor.downstream_point()
+            left = (corridor.bearing_deg - 90.0) % 360.0
+            right = (corridor.bearing_deg + 90.0) % 360.0
+            reciprocal = (corridor.bearing_deg + 180.0) % 360.0
+            endpoints = [upstream, downstream]
+            if long_buf > 0.0:
+                endpoints.append(_destination_point(*upstream, corridor.bearing_deg, long_buf))
+                endpoints.append(_destination_point(*downstream, reciprocal, long_buf))
+            corners = list(endpoints)
+            for lat, lng in endpoints:
+                corners.append(_destination_point(lat, lng, left, LATERAL_BUFFER_M))
+                corners.append(_destination_point(lat, lng, right, LATERAL_BUFFER_M))
+            lats = [c[0] for c in corners]
+            lngs = [c[1] for c in corners]
+            expected = (min(lats), min(lngs), max(lats), max(lngs))
+            assert (
+                corridor.corridor_bbox(
+                    lateral_buffer_m=LATERAL_BUFFER_M, longitudinal_buffer_m=long_buf
+                )
+                == expected
+            )

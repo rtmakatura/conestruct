@@ -464,7 +464,47 @@ class WorkCorridor:
         cardinal bearings a pure lateral inflation does not extend the
         bbox in the bearing direction at all, so without this padding
         end-of-corridor features are silently dropped.
+
+        With a :attr:`centerline` (#207) the box is built over the ROAD
+        path, not the straight chord — pre-#207, on the Lookout Mountain
+        fixture, 16 of 24 drawn-corridor stations fell outside the chord
+        bbox, so mid-bend features were never even fetched.  The box
+        must stay a superset of every point the classification frame can
+        accept, plus its lateral acceptance band.
         """
+        frame = self._centerline_frame()
+        if frame is not None:
+            cum_m, anchor_arc_m, sign = frame
+            assert self.centerline is not None
+            lo_ft = -longitudinal_buffer_m * FT_PER_M
+            hi_ft = self.total_length_ft + longitudinal_buffer_m * FT_PER_M
+            # Every centerline VERTEX whose station falls in the buffered
+            # window, plus the tangent-extended window ends and the
+            # anchor.  Vertices (not samples) make the hull exact:
+            # between vertices the polyline is straight, so its lat/lng
+            # extremes are at vertices — the padded min/max box is a
+            # strict superset of the whole in-window road path.
+            hull: list[tuple[float, float]] = [
+                (self.anchor_lat, self.anchor_lng),
+                self.point_at_station_ft(lo_ft),
+                self.point_at_station_ft(hi_ft),
+            ]
+            for i, pt in enumerate(self.centerline):
+                station_ft = sign * (cum_m[i] - anchor_arc_m) * FT_PER_M
+                if lo_ft <= station_ft <= hi_ft:
+                    hull.append(pt)
+            # Inflate by the lateral buffer in all four cardinal
+            # directions: any point within ``lateral_buffer_m`` of an
+            # in-window road point displaces each coordinate by at most
+            # the buffer, so the padded box contains it.
+            corners: list[tuple[float, float]] = []
+            for lat, lng in hull:
+                for cardinal in (0.0, 90.0, 180.0, 270.0):
+                    corners.append(_destination_point(lat, lng, cardinal, lateral_buffer_m))
+            lats = [c[0] for c in corners]
+            lngs = [c[1] for c in corners]
+            return min(lats), min(lngs), max(lats), max(lngs)
+
         upstream = self.upstream_point()
         downstream = self.downstream_point()
 
