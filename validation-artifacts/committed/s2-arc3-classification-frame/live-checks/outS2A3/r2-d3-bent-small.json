@@ -1,0 +1,88 @@
+{
+  "intersections": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "unnamed at 39.7444, -105.2328",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -407.8,
+        "lateral_offset_ft": 1935.8,
+        "distance_to_anchor_m": 602.8
+      },
+      {
+        "label": "unnamed at 39.7444, -105.2328",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -393.5,
+        "lateral_offset_ft": 1918.7,
+        "distance_to_anchor_m": 596.8
+      }
+    ]
+  },
+  "interchanges": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [],
+    "junction_refs": []
+  },
+  "sidewalks": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "unnamed at 39.7441, -105.2296",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 3483.2,
+        "lateral_offset_ft": 2489.5,
+        "distance_to_anchor_m": 844.2
+      },
+      {
+        "label": "unnamed at 39.7425, -105.2299",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 3517.1,
+        "lateral_offset_ft": 1915.1,
+        "distance_to_anchor_m": 800.2
+      }
+    ]
+  },
+  "bike_facilities": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "schools": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "railroad_crossings": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "hospitals": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "road_curvature": {
+    "detected": false,
+    "count": 0,
+    "details": [
+      "Road curvature analysis not implemented; assume straight."
+    ],
+    "features": []
+  },
+  "mode": "corridor"
+}

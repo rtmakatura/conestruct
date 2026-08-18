@@ -1,0 +1,103 @@
+{
+  "intersections": {
+    "detected": true,
+    "count": 1,
+    "details": [
+      "unnamed at 39.7371, -105.2452 [advance_warning @ 2741 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.7371, -105.2452",
+        "zone": "advance_warning",
+        "relevant": true,
+        "along_station_ft": 2741.1,
+        "lateral_offset_ft": 0.0,
+        "distance_to_anchor_m": 766.1
+      }
+    ],
+    "nearest_distance_m": 766.1
+  },
+  "interchanges": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "Chimney Gulch Trail",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 3404.4,
+        "lateral_offset_ft": 375.5,
+        "distance_to_anchor_m": 834.6
+      },
+      {
+        "label": "Chimney Gulch Trail",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 2051.2,
+        "lateral_offset_ft": 520.7,
+        "distance_to_anchor_m": 577.1
+      }
+    ],
+    "junction_refs": []
+  },
+  "sidewalks": {
+    "detected": true,
+    "count": 1,
+    "details": [
+      "Chimney Gulch Trail [advance_warning @ 2738 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.7368, -105.2455",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 2862.7,
+        "lateral_offset_ft": 63.4,
+        "distance_to_anchor_m": 815.9
+      },
+      {
+        "label": "Chimney Gulch Trail",
+        "zone": "advance_warning",
+        "relevant": true,
+        "along_station_ft": 2738.2,
+        "lateral_offset_ft": 0.2,
+        "distance_to_anchor_m": 765.2
+      }
+    ],
+    "nearest_distance_m": 765.2
+  },
+  "bike_facilities": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "schools": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "railroad_crossings": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "hospitals": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "road_curvature": {
+    "detected": false,
+    "count": 0,
+    "details": [
+      "Road curvature analysis not implemented; assume straight."
+    ],
+    "features": []
+  },
+  "mode": "corridor"
+}

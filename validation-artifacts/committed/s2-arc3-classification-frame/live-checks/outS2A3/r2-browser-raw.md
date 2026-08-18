@@ -1,0 +1,10 @@
+- `2026-08-18T06:35:55.538Z` healthz sha: 0420ca21c30cd36126dbdd0b1c21b8212dc3c018
+- `2026-08-18T06:35:55.540Z` expected: 0420ca21c30cd36126dbdd0b1c21b8212dc3c018
+- `2026-08-18T06:35:56.013Z` served bundle sha found in /_next/static/chunks/720-23f440739b5033dc.js
+- `2026-08-18T06:35:56.013Z` **PASS** — gate. healthz == origin/main == served bundle (0420ca2)
+- `2026-08-18T06:36:25.761Z` Lakewood candidate picked (Wadsworth)
+- `2026-08-18T06:36:26.647Z` picker saved (Lakewood)
+- `2026-08-18T06:36:33.728Z` **PASS** — B1'. the browser's detect body carries the confirmed road's centerline (59 vertices)
+- `2026-08-18T06:36:33.728Z` **PASS** — B2'. the relay-bearing browser detect succeeds end-to-end (round 1: 413) (HTTP 200)
+- `2026-08-18T06:36:35.236Z` **PASS** — B3'. the corridor-scan result surfaces ("flag(s) auto-checked") (Corridor scan: 3 flag(s) auto-checked)
+- `2026-08-18T06:36:35.929Z` **FAIL** — AX1'. axe zero violations — post-detect state (1 finding(s))

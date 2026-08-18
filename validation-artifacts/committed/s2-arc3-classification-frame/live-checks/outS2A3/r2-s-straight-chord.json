@@ -1,0 +1,198 @@
+{
+  "intersections": {
+    "detected": true,
+    "count": 13,
+    "details": [
+      "unnamed at 39.7112, -105.0816 [downstream @ 45 ft]",
+      "unnamed at 39.7108, -105.0816 [work_zone @ 164 ft]",
+      "unnamed at 39.7112, -105.0814 [downstream @ 49 ft]",
+      "unnamed at 39.7108, -105.0814 [work_zone @ 168 ft]",
+      "unnamed at 39.7092, -105.0812 [work_zone @ 762 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.7112, -105.0816",
+        "zone": "downstream",
+        "relevant": true,
+        "along_station_ft": 44.8,
+        "lateral_offset_ft": 24.5,
+        "distance_to_anchor_m": 15.6
+      },
+      {
+        "label": "unnamed at 39.7108, -105.0816",
+        "zone": "work_zone",
+        "relevant": true,
+        "along_station_ft": 163.5,
+        "lateral_offset_ft": 34.5,
+        "distance_to_anchor_m": 50.9
+      },
+      {
+        "label": "unnamed at 39.7111, -105.0813",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 77.8,
+        "lateral_offset_ft": 53.1,
+        "distance_to_anchor_m": 28.7
+      },
+      {
+        "label": "unnamed at 39.7071, -105.0800",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1556.1,
+        "lateral_offset_ft": 318.0,
+        "distance_to_anchor_m": 484.1
+      },
+      {
+        "label": "unnamed at 39.7070, -105.0800",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1589.7,
+        "lateral_offset_ft": 315.6,
+        "distance_to_anchor_m": 494.0
+      }
+    ],
+    "nearest_distance_m": 10.4
+  },
+  "interchanges": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [],
+    "junction_refs": []
+  },
+  "sidewalks": {
+    "detected": true,
+    "count": 15,
+    "details": [
+      "unnamed at 39.7112, -105.0812 [lateral @ 38 ft]",
+      "unnamed at 39.7108, -105.0815 [work_zone @ 165 ft]",
+      "unnamed at 39.7072, -105.0816 [lateral @ 1495 ft]",
+      "unnamed at 39.7112, -105.0817 [lateral @ 26 ft]",
+      "unnamed at 39.7112, -105.0815 [downstream @ 46 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.7105, -105.0822",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 261.9,
+        "lateral_offset_ft": 202.0,
+        "distance_to_anchor_m": 100.8
+      },
+      {
+        "label": "unnamed at 39.7112, -105.0812",
+        "zone": "lateral",
+        "relevant": true,
+        "along_station_ft": 38.1,
+        "lateral_offset_ft": 72.7,
+        "distance_to_anchor_m": 25.0
+      },
+      {
+        "label": "unnamed at 39.7108, -105.0815",
+        "zone": "work_zone",
+        "relevant": true,
+        "along_station_ft": 165.3,
+        "lateral_offset_ft": 9.6,
+        "distance_to_anchor_m": 50.5
+      },
+      {
+        "label": "unnamed at 39.7110, -105.0799",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 131.8,
+        "lateral_offset_ft": 430.4,
+        "distance_to_anchor_m": 137.2
+      },
+      {
+        "label": "unnamed at 39.7072, -105.0798",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1523.6,
+        "lateral_offset_ft": 369.0,
+        "distance_to_anchor_m": 477.8
+      }
+    ],
+    "nearest_distance_m": 14.2
+  },
+  "bike_facilities": {
+    "detected": true,
+    "count": 25,
+    "details": [
+      "unnamed at 39.7092, -105.0818 [lateral @ 755 ft]",
+      "unnamed at 39.7100, -105.0818 [lateral @ 456 ft]",
+      "unnamed at 39.7092, -105.0812 [work_zone @ 758 ft]",
+      "unnamed at 39.7082, -105.0813 [buffer @ 1133 ft]",
+      "unnamed at 39.7100, -105.0812 [work_zone @ 462 ft]"
+    ],
+    "features": [
+      {
+        "label": "Alameda Avenue Multi-Use Path",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 154.1,
+        "lateral_offset_ft": 378.2,
+        "distance_to_anchor_m": 124.5
+      },
+      {
+        "label": "unnamed at 39.7092, -105.0818",
+        "zone": "lateral",
+        "relevant": true,
+        "along_station_ft": 755.4,
+        "lateral_offset_ft": 130.6,
+        "distance_to_anchor_m": 233.7
+      },
+      {
+        "label": "unnamed at 39.7082, -105.0818",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1130.3,
+        "lateral_offset_ft": 167.3,
+        "distance_to_anchor_m": 348.3
+      },
+      {
+        "label": "unnamed at 39.7100, -105.0818",
+        "zone": "lateral",
+        "relevant": true,
+        "along_station_ft": 456.3,
+        "lateral_offset_ft": 118.0,
+        "distance_to_anchor_m": 143.7
+      },
+      {
+        "label": "Alameda Multi-Use Path",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 14.2,
+        "lateral_offset_ft": 244.7,
+        "distance_to_anchor_m": 74.7
+      }
+    ],
+    "nearest_distance_m": 21.7
+  },
+  "schools": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "railroad_crossings": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "hospitals": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "road_curvature": {
+    "detected": false,
+    "count": 0,
+    "details": [
+      "Road curvature analysis not implemented; assume straight."
+    ],
+    "features": []
+  },
+  "mode": "corridor"
+}

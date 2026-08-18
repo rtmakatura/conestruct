@@ -1,0 +1,19 @@
+- `2026-08-18T06:31:14Z` **PASS** — D2'. the 166-vertex fixture relay serves (round 1: 413) (HTTP 200)
+- `2026-08-18T06:31:17Z` **PASS** — D3' (inverted). the bent centerline CHANGES the classification vs no-centerline (canonical responses differ)
+- `2026-08-18T06:31:34Z`   C candidate: 'Lookout Mountain Road' way 1432422179 bearing 94.57 snap 23 m geomLen 262
+- `2026-08-18T06:32:22Z`   C Overpass coord fetch: 6 elements
+- `2026-08-18T06:32:22Z`   C-match [intersections] 'unnamed at 39.7338, -105.2392': served lateral @ -2.7 ft / local lateral @ -2.7 ft (Δst 0.02, Δlat 0.02; chord would say -2.7 ft)
+- `2026-08-18T06:32:22Z`   C-match [sidewalks] 'unnamed at 39.7325, -105.2383': served lateral @ 636.9 ft / local lateral @ 636.9 ft (Δst 0.01, Δlat 0.04; chord would say 299.6 ft)
+- `2026-08-18T06:32:22Z`   C-match [sidewalks] 'unnamed at 39.7325, -105.2381': served lateral @ 801.5 ft / local lateral @ 801.5 ft (Δst 0.00, Δlat 0.02; chord would say 347.8 ft)
+- `2026-08-18T06:32:22Z`   C-match [sidewalks] 'unnamed at 39.7328, -105.2383': served lateral @ 510.3 ft / local lateral @ 510.3 ft (Δst 0.03, Δlat 0.03; chord would say 268.3 ft)
+- `2026-08-18T06:32:22Z`   C-match [sidewalks] 'unnamed at 39.7335, -105.2386': served lateral @ 271.8 ft / local lateral @ 271.8 ft (Δst 0.03, Δlat 0.02; chord would say 170.2 ft)
+- `2026-08-18T06:32:22Z`   C-match [sidewalks] 'unnamed at 39.7334, -105.2387': served lateral @ 278.2 ft / local lateral @ 278.2 ft (Δst 0.00, Δlat 0.01; chord would say 151.2 ft)
+- `2026-08-18T06:32:22Z` **PASS** — C1. served station/zone == the local road frame for every matched feature (6 matched (2 relevant among served), max Δ 0.04 ft, zone mismatches 0)
+- `2026-08-18T06:32:22Z` **PASS** — C2. the chord frame materially disagrees on this curve (non-vacuity) (max chord-vs-served station delta 454 ft)
+- `2026-08-18T06:32:38Z`   S candidate: 'South Wadsworth Boulevard' way 132831821 bearing 176 geomLen 59
+- `2026-08-18T06:33:19Z`   S Overpass coord fetch: 175 elements
+- `2026-08-18T06:33:19Z` **PASS** — S1 (recast). served == local per frame for every matched shared feature (6 matched, max served-vs-local delta 0.049 ft, zone mismatches 0; measured A/B curvature delta up to 14.0 ft (the road's, declared))
+- `2026-08-18T06:33:19Z`   S set-membership not evaluable on Lakewood: buckets at the 5-record cap: ['intersections', 'sidewalks', 'bike_facilities'] (counts exceed the evidence window)
+- `2026-08-18T06:33:38Z`   S2 candidate: 'Washington Way' way 16971963 bearing 0.5 geomLen 24
+- `2026-08-18T06:34:24Z`   S2 Overpass coord fetch: 10 elements
+- `2026-08-18T06:34:24Z` **PASS** — S2 (uncapped buckets). set differences are exactly predicted bbox-membership differences (3/1 uncapped features; chord-only 2, road-only 0, unexplained 0)

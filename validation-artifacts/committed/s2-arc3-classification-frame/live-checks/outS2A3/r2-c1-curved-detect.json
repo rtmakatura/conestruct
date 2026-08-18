@@ -1,0 +1,117 @@
+{
+  "intersections": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "unnamed at 39.7338, -105.2392",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": -2.7,
+        "lateral_offset_ft": 91.9,
+        "distance_to_anchor_m": 5.2
+      }
+    ]
+  },
+  "interchanges": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "Buffalo Bill Trail",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 2590.0,
+        "lateral_offset_ft": 256.7,
+        "distance_to_anchor_m": 484.7
+      }
+    ],
+    "junction_refs": []
+  },
+  "sidewalks": {
+    "detected": true,
+    "count": 2,
+    "details": [
+      "unnamed at 39.7335, -105.2386 [lateral @ 272 ft]",
+      "unnamed at 39.7334, -105.2387 [lateral @ 278 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.7325, -105.2383",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 636.9,
+        "lateral_offset_ft": 275.8,
+        "distance_to_anchor_m": 164.9
+      },
+      {
+        "label": "unnamed at 39.7325, -105.2381",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 801.5,
+        "lateral_offset_ft": 231.1,
+        "distance_to_anchor_m": 172.9
+      },
+      {
+        "label": "unnamed at 39.7328, -105.2383",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 510.3,
+        "lateral_offset_ft": 226.0,
+        "distance_to_anchor_m": 135.2
+      },
+      {
+        "label": "unnamed at 39.7335, -105.2386",
+        "zone": "lateral",
+        "relevant": true,
+        "along_station_ft": 271.8,
+        "lateral_offset_ft": 102.5,
+        "distance_to_anchor_m": 60.3
+      },
+      {
+        "label": "unnamed at 39.7334, -105.2387",
+        "zone": "lateral",
+        "relevant": true,
+        "along_station_ft": 278.2,
+        "lateral_offset_ft": 137.2,
+        "distance_to_anchor_m": 60.9
+      }
+    ],
+    "nearest_distance_m": 60.3
+  },
+  "bike_facilities": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "schools": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "railroad_crossings": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "hospitals": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "road_curvature": {
+    "detected": false,
+    "count": 0,
+    "details": [
+      "Road curvature analysis not implemented; assume straight."
+    ],
+    "features": []
+  },
+  "mode": "corridor"
+}
