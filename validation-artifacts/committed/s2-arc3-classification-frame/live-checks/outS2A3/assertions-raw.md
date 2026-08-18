@@ -1,0 +1,13 @@
+- `2026-08-18T06:08:07.412Z` healthz sha: 71a11449da4d2d0d81ef4e20ae9f2fbd7922b406
+- `2026-08-18T06:08:07.414Z` expected (git rev-parse origin/main): 71a11449da4d2d0d81ef4e20ae9f2fbd7922b406
+- `2026-08-18T06:08:12.523Z` served bundle sha found in /_next/static/chunks/720-4fe41fb05e8c0511.js
+- `2026-08-18T06:08:12.523Z` **PASS** — gate. healthz == origin/main == served bundle (71a1144)
+- `2026-08-18T06:08:20.860Z` **PASS** — D1. corridor-mode detect without a centerline serves (HTTP 200)
+- `2026-08-18T06:08:21.126Z` **FAIL** — D2. relay-bearing detect (166-vertex fixture geometry) reaches the backend (HTTP 413 — Payload too large)
+- `2026-08-18T06:08:57.622Z` **FAIL** — D3. a sub-1 KB bent centerline changes the classification (not silently stripped) (response canonically identical to D1 — the allowlist dropped the field)
+- `2026-08-18T06:09:22.698Z` Lakewood candidate picked (Wadsworth)
+- `2026-08-18T06:09:23.740Z` picker saved (Lakewood)
+- `2026-08-18T06:09:24.765Z` **PASS** — B1. the browser's detect body carries the confirmed road's centerline (59 vertices)
+- `2026-08-18T06:09:24.766Z` **FAIL** — B2. the relay-bearing browser detect succeeds end-to-end (HTTP 413)
+- `2026-08-18T06:09:24.768Z` **PASS** — B3. the outcome is surfaced honestly (result count or a visible error, never silence) (error surfaced)
+- `2026-08-18T06:09:25.399Z` **FAIL** — AX1. axe zero violations — post-detect state (1 finding(s))
