@@ -864,6 +864,16 @@ class DetectSiteRequest(BaseModel):
     closure_type: str | None = None
     road_type: str | None = None
     lane_width_ft: float = Field(default=12.0, ge=8.0, le=20.0)
+    # Road centerline as [lat, lng] vertices (#207) — the confirmed OSM
+    # road candidate's way geometry, relayed by the same staleness-guarded
+    # rule as ScenarioMeta.centerline (#140).  With it, corridor-mode
+    # detection classifies features in the road's station frame (the one
+    # the drawing uses) and the Overpass bbox follows the road; absent or
+    # under 2 vertices ⇒ the straight-chord frame, exactly as before.  A
+    # backend that predates this field drops it silently (Pydantic) and
+    # classifies on the chord — graceful, but the reason backend-first is
+    # the deploy order for this arc.
+    centerline: list[tuple[float, float]] | None = None
 
 
 @app.post("/render/detect-site")
@@ -911,6 +921,9 @@ def render_detect_site(req: DetectSiteRequest) -> JSONResponse:
                 closure_type=closure_type,
                 road_type=_map_road_type(road_type, speed_mph),
                 lane_width_ft=req.lane_width_ft,
+                centerline=(
+                    tuple((p[0], p[1]) for p in req.centerline) if req.centerline else None
+                ),
             )
         except ValueError as exc:
             # Unknown closure_type / road_type → log the reason as a soft

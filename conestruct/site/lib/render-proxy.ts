@@ -405,6 +405,11 @@ export interface DetectSiteRequestBody {
   closure_type?: string;
   road_type?: string;
   lane_width_ft?: number;
+  // #207: the confirmed road's way geometry, materialized through the
+  // same staleness-guarded relay as ScenarioMeta.centerline (#140).
+  // With it the Modal service classifies detected features in the
+  // road's station frame; absent, the straight-chord frame as before.
+  centerline?: Array<[number, number]>;
 }
 
 export async function fetchSiteDetection(

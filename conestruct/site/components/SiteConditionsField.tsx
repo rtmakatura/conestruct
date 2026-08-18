@@ -8,6 +8,7 @@ import {
   type SiteConditionFlag,
   type SiteConditions,
 } from "@/lib/scenarios";
+import { withRelayedCenterline } from "@/lib/scenarios/centerline-relay";
 import { CheckRow, FieldGroup } from "./GeneratorFormPrimitives";
 
 const FLAG_LABELS: Record<SiteConditionFlag, { label: string; desc: string }> =
@@ -119,7 +120,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
     setDetecting(true);
     setDetectError(null);
     try {
-      const body: Record<string, number | string> = {
+      const body: Record<string, number | string | Array<[number, number]>> = {
         lat: meta.lat,
         lng: meta.lng,
         radius_m: 500,
@@ -131,6 +132,14 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
         body.closure_type = SCENARIO_KIND_TO_CLOSURE_TYPE[scenario.kind];
         body.road_type = scenario.roadType;
         body.lane_width_ft = scenario.laneWidth;
+        // #207: relay the confirmed road's geometry so corridor-mode
+        // detection classifies in the road's station frame — the same
+        // wire-only, staleness-guarded materialization the render
+        // payloads use (exact pin match; never stored).
+        const wireCenterline = withRelayedCenterline(scenario).meta.centerline;
+        if (wireCenterline) {
+          body.centerline = wireCenterline;
+        }
       }
       const r = await fetch("/api/render/detect-site", {
         method: "POST",

@@ -137,3 +137,114 @@ def test_corridor_valueerror_falls_back_to_point_with_reason(
         "corridor_unavailable_reason": "unknown closure_type: bogus",
     }
     assert sentinel == before
+
+
+# ---------------------------------------------------------------------------
+# #207 — the centerline relay into corridor-mode classification
+# ---------------------------------------------------------------------------
+
+
+def test_centerline_reaches_the_corridor(
+    client: TestClient,
+    auth_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from src.api import render_api
+
+    seen: dict[str, Any] = {}
+
+    def _capture(**kwargs: Any) -> object:
+        seen.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(render_api, "build_corridor", _capture)
+    monkeypatch.setattr(render_api, "detect_along_corridor", lambda c: _sentinel())
+
+    geometry = [[39.742, -105.239], [39.743, -105.24], [39.744, -105.241]]
+    resp = client.post(
+        "/render/detect-site",
+        json={**_CORRIDOR_BODY, "centerline": geometry},
+        headers=auth_headers,
+    )
+    assert resp.status_code == 200
+    assert seen["centerline"] == tuple((p[0], p[1]) for p in geometry)
+
+    # Absent ⇒ None — the structural chord-compat path.
+    seen.clear()
+    resp = client.post("/render/detect-site", json=_CORRIDOR_BODY, headers=auth_headers)
+    assert resp.status_code == 200
+    assert seen["centerline"] is None
+
+
+def test_mid_bend_feature_classifies_in_the_road_frame(
+    client: TestClient,
+    auth_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Payload-level (Rule 11): a traffic signal sitting ON the road
+    mid-bend of the recorded Lookout Mountain centerline comes back
+    ``work_zone``/relevant through the whole endpoint.  Pre-#207 the
+    identical request classified it ``lateral`` (irrelevant) — the
+    chord frame misfiled on-road features (22/24 stations on this
+    fixture)."""
+    import json as jsonlib
+    from pathlib import Path
+
+    from src.api import render_api
+    from src.rules import site_detection
+    from src.rules.corridor import build_corridor
+
+    fixture = Path(__file__).parent / "fixtures" / "centerline" / "lookout_mountain_road.json"
+    data = jsonlib.loads(fixture.read_text())
+    centerline = [[p[0], p[1]] for p in data["centerline"]]
+
+    body = {
+        "lat": data["anchor"][0],
+        "lng": data["anchor"][1],
+        "radius_m": 500,
+        "bearing_deg": data["bearing_deg"],
+        "speed_mph": 40,
+        "work_zone_ft": 800.0,
+        "closure_type": "shoulder",
+        "road_type": "urban_arterial",
+        "centerline": centerline,
+    }
+    # The same corridor the handler builds (urban_arterial @ 40 mph maps
+    # to urban_low) — used only to place the probe feature mid work zone.
+    corridor = build_corridor(
+        lat=data["anchor"][0],
+        lng=data["anchor"][1],
+        bearing_deg=data["bearing_deg"],
+        speed_mph=40,
+        work_zone_ft=800.0,
+        closure_type="shoulder",
+        road_type=render_api._map_road_type("urban_arterial", 40),
+        centerline=tuple((p[0], p[1]) for p in data["centerline"]),
+    )
+    mid_wz = corridor.downstream_taper_ft + corridor.work_zone_ft / 2.0
+    lat, lng = corridor.point_at_station_ft(mid_wz)
+
+    payload = {
+        "elements": [
+            {
+                "type": "node",
+                "id": 1,
+                "lat": lat,
+                "lon": lng,
+                "tags": {"highway": "traffic_signals"},
+            }
+        ]
+    }
+    monkeypatch.setattr(
+        site_detection, "_overpass_request_with_fallback", lambda q: (payload, None)
+    )
+
+    resp = client.post("/render/detect-site", json=body, headers=auth_headers)
+    assert resp.status_code == 200
+    out = resp.json()
+    assert out["mode"] == "corridor"
+    feature = out["intersections"]["features"][0]
+    assert feature["zone"] == "work_zone"
+    assert feature["relevant"] is True
+    assert feature["along_station_ft"] == pytest.approx(mid_wz, abs=2.0)
+    assert out["intersections"]["detected"] is True
