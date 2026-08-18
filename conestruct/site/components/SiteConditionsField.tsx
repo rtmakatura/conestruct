@@ -54,6 +54,12 @@ const DETECTION_TO_FLAG: Record<string, SiteConditionFlag> = {
   schools: "school_zone",
 };
 
+// Inverse of DETECTION_TO_FLAG, for looking up a row's bucket (#16).
+const FLAG_TO_DETECTION: Partial<Record<SiteConditionFlag, string>> =
+  Object.fromEntries(
+    Object.entries(DETECTION_TO_FLAG).map(([det, flag]) => [flag, det]),
+  );
+
 // ScenarioKind → closure_type accepted by build_corridor in
 // src/rules/corridor.py.  Each mapped value must belong to one of the
 // frozensets _resolve_taper_ft consults (corridor.py:58-61):
@@ -108,6 +114,33 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
   const [detectError, setDetectError] = useState<string | null>(null);
   const hasCoords = !!(meta.lat && meta.lng);
   const hasBearing = typeof meta.bearingDeg === "number";
+
+  // #16 — the margin display.  Backend-relayed numbers only (Rule 3:
+  // count / nearest_distance_m / details verbatim, no frontend math),
+  // rendered only under a detection-driven row whose bucket reported a
+  // relevant feature AND whose checkbox is currently on.  Every other
+  // state — no detect yet, bucket empty, detection error, manual-only
+  // row, row unchecked — renders nothing (#186: no phantom numbers).
+  // Session-scoped by design: the checkbox persists in meta, the
+  // evidence lives with this mount's detection result.
+  const evidenceFor = (key: SiteConditionFlag): string[] | undefined => {
+    if (!detection || detection.error || !flags[key]) return undefined;
+    const detKey = FLAG_TO_DETECTION[key];
+    if (!detKey) return undefined;
+    const bucket = detection[detKey];
+    if (!bucket || typeof bucket !== "object" || !bucket.detected)
+      return undefined;
+    const found = `${bucket.count ?? 0} found`;
+    const lines = [
+      bucket.nearest_distance_m != null
+        ? `${found}, nearest ~${bucket.nearest_distance_m} m`
+        : found,
+    ];
+    for (const detail of (bucket.details ?? []).slice(0, 2)) {
+      lines.push(detail);
+    }
+    return lines;
+  };
 
   const toggle = (key: SiteConditionFlag) => {
     const next: SiteConditions = { ...flags, [key]: !flags[key] };
@@ -231,6 +264,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
             on={!!flags[key]}
             label={FLAG_LABELS[key].label}
             desc={FLAG_LABELS[key].desc}
+            evidence={evidenceFor(key)}
             onToggle={() => toggle(key)}
           />
         ))}

@@ -37,11 +37,19 @@ export function CheckRow({
   on,
   label,
   desc,
+  evidence,
   onToggle,
 }: {
   on: boolean;
   label: string;
   desc?: string;
+  // #16 — backend-relayed detection evidence ("2 found, nearest ~122 m"
+  // + detail lines).  Rendered inside the row (as extra check-desc
+  // spans) rather than as a sibling element so the #200 junction rule
+  // (.check-row + :not(.check-row)) never fires mid-list, and the
+  // margin is part of the checkbox's announced content rather than
+  // hidden from AT.  Absent ⇒ nothing renders (#186).
+  evidence?: string[];
   onToggle: () => void;
 }) {
   return (
@@ -59,6 +67,11 @@ export function CheckRow({
       <span className="check-box" />
       <span className="check-lbl">{label}</span>
       {desc && <span className="check-desc">{desc}</span>}
+      {evidence?.map((line, i) => (
+        <span key={i} className="check-desc">
+          {line}
+        </span>
+      ))}
     </button>
   );
 }
