@@ -26,7 +26,7 @@ forward=2 / backward=2` (2 ≠ 4), `oneway=no`, signal **13.75 m**, snap
 double-counting the gate exists for (`turn:lanes:* = left|through`
 both directions). No synthetic relays anywhere in the browser flow.
 
-## Results — 15 checks: 13 PASS (gate included), 2 FAIL (one pre-existing node)
+## Results — 16 checks: 14 PASS (gate included), 2 FAIL (both the one pre-existing node)
 
 The raw log records check names; rendered-text assertions are the
 runner's regexes (`s2a2-live-checks.js`), with the numbered screenshots
@@ -49,7 +49,8 @@ as visual evidence. The refusal sentences under P1/P2/P5 are quoted
 | F2 | the new "Lane count is right" row armed in the Road section | `03-…png` | PASS |
 | F3 | tick lifts the refusal; row stays checked describing the override | `04-…png` | PASS |
 | N1 | served NI narrative carries the rightmost-lane note | `ni-narrative-served.md` | PASS |
-| AX1/AX2 | axe on the refusal state and the armed-row state | 2 × json | **FAIL — same pre-existing node (below)** |
+| AX1 | axe, page in the shoulder refusal state | `axe-shoulder-refusal.json` | **FAIL — pre-existing node (below)** |
+| AX2 | axe, flagger armed-confirm-row state | `axe-flagger-armed-row.json` | **FAIL — same pre-existing node (below)** |
 
 ## Byte-compare (#176's zero-change claim on the served surface)
 
@@ -75,8 +76,8 @@ armed confirm row itself scans clean.
 
 ## Verdict
 
-s2-arc2 is live and verified at `c76dc9c`: gate green first probe, 13
-of 15 checks PASS — every payload branch of the signal-proximity gate
+s2-arc2 is live and verified at `c76dc9c`: gate green first probe, 14
+of 16 checks PASS — every payload branch of the signal-proximity gate
 measured on prod with the sentences verbatim, the full refusal →
 recovery loop driven in the browser on a REAL mismatched-tags pin
 beside a real signal for both kinds (no synthetic relays), the #180
