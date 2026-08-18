@@ -1,0 +1,196 @@
+{
+  "intersections": {
+    "detected": true,
+    "count": 4,
+    "details": [
+      "unnamed at 39.8854, -104.9822 [outside @ -238 ft]",
+      "unnamed at 39.8878, -104.9779 [advance_warning @ 1413 ft]",
+      "unnamed at 39.8858, -104.9823 [outside @ -62 ft]",
+      "unnamed at 39.8858, -104.9822 [outside @ -61 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.8851, -104.9823",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -333.5,
+        "lateral_offset_ft": 278.7,
+        "distance_to_anchor_m": 142.2
+      },
+      {
+        "label": "unnamed at 39.8851, -104.9821",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -335.2,
+        "lateral_offset_ft": 233.8,
+        "distance_to_anchor_m": 133.4
+      },
+      {
+        "label": "unnamed at 39.8853, -104.9822",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -265.6,
+        "lateral_offset_ft": 269.0,
+        "distance_to_anchor_m": 125.9
+      },
+      {
+        "label": "unnamed at 39.8878, -104.9824",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 424.8,
+        "lateral_offset_ft": 447.9,
+        "distance_to_anchor_m": 222.9
+      },
+      {
+        "label": "unnamed at 39.8854, -104.9822",
+        "zone": "outside",
+        "relevant": true,
+        "along_station_ft": -238.5,
+        "lateral_offset_ft": 271.3,
+        "distance_to_anchor_m": 121.3
+      }
+    ],
+    "nearest_distance_m": 92.4
+  },
+  "interchanges": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [],
+    "junction_refs": []
+  },
+  "sidewalks": {
+    "detected": true,
+    "count": 2,
+    "details": [
+      "unnamed at 39.8877, -104.9781 [advance_warning @ 1347 ft]",
+      "unnamed at 39.8878, -104.9779 [advance_warning @ 1413 ft]"
+    ],
+    "features": [
+      {
+        "label": "unnamed at 39.8883, -104.9824",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 513.7,
+        "lateral_offset_ft": 573.2,
+        "distance_to_anchor_m": 280.7
+      },
+      {
+        "label": "unnamed at 39.8887, -104.9779",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1392.5,
+        "lateral_offset_ft": 338.1,
+        "distance_to_anchor_m": 404.4
+      },
+      {
+        "label": "unnamed at 39.8846, -104.9775",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -504.1,
+        "lateral_offset_ft": 1054.8,
+        "distance_to_anchor_m": 343.0
+      },
+      {
+        "label": "unnamed at 39.8847, -104.9784",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -477.7,
+        "lateral_offset_ft": 818.5,
+        "distance_to_anchor_m": 276.2
+      },
+      {
+        "label": "unnamed at 39.8844, -104.9780",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -593.1,
+        "lateral_offset_ft": 921.6,
+        "distance_to_anchor_m": 321.7
+      }
+    ],
+    "nearest_distance_m": 318.1
+  },
+  "bike_facilities": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "Grange Hall Greenway",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 3418.7,
+        "lateral_offset_ft": 380.2,
+        "distance_to_anchor_m": 940.8
+      },
+      {
+        "label": "unnamed at 39.8886, -104.9780",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 1366.7,
+        "lateral_offset_ft": 289.6,
+        "distance_to_anchor_m": 388.1
+      },
+      {
+        "label": "unnamed at 39.8854, -104.9825",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": -205.6,
+        "lateral_offset_ft": 332.4,
+        "distance_to_anchor_m": 131.6
+      },
+      {
+        "label": "Grange Hall Greenway",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 497.2,
+        "lateral_offset_ft": 560.3,
+        "distance_to_anchor_m": 270.1
+      },
+      {
+        "label": "unnamed at 39.8853, -104.9701",
+        "zone": "outside",
+        "relevant": false,
+        "along_station_ft": 3583.4,
+        "lateral_offset_ft": 885.2,
+        "distance_to_anchor_m": 939.7
+      }
+    ]
+  },
+  "schools": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": [
+      {
+        "label": "The Studio School",
+        "zone": "lateral",
+        "relevant": false,
+        "along_station_ft": 739.4,
+        "lateral_offset_ft": 489.7,
+        "distance_to_anchor_m": 310.0
+      }
+    ]
+  },
+  "railroad_crossings": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "hospitals": {
+    "detected": false,
+    "count": 0,
+    "details": [],
+    "features": []
+  },
+  "road_curvature": {
+    "detected": false,
+    "count": 0,
+    "details": [
+      "Road curvature analysis not implemented; assume straight."
+    ],
+    "features": []
+  },
+  "mode": "corridor"
+}

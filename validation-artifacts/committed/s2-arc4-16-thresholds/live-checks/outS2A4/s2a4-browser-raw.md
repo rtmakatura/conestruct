@@ -1,0 +1,10 @@
+- `2026-08-18T14:09:24.153Z` healthz sha: 3f021a9eb1f6b5c8063fafddfc6ad4a632a9ad64
+- `2026-08-18T14:09:24.154Z` expected: 3f021a9eb1f6b5c8063fafddfc6ad4a632a9ad64
+- `2026-08-18T14:09:24.940Z` served bundle sha found in /_next/static/chunks/720-248436c07ff20f46.js
+- `2026-08-18T14:09:24.940Z` **PASS** — gate. healthz == origin/main == served bundle (3f021a9)
+- `2026-08-18T14:09:33.739Z` Lakewood candidate picked (Wadsworth)
+- `2026-08-18T14:09:34.663Z` picker saved (Lakewood)
+- `2026-08-18T14:09:34.666Z` **PASS** — B1. #186 absent case: no evidence text before detect
+- `2026-08-18T14:10:18.507Z` **PASS** — B2. auto-checked rows carry the margin (summary + backend detail lines) (HTTP 200; summaries: ["10 found, nearest ~10.4 m","17 found, nearest ~14.2 m","24 found, nearest ~21.7 m"]; details visible: 6)
+- `2026-08-18T14:10:18.507Z` lateral-format lines visible in the first-two slices: 2 ([lateral 96 ft off centerline])
+- `2026-08-18T14:10:19.296Z` **FAIL** — AX1. axe zero violations — post-detect state (1 finding(s))

@@ -1,0 +1,8 @@
+- `2026-08-18T14:07:58Z`   P1 candidate: 'Washington Way' way 16971963
+- `2026-08-18T14:08:14Z` **PASS** — P1. no threshold flip on any matched feature (values held) (28 matched features, 0 flips, 0 present-one-side-only (OSM drift, not flips))
+- `2026-08-18T14:08:36Z` **PASS** — P2. lateral-zone details state the offset; pre-fix form gone; other zones unchanged (6 lateral-format lines, 0 old-form, 9 other-zone lines)
+- `2026-08-18T14:08:36Z`   served: unnamed at 39.7112, -105.0812 [lateral 96 ft off centerline]
+- `2026-08-18T14:08:36Z`   served: unnamed at 39.7093, -105.0820 [lateral 99 ft off centerline]
+- `2026-08-18T14:08:36Z`   served: unnamed at 39.7082, -105.0818 [lateral 52 ft off centerline]
+- `2026-08-18T14:08:37Z` **PASS** — P3. served audit strings page-cited (rules, citations, pending labels; no Ch. 6H)
+- `2026-08-18T14:08:38Z` **PASS** — P4. served crew narrative carries both page-cited rules; Ch. 6H absent (HTTP 200)

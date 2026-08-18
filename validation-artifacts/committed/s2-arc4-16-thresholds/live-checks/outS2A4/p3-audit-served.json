@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "ta": "TA-3",
+    "cdot_sheet": "S-630-1",
+    "case_id": "Case 11: Shoulder closure on undivided highway",
+    "taper_length_ft": 71,
+    "taper_label": "L/3 (shoulder taper)",
+    "buffer_space_ft": 305.0,
+    "device_spacing_taper_ft": 40.0,
+    "device_spacing_tangent_ft": 80.0,
+    "step_count": 11,
+    "case_routing": "shoulder_no_reduction"
+  },
+  "sections": {
+    "taper": {
+      "speed_mph": 40,
+      "closure_type": "shoulder",
+      "offset_label": "shoulder width",
+      "offset_ft": 8.0,
+      "shoulder_width_ft": 8.0,
+      "formula_choice": "Speed 40 mph < 45 mph threshold -> using L = W x S^2 / 60",
+      "formula_latex": "L = \\frac{W \\times S^2}{60}",
+      "L_calc_text": "L = 8 x 40^2 / 60 = 213 ft",
+      "L_full_ft": 213,
+      "L_third_calc_text": "L/3 = 213 / 3 = 71 ft",
+      "L_third_ft": 71,
+      "L_required_ft": 71,
+      "L_required_label": "L/3 (shoulder taper)",
+      "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).",
+      "cdot_reference": "CDOT S-630-1 Case 11 (right-shoulder closure, applied to undivided highway)",
+      "citation": {
+        "cite": "MUTCD \u00a7 6B.08",
+        "footer": "MUTCD 2023 EDITION \u00b7 CHAPTER 6B \u00b7 TABLE 6B-3"
+      }
+    },
+    "buffer": {
+      "speed_mph": 40,
+      "lookup_text": "MUTCD Table 6B-2: 305 ft (CDOT supplement silent at this speed)",
+      "buffer_ft": 305.0,
+      "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+      "citation": {
+        "cite": "MUTCD \u00a7 6B.06",
+        "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+      }
+    },
+    "spacing": {
+      "speed_mph": 40,
+      "in_taper_text": "40 mph -> 40 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+      "on_tangent_text": "40 mph -> 80 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+      "taper_count_text": "L/3 = 71 ft / 40 ft max spacing -> 4 drums at 23.7 ft intervals",
+      "tangent_count_text": "800 ft / 80 ft max spacing -> 11 cones at 80.0 ft intervals",
+      "n_taper_drums_required": 4,
+      "n_taper_drums_actual": 4,
+      "n_tangent_cones_required": 11,
+      "n_tangent_cones_actual": 13,
+      "source": "MUTCD 11th Ed. Sec 6K.01",
+      "citation": {
+        "cite": "MUTCD \u00a7 6K.01",
+        "footer": "MUTCD \u00a7 6K.01 \u00b7 CHANNELIZING DEVICE SPACING"
+      },
+      "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 11 tangent + 2 downstream = 13 cones total",
+      "n_downstream_taper_cones": 2,
+      "n_cones_placed_total": 13
+    },
+    "advance": {
+      "road_type_text": "Speed 40 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
+      "spacing_text": "A = 100 ft, B = 100 ft, C = 100 ft",
+      "sign_table": [
+        {
+          "Position": "C (furthest)",
+          "Code": "W20-1",
+          "Station (ft)": "1,476",
+          "Distance from Taper (ft)": "300 upstream"
+        },
+        {
+          "Position": "B (middle)",
+          "Code": "W20-2",
+          "Station (ft)": "1,376",
+          "Distance from Taper (ft)": "200 upstream"
+        },
+        {
+          "Position": "A (nearest)",
+          "Code": "W21-5aR",
+          "Station (ft)": "1,276",
+          "Distance from Taper (ft)": "100 upstream"
+        }
+      ],
+      "source": "MUTCD 11th Ed. Table 6B-1"
+    },
+    "colorado": {
+      "checks": [
+        {
+          "pass": true,
+          "label": "Signs on both sides of divided highway",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+          "detail": "Required: False. Signs placed: 0 left, 6 right."
+        },
+        {
+          "pass": true,
+          "label": "G20-5P Work Zone signs every 2,640 ft",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+          "detail": "Zone length: 1,476 ft. Required: 1. Placed: 1."
+        },
+        {
+          "pass": true,
+          "label": "Speed reduction <= 15 mph per sign installation",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+          "detail": "No work-zone speed reduction. Posted speed 40 mph applies throughout the zone."
+        },
+        {
+          "pass": true,
+          "label": "Flagger station lighting 500W @ 8 ft",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+          "detail": "Not applicable (no flaggers)."
+        }
+      ],
+      "info_items": [
+        {
+          "info": true,
+          "label": "AADT threshold for mobile operations (<= 2,000)",
+          "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+          "detail": "Not applicable (not a mobile operation)."
+        }
+      ],
+      "all_pass": true,
+      "fail_count": 0
+    },
+    "case": {
+      "case": "Case 11: Shoulder closure on undivided highway",
+      "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+      "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 11 \u2014 the general shoulder-work typical (drawn for freeway/expressway) \u2014 applied to an undivided highway with single-side signing per CDOT S-630-1 Sheet 2 General Note 8.",
+      "narrative_2": "The generated plan follows the same device layout as the reference case with spacing computed for 40 mph.",
+      "routing": "shoulder_no_reduction"
+    },
+    "flagger": {
+      "applicable": false,
+      "count": 0,
+      "required": 0,
+      "table": [],
+      "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+      "narrative": "Not applicable for this scenario."
+    },
+    "corridor_validation": {
+      "checked": false,
+      "warnings": []
+    },
+    "geometry_validation": {
+      "speed_mph": 40,
+      "work_zone_ft": 800.0,
+      "taper_ft": 71,
+      "taper_label": "L/3 (shoulder taper)",
+      "buffer_ft": 305.0,
+      "violations": [],
+      "all_pass": true,
+      "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+    },
+    "corridor_spec": {
+      "taper_ft": 71,
+      "buffer_ft": 305,
+      "advance_warning_ft": 300,
+      "downstream_taper_ft": 50,
+      "road_category": "urban_low"
+    },
+    "site_adjustments": [
+      {
+        "flag": "adjacent_intersection",
+        "action": "No devices added \u2014 the cross-street approach layout is not generated; see the pending-verification disclosure.",
+        "devices_added": 0,
+        "rule": "MUTCD \u00a76N.12 p. 848 \u2014 Work within the Traveled Way at an Intersection (11th Ed.)",
+        "citation": "MUTCD \u00a7 6N.12 p. 848"
+      },
+      {
+        "flag": "adjacent_interchange",
+        "action": "No devices added \u2014 the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
+        "devices_added": 0,
+        "rule": "MUTCD \u00a76N.16 p. 851 \u2014 Interchanges (11th Ed.)",
+        "citation": "MUTCD \u00a7 6N.16 p. 851"
+      }
+    ]
+  },
+  "pending_verification": {
+    "count": 2,
+    "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD \u00a76N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+    "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117",
+    "items": [
+      {
+        "kind": "intersection_layout_not_generated",
+        "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD \u00a76N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+        "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+      },
+      {
+        "kind": "interchange_layout_not_generated",
+        "label": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD \u00a76N.16, 11th Ed. p. 851) remain with the traffic control supervisor. Tracked at issue #117.",
+        "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+      }
+    ]
+  },
+  "plan_flags": {
+    "validation_warnings": 0,
+    "compliance_fails": 0,
+    "v1_limitations": 2,
+    "is_clean": false
+  }
+}
