@@ -781,6 +781,13 @@ function LocationSummary({
   // work-zone length — is composed client-side.  When the lengths
   // haven't arrived (first load, deploy window) the preview reads
   // unavailable below; nothing is computed locally.
+  //
+  // #211 scope note: this sidebar renders LENGTH ROWS ONLY (CorridorRows
+  // below) — no geometry is drawn, and totalLengthFt is a sum of the
+  // backend zone lengths, independent of any coordinates.
+  // buildCorridorPolyline is used purely as that summer, so no
+  // centerline is passed and no coverage disclosure applies here (the
+  // triage's "sidebar draws the chord" premise was refuted — #211).
   const corridor = useMemo<CorridorPolyline | null>(() => {
     if (!meta.lat || !meta.lng || !scenario.workLen) return null;
     if (!corridorSpecLengths) return null;

@@ -430,6 +430,56 @@ class WorkCorridor:
             pts = [pts[int(i * stride)] for i in range(max_points - 2)]
         return [downstream_ll, *pts, upstream_ll]
 
+    def work_zone_path_split(
+        self, max_points: int = 100
+    ) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:
+        """Work-zone overlay path split at the coverage boundary (#211).
+
+        Returns ``(covered, extended)``: the portion of the work-zone
+        path backed by real centerline geometry, and the portion drawn
+        on the end-tangent continuation past
+        :meth:`centerline_coverage_ft`.  Without a centerline the chord
+        IS the model (manual mode — there is no geometry claim to be
+        beyond), so ``covered`` is the whole pre-#211 path and
+        ``extended`` is empty; likewise when coverage reaches past the
+        work zone.  Each part keeps its boundary vertex at the exact
+        coverage station, so the two overlays meet with no gap.
+        """
+        full = self.work_zone_path_points(max_points=max_points)
+        coverage_ft = self.centerline_coverage_ft()
+        a_ft = self.downstream_taper_ft
+        b_ft = self.downstream_taper_ft + self.work_zone_ft
+        if coverage_ft is None or coverage_ft >= b_ft:
+            return full, []
+        if coverage_ft <= a_ft:
+            return [], full
+        # Same interior walk as work_zone_path_points, keeping each
+        # vertex's station so it lands on the right side of the boundary;
+        # the boundary vertex itself sits at the exact coverage station
+        # on both parts, so the two overlays meet with no gap.
+        frame = self._centerline_frame()
+        assert frame is not None and self.centerline is not None
+        cum_m, anchor_arc_m, sign = frame
+        downstream_ll, upstream_ll = self.work_zone_endpoints()
+        interior: list[tuple[float, tuple[float, float]]] = []
+        for i, pt in enumerate(self.centerline):
+            station_ft = sign * (cum_m[i] - anchor_arc_m) * FT_PER_M
+            if a_ft < station_ft < b_ft:
+                interior.append((station_ft, pt))
+        interior.sort(key=lambda item: item[0])
+        if len(interior) > max_points - 2:
+            stride = len(interior) / float(max_points - 2)
+            interior = [interior[int(i * stride)] for i in range(max_points - 2)]
+        boundary = self.point_at_station_ft(coverage_ft)
+        covered = [downstream_ll]
+        extended: list[tuple[float, float]] = []
+        for station_ft, pt in interior:
+            (covered if station_ft <= coverage_ft else extended).append(pt)
+        covered.append(boundary)
+        extended.insert(0, boundary)
+        extended.append(upstream_ll)
+        return covered, extended
+
     def work_zone_chord_m(self) -> float:
         """Straight-line distance between the true work-zone endpoints, meters.
 

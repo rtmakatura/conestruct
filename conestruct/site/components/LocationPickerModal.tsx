@@ -618,13 +618,26 @@ export function LocationPickerModal({
     });
   }, [hasPin, lat, lng, bearing, workZoneFt, specLengths, selectedCandidateIdx, bearingCandidates]);
 
+  // #186/#211: while detection is resolving or a multi-candidate pick is
+  // pending, NOTHING binds the drawing to a road — the bearing was reset
+  // to 0 and no geometry is selected, so the old behavior drew a
+  // due-north chord that described no real state.  Absence renders as
+  // absence: the map draws no corridor until the operator picks (the
+  // extent ROWS stay — the zone lengths are backend facts independent of
+  // geometry).  Manual mode (no candidates at all) keeps its chord: the
+  // typed bearing is the only fact there, and the extent panel names the
+  // straight projection.
+  const pendingPick =
+    classify.state === "resolving" || classify.state === "awaiting_pick";
+  const drawnCorridor = pendingPick ? null : corridor;
+
   // Sync the corridor onto the live map.  ``corridorDataRef`` is the
   // canonical "what should the line show" so the deferred installer
   // (running on ``load`` after style swap or initial init) can read it.
-  // When ``corridor`` is null we clear the source so a half-edited
+  // When ``drawnCorridor`` is null we clear the source so a half-edited
   // state doesn't leave a stale line behind.
   useEffect(() => {
-    corridorDataRef.current = corridor;
+    corridorDataRef.current = drawnCorridor;
     const map = mapRef.current;
     if (!map) return;
     const source = map.getSource(CORRIDOR_SOURCE_ID) as
@@ -632,13 +645,13 @@ export function LocationPickerModal({
       | undefined;
     if (!source) return;
     const fc =
-      corridor?.featureCollection ??
+      drawnCorridor?.featureCollection ??
       ({
         type: "FeatureCollection",
         features: [],
       } as GeoJSON.FeatureCollection);
     source.setData(fc as never);
-  }, [corridor]);
+  }, [drawnCorridor]);
 
   // Shared fitBounds helper.  Used by the one-shot initial auto-fit
   // and by the explicit "Recenter on corridor" button — never on
@@ -1181,7 +1194,17 @@ export function LocationPickerModal({
             },
             paint: {
               "line-width": 4 + ch.widthRank, // rank 1..5 → 5..9 px
-              "line-opacity": 0.9,
+              // #211: beyond-coverage footage (the tangent continuation
+              // past the road geometry) dims to 0.35 — a luminance
+              // channel that survives grayscale, leaving the zone's
+              // dash + width identity untouched.  0.35 vs 0.9 CHOSEN,
+              // display-only.  The extent panel carries the text form.
+              "line-opacity": [
+                "case",
+                ["boolean", ["get", "extended"], false],
+                0.35,
+                0.9,
+              ],
               "line-color": ZONE_COLOR[zone],
               ...(dashed ? { "line-dasharray": ch.dash } : {}),
             },
@@ -1198,6 +1221,10 @@ export function LocationPickerModal({
             type: "symbol",
             source: CORRIDOR_SOURCE_ID,
             minzoom: 13,
+            // #211: zones can split into covered + extended features;
+            // exactly one per zone carries ``labeled`` so the
+            // line-center label never doubles.
+            filter: ["boolean", ["get", "labeled"], false],
             layout: {
               "symbol-placement": "line-center",
               "text-field": [
@@ -1974,6 +2001,7 @@ export function LocationPickerModal({
                   corridor={corridor}
                   hasPin={hasPin}
                   specStatus={specStatus}
+                  pendingPick={pendingPick}
                 />
               </div>
             </div>
@@ -3020,6 +3048,7 @@ function CorridorPreviewPanel({
   corridor,
   hasPin,
   specStatus,
+  pendingPick,
 }: {
   corridor: CorridorPolyline | null;
   hasPin: boolean;
@@ -3027,6 +3056,10 @@ function CorridorPreviewPanel({
   // lengths are server-computed; this panel names the wait/failure
   // instead of ever drawing a locally-derived extent.
   specStatus: "idle" | "loading" | "ready" | "error";
+  // Detection resolving / multi-candidate pick pending: the map draws
+  // no corridor (#186) and the Centerline row stays absent — no
+  // geometry claim exists yet to disclose (#211).
+  pendingPick: boolean;
 }) {
   return (
     <div className="border-t border-[color:var(--rule)]">
@@ -3060,6 +3093,34 @@ function CorridorPreviewPanel({
         {corridor && (
           <>
             <ExtentRows corridor={corridor} />
+            {/* #211: the Centerline provenance row — the same vocabulary
+                as the PDF's CORRIDOR DETAILS row, so the two surfaces
+                can never describe the same fact differently.  Absent
+                while a pick is pending (no geometry claim exists yet). */}
+            {!pendingPick && (
+              <div className="flex items-baseline justify-between gap-3 pt-2 font-mono text-[10px] uppercase tracking-[0.08em]">
+                <span className="text-[color:var(--ink-on-dark-faint)]">
+                  Centerline
+                </span>
+                {/* Partial/manual states use the panel's existing
+                    disclosure register (--none, chromaless) — the words
+                    are the channel, not a hue (Rule 13). */}
+                <span
+                  className={
+                    corridor.coverageFt !== null &&
+                    corridor.coverageFt >= corridor.totalLengthFt
+                      ? "text-[color:var(--ink-on-dark)]"
+                      : "text-[color:var(--none)]"
+                  }
+                >
+                  {corridor.coverageFt === null
+                    ? "none — straight projection from typed bearing"
+                    : corridor.coverageFt >= corridor.totalLengthFt
+                      ? "OSM, full corridor"
+                      : `covers 0–${fmtFt(corridor.coverageFt)} ft, bearing beyond`}
+                </span>
+              </div>
+            )}
             {specStatus === "loading" && (
               <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] pt-2">
                 Preview updating…

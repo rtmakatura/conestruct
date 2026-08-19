@@ -3239,6 +3239,13 @@ def _draw_advance_table_two_column(
 _AERIAL_OVERLAY_STROKE_W: int = 3
 _AERIAL_OVERLAY_COLOR: str = "e8710a"
 _AERIAL_OVERLAY_OPACITY: str = "0.7"
+# #211: the beyond-coverage (tangent-extension) portion of the work-zone
+# band renders thinner and fainter than the road-backed portion — width
+# is this surface's non-colour channel (Static paths cannot dash), so a
+# grayscale print still reads the split.  1 px / 0.4 CHOSEN,
+# display-only.
+_AERIAL_OVERLAY_EXT_STROKE_W: int = 1
+_AERIAL_OVERLAY_EXT_OPACITY: str = "0.4"
 
 # Mapbox style for the page-2 aerial (#141).  satellite-streets-v12
 # composites road labels and highway shields over the imagery —
@@ -3335,6 +3342,36 @@ def _validate_corridor_bearing(corridor: WorkCorridor) -> None:
         print(f"[corridor-validation] {warning['level'].upper()}: {warning['message']}")
 
 
+def _aerial_overlay_part(corridor: WorkCorridor) -> str:
+    """The static-URL path overlay(s) for the work-zone band.
+
+    #211: the band splits at the centerline-coverage boundary — the
+    road-backed portion keeps the original stroke, the tangent-extension
+    portion renders thinner and fainter so the drawing itself shows
+    where the geometry claim ends (the CORRIDOR DETAILS text row is the
+    sibling channel, unchanged).  Without a centerline, or with full
+    coverage, the output is byte-identical to the pre-#211 single
+    overlay.  urllib.parse.quote with safe="" so backslashes etc. in the
+    polyline are percent-encoded; otherwise Mapbox will misparse the
+    path overlay.
+    """
+    covered, extended = corridor.work_zone_path_split()
+    parts: list[str] = []
+    if len(covered) >= 2:
+        parts.append(
+            f"path-{_AERIAL_OVERLAY_STROKE_W}"
+            f"+{_AERIAL_OVERLAY_COLOR}-{_AERIAL_OVERLAY_OPACITY}"
+            f"({urllib_quote(encode_polyline(covered), safe='')})"
+        )
+    if len(extended) >= 2:
+        parts.append(
+            f"path-{_AERIAL_OVERLAY_EXT_STROKE_W}"
+            f"+{_AERIAL_OVERLAY_COLOR}-{_AERIAL_OVERLAY_EXT_OPACITY}"
+            f"({urllib_quote(encode_polyline(extended), safe='')})"
+        )
+    return ",".join(parts)
+
+
 def _fetch_mapbox_aerial(
     lat: float,
     lng: float,
@@ -3368,19 +3405,7 @@ def _fetch_mapbox_aerial(
     """
     if corridor is not None:
         _validate_corridor_bearing(corridor)
-        # Without a centerline this is exactly [downstream, upstream] —
-        # the pre-#140 two-vertex chord; with one, the path tracks the
-        # road through the work zone.
-        polyline = encode_polyline(corridor.work_zone_path_points())
-        # urllib.parse.quote with safe="" so backslashes etc. in the
-        # polyline are percent-encoded; otherwise Mapbox will misparse
-        # the path overlay.
-        encoded_path = urllib_quote(polyline, safe="")
-        path_overlay = (
-            f"path-{_AERIAL_OVERLAY_STROKE_W}"
-            f"+{_AERIAL_OVERLAY_COLOR}-{_AERIAL_OVERLAY_OPACITY}"
-            f"({encoded_path})"
-        )
+        overlays = f"{_aerial_overlay_part(corridor)}/"
         # Center the camera on the work-zone midpoint and pick a zoom
         # that frames the work zone with surrounding context.
         midpoint_lat, midpoint_lng = corridor.point_at_station_ft(
@@ -3388,7 +3413,6 @@ def _fetch_mapbox_aerial(
         )
         zoom = _aerial_zoom_for_work_zone(corridor)
         viewport = f"{midpoint_lng},{midpoint_lat},{zoom},0"
-        overlays = f"{path_overlay}/"
     else:
         viewport = f"{lng},{lat},16,0"
         overlays = ""

@@ -310,3 +310,100 @@ class TestStaticUrl:
         chord = encode_polyline(list(corridor.work_zone_endpoints()))
         assert quote(expected, safe="") in url
         assert quote(chord, safe="") not in url
+
+
+# ---------------------------------------------------------------------------
+# #211 — the work-zone overlay splits at the coverage boundary
+# ---------------------------------------------------------------------------
+
+
+def _short_arc(max_theta_deg: int) -> tuple[tuple[float, float], ...]:
+    """The synthetic arc truncated at ``max_theta_deg`` — coverage from the
+    theta=0 anchor is ~ARC_RADIUS_FT * radians(max_theta_deg)."""
+    return tuple(_arc_point(float(t)) for t in range(0, max_theta_deg + 1))
+
+
+class TestWorkZonePathSplit:
+    """The (covered, extended) split feeding the PDF aerial (#211)."""
+
+    def test_no_centerline_is_undivided(self) -> None:
+        c = _arc_corridor(None)
+        covered, extended = c.work_zone_path_split()
+        assert covered == c.work_zone_path_points()
+        assert extended == []
+
+    def test_full_coverage_is_undivided(self) -> None:
+        c = _arc_corridor(_arc_centerline())
+        covered, extended = c.work_zone_path_split()
+        assert covered == c.work_zone_path_points()
+        assert extended == []
+
+    def test_mid_work_zone_coverage_splits_at_the_exact_boundary(self) -> None:
+        c = _arc_corridor(_short_arc(18))  # coverage ~314 ft, inside [100, 500]
+        cov = c.centerline_coverage_ft()
+        assert cov is not None and 100.0 < cov < 500.0
+        covered, extended = c.work_zone_path_split()
+        boundary = c.point_at_station_ft(cov)
+        # The parts meet at the exact coverage station — no gap, no overlap.
+        assert covered[-1] == boundary
+        assert extended[0] == boundary
+        downstream_ll, upstream_ll = c.work_zone_endpoints()
+        assert covered[0] == downstream_ll
+        assert extended[-1] == upstream_ll
+
+    def test_coverage_before_work_zone_is_all_extended(self) -> None:
+        c = _arc_corridor(_short_arc(3))  # coverage ~52 ft < the 100 ft taper
+        covered, extended = c.work_zone_path_split()
+        assert covered == []
+        assert extended == c.work_zone_path_points()
+
+
+class TestStaticUrlCoverageSplit:
+    """Partial coverage renders two overlays: road-backed at the original
+    stroke, tangent-extension thinner and fainter (#211)."""
+
+    # Same capture/no-op-bearing arrangement as TestStaticUrl (not
+    # inherited — pytest would re-collect the parent's tests here).
+    _capture_url = TestStaticUrl._capture_url
+
+    @pytest.fixture(autouse=True)
+    def _quiet_bearing_check(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        from src.rendering import plan_sheet as ps
+
+        monkeypatch.setattr(ps, "_validate_corridor_bearing", lambda corridor: None)
+
+    def test_partial_coverage_url_carries_both_overlays(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from urllib.parse import quote
+
+        from src.rendering import plan_sheet as ps
+
+        corridor = _arc_corridor(_short_arc(18))
+        url = self._capture_url(monkeypatch, corridor)
+        covered, extended = corridor.work_zone_path_split()
+        assert (
+            f"path-{ps._AERIAL_OVERLAY_STROKE_W}+{ps._AERIAL_OVERLAY_COLOR}"
+            f"-{ps._AERIAL_OVERLAY_OPACITY}({quote(encode_polyline(covered), safe='')})"
+        ) in url
+        assert (
+            f"path-{ps._AERIAL_OVERLAY_EXT_STROKE_W}+{ps._AERIAL_OVERLAY_COLOR}"
+            f"-{ps._AERIAL_OVERLAY_EXT_OPACITY}({quote(encode_polyline(extended), safe='')})"
+        ) in url
+
+    def test_full_coverage_url_is_byte_identical_to_the_single_overlay(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from urllib.parse import quote
+
+        from src.rendering import plan_sheet as ps
+
+        corridor = _arc_corridor(_arc_centerline())
+        url = self._capture_url(monkeypatch, corridor)
+        single = (
+            f"path-{ps._AERIAL_OVERLAY_STROKE_W}+{ps._AERIAL_OVERLAY_COLOR}"
+            f"-{ps._AERIAL_OVERLAY_OPACITY}"
+            f"({quote(encode_polyline(corridor.work_zone_path_points()), safe='')})/"
+        )
+        assert single in url
+        assert f"path-{ps._AERIAL_OVERLAY_EXT_STROKE_W}+" not in url
