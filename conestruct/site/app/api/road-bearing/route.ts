@@ -19,6 +19,7 @@ import {
   GEOMETRY_RADIUS_M,
   stitchChain,
   trimChain,
+  truncateAtReversal,
 } from "@/lib/road-detection/stitch";
 import type {
   RoadCandidate,
@@ -417,7 +418,14 @@ async function extendCandidateGeometry(
     );
     const own = pool.find((w) => String(w.id) === c.way_id);
     if (!own) continue;
-    const chain = stitchChain(own, pool);
+    // Stitch, then assert the no-double-back invariant (truncating on
+    // the side away from the snapped point if it ever fires), then trim
+    // to the relayed window (#210).
+    const chain = truncateAtReversal(
+      stitchChain(own, pool),
+      c.snapped_lat,
+      c.snapped_lng,
+    );
     if (chain.length >= 2) {
       c.geometry = trimChain(chain, c.snapped_lat, c.snapped_lng);
     }
