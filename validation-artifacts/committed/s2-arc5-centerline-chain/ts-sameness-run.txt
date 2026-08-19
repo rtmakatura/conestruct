@@ -1,0 +1,8 @@
+
+ [32m✓[39m s2a5-scratch-sameness.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 10:14:45
+[2m   Duration [22m 718ms[2m (transform 51ms, setup 0ms, collect 48ms, tests 18ms, environment 0ms, prepare 107ms)[22m
+

@@ -1,0 +1,30 @@
+[2m  ][22m
+
+[36m [2m❯[22m lib/road-detection/stitch.test.ts:[2m161:26[22m[39m
+    [90m159| [39m    [35mconst[39m perp [33m=[39m [34mmkWay[39m([34m2[39m[33m,[39m [[[34m39.7[39m[33m,[39m [33m-[39m[34m105.0[39m][33m,[39m [[34m39.701[39m[33m,[39m [33m-[39m[34m105.0[39m]])[33m;[39m
+    [90m160| [39m    [35mconst[39m r [33m=[39m [34mstitchChainDetailed[39m(own[33m,[39m [own[33m,[39m perp])[33m;[39m
+    [90m161| [39m    [34mexpect[39m(r[33m.[39musedWayIds)[33m.[39m[34mtoEqual[39m([[34m1[39m])[33m;[39m
+    [90m   | [39m                         [31m^[39m
+    [90m162| [39m  })[33m;[39m
+    [90m163| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m lib/road-detection/stitch.test.ts[2m > [22mstitchChainDetailed on synthetic pools[2m > [22mtakes one thread through a oneway couplet loop, preferring the agreeing half
+[31m[1mAssertionError[22m: expected [ 1, 2, 3, 4 ] to not include 3[39m
+[36m [2m❯[22m lib/road-detection/stitch.test.ts:[2m185:30[22m[39m
+    [90m183| [39m    [90m// refused, the continuation joined.[39m
+    [90m184| [39m    [34mexpect[39m(r[33m.[39musedWayIds)[33m.[39m[34mtoContain[39m([34m2[39m)[33m;[39m
+    [90m185| [39m    [34mexpect[39m(r[33m.[39musedWayIds)[33m.[39mnot[33m.[39m[34mtoContain[39m([34m3[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m186| [39m    [34mexpect[39m(r[33m.[39musedWayIds)[33m.[39m[34mtoContain[39m([34m4[39m)[33m;[39m
+    [90m187| [39m    expect(maxAdjacentReversal(r.chain)).toBeLessThan(STITCH_REVERSAL_…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 10:11:53
+[2m   Duration [22m 710ms[2m (transform 54ms, setup 0ms, collect 54ms, tests 19ms, environment 0ms, prepare 111ms)[22m
+

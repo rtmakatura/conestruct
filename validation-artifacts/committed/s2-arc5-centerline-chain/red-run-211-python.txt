@@ -1,0 +1,4 @@
+FAILED tests/test_corridor_centerline.py::TestWorkZonePathSplit::test_coverage_before_work_zone_is_all_extended
+FAILED tests/test_corridor_centerline.py::TestStaticUrlCoverageSplit::test_partial_coverage_url_carries_both_overlays
+FAILED tests/test_corridor_centerline.py::TestStaticUrlCoverageSplit::test_full_coverage_url_is_byte_identical_to_the_single_overlay
+6 failed, 20 passed in 0.54s
