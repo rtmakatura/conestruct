@@ -1,0 +1,10 @@
+[
+  {
+    "id": "label",
+    "impact": "critical",
+    "targets": [
+      "input[min=\"5\"]",
+      "input[step=\"1\"]"
+    ]
+  }
+]

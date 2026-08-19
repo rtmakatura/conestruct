@@ -1,0 +1,6 @@
+- `2026-08-19T18:29:53.172Z` **PASS** — gate. healthz == origin/main (5a06f25)
+- `2026-08-19T18:30:25.237Z` **PASS** — B1a. pending pick: no Centerline row while the Which-road card is up
+- `2026-08-19T18:30:27.276Z` **PASS** — B1b. picked E Bayaud: Centerline row reads OSM, full corridor
+- `2026-08-19T18:30:30.007Z` B1c. recentered screenshot captured (b1-bayaud-fixed.png) — compare the pre-fix baseline in the arc evidence
+- `2026-08-19T18:31:01.640Z` **PASS** — B2. partial coverage discloses on the served page ("covers 0–995 ft, bearing beyond")
+- `2026-08-19T18:31:04.871Z` **FAIL** — AX1. axe zero violations — picker state (1 finding(s))

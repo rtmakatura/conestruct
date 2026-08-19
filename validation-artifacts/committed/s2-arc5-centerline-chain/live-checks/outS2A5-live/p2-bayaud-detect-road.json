@@ -1,0 +1,198 @@
+{
+ "intersections": {
+  "detected": true,
+  "count": 18,
+  "details": [
+   "unnamed at 39.7146, -104.9406 [downstream @ 16 ft]",
+   "unnamed at 39.7148, -104.9406 [downstream @ 22 ft]",
+   "unnamed at 39.7147, -104.9409 [outside @ -55 ft]",
+   "unnamed at 39.7146, -104.9408 [downstream @ -21 ft]",
+   "unnamed at 39.7147, -104.9408 [downstream @ -18 ft]"
+  ],
+  "features": [
+   {
+    "label": "unnamed at 39.7146, -104.9406",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": 15.8,
+    "lateral_offset_ft": 36.9,
+    "distance_to_anchor_m": 12.2
+   },
+   {
+    "label": "unnamed at 39.7148, -104.9406",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": 21.6,
+    "lateral_offset_ft": 32.3,
+    "distance_to_anchor_m": 12.2
+   },
+   {
+    "label": "unnamed at 39.7147, -104.9409",
+    "zone": "outside",
+    "relevant": true,
+    "along_station_ft": -55.2,
+    "lateral_offset_ft": 0.0,
+    "distance_to_anchor_m": 16.8
+   },
+   {
+    "label": "unnamed at 39.7146, -104.9408",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": -21.3,
+    "lateral_offset_ft": 37.4,
+    "distance_to_anchor_m": 13.4
+   },
+   {
+    "label": "unnamed at 39.7139, -104.9394",
+    "zone": "lateral",
+    "relevant": false,
+    "along_station_ft": 375.0,
+    "lateral_offset_ft": 287.5,
+    "distance_to_anchor_m": 139.4
+   }
+  ],
+  "nearest_distance_m": 11.5
+ },
+ "interchanges": {
+  "detected": false,
+  "count": 0,
+  "details": [],
+  "features": [],
+  "junction_refs": []
+ },
+ "sidewalks": {
+  "detected": true,
+  "count": 9,
+  "details": [
+   "unnamed at 39.7147, -104.9405 [downstream @ 61 ft]",
+   "unnamed at 39.7146, -104.9407 [downstream @ -4 ft]",
+   "unnamed at 39.7147, -104.9407 [downstream @ -0 ft]",
+   "unnamed at 39.7148, -104.9405 [downstream @ 52 ft]",
+   "unnamed at 39.7147, -104.9402 [work_zone @ 140 ft]"
+  ],
+  "features": [
+   {
+    "label": "unnamed at 39.7132, -104.9404",
+    "zone": "lateral",
+    "relevant": false,
+    "along_station_ft": 66.6,
+    "lateral_offset_ft": 547.1,
+    "distance_to_anchor_m": 168.6
+   },
+   {
+    "label": "unnamed at 39.7147, -104.9405",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": 61.4,
+    "lateral_offset_ft": 0.2,
+    "distance_to_anchor_m": 18.7
+   },
+   {
+    "label": "unnamed at 39.7146, -104.9407",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": -4.1,
+    "lateral_offset_ft": 37.1,
+    "distance_to_anchor_m": 11.4
+   },
+   {
+    "label": "unnamed at 39.7146, -104.9409",
+    "zone": "outside",
+    "relevant": false,
+    "along_station_ft": -55.7,
+    "lateral_offset_ft": 3.6,
+    "distance_to_anchor_m": 17.0
+   },
+   {
+    "label": "unnamed at 39.7147, -104.9407",
+    "zone": "downstream",
+    "relevant": true,
+    "along_station_ft": -0.0,
+    "lateral_offset_ft": 32.0,
+    "distance_to_anchor_m": 9.9
+   }
+  ],
+  "nearest_distance_m": 9.9
+ },
+ "bike_facilities": {
+  "detected": true,
+  "count": 6,
+  "details": [
+   "East Bayaud Avenue [work_zone @ 645 ft]",
+   "East Bayaud Avenue [transition @ 1424 ft]",
+   "East Bayaud Avenue [work_zone @ 159 ft]",
+   "East Bayaud Avenue [buffer @ 1102 ft]",
+   "East Bayaud Avenue [work_zone @ 261 ft]"
+  ],
+  "features": [
+   {
+    "label": "South Clermont Street",
+    "zone": "lateral",
+    "relevant": false,
+    "along_station_ft": 1587.5,
+    "lateral_offset_ft": 286.1,
+    "distance_to_anchor_m": 486.9
+   },
+   {
+    "label": "East Bayaud Avenue",
+    "zone": "work_zone",
+    "relevant": true,
+    "along_station_ft": 645.4,
+    "lateral_offset_ft": 1.4,
+    "distance_to_anchor_m": 195.1
+   },
+   {
+    "label": "East Bayaud Avenue",
+    "zone": "transition",
+    "relevant": true,
+    "along_station_ft": 1424.5,
+    "lateral_offset_ft": 0.0,
+    "distance_to_anchor_m": 429.5
+   },
+   {
+    "label": "South Dahlia Street",
+    "zone": "outside",
+    "relevant": false,
+    "along_station_ft": 2550.3,
+    "lateral_offset_ft": 605.0,
+    "distance_to_anchor_m": 796.4
+   },
+   {
+    "label": "East Bayaud Avenue",
+    "zone": "outside",
+    "relevant": false,
+    "along_station_ft": 2072.7,
+    "lateral_offset_ft": 1.7,
+    "distance_to_anchor_m": 627.0
+   }
+  ],
+  "nearest_distance_m": 37.6
+ },
+ "schools": {
+  "detected": false,
+  "count": 0,
+  "details": [],
+  "features": []
+ },
+ "railroad_crossings": {
+  "detected": false,
+  "count": 0,
+  "details": [],
+  "features": []
+ },
+ "hospitals": {
+  "detected": false,
+  "count": 0,
+  "details": [],
+  "features": []
+ },
+ "road_curvature": {
+  "detected": false,
+  "count": 0,
+  "details": [
+   "Road curvature analysis not implemented; assume straight."
+  ],
+  "features": []
+ },
+ "mode": "corridor"
+}
