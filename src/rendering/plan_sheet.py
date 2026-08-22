@@ -144,12 +144,6 @@ DIM_LINE = colors.Color(0.20, 0.25, 0.55)
 TITLE_BORDER = colors.black
 LEADER_GRAY = colors.HexColor("#3A3A3A")
 
-LABEL_FONT = "Helvetica"
-LABEL_SIZE = 7
-LABEL_HALO_PAD_X = 1.5
-LABEL_HALO_TOP = 6.5  # ascent above baseline (≈ size * 0.92 for Helvetica)
-LABEL_HALO_BOTTOM = 1.5  # descent below baseline
-CALLOUT_TIER_H = 10.0  # vertical step between tiers in the callout strip
 CALLOUT_BAND_OFFSET = 16.0  # gap between road edge and the first tier baseline
 
 _TABLE_CATEGORIES: frozenset[str] = frozenset(
@@ -922,66 +916,6 @@ _DEVICE_DISPLAY_NAMES: dict[DeviceType, str] = {
 }
 
 
-def _draw_label_with_halo(c: canvas.Canvas, x: float, y: float, text: str) -> None:
-    """Draw a centered text label with a white background rectangle so it
-    stays legible on top of road fills, leader lines, and adjacent glyphs.
-    """
-    c.setFont(LABEL_FONT, LABEL_SIZE)
-    text_w = c.stringWidth(text, LABEL_FONT, LABEL_SIZE)
-    c.setFillColor(colors.white)
-    c.rect(
-        x - text_w / 2 - LABEL_HALO_PAD_X,
-        y - LABEL_HALO_BOTTOM,
-        text_w + 2 * LABEL_HALO_PAD_X,
-        LABEL_HALO_TOP + LABEL_HALO_BOTTOM,
-        fill=1,
-        stroke=0,
-    )
-    c.setFillColor(colors.black)
-    c.drawCentredString(x, y, text)
-
-
-_TIER_X_STAGGER: tuple[float, ...] = (0.0, 7.0, -7.0, 14.0, -14.0)
-
-
-def _layout_callout_strip(
-    label_specs: list[dict],
-    base_y: float,
-    direction: int,
-) -> list[tuple[dict, float, float]]:
-    """Greedy 2-D packing: place each label at its symbol's x, bumping to
-    the next tier (further from the road) when it would overlap the
-    previous label in that tier.  Successive tiers also pick up a small
-    horizontal stagger so leader lines fan out from the symbol cluster
-    instead of running parallel and stacking on top of each other.
-
-    ``direction = -1`` for the work-side strip (tiers march DOWN the page,
-    away from the road); ``direction = +1`` for the opposing-side strip
-    (tiers march UP).
-    """
-    specs = sorted(label_specs, key=lambda s: s["symbol_x"])
-    tier_right_edges: list[float] = []
-    placed: list[tuple[dict, float, float]] = []
-    gap = 6.0
-    for spec in specs:
-        text_w = spec["text_w"]
-        x = spec["symbol_x"]
-        left = x - text_w / 2
-        right = x + text_w / 2
-        tier = 0
-        while tier < len(tier_right_edges) and tier_right_edges[tier] > left - gap:
-            tier += 1
-        if tier == len(tier_right_edges):
-            tier_right_edges.append(right)
-        else:
-            tier_right_edges[tier] = right
-        stagger = _TIER_X_STAGGER[min(tier, len(_TIER_X_STAGGER) - 1)]
-        label_x = x + stagger
-        label_y = base_y + direction * tier * CALLOUT_TIER_H
-        placed.append((spec, label_x, label_y))
-    return placed
-
-
 def _on_road_max_offset_ft(
     params: ScenarioParams,
     shoulder_width_ft: float,
@@ -1290,6 +1224,13 @@ def build_sign_schedule(
 
 
 def _draw_callout_circle(c: canvas.Canvas, x: float, y: float, n: int) -> None:
+    # #216 (measured bound): 2 digits fit the 10 pt disc (7.8 pt at
+    # Bold 7); 3 digits (11.7 pt) would overflow it.  The realistic
+    # maximum of distinct schedule codes is ~9 (all-conditions
+    # adversarial fixture) — an order of magnitude under the bound —
+    # so a 3-digit callout means the schedule model changed shape and
+    # the disc needs redesign, not a silent overflow.
+    assert n <= 99, f"callout {n} needs 3 digits — the 10 pt disc fits at most 2"
     """Small white-filled circle with the schedule number inside.  Replaces
     the older free-floating MUTCD-code text labels — readers consult the
     Sign Schedule panel for the code → meaning mapping."""
@@ -2459,103 +2400,161 @@ def _draw_legend(
     glyph_x = box_x + 18
     text_x = box_x + 36
 
-    def _bail() -> bool:
-        return y < box_y + 10
+    # #216 Family 4: the old bail was a bare return — remaining rows AND
+    # the scale footnote silently vanished (the device summary next door
+    # explicitly promises the opposite).  Measure-then-draw (the notes
+    # box's pattern): the content is flattened into draw units; when
+    # everything fits, the draw sequence is the pre-#216 one (typical
+    # sheets unchanged).  When it doesn't, the prefix that fits renders
+    # with one row reserved for an explicit "+N MORE — SEE DEVICE LIST
+    # (XLSX)" pointer (rule 10), and the footnote — whose space is
+    # reserved up front — always renders.
+    footnote_lines: list[str] = (
+        _wrap_to_width(c, scale_note, "Helvetica-Oblique", 6.5, width - 16, max_lines=3)
+        if scale_note
+        else []
+    )
+    footnote_top = box_y + 8.0 + max(len(footnote_lines) - 1, 0) * 9.0 + 8.0
 
-    c.setFont("Helvetica", 8)
-    for dt in device_types_used:
-        glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
-        glyph(c, glyph_x, y + 3)
-        c.setFillColor(colors.black)
-        label = (
-            cone_display_name(speed_mph)
-            if dt == DeviceType.CONE
-            else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
-        )
-        # #216 Family 2: row labels truncate at the box's inner right
-        # edge — a long display name must never cross into the notes box.
-        c.drawString(
-            text_x, y, _truncate_to_width(c, label, "Helvetica", 8, box_x + width - 8 - text_x)
-        )
-        y -= row_h
-        if _bail():
+    def _draw_footnote() -> None:
+        # Scale-convention footnote — pinned to the bottom of the LEGEND
+        # box.  The structured title block carries only the bare ratio
+        # ("1\" = N ft"); the explanation of which region the ratio
+        # applies to lives here.
+        if not footnote_lines:
             return
-
-    if sign_cats_used:
-        y -= 4  # divider gap between sections
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(box_x + 8, y, "SIGN CATEGORIES")
-        y -= row_h - 1
-        c.setFont("Helvetica", 8)
-        for cat in sign_cats_used:
-            description, sample_label = _SIGN_CATEGORY_LEGEND[cat]
-            _draw_sign(c, glyph_x, y + 3, sample_label)
-            c.setFillColor(colors.black)
-            c.drawString(
-                text_x,
-                y,
-                _truncate_to_width(c, description, "Helvetica", 8, box_x + width - 8 - text_x),
-            )
-            y -= row_h
-            if _bail():
-                return
-
-    if context_kinds_used:
-        y -= 4
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(box_x + 8, y, "SITE CONTEXT")
-        y -= row_h - 1
-        c.setFont("Helvetica", 8)
-        for kind in context_kinds_used:
-            _draw_context_icon(c, glyph_x, y + 3, kind)
-            c.setFillColor(colors.black)
-            c.drawString(text_x, y, _SITE_CONTEXT_LEGEND[kind])
-            y -= row_h
-            if _bail():
-                return
-
-    if is_divided:
-        y -= 4
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 8)
-        c.drawString(box_x + 8, y, "ROAD GEOMETRY")
-        y -= row_h - 1
-        c.setFont("Helvetica", 8)
-        _draw_median_icon(c, glyph_x, y + 3)
-        c.setFillColor(colors.black)
-        c.drawString(text_x, y, "Median (separates carriageways)")
-        y -= row_h
-        if _bail():
-            return
-        c.setFont("Helvetica-Oblique", 7)
-        c.setFillColor(colors.HexColor("#404040"))
-        c.drawString(box_x + 8, y, "Left-side advance signs sit in the median")
-        y -= 9
-        if _bail():
-            return
-        c.drawString(box_x + 8, y, "per S-630-1 Sheet 2 General Note 8.")
-        y -= row_h
-
-    # Scale-convention footnote — pinned to the bottom of the LEGEND
-    # box.  The structured title block carries only the bare ratio
-    # ("1\" = N ft") to keep that cell legible; the explanation of
-    # which region the ratio applies to lives here so a reader can
-    # always orient against the schematic without squinting at a
-    # truncated value cell.
-    if scale_note:
         c.setFont("Helvetica-Oblique", 6.5)
         c.setFillColor(colors.HexColor("#666666"))
-        legend_inner_w = width - 16
-        wrapped = _wrap_to_width(
-            c, scale_note, "Helvetica-Oblique", 6.5, legend_inner_w, max_lines=3
-        )
-        # Anchor inside the box's bottom edge so the footnote doesn't
-        # collide with the rows above and never escapes the box border.
-        note_y = box_y + 8 + (len(wrapped) - 1) * 9
-        for i, line in enumerate(wrapped):
+        note_y = box_y + 8 + (len(footnote_lines) - 1) * 9
+        for i, line in enumerate(footnote_lines):
             c.drawString(box_x + 8, note_y - i * 9, line)
+
+    def _device_row(dt: DeviceType) -> Callable[[float], None]:
+        def draw(yy: float) -> None:
+            glyph = _DEVICE_LEGEND_GLYPHS.get(dt) or _DEVICE_GLYPHS.get(dt, _draw_sign)
+            glyph(c, glyph_x, yy + 3)
+            c.setFillColor(colors.black)
+            label = (
+                cone_display_name(speed_mph)
+                if dt == DeviceType.CONE
+                else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
+            )
+            # #216 Family 2: row labels truncate at the box's inner
+            # right edge.
+            c.setFont("Helvetica", 8)
+            c.drawString(
+                text_x,
+                yy,
+                _truncate_to_width(c, label, "Helvetica", 8, box_x + width - 8 - text_x),
+            )
+
+        return draw
+
+    def _header(title: str) -> Callable[[float], None]:
+        def draw(yy: float) -> None:
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica-Bold", 8)
+            c.drawString(box_x + 8, yy, title)
+
+        return draw
+
+    def _cat_row(cat: str) -> Callable[[float], None]:
+        def draw(yy: float) -> None:
+            description, sample_label = _SIGN_CATEGORY_LEGEND[cat]
+            _draw_sign(c, glyph_x, yy + 3, sample_label)
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica", 8)
+            c.drawString(
+                text_x,
+                yy,
+                _truncate_to_width(c, description, "Helvetica", 8, box_x + width - 8 - text_x),
+            )
+
+        return draw
+
+    def _context_row(kind: str) -> Callable[[float], None]:
+        def draw(yy: float) -> None:
+            _draw_context_icon(c, glyph_x, yy + 3, kind)
+            c.setFillColor(colors.black)
+            c.setFont("Helvetica", 8)
+            c.drawString(text_x, yy, _SITE_CONTEXT_LEGEND[kind])
+
+        return draw
+
+    def _median_row(yy: float) -> None:
+        c.setFont("Helvetica", 8)
+        _draw_median_icon(c, glyph_x, yy + 3)
+        c.setFillColor(colors.black)
+        c.drawString(text_x, yy, "Median (separates carriageways)")
+
+    def _median_note_1(yy: float) -> None:
+        c.setFont("Helvetica-Oblique", 7)
+        c.setFillColor(colors.HexColor("#404040"))
+        c.drawString(box_x + 8, yy, "Left-side advance signs sit in the median")
+
+    def _median_note_2(yy: float) -> None:
+        c.setFont("Helvetica-Oblique", 7)
+        c.setFillColor(colors.HexColor("#404040"))
+        c.drawString(box_x + 8, yy, "per S-630-1 Sheet 2 General Note 8.")
+
+    # (pre_gap, advance_after, draw, counts_as_row).  The walk below
+    # glues a header to the unit that follows, so a header never renders
+    # as the last thing before the pointer line.
+    units: list[tuple[float, float, Callable[[float], None], bool]] = []
+    for dt in device_types_used:
+        units.append((0.0, float(row_h), _device_row(dt), True))
+    if sign_cats_used:
+        units.append((4.0, float(row_h - 1), _header("SIGN CATEGORIES"), False))
+        for cat in sign_cats_used:
+            units.append((0.0, float(row_h), _cat_row(cat), True))
+    if context_kinds_used:
+        units.append((4.0, float(row_h - 1), _header("SITE CONTEXT"), False))
+        for kind in context_kinds_used:
+            units.append((0.0, float(row_h), _context_row(kind), True))
+    if is_divided:
+        units.append((4.0, float(row_h - 1), _header("ROAD GEOMETRY"), False))
+        units.append((0.0, float(row_h), _median_row, True))
+        units.append((0.0, 9.0, _median_note_1, False))
+        units.append((0.0, float(row_h), _median_note_2, False))
+
+    floor = footnote_top + 2.0
+    # Fits check: the lowest baseline the full sequence would reach.
+    y_sim = y
+    lowest = y
+    for pre_gap, advance, _draw, _is_row in units:
+        y_sim -= pre_gap
+        lowest = min(lowest, y_sim)
+        y_sim -= advance
+    if lowest >= floor:
+        for pre_gap, advance, draw, _is_row in units:
+            y -= pre_gap
+            draw(y)
+            y -= advance
+        _draw_footnote()
+        return
+
+    # Overflow: draw the prefix that leaves room for the pointer row.
+    total_rows = sum(1 for u in units if u[3])
+    shown_rows = 0
+    i = 0
+    while i < len(units):
+        pre_gap, advance, draw, is_row = units[i]
+        # A header (or note line) must fit together with what follows it.
+        glued = advance + units[i + 1][0] if not is_row and i + 1 < len(units) else 0.0
+        if y - pre_gap - glued < floor + row_h:  # pointer-row space stays reserved
+            break
+        y -= pre_gap
+        draw(y)
+        y -= advance
+        if is_row:
+            shown_rows += 1
+        i += 1
+    remaining = total_rows - shown_rows
+    if remaining > 0:
+        c.setFillColor(colors.black)
+        c.setFont("Helvetica-Bold", 7)
+        c.drawString(box_x + 8, y, f"+{remaining} MORE — SEE DEVICE LIST (XLSX)")
+    _draw_footnote()
 
 
 # Plaque MUTCD codes — render after their parent sign at the same
