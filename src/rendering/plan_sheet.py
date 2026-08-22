@@ -1034,6 +1034,11 @@ def _sign_y_bands(params: ScenarioParams, shoulder_width_ft: float) -> dict[str,
 
 CALLOUT_RADIUS = 5.0  # circled-number callout radius
 CALLOUT_NUMBER_FONT_SIZE = 7
+# #216 Family 3 (CHOSEN, pure geometry): a work-side sign's callout
+# circle renders inline_offset (11 pt) below the glyph with radius 5 —
+# 16 pt of clearance keeps the callout inside the frame when the glyph
+# clamps to a floor.
+_CALLOUT_CLEARANCE_PTS = 16.0
 
 SIDEWALK_FILL = colors.HexColor("#DCDCDC")
 SIDEWALK_BORDER = colors.HexColor("#888888")
@@ -1221,9 +1226,15 @@ def _draw_site_context(
         )
         taper_len = _required_taper_length(params, shoulder_width_ft)
         school_station = wz_len + buf_len + taper_len + 100.0
-        x_school = x_of(school_station)
+        # #216 Family 3: x_of extrapolates freely past the fitted station
+        # range, and this station can sit at (or past) the frame edge —
+        # clamp the 44 pt box fully inside the drawing frame.  The y
+        # ceiling keeps the box below the dim band's own clamped range
+        # (PLAN_TOP - 26 baseline + up to two raised tiers) so the two
+        # ceilings cannot invert their normal vertical order.
+        x_school = min(max(x_of(school_station), PLAN_LEFT + 22.0), PLAN_RIGHT - 22.0)
         y_road_top, _ = _road_y_extent(params, shoulder_width_ft)
-        y_school = y_road_top + 35.0
+        y_school = min(y_road_top + 35.0, PLAN_TOP - 60.0)
         c.setFillColor(SCHOOL_FILL)
         c.setStrokeColor(colors.black)
         c.setLineWidth(0.5)
@@ -1424,7 +1435,11 @@ def _deoverlap_median_horizontal(
         indices.sort(key=lambda i: (items[i][0].label or "", items[i][0].station_ft))
         for j, idx in enumerate(indices):
             p, x, y = items[idx]
-            out[idx] = (p, x + (j - (n - 1) / 2.0) * step, y)
+            # #216 Family 3: the fan is unbounded in x — a co-located
+            # group near either frame edge walks glyphs off the sheet.
+            fanned = x + (j - (n - 1) / 2.0) * step
+            fanned = min(max(fanned, PLAN_LEFT + SIGN_BOX_W / 2.0), PLAN_RIGHT - SIGN_BOX_W / 2.0)
+            out[idx] = (p, fanned, y)
     return out
 
 
@@ -1438,22 +1453,65 @@ def _clamp_sign_positions(
     band so no sign can render on a travel lane or in the opposing
     carriageway, regardless of how the de-overlap passes moved it.
 
-    Scoped to divided highways, where the two-carriageway geometry makes
-    misplacement possible.  Median signs clamp to the median band;
-    work-side signs (positive offset) clamp between the page floor and the
-    work-side lane/shoulder boundary.  Snap-to-boundary keeps output
-    visible rather than dropping or erroring.
+    Divided highways get the full band clamp (median signs to the median
+    band, work-side signs between the page floor and the work-side
+    lane/shoulder boundary).  Undivided sheets (#216 Family 3 — they had
+    NO clamp at all, so a deep de-overlap stack could walk a sign into
+    the footer band or the title strip) get the frame clamp: every sign
+    glyph stays inside [PLAN_BOTTOM, PLAN_TOP].  Both floors include the
+    callout-circle clearance (_CALLOUT_CLEARANCE_PTS): the circled
+    number renders 11 pt below a work-side glyph with radius 5, so a
+    glyph AT the floor used to put its callout inside the footer boxes.
+    Snap-to-boundary keeps output visible rather than dropping or
+    erroring.
     """
-    if not params.is_divided:
-        return items
     out: list[tuple[DevicePlacement, float, float]] = []
     for p, x, y in items:
         if p.device_type == DeviceType.SIGN_GENERIC:
-            if _is_median_sign(p, params, on_road_max):
+            if not params.is_divided:
+                y = min(
+                    max(y, PLAN_BOTTOM + _CALLOUT_CLEARANCE_PTS), PLAN_TOP - _CALLOUT_CLEARANCE_PTS
+                )
+            elif _is_median_sign(p, params, on_road_max):
                 y = min(max(y, bands["median_lo"]), bands["median_hi"])
             elif p.offset_ft > 0:
-                y = min(max(y, bands["work_floor"]), bands["work_shoulder_top"])
+                y = min(
+                    max(y, bands["work_floor"] + _CALLOUT_CLEARANCE_PTS),
+                    bands["work_shoulder_top"],
+                )
         out.append((p, x, y))
+    return out
+
+
+def _fan_coincident_signs(
+    items: list[tuple[DevicePlacement, float, float]],
+    grid: float = 6.0,
+    step: float = SIGN_BOX_W,
+) -> list[tuple[DevicePlacement, float, float]]:
+    """#216 Family 3: the legal-band clamp can collapse a vertically
+    de-overlapped sign stack back onto the band boundary — several
+    glyphs (and their callout circles) then overprint at one position.
+    Any SIGN_GENERIC glyphs still coincident after the clamp fan
+    horizontally about their shared x (the median-band treatment,
+    generalized), clamped to the drawing frame.  A no-op whenever the
+    clamp moved nothing (typical sheets)."""
+    from collections import defaultdict
+
+    groups: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for i, (p, x, y) in enumerate(items):
+        if p.device_type == DeviceType.SIGN_GENERIC:
+            groups[(round(x / grid), round(y / grid))].append(i)
+    out = list(items)
+    for indices in groups.values():
+        n = len(indices)
+        if n <= 1:
+            continue
+        indices.sort(key=lambda i: (items[i][0].label or "", items[i][0].station_ft))
+        for j, idx in enumerate(indices):
+            p, x, y = items[idx]
+            fanned = x + (j - (n - 1) / 2.0) * step
+            fanned = min(max(fanned, PLAN_LEFT + SIGN_BOX_W / 2.0), PLAN_RIGHT - SIGN_BOX_W / 2.0)
+            out[idx] = (p, fanned, y)
     return out
 
 
@@ -1530,6 +1588,7 @@ def _layout_device_positions(
     median_items = _deoverlap_median_horizontal(median_items)
 
     items = _clamp_sign_positions(items + median_items, params, on_road_max, bands)
+    items = _fan_coincident_signs(items)
     return items, lighting_items
 
 
@@ -1642,6 +1701,7 @@ def _draw_dim(
     x2: float,
     y: float,
     label: str,
+    raise_tier: int | None = None,
 ) -> None:
     """Dimension line with a centered label.
 
@@ -1660,8 +1720,12 @@ def _draw_dim(
     text_width = c.stringWidth(label, "Helvetica", 7)
     segment_width = abs(x2 - x1)
     x_center = (x1 + x2) / 2.0
-    if text_width > segment_width - 4.0:
-        y_label = y + 12.0
+    if raise_tier is None:
+        raise_tier = 1 if text_width > segment_width - 4.0 else 0
+    if raise_tier > 0:
+        # #216 Family 3: tiers stack 10 pt apart so adjacent narrow
+        # segments' raised labels can coexist instead of colliding.
+        y_label = y + 2.0 + 10.0 * raise_tier
         c.line(x_center, y + 1.0, x_center, y_label - 1.5)
         c.drawCentredString(x_center, y_label, label)
     else:
@@ -1740,30 +1804,34 @@ def _draw_landmarks(
 
     y_road_top, y_road_bottom = _road_y_extent(params, shoulder_width_ft)
     # Sit the dim band well above the upper callout strip so its tick lines
-    # cannot land inside a tiered sign label.
-    y_top = y_road_top + 18 * PTS_PER_OFFSET_FT
+    # cannot land inside a tiered sign label.  #216 Family 3: ceiling-
+    # clamped so a tall road stack (4 narrowed lanes divided) cannot walk
+    # the band — or its raised tier (up to +22 pt) — into the top banner.
+    y_top = min(y_road_top + 18 * PTS_PER_OFFSET_FT, PLAN_TOP - 26.0)
 
-    _draw_dim(
-        c,
-        x_of(taper_start),
-        x_of(taper_end),
-        y_top,
-        f"{taper_label} = {taper_len:.0f} ft",
-    )
-    _draw_dim(
-        c,
-        x_of(taper_end),
-        x_of(wz_start),
-        y_top,
-        f"BUFFER = {buf_len:.0f} ft (NTS)",
-    )
-    _draw_dim(
-        c,
-        x_of(wz_start),
-        x_of(wz_end),
-        y_top,
-        f"WORK ZONE = {wz_len:.0f} ft",
-    )
+    # Greedy raised-tier assignment (#216 Family 3): a label wider than
+    # its segment raises off the baseline; when two raised labels' text
+    # extents overlap in x (both taper and buffer are narrow on long
+    # corridors — the measured "L/3 = 150 ft" x "BUFFER = ..." garble),
+    # the later one stacks a tier higher instead of overprinting.
+    segs = [
+        (x_of(taper_start), x_of(taper_end), f"{taper_label} = {taper_len:.0f} ft"),
+        (x_of(taper_end), x_of(wz_start), f"BUFFER = {buf_len:.0f} ft (NTS)"),
+        (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:.0f} ft"),
+    ]
+    occupied: list[tuple[int, float, float]] = []  # (tier, x_lo, x_hi)
+    for x1, x2, label in segs:
+        tw = c.stringWidth(label, "Helvetica", 7)
+        if tw <= abs(x2 - x1) - 4.0:
+            _draw_dim(c, x1, x2, y_top, label, raise_tier=0)
+            continue
+        xc = (x1 + x2) / 2.0
+        lo, hi = xc - tw / 2.0 - 2.0, xc + tw / 2.0 + 2.0
+        tier = 1
+        while any(t == tier and lo < ohi and olo < hi for t, olo, ohi in occupied):
+            tier += 1
+        occupied.append((tier, lo, hi))
+        _draw_dim(c, x1, x2, y_top, label, raise_tier=tier)
 
     # Scale-break marks across the road in the (compressed) buffer region.
     buffer_mid_x = x_of(wz_len + buf_len / 2.0)

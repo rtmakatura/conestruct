@@ -47,14 +47,15 @@ HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
 # the SCHOOL box; adv-near-intersection's edge:57 is the notes-box
 # bottom blowout (the rightmost-lane legal note + NI fine print below
 # the sheet border).
-# Families 1 (notes-box fit-by-construction) and 2 (width guards)
-# landed: NI edge 57 -> 1, banner overflow gone everywhere.  The
-# residual edge:1 is the SCHOOL context box and the collisions are the
-# dim-label garble — both Family 3 (geometry clamps).
+# All four families landed (#216): every fixture measures ZERO on all
+# three detectors.  This is the acceptance bar, not a baseline — any
+# nonzero count is a regression.  (The arc's red history: adv-shoulder
+# started at edge 6 / collisions 4, adv-near-intersection at edge 57,
+# adv-flagger at edge 6 / collisions 3 — recorded in the evidence dir.)
 BASELINE = {
-    "adv-shoulder": {"edge": 1, "box_cross": 0, "collisions": 4},
-    "adv-near-intersection": {"edge": 1, "box_cross": 0, "collisions": 0},
-    "adv-flagger": {"edge": 1, "box_cross": 0, "collisions": 3},
+    "adv-shoulder": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "adv-near-intersection": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "adv-flagger": {"edge": 0, "box_cross": 0, "collisions": 0},
     "control-typical": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
