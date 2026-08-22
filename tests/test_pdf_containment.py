@@ -49,7 +49,10 @@ HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
 # the sheet border).
 BASELINE = {
     "adv-shoulder": {"edge": 6, "box_cross": 0, "collisions": 4},
-    "adv-near-intersection": {"edge": 57, "box_cross": 0, "collisions": 0},
+    # Family 1 (notes-box fit-by-construction) landed: 57 -> 6.  The
+    # residual 6 are the banner overflow (Family 2) + the SCHOOL box
+    # (Family 3).
+    "adv-near-intersection": {"edge": 6, "box_cross": 0, "collisions": 0},
     "adv-flagger": {"edge": 6, "box_cross": 0, "collisions": 3},
     "control-typical": {"edge": 0, "box_cross": 0, "collisions": 0},
 }

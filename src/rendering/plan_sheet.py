@@ -22,6 +22,7 @@ Authoritative sources:
 
 from __future__ import annotations
 
+import io
 import os
 import tempfile
 from collections.abc import Callable, Mapping
@@ -2866,7 +2867,6 @@ def _draw_notes(
 
     x = x_box + 8
     x_right = x_box + width - 8
-    y = [FOOTER_H - 24]
 
     # near_intersection adds the Cases 18/19 citation note (a bold line
     # + three fine-print disclosures) beneath the Reference footer —
@@ -2880,253 +2880,325 @@ def _draw_notes(
     extra_note_lines = (5 if params.near_intersection else 0) + (2 if rightmost_lane_note else 0)
     layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
-    def section_header(title: str) -> None:
-        y[0] -= layout.section_header_pad[0]
-        c.setStrokeColor(colors.HexColor("#888888"))
-        c.setLineWidth(0.4)
-        c.line(x, y[0] + layout.section_header_pad[0], x_right, y[0] + layout.section_header_pad[0])
-        c.setFillColor(colors.black)
-        c.setFont("Helvetica-Bold", 7.5)
-        c.drawString(x, y[0] - 4, title)
-        y[0] -= layout.section_header_pad[1]
+    # Representative station per schedule key so the shared substitution
+    # helper can resolve station-dependent values for on-page rows (the
+    # R2-1 split itself is already encoded in the key; G20-1 needs only
+    # params).
+    key_station: dict[str, float] = {}
+    for p in placements or []:
+        if p.device_type == DeviceType.SIGN_GENERIC and p.label:
+            key_station.setdefault(_schedule_key(p), p.station_ft)
 
-    def column_header(label: str, x_pos: float, align: str = "left") -> None:
-        c.setFont("Helvetica-Bold", 6.5)
-        c.setFillColor(colors.HexColor("#666666"))
-        if align == "right":
-            c.drawRightString(x_pos, y[0], label)
+    def body(cv: canvas.Canvas, schedule_cap: int, advance_cap: int) -> float:
+        """Draw the panel's content onto ``cv`` with the list regions
+        capped at ``schedule_cap`` / ``advance_cap`` rows (an honest
+        continuation line replaces anything cut) and return the final
+        cursor y.  #216 Family 1: the fixed-obligation text (reference
+        line, conflict footnotes, NI citation note, rightmost-lane note,
+        DRAFT trailer) is never cut — the caller shrinks the caps until
+        this function's cursor stays above the floor, so the legal text
+        fits by construction.  At full caps the draw calls are exactly
+        the pre-#216 sequence (typical sheets byte-identical).
+        """
+        y = [FOOTER_H - 24]
+
+        def section_header(title: str) -> None:
+            y[0] -= layout.section_header_pad[0]
+            cv.setStrokeColor(colors.HexColor("#888888"))
+            cv.setLineWidth(0.4)
+            cv.line(
+                x, y[0] + layout.section_header_pad[0], x_right, y[0] + layout.section_header_pad[0]
+            )
+            cv.setFillColor(colors.black)
+            cv.setFont("Helvetica-Bold", 7.5)
+            cv.drawString(x, y[0] - 4, title)
+            y[0] -= layout.section_header_pad[1]
+
+        def column_header(label: str, x_pos: float, align: str = "left") -> None:
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.HexColor("#666666"))
+            if align == "right":
+                cv.drawRightString(x_pos, y[0], label)
+            else:
+                cv.drawString(x_pos, y[0], label)
+
+        # PARAMETERS — 2-column "label : value" grid
+        section_header("PARAMETERS")
+        rows: list[tuple[str, str]] = [
+            ("Speed limit", f"{speed} mph"),
+            # UX-11: short display name (the full banner already sits in
+            # the title block; the half-width value column can't hold it).
+            ("Closure", scenario_display_name_short(params)),
+        ]
+        if is_mobile:
+            # Mobile ops have no fixed work area or taper.  The trailing
+            # distance between work truck and shadow is the relevant length.
+            rows.append(("Shadow trailing", "100 ft"))
+            rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
+        elif is_off_road:
+            rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
         else:
-            c.drawString(x_pos, y[0], label)
+            rows.append(("Work zone", f"{params.work_zone_length_ft:.0f} ft"))
+            rows.append((taper_label, f"{taper_len:.0f} ft"))
+            rows.append(("Buffer", f"{buf_len:.0f} ft"))
+        col_x = [x, x + width / 2.0]
+        val_x = [col_x[0] + 110, col_x[1] + 110]
+        for k, (label, val) in enumerate(rows):
+            col = k % 2
+            if col == 0 and k > 0:
+                y[0] -= layout.param_pitch
+            cv.setFont("Helvetica", 7)
+            cv.setFillColor(colors.black)
+            cv.drawString(col_x[col], y[0], f"{label}:")
+            cv.setFont("Helvetica-Bold", 7)
+            # A value that would run past the box's inner right edge (long
+            # closure display names) renders right-aligned inside the box
+            # instead — text must never bleed across a footer-box border.
+            if val_x[col] + cv.stringWidth(val, "Helvetica-Bold", 7) > x_right:
+                cv.drawRightString(x_right, y[0], val)
+            else:
+                cv.drawString(val_x[col], y[0], val)
+        y[0] -= layout.param_pitch
 
-    # PARAMETERS — 2-column "label : value" grid
-    section_header("PARAMETERS")
-    rows: list[tuple[str, str]] = [
-        ("Speed limit", f"{speed} mph"),
-        # UX-11: short display name (the full banner already sits in the
-        # title block above; the half-width value column can't hold it).
-        ("Closure", scenario_display_name_short(params)),
-    ]
-    if is_mobile:
-        # Mobile ops have no fixed work area or taper.  The trailing
-        # distance between work truck and shadow is the relevant length.
-        rows.append(("Shadow trailing", "100 ft"))
-        rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
-    elif is_off_road:
-        rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
-    else:
-        rows.append(("Work zone", f"{params.work_zone_length_ft:.0f} ft"))
-        rows.append((taper_label, f"{taper_len:.0f} ft"))
-        rows.append(("Buffer", f"{buf_len:.0f} ft"))
-    col_x = [x, x + width / 2.0]
-    val_x = [col_x[0] + 110, col_x[1] + 110]
-    for k, (label, val) in enumerate(rows):
-        col = k % 2
-        if col == 0 and k > 0:
-            y[0] -= layout.param_pitch
-        c.setFont("Helvetica", 7)
-        c.setFillColor(colors.black)
-        c.drawString(col_x[col], y[0], f"{label}:")
-        c.setFont("Helvetica-Bold", 7)
-        # A value that would run past the box's inner right edge (long
-        # closure display names) renders right-aligned inside the box
-        # instead — text must never bleed across a footer-box border.
-        if val_x[col] + c.stringWidth(val, "Helvetica-Bold", 7) > x_right:
-            c.drawRightString(x_right, y[0], val)
-        else:
-            c.drawString(val_x[col], y[0], val)
-    y[0] -= layout.param_pitch
-
-    # SIGN SCHEDULE — 3-column table (#, CODE, DESCRIPTION)
-    if schedule_order:
-        section_header("SIGN SCHEDULE")
-        column_header("#", x)
-        column_header("CODE", x + 18)
-        column_header("DESCRIPTION", x + 80)
-        y[0] -= layout.col_header_pad[0]
-        c.setStrokeColor(colors.HexColor("#CCCCCC"))
-        c.setLineWidth(0.3)
-        c.line(x, y[0], x_right, y[0])
-        y[0] -= layout.col_header_pad[1]
-        # Representative station per schedule key so the shared
-        # substitution helper can resolve station-dependent values for
-        # on-page rows (the R2-1 split itself is already encoded in the
-        # key; G20-1 needs only params).
-        key_station: dict[str, float] = {}
-        for p in placements or []:
-            if p.device_type == DeviceType.SIGN_GENERIC and p.label:
-                key_station.setdefault(_schedule_key(p), p.station_ft)
-        for i, key in enumerate(schedule_order, start=1):
-            # Schedule keys are bare MUTCD codes except R2-1, which splits
-            # into entrance/restoration variants (see _schedule_key).  The
-            # CODE column always shows the bare code; parametric
-            # placeholders (G20-1 length, R2-1 entrance/restoration
-            # limits) substitute via the shared sign_codes helper so the
-            # XLSX / UI breakdown / crew narrative read the same values.
-            code, desc = substitute_sign_description(key, key_station.get(key, 0.0), params)
-            c.setFillColor(colors.black)
-            c.setFont("Helvetica", 7)
-            c.drawString(x, y[0], str(i))
-            c.setFont("Helvetica-Bold", 7)
-            c.drawString(x + 18, y[0], code)
-            c.setFont("Helvetica", 7)
-            c.drawString(x + 80, y[0], desc)
-            y[0] -= layout.row_pitch
-
-    # ADVANCE WARNING SIGNS — 3-column table (CODE, DESCRIPTION, DISTANCE).
-    # Single-column for ≤12 total rows; 2-column (column-major fill,
-    # closest-first within each column) once row count crosses the
-    # tier-2 threshold so dense stepped-W3-5 and future flagger/lane
-    # closure additions stay inside the box.
-    #
-    # Title gains "& FLAGGER STATIONS" only when a station placement
-    # actually landed off-page (UX-09) — the same filter the table rows
-    # use — so a flagger isn't mislabeled a sign and every non-flagger
-    # plan keeps the existing string byte-for-byte.  AFAD rows keep the
-    # same title: an AFAD staffs a flagger station (the narrative calls
-    # them "AFAD station positions").
-    has_offpage_station = any(
-        _is_station_placement(p) and p.station_ft > station_max_visible for p in (placements or [])
-    )
-    if is_mobile or is_off_road:
-        advance_section_title = "ADVANCE WARNING SIGNS (upstream of work area)"
-    elif has_offpage_station:
-        advance_section_title = (
-            "ADVANCE WARNING SIGNS & FLAGGER STATIONS (off-page upstream of taper)"
-        )
-    else:
-        advance_section_title = "ADVANCE WARNING SIGNS (off-page upstream of taper)"
-    section_header(advance_section_title)
-    if layout.two_col_advance:
-        _draw_advance_table_two_column(c, advance, x, x_right, y, layout, column_header)
-    else:
-        _draw_advance_table_one_column(c, advance, x, x_right, y, layout, column_header)
-
-    y[0] -= layout.footer_pads[0]
-    c.setFont("Helvetica-Oblique", 6.5)
-    c.setFillColor(colors.HexColor("#666666"))
-    c.drawString(
-        x,
-        y[0],
-        (
-            "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6 "
-            "(effective 2026-01-18), Colorado Supplement."
-        ),
-    )
-    if jurisdiction_conflicts:
-        # Spec §4.2 (issue #150): the † footnote — one line set per
-        # adopted-source conflict, verdict + both sources, glyph-carried
-        # (never color, rule 13).  If the box runs out of room the
-        # remainder collapses to an explicit aggregate line, never a
-        # silent drop (rule 10).
-        note_w = width - 16.0
-        floor_y = FOOTER_BOX_Y + 8.0
-        c.setFont("Helvetica-Oblique", 6)
-        c.setFillColor(colors.black)
-        for i, cf in enumerate(jurisdiction_conflicts):
-            srcs = "; ".join(f"{s['doc']}: {s['value']}" for s in cf.get("sources", []))
-            note = f"† {cf['label'].upper()} — {cf['verdict']} ({srcs})"
-            lines = _wrap_to_width(c, note, "Helvetica-Oblique", 6, note_w, max_lines=3)
-            needed = len(lines) * layout.footer_pads[1]
-            if y[0] - needed < floor_y and i < len(jurisdiction_conflicts) - 1:
-                y[0] -= layout.footer_pads[1]
-                c.drawString(
+        # SIGN SCHEDULE — 3-column table (#, CODE, DESCRIPTION)
+        if schedule_order:
+            section_header("SIGN SCHEDULE")
+            column_header("#", x)
+            column_header("CODE", x + 18)
+            column_header("DESCRIPTION", x + 80)
+            y[0] -= layout.col_header_pad[0]
+            cv.setStrokeColor(colors.HexColor("#CCCCCC"))
+            cv.setLineWidth(0.3)
+            cv.line(x, y[0], x_right, y[0])
+            y[0] -= layout.col_header_pad[1]
+            for i, key in enumerate(schedule_order[:schedule_cap], start=1):
+                # Schedule keys are bare MUTCD codes except R2-1, which
+                # splits into entrance/restoration variants (see
+                # _schedule_key).  The CODE column always shows the bare
+                # code; parametric placeholders (G20-1 length, R2-1
+                # entrance/restoration limits) substitute via the shared
+                # sign_codes helper so the XLSX / UI breakdown / crew
+                # narrative read the same values.
+                code, desc = substitute_sign_description(key, key_station.get(key, 0.0), params)
+                cv.setFillColor(colors.black)
+                cv.setFont("Helvetica", 7)
+                cv.drawString(x, y[0], str(i))
+                cv.setFont("Helvetica-Bold", 7)
+                cv.drawString(x + 18, y[0], code)
+                cv.setFont("Helvetica", 7)
+                cv.drawString(x + 80, y[0], desc)
+                y[0] -= layout.row_pitch
+            if schedule_cap < len(schedule_order):
+                # #216: truncation announces itself and names the full
+                # content's home (rule 10) — same posture as the device
+                # summary next door.
+                cv.setFillColor(colors.black)
+                cv.setFont("Helvetica-Bold", 7)
+                cv.drawString(
                     x,
                     y[0],
-                    (
-                        f"† {len(jurisdiction_conflicts) - i} ADOPTED-SOURCE CONFLICTS — "
-                        "CONSERVATIVE VALUES RENDERED; SEE JURISDICTION PANEL."
-                    ),
+                    f"+{len(schedule_order) - schedule_cap} MORE SIGNS — SEE DEVICE LIST (XLSX)",
                 )
-                break
-            for line in lines:
+                y[0] -= layout.row_pitch
+
+        # ADVANCE WARNING SIGNS — 3-column table (CODE, DESCRIPTION,
+        # DISTANCE).  Single-column for ≤12 total rows; 2-column
+        # (column-major fill, closest-first within each column) once row
+        # count crosses the tier-2 threshold so dense stepped-W3-5 and
+        # future flagger/lane closure additions stay inside the box.
+        #
+        # Title gains "& FLAGGER STATIONS" only when a station placement
+        # actually landed off-page (UX-09) — the same filter the table
+        # rows use — so a flagger isn't mislabeled a sign and every
+        # non-flagger plan keeps the existing string byte-for-byte.
+        # AFAD rows keep the same title: an AFAD staffs a flagger
+        # station (the narrative calls them "AFAD station positions").
+        has_offpage_station = any(
+            _is_station_placement(p) and p.station_ft > station_max_visible
+            for p in (placements or [])
+        )
+        if is_mobile or is_off_road:
+            advance_section_title = "ADVANCE WARNING SIGNS (upstream of work area)"
+        elif has_offpage_station:
+            advance_section_title = (
+                "ADVANCE WARNING SIGNS & FLAGGER STATIONS (off-page upstream of taper)"
+            )
+        else:
+            advance_section_title = "ADVANCE WARNING SIGNS (off-page upstream of taper)"
+        section_header(advance_section_title)
+        capped_advance = advance[:advance_cap]
+        if layout.two_col_advance:
+            _draw_advance_table_two_column(cv, capped_advance, x, x_right, y, layout, column_header)
+        else:
+            _draw_advance_table_one_column(cv, capped_advance, x, x_right, y, layout, column_header)
+        if advance_cap < len(advance):
+            # #216: the full advance series lives in the crew narrative
+            # and the device list — the cut names it (rule 10).
+            cv.setFillColor(colors.black)
+            cv.setFont("Helvetica-Bold", 7)
+            cv.drawString(
+                x,
+                y[0],
+                f"+{len(advance) - advance_cap} MORE ADVANCE SIGNS — "
+                "SEE CREW NARRATIVE & DEVICE LIST",
+            )
+            y[0] -= layout.row_pitch
+
+        y[0] -= layout.footer_pads[0]
+        cv.setFont("Helvetica-Oblique", 6.5)
+        cv.setFillColor(colors.HexColor("#666666"))
+        cv.drawString(
+            x,
+            y[0],
+            (
+                "Reference: CDOT S-630-1, MUTCD 11th Ed. Part 6 "
+                "(effective 2026-01-18), Colorado Supplement."
+            ),
+        )
+        _draw_notes_footers(cv, y)
+        return y[0]
+
+    def _draw_notes_footers(cv: canvas.Canvas, y: list[float]) -> None:
+        if jurisdiction_conflicts:
+            # Spec §4.2 (issue #150): the † footnote — one line set per
+            # adopted-source conflict, verdict + both sources, glyph-carried
+            # (never color, rule 13).  If the box runs out of room the
+            # remainder collapses to an explicit aggregate line, never a
+            # silent drop (rule 10).
+            note_w = width - 16.0
+            floor_y = FOOTER_BOX_Y + 8.0
+            cv.setFont("Helvetica-Oblique", 6)
+            cv.setFillColor(colors.black)
+            for i, cf in enumerate(jurisdiction_conflicts):
+                srcs = "; ".join(f"{s['doc']}: {s['value']}" for s in cf.get("sources", []))
+                note = f"† {cf['label'].upper()} — {cf['verdict']} ({srcs})"
+                lines = _wrap_to_width(cv, note, "Helvetica-Oblique", 6, note_w, max_lines=3)
+                needed = len(lines) * layout.footer_pads[1]
+                if y[0] - needed < floor_y and i < len(jurisdiction_conflicts) - 1:
+                    y[0] -= layout.footer_pads[1]
+                    cv.drawString(
+                        x,
+                        y[0],
+                        (
+                            f"† {len(jurisdiction_conflicts) - i} ADOPTED-SOURCE CONFLICTS — "
+                            "CONSERVATIVE VALUES RENDERED; SEE JURISDICTION PANEL."
+                        ),
+                    )
+                    break
+                for line in lines:
+                    y[0] -= layout.footer_pads[1]
+                    cv.drawString(x, y[0], line)
+        if params.near_intersection:
+            # Option C citation note (Refs #117): the sheet cites the plate
+            # instead of drawing the cross street — with the plate-vs-tool
+            # deltas in fine print (the #103 disclosure posture).  Lines
+            # wrap to the box width via the shared _wrap_to_width helper.
+            note_w = width - 16.0
+            for line in _wrap_to_width(
+                cv,
+                (
+                    "CROSS-STREET CONTROL PER CDOT S-630-1 SHEET 10, CASES "
+                    "18/19 — NOT DRAWN. SEE DEVICE LIST, CREW NARRATIVE, AND AUDIT."
+                ),
+                "Helvetica-Bold",
+                6.5,
+                note_w,
+                # 3 lines for the 4-box footer's narrower width (issue #150) —
+                # the disclosure sentence must never ellipsis-truncate.
+                max_lines=3,
+            ):
                 y[0] -= layout.footer_pads[1]
-                c.drawString(x, y[0], line)
-    if params.near_intersection:
-        # Option C citation note (Refs #117): the sheet cites the plate
-        # instead of drawing the cross street — with the plate-vs-tool
-        # deltas in fine print (the #103 disclosure posture).  Lines
-        # wrap to the box width via the shared _wrap_to_width helper.
-        note_w = width - 16.0
-        for line in _wrap_to_width(
-            c,
-            (
-                "CROSS-STREET CONTROL PER CDOT S-630-1 SHEET 10, CASES "
-                "18/19 — NOT DRAWN. SEE DEVICE LIST, CREW NARRATIVE, AND AUDIT."
-            ),
-            "Helvetica-Bold",
-            6.5,
-            note_w,
-            # 3 lines for the 4-box footer's narrower width (issue #150) —
-            # the disclosure sentence must never ellipsis-truncate.
-            max_lines=3,
-        ):
-            y[0] -= layout.footer_pads[1]
-            c.setFont("Helvetica-Bold", 6.5)
-            c.setFillColor(colors.black)
-            c.drawString(x, y[0], line)
-        c.setFont("Helvetica-Oblique", 6)
-        c.setFillColor(colors.HexColor("#666666"))
-        for fine_print in (
-            (
-                "Plate typifies corner-quadrant work with a cross-street "
-                "closure train; this plan places advance sets only (corner "
-                "work tracked at issue #128)."
-            ),
-            (
-                "Opposing mainline direction not signed (undivided "
-                "single-side convention; the plate signs both directions)."
-            ),
-            (
-                "Plate typifies rural sign placement; urban applications "
-                "require block-based placement (Sheet 10 Note 1)."
-            ),
-        ):
-            # max_lines=3: the 4-box footer's narrower width (spec §4,
-            # issue #150) wraps these onto a third line — allowed, so no
-            # citation text is ever ellipsis-truncated.
-            for line in _wrap_to_width(c, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=3):
+                cv.setFont("Helvetica-Bold", 6.5)
+                cv.setFillColor(colors.black)
+                cv.drawString(x, y[0], line)
+            cv.setFont("Helvetica-Oblique", 6)
+            cv.setFillColor(colors.HexColor("#666666"))
+            for fine_print in (
+                (
+                    "Plate typifies corner-quadrant work with a cross-street "
+                    "closure train; this plan places advance sets only (corner "
+                    "work tracked at issue #128)."
+                ),
+                (
+                    "Opposing mainline direction not signed (undivided "
+                    "single-side convention; the plate signs both directions)."
+                ),
+                (
+                    "Plate typifies rural sign placement; urban applications "
+                    "require block-based placement (Sheet 10 Note 1)."
+                ),
+            ):
+                # max_lines=3: the 4-box footer's narrower width (spec §4,
+                # issue #150) wraps these onto a third line — allowed, so no
+                # citation text is ever ellipsis-truncated.
+                for line in _wrap_to_width(
+                    cv, fine_print, "Helvetica-Oblique", 6, note_w, max_lines=3
+                ):
+                    y[0] -= layout.footer_pads[1]
+                    cv.drawString(x, y[0], line)
+        if rightmost_lane_note:
+            # #176's visible right-side note (ruled 2026-08-03): the closed
+            # lane is a modeling assumption, and the sheet must say so —
+            # a crew reading this plan for left- or center-lane work would
+            # otherwise set up the wrong closure with no signal (rule 10).
+            # Fires only where a lane CHOICE exists, per the single-sourced
+            # ``rightmost_lane_assumption_active`` predicate (num_lanes >= 2
+            # lane closures: near_intersection, lane_closure_divided, and
+            # the multilane mobile op); the flagger's and 2-lane mobile op's
+            # one lane per direction offer no choice, and shoulder closures
+            # close no lane.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.black)
+            for line in _wrap_to_width(
+                cv,
+                (
+                    "CLOSED LANE DRAWN AS THE RIGHTMOST LANE — MODELING "
+                    "ASSUMPTION; NO MUTCD RULE SELECTS THE LANE (THE WORK "
+                    "LOCATION DOES). IF THE WORK OCCUPIES A DIFFERENT LANE, "
+                    "THIS PLAN DOES NOT APPLY AS DRAWN."
+                ),
+                "Helvetica-Bold",
+                6.5,
+                width - 16.0,
+                max_lines=3,
+            ):
                 y[0] -= layout.footer_pads[1]
-                c.drawString(x, y[0], line)
-    if rightmost_lane_note:
-        # #176's visible right-side note (ruled 2026-08-03): the closed
-        # lane is a modeling assumption, and the sheet must say so —
-        # a crew reading this plan for left- or center-lane work would
-        # otherwise set up the wrong closure with no signal (rule 10).
-        # Fires only where a lane CHOICE exists, per the single-sourced
-        # ``rightmost_lane_assumption_active`` predicate (num_lanes >= 2
-        # lane closures: near_intersection, lane_closure_divided, and
-        # the multilane mobile op); the flagger's and 2-lane mobile op's
-        # one lane per direction offer no choice, and shoulder closures
-        # close no lane.
-        c.setFont("Helvetica-Bold", 6.5)
-        c.setFillColor(colors.black)
-        for line in _wrap_to_width(
-            c,
-            (
-                "CLOSED LANE DRAWN AS THE RIGHTMOST LANE — MODELING "
-                "ASSUMPTION; NO MUTCD RULE SELECTS THE LANE (THE WORK "
-                "LOCATION DOES). IF THE WORK OCCUPIES A DIFFERENT LANE, "
-                "THIS PLAN DOES NOT APPLY AS DRAWN."
-            ),
-            "Helvetica-Bold",
-            6.5,
-            width - 16.0,
-            max_lines=3,
-        ):
-            y[0] -= layout.footer_pads[1]
-            c.drawString(x, y[0], line)
-    y[0] -= layout.footer_pads[1]
-    c.setFont("Helvetica-Bold", 6.5)
-    c.setFillColor(colors.HexColor("#B05010"))
-    c.drawString(
-        x,
-        y[0],
-        "GENERATED BY CONESTRUCT — DRAFT FOR PE REVIEW. NOT A SEALED PLAN.",
-    )
-    y[0] -= layout.footer_pads[1]
-    c.setFont("Helvetica-Oblique", 6.5)
-    c.setFillColor(colors.HexColor("#666666"))
-    c.drawString(x, y[0], "Verify all dimensions before use.")
+                cv.drawString(x, y[0], line)
+        y[0] -= layout.footer_pads[1]
+        cv.setFont("Helvetica-Bold", 6.5)
+        cv.setFillColor(colors.HexColor("#B05010"))
+        cv.drawString(
+            x,
+            y[0],
+            "GENERATED BY CONESTRUCT — DRAFT FOR PE REVIEW. NOT A SEALED PLAN.",
+        )
+        y[0] -= layout.footer_pads[1]
+        cv.setFont("Helvetica-Oblique", 6.5)
+        cv.setFillColor(colors.HexColor("#666666"))
+        cv.drawString(x, y[0], "Verify all dimensions before use.")
+
+    # #216 Family 1 — fit by construction.  Dry-run the exact draw path
+    # on a throwaway canvas to measure the true end cursor; while it
+    # lands below the floor, cut list rows (the advance table first —
+    # its full series lives in the crew narrative + device list — then
+    # the sign schedule) and re-measure.  The fixed-obligation text is
+    # never cut, so the pre-#216 failure mode (the rightmost-lane legal
+    # note and the DRAFT trailer rendering below the sheet border) is
+    # impossible.  At full caps the real draw is the identical call
+    # sequence — typical sheets byte-for-byte unchanged.
+    floor_y = FOOTER_BOX_Y + 8.0
+    schedule_cap = len(schedule_order or [])
+    advance_cap = len(advance)
+    while True:
+        probe = canvas.Canvas(io.BytesIO(), pagesize=(PAGE_W, PAGE_H))
+        end_y = body(probe, schedule_cap, advance_cap)
+        if end_y >= floor_y or (schedule_cap == 0 and advance_cap == 0):
+            break
+        if advance_cap > 0:
+            advance_cap -= 1
+        else:
+            schedule_cap -= 1
+    body(c, schedule_cap, advance_cap)
 
 
 def _draw_advance_table_one_column(
