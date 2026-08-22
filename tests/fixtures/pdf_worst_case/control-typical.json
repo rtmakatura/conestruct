@@ -1,0 +1,28 @@
+{
+ "_provenance": {
+  "arc": "s2-arc6 (#216) worst-case PDF layout audit, 2026-08-22",
+  "purpose": "Typical control: short strings, one site condition, 2 lanes undivided. Every worst-case guard must stay dormant here.",
+  "reachability": "All values pass the wire schema (Pydantic) and the geometry validators; rendered through the real /render/pdf path."
+ },
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Colfax Water Main",
+   "address": "E Colfax Ave at Race St",
+   "lat": 0.0,
+   "lng": 0.0,
+   "siteConditions": {
+    "pedestrian_facility": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 35,
+  "lanes": 2,
+  "laneWidth": 12,
+  "divided": false,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 800,
+  "night": false
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "_provenance": {
+  "arc": "s2-arc6 (#216) worst-case PDF layout audit, 2026-08-22",
+  "purpose": "Adversarial maximum, shoulder kind: divided 4-lane, night + work-zone speed 25 (speed/fines sign families), all 7 site conditions, Englewood (3 adopted-source conflicts), schedule range, 155-char project / 152-char address (both unbounded on the wire).",
+  "reachability": "All values pass the wire schema (Pydantic) and the geometry validators; rendered through the real /render/pdf path."
+ },
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "I-25 & Alameda Interchange Phase 3B Utility Relocation and Storm Drain Improvements Package 2 (Night Work) - CDOT Region 1 / City and County of Denver Joint Project",
+   "address": "4700-4998 South Colorado Boulevard between East Bayaud Avenue and East Alameda Avenue, Glendale / Denver County, Colorado 80246 (northbound curb lane)",
+   "lat": 0.0,
+   "lng": 0.0,
+   "siteConditions": {
+    "adjacent_intersection": true,
+    "adjacent_interchange": true,
+    "pedestrian_facility": true,
+    "bike_facility": true,
+    "school_zone": true,
+    "railroad_crossing": true,
+    "hospital_nearby": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 45,
+  "lanes": 4,
+  "laneWidth": 10.5,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 5000,
+  "night": true,
+  "workZoneSpeed": 25,
+  "jurisdiction_key": "englewood",
+  "street_class": "arterial",
+  "schedule": {
+   "date_mode": "range",
+   "work_date": "2026-08-24",
+   "work_date_end": "2026-08-28",
+   "start_time": 20.0,
+   "end_time": 5.0
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "_provenance": {
+  "arc": "s2-arc6 (#216) worst-case PDF layout audit, 2026-08-22",
+  "purpose": "Adversarial maximum, near_intersection kind: two signalized approaches at one cross street (per-leg control + the citation note's extra note lines), Thornton (on-sheet summary required + 1 conflict), same long strings. The notes-box blowout showcase.",
+  "reachability": "All values pass the wire schema (Pydantic) and the geometry validators; rendered through the real /render/pdf path."
+ },
+ "scenario": {
+  "kind": "near_intersection",
+  "meta": {
+   "project": "I-25 & Alameda Interchange Phase 3B Utility Relocation and Storm Drain Improvements Package 2 (Night Work) - CDOT Region 1 / City and County of Denver Joint Project",
+   "address": "4700-4998 South Colorado Boulevard between East Bayaud Avenue and East Alameda Avenue, Glendale / Denver County, Colorado 80246 (northbound curb lane)",
+   "lat": 0.0,
+   "lng": 0.0,
+   "siteConditions": {
+    "adjacent_intersection": true,
+    "adjacent_interchange": true,
+    "pedestrian_facility": true,
+    "bike_facility": true,
+    "school_zone": true,
+    "railroad_crossing": true,
+    "hospital_nearby": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 40,
+  "lanes": 3,
+  "laneWidth": 10.5,
+  "divided": false,
+  "workType": "utility_cut",
+  "duration": "short",
+  "workLen": 2000,
+  "night": true,
+  "approaches": [
+   {
+    "id": "north_leg",
+    "speed": 40,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 3,
+    "laneWidth": 10.5,
+    "signalized": true,
+    "alongStationFt": 2200
+   },
+   {
+    "id": "south_leg",
+    "speed": 35,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 2,
+    "laneWidth": 10.5,
+    "signalized": true,
+    "alongStationFt": 2200
+   }
+  ],
+  "jurisdiction_key": "thornton",
+  "street_class": "arterial"
+ }
+}
