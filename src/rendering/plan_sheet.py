@@ -1870,15 +1870,28 @@ def _draw_title_block(
     # Project segment — only when the user supplied a real value.  Em
     # dash separator is drawn at the title's bold weight so it visually
     # belongs to the banner rather than to either neighbouring segment.
+    #
+    # #216 Family 2: ``meta.project`` is unbounded on the wire and this
+    # banner had no width guard — a long name pushed itself AND the
+    # speed segment off the page edge.  The speed segment's width is
+    # reserved first (it always renders), and the project truncates
+    # with an ellipsis into what remains; the full name lives in the
+    # structured title block and every flowing document, so the
+    # ellipsis is a pointer, not a loss (rule 10).
+    right_limit = PAGE_W - MARGIN - 8.0
+    sep = "  —  "
+    sep_w = c.stringWidth(sep, "Helvetica-Bold", 14)
+    speed_reserved = sep_w + c.stringWidth(f"{params.speed_mph} MPH", "Helvetica", 11)
     if show_project:
-        sep = "  —  "
         c.setFont("Helvetica-Bold", 14)
         c.drawString(x, y, sep)
-        x += c.stringWidth(sep, "Helvetica-Bold", 14)
+        x += sep_w
         c.setFont("Helvetica-Bold", 12)
         c.setFillColor(colors.HexColor("#1A1A1A"))
-        c.drawString(x, y + 1.0, project_name)
-        x += c.stringWidth(project_name, "Helvetica-Bold", 12)
+        project_max_w = right_limit - x - speed_reserved
+        shown_project = _truncate_to_width(c, project_name, "Helvetica-Bold", 12, project_max_w)
+        c.drawString(x, y + 1.0, shown_project)
+        x += c.stringWidth(shown_project, "Helvetica-Bold", 12)
 
     # Speed segment — always shown.
     sep = "  —  "
@@ -2391,7 +2404,11 @@ def _draw_legend(
             if dt == DeviceType.CONE
             else _DEVICE_DISPLAY_NAMES.get(dt, dt.value)
         )
-        c.drawString(text_x, y, label)
+        # #216 Family 2: row labels truncate at the box's inner right
+        # edge — a long display name must never cross into the notes box.
+        c.drawString(
+            text_x, y, _truncate_to_width(c, label, "Helvetica", 8, box_x + width - 8 - text_x)
+        )
         y -= row_h
         if _bail():
             return
@@ -2407,7 +2424,11 @@ def _draw_legend(
             description, sample_label = _SIGN_CATEGORY_LEGEND[cat]
             _draw_sign(c, glyph_x, y + 3, sample_label)
             c.setFillColor(colors.black)
-            c.drawString(text_x, y, description)
+            c.drawString(
+                text_x,
+                y,
+                _truncate_to_width(c, description, "Helvetica", 8, box_x + width - 8 - text_x),
+            )
             y -= row_h
             if _bail():
                 return
@@ -3715,7 +3736,21 @@ def _render_aerial_page(
     # location (5 decimals — _format_latlng).  Without an address the
     # coordinates take the label line.
     if location_description:
-        c.drawString(caption_x, cap_y, f"SITE: {location_description}")
+        # #216 Family 2: the address is unbounded on the wire; measured
+        # headroom is ~248 chars at 10 pt before the page edge, so the
+        # guard is a backstop — the coordinates line beneath stays the
+        # authoritative location either way.
+        c.drawString(
+            caption_x,
+            cap_y,
+            _truncate_to_width(
+                c,
+                f"SITE: {location_description}",
+                "Helvetica-Bold",
+                10,
+                PAGE_W - MARGIN - caption_x,
+            ),
+        )
         c.setFont("Helvetica", 9)
         c.setFillColor(colors.HexColor("#333333"))
         c.drawString(caption_x, cap_y - 14.0, _format_latlng(lat, lng))

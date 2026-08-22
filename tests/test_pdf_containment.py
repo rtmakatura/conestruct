@@ -47,13 +47,14 @@ HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
 # the SCHOOL box; adv-near-intersection's edge:57 is the notes-box
 # bottom blowout (the rightmost-lane legal note + NI fine print below
 # the sheet border).
+# Families 1 (notes-box fit-by-construction) and 2 (width guards)
+# landed: NI edge 57 -> 1, banner overflow gone everywhere.  The
+# residual edge:1 is the SCHOOL context box and the collisions are the
+# dim-label garble — both Family 3 (geometry clamps).
 BASELINE = {
-    "adv-shoulder": {"edge": 6, "box_cross": 0, "collisions": 4},
-    # Family 1 (notes-box fit-by-construction) landed: 57 -> 6.  The
-    # residual 6 are the banner overflow (Family 2) + the SCHOOL box
-    # (Family 3).
-    "adv-near-intersection": {"edge": 6, "box_cross": 0, "collisions": 0},
-    "adv-flagger": {"edge": 6, "box_cross": 0, "collisions": 3},
+    "adv-shoulder": {"edge": 1, "box_cross": 0, "collisions": 4},
+    "adv-near-intersection": {"edge": 1, "box_cross": 0, "collisions": 0},
+    "adv-flagger": {"edge": 1, "box_cross": 0, "collisions": 3},
     "control-typical": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
