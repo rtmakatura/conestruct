@@ -1,0 +1,5 @@
+control-typical rendered at base 57e201a vs HEAD (s2-arc6 tip)
+base 341 words, head 341 words
+only-in-base: []
+only-in-head: []
+VERDICT: IDENTICAL incl. positions (DATE identical — same render day)
