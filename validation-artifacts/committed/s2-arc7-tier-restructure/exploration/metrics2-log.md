@@ -1,0 +1,8 @@
+- `2026-08-24T15:36:21.385Z` road candidate chosen: East Colfax Avenue eastbound (primary, 91°)21 m from pin · way 600545940
+- `2026-08-24T15:37:25.141Z` selected Denver via dropdown
+- `2026-08-24T15:37:37.195Z` heavy-denver DEFAULT: words=109 h=618 chips=8 audit=0
+- `2026-08-24T15:38:10.051Z` heavy-denver EXPANDED: words=844 h=3149 tables=2 rows=16 links=2
+- `2026-08-24T15:38:10.051Z` heavy-denver chips: Denver deltas=55w · Personnel gates=95w · Device mandates=29w · Denver hazards=73w · Work hours — Denver=66w · Permit — Denver=222w · Verification & audit trail=171w · Plan details — device schedule=112w
+- `2026-08-24T15:38:10.051Z` heavy-denver audit bodies (words): [0,41,97]
+- `2026-08-24T15:38:18.284Z` road candidate chosen: Streets
+- `2026-08-24T15:38:50.201Z` control: Save & Close never enabled — abandoning control run

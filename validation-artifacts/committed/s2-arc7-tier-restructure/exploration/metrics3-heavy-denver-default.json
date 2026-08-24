@@ -1,0 +1,60 @@
+{
+  "totalChars": 559,
+  "totalWords": 109,
+  "heightPx": 618.125,
+  "chips": [
+    {
+      "label": "Denver deltas",
+      "summary": "1 delta · 1 affect count",
+      "open": false,
+      "words": 10
+    },
+    {
+      "label": "Personnel gates",
+      "summary": "2 · 1 conditional",
+      "open": false,
+      "words": 8
+    },
+    {
+      "label": "Device mandates",
+      "summary": "1 mandate",
+      "open": false,
+      "words": 6
+    },
+    {
+      "label": "Denver hazards",
+      "summary": "2 hazards — worst: $500 / day",
+      "open": false,
+      "words": 11
+    },
+    {
+      "label": "Work hours — Denver",
+      "summary": "windows shown · not checked",
+      "open": false,
+      "words": 11
+    },
+    {
+      "label": "Permit — Denver",
+      "summary": "no published tiers · 14 fee lines · lead 5–60 days",
+      "open": false,
+      "words": 16
+    },
+    {
+      "label": "Verification & audit trail",
+      "summary": "3 values traced · each cited",
+      "open": false,
+      "words": 12
+    },
+    {
+      "label": "Plan details — device schedule",
+      "summary": "11 device types · 37 total units",
+      "open": false,
+      "words": 14
+    }
+  ],
+  "audit": [],
+  "tables": 0,
+  "tableRows": 0,
+  "buttons": 8,
+  "links": 0
+}

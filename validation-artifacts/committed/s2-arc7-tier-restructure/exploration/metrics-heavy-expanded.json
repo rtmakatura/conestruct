@@ -1,0 +1,53 @@
+{
+  "totalChars": 1741,
+  "totalWords": 276,
+  "heightPx": 1215.78125,
+  "chips": [
+    {
+      "label": "Verification & audit trail",
+      "summary": "3 values traced · each cited",
+      "open": true,
+      "chars": 1105,
+      "words": 171
+    },
+    {
+      "label": "Plan details — device schedule",
+      "summary": "11 device types · 37 total units",
+      "open": true,
+      "chars": 572,
+      "words": 96
+    }
+  ],
+  "audit": [
+    {
+      "title": "Cross-street approaches",
+      "result": "2 legs · near-side work",
+      "cite": "MUTCD § 6N.12",
+      "open": false,
+      "bodyWords": 0
+    },
+    {
+      "title": "Site corridor validation",
+      "result": "⚠ 1 warning",
+      "cite": "OpenStreetMap",
+      "open": false,
+      "bodyWords": 0
+    },
+    {
+      "title": "Verification status",
+      "result": "2 references pending",
+      "cite": "PENDING",
+      "open": true,
+      "bodyWords": 97
+    }
+  ],
+  "tables": 1,
+  "tableRows": 12,
+  "buttons": 6,
+  "links": 2,
+  "auditBodyWordsByItem": [
+    0,
+    41,
+    97
+  ]
+}

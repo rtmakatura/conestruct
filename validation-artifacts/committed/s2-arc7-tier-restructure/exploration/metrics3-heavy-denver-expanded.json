@@ -1,0 +1,81 @@
+{
+  "totalChars": 5282,
+  "totalWords": 844,
+  "heightPx": 3148.734375,
+  "chips": [
+    {
+      "label": "Denver deltas",
+      "summary": "1 delta · 1 affect count",
+      "open": true,
+      "words": 55
+    },
+    {
+      "label": "Personnel gates",
+      "summary": "2 · 1 conditional",
+      "open": true,
+      "words": 95
+    },
+    {
+      "label": "Device mandates",
+      "summary": "1 mandate",
+      "open": true,
+      "words": 29
+    },
+    {
+      "label": "Denver hazards",
+      "summary": "2 hazards — worst: $500 / day",
+      "open": true,
+      "words": 73
+    },
+    {
+      "label": "Work hours — Denver",
+      "summary": "windows shown · not checked",
+      "open": true,
+      "words": 66
+    },
+    {
+      "label": "Permit — Denver",
+      "summary": "no published tiers · 14 fee lines · lead 5–60 days",
+      "open": true,
+      "words": 222
+    },
+    {
+      "label": "Verification & audit trail",
+      "summary": "3 values traced · each cited",
+      "open": true,
+      "words": 171
+    },
+    {
+      "label": "Plan details — device schedule",
+      "summary": "11 device types · 37 total units",
+      "open": true,
+      "words": 112
+    }
+  ],
+  "audit": [
+    {
+      "title": "Cross-street approaches",
+      "result": "2 legs · near-side work",
+      "cite": "MUTCD § 6N.12"
+    },
+    {
+      "title": "Site corridor validation",
+      "result": "⚠ 1 warning",
+      "cite": "OpenStreetMap"
+    },
+    {
+      "title": "Verification status",
+      "result": "2 references pending",
+      "cite": "PENDING"
+    }
+  ],
+  "tables": 2,
+  "tableRows": 16,
+  "buttons": 12,
+  "links": 2,
+  "auditBodyWordsByItem": [
+    179,
+    41,
+    97
+  ]
+}

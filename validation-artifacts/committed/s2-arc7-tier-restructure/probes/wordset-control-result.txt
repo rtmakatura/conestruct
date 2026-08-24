@@ -1,0 +1,9 @@
+# 220 word-set control — control-typical audit PDF, base d8419d6 vs arc tip
+# (wordset-audit-control.py; base rendered in a worktree at d8419d6)
+base words: 341 head words: 349
+only-base: []
+only-head: ['1', '10', 'attention', 'change', 'checked', 'needs', 'status', '<middle-dot glyph>']
+# zero words lost; the eight new words are exactly the "Plan status:
+# 1 change · 0 needs attention · 10 checked · 0 pending · reference"
+# row (the '·' separator extracts as a replacement glyph).  DATE equal
+# (same-day renders).

@@ -1,0 +1,39 @@
+{
+  "totalWords": 94,
+  "heightPx": 501.9375,
+  "chips": [
+    {
+      "label": "Lakewood deltas",
+      "summary": "2 deltas · none affect count",
+      "words": 10
+    },
+    {
+      "label": "Device mandates",
+      "summary": "1 mandate",
+      "words": 6
+    },
+    {
+      "label": "Work hours — Lakewood",
+      "summary": "windows shown · not checked",
+      "words": 11
+    },
+    {
+      "label": "Permit — Lakewood",
+      "summary": "2 permit types · 3 fee lines · lead see below",
+      "words": 16
+    },
+    {
+      "label": "Verification & audit trail",
+      "summary": "6 values traced · each cited",
+      "words": 12
+    },
+    {
+      "label": "Plan details — device schedule",
+      "summary": "9 device types · 33 total units",
+      "words": 14
+    }
+  ],
+  "audit": [],
+  "tables": 0,
+  "tableRows": 0
+}

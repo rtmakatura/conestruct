@@ -1,0 +1,78 @@
+{
+  "totalWords": 685,
+  "heightPx": 2630.5625,
+  "chips": [
+    {
+      "label": "Lakewood deltas",
+      "summary": "2 deltas · none affect count",
+      "words": 113
+    },
+    {
+      "label": "Device mandates",
+      "summary": "1 mandate",
+      "words": 51
+    },
+    {
+      "label": "Work hours — Lakewood",
+      "summary": "windows shown · not checked",
+      "words": 80
+    },
+    {
+      "label": "Permit — Lakewood",
+      "summary": "2 permit types · 3 fee lines · lead see below",
+      "words": 154
+    },
+    {
+      "label": "Verification & audit trail",
+      "summary": "6 values traced · each cited",
+      "words": 179
+    },
+    {
+      "label": "Plan details — device schedule",
+      "summary": "9 device types · 33 total units",
+      "words": 83
+    }
+  ],
+  "audit": [
+    {
+      "title": "Taper length calculation",
+      "result": "L/3 = 89 ft",
+      "cite": "MUTCD § 6B.08"
+    },
+    {
+      "title": "Buffer space calculation",
+      "result": "B = 305 ft",
+      "cite": "MUTCD § 6B.06"
+    },
+    {
+      "title": "Channelizing device spacing",
+      "result": "18 devices · 40/80 ft o.c.",
+      "cite": "MUTCD § 6K.01"
+    },
+    {
+      "title": "Advance warning sign set",
+      "result": "3 signs",
+      "cite": "MUTCD TABLE 6B-1"
+    },
+    {
+      "title": "Colorado requirements (CDOT S-630-1)",
+      "result": "ALL CHECKS PASS",
+      "cite": "CDOT S-630-1"
+    },
+    {
+      "title": "TA-3 · S-630-1 reference",
+      "result": "Case 11: Shoulder closure on divided highway",
+      "cite": "CDOT S-630-1"
+    }
+  ],
+  "tables": 2,
+  "tableRows": 12,
+  "auditBodyWordsByItem": [
+    44,
+    39,
+    94,
+    58,
+    136,
+    59
+  ]
+}
