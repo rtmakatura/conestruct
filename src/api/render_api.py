@@ -1355,6 +1355,16 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
     Same placement source as ``/render/pdf`` so the audit cannot drift from
     the rendered plan.
     """
+    return _audit_projection_and_params_for(scenario)[0]
+
+
+def _audit_projection_and_params_for(
+    scenario: Scenario,
+) -> tuple[dict[str, Any], Any]:
+    """The projection plus the params it was built from — the PDF path
+    needs the params once more for the #220 jurisdiction evaluation
+    (same single ``_jurisdiction_eval`` the breakdown endpoint uses),
+    without running the generator a second time."""
     placements, params, site_records, _night, approaches = _placements_for(scenario)
     # Shoulder width is read from params.shoulder_width_ft inside the
     # audit builder (single source of truth — set once at the schemas bridge).
@@ -1369,7 +1379,7 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
         approaches=approaches,
     )
     step_count = _compute_step_count(scenario)
-    return audit_projection(
+    projection = audit_projection(
         audit,
         scenario.kind,
         step_count,
@@ -1400,6 +1410,7 @@ def _audit_projection_for(scenario: Scenario) -> dict[str, Any]:
             for r in (getattr(scenario, "detectionOverrides", None) or [])
         ],
     )
+    return projection, params
 
 
 @app.post("/render/audit")
@@ -1441,12 +1452,17 @@ def render_audit_pdf_endpoint(scenario: Scenario) -> Response:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        projection = _audit_projection_for(scenario)
+        projection, params = _audit_projection_and_params_for(scenario)
+        # #220 — the cover's triage line counts jurisdiction facts too
+        # (deltas, obligations, the hours verdict) when the scenario
+        # names a jurisdiction; same single evaluation the breakdown
+        # endpoint runs, derived at render time — no wire change.
+        jurisdiction = _jurisdiction_eval(scenario, params)[0]
         fd, raw_path = tempfile.mkstemp(suffix=".pdf")
         os.close(fd)
         path = Path(raw_path)
         try:
-            render_audit_pdf(projection, str(path))
+            render_audit_pdf(projection, str(path), jurisdiction=jurisdiction)
             body = path.read_bytes()
         finally:
             path.unlink(missing_ok=True)

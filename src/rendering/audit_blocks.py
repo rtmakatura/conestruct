@@ -34,6 +34,7 @@ from src.rendering.document import (
     render_document_pdf,
     rich_text,
 )
+from src.rendering.tier_ledger import ledger_line, tier_ledger
 
 # Characters the projection emits that Helvetica/WinAnsi cannot render.
 _GLYPH_FALLBACKS: dict[str, str] = {
@@ -78,10 +79,16 @@ def _str(section: dict[str, Any], key: str) -> str:
 # --------------------------------------------------------------------------- #
 
 
-def _summary_blocks(summary: dict[str, Any]) -> list[Block]:
+def _summary_blocks(summary: dict[str, Any], status_line: str | None = None) -> list[Block]:
     case_id = _str(summary, "case_id") or "Audit Trail"
     blocks: list[Block] = [Heading(1, _cell(f"Audit Trail — {case_id}"))]
-    rows: list[tuple[str, str]] = [
+    rows: list[tuple[str, str]] = []
+    # #220 — the triage summary leads the cover, sharing the screen
+    # ledger's exact words (tier_ledger.ledger_line == tiering.ts
+    # ledgerLine; the cross-surface test pins the counts equal).
+    if status_line is not None:
+        rows.append(("Plan status", _cell(status_line)))
+    rows += [
         ("MUTCD typical application", _str(summary, "ta")),
         ("CDOT standard sheet", _str(summary, "cdot_sheet")),
         ("Case", _str(summary, "case_id")),
@@ -423,18 +430,26 @@ def _pending_blocks(pending: dict[str, Any]) -> list[Block]:
 # --------------------------------------------------------------------------- #
 
 
-def audit_to_blocks(projection: dict[str, Any]) -> list[Block]:
+def audit_to_blocks(
+    projection: dict[str, Any],
+    jurisdiction: dict[str, Any] | None = None,
+) -> list[Block]:
     """Map a full audit projection (summary + sections + pending) to blocks.
 
     Renders every section the projection carries, independent of the UI's
     accordion state — the PDF is the complete, attach-to-a-bid-packet view.
+    ``jurisdiction`` is the evaluated block (when the scenario names one)
+    — it feeds ONLY the cover's #220 status line; the jurisdiction corpus
+    itself is a screen surface, not an audit-PDF section.
     """
     summary = projection.get("summary", {})
     sections = projection.get("sections", {})
     pending = projection.get("pending_verification", {})
 
     blocks: list[Block] = []
-    blocks += _summary_blocks(summary)
+    blocks += _summary_blocks(
+        summary, status_line=ledger_line(tier_ledger(projection, jurisdiction))
+    )
     blocks += _taper_blocks(sections.get("taper", {}))
     blocks += _buffer_blocks(sections.get("buffer", {}))
     blocks += _spacing_blocks(sections.get("spacing", {}))
@@ -452,11 +467,15 @@ def audit_to_blocks(projection: dict[str, Any]) -> list[Block]:
     return blocks
 
 
-def render_audit_pdf(projection: dict[str, Any], output_path: str) -> str:
+def render_audit_pdf(
+    projection: dict[str, Any],
+    output_path: str,
+    jurisdiction: dict[str, Any] | None = None,
+) -> str:
     """Render the audit projection to a PDF at ``output_path``; return the path.
 
     Mirrors the write-to-path-return-path convention of the other
     renderers so the FastAPI ``_render_with`` plumbing works unchanged.
     """
-    blocks = audit_to_blocks(projection)
+    blocks = audit_to_blocks(projection, jurisdiction=jurisdiction)
     return render_document_pdf(blocks, output_path, title="Audit Trail")
