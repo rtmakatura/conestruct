@@ -23,11 +23,10 @@ import { OutputCards } from "./OutputCards";
 import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
 import { PricingCard } from "./PricingCard";
 import { ResultsHero } from "./ResultsHero";
-import { AuditTrail } from "./AuditTrail";
-import {
-  DeviceBreakdown,
-  type DeviceBreakdownData,
-  type DeviceBreakdownState,
+import { TieredReference } from "./TieredReference";
+import type {
+  DeviceBreakdownData,
+  DeviceBreakdownState,
 } from "./DeviceBreakdown";
 import { AppFooter } from "./AppFooter";
 import {
@@ -38,7 +37,6 @@ import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionContextBar,
   JurisdictionControls,
-  JurisdictionSection,
 } from "./JurisdictionSection";
 import type {
   JurisdictionBlock,
@@ -1032,47 +1030,27 @@ export function GeneratorShell({
                 </span>
                 <h2 className="zone-title">Rules, permit &amp; audit</h2>
               </div>
-              <JurisdictionSection
+              {/* #219 — the triage tiers replace the flat family stack.
+                  The verification facts join with results OR on an
+                  audit error (rule 10: the strip's "retry below" must
+                  always land on a panel that exists); #196: the
+                  STAMPED audit view — the same one the strip reads —
+                  so panel and strip cannot disagree on declined; #187:
+                  a declined/failed audit renders "—" rows, never a
+                  prior input's numbers presented as current. */}
+              <TieredReference
                 jurisdiction={jurisdictionBlock}
-                loading={jurisdictionLoading}
+                jurisdictionLoading={jurisdictionLoading}
                 revalidating={jurisdictionRevalidating}
                 streetClass={scenario.street_class ?? null}
                 schedule={scenario.schedule ?? null}
+                scenario={scenario}
+                audit={stripAudit}
+                onRetry={onRetry}
+                generated={showResults && !auditDeclined}
+                showAudit={showResults || auditState.state === "error"}
+                breakdown={deviceBreakdown}
               />
-              {/* Plan-verification chips join the zone with results —
-                  plus the pre-generation audit-error case, because the
-                  strip's "retry from the audit trail panel below" must
-                  always point at a panel that exists (rule 10).  #187:
-                  the panel MOUNTS on an error but ``generated`` no
-                  longer forces value-unmasking there — a declined or
-                  failed audit renders "—" rows, never a prior input's
-                  numbers presented as current. */}
-              {(showResults || auditState.state === "error") && (
-                <div className="ref-group mt-4">
-                  <div className="ref-group-label">
-                    Plan verification &amp; details
-                  </div>
-                  <div className="ref-stack">
-                    <AuditTrail
-                      scenario={scenario}
-                      // #196: the STAMPED view — the same one the strip
-                      // reads — so panel and strip cannot disagree on
-                      // declined.  A settled answer for a superseded
-                      // input reaches the panel as loading-with-content
-                      // ("(refreshing…)"), never as a verdict.
-                      audit={stripAudit}
-                      onRetry={onRetry}
-                      generated={showResults && !auditDeclined}
-                    />
-                    {showResults && (
-                      <DeviceBreakdown
-                        state={deviceBreakdown}
-                        onRetry={onRetry}
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
             </section>
           )}
         </main>

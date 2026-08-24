@@ -1,17 +1,19 @@
 // @vitest-environment happy-dom
 //
-// #188/#206 card rendering: the schedule band overlay assumed
-// end > start (an overnight width went negative), and a violation
-// against a multi-window scope group named ONE window of the pair
-// instead of the alternative set.  Fixture jurisdictions with the
-// hours_eval overridden to the new backend shapes (the verdict is
-// backend-owned — rule 3 — so the override IS the seam).
+// #188/#206 card rendering (#219-migrated to the tiers): the schedule
+// band overlay assumed end > start (an overnight width went negative),
+// and a violation against a multi-window scope group named ONE window
+// of the pair instead of the alternative set.  Fixture jurisdictions
+// with the hours_eval overridden to the backend shapes (the verdict is
+// backend-owned — rule 3 — so the override IS the seam).  The band
+// chart lives in the Reference tier's WorkHoursCard; the OUTSIDE
+// verdict renders in ⚠, auto-open, straight off the same hours_eval.
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { JurisdictionSection } from "./JurisdictionSection";
+import { mountTiered } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -28,20 +30,15 @@ describe("WorkHoursCard — overnight schedules (#188)", () => {
       ...jur("thornton"),
       hours_eval: { status: "inside" as const, violations: [] },
     };
-    const { container } = render(
-      <JurisdictionSection
-        jurisdiction={thornton}
-        loading={false}
-        streetClass="arterial"
-        schedule={{
-          date_mode: "single",
-          work_date: "2026-08-05",
-          start_time: 20.0,
-          end_time: 5.0,
-        }}
-      />,
-    );
-    // "inside" does not auto-expand; the band track renders on expand.
+    const { container } = mountTiered(thornton, {
+      date_mode: "single",
+      work_date: "2026-08-05",
+      start_time: 20.0,
+      end_time: 5.0,
+    });
+    // The band chart is Reference-tier content: expand the tier, then
+    // the card ("inside" does not auto-expand the card either).
+    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
     await userEvent.click(screen.getByRole("button", { name: /work hours/i }));
     const overlays = Array.from(
       container.querySelectorAll<HTMLElement>(".border-x-2"),
@@ -54,7 +51,7 @@ describe("WorkHoursCard — overnight schedules (#188)", () => {
   });
 });
 
-describe("WorkHoursCard — alternative-window violations (#206)", () => {
+describe("hours violations — alternative windows (#206)", () => {
   it("names the whole scope group when the backend reports alternatives", () => {
     const denverish = {
       ...jur("thornton"),
@@ -76,19 +73,13 @@ describe("WorkHoursCard — alternative-window violations (#206)", () => {
         ],
       },
     };
-    render(
-      <JurisdictionSection
-        jurisdiction={denverish as JurisdictionBlock}
-        loading={false}
-        streetClass="arterial"
-        schedule={{
-          date_mode: "single",
-          work_date: "2026-08-05",
-          start_time: 10.0,
-          end_time: 16.0,
-        }}
-      />,
-    );
+    mountTiered(denverish as JurisdictionBlock, {
+      date_mode: "single",
+      work_date: "2026-08-05",
+      start_time: 10.0,
+      end_time: 16.0,
+    });
+    // OUTSIDE → the ⚠ tier auto-opens; the violation reads with no click.
     expect(
       screen.getByText(
         /0\.5 h falls outside the permitted 8:30 AM–3:30 PM \/ 8:00 PM–12:00 AM \/ 12:00 AM–5:00 AM windows/i,
@@ -112,19 +103,12 @@ describe("WorkHoursCard — alternative-window violations (#206)", () => {
         ],
       },
     };
-    render(
-      <JurisdictionSection
-        jurisdiction={thornton as JurisdictionBlock}
-        loading={false}
-        streetClass="arterial"
-        schedule={{
-          date_mode: "single",
-          work_date: "2026-08-05",
-          start_time: 8.0,
-          end_time: 15.5,
-        }}
-      />,
-    );
+    mountTiered(thornton as JurisdictionBlock, {
+      date_mode: "single",
+      work_date: "2026-08-05",
+      start_time: 8.0,
+      end_time: 15.5,
+    });
     expect(
       screen.getByText(
         /0\.5 h falls outside the permitted 8:30 AM–3:30 PM window \(/i,

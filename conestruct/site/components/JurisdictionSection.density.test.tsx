@@ -1,18 +1,24 @@
 // @vitest-environment happy-dom
 //
-// THE DENSITY CONTRACT (design deliverable 4, Zone 3):
-//   * every reference family is one collapsed summary chip;
-//   * one click reveals full detail, one fact per row;
-//   * ONLY plan-invalidating chips auto-expand — the hours chip when
-//     the backend hours_eval says the schedule is OUTSIDE the window;
-//   * empty families render nothing (no placeholder chip).
+// THE DENSITY CONTRACT, tier edition (#219 — migrated from the chip
+// stack's suite; every assertion keeps its substance, re-targeted at
+// the ruled consequence tiers):
+//   * the ledger line always renders, all four counted tokens, zeros
+//     included (flag k);
+//   * ✓ / ◌ / i containers are collapsed by default; one click reveals
+//     full detail;
+//   * ONLY ▲ CHANGED and ⚠ NEEDS ATTENTION auto-open, and only when
+//     non-empty — the hours OUTSIDE verdict now auto-opens ⚠ (the
+//     #188-family contract at tier level);
+//   * empty tiers render no container;
+//   * a manual collapse of an auto-opened tier is respected.
 // Mounted-flow tests over the real regenerated fixture data.
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { JurisdictionSection } from "./JurisdictionSection";
+import { mountTiered } from "./tiered-test-utils";
 import type { HoursEval, JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -21,153 +27,132 @@ const jur = (key: string): JurisdictionBlock =>
     key
   ] as JurisdictionBlock;
 
-const noop = () => {};
-
-function mount(j: JurisdictionBlock) {
-  return render(
-    <JurisdictionSection
-      jurisdiction={j}
-      loading={false}
-      streetClass="arterial"
-      schedule={{
-        date_mode: "single",
-        work_date: "2026-07-22",
-        start_time: 8.0,
-        end_time: 15.0,
-      }}
-    />,
-  );
-}
-
-function chipHead(name: RegExp): HTMLElement {
-  return screen.getByRole("button", { name });
-}
+const SCHEDULE = {
+  date_mode: "single" as const,
+  work_date: "2026-07-22",
+  start_time: 8.0,
+  end_time: 15.0,
+};
 
 afterEach(cleanup);
 
-describe("Zone 3 density contract", () => {
-  it("chips are collapsed by default and expand/collapse on click", async () => {
-    mount(jur("greeley"));
-    const head = chipHead(/greeley deltas/i);
-    expect(head.getAttribute("aria-expanded")).toBe("false");
-    // Body detail absent while collapsed.
-    expect(
-      screen.queryByText(/Type C arrow boards must be used/i),
-    ).toBeNull();
+describe("Zone 3 density contract — tiers", () => {
+  it("the ledger renders all four counted tokens, zeros included", () => {
+    mountTiered(jur("greeley"), SCHEDULE);
+    const ledger = screen.getByTestId("tier-ledger");
+    expect(ledger.textContent).toMatch(/\d+ changes?/);
+    expect(ledger.textContent).toMatch(/\d+ needs attention/);
+    expect(ledger.textContent).toMatch(/\d+ checked/);
+    expect(ledger.textContent).toMatch(/\d+ pending/);
+    expect(ledger.textContent).toMatch(/reference/);
+  });
 
-    await userEvent.click(head);
+  it("▲ auto-opens when a delta fires — the fired rule reads without a click", () => {
+    mountTiered(jur("greeley"), SCHEDULE);
+    const head = screen.getByRole("button", { name: /changed this plan/i });
     expect(head.getAttribute("aria-expanded")).toBe("true");
     expect(
       screen.getByText(/Type C arrow boards must be used/i),
     ).toBeTruthy();
+  });
+
+  it("collapsed tiers hide detail; a click reveals it; a second click collapses", async () => {
+    mountTiered(jur("greeley"), SCHEDULE);
+    const head = screen.getByRole("button", { name: /reference/i });
+    expect(head.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("button", { name: /permit — greeley/i })).toBeNull();
+
+    await userEvent.click(head);
+    expect(head.getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getByRole("button", { name: /permit — greeley/i })).toBeTruthy();
 
     await userEvent.click(head);
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(
-      screen.queryByText(/Type C arrow boards must be used/i),
-    ).toBeNull();
+    expect(screen.queryByRole("button", { name: /permit — greeley/i })).toBeNull();
   });
 
-  it("empty families render nothing — Greeley has no device mandates, so no chip", () => {
+  it("empty families render nothing — Greeley has no device mandates, so no obligations group for them", () => {
     const g = jur("greeley");
     expect(g.chips.device).toHaveLength(0);
-    mount(g);
-    expect(
-      screen.queryByRole("button", { name: /device mandates/i }),
-    ).toBeNull();
+    mountTiered(g, SCHEDULE);
+    expect(screen.queryByText(/device mandates — obligations/i)).toBeNull();
   });
 
-  it("the collapsed summary carries the family's counts, not its detail", () => {
-    mount(jur("greeley"));
-    const head = chipHead(/personnel gates/i);
-    // Greeley fixture: 2 personnel chips, 1 conditional.
-    expect(head.textContent).toMatch(/2/);
-    expect(head.textContent).toMatch(/1.*conditional/i);
-    // Full rule text stays behind the click.
+  it("obligations surface in ⚠ (ruled flag b): Greeley's 2 personnel gates, auto-open", () => {
+    mountTiered(jur("greeley"), SCHEDULE);
+    const head = screen.getByRole("button", { name: /needs attention/i });
+    expect(head.getAttribute("aria-expanded")).toBe("true");
+    expect(screen.getByText(/personnel gates — obligations/i)).toBeTruthy();
+    // Full rule text now reads in place — obligations are decisions owed.
     expect(
-      screen.queryByText(/Traffic Control Review Form signer/i),
-    ).toBeNull();
+      screen.getByText(/Traffic Control Review Form signer/i),
+    ).toBeTruthy();
   });
 });
 
-describe("hours chip auto-expand — plan-invalidating states only", () => {
-  it("OUTSIDE the window: auto-expands with the amber accent and the backend violations visible", () => {
+describe("hours verdict placement — plan-invalidating states only auto-open", () => {
+  it("OUTSIDE: ⚠ auto-opens with the backend violations readable, no click", () => {
     // Loveland fixture's hours_eval is baked OUTSIDE (8:00 start
     // overlaps the 7:00–8:30 ban).
-    mount(jur("loveland"));
-    const head = screen.getByRole("button", { name: /work hours — loveland/i });
+    mountTiered(jur("loveland"), SCHEDULE);
+    const head = screen.getByRole("button", { name: /needs attention/i });
     expect(head.getAttribute("aria-expanded")).toBe("true");
-    expect(head.textContent).toMatch(/outside window · review schedule/i);
-    // Violations readable without any click — this is the exception the
-    // contract reserves for plan-invalidating facts.
     expect(screen.getByText(/0\.5 h overlaps/i)).toBeTruthy();
     const chip = head.closest(".refchip")!;
     expect(chip.className).toContain("auto-expand");
     expect(chip.className).toContain("sev-warn");
   });
 
-  it("INSIDE the window: stays collapsed with the pass verdict on the summary", () => {
+  it("INSIDE: the verdict sits in ✓, collapsed — no auto-open", () => {
     const l = jur("loveland");
     const inside: JurisdictionBlock = {
       ...l,
       hours_eval: { status: "inside", violations: [] } as HoursEval,
     };
-    mount(inside);
-    const head = screen.getByRole("button", { name: /work hours — loveland/i });
+    mountTiered(inside, SCHEDULE);
+    const head = screen.getByRole("button", { name: /checked & passed/i });
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(head.textContent).toMatch(/inside window ✓/i);
-    expect(head.closest(".refchip")!.className).not.toContain("auto-expand");
+    expect(screen.queryByText(/Within the permitted window/i)).toBeNull();
   });
 
-  it("UNKNOWN + user chose 'Not set': collapsed, chromeless 'not checked' — absence of signal is not an error", () => {
+  it("UNKNOWN + 'Not set': ◌ holds the chromeless 'not checked' arm — absence is not an error", async () => {
     const l = jur("loveland");
     const unknown: JurisdictionBlock = {
       ...l,
       hours_eval: { status: "unknown", violations: [] } as HoursEval,
     };
-    render(
-      <JurisdictionSection
-        jurisdiction={unknown}
-        loading={false}
-        streetClass="arterial"
-        schedule={{ date_mode: "tbd" }}
-      />,
-    );
-    const head = screen.getByRole("button", { name: /work hours — loveland/i });
+    mountTiered(unknown, { date_mode: "tbd" });
+    const head = screen.getByRole("button", { name: /pending \/ not verified/i });
     expect(head.getAttribute("aria-expanded")).toBe("false");
-    // "not checked" is reserved for the deliberate choice (inc-8).
-    expect(head.textContent).toMatch(/not checked/i);
     const chip = head.closest(".refchip")!;
-    expect(chip.className).toContain("sev-info");
+    expect(chip.className).toContain("sev-pending");
     expect(chip.className).not.toContain("auto-expand");
+    await userEvent.click(head);
+    expect(
+      screen.getByText(/Schedule marked .Not set. — the windows above are/i),
+    ).toBeTruthy();
   });
 
-  it("UNKNOWN + schedule merely unentered: collapsed, prompts Setup entry instead of claiming 'not checked'", () => {
+  it("UNKNOWN + schedule merely unentered: ◌ prompts Setup entry instead of claiming 'not checked'", async () => {
     const l = jur("loveland");
     const unknown: JurisdictionBlock = {
       ...l,
       hours_eval: { status: "unknown", violations: [] } as HoursEval,
     };
-    render(
-      <JurisdictionSection
-        jurisdiction={unknown}
-        loading={false}
-        streetClass="arterial"
-        // #199 moved the "merely unentered" line: a NULL schedule now
-        // reads as "Not set" (Setup presents that default), so mid-entry
-        // is a chosen date mode whose times aren't in yet.
-        schedule={{ date_mode: "single" }}
-      />,
+    // #199: mid-entry is a chosen date mode whose times aren't in yet.
+    mountTiered(unknown, { date_mode: "single" });
+    await userEvent.click(
+      screen.getByRole("button", { name: /pending \/ not verified/i }),
     );
-    const head = screen.getByRole("button", { name: /work hours — loveland/i });
-    expect(head.getAttribute("aria-expanded")).toBe("false");
-    expect(head.textContent).toMatch(/set date & times in Setup/i);
-    expect(head.textContent).not.toMatch(/not checked/i);
+    expect(
+      screen.getByText(/enter the\s+work date and start\/end times in the Setup panel/i),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Schedule marked .Not set./i)).toBeNull();
   });
 
-  it("a manual collapse of an auto-expanded chip is respected", async () => {
-    mount(jur("loveland"));
-    const head = screen.getByRole("button", { name: /work hours — loveland/i });
+  it("a manual collapse of an auto-opened tier is respected", async () => {
+    mountTiered(jur("loveland"), SCHEDULE);
+    const head = screen.getByRole("button", { name: /needs attention/i });
     expect(head.getAttribute("aria-expanded")).toBe("true");
     await userEvent.click(head);
     expect(head.getAttribute("aria-expanded")).toBe("false");

@@ -31,7 +31,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 // E Colfax near Race St (39.73997, -104.96632): OSM lanes=5 = 2+2+1.

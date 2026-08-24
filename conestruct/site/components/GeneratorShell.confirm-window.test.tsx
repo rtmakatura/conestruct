@@ -208,13 +208,14 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
     await settleRefusalThenEdit();
     // In-flight for the current input: neither surface presents the old
     // 400 as the current verdict.
+    // #219: the declined voice is the ⚠ tier's banner line.
     expect(
-      screen.queryByText(/unavailable — generation declined/),
+      screen.queryByText(/unavailable while generation is declined/),
     ).toBeNull();
     // Settle 400: both surfaces show declined together.
     await release(auditCalls, 1, refusal400());
     expect(
-      screen.getByText(/unavailable — generation declined/),
+      screen.getByText(/unavailable while generation is declined/),
     ).toBeTruthy();
     expect(document.body.textContent).toContain("PLAN DECLINED");
   });

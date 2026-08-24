@@ -2135,11 +2135,38 @@ input[type="number"] {
 .workbench .refchip.sev-info .chip-sum .gl {
   color: var(--none);
 }
+/* #219 tier containers: ▲ changed rides the output-orange ramp (count/
+   method-affecting), ◌ pending stays chromeless — glyph + text label
+   carry the meaning in both (rule 13), hue is the second channel. */
+.workbench .refchip.sev-changed .chip-sum .gl {
+  color: var(--dim);
+}
+.workbench .refchip.sev-changed.open {
+  border-left: 3px solid var(--dim);
+}
+.workbench .refchip.sev-pending .chip-sum .gl {
+  color: var(--none);
+}
 .workbench .refchip.auto-expand {
   border-left: 3px solid var(--warn);
 }
 .workbench .refchip.auto-expand.sev-hazard {
   border-left-color: var(--fail);
+}
+.workbench .refchip.auto-expand.sev-changed {
+  border-left-color: var(--dim);
+}
+/* #219 — the always-on ledger line above the tier stack. */
+.workbench .tier-ledger {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  margin: 0 0 10px;
+}
+.workbench .tier-ledger b {
+  color: var(--ink);
 }
 .workbench .refchip .chip-sum .verdict-ok {
   color: var(--pass);

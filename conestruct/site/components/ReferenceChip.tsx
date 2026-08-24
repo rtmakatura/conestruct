@@ -12,7 +12,9 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 
-export type ChipSeverity = "info" | "warn" | "hazard";
+// #219: "changed" (▲ — count/method-affecting, --dim accent) and
+// "pending" (◌ — chromeless) join the ramp for the tier containers.
+export type ChipSeverity = "info" | "warn" | "hazard" | "changed" | "pending";
 
 interface Props {
   sev?: ChipSeverity;

@@ -18,7 +18,7 @@ import userEvent from "@testing-library/user-event";
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // The pricing panel's mounted-ness is the state #192 protects; the stub
 // makes it observable.

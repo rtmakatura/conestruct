@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { ReferenceChip } from "./ReferenceChip";
+import { type ReactNode } from "react";
 import type {
   FlaggerLaneClosureScenario,
   LaneClosureDividedScenario,
@@ -66,7 +65,7 @@ function sectionCitation(
 // panel copy (the backend's ``action`` prose is worded differently, and
 // converting it would visibly change the panel — a value change kept out
 // of the #104 structural migration).
-const SITE_ADJUSTMENT_DETAIL: Record<
+export const SITE_ADJUSTMENT_DETAIL: Record<
   SiteConditionFlag,
   { label: string; rule: string; action: string }
 > = {
@@ -122,18 +121,6 @@ const SITE_ADJUSTMENT_DETAIL: Record<
   },
 };
 
-interface Props {
-  scenario: Scenario;
-  audit: AuditState;
-  onRetry: () => void;
-  /** Mirrors the OLD AuditTrail's prop of the same name: when false
-   *  (during bundle-zip generation), value fields render as "—" instead
-   *  of the computed number.  Decoupled from ``audit.state`` so the
-   *  refresh UX cue (dim header + (refreshing…) badge) for scenario
-   *  edits stays distinct from the bundle-generation "—" gating. */
-  generated: boolean;
-}
-
 export interface ItemSpec {
   title: string;
   result: string;
@@ -144,7 +131,7 @@ export interface ItemSpec {
   dim?: boolean;
 }
 
-function auditFilename(name: string | undefined): string {
+export function auditFilename(name: string | undefined): string {
   const cleaned = (name ?? "")
     .trim()
     .replace(/[^a-zA-Z0-9 _-]+/g, "_")
@@ -159,7 +146,7 @@ function auditFilename(name: string | undefined): string {
 // mid-refresh.  On ``error`` — a refusal or failure for the input on
 // screen — a prior input's numbers must not render beneath the banner:
 // builders receive null and blank their values with a stated reason.
-function settledData(audit: AuditState): AuditResponse | null {
+export function settledData(audit: AuditState): AuditResponse | null {
   return audit.state === "ready"
     ? audit.data
     : audit.state === "loading"
@@ -179,218 +166,12 @@ function placeholderBody(audit: AuditState) {
   );
 }
 
-export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
-  const [openIdx, setOpenIdx] = useState<number>(0);
-  const toggle = (i: number) => setOpenIdx(openIdx === i ? -1 : i);
-  const r = (n: number | string) => (generated ? String(n) : "—");
-
-  // Audit-PDF export — POSTs the live scenario to the same public render
-  // route the other downloads use; works wherever AuditTrail renders
-  // (it always has the scenario), so it needs no mode/planId threading.
-  const [auditDl, setAuditDl] = useState<"idle" | "busy" | "error">("idle");
-  const onDownloadAuditPdf = async () => {
-    if (!generated || audit.state === "error" || auditDl === "busy") return;
-    setAuditDl("busy");
-    try {
-      const res = await fetch("/api/render/audit-pdf", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ scenario }),
-      });
-      if (!res.ok) {
-        setAuditDl("error");
-        return;
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = auditFilename(scenario.meta?.project);
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setAuditDl("idle");
-    } catch {
-      setAuditDl("error");
-    }
-  };
-
-  // Main per-scenario body items: every section reads from backend audit
-  // data via the shared item helpers (``taperItem``, ``bufferItem``,
-  // ``spacingItem``, ``advanceItem``, ``coloradoItem``, ``referenceItem``).
-  // Per-scenario builders thread ``audit`` through.  As of engine-removal
-  // PR C this component computes NO MUTCD values: the last TS-side
-  // heuristic (the flagger SSD ``bufferFor`` table) is deleted and the
-  // row reads ``sections.flagger.sight_distance_ft`` — absent field →
-  // absent row, never a computed fallback.
-  const scenarioItems = buildScenarioItems(scenario, audit, generated, r);
-
-  // Conditional additive items from the backend audit response.  These
-  // are strictly new — they never appeared in the OLD AuditTrail.  Each
-  // renders only when the backend explicitly reports the condition:
-  //   - corridor_validation: only when OSM check ran AND produced warnings
-  //   - geometry_validation: only when validators produced violations
-  //   - pending_verification: only when audit has scrubbed TODO Case # refs
-  // For SHOULDER closures in v1 with default coords, all three are empty.
-  // Read from ``ready.data`` only (not lastReady) so error states never
-  // surface stale validation flags from a previous good fetch.
-  const additiveItems: ItemSpec[] =
-    audit.state === "ready" ? buildAdditiveItems(audit.data) : [];
-
-  // #104 — thread the backend site-adjustment records into the item so
-  // its per-flag citations are backend-fed. ``lastReady`` keeps the
-  // backend values through refetch/error (stale-while-revalidate); on the
-  // very first load — or during the deploy window where the backend
-  // doesn't ship the field yet — the static fallback renders identical
-  // values, so there is no flicker.
-  const siteRecords = settledData(audit)?.sections.site_adjustments;
-  const siteItem = siteAdjustmentsItem(scenario.meta.siteConditions, siteRecords);
-
-  const items: ItemSpec[] = [
-    ...scenarioItems,
-    ...(siteItem ? [siteItem] : []),
-    ...additiveItems,
-  ];
-
-  // Stale-while-revalidate UX cues: dim header + "(refreshing…)" badge
-  // when a refetch is in flight with prior data still visible; error
-  // banner above the list when the latest fetch failed.  The main body
-  // items keep rendering through both states because they're TS-derived
-  // and never depend on the in-flight backend call.
-  const isRefreshing =
-    audit.state === "loading" && audit.lastReady !== null;
-  const isFirstLoad =
-    audit.state === "loading" && audit.lastReady === null;
-
-  // #180 — one refusal, one voice: a 400 means the backend DECLINED the
-  // scenario for a stated reason.  The trail never re-quotes that reason
-  // (the StatusBar owns the refusal's single voice) and offers no Retry
-  // for it — retrying an unchanged input re-earns the same 400.  Network
-  // and 5xx failures keep the existing failed + Retry line, unreframed.
-  const declined = audit.state === "error" && audit.httpStatus === 400;
-  // #182 — a 429 is the app's own rate limiter: say so.  Retry stays
-  // (it genuinely helps once the minute rolls).
-  const throttled = audit.state === "error" && audit.httpStatus === 429;
-
-  // Density-contract chip summary (restage): the collapsed line carries
-  // the traced-value count; an audit failure auto-expands — the strip's
-  // "retry from the audit trail panel below" must land on a visible
-  // retry, never a collapsed one (rule 10).  The declined chip must not
-  // promise a retry it doesn't offer (rule 10 again).
-  const chipSummary =
-    audit.state === "error" ? (
-      declined ? (
-        <span className="verdict-bad">unavailable — generation declined</span>
-      ) : throttled ? (
-        <span className="verdict-bad">paused — retry inside</span>
-      ) : (
-        <span className="verdict-bad">unavailable — retry inside</span>
-      )
-    ) : isFirstLoad ? (
-      <>computing…</>
-    ) : (
-      <>
-        <b>{items.length}</b> values traced ·{" "}
-        <span className="verdict-ok">each cited</span>
-      </>
-    );
-
-  return (
-    <ReferenceChip
-      glyph="∑"
-      label="Verification & audit trail"
-      sev={audit.state === "error" ? "warn" : "info"}
-      autoExpand={audit.state === "error"}
-      summary={chipSummary}
-      badge={
-        isRefreshing ? (
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] whitespace-nowrap">
-            (refreshing…)
-          </span>
-        ) : undefined
-      }
-    >
-      <div className="flex items-baseline justify-between gap-4 mb-3">
-        <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] max-w-[620px]">
-          Every calculation is traced to its MUTCD or CDOT standard-plan
-          source. Verify before stamping.
-        </div>
-        <button
-          type="button"
-          onClick={onDownloadAuditPdf}
-          disabled={!generated || audit.state === "error" || auditDl === "busy"}
-          title={
-            declined
-              ? "Unavailable — generation declined for this input"
-              : audit.state === "error"
-                ? "Unavailable — the audit failed; retry first"
-                : undefined
-          }
-          className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer whitespace-nowrap"
-        >
-          {auditDl === "busy"
-            ? "Rendering…"
-            : auditDl === "error"
-              ? "Try again"
-              : "↓ Audit PDF"}
-        </button>
-      </div>
-      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-4 max-w-[620px] leading-relaxed">
-        Scope: federal MUTCD + CDOT standards (S-630-1). Other jurisdictions
-        may impose additional requirements not yet captured.
-      </div>
-
-      {audit.state === "error" &&
-        (declined ? (
-          <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
-            <span>
-              Audit trail unavailable while generation is declined — see the
-              notice above.
-            </span>
-          </div>
-        ) : (
-          <div className="flex items-baseline gap-3 mb-4 px-4 py-3 border-l-2 border-[color:var(--fail)] font-mono text-[12px] text-[color:var(--fail)]">
-            <span>
-              {throttled
-                ? "Audit trail paused: too many updates in the last minute — retry in a moment."
-                : `Audit trail failed: ${audit.message}`}
-            </span>
-            <button
-              type="button"
-              onClick={onRetry}
-              className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
-            >
-              Retry
-            </button>
-          </div>
-        ))}
-
-      {isFirstLoad && items.length === 0 && (
-        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">
-          Computing audit trail…
-        </div>
-      )}
-
-      <div className="audit-list">
-        {items.map((item, i) => (
-          <AuditItem
-            key={item.title}
-            num={String(i + 1).padStart(2, "0")}
-            title={item.title}
-            result={item.result}
-            cite={item.cite}
-            open={openIdx === i}
-            onClick={() => toggle(i)}
-            dim={item.dim}
-          >
-            {item.body}
-          </AuditItem>
-        ))}
-      </div>
-    </ReferenceChip>
-  );
-}
+// (#219 — the "Verification & audit trail" chip is retired: Zone 3's
+// TieredReference composes the exported item builders below into the
+// ruled consequence tiers, hosts the Audit-PDF download and the
+// declined/failed banners (the #180 one-voice and rule-10 visible-
+// Retry contracts move with them, byte-preserved), and derives its
+// row set from lib/tiering.ts.)
 
 // ---------------------------------------------------------------------------
 // Per-scenario builders — TS-side display heuristics.
@@ -1271,17 +1052,11 @@ export function siteAdjustmentsItem(
 // Additive backend items — only render when the backend explicitly
 // reports the condition.  Empty for SHOULDER default scenario in v1.
 // ---------------------------------------------------------------------------
+// Additive backend items — only render when the backend explicitly
+// reports the condition.  (#219: composed per tier by TieredReference;
+// the old buildAdditiveItems aggregator is retired.)
+// ---------------------------------------------------------------------------
 
-function buildAdditiveItems(data: AuditResponse): ItemSpec[] {
-  const items: (ItemSpec | null)[] = [
-    approachesItem(data.sections.approaches),
-    corridorValidationItem(data.sections.corridor_validation),
-    geometryValidationItem(data.sections.geometry_validation),
-    finesDoubleItem(data.sections.fines_double),
-    pendingVerificationItem(data.pending_verification),
-  ];
-  return items.filter((x): x is ItemSpec => x !== null);
-}
 
 // Backend shape: src/api/audit.py approaches_section (near_intersection
 // kind, #117).  Mirrors the fields the PDF builder reads
@@ -1555,7 +1330,7 @@ interface CorridorWarning {
   message: string;
 }
 
-function corridorValidationItem(
+export function corridorValidationItem(
   corridor: Record<string, unknown>,
 ): ItemSpec | null {
   const checked = corridor.checked === true;
@@ -1693,7 +1468,7 @@ interface ItemProps {
   dim?: boolean;
 }
 
-function AuditItem({
+export function AuditItem({
   num,
   title,
   result,
@@ -1719,7 +1494,7 @@ function AuditItem({
   );
 }
 
-function CheckRow({
+export function CheckRow({
   label,
   detail,
   tone = "pass",

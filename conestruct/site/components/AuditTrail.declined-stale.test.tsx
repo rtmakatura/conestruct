@@ -129,9 +129,11 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await releaseAudit(0, okAudit());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-  // The trail lives in a collapsed ReferenceChip — expand it so the rows
-  // under test are actually rendered.
-  await user.click(screen.getByText("Verification & audit trail"));
+  // #219: the trace rows live in the collapsed ✓ CHECKED & PASSED tier —
+  // expand it so the rows under test are actually rendered.  (The
+  // declined/failed banners auto-open in ⚠; the blank-value contract
+  // under test here is the ✓ tier's.)
+  await user.click(screen.getByRole("button", { name: /checked & passed/i }));
   expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0); // sanity
   await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
   await user.selectOptions(screen.getByLabelText("Speed"), "35");

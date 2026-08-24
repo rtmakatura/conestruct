@@ -25,7 +25,7 @@ vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+// #219: Zone 3 renders REAL here — this suite asserts its content.
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
@@ -131,8 +131,9 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
 describe("class-switch stability (#152 D)", () => {
   it("a class switch holds bar + section content while the refetch is in flight — no skeleton, one reflow max", async () => {
     const user = await mountWithParker();
-    // Settled: the hours verdict renders (parker fixture is "outside").
-    expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
+    // Settled: the hours verdict renders (parker fixture is "outside")
+    // — #219: in the auto-open ⚠ tier, off the same hours_eval.
+    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
     await flushDebounce();
@@ -145,27 +146,33 @@ describe("class-switch stability (#152 D)", () => {
     expect(screen.getByText(/Parker — jurisdiction rules/)).toBeTruthy();
 
     await release(2, okBreakdown(true));
-    expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
+    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
   });
 
   it("the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)", async () => {
     const user = await mountWithParker();
-    expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
+    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
     // The stale "outside" verdict may not display as current — including
     // DURING the #182 debounce's deferred window, before the fetch has
     // even dispatched.
     expect(
-      screen.queryByText(/outside window · review schedule/),
+      screen.queryByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/),
     ).toBeNull();
-    expect(screen.getByText(/◌ checking…/)).toBeTruthy();
+    expect(
+      screen.getByText(/windows for the updated inputs/),
+    ).toBeTruthy();
 
     await flushDebounce();
-    expect(screen.getByText(/◌ checking…/)).toBeTruthy();
+    expect(
+      screen.getByText(/windows for the updated inputs/),
+    ).toBeTruthy();
     await release(2, okBreakdown(true));
-    expect(screen.queryByText(/◌ checking…/)).toBeNull();
-    expect(screen.getByText(/outside window · review schedule/)).toBeTruthy();
+    expect(
+      screen.queryByText(/windows for the updated inputs/),
+    ).toBeNull();
+    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
   });
 
   it("a CHANGED jurisdiction key still skeletons — a stale block from another jurisdiction never renders", async () => {

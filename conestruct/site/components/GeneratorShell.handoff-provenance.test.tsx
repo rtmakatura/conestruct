@@ -41,7 +41,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 function detection(over: {

@@ -6,8 +6,8 @@ import userEvent from "@testing-library/user-event";
 import {
   JurisdictionContextBar,
   JurisdictionControls,
-  JurisdictionSection,
 } from "./JurisdictionSection";
+import { mountTiered } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -27,80 +27,60 @@ const noop = () => {};
 
 afterEach(cleanup);
 
-describe("JurisdictionSection — real-data rendering", () => {
-  it("renders nothing when no jurisdiction is selected", () => {
-    const { container } = render(
-      <JurisdictionSection
-        jurisdiction={null}
-        loading={false}
-        streetClass={null}
-        schedule={null}
-      />,
-    );
-    expect(container.innerHTML).toBe("");
+describe("Zone 3 tiers — real-data rendering (#219-migrated)", () => {
+  it("renders no tier containers when no jurisdiction is selected (ledger zeros only)", () => {
+    const { container } = mountTiered(null, null, null);
+    expect(container.querySelectorAll(".refchip")).toHaveLength(0);
+    expect(screen.getByTestId("tier-ledger").textContent).toMatch(/0 changes/);
   });
 
-  it("Greeley delta panel: the Type C arrow-board delta from the real record", async () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("greeley")}
-        loading={false}
-        streetClass="arterial"
-        schedule={null}
-      />,
-    );
-    // Collapsed by default (density contract) with the count summary.
-    const head = screen.getByRole("button", { name: /greeley deltas/i });
-    expect(head.textContent).toMatch(/1 delta · 1 affect count/i);
-    await userEvent.click(head);
+  it("Greeley delta panel: the fired Type C arrow-board delta reads in ▲, auto-open", () => {
+    mountTiered(jur("greeley"), null);
+    // Fired count delta → CHANGED THIS PLAN, open by default; the rule
+    // text and its verbatim source citation read without a click.
+    const head = screen.getByRole("button", { name: /changed this plan/i });
+    expect(head.getAttribute("aria-expanded")).toBe("true");
     expect(
       screen.getByText(
         /Type C arrow boards must be used on all arterial and collector roadways/i,
       ),
     ).toBeTruthy();
-    // Source citation rendered verbatim from the record.
     expect(
       screen.getAllByText(/Greeley Permitting Requirements/i).length,
     ).toBeGreaterThan(0);
   });
 
-  it("Loveland hours card: metered badge, backend violation, and exposure estimate", () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("loveland")}
-        loading={false}
-        streetClass="arterial"
-        schedule={{
-          date_mode: "single",
-          work_date: "2026-07-22",
-          start_time: 8.0,
-          end_time: 15.0,
-        }}
-      />,
-    );
-    // The metered badge reads the real arterial half-hour meter ($700).
-    expect(screen.getByText(/Metered \$700 \/ ½-hr/i)).toBeTruthy();
+  it("Loveland hours: the backend violation + exposure read in ⚠; the metered badge rides the Reference card", async () => {
+    mountTiered(jur("loveland"), {
+      date_mode: "single",
+      work_date: "2026-07-22",
+      start_time: 8.0,
+      end_time: 15.0,
+    });
     // The verdict comes from the BACKEND hours_eval baked into the
-    // fixture: 8:00 start overlaps the 7:00–8:30 ban by 0.5 h.
+    // fixture: 8:00 start overlaps the 7:00–8:30 ban by 0.5 h — an
+    // OUTSIDE verdict auto-opens ⚠.
     expect(
       screen.getByText(/0\.5 h overlaps the 7:00 AM–8:30 AM ban/i),
     ).toBeTruthy();
-    // Exposure estimate: one half-hour × $700 = $700, rendered as dollars
-    // (the figure sits in a nested span, so match on the container text).
-    const exposure = screen.getByText(/metered exposure estimate/i);
+    const exposure = screen.getAllByText(/metered exposure estimate/i)[0];
     expect(exposure.textContent).toMatch(/≈\s*\$700/);
     expect(exposure.textContent).toMatch(/provisional schedule/i);
+    // The band chart + metered badge stay Reference-tier facts.
+    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
+    expect(screen.getByText(/Metered \$700 \/ ½-hr/i)).toBeTruthy();
   });
 
-  it("Parker trust treatment: conflict footnote renders 9:00–3:30 with both sources", () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("parker")}
-        loading={false}
-        streetClass="arterial"
-        schedule={null}
-      />,
-    );
+  it("Parker trust treatment: conflict footnote renders 9:00–3:30 with both sources", async () => {
+    mountTiered(jur("parker"), null);
+    // The conflict footnote is part of the hours card (Reference tier).
+    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
+    // Parker's fixture eval is OUTSIDE, so the card auto-expands the
+    // moment the tier opens — click only if it's still collapsed.
+    const hoursHead = screen.getByRole("button", { name: /work hours/i });
+    if (hoursHead.getAttribute("aria-expanded") === "false") {
+      await userEvent.click(hoursHead);
+    }
     expect(
       screen.getByText(/two adopted sources disagree — conservative value rendered/i),
     ).toBeTruthy();
@@ -114,16 +94,10 @@ describe("JurisdictionSection — real-data rendering", () => {
   });
 
   it("El Paso permit FYI: formula structure + digital-on-site, all provisional-flagged", async () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("el_paso")}
-        loading={false}
-        streetClass="arterial"
-        schedule={{ date_mode: "single", work_date: "2026-07-22" }}
-      />,
-    );
-    // Density contract: the permit chip is collapsed by default (a
-    // permit reference is never plan-invalidating) — expand it.
+    mountTiered(jur("el_paso"), { date_mode: "single", work_date: "2026-07-22" });
+    // A permit reference is never plan-invalidating: Reference tier,
+    // collapsed, then the permit chip inside it.
+    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
     await userEvent.click(
       screen.getByRole("button", { name: /permit — el paso/i }),
     );
@@ -140,43 +114,25 @@ describe("JurisdictionSection — real-data rendering", () => {
     expect(screen.getByText(/≈ Wed, Jul 8/)).toBeTruthy();
   });
 
-  it("E-470 chips: personnel gates + the $50,000/day fiber hazard from the real meter", async () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("e470")}
-        loading={false}
-        streetClass={null}
-        schedule={null}
-      />,
-    );
-    // The hazard chip's dollar figure joins from the meters list — never
-    // restated in the chip record (spec §2.4) — and surfaces on the
-    // COLLAPSED summary (worst meter), per the density contract.
+  it("E-470: personnel gates read in ⚠ as obligations; the $50,000/day fiber hazard stays a Reference meter", async () => {
+    mountTiered(jur("e470"), null, null);
+    // Obligations the tool cannot discharge auto-open in ⚠ (ruled
+    // flag b) — the gate text reads without a click.
+    expect(
+      screen.getByText(/registered professional traffic engineer OR an ATSSA\/CCA-certified TCS/i),
+    ).toBeTruthy();
+    // Standing hazard meters describe the jurisdiction (ruled flag c):
+    // Reference tier, worst-$ named on the hazard chip's collapsed
+    // summary once the tier opens.
+    await userEvent.click(screen.getByRole("button", { name: /reference/i }));
     const hazardHead = screen.getByRole("button", {
       name: /public highway authority hazards/i,
     });
     expect(hazardHead.textContent).toMatch(/\$50,000 \/ day/);
-    // Body detail is one click away.
-    await userEvent.click(
-      screen.getByRole("button", { name: /personnel gates/i }),
-    );
-    expect(
-      screen.getByText(/registered professional traffic engineer OR an ATSSA\/CCA-certified TCS/i),
-    ).toBeTruthy();
   });
 
-  it("Westminster chips: TCS-authorship gate rendered with its source", async () => {
-    render(
-      <JurisdictionSection
-        jurisdiction={jur("westminster")}
-        loading={false}
-        streetClass="arterial"
-        schedule={null}
-      />,
-    );
-    await userEvent.click(
-      screen.getByRole("button", { name: /personnel gates/i }),
-    );
+  it("Westminster: TCS-authorship gate rendered with its source, in ⚠", () => {
+    mountTiered(jur("westminster"), null);
     expect(
       screen.getByText(/prepared by a certified Traffic Control Supervisor/i),
     ).toBeTruthy();

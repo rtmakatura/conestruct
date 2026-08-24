@@ -15,7 +15,7 @@ import userEvent from "@testing-library/user-event";
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // AppNav owns PlanSaveButton behind Clerk; the shell hands it scenario +
 // onSaved, so the mock exposes a save affordance that reports the LIVE

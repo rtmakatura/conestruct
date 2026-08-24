@@ -602,84 +602,44 @@ function deltaImpact(d: AppliedDelta): { main: string; unit?: string } {
   return { main: d.severity === "op" ? "method" : "admin" };
 }
 
-function DeltaChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
-  const deltas = jurisdiction.applied_deltas;
-  const countN = deltas.filter((d) => d.severity === "count" && d.status === "fires").length;
-  // Density contract: empty families render nothing.  (Fired deltas are
-  // still surfaced in the device table regardless — collapsing or
-  // omitting this chip hides detail, never the fact.)
-  if (deltas.length === 0) return null;
+// #219 — one delta row, extracted verbatim from the retired DeltaChip
+// so the tier containers render the identical body (severity bar,
+// baseline, status flag, source line, impact column).
+export function DeltaRowView({ d }: { d: AppliedDelta }) {
+  const impact = deltaImpact(d);
   return (
-    <ReferenceChip
-      glyph="Δ"
-      label={`${jurisdiction.name} deltas`}
-      summary={
-        <>
-          <b>{deltas.length}</b> delta{deltas.length === 1 ? "" : "s"} ·{" "}
-          {countN > 0 ? (
-            <>
-              <b>{countN}</b> affect count
-            </>
-          ) : (
-            "none affect count"
-          )}
-        </>
-      }
+    <div
+      key={d.rule}
+      className="grid grid-cols-[3px_1fr_auto] gap-3 py-3 border-b border-[color:var(--paper-line-soft)] last:border-b-0"
     >
-        <div>
-          <div className="flex gap-4 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)] pb-2 mb-1 border-b border-[color:var(--paper-line-soft)]">
-            <span>
-              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--dim)]" aria-hidden />
-              Changes device count
-            </span>
-            <span>
-              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--act)]" aria-hidden />
-              Rule / method
-            </span>
-            <span>
-              <span className="inline-block w-2 h-2 mr-1 bg-[color:var(--none)]" aria-hidden />
-              Administrative
-            </span>
+      <span className={SEV_BAR[d.severity]} aria-hidden />
+      <div>
+        <div className="text-[13px] text-[color:var(--ink)] leading-snug">{d.rule}</div>
+        {d.baseline && (
+          <div className="text-[11px] text-[color:var(--ink-faint)] mt-1">
+            baseline: <b>{d.baseline}</b>
           </div>
-          {deltas.map((d) => {
-            const impact = deltaImpact(d);
-            return (
-              <div
-                key={d.rule}
-                className="grid grid-cols-[3px_1fr_auto] gap-3 py-3 border-b border-[color:var(--paper-line-soft)] last:border-b-0"
-              >
-                <span className={SEV_BAR[d.severity]} aria-hidden />
-                <div>
-                  <div className="text-[13px] text-[color:var(--ink)] leading-snug">{d.rule}</div>
-                  {d.baseline && (
-                    <div className="text-[11px] text-[color:var(--ink-faint)] mt-1">
-                      baseline: <b>{d.baseline}</b>
-                    </div>
-                  )}
-                  <StatusFlag status={d.status} />
-                  <SourceLine source={d.source} />
-                </div>
-                <div className="text-right min-w-[64px]">
-                  <span
-                    className={`font-mono text-[15px] ${
-                      d.severity === "count" && d.status === "fires"
-                        ? "text-[color:var(--dim)]"
-                        : "text-[color:var(--ink-faint)]"
-                    }`}
-                  >
-                    {impact.main}
-                  </span>
-                  {impact.unit && (
-                    <div className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
-                      {impact.unit}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-    </ReferenceChip>
+        )}
+        <StatusFlag status={d.status} />
+        <SourceLine source={d.source} />
+      </div>
+      <div className="text-right min-w-[64px]">
+        <span
+          className={`font-mono text-[15px] ${
+            d.severity === "count" && d.status === "fires"
+              ? "text-[color:var(--dim)]"
+              : "text-[color:var(--ink-faint)]"
+          }`}
+        >
+          {impact.main}
+        </span>
+        {impact.unit && (
+          <div className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
+            {impact.unit}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -714,7 +674,81 @@ interface WorkHoursProps {
   verifying?: boolean;
 }
 
-function WorkHoursCard({
+// #219 — the verdict block, extracted from WorkHoursCard so the tier
+// containers and the Reference-tier card render the SAME single-sourced
+// ``hours_eval`` (one backend verdict feeding both surfaces — never
+// recomputed; the ruled hours split keeps the band chart in Reference
+// while the verdict rides its tier).
+export function HoursVerdictBlock({
+  jurisdiction,
+  schedule,
+  verifying,
+}: {
+  jurisdiction: JurisdictionBlock;
+  schedule: WorkScheduleInput | null;
+  verifying: boolean;
+}) {
+  const hoursEval = jurisdiction.hours_eval;
+  const scheduleTbd = schedule == null || schedule.date_mode === "tbd";
+  return (
+    <div>
+      {verifying && (
+        <div className="text-[12px] text-[color:var(--none)]">
+          ◌ Checking the schedule against {jurisdiction.name}&apos;s windows
+          for the updated inputs…
+        </div>
+      )}
+      {!verifying &&
+        hoursEval.status === "unknown" &&
+        (scheduleTbd ? (
+          <div className="text-[12px] text-[color:var(--none)]">
+            ◌ Schedule marked &ldquo;Not set&rdquo; — the windows above are
+            reference only. Choose a date mode in Setup to check a
+            schedule against {jurisdiction.name}&apos;s windows.
+          </div>
+        ) : (
+          <div className="text-[12px] text-[color:var(--none)]">
+            ◌ {hoursEval.note ?? "Schedule not checked yet"} — enter the
+            work date and start/end times in the Setup panel&apos;s
+            Schedule step to check them against {jurisdiction.name}&apos;s
+            windows.
+          </div>
+        ))}
+      {!verifying && hoursEval.status === "inside" && (
+        <div className="text-[12px] text-[color:var(--pass)]">
+          ✓ Within the permitted window for this street class.
+          {hoursEval.note ? ` (${hoursEval.note})` : ""}
+        </div>
+      )}
+      {!verifying && hoursEval.status === "outside" && (
+        <div className="pl-3 border-l-2 border-[color:var(--warn)]">
+          <div className="text-[12px] text-[color:var(--warn)]">
+            ⚠ Schedule conflicts with {jurisdiction.name}&apos;s windows:
+          </div>
+          <ul className="m-0 mt-1 pl-4 text-[12px] text-[color:var(--ink-mute)]">
+            {hoursEval.violations.map((v) => (
+              <li key={`${v.kind}-${v.window.start}`}>
+                {v.kind === "ban_window_overlap"
+                  ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban (${dayLabel(v.window.days)})`
+                  : `${v.outside_hours} h falls outside the permitted ${(v.windows ?? [v.window]).map((w) => `${hhmm(w.start)}–${hhmm(w.end)}`).join(" / ")} ${v.windows && v.windows.length > 1 ? "windows" : "window"} (${dayLabel(v.window.days)})`}
+              </li>
+            ))}
+          </ul>
+          {hoursEval.exposure_estimate_cents != null && (
+            <div className="text-[12px] text-[color:var(--warn)] mt-1">
+              Metered exposure estimate ≈{" "}
+              <span className="font-mono">{dollars(hoursEval.exposure_estimate_cents)}</span>
+              {jurisdiction.provisional ? " (provisional schedule)" : ""} — trim the
+              schedule to avoid it.
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function WorkHoursCard({
   jurisdiction,
   streetClass,
   schedule,
@@ -896,58 +930,11 @@ function WorkHoursCard({
           user's deliberate "Not set" from a schedule they simply
           haven't finished entering. */}
       <div className="mt-3">
-        {verifying && (
-          <div className="text-[12px] text-[color:var(--none)]">
-            ◌ Checking the schedule against {jurisdiction.name}&apos;s windows
-            for the updated inputs…
-          </div>
-        )}
-        {!verifying &&
-          hoursEval.status === "unknown" &&
-          (scheduleTbd ? (
-            <div className="text-[12px] text-[color:var(--none)]">
-              ◌ Schedule marked &ldquo;Not set&rdquo; — the windows above are
-              reference only. Choose a date mode in Setup to check a
-              schedule against {jurisdiction.name}&apos;s windows.
-            </div>
-          ) : (
-            <div className="text-[12px] text-[color:var(--none)]">
-              ◌ {hoursEval.note ?? "Schedule not checked yet"} — enter the
-              work date and start/end times in the Setup panel&apos;s
-              Schedule step to check them against {jurisdiction.name}&apos;s
-              windows.
-            </div>
-          ))}
-        {!verifying && hoursEval.status === "inside" && (
-          <div className="text-[12px] text-[color:var(--pass)]">
-            ✓ Within the permitted window for this street class.
-            {hoursEval.note ? ` (${hoursEval.note})` : ""}
-          </div>
-        )}
-        {!verifying && hoursEval.status === "outside" && (
-          <div className="pl-3 border-l-2 border-[color:var(--warn)]">
-            <div className="text-[12px] text-[color:var(--warn)]">
-              ⚠ Schedule conflicts with {jurisdiction.name}&apos;s windows:
-            </div>
-            <ul className="m-0 mt-1 pl-4 text-[12px] text-[color:var(--ink-mute)]">
-              {hoursEval.violations.map((v) => (
-                <li key={`${v.kind}-${v.window.start}`}>
-                  {v.kind === "ban_window_overlap"
-                    ? `${v.overlap_hours} h overlaps the ${hhmm(v.window.start)}–${hhmm(v.window.end)} ban (${dayLabel(v.window.days)})`
-                    : `${v.outside_hours} h falls outside the permitted ${(v.windows ?? [v.window]).map((w) => `${hhmm(w.start)}–${hhmm(w.end)}`).join(" / ")} ${v.windows && v.windows.length > 1 ? "windows" : "window"} (${dayLabel(v.window.days)})`}
-                </li>
-              ))}
-            </ul>
-            {hoursEval.exposure_estimate_cents != null && (
-              <div className="text-[12px] text-[color:var(--warn)] mt-1">
-                Metered exposure estimate ≈{" "}
-                <span className="font-mono">{dollars(hoursEval.exposure_estimate_cents)}</span>
-                {jurisdiction.provisional ? " (provisional schedule)" : ""} — trim the
-                schedule to avoid it.
-              </div>
-            )}
-          </div>
-        )}
+        <HoursVerdictBlock
+          jurisdiction={jurisdiction}
+          schedule={sched}
+          verifying={verifying}
+        />
       </div>
 
       <ConflictFootnote conflict={hours.conflict} />
@@ -959,7 +946,7 @@ function WorkHoursCard({
 // 4 · Permit & Fees FYI — courtesy reference, never a checkout
 // ---------------------------------------------------------------------------
 
-function PermitFYI({
+export function PermitFYI({
   jurisdiction,
   workDate,
 }: {
@@ -1172,7 +1159,7 @@ function PermitFYI({
 // 5 · Compliance Chips — evaluated by the backend, three fixed groups
 // ---------------------------------------------------------------------------
 
-function FactRows({
+export function FactRows({
   chips,
   icon,
   tone,
@@ -1214,68 +1201,20 @@ function FactRows({
   );
 }
 
-// Density contract: one chip per compliance family; empty families
-// render nothing.  CONDITIONAL rows carry the surfaced-not-auto-applied
-// flag (StatusFlag) and never change counts.
-function PersonnelChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
-  const chips = jurisdiction.chips.personnel;
-  if (chips.length === 0) return null;
-  const cond = chips.filter((x) => x.status === "conditional").length;
-  return (
-    <ReferenceChip
-      glyph="◈"
-      label="Personnel gates"
-      summary={
-        <>
-          <b>{chips.length}</b>
-          {cond > 0 && (
-            <>
-              {" "}
-              · <b>{cond}</b> conditional
-            </>
-          )}
-        </>
-      }
-    >
-      <FactRows
-        chips={chips}
-        icon="◈"
-        tone="border-[color:var(--act)]"
-        jurName={jurisdiction.name}
-      />
-    </ReferenceChip>
-  );
-}
-
-function DeviceMandatesChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
-  const chips = jurisdiction.chips.device;
-  if (chips.length === 0) return null;
-  return (
-    <ReferenceChip
-      glyph="▮"
-      label="Device mandates"
-      summary={
-        <>
-          <b>{chips.length}</b> mandate{chips.length === 1 ? "" : "s"}
-        </>
-      }
-    >
-      <FactRows
-        chips={chips}
-        icon="▮"
-        tone="border-[color:var(--dim)]"
-        jurName={jurisdiction.name}
-      />
-    </ReferenceChip>
-  );
-}
+// (#219 — the PersonnelChip / DeviceMandatesChip family wrappers are
+// retired: their FactRows now render inside the ⚠ NEEDS ATTENTION tier
+// as obligations, per the ruled mapping.  FactRows itself is exported
+// above, byte-preserved.)
 
 function meterWorstCents(m: Chip["meter"]): number {
   if (!m) return 0;
   return m.amount_cents ?? m.amount_cents_max ?? 0;
 }
 
-function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
+// #219: standing hazard meters are REFERENCE by ruling (they describe
+// the jurisdiction, not this plan) — the chip survives whole, nested
+// inside the i tier, worst-$ still named in its summary.
+export function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
   const chips = jurisdiction.chips.hazard;
   if (chips.length === 0) return null;
   const worst = chips.reduce(
@@ -1313,71 +1252,9 @@ function HazardChip({ jurisdiction }: { jurisdiction: JurisdictionBlock }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// The section — DeltaPanel + WorkHoursCard + (PermitFYI | ComplianceChips)
-// ---------------------------------------------------------------------------
-
-interface SectionProps {
-  jurisdiction: JurisdictionBlock | null;
-  loading: boolean;
-  /** #152 D: a same-jurisdiction refetch is in flight — content stays
-   *  mounted (no skeleton reflow); verdict surfaces present as checking. */
-  revalidating?: boolean;
-  streetClass: StreetClass | null;
-  schedule: WorkScheduleInput | null;
-}
-
-export function JurisdictionSection({
-  jurisdiction,
-  loading,
-  revalidating = false,
-  streetClass,
-  schedule,
-}: SectionProps) {
-  if (!jurisdiction && !loading) return null;
-  return (
-    <section className="mt-4" aria-label="Jurisdiction rules">
-      <div className="flex items-baseline justify-between mb-1 pb-3 border-b border-[color:var(--rule)]">
-        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
-          {jurisdiction ? `${jurisdiction.name} — jurisdiction rules` : "Jurisdiction rules"}
-        </h2>
-        {jurisdiction?.provisional && <ProvisionalBadge label="Contains provisional facts" />}
-      </div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mt-0 mb-4">
-        informational · sourced corpus · never blocks generation
-      </p>
-
-      {loading || !jurisdiction ? (
-        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-6">
-          Loading jurisdiction rules…
-        </div>
-      ) : (
-        /* Density contract: one collapsed summary chip per family; empty
-           families render nothing. */
-        <div className="ref-stack">
-          <DeltaChip jurisdiction={jurisdiction} />
-          <PersonnelChip jurisdiction={jurisdiction} />
-          <DeviceMandatesChip jurisdiction={jurisdiction} />
-          <HazardChip jurisdiction={jurisdiction} />
-          <WorkHoursCard
-            jurisdiction={jurisdiction}
-            streetClass={streetClass}
-            schedule={schedule}
-            verifying={revalidating}
-          />
-          <PermitFYI
-            jurisdiction={jurisdiction}
-            // #199: a residual work_date under "Not set" is disavowed —
-            // lead-time deadlines render "—", not dates computed from a
-            // value the user un-set.
-            workDate={
-              schedule && schedule.date_mode !== "tbd"
-                ? (schedule.work_date ?? null)
-                : null
-            }
-          />
-        </div>
-      )}
-    </section>
-  );
-}
+// (#219 — the flat JurisdictionSection stack is retired: Zone 3 now
+// renders TieredReference, which composes the exported pieces above —
+// DeltaRowView, FactRows, HazardChip, WorkHoursCard/HoursVerdictBlock,
+// PermitFYI — into the ruled consequence tiers.  JurisdictionControls
+// and JurisdictionContextBar, Zone 1's and the top strip's surfaces,
+// are untouched.)

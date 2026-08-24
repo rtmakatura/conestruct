@@ -40,7 +40,7 @@ vi.mock("./OutputCards", () => ({
     </button>
   ),
 }));
-vi.mock("./AuditTrail", () => ({ AuditTrail: () => null }));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 
 // Cut the mapbox edge; the stub scripts the picker flow with two Apply
