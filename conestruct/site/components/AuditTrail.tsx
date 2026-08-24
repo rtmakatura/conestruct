@@ -422,7 +422,34 @@ export function buildScenarioItems(
     return buildMobileOp2LaneItems(scenario, audit, generated, r);
   if (scenario.kind === "mobile_op_multilane")
     return buildMobileOpMultilaneItems(scenario, audit, generated, r);
+  if (scenario.kind === "near_intersection")
+    return buildNearIntersectionItems(audit, generated, r);
   return [];
+}
+
+// #223 — NI trace parity.  The backend has always shipped the full
+// trace set for this kind (audit_projection passes ``sections``
+// unmodified; build_audit_trail computes taper/buffer/spacing/advance
+// for NI like every lane closure) — the gap was solely this missing
+// branch.  Composition is the flagger set minus the SSD row (no
+// flagger stations on this kind), reading ``summary.ta`` / ``case_id``
+// from the backend (side-aware TA-21/TA-22, Case 18/19) — never
+// literals (rule 3).  The approaches section stays an additive item.
+export function buildNearIntersectionItems(
+  audit: AuditState,
+  generated: boolean,
+  r: (n: number | string) => string,
+): ItemSpec[] {
+  const data = settledData(audit);
+  const caseId = data?.summary.case_id ?? "—";
+  return [
+    taperItem(audit, generated, r),
+    bufferItem(audit, generated, r),
+    spacingItem(audit, generated, r),
+    advanceItem(audit, generated, r),
+    coloradoItem(audit, "S-630-1"),
+    referenceItem(audit, data?.summary.ta ?? "—", "S-630-1", r(caseId)),
+  ];
 }
 
 export function buildShoulderItems(
