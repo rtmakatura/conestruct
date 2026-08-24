@@ -1,0 +1,53 @@
+{
+  "_provenance": "s2-arc7 (Refs #219/#220): the shared cross-surface expectation — the ruled status->tier mapping applied by hand to the two recorded wire fixtures. conestruct/site/lib/tiering.test.ts asserts the TS classifier equals this file; tests/test_tier_ledger.py asserts the Python mirror equals this file. Either implementation drifting breaks its own suite against this one pin. Tier rules: GO 2026-08-24, flags a-k as recommended. 'reference' facts are classified but uncounted (the ledger's reference token is unnumbered by ruling).",
+  "control-lakewood": {
+    "ledger": { "changed": 1, "attention": 3, "checked": 10, "pending": 1 },
+    "facts": {
+      "jur:delta:0": "attention",
+      "jur:delta:1": "attention",
+      "jur:device:0": "attention",
+      "jur:hours": "pending",
+      "audit:taper": "checked",
+      "audit:buffer": "checked",
+      "audit:spacing": "checked",
+      "audit:advance": "checked",
+      "audit:case": "checked",
+      "audit:colorado:check:0": "checked",
+      "audit:colorado:check:1": "checked",
+      "audit:colorado:check:2": "checked",
+      "audit:colorado:check:3": "checked",
+      "audit:colorado:info:0": "checked",
+      "audit:site:pedestrian_facility": "changed"
+    }
+  },
+  "adv-ni-denver": {
+    "ledger": { "changed": 3, "attention": 4, "checked": 12, "pending": 4 },
+    "facts": {
+      "jur:delta:0": "changed",
+      "jur:personnel:0": "attention",
+      "jur:personnel:1": "attention",
+      "jur:device:0": "attention",
+      "jur:hazard:0": "reference",
+      "jur:hazard:1": "reference",
+      "jur:hours": "pending",
+      "audit:taper": "checked",
+      "audit:buffer": "checked",
+      "audit:spacing": "checked",
+      "audit:advance": "checked",
+      "audit:case": "checked",
+      "audit:colorado:check:0": "checked",
+      "audit:colorado:check:1": "checked",
+      "audit:colorado:check:2": "checked",
+      "audit:colorado:check:3": "checked",
+      "audit:colorado:info:0": "checked",
+      "audit:site:adjacent_intersection": "checked",
+      "audit:site:adjacent_interchange": "checked",
+      "audit:site:pedestrian_facility": "changed",
+      "audit:site:school_zone": "changed",
+      "audit:approaches": "attention",
+      "audit:pending:0": "pending",
+      "audit:pending:1": "pending",
+      "audit:pending:2": "pending"
+    }
+  }
+}

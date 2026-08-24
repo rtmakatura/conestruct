@@ -1,0 +1,975 @@
+{
+ "_provenance": "Recorded via TestClient at HEAD from tests/fixtures/pdf_worst_case/adv-near-intersection.json with jurisdiction_key=denver (s2-arc7, Refs #219).",
+ "scenario": {
+  "kind": "near_intersection",
+  "meta": {
+   "project": "I-25 & Alameda Interchange Phase 3B Utility Relocation and Storm Drain Improvements Package 2 (Night Work) - CDOT Region 1 / City and County of Denver Joint Project",
+   "address": "4700-4998 South Colorado Boulevard between East Bayaud Avenue and East Alameda Avenue, Glendale / Denver County, Colorado 80246 (northbound curb lane)",
+   "lat": 0.0,
+   "lng": 0.0,
+   "siteConditions": {
+    "adjacent_intersection": true,
+    "adjacent_interchange": true,
+    "pedestrian_facility": true,
+    "bike_facility": true,
+    "school_zone": true,
+    "railroad_crossing": true,
+    "hospital_nearby": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 40,
+  "lanes": 3,
+  "laneWidth": 10.5,
+  "divided": false,
+  "workType": "utility_cut",
+  "duration": "short",
+  "workLen": 2000,
+  "night": true,
+  "approaches": [
+   {
+    "id": "north_leg",
+    "speed": 40,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 3,
+    "laneWidth": 10.5,
+    "signalized": true,
+    "alongStationFt": 2200
+   },
+   {
+    "id": "south_leg",
+    "speed": 35,
+    "roadType": "urban_arterial",
+    "lanesPerDirection": 2,
+    "laneWidth": 10.5,
+    "signalized": true,
+    "alongStationFt": 2200
+   }
+  ],
+  "jurisdiction_key": "denver",
+  "street_class": "arterial"
+ },
+ "audit": {
+  "summary": {
+   "ta": "TA-22",
+   "cdot_sheet": "S-630-1",
+   "case_id": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+   "taper_length_ft": 280,
+   "taper_label": "L (full merging taper)",
+   "buffer_space_ft": 305.0,
+   "device_spacing_taper_ft": 40.0,
+   "device_spacing_tangent_ft": 80.0,
+   "step_count": 16
+  },
+  "sections": {
+   "taper": {
+    "speed_mph": 40,
+    "closure_type": "lane",
+    "offset_label": "lane width",
+    "offset_ft": 10.5,
+    "shoulder_width_ft": 10.5,
+    "formula_choice": "Speed 40 mph < 45 mph threshold -> using L = W x S^2 / 60",
+    "formula_latex": "L = \\frac{W \\times S^2}{60}",
+    "L_calc_text": "L = 10.5 x 40^2 / 60 = 280 ft",
+    "L_full_ft": 280,
+    "L_third_calc_text": "Required: L = 280 ft (full taper for lane closure)",
+    "L_third_ft": 280,
+    "L_required_ft": 280,
+    "L_required_label": "L (full merging taper)",
+    "source": "MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the full merging taper length L.",
+    "cdot_reference": "CDOT S-630-1 Case 18 (traffic control around a work area near an intersection, one lane closed; Sheet 10)",
+    "citation": {
+     "cite": "MUTCD \u00a7 6B.08",
+     "footer": "MUTCD 2023 EDITION \u00b7 CHAPTER 6B \u00b7 TABLE 6B-3"
+    }
+   },
+   "buffer": {
+    "speed_mph": 40,
+    "lookup_text": "MUTCD Table 6B-2: 305 ft (CDOT supplement silent at this speed)",
+    "buffer_ft": 305.0,
+    "source": "MUTCD 11th Ed. Sec 6B.06, Table 6B-2 (stopping sight distance)",
+    "citation": {
+     "cite": "MUTCD \u00a7 6B.06",
+     "footer": "MUTCD \u00a7 6B.06 \u00b7 STOPPING SIGHT DISTANCE"
+    }
+   },
+   "spacing": {
+    "speed_mph": 40,
+    "in_taper_text": "40 mph -> 40 ft spacing (MUTCD Sec 6K.01: spacing equals speed in feet)",
+    "on_tangent_text": "40 mph -> 80 ft spacing (MUTCD Sec 6K.01: spacing equals 2x speed in feet)",
+    "taper_count_text": "L = 280 ft / 40 ft max spacing -> 8 drums at 40.0 ft intervals",
+    "tangent_count_text": "2000 ft / 80 ft max spacing -> 26 cones at 80.0 ft intervals",
+    "n_taper_drums_required": 8,
+    "n_taper_drums_actual": 8,
+    "n_tangent_cones_required": 26,
+    "n_tangent_cones_actual": 33,
+    "source": "MUTCD 11th Ed. Sec 6K.01",
+    "citation": {
+     "cite": "MUTCD \u00a7 6K.01",
+     "footer": "MUTCD \u00a7 6K.01 \u00b7 CHANNELIZING DEVICE SPACING"
+    },
+    "downstream_count_text": "Downstream taper: 50 ft at ~25 ft spacing -> 2 cones (MUTCD Sec 6B.08: 50-100 ft downstream taper); 31 tangent + 2 downstream = 33 cones total",
+    "n_downstream_taper_cones": 2,
+    "n_cones_placed_total": 33
+   },
+   "advance": {
+    "road_type_text": "Speed 40 mph, road_type = 'urban_low' -> Table 6B-1 category: urban_low",
+    "spacing_text": "A = 100 ft, B = 100 ft, C = 100 ft",
+    "sign_table": [
+     {
+      "Position": "Advance (S1-1)",
+      "Code": "S1-1",
+      "Station (ft)": "3,412",
+      "Distance from Taper (ft)": "800 upstream"
+     },
+     {
+      "Position": "C (furthest)",
+      "Code": "W20-1",
+      "Station (ft)": "2,912",
+      "Distance from Taper (ft)": "300 upstream"
+     },
+     {
+      "Position": "1/2 C inside the outermost sign (Case 18)",
+      "Code": "R2-10",
+      "Station (ft)": "2,862",
+      "Distance from Taper (ft)": "250 upstream"
+     },
+     {
+      "Position": "B (middle)",
+      "Code": "W20-5R",
+      "Station (ft)": "2,812",
+      "Distance from Taper (ft)": "200 upstream"
+     },
+     {
+      "Position": "A (nearest)",
+      "Code": "W4-2R",
+      "Station (ft)": "2,712",
+      "Distance from Taper (ft)": "100 upstream"
+     }
+    ],
+    "source": "MUTCD 11th Ed. Table 6B-1"
+   },
+   "colorado": {
+    "checks": [
+     {
+      "pass": true,
+      "label": "Signs on both sides of divided highway",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+      "detail": "Required: False. Signs placed: 1 left, 12 right."
+     },
+     {
+      "pass": true,
+      "label": "G20-5P Work Zone signs every 2,640 ft",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+      "detail": "Zone length: 2,912 ft. Required: 2. Placed: 2."
+     },
+     {
+      "pass": true,
+      "label": "Speed reduction <= 15 mph per sign installation",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+      "detail": "No work-zone speed reduction. Posted speed 40 mph applies throughout the zone."
+     },
+     {
+      "pass": true,
+      "label": "Flagger station lighting 500W @ 8 ft",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+      "detail": "Not applicable (no flaggers)."
+     }
+    ],
+    "info_items": [
+     {
+      "info": true,
+      "label": "AADT threshold for mobile operations (<= 2,000)",
+      "citation": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+      "detail": "Not applicable (not a mobile operation)."
+     }
+    ],
+    "all_pass": true,
+    "fail_count": 0
+   },
+   "case": {
+    "case": "Case 18: Traffic control around a work area near an intersection, one lane closed",
+    "url": "https://www.codot.gov/safety/traffic-safety/assets/s-standard-plans/s-630-1/S-630-01%20(19-Page%20Set).pdf",
+    "narrative": "This scenario follows CDOT Standard Plan S-630-1, Case 18 (Sheet 10) \u2014 traffic control around a work area near an intersection, one lane closed \u2014 applied to an undivided highway with single-side mainline signing (both-sides posting applies to divided highways, multi-lane ramps, and one-way streets per CDOT S-630-1 Sheet 2 General Note 8), plus a cross-street advance-warning set on each approach leg per MUTCD \u00a76N.12 and the Sheet 10 advance-signing key.",
+    "narrative_2": "Three disclosed departures from the plate: (1) the Case 18 plate typifies corner-quadrant work with a full cross-street closure train; this plan confines the work space to the mainline and places cross-street advance signing only \u2014 corner-quadrant support is tracked at https://github.com/rtmakatura/conestruct/issues/128. (2) The opposing mainline direction is not signed (single-side undivided convention; the plate signs both directions). (3) The plate typifies rural sign placement; urban applications require block-based placement per Sheet 10 Note 1. The plate's Type III corner barricade (work lasting more than 3 days) encloses the corner work area and is not placed, per departure (1)."
+   },
+   "flagger": {
+    "applicable": false,
+    "count": 0,
+    "required": 0,
+    "table": [],
+    "source": "MUTCD 11th Ed. Chapter 6D (Flagger Control) and Chapter 6E (One-Lane, Two-Way Traffic Control).",
+    "narrative": "Not applicable for this scenario."
+   },
+   "corridor_validation": {
+    "checked": false,
+    "warnings": []
+   },
+   "geometry_validation": {
+    "speed_mph": 40,
+    "work_zone_ft": 2000.0,
+    "taper_ft": 280,
+    "taper_label": "L (full merging taper)",
+    "buffer_ft": 305.0,
+    "violations": [],
+    "all_pass": true,
+    "source": "MUTCD 11th Ed. Sec 6B.06 (buffer) and Sec 6B.08 (taper)"
+   },
+   "corridor_spec": {
+    "taper_ft": 280,
+    "buffer_ft": 305,
+    "advance_warning_ft": 300,
+    "downstream_taper_ft": 50,
+    "road_category": "urban_low"
+   },
+   "approaches": {
+    "side": "far",
+    "along_station_ft": 2200.0,
+    "narrative": "Each cross-street leg receives its own advance set (W20-1, R2-10, R2-11), computed from that leg's own speed and road type; stations are measured along the leg from the intersection curb line, increasing away from the intersection.",
+    "source": "MUTCD \u00a76N.12; CDOT S-630-1 Sheet 10, Cases 18/19 (advance-signing key)",
+    "approaches": [
+     {
+      "id": "north_leg",
+      "speed_mph": 40,
+      "road_type": "urban_low",
+      "signalized": true,
+      "a_dist_ft": 100.0,
+      "key_text": "Sheet 10 advance-signing key: A = 100 ft at 40 mph (urban_low)",
+      "sign_table": [
+       {
+        "Code": "W20-1",
+        "Station (ft from curb line)": "200",
+        "Placement rule": "2 x A = 200 ft, approach side"
+       },
+       {
+        "Code": "R2-10",
+        "Station (ft from curb line)": "100",
+        "Placement rule": "A = 100 ft, approach side"
+       },
+       {
+        "Code": "R2-11",
+        "Station (ft from curb line)": "100",
+        "Placement rule": "100 ft, departure side (Case 18)"
+       }
+      ]
+     },
+     {
+      "id": "south_leg",
+      "speed_mph": 35,
+      "road_type": "urban_low",
+      "signalized": true,
+      "a_dist_ft": 100.0,
+      "key_text": "Sheet 10 advance-signing key: A = 100 ft at 35 mph (urban_low)",
+      "sign_table": [
+       {
+        "Code": "W20-1",
+        "Station (ft from curb line)": "200",
+        "Placement rule": "2 x A = 200 ft, approach side"
+       },
+       {
+        "Code": "R2-10",
+        "Station (ft from curb line)": "100",
+        "Placement rule": "A = 100 ft, approach side"
+       },
+       {
+        "Code": "R2-11",
+        "Station (ft from curb line)": "100",
+        "Placement rule": "100 ft, departure side (Case 18)"
+       }
+      ]
+     }
+    ]
+   },
+   "site_adjustments": [
+    {
+     "flag": "adjacent_intersection",
+     "action": "No devices added \u2014 the cross-street approach layout is not generated; see the pending-verification disclosure.",
+     "devices_added": 0,
+     "rule": "MUTCD \u00a76N.12 p. 848 \u2014 Work within the Traveled Way at an Intersection (11th Ed.)",
+     "citation": "MUTCD \u00a7 6N.12 p. 848"
+    },
+    {
+     "flag": "adjacent_interchange",
+     "action": "No devices added \u2014 the per-ramp interchange layout is not generated; see the pending-verification disclosure.",
+     "devices_added": 0,
+     "rule": "MUTCD \u00a76N.16 p. 851 \u2014 Interchanges (11th Ed.)",
+     "citation": "MUTCD \u00a7 6N.16 p. 851"
+    },
+    {
+     "flag": "pedestrian_facility",
+     "action": "Added 4 Type III barricades (sidewalk closure points) and 2 R9-9 SIDEWALK CLOSED signs at the upstream and downstream ends of the work zone.",
+     "devices_added": 6,
+     "rule": "MUTCD \u00a76C.02 \u2014 pedestrian considerations in work zones",
+     "citation": "MUTCD \u00a7 6C.02"
+    },
+    {
+     "flag": "school_zone",
+     "action": "Added 2 S1-1 SCHOOL signs upstream of the advance warning signs (station 3,412 ft, both sides).",
+     "devices_added": 2,
+     "rule": "MUTCD \u00a77B.08 \u2014 school zone signing in proximity to work zones",
+     "citation": "MUTCD \u00a7 7B.08"
+    }
+   ]
+  },
+  "pending_verification": {
+   "count": 3,
+   "note": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD \u00a76N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+   "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117",
+   "items": [
+    {
+     "kind": "intersection_layout_not_generated",
+     "label": "An adjacent intersection is flagged, but Conestruct does not generate the cross-street approach layout or evaluate traffic-signal operation, and adds no devices for it. Cross-street control design and the signal-operation review (MUTCD \u00a76N.12, 11th Ed. p. 848; Part 4 for signal-head visibility) remain with the traffic control supervisor. Intersection support is tracked at issue #117; corner-quadrant work at issue #128.",
+     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+    },
+    {
+     "kind": "interchange_layout_not_generated",
+     "label": "An adjacent interchange is flagged, but Conestruct does not generate the per-ramp layout and adds no devices for it. Ramp-specific control design and the ramp-access and coordination review (MUTCD \u00a76N.16, 11th Ed. p. 851) remain with the traffic control supervisor. Tracked at issue #117.",
+     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+    },
+    {
+     "kind": "signal_operation_review_required",
+     "label": "Signalized approaches (north_leg, south_leg): Conestruct places cross-street advance signing only and does not evaluate traffic-signal operation. The signal-operation review \u2014 phasing, timing, and signal-head visibility per MUTCD \u00a76N.12 (items 04 and 05; 11th Ed. p. 848) and MUTCD Part 4 \u2014 remains with the traffic control supervisor and the operating agency.",
+     "tracking_issue": "https://github.com/rtmakatura/conestruct/issues/117"
+    }
+   ]
+  },
+  "plan_flags": {
+   "validation_warnings": 0,
+   "compliance_fails": 0,
+   "v1_limitations": 3,
+   "is_clean": false
+  }
+ },
+ "jurisdiction": {
+  "key": "denver",
+  "name": "Denver",
+  "tcp_term": "TCP",
+  "row_term": "right-of-way",
+  "authority": "city_county",
+  "chain": [
+   {
+    "title": "MUTCD 2009 Rev 2 (pinned by PT-116.1, April 2022) \u2014 the statewide 11th-Ed mandate applies regardless",
+    "display_name": "MUTCD 2009 R2 (pinned)"
+   },
+   {
+    "title": "DOTI PT-116.1 General Traffic Control Procedures (April 2022)",
+    "display_name": "DOTI PT-116.1"
+   },
+   {
+    "title": "Rule 22.3 \u2014 Issuance of Permits by the City Traffic Engineer (2022)",
+    "display_name": "Rule 22.3"
+   },
+   {
+    "title": "ROWS 2024 Consolidated Fee Schedule (eff. 2024-01-01)",
+    "display_name": "2024 Fee Sched."
+   }
+  ],
+  "class_required": true,
+  "classification_map_url": null,
+  "hours": {
+   "shape": "work_window",
+   "windows": [
+    {
+     "kind": "work",
+     "days": "weekday",
+     "classes": [
+      "arterial",
+      "collector"
+     ],
+     "start": 8.5,
+     "end": 15.5,
+     "note": "Weekday lane/bike closures on arterials/collectors approved only 8:30am-3:30pm or 8:00pm-5:00am (Rule 22.3 \u00a7IV.4, verbatim-confirmed).",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.4",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "kind": "work",
+     "days": "weekday",
+     "classes": [
+      "arterial",
+      "collector"
+     ],
+     "start": 20.0,
+     "end": 24.0,
+     "note": "Night window 8:00pm-5:00am.",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.4",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "kind": "work",
+     "days": "weekday",
+     "classes": [
+      "arterial",
+      "collector"
+     ],
+     "start": 0.0,
+     "end": 5.0,
+     "note": "Night-window continuation.",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.4",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    }
+   ],
+   "holiday_rule": "none",
+   "override_note": "Sidewalk/bike blockage = lane closure (\u00a7III.1). Fees apply daily per day of occupancy (\u00a7V.1).",
+   "conflict": null
+  },
+  "fees": {
+   "model": "flat",
+   "items": [
+    {
+     "label": "Issuance and inspection (one per application)",
+     "amount_cents": 5000,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Residential \u2014 administrative review",
+     "amount_cents": 12500,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Residential \u2014 street lane",
+     "amount_cents": 22,
+     "effective": "2024-01-01",
+     "note": "Rate-table unit basis not recorded in the corpus; fees apply daily per day of occupancy (Rule 22.3 \u00a7V.1).",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Residential \u2014 complete closure",
+     "amount_cents": 30,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "CBD/CCA \u2014 bike lane closure",
+     "amount_cents": 85,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial NON-PEAK \u2014 1st lane and parking lane",
+     "amount_cents": 45,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial NON-PEAK \u2014 2nd lane",
+     "amount_cents": 90,
+     "effective": "2024-01-01",
+     "note": "The escalator is NOT a multiplier: each lane has its own rate; two lanes = $0.45 + $0.90.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial NON-PEAK \u2014 3rd lane",
+     "amount_cents": 270,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial NON-PEAK \u2014 4th/5th/6th lane",
+     "amount_cents": 325,
+     "effective": "2024-01-01",
+     "note": "4th $3.25 / 5th $4.05 / 6th $6.00 (4th encoded; tiers in note).",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial PEAK \u2014 1st lane and parking lane",
+     "amount_cents": 50,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial PEAK \u2014 2nd lane",
+     "amount_cents": 100,
+     "effective": "2024-01-01",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Collector & Arterial PEAK \u2014 3rd lane",
+     "amount_cents": 200,
+     "effective": "2024-01-01",
+     "note": "ANOMALY \u2014 preserve, do not smooth: the 3rd lane is MORE expensive non-peak ($2.70) than peak ($2.00); so are the 4th-6th at some tiers ($3.00/$4.50/$6.75 peak). It is what the schedule says. Do not normalize.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Bike lane closure (residential / collector-arterial)",
+     "amount_cents": 33,
+     "effective": "2024-01-01",
+     "note": "Two fees that stack: $0.33 bike-lane rate PLUS the $0.45 (non-peak) / $0.50 (peak) lane fee \u2014 verbatim 'Bike Lane closure (plus $.45 lane fee)'. Not competing values.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Expedite (permit requested in a non-standard timeframe)",
+     "amount_cents": 50000,
+     "effective": "2024-01-01",
+     "note": "Permit Fee + $500 each.",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     }
+    }
+   ],
+   "formula": null,
+   "note": "STALENESS RISK: this is the 2024 schedule; Denver publishes annually \u2014 2025/2026 schedules almost certainly exist. Rate depends on road class x geographic zone (Residential / CBD-CCA / Collector-Arterial) x peak flag, with a per-lane escalator that is not a multiplier."
+  },
+  "meters": [
+   {
+    "kind": "rejection",
+    "unit": "occurrence",
+    "amount_cents": 10000,
+    "note": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+    "source": {
+     "doc": "ROWS 2024 Consolidated Fee Schedule",
+     "date": "2024-01-01",
+     "status": "verified"
+    }
+   },
+   {
+    "kind": "no_permit",
+    "unit": "day",
+    "amount_cents": 50000,
+    "note": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+    "source": {
+     "doc": "ROWS 2024 Consolidated Fee Schedule",
+     "date": "2024-01-01",
+     "status": "verified"
+    }
+   }
+  ],
+  "applied_deltas": [
+   {
+    "severity": "count",
+    "rule": "Arrow board required if closing one or more lanes \u2014 Denver's trigger is >=1 lane (vs. Colorado Springs' 4+-lane roadway rule).",
+    "baseline": "arrow board optional per MUTCD for many single-lane closures",
+    "effect": {
+     "op": "add_device",
+     "device": "arrow_board",
+     "qty": 1
+    },
+    "trigger": {
+     "classes": null,
+     "closure": [
+      "lane"
+     ],
+     "night": null
+    },
+    "source": {
+     "doc": "DOTI PT-116.1",
+     "date": "2022-04-01",
+     "status": "verified"
+    },
+    "status": "fires"
+   }
+  ],
+  "chips": {
+   "personnel": [
+    {
+     "gate": "tcs_authorship",
+     "rule": "TCP 'must be prepared by a certified Traffic Control Supervisor' (PT-116.1, Permit 116.1); Rule 22.3 \u00a7IV.4.c says 'prepared by a certified traffic control company'. Denver's own procedures name the barricade company as the TCP author for arterials, collectors, and large-scale projects; DOTI Permit Operations can provide typical TCPs for most residential areas.",
+     "source": {
+      "doc": "DOTI PT-116.1 + Rule 22.3 \u00a7IV.4.c",
+      "date": "2022-04-01",
+      "status": "verified"
+     },
+     "status": "fires"
+    },
+    {
+     "gate": "utc_officer",
+     "rule": "Signalized intersection affected (per the City Traffic Engineer) -> uniformed police at the Permittee's cost.",
+     "trigger": {
+      "classes": null,
+      "closure": null,
+      "night": null,
+      "condition": "signalized intersection affected"
+     },
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     },
+     "status": "conditional"
+    }
+   ],
+   "device": [
+    {
+     "rule": "Steel plates: friction coefficient >=0.35, beveled leading/trailing edges or wedges. Bike detour: M4-9c signage at all decision points.",
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     },
+     "status": "fires"
+    }
+   ],
+   "hazard": [
+    {
+     "rule": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each \u2014 precisely the failure the tool exists to prevent.",
+     "meter_kind": "rejection",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     },
+     "status": "fires",
+     "meter": {
+      "kind": "rejection",
+      "unit": "occurrence",
+      "amount_cents": 10000,
+      "note": "TCP 'denied for accuracy or compliance with the MUTCD': Permit Fee + $100 each.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     }
+    },
+    {
+     "rule": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+     "meter_kind": "no_permit",
+     "source": {
+      "doc": "ROWS 2024 Consolidated Fee Schedule",
+      "date": "2024-01-01",
+      "status": "verified"
+     },
+     "status": "fires",
+     "meter": {
+      "kind": "no_permit",
+      "unit": "day",
+      "amount_cents": 50000,
+      "note": "Unauthorized sidewalk/street/alley closure, or reinstatement of a revoked permit: Permit Fee + $500 per day per violation.",
+      "source": {
+       "doc": "ROWS 2024 Consolidated Fee Schedule",
+       "date": "2024-01-01",
+       "status": "verified"
+      }
+     }
+    }
+   ]
+  },
+  "hours_eval": {
+   "status": "unknown",
+   "violations": [],
+   "note": "no work schedule provided"
+  },
+  "permit": {
+   "tier_suggested": null,
+   "tier_reason": "jurisdiction publishes no permit tiers",
+   "tiers": [],
+   "notes": [
+    {
+     "rule": "Denver is entity-gated: Contractor Licensing issues licenses to work in the ROW (720-865-2770), and the Street Occupancy Request Form requires a Contractor's license number.",
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     }
+    },
+    {
+     "rule": "Fee-design interaction (Rule 22.3 \u00a7IV.4.f, \u00a7IV.6.b): (1) maintain a temporary PAR or bike facility in the adjacent parking/travel lane -> that lane's closure fee is WAIVED; (2) fail to maintain 5 ft unobstructed width -> charged the FULL LENGTH OF A BLOCK for the sidewalk/bike closure; (3) covered walkway used as a detour with no added crossings -> reduced closure fee. The engine computes exactly the widths that decide this.",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.4.f, IV.6.b",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "rule": "Bus stops: temporary relocation/closure requires written approval from BOTH the City Traffic Engineer and RTD; all accommodation costs on the Permittee.",
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     }
+    },
+    {
+     "rule": "Paid-parking closure -> separate parking meter permit obtained with the RSOP; meter head removal only by Transportation Operations, billed daily. Unauthorized permanent meter removal: fee = (total yearly meter revenue + citation revenue) x 15 \u2014 the largest penalty multiplier in the corpus (not renderable as a fixed meter).",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.7",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "rule": "Sheet requirements are the deepest in the corpus: the TCP must depict existing conditions (north arrow, speed limit, geometry, markings, lane assignments, curb lines, sidewalks, PAR, all light/utility/signal poles, all posted signage, bus stops, all parking meters and kiosks with counts, tree lawns, racks, drop boxes) plus proposed items and closure math (taper lengths, advance signage with type/placement/distances, arrow board, work zone length AND width, width of reduced travel lanes). Engine values + a site-survey layer.",
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     }
+    },
+    {
+     "rule": "Conflicting permits: first-submitted, first-served; coordination with existing permits required.",
+     "source": {
+      "doc": "Rule 22.3",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    }
+   ],
+   "multi_agency": [
+    {
+     "rule": "RTD approval for bus-stop changes; ROWS Construction Engineering reviews arterial/collector TCPs; Permit Operations may approve local/residential at the counter.",
+     "source": {
+      "doc": "DOTI PT-116.1",
+      "date": "2022-04-01",
+      "status": "verified"
+     }
+    }
+   ],
+   "leads": [
+    {
+     "label": "Standard RSOP",
+     "lead_days": 5,
+     "lead_unit": "calendar_days",
+     "note": "Published as '>=5 days' (unit as published; Rule 22.3 \u00a7IV.1).",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.1",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Any construction/demolition (incl. street cuts)",
+     "lead_days": 10,
+     "lead_unit": "calendar_days",
+     "note": "Published as '>=10 days'.",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.1",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "label": "Special Events",
+     "lead_days": 60,
+     "lead_unit": "calendar_days",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.1",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    }
+   ],
+   "notices": [
+    {
+     "audience": "adjacent owners, businesses, residents",
+     "rule": "Lane / sidewalk / bike closure: notify >=48 hrs. Schools, health care, senior/community centers within 500 ft must be included. All closures: door hanger (area, dates, contractor contact) + posted weather-resistant sign at the closure with RSOP number, duration, contact.",
+     "lead_days": 48,
+     "lead_unit": "hours",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.3",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "audience": "public (full street closure)",
+     "rule": "Full street closure: >=2 weeks notice.",
+     "lead_days": 14,
+     "lead_unit": "calendar_days",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.3",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    },
+    {
+     "audience": "press (CBD detours & emergency closures)",
+     "rule": "Press release, issued by the Permittee.",
+     "source": {
+      "doc": "Rule 22.3",
+      "section": "IV.3",
+      "date": "2022-04-22",
+      "status": "verified"
+     }
+    }
+   ],
+   "onsite": {
+    "items": [],
+    "digital_ok": null
+   }
+  },
+  "conflicts": [],
+  "provisional": false
+ },
+ "breakdown": {
+  "devices": [
+   {
+    "device": "ROAD CONSTRUCTION (NEXT 2000 FT)",
+    "code": "G20-1",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "END ROAD WORK",
+    "code": "G20-2",
+    "function": "Termination",
+    "qty": 1
+   },
+   {
+    "device": "CONSTRUCTION ZONE plaque",
+    "code": "G20-5P",
+    "function": "Advance warning",
+    "qty": 2
+   },
+   {
+    "device": "BEGIN DOUBLE FINES ZONE",
+    "code": "R2-10",
+    "function": "Regulatory",
+    "qty": 3
+   },
+   {
+    "device": "END DOUBLE FINES ZONE",
+    "code": "R2-11",
+    "function": "Regulatory",
+    "qty": 3
+   },
+   {
+    "device": "SIDEWALK CLOSED",
+    "code": "R9-9",
+    "function": "Regulatory",
+    "qty": 2
+   },
+   {
+    "device": "SCHOOL",
+    "code": "S1-1",
+    "function": "Guide",
+    "qty": 2
+   },
+   {
+    "device": "ROAD WORK AHEAD",
+    "code": "W20-1",
+    "function": "Advance warning",
+    "qty": 3
+   },
+   {
+    "device": "RIGHT LANE CLOSED AHEAD",
+    "code": "W20-5R",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "RIGHT LANE ENDS",
+    "code": "W4-2R",
+    "function": "Advance warning",
+    "qty": 1
+   },
+   {
+    "device": "Channelizing Drum",
+    "code": "\u2014",
+    "function": "Channelizing",
+    "qty": 8
+   },
+   {
+    "device": "Traffic Cone (28-inch)",
+    "code": "\u2014",
+    "function": "Channelizing",
+    "qty": 33
+   },
+   {
+    "device": "Type C Warning Light (steady)",
+    "code": "\u2014",
+    "function": "Channelizing (night)",
+    "qty": 7
+   },
+   {
+    "device": "Type III Barricade",
+    "code": "\u2014",
+    "function": "Closure",
+    "qty": 4
+   },
+   {
+    "device": "Arrow Board",
+    "code": "\u2014",
+    "function": "Lane closure indication",
+    "qty": 1,
+    "jurisdiction_required": true,
+    "jurisdiction_source": {
+     "doc": "DOTI PT-116.1",
+     "date": "2022-04-01",
+     "status": "verified"
+    }
+   },
+   {
+    "device": "Portable Light Plant",
+    "code": "\u2014",
+    "function": "Illumination",
+    "qty": 1
+   }
+  ],
+  "total_devices": 73,
+  "unique_types": 16
+ }
+}

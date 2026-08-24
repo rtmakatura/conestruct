@@ -402,7 +402,9 @@ export function AuditTrail({ scenario, audit, onRetry, generated }: Props) {
 // remain self-contained here.
 // ---------------------------------------------------------------------------
 
-function buildScenarioItems(
+// Exported for the #223 parity pin (file pattern: every tested item
+// helper is exported).
+export function buildScenarioItems(
   scenario: Scenario,
   audit: AuditState,
   generated: boolean,
