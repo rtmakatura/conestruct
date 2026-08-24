@@ -1,0 +1,42 @@
+- `2026-08-24T20:16:59.359Z` **PASS** — B1. control generates
+- `2026-08-24T20:16:59.373Z` **PASS** — B1. ledger renders all four counted tokens + reference (0 changes · 3 needs attention · 11 checked · 1 pending · reference)
+- `2026-08-24T20:16:59.373Z` **PASS** — B1. open-state contract: ▲/⚠ open iff nonzero; ✓/◌/i collapsed ({"Needs attention":{"open":true,"summary":"3"},"Checked & passed":{"open":false,"summary":"11 · each cited"},"Pending / not verified":{"open":false,"summary":"1"},"Reference":{"open":false,"summary":"permit · hours windows · device schedule"}})
+- `2026-08-24T20:16:59.374Z` **PASS** — B1. ◌ isolation: no pending detail rendered while ◌ collapsed
+- `2026-08-24T20:16:59.816Z` **FAIL** — B1. ✓ expand reveals the trace heads + the Audit PDF download
+- `2026-08-24T20:17:00.009Z` screenshot: B1-control-tiers.png
+- `2026-08-24T20:17:00.934Z` B1 axe: 1 violation(s) — color-contrast
+- `2026-08-24T20:18:19.090Z` **PASS** — B2. heavy NI generates
+- `2026-08-24T20:18:19.098Z` **PASS** — B2. ledger renders (1 change · 5 needs attention · 10 checked · 2 pending · reference (refreshing…))
+- `2026-08-24T20:18:19.099Z` **PASS** — B2. ⚠ auto-open carries the signalized approaches item (no click)
+- `2026-08-24T20:18:19.564Z` **PASS** — B2. #223 parity SERVED: the NI trace heads render in ✓ (4/4 + case row)
+- `2026-08-24T20:18:19.808Z` screenshot: B2-ni-tiers.png
+- `2026-08-24T20:18:49.826Z` B3 setup error: TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: /^Singl
+- `2026-08-24T20:18:49.826Z` **FAIL** — B3. hours-outside rendered live (schedule controls not driveable headless this run — wire half (W4) carries the verdict+classification proof)
+- `2026-08-24T20:18:50.892Z` B2/B3 axe: 1 violation(s) — color-contrast
+- `2026-08-24T20:22:05.125Z` **PASS** — R1. control generates
+- `2026-08-24T20:22:13.504Z` **FAIL** — R1. ✓ expand reveals the trace heads + the Audit PDF download
+- `2026-08-24T20:22:39.289Z` **PASS** — R2. schedule mode control present pre-generate
+- `2026-08-24T20:22:39.967Z` R2. no time inputs; controls: SELECT:select-one:jl-jurisdiction | SELECT:select-one:sh-road-type | INPUT:range:sh-speed | INPUT:range:sh-lane-width | SELECT:select-one:sh-work-type | INPUT:number:sh-work-len | INPUT:date:sched-date | SELECT:select-one:sched-start | SELECT:select-one:sched-end
+- `2026-08-24T20:22:48.619Z` **PASS** — R2. generates with the schedule set
+- `2026-08-24T20:22:50.630Z` **FAIL** — R2. hours-outside: ⚠ auto-open with the Denver conflict text, no clicks (open=true · ledger=0 changes · 3 needs attention · 10 checked · 1 pending · reference (refreshing…))
+- `2026-08-24T20:24:06.311Z` **PASS** — R1. control generates
+- `2026-08-24T20:24:26.440Z` R1 DIAG: {"cls":"refchip sev-info open","body":"✓\nChecked & passed\n11 · each cited\n›\nEvery calculation is traced to its MUTCD or CDOT standard-plan source. Verify before stamping.\n↓ AUDIT PDF\nSCOPE: FEDERAL MUTCD + CDOT STANDARDS (S-630-1). OTHER JURISDICTIONS MAY IMPOSE ADDITIONAL REQUIREMENTS NOT YET CAPTURED.\n01\nTaper length calculation\nL/3 = 89 ft\nMUTCD § 6B.08\n›\n02\nBuffer space calculation\nB = 305 ft\nMUTCD § 6B.06\n›\n03\nChannelizing device spacing\n18 devices · 40/80 ft o.c.\nMUTCD § 6K.01\n›\n04\nAdvance warning sign set\n3 signs\nMUTCD TABLE 6B-1\n›\n05\nTA-3 · S-630-1 reference\nCase 11: Shoulder closure on divided highway\nCDOT S-630-1\n›\n✓\nSign"}
+- `2026-08-24T20:24:26.440Z` **FAIL** — R1. ✓ expand reveals the trace heads + the Audit PDF download
+- `2026-08-24T20:24:50.475Z` **PASS** — R2. schedule mode control present pre-generate
+- `2026-08-24T20:24:51.137Z` R2. no time inputs; controls: SELECT:select-one:jl-jurisdiction | SELECT:select-one:sh-road-type | INPUT:range:sh-speed | INPUT:range:sh-lane-width | SELECT:select-one:sh-work-type | INPUT:number:sh-work-len | INPUT:date:sched-date | SELECT:select-one:sched-start | SELECT:select-one:sched-end
+- `2026-08-24T20:24:59.767Z` **PASS** — R2. generates with the schedule set
+- `2026-08-24T20:25:25.042Z` **FAIL** — R2. hours-outside: ⚠ auto-open with the Denver conflict text, no clicks (open=true · ledger=0 changes · 3 needs attention · 10 checked · 1 pending · reference (refreshing…))
+- `2026-08-24T20:26:37.562Z` **PASS** — R1. control generates
+- `2026-08-24T20:26:41.619Z` **PASS** — R1. ✓ expand reveals the trace heads + the Audit PDF download
+- `2026-08-24T20:27:16.758Z` **PASS** — R2. schedule mode control present pre-generate
+- `2026-08-24T20:27:17.411Z` R2. no time inputs; controls: SELECT:select-one:jl-jurisdiction | SELECT:select-one:sh-road-type | INPUT:range:sh-speed | INPUT:range:sh-lane-width | SELECT:select-one:sh-work-type | INPUT:number:sh-work-len | INPUT:date:sched-date | SELECT:select-one:sched-start | SELECT:select-one:sched-end
+- `2026-08-24T20:27:26.080Z` **PASS** — R2. generates with the schedule set
+- `2026-08-24T20:28:56.897Z` **FAIL** — R2. hours-outside: ⚠ auto-open with the Denver conflict text, no clicks (open=true · ledger=0 changes · 4 needs attention · 10 checked · 1 pending · reference)
+- `2026-08-24T20:30:08.223Z` **PASS** — R1. control generates
+- `2026-08-24T20:30:12.282Z` **PASS** — R1. ✓ expand reveals the trace heads + the Audit PDF download
+- `2026-08-24T20:30:39.523Z` **PASS** — R2. schedule mode control present pre-generate
+- `2026-08-24T20:30:40.202Z` R2. no time inputs; controls: SELECT:select-one:jl-jurisdiction | SELECT:select-one:sh-road-type | INPUT:range:sh-speed | INPUT:range:sh-lane-width | SELECT:select-one:sh-work-type | INPUT:number:sh-work-len | INPUT:date:sched-date | SELECT:select-one:sched-start | SELECT:select-one:sched-end
+- `2026-08-24T20:30:48.841Z` **PASS** — R2. generates with the schedule set
+- `2026-08-24T20:30:48.844Z` **PASS** — R2. hours-outside: ⚠ auto-open with the Denver conflict text, no clicks (open=true · ledger=0 changes · 4 needs attention · 10 checked · 0 pending · reference)
