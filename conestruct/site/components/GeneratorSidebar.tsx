@@ -12,7 +12,6 @@ import {
   carryAcrossKinds,
   clearDetectionRelays,
   defaultFor,
-  hasLocation,
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
   SCENARIO_KINDS,
@@ -32,10 +31,9 @@ import {
 } from "@/lib/scenarios/handoff-summary";
 import {
   MAX_LANES_PER_DIRECTION,
-  validateApproaches,
-  validateLanes,
   validateWorkZone,
 } from "@/lib/scenarios/validation";
+import { deriveRail } from "@/lib/scenarios/rail";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
 import type { CorridorSpecLengths, Refusal } from "@/lib/render-types";
@@ -172,15 +170,6 @@ export function GeneratorSidebar({
   // metadata held here and rendered in LocationSummary — never written to
   // scenario state or the backend payload.
   const [handoff, setHandoff] = useState<HandoffEvent[]>([]);
-  const wzValidation = validateWorkZone(scenario);
-  // Lanes x width drawable bound (shoulder + near_intersection) — same
-  // 422-mirror class as validateWorkZone; the CTA must not offer a
-  // plan the backend will reject.
-  const lanesValidation = validateLanes(scenario);
-  // Cross-street approach mirror (near_intersection only; ok:true for
-  // every other kind) — covers the schema 422s AND the generator
-  // ValueErrors the schema can't see (#117).
-  const approachesValidation = validateApproaches(scenario);
   // Needs-confirmation hold on detection-filled approach lane counts:
   // OSM lane totals near intersections routinely include turn pockets,
   // so a detected count is a proposal until the user confirms or edits
@@ -189,6 +178,13 @@ export function GeneratorSidebar({
     pending: boolean;
     reason: string | null;
   }>({ pending: false, reason: null });
+
+  // #221: the CTA gate + reason AND the progress rail derive from one
+  // pure function (lib/scenarios/rail.ts) — the schema-mirror
+  // validations, the hold above, the shell's stamped refusal, and the
+  // location sentinel, chained in the recorded rank order.  ``blocker``
+  // is null exactly when the old seven-disjunct gate was open.
+  const rail = deriveRail({ scenario, approachConfirm, refusal, refusalPending });
 
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
@@ -472,35 +468,15 @@ export function GeneratorSidebar({
               location existing at all — before a pin the package would
               certify lat 0 / lng 0 (the unset sentinel; hasLocation).
               Ranked last: problems with actual edits state their reason
-              first.  The server still re-validates every render call. */}
+              first.  The server still re-validates every render call.
+              #221: the gate + the ranked reason chain moved verbatim to
+              lib/scenarios/rail.ts — one source for this CTA and the
+              progress rail. */}
           <GenerateButton
             generating={generating}
             onGenerate={onGenerate}
-            disabled={
-              !wzValidation.ok ||
-              !lanesValidation.ok ||
-              !approachesValidation.ok ||
-              approachConfirm.pending ||
-              refusal !== null ||
-              refusalPending ||
-              !hasLocation(scenario.meta)
-            }
-            disabledReason={
-              wzValidation.message ??
-              lanesValidation.message ??
-              approachesValidation.message ??
-              (approachConfirm.pending
-                ? "Confirm the cross-street lane count first — it was filled from map data."
-                : refusal
-                  ? // #180: short pointer, never the verbatim 400 — the
-                    // StatusBar below carries the refusal's one voice.
-                    "Generation declined — see the notice below."
-                  : refusalPending
-                    ? "Re-checking the declined input — Generate re-enables when the verdict settles."
-                    : !hasLocation(scenario.meta)
-                      ? "Set a location first — pick on map or enter manually."
-                      : undefined)
-            }
+            disabled={rail.blocker !== null}
+            disabledReason={rail.blocker?.message}
           />
 
           <div className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] text-center">
