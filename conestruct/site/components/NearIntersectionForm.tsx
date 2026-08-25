@@ -50,6 +50,9 @@ interface Props {
    *  (owned by GeneratorSidebar so it can also gate the Generate CTA). */
   approachConfirm: { pending: boolean; reason: string | null };
   clearApproachConfirm: () => void;
+  /** #222: pre-pin, this kind's steps render pending (dim + inert +
+   *  focusable summary) until a location exists. */
+  stepsPending?: boolean;
 }
 
 export function NearIntersectionForm({
@@ -57,6 +60,7 @@ export function NearIntersectionForm({
   setScenario,
   approachConfirm,
   clearApproachConfirm,
+  stepsPending = false,
 }: Props) {
   const set = <K extends keyof NearIntersectionScenario>(
     key: K,
@@ -220,7 +224,7 @@ export function NearIntersectionForm({
 
   return (
     <>
-      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="ni-road-type">Road type</LabelRow>
           <select id="ni-road-type"
@@ -286,7 +290,7 @@ export function NearIntersectionForm({
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="ni-work-type">Work type</LabelRow>
           <select id="ni-work-type"
@@ -326,7 +330,7 @@ export function NearIntersectionForm({
         />
       </FieldGroup>
 
-      <FieldGroup label="Cross street" step={5} anchorId="rail-step-extra">
+      <FieldGroup label="Cross street" step={5} anchorId="rail-step-extra" pending={stepsPending}>
         <Field>
           <LabelRow>Cross-street directions</LabelRow>
           <ChipRow

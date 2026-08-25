@@ -33,9 +33,12 @@ const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
 interface Props {
   scenario: FlaggerLaneClosureScenario;
   setScenario: (next: FlaggerLaneClosureScenario) => void;
+  /** #222: pre-pin, this kind's steps render pending (dim + inert +
+   *  focusable summary) until a location exists. */
+  stepsPending?: boolean;
 }
 
-export function FlaggerForm({ scenario, setScenario }: Props) {
+export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Props) {
   const set = <K extends keyof FlaggerLaneClosureScenario>(
     key: K,
     value: FlaggerLaneClosureScenario[K],
@@ -99,7 +102,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="fl-road-type">Road type</LabelRow>
           <select id="fl-road-type"
@@ -365,7 +368,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="fl-work-type">Work type</LabelRow>
           <select id="fl-work-type"
@@ -410,7 +413,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Flagger" step={5} anchorId="rail-step-extra">
+      <FieldGroup label="Flagger" step={5} anchorId="rail-step-extra" pending={stepsPending}>
         <CheckRow
           on={scenario.afad}
           label="Use AFAD"

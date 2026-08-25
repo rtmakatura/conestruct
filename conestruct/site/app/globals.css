@@ -1730,6 +1730,38 @@ input[type="number"] {
   color: var(--ink);
 }
 
+/* #222: pre-pin step gating.  Steps after Location render present but
+   not inviting: the body dims AND is inert (the browser removes it
+   from the Tab order and the accessibility tree); the focusable
+   summary row above it is the keyboard/AT path and names the gate.
+   0.35 matches the s2-arc5 extended-footage dim — and per that
+   precedent opacity is never the only channel: the ◌ + text row rides
+   with it (rule 13). */
+.workbench .setup-panel .step-pending-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 8px 24px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--none);
+}
+.workbench .setup-panel .step-pending-summary:hover,
+.workbench .setup-panel .step-pending-summary:focus-visible {
+  color: var(--act);
+}
+.workbench .setup-panel .step-pending-body {
+  opacity: 0.35;
+}
+
 /* Zone 1 dominant presentation: the setup form panel.  The panel hosts
    the existing form sections (FieldGroup blocks) in a responsive
    two-column grid; the section header rows and the generate footer span

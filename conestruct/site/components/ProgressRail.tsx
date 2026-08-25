@@ -20,6 +20,7 @@
 // "<label> — STEP n"; background re-renders never move focus.
 
 import type { Rail, RailEntry } from "@/lib/scenarios/rail";
+import { jumpToAnchor } from "./GeneratorFormPrimitives";
 
 const GLYPH: Record<RailEntry["state"], string> = {
   done: "✓",
@@ -27,19 +28,6 @@ const GLYPH: Record<RailEntry["state"], string> = {
   pending: "◌",
   notset: "◌",
 };
-
-function jumpTo(anchorId: string) {
-  const el = document.getElementById(anchorId);
-  if (!el) return;
-  const reduceMotion =
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({
-    behavior: reduceMotion ? "auto" : "smooth",
-    block: "start",
-  });
-  el.focus({ preventScroll: true });
-}
 
 function entryAria(e: RailEntry, ownsBlocker: boolean): string {
   const state =
@@ -72,7 +60,7 @@ export function ProgressRail({
             type="button"
             className={`rail-entry st-${e.state}${ownsBlocker ? " current" : ""}`}
             aria-label={entryAria(e, ownsBlocker)}
-            onClick={() => jumpTo(e.anchorId)}
+            onClick={() => jumpToAnchor(e.anchorId)}
           >
             {/* One ⚠ per unresolved blocker on this entry — distinct
                 glyphs, never a rollup that hides a queued hold. */}
@@ -118,7 +106,7 @@ export function ProgressRail({
               ? `Generate — blocked: ${blocker.message}`
               : "Generate — blocked, see the marked step"
         }
-        onClick={() => jumpTo(generateAnchorId)}
+        onClick={() => jumpToAnchor(generateAnchorId)}
       >
         <span className="rail-glyph" aria-hidden>
           {blocker === null ? "✓" : "→"}

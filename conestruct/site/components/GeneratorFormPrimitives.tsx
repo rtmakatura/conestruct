@@ -10,17 +10,30 @@ import type { ReactNode } from "react";
 // target — id + tabIndex -1 so a rail click (a user-initiated armed
 // action per the #193 focus policy) can land focus on the section
 // heading; never in the Tab order.
+//
+// ``pending`` (#222): pre-pin, the steps after Location render present
+// but not inviting — the header stays, a focusable summary names the
+// gate ("set a location first", itself a jump to the Location step),
+// and the field body dims to 0.35 AND goes ``inert`` (out of the Tab
+// order and the accessibility tree — the summary IS the keyboard/AT
+// path, no focus trap).  Opacity is never the only channel (rule 13):
+// the ◌ + text row rides with it, the s2-arc5 extended-footage
+// precedent.  ``inert`` is a plain DOM attribute here (React 18 passes
+// it through the spread); every evergreen browser enforces it, and
+// aria-hidden is the explicit twin for the tree.
 export function FieldGroup({
   label,
   step,
   optional = false,
   anchorId,
+  pending = false,
   children,
 }: {
   label: string;
   step?: number;
   optional?: boolean;
   anchorId?: string;
+  pending?: boolean;
   children: ReactNode;
 }) {
   const tag = optional ? "OPTIONAL" : step !== undefined ? `STEP ${step}` : "";
@@ -34,9 +47,41 @@ export function FieldGroup({
         <span>{label}</span>
         {tag && <span className="text-[color:var(--act)]">{tag}</span>}
       </div>
-      <div className="px-6 py-4">{children}</div>
+      {pending && (
+        <button
+          type="button"
+          className="step-pending-summary"
+          onClick={() => jumpToAnchor("rail-step-location")}
+        >
+          <span aria-hidden>◌</span> Pending — set a location first
+        </button>
+      )}
+      <div
+        className={pending ? "px-6 py-4 step-pending-body" : "px-6 py-4"}
+        aria-hidden={pending || undefined}
+        {...(pending ? ({ inert: "" } as Record<string, string>) : {})}
+      >
+        {children}
+      </div>
     </div>
   );
+}
+
+// The rail's jump behavior (#221/#222) — a USER-INITIATED armed action
+// per the #193 focus policy: scroll (reduced-motion aware, the #152-E
+// idiom) and move focus to the target header.  A missing anchor is a
+// no-op, never a throw.
+export function jumpToAnchor(anchorId: string) {
+  const el = document.getElementById(anchorId);
+  if (!el) return;
+  const reduceMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({
+    behavior: reduceMotion ? "auto" : "smooth",
+    block: "start",
+  });
+  el.focus({ preventScroll: true });
 }
 
 export function Field({ children }: { children: ReactNode }) {

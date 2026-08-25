@@ -32,9 +32,12 @@ const ROAD_TYPES: Array<{ v: RoadType; l: string }> = [
 interface Props {
   scenario: ShoulderScenario;
   setScenario: (next: ShoulderScenario) => void;
+  /** #222: pre-pin, this kind's steps render pending (dim + inert +
+   *  focusable summary) until a location exists. */
+  stepsPending?: boolean;
 }
 
-export function ShoulderForm({ scenario, setScenario }: Props) {
+export function ShoulderForm({ scenario, setScenario, stepsPending = false }: Props) {
   const set = <K extends keyof ShoulderScenario>(
     key: K,
     value: ShoulderScenario[K],
@@ -73,7 +76,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="sh-road-type">Road type</LabelRow>
           <select id="sh-road-type"
@@ -207,7 +210,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         )}
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="sh-work-type">Work type</LabelRow>
           <select id="sh-work-type"

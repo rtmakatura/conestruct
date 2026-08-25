@@ -283,9 +283,24 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     expect(bundleBody?.scenario.speed).toBe(75);
   });
 
-  it("control: chip selection reaches the payload with no pin at all", async () => {
+  it("control: chip selection reaches the payload with a manual location and no detection", async () => {
     const user = userEvent.setup();
-    await mountSandbox();
+    // #222: pre-pin the Road step is pending (dim + inert), so the
+    // detection-free control mounts with a manual location — the claim
+    // (chip -> payload with no picker/detection involved) is unchanged.
+    render(
+      <GeneratorShell
+        mode="sandbox"
+        initialScenario={{
+          ...DEFAULT_SHOULDER,
+          meta: { ...DEFAULT_SHOULDER.meta, lat: 39.9936, lng: -105.0897 },
+        }}
+      />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
 
     await user.click(lanesChip("3"));
     await generate(user);

@@ -20,9 +20,12 @@ interface Props {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   step: number;
+  /** #222: pre-pin, this kind's steps render pending (dim + inert +
+   *  focusable summary) until a location exists. */
+  stepsPending?: boolean;
 }
 
-export function ScheduleField({ scenario, setScenario, step }: Props) {
+export function ScheduleField({ scenario, setScenario, step, stepsPending = false }: Props) {
   const sched = scenario.schedule ?? null;
   // Untouched scenario: present "Not set" (#199) — the honest default
   // for a schedule nobody entered, matching what the hours card reports.
@@ -39,7 +42,7 @@ export function ScheduleField({ scenario, setScenario, step }: Props) {
     } as Scenario);
 
   return (
-    <FieldGroup label="Schedule" step={step} anchorId="rail-step-schedule">
+    <FieldGroup label="Schedule" step={step} anchorId="rail-step-schedule" pending={stepsPending}>
       <Field>
         <LabelRow>Work dates</LabelRow>
         <ChipRow<DateMode>

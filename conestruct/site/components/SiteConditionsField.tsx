@@ -104,9 +104,12 @@ interface Props {
   // the final step, so its number shifts with the active scenario kind —
   // the parent computes it.
   step: number;
+  /** #222: pre-pin, this kind's steps render pending (dim + inert +
+   *  focusable summary) until a location exists. */
+  stepsPending?: boolean;
 }
 
-export function SiteConditionsField({ scenario, setMeta, step }: Props) {
+export function SiteConditionsField({ scenario, setMeta, step, stepsPending = false }: Props) {
   const meta = scenario.meta;
   const flags: SiteConditions = meta.siteConditions ?? {};
   const [detection, setDetection] = useState<DetectionResult | null>(null);
@@ -218,7 +221,7 @@ export function SiteConditionsField({ scenario, setMeta, step }: Props) {
   };
 
   return (
-    <FieldGroup label="Site conditions" step={step}>
+    <FieldGroup label="Site conditions" step={step} pending={stepsPending}>
       <button
         type="button"
         onClick={detect}

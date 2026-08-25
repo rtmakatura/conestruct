@@ -314,9 +314,25 @@ describe("near_intersection picker → form → payload", () => {
 
   it("manual entry works with no detection at all", async () => {
     const user = userEvent.setup();
-    await mountSandbox();
+    // #222: pre-pin the downstream steps are pending (dim + inert), so
+    // the no-detection case mounts with a MANUAL location — a location
+    // is not a detection, and the claim under test (the form is fully
+    // editable without any OSM detection) is unchanged.
+    render(
+      <GeneratorShell
+        mode="sandbox"
+        initialScenario={{
+          ...DEFAULT_NEAR_INTERSECTION,
+          meta: { ...DEFAULT_NEAR_INTERSECTION.meta, lat: 39.7, lng: -104.9 },
+        }}
+      />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
 
-    // No picker interaction: the default one-leg cross street is fully
+    // No picker interaction: the one-leg cross street is fully
     // form-editable.  Switch to both directions and set lanes.
     await user.click(chipIn("Cross-street directions", "Both"));
     await user.click(chipIn("Cross-street lanes — direction B", "2"));

@@ -12,6 +12,7 @@ import {
   carryAcrossKinds,
   clearDetectionRelays,
   defaultFor,
+  hasLocation,
   ENABLED_SCENARIO_KINDS,
   isScenarioKindEnabled,
   SCENARIO_KINDS,
@@ -119,7 +120,8 @@ const ROAD_TYPE_LABELS: Record<RoadType, string> = {
 // Schedule then Site conditions close the panel, so their indices
 // depend on whether the active per-kind form contributed a fifth step
 // (Flagger / Protection) after the fixed Road (3) / Work (4).
-// Location (1) and Scenario (2) are constant.
+// Scenario (1) and Location (2) are constant (#222 relabel: the
+// visual order already ran Scenario-first; the numbers now agree).
 const KIND_HAS_FIFTH_STEP: Record<ScenarioKind, boolean> = {
   shoulder: false,
   flagger_lane_closure: true, // Flagger
@@ -186,6 +188,13 @@ export function GeneratorSidebar({
   // location sentinel, chained in the recorded rank order.  ``blocker``
   // is null exactly when the old seven-disjunct gate was open.
   const rail = deriveRail({ scenario, approachConfirm, refusal, refusalPending });
+  // #222: pre-pin, every step after Location renders pending (dim +
+  // inert + focusable summary) -- detection fills road facts from the
+  // pin, so inviting that work first invites an overwrite.  The
+  // Scenario picker stays live: the kind is UPSTREAM of the pin (it
+  // decides the picker's capture flow) and detection never overwrites
+  // it.  Post-pin everything is byte-identical to before.
+  const stepsPending = !hasLocation(scenario.meta);
 
   const scenarioRef = useRef(scenario);
   scenarioRef.current = scenario;
@@ -397,7 +406,7 @@ export function GeneratorSidebar({
         <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
 
         <div className="setup-grid">
-        {/* Step 1 — Location leads the grid; the optional project
+        {/* Step 2 — Location leads the grid; the optional project
             metadata (name / description / address) is demoted into a
             collapsed disclosure inside it. */}
         <LocationCorridorSection
@@ -412,10 +421,18 @@ export function GeneratorSidebar({
         />
 
         {scenario.kind === "shoulder" && (
-          <ShoulderForm scenario={scenario} setScenario={setScenario} />
+          <ShoulderForm
+            scenario={scenario}
+            setScenario={setScenario}
+            stepsPending={stepsPending}
+          />
         )}
         {scenario.kind === "flagger_lane_closure" && (
-          <FlaggerForm scenario={scenario} setScenario={setScenario} />
+          <FlaggerForm
+            scenario={scenario}
+            setScenario={setScenario}
+            stepsPending={stepsPending}
+          />
         )}
         {scenario.kind === "lane_closure_divided" && (
           <LaneClosureForm scenario={scenario} setScenario={setScenario} />
@@ -439,6 +456,7 @@ export function GeneratorSidebar({
           <NearIntersectionForm
             scenario={scenario}
             setScenario={setScenario}
+            stepsPending={stepsPending}
             approachConfirm={approachConfirm}
             clearApproachConfirm={() =>
               setApproachConfirm({ pending: false, reason: null })
@@ -453,12 +471,14 @@ export function GeneratorSidebar({
           scenario={scenario}
           setScenario={setScenario}
           step={scheduleStep(scenario.kind)}
+          stepsPending={stepsPending}
         />
 
         <SiteConditionsField
           scenario={scenario}
           setMeta={setMeta}
           step={siteStep(scenario.kind)}
+          stepsPending={stepsPending}
         />
         </div>
 
@@ -634,7 +654,7 @@ function LocationCorridorSection({
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
   return (
-    <FieldGroup label="Location" step={1} anchorId="rail-step-location">
+    <FieldGroup label="Location" step={2} anchorId="rail-step-location">
       {/* tabIndex -1: the picker's close-restore fallback (#193) —
           present in both pin states, never in the Tab order. */}
       <div ref={blockRef} tabIndex={-1} className="outline-none">
@@ -1138,7 +1158,7 @@ function ScenarioPicker({
       <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
         <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
           <span>Scenario</span>
-          <span className="text-[color:var(--act)]">STEP 2</span>
+          <span className="text-[color:var(--act)]">STEP 1</span>
         </div>
         <div className="px-6 pb-4 pt-2">
           <div className="px-3 py-3 border border-[color:var(--act)] bg-[color:var(--canvas-tint)] flex items-baseline justify-between">
@@ -1161,7 +1181,7 @@ function ScenarioPicker({
     <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
       <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
         <span>Scenario</span>
-        <span className="text-[color:var(--act)]">STEP 2</span>
+        <span className="text-[color:var(--act)]">STEP 1</span>
       </div>
       <div className="px-6 pb-4 pt-2 flex flex-col gap-2">
         {enabledKinds.map((k) => {
