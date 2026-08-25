@@ -39,7 +39,7 @@ export function ScheduleField({ scenario, setScenario, step }: Props) {
     } as Scenario);
 
   return (
-    <FieldGroup label="Schedule" step={step}>
+    <FieldGroup label="Schedule" step={step} anchorId="rail-step-schedule">
       <Field>
         <LabelRow>Work dates</LabelRow>
         <ChipRow<DateMode>

@@ -220,7 +220,7 @@ export function NearIntersectionForm({
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
         <Field>
           <LabelRow htmlFor="ni-road-type">Road type</LabelRow>
           <select id="ni-road-type"
@@ -286,7 +286,7 @@ export function NearIntersectionForm({
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4}>
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
         <Field>
           <LabelRow htmlFor="ni-work-type">Work type</LabelRow>
           <select id="ni-work-type"
@@ -326,7 +326,7 @@ export function NearIntersectionForm({
         />
       </FieldGroup>
 
-      <FieldGroup label="Cross street" step={5}>
+      <FieldGroup label="Cross street" step={5} anchorId="rail-step-extra">
         <Field>
           <LabelRow>Cross-street directions</LabelRow>
           <ChipRow

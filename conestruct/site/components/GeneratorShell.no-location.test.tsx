@@ -20,6 +20,9 @@ vi.mock("./OutputCards", () => ({ OutputCards: () => <div>OUTPUT-CARDS</div> }))
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
+// #221: the button queries name the CTA exactly ("Generate plan") --
+// the progress rail's trailing "Generate" jump entry is a second
+// /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
@@ -152,7 +155,7 @@ describe("no location, no certification (#186)", () => {
     expect(text).not.toContain("PLAN DECLINED");
 
     const btn = screen.getByRole("button", {
-      name: /generate/i,
+      name: /Generate plan/,
     }) as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     expect(text).toContain(
@@ -181,7 +184,7 @@ describe("no location, no certification (#186)", () => {
     expect(text).not.toContain("AWAITING LOCATION");
     expect(text).toContain("READY FOR TCS REVIEW");
     const btn = screen.getByRole("button", {
-      name: /generate/i,
+      name: /Generate plan/,
     }) as HTMLButtonElement;
     expect(btn.disabled).toBe(false);
   });
@@ -223,7 +226,7 @@ describe("no location, no certification (#186)", () => {
     expect(text).not.toContain("AWAITING LOCATION");
     expect(text).toContain("READY FOR TCS REVIEW");
     const btn = screen.getByRole("button", {
-      name: /generate/i,
+      name: /Generate plan/,
     }) as HTMLButtonElement;
     expect(btn.disabled).toBe(false);
   });

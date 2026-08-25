@@ -73,7 +73,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
         <Field>
           <LabelRow htmlFor="sh-road-type">Road type</LabelRow>
           <select id="sh-road-type"
@@ -207,7 +207,7 @@ export function ShoulderForm({ scenario, setScenario }: Props) {
         )}
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4}>
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
         <Field>
           <LabelRow htmlFor="sh-work-type">Work type</LabelRow>
           <select id="sh-work-type"

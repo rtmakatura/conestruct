@@ -34,6 +34,7 @@ import {
   validateWorkZone,
 } from "@/lib/scenarios/validation";
 import { deriveRail } from "@/lib/scenarios/rail";
+import { ProgressRail } from "./ProgressRail";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
 import type { CorridorSpecLengths, Refusal } from "@/lib/render-types";
@@ -384,7 +385,13 @@ export function GeneratorSidebar({
           </span>
         </div>
 
-        {/* Step 2's kind selection gates which form sections render, so
+        {/* #221: the progress rail — sticky steering line, pre-generate
+            only (this panel unmounts post-generate; the tier ledger is
+            the post-generate sibling).  Derivation shared with the
+            Generate CTA below (one source, lib/scenarios/rail.ts). */}
+        <ProgressRail rail={rail} generateAnchorId="rail-step-generate" />
+
+        {/* The kind selection gates which form sections render, so
             the banner + picker span the full panel above the grid. */}
         <DisabledScenarioBanner kind={scenario.kind} />
         <ScenarioPicker value={scenario.kind} onChange={onKindChange} />
@@ -455,7 +462,13 @@ export function GeneratorSidebar({
         />
         </div>
 
-        <div className="px-6 pt-6 pb-6 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20">
+        {/* id + tabIndex -1 (#221): the rail's trailing Generate entry
+            jumps here; never in the Tab order. */}
+        <div
+          id="rail-step-generate"
+          tabIndex={-1}
+          className="px-6 pt-6 pb-6 border-t border-[color:var(--rule)] bg-gradient-to-b from-transparent to-black/20 outline-none"
+        >
           {/* UX-21 / engine-removal PR D: generation is gated on the
               schema-bound client mirrors (required/ceiling, lanes,
               approaches) AND the backend's own invalid-input verdict —
@@ -621,7 +634,7 @@ function LocationCorridorSection({
   const meta = scenario.meta;
   const hasPin = meta.lat !== 0 || meta.lng !== 0;
   return (
-    <FieldGroup label="Location" step={1}>
+    <FieldGroup label="Location" step={1} anchorId="rail-step-location">
       {/* tabIndex -1: the picker's close-restore fallback (#193) —
           present in both pin states, never in the Tab order. */}
       <div ref={blockRef} tabIndex={-1} className="outline-none">

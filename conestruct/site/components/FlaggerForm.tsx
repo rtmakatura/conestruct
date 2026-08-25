@@ -99,7 +99,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road" step={3} anchorId="rail-step-road">
         <Field>
           <LabelRow htmlFor="fl-road-type">Road type</LabelRow>
           <select id="fl-road-type"
@@ -365,7 +365,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4}>
+      <FieldGroup label="Work" step={4} anchorId="rail-step-work">
         <Field>
           <LabelRow htmlFor="fl-work-type">Work type</LabelRow>
           <select id="fl-work-type"
@@ -410,7 +410,7 @@ export function FlaggerForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Flagger" step={5}>
+      <FieldGroup label="Flagger" step={5} anchorId="rail-step-extra">
         <CheckRow
           on={scenario.afad}
           label="Use AFAD"

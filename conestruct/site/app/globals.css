@@ -1663,6 +1663,73 @@ input[type="number"] {
   opacity: 0.85;
 }
 
+/* #221: the progress rail — the pre-generate steering line at the top
+   of the setup panel.  Sticky so the current blocker and the jump
+   links stay in view through the whole flow (the S4 stall: the CTA's
+   reason used to sit ~1 viewport below the row it named).  Rule 13:
+   every glyph rides with its label + a text state word; the ◌ states
+   are chromeless gray (--none), the current blocker uses the CTA
+   reason's own --fail voice. */
+.workbench .setup-panel .progress-rail {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+  padding: 8px 24px;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .progress-rail .rail-entry {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+}
+.workbench .progress-rail .rail-entry:hover .rail-label,
+.workbench .progress-rail .rail-entry:focus-visible .rail-label {
+  color: var(--act);
+  text-decoration: underline;
+}
+.workbench .progress-rail .rail-glyph {
+  font-family: var(--font-sans);
+}
+.workbench .progress-rail .st-done .rail-glyph {
+  color: var(--pass);
+}
+.workbench .progress-rail .st-attention .rail-glyph {
+  color: var(--warn);
+}
+.workbench .progress-rail .st-pending .rail-glyph,
+.workbench .progress-rail .st-notset .rail-glyph,
+.workbench .progress-rail .st-pending .rail-note,
+.workbench .progress-rail .st-notset .rail-note {
+  color: var(--none);
+}
+.workbench .progress-rail .rail-note {
+  color: var(--warn);
+  letter-spacing: 0.05em;
+}
+.workbench .progress-rail .rail-blocker {
+  color: var(--fail);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+.workbench .progress-rail .rail-entry.current .rail-label {
+  color: var(--ink);
+}
+
 /* Zone 1 dominant presentation: the setup form panel.  The panel hosts
    the existing form sections (FieldGroup blocks) in a responsive
    two-column grid; the section header rows and the generate footer span

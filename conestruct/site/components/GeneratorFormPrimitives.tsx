@@ -6,21 +6,31 @@ import type { ReactNode } from "react";
 // 01 / A-C / OPT / DEFINE mix). A section is either a numbered step
 // (``step``) or optional metadata (``optional``); the right-hand tag
 // reads "STEP n" or "OPTIONAL" accordingly.
+// ``anchorId`` (#221): the header row becomes the progress rail's jump
+// target — id + tabIndex -1 so a rail click (a user-initiated armed
+// action per the #193 focus policy) can land focus on the section
+// heading; never in the Tab order.
 export function FieldGroup({
   label,
   step,
   optional = false,
+  anchorId,
   children,
 }: {
   label: string;
   step?: number;
   optional?: boolean;
+  anchorId?: string;
   children: ReactNode;
 }) {
   const tag = optional ? "OPTIONAL" : step !== undefined ? `STEP ${step}` : "";
   return (
     <div>
-      <div className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+      <div
+        id={anchorId}
+        tabIndex={anchorId !== undefined ? -1 : undefined}
+        className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] outline-none"
+      >
         <span>{label}</span>
         {tag && <span className="text-[color:var(--act)]">{tag}</span>}
       </div>
