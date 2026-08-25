@@ -1,0 +1,23 @@
+- `2026-08-25T16:16:55.188Z` **PASS** — L1. step tags ascend — Scenario STEP 1 above Location STEP 2 (S1 inversion gone) ([1,2,3,4,5,6,7])
+- `2026-08-25T16:16:55.198Z` **PASS** — L1. five downstream steps pending: focusable summaries + inert bodies (summaries=5 inert=5)
+- `2026-08-25T16:16:55.198Z` **PASS** — L1. the pending summary names the gate in text (rule 13, not dim alone) (◌ Pending — set a location first)
+- `2026-08-25T16:16:55.201Z` **PASS** — L1. rail renders pre-pin: Location ⚠ current with the location string; downstream ◌ pending (["Location:st-attention current","Road:st-pending","Work:st-pending","Cross street:st-pending","Schedule:st-pending","Generate:st-generate"])
+- `2026-08-25T16:16:55.203Z` **PASS** — L1. one voice live: rail blocker === under-CTA reason (cta="Set a location first — pick on map or enter manually.")
+- `2026-08-25T16:16:55.411Z` screenshot: L1-ni-prepin.png
+- `2026-08-25T16:16:56.138Z` axe prepin-ni: region×1
+- `2026-08-25T16:18:09.854Z` **PASS** — L2. post-pin: pending chrome gone (fields fully live, unchanged behavior) ({"summaries":0,"inert":0})
+- `2026-08-25T16:18:10.387Z` **PASS** — L2. hold: rail blocker === CTA reason === the hold string (cta="Confirm the cross-street lane count first — it was filled from map data.")
+- `2026-08-25T16:18:10.387Z` **PASS** — L2. S4 gone: the sticky rail (carrying the blocker) is inside the viewport at the CTA's scroll position (railTop=0)
+- `2026-08-25T16:18:10.387Z` **PASS** — L2. schedule unset reads ◌ not set on the rail (rule 10 honest empty)
+- `2026-08-25T16:18:10.560Z` screenshot: L2-hold-sticky.png
+- `2026-08-25T16:18:11.579Z` axe hold-state: region×1
+- `2026-08-25T16:18:13.145Z` **FAIL** — L3. wz=0 + hold: BOTH ⚠ visible on the rail at once — the queue is dead ({"work":"rail-entry st-attention current","cross":"rail-entry st-attention","cta":"⚠ Work zone length is required."})
+- `2026-08-25T16:18:13.337Z` screenshot: L3-multiblocker.png
+- `2026-08-25T16:18:15.409Z` **PASS** — L4. rail jump: focus on the Cross street header AND the section scrolled into view ({"id":"rail-step-extra","inView":true})
+- `2026-08-25T16:18:49.289Z` **PASS** — L5. clean shoulder: Location/Road/Work ✓, Schedule ◌, no blocker string on the rail (["Location:st-done","Road:st-done","Work:st-done","Schedule:st-notset","Generate:st-generate"])
+- `2026-08-25T16:18:49.472Z` screenshot: L5-clean-rail.png
+- `2026-08-25T16:18:49.481Z` **PASS** — L5. Generate enabled on the clean control
+- `2026-08-25T16:18:52.066Z` **PASS** — L5. generated; post-generate the rail is gone (panel swapped to the strip by design) ({"rail":0,"pdf":true})
+- `2026-08-25T16:18:52.168Z` screenshot: L5-post-generate.png
+- `2026-08-25T16:21:44.704Z` **PASS** — R-L3. wz=0 + hold: BOTH ⚠ visible on the rail at once — the queue is dead ({"work":"rail-entry st-attention current","cross":"rail-entry st-attention","cta":"Work zone length is required.","crossAria":"Cross street — needs attention: Confirm the cross-street lane count first — it was filled from map data."})
+- `2026-08-25T16:21:44.932Z` screenshot: R-L3-multiblocker.png
