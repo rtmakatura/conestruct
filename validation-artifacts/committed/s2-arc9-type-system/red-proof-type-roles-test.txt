@@ -1,0 +1,92 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-226-type-roles/conestruct/site[39m
+
+ [31m❯[39m lib/design/type-roles.test.ts [2m([22m[2m13 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[32m 12[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22menumerates exactly the six role pairs[32m 2[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22msection ↔ step differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22msection ↔ field differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22msection ↔ provenance differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22mstep ↔ field differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22mstep ↔ provenance differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22mfield ↔ provenance differ on at least two axes[32m 0[2mms[22m[39m
+   [32m✓[39m two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)[2m > [22mweight is not counted as an axis[32m 1[2mms[22m[39m
+[31m   [31m×[31m CSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .section block mirrors the %s role[39m[32m 5[2mms[22m[39m
+[31m     → .workbench .tr-section missing from globals.css: expected null not to be null[39m
+[31m   [31m×[31m CSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .step block mirrors the %s role[39m[32m 1[2mms[22m[39m
+[31m     → .workbench .tr-step missing from globals.css: expected null not to be null[39m
+[31m   [31m×[31m CSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .field block mirrors the %s role[39m[32m 0[2mms[22m[39m
+[31m     → .workbench .tr-field missing from globals.css: expected null not to be null[39m
+[31m   [31m×[31m CSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .provenance block mirrors the %s role[39m[32m 0[2mms[22m[39m
+[31m     → .workbench .tr-prov missing from globals.css: expected null not to be null[39m
+[31m   [31m×[31m CSS mirror — the .tr-* blocks in globals.css match the table[2m > [22mno .tr-* block re-adds a text-transform to the provenance role (GO ruling 1)[39m[32m 1[2mms[22m[39m
+[31m     → expected null not to be null[39m
+System.Management.Automation.RemoteException
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+System.Management.Automation.RemoteException
+[41m[1m FAIL [22m[49m lib/design/type-roles.test.ts[2m > [22mCSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .section block mirrors the %s role
+[31m[1mAssertionError[22m: .workbench .tr-section missing from globals.css: expected null not to be null[39m
+[36m [2m❯[22m lib/design/type-roles.test.ts:[2m68:12[22m[39m
+    [90m 66| [39m    )[33m;[39m
+    [90m 67| [39m    expect(block, `.workbench .${role.cssClass} missing from globals.c…
+    [90m 68| [39m      [33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 69| [39m    [35mfor[39m ([35mconst[39m decl [35mof[39m [34mexpectedDeclarations[39m(role)) {
+    [90m 70| [39m      [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoContain[39m(decl)[33m;[39m
+System.Management.Automation.RemoteException
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+System.Management.Automation.RemoteException
+[41m[1m FAIL [22m[49m lib/design/type-roles.test.ts[2m > [22mCSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .step block mirrors the %s role
+[31m[1mAssertionError[22m: .workbench .tr-step missing from globals.css: expected null not to be null[39m
+[36m [2m❯[22m lib/design/type-roles.test.ts:[2m68:12[22m[39m
+    [90m 66| [39m    )[33m;[39m
+    [90m 67| [39m    expect(block, `.workbench .${role.cssClass} missing from globals.c…
+    [90m 68| [39m      [33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 69| [39m    [35mfor[39m ([35mconst[39m decl [35mof[39m [34mexpectedDeclarations[39m(role)) {
+    [90m 70| [39m      [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoContain[39m(decl)[33m;[39m
+System.Management.Automation.RemoteException
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+System.Management.Automation.RemoteException
+[41m[1m FAIL [22m[49m lib/design/type-roles.test.ts[2m > [22mCSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .field block mirrors the %s role
+[31m[1mAssertionError[22m: .workbench .tr-field missing from globals.css: expected null not to be null[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 11:13:21
+[2m   Duration [22m 883ms[2m (transform 54ms, setup 0ms, collect 46ms, tests 12ms, environment 0ms, prepare 124ms)[22m
+
+[36m [2m❯[22m lib/design/type-roles.test.ts:[2m68:12[22m[39m
+    [90m 66| [39m    )[33m;[39m
+    [90m 67| [39m    expect(block, `.workbench .${role.cssClass} missing from globals.c…
+    [90m 68| [39m      [33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 69| [39m    [35mfor[39m ([35mconst[39m decl [35mof[39m [34mexpectedDeclarations[39m(role)) {
+    [90m 70| [39m      [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoContain[39m(decl)[33m;[39m
+System.Management.Automation.RemoteException
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+System.Management.Automation.RemoteException
+[41m[1m FAIL [22m[49m lib/design/type-roles.test.ts[2m > [22mCSS mirror — the .tr-* blocks in globals.css match the table[2m > [22m.workbench .provenance block mirrors the %s role
+[31m[1mAssertionError[22m: .workbench .tr-prov missing from globals.css: expected null not to be null[39m
+[36m [2m❯[22m lib/design/type-roles.test.ts:[2m68:12[22m[39m
+    [90m 66| [39m    )[33m;[39m
+    [90m 67| [39m    expect(block, `.workbench .${role.cssClass} missing from globals.c…
+    [90m 68| [39m      [33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 69| [39m    [35mfor[39m ([35mconst[39m decl [35mof[39m [34mexpectedDeclarations[39m(role)) {
+    [90m 70| [39m      [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoContain[39m(decl)[33m;[39m
+System.Management.Automation.RemoteException
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+System.Management.Automation.RemoteException
+[41m[1m FAIL [22m[49m lib/design/type-roles.test.ts[2m > [22mCSS mirror — the .tr-* blocks in globals.css match the table[2m > [22mno .tr-* block re-adds a text-transform to the provenance role (GO ruling 1)
+[31m[1mAssertionError[22m: expected null not to be null[39m
+[36m [2m❯[22m lib/design/type-roles.test.ts:[2m76:23[22m[39m
+    [90m 74| [39m  it("no .tr-* block re-adds a text-transform to the provenance role (…
+    [90m 75| [39m    [35mconst[39m block [33m=[39m css[33m.[39m[34mmatch[39m([36m/\.workbench \.tr-prov \{[^}]*\}/[39m)[33m;[39m
+    [90m 76| [39m    [34mexpect[39m(block)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                      [31m^[39m
+    [90m 77| [39m    [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39mnot[33m.[39m[34mtoContain[39m([32m"text-transform: uppercase"[39m)[33m;[39m
+    [90m 78| [39m    [34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39mnot[33m.[39m[34mtoContain[39m([32m"text-transform: lowercase"[39m)[33m;[39m
+System.Management.Automation.RemoteException
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+System.Management.Automation.RemoteException
