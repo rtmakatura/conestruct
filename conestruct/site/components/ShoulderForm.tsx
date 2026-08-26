@@ -119,7 +119,7 @@ export function ShoulderForm({ scenario, setScenario, stepsPending = false }: Pr
             }}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+          <div className="tr-prov mt-1.5">
             MUTCD: ≥45 mph uses L=W·S
           </div>
         </Field>
@@ -281,7 +281,7 @@ export function ShoulderForm({ scenario, setScenario, stepsPending = false }: Pr
                   set("workZoneSpeed", +e.target.value || 0)
                 }
               />
-              <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+              <div className="tr-prov mt-1.5">
                 {scenario.speed - scenario.workZoneSpeed > 15
                   ? `Δ${scenario.speed - scenario.workZoneSpeed} mph · S-630-1 Sheet 2 Note 3: ${Math.ceil((scenario.speed - scenario.workZoneSpeed) / 15)} stepped sign installations`
                   : `Δ${scenario.speed - scenario.workZoneSpeed} mph · S-630-1 Sheet 2 Note 3: 1 advance sign`}

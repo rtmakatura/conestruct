@@ -389,7 +389,9 @@ export function GeneratorSidebar({
           <h2 className="text-[15px] font-semibold text-white m-0 tracking-[-0.005em]">
             Plan
           </h2>
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--act)]">
+          {/* #226: same tag treatment as the STEP tags — step-index
+              role, --act → dim (the tag is not interactive). */}
+          <span className="tr-step">
             INPUT
           </span>
         </div>
@@ -591,7 +593,7 @@ function ProjectGroup({
           placeholder="US-85 & Bromley Ln, Brighton, CO"
           onChange={(e) => set("address", e.target.value)}
         />
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+        <div className="tr-prov mt-1.5">
           Title-block metadata — set the work location with the map pin
           above.
         </div>
@@ -619,7 +621,8 @@ function ProjectDetailsDisclosure({
         className="w-full flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
       >
         <span>{open ? "Hide project details" : "Project details"}</span>
-        <span className="text-[color:var(--act)]">OPTIONAL</span>
+        {/* #226: tag = step-index role (dim, not act — ruling 4). */}
+        <span className="tr-step">OPTIONAL</span>
       </button>
       {open && (
         <div className="mt-3">
@@ -819,7 +822,9 @@ function LocationSummary({
         <div className="text-[13px] text-white leading-tight">
           {meta.address || "—"}
         </div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
+        {/* #226: provenance role — where the pin facts came from reads
+            in the inspectable register (the fact strip is #227). */}
+        <div className="tr-prov mt-1">
           {fmt6(meta.lat)}, {fmt6(meta.lng)}
           {meta.bearingDeg !== undefined && (
             <span> · bearing {Math.round(meta.bearingDeg)}°</span>
@@ -833,7 +838,7 @@ function LocationSummary({
           {scenario.speed} mph
           {lanes !== null && <span> · {lanes} lanes per direction</span>}
         </div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1">
+        <div className="tr-prov mt-1">
           {roadType ? ROAD_TYPE_LABELS[roadType] : "—"}
           {divided !== null && (
             <span> · {divided ? "Divided" : "Undivided"}</span>
@@ -859,7 +864,9 @@ function LocationSummary({
       {corridor && (
         <SummaryRow label="Corridor extent">
           <div className="flex items-baseline justify-between border-b border-[color:var(--rule)] pb-1 mb-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
+            {/* #226: labels the total readout — field-label role (the
+                table's tabular restructure is #227). */}
+            <span className="tr-field">
               Total
             </span>
             <span className="text-white font-semibold text-[14px] tabular-nums">
@@ -997,7 +1004,9 @@ function SummaryRow({
 }) {
   return (
     <div>
-      <div className="font-mono text-[9px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] mb-1">
+      {/* #226: summary-row headers are mini section names — section
+          role (10px replaces the old off-scale 9px). */}
+      <div className="tr-section mb-1">
         {label}
       </div>
       <div>{children}</div>
@@ -1057,12 +1066,13 @@ function ManualFallback({
   const wzValidation = validateWorkZone(scenario);
   return (
     <div className="border border-[color:var(--rule)] bg-[color:var(--canvas)] p-3">
-      <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] mb-2">
+      {/* #226: mini-card heading — section role. */}
+      <div className="tr-section mb-2">
         Manual entry (fallback)
       </div>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <div>
-          <label className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] block mb-1">
+          <label className="tr-field block mb-1">
             Latitude
           </label>
           <input
@@ -1074,7 +1084,7 @@ function ManualFallback({
           />
         </div>
         <div>
-          <label className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] block mb-1">
+          <label className="tr-field block mb-1">
             Longitude
           </label>
           <input
@@ -1088,7 +1098,7 @@ function ManualFallback({
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] block mb-1">
+          <label className="tr-field block mb-1">
             Bearing (° from N)
           </label>
           <input
@@ -1114,7 +1124,7 @@ function ManualFallback({
           />
         </div>
         <div>
-          <label className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] block mb-1">
+          <label className="tr-field block mb-1">
             Work zone (ft)
           </label>
           <input
@@ -1165,7 +1175,8 @@ function ScenarioPicker({
             <span className="text-[13px] font-medium text-white">
               {only.l}
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+            {/* #226: the TA/sheet citation — provenance role. */}
+            <span className="tr-prov">
               {only.sub}
             </span>
           </div>
@@ -1179,9 +1190,10 @@ function ScenarioPicker({
 
   return (
     <div className="border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)]">
-      <div className="px-6 py-2 flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-        <span>Scenario</span>
-        <span className="text-[color:var(--act)]">STEP 1</span>
+      {/* #226: section + step-index roles (same split as FieldGroup). */}
+      <div className="px-6 py-2 flex justify-between items-center">
+        <span className="tr-section">Scenario</span>
+        <span className="tr-step">STEP 1</span>
       </div>
       <div className="px-6 pb-4 pt-2 flex flex-col gap-2">
         {enabledKinds.map((k) => {
@@ -1206,7 +1218,8 @@ function ScenarioPicker({
               >
                 {k.l}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]">
+              {/* #226: the TA/sheet citation — provenance role. */}
+              <span className="tr-prov">
                 {k.sub}
               </span>
             </button>

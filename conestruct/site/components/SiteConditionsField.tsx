@@ -239,7 +239,7 @@ export function SiteConditionsField({ scenario, setMeta, step, stepsPending = fa
       </button>
 
       {hasCoords && !hasBearing && (
-        <div className="mb-3 px-3 py-2 text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)]">
+        <div className="mb-3 px-3 py-2 tr-prov border border-[color:var(--rule)]">
           Set road direction above for corridor-aware scanning — without it,
           detection runs in legacy point-and-radius mode and may flag
           parallel-street features.
@@ -252,8 +252,10 @@ export function SiteConditionsField({ scenario, setMeta, step, stepsPending = fa
         </div>
       )}
 
+      {/* #226: detection provenance — provenance role (was --act; the
+          line is informational, not interactive). */}
       {detection && !detection.error && (
-        <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--act)]">
+        <div className="mb-3 tr-prov">
           {detection.mode === "corridor" ? "Corridor scan: " : "Point scan: "}
           {Object.values(DETECTION_TO_FLAG).filter((f) => flags[f]).length}{" "}
           flag(s) auto-checked

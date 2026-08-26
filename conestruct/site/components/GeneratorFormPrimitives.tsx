@@ -42,10 +42,16 @@ export function FieldGroup({
       <div
         id={anchorId}
         tabIndex={anchorId !== undefined ? -1 : undefined}
-        className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] outline-none"
+        // #226: type moves off the container onto the two role spans —
+        // label = section role, tag = step-index role (tr-* classes,
+        // lib/design/type-roles.ts).  The tag's --act → dim recolor also
+        // repairs the act=interactive-only rule (globals.css role
+        // colors): the tag is not interactive.  DOM shape (a div with
+        // exactly these two spans) is pinned by the #222 prepin test.
+        className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] outline-none"
       >
-        <span>{label}</span>
-        {tag && <span className="text-[color:var(--act)]">{tag}</span>}
+        <span className="tr-section">{label}</span>
+        {tag && <span className="tr-step">{tag}</span>}
       </div>
       {pending && (
         <button

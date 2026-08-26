@@ -893,13 +893,30 @@ body {
 .workbench .check-row.on .check-lbl {
   color: white;
 }
+/* #226: check descriptions map to the provenance role (GO ruling 6 —
+   the arc's largest visual delta: full sentences stop rendering
+   ALL-CAPS).  tr-prov values; layout (margin-left auto) stays base. */
 .workbench .check-row .check-desc {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
   color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
 }
 
 /* Inputs / select: dark canvas + cyan focus */
+/* #226: the field-label role (tr-field values — lib/design/type-roles.ts).
+   Overrides the base .field-label-row's mono-caps: field labels are the
+   user's voice, sentence-case sans (PDF p. 1/p. 4; workbench + the
+   picker modal, one voice — GO ruling 5). */
 .workbench .field-label-row {
-  color: var(--ink-on-dark-faint);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
 }
 .workbench .field-label-row .field-val {
   color: white;
@@ -1356,14 +1373,17 @@ input[type="number"] {
     grid-template-columns: 1fr;
   }
 }
+/* #226: .k labels name a control — the field-label role (tr-field
+   values; the old 9.5px/0.14em mono-caps reconciles into the role). */
 .workbench .jbar-cell .k,
 .workbench .jctl-field .k {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
   margin-bottom: 7px;
 }
 .workbench .jbar select,
@@ -1593,7 +1613,9 @@ input[type="number"] {
    muted register; the live state stacks suggestion row, sourced reason,
    amber+glyph warnings, and the honesty line. */
 .workbench .jbar-suggest.quiet {
-  text-transform: uppercase;
+  /* #226: the quiet band speaks in the provenance register — caps
+     dropped (voice, not transform; GO ruling 1).  Color untouched:
+     the measured floor below is load-bearing. */
   /* No opacity reduction: at 0.7 the faint ink composited to ~3.76:1
      on --canvas, under the 4.5:1 AA floor (arc16 axe finding, coda
      Refs #200).  At the token's full value: #93a0b0 on #14202e =
@@ -1663,6 +1685,51 @@ input[type="number"] {
   opacity: 0.85;
 }
 
+/* ─── #226 type roles — the four setup-panel label roles ───
+   MIRROR of lib/design/type-roles.ts (the table is authoritative;
+   type-roles.test.ts asserts these blocks match it — same paired-halves
+   idiom as the spacing scale).  Weight is not an axis; the 500/400 are
+   extra differentiation.  Every color here is CHOSEN, not sheeted (GO
+   ruling 2); the section/step/field/provenance treatments are PDF p. 3.
+   Provenance carries NO text-transform by ruling (GO ruling 1, Rule 9:
+   "lowercase" is authored voice; MUTCD / S-630-1 / OSM keep canonical
+   casing — do not re-add a transform here).  text-decoration, not
+   border-bottom, so multi-line provenance underlines per line. */
+.workbench .tr-section {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.workbench .tr-step {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .tr-field {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .tr-prov {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
 /* #221: the progress rail — the pre-generate steering line at the top
    of the setup panel.  Sticky so the current blocker and the jump
    links stay in view through the whole flow (the S4 stall: the CTA's
@@ -1690,6 +1757,10 @@ input[type="number"] {
   border: none;
   padding: 2px 0;
   cursor: pointer;
+  /* #226: rail entries share the step-index register (mono 10px caps)
+     but are navigation, not one of the four label roles — the rail's
+     vocabulary is #228's.  Values deliberately byte-identical to
+     pre-#226; tracking stays 0.08em pending that arc. */
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.08em;

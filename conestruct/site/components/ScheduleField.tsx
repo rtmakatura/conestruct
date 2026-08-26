@@ -71,7 +71,7 @@ export function ScheduleField({ scenario, setScenario, step, stepsPending = fals
                 patch({ work_date: e.target.value || undefined })
               }
             />
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+            <div className="tr-prov mt-1.5">
               Jurisdiction work windows &amp; permit lead times compute from
               this
             </div>
@@ -149,7 +149,7 @@ export function ScheduleField({ scenario, setScenario, step, stepsPending = fals
           </div>
         </>
       ) : (
-        <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)]">
+        <div className="tr-prov">
           Jurisdiction windows show for reference — no dates to check yet
         </div>
       )}

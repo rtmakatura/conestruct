@@ -1,9 +1,9 @@
 "use client";
 
-// Form for the GATED near_intersection kind (#117, Option C inc. 4).
-// Not reachable through the scenario picker while the kind is absent
-// from ENABLED_SCENARIO_KINDS — tests mount it via GeneratorShell's
-// initialScenario prop.  The scenario object IS the wire payload, so
+// Form for the near_intersection kind (#117, Option C inc. 4; ENABLED
+// since the #117 enablement arc — the old "gated" note here outlived
+// the flip; comment-only fix, s2-arc9 GO rider R1).  The scenario
+// object IS the wire payload, so
 // every field here writes real scenario state; UI-only state (the
 // needs-confirmation hold on detection-filled lane counts) lives in
 // GeneratorSidebar and arrives via props.
@@ -240,7 +240,7 @@ export function NearIntersectionForm({
               </option>
             ))}
           </select>
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+          <div className="tr-prov mt-1.5">
             CDOT Cases 18/19 cover undivided and arterial roads
           </div>
         </Field>
@@ -256,7 +256,7 @@ export function NearIntersectionForm({
             onChange={(e) => set("speed", +e.target.value)}
             className="range-orange w-full my-1.5"
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+          <div className="tr-prov mt-1.5">
             MUTCD: ≥45 mph uses L=W·S
           </div>
         </Field>
@@ -268,7 +268,7 @@ export function NearIntersectionForm({
             value={scenario.lanes}
             onChange={(v) => set("lanes", v)}
           />
-          <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--ink-on-dark-faint)] mt-1.5">
+          <div className="tr-prov mt-1.5">
             Needs 2+ — traffic merges into the next lane over
           </div>
           {!lanesValidation.ok && (
