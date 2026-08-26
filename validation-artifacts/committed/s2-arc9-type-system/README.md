@@ -39,11 +39,27 @@ Arc evidence folder. Refs #226.
   (test fails as "no alert on screen", not as a color assertion). Candidate:
   select by `role="alert"` position or a stable semantic class.
 
-## Contents (filled as the arc lands)
+## Contents
 
-- `contrast-measurements.txt` + `probes/contrast-measure.py` — WCAG ratios
-  for every role color on both panel surfaces, measured not asserted.
-- `red-proof-type-roles-test.txt` — the two-axis/mirror test failing against
-  the pre-arc CSS (red-prove step, GO sequence 4).
-- `live-checks/` — `s2a9-live-checks.js` + axe baselines + before/after and
-  grayscale screenshots (one per live kind + the picker modal).
+- `red-proof-type-roles-test.txt` — the two-axis/mirror test failing
+  against the pre-arc CSS (red-prove, GO sequence 4): pure half green,
+  every `.tr-*` mirror assertion red. Turned green by the commit that
+  landed the CSS blocks.
+- `probes/contrast-measure.py` → `contrast-measurements.txt` — WCAG
+  ratios for all four role colors on both panel surfaces, measured not
+  asserted (Rule 13). All PASS; floor is `--ink-on-dark-faint` at
+  6.19:1 on `--canvas` / 5.61:1 on `--canvas-tint`. The 0.35 pending-dim
+  column is recorded for the record, not held to the floor (the body is
+  `inert` + `aria-hidden`; the ◌ summary is the accessible path — #222).
+- `live-checks/s2a9-live-checks.js` + `outS2A9LC/` — the local
+  before/after run (GO sequence 7: BEFORE = main checkout dev at the
+  pre-arc HEAD on :3111, AFTER = this branch on :3112; the prod re-run
+  happens after ship). 11/11 assertions PASS (`assertions-raw.md`):
+  computed-style spot checks for all four roles, the STEP tag's literal
+  caps + dim ink, rail-entry byte-identity, and axe zero-new on both the
+  pre-pin and pinned states (`axe-before.json` = `axe-after.json`:
+  `[region]` pre-pin, `[label, region]` pinned — the known baseline).
+  Screenshots: `before-/after-{shoulder,flagger,near-intersection,modal}.png`
+  plus `after-*-gray.png` (CSS `grayscale(1)`) — the acceptance
+  desaturation check; roles separate by luminance, family, casing, and
+  decoration, never hue alone.

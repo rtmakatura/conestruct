@@ -1,0 +1,16 @@
+﻿s2-arc9 type-role contrast (WCAG 2.x relative luminance)
+AA floor for text: 4.5:1.  dim0.35 = #222 pending body (inert +
+aria-hidden; recorded, not held to the floor -- see header).
+
+on --canvas #14202e:
+  section        #ffffff (CHOSEN)                       16.46:1  PASS   dim0.35  3.18:1
+  step index     --ink-on-dark-faint #93a0b0 (CHOSEN)    6.19:1  PASS   dim0.35  1.91:1
+  field label    --ink-on-dark #c8d1dd (CHOSEN)         10.68:1  PASS   dim0.35  2.49:1
+  provenance     --ink-on-dark-faint #93a0b0 (CHOSEN)    6.19:1  PASS   dim0.35  1.91:1
+
+on --canvas-tint #1b2838:
+  section        #ffffff (CHOSEN)                       14.92:1  PASS   dim0.35  3.11:1
+  step index     --ink-on-dark-faint #93a0b0 (CHOSEN)    5.61:1  PASS   dim0.35  1.87:1
+  field label    --ink-on-dark #c8d1dd (CHOSEN)          9.68:1  PASS   dim0.35  2.45:1
+  provenance     --ink-on-dark-faint #93a0b0 (CHOSEN)    5.61:1  PASS   dim0.35  1.87:1
+
