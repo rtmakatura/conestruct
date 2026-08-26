@@ -63,3 +63,14 @@ Arc evidence folder. Refs #226.
   plus `after-*-gray.png` (CSS `grayscale(1)`) — the acceptance
   desaturation check; roles separate by luminance, family, casing, and
   decoration, never hue alone.
+- `live-checks/s2a9-lc-prod.js` + `outS2A9Prod/` — the PROD re-run
+  after the ship (2026-08-26, prod at `da52cc1`; healthz sha ==
+  `git rev-parse HEAD` verified before the run). 7/7 PASS
+  (`assertions-raw.md`): per-role computed-style checks against the
+  **deployed bundle** (family / weight / size / tracking / casing /
+  color / decoration for section, step index, field label, provenance;
+  rail-entry byte-identity), and axe on both states with violation-id
+  sets equal to the committed local baseline (`axe-prod.json`:
+  `[region]` pre-pin, `[label, region]` pinned — zero new). Captures:
+  `prod-{shoulder,flagger,near-intersection}.png` plus the E Colfax
+  pin (39.73997, −104.96632) in color and `grayscale(1)`.
