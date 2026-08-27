@@ -876,6 +876,7 @@ export function GeneratorShell({
                 refusalPending={refusalPending}
                 corridorSpecLengths={corridorSpecLengths}
                 jurisdictionControls={jurisdictionControls}
+                jurisdictionName={jurisdictionBlock?.name ?? null}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }

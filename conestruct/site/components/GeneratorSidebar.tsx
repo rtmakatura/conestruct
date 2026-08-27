@@ -35,6 +35,7 @@ import {
   validateWorkZone,
 } from "@/lib/scenarios/validation";
 import { deriveRail } from "@/lib/scenarios/rail";
+import { JURISDICTION_OPTIONS } from "@/lib/jurisdiction";
 import { ProgressRail } from "./ProgressRail";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
@@ -100,6 +101,11 @@ interface Props {
   // by the shell (which owns the suggestion state); this component only
   // places it.
   jurisdictionControls?: ReactNode;
+  // #227 fact strip: the evaluated jurisdiction's display name (the
+  // device-breakdown block's ``name``), null before it loads or when no
+  // jurisdiction is named.  The strip falls back to the option label /
+  // "None — baseline" — a real answer, never blank.
+  jurisdictionName?: string | null;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -161,6 +167,7 @@ export function GeneratorSidebar({
   refusalPending,
   corridorSpecLengths,
   jurisdictionControls,
+  jurisdictionName = null,
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -419,6 +426,7 @@ export function GeneratorSidebar({
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
           jurisdictionControls={jurisdictionControls}
+          jurisdictionName={jurisdictionName}
           blockRef={locationBlockRef}
         />
 
@@ -643,6 +651,7 @@ function LocationCorridorSection({
   handoff,
   corridorSpecLengths,
   jurisdictionControls,
+  jurisdictionName,
   blockRef,
 }: {
   scenario: Scenario;
@@ -652,6 +661,7 @@ function LocationCorridorSection({
   handoff: HandoffEvent[];
   corridorSpecLengths: CorridorSpecLengths | null;
   jurisdictionControls?: ReactNode;
+  jurisdictionName?: string | null;
   blockRef?: MutableRefObject<HTMLDivElement | null>;
 }) {
   const meta = scenario.meta;
@@ -669,6 +679,7 @@ function LocationCorridorSection({
             setScenario={setScenario}
             handoff={handoff}
             corridorSpecLengths={corridorSpecLengths}
+            jurisdictionName={jurisdictionName ?? null}
           />
         ) : (
           <UnsetLocation
@@ -763,6 +774,7 @@ function LocationSummary({
   setScenario,
   handoff,
   corridorSpecLengths,
+  jurisdictionName,
 }: {
   scenario: Scenario;
   onOpenPicker: () => void;
@@ -770,6 +782,7 @@ function LocationSummary({
   setScenario: (next: Scenario) => void;
   handoff: HandoffEvent[];
   corridorSpecLengths: CorridorSpecLengths | null;
+  jurisdictionName: string | null;
 }) {
   const meta = scenario.meta;
   const [showManual, setShowManual] = useState(false);
@@ -782,10 +795,16 @@ function LocationSummary({
     handoffEventIsCurrent(e, scenario),
   );
 
-  const lanes = scenario.kind === "shoulder" ? scenario.lanes : null;
-  const divided = scenario.kind === "shoulder" ? scenario.divided : null;
-  const roadType: RoadType | null =
-    "roadType" in scenario ? (scenario.roadType as RoadType) : null;
+  // #227 fact strip: the jurisdiction cell is a real answer in every
+  // state — the evaluated block's name, the option label while that
+  // block is in flight, or "None — baseline" (a valid answer, not an
+  // empty; guess-correction on record).
+  const jurisdictionCell =
+    jurisdictionName ??
+    (scenario.jurisdiction_key
+      ? (JURISDICTION_OPTIONS.find((o) => o.key === scenario.jurisdiction_key)
+          ?.label ?? scenario.jurisdiction_key)
+      : "None — baseline");
 
   // Engine-removal PR D: zone lengths come from the backend
   // (sections.corridor_spec off the audit fetch the shell already makes
@@ -817,32 +836,31 @@ function LocationSummary({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Location row */}
+      {/* #227 fact strip — the pin readout as instrument output, not
+          fields (PDF p.3): bordered labeled cells for the read-only
+          facts.  Renders in the PINNED state only (GO ruling 1 — the
+          pre-pin surface keeps the pick CTA per #222; the deviation
+          from the empty-state principle is recorded in the addendum).
+          Cell labels take the step-index register (mono caps micro
+          labels); values are mono instrument output.  A bearing nobody
+          set renders "—" (rule 10). */}
       <SummaryRow label="Location">
-        <div className="text-[13px] text-white leading-tight">
+        <div className="text-[13px] text-white leading-tight mb-1.5">
           {meta.address || "—"}
         </div>
-        {/* #226: provenance role — where the pin facts came from reads
-            in the inspectable register (the fact strip is #227). */}
-        <div className="tr-prov mt-1">
-          {fmt6(meta.lat)}, {fmt6(meta.lng)}
-          {meta.bearingDeg !== undefined && (
-            <span> · bearing {Math.round(meta.bearingDeg)}°</span>
-          )}
-        </div>
-      </SummaryRow>
-
-      {/* Road properties row */}
-      <SummaryRow label="Road properties">
-        <div className="text-[13px] text-white leading-tight">
-          {scenario.speed} mph
-          {lanes !== null && <span> · {lanes} lanes per direction</span>}
-        </div>
-        <div className="tr-prov mt-1">
-          {roadType ? ROAD_TYPE_LABELS[roadType] : "—"}
-          {divided !== null && (
-            <span> · {divided ? "Divided" : "Undivided"}</span>
-          )}
+        <div className="fact-strip">
+          <FactCell label="Lat" value={fmt6(meta.lat)} />
+          <FactCell label="Lng" value={fmt6(meta.lng)} />
+          <FactCell
+            label="Bearing"
+            value={
+              meta.bearingDeg !== undefined
+                ? `${Math.round(meta.bearingDeg)}°`
+                : "—"
+            }
+          />
+          <FactCell label="Speed" value={`${scenario.speed} mph`} />
+          <FactCell label="Jurisdiction" value={jurisdictionCell} />
         </div>
       </SummaryRow>
 
@@ -1019,6 +1037,21 @@ function SummaryRow({
         {label}
       </div>
       <div>{children}</div>
+    </div>
+  );
+}
+
+// #227: one fact-strip cell — a micro label over a mono value.  The
+// label rides the step-index register (mono caps dim); the value is
+// instrument output.  Read-only by design: coordinates, bearing, speed
+// and jurisdiction are edited in the picker / band, never here.
+function FactCell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="fact-cell">
+      <span className="tr-step">{label}</span>
+      <span className="font-mono text-[12px] text-white tabular-nums leading-tight">
+        {value}
+      </span>
     </div>
   );
 }

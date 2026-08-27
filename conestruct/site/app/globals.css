@@ -1714,6 +1714,30 @@ input[type="number"] {
   width: var(--glyph-cell);
 }
 
+/* ─── #227 fact strip ───
+   The pin readout as instrument output (PDF p.3): a bordered strip of
+   labeled cells, visually distinct from the editable stack below.
+   Pinned state only (GO ruling 1).  Cells wrap under narrow widths —
+   the below-900px stacking is recorded, not designed (PDF p.5). */
+.workbench .fact-strip {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .fact-strip .fact-cell {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  border-right: 1px solid var(--rule-soft);
+}
+.workbench .fact-strip .fact-cell:last-child {
+  border-right: 0;
+}
+
 /* ─── #226 type roles — the four setup-panel label roles ───
    MIRROR of lib/design/type-roles.ts (the table is authoritative;
    type-roles.test.ts asserts these blocks match it — same paired-halves
