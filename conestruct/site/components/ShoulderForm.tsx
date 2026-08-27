@@ -21,6 +21,7 @@ import {
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
+import { DetectedVsApplied } from "./DetectedVsApplied";
 
 const ROAD_TYPES: Array<{ v: RoadType; l: string }> = [
   { v: "rural_undivided", l: "Rural — undivided" },
@@ -77,6 +78,9 @@ export function ShoulderForm({ scenario, setScenario, stepsPending = false }: Pr
   return (
     <>
       <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
+        {/* #227: detection's answer vs the plan's answer, one block
+            (closes #214 — the bearing role line inside). */}
+        <DetectedVsApplied scenario={scenario} />
         <Field>
           <LabelRow htmlFor="sh-road-type">Road type</LabelRow>
           <select id="sh-road-type"

@@ -37,6 +37,7 @@ import {
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
+import { DetectedVsApplied } from "./DetectedVsApplied";
 
 const ROAD_TYPES: Array<{ v: NearIntersectionRoadType; l: string }> = [
   { v: "rural_undivided", l: "Rural — undivided" },
@@ -225,6 +226,8 @@ export function NearIntersectionForm({
   return (
     <>
       <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
+        {/* #227: detection's answer vs the plan's answer (closes #214). */}
+        <DetectedVsApplied scenario={scenario} />
         <Field>
           <LabelRow htmlFor="ni-road-type">Road type</LabelRow>
           <select id="ni-road-type"

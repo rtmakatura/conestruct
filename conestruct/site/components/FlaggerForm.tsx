@@ -24,6 +24,7 @@ import {
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
+import { DetectedVsApplied } from "./DetectedVsApplied";
 
 const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
   { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
@@ -103,6 +104,8 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
   return (
     <>
       <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
+        {/* #227: detection's answer vs the plan's answer (closes #214). */}
+        <DetectedVsApplied scenario={scenario} />
         <Field>
           <LabelRow htmlFor="fl-road-type">Road type</LabelRow>
           <select id="fl-road-type"

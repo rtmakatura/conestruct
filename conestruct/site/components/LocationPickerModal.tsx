@@ -2803,6 +2803,18 @@ function WorkZonePanel({
             ⟲ Flip
           </button>
         </div>
+
+        {/* #214 (via #227, GO ruling 7): with a selected road whose
+            geometry will drive the corridor, the typed bearing is
+            consumed sign-only (centerline.ts ±90° test) — say so
+            BEFORE the user types.  Display-only: no handler changes;
+            Flip and the manual/no-geometry path are byte-identical. */}
+        {selectedCandidate && (selectedCandidate.geometry?.length ?? 0) > 1 && (
+          <div className="tr-prov pb-2">
+            road geometry governs the drawing — this field sets the
+            travel-direction sign only (Flip reverses it)
+          </div>
+        )}
       </div>
     </div>
   );

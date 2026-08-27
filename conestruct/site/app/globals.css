@@ -1795,6 +1795,23 @@ input[type="number"] {
   border-right: 0;
 }
 
+/* ─── #227 detected-vs-applied block (closes #214) ───
+   Three facts of one kind in one place: source, detected, applied.
+   Read-only reference mass at the top of the Road column. */
+.workbench .dva {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+.workbench .dva .dva-grid {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 14px;
+  row-gap: 3px;
+  align-items: baseline;
+}
+
 /* ─── #227 schedule window reference block ───
    Real class-scoped window rows at final widths: the fixed grid means
    evaluation changes glyph + value text only — nothing reflows when
