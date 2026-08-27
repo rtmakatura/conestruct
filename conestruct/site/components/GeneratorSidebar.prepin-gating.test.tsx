@@ -73,9 +73,13 @@ describe("pre-pin gating (#222)", () => {
         initialScenario={DEFAULT_NEAR_INTERSECTION}
       />,
     );
-    // Road, Work, Cross street, Schedule, Site conditions.
+    // Road, Work, Cross street, Schedule, Site conditions — and the
+    // #227 jurisdiction band, a downstream section like the rest (its
+    // suggestions are pin-derived; GO standing, 2026-08-27).  It has no
+    // STEP tag (not a rail step — #228 owns rail vocabulary), so the
+    // relabel test below is untouched.
     const summaries = pendingSummaries();
-    expect(summaries.length).toBe(5);
+    expect(summaries.length).toBe(6);
     for (const s of summaries) {
       expect(s.textContent).toContain("Pending — set a location first");
       // A real <button>: in the Tab order, announced, actionable.
@@ -83,7 +87,7 @@ describe("pre-pin gating (#222)", () => {
       expect(s.disabled).toBe(false);
     }
     const bodies = inertBodies();
-    expect(bodies.length).toBe(5);
+    expect(bodies.length).toBe(6);
     for (const b of bodies) {
       // ``inert`` unfocuses the whole body in the browser (no trap);
       // aria-hidden is the explicit accessibility-tree twin.

@@ -1491,6 +1491,32 @@ input[type="number"] {
   margin-top: 12px;
 }
 
+/* ─── #227 jurisdiction band ───
+   The two decision cards move OUT of the Location column into a
+   full-width band directly below it — the single-column adoption of
+   PDF p.1's "row one" band (recorded in the addendum): pin →
+   suggestions → confirm still reads top to bottom.  Two single-purpose
+   cards side by side, one decision each (PDF p.2); they stack under
+   900px (recorded, not designed — PDF p.5).  The #201 placement
+   contract is internal to each card and untouched. */
+.workbench .jctl-band .jctl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+  border: 0;
+  background: transparent;
+}
+.workbench .jctl-band .jctl-field {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+@media (max-width: 900px) {
+  .workbench .jctl-band .jctl {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Read-only summary strip: the class value + "not set" tone.  No
    dropdown or pills — those live in .jctl now. */
 .workbench .jbar-readonly .none {

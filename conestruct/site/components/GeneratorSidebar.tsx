@@ -95,11 +95,11 @@ interface Props {
   // audit resolves or when the field is absent (deploy window) — the
   // preview then reads unavailable; it is never computed locally.
   corridorSpecLengths: CorridorSpecLengths | null;
-  // Surface B (#152): the interactive jurisdiction + street-class
-  // controls, rendered inside the Location step directly under the pin
-  // summary so the causality reads pin -> suggestions -> confirm.  Built
-  // by the shell (which owns the suggestion state); this component only
-  // places it.
+  // Surface B (#152), rehomed by #227: the interactive jurisdiction +
+  // street-class controls, rendered as the full-width band directly
+  // below the Location step so the causality still reads pin ->
+  // suggestions -> confirm.  Built by the shell (which owns the
+  // suggestion state); this component only places it.
   jurisdictionControls?: ReactNode;
   // #227 fact strip: the evaluated jurisdiction's display name (the
   // device-breakdown block's ``name``), null before it loads or when no
@@ -425,10 +425,23 @@ export function GeneratorSidebar({
           onOpenPicker={() => setPickerOpen(true)}
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
-          jurisdictionControls={jurisdictionControls}
           jurisdictionName={jurisdictionName}
           blockRef={locationBlockRef}
         />
+
+        {/* #227: the jurisdiction & classification band — the two
+            decision cards as a full-width section directly below the
+            pin they depend on (the single-column adoption of the PDF's
+            row-one band).  Not a numbered step: it has no rail entry
+            (#228 owns rail vocabulary) and renumbering Road/Work is out
+            of scope.  Pre-pin it renders pending like every downstream
+            step (GO standing) — the suggestions it hosts are
+            pin-derived. */}
+        {jurisdictionControls && (
+          <FieldGroup label="Jurisdiction & classification" pending={stepsPending}>
+            <div className="jctl-band">{jurisdictionControls}</div>
+          </FieldGroup>
+        )}
 
         {scenario.kind === "shoulder" && (
           <ShoulderForm
@@ -650,7 +663,6 @@ function LocationCorridorSection({
   onOpenPicker,
   handoff,
   corridorSpecLengths,
-  jurisdictionControls,
   jurisdictionName,
   blockRef,
 }: {
@@ -660,7 +672,6 @@ function LocationCorridorSection({
   onOpenPicker: () => void;
   handoff: HandoffEvent[];
   corridorSpecLengths: CorridorSpecLengths | null;
-  jurisdictionControls?: ReactNode;
   jurisdictionName?: string | null;
   blockRef?: MutableRefObject<HTMLDivElement | null>;
 }) {
@@ -690,12 +701,6 @@ function LocationCorridorSection({
           />
         )}
       </div>
-      {/* Surface B (#152): jurisdiction + street-class controls sit
-          directly under the pin summary — pin -> suggestions -> confirm,
-          reading top to bottom. */}
-      {jurisdictionControls && (
-        <div className="jctl-host">{jurisdictionControls}</div>
-      )}
       <ProjectDetailsDisclosure scenario={scenario} setMeta={setMeta} />
     </FieldGroup>
   );
