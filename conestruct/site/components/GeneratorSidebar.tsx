@@ -47,6 +47,7 @@ import {
   type CorridorZone,
 } from "@/lib/corridor-polyline";
 import { ZoneChannelSwatch } from "./ZoneChannelSwatch";
+import { ZONE_COLOR } from "@/lib/corridor-zones";
 import {
   Field,
   FieldErrorLine,
@@ -899,7 +900,11 @@ function LocationSummary({
               Total
             </span>
             <span className="text-white font-semibold text-[14px] tabular-nums">
-              {fmtFt(corridor.totalLengthFt)} ft
+              {fmtFt(corridor.totalLengthFt)}
+              <span className="text-[10px] font-normal text-[color:var(--ink-on-dark-faint)]">
+                {" "}
+                ft
+              </span>
             </span>
           </div>
           <CorridorRows corridor={corridor} />
@@ -1061,19 +1066,21 @@ function FactCell({ label, value }: { label: string; value: string }) {
   );
 }
 
+// Same ordering convention as the modal preview: upstream → downstream
+// so the rows — and the bar's segments, which must match them (PDF
+// p.2) — read in the direction a motorist encounters the zones.
+const CORRIDOR_ORDER: readonly CorridorZone[] = [
+  "advance_warning",
+  "transition",
+  "buffer",
+  "work_zone",
+  "downstream",
+];
+
 function CorridorRows({ corridor }: { corridor: CorridorPolyline }) {
-  // Same ordering convention as the modal preview: upstream → downstream
-  // so the row reads in the direction a motorist encounters the zones.
-  const ORDER: readonly CorridorZone[] = [
-    "advance_warning",
-    "transition",
-    "buffer",
-    "work_zone",
-    "downstream",
-  ];
   return (
     <div className="flex flex-col gap-1">
-      {ORDER.map((zone) => {
+      {CORRIDOR_ORDER.map((zone) => {
         const seg = corridor.segments.find((s) => s.zone === zone);
         const length = seg?.lengthFt ?? 0;
         return (
@@ -1083,14 +1090,57 @@ function CorridorRows({ corridor }: { corridor: CorridorPolyline }) {
           >
             <span className="flex items-center gap-2 min-w-0 flex-1">
               <ZoneChannelSwatch zone={zone} className="flex-shrink-0" />
+              {/* #227: the hard-prefixed ✓ is dropped (GO ruling 5) —
+                  these rows carry no verdict; ✓ is reserved for
+                  confirmed/passing in the one glyph vocabulary. */}
               <span className="text-[11px] text-[color:var(--ink-on-dark)] truncate">
-                ✓ {ZONE_LABEL[zone]}
+                {ZONE_LABEL[zone]}
               </span>
             </span>
+            {/* Right-aligned tabular figures, unit demoted (PDF p.2). */}
             <span className="font-mono text-[11px] text-white tabular-nums whitespace-nowrap">
-              {fmtFt(length)} ft
+              {fmtFt(length)}
+              <span className="text-[9px] text-[color:var(--ink-on-dark-faint)]">
+                {" "}
+                ft
+              </span>
             </span>
           </div>
+        );
+      })}
+      <CorridorBar corridor={corridor} />
+    </div>
+  );
+}
+
+// #227: the proportional bar — a sanity check under the table, never a
+// second source of truth.  RULE 3 MIRROR: the only arithmetic here is
+// lengthFt / totalLengthFt, a display proportion of the BACKEND zone
+// lengths (sections.corridor_spec + the typed work-zone length summed
+// upstream); no MUTCD math, and nothing computed here feeds any value
+// anywhere.  The table is authoritative: the bar is aria-hidden and
+// unlabeled (PDF p.5), with --bar-seg-min flooring each segment so a
+// short taper next to a long work zone never vanishes to a sliver —
+// which also means the bar deliberately over-draws small segments and
+// must not be read for values.  Segment order matches the rows above.
+function CorridorBar({ corridor }: { corridor: CorridorPolyline }) {
+  const total = corridor.totalLengthFt;
+  if (!(total > 0)) return null;
+  return (
+    <div className="corridor-bar" aria-hidden>
+      {CORRIDOR_ORDER.map((zone) => {
+        const seg = corridor.segments.find((s) => s.zone === zone);
+        const length = seg?.lengthFt ?? 0;
+        if (length <= 0) return null;
+        return (
+          <div
+            key={zone}
+            className="corridor-bar-seg"
+            style={{
+              width: `${(length / total) * 100}%`,
+              background: ZONE_COLOR[zone],
+            }}
+          />
         );
       })}
     </div>

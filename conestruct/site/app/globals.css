@@ -1795,6 +1795,21 @@ input[type="number"] {
   border-right: 0;
 }
 
+/* ─── #227 corridor proportional bar ───
+   Nine pixels of sanity check under the extent table (PDF p.2/p.5).
+   min-width floors each segment (--bar-seg-min, CHOSEN) so small zones
+   stay visible — which over-draws them: the table is the source of
+   truth, the bar is aria-hidden and unlabeled. */
+.workbench .corridor-bar {
+  display: flex;
+  height: 9px;
+  margin-top: 6px;
+  border: 1px solid var(--rule-soft);
+}
+.workbench .corridor-bar .corridor-bar-seg {
+  min-width: var(--bar-seg-min);
+}
+
 /* ─── #226 type roles — the four setup-panel label roles ───
    MIRROR of lib/design/type-roles.ts (the table is authoritative;
    type-roles.test.ts asserts these blocks match it — same paired-halves
