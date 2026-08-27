@@ -849,15 +849,21 @@ function LocationSummary({
       {/* Applied-changes summary — names the transformations the picker →
           form handoff made to the values the operator reviewed (UX-01
           clamp/snap; UX-02 low-confidence skip/accept).  Renders only
-          when something notable happened. */}
+          when something notable happened.  #227: promoted to the
+          system-event container ("a value the user didn't set is a
+          system event, not a field annotation") — amber rule, border,
+          ⚠ glyph, provenance line 2.  The sentences are the #198
+          byte-identity strings, kept as single text nodes. */}
       {handoffNotes.length > 0 && (
-        <SummaryRow label="Applied from picker">
+        <div className="sys-event warn">
+          <div className="tr-section mb-1.5">Applied from picker</div>
           <div className="flex flex-col gap-1.5">
             {handoffNotes.map((e, i) => (
               <HandoffNote key={i} event={e} kind={scenario.kind} />
             ))}
           </div>
-        </SummaryRow>
+          <div className="tr-prov mt-1.5">picker → form handoff</div>
+        </div>
       )}
 
       {/* Corridor extent rows */}
@@ -985,10 +991,13 @@ function HandoffNote({
 }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="text-[color:var(--warn)] font-mono text-[11px] leading-none flex-shrink-0">
-        !
+      {/* #227 reconciled vocabulary: the "changed" mark is ⚠ (the
+          PDF's ! maps to ⚠); the sentence beside it is the second
+          channel (rule 13). */}
+      <span className="sys-glyph font-mono" aria-hidden>
+        ⚠
       </span>
-      <span className="text-[11px] text-[color:var(--ink-on-dark)] leading-snug">
+      <span className="text-[12px] text-[color:var(--ink-on-dark)] leading-snug">
         {handoffNoteText(event, kind)}
       </span>
     </div>

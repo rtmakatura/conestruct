@@ -758,6 +758,11 @@ body {
   --conf-fill: #c6d2e0;
   --conf-empty: #33475e;
 
+  /* #227 sizing tokens — CHOSEN, unsheeted (GO ruling 4, 2026-08-27).
+     Mirrored by lib/design/tokens.ts (tokens.test.ts pins equality). */
+  --glyph-cell: 16px;
+  --bar-seg-min: 6px;
+
   /* legacy aliases — safety net so a missed var() reference can never
      fall back to the light :root palette.  New code uses role names. */
   --orange: var(--dim);
@@ -1683,6 +1688,30 @@ input[type="number"] {
   font-size: 9.5px;
   color: var(--ink-on-dark-faint);
   opacity: 0.85;
+}
+
+/* ─── #227 system-event container ───
+   "A value the user didn't set is a system event, not a field
+   annotation" (PDF p.4): the #198 handoff notes' promoted home — amber
+   rule + border + full-size glyph + the full sentence + provenance on
+   line 2.  The sentences are the #198 byte-identity strings and stay
+   SINGLE TEXT NODES (no inline bolding — GO ruling 2; the mounted
+   regex suite pins them).  Glyph is the reconciled vocabulary's ⚠
+   "changed" (the PDF's ! maps to ⚠).  Commit 4 reuses this shape for
+   the resolved suggestion records (.confirmed / .dismissed variants):
+   state changes reuse the container they replace. */
+.workbench .sys-event {
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--warn);
+  background: var(--canvas-tint);
+  padding: 10px 12px;
+}
+.workbench .sys-event .sys-glyph {
+  color: var(--warn);
+  font-size: 13px;
+  line-height: 1.3;
+  flex-shrink: 0;
+  width: var(--glyph-cell);
 }
 
 /* ─── #226 type roles — the four setup-panel label roles ───
