@@ -1739,6 +1739,37 @@ input[type="number"] {
   flex-shrink: 0;
   width: var(--glyph-cell);
 }
+/* #227 resolved-record variants — same shape, different glyph + rule
+   color (state changes reuse the container they replace, PDF p.4).
+   ✓ confirmed = --pass; × dismissed = chromeless --none (a dismissal
+   is a recorded decision, not a verdict).  Never hue-alone: the
+   sentence names the resolution (rule 13). */
+.workbench .sys-event.confirmed {
+  border-left-color: var(--pass);
+}
+.workbench .sys-event.confirmed .sys-glyph {
+  color: var(--pass);
+}
+.workbench .sys-event.dismissed {
+  border-left-color: var(--none);
+}
+.workbench .sys-event.dismissed .sys-glyph {
+  color: var(--none);
+}
+.workbench .jbar-suggest .sys-event {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+/* ⌁ proposed — the suggestion rows' glyph cell.  CHOSEN neutral ink
+   (chromaless; the two buttons are the interactive surface — act stays
+   interactive-only per the role rule). */
+.workbench .sugg-glyph {
+  width: var(--glyph-cell);
+  flex-shrink: 0;
+  color: var(--ink-on-dark);
+}
 
 /* ─── #227 fact strip ───
    The pin readout as instrument output (PDF p.3): a bordered strip of

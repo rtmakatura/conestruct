@@ -256,7 +256,10 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
     expect(screen.queryByText("Confirm Arterial")).toBeNull();
   });
 
-  it("Dismiss clears the row", async () => {
+  it("Dismiss leaves a ×-record with undo — never a cleared row (#227)", async () => {
+    // Reshaped for #227 (GO 2026-08-27): the dismissal stays on the
+    // record — same container, × + evidence + undo; undo re-arms the
+    // live proposal.  Nothing writes to the wire either way.
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" />);
 
@@ -270,6 +273,18 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
     expect(
       screen.queryByText(/Detected road suggests street class:/),
     ).toBeNull();
+    expect(
+      screen.getByText(/Dismissed the Arterial suggestion — Not set stands\./),
+    ).toBeTruthy();
+    for (const c of wireClasses()) {
+      expect(c ?? null).toBeNull();
+    }
+
+    await user.click(screen.getByText("Undo"));
+    expect(
+      screen.getByText(/Detected road suggests street class:/),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Dismissed the Arterial suggestion/)).toBeNull();
   });
 
   it("a tertiary road suggests Collector", async () => {

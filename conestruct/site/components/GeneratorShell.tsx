@@ -37,6 +37,7 @@ import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionContextBar,
   JurisdictionControls,
+  type SuggestionResolution,
 } from "./JurisdictionSection";
 import type {
   JurisdictionBlock,
@@ -363,23 +364,34 @@ export function GeneratorShell({
     status: "idle" | "loading" | "ready" | "error";
     data: JurisdictionSuggestion | null;
   }>({ status: "idle", data: null });
-  const [suggestDismissed, setSuggestDismissed] = useState(false);
-  // #152 C: street-class suggestion, dismissed state.  Same lifecycle
-  // as the jurisdiction suggestion's Dismiss: cleared on pin move.
-  const [classSuggestDismissed, setClassSuggestDismissed] = useState(false);
+  // #227: resolving a suggestion leaves a RECORD, not a cleared slot —
+  // confirm/dismiss re-render the same container with ✓/× + evidence +
+  // undo (the #179 semantics copied to this seam: the record carries
+  // exactly what undo needs — the value in effect at click, null
+  // included — and undo restores it / re-arms the live proposal).
+  // Shell state only, cleared on pin move, NEVER written to scenario
+  // state or the payload (GO ruling 3; the handoff-summary.ts:12-16
+  // precedent) — a reload drops the record but re-derives the
+  // suggestion, so nothing is lost silently.
+  const [suggestResolution, setSuggestResolution] =
+    useState<SuggestionResolution<string> | null>(null);
+  // #152 C: street-class suggestion, same record lifecycle.
+  const [classResolution, setClassResolution] =
+    useState<SuggestionResolution<StreetClass> | null>(null);
   const pinLat = scenario.meta.lat;
   const pinLng = scenario.meta.lng;
   useEffect(() => {
     // lat=lng=0 is the "no pin yet" default — nothing to suggest.
     if (!pinLat && !pinLng) {
       setSuggestState({ status: "idle", data: null });
-      setSuggestDismissed(false);
-      setClassSuggestDismissed(false);
+      setSuggestResolution(null);
+      setClassResolution(null);
       return;
     }
-    // A moved pin clears a prior Dismiss (spec §3).
-    setSuggestDismissed(false);
-    setClassSuggestDismissed(false);
+    // A moved pin clears a prior resolution record (spec §3 / #227:
+    // the record's subject — this pin's suggestion — no longer exists).
+    setSuggestResolution(null);
+    setClassResolution(null);
     let cancelled = false;
     const t = setTimeout(async () => {
       setSuggestState((s) => ({ ...s, status: "loading" }));
@@ -769,22 +781,81 @@ export function GeneratorShell({
         setScenario({ ...scenario, street_class: c })
       }
       loading={jurisdictionLoading}
-      suggest={
-        suggestDismissed || suggestState.status !== "ready"
-          ? null
-          : suggestState.data
-      }
+      suggest={suggestState.status !== "ready" ? null : suggestState.data}
       suggestLoading={suggestState.status === "loading"}
-      onConfirmSuggestion={(k) =>
-        setScenario({ ...scenario, jurisdiction_key: k })
-      }
-      onDismissSuggestion={() => setSuggestDismissed(true)}
-      classSuggest={classSuggestDismissed ? null : classSuggestion}
+      suggestResolution={suggestResolution}
+      onConfirmSuggestion={(k) => {
+        // #227: the record carries the value in effect at click (null
+        // and ABSENT distinguished) — exactly what undo restores
+        // (#179 semantics: byte-identical after confirm-then-undo).
+        setSuggestResolution({
+          resolution: "confirmed",
+          prior: scenario.jurisdiction_key ?? null,
+          priorPresent: scenario.jurisdiction_key !== undefined,
+          suggested: k,
+        });
+        setScenario({ ...scenario, jurisdiction_key: k });
+      }}
+      onDismissSuggestion={() => {
+        const k = suggestState.data?.suggestion;
+        if (k)
+          setSuggestResolution({
+            resolution: "dismissed",
+            prior: scenario.jurisdiction_key ?? null,
+            priorPresent: scenario.jurisdiction_key !== undefined,
+            suggested: k,
+          });
+      }}
+      onUndoSuggestion={() => {
+        if (suggestResolution?.resolution === "confirmed") {
+          if (suggestResolution.priorPresent) {
+            setScenario({
+              ...scenario,
+              jurisdiction_key: suggestResolution.prior,
+            });
+          } else {
+            // Absence restores as absence (rule 10) — an explicit null
+            // would serialize where no key ever was.
+            const next = { ...scenario } as Record<string, unknown>;
+            delete next.jurisdiction_key;
+            setScenario(next as unknown as Scenario);
+          }
+        }
+        setSuggestResolution(null);
+      }}
+      classSuggest={classSuggestion}
       classSuggestTier={roadForPin?.candidate.highway_class ?? null}
-      onConfirmClassSuggestion={(c: StreetClass) =>
-        setScenario({ ...scenario, street_class: c })
-      }
-      onDismissClassSuggestion={() => setClassSuggestDismissed(true)}
+      classResolution={classResolution}
+      onConfirmClassSuggestion={(c: StreetClass) => {
+        setClassResolution({
+          resolution: "confirmed",
+          prior: scenario.street_class ?? null,
+          priorPresent: scenario.street_class !== undefined,
+          suggested: c,
+        });
+        setScenario({ ...scenario, street_class: c });
+      }}
+      onDismissClassSuggestion={() => {
+        if (classSuggestion)
+          setClassResolution({
+            resolution: "dismissed",
+            prior: scenario.street_class ?? null,
+            priorPresent: scenario.street_class !== undefined,
+            suggested: classSuggestion,
+          });
+      }}
+      onUndoClassSuggestion={() => {
+        if (classResolution?.resolution === "confirmed") {
+          if (classResolution.priorPresent) {
+            setScenario({ ...scenario, street_class: classResolution.prior });
+          } else {
+            const next = { ...scenario } as Record<string, unknown>;
+            delete next.street_class;
+            setScenario(next as unknown as Scenario);
+          }
+        }
+        setClassResolution(null);
+      }}
     />
   );
 

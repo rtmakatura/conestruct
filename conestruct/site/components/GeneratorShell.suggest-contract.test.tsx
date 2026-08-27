@@ -182,7 +182,11 @@ describe("pin suggestion contract: suggest never sets", () => {
     );
   });
 
-  it("Dismiss clears the slot until the pin moves", async () => {
+  it("Dismiss leaves a ×-record with undo — never a cleared slot (#227)", async () => {
+    // Reshaped for #227 (GO 2026-08-27): resolving a suggestion no
+    // longer erases the decision.  Dismiss re-renders the same
+    // container as a dismissed record (× + evidence + undo); undo
+    // re-arms the live proposal; only a pin move clears everything.
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" />);
 
@@ -192,9 +196,25 @@ describe("pin suggestion contract: suggest never sets", () => {
       { timeout: 3000 },
     );
     await user.click(screen.getByText("Dismiss"));
+    // The proposal row is gone; the record stands in its place with
+    // the evidence it carried.
     expect(screen.queryByText(/Pin suggests:/)).toBeNull();
+    expect(
+      screen.getByText(/Dismissed the Denver suggestion — None — baseline stands\./),
+    ).toBeTruthy();
+    expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
+    // A dismiss writes nothing — every payload stays jurisdiction-free.
+    for (const key of wireKeys()) {
+      expect(key ?? null).toBeNull();
+    }
 
-    // Pin moves ⇒ the dismissal clears and a fresh suggestion shows.
+    // Undo re-arms the live proposal (the suggestion data never left).
+    await user.click(screen.getByText("Undo"));
+    expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
+    expect(screen.queryByText(/Dismissed the Denver suggestion/)).toBeNull();
+
+    // Dismiss again; a pin move clears the record and re-suggests fresh.
+    await user.click(screen.getByText("Dismiss"));
     suggestResponse = () =>
       jsonResponse(200, { ...SUGGEST_DENVER, suggestion: "parker" });
     await user.click(screen.getByText("stub-drop-pin-parker"));
@@ -204,6 +224,7 @@ describe("pin suggestion contract: suggest never sets", () => {
       { timeout: 3000 },
     );
     expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
+    expect(screen.queryByText(/Dismissed the/)).toBeNull();
   });
 
   it("a differing manual pick demotes the suggestion to a passive notice", async () => {

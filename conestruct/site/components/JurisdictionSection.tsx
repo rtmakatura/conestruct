@@ -95,6 +95,25 @@ export function ConflictFootnote({
   );
 }
 
+// #227: a resolved suggestion's record — confirm/dismiss re-render the
+// same container with ✓/× + evidence + undo instead of erasing the
+// decision (PDF p.2; Reference B).  The record carries exactly what
+// undo needs (#179 semantics, copied not shared: the DetectionOverride
+// marker stays detection's own): the value in effect at click, null
+// included.  Undo on a confirm restores ``prior``; undo on a dismiss
+// re-arms the live proposal.  Shell state only — never on the payload
+// (GO ruling 3).
+export interface SuggestionResolution<V extends string = string> {
+  resolution: "confirmed" | "dismissed";
+  prior: V | null;
+  /** Whether the field was PRESENT at click — an absent key and an
+   *  explicit null both display "None — baseline"/"Not set", but undo
+   *  must restore absence as absence (rule 10): a confirm-then-undo
+   *  payload is byte-identical to one that never confirmed. */
+  priorPresent: boolean;
+  suggested: V;
+}
+
 const STATUS_LABEL: Record<TriggerStatus, string | null> = {
   fires: null,
   conditional: "conditional — surfaced, not auto-applied",
@@ -133,8 +152,12 @@ interface ContextBarProps {
    *  load-bearing). */
   suggest?: JurisdictionSuggestion | null;
   suggestLoading?: boolean;
+  /** #227: the standing confirm/dismiss record for this pin's
+   *  suggestion — the slot renders it in place of the proposal row. */
+  suggestResolution?: SuggestionResolution<string> | null;
   onConfirmSuggestion?: (key: string) => void;
   onDismissSuggestion?: () => void;
+  onUndoSuggestion?: () => void;
   /** #152 C: street-class suggestion derived from the confirmed road's
    *  OSM highway tier.  Advice only — the single writer of street_class
    *  from this feature is onConfirmClassSuggestion (the user's Confirm
@@ -143,8 +166,11 @@ interface ContextBarProps {
   classSuggest?: StreetClass | null;
   /** The OSM highway tier the suggestion came from (provenance line). */
   classSuggestTier?: string | null;
+  /** #227: the class suggestion's confirm/dismiss record. */
+  classResolution?: SuggestionResolution<StreetClass> | null;
   onConfirmClassSuggestion?: (c: StreetClass) => void;
   onDismissClassSuggestion?: () => void;
+  onUndoClassSuggestion?: () => void;
 }
 
 const STREET_CLASSES: [StreetClass, string][] = [
@@ -183,12 +209,16 @@ export function JurisdictionControls({
   loading = false,
   suggest = null,
   suggestLoading = false,
+  suggestResolution = null,
   onConfirmSuggestion,
   onDismissSuggestion,
+  onUndoSuggestion,
   classSuggest = null,
   classSuggestTier = null,
+  classResolution = null,
   onConfirmClassSuggestion,
   onDismissClassSuggestion,
+  onUndoClassSuggestion,
 }: ContextBarProps) {
   return (
     <div className="jctl">
@@ -232,8 +262,10 @@ export function JurisdictionControls({
           suggest={suggest}
           loading={suggestLoading}
           jurisdictionKey={jurisdictionKey}
+          resolution={suggestResolution}
           onConfirm={onConfirmSuggestion}
           onDismiss={onDismissSuggestion}
+          onUndo={onUndoSuggestion}
         />
       </div>
 
@@ -289,8 +321,10 @@ export function JurisdictionControls({
           tier={classSuggestTier}
           streetClass={streetClass}
           jurisdiction={jurisdiction}
+          resolution={classResolution}
           onConfirm={onConfirmClassSuggestion}
           onDismiss={onDismissClassSuggestion}
+          onUndo={onUndoClassSuggestion}
         />
       </div>
     </div>
@@ -416,28 +450,107 @@ function ClassSuggestSlot({
   tier,
   streetClass,
   jurisdiction,
+  resolution = null,
   onConfirm,
   onDismiss,
+  onUndo,
 }: {
   classSuggest: StreetClass | null;
   tier: string | null;
   streetClass: StreetClass | null;
   jurisdiction: JurisdictionBlock | null;
+  resolution?: SuggestionResolution<StreetClass> | null;
   onConfirm?: (c: StreetClass) => void;
   onDismiss?: () => void;
+  onUndo?: () => void;
 }) {
-  // No confirmed road at the current pin (or dismissed): nothing to
-  // say.  The classpick above is exactly as functional either way —
-  // this row is additive, never load-bearing.
+  // No confirmed road at the current pin: nothing to say.  The
+  // classpick above is exactly as functional either way — this row is
+  // additive, never load-bearing.
   if (!classSuggest) return null;
 
   const agrees = streetClass === classSuggest;
   const differs = streetClass !== null && streetClass !== classSuggest;
 
+  // The tier is a proxy; the jurisdiction's adopted map is the
+  // authority.  Caveat rides wherever a map is on record — proposal
+  // and resolved record alike (PDF p.2: evidence survives resolution).
+  const mapCaveat = jurisdiction?.classification_map_url ? (
+    <div className="honesty">
+      Verify against{" "}
+      <a
+        href={jurisdiction.classification_map_url}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {jurisdiction.name}&apos;s functional-classification map
+      </a>{" "}
+      — the road tier is a proxy, the adopted map governs.
+    </div>
+  ) : null;
+
+  // #227: a standing record renders the same container resolved.
+  if (resolution) {
+    const priorLabel = resolution.prior
+      ? classLabel(resolution.prior)
+      : "Not set";
+    return (
+      <div className="jbar-suggest live" aria-live="polite">
+        <div className={`sys-event ${resolution.resolution}`}>
+          <div className="sugg-row">
+            <span className="sys-glyph" aria-hidden>
+              {resolution.resolution === "confirmed" ? "✓" : "×"}
+            </span>
+            <span>
+              {resolution.resolution === "confirmed" ? (
+                <>
+                  Confirmed{" "}
+                  <b className="sugg-name">
+                    {classLabel(resolution.suggested)}
+                  </b>{" "}
+                  — was {priorLabel}.
+                </>
+              ) : (
+                <>
+                  Dismissed the {classLabel(resolution.suggested)} suggestion —{" "}
+                  {priorLabel} stands.
+                </>
+              )}
+            </span>
+            <button type="button" className="ghost" onClick={() => onUndo?.()}>
+              Undo
+            </button>
+          </div>
+          {agrees && (
+            <div className="sugg-row passive">
+              <span aria-hidden>✓ </span>
+              Street class matches the detected road tier (
+              {classLabel(classSuggest)}).
+            </div>
+          )}
+          {differs && (
+            <div className="sugg-row passive">
+              Detected road tier suggests {classLabel(classSuggest)} — you
+              have {classLabel(streetClass as StreetClass)} selected.
+            </div>
+          )}
+          {tier && (
+            <div className="sugg-reason">detected road tier: OSM {tier}</div>
+          )}
+          {mapCaveat}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="jbar-suggest live" aria-live="polite">
       {!streetClass && (
         <div className="sugg-row">
+          {/* ⌁ = proposed (the one glyph vocabulary, #227). */}
+          <span className="sugg-glyph" aria-hidden>
+            ⌁
+          </span>
           <span>
             Detected road suggests street class:{" "}
             <b className="sugg-name">{classLabel(classSuggest)}</b>
@@ -470,21 +583,7 @@ function ClassSuggestSlot({
           {classLabel(streetClass as StreetClass)} selected.
         </div>
       )}
-      {/* The tier is a proxy; the jurisdiction's adopted map is the
-          authority.  Caveat rides wherever a map is on record. */}
-      {jurisdiction?.classification_map_url && (
-        <div className="honesty">
-          Verify against{" "}
-          <a
-            href={jurisdiction.classification_map_url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {jurisdiction.name}&apos;s functional-classification map
-          </a>{" "}
-          — the road tier is a proxy, the adopted map governs.
-        </div>
-      )}
+      {mapCaveat}
     </div>
   );
 }
@@ -501,14 +600,18 @@ function SuggestSlot({
   suggest,
   loading,
   jurisdictionKey,
+  resolution = null,
   onConfirm,
   onDismiss,
+  onUndo,
 }: {
   suggest: JurisdictionSuggestion | null;
   loading: boolean;
   jurisdictionKey: string | null;
+  resolution?: SuggestionResolution<string> | null;
   onConfirm?: (key: string) => void;
   onDismiss?: () => void;
+  onUndo?: () => void;
 }) {
   // Quiet state: no pin yet, endpoint failed, or dismissed.  The bar
   // keeps its band (fixed min-height) so the slot appearing later never
@@ -535,10 +638,86 @@ function SuggestSlot({
   const manualDiffers = Boolean(jurisdictionKey && key && jurisdictionKey !== key);
   const agrees = Boolean(jurisdictionKey && key && jurisdictionKey === key);
 
+  // Evidence travels with every state — proposal AND resolved record
+  // (PDF p.2: resolved blocks "keep their evidence"); the TIGER caveat
+  // is the most legally loaded sentence in the panel and never drops.
+  const evidence = (
+    <>
+      <div className="sugg-reason">{suggest.reason}</div>
+      {suggest.warnings.map((w) => (
+        <div key={`${w.kind}:${w.message}`} className="warnrow">
+          <span aria-hidden>⚠ </span>
+          {w.message}
+        </div>
+      ))}
+      <div className="honesty">
+        Boundary data is approximate ({suggest.boundary_source.source},{" "}
+        {suggest.boundary_source.vintage.split(" ")[0]}) — confirm jurisdiction
+        with the permitting authority.
+      </div>
+    </>
+  );
+
+  // #227: a standing record renders the same container resolved —
+  // ✓/× + the decision sentence + evidence + undo.  Nothing vanishes.
+  if (resolution && key) {
+    const priorLabel = resolution.prior
+      ? jurisdictionLabel(resolution.prior)
+      : "None — baseline";
+    return (
+      <div className="jbar-suggest live" aria-live="polite">
+        <div className={`sys-event ${resolution.resolution}`}>
+          <div className="sugg-row">
+            <span className="sys-glyph" aria-hidden>
+              {resolution.resolution === "confirmed" ? "✓" : "×"}
+            </span>
+            <span>
+              {resolution.resolution === "confirmed" ? (
+                <>
+                  Confirmed{" "}
+                  <b className="sugg-name">
+                    {jurisdictionLabel(resolution.suggested)}
+                  </b>{" "}
+                  — was {priorLabel}.
+                </>
+              ) : (
+                <>
+                  Dismissed the {jurisdictionLabel(resolution.suggested)}{" "}
+                  suggestion — {priorLabel} stands.
+                </>
+              )}
+            </span>
+            <button type="button" className="ghost" onClick={() => onUndo?.()}>
+              Undo
+            </button>
+          </div>
+          {agrees && (
+            <div className="sugg-row passive">
+              <span aria-hidden>✓ </span>
+              Pin agrees with your selection ({jurisdictionLabel(key)}).
+            </div>
+          )}
+          {manualDiffers && (
+            <div className="sugg-row passive">
+              Pin appears to be in {jurisdictionLabel(key)} — you have{" "}
+              {jurisdictionLabel(jurisdictionKey as string)} selected.
+            </div>
+          )}
+          {evidence}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="jbar-suggest live" aria-live="polite">
       {key && !jurisdictionKey && (
         <div className="sugg-row">
+          {/* ⌁ = proposed (the one glyph vocabulary, #227) — the
+              sentence and two buttons carry the meaning (rule 13). */}
+          <span className="sugg-glyph" aria-hidden>
+            ⌁
+          </span>
           <span>
             Pin suggests: <b className="sugg-name">{jurisdictionLabel(key)}</b>
             {suggest.confidence === "near_boundary" && " (near a boundary)"}
@@ -567,18 +746,7 @@ function SuggestSlot({
           Pin agrees with your selection ({jurisdictionLabel(key)}).
         </div>
       )}
-      <div className="sugg-reason">{suggest.reason}</div>
-      {suggest.warnings.map((w) => (
-        <div key={`${w.kind}:${w.message}`} className="warnrow">
-          <span aria-hidden>⚠ </span>
-          {w.message}
-        </div>
-      ))}
-      <div className="honesty">
-        Boundary data is approximate ({suggest.boundary_source.source},{" "}
-        {suggest.boundary_source.vintage.split(" ")[0]}) — confirm jurisdiction
-        with the permitting authority.
-      </div>
+      {evidence}
     </div>
   );
 }
