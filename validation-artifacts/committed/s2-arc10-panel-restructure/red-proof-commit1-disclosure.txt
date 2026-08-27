@@ -1,0 +1,4940 @@
+﻿npx : [33mThe CJS build of Vite's Node API is deprecated. See 
+https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+At line:1 char:622
++ ... truct\site; npx vitest run components/GeneratorShell.disclosure-conta ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([33mThe CJS bu...e details.[39m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-227-panel-restructure/conestruct/site[39m
+
+ [31m❯[39m lib/design/tokens.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 10[2mms[22m[39m
+[31m   [31m×[31m SIZE_TOKENS mirror .workbench custom properties (#227)[2m > [22m--glyph-cell is defined as 16px[39m[32m 7[2mms[22m[39m
+[31m     → expected '@tailwind base;\r\n@tailwind componen…' to match /--glyph-cell:\s*16px;/[39m
+[31m   [31m×[31m SIZE_TOKENS mirror .workbench custom properties (#227)[2m > [22m--bar-seg-min is defined as 6px[39m[32m 1[2mms[22m[39m
+[31m     → expected '@tailwind base;\r\n@tailwind componen…' to match /--bar-seg-min:\s*6px;/[39m
+   [32m✓[39m SIZE_TOKENS mirror .workbench custom properties (#227)[2m > [22mthe table stays exactly the two ruled tokens[32m 1[2mms[22m[39m
+ [31m❯[39m components/GeneratorShell.disclosure-container.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 477[2mms[22m[39m
+[31m   [31m×[31m #227 disclosure container — the #198 notes' new clothes[2m > [22mthe note sentence renders as one text node inside .sys-event.warn[39m[32m 203[2mms[22m[39m
+[31m     → expected null not to be null[39m
+[31m   [31m×[31m #227 disclosure container — the #198 notes' new clothes[2m > [22mthe container carries the ⚠ glyph (aria-hidden) and no bare '!' glyph[39m[32m 144[2mms[22m[39m
+[31m     → Cannot read properties of null (reading 'querySelector')[39m
+[31m   [31m×[31m #227 disclosure container — the #198 notes' new clothes[2m > [22mprovenance rides a second line in the provenance role[39m[32m 127[2mms[22m[39m
+[31m     → Cannot read properties of null (reading 'querySelector')[39m
+[31m   [31m×[31m the .sys-event CSS block mirrors the adopted container[2m > [22m.workbench .sys-event carries the border and the amber rule[39m[32m 1[2mms[22m[39m
+[31m     → expected null not to be null[39m
+[31m   [31m×[31m the .sys-event CSS block mirrors the adopted container[2m > [22mthe glyph cell sizes from the CHOSEN --glyph-cell token[39m[32m 1[2mms[22m[39m
+[31m     → expected null not to be null[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 7 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.disclosure-container.test.tsx[2m > [22m#227 disclosure container 
+— the #198 notes' new clothes[2m > [22mthe note sentence renders as one text node inside .sys-event.warn
+[31m[1mAssertionError[22m: expected null not to be null[39m
+[36m [2m❯[22m components/GeneratorShell.disclosure-container.test.tsx:[2m128:27[22m[39m
+    [90m126| [39m    )[33m;[39m
+    [90m127| [39m    [35mconst[39m container [33m=[39m 
+note[33m.[39m[34mclosest[39m([32m".sys-event"[39m)[33m;[39m
+    [90m128| [39m    [34mexpect[39m(container)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                          [31m^[39m
+    [90m129| [39m    [34mexpect[39m(container[33m![39m[33m.[39mclassList[33m.[39m[34mcontains[39m([32m"war
+n"[39m))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m130| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.disclosure-container.test.tsx[2m > [22m#227 disclosure container 
+— the #198 notes' new clothes[2m > [22mthe container carries the ⚠ glyph (aria-hidden) and no bare '!' glyph
+[31m[1mTypeError[22m: Cannot read properties of null (reading 'querySelector')[39m
+[36m [2m❯[22m components/GeneratorShell.disclosure-container.test.tsx:[2m136:29[22m[39m
+    [90m134| [39m    [35mconst[39m note [33m=[39m screen[33m.[39m[34mgetByText[39m([36m/snapped from 62 mph 
+OSM detection/[39m)[33m;[39m
+    [90m135| [39m    [35mconst[39m container [33m=[39m 
+note[33m.[39m[34mclosest[39m([32m".sys-event"[39m)[33m![39m[33m;[39m
+    [90m136| [39m    [35mconst[39m glyph [33m=[39m 
+container[33m.[39m[34mquerySelector[39m([32m".sys-glyph"[39m)[33m;[39m
+    [90m   | [39m                            [31m^[39m
+    [90m137| [39m    [34mexpect[39m(glyph)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m138| [39m    
+[34mexpect[39m(glyph[33m![39m[33m.[39mtextContent)[33m.[39m[34mtoBe[39m([32m"⚠"[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.disclosure-container.test.tsx[2m > [22m#227 disclosure container 
+— the #198 notes' new clothes[2m > [22mprovenance rides a second line in the provenance role
+[31m[1mTypeError[22m: Cannot read properties of null (reading 'querySelector')[39m
+[36m [2m❯[22m components/GeneratorShell.disclosure-container.test.tsx:[2m152:28[22m[39m
+    [90m150| [39m    [35mconst[39m note [33m=[39m screen[33m.[39m[34mgetByText[39m([36m/snapped from 62 mph 
+OSM detection/[39m)[33m;[39m
+    [90m151| [39m    [35mconst[39m container [33m=[39m 
+note[33m.[39m[34mclosest[39m([32m".sys-event"[39m)[33m![39m[33m;[39m
+    [90m152| [39m    [35mconst[39m prov [33m=[39m 
+container[33m.[39m[34mquerySelector[39m([32m".tr-prov"[39m)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m153| [39m    [34mexpect[39m(prov)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m154| [39m    
+[34mexpect[39m(prov[33m![39m[33m.[39mtextContent)[33m.[39m[34mtoMatch[39m([36m/picker → form 
+handoff/[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.disclosure-container.test.tsx[2m > [22mthe .sys-event CSS block 
+mirrors the adopted container[2m > [22m.workbench .sys-event carries the border and the amber rule
+[31m[1mAssertionError[22m: expected null not to be null[39m
+[36m [2m❯[22m components/GeneratorShell.disclosure-container.test.tsx:[2m166:23[22m[39m
+    [90m164| [39m  it(".workbench .sys-event carries the border and the amber rule", ()…
+    [90m165| [39m    [35mconst[39m block [33m=[39m css[33m.[39m[34mmatch[39m([36m/\.workbench \.sys-event 
+\{[^}]*\}/[39m)[33m;[39m
+    [90m166| [39m    [34mexpect[39m(block)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                      [31m^[39m
+    [90m167| [39m    
+[34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoMatch[39m([36m/border:/[39m)[33m;[39m
+    [90m168| [39m    
+[34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoMatch[39m([36m/var\(--warn\)/[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.disclosure-container.test.tsx[2m > [22mthe .sys-event CSS block 
+mirrors the adopted container[2m > [22mthe glyph cell sizes from the CHOSEN --glyph-cell token
+[31m[1mAssertionError[22m: expected null not to be null[39m
+[36m [2m❯[22m components/GeneratorShell.disclosure-container.test.tsx:[2m173:23[22m[39m
+    [90m171| [39m  [34mit[39m([32m"the glyph cell sizes from the CHOSEN --glyph-cell token"[39m[33m,[39m () 
+[33m=>[39m {
+    [90m172| [39m    const block = css.match(/\.workbench \.sys-event \.sys-glyph \{[^}…
+    [90m173| [39m    [34mexpect[39m(block)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                      [31m^[39m
+    [90m174| [39m    
+[34mexpect[39m(block[33m![39m[[34m0[39m])[33m.[39m[34mtoMatch[39m([36m/var\(--glyph-cell\)/[39m)[33m;[39m
+    [90m175| [39m    [90m// The token itself is defined on the workbench (GO ruling 4).[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m lib/design/tokens.test.ts[2m > [22mSIZE_TOKENS mirror .workbench custom properties 
+(#227)[2m > [22m--glyph-cell is defined as 16px
+[31m[1mAssertionError[22m: expected '@tailwind base;\r\n@tailwind componen…' to match /--glyph-cell:\s*16px;/[39m
+
+[32m- Expected:[39m 
+/--glyph-cell:\s*16px;/
+
+[31m+ Received:[39m 
+"@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #e8710a;
+  --orange-deep: #c45f08;
+  --orange-soft: #fce9d6;
+  --navy: #1b2838;
+  --navy-soft: #2a3b50;
+  --blue: #2d9cdb;
+  --green: #27ae60;
+  --green-soft: #ddf1e5;
+  --red: #eb5757;
+  --red-soft: #fbe0e0;
+  --beige: #f5f0eb;
+  --beige-deep: #ece4d9;
+  --paper: #faf6f0;
+  --line: #d9cfc1;
+  --line-soft: #e5dccd;
+  --ink: #1b2838;
+  --ink-mute: #5c6b7e;
+  --ink-faint: #8a95a4;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  line-height: 1.6;
+}
+
+@layer components {
+  /* Blueprint page background */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-light {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-fine {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .blueprint-grid-faint {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Eyebrow: orange mono uppercase, prefixed by 24x1px tick */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--orange);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: \"\";
+    width: 24px;
+    height: 1px;
+    background: var(--orange);
+    display: inline-block;
+  }
+
+  /* Primary CTA: orange button with shadowed double-stroke */
+  .btn-primary {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px 28px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.005em;
+    box-shadow:
+      0 1px 0 var(--orange-deep),
+      0 0 0 1px var(--orange-deep);
+    transition: transform 0.08s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  /* Range slider: orange square thumbs, 2px track */
+  .range-orange {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  .range-orange::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-moz-range-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    margin-top: -7px;
+    border-radius: 0;
+  }
+  .range-orange::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    border-radius: 0;
+  }
+
+  /* ─── Generator app patterns ─── */
+
+  /* Chip row (radio-as-buttons) */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--navy);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.1s ease;
+  }
+  .chip:hover {
+    border-color: var(--navy);
+  }
+  .chip.on {
+    background: var(--orange);
+    border-color: var(--orange-deep);
+    color: white;
+  }
+
+  /* Check row toggle */
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    cursor: pointer;
+    border-top: 1px solid var(--line-soft);
+  }
+  .check-row:last-of-type {
+    border-bottom: 1px solid var(--line-soft);
+  }
+  /* A field following a check-row run re-enters the 12px row rhythm
+     symmetrically: the run is entered at 12px (Field mb) + 12px (row
+     padding), but Field margins are bottom-only, so without this the
+     exit gap is half the entry gap (#200). */
+  .check-row + :not(.check-row) {
+    margin-top: 12px;
+  }
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-row.on .check-box {
+    background: var(--orange);
+    border-color: var(--orange-deep);
+  }
+  .check-row.on .check-box::after {
+    content: \"✓\";
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check-row .check-lbl {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .check-row .check-desc {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    margin-left: auto;
+    text-transform: uppercase;
+  }
+
+  /* Sidebar field label with right-aligned value */
+  .field-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .field-label-row .field-val {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* Sidebar text/number/select inputs */
+  .field-input {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--navy);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.1s ease;
+    border-radius: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input:focus {
+    border-color: var(--orange);
+  }
+  .field-select {
+    background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%231B2838' fill='none' stroke-width='1.2'/></svg>\");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    background: white;
+    margin-bottom: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .status-bar .indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--ink-faint);
+    display: inline-block;
+  }
+  .status-bar.idle {
+    border-left: 3px solid var(--line);
+  }
+  .status-bar.warn {
+    border-left: 3px solid var(--orange);
+  }
+  .status-bar.warn .indicator {
+    background: var(--orange);
+  }
+  .status-bar.pass {
+    border-left: 3px solid var(--green);
+  }
+  .status-bar.pass .indicator {
+    background: var(--green);
+  }
+  .status-bar .pill {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+    padding: 4px 8px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .status-bar .pill.pass {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+  /* PR 7 (UX-21/22): derived strip states.  ``caution`` = validation
+     warnings present (amber); ``fail`` = invalid input, generation
+     blocked (red).  The ``warn`` class stays the in-progress style. */
+  .status-bar.caution {
+    border-left: 3px solid var(--orange);
+  }
+  .status-bar.caution .indicator {
+    background: var(--orange);
+  }
+  .status-bar.fail {
+    border-left: 3px solid var(--red);
+  }
+  .status-bar.fail .indicator {
+    background: var(--red);
+  }
+  .status-bar .pill.caution {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+  }
+  .status-bar .pill.fail {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  /* Warnings disclosure (UX-22): the caution strip is a <summary>;
+     expanding lists each warning with rule ID + citation. */
+  .status-details {
+    margin-bottom: 24px;
+  }
+  .status-details > summary {
+    list-style: none;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .status-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .status-details .disclosure-caret {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .status-details[open] .disclosure-caret {
+    transform: rotate(90deg);
+  }
+  .status-warnings {
+    border: 1px solid var(--line);
+    border-top: 0;
+    background: white;
+    padding: 12px 16px;
+  }
+
+  /* Output card with corner ticks */
+  .output-card {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 16px;
+    position: relative;
+  }
+  .output-card .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--orange);
+  }
+  .output-card .corner.tl {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .output-card .corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* Audit accordion */
+  .audit-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .audit-item {
+    background: white;
+    border: 1px solid var(--line);
+    border-bottom: none;
+  }
+  .audit-item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .audit-head {
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+  .audit-head:hover {
+    background: var(--paper);
+  }
+  .audit-head .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    letter-spacing: 0.08em;
+  }
+  .audit-head .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.005em;
+  }
+  .audit-head .result {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .audit-head .cite {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .audit-head .chev {
+    font-family: var(--font-mono);
+    color: var(--ink-faint);
+    transition: transform 0.15s ease;
+    display: inline-block;
+  }
+  .audit-item.open .audit-head .chev {
+    transform: rotate(90deg);
+  }
+  /* Left inset aligns to the .audit-head number column: 16px padding-left
+     + 36px grid column + 16px gap = 68px (issue #165 — tracks .audit-head
+     padding, not a spacing-scale step). */
+  .audit-body {
+    padding: 0 16px 16px 68px;
+    border-top: 1px dashed var(--line);
+    background: var(--paper);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .audit-body p {
+    margin: 12px 0;
+    max-width: 640px;
+  }
+  .audit-body .formula {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--navy);
+    background: white;
+    padding: 16px;
+    border: 1px solid var(--line);
+    margin: 16px 0;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .audit-body .formula .var {
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .audit-body .formula .res {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .audit-body .formula .op {
+    color: var(--ink-mute);
+    margin: 0 6px;
+  }
+  .audit-body .citation {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    clear: both;
+  }
+  .audit-body .citation .check {
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .audit-body table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 480px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .audit-body table th,
+  .audit-body table td {
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .audit-body table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .audit-body table td.match {
+    background: var(--orange-soft);
+    font-weight: 600;
+  }
+
+  /* Compliance check list */
+  .check-list {
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    max-width: 600px;
+  }
+  .check-list-item {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: center;
+  }
+  .check-list-item .ck {
+    width: 18px;
+    height: 18px;
+    background: var(--green-soft);
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check-list-item .ck.warn {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+  }
+  .check-list-item .ck.fail {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  .check-list-item .check-list-lbl {
+    font-size: 14px;
+    color: var(--navy);
+  }
+  .check-list-item .check-list-src {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+  }
+
+  /* Device breakdown table */
+  .device-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border: 1px solid var(--line);
+  }
+  .device-table th,
+  .device-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .device-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    font-weight: 500;
+    background: var(--beige);
+  }
+  .device-table td.num {
+    text-align: right;
+    font-family: var(--font-mono);
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .device-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Empty state for outputs */
+  .empty-state {
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    padding: 24px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 24px;
+  }
+  .empty-state .big {
+    display: block;
+    font-size: 18px;
+    color: var(--navy);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  .empty-state .arrow {
+    display: inline-block;
+    margin: 8px 12px;
+    color: var(--orange);
+    font-size: 14px;
+  }
+
+  /* Sidebar generate button */
+  .generate-btn {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    letter-spacing: 0.005em;
+    box-shadow:
+      0 1px 0 var(--orange-deep),
+      0 0 0 1px var(--orange-deep);
+    transition: transform 0.08s ease;
+  }
+  .generate-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .generate-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .generate-btn:disabled {
+    background: var(--line);
+    color: var(--ink-faint);
+    box-shadow: none;
+    cursor: wait;
+  }
+}
+
+/* ─── Workbench (dark generator app) overrides ───
+   Scope: any descendant of `.workbench`. The landing page stays untouched.
+   Locks the slate palette (no runtime toggle). */
+.workbench {
+  /* dark canvas (fix-spec-02 surface set) */
+  --canvas: #14202e;
+  --canvas-tint: #1b2838;
+  --rule: #2c3e53;
+  --rule-soft: #223244;
+  --raise: #22344a;
+  --raise-hi: #294056;
+
+  /* slate cards (audit trail / device table keep the raised look;
+     QuotePanel and OutputCards are dark-native per P1·03) */
+  --paper: #243447;
+  --paper-deep: #1e2d3f;
+  --paper-line: #3a4d66;
+  --paper-line-soft: #2e4058;
+
+  /* on-paper ink (slate-tuned) */
+  --ink: #eaf0f7;
+  --ink-mute: #aebbcc;
+  --ink-faint: #93a0b0;
+  --heading-on-paper: #ffffff;
+  --match-bg: rgba(232, 113, 10, 0.18);
+  --match-ink: #ffd9b0;
+
+  /* on-canvas ink */
+  --ink-on-dark: #c8d1dd;
+  --ink-on-dark-faint: #93a0b0;
+
+  /* ─── Role colors — one job each (fix-spec-02, P1·01) ───
+     act  = INTERACTIVE: anything you touch (buttons, links, focus,
+            selection).  Solid act surfaces carry --on-act ink.
+     dim  = OUTPUT/DIMENSION: generated numbers only.  Never interactive.
+     warn = WARNING: review flags.  Amber, never hue-alone — always
+            paired with a glyph or label.
+     pass/fail = verdict + error states.
+     none = verification-unavailable: deliberately chromaless — \"no
+            signal\" is read via copy/hollow dot, not hue. */
+  --act: #34a9e8;
+  --act-bright: #56bcf2;
+  --act-deep: #1f7bb0;
+  --act-glow: rgba(52, 169, 232, 0.32);
+  --on-act: #06222f;
+
+  --dim: #ff8a2e;
+  --dim-deep: #e8710a;
+  --dim-soft: rgba(255, 138, 46, 0.16);
+
+  --warn: #f4c020;
+  --warn-deep: #c79300;
+  --warn-soft: rgba(244, 192, 32, 0.15);
+
+  --pass: #4fd787;
+  --pass-soft: rgba(39, 174, 96, 0.2);
+  --fail: #ff7a7a;
+  --fail-soft: rgba(235, 87, 87, 0.2);
+  --none: #93a0b0;
+  --none-soft: rgba(147, 160, 176, 0.14);
+
+  /* confidence speaks its own achromatic language (P1·04) */
+  --conf-fill: #c6d2e0;
+  --conf-empty: #33475e;
+
+  /* legacy aliases — safety net so a missed var() reference can never
+     fall back to the light :root palette.  New code uses role names. */
+  --orange: var(--dim);
+  --orange-deep: var(--dim-deep);
+  --orange-soft: var(--dim-soft);
+  --green: var(--pass);
+  --green-soft: var(--pass-soft);
+  --red: var(--fail);
+  --red-soft: var(--fail-soft);
+  --cyan: var(--act);
+  --cyan-deep: var(--act-deep);
+  --cyan-glow: var(--act-glow);
+
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+}
+
+/* fix-spec-02 P1·05·01 — visible keyboard focus (WCAG 2.4.7).  One
+   ring for every interactive control in the workbench; mouse focus
+   stays ringless via :focus:not(:focus-visible).  Ring-vs-surface
+   contrast (measured): 7.74:1 on --canvas, 7.01:1 on --canvas-tint,
+   5.96:1 on the slate --paper cards (floor is 3:1). */
+.workbench :focus-visible {
+  outline: 2px solid var(--act-bright);
+  outline-offset: 2px;
+}
+.workbench :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* technical-drawing frame around the entire app shell */
+.workbench-frame {
+  position: fixed;
+  inset: 8px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+  z-index: 60;
+}
+.workbench-frame .ftick {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--dim);
+}
+.workbench-frame .ftick.tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.tr {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.bl {
+  bottom: -1px;
+  left: -1px;
+  border-right: none;
+  border-top: none;
+}
+.workbench-frame .ftick.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Lanes / chips: cyan active, divided cells */
+.workbench .chip-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  flex-wrap: nowrap;
+}
+.workbench .chip {
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  border: none;
+  border-right: 1px solid var(--rule);
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 6px;
+}
+.workbench .chip:last-child {
+  border-right: none;
+}
+.workbench .chip:hover {
+  background: var(--rule);
+  color: white;
+  border-color: var(--rule);
+}
+.workbench .chip.on {
+  background: var(--act);
+  color: var(--on-act);
+  border-color: var(--act-deep);
+  box-shadow: inset 0 0 0 1px var(--act-deep);
+}
+
+/* Check rows: cyan on, rule borders */
+.workbench .check-row {
+  border-top-color: var(--rule);
+  width: 100%;
+  background: transparent;
+  text-align: left;
+}
+.workbench .check-row:last-of-type {
+  border-bottom-color: var(--rule);
+}
+.workbench .check-box {
+  background: var(--canvas);
+  border-color: var(--rule);
+  width: 14px;
+  height: 14px;
+}
+.workbench .check-row.on .check-box {
+  background: var(--act);
+  border-color: var(--act-deep);
+}
+.workbench .check-row.on .check-box::after {
+  color: var(--on-act);
+}
+.workbench .check-row .check-lbl {
+  color: var(--ink-on-dark);
+}
+.workbench .check-row.on .check-lbl {
+  color: white;
+}
+/* #226: check descriptions map to the provenance role (GO ruling 6 —
+   the arc's largest visual delta: full sentences stop rendering
+   ALL-CAPS).  tr-prov values; layout (margin-left auto) stays base. */
+.workbench .check-row .check-desc {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+/* Inputs / select: dark canvas + cyan focus */
+/* #226: the field-label role (tr-field values — lib/design/type-roles.ts).
+   Overrides the base .field-label-row's mono-caps: field labels are the
+   user's voice, sentence-case sans (PDF p. 1/p. 4; workbench + the
+   picker modal, one voice — GO ruling 5). */
+.workbench .field-label-row {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .field-label-row .field-val {
+  color: white;
+}
+.workbench .field-input {
+  background-color: var(--canvas);
+  border-color: var(--rule);
+  color: white;
+}
+.workbench .field-input::placeholder {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .field-input:focus {
+  background-color: var(--raise);
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .field-select {
+  background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23C8D1DD' fill='none' stroke-width='1.2'/></svg>\");
+}
+
+/* Range slider: cyan square thumb, rule track */
+.workbench .range-orange::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-moz-range-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--act);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--act);
+  margin-top: -6px;
+}
+.workbench .range-orange::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--act);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--act);
+}
+
+/* Status bar */
+.workbench .status-bar {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.workbench .status-bar .indicator {
+  background: var(--ink-on-dark-faint);
+}
+.workbench .status-bar.idle {
+  border-left-color: var(--rule);
+}
+.workbench .status-bar.warn {
+  border-left-color: var(--act);
+}
+.workbench .status-bar.warn .indicator {
+  background: var(--act);
+  animation: sb-pulse 1.2s ease-in-out infinite;
+}
+.workbench .status-bar.pass {
+  border-left-color: var(--pass);
+}
+.workbench .status-bar.pass .indicator {
+  background: var(--pass);
+}
+.workbench .status-bar .pill,
+.workbench .status-bar .pill.pass {
+  background: var(--pass-soft);
+  color: var(--pass);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  padding: 4px 8px;
+  margin-left: auto;
+}
+/* PR 7 (UX-21/22) + fix-spec-02 P1·02: derived strip states on the dark
+   theme.  The base ``warn`` class stays the in-progress style (act cyan,
+   pulsing) — amber belongs to ``caution`` and red to ``fail``.  The
+   caution indicator is a hazard hatch, not a flat swatch, so the warning
+   state never reads by hue alone. */
+.workbench .status-bar.caution {
+  border-left-color: var(--warn);
+}
+.workbench .status-bar.caution .indicator {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn) 0 3px,
+    #1a1200 3px 6px
+  );
+}
+.workbench .status-bar.fail {
+  border-left-color: var(--fail);
+}
+.workbench .status-bar.fail .indicator {
+  background: var(--fail);
+}
+.workbench .status-bar .pill.caution {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.workbench .status-bar .pill.fail {
+  background: var(--fail-soft);
+  color: var(--fail);
+}
+/* fix-spec-02 P1·02 — the two engine-removal states get their own
+   treatments (both previously rendered as bare ``idle``).  Additive
+   modifier classes on top of ``idle``; the pinned class names and copy
+   are untouched.
+   ``verifying``: in-flight check — act-cyan spinner, distinct from a
+   verdict.  ``unavail``: deliberately chromaless (--none) hollow dot —
+   the absence of a verdict is not an error and gets no verdict hue. */
+.workbench .status-bar.verifying {
+  border-left-color: var(--act);
+}
+.workbench .status-bar.verifying .indicator {
+  background: transparent;
+  border: 1.5px solid var(--rule);
+  border-top-color: var(--act);
+  border-radius: 50%;
+  animation: sb-spin 0.7s linear infinite;
+}
+.workbench .status-bar.unavail {
+  border-left-color: var(--none);
+  background: var(--none-soft);
+  color: var(--ink-mute);
+}
+.workbench .status-bar.unavail .indicator {
+  background: var(--none);
+  box-shadow: inset 0 0 0 2px var(--canvas);
+}
+@keyframes sb-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes sb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.workbench .status-warnings {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
+}
+
+/* Output cards: dark-native (fix-spec-02 P1·03 — no paper-era tokens
+   on the dark canvas; the spec's .ocard is canvas-tint with rule
+   borders and rule corner ticks) */
+.workbench .output-card {
+  background: var(--canvas-tint);
+  border-color: var(--rule);
+  box-shadow: none;
+}
+.workbench .output-card .corner {
+  border-color: var(--rule);
+}
+.workbench .output-card h3 {
+  color: var(--heading-on-paper);
+}
+
+/* Audit accordion */
+.workbench .audit-list {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .audit-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--paper-line-soft);
+}
+.workbench .audit-item:last-child {
+  border-bottom: none;
+}
+.workbench .audit-head {
+  color: var(--ink);
+}
+.workbench .audit-head:hover {
+  background: var(--paper-deep);
+}
+.workbench .audit-item.open .audit-head {
+  background: var(--paper-deep);
+}
+.workbench .audit-head .num {
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.workbench .audit-head .title {
+  color: var(--heading-on-paper);
+}
+.workbench .audit-head .result {
+  color: var(--dim);
+}
+.workbench .audit-head .cite {
+  color: var(--ink-faint);
+}
+.workbench .audit-head .chev {
+  color: var(--ink-faint);
+}
+.workbench .audit-item.open .audit-head .chev {
+  color: var(--ink);
+}
+
+.workbench .audit-body {
+  background: var(--paper-deep);
+  color: var(--ink);
+  border-top-color: var(--paper-line);
+}
+.workbench .audit-body p {
+  color: var(--ink);
+}
+.workbench .audit-body .formula {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--heading-on-paper);
+}
+.workbench .audit-body .formula .var {
+  color: var(--dim);
+}
+.workbench .audit-body .formula .res {
+  color: var(--pass);
+}
+.workbench .audit-body .formula .op {
+  color: var(--ink-mute);
+}
+.workbench .audit-body .citation {
+  color: var(--ink-faint);
+}
+.workbench .audit-body .citation .check {
+  background: var(--pass);
+  color: var(--on-act);
+}
+.workbench .audit-body table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+}
+.workbench .audit-body table th,
+.workbench .audit-body table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .audit-body table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .audit-body table td.match {
+  background: var(--match-bg);
+  color: var(--match-ink);
+  font-weight: 600;
+}
+
+/* Compliance check list */
+.workbench .check-list-item {
+  border-bottom-color: var(--paper-line);
+}
+.workbench .check-list-item .check-list-lbl {
+  color: var(--heading-on-paper);
+}
+.workbench .check-list-item .check-list-src {
+  color: var(--ink-faint);
+}
+.workbench .check-list-item .ck {
+  background: var(--pass-soft);
+  color: var(--pass);
+}
+.workbench .check-list-item .ck.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.workbench .check-list-item .ck.fail {
+  background: var(--fail-soft);
+  color: var(--fail);
+}
+
+/* Device breakdown table */
+.workbench .device-table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .device-table th,
+.workbench .device-table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .device-table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .device-table td.num {
+  color: var(--dim);
+}
+
+/* Empty state */
+.workbench .empty-state {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--rule);
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.workbench .empty-state .big {
+  color: white;
+}
+.workbench .empty-state .arrow {
+  color: var(--act);
+}
+
+/* Generate button: the headline P1·01 change — the primary action joins
+   the interactive (act) role instead of borrowing brand orange.  Label
+   ink is --on-act per the spec's CTA pairing. */
+.workbench .generate-btn {
+  background: var(--act);
+  color: var(--on-act);
+  box-shadow:
+    0 1px 0 var(--act-deep),
+    0 0 0 1px var(--act-deep),
+    0 0 24px -8px var(--act-glow);
+}
+.workbench .generate-btn:disabled {
+  background: var(--rule);
+  color: var(--ink-on-dark-faint);
+  box-shadow: none;
+}
+
+/* Hide the up/down stepper arrows on number inputs.  Users type values
+   directly; the arrows eat horizontal space inside narrow input boxes
+   (Speed, Lanes, Direction of Travel, Work Zone Length). */
+input[type=\"number\"]::-webkit-outer-spin-button,
+input[type=\"number\"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=\"number\"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Site Conditions checklist.  The shared .check-row/.check-desc pattern
+   (margin-left: auto, single line) is built for the SHORT trailing tags
+   used everywhere else (\"Median present\", \"+ retroreflective\").  This
+   list feeds full sentences into .check-desc, which can't share the
+   label's line at the 312px sidebar width — so the desc wraps onto its
+   own full-width line beneath the label.  Every row then aligns the same
+   way regardless of label/desc length (intersection, interchange,
+   limited-sight, pedestrian, school, bike all wrapped raggedly before).
+   Scoped to .check-list so the short-tag rows keep the inline layout.
+   Placed after the .workbench block so it wins the 0,2,0 specificity tie
+   by source order in both the sandbox and workbench contexts.
+
+   --check-box-size mirrors the .check-box width literals (16px base at
+   :189, 14px workbench override at :818) so the desc indent tracks the
+   checkbox size in each context; keep these two values in sync with the
+   box if it ever changes.  The +8px is the .check-row gap (:181). */
+.check-list {
+  --check-box-size: 16px;
+}
+.workbench .check-list {
+  --check-box-size: 14px;
+}
+.check-list .check-row {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.check-list .check-row .check-desc {
+  flex-basis: 100%;
+  margin-left: calc(var(--check-box-size) + 8px);
+  margin-top: 4px;
+}
+
+/* ─── Generator restage (Endeavor A) — three staged zones ───
+   Zone scaffolding: a mono zone tag (01 · SETUP …), a title, an optional
+   right-aligned note.  `.zone.dominant` is the stage direction — the
+   pre-generation Setup panel and the post-generation Results zone get
+   the larger title. */
+.workbench .zone {
+  margin-bottom: 24px;
+}
+.workbench .zone-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.workbench .zone-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .zone-tag .n {
+  color: var(--act);
+  margin-right: 8px;
+}
+.workbench .zone-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+.workbench .zone.dominant .zone-title {
+  font-size: 20px;
+}
+.workbench .zone-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-left: auto;
+}
+
+/* Persistent jurisdiction bar — selection, street class, spec-chain
+   breadcrumb, and the reserved Endeavor-B slot.  Single source for
+   jurisdiction + class; nothing below the bar repeats them. */
+.workbench .jbar {
+  background: var(--canvas-tint);
+  border: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+.workbench .jbar-main {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.1fr) auto minmax(260px, 1.3fr);
+  gap: 26px;
+  padding: 14px 18px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .workbench .jbar-main {
+    grid-template-columns: 1fr;
+  }
+}
+/* #226: .k labels name a control — the field-label role (tr-field
+   values; the old 9.5px/0.14em mono-caps reconciles into the role). */
+.workbench .jbar-cell .k,
+.workbench .jctl-field .k {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+  margin-bottom: 7px;
+}
+.workbench .jbar select,
+.workbench .jctl select {
+  width: 100%;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 7px 30px 7px 10px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23c8d1dd' fill='none' stroke-width='1.2'/></svg>\");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+}
+.workbench .jbar select:focus,
+.workbench .jctl select:focus {
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .jbar-auth {
+  margin-top: 7px;
+  font-size: 12px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-auth b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .jbar-auth .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark);
+}
+.workbench .classpick {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+}
+.workbench .classpick button {
+  padding: 7px 14px;
+  font-size: 12px;
+  background: var(--canvas);
+  color: var(--ink-on-dark-faint);
+  border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+}
+.workbench .classpick button:last-child {
+  border-right: none;
+}
+.workbench .classpick button:hover {
+  color: var(--ink);
+}
+.workbench .classpick button.on {
+  background: var(--act-glow);
+  color: var(--act-bright);
+  box-shadow: inset 0 -2px 0 var(--act);
+}
+.workbench .mapchip {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .mapchip a {
+  color: var(--act);
+}
+
+/* ─── JurisdictionControls (Surface B) ───
+   The interactive dropdown + pills + suggestion rows, now hosted inside
+   the Location step of the setup panel (and, compactly, the strip's
+   inline edit).  A vertical stack sized for the narrow setup column,
+   framed so it reads as its own decision block under the pin summary. */
+.workbench .jctl-host {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.workbench .jctl {
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+}
+.workbench .jctl-field {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .jctl-field .classpick {
+  margin-top: 2px;
+}
+/* #201: each suggestion strip renders inside its subject's field, so it
+   inherits the field's 14px inset and sheds its own; the row step (12px)
+   separates it from the control it confirms.  The dashed separator now
+   spans the field content instead of the full section width. */
+.workbench .jctl .jbar-suggest {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 12px;
+}
+
+/* Read-only summary strip: the class value + \"not set\" tone.  No
+   dropdown or pills — those live in .jctl now. */
+.workbench .jbar-readonly .none {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-readonly .jbar-slot-hint b {
+  color: #fff;
+  font-weight: 600;
+}
+.workbench .jbar-readonly .jbar-slot-hint .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+
+/* spec-chain breadcrumb — single line, no boxes; the local override
+   renders last & strongest (white bold — a document name is not a
+   generated number, so it is NOT orange) */
+.workbench .chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.workbench .chain .seg {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .chain .seg.local {
+  color: #fff;
+  font-weight: 700;
+}
+/* compact breadcrumb: full title on hover — the dotted underline is the
+   there's-more cue */
+.workbench .chain .seg[title] {
+  border-bottom: 1px dotted var(--rule);
+  cursor: help;
+}
+.workbench .chain .sep {
+  color: var(--rule);
+  font-size: 12px;
+}
+.workbench .chain-note {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+/* ─── jbar geometric stability ───
+   The bar's three variable regions get RESERVED heights so a
+   jurisdiction selection never resizes it: the picker helper line
+   (1–2 lines), the classification-hint slot (present only for
+   class_required jurisdictions), and the spec-chain slot sized to the
+   tallest launch-8 chain (Denver, measured at the md+ column width —
+   re-measure with scripts/verify-jbar-stability.mjs if a chain grows).
+   During the jurisdiction fetch the chain slot renders a skeleton at
+   final size: one reflow max, zero when data lands. */
+.workbench .jbar-slot-auth {
+  line-height: 18px; /* pinned — unpinned line boxes measured 19.5px and
+                        broke the 2-line reservation by 3px */
+  min-height: 36px; /* 2 lines */
+}
+.workbench .jbar-slot-hint {
+  display: block;
+  line-height: 17px;
+  min-height: 34px; /* 2 lines — the look-it-up hint wraps at 1100px */
+}
+/* FIXED height sized to the tallest launch-8 compact breadcrumb at the
+   1100px 3-column width (Ryan ruling, inc-9: chains render authored
+   display_names, full titles on hover) — every chain fits whole, no
+   internal scroll.  Re-measure with scripts/verify-jbar-stability.mjs
+   if a chain gains links. */
+.workbench .jbar-slot-chain {
+  height: 108px; /* Englewood's 5-link breadcrumb + note at 1100px (105px
+                    measured) — the tallest; every chain fits, no scroll */
+}
+.workbench .jbar-skel-line {
+  display: block;
+  height: 10px;
+  margin: 6px 0;
+  background: var(--rule-soft);
+  animation: sb-pulse 1.6s ease-in-out infinite;
+}
+.workbench .jbar-skel-line.w-full {
+  width: 100%;
+}
+.workbench .jbar-skel-line.w-5\\/6 {
+  width: 83%;
+}
+.workbench .jbar-skel-line.w-3\\/4 {
+  width: 75%;
+}
+.workbench .jbar-skel-line.w-2\\/3 {
+  width: 66%;
+}
+
+/* reserved suggestion slot (Endeavor B) — deliberate inert space */
+.workbench .jbar-suggest {
+  border-top: 1px dashed var(--rule);
+  padding: 9px 18px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-on-dark-faint);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+}
+.workbench .jbar-suggest.reserved {
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.workbench .jbar-suggest.reserved .tag {
+  border: 1px dashed var(--rule);
+  padding: 2px 7px;
+  color: var(--ink-on-dark-faint);
+}
+/* Live Endeavor-B states.  The quiet state keeps the reserved band's
+   muted register; the live state stacks suggestion row, sourced reason,
+   amber+glyph warnings, and the honesty line. */
+.workbench .jbar-suggest.quiet {
+  /* #226: the quiet band speaks in the provenance register — caps
+     dropped (voice, not transform; GO ruling 1).  Color untouched:
+     the measured floor below is load-bearing. */
+  /* No opacity reduction: at 0.7 the faint ink composited to ~3.76:1
+     on --canvas, under the 4.5:1 AA floor (arc16 axe finding, coda
+     Refs #200).  At the token's full value: #93a0b0 on #14202e =
+     6.19:1.  This band only — the wider faint-register family
+     (.reserved etc.) stays on the a11y triage pile by ruling. */
+}
+.workbench .jbar-suggest.live {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.workbench .jbar-suggest .sugg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest .sugg-row.passive {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .sugg-name {
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest button.confirm,
+.workbench .jbar-suggest button.ghost {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  background: transparent;
+  cursor: pointer;
+}
+.workbench .jbar-suggest button.confirm {
+  border: 1px solid var(--act);
+  color: var(--act);
+}
+.workbench .jbar-suggest button.confirm:hover,
+.workbench .jbar-suggest button.confirm:focus-visible {
+  background: var(--act);
+  color: #0b1420;
+}
+.workbench .jbar-suggest button.ghost {
+  border: 1px solid var(--rule);
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest button.ghost:hover,
+.workbench .jbar-suggest button.ghost:focus-visible {
+  color: var(--ink-on-dark);
+  border-color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .sugg-reason {
+  color: var(--ink-on-dark-faint);
+  letter-spacing: 0.02em;
+}
+.workbench .jbar-suggest .warnrow {
+  color: var(--warn);
+  letter-spacing: 0.02em;
+}
+.workbench .jbar-suggest .honesty {
+  font-size: 9.5px;
+  color: var(--ink-on-dark-faint);
+  opacity: 0.85;
+}
+
+/* ─── #226 type roles — the four setup-panel label roles ───
+   MIRROR of lib/design/type-roles.ts (the table is authoritative;
+   type-roles.test.ts asserts these blocks match it — same paired-halves
+   idiom as the spacing scale).  Weight is not an axis; the 500/400 are
+   extra differentiation.  Every color here is CHOSEN, not sheeted (GO
+   ruling 2); the section/step/field/provenance treatments are PDF p. 3.
+   Provenance carries NO text-transform by ruling (GO ruling 1, Rule 9:
+   \"lowercase\" is authored voice; MUTCD / S-630-1 / OSM keep canonical
+   casing — do not re-add a transform here).  text-decoration, not
+   border-bottom, so multi-line provenance underlines per line. */
+.workbench .tr-section {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.workbench .tr-step {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .tr-field {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .tr-prov {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+/* #221: the progress rail — the pre-generate steering line at the top
+   of the setup panel.  Sticky so the current blocker and the jump
+   links stay in view through the whole flow (the S4 stall: the CTA's
+   reason used to sit ~1 viewport below the row it named).  Rule 13:
+   every glyph rides with its label + a text state word; the ◌ states
+   are chromeless gray (--none), the current blocker uses the CTA
+   reason's own --fail voice. */
+.workbench .setup-panel .progress-rail {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+  padding: 8px 24px;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .progress-rail .rail-entry {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  /* #226: rail entries share the step-index register (mono 10px caps)
+     but are navigation, not one of the four label roles — the rail's
+     vocabulary is #228's.  Values deliberately byte-identical to
+     pre-#226; tracking stays 0.08em pending that arc. */
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+}
+.workbench .progress-rail .rail-entry:hover .rail-label,
+.workbench .progress-rail .rail-entry:focus-visible .rail-label {
+  color: var(--act);
+  text-decoration: underline;
+}
+.workbench .progress-rail .rail-glyph {
+  font-family: var(--font-sans);
+}
+.workbench .progress-rail .st-done .rail-glyph {
+  color: var(--pass);
+}
+.workbench .progress-rail .st-attention .rail-glyph {
+  color: var(--warn);
+}
+.workbench .progress-rail .st-pending .rail-glyph,
+.workbench .progress-rail .st-notset .rail-glyph,
+.workbench .progress-rail .st-pending .rail-note,
+.workbench .progress-rail .st-notset .rail-note {
+  color: var(--none);
+}
+.workbench .progress-rail .rail-note {
+  color: var(--warn);
+  letter-spacing: 0.05em;
+}
+.workbench .progress-rail .rail-blocker {
+  color: var(--fail);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+.workbench .progress-rail .rail-entry.current .rail-label {
+  color: var(--ink);
+}
+
+/* #222: pre-pin step gating.  Steps after Location render present but
+   not inviting: the body dims AND is inert (the browser removes it
+   from the Tab order and the accessibility tree); the focusable
+   summary row above it is the keyboard/AT path and names the gate.
+   0.35 matches the s2-arc5 extended-footage dim — and per that
+   precedent opacity is never the only channel: the ◌ + text row rides
+   with it (rule 13). */
+.workbench .setup-panel .step-pending-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 8px 24px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--none);
+}
+.workbench .setup-panel .step-pending-summary:hover,
+.workbench .setup-panel .step-pending-summary:focus-visible {
+  color: var(--act);
+}
+.workbench .setup-panel .step-pending-body {
+  opacity: 0.35;
+}
+
+/* Zone 1 dominant presentation: the setup form panel.  The panel hosts
+   the existing form sections (FieldGroup blocks) in a responsive
+   two-column grid; the section header rows and the generate footer span
+   both columns. */
+.workbench .setup-panel {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .setup-panel .setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.workbench .setup-panel .setup-grid > * {
+  border-bottom: 1px solid var(--rule-soft);
+  min-width: 0;
+}
+.workbench .setup-panel .setup-grid > *:nth-child(odd) {
+  border-right: 1px solid var(--rule-soft);
+}
+.workbench .setup-panel .setup-grid > .span-all {
+  grid-column: 1 / -1;
+  border-right: none;
+}
+@media (max-width: 980px) {
+  .workbench .setup-panel .setup-grid {
+    grid-template-columns: 1fr;
+  }
+  .workbench .setup-panel .setup-grid > *:nth-child(odd) {
+    border-right: none;
+  }
+}
+
+/* Zone 1 slim presentation (post-generation): the scenario summary
+   strip.  Structural values reopen the panel; simple values edit
+   inline (`.sv-editor`). */
+.workbench .setup-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .setup-strip .sv {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-right: 1px solid var(--rule-soft);
+  position: relative;
+  min-width: 0;
+  background: transparent;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.workbench .setup-strip .sv:hover {
+  background: var(--canvas);
+}
+.workbench .setup-strip .sv .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .setup-strip .sv .val {
+  font-size: 13px;
+  color: var(--ink-on-dark);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.workbench .setup-strip .sv.structural .val {
+  color: #fff;
+}
+.workbench .setup-strip .sv .edit-ic {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  color: var(--ink-on-dark-faint);
+  opacity: 0;
+}
+.workbench .setup-strip .sv:hover .edit-ic,
+.workbench .setup-strip .sv:focus-visible .edit-ic {
+  opacity: 1;
+}
+.workbench .setup-strip .sv.structural .edit-ic {
+  color: var(--act);
+}
+.workbench .setup-strip .sv-editor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-right: 1px solid var(--rule-soft);
+  background: var(--canvas);
+}
+.workbench .setup-strip .sv-editor .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-right: 4px;
+}
+.workbench .setup-strip .sv-editor input,
+.workbench .setup-strip .sv-editor select {
+  background: var(--canvas-tint);
+  border: 1px solid var(--act);
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 6px;
+  outline: none;
+  border-radius: 0;
+  font-family: var(--font-sans);
+}
+.workbench .setup-strip .strip-edit-all {
+  margin-left: auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--rule-soft);
+  color: var(--act);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.workbench .setup-strip .strip-edit-all:hover {
+  background: var(--act-glow);
+}
+
+/* Zone 2 hero — the two numbers a CBC estimator prices from, plus the
+   backend zone-geometry meta strip.  Numerals are generated output →
+   orange (--dim); the corner ticks carry the same output accent. */
+.workbench .hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  position: relative;
+  margin-bottom: 16px;
+}
+.workbench .hero .tick {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--dim);
+}
+.workbench .hero .tick.tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.workbench .hero .tick.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+.workbench .hero-cell {
+  padding: 24px;
+  border-right: 1px solid var(--rule-soft);
+}
+.workbench .hero-cell .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  display: block;
+  margin-bottom: 4px;
+}
+.workbench .hero-cell .num {
+  font-family: var(--font-mono);
+  font-size: 76px;
+  line-height: 0.92;
+  font-weight: 600;
+  color: var(--dim);
+  letter-spacing: -0.02em;
+}
+.workbench .hero-cell .sub {
+  font-size: 12px;
+  color: var(--ink-on-dark-faint);
+  margin-top: 6px;
+}
+.workbench .hero-cell .sub b {
+  color: var(--dim);
+  font-weight: 600;
+}
+.workbench .hero-meta {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 210px;
+}
+.workbench .hero-meta .caseid {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-on-dark);
+  letter-spacing: 0.04em;
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.workbench .hero-meta .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 11.5px;
+  color: var(--ink-on-dark-faint);
+  font-family: var(--font-mono);
+}
+.workbench .hero-meta .row .mv {
+  color: var(--ink-on-dark);
+}
+@media (max-width: 980px) {
+  .workbench .hero {
+    grid-template-columns: 1fr 1fr;
+  }
+  .workbench .hero-meta {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .workbench .hero-cell .num {
+    font-size: 60px;
+  }
+}
+
+/* Zone 2 downloads — one card per deliverable */
+.workbench .dls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 980px) {
+  .workbench .dls {
+    grid-template-columns: 1fr;
+  }
+}
+.workbench .dl-card {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.workbench .dl-card .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.workbench .dl-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+.workbench .dl-card .fmt {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .dl-card .desc {
+  font-size: 11.5px;
+  color: var(--ink-on-dark-faint);
+  line-height: 1.45;
+}
+.workbench .dl-card .desc b {
+  color: var(--dim);
+  font-weight: 600;
+}
+.workbench .dl-btn {
+  margin-top: auto;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--canvas);
+  border: 1px solid var(--act-deep);
+  color: var(--act-bright);
+  padding: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.workbench .dl-btn:hover {
+  background: var(--act-glow);
+}
+.workbench .dl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--rule);
+  color: var(--ink-on-dark-faint);
+}
+.workbench .dl-btn:disabled:hover {
+  background: var(--canvas);
+}
+
+/* Zone 2 pricing — secondary collapsed card; the full quote panel
+   (inputs, breakdown preview, XLSX download) lives in the body */
+.workbench .price {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .price-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-align: left;
+}
+.workbench .price-head .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .price-head .fyi {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  border: 1px solid var(--rule);
+  padding: 4px 6px;
+}
+.workbench .price-head .total {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--dim);
+}
+.workbench .price-head .total.unset {
+  color: var(--ink-on-dark-faint);
+  font-size: 13px;
+  font-weight: 400;
+}
+.workbench .price-head .caret {
+  font-family: var(--font-mono);
+  color: var(--ink-on-dark-faint);
+  transition: transform 0.15s;
+}
+.workbench .price.open .price-head .caret {
+  transform: rotate(90deg);
+}
+.workbench .price-body {
+  border-top: 1px solid var(--rule-soft);
+  padding: 8px 16px 16px;
+}
+
+/* Zone 3 — the density-contract chip grammar.  Every reference family
+   is ONE collapsed summary chip; one click reveals full detail; only
+   plan-invalidating chips auto-expand; empty families render nothing.
+   (`.refchip` — the `.chip` name is taken by the form chip-row.) */
+.workbench .ref-group {
+  margin-bottom: 16px;
+}
+.workbench .ref-group-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.workbench .ref-group-label .ix {
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
+.workbench .ref-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.workbench .refchip {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .refchip .chip-sum {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+.workbench .refchip .chip-sum:hover {
+  background: var(--canvas);
+}
+.workbench .refchip .chip-sum .gl {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.workbench .refchip .chip-sum .label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.workbench .refchip .chip-sum .detail {
+  font-size: 12.5px;
+  color: var(--ink-on-dark-faint);
+  min-width: 0;
+}
+.workbench .refchip .chip-sum .detail b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .refchip .chip-sum .caret {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--ink-on-dark-faint);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.workbench .refchip.open .chip-sum .caret {
+  transform: rotate(90deg);
+}
+/* severity glyph coloring — one ramp; the left border is the expanded
+   accent (paired with the glyph, never hue alone) */
+.workbench .refchip.sev-hazard .chip-sum .gl {
+  color: var(--fail);
+}
+.workbench .refchip.sev-hazard.open {
+  border-left: 3px solid var(--fail);
+}
+.workbench .refchip.sev-warn .chip-sum .gl {
+  color: var(--warn);
+}
+.workbench .refchip.sev-warn.open {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.sev-info .chip-sum .gl {
+  color: var(--none);
+}
+/* #219 tier containers: ▲ changed rides the output-orange ramp (count/
+   method-affecting), ◌ pending stays chromeless — glyph + text label
+   carry the meaning in both (rule 13), hue is the second channel. */
+.workbench .refchip.sev-changed .chip-sum .gl {
+  color: var(--dim);
+}
+.workbench .refchip.sev-changed.open {
+  border-left: 3px solid var(--dim);
+}
+.workbench .refchip.sev-pending .chip-sum .gl {
+  color: var(--none);
+}
+.workbench .refchip.auto-expand {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.auto-expand.sev-hazard {
+  border-left-color: var(--fail);
+}
+.workbench .refchip.auto-expand.sev-changed {
+  border-left-color: var(--dim);
+}
+/* #219 — the always-on ledger line above the tier stack. */
+.workbench .tier-ledger {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  margin: 0 0 10px;
+}
+.workbench .tier-ledger b {
+  color: var(--ink);
+}
+.workbench .refchip .chip-sum .verdict-ok {
+  color: var(--pass);
+}
+.workbench .refchip .chip-sum .verdict-bad {
+  color: var(--warn);
+}
+.workbench .refchip .chip-body {
+  border-top: 1px solid var(--rule-soft);
+  padding: 12px 16px;
+}
+
+/* jurisdiction-required device rows — output-orange wash + source tag
+   (the flag is backend data; the row must read distinct without hue
+   alone, so it also carries the bordered JR tag) */
+.workbench .device-table tr.jr td {
+  background: var(--dim-soft);
+}
+.workbench .device-table .jr-tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--dim);
+  padding: 1px 5px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Zone 2 error presentation: last successful results kept visible but
+   visibly stale — dimmed and desaturated behind a red ribbon.  The
+   ribbon carries the words; the wash is never the only signal. */
+.workbench .results-stale {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+}
+.workbench .stale-ribbon {
+  background: var(--fail-soft);
+  border: 1px solid var(--fail);
+  border-left-width: 3px;
+  color: var(--fail);
+  font-size: 12.5px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+"
+
+[36m [2m❯[22m lib/design/tokens.test.ts:[2m19:19[22m[39m
+    [90m 17| [39m    [34mit[39m([32m`[39m[36m${[39mname[36m}[39m[32m is defined as 
+[39m[36m${[39mvalue[36m}[39m[32m`[39m[33m,[39m () [33m=>[39m {
+    [90m 18| [39m      [35mconst[39m re [33m=[39m [35mnew[39m [33mRegExp[39m([32m`[39m[36m${[39mname[36m
+}[39m[32m:\\s*[39m[36m${[39mvalue[36m}[39m[32m;`[39m)[33m;[39m
+    [90m 19| [39m      [34mexpect[39m(css)[33m.[39m[34mtoMatch[39m(re)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 20| [39m    })[33m;[39m
+    [90m 21| [39m  }
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m lib/design/tokens.test.ts[2m > [22mSIZE_TOKENS mirror .workbench custom properties 
+(#227)[2m > [22m--bar-seg-min is defined as 6px
+[31m[1mAssertionError[22m: expected '@tailwind base;\r\n@tailwind componen…' to match /--bar-seg-min:\s*6px;/[39m
+
+[32m- Expected:[39m 
+/--bar-seg-min:\s*6px;/
+
+[31m+ Received:[39m 
+"@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #e8710a;
+  --orange-deep: #c45f08;
+  --orange-soft: #fce9d6;
+  --navy: #1b2838;
+  --navy-soft: #2a3b50;
+  --blue: #2d9cdb;
+  --green: #27ae60;
+  --green-soft: #ddf1e5;
+  --red: #eb5757;
+  --red-soft: #fbe0e0;
+  --beige: #f5f0eb;
+  --beige-deep: #ece4d9;
+  --paper: #faf6f0;
+  --line: #d9cfc1;
+  --line-soft: #e5dccd;
+  --ink: #1b2838;
+  --ink-mute: #5c6b7e;
+  --ink-faint: #8a95a4;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  line-height: 1.6;
+}
+
+@layer components {
+  /* Blueprint page background */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-light {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .blueprint-grid-fine {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .blueprint-grid-faint {
+    background-image:
+      linear-gradient(to right, rgba(27, 40, 56, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(27, 40, 56, 0.04) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Eyebrow: orange mono uppercase, prefixed by 24x1px tick */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--orange);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: \"\";
+    width: 24px;
+    height: 1px;
+    background: var(--orange);
+    display: inline-block;
+  }
+
+  /* Primary CTA: orange button with shadowed double-stroke */
+  .btn-primary {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px 28px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.005em;
+    box-shadow:
+      0 1px 0 var(--orange-deep),
+      0 0 0 1px var(--orange-deep);
+    transition: transform 0.08s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  /* Range slider: orange square thumbs, 2px track */
+  .range-orange {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  .range-orange::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-moz-range-track {
+    height: 2px;
+    background: var(--line);
+  }
+  .range-orange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    margin-top: -7px;
+    border-radius: 0;
+  }
+  .range-orange::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--orange);
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px var(--orange);
+    border-radius: 0;
+  }
+
+  /* ─── Generator app patterns ─── */
+
+  /* Chip row (radio-as-buttons) */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--navy);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.1s ease;
+  }
+  .chip:hover {
+    border-color: var(--navy);
+  }
+  .chip.on {
+    background: var(--orange);
+    border-color: var(--orange-deep);
+    color: white;
+  }
+
+  /* Check row toggle */
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    cursor: pointer;
+    border-top: 1px solid var(--line-soft);
+  }
+  .check-row:last-of-type {
+    border-bottom: 1px solid var(--line-soft);
+  }
+  /* A field following a check-row run re-enters the 12px row rhythm
+     symmetrically: the run is entered at 12px (Field mb) + 12px (row
+     padding), but Field margins are bottom-only, so without this the
+     exit gap is half the entry gap (#200). */
+  .check-row + :not(.check-row) {
+    margin-top: 12px;
+  }
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-row.on .check-box {
+    background: var(--orange);
+    border-color: var(--orange-deep);
+  }
+  .check-row.on .check-box::after {
+    content: \"✓\";
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check-row .check-lbl {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .check-row .check-desc {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    margin-left: auto;
+    text-transform: uppercase;
+  }
+
+  /* Sidebar field label with right-aligned value */
+  .field-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .field-label-row .field-val {
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  /* Sidebar text/number/select inputs */
+  .field-input {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--navy);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.1s ease;
+    border-radius: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input:focus {
+    border-color: var(--orange);
+  }
+  .field-select {
+    background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%231B2838' fill='none' stroke-width='1.2'/></svg>\");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    background: white;
+    margin-bottom: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+  }
+  .status-bar .indicator {
+    width: 8px;
+    height: 8px;
+    background: var(--ink-faint);
+    display: inline-block;
+  }
+  .status-bar.idle {
+    border-left: 3px solid var(--line);
+  }
+  .status-bar.warn {
+    border-left: 3px solid var(--orange);
+  }
+  .status-bar.warn .indicator {
+    background: var(--orange);
+  }
+  .status-bar.pass {
+    border-left: 3px solid var(--green);
+  }
+  .status-bar.pass .indicator {
+    background: var(--green);
+  }
+  .status-bar .pill {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+    padding: 4px 8px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .status-bar .pill.pass {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+  /* PR 7 (UX-21/22): derived strip states.  ``caution`` = validation
+     warnings present (amber); ``fail`` = invalid input, generation
+     blocked (red).  The ``warn`` class stays the in-progress style. */
+  .status-bar.caution {
+    border-left: 3px solid var(--orange);
+  }
+  .status-bar.caution .indicator {
+    background: var(--orange);
+  }
+  .status-bar.fail {
+    border-left: 3px solid var(--red);
+  }
+  .status-bar.fail .indicator {
+    background: var(--red);
+  }
+  .status-bar .pill.caution {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+  }
+  .status-bar .pill.fail {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  /* Warnings disclosure (UX-22): the caution strip is a <summary>;
+     expanding lists each warning with rule ID + citation. */
+  .status-details {
+    margin-bottom: 24px;
+  }
+  .status-details > summary {
+    list-style: none;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .status-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .status-details .disclosure-caret {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .status-details[open] .disclosure-caret {
+    transform: rotate(90deg);
+  }
+  .status-warnings {
+    border: 1px solid var(--line);
+    border-top: 0;
+    background: white;
+    padding: 12px 16px;
+  }
+
+  /* Output card with corner ticks */
+  .output-card {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 16px;
+    position: relative;
+  }
+  .output-card .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--orange);
+  }
+  .output-card .corner.tl {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .output-card .corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+  }
+
+  /* Audit accordion */
+  .audit-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .audit-item {
+    background: white;
+    border: 1px solid var(--line);
+    border-bottom: none;
+  }
+  .audit-item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .audit-head {
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+  .audit-head:hover {
+    background: var(--paper);
+  }
+  .audit-head .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    letter-spacing: 0.08em;
+  }
+  .audit-head .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.005em;
+  }
+  .audit-head .result {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .audit-head .cite {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .audit-head .chev {
+    font-family: var(--font-mono);
+    color: var(--ink-faint);
+    transition: transform 0.15s ease;
+    display: inline-block;
+  }
+  .audit-item.open .audit-head .chev {
+    transform: rotate(90deg);
+  }
+  /* Left inset aligns to the .audit-head number column: 16px padding-left
+     + 36px grid column + 16px gap = 68px (issue #165 — tracks .audit-head
+     padding, not a spacing-scale step). */
+  .audit-body {
+    padding: 0 16px 16px 68px;
+    border-top: 1px dashed var(--line);
+    background: var(--paper);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .audit-body p {
+    margin: 12px 0;
+    max-width: 640px;
+  }
+  .audit-body .formula {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--navy);
+    background: white;
+    padding: 16px;
+    border: 1px solid var(--line);
+    margin: 16px 0;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .audit-body .formula .var {
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .audit-body .formula .res {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .audit-body .formula .op {
+    color: var(--ink-mute);
+    margin: 0 6px;
+  }
+  .audit-body .citation {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    clear: both;
+  }
+  .audit-body .citation .check {
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .audit-body table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 480px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .audit-body table th,
+  .audit-body table td {
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .audit-body table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .audit-body table td.match {
+    background: var(--orange-soft);
+    font-weight: 600;
+  }
+
+  /* Compliance check list */
+  .check-list {
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    max-width: 600px;
+  }
+  .check-list-item {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: center;
+  }
+  .check-list-item .ck {
+    width: 18px;
+    height: 18px;
+    background: var(--green-soft);
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check-list-item .ck.warn {
+    background: var(--orange-soft);
+    color: var(--orange-deep);
+  }
+  .check-list-item .ck.fail {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+  .check-list-item .check-list-lbl {
+    font-size: 14px;
+    color: var(--navy);
+  }
+  .check-list-item .check-list-src {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+  }
+
+  /* Device breakdown table */
+  .device-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border: 1px solid var(--line);
+  }
+  .device-table th,
+  .device-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .device-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    font-weight: 500;
+    background: var(--beige);
+  }
+  .device-table td.num {
+    text-align: right;
+    font-family: var(--font-mono);
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .device-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Empty state for outputs */
+  .empty-state {
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    padding: 24px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 24px;
+  }
+  .empty-state .big {
+    display: block;
+    font-size: 18px;
+    color: var(--navy);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  .empty-state .arrow {
+    display: inline-block;
+    margin: 8px 12px;
+    color: var(--orange);
+    font-size: 14px;
+  }
+
+  /* Sidebar generate button */
+  .generate-btn {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    letter-spacing: 0.005em;
+    box-shadow:
+      0 1px 0 var(--orange-deep),
+      0 0 0 1px var(--orange-deep);
+    transition: transform 0.08s ease;
+  }
+  .generate-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .generate-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .generate-btn:disabled {
+    background: var(--line);
+    color: var(--ink-faint);
+    box-shadow: none;
+    cursor: wait;
+  }
+}
+
+/* ─── Workbench (dark generator app) overrides ───
+   Scope: any descendant of `.workbench`. The landing page stays untouched.
+   Locks the slate palette (no runtime toggle). */
+.workbench {
+  /* dark canvas (fix-spec-02 surface set) */
+  --canvas: #14202e;
+  --canvas-tint: #1b2838;
+  --rule: #2c3e53;
+  --rule-soft: #223244;
+  --raise: #22344a;
+  --raise-hi: #294056;
+
+  /* slate cards (audit trail / device table keep the raised look;
+     QuotePanel and OutputCards are dark-native per P1·03) */
+  --paper: #243447;
+  --paper-deep: #1e2d3f;
+  --paper-line: #3a4d66;
+  --paper-line-soft: #2e4058;
+
+  /* on-paper ink (slate-tuned) */
+  --ink: #eaf0f7;
+  --ink-mute: #aebbcc;
+  --ink-faint: #93a0b0;
+  --heading-on-paper: #ffffff;
+  --match-bg: rgba(232, 113, 10, 0.18);
+  --match-ink: #ffd9b0;
+
+  /* on-canvas ink */
+  --ink-on-dark: #c8d1dd;
+  --ink-on-dark-faint: #93a0b0;
+
+  /* ─── Role colors — one job each (fix-spec-02, P1·01) ───
+     act  = INTERACTIVE: anything you touch (buttons, links, focus,
+            selection).  Solid act surfaces carry --on-act ink.
+     dim  = OUTPUT/DIMENSION: generated numbers only.  Never interactive.
+     warn = WARNING: review flags.  Amber, never hue-alone — always
+            paired with a glyph or label.
+     pass/fail = verdict + error states.
+     none = verification-unavailable: deliberately chromaless — \"no
+            signal\" is read via copy/hollow dot, not hue. */
+  --act: #34a9e8;
+  --act-bright: #56bcf2;
+  --act-deep: #1f7bb0;
+  --act-glow: rgba(52, 169, 232, 0.32);
+  --on-act: #06222f;
+
+  --dim: #ff8a2e;
+  --dim-deep: #e8710a;
+  --dim-soft: rgba(255, 138, 46, 0.16);
+
+  --warn: #f4c020;
+  --warn-deep: #c79300;
+  --warn-soft: rgba(244, 192, 32, 0.15);
+
+  --pass: #4fd787;
+  --pass-soft: rgba(39, 174, 96, 0.2);
+  --fail: #ff7a7a;
+  --fail-soft: rgba(235, 87, 87, 0.2);
+  --none: #93a0b0;
+  --none-soft: rgba(147, 160, 176, 0.14);
+
+  /* confidence speaks its own achromatic language (P1·04) */
+  --conf-fill: #c6d2e0;
+  --conf-empty: #33475e;
+
+  /* legacy aliases — safety net so a missed var() reference can never
+     fall back to the light :root palette.  New code uses role names. */
+  --orange: var(--dim);
+  --orange-deep: var(--dim-deep);
+  --orange-soft: var(--dim-soft);
+  --green: var(--pass);
+  --green-soft: var(--pass-soft);
+  --red: var(--fail);
+  --red-soft: var(--fail-soft);
+  --cyan: var(--act);
+  --cyan-deep: var(--act-deep);
+  --cyan-glow: var(--act-glow);
+
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+}
+
+/* fix-spec-02 P1·05·01 — visible keyboard focus (WCAG 2.4.7).  One
+   ring for every interactive control in the workbench; mouse focus
+   stays ringless via :focus:not(:focus-visible).  Ring-vs-surface
+   contrast (measured): 7.74:1 on --canvas, 7.01:1 on --canvas-tint,
+   5.96:1 on the slate --paper cards (floor is 3:1). */
+.workbench :focus-visible {
+  outline: 2px solid var(--act-bright);
+  outline-offset: 2px;
+}
+.workbench :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* technical-drawing frame around the entire app shell */
+.workbench-frame {
+  position: fixed;
+  inset: 8px;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+  z-index: 60;
+}
+.workbench-frame .ftick {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--dim);
+}
+.workbench-frame .ftick.tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.tr {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
+}
+.workbench-frame .ftick.bl {
+  bottom: -1px;
+  left: -1px;
+  border-right: none;
+  border-top: none;
+}
+.workbench-frame .ftick.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Lanes / chips: cyan active, divided cells */
+.workbench .chip-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  flex-wrap: nowrap;
+}
+.workbench .chip {
+  background: var(--canvas);
+  color: var(--ink-on-dark);
+  border: none;
+  border-right: 1px solid var(--rule);
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 6px;
+}
+.workbench .chip:last-child {
+  border-right: none;
+}
+.workbench .chip:hover {
+  background: var(--rule);
+  color: white;
+  border-color: var(--rule);
+}
+.workbench .chip.on {
+  background: var(--act);
+  color: var(--on-act);
+  border-color: var(--act-deep);
+  box-shadow: inset 0 0 0 1px var(--act-deep);
+}
+
+/* Check rows: cyan on, rule borders */
+.workbench .check-row {
+  border-top-color: var(--rule);
+  width: 100%;
+  background: transparent;
+  text-align: left;
+}
+.workbench .check-row:last-of-type {
+  border-bottom-color: var(--rule);
+}
+.workbench .check-box {
+  background: var(--canvas);
+  border-color: var(--rule);
+  width: 14px;
+  height: 14px;
+}
+.workbench .check-row.on .check-box {
+  background: var(--act);
+  border-color: var(--act-deep);
+}
+.workbench .check-row.on .check-box::after {
+  color: var(--on-act);
+}
+.workbench .check-row .check-lbl {
+  color: var(--ink-on-dark);
+}
+.workbench .check-row.on .check-lbl {
+  color: white;
+}
+/* #226: check descriptions map to the provenance role (GO ruling 6 —
+   the arc's largest visual delta: full sentences stop rendering
+   ALL-CAPS).  tr-prov values; layout (margin-left auto) stays base. */
+.workbench .check-row .check-desc {
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+/* Inputs / select: dark canvas + cyan focus */
+/* #226: the field-label role (tr-field values — lib/design/type-roles.ts).
+   Overrides the base .field-label-row's mono-caps: field labels are the
+   user's voice, sentence-case sans (PDF p. 1/p. 4; workbench + the
+   picker modal, one voice — GO ruling 5). */
+.workbench .field-label-row {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .field-label-row .field-val {
+  color: white;
+}
+.workbench .field-input {
+  background-color: var(--canvas);
+  border-color: var(--rule);
+  color: white;
+}
+.workbench .field-input::placeholder {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .field-input:focus {
+  background-color: var(--raise);
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .field-select {
+  background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23C8D1DD' fill='none' stroke-width='1.2'/></svg>\");
+}
+
+/* Range slider: cyan square thumb, rule track */
+.workbench .range-orange::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-moz-range-track {
+  height: 2px;
+  background: var(--rule);
+}
+.workbench .range-orange::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--act);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--act);
+  margin-top: -6px;
+}
+.workbench .range-orange::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--act);
+  border: 2px solid var(--canvas-tint);
+  box-shadow: 0 0 0 1px var(--act);
+}
+
+/* Status bar */
+.workbench .status-bar {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.workbench .status-bar .indicator {
+  background: var(--ink-on-dark-faint);
+}
+.workbench .status-bar.idle {
+  border-left-color: var(--rule);
+}
+.workbench .status-bar.warn {
+  border-left-color: var(--act);
+}
+.workbench .status-bar.warn .indicator {
+  background: var(--act);
+  animation: sb-pulse 1.2s ease-in-out infinite;
+}
+.workbench .status-bar.pass {
+  border-left-color: var(--pass);
+}
+.workbench .status-bar.pass .indicator {
+  background: var(--pass);
+}
+.workbench .status-bar .pill,
+.workbench .status-bar .pill.pass {
+  background: var(--pass-soft);
+  color: var(--pass);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  padding: 4px 8px;
+  margin-left: auto;
+}
+/* PR 7 (UX-21/22) + fix-spec-02 P1·02: derived strip states on the dark
+   theme.  The base ``warn`` class stays the in-progress style (act cyan,
+   pulsing) — amber belongs to ``caution`` and red to ``fail``.  The
+   caution indicator is a hazard hatch, not a flat swatch, so the warning
+   state never reads by hue alone. */
+.workbench .status-bar.caution {
+  border-left-color: var(--warn);
+}
+.workbench .status-bar.caution .indicator {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--warn) 0 3px,
+    #1a1200 3px 6px
+  );
+}
+.workbench .status-bar.fail {
+  border-left-color: var(--fail);
+}
+.workbench .status-bar.fail .indicator {
+  background: var(--fail);
+}
+.workbench .status-bar .pill.caution {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.workbench .status-bar .pill.fail {
+  background: var(--fail-soft);
+  color: var(--fail);
+}
+/* fix-spec-02 P1·02 — the two engine-removal states get their own
+   treatments (both previously rendered as bare ``idle``).  Additive
+   modifier classes on top of ``idle``; the pinned class names and copy
+   are untouched.
+   ``verifying``: in-flight check — act-cyan spinner, distinct from a
+   verdict.  ``unavail``: deliberately chromaless (--none) hollow dot —
+   the absence of a verdict is not an error and gets no verdict hue. */
+.workbench .status-bar.verifying {
+  border-left-color: var(--act);
+}
+.workbench .status-bar.verifying .indicator {
+  background: transparent;
+  border: 1.5px solid var(--rule);
+  border-top-color: var(--act);
+  border-radius: 50%;
+  animation: sb-spin 0.7s linear infinite;
+}
+.workbench .status-bar.unavail {
+  border-left-color: var(--none);
+  background: var(--none-soft);
+  color: var(--ink-mute);
+}
+.workbench .status-bar.unavail .indicator {
+  background: var(--none);
+  box-shadow: inset 0 0 0 2px var(--canvas);
+}
+@keyframes sb-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes sb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.workbench .status-warnings {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: var(--rule);
+}
+
+/* Output cards: dark-native (fix-spec-02 P1·03 — no paper-era tokens
+   on the dark canvas; the spec's .ocard is canvas-tint with rule
+   borders and rule corner ticks) */
+.workbench .output-card {
+  background: var(--canvas-tint);
+  border-color: var(--rule);
+  box-shadow: none;
+}
+.workbench .output-card .corner {
+  border-color: var(--rule);
+}
+.workbench .output-card h3 {
+  color: var(--heading-on-paper);
+}
+
+/* Audit accordion */
+.workbench .audit-list {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .audit-item {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--paper-line-soft);
+}
+.workbench .audit-item:last-child {
+  border-bottom: none;
+}
+.workbench .audit-head {
+  color: var(--ink);
+}
+.workbench .audit-head:hover {
+  background: var(--paper-deep);
+}
+.workbench .audit-item.open .audit-head {
+  background: var(--paper-deep);
+}
+.workbench .audit-head .num {
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.workbench .audit-head .title {
+  color: var(--heading-on-paper);
+}
+.workbench .audit-head .result {
+  color: var(--dim);
+}
+.workbench .audit-head .cite {
+  color: var(--ink-faint);
+}
+.workbench .audit-head .chev {
+  color: var(--ink-faint);
+}
+.workbench .audit-item.open .audit-head .chev {
+  color: var(--ink);
+}
+
+.workbench .audit-body {
+  background: var(--paper-deep);
+  color: var(--ink);
+  border-top-color: var(--paper-line);
+}
+.workbench .audit-body p {
+  color: var(--ink);
+}
+.workbench .audit-body .formula {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--heading-on-paper);
+}
+.workbench .audit-body .formula .var {
+  color: var(--dim);
+}
+.workbench .audit-body .formula .res {
+  color: var(--pass);
+}
+.workbench .audit-body .formula .op {
+  color: var(--ink-mute);
+}
+.workbench .audit-body .citation {
+  color: var(--ink-faint);
+}
+.workbench .audit-body .citation .check {
+  background: var(--pass);
+  color: var(--on-act);
+}
+.workbench .audit-body table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+}
+.workbench .audit-body table th,
+.workbench .audit-body table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .audit-body table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .audit-body table td.match {
+  background: var(--match-bg);
+  color: var(--match-ink);
+  font-weight: 600;
+}
+
+/* Compliance check list */
+.workbench .check-list-item {
+  border-bottom-color: var(--paper-line);
+}
+.workbench .check-list-item .check-list-lbl {
+  color: var(--heading-on-paper);
+}
+.workbench .check-list-item .check-list-src {
+  color: var(--ink-faint);
+}
+.workbench .check-list-item .ck {
+  background: var(--pass-soft);
+  color: var(--pass);
+}
+.workbench .check-list-item .ck.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.workbench .check-list-item .ck.fail {
+  background: var(--fail-soft);
+  color: var(--fail);
+}
+
+/* Device breakdown table */
+.workbench .device-table {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 12px 24px -16px rgba(0, 0, 0, 0.5);
+}
+.workbench .device-table th,
+.workbench .device-table td {
+  border-bottom-color: var(--paper-line-soft);
+  color: var(--ink);
+}
+.workbench .device-table th {
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.workbench .device-table td.num {
+  color: var(--dim);
+}
+
+/* Empty state */
+.workbench .empty-state {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: var(--rule);
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: normal;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.workbench .empty-state .big {
+  color: white;
+}
+.workbench .empty-state .arrow {
+  color: var(--act);
+}
+
+/* Generate button: the headline P1·01 change — the primary action joins
+   the interactive (act) role instead of borrowing brand orange.  Label
+   ink is --on-act per the spec's CTA pairing. */
+.workbench .generate-btn {
+  background: var(--act);
+  color: var(--on-act);
+  box-shadow:
+    0 1px 0 var(--act-deep),
+    0 0 0 1px var(--act-deep),
+    0 0 24px -8px var(--act-glow);
+}
+.workbench .generate-btn:disabled {
+  background: var(--rule);
+  color: var(--ink-on-dark-faint);
+  box-shadow: none;
+}
+
+/* Hide the up/down stepper arrows on number inputs.  Users type values
+   directly; the arrows eat horizontal space inside narrow input boxes
+   (Speed, Lanes, Direction of Travel, Work Zone Length). */
+input[type=\"number\"]::-webkit-outer-spin-button,
+input[type=\"number\"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=\"number\"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Site Conditions checklist.  The shared .check-row/.check-desc pattern
+   (margin-left: auto, single line) is built for the SHORT trailing tags
+   used everywhere else (\"Median present\", \"+ retroreflective\").  This
+   list feeds full sentences into .check-desc, which can't share the
+   label's line at the 312px sidebar width — so the desc wraps onto its
+   own full-width line beneath the label.  Every row then aligns the same
+   way regardless of label/desc length (intersection, interchange,
+   limited-sight, pedestrian, school, bike all wrapped raggedly before).
+   Scoped to .check-list so the short-tag rows keep the inline layout.
+   Placed after the .workbench block so it wins the 0,2,0 specificity tie
+   by source order in both the sandbox and workbench contexts.
+
+   --check-box-size mirrors the .check-box width literals (16px base at
+   :189, 14px workbench override at :818) so the desc indent tracks the
+   checkbox size in each context; keep these two values in sync with the
+   box if it ever changes.  The +8px is the .check-row gap (:181). */
+.check-list {
+  --check-box-size: 16px;
+}
+.workbench .check-list {
+  --check-box-size: 14px;
+}
+.check-list .check-row {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.check-list .check-row .check-desc {
+  flex-basis: 100%;
+  margin-left: calc(var(--check-box-size) + 8px);
+  margin-top: 4px;
+}
+
+/* ─── Generator restage (Endeavor A) — three staged zones ───
+   Zone scaffolding: a mono zone tag (01 · SETUP …), a title, an optional
+   right-aligned note.  `.zone.dominant` is the stage direction — the
+   pre-generation Setup panel and the post-generation Results zone get
+   the larger title. */
+.workbench .zone {
+  margin-bottom: 24px;
+}
+.workbench .zone-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.workbench .zone-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .zone-tag .n {
+  color: var(--act);
+  margin-right: 8px;
+}
+.workbench .zone-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+.workbench .zone.dominant .zone-title {
+  font-size: 20px;
+}
+.workbench .zone-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-left: auto;
+}
+
+/* Persistent jurisdiction bar — selection, street class, spec-chain
+   breadcrumb, and the reserved Endeavor-B slot.  Single source for
+   jurisdiction + class; nothing below the bar repeats them. */
+.workbench .jbar {
+  background: var(--canvas-tint);
+  border: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+.workbench .jbar-main {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.1fr) auto minmax(260px, 1.3fr);
+  gap: 26px;
+  padding: 14px 18px;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .workbench .jbar-main {
+    grid-template-columns: 1fr;
+  }
+}
+/* #226: .k labels name a control — the field-label role (tr-field
+   values; the old 9.5px/0.14em mono-caps reconciles into the role). */
+.workbench .jbar-cell .k,
+.workbench .jctl-field .k {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+  margin-bottom: 7px;
+}
+.workbench .jbar select,
+.workbench .jctl select {
+  width: 100%;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 7px 30px 7px 10px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  background-image: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' 
+viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23c8d1dd' fill='none' stroke-width='1.2'/></svg>\");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+}
+.workbench .jbar select:focus,
+.workbench .jctl select:focus {
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .jbar-auth {
+  margin-top: 7px;
+  font-size: 12px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-auth b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .jbar-auth .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark);
+}
+.workbench .classpick {
+  display: inline-flex;
+  border: 1px solid var(--rule);
+}
+.workbench .classpick button {
+  padding: 7px 14px;
+  font-size: 12px;
+  background: var(--canvas);
+  color: var(--ink-on-dark-faint);
+  border: none;
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+}
+.workbench .classpick button:last-child {
+  border-right: none;
+}
+.workbench .classpick button:hover {
+  color: var(--ink);
+}
+.workbench .classpick button.on {
+  background: var(--act-glow);
+  color: var(--act-bright);
+  box-shadow: inset 0 -2px 0 var(--act);
+}
+.workbench .mapchip {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .mapchip a {
+  color: var(--act);
+}
+
+/* ─── JurisdictionControls (Surface B) ───
+   The interactive dropdown + pills + suggestion rows, now hosted inside
+   the Location step of the setup panel (and, compactly, the strip's
+   inline edit).  A vertical stack sized for the narrow setup column,
+   framed so it reads as its own decision block under the pin summary. */
+.workbench .jctl-host {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.workbench .jctl {
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+}
+.workbench .jctl-field {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .jctl-field .classpick {
+  margin-top: 2px;
+}
+/* #201: each suggestion strip renders inside its subject's field, so it
+   inherits the field's 14px inset and sheds its own; the row step (12px)
+   separates it from the control it confirms.  The dashed separator now
+   spans the field content instead of the full section width. */
+.workbench .jctl .jbar-suggest {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 12px;
+}
+
+/* Read-only summary strip: the class value + \"not set\" tone.  No
+   dropdown or pills — those live in .jctl now. */
+.workbench .jbar-readonly .none {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-readonly .jbar-slot-hint b {
+  color: #fff;
+  font-weight: 600;
+}
+.workbench .jbar-readonly .jbar-slot-hint .term {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark-faint);
+}
+
+/* spec-chain breadcrumb — single line, no boxes; the local override
+   renders last & strongest (white bold — a document name is not a
+   generated number, so it is NOT orange) */
+.workbench .chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.workbench .chain .seg {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .chain .seg.local {
+  color: #fff;
+  font-weight: 700;
+}
+/* compact breadcrumb: full title on hover — the dotted underline is the
+   there's-more cue */
+.workbench .chain .seg[title] {
+  border-bottom: 1px dotted var(--rule);
+  cursor: help;
+}
+.workbench .chain .sep {
+  color: var(--rule);
+  font-size: 12px;
+}
+.workbench .chain-note {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+/* ─── jbar geometric stability ───
+   The bar's three variable regions get RESERVED heights so a
+   jurisdiction selection never resizes it: the picker helper line
+   (1–2 lines), the classification-hint slot (present only for
+   class_required jurisdictions), and the spec-chain slot sized to the
+   tallest launch-8 chain (Denver, measured at the md+ column width —
+   re-measure with scripts/verify-jbar-stability.mjs if a chain grows).
+   During the jurisdiction fetch the chain slot renders a skeleton at
+   final size: one reflow max, zero when data lands. */
+.workbench .jbar-slot-auth {
+  line-height: 18px; /* pinned — unpinned line boxes measured 19.5px and
+                        broke the 2-line reservation by 3px */
+  min-height: 36px; /* 2 lines */
+}
+.workbench .jbar-slot-hint {
+  display: block;
+  line-height: 17px;
+  min-height: 34px; /* 2 lines — the look-it-up hint wraps at 1100px */
+}
+/* FIXED height sized to the tallest launch-8 compact breadcrumb at the
+   1100px 3-column width (Ryan ruling, inc-9: chains render authored
+   display_names, full titles on hover) — every chain fits whole, no
+   internal scroll.  Re-measure with scripts/verify-jbar-stability.mjs
+   if a chain gains links. */
+.workbench .jbar-slot-chain {
+  height: 108px; /* Englewood's 5-link breadcrumb + note at 1100px (105px
+                    measured) — the tallest; every chain fits, no scroll */
+}
+.workbench .jbar-skel-line {
+  display: block;
+  height: 10px;
+  margin: 6px 0;
+  background: var(--rule-soft);
+  animation: sb-pulse 1.6s ease-in-out infinite;
+}
+.workbench .jbar-skel-line.w-full {
+  width: 100%;
+}
+.workbench .jbar-skel-line.w-5\\/6 {
+  width: 83%;
+}
+.workbench .jbar-skel-line.w-3\\/4 {
+  width: 75%;
+}
+.workbench .jbar-skel-line.w-2\\/3 {
+  width: 66%;
+}
+
+/* reserved suggestion slot (Endeavor B) — deliberate inert space */
+.workbench .jbar-suggest {
+  border-top: 1px dashed var(--rule);
+  padding: 9px 18px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-on-dark-faint);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+}
+.workbench .jbar-suggest.reserved {
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.workbench .jbar-suggest.reserved .tag {
+  border: 1px dashed var(--rule);
+  padding: 2px 7px;
+  color: var(--ink-on-dark-faint);
+}
+/* Live Endeavor-B states.  The quiet state keeps the reserved band's
+   muted register; the live state stacks suggestion row, sourced reason,
+   amber+glyph warnings, and the honesty line. */
+.workbench .jbar-suggest.quiet {
+  /* #226: the quiet band speaks in the provenance register — caps
+     dropped (voice, not transform; GO ruling 1).  Color untouched:
+     the measured floor below is load-bearing. */
+  /* No opacity reduction: at 0.7 the faint ink composited to ~3.76:1
+     on --canvas, under the 4.5:1 AA floor (arc16 axe finding, coda
+     Refs #200).  At the token's full value: #93a0b0 on #14202e =
+     6.19:1.  This band only — the wider faint-register family
+     (.reserved etc.) stays on the a11y triage pile by ruling. */
+}
+.workbench .jbar-suggest.live {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.workbench .jbar-suggest .sugg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest .sugg-row.passive {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .sugg-name {
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest button.confirm,
+.workbench .jbar-suggest button.ghost {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  background: transparent;
+  cursor: pointer;
+}
+.workbench .jbar-suggest button.confirm {
+  border: 1px solid var(--act);
+  color: var(--act);
+}
+.workbench .jbar-suggest button.confirm:hover,
+.workbench .jbar-suggest button.confirm:focus-visible {
+  background: var(--act);
+  color: #0b1420;
+}
+.workbench .jbar-suggest button.ghost {
+  border: 1px solid var(--rule);
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest button.ghost:hover,
+.workbench .jbar-suggest button.ghost:focus-visible {
+  color: var(--ink-on-dark);
+  border-color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .sugg-reason {
+  color: var(--ink-on-dark-faint);
+  letter-spacing: 0.02em;
+}
+.workbench .jbar-suggest .warnrow {
+  color: var(--warn);
+  letter-spacing: 0.02em;
+}
+.workbench .jbar-suggest .honesty {
+  font-size: 9.5px;
+  color: var(--ink-on-dark-faint);
+  opacity: 0.85;
+}
+
+/* ─── #226 type roles — the four setup-panel label roles ───
+   MIRROR of lib/design/type-roles.ts (the table is authoritative;
+   type-roles.test.ts asserts these blocks match it — same paired-halves
+   idiom as the spacing scale).  Weight is not an axis; the 500/400 are
+   extra differentiation.  Every color here is CHOSEN, not sheeted (GO
+   ruling 2); the section/step/field/provenance treatments are PDF p. 3.
+   Provenance carries NO text-transform by ruling (GO ruling 1, Rule 9:
+   \"lowercase\" is authored voice; MUTCD / S-630-1 / OSM keep canonical
+   casing — do not re-add a transform here).  text-decoration, not
+   border-bottom, so multi-line provenance underlines per line. */
+.workbench .tr-section {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.workbench .tr-step {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .tr-field {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-on-dark);
+}
+.workbench .tr-prov {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-on-dark-faint);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+/* #221: the progress rail — the pre-generate steering line at the top
+   of the setup panel.  Sticky so the current blocker and the jump
+   links stay in view through the whole flow (the S4 stall: the CTA's
+   reason used to sit ~1 viewport below the row it named).  Rule 13:
+   every glyph rides with its label + a text state word; the ◌ states
+   are chromeless gray (--none), the current blocker uses the CTA
+   reason's own --fail voice. */
+.workbench .setup-panel .progress-rail {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 16px;
+  padding: 8px 24px;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--rule);
+}
+.workbench .progress-rail .rail-entry {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+  /* #226: rail entries share the step-index register (mono 10px caps)
+     but are navigation, not one of the four label roles — the rail's
+     vocabulary is #228's.  Values deliberately byte-identical to
+     pre-#226; tracking stays 0.08em pending that arc. */
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+}
+.workbench .progress-rail .rail-entry:hover .rail-label,
+.workbench .progress-rail .rail-entry:focus-visible .rail-label {
+  color: var(--act);
+  text-decoration: underline;
+}
+.workbench .progress-rail .rail-glyph {
+  font-family: var(--font-sans);
+}
+.workbench .progress-rail .st-done .rail-glyph {
+  color: var(--pass);
+}
+.workbench .progress-rail .st-attention .rail-glyph {
+  color: var(--warn);
+}
+.workbench .progress-rail .st-pending .rail-glyph,
+.workbench .progress-rail .st-notset .rail-glyph,
+.workbench .progress-rail .st-pending .rail-note,
+.workbench .progress-rail .st-notset .rail-note {
+  color: var(--none);
+}
+.workbench .progress-rail .rail-note {
+  color: var(--warn);
+  letter-spacing: 0.05em;
+}
+.workbench .progress-rail .rail-blocker {
+  color: var(--fail);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+.workbench .progress-rail .rail-entry.current .rail-label {
+  color: var(--ink);
+}
+
+/* #222: pre-pin step gating.  Steps after Location render present but
+   not inviting: the body dims AND is inert (the browser removes it
+   from the Tab order and the accessibility tree); the focusable
+   summary row above it is the keyboard/AT path and names the gate.
+   0.35 matches the s2-arc5 extended-footage dim — and per that
+   precedent opacity is never the only channel: the ◌ + text row rides
+   with it (rule 13). */
+.workbench .setup-panel .step-pending-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 8px 24px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--none);
+}
+.workbench .setup-panel .step-pending-summary:hover,
+.workbench .setup-panel .step-pending-summary:focus-visible {
+  color: var(--act);
+}
+.workbench .setup-panel .step-pending-body {
+  opacity: 0.35;
+}
+
+/* Zone 1 dominant presentation: the setup form panel.  The panel hosts
+   the existing form sections (FieldGroup blocks) in a responsive
+   two-column grid; the section header rows and the generate footer span
+   both columns. */
+.workbench .setup-panel {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .setup-panel .setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.workbench .setup-panel .setup-grid > * {
+  border-bottom: 1px solid var(--rule-soft);
+  min-width: 0;
+}
+.workbench .setup-panel .setup-grid > *:nth-child(odd) {
+  border-right: 1px solid var(--rule-soft);
+}
+.workbench .setup-panel .setup-grid > .span-all {
+  grid-column: 1 / -1;
+  border-right: none;
+}
+@media (max-width: 980px) {
+  .workbench .setup-panel .setup-grid {
+    grid-template-columns: 1fr;
+  }
+  .workbench .setup-panel .setup-grid > *:nth-child(odd) {
+    border-right: none;
+  }
+}
+
+/* Zone 1 slim presentation (post-generation): the scenario summary
+   strip.  Structural values reopen the panel; simple values edit
+   inline (`.sv-editor`). */
+.workbench .setup-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .setup-strip .sv {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-right: 1px solid var(--rule-soft);
+  position: relative;
+  min-width: 0;
+  background: transparent;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.workbench .setup-strip .sv:hover {
+  background: var(--canvas);
+}
+.workbench .setup-strip .sv .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .setup-strip .sv .val {
+  font-size: 13px;
+  color: var(--ink-on-dark);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.workbench .setup-strip .sv.structural .val {
+  color: #fff;
+}
+.workbench .setup-strip .sv .edit-ic {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  color: var(--ink-on-dark-faint);
+  opacity: 0;
+}
+.workbench .setup-strip .sv:hover .edit-ic,
+.workbench .setup-strip .sv:focus-visible .edit-ic {
+  opacity: 1;
+}
+.workbench .setup-strip .sv.structural .edit-ic {
+  color: var(--act);
+}
+.workbench .setup-strip .sv-editor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-right: 1px solid var(--rule-soft);
+  background: var(--canvas);
+}
+.workbench .setup-strip .sv-editor .k {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-right: 4px;
+}
+.workbench .setup-strip .sv-editor input,
+.workbench .setup-strip .sv-editor select {
+  background: var(--canvas-tint);
+  border: 1px solid var(--act);
+  color: #fff;
+  font-size: 13px;
+  padding: 4px 6px;
+  outline: none;
+  border-radius: 0;
+  font-family: var(--font-sans);
+}
+.workbench .setup-strip .strip-edit-all {
+  margin-left: auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--rule-soft);
+  color: var(--act);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.workbench .setup-strip .strip-edit-all:hover {
+  background: var(--act-glow);
+}
+
+/* Zone 2 hero — the two numbers a CBC estimator prices from, plus the
+   backend zone-geometry meta strip.  Numerals are generated output →
+   orange (--dim); the corner ticks carry the same output accent. */
+.workbench .hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  position: relative;
+  margin-bottom: 16px;
+}
+.workbench .hero .tick {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--dim);
+}
+.workbench .hero .tick.tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.workbench .hero .tick.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+.workbench .hero-cell {
+  padding: 24px;
+  border-right: 1px solid var(--rule-soft);
+}
+.workbench .hero-cell .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  display: block;
+  margin-bottom: 4px;
+}
+.workbench .hero-cell .num {
+  font-family: var(--font-mono);
+  font-size: 76px;
+  line-height: 0.92;
+  font-weight: 600;
+  color: var(--dim);
+  letter-spacing: -0.02em;
+}
+.workbench .hero-cell .sub {
+  font-size: 12px;
+  color: var(--ink-on-dark-faint);
+  margin-top: 6px;
+}
+.workbench .hero-cell .sub b {
+  color: var(--dim);
+  font-weight: 600;
+}
+.workbench .hero-meta {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 210px;
+}
+.workbench .hero-meta .caseid {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-on-dark);
+  letter-spacing: 0.04em;
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.workbench .hero-meta .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 11.5px;
+  color: var(--ink-on-dark-faint);
+  font-family: var(--font-mono);
+}
+.workbench .hero-meta .row .mv {
+  color: var(--ink-on-dark);
+}
+@media (max-width: 980px) {
+  .workbench .hero {
+    grid-template-columns: 1fr 1fr;
+  }
+  .workbench .hero-meta {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .workbench .hero-cell .num {
+    font-size: 60px;
+  }
+}
+
+/* Zone 2 downloads — one card per deliverable */
+.workbench .dls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (max-width: 980px) {
+  .workbench .dls {
+    grid-template-columns: 1fr;
+  }
+}
+.workbench .dl-card {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.workbench .dl-card .top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.workbench .dl-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+.workbench .dl-card .fmt {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .dl-card .desc {
+  font-size: 11.5px;
+  color: var(--ink-on-dark-faint);
+  line-height: 1.45;
+}
+.workbench .dl-card .desc b {
+  color: var(--dim);
+  font-weight: 600;
+}
+.workbench .dl-btn {
+  margin-top: auto;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--canvas);
+  border: 1px solid var(--act-deep);
+  color: var(--act-bright);
+  padding: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.workbench .dl-btn:hover {
+  background: var(--act-glow);
+}
+.workbench .dl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--rule);
+  color: var(--ink-on-dark-faint);
+}
+.workbench .dl-btn:disabled:hover {
+  background: var(--canvas);
+}
+
+/* Zone 2 pricing — secondary collapsed card; the full quote panel
+   (inputs, breakdown preview, XLSX download) lives in the body */
+.workbench .price {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .price-head {
+  display: flex;
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 12:03:34
+[2m   Duration [22m 2.51s[2m (transform 401ms, setup 0ms, collect 870ms, tests 487ms, environment 479ms, prepare 210ms)[22m
+
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: inherit;
+  text-align: left;
+}
+.workbench .price-head .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .price-head .fyi {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  border: 1px solid var(--rule);
+  padding: 4px 6px;
+}
+.workbench .price-head .total {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--dim);
+}
+.workbench .price-head .total.unset {
+  color: var(--ink-on-dark-faint);
+  font-size: 13px;
+  font-weight: 400;
+}
+.workbench .price-head .caret {
+  font-family: var(--font-mono);
+  color: var(--ink-on-dark-faint);
+  transition: transform 0.15s;
+}
+.workbench .price.open .price-head .caret {
+  transform: rotate(90deg);
+}
+.workbench .price-body {
+  border-top: 1px solid var(--rule-soft);
+  padding: 8px 16px 16px;
+}
+
+/* Zone 3 — the density-contract chip grammar.  Every reference family
+   is ONE collapsed summary chip; one click reveals full detail; only
+   plan-invalidating chips auto-expand; empty families render nothing.
+   (`.refchip` — the `.chip` name is taken by the form chip-row.) */
+.workbench .ref-group {
+  margin-bottom: 16px;
+}
+.workbench .ref-group-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.workbench .ref-group-label .ix {
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+}
+.workbench .ref-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.workbench .refchip {
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+}
+.workbench .refchip .chip-sum {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+.workbench .refchip .chip-sum:hover {
+  background: var(--canvas);
+}
+.workbench .refchip .chip-sum .gl {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.workbench .refchip .chip-sum .label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.workbench .refchip .chip-sum .detail {
+  font-size: 12.5px;
+  color: var(--ink-on-dark-faint);
+  min-width: 0;
+}
+.workbench .refchip .chip-sum .detail b {
+  color: var(--ink-on-dark);
+  font-weight: 600;
+}
+.workbench .refchip .chip-sum .caret {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--ink-on-dark-faint);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.workbench .refchip.open .chip-sum .caret {
+  transform: rotate(90deg);
+}
+/* severity glyph coloring — one ramp; the left border is the expanded
+   accent (paired with the glyph, never hue alone) */
+.workbench .refchip.sev-hazard .chip-sum .gl {
+  color: var(--fail);
+}
+.workbench .refchip.sev-hazard.open {
+  border-left: 3px solid var(--fail);
+}
+.workbench .refchip.sev-warn .chip-sum .gl {
+  color: var(--warn);
+}
+.workbench .refchip.sev-warn.open {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.sev-info .chip-sum .gl {
+  color: var(--none);
+}
+/* #219 tier containers: ▲ changed rides the output-orange ramp (count/
+   method-affecting), ◌ pending stays chromeless — glyph + text label
+   carry the meaning in both (rule 13), hue is the second channel. */
+.workbench .refchip.sev-changed .chip-sum .gl {
+  color: var(--dim);
+}
+.workbench .refchip.sev-changed.open {
+  border-left: 3px solid var(--dim);
+}
+.workbench .refchip.sev-pending .chip-sum .gl {
+  color: var(--none);
+}
+.workbench .refchip.auto-expand {
+  border-left: 3px solid var(--warn);
+}
+.workbench .refchip.auto-expand.sev-hazard {
+  border-left-color: var(--fail);
+}
+.workbench .refchip.auto-expand.sev-changed {
+  border-left-color: var(--dim);
+}
+/* #219 — the always-on ledger line above the tier stack. */
+.workbench .tier-ledger {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  margin: 0 0 10px;
+}
+.workbench .tier-ledger b {
+  color: var(--ink);
+}
+.workbench .refchip .chip-sum .verdict-ok {
+  color: var(--pass);
+}
+.workbench .refchip .chip-sum .verdict-bad {
+  color: var(--warn);
+}
+.workbench .refchip .chip-body {
+  border-top: 1px solid var(--rule-soft);
+  padding: 12px 16px;
+}
+
+/* jurisdiction-required device rows — output-orange wash + source tag
+   (the flag is backend data; the row must read distinct without hue
+   alone, so it also carries the bordered JR tag) */
+.workbench .device-table tr.jr td {
+  background: var(--dim-soft);
+}
+.workbench .device-table .jr-tag {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--dim);
+  padding: 1px 5px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* Zone 2 error presentation: last successful results kept visible but
+   visibly stale — dimmed and desaturated behind a red ribbon.  The
+   ribbon carries the words; the wash is never the only signal. */
+.workbench .results-stale {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+}
+.workbench .stale-ribbon {
+  background: var(--fail-soft);
+  border: 1px solid var(--fail);
+  border-left-width: 3px;
+  color: var(--fail);
+  font-size: 12.5px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+"
+
+[36m [2m❯[22m lib/design/tokens.test.ts:[2m19:19[22m[39m
+    [90m 17| [39m    [34mit[39m([32m`[39m[36m${[39mname[36m}[39m[32m is defined as 
+[39m[36m${[39mvalue[36m}[39m[32m`[39m[33m,[39m () [33m=>[39m {
+    [90m 18| [39m      [35mconst[39m re [33m=[39m [35mnew[39m [33mRegExp[39m([32m`[39m[36m${[39mname[36m
+}[39m[32m:\\s*[39m[36m${[39mvalue[36m}[39m[32m;`[39m)[33m;[39m
+    [90m 19| [39m      [34mexpect[39m(css)[33m.[39m[34mtoMatch[39m(re)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 20| [39m    })[33m;[39m
+    [90m 21| [39m  }
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+

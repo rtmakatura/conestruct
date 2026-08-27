@@ -1,0 +1,49 @@
+# s2a10 live checks — raw log
+
+- `2026-08-27T18:42:44.147Z` — L1: per-kind captures —
+- `2026-08-27T18:42:48.025Z` screenshot: before-shoulder.png
+- `2026-08-27T18:42:50.696Z` screenshot: before-flagger.png
+- `2026-08-27T18:42:53.321Z` screenshot: before-near-intersection.png
+- `2026-08-27T18:42:55.299Z` screenshot: after-prepin.png
+- `2026-08-27T18:42:57.833Z` screenshot: after-shoulder.png
+- `2026-08-27T18:42:58.269Z` screenshot: after-shoulder-gray.png
+- `2026-08-27T18:43:00.732Z` screenshot: after-flagger.png
+- `2026-08-27T18:43:01.037Z` screenshot: after-flagger-gray.png
+- `2026-08-27T18:43:03.743Z` screenshot: after-near-intersection.png
+- `2026-08-27T18:43:04.065Z` screenshot: after-near-intersection-gray.png
+- `2026-08-27T18:43:04.066Z` — L2: fact strip —
+- `2026-08-27T18:43:05.661Z` **PASS** — pre-pin: no fact strip (GO ruling 1 — the pick CTA is the surface)
+- `2026-08-27T18:43:06.267Z` **PASS** — pinned: five labeled cells (lat/lng/bearing/speed/jurisdiction) (["Lat","Lng","Bearing","Speed","Jurisdiction"])
+- `2026-08-27T18:43:06.271Z` **PASS** — jurisdiction cell answers "None — baseline" ("None — baseline")
+- `2026-08-27T18:43:06.271Z` — L3: the band —
+- `2026-08-27T18:43:07.873Z` **PASS** — band is a full-width sibling — controls left the Location body
+- `2026-08-27T18:43:07.874Z` **PASS** — pre-pin: the band body is pending (inert + aria-hidden)
+- `2026-08-27T18:43:07.874Z` — L4: resolved-state records (Denver pin) —
+- `2026-08-27T18:43:09.304Z` **PASS** — proposal: ⌁ glyph + Confirm + Dismiss
+- `2026-08-27T18:43:09.574Z` screenshot: record-1-proposal.png
+- `2026-08-27T18:43:09.627Z` **PASS** — dismiss: ×-record with sentence + evidence + Undo
+- `2026-08-27T18:43:09.868Z` screenshot: record-2-dismissed.png
+- `2026-08-27T18:43:09.917Z` **PASS** — undo re-arms the live proposal
+- `2026-08-27T18:43:09.995Z` **PASS** — confirm: ✓-record naming old and new, with Undo
+- `2026-08-27T18:43:10.000Z` **PASS** — confirm wrote the select
+- `2026-08-27T18:43:10.257Z` screenshot: record-3-confirmed.png
+- `2026-08-27T18:43:10.257Z` — L6: schedule window block (uses the confirmed Denver) —
+- `2026-08-27T18:43:10.397Z` **PASS** — real window rows render ◌ '— set dates to check' (no invented rows) ([{"glyph":"◌","label":"Arterial / Collector · Weekday","value":"— set dates to check"}])
+- `2026-08-27T18:43:10.708Z` screenshot: schedule-1-unevaluated.png
+- `2026-08-27T18:43:11.458Z` **PASS** — evaluated: same row count and labels — only glyph/value changed ([{"glyph":"✓","label":"Arterial / Collector · Weekday","value":"clear"}])
+- `2026-08-27T18:43:11.741Z` screenshot: schedule-2-evaluated.png
+- `2026-08-27T18:43:18.085Z` **PASS** — no jurisdiction: the one-row answer
+- `2026-08-27T18:43:18.085Z` — L5: corridor bar —
+- `2026-08-27T18:43:18.098Z` **PASS** — five segments render, every one at least the 6px floor ([266,38,114,71,9])
+- `2026-08-27T18:43:18.100Z` **PASS** — bar is aria-hidden (the table is the record)
+- `2026-08-27T18:43:18.104Z` **PASS** — extent rows carry no ✓ prefix (GO ruling 5)
+- `2026-08-27T18:43:18.104Z` — L7: detected-vs-applied via the real picker (#214) —
+- `2026-08-27T18:43:26.283Z` **PASS** — picker: the bearing role note stands beside the field (GO ruling 7)
+- `2026-08-27T18:43:26.857Z` screenshot: 214-1-picker-bearing-90.png
+- `2026-08-27T18:43:27.140Z` **PASS** — #214 repro: block shows detected AND applied bearing + the governs sentence (Detected vs appliedOSM detection · East Bayaud Avenue · way 39508704 · operator pickDetectedAppliedBearing85°90°Lanes per direction22Road typeRural — undividedRural — undividedDividedUndividedUndivide)
+- `2026-08-27T18:43:27.423Z` screenshot: 214-2-detected-vs-applied.png
+- `2026-08-27T18:43:27.423Z` — L8: axe zero-new (arc16 injection idiom) —
+- `2026-08-27T18:43:34.395Z` **PASS** — axe prepin: zero NEW violation ids (before=[region] after=[region])
+- `2026-08-27T18:43:34.395Z` **PASS** — axe pinned: zero NEW violation ids (before=[label,region] after=[label,region])
+
+**ALL PASS**

@@ -1,0 +1,19 @@
+﻿s2-arc10 restructure contrast (WCAG 2.x relative luminance)
+AA floor for normal text: 4.5:1.
+
+on --canvas #14202e (panel ground):
+  warn glyph/rule   --warn #f4c020                 9.73:1  PASS
+  confirmed / clear --pass #4fd787                 8.94:1  PASS
+  dismissed / unev. --none #93a0b0                 6.19:1  PASS
+  sentences / prop. --ink-on-dark #c8d1dd         10.68:1  PASS
+  applied values    #ffffff                       16.46:1  PASS
+  detected / labels --ink-on-dark-faint #93a0b0    6.19:1  PASS
+
+on --canvas-tint #1b2838 (containers):
+  warn glyph/rule   --warn #f4c020                 8.82:1  PASS
+  confirmed / clear --pass #4fd787                 8.10:1  PASS
+  dismissed / unev. --none #93a0b0                 5.61:1  PASS
+  sentences / prop. --ink-on-dark #c8d1dd          9.68:1  PASS
+  applied values    #ffffff                       14.92:1  PASS
+  detected / labels --ink-on-dark-faint #93a0b0    5.61:1  PASS
+

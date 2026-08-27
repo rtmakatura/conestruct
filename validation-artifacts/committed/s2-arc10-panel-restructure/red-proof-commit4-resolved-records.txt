@@ -1,0 +1,1628 @@
+﻿npx : [33mThe CJS build of Vite's Node API is deprecated. See 
+https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+At line:1 char:424
++ ... truct\site; npx vitest run components/GeneratorShell.suggest-contract ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([33mThe CJS bu...e details.[39m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-227-panel-restructure/conestruct/site[39m
+
+ [31m❯[39m components/GeneratorShell.class-suggest.test.tsx [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1085[2mms[22m[39m
+   [33m[2m✓[22m[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22ma confirmed primary road renders an Arterial suggestion; street_class never reaches the wire until Confirm [33m 503[2mms[22m[39m
+   [32m✓[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22mabsent when no road is confirmed[32m 12[2mms[22m[39m
+   [32m✓[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22ma pin move away from the confirmed road's pin removes the suggestion (stale road never suggests)[32m 131[2mms[22m[39m
+   [32m✓[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22ma differing manual class demotes the suggestion to a passive notice — no Confirm offered[32m 111[2mms[22m[39m
+[31m   [31m×[31m street-class suggestion contract (#152 C): suggest never sets[2m > [22mDismiss leaves a ×-record with undo — never a cleared row (#227)[39m[32m 135[2mms[22m[39m
+[31m     → Unable to find an element with the text: /Dismissed the Arterial suggestion — Not set stands\./. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"workbench min-h-screen"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-hidden[31m=[32m"true"[31m
+        [33mclass[31m=[32m"workbench-frame"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick tl"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick tr"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick bl"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick br"[31m
+        [36m/>[31m
+      [36m</div>[31m
+      [36m<div>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"mb-6"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block"[31m
+            [36m>[31m
+              [0m02 · GENERATOR[0m
+            [36m</div>[31m
+            [36m<h1[31m
+              [33mclass[31m=[32m"text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]"[31m
+            [36m>[31m
+              [0mMethod of Handling Traffic — plan generator[0m
+            [36m</h1>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]"[31m
+            [36m>[31m
+              [0mGenerate a CDOT-compliant MHT package: PDF plan sheet, device list, and crew instructions. Every dimension cited to MUTCD or CDOT standards.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1"[31m
+            [36m>[31m
+              [0mDraft — not a sealed plan[0m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]"[31m
+            [36m>[31m
+              [0mOutput is engineering reference. Requires review and seal by a licensed Professional Engineer prior to field use.[0m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"jbar jbar-readonly"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"jbar-main"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mJurisdiction[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-auth jbar-slot-auth"[31m
+                [36m>[31m
+                  [36m<b>[31m
+                    [0mNone — baseline[0m
+                  [36m</b>[31m
+                  [0m · MUTCD + Colorado Supplement only.[0m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mStreet classification[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-auth jbar-slot-hint"[31m
+                [36m>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"none"[31m
+                  [36m>[31m
+                    [0m◌ Not set — choose it in Setup[0m
+                  [36m</span>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mGoverning spec chain[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-slot-chain"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"chain"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"contents"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"seg"[31m
+                        [33mtitle[31m=[32m"MUTCD 11th Ed. + Colorado Supplement"[31m
+                      [36m>[31m
+                        [0mMUTCD 11th + CO Suppl.[0m
+                      [36m</span>[31m
+                    [36m</span>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"contents"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"sep"[31m
+                      [36m>[31m
+                        [0m›[0m
+                      [36m</span>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"seg"[31m
+                        [33mtitle[31m=[32m"CDOT Standard Specifications §630"[31m
+                      [36m>[31m
+                        [0mCDOT Specs §630[0m
+                      [36m</span>[31m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<section[31m
+            [33mclass[31m=[32m"zone outline-none dominant"[31m
+            [33mtabindex[31m=[32m"-1"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"zone-head"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"zone-tag"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"n"[31m
+                [36m>[31m
+                  [0m01[0m
+                [36m</span>[31m
+                [0mSetup[0m
+              [36m</span>[31m
+              [36m<h2[31m
+                [33mclass[31m=[32m"zone-title"[31m
+              [36m>[31m
+                [0mDescribe the work zone[0m
+              [36m</h2>[31m
+            [36m</div>[31m
+            [36m<div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jctl"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jctl-field"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"k"[31m
+                    [33mfor[31m=[32m"jl-jurisdiction"[31m
+                  [36m>[31m
+                    [0mJurisdiction[0m
+                  [36m</label>[31m
+                  [36m<select[31m
+                    [33mid[31m=[32m"jl-jurisdiction"[31m
+                  [36m>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m>[31m
+                      [0mNone — baseline (MUTCD + CDOT) only[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"cdot"[31m
+                    [36m>[31m
+                      [0mCDOT (state highway)[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"denver"[31m
+                    [36m>[31m
+                      [0mDenver[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"lakewood"[31m
+                    [36m>[31m
+                      [0mLakewood[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"englewood"[31m
+                    [36m>[31m
+                      [0mEnglewood[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"littleton"[31m
+                    [36m>[31m
+                      [0mLittleton[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"centennial"[31m
+                    [36m>[31m
+                      [0mCentennial[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"parker"[31m
+                    [36m>[31m
+                      [0mParker[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"greeley"[31m
+                    [36m>[31m
+                      [0mGreeley[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"thornton"[31m
+                    [36m>[31m
+                      [0mThornton[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"e470"[31m
+                    [36m>[31m
+                      [0mE-470[0m
+                    [36m</option>[31m
+                  [36m</select>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"jbar-auth"[31m
+                  [36m>[31m
+                    [0mStatewide baseline — MUTCD + Colorado Supplement only.[0m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33maria-live[31m=[32m"polite"[31m
+                    [33mclass[31m=[32m"jbar-suggest quiet"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33maria-hidden[31m=[32m"true"[31m
+                    [36m>[31m
+                      [0m◌[0m
+                    [36m</span>[31m
+                    [36m<span>[31m
+                      [0mDrop a site pin for a jurisdiction suggestion[0m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jctl-field"[31m
+                [36m>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"k"[31m
+                  [36m>[31m
+                    [0mStreet classification[0m
+                  [36m</span>[31m
+                  [36m<div[31m
+                    [33maria-label[31m=[32m"Street classification"[31m
+                    [33mclass[31m=[32m"classpick"[31m
+                    [33mrole[31m=[32m"group"[31m
+                  [36m>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mLocal[0m
+                    [36m</button>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mCollector[0m
+                    [36m</button>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mArterial[0m
+                    [36m</button>[31m
+                  [36m</div>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"mapchip"[31m
+                  [36m>[31m
+                    [0m [0m
+                  [36m</span>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<button[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0mstub-confirm-road[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0mstub-move-pin-only[0m
+              [36m</button>[31m
+            [36m</div>[31m
+          [36m</section>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"sr-only"[31m
+            [33mrole[31m=[32m"status"[31m
+          [36m/>[31m
+          [36m<section[31m
+            [33mclass[31m=[32m"zone outline-none"[31m
+            [33mtabindex[31m=[32m"-1"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"zone-head"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"zone-tag"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"n"[31m
+                [36m>[31m
+                  [0m02[0m
+                [36m</span>[31m
+                [0mResults[0m
+              [36m</span>[31m
+              [36m<h2[31m
+                [33mclass[31m=[32m"zone-title"[31m
+              [36m>[31m
+                [0mMHT package[0m
+              [36m</h2>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m""[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"empty-state"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"big"[31m
+                [36m>[31m
+                  [0mNo package yet[0m
+                [36m</span>[31m
+                [0mDescribe the work zone [0m
+                [36m<span[31m
+                  [33mclass[31m=[32m"arrow"[31m
+                [36m>[31m
+                  [0m→[0m
+                [36m</span>[31m
+                [0m press generate[0m
+                [36m<span[31m
+                  [33mclass[31m=[32m"arrow"[31m
+                [36m>[31m
+                  [0m→[0m
+                [36m</span>[31m
+                [0m download the package[0m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</section>[31m
+          [36m<section[31m
+            [33mclass[31m=[32m"zone"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"zone-head"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"zone-tag"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"n"[31m
+                [36m>[31m
+                  [0m03[0m
+                [36m</span>[31m
+                [0mReference[0m
+              [36m</span>[31m
+              [36m<h2[31m
+                [33mclass[31m=[32m"zone-title"[31m
+              [36m>[31m
+                [0mRules, permit & audit[0m
+              [36m</h2>[31m
+            [36m</div>[31m
+          [36m</section>[31m
+        [36m</main>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+   [32m✓[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22ma tertiary road suggests Collector[32m 64[2mms[22m[39m
+   [32m✓[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22mthe classification-map caveat rides the row when the jurisdiction publishes a map[32m 127[2mms[22m[39m
+ [31m❯[39m components/GeneratorShell.suggest-contract.test.tsx [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3954[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22ma suggestion round-trip never places jurisdiction_key on the wire [33m 505[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mConfirm is the only writer — clicking it sets jurisdiction_key [33m 856[2mms[22m[39m
+[31m   [31m×[31m pin suggestion contract: suggest never sets[2m > [22mDismiss leaves a ×-record with undo — never a cleared slot (#227)[39m[33m 530[2mms[22m[39m
+[31m     → Unable to find an element with the text: /Dismissed the Denver suggestion — None — baseline stands\./. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"workbench min-h-screen"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-hidden[31m=[32m"true"[31m
+        [33mclass[31m=[32m"workbench-frame"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick tl"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick tr"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick bl"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"ftick br"[31m
+        [36m/>[31m
+      [36m</div>[31m
+      [36m<div>[31m
+        [36m<main[31m
+          [33mclass[31m=[32m"px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"mb-6"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block"[31m
+            [36m>[31m
+              [0m02 · GENERATOR[0m
+            [36m</div>[31m
+            [36m<h1[31m
+              [33mclass[31m=[32m"text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]"[31m
+            [36m>[31m
+              [0mMethod of Handling Traffic — plan generator[0m
+            [36m</h1>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]"[31m
+            [36m>[31m
+              [0mGenerate a CDOT-compliant MHT package: PDF plan sheet, device list, and crew instructions. Every dimension cited to MUTCD or CDOT standards.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1"[31m
+            [36m>[31m
+              [0mDraft — not a sealed plan[0m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]"[31m
+            [36m>[31m
+              [0mOutput is engineering reference. Requires review and seal by a licensed Professional Engineer prior to field use.[0m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"jbar jbar-readonly"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"jbar-main"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mJurisdiction[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-auth jbar-slot-auth"[31m
+                [36m>[31m
+                  [36m<b>[31m
+                    [0mNone — baseline[0m
+                  [36m</b>[31m
+                  [0m · MUTCD + Colorado Supplement only.[0m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mStreet classification[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-auth jbar-slot-hint"[31m
+                [36m>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"none"[31m
+                  [36m>[31m
+                    [0m◌ Not set — choose it in Setup[0m
+                  [36m</span>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jbar-cell"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"k"[31m
+                [36m>[31m
+                  [0mGoverning spec chain[0m
+                [36m</span>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jbar-slot-chain"[31m
+                [36m>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"chain"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"contents"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"seg"[31m
+                        [33mtitle[31m=[32m"MUTCD 11th Ed. + Colorado Supplement"[31m
+                      [36m>[31m
+                        [0mMUTCD 11th + CO Suppl.[0m
+                      [36m</span>[31m
+                    [36m</span>[31m
+                    [36m<span[31m
+                      [33mclass[31m=[32m"contents"[31m
+                    [36m>[31m
+                      [36m<span[31m
+                        [33maria-hidden[31m=[32m"true"[31m
+                        [33mclass[31m=[32m"sep"[31m
+                      [36m>[31m
+                        [0m›[0m
+                      [36m</span>[31m
+                      [36m<span[31m
+                        [33mclass[31m=[32m"seg"[31m
+                        [33mtitle[31m=[32m"CDOT Standard Specifications §630"[31m
+                      [36m>[31m
+                        [0mCDOT Specs §630[0m
+                      [36m</span>[31m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<section[31m
+            [33mclass[31m=[32m"zone outline-none dominant"[31m
+            [33mtabindex[31m=[32m"-1"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"zone-head"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"zone-tag"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"n"[31m
+                [36m>[31m
+                  [0m01[0m
+                [36m</span>[31m
+                [0mSetup[0m
+              [36m</span>[31m
+              [36m<h2[31m
+                [33mclass[31m=[32m"zone-title"[31m
+              [36m>[31m
+                [0mDescribe the work zone[0m
+              [36m</h2>[31m
+            [36m</div>[31m
+            [36m<div>[31m
+              [36m<button[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0mstub-drop-pin-denver[0m
+              [36m</button>[31m
+              [36m<button[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0mstub-drop-pin-parker[0m
+              [36m</button>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"jctl"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jctl-field"[31m
+                [36m>[31m
+                  [36m<label[31m
+                    [33mclass[31m=[32m"k"[31m
+                    [33mfor[31m=[32m"jl-jurisdiction"[31m
+                  [36m>[31m
+                    [0mJurisdiction[0m
+                  [36m</label>[31m
+                  [36m<select[31m
+                    [33mid[31m=[32m"jl-jurisdiction"[31m
+                  [36m>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m""[31m
+                    [36m>[31m
+                      [0mNone — baseline (MUTCD + CDOT) only[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"cdot"[31m
+                    [36m>[31m
+                      [0mCDOT (state highway)[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"denver"[31m
+                    [36m>[31m
+                      [0mDenver[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"lakewood"[31m
+                    [36m>[31m
+                      [0mLakewood[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"englewood"[31m
+                    [36m>[31m
+                      [0mEnglewood[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"littleton"[31m
+                    [36m>[31m
+                      [0mLittleton[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"centennial"[31m
+                    [36m>[31m
+                      [0mCentennial[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"parker"[31m
+                    [36m>[31m
+                      [0mParker[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"greeley"[31m
+                    [36m>[31m
+                      [0mGreeley[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"thornton"[31m
+                    [36m>[31m
+                      [0mThornton[0m
+                    [36m</option>[31m
+                    [36m<option[31m
+                      [33mvalue[31m=[32m"e470"[31m
+                    [36m>[31m
+                      [0mE-470[0m
+                    [36m</option>[31m
+                  [36m</select>[31m
+                  [36m<div[31m
+                    [33mclass[31m=[32m"jbar-auth"[31m
+                  [36m>[31m
+                    [0mStatewide baseline — MUTCD + Colorado Supplement only.[0m
+                  [36m</div>[31m
+                  [36m<div[31m
+                    [33maria-live[31m=[32m"polite"[31m
+                    [33mclass[31m=[32m"jbar-suggest quiet"[31m
+                  [36m>[31m
+                    [36m<span[31m
+                      [33maria-hidden[31m=[32m"true"[31m
+                    [36m>[31m
+                      [0m◌[0m
+                    [36m</span>[31m
+                    [36m<span>[31m
+                      [0mDrop a site pin for a jurisdiction suggestion[0m
+                    [36m</span>[31m
+                  [36m</div>[31m
+                [36m</div>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"jctl-field"[31m
+                [36m>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"k"[31m
+                  [36m>[31m
+                    [0mStreet classification[0m
+                  [36m</span>[31m
+                  [36m<div[31m
+                    [33maria-label[31m=[32m"Street classification"[31m
+                    [33mclass[31m=[32m"classpick"[31m
+                    [33mrole[31m=[32m"group"[31m
+                  [36m>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mLocal[0m
+                    [36m</button>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mCollector[0m
+                    [36m</button>[31m
+                    [36m<button[31m
+                      [33maria-pressed[31m=[32m"false"[31m
+                      [33mclass[31m=[32m""[31m
+                      [33mtype[31m=[32m"button"[31m
+                    [36m>[31m
+                      [0mArterial[0m
+                    [36m</button>[31m
+                  [36m</div>[31m
+                  [36m<span[31m
+                    [33mclass[31m=[32m"mapchip"[31m
+                  [36m>[31m
+                    [0m [0m
+                  [36m</span>[31m
+                [36m</div>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</section>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"sr-only"[31m
+            [33mrole[31m=[32m"status"[31m
+          [36m/>[31m
+          [36m<section[31m
+            [33mclass[31m=[32m"zone outline-none"[31m
+            [33mtabindex[31m=[32m"-1"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"zone-head"[31m
+            [36m>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"zone-tag"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"n"[31m
+                [36m>[31m
+                  [0m02[0m
+                [36m</span>[31m
+                [0mResults[0m
+              [36m</span>[31m
+              [36m<h2[31m
+                [33mclass[31m=[32m"zone-title"[31m
+              [36m>[31m
+                [0mMHT package[0m
+              [36m</h2>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m""[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"empty-state"[31m
+              [36m>[31m
+                [36m<span[31m
+                  [33mclass[31m=[32m"big"[31m
+                [36m>[31m
+                  [0mNo package yet[0m
+                [36m</span>[31m
+                [0mDescribe the work zone [0m
+                [36m<span[31m
+                  [33mclass[31m=[32m"arrow"[31m
+                [36m>[31m
+                  [0m→[0m
+                [36m</span>[31m
+                [0m press generate[0m
+                [36m<span[31m
+                  [33mclass[31m=[32m"arrow"[31m
+                [36m>[31m
+                  [0m→[0m
+                [36m</span>[31m
+                [0m download the package[0m
+              [36m</div>[31m
+            [36m</div>[31m
+          [36m</section>[31m
+        [36m</main>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22ma differing manual pick demotes the suggestion to a passive notice [33m 516[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mendpoint failure: slot goes quiet, picker works exactly as today [33m 923[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mno pin (default 0/0): no suggest call ever fires [33m 623[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.class-suggest.test.tsx[2m > [22mstreet-class suggestion contract 
+(#152 C): suggest never sets[2m > [22mDismiss leaves a ×-record with undo — never a cleared row (#227)
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Dismissed the Arterial 
+suggestion — Not set stands\./. This could be because the text is broken up by multiple elements. In this case, you 
+can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"workbench min-h-screen"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"workbench-frame"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick tl"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick tr"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick bl"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick br"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] 
+inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] 
+before:inline-block"[39m
+            [36m>[39m
+              [0m02 · GENERATOR[0m
+            [36m</div>[39m
+            [36m<h1[39m
+              [33mclass[39m=[32m"text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]"[39m
+            [36m>[39m
+              [0mMethod of Handling Traffic — plan generator[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]"[39m
+            [36m>[39m
+              [0mGenerate a CDOT-compliant MHT package: PDF plan sheet, device list, and crew instructions. Every 
+dimension cited to MUTCD or CDOT standards.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] 
+mb-1"[39m
+            [36m>[39m
+              [0mDraft — not a sealed plan[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]"[39m
+            [36m>[39m
+              [0mOutput is engineering reference. Requires review and seal by a licensed Professional Engineer prior 
+to field use.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"jbar jbar-readonly"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"jbar-main"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mJurisdiction[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-auth jbar-slot-auth"[39m
+                [36m>[39m
+                  [36m<b>[39m
+                    [0mNone — baseline[0m
+                  [36m</b>[39m
+                  [0m · MUTCD + Colorado Supplement only.[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mStreet classification[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-auth jbar-slot-hint"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"none"[39m
+                  [36m>[39m
+                    [0m◌ Not set — choose it in Setup[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mGoverning spec chain[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-slot-chain"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"chain"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"contents"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"seg"[39m
+                        [33mtitle[39m=[32m"MUTCD 11th Ed. + Colorado Supplement"[39m
+                      [36m>[39m
+                        [0mMUTCD 11th + CO Suppl.[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"contents"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"sep"[39m
+                      [36m>[39m
+                        [0m›[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"seg"[39m
+                        [33mtitle[39m=[32m"CDOT Standard Specifications §630"[39m
+                      [36m>[39m
+                        [0mCDOT Specs §630[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"zone outline-none dominant"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"zone-head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"zone-tag"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"n"[39m
+                [36m>[39m
+                  [0m01[0m
+                [36m</span>[39m
+                [0mSetup[0m
+              [36m</span>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"zone-title"[39m
+              [36m>[39m
+                [0mDescribe the work zone[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jctl"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jctl-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"k"[39m
+                    [33mfor[39m=[32m"jl-jurisdiction"[39m
+                  [36m>[39m
+                    [0mJurisdiction[0m
+                  [36m</label>[39m
+                  [36m<select[39m
+                    [33mid[39m=[32m"jl-jurisdiction"[39m
+                  [36m>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m>[39m
+                      [0mNone — baseline (MUTCD + CDOT) only[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"cdot"[39m
+                    [36m>[39m
+                      [0mCDOT (state highway)[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"denver"[39m
+                    [36m>[39m
+                      [0mDenver[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"lakewood"[39m
+                    [36m>[39m
+                      [0mLakewood[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"englewood"[39m
+                    [36m>[39m
+                      [0mEnglewood[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"littleton"[39m
+                    [36m>[39m
+                      [0mLittleton[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"centennial"[39m
+                    [36m>[39m
+                      [0mCentennial[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"parker"[39m
+                    [36m>[39m
+                      [0mParker[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"greeley"[39m
+                    [36m>[39m
+                      [0mGreeley[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"thornton"[39m
+                    [36m>[39m
+                      [0mThornton[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"e470"[39m
+                    [36m>[39m
+                      [0mE-470[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"jbar-auth"[39m
+                  [36m>[39m
+                    [0mStatewide baseline — MUTCD + Colorado Supplement only.[0m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33maria-live[39m=[32m"polite"[39m
+                    [33mclass[39m=[32m"jbar-suggest quiet"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m◌[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mDrop a site pin for a jurisdiction suggestion[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jctl-field"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"k"[39m
+                  [36m>[39m
+                    [0mStreet classification[0m
+                  [36m</span>[39m
+                  [36m<div[39m
+                    [33maria-label[39m=[32m"Street classification"[39m
+                    [33mclass[39m=[32m"classpick"[39m
+                    [33mrole[39m=[32m"group"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mLocal[0m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mCollector[0m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mArterial[0m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"mapchip"[39m
+                  [36m>[39m
+                    [0m [0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mstub-confirm-road[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mstub-move-pin-only[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-only"[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m/>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"zone outline-none"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"zone-head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"zone-tag"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"n"[39m
+                [36m>[39m
+                  [0m02[0m
+                [36m</span>[39m
+                [0mResults[0m
+              [36m</span>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"zone-title"[39m
+              [36m>[39m
+                [0mMHT package[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"empty-state"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"big"[39m
+                [36m>[39m
+                  [0mNo package yet[0m
+                [36m</span>[39m
+                [0mDescribe the work zone [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"arrow"[39m
+                [36m>[39m
+                  [0m→[0m
+                [36m</span>[39m
+                [0m press generate[0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"arrow"[39m
+                [36m>[39m
+                  [0m→[0m
+                [36m</span>[39m
+                [0m download the package[0m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"zone"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"zone-head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"zone-tag"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"n"[39m
+                [36m>[39m
+                  [0m03[0m
+                [36m</span>[39m
+                [0mReference[0m
+              [36m</span>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"zone-title"[39m
+              [36m>[39m
+                [0mRules, permit & audit[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+        [36m</main>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m components/GeneratorShell.class-suggest.test.tsx:[2m277:14[22m[39m
+    [90m275| [39m    )[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m276| [39m    [34mexpect[39m(
+    [90m277| [39m      screen.getByText(/Dismissed the Arterial suggestion — Not set st…
+    [90m   | [39m             [31m^[39m
+    [90m278| [39m    )[33m.[39m[34mtoBeTruthy[39m()[33m;[39m
+    [90m279| [39m    [35mfor[39m ([35mconst[39m c [35mof[39m [34mwireClasses[39m()) {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/GeneratorShell.suggest-contract.test.tsx[2m > [22mpin suggestion contract: 
+suggest never sets[2m > [22mDismiss leaves a ×-record with undo — never a cleared slot (#227)
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Dismissed the Denver 
+suggestion — None — baseline stands\./. This could be because the text is broken up by multiple elements. In this 
+case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"workbench min-h-screen"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"workbench-frame"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick tl"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick tr"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick bl"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ftick br"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] 
+inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] 
+before:inline-block"[39m
+            [36m>[39m
+              [0m02 · GENERATOR[0m
+            [36m</div>[39m
+            [36m<h1[39m
+              [33mclass[39m=[32m"text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]"[39m
+            [36m>[39m
+              [0mMethod of Handling Traffic — plan generator[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]"[39m
+            [36m>[39m
+              [0mGenerate a CDOT-compliant MHT package: PDF plan sheet, device list, and crew instructions. Every 
+dimension cited to MUTCD or CDOT standards.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] 
+mb-1"[39m
+            [36m>[39m
+              [0mDraft — not a sealed plan[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]"[39m
+            [36m>[39m
+              [0mOutput is engineering reference. Requires review and seal by a licensed Professional Engineer prior 
+to field use.[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"jbar jbar-readonly"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"jbar-main"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mJurisdiction[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-auth jbar-slot-auth"[39m
+                [36m>[39m
+                  [36m<b>[39m
+                    [0mNone — baseline[0m
+                  [36m</b>[39m
+                  [0m · MUTCD + Colorado Supplement only.[0m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mStreet classification[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-auth jbar-slot-hint"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"none"[39m
+                  [36m>[39m
+                    [0m◌ Not set — choose it in Setup[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jbar-cell"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"k"[39m
+                [36m>[39m
+                  [0mGoverning spec chain[0m
+                [36m</span>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jbar-slot-chain"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"chain"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"contents"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"seg"[39m
+                        [33mtitle[39m=[32m"MUTCD 11th Ed. + Colorado Supplement"[39m
+                      [36m>[39m
+                        [0mMUTCD 11th + CO Suppl.[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"contents"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"sep"[39m
+                      [36m>[39m
+                        [0m›[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"seg"[39m
+                        [33mtitle[39m=[32m"CDOT Standard Specifications §630"[39m
+                      [36m>[39m
+                        [0mCDOT Specs §630[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"zone outline-none dominant"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"zone-head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"zone-tag"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"n"[39m
+                [36m>[39m
+                  [0m01[0m
+                [36m</span>[39m
+                [0mSetup[0m
+              [36m</span>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"zone-title"[39m
+              [36m>[39m
+                [0mDescribe the work zone[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mstub-drop-pin-denver[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mstub-drop-pin-parker[0m
+              [36m</button>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jctl"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jctl-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"k"[39m
+                    [33mfor[39m=[32m"jl-jurisdiction"[39m
+                  [36m>[39m
+                    [0mJurisdiction[0m
+                  [36m</label>[39m
+                  [36m<select[39m
+                    [33mid[39m=[32m"jl-jurisdiction"[39m
+                  [36m>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m>[39m
+                      [0mNone — baseline (MUTCD + CDOT) only[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"cdot"[39m
+                    [36m>[39m
+                      [0mCDOT (state highway)[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"denver"[39m
+                    [36m>[39m
+                      [0mDenver[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"lakewood"[39m
+                    [36m>[39m
+                      [0mLakewood[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"englewood"[39m
+                    [36m>[39m
+                      [0mEnglewood[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"littleton"[39m
+                    [36m>[39m
+                      [0mLittleton[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"centennial"[39m
+                    [36m>[39m
+                      [0mCentennial[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"parker"[39m
+                    [36m>[39m
+                      [0mParker[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"greeley"[39m
+                    [36m>[39m
+                      [0mGreeley[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"thornton"[39m
+                    [36m>[39m
+                      [0mThornton[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"e470"[39m
+                    [36m>[39m
+                      [0mE-470[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"jbar-auth"[39m
+                  [36m>[39m
+                    [0mStatewide baseline — MUTCD + Colorado Supplement only.[0m
+                  [36m</div>[39m
+                  [36m<div[39m
+                    [33maria-live[39m=[32m"polite"[39m
+                    [33mclass[39m=[32m"jbar-suggest quiet"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m◌[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mDrop a site pin for a jurisdiction suggestion[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"jctl-field"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"k"[39m
+                  [36m>[39m
+                    [0mStreet classification[0m
+                  [36m</span>[39m
+                  [36m<div[39m
+                    [33maria-label[39m=[32m"Street classification"[39m
+                    [33mclass[39m=[32m"classpick"[39m
+                    [33mrole[39m=[32m"group"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mLocal[0m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mCollector[0m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-pressed[39m=[32m"false"[39m
+                      [33mclass[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [0mArterial[0m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"mapchip"[39m
+                  [36m>[39m
+                    [0m [0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"sr-only"[39m
+            [33mrole[39m=[32m"status"[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m11 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 12:13:17
+[2m   Duration [22m 5.81s[2m (transform 344ms, setup 0ms, collect 1.22s, tests 5.04s, environment 1.00s, prepare 255ms)[22m
+
+          [36m/>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"zone outline-none"[39m
+            [33mtabindex[39m=[32m"-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"zone-head"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"zone-tag"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"n"[39m
+                [36m>[39m
+                  [0m02[0m
+                [36m</span>[39m
+                [0mResults[0m
+              [36m</span>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"zone-title"[39m
+              [36m>[39m
+                [0mMHT package[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"empty-state"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"big"[39m
+                [36m>[39m
+                  [0mNo package yet[0m
+                [36m</span>[39m
+                [0mDescribe the work zone [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"arrow"[39m
+                [36m>[39m
+                  [0m→[0m
+                [36m</span>[39m
+                [0m press generate[0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"arrow"[39m
+                [36m>[39m
+                  [0m→[0m
+                [36m</span>[39m
+                [0m download the package[0m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+        [36m</main>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m components/GeneratorShell.suggest-contract.test.tsx:[2m203:14[22m[39m
+    [90m201| [39m    [34mexpect[39m(screen[33m.[39m[34mqueryByText[39m([36m/Pin 
+suggests:/[39m))[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m202| [39m    [34mexpect[39m(
+    [90m203| [39m      screen.getByText(/Dismissed the Denver suggestion — None — basel…
+    [90m   | [39m             [31m^[39m
+    [90m204| [39m    )[33m.[39m[34mtoBeTruthy[39m()[33m;[39m
+    [90m205| [39m    expect(screen.getByText(/Boundary data is approximate/)).toBeTruth…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
