@@ -30,9 +30,21 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { DEFAULT_SCENARIO } from "@/lib/scenarios";
+import type { Scenario } from "@/lib/scenarios";
 
 const parker = (demo as { jurisdictions: Record<string, unknown> })
   .jurisdictions.parker as JurisdictionBlock;
+
+// #227: the jurisdiction band is pin-gated (pre-pin its body is inert
+// + aria-hidden, so the class pills leave the accessibility tree).
+// This suite's subject is stale-while-revalidate, not gating — mount
+// pinned so the controls are live, exactly as a user switching classes
+// would be.
+const PINNED: Scenario = {
+  ...DEFAULT_SCENARIO,
+  meta: { ...DEFAULT_SCENARIO.meta, lat: 39.5186, lng: -104.7614 },
+} as Scenario;
 
 const BREAKDOWN_BASE = {
   devices: [],
@@ -113,7 +125,7 @@ function chainSegs(): number {
 
 async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   const user = userEvent.setup();
-  render(<GeneratorShell mode="sandbox" />);
+  render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
   await release(0, okBreakdown(false));
   const select = document.querySelector(
     "#jl-jurisdiction",
