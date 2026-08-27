@@ -948,6 +948,7 @@ export function GeneratorShell({
                 corridorSpecLengths={corridorSpecLengths}
                 jurisdictionControls={jurisdictionControls}
                 jurisdictionName={jurisdictionBlock?.name ?? null}
+                jurisdictionBlock={jurisdictionBlock}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }

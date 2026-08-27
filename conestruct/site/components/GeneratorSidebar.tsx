@@ -35,7 +35,10 @@ import {
   validateWorkZone,
 } from "@/lib/scenarios/validation";
 import { deriveRail } from "@/lib/scenarios/rail";
-import { JURISDICTION_OPTIONS } from "@/lib/jurisdiction";
+import {
+  JURISDICTION_OPTIONS,
+  type JurisdictionBlock,
+} from "@/lib/jurisdiction";
 import { ProgressRail } from "./ProgressRail";
 import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
@@ -107,6 +110,9 @@ interface Props {
   // jurisdiction is named.  The strip falls back to the option label /
   // "None — baseline" — a real answer, never blank.
   jurisdictionName?: string | null;
+  // #227 schedule reference block: the full evaluated block — window
+  // set + hours_eval — for the Schedule step's window rows.
+  jurisdictionBlock?: JurisdictionBlock | null;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -169,6 +175,7 @@ export function GeneratorSidebar({
   corridorSpecLengths,
   jurisdictionControls,
   jurisdictionName = null,
+  jurisdictionBlock = null,
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -496,6 +503,7 @@ export function GeneratorSidebar({
           setScenario={setScenario}
           step={scheduleStep(scenario.kind)}
           stepsPending={stepsPending}
+          jurisdiction={jurisdictionBlock ?? null}
         />
 
         <SiteConditionsField

@@ -1795,6 +1795,23 @@ input[type="number"] {
   border-right: 0;
 }
 
+/* ─── #227 schedule window reference block ───
+   Real class-scoped window rows at final widths: the fixed grid means
+   evaluation changes glyph + value text only — nothing reflows when
+   dates land (PDF p.2, asserted by test). */
+.workbench .sched-windows {
+  margin-top: 12px;
+  border-top: 1px dashed var(--rule);
+  padding-top: 10px;
+}
+.workbench .sched-windows .sched-window-row {
+  display: grid;
+  grid-template-columns: var(--glyph-cell) 1fr auto;
+  align-items: baseline;
+  gap: 6px;
+  padding: 2px 0;
+}
+
 /* ─── #227 corridor proportional bar ───
    Nine pixels of sanity check under the extent table (PDF p.2/p.5).
    min-width floors each segment (--bar-seg-min, CHOSEN) so small zones
