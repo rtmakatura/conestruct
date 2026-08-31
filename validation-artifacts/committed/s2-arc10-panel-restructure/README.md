@@ -76,3 +76,21 @@ rules live in `conestruct/site/DESIGN-SPACING.md` under
     `[region]` pre-pin, `[label, region]` pinned, before == after
     (`axe-before.json` / `axe-after.json`) — the predicted baseline
     held exactly.
+- `live-checks/s2a10-lc-prod.js` + `outS2A10Prod/` — the PROD re-run
+  after the ship (2026-08-31, prod at `26b78dd`; healthz sha ==
+  `git rev-parse HEAD` verified before the run). **ALL PASS** (17/17,
+  `assertions-raw.md`), read-only against the deployed bundle:
+  fact strip (five cells pinned, absent pre-pin, "None — baseline"
+  answered); band a pending full-width sibling; the dismiss →
+  ×-record → undo-re-arms flow live on the prod suggest endpoint
+  (`prod-record-dismissed/rearmed.png`); corridor bar aria-hidden with
+  segment rank order matching the rows (`rows=[1500,217,645,400,50]`,
+  the 50 ft downstream held at 9 px by the floor) and no ✓ prefix;
+  Denver's real window row ◌ unevaluated
+  (`prod-schedule-unevaluated.png`); the #214 repro on the real prod
+  picker — East Bayaud way 39508704, detected 85° vs typed 90°, the
+  governs note in the modal and the detected-vs-applied block
+  (`prod-214-*.png`); axe violation-id sets equal to the committed
+  local baseline (`axe-prod.json`: `[region]` pre-pin,
+  `[label, region]` pinned — zero new). Captures:
+  `prod-{shoulder,flagger,near-intersection}.png` + one grayscale.
