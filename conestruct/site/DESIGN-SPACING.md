@@ -168,3 +168,58 @@ without numbers (Rule 12):
 
 Out of scope here: #228 rail vocabulary, #224 site-conditions
 retirement, #205 multi-jurisdiction boundary pins.
+
+## Rail vocabulary (issue #228)
+
+GO 2026-08-31: eight rulings accepted as recommended. The vocabulary is
+DERIVED, not stored -- every state, glyph, word, info line, and aria
+phrase a rail row shows is a field on `deriveRail`'s return
+(lib/scenarios/rail.ts); the component renders verbatim (sentinel test:
+ProgressRail.single-voice.test.tsx, red-proved against the #221
+component).
+
+### The five states
+
+| State | Glyph | Word (visible) | Ink |
+|---|---|---|---|
+| done | `✓` | -- (none) | `--pass` |
+| attention | `⚠` one per issue | "needs attention" / the blocker string on the owning entry | `--warn` / `--fail` |
+| pending | `◌` | "pending" | `--none` |
+| notset | `◌` | "optional · not set" (sheeted, PDF p. 5) | `--none` |
+| stale | `▲` CHOSEN | "detection stale" CHOSEN | `--dim` |
+
+- **stale** (ruling 2) is the PDF's flagged fourth state (p. 5:
+  complete-but-stale, "I'd want to design its glyph rather than have
+  one picked ad hoc" -- so glyph + word are CHOSEN here, from the
+  reconciled set). Predicate: `meta.confirmedRoad` present at a pin
+  it no longer matches -- the exact DetectedVsApplied staleness key,
+  rule 3 mirror comments both sides. Road only; `attention` outranks
+  it; it never gates.
+- **Step indexes** (ruling 4): every entry renders its STEP number
+  zero-padded ("02 Location"; format CHOSEN), derived in rail.ts
+  beside the fifth-step table; ink `--ink-on-dark-faint`.
+- **Info sublines** (rulings 1/5), `--ink-on-dark-faint`, never a
+  state or blocker: Location's pending-proposal count ("2 to
+  confirm"), computed by the shell from the SAME expressions the two
+  suggestion slots branch on; Schedule's duration ("4 days",
+  inclusive; "1 day" for a single date) -- display-only date
+  arithmetic, rule 3.
+- **Register** (ruling 3): rail entries adopt the step-index register
+  in full -- mono 400 · 10px · 0.14em · UPPERCASE (PDF p. 3); the
+  #226 deferral retired.
+
+### Ruled deviations from the reference sheets
+
+- **No band entry, no "classification not set" line** (ruling 1): the
+  PDF's Reference B rail reads "classification not set" after a
+  dismiss (p. 10), and its p. 6 note says treating unset classification
+  as blocking "is a product rule, not a design one" -- our product rule
+  (#227) is that classification never gates, so the band has no rail
+  entry and no rail line; only the pending-proposal count speaks, on
+  Location.
+- **The references' ● and — glyphs do not land**: neither is in the
+  reconciled vocabulary; the count subline replaces ●'s "in progress"
+  reading and "optional · not set" replaces the — row.
+- **Dismiss-honesty** (PDF p. 4 corollary): dismissing without
+  choosing removes only the count line -- no state moves, no ✓ is
+  manufactured (asserted mounted).
