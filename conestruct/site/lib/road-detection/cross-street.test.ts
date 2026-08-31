@@ -11,7 +11,7 @@ import {
 import { destinationPoint } from "@/lib/geodesy";
 import type {
   RoadCandidate,
-  RoadDetectResponse,
+  RoadDetectOk,
 } from "@/lib/road-detection/types";
 
 const M_PER_FT = 0.3048;
@@ -44,8 +44,8 @@ function mkCandidate(over: Partial<RoadCandidate>): RoadCandidate {
 function mkDetection(
   candidates: RoadCandidate[],
   isUrban = true,
-): RoadDetectResponse {
-  return { candidates, primary_index: 0, isUrban, placeName: null };
+): RoadDetectOk {
+  return { scan_status: "ok", candidates, primary_index: 0, isUrban, placeName: null };
 }
 
 const ANCHOR = { lat: 39.9936, lng: -105.0897 };

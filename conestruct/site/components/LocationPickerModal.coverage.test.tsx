@@ -80,6 +80,7 @@ function stubFetches(detect: RoadDetectResponse) {
 
 function detection(candidates: RoadCandidate[]): RoadDetectResponse {
   return {
+    scan_status: "ok",
     candidates,
     primary_index: candidates.length >= 1 ? 0 : null,
     isUrban: true,

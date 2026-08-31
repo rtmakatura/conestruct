@@ -134,8 +134,10 @@ describe("unavailable scan renders as unavailable (#213)", () => {
 
     // The panel names the failure — not "No road detected at this
     // point" (a measurement) and not any road-type claim derived from
-    // the silent isUrban:false default.
-    await screen.findByText(/Detection service unavailable/i);
+    // the silent isUrban:false default.  (Both the outcome card and
+    // the property panel voice it — findAll, at least one.)
+    const hits = await screen.findAllByText(/Detection service unavailable/i);
+    expect(hits.length).toBeGreaterThan(0);
     expect(screen.queryByText(/No road detected at this point/i)).toBeNull();
     expect(screen.queryByText(/rural/i)).toBeNull();
   });

@@ -65,6 +65,7 @@ const OTHER_ROAD = candidate({
 
 function detection(candidates: RoadCandidate[]): RoadDetectResponse {
   return {
+    scan_status: "ok",
     candidates,
     primary_index: candidates.length === 1 ? 0 : null,
     isUrban: true,

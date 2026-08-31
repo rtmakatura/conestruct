@@ -17,7 +17,7 @@ import {
   parseLaneNumber,
   parseMaxspeedToMph,
 } from "./classify";
-import type { RoadCandidate, RoadDetectResponse } from "./types";
+import type { RoadCandidate, RoadDetectOk } from "./types";
 
 // A signal node this close to the cross street's snapped point means
 // the intersection is signal-controlled.  Same magnitude as the
@@ -72,8 +72,11 @@ export interface CrossStreetCandidate {
 }
 
 export interface DeriveCrossStreetInput {
-  /** Detection response from /api/road-bearing at the SECOND pin. */
-  detection: RoadDetectResponse;
+  /** Detection response from /api/road-bearing at the SECOND pin.
+   *  Narrowed to the completed-scan member (#213): the caller guards
+   *  scan_status before deriving, so the isUrban read below is always
+   *  a measurement, never the old unavailable-path rural default. */
+  detection: RoadDetectOk;
   /** The picked mainline's identity, to exclude it from candidates. */
   mainlineWayId: string | null;
   mainlineName: string | null;
@@ -121,7 +124,7 @@ export function alongStationFromPins(
 }
 
 function pickCrossCandidate(
-  detection: RoadDetectResponse,
+  detection: RoadDetectOk,
   mainlineWayId: string | null,
   mainlineName: string | null,
   mainlineBearingDeg: number,

@@ -91,7 +91,7 @@ function caption(label: string): HTMLElement {
 
 beforeEach(() => {
   delete process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-  stubDetection({ candidates: [MIXED], primary_index: 0, isUrban: true, placeName: "Denver" });
+  stubDetection({ scan_status: "ok", candidates: [MIXED], primary_index: 0, isUrban: true, placeName: "Denver" });
 });
 
 afterEach(() => {

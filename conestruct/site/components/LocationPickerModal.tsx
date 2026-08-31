@@ -824,6 +824,23 @@ export function LocationPickerModal({
         }
         const j = (await r.json()) as RoadDetectResponse;
         if (bearingTokenRef.current !== myToken) return;
+        if (j.scan_status === "unavailable") {
+          // #213: the scan never completed — say so and stamp NOTHING.
+          // No detectionContext (the silent isUrban:false rural default
+          // was the bug), and no absence claim (that copy is reserved
+          // for a completed scan below).  The ↻ Re-detect roads control
+          // is the retry affordance.
+          setBearingWarning(
+            "Road detection is unavailable right now — use ↻ Re-detect roads to retry, or enter bearing manually.",
+          );
+          setBearingCandidates([]);
+          setSelectedCandidateIdx(null);
+          setClassify({
+            state: "error",
+            message: "Detection service unavailable",
+          });
+          return;
+        }
         const cands = j.candidates ?? [];
         setDetectionContext({ isUrban: j.isUrban, placeName: j.placeName });
         if (cands.length === 0) {
@@ -945,6 +962,14 @@ export function LocationPickerModal({
       }
       const j = (await r.json()) as RoadDetectResponse;
       if (crossTokenRef.current !== myToken) return;
+      if (j.scan_status === "unavailable") {
+        // #213: same guard as the mainline path — an unavailable scan
+        // is the error state, never a derived "no cross street" (and
+        // never deriveCrossStreet's isUrban-driven rural default).
+        setCrossStreet(null);
+        setCrossStatus("error");
+        return;
+      }
       const ctx = crossDetectCtxRef.current;
       // The anchor pin sits one downstream-taper length below station
       // 0, so the derivation needs the same backend-fed length the

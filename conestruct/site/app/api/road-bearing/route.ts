@@ -23,7 +23,8 @@ import {
 } from "@/lib/road-detection/stitch";
 import type {
   RoadCandidate,
-  RoadDetectResponse,
+  RoadDetectOk,
+  RoadDetectUnavailable,
 } from "@/lib/road-detection/types";
 import { rateLimitOr429 } from "@/lib/rate-limit";
 
@@ -256,16 +257,32 @@ function pickClosestPlace(
   return best;
 }
 
-function emptyResponse(isUrban: boolean, placeName: string | null): RoadDetectResponse {
-  return { candidates: [], primary_index: null, isUrban, placeName };
+// A completed scan that found nothing — a measurement, so the place
+// facts from the same round trip stay on it (#213: only the never-ran
+// path is barred from claiming them).
+function emptyResponse(isUrban: boolean, placeName: string | null): RoadDetectOk {
+  return { scan_status: "ok", candidates: [], primary_index: null, isUrban, placeName };
+}
+
+// The scan never completed (#213): every mirror failed or 4xx'd.  The
+// body claims nothing — no candidates, no isUrban (the old computed
+// `false` here was the silent rural default), no placeName.
+function unavailableResponse(): RoadDetectUnavailable {
+  return {
+    scan_status: "unavailable",
+    candidates: [],
+    primary_index: null,
+    isUrban: null,
+    placeName: null,
+  };
 }
 
 function buildResponse(
-  payload: OverpassResponse | null,
+  payload: OverpassResponse,
   lat: number,
   lng: number,
-): RoadDetectResponse {
-  const elements = payload?.elements ?? [];
+): RoadDetectOk {
+  const elements = payload.elements ?? [];
 
   // Resolve pin-level place context once for the whole response.
   // isUrban is the gate that flips trunk/primary/secondary/tertiary
@@ -362,6 +379,7 @@ function buildResponse(
   );
 
   return {
+    scan_status: "ok",
     candidates: deduped,
     primary_index: 0,
     isUrban,
@@ -472,6 +490,14 @@ export async function POST(req: NextRequest) {
     payload = null;
   }
 
+  if (payload === null) {
+    // #213: all mirrors failed (or the query 4xx'd) — the scan never
+    // ran, so this is an honest "unavailable", never the fabricated
+    // empty measurement it used to serialize as.  Still HTTP 200: the
+    // route worked; the upstream did not.
+    return Response.json(unavailableResponse());
+  }
+
   const response = buildResponse(payload, lat, lng);
   if (response.candidates.length > 0) {
     try {
@@ -480,7 +506,11 @@ export async function POST(req: NextRequest) {
       if ((err as Error).name === "AbortError") {
         return new Response("Aborted", { status: 499 });
       }
-      // Best-effort: candidates keep own-way geometry.
+      // Best-effort: candidates keep own-way geometry.  The silent
+      // degradation (the s2-arc5 "Colfax transient": a 17-pt own-way
+      // chain served where re-probes served 191 pts) is pinned by
+      // route.test.ts; surfacing it on the wire is #224 phase-1+
+      // scope, not #213's.
     }
   }
   return Response.json(response);

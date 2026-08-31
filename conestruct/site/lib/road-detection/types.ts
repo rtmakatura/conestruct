@@ -91,12 +91,34 @@ export interface RoadCandidate {
 // describe the *pin location*, not any individual candidate — they
 // come from a single Overpass place-node lookup that runs in the same
 // round trip as the way query.
-export interface RoadDetectResponse {
+//
+// #213: `scan_status` separates a completed scan from an upstream
+// failure.  "ok" is a measurement — candidates, isUrban, and placeName
+// are claims about the pin, including the empty-candidates case
+// ("no road here" was measured).  "unavailable" means Overpass never
+// answered: the response claims nothing — no candidates, no urban
+// verdict, no place name.  A discriminated union so consumers must
+// narrow before reading the measured fields; the pre-#213 shape let an
+// outage serialize as `isUrban:false` and become a silent rural
+// default downstream.
+export interface RoadDetectOk {
+  scan_status: "ok";
   candidates: RoadCandidate[];
   primary_index: number | null;
   isUrban: boolean;
   placeName: string | null;
 }
+
+export interface RoadDetectUnavailable {
+  scan_status: "unavailable";
+  /** Always empty — kept so `.candidates` reads never branch on shape. */
+  candidates: RoadCandidate[];
+  primary_index: null;
+  isUrban: null;
+  placeName: null;
+}
+
+export type RoadDetectResponse = RoadDetectOk | RoadDetectUnavailable;
 
 // Final classification shape consumed by the LocationPickerModal's
 // property panel and applyClassification in lib/scenarios/auto-apply.ts.
