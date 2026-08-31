@@ -464,3 +464,136 @@ def test_generic_details_append_safe_on_every_bucket(
         appended += 1
     assert appended == len(_STANDARD_BUCKET_KEYS)
     assert result["road_curvature"]["details"][-1] == "generic-consumer note"
+
+
+# ---------------------------------------------------------------------------
+# Failure taxonomy (#213, s2-arc12): the error branches, previously
+# untested.  ``stub_overpass`` above can only express success — these
+# fixtures express the mirror-failure classes so the honest-refusal
+# contract ("all buckets empty + an ``error`` key, never a fabricated
+# measurement") is pinned per distinguishable outcome.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def stub_overpass_down() -> Iterator[list[Any]]:
+    """Every mirror raises at the transport layer (outage / timeout class).
+
+    Yields the call log so tests can assert how many mirrors were tried.
+    """
+    calls: list[Any] = []
+
+    def fake_post(url: str, **_kwargs: Any) -> _FakeResponse:
+        calls.append(url)
+        raise site_detection.httpx.ConnectError("connection refused")
+
+    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+        yield calls
+
+
+@pytest.fixture
+def stub_overpass_4xx() -> Iterator[list[Any]]:
+    """First mirror answers 400 — the query itself is rejected."""
+    calls: list[Any] = []
+
+    def fake_post(url: str, **_kwargs: Any) -> _FakeResponse:
+        calls.append(url)
+        return _FakeResponse({}, status_code=400)
+
+    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+        yield calls
+
+
+def test_point_scan_failure_is_error_plus_empty_never_a_measurement(
+    stub_overpass_down: list[Any],
+) -> None:
+    """Coverage pin (green at baseline — the branch was correct, just
+    untested): a full outage returns every bucket empty PLUS ``error``.
+    The empty buckets alone must never be mistaken for a completed scan."""
+    result = site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
+    assert "error" in result
+    assert "ConnectError" in result["error"]
+    for key in _STANDARD_BUCKET_KEYS:
+        assert result[key]["detected"] is False, key
+        assert result[key]["count"] == 0, key
+
+
+def test_point_scan_failure_tries_every_mirror(
+    stub_overpass_down: list[Any],
+) -> None:
+    """Transport errors fall through the whole mirror list before failing."""
+    site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
+    assert len(stub_overpass_down) == len(site_detection.OVERPASS_MIRRORS)
+
+
+def test_point_scan_4xx_hard_stops_the_mirror_list(
+    stub_overpass_4xx: list[Any],
+) -> None:
+    """A 4xx means the query is malformed — retrying another mirror would
+    repeat it, so exactly one request fires and the error names the status."""
+    result = site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
+    assert "error" in result
+    assert "400" in result["error"]
+    assert len(stub_overpass_4xx) == 1
+
+
+def test_corridor_scan_failure_is_error_plus_empty(
+    stub_overpass_down: list[Any],
+) -> None:
+    """Coverage pin (green at baseline): the corridor detector's failure
+    branch mirrors the point detector's — empty buckets + ``error``."""
+    result = site_detection.detect_along_corridor(_test_corridor())
+    assert "error" in result
+    for key in _STANDARD_BUCKET_KEYS:
+        assert result[key]["detected"] is False, key
+        assert result[key]["count"] == 0, key
+        assert result[key]["features"] == [], key
+
+
+# ---------------------------------------------------------------------------
+# validate_corridor_against_osm reason split (#213 V4): ``checked:False``
+# conflated three causes — inputs insufficient, Overpass exception, and
+# an Overpass error result — and the audit PDF asserted the first one
+# ("no site coordinates supplied") for all three.  The ``reason`` key
+# makes the causes distinguishable downstream.
+# ---------------------------------------------------------------------------
+
+
+def test_validate_reason_unavailable_on_error_result() -> None:
+    with patch.object(
+        site_detection,
+        "detect_road_bearing",
+        return_value={"error": "overpass-api.de: 504 Gateway Timeout", "bearing_deg": None},
+    ):
+        out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0)
+    assert out["checked"] is False
+    assert out["reason"] == "check_unavailable"
+    assert "504" in out["error"]
+
+
+def test_validate_reason_unavailable_on_exception() -> None:
+    with patch.object(
+        site_detection,
+        "detect_road_bearing",
+        side_effect=RuntimeError("socket torn down"),
+    ):
+        out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0)
+    assert out["checked"] is False
+    assert out["reason"] == "check_unavailable"
+
+
+def test_validate_reason_not_run_without_bearing() -> None:
+    out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, None)
+    assert out["checked"] is False
+    assert out["reason"] == "not_run_no_coords"
+
+
+def test_validate_success_carries_no_reason() -> None:
+    with patch.object(
+        site_detection,
+        "detect_road_bearing",
+        return_value={"highway": "primary", "bearing_deg": 85.0, "way_id": 39508704},
+    ):
+        out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0)
+    assert out["checked"] is True
+    assert "reason" not in out

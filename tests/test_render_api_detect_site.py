@@ -248,3 +248,29 @@ def test_mid_bend_feature_classifies_in_the_road_frame(
     assert feature["relevant"] is True
     assert feature["along_station_ft"] == pytest.approx(mid_wz, abs=2.0)
     assert out["intersections"]["detected"] is True
+
+
+# ---------------------------------------------------------------------------
+# #213 — the failure signal crosses this hop intact
+# ---------------------------------------------------------------------------
+
+
+def test_detector_error_key_passes_through(
+    client: TestClient,
+    auth_headers: dict[str, str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Coverage pin (green at baseline): the endpoint's spread preserves
+    the detector's ``error`` key, so an Overpass outage reaches the UI as
+    a failure — never rebranded as a clean empty scan.  #224's in-generate
+    scan will refuse on exactly this signal (ruling 2)."""
+    from src.api import render_api
+
+    failed = {**_sentinel(), "error": "overpass-api.de: ConnectError: connection refused"}
+    monkeypatch.setattr(render_api, "detect_site_conditions", lambda *a, **k: failed)
+
+    resp = client.post("/render/detect-site", json=_POINT_BODY, headers=auth_headers)
+    assert resp.status_code == 200
+    out = resp.json()
+    assert out["mode"] == "point"
+    assert "ConnectError" in out["error"]
