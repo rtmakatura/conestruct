@@ -69,3 +69,16 @@ glyph, word, info, aria, step index) lands as fields on the entries
   and leaves `confirmedRoad` untouched — exactly the flow R5 drives.
 - Prod re-run happens after ship (s2a11 live-checks branch, next
   task).
+
+## Prod run (post-ship, 2026-08-31)
+
+- `live-checks/s2a11-lc-prod.js` + `outS2A11Prod/` — the same
+  R1–R6 against https://www.conestruct.com/sandbox with prod at
+  `ceba2f1` (`/healthz` == `main`, verified): **ALL PASS 25/25**.
+  Step indexes + 1.4px register on the deployed bundle; "optional ·
+  not set"; live suggest → "1 to confirm" → dismiss-honesty; "1 day" /
+  "4 days"; the stale path end to end (real Bayaud detection, the
+  #173 refusal remedied by its own pointer — attention outranking
+  stale live — then the Edit-manually pin move rendering ▲ "detection
+  stale" in rgb(255, 138, 46), no blocker); axe sets `[region]` /
+  `[label, region]` — equal to the committed baseline, zero new.
