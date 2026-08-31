@@ -1916,13 +1916,14 @@ input[type="number"] {
   border: none;
   padding: 2px 0;
   cursor: pointer;
-  /* #226: rail entries share the step-index register (mono 10px caps)
-     but are navigation, not one of the four label roles — the rail's
-     vocabulary is #228's.  Values deliberately byte-identical to
-     pre-#226; tracking stays 0.08em pending that arc. */
+  /* #228 (ruling 3): the rail adopts the step-index register in full —
+     mono 400 · 10px · 0.14em · UPPERCASE (PDF p.3; the #226 deferral
+     retired).  Entries are navigation, not one of the four label
+     roles; the label keeps --ink-on-dark, the index itself dims to
+     the role's faint ink (.rail-step below). */
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-on-dark);
 }
@@ -1945,6 +1946,25 @@ input[type="number"] {
 .workbench .progress-rail .st-pending .rail-note,
 .workbench .progress-rail .st-notset .rail-note {
   color: var(--none);
+}
+/* #228: the stale fourth state — ▲ + "detection stale" in --dim
+   (ruling 2), grayscale-distinct from ✓/⚠/◌/×. */
+.workbench .progress-rail .st-stale .rail-glyph,
+.workbench .progress-rail .st-stale .rail-note {
+  color: var(--dim);
+}
+/* #228 ruling 4: the zero-padded STEP index, in the step-index role's
+   faint ink (PDF p.3: "The step number and nothing else … the rail's
+   jump target"). */
+.workbench .progress-rail .rail-step {
+  color: var(--ink-on-dark-faint);
+}
+/* #228 rulings 1/5: the informational subline ("2 to confirm" /
+   "4 days") — informational ink, never a verdict color. */
+.workbench .progress-rail .rail-info {
+  color: var(--ink-on-dark-faint);
+  text-transform: none;
+  letter-spacing: 0.05em;
 }
 .workbench .progress-rail .rail-note {
   color: var(--warn);
