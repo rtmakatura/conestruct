@@ -1,0 +1,44 @@
+# s2-arc11 live checks (local)
+
+- `2026-08-31T14:55:22.053Z` — R1: pre-pin rail —
+- `2026-08-31T14:55:25.411Z` **PASS** — R1 step indexes 02–05, zero-padded, in order (02,03,04,05)
+- `2026-08-31T14:55:25.429Z` **PASS** — R1 Location aria carries the blocker verbatim + (current blocker) (Location — needs attention: Set a location first — pick on map or enter manually. (current blocker))
+- `2026-08-31T14:55:25.432Z` **PASS** — R1 Road aria byte-identical pre-arc format (Road — pending — set a location first)
+- `2026-08-31T14:55:25.435Z` **PASS** — R1 Road visible word 'pending' (pending)
+- `2026-08-31T14:55:25.437Z` **PASS** — R1 exactly one ⚠ pre-pin (the location blocker)
+- `2026-08-31T14:55:25.446Z` **PASS** — R1 register letter-spacing 1.4px (0.14em @ 10px, ruling 3) (1.4px)
+- `2026-08-31T14:55:25.604Z` screenshot: r1-prepin.png
+- `2026-08-31T14:55:25.792Z` screenshot: r1-prepin-grayscale.png
+- `2026-08-31T14:55:25.794Z` — R2: pinned —
+- `2026-08-31T14:55:26.412Z` **PASS** — R2 Location — done
+- `2026-08-31T14:55:26.414Z` **PASS** — R2 Schedule word 'optional · not set' (sheeted p.5) (optional · not set)
+- `2026-08-31T14:55:26.416Z` **PASS** — R2 Schedule glyph ◌ (◌)
+- `2026-08-31T14:55:26.618Z` screenshot: r2-pinned.png
+- `2026-08-31T14:55:26.618Z` — R3: the count subline + dismiss-honesty —
+- `2026-08-31T14:55:26.852Z` **PASS** — R3 live suggest → 'Location — done · 1 to confirm'
+- `2026-08-31T14:55:26.854Z` **PASS** — R3 visible info line '1 to confirm'
+- `2026-08-31T14:55:27.053Z` screenshot: r3-count.png
+- `2026-08-31T14:55:27.110Z` **PASS** — R3 dismiss-honesty: only the count line moved — every entry's state class unchanged
+- `2026-08-31T14:55:27.112Z` **PASS** — R3 no info line after dismiss
+- `2026-08-31T14:55:27.296Z` screenshot: r3-dismissed.png
+- `2026-08-31T14:55:27.296Z` — R4: the duration subline —
+- `2026-08-31T14:55:27.381Z` **PASS** — R4 single day → 'Schedule — done · 1 day'
+- `2026-08-31T14:55:27.439Z` **PASS** — R4 range 09-01→09-04 → 'Schedule — done · 4 days' (inclusive)
+- `2026-08-31T14:55:27.445Z` **PASS** — R4 Schedule glyph flips to ✓
+- `2026-08-31T14:55:27.668Z` screenshot: r4-duration.png
+- `2026-08-31T14:55:27.668Z` — R5: stale end to end (real picker + the Edit-manually move) —
+- `2026-08-31T14:55:45.717Z` R5 refusal on save (expected at this pin): Road — needs attention: Re-checking the declined input — Generate re-enables when the verdict settles. (current blocker)
+- `2026-08-31T14:55:45.752Z` **PASS** — R5 fresh confirmed road: Road — done (never stale at its own pin)
+- `2026-08-31T14:55:45.982Z` screenshot: r5-fresh.png
+- `2026-08-31T14:55:46.035Z` **PASS** — R5 moved pin → 'Road — detection stale'
+- `2026-08-31T14:55:46.038Z` **PASS** — R5 st-stale class on the entry
+- `2026-08-31T14:55:46.041Z` **PASS** — R5 ▲ glyph (▲)
+- `2026-08-31T14:55:46.043Z` **PASS** — R5 word 'detection stale'
+- `2026-08-31T14:55:46.051Z` **PASS** — R5 ▲ computed color --dim rgb(255, 138, 46) (rgb(255, 138, 46))
+- `2026-08-31T14:55:46.053Z` **PASS** — R5 stale never gates: no blocker string on the Road entry
+- `2026-08-31T14:55:46.259Z` screenshot: r5-stale.png
+- `2026-08-31T14:55:46.574Z` screenshot: r5-stale-grayscale.png
+- `2026-08-31T14:55:46.575Z` — R6: axe — violation id sets equal the committed baseline —
+- `2026-08-31T14:55:51.493Z` **PASS** — R6 pre-pin set == baseline [region] (region)
+- `2026-08-31T14:55:51.493Z` **PASS** — R6 pinned set == baseline [label, region] (label,region)
+- `2026-08-31T14:55:51.493Z` ALL PASS

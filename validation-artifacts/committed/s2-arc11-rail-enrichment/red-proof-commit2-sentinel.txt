@@ -1,0 +1,567 @@
+﻿npx : [33mThe CJS build of Vite's Node API is deprecated. See 
+https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+At line:1 char:434
++ ... | Out-Null; npx vitest run components/ProgressRail.single-voice.test. ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([33mThe CJS bu...e details.[39m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-228-rail-enrichment/conestruct/site[39m
+
+ [31m❯[39m components/ProgressRail.single-voice.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 70[2mms[22m[39m
+[31m   [31m×[31m #228 single voice — the component renders, never derives[2m > [22mshows exactly the derivation's glyph, step, word, info, and aria[39m[32m 39[2mms[22m[39m
+[31m     → Unable to find an accessible element with the role "button" and name "__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention:":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: "[31m
+    [33mclass[31m=[32m"rail-entry st-stale"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — ready":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — ready"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: "[31m
+        [33mclass[31m=[32m"rail-entry st-stale"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — ready"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m✓[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[31m   [31m×[31m #228 single voice — the component renders, never derives[2m > [22man attention entry repeats the derivation's glyph once per issue[39m[32m 14[2mms[22m[39m
+[31m     → Unable to find an accessible element with the role "button" and name "__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention: a Also: b":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: a Also: b"[31m
+    [33mclass[31m=[32m"rail-entry st-attention"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — ready":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — ready"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: a Also: b"[31m
+        [33mclass[31m=[32m"rail-entry st-attention"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-note"[31m
+        [36m>[31m
+          [0mneeds attention[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — ready"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m✓[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[31m   [31m×[31m #228 single voice — the component renders, never derives[2m > [22mthe owning entry renders the blocker string in the word's place — both from the derivation[39m[32m 15[2mms[22m[39m
+[31m     → Unable to find an accessible element with the role "button" and name "__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention: __BLOCKER__ (current blocker)":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: __BLOCKER__ (current blocker)"[31m
+    [33mclass[31m=[32m"rail-entry st-attention current"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — blocked, see the marked step":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — blocked, see the marked step"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: __BLOCKER__ (current blocker)"[31m
+        [33mclass[31m=[32m"rail-entry st-attention current"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-blocker"[31m
+        [36m>[31m
+          [0m__BLOCKER__[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — blocked, see the marked step"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m→[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m components/ProgressRail.single-voice.test.tsx[2m > [22m#228 single voice — the component 
+renders, never derives[2m > [22mshows exactly the derivation's glyph, step, word, info, and aria
+[31m[1mTestingLibraryElementError[22m: Unable to find an accessible element with the role "button" and name 
+"__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention:":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: "[31m
+    [33mclass[31m=[32m"rail-entry st-stale"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — ready":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — ready"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: "[31m
+        [33mclass[31m=[32m"rail-entry st-stale"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m/>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — ready"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m✓[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m components/ProgressRail.single-voice.test.tsx:[2m35:24[22m[39m
+    [90m 33| [39m    [35mconst[39m rail[33m:[39m [33mRail[39m [33m=[39m { entries[33m:[39m 
+[[33mSENTINEL_ENTRY[39m][33m,[39m blocker[33m:[39m [35mnull[39m }[33m;[39m
+    [90m 34| [39m    [34mrender[39m([33m<[39m[33mProgressRail[39m 
+[33mrail[39m[33m=[39m[33m{[39mrail[33m}[39m [33mgenerateAnchorId[39m[33m=[39m[32m"g"[39m 
+[33m/[39m[33m>[39m)[33m;[39m
+    [90m 35| [39m    [35mconst[39m btn [33m=[39m 
+screen[33m.[39m[34mgetByRole[39m([32m"button"[39m[33m,[39m { name[33m:[39m [32m"__ARIA__"[39m })[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m 36| [39m    expect(btn.querySelector(".rail-glyph")?.textContent).toBe("__GLYP…
+    [90m 37| [39m    [34mexpect[39m(btn[33m.[39m[34mquerySelector[39m([32m".rail-step"[39m)[33m?.[39mtextCo
+ntent)[33m.[39m[34mtoBe[39m([32m"42"[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/ProgressRail.single-voice.test.tsx[2m > [22m#228 single voice — the component 
+renders, never derives[2m > [22man attention entry repeats the derivation's glyph once per issue
+[31m[1mTestingLibraryElementError[22m: Unable to find an accessible element with the role "button" and name 
+"__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention: a Also: b":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: a Also: b"[31m
+    [33mclass[31m=[32m"rail-entry st-attention"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — ready":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — ready"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: a Also: b"[31m
+        [33mclass[31m=[32m"rail-entry st-attention"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-note"[31m
+        [36m>[31m
+          [0mneeds attention[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — ready"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m✓[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m components/ProgressRail.single-voice.test.tsx:[2m58:24[22m[39m
+    [90m 56| [39m    }[33m;[39m
+    [90m 57| [39m    [34mrender[39m([33m<[39m[33mProgressRail[39m 
+[33mrail[39m[33m=[39m[33m{[39mrail[33m}[39m [33mgenerateAnchorId[39m[33m=[39m[32m"g"[39m 
+[33m/[39m[33m>[39m)[33m;[39m
+    [90m 58| [39m    [35mconst[39m btn [33m=[39m 
+screen[33m.[39m[34mgetByRole[39m([32m"button"[39m[33m,[39m { name[33m:[39m [32m"__ARIA__"[39m })[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m 59| [39m    [34mexpect[39m(
+    [90m 60| [39m      [33mArray[39m[33m.[39m[35mfrom[39m(btn[33m.[39m[34mquerySelectorAll[39m([32m".rail-
+glyph"[39m))[33m.[39m[34mmap[39m(
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/ProgressRail.single-voice.test.tsx[2m > [22m#228 single voice — the component 
+renders, never derives[2m > [22mthe owning entry renders the blocker string in the word's place — both from the 
+derivation
+[31m[1mTestingLibraryElementError[22m: Unable to find an accessible element with the role "button" and name 
+"__ARIA__"
+
+Here are the accessible roles:
+
+  navigation:
+
+  Name "Plan progress":
+  [36m<nav[31m
+    [33maria-label[31m=[32m"Plan progress"[31m
+    [33mclass[31m=[32m"progress-rail"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+  button:
+
+  Name "Road — needs attention: __BLOCKER__ (current blocker)":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Road — needs attention: __BLOCKER__ (current blocker)"[31m
+    [33mclass[31m=[32m"rail-entry st-attention current"[31m
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  Name "Generate — blocked, see the marked step":
+  [36m<button[31m
+    [33maria-label[31m=[32m"Generate — blocked, see the marked step"[31m
+    [33mclass[31m=[32m"rail-entry st-generate"[31m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[90m (3)[39m
+[2m   Start at [22m 08:42:34
+[2m   Duration [22m 1.65s[2m (transform 84ms, setup 0ms, collect 368ms, tests 70ms, environment 681ms, prepare 175ms)[22m
+
+    [33mtype[31m=[32m"button"[31m
+  [36m/>[31m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<nav[31m
+      [33maria-label[31m=[32m"Plan progress"[31m
+      [33mclass[31m=[32m"progress-rail"[31m
+    [36m>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Road — needs attention: __BLOCKER__ (current blocker)"[31m
+        [33mclass[31m=[32m"rail-entry st-attention current"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m⚠[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mRoad[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-blocker"[31m
+        [36m>[31m
+          [0m__BLOCKER__[0m
+        [36m</span>[31m
+      [36m</button>[31m
+      [36m<button[31m
+        [33maria-label[31m=[32m"Generate — blocked, see the marked step"[31m
+        [33mclass[31m=[32m"rail-entry st-generate"[31m
+        [33mtype[31m=[32m"button"[31m
+      [36m>[31m
+        [36m<span[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"rail-glyph"[31m
+        [36m>[31m
+          [0m→[0m
+        [36m</span>[31m
+        [36m<span[31m
+          [33mclass[31m=[32m"rail-label"[31m
+        [36m>[31m
+          [0mGenerate[0m
+        [36m</span>[31m
+      [36m</button>[31m
+    [36m</nav>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m components/ProgressRail.single-voice.test.tsx:[2m79:24[22m[39m
+    [90m 77| [39m    }[33m;[39m
+    [90m 78| [39m    [34mrender[39m([33m<[39m[33mProgressRail[39m 
+[33mrail[39m[33m=[39m[33m{[39mrail[33m}[39m [33mgenerateAnchorId[39m[33m=[39m[32m"g"[39m 
+[33m/[39m[33m>[39m)[33m;[39m
+    [90m 79| [39m    [35mconst[39m btn [33m=[39m 
+screen[33m.[39m[34mgetByRole[39m([32m"button"[39m[33m,[39m { name[33m:[39m [32m"__ARIA__"[39m })[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m 80| [39m    [34mexpect[39m(btn[33m.[39m[34mquerySelector[39m([32m".rail-blocker"[39m)[33m?.[39mtex
+tContent)[33m.[39m[34mtoBe[39m(
+    [90m 81| [39m      [32m"__BLOCKER__"[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+

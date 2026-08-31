@@ -1,0 +1,5 @@
+﻿s2-arc11 rail-vocabulary contrast (AA normal-text floor 4.5:1)
+surface: --canvas #14202e (rail ground)
+  stale glyph+word  --dim #ff8a2e: 7.00:1  PASS
+  step index / info --ink-on-dark-faint #93a0b0: 6.19:1  PASS
+  entry labels      --ink-on-dark #c8d1dd: 10.68:1  PASS
