@@ -443,6 +443,26 @@ export function GeneratorShell({
     ? suggestStreetClass(roadForPin.candidate.highway_class)
     : null;
 
+  // #228 (ruling 7): the rail's Location info line counts the
+  // proposals awaiting Confirm/Dismiss — computed from the SAME
+  // expressions the two slots branch on (rule 3 mirror:
+  // JurisdictionSection's SuggestSlot proposal row renders iff a
+  // suggestion exists with no jurisdiction_key and no resolution;
+  // ClassSuggestSlot's iff classSuggest with no street_class and no
+  // resolution — mirror comments there name this count).
+  // Informational only: deriveRail renders it on Location's ``info``
+  // subline and nothing else — never a state, never the blocker
+  // (suggestions never gate).
+  const suggestionKey =
+    suggestState.status === "ready"
+      ? (suggestState.data?.suggestion ?? null)
+      : null;
+  const pendingSuggestions =
+    (suggestionKey && !scenario.jurisdiction_key && !suggestResolution
+      ? 1
+      : 0) +
+    (classSuggestion && !scenario.street_class && !classResolution ? 1 : 0);
+
   // The evaluated jurisdiction block rides the device-breakdown response
   // (spec §3.2) — present only when the scenario names a jurisdiction_key.
   //
@@ -949,6 +969,7 @@ export function GeneratorShell({
                 jurisdictionControls={jurisdictionControls}
                 jurisdictionName={jurisdictionBlock?.name ?? null}
                 jurisdictionBlock={jurisdictionBlock}
+                pendingSuggestions={pendingSuggestions}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }

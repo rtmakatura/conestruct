@@ -547,7 +547,11 @@ function ClassSuggestSlot({
     <div className="jbar-suggest live" aria-live="polite">
       {!streetClass && (
         <div className="sugg-row">
-          {/* ⌁ = proposed (the one glyph vocabulary, #227). */}
+          {/* ⌁ = proposed (the one glyph vocabulary, #227).
+              #228 rule 3 mirror: this render condition (classSuggest
+              && no streetClass && no resolution) is the expression
+              GeneratorShell's ``pendingSuggestions`` counts for the
+              rail's "N to confirm" line — keep the two in step. */}
           <span className="sugg-glyph" aria-hidden>
             ⌁
           </span>
@@ -714,7 +718,11 @@ function SuggestSlot({
       {key && !jurisdictionKey && (
         <div className="sugg-row">
           {/* ⌁ = proposed (the one glyph vocabulary, #227) — the
-              sentence and two buttons carry the meaning (rule 13). */}
+              sentence and two buttons carry the meaning (rule 13).
+              #228 rule 3 mirror: this render condition (suggestion &&
+              no jurisdictionKey && no resolution) is the expression
+              GeneratorShell's ``pendingSuggestions`` counts for the
+              rail's "N to confirm" line — keep the two in step. */}
           <span className="sugg-glyph" aria-hidden>
             ⌁
           </span>
