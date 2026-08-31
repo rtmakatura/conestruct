@@ -1,0 +1,319 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/s2a11-live-checks/conestruct/site[39m
+
+[90mstderr[2m | components/GeneratorShell.picker-reapply.test.tsx[2m > [22m[2mpicker re-apply preserves manual form edits (lanes bug)[2m > [22m[2mREGRESSION: a no-change re-apply keeps the user's lane selection in the payload
+[22m[39mWarning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+[90mstderr[2m | components/GeneratorShell.near-intersection.test.tsx[2m > [22m[2mnear_intersection picker → form → payload[2m > [22m[2mACCEPTANCE: prefill, edit, re-apply without losing the edit, submit the exact approaches array
+[22m[39mWarning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+[90mstderr[2m | components/GeneratorShell.kind-switch.test.tsx[2m > [22m[2mkind-switch preserves the safety relays (#181)[2m > [22m[2mswitching kinds twice returns the shared inputs, not the defaults
+[22m[39mWarning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+ [32m✓[39m components/GeneratorShell.kind-switch.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2155[2mms[22m[39m
+   [33m[2m✓[22m[39m kind-switch preserves the safety relays (#181)[2m > [22mREGRESSION: detect-then-switch payload carries every relay the flagger gates consume [33m 923[2mms[22m[39m
+   [33m[2m✓[22m[39m kind-switch preserves the safety relays (#181)[2m > [22mthe recovery affordances render after the switch — refusal comes with its confirm row [33m 315[2mms[22m[39m
+   [33m[2m✓[22m[39m kind-switch preserves the safety relays (#181)[2m > [22mswitching kinds twice returns the shared inputs, not the defaults [33m 694[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.confirm-window.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2480[2mms[22m[39m
+   [33m[2m✓[22m[39m confirm-tick window: CTA stays gated after a refusal (#196)[2m > [22mGenerate stays disabled while the re-fetch is in flight after a settled 400 [33m 900[2mms[22m[39m
+   [33m[2m✓[22m[39m confirm-tick window: CTA stays gated after a refusal (#196)[2m > [22ma clean settle re-enables; a repeat 400 keeps the gate with the refusal pointer [33m 1029[2mms[22m[39m
+   [33m[2m✓[22m[39m confirm-tick window: CTA stays gated after a refusal (#196)[2m > [22mpanel and strip read the same stamped verdict: no declined line while the window is open [33m 549[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.near-intersection.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3026[2mms[22m[39m
+   [33m[2m✓[22m[39m near_intersection picker → form → payload[2m > [22mACCEPTANCE: prefill, edit, re-apply without losing the edit, submit the exact approaches array [33m 1058[2mms[22m[39m
+   [33m[2m✓[22m[39m near_intersection picker → form → payload[2m > [22mgates Generate on the unconfirmed detection-filled lane count [33m 447[2mms[22m[39m
+   [33m[2m✓[22m[39m near_intersection picker → form → payload[2m > [22mgates Generate when OSM had NO lane tag — the substituted 1 needs acknowledging (#174) [33m 442[2mms[22m[39m
+   [33m[2m✓[22m[39m near_intersection picker → form → payload[2m > [22ma CHANGED cross-street detection applies over manual edits (new information wins) [33m 690[2mms[22m[39m
+   [33m[2m✓[22m[39m near_intersection picker → form → payload[2m > [22mmanual entry works with no detection at all [33m 387[2mms[22m[39m
+ [32m✓[39m components/AuditTrail.declined-stale.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 3206[2mms[22m[39m
+   [33m[2m✓[22m[39m audit rows never present a prior input's numbers under a declined banner (#187)[2m > [22mrefetch (loading) keeps last-known rows with the refreshing cue — the sanctioned fallback [33m 1251[2mms[22m[39m
+   [33m[2m✓[22m[39m audit rows never present a prior input's numbers under a declined banner (#187)[2m > [22ma declined (400) audit blanks the cited values and disables the Audit PDF [33m 966[2mms[22m[39m
+   [33m[2m✓[22m[39m audit rows never present a prior input's numbers under a declined banner (#187)[2m > [22ma failed (5xx) audit blanks the values too, keeping the retry line [33m 983[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.post-generate-scroll.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3590[2mms[22m[39m
+   [33m[2m✓[22m[39m post-generate scroll (#152 E)[2m > [22mGenerate scrolls the results zone into view once, smoothly [33m 514[2mms[22m[39m
+   [33m[2m✓[22m[39m post-generate scroll (#152 E)[2m > [22mwaits for a pending breakdown: scroll fires when generating resolves to post [33m 1123[2mms[22m[39m
+   [33m[2m✓[22m[39m post-generate scroll (#152 E)[2m > [22mordinary edits never scroll — only a Generate click arms it [33m 714[2mms[22m[39m
+   [33m[2m✓[22m[39m post-generate scroll (#152 E)[2m > [22ma failed generation disarms the scroll instead of yanking the viewport [33m 1049[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.a11y-focus.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3904[2mms[22m[39m
+   [33m[2m✓[22m[39m focus policy after Generate (#193)[2m > [22mkeyboard Generate (Enter) lands focus on the results zone; scroll still fires [33m 506[2mms[22m[39m
+   [33m[2m✓[22m[39m focus policy after Generate (#193)[2m > [22mwith the fetch still in flight, focus moves only when it settles to post [33m 1181[2mms[22m[39m
+   [33m[2m✓[22m[39m focus policy after Generate (#193)[2m > [22ma failed generation focuses the results zone (it holds the alert) without scrolling [33m 962[2mms[22m[39m
+   [33m[2m✓[22m[39m focus policy after Generate (#193)[2m > [22ma background settle never moves focus (debounced strip edit) [33m 822[2mms[22m[39m
+   [33m[2m✓[22m[39m focus policy after Generate (#193)[2m > [22mReopen lands focus on the Setup zone [33m 432[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.a11y-announce.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 4551[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22mannounces the generated package with the counts the hero renders [33m 564[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22mclears at the click so a repeat Generate with identical counts re-announces [33m 1034[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22ma background settle never writes the status region [33m 739[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22ma failed generation announces via the alert ribbon, not the status region [33m 1082[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22ma bundle failure announces via role=alert [33m 328[2mms[22m[39m
+   [33m[2m✓[22m[39m generation announcements (#193)[2m > [22mthe recomputing ribbon stays visual-only (strip announces COMPUTING) [33m 802[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.suggest-contract.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 4844[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22ma suggestion round-trip never places jurisdiction_key on the wire [33m 541[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mConfirm is the only writer — clicking it sets jurisdiction_key [33m 1021[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mDismiss leaves a ×-record with undo — never a cleared slot (#227) [33m 1103[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22ma differing manual pick demotes the suggestion to a passive notice [33m 564[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mendpoint failure: slot goes quiet, picker works exactly as today [33m 971[2mms[22m[39m
+   [33m[2m✓[22m[39m pin suggestion contract: suggest never sets[2m > [22mno pin (default 0/0): no suggest call ever fires [33m 641[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.zone-staging.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 4858[2mms[22m[39m
+   [33m[2m✓[22m[39m zone staging lifecycle[2m > [22mgenerating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only [33m 1063[2mms[22m[39m
+   [33m[2m✓[22m[39m zone staging lifecycle[2m > [22merror: breakdown failure after generate shows the stale ribbon, not a silent blank [33m 761[2mms[22m[39m
+   [33m[2m✓[22m[39m zone staging lifecycle[2m > [22mpanel schedule entry reaches the POSTed scenario (payload-level, inc-8) [33m 1826[2mms[22m[39m
+   [33m[2m✓[22m[39m zone staging lifecycle[2m > [22mstrip inline edit writes the scenario and refires the request (payload-level) [33m 703[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.class-stability.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 4998[2mms[22m[39m
+   [33m[2m✓[22m[39m class-switch stability (#152 D)[2m > [22ma class switch holds bar + section content while the refetch is in flight — no skeleton, one reflow max [33m 1493[2mms[22m[39m
+   [33m[2m✓[22m[39m class-switch stability (#152 D)[2m > [22mthe hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10) [33m 1186[2mms[22m[39m
+   [33m[2m✓[22m[39m class-switch stability (#152 D)[2m > [22ma CHANGED jurisdiction key still skeletons — a stale block from another jurisdiction never renders [33m 1169[2mms[22m[39m
+   [33m[2m✓[22m[39m class-switch stability (#152 D)[2m > [22ma breakdown ERROR clears the held block rather than presenting it as live [33m 1148[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.picker-reapply.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 5139[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22mREGRESSION: a no-change re-apply keeps the user's lane selection in the payload [33m 996[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22mcontrol: plain pin apply then chip selection reaches the payload [33m 434[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22mcontrol: chip selection reaches the payload with a manual location and no detection [33m 301[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22mREGRESSION (#190): a no-change re-save does not re-impose restored overrides over manual edits [33m 435[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22mcontrol (#190): a CHANGED override still applies — explicit picker edits win [33m 597[2mms[22m[39m
+   [33m[2m✓[22m[39m picker re-apply preserves manual form edits (lanes bug)[2m > [22ma CHANGED detection still applies over manual edits (new information wins) [33m 607[2mms[22m[39m
+   [33m[2m✓[22m[39m settled-null save clears the prior pin's relays (#189-3)[2m > [22mcontrol: pin A's relays reach the payload while its detection stands [33m 426[2mms[22m[39m
+   [33m[2m✓[22m[39m settled-null save clears the prior pin's relays (#189-3)[2m > [22mREGRESSION: a no-road save at a new pin removes every relay from the wire payload [33m 569[2mms[22m[39m
+   [33m[2m✓[22m[39m settled-null save clears the prior pin's relays (#189-3)[2m > [22ma fresh detection after the clear re-arms the relays (new information) [33m 773[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.regenerate-mounted.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 2175[2mms[22m[39m
+   [33m[2m✓[22m[39m results stay mounted through regeneration (#192)[2m > [22ma post-generate edit dims in place: no empty-state swap, panel stays mounted, ribbon marks the refresh [33m 1044[2mms[22m[39m
+   [33m[2m✓[22m[39m results stay mounted through regeneration (#192)[2m > [22ma refusal settling mid-regeneration is never masked by COMPUTING [33m 867[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.status-pending.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1715[2mms[22m[39m
+   [33m[2m✓[22m[39m StatusBar checking state across the change→response window (Decision 2)[2m > [22mis NOT green in the window between an input change and the backend's answer [33m 424[2mms[22m[39m
+   [33m[2m✓[22m[39m StatusBar checking state across the change→response window (Decision 2)[2m > [22ma stale answer for a superseded input never lands as current [33m 814[2mms[22m[39m
+   [33m[2m✓[22m[39m StatusBar checking state across the change→response window (Decision 2)[2m > [22mthe failure state is reachable from checking: a failed refetch shows UNAVAILABLE, not the old verdict [33m 410[2mms[22m[39m
+[90mstderr[2m | components/GeneratorShell.handoff-provenance.test.tsx[2m > [22m[2m#198 handoff provenance — the four families produce visible notes[2m > [22m[2mfamily 4: the cleared reduction is named AND the payload ships valid
+[22m[39mWarning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\s2a11-live-checks\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+ [32m✓[39m components/GeneratorShell.handoff-provenance.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2186[2mms[22m[39m
+   [33m[2m✓[22m[39m #198 handoff provenance — the four families produce visible notes[2m > [22mfamily 1: a changed detection overwriting a manual lane edit is named [33m 825[2mms[22m[39m
+   [33m[2m✓[22m[39m #198 handoff provenance — the four families produce visible notes[2m > [22mfamily 2: picker lanes/divided overrides on a flagger plan are named as not applicable [33m 375[2mms[22m[39m
+   [33m[2m✓[22m[39m #198 handoff provenance — the four families produce visible notes[2m > [22mfamily 4: the cleared reduction is named AND the payload ships valid [33m 719[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.bundle-settings.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1849[2mms[22m[39m
+   [33m[2m✓[22m[39m GeneratorShell bundle download — live quote settings (#74)[2m > [22msends the user's edited rates to /api/render/bundle [33m 474[2mms[22m[39m
+   [33m[2m✓[22m[39m GeneratorShell bundle download — live quote settings (#74)[2m > [22mkeeps the edited rate field across a reopen → regenerate cycle [33m 767[2mms[22m[39m
+   [33m[2m✓[22m[39m GeneratorShell bundle download — live quote settings (#74)[2m > [22mpreserves a manual flagger count and delivery distance through the cycle [33m 606[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.saved-dirty.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1867[2mms[22m[39m
+   [33m[2m✓[22m[39m workbench downloads gate on dirty state (#183)[2m > [22man unedited open downloads normally — no new friction [33m 408[2mms[22m[39m
+   [33m[2m✓[22m[39m workbench downloads gate on dirty state (#183)[2m > [22man edit disables the row-backed downloads and names the resolution [33m 960[2mms[22m[39m
+   [33m[2m✓[22m[39m workbench downloads gate on dirty state (#183)[2m > [22msaving re-enables downloads that match the screen [33m 482[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.class-suggest.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1791[2mms[22m[39m
+   [33m[2m✓[22m[39m street-class suggestion contract (#152 C): suggest never sets[2m > [22ma confirmed primary road renders an Arterial suggestion; street_class never reaches the wire until Confirm [33m 707[2mms[22m[39m
+ [32m✓[39m components/SetupStrip.focus.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1308[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.confirm-undo-loop.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 1389[2mms[22m[39m
+   [33m[2m✓[22m[39m tick → clean → untick → re-refusal, CTA gated through both windows (#179)[2m > [22mruns the full loop with focus retained and a byte-identical restored payload [33m 1387[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.no-location.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1230[2mms[22m[39m
+   [33m[2m✓[22m[39m no location, no certification (#186)[2m > [22mfresh load: AWAITING LOCATION, no verdict, Generate disabled with the stated reason [33m 321[2mms[22m[39m
+   [33m[2m✓[22m[39m no location, no certification (#186)[2m > [22mtyping coordinates in the manual fallback enables both surfaces [33m 666[2mms[22m[39m
+ [32m✓[39m components/JurisdictionSection.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1038[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.coverage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1535[2mms[22m[39m
+   [33m[2m✓[22m[39m the Centerline provenance row (#211)[2m > [22mpartial coverage: 'covers 0–N ft, bearing beyond' in the PDF's vocabulary [33m 624[2mms[22m[39m
+   [33m[2m✓[22m[39m the Centerline provenance row (#211)[2m > [22mfull coverage: 'OSM, full corridor' [33m 428[2mms[22m[39m
+   [33m[2m✓[22m[39m the Centerline provenance row (#211)[2m > [22mmanual mode (no road detected): 'none — straight projection from typed bearing' [33m 384[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.error-honesty.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 873[2mms[22m[39m
+   [33m[2m✓[22m[39m strip error honesty (#184)[2m > [22ma mirrored invalid combination renders INVALID INPUT, agreeing with the form — never UNAVAILABLE [33m 339[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.input-gating.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 861[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.debounce.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 764[2mms[22m[39m
+   [33m[2m✓[22m[39m fetch debounce (#182)[2m > [22ma 12-step burst collapses to leading + one trailing pair carrying the final value [33m 393[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.confirm-undo.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 826[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.refusal-voice.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 797[2mms[22m[39m
+   [33m[2m✓[22m[39m one refusal, one voice (#180)[2m > [22mwith-affordance refusal: row note primary, short pointer, verbatim 400 renders zero times [33m 377[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.road-pick.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1416[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.rail-vocabulary.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 1033[2mms[22m[39m
+   [33m[2m✓[22m[39m #228 mounted — dismiss-honesty on the live count[2m > [22ma live proposal reads '1 to confirm'; Dismiss removes the line and flips no state [33m 861[2mms[22m[39m
+ [32m✓[39m components/GeneratorSidebar.prepin-gating.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 704[2mms[22m[39m
+   [33m[2m✓[22m[39m pre-pin gating (#222)[2m > [22mNI pre-pin: five downstream steps pending — summary focusable, body inert + aria-hidden [33m 346[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.state-contract.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1657[2mms[22m[39m
+ [32m✓[39m components/QuotePanel.invalidation.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 593[2mms[22m[39m
+ [32m✓[39m components/JurisdictionSection.density.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 786[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.rail-single-source.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 655[2mms[22m[39m
+   [33m[2m✓[22m[39m rail blocker === CTA disabled-reason (one export)[2m > [22mpre-pin: the missing-location reason renders identically on both [33m 305[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.confirmed-road.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 861[2mms[22m[39m
+   [33m[2m✓[22m[39m confirmed road persists on scenario.meta across picker close/reopen[2m > [22mreopen hands the saved confirmation back to the picker [33m 700[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.override-provenance.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 633[2mms[22m[39m
+ [32m✓[39m components/SetupStrip.schedule.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 555[2mms[22m[39m
+ [32m✓[39m components/TieredReference.fixtures.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 524[2mms[22m[39m
+ [32m✓[39m components/ScheduleField.overnight.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 530[2mms[22m[39m
+ [32m✓[39m components/JurisdictionSection.schedule-overnight.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 295[2mms[22m[39m
+ [32m✓[39m components/SetupStrip.jurisdiction.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 431[2mms[22m[39m
+ [32m✓[39m components/OutputCards.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.provenance.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 458[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.lane-confidence.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 246[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.signal-gate.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 267[2mms[22m[39m
+ [32m✓[39m components/ProgressRail.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 275[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.slow-verify.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 188[2mms[22m[39m
+ [32m✓[39m components/DeviceBreakdown.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 105[2mms[22m[39m
+ [32m✓[39m components/GeneratorFormPrimitives.a11y.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.disclosure-container.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1046[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 disclosure container — the #198 notes' new clothes[2m > [22mthe note sentence renders as one text node inside .sys-event.warn [33m 476[2mms[22m[39m
+ [32m✓[39m components/DebugSnapshotButton.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32m✓[39m components/DetectedVsApplied.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.scan-honesty.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 443[2mms[22m[39m
+ [32m✓[39m components/ScheduleField.windows-block.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 175[2mms[22m[39m
+ [32m✓[39m components/GeneratorShell.suggestion-records.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 2019[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 resolved-state records — confirm, then undo[2m > [22mConfirm leaves a ✓-record with evidence and undo; undo restores the prior null exactly [33m 1452[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 resolved-state records — confirm, then undo[2m > [22mrecords never reach the wire — no resolution fields in any payload [33m 564[2mms[22m[39m
+ [32m✓[39m components/GeneratorSidebar.corridor-bar.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 991[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 corridor bar — proportion of backend lengths only[2m > [22mfive segments, order matching the rows, widths = backend length / total [33m 630[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 corridor bar — proportion of backend lengths only[2m > [22mthe bar is aria-hidden; the table rows are the record — with no ✓ prefix [33m 358[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.a11y.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 194[2mms[22m[39m
+ [32m✓[39m components/severity-ramp.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.single-lane.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 192[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.multilane.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 222[2mms[22m[39m
+ [32m✓[39m components/JurisdictionSection.notset.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 457[2mms[22m[39m
+ [32m✓[39m components/GeneratorSidebar.jurisdiction-band.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 708[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 jurisdiction band — a full-width sibling of Location[2m > [22mpinned: the band goes live and the jurisdiction select is usable [33m 352[2mms[22m[39m
+ [32m✓[39m components/GeneratorSidebar.fact-strip.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 961[2mms[22m[39m
+   [33m[2m✓[22m[39m #227 fact strip — pin readout as labeled cells[2m > [22mpinned: five cells carry lat / lng / bearing / speed / jurisdiction [33m 471[2mms[22m[39m
+ [32m✓[39m components/ScheduleField.notset-default.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 176[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.oneway.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 146[2mms[22m[39m
+ [32m✓[39m components/SiteConditionsField.detect.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32m✓[39m components/SiteConditionsField.rows.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+ [32m✓[39m components/JurisdictionSection.placement.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m components/JurisdictionContextBar.stability.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m components/spacing-scale.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m components/GeneratorForms.a11y.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32m✓[39m components/ProgressRail.single-voice.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m components/AppNav.rule13.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32m✓[39m components/AuditTrail.corridor.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m components/quiet-band-contrast.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+[90mstderr[2m | lib/rate-limit.test.ts[2m > [22m[2mrateLimitOr429 — fail-open contract (#145)[2m > [22m[2mallows (returns null) when the store is UNCONFIGURED, no matter how many calls
+[22m[39mrate-limit: UPSTASH_REDIS_REST_URL/TOKEN unset — limiter is a no-op (fail-open)
+
+ [32m✓[39m lib/scenarios/validation.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m lib/rate-limit.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchAuditTrail: upstream 422 → 400 with the validation message
+[22m[39maudit trail upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchAuditTrail: upstream 500 stays a 502 outage
+[22m[39maudit trail upstream 500 render failed: boom
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchDeviceBreakdown: upstream 422 → 400 with the validation message
+[22m[39mdevice breakdown upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchDeviceBreakdown: upstream 500 stays a 502 outage
+[22m[39mdevice breakdown upstream 500 render failed: boom
+
+ [32m✓[39m components/AuditTrail.test.tsx [2m([22m[2m61 tests[22m[2m)[22m[32m 120[2mms[22m[39m
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchQuoteBreakdown: upstream 422 → 400 with the validation message
+[22m[39mquote breakdown upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchQuoteBreakdown: upstream 500 stays a 502 outage
+[22m[39mquote breakdown upstream 500 render failed: boom
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mrenderScenarioToResponse: upstream 422 → 400 with the validation message
+[22m[39mrender upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mrenderScenarioToResponse: upstream 500 stays a 502 outage
+[22m[39mrender upstream 500 render failed: boom
+
+[90mstderr[2m | lib/render-proxy.validation.test.ts[2m > [22m[2mproxy fetchers route 422s onto the 400 path (#184)[2m > [22m[2mfetchQuoteBreakdown: upstream 400 now forwards its body (was a 502)
+[22m[39mquote breakdown upstream 400 {"detail": "gate says no"}
+
+ [32m✓[39m lib/render-proxy.validation.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m lib/scenarios/validation.near-intersection.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m components/AuditTrail.approaches.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m components/StatusBar.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m lib/tiering.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+[90mstderr[2m | app/api/render/detect-site/route.test.ts[2m > [22m[2mdetect-site proxy centerline relay (#207)[2m > [22m[2mpasses a realistic centerline through to the upstream payload
+[22m[39mrate-limit: UPSTASH_REDIS_REST_URL/TOKEN unset — limiter is a no-op (fail-open)
+
+ [32m✓[39m app/api/render/detect-site/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m app/api/road-bearing/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m lib/road-detection/classify.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/modal-healthz-probe.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2313[2mms[22m[39m
+   [33m[2m✓[22m[39m modal-healthz-probe exit-code taxonomy (#169 / PR #168)[2m > [22mmock 500 -> exit 1, distinct non-200 error [33m 430[2mms[22m[39m
+   [33m[2m✓[22m[39m modal-healthz-probe exit-code taxonomy (#169 / PR #168)[2m > [22mmock 200 with a DRIFTED sha -> exit 0, sha faithfully extracted [33m 408[2mms[22m[39m
+   [33m[2m✓[22m[39m modal-healthz-probe exit-code taxonomy (#169 / PR #168)[2m > [22mmock 200 with the MATCHING sha -> exit 0, sha faithfully extracted [33m 421[2mms[22m[39m
+   [33m[2m✓[22m[39m modal-healthz-probe exit-code taxonomy (#169 / PR #168)[2m > [22mmock 200 without a sha field -> exit 0, served_sha=unknown (jq `.sha // "unknown"` preserved) [33m 409[2mms[22m[39m
+   [33m[2m✓[22m[39m modal-healthz-probe exit-code taxonomy (#169 / PR #168)[2m > [22mmock 200 with a non-JSON body -> exit 1 (deliberately red) [33m 407[2mms[22m[39m
+ [32m✓[39m lib/centerline.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m lib/scenarios/auto-apply.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m lib/scenarios/handoff-summary.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m lib/road-detection/stitch.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m lib/scenarios/rail.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m lib/scenarios/undo-override.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m lib/road-detection/cross-street.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m components/AppSheetMeta.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m components/AuditTrail.ni-parity.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m components/GeneratorFormPrimitives.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m lib/road-detection/dedup.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m components/StatusBar.a11y.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m lib/scenarios/carry-across-kinds.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m lib/corridor-polyline.coverage.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m lib/corridor-zones.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m lib/scenarios/overrides.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m lib/scenarios/sidebar-payload.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m lib/road-detection/labels.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m lib/design/type-roles.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m lib/scenarios/centerline-relay.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m lib/answer-stamp.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m lib/scenarios/clear-detection-relays.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m lib/geocode-precision.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m components/LocationPickerModal.spacing.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m lib/design/tokens.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m112 passed[39m[22m[90m (112)[39m
+[2m      Tests [22m [1m[32m845 passed[39m[22m[90m (845)[39m
+[2m   Start at [22m 16:04:04
+[2m   Duration [22m 27.53s[2m (transform 6.61s, setup 0ms, collect 58.17s, tests 89.78s, environment 82.81s, prepare 26.20s)[22m
+

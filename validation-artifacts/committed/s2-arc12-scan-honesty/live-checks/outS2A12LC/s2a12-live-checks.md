@@ -1,0 +1,23 @@
+# s2-arc12 live checks (local)
+
+- `2026-08-31T22:13:10.167Z` — L1: real detection at the E Bayaud pin (the #213 triage coordinate) —
+- `2026-08-31T22:13:27.754Z` **PASS** — L1 candidates render (completed scan)
+- `2026-08-31T22:13:27.754Z` **PASS** — L1 no absence claim beside candidates
+- `2026-08-31T22:13:27.754Z` **PASS** — L1 no unavailable copy on a completed scan
+- `2026-08-31T22:13:28.162Z` screenshot: l1-bayaud-candidates.png
+- `2026-08-31T22:13:28.162Z` — L2: completed empty scan at the lake pin —
+- `2026-08-31T22:13:37.840Z` **PASS** — L2 absence copy renders (a measurement)
+- `2026-08-31T22:13:37.840Z` **PASS** — L2 never the unavailable copy
+- `2026-08-31T22:13:38.118Z` screenshot: l2-lake-absence.png
+- `2026-08-31T22:13:38.118Z` — L3: unavailable wire shape through the served modal bundle —
+- `2026-08-31T22:13:39.804Z` **PASS** — L3 unavailable copy renders
+- `2026-08-31T22:13:39.804Z` **PASS** — L3 the absence claim does NOT
+- `2026-08-31T22:13:39.804Z` **PASS** — L3 panel names the failure
+- `2026-08-31T22:13:39.818Z` **PASS** — L3 no Rural verdict claimed in the modal
+- `2026-08-31T22:13:39.822Z` **PASS** — L3 ↻ Re-detect roads stands
+- `2026-08-31T22:13:40.126Z` screenshot: l3-unavailable.png
+- `2026-08-31T22:13:40.126Z` — L4: retry recovers to real detection —
+- `2026-08-31T22:13:55.321Z` **PASS** — L4 real candidates after retry
+- `2026-08-31T22:13:55.321Z` **PASS** — L4 unavailable copy cleared
+- `2026-08-31T22:13:55.580Z` screenshot: l4-recovered.png
+- `2026-08-31T22:13:55.580Z` ALL PASS

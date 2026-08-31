@@ -1,0 +1,1853 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/s2a11-live-checks/conestruct/site[39m
+
+ [31m❯[39m app/api/road-bearing/route.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[32m 29[2mms[22m[39m
+[31m   [31m×[31m scan failure vs measured absence (#213)[2m > [22mall-mirrors outage → scan_status 'unavailable', claiming nothing[39m[32m 17[2mms[22m[39m
+[31m     → expected undefined to be 'unavailable' // Object.is equality[39m
+[31m   [31m×[31m scan failure vs measured absence (#213)[2m > [22mthe 0-then-5 capture: outage, then the identical request succeeds[39m[32m 2[2mms[22m[39m
+[31m     → expected undefined to be 'unavailable' // Object.is equality[39m
+[31m   [31m×[31m scan failure vs measured absence (#213)[2m > [22ma genuine empty scan stays a measurement: ok + zero candidates + place facts[39m[32m 2[2mms[22m[39m
+[31m     → expected undefined to be 'ok' // Object.is equality[39m
+[31m   [31m×[31m scan failure vs measured absence (#213)[2m > [22ma 4xx is unavailable, and a hard stop (no second mirror)[39m[32m 1[2mms[22m[39m
+[31m     → expected undefined to be 'unavailable' // Object.is equality[39m
+[31m   [31m×[31m scan failure vs measured absence (#213)[2m > [22ma 5xx falls through to the next mirror and still completes[39m[32m 4[2mms[22m[39m
+[31m     → expected undefined to be 'ok' // Object.is equality[39m
+[31m   [31m×[31m extension-failure fallback (the Colfax transient, pinned)[2m > [22ma failed extension query keeps own-way geometry silently[39m[32m 2[2mms[22m[39m
+[31m     → expected undefined to be 'ok' // Object.is equality[39m
+ [31m❯[39m components/AuditTrail.corridor.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 9[2mms[22m[39m
+[31m   [31m×[31m corridorValidationItem reason split (#213 V5)[2m > [22mcheck_unavailable renders a stated no-verdict item — never null[39m[32m 6[2mms[22m[39m
+[31m     → expected null not to be null[39m
+   [32m✓[39m corridorValidationItem reason split (#213 V5)[2m > [22mnot_run_no_coords stays unrendered — there was nothing to check[32m 0[2mms[22m[39m
+   [32m✓[39m corridorValidationItem reason split (#213 V5)[2m > [22ma legacy reasonless not-checked dict stays unrendered (pin)[32m 0[2mms[22m[39m
+   [32m✓[39m corridorValidationItem reason split (#213 V5)[2m > [22mchecked with warnings renders the warning item unchanged (pin)[32m 1[2mms[22m[39m
+   [32m✓[39m corridorValidationItem reason split (#213 V5)[2m > [22mchecked and clean stays unrendered (pin)[32m 0[2mms[22m[39m
+ [31m❯[39m components/LocationPickerModal.scan-honesty.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 3132[2mms[22m[39m
+[31m   [31m×[31m unavailable scan renders as unavailable (#213)[2m > [22mshows the unavailable copy, never the measured-absence claim[39m[33m 1065[2mms[22m[39m
+[31m     → Unable to find an element with the text: /Road detection is unavailable right now/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...[39m
+[31m   [31m×[31m unavailable scan renders as unavailable (#213)[2m > [22mclaims no verdict: the property panel says unavailable, not Rural[39m[33m 1018[2mms[22m[39m
+[31m     → Unable to find an element with the text: /Detection service unavailable/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...[39m
+[31m   [31m×[31m unavailable scan renders as unavailable (#213)[2m > [22mretry re-runs detection and recovers to a real result[39m[33m 1029[2mms[22m[39m
+[31m     → Unable to find an element with the text: /Road detection is unavailable right now/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[31m
+  [33mstyle[31m=[32m"overflow: hidden;"[31m
+[36m>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33maria-label[31m=[32m"Define work zone"[31m
+        [33maria-modal[31m=[32m"true"[31m
+        [33mclass[31m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[31m
+        [33mrole[31m=[32m"dialog"[31m
+        [33mtabindex[31m=[32m"-1"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[31m
+        [36m>[31m
+          [36m<div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[31m
+            [36m>[31m
+              [0mWork zone · Define[0m
+            [36m</div>[31m
+            [36m<h2[31m
+              [33mclass[31m=[32m"text-white text-[17px] font-semibold m-0"[31m
+            [36m>[31m
+              [0mDefine Work Zone[0m
+            [36m</h2>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[31m
+            [36m>[31m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<button[31m
+            [33maria-label[31m=[32m"Close"[31m
+            [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[31m
+            [33mtype[31m=[32m"button"[31m
+          [36m>[31m
+            [36m<svg[31m
+              [33mfill[31m=[32m"none"[31m
+              [33mheight[31m=[32m"18"[31m
+              [33mviewBox[31m=[32m"0 0 18 18"[31m
+              [33mwidth[31m=[32m"18"[31m
+            [36m>[31m
+              [36m<path[31m
+                [33md[31m=[32m"M3 3l12 12M15 3L3 15"[31m
+                [33mstroke[31m=[32m"currentColor"[31m
+                [33mstroke-linecap[31m=[32m"round"[31m
+                [33mstroke-width[31m=[32m"1.5"[31m
+              [36m/>[31m
+            [36m</svg>[31m
+          [36m</button>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[31m
+        [36m>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"flex flex-col md:flex-1 md:min-w-0"[31m
+          [36m>[31m
+            [36m<form[31m
+              [33mclass[31m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<input[31m
+                [33maria-label[31m=[32m"Address or intersection search"[31m
+                [33mclass[31m=[32m"field-input flex-1"[31m
+                [33mplaceholder[31m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[31m
+                [33mtype[31m=[32m"text"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[31m
+                [33mdisabled[31m=[32m""[31m
+                [33mtype[31m=[32m"submit"[31m
+              [36m>[31m
+                [0mSearch[0m
+              [36m</button>[31m
+            [36m</form>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[31m
+            [36m>[31m
+              [36m<button[31m
+                [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[31m
+                [33mtype[31m=[32m"button"[31m
+              [36m>[31m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[31m
+              [36m<span[31m
+                [33mclass[31m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[31m
+              [36m>[31m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[31m
+            [36m>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Latitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Latitude (e.g., 38.8862)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"39.7147"[31m
+                [36m/>[31m
+              [36m</div>[31m
+              [36m<div>[31m
+                [36m<input[31m
+                  [33maria-label[31m=[32m"Longitude"[31m
+                  [33mclass[31m=[32m"field-input w-full"[31m
+                  [33minputmode[31m=[32m"decimal"[31m
+                  [33mplaceholder[31m=[32m"Longitude (e.g., -104.8354)"[31m
+                  [33mtype[31m=[32m"text"[31m
+                  [33mvalue[31m=[32m"-104.9407"[31m
+                [36m/>[31m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[31m
+            [36m>[31m
+              [36m<div[31m
+                [33mclass[31m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[31m
+              [36m>[31m
+                [36m<div[31m
+                  [33mclass[31m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[31m
+                [36m>[31m
+                  [0mMap unavailable[0m
+                [36m</div>[31m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[31m
+            [36m>[31m
+        ...[39m
+   [32m✓[39m unavailable scan renders as unavailable (#213)[2m > [22ma completed empty scan keeps the absence copy (pin)[32m 20[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 10 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m components/AuditTrail.corridor.test.tsx[2m > [22mcorridorValidationItem reason split (#213 V5)[2m > [22mcheck_unavailable renders a stated no-verdict item — never null
+[31m[1mAssertionError[22m: expected null not to be null[39m
+[36m [2m❯[22m components/AuditTrail.corridor.test.tsx:[2m27:22[22m[39m
+    [90m 25| [39m      error[33m:[39m [32m"https://overpass-api.de/api/interpreter: ConnectError"[39m[33m,[39m
+    [90m 26| [39m    })[33m;[39m
+    [90m 27| [39m    [34mexpect[39m(item)[33m.[39mnot[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m 28| [39m    [90m// Word + glyph (rule 13): ▲ marks degraded detection in the[39m
+    [90m 29| [39m    [90m// reconciled set; the words carry the verdict.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/LocationPickerModal.scan-honesty.test.tsx[2m > [22munavailable scan renders as unavailable (#213)[2m > [22mshows the unavailable copy, never the measured-absence claim
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Road detection is unavailable right now/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+[90m [2m❯[22m waitForWrapper ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m components/LocationPickerModal.scan-honesty.test.tsx:[2m119:18[22m[39m
+    [90m117| [39m    [34mtypeCoords[39m()[33m;[39m
+    [90m118| [39m
+    [90m119| [39m    await screen.findByText(/Road detection is unavailable right now/i…
+    [90m   | [39m                 [31m^[39m
+    [90m120| [39m    [90m// The absence copy is reserved for a completed scan.[39m
+    [90m121| [39m    [34mexpect[39m(
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/LocationPickerModal.scan-honesty.test.tsx[2m > [22munavailable scan renders as unavailable (#213)[2m > [22mclaims no verdict: the property panel says unavailable, not Rural
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Detection service unavailable/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+[90m [2m❯[22m waitForWrapper ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m components/LocationPickerModal.scan-honesty.test.tsx:[2m138:18[22m[39m
+    [90m136| [39m    [90m// point" (a measurement) and not any road-type claim derived from[39m
+    [90m137| [39m    [90m// the silent isUrban:false default.[39m
+    [90m138| [39m    [35mawait[39m screen[33m.[39m[34mfindByText[39m([36m/Detection service unavailable/i[39m)[33m;[39m
+    [90m   | [39m                 [31m^[39m
+    [90m139| [39m    expect(screen.queryByText(/No road detected at this point/i)).toBe…
+    [90m140| [39m    [34mexpect[39m(screen[33m.[39m[34mqueryByText[39m([36m/rural/i[39m))[33m.[39m[34mtoBeNull[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m components/LocationPickerModal.scan-honesty.test.tsx[2m > [22munavailable scan renders as unavailable (#213)[2m > [22mretry re-runs detection and recovers to a real result
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Road detection is unavailable right now/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m"overflow: hidden;"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 md:p-6"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Define work zone"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"border border-[color:var(--rule)] bg-[color:var(--canvas-tint)] flex flex-col w-full h-full md:w-[90vw] md:h-[90vh] md:max-w-[1280px] md:max-h-[880px] overflow-hidden outline-none"[39m
+        [33mrole[39m=[32m"dialog"[39m
+        [33mtabindex[39m=[32m"-1"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-start justify-between border-b border-[color:var(--rule)] px-6 py-3 flex-shrink-0"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--dim)] mb-1"[39m
+            [36m>[39m
+              [0mWork zone · Define[0m
+            [36m</div>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-white text-[17px] font-semibold m-0"[39m
+            [36m>[39m
+              [0mDefine Work Zone[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[12px] text-[color:var(--ink-on-dark-faint)] mt-1 m-0"[39m
+            [36m>[39m
+              [0mDrop a pin, review the detected road properties, and set the work-zone length.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Close"[39m
+            [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] hover:text-white px-2 py-1"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mviewBox[39m=[32m"0 0 18 18"[39m
+              [33mwidth[39m=[32m"18"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 3l12 12M15 3L3 15"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex-1 min-h-0 flex flex-col overflow-y-auto md:flex-row md:overflow-hidden"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex flex-col md:flex-1 md:min-w-0"[39m
+          [36m>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"flex gap-2 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Address or intersection search"[39m
+                [33mclass[39m=[32m"field-input flex-1"[39m
+                [33mplaceholder[39m=[32m"Address or intersection (e.g., I-25 & Bijou St, Colorado Springs)"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"border border-[color:var(--act)] bg-transparent text-[color:var(--act)] font-mono text-[11px] uppercase tracking-[0.1em] px-4 hover:bg-[color:var(--act)] hover:text-[color:var(--on-act)] transition-colors disabled:opacity-40"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [0mSearch[0m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-b border-[color:var(--rule)] px-6 py-1.5 flex-shrink-0 flex items-center justify-between"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m− Hide coordinate entry[0m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)]"[39m
+              [36m>[39m
+                [0mLat / Lng decimal degrees[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-3 border-b border-[color:var(--rule)] px-6 py-2 flex-shrink-0"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Latitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Latitude (e.g., 38.8862)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"39.7147"[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Longitude"[39m
+                  [33mclass[39m=[32m"field-input w-full"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mplaceholder[39m=[32m"Longitude (e.g., -104.8354)"[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m"-104.9407"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"relative bg-black/30 flex items-center justify-center text-center px-6 flex-shrink-0 min-h-[240px] h-[30vh] md:h-auto md:shrink md:flex-1"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"text-[color:var(--ink-on-dark-faint)] text-[13px] max-w-md"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--none)] mb-2"[39m
+                [36m>[39m
+                  [0mMap unavailable[0m
+                [36m</div>[39m
+                [0mNEXT_PUBLIC_MAPBOX_TOKEN is not configured. The interactive map can't load — please enter coordinates manually below.[0m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"border-t border-[color:var(--rule)] px-6 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--warn)] flex-shrink-0"[39m
+            [36m>[39m
+        ...
+[90m [2m❯[22m waitForWrapper ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../conestruct/site/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m components/LocationPickerModal.scan-honesty.test.tsx:[2m148:18[22m[39m
+    [90m146| [39m    [34mtypeCoords[39m()[33m;[39m
+    [90m147| [39m
+    [90m148| [39m    await screen.findByText(/Road detection is unavailable right now/i…
+    [90m   | [39m                 [31m^[39m
+    [90m149| [39m    fireEvent.click(screen.getByRole("button", { name: /Re-detect road…
+    [90m150| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mscan failure vs measured absence (#213)[2m > [22mall-mirrors outage → scan_status 'unavailable', claiming nothing
+[31m[1mAssertionError[22m: expected undefined to be 'unavailable' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"unavailable"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m115:30[22m[39m
+    [90m113| [39m    [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m200[39m)[33m;[39m
+    [90m114| [39m    [35mconst[39m body [33m=[39m [35mawait[39m res[33m.[39m[34mjson[39m()[33m;[39m
+    [90m115| [39m    [34mexpect[39m(body[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"unavailable"[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m116| [39m    [34mexpect[39m(body[33m.[39mcandidates)[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m117| [39m    [90m// The bug's payload was a claim: isUrban:false (the silent rural[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mscan failure vs measured absence (#213)[2m > [22mthe 0-then-5 capture: outage, then the identical request succeeds
+[31m[1mAssertionError[22m: expected undefined to be 'unavailable' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"unavailable"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m128:31[22m[39m
+    [90m126| [39m    queue = [{ kind: "reject" }, { kind: "reject" }, { kind: "reject" …
+    [90m127| [39m    [35mconst[39m first [33m=[39m [35mawait[39m ([35mawait[39m [33mPOST[39m([34mrequest[39m([33mPIN[39m)))[33m.[39m[34mjson[39m()[33m;[39m
+    [90m128| [39m    [34mexpect[39m(first[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"unavailable"[39m)[33m;[39m
+    [90m   | [39m                              [31m^[39m
+    [90m129| [39m    [34mexpect[39m(first[33m.[39mcandidates)[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m130| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mscan failure vs measured absence (#213)[2m > [22ma genuine empty scan stays a measurement: ok + zero candidates + place facts
+[31m[1mAssertionError[22m: expected undefined to be 'ok' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"ok"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m161:30[22m[39m
+    [90m159| [39m    queue [33m=[39m [{ kind[33m:[39m [32m"ok"[39m[33m,[39m elements[33m:[39m [[33mPLACE_NODE[39m] }][33m;[39m
+    [90m160| [39m    [35mconst[39m body [33m=[39m [35mawait[39m ([35mawait[39m [33mPOST[39m([34mrequest[39m([33mPIN[39m)))[33m.[39m[34mjson[39m()[33m;[39m
+    [90m161| [39m    [34mexpect[39m(body[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"ok"[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m162| [39m    [34mexpect[39m(body[33m.[39mcandidates)[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m163| [39m    [34mexpect[39m(body[33m.[39misUrban)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mscan failure vs measured absence (#213)[2m > [22ma 4xx is unavailable, and a hard stop (no second mirror)
+[31m[1mAssertionError[22m: expected undefined to be 'unavailable' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"unavailable"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m170:30[22m[39m
+    [90m168| [39m    queue [33m=[39m [{ kind[33m:[39m [32m"status"[39m[33m,[39m status[33m:[39m [34m400[39m }][33m;[39m
+    [90m169| [39m    [35mconst[39m body [33m=[39m [35mawait[39m ([35mawait[39m [33mPOST[39m([34mrequest[39m([33mPIN[39m)))[33m.[39m[34mjson[39m()[33m;[39m
+    [90m170| [39m    [34mexpect[39m(body[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"unavailable"[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m171| [39m    [90m// 4xx means the query itself was rejected — retrying another[39m
+    [90m172| [39m    [90m// mirror would repeat it, so exactly one fetch fires.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mscan failure vs measured absence (#213)[2m > [22ma 5xx falls through to the next mirror and still completes
+[31m[1mAssertionError[22m: expected undefined to be 'ok' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"ok"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m182:30[22m[39m
+    [90m180| [39m    ][33m;[39m
+    [90m181| [39m    [35mconst[39m body [33m=[39m [35mawait[39m ([35mawait[39m [33mPOST[39m([34mrequest[39m([33mPIN[39m)))[33m.[39m[34mjson[39m()[33m;[39m
+    [90m182| [39m    [34mexpect[39m(body[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"ok"[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m183| [39m    [34mexpect[39m(body[33m.[39mcandidates)[33m.[39m[34mtoHaveLength[39m([34m1[39m)[33m;[39m
+    [90m184| [39m    [90m// Unnamed candidate → no extension round trip → exactly the two[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m app/api/road-bearing/route.test.ts[2m > [22mextension-failure fallback (the Colfax transient, pinned)[2m > [22ma failed extension query keeps own-way geometry silently
+[31m[1mAssertionError[22m: expected undefined to be 'ok' // Object.is equality[39m
+
+[32m- Expected:[39m 
+"ok"
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m app/api/road-bearing/route.test.ts:[2m203:30[22m[39m
+    [90m201| [39m    [90m// draws on the exhausted queue → every mirror rejects.[39m
+    [90m202| [39m    [35mconst[39m body [33m=[39m [35mawait[39m ([35mawait[39m [33mPOST[39m([34mrequest[39m([33mPIN[39m)))[33m.[39m[34mjson[39m()[33m;[39m
+    [90m203| [39m    [34mexpect[39m(body[33m.[39mscan_status)[33m.[39m[34mtoBe[39m([32m"ok"[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m204| [39m    [34mexpect[39m(body[33m.[39mcandidates)[33m.[39m[34mtoHaveLength[39m([34m1[39m)[33m;[39m
+    [90m205| [39m    [34mexpect[39m(body[33m.[39mcandidates[[34m0[39m][33m.[39mgeometry)[33m.[39m[34mtoEqual[39m(
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m 15:58:33
+[2m   Duration [22m 5.03s[2m (transform 516ms, setup 0ms, collect 1.05s, tests 3.17s, environment 1.05s, prepare 438ms)[22m
+

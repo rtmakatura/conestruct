@@ -1,0 +1,88 @@
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31mF[0m[31mF[0m[31mF[0m[32m.[0m[31mF[0m[31mF[0m[31mF[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[31m                                      [100%][0m
+================================== FAILURES ===================================
+[31m[1m______________ test_validate_reason_unavailable_on_error_result _______________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_validate_reason_unavailable_on_error_result[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+        [94mwith[39;49;00m patch.object([90m[39;49;00m
+            site_detection,[90m[39;49;00m
+            [33m"[39;49;00m[33mdetect_road_bearing[39;49;00m[33m"[39;49;00m,[90m[39;49;00m
+            return_value={[33m"[39;49;00m[33merror[39;49;00m[33m"[39;49;00m: [33m"[39;49;00m[33moverpass-api.de: 504 Gateway Timeout[39;49;00m[33m"[39;49;00m, [33m"[39;49;00m[33mbearing_deg[39;49;00m[33m"[39;49;00m: [94mNone[39;49;00m},[90m[39;49;00m
+        ):[90m[39;49;00m
+            out = site_detection.validate_corridor_against_osm([94m39.71466[39;49;00m, -[94m104.94071[39;49;00m, [94m85.0[39;49;00m)[90m[39;49;00m
+        [94massert[39;49;00m out[[33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m] [95mis[39;49;00m [94mFalse[39;49;00m[90m[39;49;00m
+>       [94massert[39;49;00m out[[33m"[39;49;00m[33mreason[39;49;00m[33m"[39;49;00m] == [33m"[39;49;00m[33mcheck_unavailable[39;49;00m[33m"[39;49;00m[90m[39;49;00m
+               ^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       KeyError: 'reason'[0m
+
+[1m[31mtests\test_site_detection.py[0m:570: KeyError
+[31m[1m________________ test_validate_reason_unavailable_on_exception ________________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_validate_reason_unavailable_on_exception[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+        [94mwith[39;49;00m patch.object([90m[39;49;00m
+            site_detection,[90m[39;49;00m
+            [33m"[39;49;00m[33mdetect_road_bearing[39;49;00m[33m"[39;49;00m,[90m[39;49;00m
+            side_effect=[96mRuntimeError[39;49;00m([33m"[39;49;00m[33msocket torn down[39;49;00m[33m"[39;49;00m),[90m[39;49;00m
+        ):[90m[39;49;00m
+            out = site_detection.validate_corridor_against_osm([94m39.71466[39;49;00m, -[94m104.94071[39;49;00m, [94m85.0[39;49;00m)[90m[39;49;00m
+        [94massert[39;49;00m out[[33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m] [95mis[39;49;00m [94mFalse[39;49;00m[90m[39;49;00m
+>       [94massert[39;49;00m out[[33m"[39;49;00m[33mreason[39;49;00m[33m"[39;49;00m] == [33m"[39;49;00m[33mcheck_unavailable[39;49;00m[33m"[39;49;00m[90m[39;49;00m
+               ^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       KeyError: 'reason'[0m
+
+[1m[31mtests\test_site_detection.py[0m:582: KeyError
+[31m[1m________________ test_validate_reason_not_run_without_bearing _________________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_validate_reason_not_run_without_bearing[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+        out = site_detection.validate_corridor_against_osm([94m39.71466[39;49;00m, -[94m104.94071[39;49;00m, [94mNone[39;49;00m)[90m[39;49;00m
+        [94massert[39;49;00m out[[33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m] [95mis[39;49;00m [94mFalse[39;49;00m[90m[39;49;00m
+>       [94massert[39;49;00m out[[33m"[39;49;00m[33mreason[39;49;00m[33m"[39;49;00m] == [33m"[39;49;00m[33mnot_run_no_coords[39;49;00m[33m"[39;49;00m[90m[39;49;00m
+               ^^^^^^^^^^^^^[90m[39;49;00m
+[1m[31mE       KeyError: 'reason'[0m
+
+[1m[31mtests\test_site_detection.py[0m:588: KeyError
+[31m[1m____ test_unavailable_reason_prints_unavailable_never_the_no_coords_claim _____[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_unavailable_reason_prints_unavailable_never_the_no_coords_claim[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+        blocks = _corridor_blocks([90m[39;49;00m
+            {[90m[39;49;00m
+                [33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m: [94mFalse[39;49;00m,[90m[39;49;00m
+                [33m"[39;49;00m[33mwarnings[39;49;00m[33m"[39;49;00m: [],[90m[39;49;00m
+                [33m"[39;49;00m[33mreason[39;49;00m[33m"[39;49;00m: [33m"[39;49;00m[33mcheck_unavailable[39;49;00m[33m"[39;49;00m,[90m[39;49;00m
+                [33m"[39;49;00m[33merror[39;49;00m[33m"[39;49;00m: [33m"[39;49;00m[33moverpass-api.de: ConnectError: connection refused[39;49;00m[33m"[39;49;00m,[90m[39;49;00m
+            }[90m[39;49;00m
+        )[90m[39;49;00m
+        text = _texts(blocks)[90m[39;49;00m
+>       [94massert[39;49;00m [33m"[39;49;00m[33munavailable[39;49;00m[33m"[39;49;00m [95min[39;49;00m text[90m[39;49;00m
+[1m[31mE       AssertionError: assert 'unavailable' in 'Corridor Validation | Corridor check not run (no site coordinates supplied).'[0m
+
+[1m[31mtests\test_audit_blocks_corridor.py[0m:33: AssertionError
+[31m[1m_______________ test_not_run_reason_prints_the_inputs_sentence ________________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_not_run_reason_prints_the_inputs_sentence[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+        blocks = _corridor_blocks([90m[39;49;00m
+            {[33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m: [94mFalse[39;49;00m, [33m"[39;49;00m[33mwarnings[39;49;00m[33m"[39;49;00m: [], [33m"[39;49;00m[33mreason[39;49;00m[33m"[39;49;00m: [33m"[39;49;00m[33mnot_run_no_coords[39;49;00m[33m"[39;49;00m}[90m[39;49;00m
+        )[90m[39;49;00m
+        text = _texts(blocks)[90m[39;49;00m
+>       [94massert[39;49;00m [33m"[39;49;00m[33mno site coordinates or bearing supplied[39;49;00m[33m"[39;49;00m [95min[39;49;00m text[90m[39;49;00m
+[1m[31mE       AssertionError: assert 'no site coordinates or bearing supplied' in 'Corridor Validation | Corridor check not run (no site coordinates supplied).'[0m
+
+[1m[31mtests\test_audit_blocks_corridor.py[0m:45: AssertionError
+[31m[1m________ test_reasonless_not_checked_falls_back_to_the_inputs_sentence ________[0m
+
+    [0m[94mdef[39;49;00m[90m [39;49;00m[92mtest_reasonless_not_checked_falls_back_to_the_inputs_sentence[39;49;00m() -> [94mNone[39;49;00m:[90m[39;49;00m
+    [90m    [39;49;00m[33m"""A legacy dict without ``reason`` reads as not-run — the fallback[39;49;00m
+    [33m    must never claim unavailability it cannot know about."""[39;49;00m[90m[39;49;00m
+        blocks = _corridor_blocks({[33m"[39;49;00m[33mchecked[39;49;00m[33m"[39;49;00m: [94mFalse[39;49;00m, [33m"[39;49;00m[33mwarnings[39;49;00m[33m"[39;49;00m: []})[90m[39;49;00m
+        text = _texts(blocks)[90m[39;49;00m
+>       [94massert[39;49;00m [33m"[39;49;00m[33mno site coordinates or bearing supplied[39;49;00m[33m"[39;49;00m [95min[39;49;00m text[90m[39;49;00m
+[1m[31mE       AssertionError: assert 'no site coordinates or bearing supplied' in 'Corridor Validation | Corridor check not run (no site coordinates supplied).'[0m
+
+[1m[31mtests\test_audit_blocks_corridor.py[0m:54: AssertionError
+[36m[1m=========================== short test summary info ===========================[0m
+[31mFAILED[0m tests/test_site_detection.py::[1mtest_validate_reason_unavailable_on_error_result[0m - KeyError: 'reason'
+[31mFAILED[0m tests/test_site_detection.py::[1mtest_validate_reason_unavailable_on_exception[0m - KeyError: 'reason'
+[31mFAILED[0m tests/test_site_detection.py::[1mtest_validate_reason_not_run_without_bearing[0m - KeyError: 'reason'
+[31mFAILED[0m tests/test_audit_blocks_corridor.py::[1mtest_unavailable_reason_prints_unavailable_never_the_no_coords_claim[0m - AssertionError: assert 'unavailable' in 'Corridor Validation | Corridor che...
+[31mFAILED[0m tests/test_audit_blocks_corridor.py::[1mtest_not_run_reason_prints_the_inputs_sentence[0m - AssertionError: assert 'no site coordinates or bearing supplied' in 'Corrid...
+[31mFAILED[0m tests/test_audit_blocks_corridor.py::[1mtest_reasonless_not_checked_falls_back_to_the_inputs_sentence[0m - AssertionError: assert 'no site coordinates or bearing supplied' in 'Corrid...
+[31m[31m[1m6 failed[0m, [32m29 passed[0m[31m in 1.66s[0m[0m
