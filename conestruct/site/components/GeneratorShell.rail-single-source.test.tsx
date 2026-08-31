@@ -57,17 +57,15 @@ afterEach(() => {
 
 function ctaReason(): string {
   // The under-Generate alert (GenerateButton renders it only while
-  // disabled with a reason).
-  const alerts = Array.from(document.querySelectorAll('[role="alert"]'));
-  const el = alerts.find((a) =>
-    a.className.includes("text-[color:var(--fail)]"),
-  );
+  // disabled with a reason).  #228 hardening: selected by its stable
+  // hook, not by Tailwind class string.
+  const el = document.querySelector('[data-testid="cta-reason"]');
   if (!el) throw new Error("no under-CTA reason alert on screen");
   return (el.textContent ?? "").trim();
 }
 
 function railBlocker(): string {
-  const el = document.querySelector(".progress-rail .rail-blocker");
+  const el = document.querySelector('[data-testid="rail-blocker"]');
   if (!el) throw new Error("no rail blocker string on screen");
   return (el.textContent ?? "").trim();
 }
@@ -98,7 +96,7 @@ describe("rail blocker === CTA disabled-reason (one export)", () => {
     expect(railBlocker()).toBe(ctaReason());
     expect(railBlocker()).toBe("Generation declined — see the notice below.");
     const gen = screen.getByRole("button", { name: /Generate — blocked:/ });
-    expect(gen.querySelector(".rail-blocker")).not.toBeNull();
+    expect(gen.querySelector('[data-testid="rail-blocker"]')).not.toBeNull();
     // #180 one voice intact: the verbatim 400 renders exactly once
     // (the strip), never on the rail.
     const occurrences =
@@ -126,7 +124,9 @@ describe("rail blocker === CTA disabled-reason (one export)", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(document.querySelector(".progress-rail .rail-blocker")).toBeNull();
+    expect(
+      document.querySelector('[data-testid="rail-blocker"]'),
+    ).toBeNull();
     screen.getByRole("button", { name: "Generate — ready" });
   });
 });

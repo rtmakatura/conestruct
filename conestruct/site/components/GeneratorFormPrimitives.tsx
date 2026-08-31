@@ -223,6 +223,7 @@ export function GenerateButton({
       {!generating && disabled && disabledReason && (
         <div
           role="alert"
+          data-testid="cta-reason"
           className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--fail)] text-center"
         >
           {disabledReason}
