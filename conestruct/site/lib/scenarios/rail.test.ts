@@ -33,6 +33,7 @@ function input(scenario: Scenario, over: Partial<RailInput> = {}): RailInput {
     approachConfirm: NO_HOLD,
     refusal: null,
     refusalPending: false,
+    pendingSuggestions: 0,
     ...over,
   };
 }
@@ -249,5 +250,201 @@ describe("entry states — pending, notset, done", () => {
     expect(
       deriveRail(input(pinned(DEFAULT_FLAGGER))).entries.map((e) => e.label),
     ).toEqual(["Location", "Road", "Work", "Flagger", "Schedule"]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// #228 — the per-step vocabulary, derived here and nowhere else
+// ---------------------------------------------------------------------------
+
+// deriveRail reads only the staleness key off the confirmed road — the
+// minimal cast keeps the fixture honest about that.
+function confirmedRoadAt(pinLat: number, pinLng: number) {
+  return { pinLat, pinLng } as NonNullable<
+    Scenario["meta"]["confirmedRoad"]
+  >;
+}
+
+describe("#228 vocabulary — fields on the derivation, purity", () => {
+  it("derives deterministically: two calls on one input are deep-equal", () => {
+    const i = input(pinned(DEFAULT_NEAR_INTERSECTION), {
+      pendingSuggestions: 2,
+    });
+    expect(deriveRail(i)).toEqual(deriveRail(i));
+  });
+
+  it("step indexes mirror the FieldGroup tags: shoulder 2–5, flagger 2–6", () => {
+    expect(
+      deriveRail(input(pinned(DEFAULT_SHOULDER))).entries.map((e) => e.step),
+    ).toEqual([2, 3, 4, 5]);
+    expect(
+      deriveRail(input(pinned(DEFAULT_FLAGGER))).entries.map((e) => e.step),
+    ).toEqual([2, 3, 4, 5, 6]);
+  });
+
+  it("glyph + word per state; a plain done carries no word", () => {
+    const pre = deriveRail(input(DEFAULT_SHOULDER));
+    expect(entryById(pre, "location").glyph).toBe("⚠");
+    expect(entryById(pre, "location").word).toBe("needs attention");
+    expect(entryById(pre, "road").glyph).toBe("◌");
+    expect(entryById(pre, "road").word).toBe("pending");
+    const post = deriveRail(input(pinned(DEFAULT_SHOULDER)));
+    expect(entryById(post, "location").glyph).toBe("✓");
+    expect(entryById(post, "location").word).toBeNull();
+    expect(entryById(post, "schedule").glyph).toBe("◌");
+    expect(entryById(post, "schedule").word).toBe("optional · not set");
+  });
+
+  it("aria strings are the pre-arc component strings, byte-identical", () => {
+    const pre = deriveRail(input(DEFAULT_SHOULDER));
+    expect(entryById(pre, "location").aria).toBe(
+      "Location — needs attention: Set a location first — pick on map or enter manually. (current blocker)",
+    );
+    expect(entryById(pre, "road").aria).toBe(
+      "Road — pending — set a location first",
+    );
+    const post = deriveRail(input(pinned(DEFAULT_SHOULDER)));
+    expect(entryById(post, "location").aria).toBe("Location — done");
+    expect(entryById(post, "schedule").aria).toBe("Schedule — not set");
+  });
+});
+
+describe("#228 stale — the flagged fourth state (PDF p.5)", () => {
+  it("a confirmed road at a moved pin flips Road to stale ▲ / 'detection stale'", () => {
+    const s = pinned(DEFAULT_SHOULDER);
+    const stale = {
+      ...s,
+      meta: { ...s.meta, confirmedRoad: confirmedRoadAt(40.0, -105.0) },
+    };
+    const road = entryById(deriveRail(input(stale)), "road");
+    expect(road.state).toBe("stale");
+    expect(road.glyph).toBe("▲");
+    expect(road.word).toBe("detection stale");
+    expect(road.aria).toBe("Road — detection stale");
+  });
+
+  it("a fresh confirmed road stays done (the DetectedVsApplied key)", () => {
+    const s = pinned(DEFAULT_SHOULDER);
+    const fresh = {
+      ...s,
+      meta: { ...s.meta, confirmedRoad: confirmedRoadAt(39.7, -104.9) },
+    };
+    expect(entryById(deriveRail(input(fresh)), "road").state).toBe("done");
+  });
+
+  it("attention outranks stale", () => {
+    const s = {
+      ...pinned(DEFAULT_SHOULDER),
+      lanes: 4,
+      laneWidth: 14,
+      meta: {
+        ...pinned(DEFAULT_SHOULDER).meta,
+        confirmedRoad: confirmedRoadAt(40.0, -105.0),
+      },
+    };
+    expect(entryById(deriveRail(input(s)), "road").state).toBe("attention");
+  });
+
+  it("stale never gates: the blocker stays null", () => {
+    const s = pinned(DEFAULT_SHOULDER);
+    const stale = {
+      ...s,
+      meta: { ...s.meta, confirmedRoad: confirmedRoadAt(40.0, -105.0) },
+    };
+    expect(deriveRail(input(stale)).blocker).toBeNull();
+  });
+
+  it("pre-pin, pending outranks stale (nothing to be stale against)", () => {
+    const s = {
+      ...DEFAULT_SHOULDER,
+      meta: {
+        ...DEFAULT_SHOULDER.meta,
+        confirmedRoad: confirmedRoadAt(40.0, -105.0),
+      },
+    };
+    expect(entryById(deriveRail(input(s)), "road").state).toBe("pending");
+  });
+});
+
+describe("#228 pending-suggestion count — informational only (ruling 1)", () => {
+  it("2 pending proposals read '2 to confirm' on Location, 1 reads '1 to confirm'", () => {
+    const two = deriveRail(
+      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 2 }),
+    );
+    expect(entryById(two, "location").info).toBe("2 to confirm");
+    expect(entryById(two, "location").aria).toBe(
+      "Location — done · 2 to confirm",
+    );
+    const one = deriveRail(
+      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 1 }),
+    );
+    expect(entryById(one, "location").info).toBe("1 to confirm");
+  });
+
+  it("zero pending: no info line, aria byte-identical to pre-arc", () => {
+    const rail = deriveRail(input(pinned(DEFAULT_SHOULDER)));
+    expect(entryById(rail, "location").info).toBeNull();
+    expect(entryById(rail, "location").aria).toBe("Location — done");
+  });
+
+  it("the count never changes state or blocker (suggestions never gate)", () => {
+    const rail = deriveRail(
+      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 2 }),
+    );
+    expect(entryById(rail, "location").state).toBe("done");
+    expect(rail.blocker).toBeNull();
+  });
+
+  it("dismiss-honesty (PDF p.4 corollary): the count dropping to 0 removes the line and flips nothing to ✓ that wasn't", () => {
+    const before = deriveRail(
+      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 1 }),
+    );
+    const after = deriveRail(
+      input(pinned(DEFAULT_SHOULDER), { pendingSuggestions: 0 }),
+    );
+    expect(entryById(after, "location").info).toBeNull();
+    // Every state and glyph is unchanged by the resolution — the count
+    // is the ONLY thing that moved.
+    expect(after.entries.map((e) => e.state)).toEqual(
+      before.entries.map((e) => e.state),
+    );
+    expect(after.entries.map((e) => e.glyph)).toEqual(
+      before.entries.map((e) => e.glyph),
+    );
+  });
+});
+
+describe("#228 duration — display-only date arithmetic (ruling 5)", () => {
+  it("a range reads inclusive days ('4 days')", () => {
+    const s: Scenario = {
+      ...pinned(DEFAULT_SHOULDER),
+      schedule: {
+        date_mode: "range",
+        work_date: "2026-09-01",
+        work_date_end: "2026-09-04",
+      },
+    };
+    const sched = entryById(deriveRail(input(s)), "schedule");
+    expect(sched.state).toBe("done");
+    expect(sched.info).toBe("4 days");
+    expect(sched.aria).toBe("Schedule — done · 4 days");
+  });
+
+  it("a single date reads '1 day'", () => {
+    const s: Scenario = {
+      ...pinned(DEFAULT_SHOULDER),
+      schedule: { date_mode: "single", work_date: "2026-09-01" },
+    };
+    expect(entryById(deriveRail(input(s)), "schedule").info).toBe("1 day");
+  });
+
+  it("tbd/unset: notset with no duration", () => {
+    const s: Scenario = {
+      ...pinned(DEFAULT_SHOULDER),
+      schedule: { date_mode: "tbd" },
+    };
+    const sched = entryById(deriveRail(input(s)), "schedule");
+    expect(sched.state).toBe("notset");
+    expect(sched.info).toBeNull();
   });
 });

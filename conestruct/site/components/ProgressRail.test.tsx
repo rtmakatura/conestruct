@@ -15,14 +15,50 @@ import type { Rail } from "@/lib/scenarios/rail";
 
 afterEach(cleanup);
 
+// #228 fixture move: entries now carry the derived vocabulary fields
+// (step/glyph/word/info/aria) — the helper fills them the way
+// deriveRail does so the pre-existing assertions hold unchanged.
+const FIX_GLYPH: Record<Rail["entries"][number]["state"], string> = {
+  done: "✓",
+  attention: "⚠",
+  pending: "◌",
+  notset: "◌",
+  stale: "▲",
+};
+const FIX_WORD: Record<Rail["entries"][number]["state"], string | null> = {
+  done: null,
+  attention: "needs attention",
+  pending: "pending",
+  notset: "optional · not set",
+  stale: "detection stale",
+};
+
 function entry(over: Partial<Rail["entries"][number]>): Rail["entries"][number] {
-  return {
-    id: "road",
+  const base = {
+    id: "road" as const,
     label: "Road",
     anchorId: "rail-step-road",
-    state: "done",
+    state: "done" as const,
     issues: [],
+    step: 3,
+    info: null,
     ...over,
+  };
+  const phrase =
+    base.state === "done"
+      ? "done"
+      : base.state === "notset"
+        ? "not set"
+        : base.state === "pending"
+          ? "pending — set a location first"
+          : base.state === "stale"
+            ? "detection stale"
+            : `needs attention: ${base.issues.map((i) => i.text).join(" Also: ")}`;
+  return {
+    glyph: FIX_GLYPH[base.state],
+    word: FIX_WORD[base.state],
+    aria: `${base.label} — ${phrase}`,
+    ...base,
   };
 }
 

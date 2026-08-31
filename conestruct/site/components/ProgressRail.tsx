@@ -1,45 +1,35 @@
 "use client";
 
-// The progress rail (issue #221) — Zone 1's pre-generate steering line.
-// Pure navigation over deriveRail's output: every entry is a jump link
-// to its FieldGroup header; the entry that owns the current blocker
-// renders the CTA's disabled-reason VERBATIM (same string, same source
-// — lib/scenarios/rail.ts); every other unresolved blocker shows its
-// own ⚠ so nothing queues invisibly (rule 10).  The rail POINTS at the
-// sections and at the refusal notice — it never re-states a refusal in
-// different words (#180: the strings are the affordance pointer or the
-// short decline line, both existing strings).
+// The progress rail (issue #221; vocabulary #228) — Zone 1's
+// pre-generate steering line.  Pure navigation over deriveRail's
+// output: every entry is a jump link to its FieldGroup header; the
+// entry that owns the current blocker renders the CTA's
+// disabled-reason VERBATIM (same string, same source —
+// lib/scenarios/rail.ts); every other unresolved blocker shows its
+// own ⚠ so nothing queues invisibly (rule 10).  The rail POINTS at
+// the sections and at the refusal notice — it never re-states a
+// refusal in different words (#180).
 //
-// Rule 13: no state is glyph-only — ✓/⚠/◌ ride next to the label and a
-// visible state word (⚠ carries its text; ◌ says "not set"/"pending");
-// the ◌ states render chromeless gray (--none), never a verdict color.
+// #228: this component RENDERS the vocabulary, it never derives it —
+// state, glyph, word, info, and aria are fields on deriveRail's
+// entries (single voice, asserted by the sentinel test in
+// ProgressRail.single-voice.test.tsx).  The only strings born here
+// are the Generate slot's — a join of ``blocker``'s own fields, not a
+// re-derivation (ruling 8); the step index renders zero-padded
+// (ruling 4: format CHOSEN — display formatting of the derived
+// number, like the blocker join).
+//
+// Rule 13: no state is glyph-only — every glyph rides next to the
+// label and its derived state word (or the blocker string), and the
+// whole announcement is the derived ``aria``.
 //
 // Focus policy (#193/arc 7): a rail click is a USER-INITIATED armed
 // action — it may scroll and move focus.  It lands on the section's
 // header (id + tabIndex -1 via FieldGroup's anchorId), announced as
 // "<label> — STEP n"; background re-renders never move focus.
 
-import type { Rail, RailEntry } from "@/lib/scenarios/rail";
+import type { Rail } from "@/lib/scenarios/rail";
 import { jumpToAnchor } from "./GeneratorFormPrimitives";
-
-const GLYPH: Record<RailEntry["state"], string> = {
-  done: "✓",
-  attention: "⚠",
-  pending: "◌",
-  notset: "◌",
-};
-
-function entryAria(e: RailEntry, ownsBlocker: boolean): string {
-  const state =
-    e.state === "done"
-      ? "done"
-      : e.state === "notset"
-        ? "not set"
-        : e.state === "pending"
-          ? "pending — set a location first"
-          : `needs attention: ${e.issues.map((i) => i.text).join(" Also: ")}`;
-  return `${e.label} — ${state}${ownsBlocker ? " (current blocker)" : ""}`;
-}
 
 export function ProgressRail({
   rail,
@@ -59,38 +49,35 @@ export function ProgressRail({
             key={e.id}
             type="button"
             className={`rail-entry st-${e.state}${ownsBlocker ? " current" : ""}`}
-            aria-label={entryAria(e, ownsBlocker)}
+            aria-label={e.aria}
             onClick={() => jumpToAnchor(e.anchorId)}
           >
-            {/* One ⚠ per unresolved blocker on this entry — distinct
-                glyphs, never a rollup that hides a queued hold. */}
+            {/* One ⚠ per unresolved blocker on this entry — the
+                derived glyph repeats per issue, never a rollup that
+                hides a queued hold. */}
             {e.state === "attention" ? (
-              e.issues.map((iss, i) => (
+              e.issues.map((_iss, i) => (
                 <span key={i} className="rail-glyph" aria-hidden>
-                  {GLYPH.attention}
+                  {e.glyph}
                 </span>
               ))
             ) : (
               <span className="rail-glyph" aria-hidden>
-                {GLYPH[e.state]}
+                {e.glyph}
               </span>
             )}
+            <span className="rail-step" aria-hidden>
+              {String(e.step).padStart(2, "0")}
+            </span>
             <span className="rail-label">{e.label}</span>
-            {e.state === "notset" && (
-              <span className="rail-note">not set</span>
-            )}
-            {e.state === "pending" && (
-              <span className="rail-note">pending</span>
-            )}
-            {ownsBlocker && (
+            {ownsBlocker ? (
               <span className="rail-blocker">{blocker.message}</span>
+            ) : (
+              e.word !== null && (
+                <span className="rail-note">{e.word}</span>
+              )
             )}
-            {/* Non-blocker ⚠ entries still say so in text (rule 13) —
-                the full issue texts live in their sections and in the
-                accessible name above. */}
-            {e.state === "attention" && !ownsBlocker && (
-              <span className="rail-note">needs attention</span>
-            )}
+            {e.info !== null && <span className="rail-info">{e.info}</span>}
           </button>
         );
       })}

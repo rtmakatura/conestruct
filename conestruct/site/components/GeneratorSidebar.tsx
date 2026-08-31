@@ -113,6 +113,10 @@ interface Props {
   // #227 schedule reference block: the full evaluated block — window
   // set + hours_eval — for the Schedule step's window rows.
   jurisdictionBlock?: JurisdictionBlock | null;
+  // #228: how many suggestion proposals await Confirm/Dismiss (0–2),
+  // computed by the shell from the slots' own render expressions —
+  // feeds the rail's Location info subline and nothing else.
+  pendingSuggestions?: number;
   // Dev-only replication snapshot (Refs #102, TEMPORARY): surfaces the raw
   // picker classification (plus the pin it was captured at, so a later
   // location edit is detectable as staleness) up to the shell — it
@@ -176,6 +180,7 @@ export function GeneratorSidebar({
   jurisdictionControls,
   jurisdictionName = null,
   jurisdictionBlock = null,
+  pendingSuggestions = 0,
   onClassification,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -202,7 +207,13 @@ export function GeneratorSidebar({
   // validations, the hold above, the shell's stamped refusal, and the
   // location sentinel, chained in the recorded rank order.  ``blocker``
   // is null exactly when the old seven-disjunct gate was open.
-  const rail = deriveRail({ scenario, approachConfirm, refusal, refusalPending });
+  const rail = deriveRail({
+    scenario,
+    approachConfirm,
+    refusal,
+    refusalPending,
+    pendingSuggestions,
+  });
   // #222: pre-pin, every step after Location renders pending (dim +
   // inert + focusable summary) -- detection fills road facts from the
   // pin, so inviting that work first invites an overwrite.  The
