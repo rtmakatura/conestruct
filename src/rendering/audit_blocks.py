@@ -264,7 +264,23 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
         return []
     blocks: list[Block] = [Heading(2, _cell("Corridor Validation"))]
     if not corridor.get("checked"):
-        blocks.append(_body("Corridor check not run (no site coordinates supplied)."))
+        # #213 V4: honest copy per cause.  The old single sentence
+        # asserted missing coordinates for an Overpass outage on a plan
+        # that had them.
+        if corridor.get("reason") == "check_unavailable":
+            blocks.append(
+                _body(
+                    "Corridor check unavailable — OpenStreetMap could not be "
+                    "reached at generation; road-network warnings were not "
+                    "evaluated. Re-generate to retry."
+                )
+            )
+        else:
+            # not_run_no_coords, and the legacy reasonless dict: the
+            # inputs weren't there, so there was nothing to check.
+            blocks.append(
+                _body("Corridor check not run (no site coordinates or bearing supplied).")
+            )
         return blocks
     warnings = corridor.get("warnings", [])
     if warnings:

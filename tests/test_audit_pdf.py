@@ -50,7 +50,14 @@ _PARAMS = ScenarioParams(
 # they are excluded like ``formula_latex``.  Caveat: ``_SKIP_KEYS`` is
 # global, so this assumes no future section adds a *displayed* ``flag`` /
 # ``level`` string — true today (they appear only on corridor warnings).
-_SKIP_KEYS = frozenset({"formula_latex", "flag", "level"})
+#
+# ``reason`` / ``error`` are the corridor-validation not-checked cause
+# (#213 V4, same class as ``flag``/``level``): the enum token maps to
+# prose per cause in ``_corridor_blocks`` / ``corridorValidationItem``,
+# and ``error`` is transport diagnostics (mirror URL + exception text),
+# never rendered verbatim.  Same global-key caveat applies — true today
+# (both appear only on ``corridor_validation``).
+_SKIP_KEYS = frozenset({"formula_latex", "flag", "level", "reason", "error"})
 
 # #97 — the taper/buffer/spacing ``citation`` field ({cite, footer}) feeds
 # the React audit PANEL's cite header + footer chip only; the PDF renders

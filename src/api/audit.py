@@ -1341,7 +1341,14 @@ def build_audit_trail(
 
         corridor_validation = validate_corridor_against_osm(site_lat, site_lng, params.bearing_deg)
     else:
-        corridor_validation = {"checked": False, "warnings": []}
+        # #213 V4: the reason names the cause — this branch really is
+        # "inputs missing", distinct from an Overpass outage inside
+        # validate_corridor_against_osm.
+        corridor_validation = {
+            "checked": False,
+            "warnings": [],
+            "reason": "not_run_no_coords",
+        }
 
     # ------------------------------------------------------------------
     # 10. Geometry validation (work zone vs taper / buffer)

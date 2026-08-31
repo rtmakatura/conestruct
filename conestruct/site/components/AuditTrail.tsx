@@ -1335,7 +1335,34 @@ export function corridorValidationItem(
 ): ItemSpec | null {
   const checked = corridor.checked === true;
   const warnings = (corridor.warnings as CorridorWarning[] | undefined) ?? [];
-  if (!checked || warnings.length === 0) return null;
+  if (!checked) {
+    // #213 V5: an unavailable check is a stated absence of verdict,
+    // never silence.  The not-run case (no coords/bearing — and any
+    // legacy reasonless dict) stays unrendered: there was nothing to
+    // check.  ▲ + words per rule 13, existing warn ink only.
+    if (corridor.reason !== "check_unavailable") return null;
+    return {
+      title: "Site corridor validation",
+      result: "▲ CHECK UNAVAILABLE",
+      cite: "OpenStreetMap",
+      body: (
+        <>
+          <p>
+            OpenStreetMap could not be reached at generation —
+            road-network warnings were not evaluated.
+          </p>
+          <div className="check-list">
+            <CheckRow
+              label="Anchor and bearing agreement with OSM ground truth was not checked. Re-generate to retry."
+              tone="warn"
+              tag="NOT CHECKED"
+            />
+          </div>
+        </>
+      ),
+    };
+  }
+  if (warnings.length === 0) return null;
   return {
     title: "Site corridor validation",
     result: `⚠ ${warnings.length} warning${warnings.length === 1 ? "" : "s"}`,

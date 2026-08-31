@@ -112,6 +112,7 @@
     },
     "corridor_validation": {
       "checked": false,
+      "reason": "not_run_no_coords",
       "warnings": []
     },
     "flagger": {

@@ -708,13 +708,20 @@ def validate_corridor_against_osm(
          agrees within ``bearing_threshold_deg``, emit a
          ``bearing_conflict`` warning.
 
-    Returns ``{"checked": bool, "warnings": list[dict]}`` so callers can
-    distinguish "OSM unavailable, skipped" from "OSM agreed, no
-    warnings".  Each warning is a dict with ``flag`` / ``level`` /
-    ``message`` plus context fields.
+    Returns ``{"checked": bool, "warnings": list[dict]}``; when
+    ``checked`` is False a ``reason`` key names the cause (#213 V4 —
+    the single flag used to conflate three causes, and the audit PDF
+    asserted "no site coordinates supplied" for all of them):
 
-    Network or Overpass failures are caught silently — this is a soft
-    check, never a render blocker.
+    * ``"not_run_no_coords"`` — inputs insufficient, nothing to check.
+    * ``"check_unavailable"`` — Overpass never answered; an ``error``
+      key carries the detail when the transport layer supplied one.
+
+    Each warning is a dict with ``flag`` / ``level`` / ``message`` plus
+    context fields.  Network or Overpass failures never raise — this is
+    a soft check, never a render blocker — but they are no longer
+    silent: the reason crosses the wire so every surface can say
+    "not checked" honestly.
     """
     out: dict[str, Any] = {"checked": False, "warnings": []}
 
@@ -722,17 +729,23 @@ def validate_corridor_against_osm(
         # Without a declared bearing we can't compute the conflict
         # check, and the no-road check is itself less actionable —
         # skip entirely so a future bearing-less render path doesn't
-        # noisily warn for every plan.
+        # noisily warn for every plan.  Same reason family as the
+        # caller-side no-coords skip: the inputs weren't there.
+        out["reason"] = "not_run_no_coords"
         return out
 
     try:
         result = detect_road_bearing(anchor_lat, anchor_lng, radius_m=search_radius_m)
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
         # Best-effort: any Overpass / network failure leaves
-        # ``checked = False`` so callers know we never got an answer.
+        # ``checked = False`` — but named, never mistaken for not-run.
+        out["reason"] = "check_unavailable"
+        out["error"] = f"{type(exc).__name__}: {exc}"
         return out
 
     if "error" in result and result.get("bearing_deg") is None:
+        out["reason"] = "check_unavailable"
+        out["error"] = str(result["error"])
         return out
 
     out["checked"] = True
