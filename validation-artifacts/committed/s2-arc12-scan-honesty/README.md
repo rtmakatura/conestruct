@@ -162,3 +162,30 @@ upstream-outage proof.  The upstream mirror behavior is fixture-proven
 - No Pydantic changes (the road-bearing route is Next-side; the
   corridor reason rides the existing audit-section dict per the
   Arc-15 no-response_model convention).
+
+## Prod-run provenance (added 2026-09-01, post-close)
+
+- `live-checks/outS2A12LC-prod/` is the run performed at ship time
+  (2026-09-01T15:58Z).  Its md self-titles "(local)" because the
+  script's report template was not updated for the prod run — the
+  `BASE = "https://www.conestruct.com/sandbox"` line in the committed
+  scripts (`s2a12-lc-prod.js`, `s2a12-lc-prod-l2rerun.js`) is the prod
+  tie.  It recorded 2 failures, both on L2 at the lake pin: the two
+  asserts ("absence copy renders" and "never the unavailable copy")
+  failed together, meaning the deployed picker rendered the
+  UNAVAILABLE copy ("Road detection is unavailable right now…") — the
+  honest #213 state — during a real upstream Overpass transient.  This
+  is NOT the 0-then-5 signature (#213's dishonest absence-on-an-
+  unmeasured-frame); it is the shipped fix rendering an outage
+  honestly, and the FAIL is the harness's expectation of a completed
+  empty scan, not a product defect.  The L2 re-run ~4 minutes later
+  (Ryan's disposition) measured the genuine absence: `L2 RE-RUN PASS`.
+  The archive pins no sha; its association with `a7bc4ac` rests on the
+  #213 close comment and timing.
+- `live-checks/outS2A12Prod-pinned/` is the definitive record
+  (`s2a12-lc-prod-pinned.js`): sha-gated in its own output — first
+  lines quote the live `/healthz` JSON
+  (`{"status":"ok","sha":"a7bc4ac…"}`) and `git rev-parse origin/main`
+  with a PASS/FAIL gate that aborts on mismatch.  Run
+  2026-09-01T19:23–19:24Z, result **ALL PASS 13/13** (the gate + the
+  full L1–L4 set, 12 checks), first attempt, no re-runs.
