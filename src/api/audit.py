@@ -89,6 +89,14 @@ _SEC_TAPER: str = "6B.08"
 _SEC_BUFFER: str = "6B.06"
 _SEC_SPACING: str = "6K.01"
 _TBL_TAPER: str = "6B-3"
+# #229 — Table 6B-3 holds the taper-length CRITERIA (merging taper at
+# least L, shoulder taper at least 0.33 L; "Note: Use Table 6B-4 to
+# calculate L"); the L formulas themselves (L = WS^2/60 at 40 mph or
+# less, L = WS at 45 mph or more) are Table 6B-4.  Each ``source``
+# sentence below cites the formula table for L and the criteria table
+# for the ratio it applies.  Subject-verified, MUTCD 11th Ed. printed
+# p. 775 (validation-artifacts/committed/s2-arc13-demo-fixes/).
+_TBL_TAPER_L: str = "6B-4"
 _TBL_BUFFER: str = "6B-2"
 _CITATION_TAPER: dict[str, str] = {
     "cite": f"MUTCD § {_SEC_TAPER}",
@@ -303,8 +311,8 @@ def build_audit_trail(
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
         source_text = (
-            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Lane closures use the "
-            "full merging taper length L."
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER_L} (taper length L). "
+            f"Lane closures use the full merging taper length L (Table {_TBL_TAPER})."
         )
         cdot_reference = (
             "CDOT S-630-1 Case 18 (traffic control around a work area "
@@ -315,8 +323,8 @@ def build_audit_trail(
         L_required_label = "L (full merging taper)"
         L_required_calc_text = f"Required: L = {_ft(L_full)} ft (full taper for lane closure)"
         source_text = (
-            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Lane closures use the "
-            "full merging taper length L."
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER_L} (taper length L). "
+            f"Lane closures use the full merging taper length L (Table {_TBL_TAPER})."
         )
         cdot_reference = "CDOT S-630-1 Case 10 (one lane closed on 4-lane divided highway, Sheet 7)"
     else:
@@ -324,8 +332,8 @@ def build_audit_trail(
         L_required_label = "L/3 (shoulder taper)"
         L_required_calc_text = f"L/3 = {_ft(L_full)} / 3 = {_ft(L_third)} ft"
         source_text = (
-            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER}. Shoulder closures use L/3 "
-            f"per Sec {_SEC_TAPER} (Table {_TBL_TAPER})."
+            f"MUTCD 11th Ed. Sec {_SEC_TAPER}, Table {_TBL_TAPER_L} (taper length L). "
+            f"Shoulder closures use L/3 per Sec {_SEC_TAPER} (Table {_TBL_TAPER})."
         )
         # Routing-aware taper cdot_reference (V1-Wide S1). Only the exact
         # Case 26/27 mandated step-down (65->60, 75->65) maps to the Sheet
