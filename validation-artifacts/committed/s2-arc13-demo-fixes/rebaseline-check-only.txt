@@ -1,0 +1,2 @@
+grid cases drifted: 43/70
+  ~ sections.taper.source: 'MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).' -> 'MUTCD 11th Ed. Sec 6B.08, Table 6B-4 (taper length L). Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).'

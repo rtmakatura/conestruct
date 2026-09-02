@@ -1,0 +1,91 @@
+December 2023
+MUTCD 11th Edition Page 775
+ Sect. 6B.06 to 6B.08
+Guidance:
+15 The width of a lateral buffer space should be 
+determined by engineering judgment.
+Option:
+16 When work occurs on a high-volume, highly￾congested facility, a vehicle storage or staging space may 
+be provided for incident response and emergency vehicles 
+(for example, tow trucks and fire apparatus) so that these 
+vehicles can respond quickly to road user incidents.
+Section 6B.07 Termination Area
+Support:
+01 The termination area is the section of the highway 
+where road users are returned to their normal driving 
+path. The termination area extends from the downstream 
+end of the work area to the last TTC device such as 
+END ROAD WORK signs, if posted.
+Option:
+02 An END ROAD WORK sign, a Speed Limit sign, or 
+other signs may be used to inform road users that they can 
+resume normal operations.
+03 A longitudinal buffer space may be used between the 
+work space and the beginning of the downstream taper.
+Section 6B.08 Tapers
+Option:
+01 Tapers may be used in both the transition and termination areas. Whenever tapers are to be used in close 
+proximity to an interchange ramp, crossroads, curves, or other influencing factors, the length of the tapers may 
+be adjusted.
+Support:
+02 Tapers are created by using a 
+series of channelizing devices and/or 
+pavement markings to move traffic out 
+of or into the normal path. Types of 
+tapers are shown in Figure 6B-2.
+03 Longer tapers are not necessarily 
+better than shorter tapers (particularly 
+in urban areas with characteristics such 
+as short block lengths or driveways) 
+because extended tapers tend to 
+encourage sluggish operation and to 
+encourage drivers to delay lane changes 
+unnecessarily. The test concerning 
+adequate lengths of tapers involves 
+observation of driver performance after 
+TTC plans are put into effect.
+Guidance:
+04 The appropriate taper length (L) should 
+be determined using the criteria shown in 
+Tables 6B-3 and 6B-4.
+Support:
+05 A merging taper requires the longest distance 
+because drivers are required to merge into common 
+road space.
+Table 6B---2. Stopping Sight Distance 
+as a Function of Speed
+Speed* Distance
+20 mph 115 feet
+25 mph 155 feet
+30 mph 200 feet
+35 mph 250 feet
+40 mph 305 feet
+45 mph 360 feet
+50 mph 425 feet
+55 mph 495 feet
+60 mph 570 feet
+65 mph 645 feet
+70 mph 730 feet
+75 mph 820 feet
+* Posted speed, off---peak 85th---percentile speed prior 
+to work starting, or the anticipated operating speed
+Table 6B---3. Taper Length Criteria for 
+Temporary Traffic Control Zones
+Type of Taper Taper Length
+Merging Taper at least L
+Shifting Taper at least 0.5 L
+Shoulder Taper at least 0.33 L
+One---Lane, Two---Way Traffic Taper 50 feet minimum, 100 feet maximum
+Downstream Taper 50 feet minimum, 100 feet maximum
+Note: Use Table 6B---4 to calculate L
+Table 6B---4. Formulas for Determining 
+Taper Length
+Speed (S) Taper Length (L) in feet 
+40 mph or less L = WS 2
+ 60
+45 mph or more L = WS
+Where: L = taper length in feet
+W = width of offset in feet
+S = posted speed limit, or off---peak 85th---percentile speed 
+prior to work starting, or the anticipated operating 
+speed in mph

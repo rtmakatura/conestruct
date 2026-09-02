@@ -1,0 +1,40 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+ ❯ lib/redirects.test.ts (2 tests | 1 failed) 582ms
+   × next.config redirects > /landing permanently redirects to /sandbox 580ms
+     → expected undefined to deeply equal { source: '/landing', …(2) }
+   ✓ next.config redirects > /try → /sandbox is still declared (pre-existing) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  lib/redirects.test.ts > next.config redirects > /landing permanently redirects to /sandbox
+AssertionError: expected undefined to deeply equal { source: '/landing', …(2) }
+
+- Expected: 
+{
+  "destination": "/sandbox",
+  "permanent": true,
+  "source": "/landing",
+}
+
++ Received: 
+undefined
+
+ ❯ lib/redirects.test.ts:24:19
+     22|   it("/landing permanently redirects to /sandbox", async () => {
+     23|     const entry = (await redirects()).find((r) => r.source === "/landi…
+     24|     expect(entry).toEqual({
+       |                   ^
+     25|       source: "/landing",
+     26|       destination: "/sandbox",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  07:36:19
+   Duration  1.35s (transform 39ms, setup 0ms, collect 31ms, tests 582ms, environment 0ms, prepare 104ms)
+

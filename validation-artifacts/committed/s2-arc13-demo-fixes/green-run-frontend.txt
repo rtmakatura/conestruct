@@ -1,0 +1,324 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+ ✓ lib/road-detection/classify.test.ts (36 tests) 18ms
+ ✓ lib/tiering.test.ts (26 tests) 22ms
+ ✓ lib/road-detection/stitch.test.ts (9 tests) 12ms
+ ✓ lib/scenarios/auto-apply.test.ts (34 tests) 13ms
+ ✓ lib/road-detection/cross-street.test.ts (17 tests) 13ms
+ ✓ lib/scenarios/validation.near-intersection.test.ts (18 tests) 83ms
+ ✓ lib/scenarios/handoff-summary.test.ts (32 tests) 15ms
+ ✓ components/StatusBar.test.tsx (27 tests) 35ms
+ ✓ lib/scenarios/rail.test.ts (33 tests) 20ms
+ ✓ app/api/road-bearing/route.test.ts (6 tests) 35ms
+ ✓ components/AuditTrail.test.tsx (61 tests) 117ms
+ ✓ lib/road-detection/dedup.test.ts (9 tests) 10ms
+stderr | lib/rate-limit.test.ts > rateLimitOr429 — fail-open contract (#145) > allows (returns null) when the store is UNCONFIGURED, no matter how many calls
+rate-limit: UPSTASH_REDIS_REST_URL/TOKEN unset — limiter is a no-op (fail-open)
+
+ ✓ lib/scenarios/undo-override.test.ts (11 tests) 10ms
+ ✓ lib/rate-limit.test.ts (13 tests) 48ms
+ ✓ lib/scenarios/validation.test.ts (17 tests) 36ms
+ ✓ lib/centerline.test.ts (13 tests) 16ms
+ ✓ lib/scenarios/carry-across-kinds.test.ts (4 tests) 10ms
+ ✓ components/AuditTrail.approaches.test.tsx (5 tests) 47ms
+ ✓ lib/scenarios/sidebar-payload.test.ts (6 tests) 7ms
+ ✓ lib/corridor-polyline.coverage.test.ts (4 tests) 13ms
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchAuditTrail: upstream 422 → 400 with the validation message
+audit trail upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchAuditTrail: upstream 500 stays a 502 outage
+audit trail upstream 500 render failed: boom
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchDeviceBreakdown: upstream 422 → 400 with the validation message
+device breakdown upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchDeviceBreakdown: upstream 500 stays a 502 outage
+device breakdown upstream 500 render failed: boom
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchQuoteBreakdown: upstream 422 → 400 with the validation message
+quote breakdown upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchQuoteBreakdown: upstream 500 stays a 502 outage
+quote breakdown upstream 500 render failed: boom
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > renderScenarioToResponse: upstream 422 → 400 with the validation message
+render upstream 422 {"detail":[{"type":"value_error","loc":["body","shoulder"],"msg":"Value error, 4 lanes x 14.0 ft + 8 ft shoulder = 64.0 ft exceeds the plan sheet's drawable half-road (52 ft) — use a lane width of 11.0 ft or less, or reduce the lane count.","input":{},"ctx":{"error":{}}}]}
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > renderScenarioToResponse: upstream 500 stays a 502 outage
+render upstream 500 render failed: boom
+
+stderr | lib/render-proxy.validation.test.ts > proxy fetchers route 422s onto the 400 path (#184) > fetchQuoteBreakdown: upstream 400 now forwards its body (was a 502)
+quote breakdown upstream 400 {"detail": "gate says no"}
+
+ ✓ lib/render-proxy.validation.test.ts (13 tests) 64ms
+stderr | app/api/render/detect-site/route.test.ts > detect-site proxy centerline relay (#207) > passes a realistic centerline through to the upstream payload
+rate-limit: UPSTASH_REDIS_REST_URL/TOKEN unset — limiter is a no-op (fail-open)
+
+ ✓ app/api/render/detect-site/route.test.ts (4 tests) 31ms
+ ✓ lib/scenarios/overrides.test.ts (10 tests) 10ms
+ ✓ components/AuditTrail.ni-parity.test.tsx (3 tests) 17ms
+ ✓ components/GeneratorFormPrimitives.test.tsx (5 tests) 13ms
+ ✓ lib/road-detection/labels.test.ts (7 tests) 7ms
+ ✓ lib/corridor-zones.test.ts (7 tests) 9ms
+ ✓ lib/scenarios/centerline-relay.test.ts (3 tests) 6ms
+ ✓ lib/design/type-roles.test.ts (13 tests) 12ms
+ ✓ components/StatusBar.a11y.test.tsx (4 tests) 15ms
+ ✓ components/AppSheetMeta.test.tsx (5 tests) 23ms
+ ✓ lib/scenarios/clear-detection-relays.test.ts (3 tests) 6ms
+ ✓ lib/answer-stamp.test.ts (6 tests) 6ms
+ ✓ components/LocationPickerModal.spacing.test.ts (2 tests) 5ms
+ ✓ lib/design/tokens.test.ts (3 tests) 6ms
+ ✓ lib/geocode-precision.test.ts (3 tests) 6ms
+ ✓ tests/modal-healthz-probe.test.ts (6 tests) 2394ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 500 -> exit 1, distinct non-200 error  449ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a DRIFTED sha -> exit 0, sha faithfully extracted  410ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with the MATCHING sha -> exit 0, sha faithfully extracted  453ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 without a sha field -> exit 0, served_sha=unknown (jq `.sha // "unknown"` preserved)  432ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a non-JSON body -> exit 1 (deliberately red)  487ms
+ ✓ lib/redirects.test.ts (2 tests) 1289ms
+   ✓ next.config redirects > /landing permanently redirects to /sandbox  1284ms
+ ✓ components/OutputCards.test.tsx (10 tests) 388ms
+ ✓ components/GeneratorForms.override-provenance.test.tsx (14 tests) 604ms
+ ✓ components/LocationPickerModal.road-pick.test.tsx (10 tests) 1367ms
+stderr | components/GeneratorShell.picker-reapply.test.tsx > picker re-apply preserves manual form edits (lanes bug) > REGRESSION: a no-change re-apply keeps the user's lane selection in the payload
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+stderr | components/GeneratorShell.near-intersection.test.tsx > near_intersection picker → form → payload > ACCEPTANCE: prefill, edit, re-apply without losing the edit, submit the exact approaches array
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+ ✓ components/LocationPickerModal.state-contract.test.tsx (12 tests) 1681ms
+   ✓ lost confirmations: reopen restores, pin move re-arms > a fresh operator pick records method 'operator_pick'; a sole candidate 'auto_single'  325ms
+ ✓ components/GeneratorShell.class-suggest.test.tsx (7 tests) 1688ms
+   ✓ street-class suggestion contract (#152 C): suggest never sets > a confirmed primary road renders an Arterial suggestion; street_class never reaches the wire until Confirm  714ms
+stderr | components/GeneratorShell.handoff-provenance.test.tsx > #198 handoff provenance — the four families produce visible notes > family 4: the cleared reduction is named AND the payload ships valid
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+ ✓ components/GeneratorShell.handoff-provenance.test.tsx (4 tests) 2071ms
+   ✓ #198 handoff provenance — the four families produce visible notes > family 1: a changed detection overwriting a manual lane edit is named  861ms
+   ✓ #198 handoff provenance — the four families produce visible notes > family 2: picker lanes/divided overrides on a flagger plan are named as not applicable  312ms
+   ✓ #198 handoff provenance — the four families produce visible notes > family 3: an out-of-domain detected lane count is named as clamped  341ms
+   ✓ #198 handoff provenance — the four families produce visible notes > family 4: the cleared reduction is named AND the payload ships valid  555ms
+stderr | components/GeneratorShell.kind-switch.test.tsx > kind-switch preserves the safety relays (#181) > switching kinds twice returns the shared inputs, not the defaults
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at label
+    at NumberField (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:964:3)
+    at div
+    at div
+    at QuotePanel (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\QuotePanel.tsx:30:3)
+    at div
+    at div
+    at PricingCard (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\PricingCard.tsx:12:61)
+    at div
+    at section
+    at main
+    at div
+    at div
+    at GeneratorShell (C:\Users\rtmak\Documents\traffic-control-tool\conestruct\site\components\GeneratorShell.tsx:70:69)
+
+ ✓ components/DebugSnapshotButton.test.tsx (16 tests) 93ms
+ ✓ components/GeneratorShell.kind-switch.test.tsx (4 tests) 2677ms
+   ✓ kind-switch preserves the safety relays (#181) > REGRESSION: detect-then-switch payload carries every relay the flagger gates consume  992ms
+   ✓ kind-switch preserves the safety relays (#181) > the recovery affordances render after the switch — refusal comes with its confirm row  391ms
+   ✓ kind-switch preserves the safety relays (#181) > switching kinds twice returns the shared inputs, not the defaults  934ms
+   ✓ kind-switch preserves the safety relays (#181) > no confirmed detection → no relays: absence renders as absence (rule 10)  359ms
+ ✓ components/GeneratorForms.signal-gate.test.tsx (8 tests) 260ms
+ ✓ components/JurisdictionSection.test.tsx (10 tests) 922ms
+ ✓ components/GeneratorForms.confirm-undo.test.tsx (8 tests) 684ms
+ ✓ components/GeneratorShell.near-intersection.test.tsx (5 tests) 3888ms
+   ✓ near_intersection picker → form → payload > ACCEPTANCE: prefill, edit, re-apply without losing the edit, submit the exact approaches array  1282ms
+   ✓ near_intersection picker → form → payload > gates Generate on the unconfirmed detection-filled lane count  665ms
+   ✓ near_intersection picker → form → payload > gates Generate when OSM had NO lane tag — the substituted 1 needs acknowledging (#174)  683ms
+   ✓ near_intersection picker → form → payload > a CHANGED cross-street detection applies over manual edits (new information wins)  825ms
+   ✓ near_intersection picker → form → payload > manual entry works with no detection at all  430ms
+ ✓ components/GeneratorShell.no-location.test.tsx (5 tests) 1224ms
+   ✓ no location, no certification (#186) > typing coordinates in the manual fallback enables both surfaces  691ms
+ ✓ components/GeneratorShell.suggest-contract.test.tsx (6 tests) 5037ms
+   ✓ pin suggestion contract: suggest never sets > a suggestion round-trip never places jurisdiction_key on the wire  573ms
+   ✓ pin suggestion contract: suggest never sets > Confirm is the only writer — clicking it sets jurisdiction_key  1025ms
+   ✓ pin suggestion contract: suggest never sets > Dismiss leaves a ×-record with undo — never a cleared slot (#227)  1247ms
+   ✓ pin suggestion contract: suggest never sets > a differing manual pick demotes the suggestion to a passive notice  590ms
+   ✓ pin suggestion contract: suggest never sets > endpoint failure: slot goes quiet, picker works exactly as today  971ms
+   ✓ pin suggestion contract: suggest never sets > no pin (default 0/0): no suggest call ever fires  625ms
+ ✓ components/GeneratorShell.input-gating.test.tsx (5 tests) 905ms
+ ✓ components/GeneratorShell.zone-staging.test.tsx (7 tests) 5251ms
+   ✓ zone staging lifecycle > generating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only  1100ms
+   ✓ zone staging lifecycle > error: breakdown failure after generate shows the stale ribbon, not a silent blank  830ms
+   ✓ zone staging lifecycle > panel schedule entry reaches the POSTed scenario (payload-level, inc-8)  1812ms
+   ✓ zone staging lifecycle > strip inline edit writes the scenario and refires the request (payload-level)  806ms
+ ✓ components/GeneratorShell.picker-reapply.test.tsx (9 tests) 5870ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > REGRESSION: a no-change re-apply keeps the user's lane selection in the payload  1305ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > control: plain pin apply then chip selection reaches the payload  527ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > control: chip selection reaches the payload with a manual location and no detection  312ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > REGRESSION (#190): a no-change re-save does not re-impose restored overrides over manual edits  594ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > control (#190): a CHANGED override still applies — explicit picker edits win  606ms
+   ✓ picker re-apply preserves manual form edits (lanes bug) > a CHANGED detection still applies over manual edits (new information wins)  640ms
+   ✓ settled-null save clears the prior pin's relays (#189-3) > control: pin A's relays reach the payload while its detection stands  382ms
+   ✓ settled-null save clears the prior pin's relays (#189-3) > REGRESSION: a no-road save at a new pin removes every relay from the wire payload  626ms
+   ✓ settled-null save clears the prior pin's relays (#189-3) > a fresh detection after the clear re-arms the relays (new information)  874ms
+ ✓ components/GeneratorShell.bundle-settings.test.tsx (3 tests) 1554ms
+   ✓ GeneratorShell bundle download — live quote settings (#74) > sends the user's edited rates to /api/render/bundle  457ms
+   ✓ GeneratorShell bundle download — live quote settings (#74) > keeps the edited rate field across a reopen → regenerate cycle  537ms
+   ✓ GeneratorShell bundle download — live quote settings (#74) > preserves a manual flagger count and delivery distance through the cycle  558ms
+ ✓ components/GeneratorShell.status-pending.test.tsx (4 tests) 1696ms
+   ✓ StatusBar checking state across the change→response window (Decision 2) > is NOT green in the window between an input change and the backend's answer  429ms
+   ✓ StatusBar checking state across the change→response window (Decision 2) > a stale answer for a superseded input never lands as current  802ms
+   ✓ StatusBar checking state across the change→response window (Decision 2) > the failure state is reachable from checking: a failed refetch shows UNAVAILABLE, not the old verdict  402ms
+ ✓ components/GeneratorShell.confirm-window.test.tsx (3 tests) 2573ms
+   ✓ confirm-tick window: CTA stays gated after a refusal (#196) > Generate stays disabled while the re-fetch is in flight after a settled 400  770ms
+   ✓ confirm-tick window: CTA stays gated after a refusal (#196) > a clean settle re-enables; a repeat 400 keeps the gate with the refusal pointer  1133ms
+   ✓ confirm-tick window: CTA stays gated after a refusal (#196) > panel and strip read the same stamped verdict: no declined line while the window is open  668ms
+ ✓ components/GeneratorShell.refusal-voice.test.tsx (3 tests) 825ms
+   ✓ one refusal, one voice (#180) > with-affordance refusal: row note primary, short pointer, verbatim 400 renders zero times  438ms
+ ✓ components/GeneratorShell.confirm-undo-loop.test.tsx (1 test) 1540ms
+   ✓ tick → clean → untick → re-refusal, CTA gated through both windows (#179) > runs the full loop with focus retained and a byte-identical restored payload  1537ms
+ ✓ components/GeneratorShell.a11y-announce.test.tsx (6 tests) 4686ms
+   ✓ generation announcements (#193) > announces the generated package with the counts the hero renders  438ms
+   ✓ generation announcements (#193) > clears at the click so a repeat Generate with identical counts re-announces  1108ms
+   ✓ generation announcements (#193) > a background settle never writes the status region  825ms
+   ✓ generation announcements (#193) > a failed generation announces via the alert ribbon, not the status region  1089ms
+   ✓ generation announcements (#193) > a bundle failure announces via role=alert  396ms
+   ✓ generation announcements (#193) > the recomputing ribbon stays visual-only (strip announces COMPUTING)  829ms
+ ✓ components/GeneratorShell.class-stability.test.tsx (4 tests) 5258ms
+   ✓ class-switch stability (#152 D) > a class switch holds bar + section content while the refetch is in flight — no skeleton, one reflow max  1616ms
+   ✓ class-switch stability (#152 D) > the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)  1321ms
+   ✓ class-switch stability (#152 D) > a CHANGED jurisdiction key still skeletons — a stale block from another jurisdiction never renders  1112ms
+   ✓ class-switch stability (#152 D) > a breakdown ERROR clears the held block rather than presenting it as live  1208ms
+ ✓ components/AuditTrail.declined-stale.test.tsx (3 tests) 3489ms
+   ✓ audit rows never present a prior input's numbers under a declined banner (#187) > refetch (loading) keeps last-known rows with the refreshing cue — the sanctioned fallback  1247ms
+   ✓ audit rows never present a prior input's numbers under a declined banner (#187) > a declined (400) audit blanks the cited values and disables the Audit PDF  1186ms
+   ✓ audit rows never present a prior input's numbers under a declined banner (#187) > a failed (5xx) audit blanks the values too, keeping the retry line  1055ms
+ ✓ components/JurisdictionSection.density.test.tsx (10 tests) 695ms
+ ✓ components/GeneratorShell.error-honesty.test.tsx (4 tests) 936ms
+   ✓ strip error honesty (#184) > a mirrored invalid combination renders INVALID INPUT, agreeing with the form — never UNAVAILABLE  349ms
+ ✓ components/GeneratorShell.regenerate-mounted.test.tsx (6 tests) 2327ms
+   ✓ results stay mounted through regeneration (#192) > a post-generate edit dims in place: no empty-state swap, panel stays mounted, ribbon marks the refresh  1213ms
+   ✓ results stay mounted through regeneration (#192) > a refusal settling mid-regeneration is never masked by COMPUTING  864ms
+ ✓ components/GeneratorShell.disclosure-container.test.tsx (5 tests) 1045ms
+   ✓ #227 disclosure container — the #198 notes' new clothes > the note sentence renders as one text node inside .sys-event.warn  492ms
+ ✓ components/GeneratorShell.a11y-focus.test.tsx (5 tests) 3898ms
+   ✓ focus policy after Generate (#193) > keyboard Generate (Enter) lands focus on the results zone; scroll still fires  352ms
+   ✓ focus policy after Generate (#193) > with the fetch still in flight, focus moves only when it settles to post  1163ms
+   ✓ focus policy after Generate (#193) > a failed generation focuses the results zone (it holds the alert) without scrolling  1075ms
+   ✓ focus policy after Generate (#193) > a background settle never moves focus (debounced strip edit)  883ms
+   ✓ focus policy after Generate (#193) > Reopen lands focus on the Setup zone  422ms
+ ✓ components/GeneratorShell.post-generate-scroll.test.tsx (5 tests) 3715ms
+   ✓ post-generate scroll (#152 E) > Generate scrolls the results zone into view once, smoothly  501ms
+   ✓ post-generate scroll (#152 E) > waits for a pending breakdown: scroll fires when generating resolves to post  1177ms
+   ✓ post-generate scroll (#152 E) > ordinary edits never scroll — only a Generate click arms it  745ms
+   ✓ post-generate scroll (#152 E) > a failed generation disarms the scroll instead of yanking the viewport  1091ms
+ ✓ components/GeneratorShell.rail-vocabulary.test.tsx (2 tests) 1048ms
+   ✓ #228 mounted — dismiss-honesty on the live count > a live proposal reads '1 to confirm'; Dismiss removes the line and flips no state  832ms
+ ✓ components/GeneratorShell.slow-verify.test.tsx (3 tests) 164ms
+ ✓ components/ProgressRail.test.tsx (6 tests) 317ms
+ ✓ components/LocationPickerModal.provenance.test.tsx (5 tests) 578ms
+ ✓ components/GeneratorSidebar.prepin-gating.test.tsx (4 tests) 650ms
+   ✓ pre-pin gating (#222) > NI pre-pin: five downstream steps pending — summary focusable, body inert + aria-hidden  344ms
+ ✓ components/GeneratorShell.confirmed-road.test.tsx (2 tests) 874ms
+   ✓ confirmed road persists on scenario.meta across picker close/reopen > reopen hands the saved confirmation back to the picker  660ms
+ ✓ components/DetectedVsApplied.test.tsx (5 tests) 82ms
+ ✓ components/LocationPickerModal.scan-honesty.test.tsx (4 tests) 461ms
+ ✓ components/GeneratorShell.saved-dirty.test.tsx (4 tests) 1969ms
+   ✓ workbench downloads gate on dirty state (#183) > an unedited open downloads normally — no new friction  527ms
+   ✓ workbench downloads gate on dirty state (#183) > an edit disables the row-backed downloads and names the resolution  927ms
+   ✓ workbench downloads gate on dirty state (#183) > saving re-enables downloads that match the screen  501ms
+ ✓ components/ScheduleField.windows-block.test.tsx (4 tests) 191ms
+ ✓ components/QuotePanel.invalidation.test.tsx (4 tests) 599ms
+ ✓ components/GeneratorShell.suggestion-records.test.tsx (2 tests) 2143ms
+   ✓ #227 resolved-state records — confirm, then undo > Confirm leaves a ✓-record with evidence and undo; undo restores the prior null exactly  1555ms
+   ✓ #227 resolved-state records — confirm, then undo > records never reach the wire — no resolution fields in any payload  585ms
+ ✓ components/GeneratorShell.debounce.test.tsx (4 tests) 907ms
+   ✓ fetch debounce (#182) > a 12-step burst collapses to leading + one trailing pair carrying the final value  399ms
+ ✓ components/LocationPickerModal.coverage.test.tsx (4 tests) 1512ms
+   ✓ the Centerline provenance row (#211) > partial coverage: 'covers 0–N ft, bearing beyond' in the PDF's vocabulary  589ms
+   ✓ the Centerline provenance row (#211) > full coverage: 'OSM, full corridor'  445ms
+   ✓ the Centerline provenance row (#211) > manual mode (no road detected): 'none — straight projection from typed bearing'  365ms
+ ✓ components/GeneratorSidebar.corridor-bar.test.tsx (3 tests) 913ms
+   ✓ #227 corridor bar — proportion of backend lengths only > five segments, order matching the rows, widths = backend length / total  572ms
+   ✓ #227 corridor bar — proportion of backend lengths only > the bar is aria-hidden; the table rows are the record — with no ✓ prefix  338ms
+ ✓ components/severity-ramp.test.tsx (4 tests) 173ms
+ ✓ components/LocationPickerModal.a11y.test.tsx (6 tests) 245ms
+ ✓ components/SiteConditionsField.rows.test.tsx (6 tests) 309ms
+ ✓ components/GeneratorShell.rail-single-source.test.tsx (3 tests) 653ms
+ ✓ components/GeneratorForms.lane-confidence.test.tsx (3 tests) 266ms
+ ✓ components/TieredReference.fixtures.test.tsx (6 tests) 635ms
+ ✓ components/GeneratorSidebar.fact-strip.test.tsx (4 tests) 1089ms
+   ✓ #227 fact strip — pin readout as labeled cells > pinned: five cells carry lat / lng / bearing / speed / jurisdiction  510ms
+   ✓ #227 fact strip — pin readout as labeled cells > a named jurisdiction reaches the cell (option label before the block loads)  332ms
+ ✓ components/SiteConditionsField.detect.test.tsx (3 tests) 116ms
+ ✓ components/JurisdictionSection.schedule-overnight.test.tsx (3 tests) 344ms
+ ✓ components/quiet-band-contrast.test.tsx (2 tests) 58ms
+ ✓ components/JurisdictionContextBar.stability.test.tsx (5 tests) 63ms
+ ✓ components/GeneratorForms.multilane.test.tsx (5 tests) 261ms
+ ✓ components/ScheduleField.overnight.test.tsx (4 tests) 514ms
+ ✓ components/GeneratorSidebar.jurisdiction-band.test.tsx (3 tests) 809ms
+   ✓ #227 jurisdiction band — a full-width sibling of Location > pinned: the band goes live and the jurisdiction select is usable  445ms
+ ✓ components/ProgressRail.single-voice.test.tsx (3 tests) 77ms
+ ✓ components/SetupStrip.focus.test.tsx (6 tests) 1546ms
+   ✓ SetupStrip editor focus restore (#193) > closing the hours editor via the end select restores the Hours cell  358ms
+ ✓ components/SetupStrip.jurisdiction.test.tsx (5 tests) 523ms
+ ✓ components/JurisdictionSection.placement.test.tsx (3 tests) 119ms
+ ✓ components/DeviceBreakdown.test.tsx (4 tests) 110ms
+ ✓ components/SetupStrip.schedule.test.tsx (4 tests) 596ms
+ ✓ components/GeneratorForms.single-lane.test.tsx (3 tests) 206ms
+ ✓ components/GeneratorFormPrimitives.a11y.test.tsx (4 tests) 211ms
+ ✓ components/AuditTrail.corridor.test.tsx (5 tests) 37ms
+ ✓ components/spacing-scale.test.tsx (3 tests) 60ms
+ ✓ components/JurisdictionSection.notset.test.tsx (3 tests) 447ms
+ ✓ components/ScheduleField.notset-default.test.tsx (3 tests) 136ms
+ ✓ components/AppNav.rule13.test.tsx (2 tests) 40ms
+ ✓ components/GeneratorForms.oneway.test.tsx (2 tests) 98ms
+ ✓ components/GeneratorForms.a11y.test.tsx (2 tests) 45ms
+
+ Test Files  113 passed (113)
+      Tests  847 passed (847)
+   Start at  07:44:24
+   Duration  28.13s (transform 7.63s, setup 0ms, collect 58.46s, tests 95.54s, environment 79.87s, prepare 26.21s)
+

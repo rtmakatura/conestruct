@@ -1,0 +1,39 @@
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+_________ test_shoulder_source_cites_6b4_for_L_and_6b3_for_the_third __________
+    def test_shoulder_source_cites_6b4_for_L_and_6b3_for_the_third() -> None:
+        """Lakewood-control shape: 35 mph shoulder, L = WS^2/60 (Table 6B-4),
+        required run L/3 (Table 6B-3 "Shoulder Taper at least 0.33 L")."""
+        trail = _shoulder_trail(35)
+        taper = trail["taper"]
+        src = taper["source"]
+>       assert "Table 6B-4 (taper length L)" in src, src
+E       AssertionError: MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).
+E       assert 'Table 6B-4 (taper length L)' in 'MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Shoulder closures use L/3 per Sec 6B.08 (Table 6B-3).'
+tests\test_taper_citation_tables.py:77: AssertionError
+______ test_near_intersection_source_cites_6b4_for_L_and_6b3_for_full_L _______
+client = <starlette.testclient.TestClient object at 0x0000014E3A566510>
+auth_headers = {'Authorization': 'Bearer test-secret-do-not-deploy'}
+    def test_near_intersection_source_cites_6b4_for_L_and_6b3_for_full_L(
+        client: TestClient, auth_headers: dict[str, str]
+    ) -> None:
+        """Lane closure near an intersection: full merging taper L (Table 6B-3
+        "Merging Taper at least L"), L itself from Table 6B-4."""
+        body = _body(
+            "issue-229-ni",
+            speed=50,
+            workLen=1000.0,
+            approaches=[_approach(speed=25, alongStationFt=1150.0)],
+        )
+        res = client.post("/render/audit", headers=auth_headers, json=body)
+        assert res.status_code == 200, res.text
+        taper = res.json()["sections"]["taper"]
+        src = taper["source"]
+>       assert "Table 6B-4 (taper length L)" in src, src
+E       AssertionError: MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the full merging taper length L.
+E       assert 'Table 6B-4 (taper length L)' in 'MUTCD 11th Ed. Sec 6B.08, Table 6B-3. Lane closures use the full merging taper length L.'
+tests\test_taper_citation_tables.py:103: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_taper_citation_tables.py::test_shoulder_source_cites_6b4_for_L_and_6b3_for_the_third
+FAILED tests/test_taper_citation_tables.py::test_near_intersection_source_cites_6b4_for_L_and_6b3_for_full_L
+2 failed, 1 passed in 2.20s
