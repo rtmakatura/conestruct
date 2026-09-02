@@ -48,7 +48,7 @@ export function FieldGroup({
         // repairs the act=interactive-only rule (globals.css role
         // colors): the tag is not interactive.  DOM shape (a div with
         // exactly these two spans) is pinned by the #222 prepin test.
-        className="flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] outline-none"
+        className="jump-anchor flex justify-between items-center px-6 py-2 border-t border-b border-[color:var(--rule)] bg-[color:var(--canvas)] outline-none"
       >
         <span className="tr-section">{label}</span>
         {tag && <span className="tr-step">{tag}</span>}

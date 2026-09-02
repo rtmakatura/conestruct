@@ -25,7 +25,7 @@ interface Props {
 export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSaved }: Props) {
   const isSandbox = mode === "sandbox";
   return (
-    <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[52px] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
+    <nav className="sticky top-0 z-30 flex items-stretch justify-between h-[var(--nav-h)] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
       <div className="flex items-stretch">
         <Link
           href="/"

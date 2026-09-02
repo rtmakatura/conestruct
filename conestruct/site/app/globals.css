@@ -697,6 +697,13 @@ body {
    Scope: any descendant of `.workbench`. The landing page stays untouched.
    Locks the slate palette (no runtime toggle). */
 .workbench {
+  /* #231/#232: the sticky chrome's heights, in one place.  --nav-h
+     sizes AppNav; the rail parks at it; every scroll target's
+     scroll-margin-top is built from both so ``block: "start"`` lands a
+     heading clear of the nav + rail instead of under them. */
+  --nav-h: 52px;
+  --rail-h: 38px;
+
   /* dark canvas (fix-spec-02 surface set) */
   --canvas: #14202e;
   --canvas-tint: #1b2838;
@@ -1319,8 +1326,13 @@ input[type="number"] {
    right-aligned note.  `.zone.dominant` is the stage direction — the
    pre-generation Setup panel and the post-generation Results zone get
    the larger title. */
+/* #231: scroll targets clear the sticky chrome (nav + rail + 8px). */
 .workbench .zone {
+  scroll-margin-top: calc(var(--nav-h) + var(--rail-h) + 8px);
   margin-bottom: 24px;
+}
+.workbench .jump-anchor {
+  scroll-margin-top: calc(var(--nav-h) + var(--rail-h) + 8px);
 }
 .workbench .zone-head {
   display: flex;
