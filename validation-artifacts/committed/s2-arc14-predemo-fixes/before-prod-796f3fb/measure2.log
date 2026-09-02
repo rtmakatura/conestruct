@@ -1,0 +1,9 @@
+run2 start 2026-09-02T16:07:12.830Z
+BOTTOM RULE over text at scrollY 37: {"x":220,"text":"Location","tag":"SPAN"}
+RAIL post-location shoulder: rail {"x":171,"y":114,"w":1098,"h":38} pad=24px/24px gap=16px rows=1 widths=176,63,63,214,73 sum=589 tops=122,122,122,122,122 texts=["✓02Location2 to confirm","✓03Road","✓04Work","◌05Scheduleoptional · not set","✓Generate"]
+RAIL post-location flagger: rail {"x":171,"y":114,"w":1098,"h":61} pad=24px/24px gap=16px rows=2 widths=176,553,63,86,214,76 sum=1168 tops=122,122,122,122,145,145 texts=["✓02Location2 to confirm","⚠03RoadRe-checking the declined input — Generate re-enables when the verdict settles.","✓04Work","✓05Flagger","◌06Scheduleoptional · not set","→Generate"]
+RAIL post-location lane: rail {"x":171,"y":114,"w":1098,"h":38} pad=24px/24px gap=16px rows=1 widths=176,63,63,123,214,73 sum=712 tops=122,122,122,122,122,122 texts=["✓02Location2 to confirm","✓03Road","✓04Work","✓05Cross street","◌06Scheduleoptional · not set","✓Generate"]
+GEN2: button found=1 disabled=false
+GEN2 before: {"scrollY":2512,"docH":3475}
+GEN2 landing: {"sectionTop":5,"headTop":5,"headBottom":37,"navBottom":52,"railPresent":false,"scrollY":752,"docH":1903,"vh":900,"focusedIsResults":true,"focusedTag":"SECTION.zone outline-none dominant"}
+GEN2 scrollY changes (t ms, y, docH): [[0,2512,3475],[58,172,1072],[982,998,1898],[1002,1000,1903],[1017,985,1903],[1034,955,1903],[1051,893,1903],[1067,845,1903],[1084,817,1903],[1100,798,1903],[1118,784,1903],[1134,774,1903],[1151,767,1903],[1167,761,1903],[1184,757,1903],[1201,755,1903],[1217,753,1903],[1234,752,1903]]

@@ -1,0 +1,9 @@
+ Test Files  115 passed (115)
+      Tests  863 passed (863)
+   Duration  28.05s (transform 6.62s, setup 0ms, collect 60.73s, tests 94.79s, environment 81.41s, prepare 25.60s)
+ ✓ components/LocationPickerModal.manual-entry.test.tsx (7 tests) 1732ms
+ ✓ components/GeneratorShell.rail-vocabulary.test.tsx (2 tests) 958ms
+ ✓ components/GeneratorShell.rail-single-source.test.tsx (3 tests) 698ms
+ ✓ components/ProgressRail.test.tsx (6 tests) 250ms
+ ✓ components/ProgressRail.single-voice.test.tsx (3 tests) 89ms
+ ✓ components/shell-chrome.test.tsx (9 tests) 47ms

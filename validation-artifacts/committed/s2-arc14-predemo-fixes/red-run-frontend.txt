@@ -1,0 +1,46 @@
+   × #231 — one nav-height token drives the scroll targets > the workbench defines --nav-h and --rail-h 7ms
+     → expected '\r\n  /* dark canvas (fix-spec-02 sur…' to match /--nav-h:\s*52px/
+   × #231 — one nav-height token drives the scroll targets > the nav's height is the token, not a literal 11ms
+     → expected 'import Link from "next/link";\r\nimpo…' to contain 'h-[var(--nav-h)]'
+   × #231 — one nav-height token drives the scroll targets > .zone and the jump anchors carry scroll-margin-top = nav + rail + 8px 1ms
+     → expected '\r\n  margin-bottom: 24px;\r\n' to match /scroll-margin-top:\s*calc\(var\(--nav…/
+   × #231 — one nav-height token drives the scroll targets > FieldGroup's anchored header carries the jump-anchor hook 17ms
+     → expected 'flex justify-between items-center px-…' to contain 'jump-anchor'
+   × #232 — three-sided frame, rail under the nav > the rail sticks at --nav-h 1ms
+     → expected '\r\n  position: sticky;\r\n  top: 0;\…' to match /top:\s*var\(--nav-h\)/
+   × #232 — three-sided frame, rail under the nav > the frame has no bottom rule and keeps its four ticks 1ms
+     → expected '\r\n  position: fixed;\r\n  inset: 8p…' to match /border-bottom:\s*none/
+   × #233 — the rail stays one row; the blocker elides, never re-words > rail chrome tightened: gap 2px 10px, padding 8px 16px 1ms
+     → expected '\r\n  position: sticky;\r\n  top: 0;\…' to match /gap:\s*2px 10px/
+   × #233 — the rail stays one row; the blocker elides, never re-words > the owning entry grows and shrinks; the blocker elides 1ms
+     → rule not found: .workbench .progress-rail .rail-entry.current: expected -1 to be greater than -1
+   × #233 — the rail stays one row; the blocker elides, never re-words > the blocker span carries the full string as title; textContent unchanged 7ms
+     → expected null to be 'Set a location first — pick on map or…' // Object.is equality
+   × #230 typed entry, keystroke by keystroke > lat then lng: the boxes hold what was typed; the last detect is the pair 398ms
+     → expected '-1.0002' to be '-105.0815' // Object.is equality
+   × #230 typed entry, keystroke by keystroke > lng then lat: same contract in the other order 318ms
+     → expected '3.0002' to be '39.7113' // Object.is equality
+   × #230 typed entry, keystroke by keystroke > a Unicode minus typed by hand is accepted 363ms
+     → expected [ 'Invalid number' ] to deeply equal []
+   ✓ #230 pasted pair > ASCII pair into an empty box splits (control — green before the fix) 31ms
+   × #230 pasted pair > the U+2212 pair splits and validates 88ms
+     → expected '39.7113, −105.0815' to be '39.7113' // Object.is equality
+   × #230 pasted pair > a pair pasted over prior text replaces both boxes 141ms
+     → expected '39.7390' to be '39.7113' // Object.is equality
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected '-1.0002' to be '-105.0815' // Object.is equality
+AssertionError: expected '3.0002' to be '39.7113' // Object.is equality
+AssertionError: expected [ 'Invalid number' ] to deeply equal []
+AssertionError: expected '39.7113, −105.0815' to be '39.7113' // Object.is equality
+AssertionError: expected '39.7390' to be '39.7113' // Object.is equality
+AssertionError: expected '\r\n  /* dark canvas (fix-spec-02 sur…' to match /--nav-h:\s*52px/
+AssertionError: expected 'import Link from "next/link";\r\nimpo…' to contain 'h-[var(--nav-h)]'
+AssertionError: expected '\r\n  margin-bottom: 24px;\r\n' to match /scroll-margin-top:\s*calc\(var\(--nav…/
+AssertionError: expected 'flex justify-between items-center px-…' to contain 'jump-anchor'
+AssertionError: expected '\r\n  position: sticky;\r\n  top: 0;\…' to match /top:\s*var\(--nav-h\)/
+AssertionError: expected '\r\n  position: fixed;\r\n  inset: 8p…' to match /border-bottom:\s*none/
+AssertionError: expected '\r\n  position: sticky;\r\n  top: 0;\…' to match /gap:\s*2px 10px/
+AssertionError: rule not found: .workbench .progress-rail .rail-entry.current: expected -1 to be greater than -1
+AssertionError: expected null to be 'Set a location first — pick on map or…' // Object.is equality
+ Test Files  2 failed (2)
+      Tests  14 failed | 1 passed (15)
