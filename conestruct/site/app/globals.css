@@ -801,11 +801,16 @@ body {
   outline: none;
 }
 
-/* technical-drawing frame around the entire app shell */
+/* technical-drawing frame around the entire app shell.  #232: three
+   sides + four ticks — the frame is fixed above everything, so a bottom
+   rule struck through whatever scrolled under it; the left/right rules
+   sit in gutters no content reaches (main is >= 24px in, nav text >=
+   20px), and the top rule sits in the nav's top padding. */
 .workbench-frame {
   position: fixed;
   inset: 8px;
   border: 1px solid var(--rule);
+  border-bottom: none;
   pointer-events: none;
   z-index: 60;
 }
@@ -1910,7 +1915,9 @@ input[type="number"] {
    reason's own --fail voice. */
 .workbench .setup-panel .progress-rail {
   position: sticky;
-  top: 0;
+  /* #232: park under the sticky nav (was 0: the rail painted over the
+     nav band, boxed between the frame's top rule and its own border). */
+  top: var(--nav-h);
   z-index: 30;
   display: flex;
   flex-wrap: wrap;
