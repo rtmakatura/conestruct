@@ -43,7 +43,7 @@ B2 the followed page. Run from anywhere: `node validation-artifacts/committed/s2
 
 - `outS2A13Prod-preship/` — the script run against prod BEFORE the ship (gate PASS on `eebe82b`; the 7 fix-specific
   assertions FAIL, the 7 control assertions PASS). Proves the script discriminates; it is not a verification of the fix.
-- `outS2A13Prod/` — to be added by the post-ship run (next prompt).
+- `outS2A13Prod/` — the DEFINITIVE post-ship run, 2026-09-02 14:05 UTC: gate PASS (healthz == origin/main == `d7a9ede`), **ALL PASS 14/14** — served audit JSON and PDF cite 6B-4 for L and 6B-3 for L/3 with L 163 / L/3 54 unchanged; `/landing` answers HTTP 308 Location `/sandbox`; the followed page titles "Sandbox · Conestruct" and carries none of the archived copy.
 
 ## Environment note
 The main-tree `conestruct/site/node_modules` was incomplete (no `.bin`, missing transitive packages) because prior arcs
