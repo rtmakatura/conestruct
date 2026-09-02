@@ -105,12 +105,13 @@ describe("#233 — the rail stays one row; the blocker elides, never re-words", 
   });
   it("the owning entry grows and shrinks; the blocker elides", () => {
     expect(rule(".workbench .progress-rail .rail-entry.current")).toMatch(
-      /flex:\s*1 1 auto;\s*min-width:\s*0/,
+      /flex:\s*1 1 0;\s*min-width:\s*0/,
     );
     const b = rule(".workbench .progress-rail .rail-blocker");
     expect(b).toMatch(/white-space:\s*nowrap/);
     expect(b).toMatch(/overflow:\s*hidden/);
     expect(b).toMatch(/text-overflow:\s*ellipsis/);
+    expect(b).toMatch(/flex:\s*1 1 auto;[\s\S]*min-width:\s*0/);
   });
   it("the blocker span carries the full string as title; textContent unchanged", () => {
     const { container } = render(<ProgressRail rail={RAIL} generateAnchorId="gen" />);

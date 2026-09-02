@@ -71,7 +71,11 @@ export function ProgressRail({
             </span>
             <span className="rail-label">{e.label}</span>
             {ownsBlocker ? (
-              <span className="rail-blocker" data-testid="rail-blocker">
+              <span
+                className="rail-blocker"
+                data-testid="rail-blocker"
+                title={blocker.message}
+              >
                 {blocker.message}
               </span>
             ) : (
@@ -104,7 +108,11 @@ export function ProgressRail({
         {/* A refusal with no section affordance has no home entry — its
             pointer line renders here so the blocker is never invisible. */}
         {blocker !== null && blocker.entryId === null && (
-          <span className="rail-blocker" data-testid="rail-blocker">
+          <span
+            className="rail-blocker"
+            data-testid="rail-blocker"
+            title={blocker.message}
+          >
             {blocker.message}
           </span>
         )}

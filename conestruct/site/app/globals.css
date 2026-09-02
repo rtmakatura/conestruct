@@ -1922,8 +1922,10 @@ input[type="number"] {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 2px 16px;
-  padding: 8px 24px;
+  /* #233: gap 16 -> 10, padding 24 -> 16 — 49px back for the six-entry
+     kinds (flagger, near-intersection) inside the rail's fixed 1098px. */
+  gap: 2px 10px;
+  padding: 8px 16px;
   background: var(--canvas);
   border-bottom: 1px solid var(--rule);
 }
@@ -1994,6 +1996,28 @@ input[type="number"] {
   text-transform: none;
   letter-spacing: 0.02em;
   text-align: left;
+  /* #233: the verbatim CTA reason (50–90 chars) cannot share one row
+     with six entries; it elides here (full string as title, in the
+     entry's accessible name, and verbatim on the CTA) rather than
+     tumbling the last entries onto a second row.  CSS elision only:
+     textContent is the sentinel's, unchanged. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* a flex item's min-width defaults to its content — without this the
+     span keeps its full width and the entry wraps the rail instead. */
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* #233: the owning entry takes the row's free space so the blocker
+   above elides instead of wrapping the rail.  Basis 0, not auto: a
+   wrapping flex row breaks lines on each item's hypothetical (content)
+   size BEFORE any shrinking, so an auto-basis entry would still tumble
+   the last entries onto a second row; at basis 0 it never forces a
+   break and grows into whatever the other entries leave. */
+.workbench .progress-rail .rail-entry.current {
+  flex: 1 1 0;
+  min-width: 0;
 }
 .workbench .progress-rail .rail-entry.current .rail-label {
   color: var(--ink);
