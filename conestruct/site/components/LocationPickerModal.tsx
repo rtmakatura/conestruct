@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ClipboardEvent,
   type RefObject,
 } from "react";
 import type * as MapboxGL from "mapbox-gl";
@@ -208,6 +209,16 @@ function normaliseBearing(n: number): number {
 
 function fmt4(n: number): string {
   return (Math.round(n * 10000) / 10000).toFixed(4);
+}
+
+// #230: what people actually type or paste — the Unicode minus (U+2212,
+// docs and some map apps), the en dash (U+2013, word processors) and
+// stray whitespace incl. NBSP — normalised to what parseFloat reads.
+// Runs on every manual-box change before any parse, and on both halves
+// of a pasted "lat, lng" pair.  DMS glyphs are left alone: the DMS
+// refusal below must still see them.
+function normaliseCoordText(raw: string): string {
+  return raw.replace(/[\u2212\u2013]/g, "-").replace(/[\s\u00a0]+/g, "");
 }
 
 function fmtFt(n: number): string {
@@ -1061,15 +1072,25 @@ export function LocationPickerModal({
     (
       newLat: number,
       newLng: number,
-      opts: { detect: boolean; fly: boolean; targetZoom?: number },
+      opts: {
+        detect: boolean;
+        fly: boolean;
+        targetZoom?: number;
+        // #230: a typed change never has its box rewritten under the
+        // caret — the keystroke path owns the box text; the pin/detect
+        // still follow every valid prefix exactly as before.
+        keepInputs?: boolean;
+      },
     ) => {
       if (!isValidLat(newLat) || !isValidLng(newLng)) return;
       setHasPin(true);
       setCoarseNotice(null);
       setLat(newLat);
       setLng(newLng);
-      setLatInput(fmt4(newLat));
-      setLngInput(fmt4(newLng));
+      if (!opts.keepInputs) {
+        setLatInput(fmt4(newLat));
+        setLngInput(fmt4(newLng));
+      }
       setLatError(null);
       setLngError(null);
 
@@ -1105,14 +1126,18 @@ export function LocationPickerModal({
   // Snap the map (if pin is off-screen) and the pin to provided coords.
   // Used after typing-in coordinates.
   const applyTypedCoords = useCallback(
-    (newLat: number, newLng: number) => {
+    (newLat: number, newLng: number, keepInputs = false) => {
       const map = mapRef.current;
       let needFly = true;
       if (map) {
         const bounds = map.getBounds();
         if (bounds && bounds.contains([newLng, newLat])) needFly = false;
       }
-      applyPinPosition(newLat, newLng, { detect: true, fly: needFly });
+      applyPinPosition(newLat, newLng, {
+        detect: true,
+        fly: needFly,
+        keepInputs,
+      });
     },
     [applyPinPosition],
   );
@@ -1389,35 +1414,47 @@ export function LocationPickerModal({
 
   // ---- Field handlers ---------------------------------------------------
 
-  const onLatChange = (raw: string) => {
-    if (raw.includes(",")) {
-      const [a, b] = raw.split(",").map((s) => s.trim());
-      const la = parseFloat(a);
-      const lo = parseFloat(b);
-      if (Number.isFinite(la) && Number.isFinite(lo)) {
-        setLatInput(fmt4(la));
-        setLngInput(fmt4(lo));
-        setLatError(isValidLat(la) ? null : "Latitude must be between -90 and 90");
-        setLngError(
-          isValidLng(lo) ? null : "Longitude must be between -180 and 180",
-        );
-        if (isValidLat(la) && isValidLng(lo)) {
-          applyTypedCoords(la, lo);
-        }
-        return;
-      }
+  // #230: a pasted "lat, lng" pair in EITHER box fills both (replacing
+  // whatever they held) and places the pin.  Returns false when the
+  // text is not a pair so the caller continues as a single value.
+  const trySplitPair = (text: string): boolean => {
+    if (!text.includes(",")) return false;
+    const [a, b] = text.split(",");
+    const la = parseFloat(a);
+    const lo = parseFloat(b);
+    if (!Number.isFinite(la) || !Number.isFinite(lo)) return false;
+    setLatInput(fmt4(la));
+    setLngInput(fmt4(lo));
+    setLatError(isValidLat(la) ? null : "Latitude must be between -90 and 90");
+    setLngError(isValidLng(lo) ? null : "Longitude must be between -180 and 180");
+    if (isValidLat(la) && isValidLng(lo)) {
+      applyTypedCoords(la, lo);
     }
+    return true;
+  };
+
+  // #230: a pasted pair replaces both boxes whatever they held — the
+  // paste event carries the clipboard text on its own, so a pair pasted
+  // after a half-typed value never concatenates into one number.
+  const onCoordPaste = (e: ClipboardEvent<HTMLInputElement>) => {
+    const text = normaliseCoordText(e.clipboardData.getData("text"));
+    if (trySplitPair(text)) e.preventDefault();
+  };
+
+  const onLatChange = (raw: string) => {
     if (/[°'"NSEW]/i.test(raw)) {
       setLatError("Use decimal degrees (e.g., 38.8862). DMS not supported.");
       setLatInput(raw);
       return;
     }
-    setLatInput(raw);
-    if (raw.trim() === "") {
+    const text = normaliseCoordText(raw);
+    if (trySplitPair(text)) return;
+    setLatInput(text);
+    if (text === "") {
       setLatError(null);
       return;
     }
-    const n = parseFloat(raw);
+    const n = parseFloat(text);
     if (!Number.isFinite(n)) {
       setLatError("Invalid number");
       return;
@@ -1428,7 +1465,7 @@ export function LocationPickerModal({
     }
     setLatError(null);
     if (isValidLng(parseFloat(lngInput))) {
-      applyTypedCoords(n, parseFloat(lngInput));
+      applyTypedCoords(n, parseFloat(lngInput), true);
     }
   };
 
@@ -1438,12 +1475,14 @@ export function LocationPickerModal({
       setLngInput(raw);
       return;
     }
-    setLngInput(raw);
-    if (raw.trim() === "") {
+    const text = normaliseCoordText(raw);
+    if (trySplitPair(text)) return;
+    setLngInput(text);
+    if (text === "") {
       setLngError(null);
       return;
     }
-    const n = parseFloat(raw);
+    const n = parseFloat(text);
     if (!Number.isFinite(n)) {
       setLngError("Invalid number");
       return;
@@ -1454,7 +1493,7 @@ export function LocationPickerModal({
     }
     setLngError(null);
     if (isValidLat(parseFloat(latInput))) {
-      applyTypedCoords(parseFloat(latInput), n);
+      applyTypedCoords(parseFloat(latInput), n, true);
     }
   };
 
@@ -1825,6 +1864,7 @@ export function LocationPickerModal({
                     inputMode="decimal"
                     value={latInput}
                     onChange={(e) => onLatChange(e.target.value)}
+                    onPaste={onCoordPaste}
                     aria-label="Latitude"
                     placeholder="Latitude (e.g., 38.8862)"
                     className="field-input w-full"
@@ -1841,6 +1881,7 @@ export function LocationPickerModal({
                     inputMode="decimal"
                     value={lngInput}
                     onChange={(e) => onLngChange(e.target.value)}
+                    onPaste={onCoordPaste}
                     aria-label="Longitude"
                     placeholder="Longitude (e.g., -104.8354)"
                     className="field-input w-full"

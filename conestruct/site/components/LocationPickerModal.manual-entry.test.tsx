@@ -119,6 +119,17 @@ describe("#230 pasted pair", () => {
     expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
   });
 
+  it("stray whitespace incl. NBSP around a pasted pair is stripped", async () => {
+    const user = userEvent.setup();
+    mount();
+    await user.click(lat());
+    await user.paste(" 39.7113 , -105.0815 ");
+    expect(lat().value).toBe("39.7113");
+    expect(lng().value).toBe("-105.0815");
+    expect(errors()).toEqual([]);
+    expect(last()).toEqual({ lat: 39.7113, lng: -105.0815 });
+  });
+
   it("a pair pasted over prior text replaces both boxes", async () => {
     const user = userEvent.setup();
     mount();
