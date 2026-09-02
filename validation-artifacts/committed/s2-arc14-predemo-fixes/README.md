@@ -32,7 +32,7 @@ Ryan's rulings (2026-09-02 checkpoint): all four as recommended — see each com
   `scroll-margin-top` under a 52px sticky nav + 38px sticky rail. Prod measurements (`before-prod-796f3fb/measure*.log`):
   rail jump → anchor top 0; Generate → results heading top 5. The *jarring* is two instant jumps from the DOM swap
   (sidebar unmount clamps scrollY 2512→172 at t=58 ms; results mount triggers scroll anchoring 172→998 at t=982 ms),
-  then the smooth ease. Out of scope per ruling 1; follow-up issue: **(Ryan to post — number to be filled in here)**.
+  then the smooth ease. Out of scope per ruling 1; follow-up issue #240.
 - **#232** — `.workbench-frame` is `position: fixed; inset: 8px; z-index: 60`, above all content. Bottom rule struck
   "LOCATION · STEP 2" at a 37px scroll (`before-prod-796f3fb/z-bottomrule-strike.png`); the rail at `top: 0` painted
   over the nav band boxed between the frame's top rule and its own border (`before-prod-796f3fb/gen-after.png`).
@@ -63,7 +63,13 @@ post-location.
 - `before-prod-796f3fb/` — the investigation's read-only prod measurements at `796f3fb` (scripts, logs, and the
   captures the checkpoint cited). The same assertions fail there: rail 2 rows for flagger/NI, anchor top 0, results
   heading top 5, text under the bottom rule, typed lng `-1.0002`.
-- Prod run post-ship: `outS2A14Prod/` — **not yet run** (this line is replaced by the definitive run's summary).
+- `outS2A14Prod/` — the DEFINITIVE post-ship run, 2026-09-02 16:55 UTC: gate PASS (healthz == origin/main ==
+  `29346c9`), **ALL PASS 57/57** (56 checks + the gate line; every check applies on prod, none local-only). Typed
+  keystrokes hold their values and the served detect POST carries 39.739776 / −104.963483; every rail jump lands its
+  anchor at 98px under a 52px nav with focus on the anchor, at four viewports; the results heading lands at 98px after
+  Generate with focus on the results zone; no glyph under any frame edge across the scroll walk; rail one row × 3 kinds
+  pre-pin and post-location (this run's near-intersection post-location state carried the re-check blocker on the
+  Generate slot, elided to 377px — still one row).
 
 ## Not run
 - `next build` — same handle-locked SWC binary as s2-arc13 (recorded in handoff.md). All changes are CSS, one
