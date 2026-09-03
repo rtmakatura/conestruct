@@ -1,0 +1,11 @@
+# s2-arc17 commit 5 — red run: SiteConditionsField.rows.test.tsx against the component at commit 4 (1bef92d): seven rows
+# 2026-09-03T23:39:27Z
+   ✓ SiteConditionsField — the slim control (#224 phase 2 + 3) > no detect button, no scan copy — one provenance sentence says the scan happens at Generate 22ms
+   ✓ SiteConditionsField — the slim control (#224 phase 2 + 3) > #186 absent case: pre-generation the rows carry no evidence text, ever 4ms
+   × SiteConditionsField — the slim control (#224 phase 2 + 3) > exactly the two manual-only rows remain and still write meta.siteConditions 11ms
+     → expected 'Site conditionsSTEP 5Site conditions …' to contain 'Site conditions you assert'
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/SiteConditionsField.rows.test.tsx > SiteConditionsField — the slim control (#224 phase 2 + 3) > exactly the two manual-only rows remain and still write meta.siteConditions
+AssertionError: expected 'Site conditionsSTEP 5Site conditions …' to contain 'Site conditions you assert'
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)

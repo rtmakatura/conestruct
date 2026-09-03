@@ -11,50 +11,35 @@ import { CheckRow, FieldGroup } from "./GeneratorFormPrimitives";
 // #224 phase 2 (s2-arc16): the manual detect section retired.  Detection
 // is the in-generate site scan (src/api/site_scan.py, phase 1): the plan
 // finds out what applies at Generate, against its own final geometry,
-// and explains itself — or refuses honestly.  The "Detect nearby site
-// conditions" button, its point-mode note, the "N flag(s) auto-checked"
-// line and the #16 evidence lines (all computed from the button's
-// result — and carrying two input drifts the phase-1 README records)
-// are gone.  What survives to phase 3 (ruling 6): this group and its
-// seven checkbox rows writing meta.siteConditions, untouched.  Scan
-// precedence is the backend's (phase 1, ruling 1): the scan owns the
-// five detection keys; manual-only keys pass through.
+// and explains itself — or refuses honestly.
+//
+// #224 phase 3 (s2-arc17, ruling a): the five scanned checkboxes retired
+// too.  They were dead input on a generated plan — the scan owns those
+// keys by phase-1 ruling 1 and overwrote them (disclosed in
+// manual_flags_discarded) — and their facts now render as section 03's
+// counted tier rows with the s2-arc4 evidence.  What stays is the slim
+// control: the two conditions no scan can see, operator-asserted, still
+// writing meta.siteConditions and passing through the scan untouched.
+// Post-generate edits go through Reopen like every other setup field;
+// overrides of the scanned keys are phase 4's.
 //
 // #186 doctrine, carried: pre-generation these rows render no evidence
-// — no counts, no distances, no phantom numbers.  Evidence for applied
-// conditions becomes phase 3's tier rows.
+// — no counts, no distances, no phantom numbers.
 
-const FLAG_LABELS: Record<SiteConditionFlag, { label: string; desc: string }> =
-  {
-    limited_sight_distance: {
-      label: "Limited sight distance",
-      desc: "Curve, hill crest — moves advance signs 50% farther upstream.",
-    },
-    adjacent_intersection: {
-      label: "Adjacent at-grade intersection",
-      desc: "Signal/stop/uncontrolled cross street — flags the plan for TCS review; the cross-street layout is not generated and no devices are added.",
-    },
-    adjacent_interchange: {
-      label: "Adjacent interchange (highway ramps)",
-      desc: "Highway on/off-ramps within or adjacent to work zone — flags the plan for TCS review; the per-ramp layout is not generated and no devices are added.",
-    },
-    driveways_present: {
-      label: "Driveways present",
-      desc: "Advisory: maintain access gaps in channelization.",
-    },
-    pedestrian_facility: {
-      label: "Pedestrian sidewalks present",
-      desc: "Adds 4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs.",
-    },
-    bicycle_facility: {
-      label: "Bike lane / cycleway present",
-      desc: "Adds 2 M4-9a BIKE DETOUR signs.",
-    },
-    school_zone: {
-      label: "School zone nearby",
-      desc: "Adds 2 S1-1 SCHOOL signs upstream of advance warnings.",
-    },
-  };
+type ManualFlag = Extract<SiteConditionFlag, "limited_sight_distance" | "driveways_present">;
+
+const MANUAL_FLAGS: readonly ManualFlag[] = ["limited_sight_distance", "driveways_present"];
+
+const FLAG_LABELS: Record<ManualFlag, { label: string; desc: string }> = {
+  limited_sight_distance: {
+    label: "Limited sight distance",
+    desc: "Curve, hill crest — moves advance signs 50% farther upstream.",
+  },
+  driveways_present: {
+    label: "Driveways present",
+    desc: "Advisory: maintain access gaps in channelization.",
+  },
+};
 
 interface Props {
   scenario: Scenario;
@@ -79,16 +64,17 @@ export function SiteConditionsField({ scenario, setMeta, step, stepsPending = fa
   };
 
   return (
-    <FieldGroup label="Site conditions" step={step} pending={stepsPending}>
+    <FieldGroup label="Site conditions you assert" step={step} pending={stepsPending}>
       {/* #226 provenance role: a static statement of where detection
           happens now — not a state, not a claim about this site. */}
       <div className="mb-3 tr-prov">
         Site conditions are scanned along the corridor when you generate
-        (OpenStreetMap).
+        (OpenStreetMap). These two are yours to assert — no scan can see
+        them.
       </div>
 
       <div className="check-list flex flex-col gap-1.5">
-        {(Object.keys(FLAG_LABELS) as SiteConditionFlag[]).map((key) => (
+        {MANUAL_FLAGS.map((key) => (
           <CheckRow
             key={key}
             on={!!flags[key]}

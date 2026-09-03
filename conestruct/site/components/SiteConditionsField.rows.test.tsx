@@ -4,14 +4,15 @@
 // The in-generate scan (phase 1) owns detection; the "Detect nearby site
 // conditions" button, its point-mode note, the "N flag(s) auto-checked"
 // provenance line and the #16 evidence lines (which were computed from
-// the button's result) are gone.  What survives to phase 3 (ruling 6):
-// the "Site conditions" group with the seven checkbox rows writing
-// meta.siteConditions, untouched.
+// the button's result) are gone.
+//
+// #224 phase 3 (s2-arc17, ruling a) — the five scanned checkboxes
+// retired too; the slim control keeps the two operator-asserted keys
+// (limited_sight_distance, driveways_present) writing meta.siteConditions
+// under "Site conditions you assert".  Declared churn: 7 → 2 rows.
 //
 // #186 doctrine, carried: pre-generation the rows render NO evidence —
-// no counts, no distances, no phantom numbers — ever.  (The former
-// detect-time evidence tests retired with the button; these two pins are
-// the doctrine's new home.)
+// no counts, no distances, no phantom numbers — ever.
 
 import { useState } from "react";
 import { cleanup, fireEvent, render } from "@testing-library/react";
@@ -48,7 +49,7 @@ function Harness({ initial }: { initial: Scenario }) {
 
 afterEach(cleanup);
 
-describe("SiteConditionsField after the manual detect retirement (#224 phase 2)", () => {
+describe("SiteConditionsField — the slim control (#224 phase 2 + 3)", () => {
   it("no detect button, no scan copy — one provenance sentence says the scan happens at Generate", () => {
     const { container, queryByRole } = render(<Harness initial={scenario()} />);
     expect(queryByRole("button", { name: /detect nearby site conditions/i })).toBeNull();
@@ -69,16 +70,34 @@ describe("SiteConditionsField after the manual detect retirement (#224 phase 2)"
     expect(text).not.toMatch(/\d+ m\b/);
   });
 
-  it("the seven checkbox rows survive and still write meta.siteConditions", () => {
-    const { getAllByRole, getByRole, getByTestId } = render(
+  it("exactly the two manual-only rows remain and still write meta.siteConditions", () => {
+    const { container, getAllByRole, getByRole, queryByRole, getByTestId } = render(
       <Harness initial={scenario()} />,
     );
-    expect(getAllByRole("checkbox").length).toBe(7);
-    fireEvent.click(getByRole("checkbox", { name: /Pedestrian sidewalks present/i }));
+    expect(container.textContent).toContain("Site conditions you assert");
+    expect(getAllByRole("checkbox").map((c) => c.getAttribute("aria-label") ?? c.textContent)).toHaveLength(2);
+    // The five scanned keys are no longer offered — the scan owns them.
+    for (const gone of [
+      /Pedestrian sidewalks present/i,
+      /Bike lane/i,
+      /School zone/i,
+      /Adjacent at-grade intersection/i,
+      /Adjacent interchange/i,
+    ]) {
+      expect(queryByRole("checkbox", { name: gone })).toBeNull();
+    }
+    fireEvent.click(getByRole("checkbox", { name: /Driveways present/i }));
     expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({
-      pedestrian_facility: true,
+      driveways_present: true,
     });
-    fireEvent.click(getByRole("checkbox", { name: /Pedestrian sidewalks present/i }));
-    expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({});
+    fireEvent.click(getByRole("checkbox", { name: /Limited sight distance/i }));
+    expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({
+      driveways_present: true,
+      limited_sight_distance: true,
+    });
+    fireEvent.click(getByRole("checkbox", { name: /Driveways present/i }));
+    expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({
+      limited_sight_distance: true,
+    });
   });
 });
