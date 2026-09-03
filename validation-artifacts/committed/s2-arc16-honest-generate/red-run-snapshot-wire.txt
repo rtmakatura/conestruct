@@ -1,0 +1,5 @@
+     → expected undefined to deeply equal { proceed_if_unavailable: false }
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.scan-wire.test.tsx > Generate sets site_scan on the wire (#224 phase 2) > the replication snapshot posts the wire scenario too (post-ship follow-up: the sender 6d3baee missed)
+AssertionError: expected undefined to deeply equal { proceed_if_unavailable: false }
+      Tests  1 failed | 6 passed (7)

@@ -1091,8 +1091,12 @@ export function GeneratorShell({
           </div>
           {/* Dev-only replication snapshot (Refs #102, TEMPORARY) — renders
               nothing without ?debug=1. Delete with DebugSnapshotButton. */}
+          {/* #224 phase 2 follow-up: the snapshot is a replication of the
+              plan on screen, so it posts the WIRE scenario (the sender
+              6d3baee missed — a generated plan's snapshot read
+              not_run/not_requested). */}
           <DebugSnapshotButton
-            scenario={scenario}
+            scenario={wireScenario}
             settings={settings}
             detection={lastDetection}
           />

@@ -87,6 +87,7 @@ function okResponse(data: unknown): Response {
     ok: true,
     status: 200,
     json: async () => data,
+    text: async () => "",
     blob: async () => new Blob(["zip"]),
   } as unknown as Response;
 }
@@ -195,6 +196,26 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     expect(bodiesFor("/api/render/bundle")[0].site_scan).toEqual({
       proceed_if_unavailable: false,
     });
+  });
+
+  it("the replication snapshot posts the wire scenario too (post-ship follow-up: the sender 6d3baee missed)", async () => {
+    // The dev-only button gates on ?debug=1 read from window.location.
+    window.history.replaceState({}, "", "/sandbox?debug=1");
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await settle();
+    const snap = await screen.findByRole("button", { name: /replication snapshot/i });
+    await user.click(snap);
+    await waitFor(() => expect(bodiesFor("/api/replication-snapshot").length).toBe(1));
+    expect(bodiesFor("/api/replication-snapshot")[0].site_scan).toBeUndefined();
+    await user.click(screen.getByText("Generate package"));
+    await settle();
+    await user.click(await screen.findByRole("button", { name: /replication snapshot/i }));
+    await waitFor(() => expect(bodiesFor("/api/replication-snapshot").length).toBe(2));
+    expect(bodiesFor("/api/replication-snapshot")[1].site_scan).toEqual({
+      proceed_if_unavailable: false,
+    });
+    window.history.replaceState({}, "", "/");
   });
 
   it("the strip settles on the scanned answer — never a permanent VERIFYING (the #197 stamp)", async () => {
