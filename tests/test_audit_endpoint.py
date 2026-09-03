@@ -200,6 +200,10 @@ def test_audit_sections_carries_all_build_audit_trail_keys(client: TestClient) -
         # Engine-removal PR B: corridor-preview zone lengths, backend-
         # computed so PR D can delete the corridor-spacing.ts mirror.
         "corridor_spec",
+        # #224 phase 1 (s2-arc15, ruling 6): the in-generate scan's
+        # provenance is ALWAYS present — not_run/not_requested when no
+        # scan was asked for.
+        "site_scan",
     }
 
 

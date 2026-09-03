@@ -1,0 +1,2 @@
+grid cases drifted: 70/70
+  + sections.site_scan = {'status': 'not_run', 'reason': 'not_requested', 'error': None, 'mode': None, 'measured_at': None, 'duration_ms': None, 'budget_s': 20.0, 'memo_hit': False, 'proceeded_anyway': False, 'inputs': None, 'buckets': {}, 'flags': {}, 'manual_flags_discarded': {}, 'disclosure': None}

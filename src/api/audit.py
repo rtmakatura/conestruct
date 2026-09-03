@@ -15,6 +15,7 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from src.api.site_scan import not_run_provenance
 from src.generation.layout import (
     device_count_floors,
     flagger_chain_stations,
@@ -1723,6 +1724,7 @@ def audit_projection(
     site_records: list[dict[str, Any]] | None = None,
     lane_count_suspect: bool = False,
     override_records: list[dict[str, Any]] | None = None,
+    site_scan: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Wrap a raw audit-trail dict in the shape the /render/audit endpoint returns.
 
@@ -2008,6 +2010,19 @@ def audit_projection(
         sections["site_adjustments"] = [
             {**rec, "citation": _site_citation(str(rec.get("rule", "")))} for rec in site_records
         ]
+
+    # #224 phase 1 — the in-generate scan's provenance, ALWAYS present
+    # (ruling 6, s2-arc15): ``not_run`` / ``not_requested`` is the honest
+    # default when the caller ran no scan.  A missing key is what a
+    # pre-phase-1 backend emits in the Vercel-leads-Modal deploy window, so
+    # absence must never double as "not run" (Rule 10).  Nothing renders
+    # this key in phase 1 (ruling 7) — the audit PDF and panel consume
+    # named sections only.
+    sections["site_scan"] = (
+        site_scan
+        if site_scan is not None
+        else not_run_provenance("not_requested").model_dump(mode="json")
+    )
 
     speed = audit["spacing"]["speed_mph"]
     summary: dict[str, Any] = {

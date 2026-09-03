@@ -166,6 +166,22 @@
       "violations": [],
       "work_zone_ft": 800.0
     },
+    "site_scan": {
+      "buckets": {},
+      "budget_s": 20.0,
+      "disclosure": null,
+      "duration_ms": null,
+      "error": null,
+      "flags": {},
+      "inputs": null,
+      "manual_flags_discarded": {},
+      "measured_at": null,
+      "memo_hit": false,
+      "mode": null,
+      "proceeded_anyway": false,
+      "reason": "not_requested",
+      "status": "not_run"
+    },
     "spacing": {
       "citation": {
         "cite": "MUTCD § 6K.01",

@@ -20,6 +20,7 @@ from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, Field, model_validator
 
+from src.api.site_scan import SiteScanRequest
 from src.generation.layout import (
     generate_flagger_alternating_2lane,
     generate_lane_closure_divided,
@@ -136,6 +137,23 @@ class WorkSchedule(BaseModel):
         return self
 
 
+class SiteScanScenarioFields(BaseModel):
+    """Mixin adding the #224 phase-1 in-generate scan request to every kind.
+
+    ``site_scan`` absent (the default, and what the frontend sends this
+    phase) ⇒ generation behaves exactly as before: the manual
+    ``meta.siteConditions`` apply and the audit's ``sections.site_scan``
+    reads ``not_run`` / ``not_requested``.  Present ⇒ generation runs the
+    corridor scan itself (src/api/site_scan.py).  Opt-in on purpose: the
+    audit and device-breakdown fetches fire on every debounced edit from
+    first paint, and a scan on each of those would put an Overpass round
+    trip on every keystroke burst; phase 2's Generate flow sets this at the
+    click.  Snake_case like the other extension fields (§1.1 #1).
+    """
+
+    site_scan: SiteScanRequest | None = None
+
+
 class JurisdictionScenarioFields(BaseModel):
     """Mixin adding the optional jurisdiction-layer fields to every kind."""
 
@@ -228,7 +246,7 @@ MobileWorkType = Literal[
 ]
 
 
-class ShoulderScenario(JurisdictionScenarioFields):
+class ShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -328,7 +346,7 @@ class ShoulderScenario(JurisdictionScenarioFields):
         return self
 
 
-class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
+class FlaggerLaneClosureScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["flagger_lane_closure"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -379,7 +397,7 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields):
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
 
-class LaneClosureDividedScenario(JurisdictionScenarioFields):
+class LaneClosureDividedScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["lane_closure_divided"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -395,7 +413,7 @@ class LaneClosureDividedScenario(JurisdictionScenarioFields):
     truckMountedAttenuator: bool
 
 
-class WorkBeyondShoulderScenario(JurisdictionScenarioFields):
+class WorkBeyondShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["work_beyond_shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -409,7 +427,7 @@ class WorkBeyondShoulderScenario(JurisdictionScenarioFields):
     night: bool
 
 
-class MobileOp2LaneScenario(JurisdictionScenarioFields):
+class MobileOp2LaneScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["mobile_op_2lane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -424,7 +442,7 @@ class MobileOp2LaneScenario(JurisdictionScenarioFields):
     arrowBoardOnShadow: bool
 
 
-class MobileOpMultilaneScenario(JurisdictionScenarioFields):
+class MobileOpMultilaneScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     kind: Literal["mobile_op_multilane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -530,7 +548,7 @@ class IntersectionApproach(BaseModel):
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
 
 
-class NearIntersectionScenario(JurisdictionScenarioFields):
+class NearIntersectionScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     """Work near (not within) an intersection — S-630-1 Cases 18/19.
 
     GATED: absent from ``ENABLED_SCENARIOS`` (render_api.py) and from
