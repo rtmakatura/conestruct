@@ -1053,6 +1053,12 @@ export function GeneratorShell({
                 scenario={scenario}
                 setScenario={setScenario}
                 onReopen={onReopen}
+                // #224 phase 2: the STAMPED view — null mid-refetch.
+                siteScan={
+                  stripAudit.state === "ready"
+                    ? (stripAudit.data.sections?.site_scan ?? null)
+                    : null
+                }
                 jurisdiction={jurisdictionBlock}
                 setJurisdictionKey={(k) =>
                   setScenario({ ...scenario, jurisdiction_key: k })

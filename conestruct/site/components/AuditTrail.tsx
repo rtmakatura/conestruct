@@ -1385,6 +1385,50 @@ export function corridorValidationItem(
   };
 }
 
+/**
+ * #224 phase 2 (ruling 9) — the NOT-CHECKED disclosure in section 03.
+ * Renders ONLY for a plan generated with proceed-anyway after a refused
+ * site scan: the backend-authored ``disclosure`` string verbatim as one
+ * text node (one voice — src/api/site_scan.py owns it), ▲ + words (rule
+ * 13, existing warn ink), the scan's own error/attempt facts.  An
+ * UNCOUNTED attention item, exactly the corridorValidationItem
+ * precedent: assignTiers and the shared expectation JSON are untouched
+ * (a counted fact is phase 3's).  Every other scan state renders
+ * nothing here: ok-scan facts are phase-3 tier rows; not_run is not a
+ * finding; a refused scan never reaches a rendered plan.
+ */
+export function siteScanNotCheckedItem(
+  scan: Record<string, unknown> | undefined,
+): ItemSpec | null {
+  if (!scan || scan.status !== "unavailable" || scan.proceeded_anyway !== true) {
+    return null;
+  }
+  const disclosure = typeof scan.disclosure === "string" ? scan.disclosure : null;
+  if (!disclosure) return null;
+  const facts = [
+    typeof scan.error === "string" ? scan.error : null,
+    typeof scan.measured_at === "string" ? `attempted ${scan.measured_at}` : null,
+  ].filter((f): f is string => f !== null);
+  return {
+    title: "Site conditions",
+    result: "▲ NOT CHECKED",
+    cite: "OpenStreetMap",
+    body: (
+      <>
+        <p>{disclosure}</p>
+        <div className="check-list">
+          <CheckRow
+            label="School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor were not verified — site adjustments reflect operator-set flags only. Re-generate to retry the scan."
+            tone="warn"
+            tag="NOT CHECKED"
+          />
+        </div>
+        {facts.length > 0 && <div className="tr-prov mt-1.5">{facts.join(" · ")}</div>}
+      </>
+    ),
+  };
+}
+
 interface ViolationSpec {
   rule_id: string;
   severity: string;

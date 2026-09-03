@@ -45,6 +45,7 @@ import {
   approachesItem,
   buildScenarioItems,
   corridorValidationItem,
+  siteScanNotCheckedItem,
   finesDoubleItem,
   geometryValidationItem,
   pendingVerificationItem,
@@ -221,6 +222,10 @@ export function TieredReference({
     | { checked?: boolean; warnings?: unknown[] }
     | undefined;
   const corridorItem = settled ? corridorValidationItem(settled.sections.corridor_validation) : null;
+  // #224 phase 2: the NOT-CHECKED disclosure — uncounted (ruling 9).
+  const siteScanItem = settled
+    ? siteScanNotCheckedItem(settled.sections.site_scan as Record<string, unknown> | undefined)
+    : null;
   const corridorClean =
     corridorSection?.checked === true && (corridorSection.warnings ?? []).length === 0;
 
@@ -383,6 +388,7 @@ export function TieredReference({
     );
   }
   const attentionItems: ItemSpec[] = [
+    ...(siteScanItem ? [siteScanItem] : []),
     ...(corridorItem ? [corridorItem] : []),
     ...(geometryItem ? [geometryItem] : []),
     ...(approachesSpec && approachesSignalized ? [approachesSpec] : []),

@@ -19,6 +19,7 @@ import {
   type ReactNode,
 } from "react";
 import { SCENARIO_KINDS, type RoadType, type Scenario } from "@/lib/scenarios";
+import type { SiteScanProvenance } from "@/lib/render-types";
 import {
   hhmm,
   JURISDICTION_OPTIONS,
@@ -139,6 +140,14 @@ interface Props {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   onReopen: () => void;
+  /**
+   * #224 phase 2 — the settled audit's ``sections.site_scan`` for the
+   * input on screen (the STAMPED view: null while a refetch is in
+   * flight, so a prior input's disclosure never renders as current).
+   * The panel prints the NOT-CHECKED disclosure for a proceed-anyway
+   * plan as a #227 system event; every other scan state prints nothing.
+   */
+  siteScan?: SiteScanProvenance | null;
   // Surface B (#152): a late jurisdiction / street-class change is a
   // real estimator move, so the post-generate strip edits them inline —
   // the Speed-edit treatment.  The evaluated block (when loaded) names
@@ -153,6 +162,7 @@ export function SetupStrip({
   scenario,
   setScenario,
   onReopen,
+  siteScan = null,
   jurisdiction = null,
   setJurisdictionKey,
   setStreetClass,
@@ -221,7 +231,41 @@ export function SetupStrip({
   const speeds: number[] = [];
   for (let s = 25; s <= speedMax; s += 5) speeds.push(s);
 
+  // #224 phase 2 (rule 10): the disclosure is loud — the #227 system-
+  // event container above the fact strip, ⚠ + words, the backend string
+  // as ONE text node (one voice), provenance on line 2.  Only for a
+  // proceed-anyway plan (status unavailable + proceeded_anyway + the
+  // string itself).
+  const notChecked =
+    siteScan &&
+    siteScan.status === "unavailable" &&
+    siteScan.proceeded_anyway === true &&
+    typeof siteScan.disclosure === "string"
+      ? siteScan
+      : null;
   return (
+    <>
+      {notChecked && (
+        <div className="sys-event warn site-not-checked mb-3">
+          <div className="tr-section mb-1.5">Site conditions</div>
+          <div className="flex items-start gap-2">
+            <span className="sys-glyph" aria-hidden="true">
+              ⚠
+            </span>
+            <span>{notChecked.disclosure}</span>
+          </div>
+          <div className="tr-prov mt-1.5">
+            {[
+              "site scan",
+              notChecked.error ?? null,
+              notChecked.measured_at ? `attempted ${notChecked.measured_at}` : null,
+              "re-generate to retry",
+            ]
+              .filter((p): p is string => p !== null)
+              .join(" · ")}
+          </div>
+        </div>
+      )}
     <div className="setup-strip">
       <Structural
         k="Scenario"
@@ -482,5 +526,6 @@ export function SetupStrip({
         Edit full setup <span aria-hidden>⤢</span>
       </button>
     </div>
+    </>
   );
 }

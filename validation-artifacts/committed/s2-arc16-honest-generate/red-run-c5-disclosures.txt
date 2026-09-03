@@ -1,0 +1,7 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.scan-disclosure.test.tsx > the NOT-CHECKED disclosure through the shell (#224 phase 2) > proceed-anyway → the Setup panel prints the disclosure; an edit blanks it
+ FAIL  components/SetupStrip.disclosure.test.tsx > SetupStrip NOT-CHECKED disclosure (#224 phase 2) > a proceed-anyway plan renders the disclosure as a .sys-event warn: glyph, one text node, provenance
+ FAIL  components/SetupStrip.disclosure.test.tsx > SetupStrip NOT-CHECKED disclosure (#224 phase 2) > an ok scan, a not_run scan, and no provenance render nothing
+ FAIL  components/SetupStrip.disclosure.test.tsx > SetupStrip NOT-CHECKED disclosure (#224 phase 2) > a refusal that was NOT proceeded past renders nothing (it never reaches a plan)
+ FAIL  components/TieredReference.site-scan.test.tsx > section 03 NOT-CHECKED item (#224 phase 2) > a proceed-anyway plan renders ▲ NOT CHECKED with the disclosure verbatim — uncounted
+      Tests  5 failed | 1 passed (6)
