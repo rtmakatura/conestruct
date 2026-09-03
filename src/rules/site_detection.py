@@ -33,6 +33,15 @@ if TYPE_CHECKING:
 # the corridor bbox instead.
 DEFAULT_RADIUS_M = 500.0
 HTTP_TIMEOUT_S = 25.0
+# #241 (s2-arc16 rider): wall-clock budget for the corridor-validation
+# trip (``validate_corridor_against_osm`` → ``detect_road_bearing``).
+# CHOSEN, not traced: the audit's worst case is this check plus the
+# #224 phase-1 site scan (SCAN_BUDGET_S = 20 s) plus layout — 20 + 20 +
+# layout stays under the Vercel proxy's 60 s ``maxDuration``, where the
+# unbudgeted 25 s × 3-mirror chain measured three 504s on prod
+# (2026-09-03, s2-arc15 after-table).  Past the budget the check reports
+# its existing honest ``check_unavailable`` reason (#213 V4).
+CORRIDOR_CHECK_BUDGET_S = 20.0
 # Overpass returns 406 to clients without an identifying User-Agent.
 USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)"
 
@@ -597,6 +606,7 @@ def detect_road_bearing(
     lat: float,
     lng: float,
     radius_m: float = 30.0,
+    budget_s: float | None = None,
 ) -> dict[str, Any]:
     """Best-effort estimate of the road bearing at (lat, lng).
 
@@ -625,7 +635,13 @@ def detect_road_bearing(
     }
 
     query = _build_road_at_query(lat, lng, radius_m)
-    payload, error = _overpass_request_with_fallback(query)
+    # #241: positional when unbudgeted so single-arg stubs keep working
+    # (the phase-1 idiom in detect_along_corridor).
+    payload, error = (
+        _overpass_request_with_fallback(query)
+        if budget_s is None
+        else _overpass_request_with_fallback(query, budget_s=budget_s)
+    )
     if payload is None:
         out["error"] = error or "Overpass request failed"
         return out
@@ -717,6 +733,7 @@ def validate_corridor_against_osm(
     corridor_bearing_deg: float | None,
     search_radius_m: float = _VALIDATION_SEARCH_RADIUS_M,
     bearing_threshold_deg: float = _BEARING_CONFLICT_THRESHOLD_DEG,
+    budget_s: float | None = None,
 ) -> dict[str, Any]:
     """Best-effort sanity check: corridor inputs vs. OSM ground truth.
 
@@ -760,7 +777,9 @@ def validate_corridor_against_osm(
         return out
 
     try:
-        result = detect_road_bearing(anchor_lat, anchor_lng, radius_m=search_radius_m)
+        result = detect_road_bearing(
+            anchor_lat, anchor_lng, radius_m=search_radius_m, budget_s=budget_s
+        )
     except Exception as exc:  # noqa: BLE001
         # Best-effort: any Overpass / network failure leaves
         # ``checked = False`` — but named, never mistaken for not-run.

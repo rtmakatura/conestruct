@@ -1346,9 +1346,16 @@ def build_audit_trail(
     ):
         # Deferred import keeps the audit-trail module's import graph
         # free of httpx/Overpass code unless this branch runs.
-        from src.rules.site_detection import validate_corridor_against_osm
+        from src.rules.site_detection import (
+            CORRIDOR_CHECK_BUDGET_S,
+            validate_corridor_against_osm,
+        )
 
-        corridor_validation = validate_corridor_against_osm(site_lat, site_lng, params.bearing_deg)
+        # #241: budgeted — a stalled Overpass yields check_unavailable
+        # inside the proxy's 60 s, never a 504.
+        corridor_validation = validate_corridor_against_osm(
+            site_lat, site_lng, params.bearing_deg, budget_s=CORRIDOR_CHECK_BUDGET_S
+        )
     else:
         # #213 V4: the reason names the cause — this branch really is
         # "inputs missing", distinct from an Overpass outage inside

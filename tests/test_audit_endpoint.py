@@ -2694,3 +2694,36 @@ def test_no_intersection_flags_pending_unchanged(client: TestClient) -> None:
     assert "items" not in pending
     assert pending["note"] == ""
     assert pending["tracking_issue"] == audit_module.AUDIT_PENDING_VERIFICATION_ISSUE
+
+
+# ---------------------------------------------------------------------------
+# #241 (s2-arc16 rider): a stalled Overpass no longer hangs the plain audit
+# past the proxy's 60 s limit — the corridor check gives up at its budget
+# and the audit completes with the #213 honest reason.
+# ---------------------------------------------------------------------------
+
+
+def test_audit_completes_with_check_unavailable_when_overpass_stalls(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from src.rules import site_detection as sd
+
+    clock = {"t": 9000.0}
+    budgets: list[float | None] = []
+
+    def fake_post(url: str, **kw: Any) -> Any:
+        budgets.append(kw.get("timeout"))
+        clock["t"] += 21.0
+        raise sd.httpx.ConnectTimeout("hung", request=sd.httpx.Request("POST", url))
+
+    monkeypatch.setattr(sd.time, "monotonic", lambda: clock["t"])
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    scenario = _shoulder_scenario()
+    scenario["meta"] = {**scenario["meta"], "lat": 39.7113, "lng": -105.0815, "bearingDeg": 180}
+    res = client.post("/render/audit", headers=_auth_headers(), json=scenario)
+    assert res.status_code == 200, res.text[:300]
+    corridor = res.json()["sections"]["corridor_validation"]
+    assert corridor["checked"] is False
+    assert corridor["reason"] == "check_unavailable"
+    assert corridor["error"] == "scan budget exceeded (20 s)"
+    assert budgets == [20.0]  # the audit caller passed CORRIDOR_CHECK_BUDGET_S

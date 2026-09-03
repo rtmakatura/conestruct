@@ -3483,11 +3483,19 @@ def _validate_corridor_bearing(corridor: WorkCorridor) -> None:
     """
     # Deferred import keeps the rendering module's import graph free
     # of httpx-driven Overpass code unless the aerial path runs.
-    from src.rules.site_detection import validate_corridor_against_osm
+    from src.rules.site_detection import (
+        CORRIDOR_CHECK_BUDGET_S,
+        validate_corridor_against_osm,
+    )
 
     try:
+        # #241: same budget as the audit's trip (the PDF path shares the
+        # proxy's 60 s ceiling).
         validation = validate_corridor_against_osm(
-            corridor.anchor_lat, corridor.anchor_lng, corridor.bearing_deg
+            corridor.anchor_lat,
+            corridor.anchor_lng,
+            corridor.bearing_deg,
+            budget_s=CORRIDOR_CHECK_BUDGET_S,
         )
     except Exception as exc:  # noqa: BLE001
         print(

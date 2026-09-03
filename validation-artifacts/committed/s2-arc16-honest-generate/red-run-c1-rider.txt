@@ -1,0 +1,6 @@
+tests\test_audit_endpoint.py:2728: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_site_detection.py::test_corridor_check_budget_is_the_chosen_value
+FAILED tests/test_site_detection.py::test_validate_budget_exceeded_reports_check_unavailable
+FAILED tests/test_audit_endpoint.py::test_audit_completes_with_check_unavailable_when_overpass_stalls
+3 failed, 1 passed, 180 deselected in 1.63s

@@ -597,3 +597,57 @@ def test_validate_success_carries_no_reason() -> None:
         out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0)
     assert out["checked"] is True
     assert "reason" not in out
+
+
+# ---------------------------------------------------------------------------
+# #241 (s2-arc16 rider): the corridor-validation Overpass trip carries the
+# same wall-clock budget the #224 phase-1 scan does.  Past the budget the
+# check reports its existing honest ``check_unavailable`` state instead
+# of hanging the request into the proxy's 60 s limit (three 504s measured
+# on prod 2026-09-03).  Fast path byte-identical.
+# ---------------------------------------------------------------------------
+
+
+def test_corridor_check_budget_is_the_chosen_value() -> None:
+    # 20 + 20 (site scan) + layout < 60 s proxy limit — recorded on the
+    # constant.
+    assert site_detection.CORRIDOR_CHECK_BUDGET_S == 20.0
+
+
+def test_validate_budget_exceeded_reports_check_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    clock = {"t": 5000.0}
+    posts: list[float | None] = []
+
+    def fake_post(url: str, **_kw: Any) -> Any:
+        posts.append(_kw.get("timeout"))
+        clock["t"] += 21.0  # the first mirror hangs past the whole budget
+        raise site_detection.httpx.ConnectTimeout(
+            "hung", request=site_detection.httpx.Request("POST", url)
+        )
+
+    monkeypatch.setattr(site_detection.time, "monotonic", lambda: clock["t"])
+    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
+    out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0, budget_s=20.0)
+    assert out["checked"] is False
+    assert out["reason"] == "check_unavailable"
+    assert out["error"] == "scan budget exceeded (20 s)"
+    assert posts == [20.0]  # one mirror tried at min(25, remaining); no second
+
+
+def test_validate_fast_path_passes_budget_through_positionally_when_none(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Existing ``lambda q:`` stubs (one positional arg) must keep working:
+    without a budget the fallback is called exactly as before."""
+    seen: list[tuple[Any, ...]] = []
+
+    def stub(query: str) -> tuple[dict[str, Any], None]:
+        seen.append((query,))
+        return {"elements": []}, None
+
+    monkeypatch.setattr(site_detection, "_overpass_request_with_fallback", stub)
+    out = site_detection.validate_corridor_against_osm(39.71466, -104.94071, 85.0)
+    assert out["checked"] is True  # no road found → checked with a warning
+    assert len(seen) == 1
