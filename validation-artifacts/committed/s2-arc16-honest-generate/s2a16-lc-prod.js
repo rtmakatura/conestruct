@@ -244,13 +244,16 @@ async function generateAndWait(page) {
     save("D-proceed-audit.pdf", d.buf);
     let text = "";
     try { text = pdfText(pdfPath); } catch (e) { log("pdf text extraction failed: " + String(e).slice(0, 120)); }
-    const dScan = d.json ? null : text;
-    if (cProceeded || /SITE CONDITIONS NOT CHECKED/.test(text)) {
-      ok(/SITE CONDITIONS NOT CHECKED/.test(text) && /service unavailable at generation/.test(text),
-        "D2 the audit PDF carries the NOT-CHECKED disclosure");
-    } else {
-      note("D2 the PDF's scan succeeded (memo/live) — no disclosure expected; the block is pinned at test level (tests/test_audit_blocks_site_scan.py)", dScan ? "" : `${text.length} chars extracted`);
-    }
+    // Judge the PDF by ITS OWN scan outcome, not leg C's: a refused scan
+    // is never memoised, so the PDF's request may land on another
+    // container whose scan succeeds (prod runs up to 8).  The PDF shows
+    // which happened — the disclosure block, or the scanned Site
+    // Adjustments rows (sidewalk / bike detour at the Lakewood control).
+    const disclosed = /SITE CONDITIONS NOT CHECKED/.test(text) && /service unavailable at generation/.test(text);
+    const scannedRows = /Site Adjustments/.test(text) && /(SIDEWALK|BIKE DETOUR)/.test(text);
+    if (disclosed) ok(true, "D2 the audit PDF carries the NOT-CHECKED disclosure (its scan was refused; proceeded)");
+    else if (scannedRows) note("D2 the PDF's own scan succeeded (scanned Site Adjustments rows present; a refused scan is never memoised, so leg C's refusal did not carry over) — no disclosure expected; the block is pinned at test level (tests/test_audit_blocks_site_scan.py) and captured live in outS2A16Local", `${text.length} chars extracted`);
+    else ok(false, "D2 the audit PDF shows neither the disclosure nor the scanned rows", `${text.length} chars extracted`);
   }
 
   // ---- E / F / G — browser ----

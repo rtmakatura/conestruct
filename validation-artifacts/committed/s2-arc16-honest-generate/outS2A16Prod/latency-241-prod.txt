@@ -1,0 +1,8 @@
+#241 spot-check — prod 9046f1c, 2026-09-03 ~18:07Z, plain audit (no site_scan) at the Lakewood control via the Next proxy, x3 sequential
+plain audit run1 http=200 t=21156 ms
+plain audit run2 http=200 t=21351 ms
+plain audit run3 http=200 t=20942 ms
+Reading: Overpass was slow at run time — every corridor check hit its 20 s budget and the audit COMPLETED at ~21 s with
+corridor_validation reason check_unavailable (the s2-arc15 after-table measured the same condition as three 504s at ~61 s).
+Watch item: none over 45 s. Live-check legs in the same window: run 1 A1 22.6 s, C1 (proceed, scan refused) 22.6 s;
+run 2 A1 8.2 s, E6 Generate settle 25.0 s, F retry settle 24.6 s.

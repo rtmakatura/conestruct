@@ -131,6 +131,30 @@ same "scan-naming wait copy" applied to the surface a first Generate actually
 shows (the pre-generate loop already holds a breakdown, so the empty state is
 never reached on a normal first Generate).
 
+## Prod runs — `outS2A16Prod/` — ALL PASS 19/19 (+3 INFO) on `9046f1c`
+
+Shipped 2026-09-03; `/healthz` == `origin/main` == `9046f1c` (gate line in
+`s2a16-lc.md`). Two runs, minutes apart, both sha-gated:
+
+- **Run 1** (`s2a16-lc-run1-superseded.md`, 18:00Z): leg C's scan was refused
+  on prod and the proceed-anyway audit carried the EXACT disclosure on the
+  wire (C2 PASS). Its single FAIL was a script defect: D2 judged the PDF by
+  leg C's outcome, but a refused scan is never memoised and the PDF's own
+  request landed on a container whose scan succeeded (the PDF prints the
+  scanned Site Adjustments rows, no disclosure — the honest output for that
+  request). Fixed: D2 now judges the PDF by its own content.
+- **Run 2** (`s2a16-lc.md`, 18:03Z): ALL PASS 19/19. A natural budget
+  refusal landed in the BROWSER: PLAN DECLINED · SERVICE UNAVAILABLE, the
+  backend message once in the container, no generic ribbon, Retry + the
+  consequence-stating proceed-anyway offered (F1–F4; `F-refused.png`). The
+  retry then succeeded, so proceed-anyway itself was not exercised on prod
+  (INFO; captured live in `outS2A16Local/`). Axe: post-generate 0, refused 0
+  (baseline 2). Sizes: plain 5256 B, scanned 11500 B, +6244 B.
+
+#241 on prod (`latency-241-prod.txt`): under a slow Overpass, three plain
+audits completed at 20.9–21.4 s with `check_unavailable` — the same condition
+that measured as three ~61 s 504s in the s2-arc15 after-table. None over 45 s.
+
 ## Post-ship (next prompt)
 
 Prod run of `s2a16-lc-prod.js` on the evidence branch `s2a16-live-checks`
