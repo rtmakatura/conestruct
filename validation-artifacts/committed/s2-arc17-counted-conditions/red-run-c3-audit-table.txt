@@ -1,0 +1,19 @@
+# s2-arc17 commit 3 — red run: tests/test_audit_blocks_site_scan.py against audit_blocks.py at commit 2 (c70dfd4): an ok scan prints nothing
+# 2026-09-03T23:33:18Z
+_ test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition _
+E       IndexError: list index out of range
+_____ test_ok_scan_with_a_bucket_missing_from_the_wire_says_not_reported ______
+E       assert 0 == 1
+E        +  where 0 = len([])
+_______________ test_ok_scan_discloses_overridden_manual_values _______________
+E       AssertionError: assert 'Operator-set values the scan overrode: school_zone=True.' in ''
+E        +  where '' = _texts([])
+E        +    where [] = _site_scan_blocks({'buckets': {'schools': {'count': 0, 'details': [], 'detected': False, 'features': [], ...}}, 'budget_s': 20.0, 'disclosure': None, 'duration_ms': 1234, ...})
+__ test_real_audit_pdf_on_an_ok_scan_names_every_condition_the_cover_counts ___
+E           AssertionError: Adjacent at-grade
+E           assert 'Adjacent at-grade' in 'Audit Trail — Case 11: Shoulder closure on divided highway\r\nField Value\r\nPlan status 2 changes · 2 needs attentio...is tracked at issue #117; corner-quadrant work at issue #128.\r\n(https://github.com/rtmakatura/conestruct/issues/117)'
+FAILED tests/test_audit_blocks_site_scan.py::test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition
+FAILED tests/test_audit_blocks_site_scan.py::test_ok_scan_with_a_bucket_missing_from_the_wire_says_not_reported
+FAILED tests/test_audit_blocks_site_scan.py::test_ok_scan_discloses_overridden_manual_values
+FAILED tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_an_ok_scan_names_every_condition_the_cover_counts
+4 failed, 5 passed in 1.53s

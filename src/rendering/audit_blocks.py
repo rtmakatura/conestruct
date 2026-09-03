@@ -294,17 +294,114 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
     return blocks
 
 
-def _site_scan_blocks(scan: dict[str, Any]) -> list[Block]:
-    """#224 phase 2 — the NOT-CHECKED disclosure (the audit PDF surface).
+# #224 phase 3 (s2-arc17, ruling e2): the scan buckets the audit PDF
+# tabulates, in section 03's row order.  MIRROR of src/api/site_scan.py
+# DETECTION_TO_FLAG's bucket order (this module imports nothing from
+# src.api by design — header note); the mapping decides only which row
+# gets which label, never a verdict.  The three keyless buckets are
+# reference rows: measured, no rule consequence (ruling e3).
+_SCAN_CONDITION_ROWS: tuple[tuple[str, str], ...] = (
+    ("intersections", "Adjacent at-grade intersection"),
+    ("interchanges", "Adjacent interchange (highway ramps)"),
+    ("sidewalks", "Pedestrian sidewalks"),
+    ("bike_facilities", "Bike lane / cycleway"),
+    ("schools", "School zone"),
+)
+_SCAN_REFERENCE_ROWS: tuple[tuple[str, str], ...] = (
+    ("railroad_crossings", "Railroad crossing"),
+    ("hospitals", "Hospital"),
+    ("road_curvature", "Road curvature"),
+)
 
-    Renders ONLY for a plan generated with ``proceed_if_unavailable``
-    after a failed in-generate scan: the backend-authored ``disclosure``
-    string verbatim (one voice — ``src/api/site_scan.py`` owns it) plus
-    the scan's error line.  ``ok`` scans print nothing this phase (their
-    facts become tier rows in phase 3); ``not_run`` is not a finding; a
-    refused scan never reaches a PDF (the render is a 400).
+
+def _scan_evidence(bucket: dict[str, Any]) -> str:
+    """The margin evidence as the wire carries it (rule 3: printed as
+    sent — count, the feet twin of the nearest distance, the first
+    relevant detail line).  Empty for an absent bucket."""
+    if not bucket.get("detected"):
+        return ""
+    parts = [f"{bucket.get('count', 0)} found"]
+    ft = bucket.get("nearest_distance_ft")
+    if isinstance(ft, (int, float)) and not isinstance(ft, bool):
+        parts.append(f"nearest {ft:g} ft from anchor")
+    details = bucket.get("details") or []
+    if details:
+        parts.append(str(details[0]))
+    return " · ".join(parts)
+
+
+def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
+    """#224 phase 3 (ruling e2) — an ``ok`` scan's conditions table, so
+    the cover ledger never counts a scan fact the body does not list:
+    every one of the five rule-bearing conditions is a row (DETECTED
+    with its evidence, or none along the corridor), the keyless buckets
+    follow as reference rows.  A bucket missing from the wire renders
+    "not reported" — absence of signal is not absence of a feature
+    (rule 10)."""
+    buckets = scan.get("buckets") or {}
+    blocks: list[Block] = [Heading(2, _cell("Site Conditions"))]
+    when = scan.get("measured_at")
+    intro = "Scanned along the corridor against OpenStreetMap"
+    if when:
+        intro += f" at {when}"
+    duration = scan.get("duration_ms")
+    if isinstance(duration, int) and not isinstance(duration, bool):
+        intro += f" ({duration} ms{', memoised' if scan.get('memo_hit') else ''})"
+    intro += (
+        ". The five rule-bearing conditions below are plan facts; a detected "
+        "condition fired the matching Site Adjustment that follows."
+    )
+    blocks.append(_body(intro))
+    rows: list[list[Any]] = []
+    for bucket_name, label in _SCAN_CONDITION_ROWS:
+        b = buckets.get(bucket_name)
+        if not isinstance(b, dict):
+            rows.append([_cell(label), _cell("not reported"), _cell("")])
+        elif b.get("detected"):
+            rows.append([_cell(label), _cell("DETECTED"), _cell(_scan_evidence(b))])
+        else:
+            rows.append([_cell(label), _cell("None along the corridor"), _cell("")])
+    for bucket_name, label in _SCAN_REFERENCE_ROWS:
+        b = buckets.get(bucket_name)
+        if not isinstance(b, dict):
+            continue
+        result = "Reference — detected, no rule" if b.get("detected") else "Reference — none"
+        rows.append([_cell(label), _cell(result), _cell(_scan_evidence(b))])
+    blocks.append(
+        Table_(
+            header=[_cell(h) for h in ("Condition", "Result", "Evidence")],
+            rows=rows,
+            weights=[2, 2, 3],
+        )
+    )
+    discarded = scan.get("manual_flags_discarded") or {}
+    if discarded:
+        blocks.append(
+            _body(
+                "Operator-set values the scan overrode: "
+                + ", ".join(f"{k}={v}" for k, v in sorted(discarded.items()))
+                + "."
+            )
+        )
+    return blocks
+
+
+def _site_scan_blocks(scan: dict[str, Any]) -> list[Block]:
+    """#224 phase 2 — the NOT-CHECKED disclosure (the audit PDF surface);
+    phase 3 — the ``ok`` scan's conditions table (``_site_scan_ok_blocks``).
+
+    The disclosure renders ONLY for a plan generated with
+    ``proceed_if_unavailable`` after a failed in-generate scan: the
+    backend-authored ``disclosure`` string verbatim (one voice —
+    ``src/api/site_scan.py`` owns it) plus the scan's error line.
+    ``not_run`` is not a finding; a refused scan never reaches a PDF (the
+    render is a 400).
     """
-    if not scan or scan.get("status") != "unavailable" or not scan.get("proceeded_anyway"):
+    if not scan:
+        return []
+    if scan.get("status") == "ok":
+        return _site_scan_ok_blocks(scan)
+    if scan.get("status") != "unavailable" or not scan.get("proceeded_anyway"):
         return []
     disclosure = scan.get("disclosure")
     if not disclosure:

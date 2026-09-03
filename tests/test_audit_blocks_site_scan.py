@@ -7,6 +7,11 @@ surfaces (panel, section 03, audit PDF); its block renders the string
 VERBATIM — one voice — plus the scan's error line.  Every other scan
 state prints nothing here this phase (ok-scan facts are phase 3's tier
 rows; ``not_run`` is not a finding).
+
+#224 phase 3 (s2-arc17, ruling e2): an ``ok`` scan now prints a Site
+Conditions table — one row per rule-bearing condition (so the cover
+ledger's counted scan facts all have a body row), reference rows for the
+keyless buckets, evidence as the wire sent it.
 """
 
 from __future__ import annotations
@@ -21,7 +26,7 @@ from fastapi.testclient import TestClient
 
 from src.api import site_scan as ss
 from src.rendering.audit_blocks import _site_scan_blocks, audit_to_blocks
-from src.rendering.document import Body, Heading
+from src.rendering.document import Body, Heading, Table_
 from src.rules import site_detection as sd
 
 os.environ.setdefault("RENDER_API_SECRET", "test-secret-do-not-deploy")
@@ -55,11 +60,84 @@ def test_proceeded_anyway_prints_the_disclosure_verbatim_and_the_error() -> None
     assert isinstance(blocks[0], Heading)
 
 
-def test_ok_scan_prints_nothing_this_phase() -> None:
+def _ok(buckets: dict[str, Any]) -> dict[str, Any]:
     prov = ss.SiteScanProvenance(
-        status="ok", mode="corridor", measured_at="x", buckets={}, flags={}
+        status="ok",
+        mode="corridor",
+        measured_at="2026-09-03T14:32:00+00:00",
+        duration_ms=1234,
+        buckets={k: ss.SiteScanBucket.model_validate(v) for k, v in buckets.items()},
+        flags={},
     )
-    assert _site_scan_blocks(prov.model_dump(mode="json")) == []
+    return prov.model_dump(mode="json")
+
+
+def _rows(blocks: list[Any]) -> list[list[str]]:
+    tables = [b for b in blocks if isinstance(b, Table_)]
+    assert len(tables) == 1
+    return [list(row) for row in tables[0].rows]  # cells are rich-text strings
+
+
+def test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition() -> None:
+    """#224 phase 3 (ruling e2): the cover ledger counts an absent key as
+    checked, so the body names it; a detected key carries its evidence
+    as the wire sent it (count, the ft twin, the first detail line)."""
+    blocks = _site_scan_blocks(
+        _ok(
+            {
+                "intersections": {
+                    "detected": True,
+                    "count": 26,
+                    "nearest_distance_m": 10.4,
+                    "details": ["unnamed at 39.7112, -105.0816 [downstream @ 46 ft]"],
+                },
+                "interchanges": {"detected": False, "count": 0},
+                "sidewalks": {"detected": True, "count": 18, "nearest_distance_m": 14.2},
+                "bike_facilities": {"detected": False, "count": 0},
+                "schools": {"detected": False, "count": 0},
+                "hospitals": {"detected": True, "count": 1, "nearest_distance_m": 300.0},
+                "railroad_crossings": {"detected": False, "count": 0},
+            }
+        )
+    )
+    assert isinstance(blocks[0], Heading) and blocks[0].text == "Site Conditions"
+    assert "2026-09-03T14:32:00+00:00" in _texts(blocks)
+    rows = _rows(blocks)
+    by_label = {r[0]: r for r in rows}
+    assert [r[0] for r in rows[:5]] == [
+        "Adjacent at-grade intersection",
+        "Adjacent interchange (highway ramps)",
+        "Pedestrian sidewalks",
+        "Bike lane / cycleway",
+        "School zone",
+    ]
+    assert by_label["Adjacent at-grade intersection"][1] == "DETECTED"
+    assert (
+        by_label["Adjacent at-grade intersection"][2] == "26 found · nearest 34.1 ft from anchor · "
+        "unnamed at 39.7112, -105.0816 [downstream @ 46 ft]"
+    )
+    assert by_label["Pedestrian sidewalks"][2] == "18 found · nearest 46.6 ft from anchor"
+    assert by_label["School zone"][1:] == ["None along the corridor", ""]
+    # Keyless buckets: reference rows, present only when the wire carried them.
+    assert by_label["Hospital"][1] == "Reference — detected, no rule"
+    assert by_label["Railroad crossing"][1] == "Reference — none"
+    assert "Road curvature" not in by_label
+
+
+def test_ok_scan_with_a_bucket_missing_from_the_wire_says_not_reported() -> None:
+    rows = _rows(_site_scan_blocks(_ok({"schools": {"detected": False, "count": 0}})))
+    by_label = {r[0]: r for r in rows}
+    assert by_label["School zone"][1] == "None along the corridor"
+    assert by_label["Pedestrian sidewalks"][1] == "not reported"
+    assert len(rows) == 5
+
+
+def test_ok_scan_discloses_overridden_manual_values() -> None:
+    scan = _ok({"schools": {"detected": False, "count": 0}})
+    scan["manual_flags_discarded"] = {"school_zone": True}
+    assert "Operator-set values the scan overrode: school_zone=True." in _texts(
+        _site_scan_blocks(scan)
+    )
 
 
 def test_not_run_and_empty_print_nothing() -> None:
@@ -123,3 +201,51 @@ def test_real_audit_pdf_carries_the_disclosure_text(
     assert "SITE CONDITIONS NOT CHECKED" in text
     assert "service unavailable at generation" in text
     ss.clear_memo()
+
+
+def test_real_audit_pdf_on_an_ok_scan_names_every_condition_the_cover_counts(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Through the real route on the scanned-ok fixture with the recorded
+    payload: the five condition labels are in the body, the two absent
+    ones read as named passes, and the ledger's checked count includes
+    them (parity between the cover line and the body — the #223 gap
+    class, closed by construction)."""
+    import json
+
+    from src.api.render_api import app
+
+    ss.clear_memo()
+    payload = json.loads(
+        (Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
+    scenario = json.loads(
+        (Path(__file__).parent / "fixtures" / "pdf_worst_case" / "scanned-ok.json").read_text(
+            encoding="utf-8"
+        )
+    )["scenario"]
+    r = TestClient(app).post("/render/audit-pdf", json=scenario, headers=HEADERS)
+    assert r.status_code == 200, r.text[:300]
+    p = tmp_path / "audit.pdf"
+    p.write_bytes(r.content)
+    doc = pdfium.PdfDocument(str(p))
+    try:
+        text = " ".join(page.get_textpage().get_text_bounded() for page in doc)
+    finally:
+        doc.close()
+    ss.clear_memo()
+    # Wrap-safe fragments: pdfium breaks a cell's text at its column width.
+    for label in (
+        "Adjacent at-grade",
+        "Adjacent interchange",
+        "Pedestrian sidewalks",
+        "Bike lane",
+        "School zone",
+    ):
+        assert label in text, label
+    assert "None along the corridor" in text
+    assert "DETECTED" in text
+    assert "found" in text and "ft from anchor" in text
