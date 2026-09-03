@@ -1,0 +1,3 @@
+ImportError while importing test module 'C:\Users\rtmak\Documents\traffic-control-tool\tests\test_audit_blocks_site_scan.py'.
+E   ImportError: cannot import name '_site_scan_blocks' from 'src.rendering.audit_blocks' (C:\Users\rtmak\Documents\traffic-control-tool\src\rendering\audit_blocks.py)
+1 error in 0.83s

@@ -1,0 +1,33 @@
+{
+ "_provenance": {
+  "arc": "s2-arc16 (#224 phase 2) scanned-path containment, 2026-09-03 \u2014 the phase-1 debt",
+  "purpose": "Scanned path, scan unavailable + proceed_if_unavailable: the NOT-CHECKED disclosure flows through the audit PDF; the plan sheet renders from manual flags only. workLen differs from scanned-ok so the two never share a memo key.",
+  "overpass": "down",
+  "reachability": "Passes the wire schema (SiteScanScenarioFields); rendered through the real /render/pdf, /render/audit-pdf and /render/crew-pdf paths with _overpass_request_with_fallback stubbed per the overpass key (the tests never reach the network)."
+ },
+ "scenario": {
+  "kind": "shoulder",
+  "meta": {
+   "project": "Lakewood Scanned Control",
+   "address": "W Alameda Ave, Lakewood",
+   "lat": 39.7113,
+   "lng": -105.0815,
+   "bearingDeg": 180,
+   "siteConditions": {
+    "pedestrian_facility": true
+   }
+  },
+  "roadType": "urban_arterial",
+  "speed": 45,
+  "lanes": 2,
+  "laneWidth": 12,
+  "divided": true,
+  "workType": "utility_locate",
+  "duration": "short",
+  "workLen": 1100,
+  "night": false,
+  "site_scan": {
+   "proceed_if_unavailable": true
+  }
+ }
+}

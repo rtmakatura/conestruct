@@ -57,7 +57,40 @@ BASELINE = {
     "adv-near-intersection": {"edge": 0, "box_cross": 0, "collisions": 0},
     "adv-flagger": {"edge": 0, "box_cross": 0, "collisions": 0},
     "control-typical": {"edge": 0, "box_cross": 0, "collisions": 0},
+    # #224 phase 2 (s2-arc16, ruling 8): the scanned path — the phase-1
+    # debt.  Both at the Lakewood control pin with a bearing, so the
+    # in-generate scan actually runs (stubbed per the fixture's
+    # ``_provenance.overpass`` key: the recorded payload, or down).
+    "scanned-ok": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "scanned-not-checked": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
+
+SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"
+
+
+@pytest.fixture(autouse=True)
+def _scan_stub(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch):
+    """Route the scanned fixtures' Overpass trip to a stub; the network is
+    never reached.  Memo cleared around every case so no fixture serves
+    another's scan."""
+    from src.api import site_scan as ss
+    from src.rules import site_detection as sd
+
+    ss.clear_memo()
+    name = getattr(getattr(request.node, "callspec", None), "params", {}).get("name")
+    mode = None
+    if name:
+        prov = json.loads((FIXTURE_DIR / f"{name}.json").read_text(encoding="utf-8"))
+        mode = prov.get("_provenance", {}).get("overpass")
+    if mode == "recorded":
+        payload = json.loads(SCAN_PAYLOAD.read_text(encoding="utf-8"))
+        monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
+    elif mode == "down":
+        monkeypatch.setattr(
+            sd, "_overpass_request_with_fallback", lambda q, **_k: (None, "stub: mirrors down")
+        )
+    yield
+    ss.clear_memo()
 
 
 @pytest.fixture(scope="module")
@@ -201,3 +234,26 @@ def test_flowing_pdfs_stay_inside_margins(
         assert not bad, f"{len(bad)} chars outside the margins"
     finally:
         doc.close()
+
+
+@pytest.mark.parametrize(
+    ("name", "status", "proceeded"),
+    [("scanned-ok", "ok", False), ("scanned-not-checked", "unavailable", True)],
+)
+def test_scanned_fixtures_really_scan(
+    name: str, status: str, proceeded: bool, client: TestClient
+) -> None:
+    """Rule 11: the scanned fixtures must exercise the scanned path, never
+    a silent not_run — pinned on the audit's provenance for the same
+    scenario the PDFs above render."""
+    r = client.post("/render/audit", json=_load_fixture(name), headers=HEADERS)
+    assert r.status_code == 200, r.text[:300]
+    prov = r.json()["sections"]["site_scan"]
+    assert prov["status"] == status
+    assert prov["proceeded_anyway"] is proceeded
+    if status == "ok":
+        assert prov["flags"], "the recorded payload detects flags at the Lakewood control"
+    else:
+        assert (
+            prov["disclosure"] == "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
+        )

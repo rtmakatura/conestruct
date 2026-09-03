@@ -294,6 +294,40 @@ def _corridor_blocks(corridor: dict[str, Any]) -> list[Block]:
     return blocks
 
 
+def _site_scan_blocks(scan: dict[str, Any]) -> list[Block]:
+    """#224 phase 2 — the NOT-CHECKED disclosure (the audit PDF surface).
+
+    Renders ONLY for a plan generated with ``proceed_if_unavailable``
+    after a failed in-generate scan: the backend-authored ``disclosure``
+    string verbatim (one voice — ``src/api/site_scan.py`` owns it) plus
+    the scan's error line.  ``ok`` scans print nothing this phase (their
+    facts become tier rows in phase 3); ``not_run`` is not a finding; a
+    refused scan never reaches a PDF (the render is a 400).
+    """
+    if not scan or scan.get("status") != "unavailable" or not scan.get("proceeded_anyway"):
+        return []
+    disclosure = scan.get("disclosure")
+    if not disclosure:
+        return []
+    blocks: list[Block] = [Heading(2, _cell("Site Conditions"))]
+    blocks.append(_body(str(disclosure)))
+    error = scan.get("error")
+    measured_at = scan.get("measured_at")
+    detail = "The site scan did not complete"
+    if error:
+        detail += f": {error}"
+    if measured_at:
+        detail += f" (attempted {measured_at})"
+    detail += (
+        ". School zones, sidewalks, bicycle facilities, intersections and "
+        "interchanges along the corridor were NOT verified against "
+        "OpenStreetMap; site adjustments below reflect operator-set flags "
+        "only. Re-generate to retry the scan."
+    )
+    blocks.append(_body(detail))
+    return blocks
+
+
 def _site_adjustments_blocks(records: list[dict[str, Any]]) -> list[Block]:
     """Site-condition adjustments (#104) — one row per fired flag.
 
@@ -474,6 +508,7 @@ def audit_to_blocks(
     blocks += _case_blocks(sections.get("case", {}))
     blocks += _geometry_blocks(sections.get("geometry_validation", {}))
     blocks += _corridor_blocks(sections.get("corridor_validation", {}))
+    blocks += _site_scan_blocks(sections.get("site_scan", {}))
     blocks += _site_adjustments_blocks(sections.get("site_adjustments", []))
     blocks += _approaches_blocks(sections.get("approaches", {}))
     blocks += _flagger_blocks(sections.get("flagger", {}))
