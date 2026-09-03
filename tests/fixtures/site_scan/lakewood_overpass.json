@@ -1,0 +1,2237 @@
+{
+ "elements": [
+  {
+   "id": 177381339,
+   "lat": 39.7038111,
+   "lon": -105.0815809,
+   "tags": {
+    "highway": "traffic_signals"
+   },
+   "type": "node"
+  },
+  {
+   "id": 574187931,
+   "lat": 39.7111727,
+   "lon": -105.0815761,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 574187932,
+   "lat": 39.7108464,
+   "lon": -105.0815821,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 574188203,
+   "lat": 39.7110975,
+   "lon": -105.081292,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 656843443,
+   "lat": 39.7056262,
+   "lon": -105.0812577,
+   "tags": {
+    "crossing": "marked",
+    "crossing:island": "yes",
+    "crossing:markings": "surface",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 656843527,
+   "lat": 39.7038615,
+   "lon": -105.081311,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 656843530,
+   "lat": 39.7038119,
+   "lon": -105.0814333,
+   "tags": {
+    "highway": "traffic_signals"
+   },
+   "type": "node"
+  },
+  {
+   "id": 656843590,
+   "lat": 39.7037428,
+   "lon": -105.0813147,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 656844668,
+   "lat": 39.7111716,
+   "lon": -105.0813735,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1025900740,
+   "lat": 39.7036448,
+   "lon": -105.0823195,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344221470,
+   "lat": 39.7102195,
+   "lon": -105.0825935,
+   "tags": {
+    "crossing": "marked",
+    "crossing:markings": "ladder:skewed",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344315287,
+   "lat": 39.7092035,
+   "lon": -105.0817755,
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344315305,
+   "lat": 39.7108456,
+   "lon": -105.081371,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344315529,
+   "lat": 39.7071903,
+   "lon": -105.0816211,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344315551,
+   "lat": 39.7071782,
+   "lon": -105.0814042,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325470,
+   "lat": 39.7109302,
+   "lon": -105.0817148,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325473,
+   "lat": 39.7108186,
+   "lon": -105.0812467,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325484,
+   "lat": 39.7092204,
+   "lon": -105.0812466,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325499,
+   "lat": 39.7110968,
+   "lon": -105.0817105,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325526,
+   "lat": 39.7112207,
+   "lon": -105.0817566,
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325527,
+   "lat": 39.7108123,
+   "lon": -105.0817608,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325561,
+   "lat": 39.7112101,
+   "lon": -105.0812311,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344325563,
+   "lat": 39.7109321,
+   "lon": -105.08129,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511206,
+   "lat": 39.7069928,
+   "lon": -105.0818224,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511252,
+   "lat": 39.7070982,
+   "lon": -105.0813297,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511279,
+   "lat": 39.7069984,
+   "lon": -105.0813195,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511294,
+   "lat": 39.706927,
+   "lon": -105.0814079,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511318,
+   "lat": 39.7069265,
+   "lon": -105.081618,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511326,
+   "lat": 39.7038123,
+   "lon": -105.0816995,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511334,
+   "lat": 39.7071025,
+   "lon": -105.0818207,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344511393,
+   "lat": 39.7069156,
+   "lon": -105.0824408,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344587422,
+   "lat": 39.7121245,
+   "lon": -105.0817287,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344587655,
+   "lat": 39.7117687,
+   "lon": -105.0817323,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344587735,
+   "lat": 39.7120018,
+   "lon": -105.0817292,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344587772,
+   "lat": 39.7126005,
+   "lon": -105.0817161,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1344588153,
+   "lat": 39.7116307,
+   "lon": -105.0817342,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1363134381,
+   "lat": 39.7126203,
+   "lon": -105.081249,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 1553040561,
+   "lat": 39.7036929,
+   "lon": -105.0806011,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3409818360,
+   "lat": 39.707205,
+   "lon": -105.0812922,
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656111487,
+   "lat": 39.7034761,
+   "lon": -105.0811784,
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656111503,
+   "lat": 39.7035635,
+   "lon": -105.0806931,
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656148322,
+   "lat": 39.7037031,
+   "lon": -105.081581,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656148842,
+   "lat": 39.7039208,
+   "lon": -105.0814326,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656148879,
+   "lat": 39.7039177,
+   "lon": -105.0815822,
+   "tags": {
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656148893,
+   "lat": 39.703697,
+   "lon": -105.0814335,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3656159109,
+   "lat": 39.7066715,
+   "lon": -105.0824408,
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 5121215726,
+   "lat": 39.7052848,
+   "lon": -105.0808354,
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 5121215731,
+   "lat": 39.7049306,
+   "lon": -105.0804045,
+   "tags": {
+    "crossing": "uncontrolled",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 5121215734,
+   "lat": 39.7055417,
+   "lon": -105.0812725,
+   "tags": {
+    "crossing": "marked",
+    "crossing:island": "yes",
+    "crossing:markings": "surface",
+    "crossing:signals": "no",
+    "highway": "crossing",
+    "source": "Bing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333096,
+   "lat": 39.7109299,
+   "lon": -105.0817665,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333103,
+   "lat": 39.7110981,
+   "lon": -105.0812386,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333107,
+   "lat": 39.707099,
+   "lon": -105.0812751,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333109,
+   "lat": 39.7069917,
+   "lon": -105.0818675,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333111,
+   "lat": 39.7112261,
+   "lon": -105.0815752,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 6634333124,
+   "lat": 39.7107967,
+   "lon": -105.0813705,
+   "tags": {
+    "highway": "traffic_signals",
+    "traffic_signals": "signal"
+   },
+   "type": "node"
+  },
+  {
+   "id": 9644277013,
+   "lat": 39.7069078,
+   "lon": -105.0806413,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 9644277014,
+   "lat": 39.706906,
+   "lon": -105.0807687,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 9644277029,
+   "lat": 39.705564,
+   "lon": -105.0807366,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "id": 9644277042,
+   "lat": 39.7054036,
+   "lon": -105.0806807,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "highway": "crossing"
+   },
+   "type": "node"
+  },
+  {
+   "center": {
+    "lat": 39.7035446,
+    "lon": -105.0819056
+   },
+   "id": 88320432,
+   "tags": {
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "yes",
+    "name": "Belmar Park Trail",
+    "segregated": "no"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7037042,
+    "lon": -105.0815049
+   },
+   "id": 93277871,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "horse": "yes",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.710548,
+    "lon": -105.0821528
+   },
+   "id": 119725427,
+   "tags": {
+    "highway": "footway",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108063,
+    "lon": -105.0828061
+   },
+   "id": 119725429,
+   "tags": {
+    "access": "yes",
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Alameda Avenue Multi-Use Path",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7112096,
+    "lon": -105.0812322
+   },
+   "id": 119725431,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108461,
+    "lon": -105.0814929
+   },
+   "id": 119725433,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7092095,
+    "lon": -105.0817761
+   },
+   "id": 119742360,
+   "tags": {
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "cycleway": "crossing",
+    "foot": "designated",
+    "highway": "cycleway",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7071878,
+    "lon": -105.0815603
+   },
+   "id": 119742371,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7092724,
+    "lon": -105.0822553
+   },
+   "id": 119742373,
+   "tags": {
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7092821,
+    "lon": -105.0819796
+   },
+   "id": 119742388,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7081773,
+    "lon": -105.0818139
+   },
+   "id": 119742392,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7100297,
+    "lon": -105.081806
+   },
+   "id": 119742393,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood;Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7093044,
+    "lon": -105.0830648
+   },
+   "id": 119742396,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7112143,
+    "lon": -105.0823663
+   },
+   "id": 119744588,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "name": "Alameda Multi-Use Path",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7092313,
+    "lon": -105.081247
+   },
+   "id": 119744590,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "cycleway": "crossing",
+    "foot": "designated",
+    "highway": "cycleway",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7112338,
+    "lon": -105.0805915
+   },
+   "id": 119744592,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "name": "Alameda Multi-Use Path",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.710816,
+    "lon": -105.0806268
+   },
+   "id": 119744608,
+   "tags": {
+    "access": "yes",
+    "bicycle": "designated",
+    "cycleway": "sidewalk",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Alameda Multi-Use Path",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.712122,
+    "lon": -105.0817287
+   },
+   "id": 119744612,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7081999,
+    "lon": -105.0812639
+   },
+   "id": 119744619,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7112144,
+    "lon": -105.0817499
+   },
+   "id": 119744620,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111723,
+    "lon": -105.0815017
+   },
+   "id": 119744624,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7119,
+    "lon": -105.0812299
+   },
+   "id": 119745261,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069145,
+    "lon": -105.0824175
+   },
+   "id": 119758518,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:markings": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7038113,
+    "lon": -105.0816994
+   },
+   "id": 119758527,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069077,
+    "lon": -105.0820499
+   },
+   "id": 119758535,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7041702,
+    "lon": -105.0825424
+   },
+   "id": 119758539,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7070401,
+    "lon": -105.0813238
+   },
+   "id": 119758541,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069118,
+    "lon": -105.0827207
+   },
+   "id": 119758546,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7126327,
+    "lon": -105.0812499
+   },
+   "id": 121861851,
+   "tags": {
+    "crossing": "unmarked",
+    "crossing:island": "no",
+    "crossing:markings": "no",
+    "crossing:signals": "no",
+    "cycleway": "crossing",
+    "foot": "designated",
+    "highway": "cycleway",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7036081,
+    "lon": -105.0818563
+   },
+   "id": 132687946,
+   "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Belmar Park Trail",
+    "segregated": "no",
+    "source": "bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7035707,
+    "lon": -105.0818192
+   },
+   "id": 132688480,
+   "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "is_sidepath": "yes",
+    "motor_vehicle": "no",
+    "name": "Belmar Park Trail",
+    "segregated": "no",
+    "source": "bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7036134,
+    "lon": -105.0821311
+   },
+   "id": 132688483,
+   "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Belmar Park Trail",
+    "segregated": "no",
+    "source": "bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7036255,
+    "lon": -105.0828683
+   },
+   "id": 132688496,
+   "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "motor_vehicle": "no",
+    "name": "Belmar Park Trail",
+    "segregated": "no",
+    "source": "bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7036734,
+    "lon": -105.0812894
+   },
+   "id": 141891797,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "horse": "yes",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7025483,
+    "lon": -105.0812695
+   },
+   "id": 141891798,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "horse": "yes",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.703677,
+    "lon": -105.0805663
+   },
+   "id": 141891805,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7047228,
+    "lon": -105.081304
+   },
+   "id": 141894258,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7030467,
+    "lon": -105.0818537
+   },
+   "id": 141897637,
+   "tags": {
+    "access": "yes",
+    "bicycle": "yes",
+    "foot": "yes",
+    "highway": "cycleway",
+    "horse": "no",
+    "is_sidepath": "yes",
+    "motor_vehicle": "no",
+    "name": "Belmar Park Trail",
+    "segregated": "no",
+    "source": "bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7100433,
+    "lon": -105.0812349
+   },
+   "id": 333937869,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood;Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7039287,
+    "lon": -105.08058
+   },
+   "id": 361094836,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7039125,
+    "lon": -105.0815073
+   },
+   "id": 361094841,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7054265,
+    "lon": -105.0817676
+   },
+   "id": 526662297,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.70706,
+    "lon": -105.0818214
+   },
+   "id": 797198232,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069267,
+    "lon": -105.0815364
+   },
+   "id": 797198233,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "esri-Lakewood",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7072013,
+    "lon": -105.0812973
+   },
+   "id": 797198234,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108144,
+    "lon": -105.0817578
+   },
+   "id": 797205549,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7110111,
+    "lon": -105.0817127
+   },
+   "id": 797205550,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7110134,
+    "lon": -105.0812909
+   },
+   "id": 797205551,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069347,
+    "lon": -105.0802606
+   },
+   "id": 1049439698,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7055223,
+    "lon": -105.0806027
+   },
+   "id": 1049439699,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7053673,
+    "lon": -105.0806197
+   },
+   "id": 1049439700,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7036763,
+    "lon": -105.0817317
+   },
+   "id": 1334285493,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "horse": "yes",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7038055,
+    "lon": -105.0813127
+   },
+   "id": 1334285494,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "traffic_signals",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "yes",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7039268,
+    "lon": -105.0813004
+   },
+   "id": 1334285495,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7055804,
+    "lon": -105.0812577
+   },
+   "id": 1334285496,
+   "tags": {
+    "crossing": "marked",
+    "crossing:island": "yes",
+    "crossing:markings": "surface",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7062875,
+    "lon": -105.0812715
+   },
+   "id": 1334285497,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood;bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7071752,
+    "lon": -105.0813519
+   },
+   "id": 1334285498,
+   "tags": {
+    "bicycle": "yes",
+    "footway": "traffic_island",
+    "highway": "footway",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7071672,
+    "lon": -105.0813318
+   },
+   "id": 1334285499,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.707207,
+    "lon": -105.0806017
+   },
+   "id": 1334285500,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.707188,
+    "lon": -105.082385
+   },
+   "id": 1334285501,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7091205,
+    "lon": -105.0823997
+   },
+   "id": 1334301767,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108159,
+    "lon": -105.0812423
+   },
+   "id": 1334301768,
+   "tags": {
+    "bicycle": "yes",
+    "crossing": "uncontrolled",
+    "crossing:island": "no",
+    "crossing:markings": "zebra",
+    "crossing:signals": "no",
+    "footway": "crossing",
+    "highway": "footway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "asphalt"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108397,
+    "lon": -105.0812804
+   },
+   "id": 1334301769,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108456,
+    "lon": -105.0813046
+   },
+   "id": 1334301770,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108467,
+    "lon": -105.0816906
+   },
+   "id": 1334301771,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108393,
+    "lon": -105.0817244
+   },
+   "id": 1334301772,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108596,
+    "lon": -105.081716
+   },
+   "id": 1334301773,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7108613,
+    "lon": -105.0812892
+   },
+   "id": 1334301774,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111713,
+    "lon": -105.0813099
+   },
+   "id": 1334301775,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111606,
+    "lon": -105.0812927
+   },
+   "id": 1334301776,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111802,
+    "lon": -105.0812789
+   },
+   "id": 1334301777,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111615,
+    "lon": -105.0817089
+   },
+   "id": 1334301778,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111733,
+    "lon": -105.0816925
+   },
+   "id": 1334301779,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7111832,
+    "lon": -105.0817177
+   },
+   "id": 1334301780,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "segregated": "no",
+    "source": "Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.711241,
+    "lon": -105.0817801
+   },
+   "id": 1334301781,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.710793,
+    "lon": -105.0817884
+   },
+   "id": 1347603931,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood;Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7107946,
+    "lon": -105.0812078
+   },
+   "id": 1347603932,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood;Bing",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.706906,
+    "lon": -105.080776
+   },
+   "id": 1356431777,
+   "tags": {
+    "bicycle": "designated",
+    "crossing": "unmarked",
+    "cycleway": "crossing",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069069,
+    "lon": -105.0807037
+   },
+   "id": 1356431778,
+   "tags": {
+    "bicycle": "designated",
+    "cycleway": "traffic_island",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069185,
+    "lon": -105.0810522
+   },
+   "id": 1356431779,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7069089,
+    "lon": -105.0806304
+   },
+   "id": 1356431780,
+   "tags": {
+    "bicycle": "designated",
+    "crossing": "unmarked",
+    "cycleway": "crossing",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7102683,
+    "lon": -105.0825262
+   },
+   "id": 1362661792,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7102183,
+    "lon": -105.082595
+   },
+   "id": 1362661793,
+   "tags": {
+    "crossing": "marked",
+    "crossing:markings": "ladder:skewed",
+    "footway": "crossing",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7101653,
+    "lon": -105.0826636
+   },
+   "id": 1362661794,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.707227,
+    "lon": -105.0812623
+   },
+   "id": 1388102353,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7071883,
+    "lon": -105.0818226
+   },
+   "id": 1388140920,
+   "tags": {
+    "bicycle": "designated",
+    "foot": "designated",
+    "highway": "cycleway",
+    "is_sidepath": "yes",
+    "segregated": "no",
+    "source": "esri-Lakewood",
+    "surface": "concrete"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 39.7072026,
+    "lon": -105.0817902
+   },
+   "id": 1388140921,
+   "tags": {
+    "footway": "sidewalk",
+    "highway": "footway",
+    "source": "Bing",
+    "surface": "paved"
+   },
+   "type": "way"
+  }
+ ],
+ "generator": "Overpass API 0.7.62.7 375dc00a",
+ "osm3s": {
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp_osm_base": "2026-09-03T14:28:27Z"
+ },
+ "version": 0.6
+}
