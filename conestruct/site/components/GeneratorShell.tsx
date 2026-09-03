@@ -1124,6 +1124,62 @@ export function GeneratorShell({
                 </span>
               )}
             </div>
+            {/* #224 phase 2 — the PLAN DECLINED container for a refused
+                site scan: the #227 system-event shape (amber rule,
+                ⚠ glyph, the backend ``message`` as ONE text node —
+                the only place it renders — provenance on line 2) plus
+                the two recovery actions.  Retry refires both fetches;
+                proceed-anyway is a deliberate, consequence-stating,
+                secondary action — never a default.  Precedes the
+                generic failure ribbon: a refusal is a stated reason,
+                not a broken breakdown.  Rendered OUTSIDE the
+                results-stale wrapper: the dimmed stale results are the
+                previous answer, but the refusal is current and must
+                keep its measured contrast (rule 13). */}
+            {scanRefusal && (
+              <div role="alert" className="sys-event warn scan-refusal">
+                <div className="tr-section mb-1.5">Site scan</div>
+                <div className="flex items-start gap-2">
+                  <span className="sys-glyph" aria-hidden="true">
+                    ⚠
+                  </span>
+                  <span>{scanRefusal.message}</span>
+                </div>
+                <div className="tr-prov mt-1.5">
+                  {[
+                    scanRefusal.scan?.mode
+                      ? `${scanRefusal.scan.mode} scan`
+                      : "site scan",
+                    scanRefusal.scan?.error ?? null,
+                    scanRefusal.scan?.measured_at
+                      ? `attempted ${scanRefusal.scan.measured_at}`
+                      : null,
+                    scanRefusal.scan?.budget_s != null
+                      ? `budget ${scanRefusal.scan.budget_s} s`
+                      : null,
+                  ]
+                    .filter((p): p is string => p !== null)
+                    .join(" · ")}
+                </div>
+                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+                  <button
+                    type="button"
+                    onClick={onRetry}
+                    className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline cursor-pointer"
+                  >
+                    ↻ Retry scan
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onProceedWithoutScan}
+                    className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-2 py-1 hover:border-[color:var(--warn)] hover:text-[color:var(--ink-on-dark)] cursor-pointer transition-colors"
+                  >
+                    Generate without site check — the plan will say SITE
+                    CONDITIONS NOT CHECKED
+                  </button>
+                </div>
+              </div>
+            )}
             {genState === "generating" && !regenerating ? (
               <div className="empty-state">
                 <span className="big text-[color:var(--act)]">Generating…</span>
@@ -1143,59 +1199,6 @@ export function GeneratorShell({
                 {/* role=alert (#193): a failed generation reaches the
                     strip's live region never (the breakdown pipeline is
                     separate from audit) — the ribbon announces itself. */}
-                {/* #224 phase 2 — the PLAN DECLINED container for a refused
-                    site scan: the #227 system-event shape (amber rule,
-                    ⚠ glyph, the backend ``message`` as ONE text node —
-                    the only place it renders — provenance on line 2) plus
-                    the two recovery actions.  Retry refires both fetches;
-                    proceed-anyway is a deliberate, consequence-stating,
-                    secondary action — never a default.  Precedes the
-                    generic failure ribbon: a refusal is a stated reason,
-                    not a broken breakdown. */}
-                {scanRefusal && (
-                  <div role="alert" className="sys-event warn scan-refusal">
-                    <div className="tr-section mb-1.5">Site scan</div>
-                    <div className="flex items-start gap-2">
-                      <span className="sys-glyph" aria-hidden="true">
-                        ⚠
-                      </span>
-                      <span>{scanRefusal.message}</span>
-                    </div>
-                    <div className="tr-prov mt-1.5">
-                      {[
-                        scanRefusal.scan?.mode
-                          ? `${scanRefusal.scan.mode} scan`
-                          : "site scan",
-                        scanRefusal.scan?.error ?? null,
-                        scanRefusal.scan?.measured_at
-                          ? `attempted ${scanRefusal.scan.measured_at}`
-                          : null,
-                        scanRefusal.scan?.budget_s != null
-                          ? `budget ${scanRefusal.scan.budget_s} s`
-                          : null,
-                      ]
-                        .filter((p): p is string => p !== null)
-                        .join(" · ")}
-                    </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
-                      <button
-                        type="button"
-                        onClick={onRetry}
-                        className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline cursor-pointer"
-                      >
-                        ↻ Retry scan
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onProceedWithoutScan}
-                        className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-2 py-1 hover:border-[color:var(--warn)] hover:text-[color:var(--ink-on-dark)] cursor-pointer transition-colors"
-                      >
-                        Generate without site check — the plan will say SITE
-                        CONDITIONS NOT CHECKED
-                      </button>
-                    </div>
-                  </div>
-                )}
                 {genState === "error" && !scanRefusal && (
                   <div role="alert" className="stale-ribbon">
                     ⚠ Device breakdown failed — values below may be stale. Fix

@@ -68,6 +68,11 @@ describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
       }),
     );
     expect(screen.getByText("▲ NOT CHECKED")).toBeTruthy();
+    // Rule 10: the tier holding it auto-expands even though the item is
+    // uncounted — never a footnote inside a collapsed chip.
+    const chip = screen.getByText("▲ NOT CHECKED").closest(".refchip");
+    expect(chip?.classList.contains("open")).toBe(true);
+    expect(chip?.querySelector(".chip-sum")?.getAttribute("aria-expanded")).toBe("true");
     // The item is an accordion row: open it to read the body.
     await user.click(screen.getByText("Site conditions"));
     expect(screen.getByText(DISCLOSURE)).toBeTruthy();

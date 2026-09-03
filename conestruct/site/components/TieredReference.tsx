@@ -592,7 +592,11 @@ export function TieredReference({
             sev="warn"
             label="Needs attention"
             summary={<b>{model.ledger.attention}</b>}
-            autoExpand={model.ledger.attention > 0}
+            // #224 phase 2 (rule 10): the NOT-CHECKED item is uncounted
+            // (ruling 9) but must never sit inside a collapsed tier — a
+            // footnote is the failure mode.  Rendering decision, not a
+            // count: the ledger and assignTiers are untouched.
+            autoExpand={model.ledger.attention > 0 || siteScanItem !== null}
           >
             {attentionBody}
           </ReferenceChip>
