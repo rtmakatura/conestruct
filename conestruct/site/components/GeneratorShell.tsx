@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
+import { withSiteScan } from "@/lib/scenarios/site-scan";
 import {
   validateApproaches,
   validateLanes,
@@ -219,7 +220,20 @@ export function GeneratorShell({
   // input the backend actually saw; the strip's stamp comparison against
   // the live ``scenario`` keeps the deferred window an explicit
   // VERIFYING, never a stale verdict presented as current.
-  const fetchScenario = useDebouncedScenario(scenario, FETCH_DEBOUNCE_MS);
+  // #224 phase 2 — the wire scenario.  Generate is a stage flip; what it
+  // changes is what the loop SENDS: once generated, every request (the
+  // two fetches below, the bundle, the per-file downloads, the quote)
+  // carries ``site_scan`` so the backend scans the corridor inside
+  // generation (src/api/site_scan.py).  Derived, memoised on identity:
+  // the #197 stamps compare against THIS object, never ``scenario``, or
+  // every post-generate answer would read as stale.  Reopen drops the
+  // flag with ``generated``.  ``proceed_if_unavailable`` is false here;
+  // commit 4 (the refusal) threads the per-input acknowledgement.
+  const wireScenario = useMemo(
+    () => (generated ? withSiteScan(scenario, false) : scenario),
+    [scenario, generated],
+  );
+  const fetchScenario = useDebouncedScenario(wireScenario, FETCH_DEBOUNCE_MS);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -580,7 +594,8 @@ export function GeneratorShell({
         // Thread the live, user-edited quote settings into the bundle so the
         // zipped quote.xlsx matches the on-screen rates. Omitting them made
         // the route coerce defaults, silently ignoring every edit.
-        body: JSON.stringify({ scenario, settings }),
+        // #224 phase 2: the wire scenario — the zip is the scanned plan.
+        body: JSON.stringify({ scenario: wireScenario, settings }),
       });
       if (!res.ok) {
         setBundleError(`Bundle failed (${res.status})`);
@@ -692,7 +707,7 @@ export function GeneratorShell({
   // verdict itself is governed here as before.
   const auditSettled =
     (auditState.state === "ready" || auditState.state === "error") &&
-    stampMatches([auditState.forScenario], [scenario]);
+    stampMatches([auditState.forScenario], [wireScenario]);
   const stripAudit: AuditState = auditSettled
     ? auditState
     : {
@@ -1001,6 +1016,7 @@ export function GeneratorShell({
             locationUnset={!hasLocation(scenario.meta)}
             audit={stripAudit}
             verifySlow={verifySlow}
+            scanning={generated}
           />
           {/* #193 — generation-lifecycle announcements (WCAG 4.1.3).
               Visually hidden, persistently mounted; content set only at
@@ -1046,7 +1062,12 @@ export function GeneratorShell({
             {genState === "generating" && !regenerating ? (
               <div className="empty-state">
                 <span className="big text-[color:var(--act)]">Generating…</span>
-                Computing taper, buffer, device spacing, and sign placement.
+                {/* #224 phase 2: the scan is part of generation; one
+                    sentence, no fabricated stage progress (one request,
+                    no signal of which stage the backend is in). */}
+                Scanning site conditions along the corridor (OpenStreetMap,
+                up to 20 s), then computing taper, buffer, device spacing,
+                and sign placement.
               </div>
             ) : (
               <div
@@ -1068,8 +1089,13 @@ export function GeneratorShell({
                     region saying the same thing is noise. */}
                 {regenerating && (
                   <div className="stale-ribbon">
-                    ⟳ Recomputing for the edited input — values below are the
-                    previous answer until this settles.
+                    {/* #224 phase 2: a first Generate lands here, not in
+                        the empty state — the pre-generate loop already
+                        holds a breakdown — so this ribbon is the wait
+                        the user actually sees during the scan.  Name it. */}
+                    {generated
+                      ? "⟳ Recomputing — scanning site conditions along the corridor (OpenStreetMap, up to 20 s); values below are the previous answer until this settles."
+                      : "⟳ Recomputing for the edited input — values below are the previous answer until this settles."}
                   </div>
                 )}
                 {showResults && (
@@ -1083,7 +1109,7 @@ export function GeneratorShell({
                   generated={showResults}
                   mode={
                     mode === "sandbox"
-                      ? { kind: "public", scenario }
+                      ? { kind: "public", scenario: wireScenario }
                       : { kind: "saved", planId, dirty: planDirty }
                   }
                   breakdown={deviceBreakdown}
@@ -1097,7 +1123,7 @@ export function GeneratorShell({
                   <PricingCard
                     mode={
                       mode === "sandbox"
-                        ? { kind: "public", scenario }
+                        ? { kind: "public", scenario: wireScenario }
                         : { kind: "saved", planId, dirty: planDirty }
                     }
                     settings={settings}
@@ -1138,7 +1164,7 @@ export function GeneratorShell({
                 revalidating={jurisdictionRevalidating}
                 streetClass={scenario.street_class ?? null}
                 schedule={scenario.schedule ?? null}
-                scenario={scenario}
+                scenario={wireScenario}
                 audit={stripAudit}
                 onRetry={onRetry}
                 generated={showResults && !auditDeclined}

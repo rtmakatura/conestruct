@@ -172,6 +172,14 @@ interface Props {
    * Same chromeless treatment — a slow answer is not an error.
    */
   verifySlow?: boolean;
+  /**
+   * #224 phase 2 (ruling 2): true while the request in flight carries the
+   * in-generate site scan (every post-generate request does).  The
+   * COMPUTING line and the slow-verify copy name the scan — the #122
+   * "waking up" claim is false during a scan (the server is up; it is
+   * scanning OpenStreetMap, up to the 20 s budget) and never shows then.
+   */
+  scanning?: boolean;
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -194,6 +202,7 @@ function StatusBarState({
   locationUnset = false,
   audit,
   verifySlow,
+  scanning = false,
 }: Props) {
   if (inputError) {
     return (
@@ -248,7 +257,11 @@ function StatusBarState({
     return (
       <div className="status-bar warn">
         <span className="indicator" />
-        <span>COMPUTING · taper · buffer · spacing · sign placement</span>
+        <span>
+          {scanning
+            ? "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · spacing · sign placement"
+            : "COMPUTING · taper · buffer · spacing · sign placement"}
+        </span>
       </div>
     );
   }
@@ -295,7 +308,9 @@ function StatusBarState({
         <span className="indicator" />
         <span>
           {verifySlow
-            ? "VERIFYING · waking the verification server — the first check can take a few extra seconds"
+            ? scanning
+              ? "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+              : "VERIFYING · waking the verification server — the first check can take a few extra seconds"
             : "VERIFYING · taper · buffer · spacing · sign placement"}
         </span>
       </div>

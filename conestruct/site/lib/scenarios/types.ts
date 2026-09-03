@@ -147,6 +147,13 @@ export interface NearIntersectionScenario extends JurisdictionPlanFields {
  * decision §1.1 #1). Absent ⇒ baseline-only behavior, untouched.
  */
 export interface JurisdictionPlanFields {
+  /**
+   * #224 phase 2 — the in-generate site scan opt-in (wire field since
+   * phase 1's ``SiteScanScenarioFields``).  Set ONLY on the derived wire
+   * scenario the shell posts once generated (lib/scenarios/site-scan.ts);
+   * never on the scenario the forms edit or a saved plan carries.
+   */
+  site_scan?: { proceed_if_unavailable: boolean } | null;
   jurisdiction_key?: string | null;
   street_class?: "local" | "collector" | "arterial" | null;
   schedule?: {
