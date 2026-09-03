@@ -1,0 +1,3 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/SiteConditionsField.rows.test.tsx > SiteConditionsField after the manual detect retirement (#224 phase 2) > no detect button, no scan copy — one provenance sentence says the scan happens at Generate
+      Tests  1 failed | 2 passed (3)

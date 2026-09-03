@@ -1,16 +1,21 @@
 // @vitest-environment happy-dom
-// #16 — the site-conditions rows surface the detection margin.
 //
-// Rule 11: the defect lived in the rendered output (nearest_distance_m
-// and details crossed the wire typed but the rows rendered booleans
-// only — a sidewalk 140 ft out and one 10 ft out read identically), so
-// these tests assert the mounted rows' text after a mocked detect, not
-// helper returns.  Rule 3: every rendered number is a backend value
-// verbatim.  #186: the absent case renders no number, ever.
+// #224 phase 2 (s2-arc16, commit 6) — the manual detect section retired.
+// The in-generate scan (phase 1) owns detection; the "Detect nearby site
+// conditions" button, its point-mode note, the "N flag(s) auto-checked"
+// provenance line and the #16 evidence lines (which were computed from
+// the button's result) are gone.  What survives to phase 3 (ruling 6):
+// the "Site conditions" group with the seven checkbox rows writing
+// meta.siteConditions, untouched.
+//
+// #186 doctrine, carried: pre-generation the rows render NO evidence —
+// no counts, no distances, no phantom numbers — ever.  (The former
+// detect-time evidence tests retired with the button; these two pins are
+// the doctrine's new home.)
 
 import { useState } from "react";
-import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
 import { SiteConditionsField } from "./SiteConditionsField";
@@ -27,112 +32,53 @@ function scenario(): Scenario {
   };
 }
 
-// Auto-check flows through setMeta → parent state → re-render, so the
-// harness holds real state instead of a no-op setMeta.
 function Harness({ initial }: { initial: Scenario }) {
   const [s, setS] = useState(initial);
   return (
-    <SiteConditionsField
-      scenario={s}
-      setMeta={(m) => setS((prev) => ({ ...prev, meta: m }))}
-      step={5}
-    />
+    <>
+      <SiteConditionsField
+        scenario={s}
+        setMeta={(m) => setS((prev) => ({ ...prev, meta: m }))}
+        step={5}
+      />
+      <pre data-testid="meta">{JSON.stringify(s.meta.siteConditions ?? {})}</pre>
+    </>
   );
 }
 
-const SIDEWALKS_BUCKET = {
-  detected: true,
-  count: 2,
-  nearest_distance_m: 122.0,
-  details: [
-    "Curbside Walk [work_zone @ 400 ft]",
-    "Setback Path [lateral 140 ft off centerline]",
-  ],
-};
+afterEach(cleanup);
 
-async function renderAfterDetect(result: Record<string, unknown>) {
-  const fetchMock = vi.fn(async () => ({ ok: true, json: async () => result }));
-  vi.stubGlobal("fetch", fetchMock);
-  const utils = render(<Harness initial={scenario()} />);
-  fireEvent.click(
-    utils.getByRole("button", { name: /detect nearby site conditions/i }),
-  );
-  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
-  await waitFor(() =>
-    expect(utils.container.textContent).toMatch(/flag\(s\) auto-checked/),
-  );
-  return utils;
-}
-
-afterEach(() => {
-  cleanup();
-  vi.unstubAllGlobals();
-});
-
-describe("#16 site-conditions rows render the detection margin", () => {
-  it("an auto-checked row carries the bucket's count, nearest distance, and detail lines", async () => {
-    const { container } = await renderAfterDetect({
-      mode: "corridor",
-      sidewalks: SIDEWALKS_BUCKET,
-    });
+describe("SiteConditionsField after the manual detect retirement (#224 phase 2)", () => {
+  it("no detect button, no scan copy — one provenance sentence says the scan happens at Generate", () => {
+    const { container, queryByRole } = render(<Harness initial={scenario()} />);
+    expect(queryByRole("button", { name: /detect nearby site conditions/i })).toBeNull();
     const text = container.textContent ?? "";
-    expect(text).toContain("2 found, nearest ~122 m");
-    // Backend-authored evidence verbatim — the 140 ft margin visible.
-    expect(text).toContain("Curbside Walk [work_zone @ 400 ft]");
-    expect(text).toContain("Setback Path [lateral 140 ft off centerline]");
+    expect(text).not.toContain("Scanning OpenStreetMap");
+    expect(text).not.toContain("auto-checked");
+    expect(text).not.toContain("point-and-radius");
+    expect(text).toContain(
+      "Site conditions are scanned along the corridor when you generate (OpenStreetMap).",
+    );
   });
 
-  it("omits the nearest clause when the bucket has no nearest_distance_m", async () => {
-    const { container } = await renderAfterDetect({
-      mode: "corridor",
-      schools: { detected: true, count: 1, details: ["Foothills Elementary [advance_warning @ 1100 ft]"] },
-    });
-    const text = container.textContent ?? "";
-    expect(text).toContain("1 found");
-    expect(text).not.toContain("nearest ~");
-    expect(text).toContain("Foothills Elementary [advance_warning @ 1100 ft]");
-  });
-
-  it("renders at most two detail lines", async () => {
-    const { container } = await renderAfterDetect({
-      mode: "corridor",
-      sidewalks: {
-        ...SIDEWALKS_BUCKET,
-        details: ["one [work_zone @ 10 ft]", "two [buffer @ 20 ft]", "three [transition @ 30 ft]"],
-      },
-    });
-    const text = container.textContent ?? "";
-    expect(text).toContain("one [work_zone @ 10 ft]");
-    expect(text).toContain("two [buffer @ 20 ft]");
-    expect(text).not.toContain("three [transition @ 30 ft]");
-  });
-
-  it("#186 absent case: an undetected bucket renders no number and no evidence", async () => {
-    const { container } = await renderAfterDetect({
-      mode: "corridor",
-      sidewalks: { detected: false, count: 0, details: [] },
-    });
-    const text = container.textContent ?? "";
-    expect(text).not.toContain("found");
-    expect(text).not.toContain("nearest ~");
-  });
-
-  it("#186 absent case: before any detect, no evidence text exists", () => {
+  it("#186 absent case: pre-generation the rows carry no evidence text, ever", () => {
     const { container } = render(<Harness initial={scenario()} />);
     const text = container.textContent ?? "";
     expect(text).not.toContain("found");
     expect(text).not.toContain("nearest ~");
+    expect(text).not.toMatch(/\d+ m\b/);
   });
 
-  it("unchecking the auto-checked row hides its evidence with it", async () => {
-    const utils = await renderAfterDetect({
-      mode: "corridor",
-      sidewalks: SIDEWALKS_BUCKET,
-    });
-    expect(utils.container.textContent).toContain("2 found, nearest ~122 m");
-    fireEvent.click(
-      utils.getByRole("checkbox", { name: /Pedestrian sidewalks present/i }),
+  it("the seven checkbox rows survive and still write meta.siteConditions", () => {
+    const { getAllByRole, getByRole, getByTestId } = render(
+      <Harness initial={scenario()} />,
     );
-    expect(utils.container.textContent).not.toContain("2 found");
+    expect(getAllByRole("checkbox").length).toBe(7);
+    fireEvent.click(getByRole("checkbox", { name: /Pedestrian sidewalks present/i }));
+    expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({
+      pedestrian_facility: true,
+    });
+    fireEvent.click(getByRole("checkbox", { name: /Pedestrian sidewalks present/i }));
+    expect(JSON.parse(getByTestId("meta").textContent ?? "{}")).toEqual({});
   });
 });
