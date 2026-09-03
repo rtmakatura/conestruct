@@ -54,7 +54,14 @@ import {
   type ItemSpec,
 } from "./AuditTrail";
 import { DeviceBreakdown, type DeviceBreakdownState } from "./DeviceBreakdown";
-import { assignTiers, ledgerLine } from "@/lib/tiering";
+import {
+  SCAN_BUCKET_TO_FLAG,
+  SCAN_KEYED_BUCKETS,
+  assignTiers,
+  ledgerLine,
+  scanEvidence,
+  type ScanWire,
+} from "@/lib/tiering";
 import type {
   JurisdictionBlock,
   StreetClass,
@@ -62,6 +69,14 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
+
+// #224 phase 3 (ruling e3): panel labels for the scanned buckets that
+// map to no rule — reference rows, uncounted.
+const SCAN_REFERENCE_LABELS: Record<string, string> = {
+  railroad_crossings: "Railroad crossings",
+  hospitals: "Hospitals",
+  road_curvature: "Road curvature",
+};
 
 interface Props {
   jurisdiction: JurisdictionBlock | null;
@@ -189,8 +204,18 @@ export function TieredReference({
   const siteAdvisory = siteRecords.filter(
     (rec) => rec.devices_added === 0 && (rec.devices_modified ?? 0) === 0,
   );
+  // #224 phase 3 (s2-arc17): the scan's own facts, read off the same
+  // wire section the classifier reads (lib/tiering.ts — one mapping).
+  const scan = settled?.sections.site_scan as ScanWire | undefined;
+  const scanBuckets = scan?.status === "ok" ? (scan.buckets ?? {}) : null;
+  const flagToBucket = new Map(SCAN_BUCKET_TO_FLAG.map(([b, f]) => [f, b] as const));
   const siteRow = (rec: SiteAdjustmentRecord) => {
     const detail = SITE_ADJUSTMENT_DETAIL[rec.flag as SiteConditionFlag];
+    // A detected condition's evidence rides its adjustment row (one
+    // fact per condition — the classifier adds no second fact).
+    const bucketName = flagToBucket.get(rec.flag);
+    const evidence =
+      scanBuckets && bucketName ? scanEvidence(scanBuckets[bucketName]) : "";
     return (
       <CheckRow
         key={rec.flag}
@@ -198,9 +223,49 @@ export function TieredReference({
         detail={detail?.action ?? rec.action}
         tone="pass"
         tag={rec.citation}
+        evidence={evidence || undefined}
       />
     );
   };
+  // Scanned-and-absent conditions: the named passes (audit:scan:<flag>,
+  // ✓ checked).  A bucket missing from the wire renders nothing.
+  const scanAbsentRows: ReactNode[] = [];
+  const scanReferenceRows: ReactNode[] = [];
+  if (scanBuckets) {
+    const scannedAt = scan?.measured_at ? `scanned ${scan.measured_at}` : "scanned";
+    for (const [bucketName, flag] of SCAN_BUCKET_TO_FLAG) {
+      const b = scanBuckets[bucketName];
+      if (b && b.detected !== true) {
+        scanAbsentRows.push(
+          <CheckRow
+            key={`scan-${flag}`}
+            label={SITE_ADJUSTMENT_DETAIL[flag as SiteConditionFlag]?.label ?? flag}
+            detail="none along the corridor"
+            tone="pass"
+            tag="OPENSTREETMAP"
+            evidence={scannedAt}
+          />,
+        );
+      }
+    }
+    // Keyless buckets — measured, no rule consequence: reference,
+    // uncounted (ruling e3).
+    for (const bucketName of Object.keys(scanBuckets)) {
+      if (SCAN_KEYED_BUCKETS.has(bucketName)) continue;
+      const b = scanBuckets[bucketName];
+      if (!b) continue;
+      scanReferenceRows.push(
+        <CheckRow
+          key={`scan-ref-${bucketName}`}
+          label={SCAN_REFERENCE_LABELS[bucketName] ?? bucketName}
+          detail={b.detected === true ? "detected — no rule applies" : "none along the corridor"}
+          tone="info"
+          tag="REFERENCE"
+          evidence={scanEvidence(b) || undefined}
+        />,
+      );
+    }
+  }
   // Deploy-window fallback: no backend records → the legacy aggregate
   // item renders (uncounted, matching the classifier's view of the wire).
   const legacySiteItem =
@@ -222,7 +287,8 @@ export function TieredReference({
     | { checked?: boolean; warnings?: unknown[] }
     | undefined;
   const corridorItem = settled ? corridorValidationItem(settled.sections.corridor_validation) : null;
-  // #224 phase 2: the NOT-CHECKED disclosure — uncounted (ruling 9).
+  // #224 phase 2/3: the NOT-CHECKED disclosure — one counted attention
+  // fact since phase 3 (audit:scan:not_checked).
   const siteScanItem = settled
     ? siteScanNotCheckedItem(settled.sections.site_scan as Record<string, unknown> | undefined)
     : null;
@@ -469,6 +535,7 @@ export function TieredReference({
     );
   }
   siteAdvisory.forEach((rec) => checkedRows.push(siteRow(rec)));
+  scanAbsentRows.forEach((row) => checkedRows.push(row));
   if (checkedRows.length > 0) {
     checkedBody.push(
       <div key="rows" className="check-list mt-2">
@@ -542,6 +609,14 @@ export function TieredReference({
       </div>,
     );
   }
+  if (scanReferenceRows.length > 0) {
+    referenceBody.push(
+      <div key="scan-ref" className={jur ? "mt-2" : undefined}>
+        <GroupLabel>Site scan — measured, no rule applies</GroupLabel>
+        <div className="check-list">{scanReferenceRows}</div>
+      </div>,
+    );
+  }
   if (showAudit) {
     referenceBody.push(
       <div key="devices" className={jur ? "mt-2" : undefined}>
@@ -592,11 +667,10 @@ export function TieredReference({
             sev="warn"
             label="Needs attention"
             summary={<b>{model.ledger.attention}</b>}
-            // #224 phase 2 (rule 10): the NOT-CHECKED item is uncounted
-            // (ruling 9) but must never sit inside a collapsed tier — a
-            // footnote is the failure mode.  Rendering decision, not a
-            // count: the ledger and assignTiers are untouched.
-            autoExpand={model.ledger.attention > 0 || siteScanItem !== null}
+            // #224 phase 3: the NOT-CHECKED item is a counted attention
+            // fact (audit:scan:not_checked), so the count opens the tier —
+            // the phase-2 rider is retired.
+            autoExpand={model.ledger.attention > 0}
           >
             {attentionBody}
           </ReferenceChip>

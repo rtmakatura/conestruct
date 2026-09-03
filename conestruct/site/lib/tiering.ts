@@ -53,22 +53,47 @@ import type { AuditResponse } from "./render-types";
 // DETECTION_TO_FLAG (the backend owns the mapping; this copy only
 // decides which wire bucket names which fact id — no verdict computed).
 // Insertion order is the row order section 03 renders.
-const SCAN_BUCKET_TO_FLAG: ReadonlyArray<readonly [string, string]> = [
+export const SCAN_BUCKET_TO_FLAG: ReadonlyArray<readonly [string, string]> = [
   ["intersections", "adjacent_intersection"],
   ["interchanges", "adjacent_interchange"],
   ["sidewalks", "pedestrian_facility"],
   ["bike_facilities", "bicycle_facility"],
   ["schools", "school_zone"],
 ];
-const SCAN_KEYED_BUCKETS = new Set(SCAN_BUCKET_TO_FLAG.map(([b]) => b));
+export const SCAN_KEYED_BUCKETS: ReadonlySet<string> = new Set(
+  SCAN_BUCKET_TO_FLAG.map(([b]) => b),
+);
 
-interface ScanBucketWire {
+/** One scan bucket as the wire carries it (src/api/site_scan.py
+ *  SiteScanBucket).  The rows print these fields as sent — count, the
+ *  feet twin, the relevant-only detail lines — and never ``features``
+ *  (the first five Overpass elements, relevant or not). */
+export interface ScanBucketWire {
   detected?: boolean;
+  count?: number;
+  nearest_distance_m?: number | null;
+  nearest_distance_ft?: number | null;
+  details?: string[];
 }
-interface ScanWire {
+export interface ScanWire {
   status?: string;
   proceeded_anyway?: boolean;
+  measured_at?: string | null;
   buckets?: Record<string, ScanBucketWire>;
+}
+
+/** The evidence line a section-03 row prints for a detected bucket —
+ *  the wire's numbers, joined; nothing invented, nothing converted
+ *  (rule 3).  Empty when the bucket carries no evidence. */
+export function scanEvidence(b: ScanBucketWire | undefined): string {
+  if (!b || b.detected !== true) return "";
+  const parts: string[] = [];
+  if (typeof b.count === "number") parts.push(`${b.count} found`);
+  if (typeof b.nearest_distance_ft === "number") {
+    parts.push(`nearest ${b.nearest_distance_ft} ft from anchor`);
+  }
+  if (b.details && b.details.length > 0) parts.push(b.details[0]);
+  return parts.join(" · ");
 }
 
 export type Tier = "changed" | "attention" | "checked" | "pending" | "reference";

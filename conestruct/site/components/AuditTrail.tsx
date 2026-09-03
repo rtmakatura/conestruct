@@ -1570,11 +1570,16 @@ export function CheckRow({
   detail,
   tone = "pass",
   tag = "PASS",
+  evidence,
 }: {
   label: string;
   detail?: string;
   tone?: "pass" | "warn" | "fail" | "info";
   tag?: string;
+  /** #224 phase 3 — the s2-arc4 margin evidence ("26 found · nearest
+   *  34.1 ft from anchor · …"), one provenance line under the label,
+   *  its own text node.  Absent ⇒ the row is byte-identical to before. */
+  evidence?: string;
 }) {
   const ckClass = tone === "pass" ? "ck" : `ck ${tone}`;
   const symbol =
@@ -1596,6 +1601,7 @@ export function CheckRow({
         ) : (
           label
         )}
+        {evidence && <span className="tr-prov block mt-1">{evidence}</span>}
       </span>
       <span className="check-list-src">{tag}</span>
     </div>

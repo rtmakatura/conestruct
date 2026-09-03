@@ -1,0 +1,31 @@
+# s2-arc17 commit 4 — red run: TieredReference.scan-rows.test.tsx against the components at commit 3 (d8478b3): no evidence lines, no absent rows, no reference rows
+# 2026-09-03T23:36:00Z
+   × section 03 scan rows (#224 phase 3) — scanned-lakewood > a detected condition's row carries the wire's evidence, printed as sent 48ms
+     → Unable to find an element with the text: 18 found · nearest 46.6 ft from anchor · unnamed at 39.7112, -105.0812 [lateral 75 ft off centerline]. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+    ✓
+   × section 03 scan rows (#224 phase 3) — scanned-lakewood > scanned-and-absent conditions are named ✓ passes with the scan time 85ms
+     → Unable to find an element with the text: Adjacent interchange (highway ramps). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+      ✓
+          ✓
+          ✓
+          ✓
+          ✓
+   × section 03 scan rows (#224 phase 3) — scanned-lakewood > keyless buckets sit in the reference tier, uncounted 124ms
+     → Unable to find an element with the text: Site scan — measured, no rule applies. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+   ✓ section 03 scan rows (#224 phase 3) — scanned-lakewood > the rendered ledger equals the shared expectation 9ms
+   ✓ section 03 scan rows (#224 phase 3) — scanned-not-checked > NOT-CHECKED is one counted ⚠ item; the tier opens on its count alone; no scan rows elsewhere 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > a detected condition's row carries the wire's evidence, printed as sent
+TestingLibraryElementError: Unable to find an element with the text: 18 found · nearest 46.6 ft from anchor · unnamed at 39.7112, -105.0812 [lateral 75 ft off centerline]. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+    ✓
+ FAIL  components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > scanned-and-absent conditions are named ✓ passes with the scan time
+TestingLibraryElementError: Unable to find an element with the text: Adjacent interchange (highway ramps). This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+      ✓
+          ✓
+          ✓
+          ✓
+          ✓
+ FAIL  components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > keyless buckets sit in the reference tier, uncounted
+TestingLibraryElementError: Unable to find an element with the text: Site scan — measured, no rule applies. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
