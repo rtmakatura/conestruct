@@ -69,8 +69,10 @@ sheets.
         │     ├─ /render/markdown       ─→ narrative/crew_narrative  │
         │     ├─ /render/quote          ─→ export/quote_generator.py │
         │     ├─ /render/device-breakdown ─→ aggregated device count │
-        │     ├─ /render/quote-breakdown  ─→ itemized cost lines     │
-        │     └─ /render/detect-site      ─→ rules/site_detection    │
+        │     └─ /render/quote-breakdown  ─→ itemized cost lines     │
+        │        (every render route runs the in-generate site scan   │
+        │         when the scenario carries site_scan — api/site_scan │
+        │         → rules/site_detection)                             │
         │                                                            │
         │   rules/ ── spacing.py · devices.py · validators.py ·      │
         │             corridor.py · site_adjustments · tables.py     │
@@ -137,8 +139,6 @@ UI can show *why* a scenario was rejected.
   JSZip server-side, return as one download.
 - `render/device-breakdown` — Plan Details panel data.
 - `render/quote-breakdown` — Quote panel itemized lines.
-- `render/detect-site` — sniff intersections, sidewalks, schools, etc.
-  near a point.
 - `plans` / `plans/[id]` — CRUD against Neon, auth-gated.
 - `plans/[id]/{pdf,xlsx,markdown,quote}` — download routes for saved
   plans (loads from DB, calls proxy).
@@ -436,8 +436,10 @@ geocode.
 
 **Overpass API** (OSM) is hit from the backend by `site_detection.py`
 to count nearby intersections, interchanges, schools, sidewalks, bike
-facilities. Used by `/render/detect-site` and indirectly by
-`/api/road-classify`. No API key; rate limit is best-effort per-IP on
+facilities. Used by the in-generate site scan (`src/api/site_scan.py`,
+run by every render route when the scenario carries `site_scan`; the
+manual `/render/detect-site` endpoint retired in s2-arc17) and
+indirectly by `/api/road-classify`. No API key; rate limit is best-effort per-IP on
 Overpass's side. If Overpass is down, site detection returns an
 error object and the renderer skips the corresponding adjustments.
 

@@ -14,7 +14,9 @@ Rulings (2026-09-02, all seven as recommended):
     pass through; discarded manual values are disclosed.
   2 one scan per Generate — per-container memo, TTL 120 s (CHOSEN).
   3 the scan uses the plan's own params; the parity fixture's "today"
-    path sends the SAME inputs to /render/detect-site.
+    path sends the SAME inputs to the corridor detector (originally via
+    /render/detect-site; since s2-arc17 retired that endpoint, path A
+    calls detect_along_corridor directly over the same corridor).
   4 budget 20 s wall (CHOSEN) → ``unavailable`` "scan budget exceeded".
   5 no bearing → ``not_run`` / ``no_bearing`` (no point-mode fallback).
   6 ``sections.site_scan`` always present.
@@ -22,11 +24,11 @@ Rulings (2026-09-02, all seven as recommended):
     are untouched; this file asserts the DATA only).
 
 Parity is claimed for corridor mode only (ruling 5).  The parity case is
-the shoulder-divided kind because /render/detect-site cannot take a
-shoulder width: divided ⇒ params.shoulder_width_ft == build_corridor's
-10 ft default, so the two paths' corridor inputs are identical without
-a new field on the manual endpoint (the button's two input drifts are on
-the record in the arc README, ruling 3).
+the shoulder-divided kind because the retired /render/detect-site could
+not take a shoulder width: divided ⇒ params.shoulder_width_ft ==
+build_corridor's 10 ft default, so the two paths' corridor inputs are
+identical (the button's two input drifts are on the record in the
+s2-arc15 README, ruling 3).  Path A keeps exactly those inputs.
 """
 
 from __future__ import annotations
@@ -145,9 +147,11 @@ def scenario(**over: Any) -> dict[str, Any]:
     return base
 
 
-# The button's rule (SiteConditionsField.tsx DETECTION_TO_FLAG + detect()):
-# a detection-driven flag is set when its bucket reports a relevant
-# feature and deleted when it doesn't; manual-only flags are preserved.
+# The retired button's rule (SiteConditionsField.tsx DETECTION_TO_FLAG +
+# detect(), gone since s2-arc16/17; site_scan.DETECTION_TO_FLAG is the
+# owner now): a detection-driven flag is set when its bucket reports a
+# relevant feature and deleted when it doesn't; manual-only flags are
+# preserved.
 BUTTON_MAP = {
     "intersections": "adjacent_intersection",
     "interchanges": "adjacent_interchange",
@@ -176,25 +180,25 @@ def button_flags(detection: dict[str, Any], prior: dict[str, bool]) -> dict[str,
 def test_parity_detect_then_generate_equals_auto_scan(
     client: TestClient, auth: dict[str, str], overpass: Overpass
 ) -> None:
-    # Path A — today's manual flow with the plan's own corridor inputs.
-    manual = client.post(
-        "/render/detect-site",
-        headers=auth,
-        json={
-            "lat": LAT,
-            "lng": LNG,
-            "radius_m": 500,
-            "bearing_deg": BEARING,
-            "speed_mph": 45,
-            "work_zone_ft": 1000.0,
-            "closure_type": "shoulder",
-            "road_type": "urban_arterial",
-            "lane_width_ft": 12.0,
-        },
+    # Path A — the retired manual flow, replayed at the function level
+    # over the plan's own corridor inputs (what /render/detect-site did
+    # in corridor mode, minus the HTTP hop that s2-arc17 removed).
+    from src.api.render_api import _map_road_type
+    from src.rules.corridor import build_corridor
+
+    corridor = build_corridor(
+        lat=LAT,
+        lng=LNG,
+        bearing_deg=BEARING,
+        speed_mph=45,
+        work_zone_ft=1000.0,
+        closure_type="shoulder",
+        road_type=_map_road_type("urban_arterial", 45),
+        lane_width_ft=12.0,
     )
-    assert manual.status_code == 200, manual.text
-    assert manual.json()["mode"] == "corridor"
-    flags = button_flags(manual.json(), {})
+    manual = sd.detect_along_corridor(corridor)
+    assert "error" not in manual
+    flags = button_flags(manual, {})
     assert flags == {
         "adjacent_intersection": True,
         "pedestrian_facility": True,

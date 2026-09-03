@@ -392,65 +392,6 @@ export const RENDER_PART_FILENAMES: Record<RenderKind, string> = {
   "audit-pdf": "audit_trail.pdf",
 };
 
-export interface DetectSiteRequestBody {
-  lat: number;
-  lng: number;
-  radius_m: number;
-  // Corridor parameters.  When all five are present, the Modal service
-  // builds a WorkCorridor and runs corridor-aware detection; otherwise
-  // it falls back to the legacy point-and-radius detector.
-  bearing_deg?: number;
-  speed_mph?: number;
-  work_zone_ft?: number;
-  closure_type?: string;
-  road_type?: string;
-  lane_width_ft?: number;
-  // #207: the confirmed road's way geometry, materialized through the
-  // same staleness-guarded relay as ScenarioMeta.centerline (#140).
-  // With it the Modal service classifies detected features in the
-  // road's station frame; absent, the straight-chord frame as before.
-  centerline?: Array<[number, number]>;
-}
-
-export async function fetchSiteDetection(
-  body: DetectSiteRequestBody,
-): Promise<Response> {
-  const url = process.env.MODAL_RENDER_URL;
-  const secret = process.env.MODAL_RENDER_SECRET;
-  if (!url || !secret) {
-    return new Response("Render service not configured", { status: 503 });
-  }
-
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${url.replace(/\/$/, "")}/render/detect-site`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${secret}`,
-      },
-      body: JSON.stringify(body),
-    });
-  } catch (err) {
-    console.error("site detection fetch failed", err);
-    return new Response("Render service unreachable", { status: 502 });
-  }
-
-  if (!upstream.ok) {
-    const detail = await upstream.text().catch(() => "");
-    console.error(`site detection upstream ${upstream.status}`, detail);
-    return new Response("Site detection failed", { status: 502 });
-  }
-
-  const headers = new Headers();
-  headers.set(
-    "content-type",
-    upstream.headers.get("content-type") ?? "application/json",
-  );
-  headers.set("cache-control", "private, no-store");
-  return new Response(upstream.body, { status: 200, headers });
-}
-
 export async function fetchJurisdictionSuggest(body: {
   lat: number;
   lng: number;

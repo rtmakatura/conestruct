@@ -37,8 +37,9 @@ from src.rules.validators import ApproachParams, DevicePlacement, ScenarioParams
 # Pydantic models — mirror TS Scenario exactly (camelCase field names)
 # ---------------------------------------------------------------------------
 
-# Upper bound for ``workLen`` on every scenario kind, matching the
-# ``DetectSiteRequest.work_zone_ft`` cap (render_api.py).  20,000 ft is
+# Upper bound for ``workLen`` on every scenario kind (CHOSEN; it matched
+# the retired manual detect endpoint's ``work_zone_ft`` cap, s2-arc17
+# removed that endpoint and the bound stands on its own).  20,000 ft is
 # ~3.8 miles — beyond any single-plan work zone.  Without a ceiling,
 # ``workLen=Infinity`` passed validation and died as an OverflowError
 # (HTTP 500) in the plaque math, and large finite values silently
