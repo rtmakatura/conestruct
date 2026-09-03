@@ -1,0 +1,51 @@
+AFTER - production at a0ac42e (healthz == origin/main), via the Next proxy, Lakewood control 39.7113/-105.0815, bearing 180, shoulder divided 45 mph workLen 1000
+UTC 2026-09-03T15:26:32Z
+
+/render/audit plain x3 (includes the pre-existing corridor-validation Overpass trip):
+  run1  http=504  t=60.772s
+  run2  http=504  t=60.926s
+  run3  http=504  t=61.000s
+
+/render/audit scanned COLD x3 (workLen 1101/1102/1103 -> distinct memo keys):
+  run1  http=200  t=15.202s  scan=ok duration_ms=13042 memo_hit=False measured_at=2026-09-03T15:29:36+00:00
+  run2  http=400  t=21.669s
+    REFUSAL verbatim: {"detail":{"error":"site_scan_unavailable","message":"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.","site_scan":{"status":"unavailable","reason":null,"error":"scan budget exceeded (20 s)","mode":"corridor","measured_at":"2026-09-03T15:29:51+00:00","duration_ms":20525,"budget_
+    retry  http=400  t=21.083s
+  run3  http=400  t=27.865s
+    REFUSAL verbatim: {"detail":{"error":"site_scan_unavailable","message":"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.","site_scan":{"status":"unavailable","reason":null,"error":"scan budget exceeded (20 s)","mode":"corridor","measured_at":"2026-09-03T15:31:41+00:00","duration_ms":20482,"budget_
+    retry  http=400  t=28.374s
+    proceed-anyway audit  http=200  t=51.007s  status=ok proceeded_anyway=False disclosure=None flags={'adjacent_intersection': True, 'pedestrian_facility': True, 'bicycle_facility': True}
+
+/render/audit scanned, workLen 1000: run0 cold-or-memo, then MEMO HIT x3 (same container expected; a miss = another Modal container):
+  run0  http=400  t=21.890s
+    REFUSAL verbatim: {"detail":{"error":"site_scan_unavailable","message":"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.","site_scan":{"status":"unavailable","reason":null,"error":"scan budget exceeded (20 s)","mode":"corridor","measured_at":"2026-09-03T15:33:22+00:00","duration_ms":20523,"budget_
+    retry  http=400  t=21.627s
+  run1  http=400  t=27.417s
+    REFUSAL verbatim: {"detail":{"error":"site_scan_unavailable","message":"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.","site_scan":{"status":"unavailable","reason":null,"error":"scan budget exceeded (20 s)","mode":"corridor","measured_at":"2026-09-03T15:35:13+00:00","duration_ms":20056,"budget_
+    retry  http=400  t=21.055s
+  run2  http=200  t=5.397s  scan=ok duration_ms=3324 memo_hit=False measured_at=2026-09-03T15:36:56+00:00
+  run3  http=200  t=6.367s  scan=ok duration_ms=3172 memo_hit=False measured_at=2026-09-03T15:37:01+00:00
+
+/render/device-breakdown plain x3 vs scanned (memo) x3:
+  plain run1  http=200  t=0.991s
+  plain run2  http=200  t=0.966s
+  plain run3  http=200  t=1.134s
+  scan  run1  http=200  t=0.901s
+  scan  run2  http=200  t=0.932s
+  scan  run3  http=200  t=0.979s
+
+/render/pdf plain x3 vs scanned (memo) x3:
+  plain run1  http=200  t=3.426s  bytes=916935
+  plain run2  http=200  t=2.654s  bytes=916931
+  plain run3  http=200  t=11.405s  bytes=916935
+  scan  run1  http=400  t=21.337s
+    REFUSAL verbatim: {"detail":{"error":"site_scan_unavailable","message":"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.","site_scan":{"status":"unavailable","reason":null,"error":"scan budget exceeded (20 s)","mode":"corridor","measured_at":"2026-09-03T15:37:31+00:00","duration_ms":20284,"budget_
+    retry  http=200  t=4.720s
+  scan  run2  http=200  t=10.887s
+  scan  run3  http=200  t=2.088s
+
+RESPONSE SIZE (prod): plain audit 5256 B; scanned audit 11602 B (http 200); growth 6346 B  (local TestClient: 5467 / 11707 / +6240 B; local uvicorn live check 5256 / 11500 / +6244 B)
+proceed_if_unavailable on a successful scan (inert by design): status=ok proceeded_anyway=False disclosure=None
+
+REFUSAL RATE: 5 budget refusal(s) in 18 scanned requests; retries refused: 4; details: [('run2', 'scan budget exceeded (20 s)'), ('run2 retry', '400'), ('run3', 'scan budget exceeded (20 s)'), ('run3 retry', '400'), ('run0', 'scan budget exceeded (20 s)'), ('run0 retry', '400'), ('run1', 'scan budget exceeded (20 s)'), ('run1 retry', '400'), ('scan  run1', 'scan budget exceeded (20 s)')]
+DONE

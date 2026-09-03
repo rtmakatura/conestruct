@@ -95,6 +95,24 @@ full — `site_scan.error: "scan budget exceeded (20 s)"`, `duration_ms: 20748`,
 this run also hammered Overpass from one IP (each cold scan + each validation = two queries), which plausibly
 slowed the mirrors; the prod number is the one that counts.
 
+After, prod (`outS2A15Prod/latency-after-prod.txt`, 2026-09-03 15:26–15:40Z, via the proxy, during a slow Overpass
+stretch): **plain audit ×3 — HTTP 504 at 60.8 / 60.9 / 61.0 s**, the Vercel proxy's 60 s limit tripping on the
+UNBUDGETED corridor-validation trip (the scan is not involved in those requests; that code path is unchanged by
+this arc apart from the `not_run` leaf). Scanned audits: 5 budget refusals in 18 scanned requests (28 %), each the
+honest 400 with `scan budget exceeded (20 s)` at 21–28 s wall, 4 of the 5 immediate retries refused again; the
+successful cold scans took 3.2 / 3.3 / 13.0 s scan time (5.4 / 6.4 / 15.2 s wall). Memo hits did NOT recur in this
+run (memo_hit false with new `measured_at` on same-key requests 5 s apart): a refused scan is never memoised by
+design, and successive requests can land on different Modal containers — the live check an hour earlier did record
+a hit. Breakdown 0.97–1.13 s plain vs 0.90–0.98 s scanned (memo) — the scan cost nothing there; pdf 2.7 / 3.4 /
+11.4 s plain vs one refusal then 4.7 / 10.9 / 2.1 s scanned. The one proceed-anyway request sent after a refusal
+scanned successfully (status ok, flag inert) — no live proceed-anyway shape was captured; it stays test-proven.
+Prod response size: plain 5256 B, scanned 11602 B (+6346 B; buckets vary with the live answer).
+
+**Finding for Ryan (pre-existing, not caused by this arc):** the audit's corridor-validation Overpass trip has no
+budget and can exceed the proxy's 60 s limit, so a plain audit can 504 on prod under a slow Overpass. The new scan
+is bounded at ~21 s and refuses honestly; the old check is now the audit's worst case. A budget there is a
+follow-up candidate (no issue filed).
+
 Observation for the phase-2 latency ruling: the scan under budget is bounded at ~21 s; the UNBUDGETED corridor
 validation next to it is not (37–40 s measured) — the audit's worst case is now the old check, not the new one.
 
@@ -109,7 +127,10 @@ Lakewood control · C live parity vs the manual endpoint · D memo hit via `meas
 container is a legitimate miss — INFO, not FAIL) · E `no_bearing` / `no_coords` · F forced failure stated as
 test-proven, not faked (Overpass cannot be downed on demand) · size and timing lines.
 - `outS2A15Local/` — **ALL PASS 14/14 (+1 INFO)**, 2026-09-03 14:49Z, real Overpass.
-- `outS2A15Prod/` — post-ship (next prompt).
+- `outS2A15Prod/` — the DEFINITIVE post-ship run, 2026-09-03 15:14Z: gate PASS (healthz == origin/main ==
+  `a0ac42e`), **ALL PASS 15/15 (+1 INFO)** — the 14 checks plus the gate line. Scanned audit at the control: status
+  ok, scan 2.8 s, the three flags, one adjustment per flag; live parity vs the manual endpoint held (41 == 41
+  devices); the memo hit was visible (same `measured_at`, memo_hit true). Prod audit sizes 5256 → 11500 B.
 
 ## Contracts held
 - #104 `site_adjustments` byte-identical (parity fixture; `test_site_adjustments*` untouched).
@@ -129,4 +150,4 @@ test-proven, not faked (Overpass cannot be downed on demand) · size and timing 
 - The corridor-validation trip is unbudgeted (37–40 s measured locally); a budget there is a separate item.
 
 ## Not run
-- Prod live check (post-ship). Prod after-table (post-ship). `next build` (frontend untouched; vitest 863/863 recorded).
+- `next build` (frontend untouched; vitest 863/863 recorded).
