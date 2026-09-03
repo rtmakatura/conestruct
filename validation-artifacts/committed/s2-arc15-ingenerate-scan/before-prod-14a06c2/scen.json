@@ -1,0 +1,1 @@
+{"scenario":{"kind":"shoulder","meta":{"project":"s2a15 timing probe","address":"","lat":39.7113,"lng":-105.0815,"bearingDeg":90},"roadType":"urban_arterial","speed":45,"lanes":2,"laneWidth":12,"divided":true,"workType":"utility_locate","duration":"short","workLen":1000,"night":false}}

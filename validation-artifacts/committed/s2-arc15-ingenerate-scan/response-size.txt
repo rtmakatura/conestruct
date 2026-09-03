@@ -1,0 +1,6 @@
+Response-size measurement - /render/audit JSON bytes (TestClient, Lakewood fixture payload stubbed in for Overpass)
+plain (not_run/not_requested):              5467 B   sections.site_scan = 277 B
+site_scan ok (3 flags, 8 buckets):         11707 B   sections.site_scan = 4999 B   growth vs plain = 6240 B
+site_scan unavailable, proceed-anyway:      5689 B   sections.site_scan = 685 B
+refusal 400 body:                            885 B
+request growth: '"site_scan":{}' = 15 B against the 32 KB proxy cap

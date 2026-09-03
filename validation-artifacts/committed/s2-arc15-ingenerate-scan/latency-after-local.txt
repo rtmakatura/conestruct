@@ -1,0 +1,38 @@
+AFTER (local uvicorn at fd45ba3, real Overpass from this machine; NOT the Modal network - the prod after-table lands post-ship)
+UTC 2026-09-03T14:52:43Z
+
+/render/audit plain (no site_scan) x5 - includes the pre-existing corridor-validation Overpass trip:
+  run1  http=200  t=38.783s
+  run2  http=200  t=38.769s
+  run3  http=200  t=39.921s
+  run4  http=200  t=38.497s
+  run5  http=200  t=37.018s
+
+/render/audit with site_scan, COLD (workLen varied 1000..1004 -> five distinct memo keys) x5:
+  run1  http=200  t=3.929s  scan status=ok  scan duration_ms=2255  memo_hit=False
+  run2  http=200  t=32.490s  scan status=ok  scan duration_ms=13518  memo_hit=False
+  run3  http=400  t=14.844s  scan status=None  scan duration_ms=None  memo_hit=None
+  run4  http=400  t=21.167s  scan status=None  scan duration_ms=None  memo_hit=None
+  run5  http=200  t=13.076s  scan status=ok  scan duration_ms=3840  memo_hit=False
+
+/render/audit with site_scan, MEMO HIT (workLen 1000 again) x3:
+  run1  http=200  t=13.369s  memo_hit=True
+  run2  http=200  t=13.562s  memo_hit=True
+  run3  http=200  t=6.654s  memo_hit=True
+
+/render/device-breakdown plain x3 vs with site_scan (memo hit) x3:
+  plain run1  http=200  t=0.406s
+  plain run2  http=200  t=0.426s
+  plain run3  http=200  t=0.394s
+  scan  run1  http=200  t=0.416s  (memo)
+  scan  run2  http=200  t=0.385s  (memo)
+  scan  run3  http=200  t=0.402s  (memo)
+
+/render/device-breakdown with site_scan, COLD (workLen 1010) x1:
+  cold  http=400  t=21.075s
+
+/render/markdown plain x2 vs with site_scan (memo) x2:
+  plain run1  http=200  t=0.469s
+  plain run2  http=200  t=0.469s
+  scan  run1  http=400  t=21.113s  (memo)
+  scan  run2  http=400  t=21.178s  (memo)

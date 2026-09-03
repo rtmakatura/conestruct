@@ -1,0 +1,12 @@
+BEFORE — production at 14a06c2 (healthz == origin/main), 2026-09-02T20:56:44Z, read-only curl via the Next proxy (www.conestruct.com),
+Lakewood control pin 39.7113 / -105.0815, shoulder divided, urban_arterial 45 mph, workLen 1000, bearingDeg 90 (the timing
+probe's bearing; it drew a bearing_conflict warning against the N–S road — irrelevant to timing). Each run = one curl -w %{time_total}.
+
+/render/audit             run1 3.039 s   run2 12.997 s   run3 36.226 s   (the audit already pays one Overpass round trip:
+                                                                            validate_corridor_against_osm → detect_road_bearing)
+/render/device-breakdown  run1 0.594 s   run2  0.589 s   run3  0.542 s
+/render/pdf               run1 1.508 s   run2  1.779 s
+/render/detect-site       run1 2.734 s   run2  3.477 s   run3 16.262 s   (corridor mode — the cost of one scan today)
+
+Files: scen.json / detect.json are the exact request bodies; out-*.json the first responses (audit: corridor_validation
+checked=true with the bearing_conflict warning; site_adjustments absent; detect: intersections 22, sidewalks 8, bikes 20).

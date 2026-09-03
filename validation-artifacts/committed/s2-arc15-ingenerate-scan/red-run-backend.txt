@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_site_scan_ingenerate.py _____________
+ImportError while importing test module 'C:\Users\rtmak\Documents\traffic-control-tool\tests\test_site_scan_ingenerate.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_site_scan_ingenerate.py:45: in <module>
+    from src.api import site_scan as ss
+E   ImportError: cannot import name 'site_scan' from 'src.api' (C:\Users\rtmak\Documents\traffic-control-tool\src\api\__init__.py)
+=========================== short test summary info ===========================
+ERROR tests/test_site_scan_ingenerate.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.64s
