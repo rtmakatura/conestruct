@@ -1,0 +1,63 @@
+# s2-arc17 commit 1 — red run: expectation JSON + two recorded fixtures + harness lists staged, BOTH mirrors unchanged (tiering.ts / tier_ledger.py at main 9814b67)
+# 2026-09-03T23:16:41Z  branch issue-224-phase3
+
+## TS — npx vitest run lib/tiering.test.ts components/TieredReference.fixtures.test.tsx
+   ✓ recorded fixtures match the shared expectation file > control-lakewood 3ms
+   ✓ recorded fixtures match the shared expectation file > adv-ni-denver 1ms
+   × recorded fixtures match the shared expectation file > scanned-lakewood 14ms
+   × recorded fixtures match the shared expectation file > scanned-not-checked 2ms
+   ✓ the ruled status→tier grid > colorado pass → checked; FAIL → attention (flag i) 0ms
+   ✓ the rendered ledger equals the shared expectation > control-lakewood 30ms
+   ✓ the rendered ledger equals the shared expectation > adv-ni-denver 27ms
+   × the rendered ledger equals the shared expectation > scanned-lakewood 14ms
+   × the rendered ledger equals the shared expectation > scanned-not-checked 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-lakewood
+Expected: "2 changes · 5 needs attention · 12 checked · 2 pending · reference"
+Received: "2 changes · 5 needs attention · 10 checked · 2 pending · reference"
+ FAIL  components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-not-checked
+Expected: "1 change · 5 needs attention · 9 checked · 1 pending · reference"
+Received: "1 change · 4 needs attention · 9 checked · 1 pending · reference"
+ FAIL  lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-lakewood
+- Expected
++ Received
+-   "audit:scan:adjacent_interchange": "checked",
+-   "audit:scan:hospitals": "reference",
+-   "audit:scan:railroad_crossings": "reference",
+-   "audit:scan:road_curvature": "reference",
+-   "audit:scan:school_zone": "checked",
+ FAIL  lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-not-checked
+- Expected
++ Received
+-   "audit:scan:not_checked": "attention",
+ Test Files  2 failed (2)
+      Tests  4 failed | 32 passed (36)
+
+## Python — pytest tests/test_tier_ledger.py -q
+______ test_recorded_fixtures_match_shared_expectation[scanned-lakewood] ______
+E       AssertionError: assert {'audit:advan...tention', ...} == {'audit:advan...tention', ...}
+E         
+E         Omitting 19 identical items, use -vv to show
+E         Right contains 5 more items:
+E         {'audit:scan:adjacent_interchange': 'checked',
+E          'audit:scan:hospitals': 'reference',
+E          'audit:scan:railroad_crossings': 'reference',
+E          'audit:scan:road_curvature': 'reference',
+E          'audit:scan:school_zone': 'checked'}
+E         Use -v to get more diff
+____ test_recorded_fixtures_match_shared_expectation[scanned-not-checked] _____
+E       AssertionError: assert {'audit:advan...tention', ...} == {'audit:advan...tention', ...}
+E         
+E         Omitting 15 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'audit:scan:not_checked': 'attention'}
+E         Use -v to get more diff
+______ test_audit_pdf_cover_carries_the_screen_ledger[scanned-lakewood] _______
+E       AssertionError: assert '2 changes · 5 needs attention · 12 checked · 2 pending · reference' in 'Audit Trail — Case 11: Shoulder closure on divided highway\r\nField Value\r\nPlan status 2 changes · 5 needs attentio... 6B.08: 50-100 ft downstream taper); 13 tangent + 2\r\ndownstream = 15 cones total\r\nSource: MUTCD 11th Ed. Sec 6K.01'
+_____ test_audit_pdf_cover_carries_the_screen_ledger[scanned-not-checked] _____
+E       AssertionError: assert '1 change · 5 needs attention · 9 checked · 1 pending · reference' in 'Audit Trail — Case 11: Shoulder closure on divided highway\r\nField Value\r\nPlan status 1 change · 4 needs attention... 6B.08: 50-100 ft downstream taper); 14 tangent + 2\r\ndownstream = 16 cones total\r\nSource: MUTCD 11th Ed. Sec 6K.01'
+FAILED tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-lakewood]
+FAILED tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-not-checked]
+FAILED tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-lakewood]
+FAILED tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-not-checked]
+4 failed, 9 passed in 1.95s

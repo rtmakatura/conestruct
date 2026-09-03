@@ -21,7 +21,22 @@
 //                 (schedule not set / not finished — Setup pointer)
 //   i reference — admin deltas · standing hazard meters (contingent
 //                 penalties describe the jurisdiction, not this plan;
-//                 the worst-$ token stays named in the section) .
+//                 the worst-$ token stays named in the section) ·
+//                 scanned buckets that map to no rule (#224 phase 3).
+//
+// #224 phase 3 (s2-arc17, GO 2026-09-03): the in-generate site scan's
+// own facts, read off ``sections.site_scan`` (src/api/site_scan.py):
+//   · status ok, key DETECTED — no fact here: the detection fired an
+//     ``audit:site:<flag>`` adjustment record above, and its evidence
+//     attaches to that row (one fact per condition, never two).
+//   · status ok, key ABSENT   — ``audit:scan:<flag>`` ✓ checked: the
+//     scanned-and-clean named pass (the corridor flag-h precedent).
+//   · status ok, keyless bucket (railroad_crossings, hospitals,
+//     road_curvature) — ``audit:scan:<bucket>`` i reference, uncounted:
+//     a measurement with no rule consequence.
+//   · unavailable + proceeded_anyway — ONE ``audit:scan:not_checked`` ⚠
+//     (counted; phase 2's uncounted item retired with the pin's growth).
+//   · not_run — nothing: no scan is not a finding.
 //                 Reference is deliberately UNCOUNTED: the ledger's
 //                 reference token is unnumbered by ruling (flag k keeps
 //                 the other four tokens always rendered, zeros incl.).
@@ -33,6 +48,28 @@
 
 import type { JurisdictionBlock } from "./jurisdiction";
 import type { AuditResponse } from "./render-types";
+
+// Scan bucket → site-condition flag.  MIRROR of src/api/site_scan.py
+// DETECTION_TO_FLAG (the backend owns the mapping; this copy only
+// decides which wire bucket names which fact id — no verdict computed).
+// Insertion order is the row order section 03 renders.
+const SCAN_BUCKET_TO_FLAG: ReadonlyArray<readonly [string, string]> = [
+  ["intersections", "adjacent_intersection"],
+  ["interchanges", "adjacent_interchange"],
+  ["sidewalks", "pedestrian_facility"],
+  ["bike_facilities", "bicycle_facility"],
+  ["schools", "school_zone"],
+];
+const SCAN_KEYED_BUCKETS = new Set(SCAN_BUCKET_TO_FLAG.map(([b]) => b));
+
+interface ScanBucketWire {
+  detected?: boolean;
+}
+interface ScanWire {
+  status?: string;
+  proceeded_anyway?: boolean;
+  buckets?: Record<string, ScanBucketWire>;
+}
 
 export type Tier = "changed" | "attention" | "checked" | "pending" | "reference";
 
@@ -208,6 +245,26 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
     } else if (audit.pending_verification.count > 0) {
       // Pre-items flat shape: one rollup fact so the count never vanishes.
       facts.push(fact("audit:pending:0", "pending", "pending verification"));
+    }
+    // #224 phase 3 — the scan's own facts (header table).  A bucket
+    // missing from the wire yields nothing: absence of signal is not
+    // absence of a feature (rule 10).
+    const scan = s.site_scan as ScanWire | undefined;
+    if (scan?.status === "ok") {
+      const buckets = scan.buckets ?? {};
+      for (const [bucket, flag] of SCAN_BUCKET_TO_FLAG) {
+        const b = buckets[bucket];
+        if (b && b.detected !== true) {
+          facts.push(fact(`audit:scan:${flag}`, "checked", "scanned — none along the corridor"));
+        }
+      }
+      for (const bucket of Object.keys(buckets)) {
+        if (!SCAN_KEYED_BUCKETS.has(bucket)) {
+          facts.push(fact(`audit:scan:${bucket}`, "reference", "scanned bucket with no rule"));
+        }
+      }
+    } else if (scan?.status === "unavailable" && scan.proceeded_anyway === true) {
+      facts.push(fact("audit:scan:not_checked", "attention", "site scan not checked"));
     }
   }
 

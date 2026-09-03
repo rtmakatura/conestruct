@@ -51,7 +51,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.rules.corridor import build_corridor
 from src.rules.site_detection import detect_along_corridor
@@ -141,8 +141,22 @@ class SiteScanBucket(BaseModel):
     detected: bool
     count: int
     nearest_distance_m: float | None = None
+    # #224 phase 3 (s2-arc17, ruling b): the feet twin of
+    # ``nearest_distance_m`` — the panel's tier rows print feet only and
+    # never convert (rule 3).  Derived here, once, from the metre value:
+    # ft = m / 0.3048 (the international foot is 0.3048 m by definition),
+    # rounded to 0.1 ft like the metre value it traces to (rule 12).
+    # ``None`` exactly when the metre value is ``None`` (no relevant
+    # feature — an absence stays an absence, rule 10).
+    nearest_distance_ft: float | None = None
     details: list[str] = Field(default_factory=list)
     features: list[dict[str, Any]] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _derive_feet(self) -> SiteScanBucket:
+        if self.nearest_distance_ft is None and self.nearest_distance_m is not None:
+            self.nearest_distance_ft = round(self.nearest_distance_m / 0.3048, 1)
+        return self
 
 
 class SiteScanProvenance(BaseModel):

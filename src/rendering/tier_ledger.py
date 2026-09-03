@@ -12,11 +12,29 @@ pinned to the same committed expectation file
 breaks its own suite against that one pin.  The frontend-only
 ``audit:unavailable`` fact is excluded by construction — the PDF renders
 from a successful projection only.
+
+#224 phase 3 (s2-arc17, GO 2026-09-03): the in-generate site scan's own
+facts, read off ``sections.site_scan`` (src/api/site_scan.py) — the pin's
+first growth since s2-arc7:
+
+* status ok, key DETECTED — no fact here: the detection fired an
+  ``audit:site:<flag>`` adjustment record, and its evidence attaches to
+  that row (one fact per condition, never two).
+* status ok, key ABSENT — ``audit:scan:<flag>`` checked: the
+  scanned-and-clean named pass (the corridor flag-h precedent).
+* status ok, keyless bucket (railroad_crossings, hospitals,
+  road_curvature) — ``audit:scan:<bucket>`` reference, uncounted.
+* unavailable + proceeded_anyway — ONE ``audit:scan:not_checked``
+  attention fact (counted; phase 2's uncounted item retired).
+* not_run — nothing: no scan is not a finding.  A bucket missing from
+  the wire yields nothing either (rule 10).
 """
 
 from __future__ import annotations
 
 from typing import Any
+
+from src.api.site_scan import DETECTION_TO_FLAG
 
 TIERS = ("changed", "attention", "checked", "pending", "reference")
 
@@ -97,6 +115,19 @@ def tier_facts(
                 facts[f"audit:pending:{i}"] = "pending"
         elif pending.get("count", 0) > 0:
             facts["audit:pending:0"] = "pending"
+        # #224 phase 3 — the scan's own facts (module docstring).
+        scan = sections.get("site_scan") or {}
+        if scan.get("status") == "ok":
+            buckets = scan.get("buckets") or {}
+            for bucket, flag in DETECTION_TO_FLAG.items():
+                b = buckets.get(bucket)
+                if isinstance(b, dict) and b.get("detected") is not True:
+                    facts[f"audit:scan:{flag}"] = "checked"
+            for bucket in buckets:
+                if bucket not in DETECTION_TO_FLAG:
+                    facts[f"audit:scan:{bucket}"] = "reference"
+        elif scan.get("status") == "unavailable" and scan.get("proceeded_anyway") is True:
+            facts["audit:scan:not_checked"] = "attention"
 
     return facts
 

@@ -53,7 +53,7 @@ function mountFixture(fx: Recorded) {
 afterEach(cleanup);
 
 describe("the rendered ledger equals the shared expectation", () => {
-  for (const name of ["control-lakewood", "adv-ni-denver"]) {
+  for (const name of ["control-lakewood", "adv-ni-denver", "scanned-lakewood", "scanned-not-checked"]) {
     it(name, () => {
       mountFixture(load(name));
       const l = expectations[name].ledger;

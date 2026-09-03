@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 //
 // #224 phase 2 (s2-arc16, commit 5, ruling 9) — section 03's surface of
-// the NOT-CHECKED disclosure: an UNCOUNTED attention item (the
-// corridorValidationItem precedent).  Proof of "uncounted": the rendered
-// ledger on the recorded control fixture is byte-identical with and
-// without the disclosure, and equals the shared expectation JSON —
-// assignTiers and tiering-expectations.json are untouched by this arc.
+// the NOT-CHECKED disclosure.  Phase 3 (s2-arc17, rulings c/d) made it a
+// COUNTED attention fact (``audit:scan:not_checked``, one per plan): the
+// rendered ledger on the recorded control fixture now reads exactly ONE
+// more "needs attention" with the disclosure than without it — the pin
+// that flipped when the expectation JSON grew (declared churn).
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -56,7 +56,7 @@ function mount(audit: AuditResponse) {
 afterEach(cleanup);
 
 describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
-  it("a proceed-anyway plan renders ▲ NOT CHECKED with the disclosure verbatim — uncounted", async () => {
+  it("a proceed-anyway plan renders ▲ NOT CHECKED with the disclosure verbatim — counted once", async () => {
     const user = userEvent.setup();
     mount(
       withScan(control.audit, {
@@ -68,8 +68,8 @@ describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
       }),
     );
     expect(screen.getByText("▲ NOT CHECKED")).toBeTruthy();
-    // Rule 10: the tier holding it auto-expands even though the item is
-    // uncounted — never a footnote inside a collapsed chip.
+    // Rule 10: the tier holding it auto-expands — never a footnote
+    // inside a collapsed chip.
     const chip = screen.getByText("▲ NOT CHECKED").closest(".refchip");
     expect(chip?.classList.contains("open")).toBe(true);
     expect(chip?.querySelector(".chip-sum")?.getAttribute("aria-expanded")).toBe("true");
@@ -77,18 +77,19 @@ describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
     await user.click(screen.getByText("Site conditions"));
     expect(screen.getByText(DISCLOSURE)).toBeTruthy();
     expect(document.body.textContent).toContain("scan budget exceeded (20 s)");
+    // Phase 3: the count moves by exactly one, in attention, nowhere else.
     const l = expectations["control-lakewood"].ledger;
     expect(screen.getByTestId("tier-ledger").textContent).toContain(
       ledgerLine({
         changed: l.changed,
-        attention: l.attention,
+        attention: l.attention + 1,
         checked: l.checked,
         pending: l.pending,
       }),
     );
   });
 
-  it("an ok scan and a not_run scan render no item; the ledger is the same line", () => {
+  it("an ok scan without buckets and a not_run scan render no item; the ledger is the same line (a missing bucket is no fact — rule 10)", () => {
     const l = expectations["control-lakewood"].ledger;
     const expected = ledgerLine({
       changed: l.changed,

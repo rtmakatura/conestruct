@@ -20,6 +20,11 @@ import type { AuditResponse } from "./render-types";
 
 const FIXTURE_DIR = join(__dirname, "..", "..", "..", "tests", "fixtures", "tiering");
 
+// The recorded wire fixtures the pin covers.  s2-arc17 (#224 phase 3)
+// added the two scanned recordings — the pin's first growth since
+// s2-arc7; the two originals' expectations are byte-identical.
+const FIXTURES = ["control-lakewood", "adv-ni-denver", "scanned-lakewood", "scanned-not-checked"];
+
 interface RecordedFixture {
   audit: AuditResponse;
   jurisdiction: JurisdictionBlock;
@@ -40,7 +45,7 @@ const expectations: Record<
 // ---------------------------------------------------------------------------
 
 describe("recorded fixtures match the shared expectation file", () => {
-  for (const name of ["control-lakewood", "adv-ni-denver"]) {
+  for (const name of FIXTURES) {
     it(name, () => {
       const fx = loadFixture(name);
       const model = assignTiers({ jurisdiction: fx.jurisdiction, audit: fx.audit });
@@ -241,7 +246,7 @@ describe("the ruled status→tier grid", () => {
 
 describe("ledger invariants", () => {
   it("sums to all non-reference facts, on both recorded fixtures", () => {
-    for (const name of ["control-lakewood", "adv-ni-denver"]) {
+    for (const name of FIXTURES) {
       const fx = loadFixture(name);
       const model = assignTiers({ jurisdiction: fx.jurisdiction, audit: fx.audit });
       const counted = model.facts.filter((f) => f.tier !== "reference").length;
@@ -275,7 +280,7 @@ describe("ledger invariants", () => {
   });
 
   it("plan_flags coherence: tier counts never contradict the #60 rollup", () => {
-    for (const name of ["control-lakewood", "adv-ni-denver"]) {
+    for (const name of FIXTURES) {
       const fx = loadFixture(name);
       const flags = fx.audit.plan_flags;
       if (!flags) continue;
@@ -284,6 +289,53 @@ describe("ledger invariants", () => {
       // every v1 limitation is a pending fact here.
       expect(model.ledger.attention).toBeGreaterThanOrEqual(flags.compliance_fails);
       expect(model.ledger.pending).toBeGreaterThanOrEqual(flags.v1_limitations);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 4 · The scan family (#224 phase 3, s2-arc17) — the ruled edges
+// ---------------------------------------------------------------------------
+
+describe("the scan family's ruled edges (#224 phase 3)", () => {
+  const ok = (buckets: Record<string, { detected: boolean }>) =>
+    auditWith({ site_scan: { status: "ok", buckets } as never });
+
+  it("ok + absent key → audit:scan:<flag> checked (the named pass)", () => {
+    const a = ok({ schools: { detected: false }, interchanges: { detected: false } });
+    expect(tierOf({ jurisdiction: null, audit: a }, "audit:scan:school_zone")).toBe("checked");
+    expect(tierOf({ jurisdiction: null, audit: a }, "audit:scan:adjacent_interchange")).toBe("checked");
+  });
+  it("ok + detected key → NO scan fact (the evidence rides the audit:site row — never two facts)", () => {
+    const a = ok({ sidewalks: { detected: true } });
+    const ids = assignTiers({ jurisdiction: null, audit: a }).facts.map((f) => f.id);
+    expect(ids.some((i) => i.startsWith("audit:scan:"))).toBe(false);
+  });
+  it("ok + keyless bucket → reference, uncounted", () => {
+    const a = ok({ hospitals: { detected: true }, road_curvature: { detected: false } });
+    const model = assignTiers({ jurisdiction: null, audit: a });
+    expect(model.facts.find((f) => f.id === "audit:scan:hospitals")?.tier).toBe("reference");
+    expect(model.facts.find((f) => f.id === "audit:scan:road_curvature")?.tier).toBe("reference");
+    expect(model.ledger).toEqual({ changed: 0, attention: 0, checked: 5, pending: 0 });
+  });
+  it("ok + a bucket missing from the wire → nothing (absence of signal is not absence of a feature)", () => {
+    const a = ok({});
+    const ids = assignTiers({ jurisdiction: null, audit: a }).facts.map((f) => f.id);
+    expect(ids.some((i) => i.startsWith("audit:scan:"))).toBe(false);
+  });
+  it("unavailable + proceeded_anyway → ONE counted attention fact; refused-without-proceed and not_run → nothing", () => {
+    const proceeded = auditWith({
+      site_scan: { status: "unavailable", proceeded_anyway: true } as never,
+    });
+    expect(tierOf({ jurisdiction: null, audit: proceeded }, "audit:scan:not_checked")).toBe("attention");
+    expect(assignTiers({ jurisdiction: null, audit: proceeded }).ledger.attention).toBe(1);
+    for (const scan of [
+      { status: "unavailable", proceeded_anyway: false },
+      { status: "not_run", reason: "not_requested" },
+    ]) {
+      const a = auditWith({ site_scan: scan as never });
+      const ids = assignTiers({ jurisdiction: null, audit: a }).facts.map((f) => f.id);
+      expect(ids.some((i) => i.startsWith("audit:scan:"))).toBe(false);
     }
   });
 });
