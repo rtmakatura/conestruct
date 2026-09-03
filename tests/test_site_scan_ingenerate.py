@@ -84,15 +84,25 @@ def payload() -> dict[str, Any]:
 
 
 class Overpass:
-    """A stub for ``_overpass_request_with_fallback`` that counts calls."""
+    """A stub for ``_overpass_request_with_fallback`` that counts SCAN calls.
+
+    The audit already makes one Overpass round trip per request today
+    (``validate_corridor_against_osm`` → ``detect_road_bearing``, an
+    ``around:`` query).  That pre-existing traffic is not the scan; only
+    the corridor bbox query (``_build_bbox_query``, no ``around:``) counts
+    toward ``scan_calls``.  ``calls`` is every call, for reference.
+    """
 
     def __init__(self, payload: dict[str, Any] | None, error: str | None = None) -> None:
         self.payload = payload
         self.error = error
         self.calls = 0
+        self.scan_calls = 0
 
-    def __call__(self, *_args: Any, **_kwargs: Any) -> tuple[dict[str, Any] | None, str | None]:
+    def __call__(self, *args: Any, **_kwargs: Any) -> tuple[dict[str, Any] | None, str | None]:
         self.calls += 1
+        if args and "around:" not in str(args[0]):
+            self.scan_calls += 1
         if self.payload is None:
             return None, self.error or "stub outage"
         return copy.deepcopy(self.payload), None
@@ -264,13 +274,13 @@ def test_not_requested_is_the_always_present_default(
     res = client.post("/render/audit", headers=auth, json=scenario())
     assert res.status_code == 200
     _assert_not_run(res.json()["sections"]["site_scan"], "not_requested")
-    assert overpass.calls == 0
+    assert overpass.scan_calls == 0
     # Manual flags still apply exactly as before phase 1.
     res2 = client.post(
         "/render/audit", headers=auth, json=scenario(meta={"siteConditions": {"school_zone": True}})
     )
     assert [r["flag"] for r in res2.json()["sections"]["site_adjustments"]] == ["school_zone"]
-    assert overpass.calls == 0
+    assert overpass.scan_calls == 0
 
 
 def test_no_coords_is_not_run(client: TestClient, auth: dict[str, str], overpass: Overpass) -> None:
@@ -279,7 +289,7 @@ def test_no_coords_is_not_run(client: TestClient, auth: dict[str, str], overpass
     )
     assert res.status_code == 200, res.text
     _assert_not_run(res.json()["sections"]["site_scan"], "no_coords")
-    assert overpass.calls == 0
+    assert overpass.scan_calls == 0
 
 
 def test_no_bearing_is_not_run_no_point_mode_fallback(
@@ -290,7 +300,7 @@ def test_no_bearing_is_not_run_no_point_mode_fallback(
     res = client.post("/render/audit", headers=auth, json=body)
     assert res.status_code == 200, res.text
     _assert_not_run(res.json()["sections"]["site_scan"], "no_bearing")
-    assert overpass.calls == 0
+    assert overpass.scan_calls == 0
 
 
 def test_every_kind_accepts_site_scan() -> None:
@@ -345,7 +355,7 @@ def test_unavailable_is_never_memoised(
     for _ in range(2):
         res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
         assert res.status_code == 400
-    assert overpass_down.calls == 2  # a retry within the TTL really retries
+    assert overpass_down.scan_calls == 2  # a retry within the TTL really retries
 
 
 def test_proceed_anyway_builds_with_manual_flags_and_the_disclosure(
@@ -408,7 +418,7 @@ def test_one_overpass_call_across_the_generate_fan_out(
     assert client.post("/render/device-breakdown", headers=auth, json=body).status_code == 200
     assert client.post("/render/markdown", headers=auth, json=body).status_code == 200
     second = client.post("/render/audit", headers=auth, json=body)
-    assert overpass.calls == 1
+    assert overpass.scan_calls == 1
     p1, p2 = first.json()["sections"]["site_scan"], second.json()["sections"]["site_scan"]
     assert p1["measured_at"] == p2["measured_at"]  # the hit is visible
     assert p1["memo_hit"] is False and p2["memo_hit"] is True
@@ -416,11 +426,11 @@ def test_one_overpass_call_across_the_generate_fan_out(
     # A moved pin is a different corridor: it scans again.
     moved = scenario(site_scan={}, meta={"lat": LAT + 0.01})
     assert client.post("/render/audit", headers=auth, json=moved).status_code == 200
-    assert overpass.calls == 2
+    assert overpass.scan_calls == 2
     # So is a changed work-zone length (the bbox follows the corridor).
     longer = scenario(site_scan={}, workLen=1500)
     assert client.post("/render/audit", headers=auth, json=longer).status_code == 200
-    assert overpass.calls == 3
+    assert overpass.scan_calls == 3
 
 
 def test_memo_expires_after_the_ttl(
@@ -432,10 +442,10 @@ def test_memo_expires_after_the_ttl(
     assert client.post("/render/audit", headers=auth, json=body).status_code == 200
     clock["t"] += ss.MEMO_TTL_S - 1
     assert client.post("/render/audit", headers=auth, json=body).status_code == 200
-    assert overpass.calls == 1
+    assert overpass.scan_calls == 1
     clock["t"] += 2
     assert client.post("/render/audit", headers=auth, json=body).status_code == 200
-    assert overpass.calls == 2
+    assert overpass.scan_calls == 2
 
 
 # ---------------------------------------------------------------------------

@@ -57,7 +57,14 @@ _PARAMS = ScenarioParams(
 # and ``error`` is transport diagnostics (mirror URL + exception text),
 # never rendered verbatim.  Same global-key caveat applies — true today
 # (both appear only on ``corridor_validation``).
-_SKIP_KEYS = frozenset({"formula_latex", "flag", "level", "reason", "error"})
+#
+# ``site_scan`` (#224 phase 1, s2-arc15 ruling 7): the in-generate scan's
+# provenance rides every projection as DATA and renders NOWHERE this
+# phase — not the audit PDF, not the narrative, not the panel.  Skipped
+# whole.  Phase-2 debt: when the NOT-CHECKED disclosure and the scan
+# provenance start printing, REMOVE this key from the skip set so the
+# single-source proof covers them.
+_SKIP_KEYS = frozenset({"formula_latex", "flag", "level", "reason", "error", "site_scan"})
 
 # #97 — the taper/buffer/spacing ``citation`` field ({cite, footer}) feeds
 # the React audit PANEL's cite header + footer chip only; the PDF renders

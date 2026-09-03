@@ -19,6 +19,7 @@ Two detection modes are supported:
 from __future__ import annotations
 
 import math
+import time
 from typing import TYPE_CHECKING, Any
 
 import httpx
@@ -125,6 +126,7 @@ def _junction_ref(el: dict[str, Any]) -> str | None:
 
 def _overpass_request_with_fallback(
     query: str,
+    budget_s: float | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     """POST the Overpass query to each mirror until one returns a valid payload.
 
@@ -132,15 +134,29 @@ def _overpass_request_with_fallback(
     Stops on 4xx (the query itself is malformed; trying another mirror
     will produce the same error).  Returns ``(payload, None)`` on
     success or ``(None, error_message)`` after exhausting mirrors.
+
+    ``budget_s`` (#224 phase 1, ruling 4) is a wall-clock deadline for the
+    whole fallback chain: each mirror's timeout is ``min(HTTP_TIMEOUT_S,
+    remaining)`` and once the budget is spent no further mirror is tried —
+    the caller gets ``(None, "scan budget exceeded (N s)")``, an honest
+    ``unavailable``.  ``None`` (every pre-phase-1 caller) keeps the
+    unbounded three-mirror chain exactly as before.
     """
     last_error = "no mirrors configured"
+    deadline = time.monotonic() + budget_s if budget_s is not None else None
     for url in OVERPASS_MIRRORS:
+        timeout = HTTP_TIMEOUT_S
+        if deadline is not None:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return None, f"scan budget exceeded ({budget_s:g} s)"
+            timeout = min(HTTP_TIMEOUT_S, remaining)
         try:
             resp = httpx.post(
                 url,
                 data={"data": query},
                 headers={"User-Agent": USER_AGENT},
-                timeout=HTTP_TIMEOUT_S,
+                timeout=timeout,
             )
         except httpx.HTTPError as exc:
             last_error = f"{url}: {type(exc).__name__}: {exc}"
@@ -423,6 +439,7 @@ def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
 def detect_along_corridor(
     corridor: WorkCorridor,
     lateral_buffer_m: float = _CORRIDOR_LATERAL_BUFFER_M,
+    budget_s: float | None = None,
 ) -> dict[str, Any]:
     """Query Overpass over the corridor's bounding box and bucket detections.
 
@@ -442,7 +459,9 @@ def detect_along_corridor(
       downstream) so existing callers see the same shape.
 
     On any network/parse failure, returns all-buckets-empty plus an
-    ``error`` key carrying the failure message.
+    ``error`` key carrying the failure message.  ``budget_s`` bounds the
+    Overpass mirror chain (see ``_overpass_request_with_fallback``); the
+    in-generate scan passes its CHOSEN budget, the manual endpoint none.
     """
     buckets: dict[str, Any] = {
         "intersections": _empty_corridor_bucket(),
@@ -465,7 +484,13 @@ def detect_along_corridor(
         longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
     )
     query = _build_bbox_query(bbox)
-    payload, error = _overpass_request_with_fallback(query)
+    # Positional call when unbudgeted so the pre-phase-1 stubs
+    # (``lambda q: ...``) keep working unchanged.
+    payload, error = (
+        _overpass_request_with_fallback(query)
+        if budget_s is None
+        else _overpass_request_with_fallback(query, budget_s=budget_s)
+    )
     if payload is None:
         buckets["error"] = error or "Overpass request failed"
         return buckets

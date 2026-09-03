@@ -78,7 +78,7 @@ def build_snapshot_markdown(req: QuoteRequest) -> str:
     # section quoting the detail verbatim instead of dying (issue #178).
     # Anything else propagates unchanged.
     try:
-        placements, params, site_adj, night_adj, approaches = _placements_for(scenario)
+        placements, params, site_adj, night_adj, approaches, _scan = _placements_for(scenario)
     except HTTPException as exc:
         if exc.status_code != 400:
             raise

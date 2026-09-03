@@ -41,6 +41,7 @@ from src.api.schemas import (
     lanes_arithmetic_mismatch,
     scenario_to_call,
 )
+from src.api.site_scan import SiteScanResult, refusal_detail, run_site_scan
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import (
@@ -454,11 +455,21 @@ def _safe_filename(scenario: Scenario, ext: str) -> str:
 
 def _placements_for(
     scenario: Scenario,
-) -> tuple[list, object, list[dict], list[dict], list | None]:
+) -> tuple[list, object, list[dict], list[dict], list | None, SiteScanResult]:
     """Run the generator and apply site- and night-condition adjustments.
 
     Returns ``(placements, params, site_records, night_records,
-    approaches)``.  The record lists describe each flag that fired and
+    approaches, site_scan)``.  ``site_scan`` (#224 phase 1) is the
+    in-generate corridor scan's result: its provenance rides the audit
+    as ``sections.site_scan`` and its ``effective_flags`` are the site
+    conditions the plan actually applied — the plan sheet's context
+    drawing reads those, never the wire's manual dict, so the drawn
+    context and the device list cannot disagree.  When the scenario
+    carries ``site_scan`` and Overpass never answers, this is where
+    generation refuses (honest 400, ``error: site_scan_unavailable``)
+    unless the caller set ``proceed_if_unavailable``.
+
+    The record lists describe each flag that fired and
     the MUTCD section behind it; the markdown narrative consumes both,
     the other render paths discard them but still benefit from the
     modified placements.  ``approaches`` is the ApproachParams list the
@@ -584,26 +595,34 @@ def _placements_for(
                 ),
             },
         )
-    placements, site_records = apply_site_adjustments(
-        placements, params, scenario.meta.siteConditions or {}
-    )
+    # #224 phase 1 — the in-generate corridor site scan (src/api/site_scan.py).
+    # Runs against the plan's FINAL geometry (these params, this
+    # centerline), never a button-time result.  Opt-in via
+    # ``scenario.site_scan``; absent ⇒ ``not_run`` and the manual flags
+    # apply exactly as before.  The refusal sits after the geometry and
+    # layout gates so an input problem is always reported as itself first.
+    site_scan = run_site_scan(scenario, params)
+    if site_scan.refused:
+        raise HTTPException(status_code=400, detail=refusal_detail(site_scan.provenance))
+    placements, site_records = apply_site_adjustments(placements, params, site_scan.effective_flags)
     placements, night_records = apply_night_adjustments(placements, params)
-    return placements, params, site_records, night_records, approaches
+    return placements, params, site_records, night_records, approaches, site_scan
 
 
-def _plan_sheet_site_flags(scenario: Scenario) -> dict[str, bool]:
+def _plan_sheet_site_flags(scenario: Scenario, effective_flags: dict[str, bool]) -> dict[str, bool]:
     """Structured site flags for the plan-sheet renderer (Refs #121).
 
     The renderer's site context used to be inferred by scanning device
     labels; it is now driven by the same flags ``apply_site_adjustments``
-    consumed.  Two structured sources produce drawable context devices:
-    ``meta.siteConditions`` and — for the flagger scenario — the
-    top-level ``pedestrianAccess`` field, whose R9-9 signs come from the
-    generator itself rather than a site adjustment.  Folding the latter
-    into ``pedestrian_facility`` keeps the drawn sheet identical to the
-    pre-#121 inference (like-for-like, rule #5).
+    consumed — ``effective_flags``, the in-generate scan's result merged
+    with the manual dict (#224 phase 1; identical to ``meta.siteConditions``
+    when no scan ran).  A second structured source — for the flagger
+    scenario — is the top-level ``pedestrianAccess`` field, whose R9-9
+    signs come from the generator itself rather than a site adjustment.
+    Folding the latter into ``pedestrian_facility`` keeps the drawn sheet
+    identical to the pre-#121 inference (like-for-like, rule #5).
     """
-    flags = dict(scenario.meta.siteConditions or {})
+    flags = dict(effective_flags)
     if getattr(scenario, "pedestrianAccess", False):
         flags["pedestrian_facility"] = True
     return flags
@@ -612,21 +631,23 @@ def _plan_sheet_site_flags(scenario: Scenario) -> dict[str, bool]:
 def _render_with(
     scenario: Scenario,
     suffix: str,
-    write: Callable[[Path, list, object, list[dict], list[dict], list | None], Path],
+    write: Callable[
+        [Path, list, object, list[dict], list[dict], list | None, SiteScanResult], Path
+    ],
 ) -> bytes:
     """Run scenario_to_call, invoke ``write``, return the file bytes.
 
-    ``write(path, placements, params, site_adj, night_adj, approaches)``
-    writes the artifact at ``path`` and returns the same path.  Cleanup
-    happens regardless of outcome.
+    ``write(path, placements, params, site_adj, night_adj, approaches,
+    site_scan)`` writes the artifact at ``path`` and returns the same
+    path.  Cleanup happens regardless of outcome.
     """
-    placements, params, site_adj, night_adj, approaches = _placements_for(scenario)
+    placements, params, site_adj, night_adj, approaches, site_scan = _placements_for(scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=suffix)
     os.close(fd)
     path = Path(raw_path)
     try:
-        write(path, placements, params, site_adj, night_adj, approaches)
+        write(path, placements, params, site_adj, night_adj, approaches, site_scan)
         return path.read_bytes()
     finally:
         path.unlink(missing_ok=True)
@@ -661,7 +682,7 @@ def render_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, _site, _night, approaches: Path(
+            lambda path, placements, params, _site, _night, approaches, site_scan: Path(
                 render_plan_sheet(
                     placements,
                     params,
@@ -670,7 +691,7 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_lat=scenario.meta.lat or None,
                     site_lng=scenario.meta.lng or None,
                     site_address=scenario.meta.address,
-                    site_flags=_plan_sheet_site_flags(scenario),
+                    site_flags=_plan_sheet_site_flags(scenario, site_scan.effective_flags),
                     include_device_summary=include_summary,
                     jurisdiction_conflicts=conflicts,
                     # Same fired count deltas the breakdown + XLSX apply, so
@@ -706,7 +727,7 @@ def render_xlsx(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".xlsx",
-            lambda path, placements, params, _site, _night, _approaches: Path(
+            lambda path, placements, params, _site, _night, _approaches, _scan: Path(
                 export_device_list(
                     placements,
                     params,
@@ -758,7 +779,7 @@ def render_markdown(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".md",
-            lambda path, placements, params, site_adj, night_adj, approaches: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches, _scan: Path(
                 generate_crew_narrative(
                     placements,
                     params,
@@ -804,7 +825,7 @@ def render_crew_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, site_adj, night_adj, approaches: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches, _scan: Path(
                 generate_crew_narrative_pdf(
                     placements,
                     params,
@@ -1053,7 +1074,7 @@ class QuoteRequest(BaseModel):
 
 
 def _run_quote(req: QuoteRequest):
-    placements, params, _site_adj, _night_adj, _approaches = _placements_for(req.scenario)
+    placements, params, _site_adj, _night_adj, _approaches, _scan = _placements_for(req.scenario)
 
     fd, raw_path = tempfile.mkstemp(suffix=".xlsx")
     os.close(fd)
@@ -1323,7 +1344,7 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     """
     _ensure_scenario_enabled(scenario)
     try:
-        placements, params, _site, _night, _approaches = _placements_for(scenario)
+        placements, params, _site, _night, _approaches, _scan = _placements_for(scenario)
     except HTTPException:
         raise
     except Exception as exc:  # noqa: BLE001
@@ -1365,7 +1386,7 @@ def _audit_projection_and_params_for(
     needs the params once more for the #220 jurisdiction evaluation
     (same single ``_jurisdiction_eval`` the breakdown endpoint uses),
     without running the generator a second time."""
-    placements, params, site_records, _night, approaches = _placements_for(scenario)
+    placements, params, site_records, _night, approaches, site_scan = _placements_for(scenario)
     # Shoulder width is read from params.shoulder_width_ft inside the
     # audit builder (single source of truth — set once at the schemas bridge).
     audit = build_audit_trail(
@@ -1409,6 +1430,9 @@ def _audit_projection_and_params_for(
             r.model_dump(exclude_none=True)
             for r in (getattr(scenario, "detectionOverrides", None) or [])
         ],
+        # #224 phase 1 — the in-generate scan's provenance (always present
+        # on the wire; not_run/not_requested when no scan was asked for).
+        site_scan=site_scan.provenance.model_dump(mode="json"),
     )
     return projection, params
 
