@@ -2,15 +2,26 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
-import { withSiteScan } from "@/lib/scenarios/site-scan";
+import {
+  SITE_SCAN_UNAVAILABLE_CODE,
+  withSiteScan,
+} from "@/lib/scenarios/site-scan";
 import {
   validateApproaches,
   validateLanes,
   validateWorkZone,
 } from "@/lib/scenarios/validation";
-import { matchRefusalAffordance } from "@/lib/scenarios/auto-apply";
+import {
+  matchRefusalAffordance,
+  matchRefusalCode,
+} from "@/lib/scenarios/auto-apply";
 import { stampMatches } from "@/lib/answer-stamp";
-import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
+import type {
+  AuditResponse,
+  AuditState,
+  Refusal,
+  SiteScanProvenance,
+} from "@/lib/render-types";
 import {
   DEFAULT_QUOTE_SETTINGS,
   type QuoteSettings,
@@ -227,11 +238,20 @@ export function GeneratorShell({
   // generation (src/api/site_scan.py).  Derived, memoised on identity:
   // the #197 stamps compare against THIS object, never ``scenario``, or
   // every post-generate answer would read as stale.  Reopen drops the
-  // flag with ``generated``.  ``proceed_if_unavailable`` is false here;
-  // commit 4 (the refusal) threads the per-input acknowledgement.
+  // flag with ``generated``.
+  //
+  // ``proceedFor`` (ruling 1) is the explicit proceed-anyway
+  // acknowledgement after a refused scan: a per-INPUT stamp (the #197
+  // idiom — the scenario object it was given for).  Any edit is a new
+  // object, so the acknowledgement drops and the next scan must succeed
+  // or be acknowledged again; a fresh Generate click resets it.  Shell
+  // state only — never on the scenario the forms edit or a saved plan
+  // carries, never a default (suggest-never-set).
+  const [proceedFor, setProceedFor] = useState<Scenario | null>(null);
   const wireScenario = useMemo(
-    () => (generated ? withSiteScan(scenario, false) : scenario),
-    [scenario, generated],
+    () =>
+      generated ? withSiteScan(scenario, proceedFor === scenario) : scenario,
+    [scenario, generated, proceedFor],
   );
   const fetchScenario = useDebouncedScenario(wireScenario, FETCH_DEBOUNCE_MS);
 
@@ -260,6 +280,7 @@ export function GeneratorShell({
         });
         if (!res.ok) {
           let detail = "";
+          let code: string | undefined;
           try {
             const body = await res.json();
             detail =
@@ -268,6 +289,8 @@ export function GeneratorShell({
                 : typeof body?.detail === "string"
                   ? body.detail
                   : "";
+            // #224 phase 2: the machine-readable code, when sent.
+            if (typeof body?.detail?.error === "string") code = body.detail.error;
           } catch {
             detail = await res.text().catch(() => "");
           }
@@ -277,6 +300,7 @@ export function GeneratorShell({
             // #184: 400 = declined — the chip renders its declined line
             // and offers no Retry (see DeviceBreakdownState).
             httpStatus: res.status,
+            code,
           });
           return;
         }
@@ -310,6 +334,8 @@ export function GeneratorShell({
         setVerifySlow(false);
         if (!res.ok) {
           let detail = "";
+          let code: string | undefined;
+          let siteScan: SiteScanProvenance | undefined;
           try {
             const body = await res.json();
             detail =
@@ -318,6 +344,12 @@ export function GeneratorShell({
                 : typeof body?.detail === "string"
                   ? body.detail
                   : "";
+            // #224 phase 2: the machine-readable code + the scan
+            // provenance that rode with the refusal, when sent.
+            if (typeof body?.detail?.error === "string") code = body.detail.error;
+            if (body?.detail?.site_scan && typeof body.detail.site_scan === "object") {
+              siteScan = body.detail.site_scan as SiteScanProvenance;
+            }
           } catch {
             detail = await res.text().catch(() => "");
           }
@@ -328,6 +360,8 @@ export function GeneratorShell({
             // validation) — the StatusBar renders that as a red input
             // error instead of a neutral "verification unavailable".
             httpStatus: res.status,
+            code,
+            siteScan,
             lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
             forScenario: fetchScenario,
           }));
@@ -554,8 +588,15 @@ export function GeneratorShell({
   const onGenerate = () => {
     scrollPendingRef.current = true;
     setGenAnnouncement("");
+    // #224 phase 2: a proceed-anyway acknowledgement is never remembered
+    // across a fresh Generate (suggest-never-set).
+    setProceedFor(null);
     setGenerated(true);
   };
+  // #224 phase 2 — the explicit proceed-anyway: acknowledge THIS input.
+  // The wire scenario's identity changes, so both fetches refire with
+  // ``proceed_if_unavailable: true`` (the debounce's leading edge).
+  const onProceedWithoutScan = () => setProceedFor(scenario);
 
   // #193: reopening swaps the strip out from under the keyboard — the
   // control that was clicked unmounts, so focus is moved deliberately
@@ -781,12 +822,30 @@ export function GeneratorShell({
       : !approachesValidation.ok
         ? approachesValidation.message
         : null;
+  // #224 phase 2: the code-keyed half — when the 400 carried a
+  // ``detail.error`` the affordance matches on the code (one entry,
+  // matchRefusalCode); the scenario-predicate match stays first and
+  // untouched.
+  const auditRefusalCode =
+    stripAudit.state === "error" && stripAudit.httpStatus === 400
+      ? (stripAudit.code ?? null)
+      : null;
   const refusal: Refusal | null =
     inputError === null && auditInputError !== null
       ? {
           message: auditInputError,
-          pointer: matchRefusalAffordance(scenario)?.pointer ?? null,
+          pointer:
+            matchRefusalAffordance(scenario)?.pointer ??
+            matchRefusalCode(auditRefusalCode)?.pointer ??
+            null,
+          code: auditRefusalCode,
         }
+      : null;
+  // The refused scan's provenance, from the STAMPED audit view (so a
+  // stale refusal for an edited input never renders as current).
+  const scanRefusal: { message: string; scan: SiteScanProvenance | null } | null =
+    stripAudit.state === "error" && stripAudit.code === SITE_SCAN_UNAVAILABLE_CODE
+      ? { message: stripAudit.message, scan: stripAudit.siteScan ?? null }
       : null;
 
   // Engine-removal PR D: the sidebar's corridor preview reads the
@@ -1078,7 +1137,60 @@ export function GeneratorShell({
                 {/* role=alert (#193): a failed generation reaches the
                     strip's live region never (the breakdown pipeline is
                     separate from audit) — the ribbon announces itself. */}
-                {genState === "error" && (
+                {/* #224 phase 2 — the PLAN DECLINED container for a refused
+                    site scan: the #227 system-event shape (amber rule,
+                    ⚠ glyph, the backend ``message`` as ONE text node —
+                    the only place it renders — provenance on line 2) plus
+                    the two recovery actions.  Retry refires both fetches;
+                    proceed-anyway is a deliberate, consequence-stating,
+                    secondary action — never a default.  Precedes the
+                    generic failure ribbon: a refusal is a stated reason,
+                    not a broken breakdown. */}
+                {scanRefusal && (
+                  <div role="alert" className="sys-event warn scan-refusal">
+                    <div className="tr-section mb-1.5">Site scan</div>
+                    <div className="flex items-start gap-2">
+                      <span className="sys-glyph" aria-hidden="true">
+                        ⚠
+                      </span>
+                      <span>{scanRefusal.message}</span>
+                    </div>
+                    <div className="tr-prov mt-1.5">
+                      {[
+                        scanRefusal.scan?.mode
+                          ? `${scanRefusal.scan.mode} scan`
+                          : "site scan",
+                        scanRefusal.scan?.error ?? null,
+                        scanRefusal.scan?.measured_at
+                          ? `attempted ${scanRefusal.scan.measured_at}`
+                          : null,
+                        scanRefusal.scan?.budget_s != null
+                          ? `budget ${scanRefusal.scan.budget_s} s`
+                          : null,
+                      ]
+                        .filter((p): p is string => p !== null)
+                        .join(" · ")}
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+                      <button
+                        type="button"
+                        onClick={onRetry}
+                        className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline cursor-pointer"
+                      >
+                        ↻ Retry scan
+                      </button>
+                      <button
+                        type="button"
+                        onClick={onProceedWithoutScan}
+                        className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-2 py-1 hover:border-[color:var(--warn)] hover:text-[color:var(--ink-on-dark)] cursor-pointer transition-colors"
+                      >
+                        Generate without site check — the plan will say SITE
+                        CONDITIONS NOT CHECKED
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {genState === "error" && !scanRefusal && (
                   <div role="alert" className="stale-ribbon">
                     ⚠ Device breakdown failed — values below may be stale. Fix
                     the input or retry from the plan details panel.

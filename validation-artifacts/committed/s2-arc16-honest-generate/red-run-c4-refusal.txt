@@ -1,0 +1,12 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > renders the PLAN DECLINED container: message verbatim once, provenance, Retry, proceed-anyway; the pill says SERVICE UNAVAILABLE
+Error: refusal container not rendered
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > Retry refires both scanned fetches, still without the acknowledgement
+Error: refusal container not rendered
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > proceed-anyway sends the acknowledgement once; the plan renders and the container clears
+Error: refusal container not rendered
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > an edit drops the acknowledgement: the next scan must succeed or be re-acknowledged
+Error: refusal container not rendered
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > a fresh Generate click resets the acknowledgement (never remembered)
+Error: refusal container not rendered
+ FAIL  components/GeneratorShell.scan-refusal.test.tsx > the code-keyed scan refusal (#224 phase 2) > a successful scan after Retry renders the plan with no container and no disclosure

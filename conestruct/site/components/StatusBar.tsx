@@ -226,8 +226,15 @@ function StatusBarState({
       <div className="status-bar fail">
         <span className="indicator" />
         <span>PLAN DECLINED · {refusal.pointer ?? refusal.message}</span>
+        {/* #224 phase 2 (ruling 2): a refused site scan is neither a
+            review of the user's input nor missing input — the service
+            was unavailable.  The pill says so. */}
         <span className="pill fail">
-          {refusal.pointer ? "NEEDS REVIEW" : "NEEDS INPUT"}
+          {refusal.code === "site_scan_unavailable"
+            ? "SERVICE UNAVAILABLE"
+            : refusal.pointer
+              ? "NEEDS REVIEW"
+              : "NEEDS INPUT"}
         </span>
       </div>
     );

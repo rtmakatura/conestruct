@@ -114,8 +114,31 @@ export interface RefusalAffordance {
     | "flagger_oneway"
     | "flagger_lane_confidence"
     | "shoulder_lane_confidence"
-    | "ni_lane_confidence";
+    | "ni_lane_confidence"
+    | "site_scan_unavailable";
   pointer: string;
+}
+
+// #224 phase 2 — the FIRST code-keyed entry (the header note's option
+// (i)).  The in-generate site scan's refusal has no scenario mirror to
+// predicate on: whether Overpass answered inside its budget is a fact
+// only the backend knows, so the 400 carries ``detail.error`` and this
+// matcher keys on THAT — one entry, exact equality, no message text.
+// ``matchRefusalAffordance`` above is untouched (this refusal exists only
+// post-generate; deriveRail never sees it).  The remedy lives in the
+// Results zone's PLAN DECLINED container (Retry / proceed-anyway), which
+// the pointer names.
+export function matchRefusalCode(
+  code: string | null | undefined,
+): RefusalAffordance | null {
+  if (code === "site_scan_unavailable") {
+    return {
+      code: "site_scan_unavailable",
+      pointer:
+        "the site scan could not complete — retry it, or generate without the site check, from the notice in the Results zone.",
+    };
+  }
+  return null;
 }
 
 // Mirror of render_api.SIGNAL_GATE_NEARBY_M (issue #173) — display-only:

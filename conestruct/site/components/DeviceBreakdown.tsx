@@ -49,6 +49,8 @@ export type DeviceBreakdownState =
       // scenario: the chip mirrors AuditTrail's declined line and offers
       // no Retry (retrying an unchanged input re-earns the same 400).
       httpStatus?: number;
+      // #224 phase 2: the 400's ``detail.error`` when the backend sent one.
+      code?: string;
     };
 
 interface Props {

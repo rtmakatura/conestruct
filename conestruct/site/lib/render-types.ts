@@ -133,6 +133,10 @@ export interface AuditResponse {
     // #104: absent when no site-condition flag fired AND during the
     // Vercel-leads-Modal deploy window (fallback: static table).
     site_adjustments?: SiteAdjustmentRecord[];
+    // #224 phase 1: the in-generate scan's provenance — ALWAYS present
+    // on the wire (not_run/not_requested when no scan was asked for);
+    // optional here only for the deploy window.
+    site_scan?: SiteScanProvenance;
     // #117: per-leg cross-street advance signing.  Present only for the
     // (gated) near_intersection kind; the panel self-suppresses when
     // absent.  Kept loose like the other sections (file-header note).
@@ -175,9 +179,36 @@ export type AuditState =
       // (geometry validation), which the StatusBar renders as a red
       // input error rather than a neutral "verification unavailable".
       httpStatus?: number;
+      // #224 phase 2: the 400's machine-readable ``detail.error`` when
+      // the backend sent one (the first is "site_scan_unavailable") and
+      // the scan provenance that rode with it.  Absent on every other
+      // 400 — those keep matching by scenario predicate (#180).
+      code?: string;
+      siteScan?: SiteScanProvenance;
       lastReady: AuditResponse | null;
       forScenario?: unknown;
     };
+
+/**
+ * #224 phase 1 — ``sections.site_scan`` / the refusal's ``detail.site_scan``
+ * (src/api/site_scan.py SiteScanProvenance).  Loose on purpose: the panel
+ * reads status, error, measured_at, proceeded_anyway and the disclosure
+ * string; everything else is provenance the audit PDF and phase 3 own.
+ */
+export interface SiteScanProvenance {
+  status: "ok" | "unavailable" | "not_run";
+  reason?: string | null;
+  error?: string | null;
+  mode?: string | null;
+  measured_at?: string | null;
+  duration_ms?: number | null;
+  budget_s?: number | null;
+  memo_hit?: boolean;
+  proceeded_anyway?: boolean;
+  flags?: Record<string, boolean>;
+  disclosure?: string | null;
+  [key: string]: unknown;
+}
 
 /**
  * One refusal, one voice (issue #180): the view-model for a backend gate
@@ -194,4 +225,6 @@ export type AuditState =
 export interface Refusal {
   message: string;
   pointer: string | null;
+  /** #224 phase 2: the 400's ``detail.error`` when the backend sent one. */
+  code?: string | null;
 }
