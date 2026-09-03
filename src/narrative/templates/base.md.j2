@@ -148,6 +148,14 @@
 - {{ emergency_access_fact }}
 - The Traffic Control Supervisor completes and confirms the emergency access plan for this site and coordinates notification of police, fire, and emergency medical responder agencies prior to work (TCS duties per CDOT Standard Specifications 630.11).
 - An emergency access plan is a required minimum element of the approved Method of Handling Traffic (CDOT 630.10(a)); this section is draft input for it, not the approved plan.
+{% if site_scan_not_checked %}
+
+## Site Conditions
+
+**{{ site_scan_not_checked }}**
+
+School zones, sidewalks, bicycle facilities, intersections and interchanges along the corridor were not verified against OpenStreetMap at generation; the site-specific notes below reflect operator-set flags only. Re-generate to retry the scan.
+{% endif %}
 {% if site_adjustments %}
 
 ## Site-Specific Notes

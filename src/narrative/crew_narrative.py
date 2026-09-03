@@ -18,12 +18,14 @@ Authoritative sources:
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Mapping
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from src.api.site_scan import not_checked_disclosure
 from src.generation.layout import (
     device_count_floors,
     near_intersection_stations,
@@ -273,6 +275,7 @@ def build_narrative_context(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Extract everything the template needs from placements + params.
 
@@ -864,6 +867,11 @@ def build_narrative_context(
         "flagger_station_1_ft": flagger_station_1_ft,
         "flagger_station_2_ft": flagger_station_2_ft,
         "site_adjustments": site_adjustments or [],
+        # #224 phase 3 (s2-arc17): the NOT-CHECKED disclosure, the
+        # backend's own sentence or None (src/api/site_scan.py owns both
+        # the predicate and the words — one voice across the audit PDF,
+        # the sheet, the panel and this narrative).
+        "site_scan_not_checked": not_checked_disclosure(site_scan),
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
         "trigger_condition": trigger_condition,
@@ -966,6 +974,7 @@ def render_crew_narrative_markdown(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> str:
     """Build the crew-instructions Markdown string (no file I/O).
 
@@ -984,6 +993,7 @@ def render_crew_narrative_markdown(
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
+        site_scan=site_scan,
     )
     markdown = _render_template(context)
     if use_llm:
@@ -1002,6 +1012,7 @@ def generate_crew_narrative(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> str:
     """Render a crew-instructions Markdown document and write it to disk.
 
@@ -1027,6 +1038,7 @@ def generate_crew_narrative(
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
+        site_scan=site_scan,
     )
     Path(output_path).write_text(markdown, encoding="utf-8")
     return output_path
@@ -1043,6 +1055,7 @@ def generate_crew_narrative_pdf(
     approaches: list[ApproachParams] | None = None,
     jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> str:
     """Render the crew narrative as a phone-readable PDF and write it to disk.
 
@@ -1064,6 +1077,7 @@ def generate_crew_narrative_pdf(
         approaches=approaches,
         jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
+        site_scan=site_scan,
     )
     blocks = markdown_to_blocks(markdown)
     return render_document_pdf(blocks, output_path, title="Crew Instructions")

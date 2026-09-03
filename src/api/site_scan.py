@@ -47,6 +47,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Literal
@@ -195,6 +196,22 @@ class SiteScanResult:
 
 def not_run_provenance(reason: SiteScanReason, error: str | None = None) -> SiteScanProvenance:
     return SiteScanProvenance(status="not_run", reason=reason, error=error)
+
+
+def not_checked_disclosure(scan: Mapping[str, Any] | None) -> str | None:
+    """The NOT-CHECKED sentence a surface must print, or ``None``.
+
+    #224 phase 3 (s2-arc17, commit 2): the plan sheet and the crew
+    narrative join the audit PDF and the panel as disclosure surfaces.
+    One predicate — ``unavailable`` + ``proceeded_anyway`` + the string
+    itself — so every surface prints the same backend-authored sentence
+    for the same plan and nothing for any other scan state (an ok scan,
+    ``not_run``, or a refusal that never reached a render).
+    """
+    if not scan or scan.get("status") != "unavailable" or not scan.get("proceeded_anyway"):
+        return None
+    disclosure = scan.get("disclosure")
+    return str(disclosure) if disclosure else None
 
 
 def refusal_detail(provenance: SiteScanProvenance) -> dict[str, Any]:

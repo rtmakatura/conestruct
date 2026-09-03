@@ -692,6 +692,8 @@ def render_pdf(scenario: Scenario) -> Response:
                     site_lng=scenario.meta.lng or None,
                     site_address=scenario.meta.address,
                     site_flags=_plan_sheet_site_flags(scenario, site_scan.effective_flags),
+                    # #224 phase 3 — the NOT-CHECKED disclosure surface.
+                    site_scan=site_scan.provenance.model_dump(mode="json"),
                     include_device_summary=include_summary,
                     jurisdiction_conflicts=conflicts,
                     # Same fired count deltas the breakdown + XLSX apply, so
@@ -779,7 +781,7 @@ def render_markdown(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".md",
-            lambda path, placements, params, site_adj, night_adj, approaches, _scan: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches, scan: Path(
                 generate_crew_narrative(
                     placements,
                     params,
@@ -797,6 +799,8 @@ def render_markdown(scenario: Scenario) -> Response:
                     # Cross-street steps need the same ApproachParams the
                     # generator got (#117); None for every other kind.
                     approaches=approaches,
+                    # #224 phase 3 — the NOT-CHECKED disclosure surface.
+                    site_scan=scan.provenance.model_dump(mode="json"),
                 )
             ),
         )
@@ -825,7 +829,7 @@ def render_crew_pdf(scenario: Scenario) -> Response:
         body = _render_with(
             scenario,
             ".pdf",
-            lambda path, placements, params, site_adj, night_adj, approaches, _scan: Path(
+            lambda path, placements, params, site_adj, night_adj, approaches, scan: Path(
                 generate_crew_narrative_pdf(
                     placements,
                     params,
@@ -836,6 +840,8 @@ def render_crew_pdf(scenario: Scenario) -> Response:
                     jurisdiction_name=jurisdiction_name,
                     jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
                     approaches=approaches,
+                    # #224 phase 3 — the NOT-CHECKED disclosure surface.
+                    site_scan=scan.provenance.model_dump(mode="json"),
                 )
             ),
         )

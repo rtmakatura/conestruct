@@ -37,6 +37,7 @@ from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
+from src.api.site_scan import not_checked_disclosure
 from src.generation.layout import rightmost_lane_assumption_active
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
 from src.rules.device_aggregation import AggregatedDeviceRow
@@ -2855,6 +2856,7 @@ def _draw_notes(
     box_x: float,
     box_w: float,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> None:
     """Draw the NOTES & SIGN SCHEDULE panel as three tabular sub-sections.
 
@@ -2965,7 +2967,17 @@ def _draw_notes(
     # single-sourced in ``rightmost_lane_assumption_active`` (layout.py)
     # so the note fires everywhere the assumption operates.
     rightmost_lane_note = rightmost_lane_assumption_active(params)
-    extra_note_lines = (5 if params.near_intersection else 0) + (2 if rightmost_lane_note else 0)
+    # #224 phase 3 (s2-arc17): the NOT-CHECKED disclosure — a fixed-
+    # obligation line of the same class as the rightmost-lane note (never
+    # cut; reserved up front, 2 wrapped lines).  The predicate and the
+    # sentence are the backend's own (src/api/site_scan.py), so the sheet
+    # prints exactly what the audit PDF and the panel print.
+    scan_disclosure = not_checked_disclosure(site_scan)
+    extra_note_lines = (
+        (5 if params.near_intersection else 0)
+        + (2 if rightmost_lane_note else 0)
+        + (2 if scan_disclosure else 0)
+    )
     layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
     # Representative station per schedule key so the shared substitution
@@ -3249,6 +3261,19 @@ def _draw_notes(
                 6.5,
                 width - 16.0,
                 max_lines=3,
+            ):
+                y[0] -= layout.footer_pads[1]
+                cv.drawString(x, y[0], line)
+        if scan_disclosure:
+            # Rule 10 on the sheet: a plan generated without the site
+            # scan says so where the crew reads the notes — the same
+            # bold 6.5 pt fixed-obligation ink as the DRAFT trailer,
+            # the backend sentence verbatim (one voice), wrapped to the
+            # box, never ellipsis-truncated.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.HexColor("#B05010"))
+            for line in _wrap_to_width(
+                cv, scan_disclosure, "Helvetica-Bold", 6.5, width - 16.0, max_lines=2
             ):
                 y[0] -= layout.footer_pads[1]
                 cv.drawString(x, y[0], line)
@@ -3882,6 +3907,7 @@ def render_plan_sheet(
     include_device_summary: bool = True,
     jurisdiction_conflicts: list[dict[str, Any]] | None = None,
     applied_deltas: list[dict[str, Any]] | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> str:
     """Render a one-sheet schematic MOT plan to ``output_path``.
 
@@ -3906,6 +3932,12 @@ def render_plan_sheet(
     call site rendering a scenario that can carry site conditions MUST
     pass the real flags, or the sheet silently drops its site context
     (Refs #121; replaced the retired label-scan inference).
+
+    ``site_scan`` is the in-generate scan's provenance dict
+    (``sections.site_scan``, #224).  Only one state prints: a plan
+    generated with proceed-anyway after a failed scan carries the
+    backend's NOT-CHECKED sentence in the notes box (s2-arc17).  ``None``
+    (every pre-phase-3 caller) prints nothing, as before.
     """
     # Invariant: the renderer never receives an empty device list.  The
     # API path rejects this with an honest 400 upstream (_placements_for);
@@ -4039,6 +4071,7 @@ def render_plan_sheet(
         include_device_summary=include_device_summary,
         jurisdiction_conflicts=jurisdiction_conflicts,
         applied_deltas=applied_deltas,
+        site_scan=site_scan,
         site_lat=site_lat,
         site_lng=site_lng,
     )
@@ -4090,6 +4123,7 @@ def _render_schematic_page(
     applied_deltas: list[dict[str, Any]] | None = None,
     site_lat: float | None = None,
     site_lng: float | None = None,
+    site_scan: Mapping[str, Any] | None = None,
 ) -> None:
     """Render the schematic page (page 1)."""
     bearing_deg = getattr(params, "bearing_deg", None)
@@ -4176,6 +4210,7 @@ def _render_schematic_page(
         box_x=geom.notes_x,
         box_w=geom.notes_w,
         jurisdiction_conflicts=jurisdiction_conflicts,
+        site_scan=site_scan,
     )
     if geom.device_x is not None and geom.device_w is not None:
         _draw_device_summary(c, geom.device_x, geom.device_w, placements, params, applied_deltas)
