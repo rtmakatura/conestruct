@@ -287,8 +287,16 @@ function judgeRows(text, scan, tag) {
       const PDF_LABELS = ["Adjacent at-grade", "Adjacent interchange", "Pedestrian sidewalks", "Bike lane", "School zone"];
       const pdfDetected = PDF_LABELS.filter((l) => new RegExp(l + "[^\\n]{0,80}DETECTED").test(text)).length;
       const aDetected = detectedSet(aScan).split(",").filter(Boolean).length;
-      if (pdfDetected === aDetected) ok(cover === wantLine, "B3 the audit-PDF cover line equals the classifier line over the served audit (screen == PDF == classifier)", `cover "${cover}" vs served "${wantLine}"`);
-      else note("B3 the PDF's own scan detected a different set than leg A's (another container) — cover/classifier parity is pinned at test level (test_tier_ledger PDF-cover test on the scanned fixtures)", `pdf ${pdfDetected} vs A ${aDetected}; cover "${cover}"`);
+      // The corridor check is the other per-request fact that moves the
+      // ledger (checked-and-clean ⇒ audit:corridor:clean ✓; #241's
+      // budget ⇒ check_unavailable ⇒ no fact).  The prod run-1 lesson:
+      // same detected set but a different corridor outcome is a
+      // different classifier input, not a parity defect.
+      const aCv = a.json?.sections?.corridor_validation ?? {};
+      const aClean = aCv.checked === true && (aCv.warnings ?? []).length === 0;
+      const pdfClean = /corridor check ran with no warnings/.test(text);
+      if (pdfDetected === aDetected && pdfClean === aClean) ok(cover === wantLine, "B3 the audit-PDF cover line equals the classifier line over the served audit (screen == PDF == classifier)", `cover "${cover}" vs served "${wantLine}"`);
+      else note("B3 the PDF's own request differs from leg A's in a per-request fact (detected set or corridor-check outcome — another container / the #241 budget), so the two are different classifier inputs; cover/classifier parity on ONE audit is pinned at test level (test_tier_ledger PDF-cover test) and measured live in E6", `pdf detected ${pdfDetected} vs A ${aDetected}; pdf corridor clean ${pdfClean} vs A ${aClean}; cover "${cover}"`);
     }
   }
 

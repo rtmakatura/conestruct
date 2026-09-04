@@ -145,8 +145,46 @@ rewritten + 2 site-scan pins renamed; 19 added), pytest collected
   backend-derived `citation` and the OPENSTREETMAP / REFERENCE provenance
   tags.
 
-## Post-ship (next prompt)
+## Prod runs — `outS2A17Prod/` — ALL PASS 18/18 (+2 INFO) on `371ed5c`
 
-Prod run of `s2a17-lc-prod.js` on an evidence branch (dies in this arc's
-janitorial); the #224 phase-3 re-scoping comment chat-drafted after
-Ryan's hand-confirm on a hard-refreshed tab (#242 window).
+Shipped 2026-09-04; `/healthz` == `origin/main` == `371ed5c` (gate line in
+`s2a17-lc.md`). Two runs, minutes apart, both sha-gated, on the evidence
+branch `s2a17-live-checks`:
+
+- **Run 1** (`s2a17-lc-run1-superseded.md`, 15:09Z): 17/18. Its single
+  FAIL was a script judgement, not a product defect: B3 compared the
+  audit-PDF cover line to the classifier over leg A's audit, and the two
+  requests differed in a per-request fact — A's corridor check read
+  `check_unavailable` (the #241 budget; A took 26.5 s) while the PDF's
+  own request had a clean corridor check (`audit:corridor:clean`, +1
+  checked). The cover was right for its own audit (`E6` proved the same
+  13-checked line against the browser's own served audit). Fixed: B3
+  now also requires the corridor outcome to match before claiming
+  parity, otherwise INFO.
+- **Run 2** (`s2a17-lc.md`, 15:12Z): ALL PASS 18/18. On the wire: every
+  keyed bucket present; each detected bucket's `nearest_distance_ft`
+  equals m / 0.3048 (10.4 → 34.1, 14.2 → 46.6, 21.7 → 71.2). The
+  audit-PDF cover, the on-screen ledger, and the Python classifier over
+  the browser's own served audit all print `2 changes · 1 needs
+  attention · 13 checked · 1 pending · reference`. Section 03 names all
+  five conditions per the served scan; the Setup step is the slim
+  control; `/api/render/detect-site` → 404. Axe post-generate 1 ≤ 2
+  (the pre-existing `.opacity-80` scope line, as in the local run).
+  INFO ×2: both proceed-anyway scans succeeded (the sheet and narrative
+  correctly print no disclosure — rule 10's negative, PASS C3) and no
+  refusal landed in 4 Generate cycles (8 across both runs), so the
+  counted NOT-CHECKED item was not captured on prod; it is captured
+  live in `outS2A17Local/` (leg C, sheet + narrative) and pinned mounted
+  on the recorded fixture. Never faked.
+
+Latencies on prod, run 2: scanned audit 12.2 s (cold), scanned audit
+PDF 4.1 s, proceed-anyway sheet 8.2 s, narrative 0.5 s (memo), browser
+Generate 5.6 s; run 1's cold scanned audit 26.5 s and sheet 26.8 s
+(corridor check at the 20 s budget). None over 45 s.
+
+## Post-ship remaining
+
+Ryan's hand-confirm on a hard-refreshed tab (#242 window); the #224
+phase-3 re-scoping comment chat-drafted; janitorial — the arc branch,
+`fix-224-snapshot-wire` (merged), and this evidence branch after it
+ships.

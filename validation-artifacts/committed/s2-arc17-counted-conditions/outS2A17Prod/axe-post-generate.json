@@ -1,0 +1,9 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "targets": [
+      ".opacity-80"
+    ]
+  }
+]
