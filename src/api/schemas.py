@@ -57,6 +57,43 @@ WORK_LEN_MAX_FT = 20000.0
 MAX_DRAWABLE_HALF_ROAD_FT = 52.0
 
 
+ScannedSiteFlag = Literal[
+    "adjacent_intersection",
+    "adjacent_interchange",
+    "pedestrian_facility",
+    "bicycle_facility",
+    "school_zone",
+]
+SiteOverrideAction = Literal["dismiss", "assert"]
+SiteDismissReason = Literal["fenced", "removed", "not_in_work_zone", "other"]
+
+
+class SiteConditionOverride(BaseModel):
+    """An operator correction of one scanned site condition (#224 phase 4).
+
+    The in-generate scan owns the five detection keys (phase 1 ruling 1).
+    This marker is the operator's explicit, disclosed disagreement with
+    what the scan found — ``dismiss`` ("the sidewalk is fenced off") or
+    ``assert`` ("there is a school zone the map lacks").  It rides
+    ``meta.siteConditionOverrides`` on the scenario itself, like the #177
+    ``DetectionOverride`` markers, because the backend re-generates from it
+    and a saved plan must reload to the same plan (rule 10).
+
+    Mirrors ``SiteConditionOverride`` in lib/scenarios/types.ts.  The
+    cross-field rules (a dismiss needs a reason; ``note`` iff ``other``;
+    one correction per condition) are enforced by
+    ``site_scan.override_violation`` as an honest 400, not a 422 — the
+    frontend's recovery affordance reads the code.
+    """
+
+    flag: ScannedSiteFlag
+    action: SiteOverrideAction
+    reason: SiteDismissReason | None = None
+    note: str | None = Field(default=None, max_length=200)
+    # ISO-8601 UTC, seconds — the click, recorded by the frontend.
+    recorded_at: str = Field(max_length=32)
+
+
 class ScenarioMeta(BaseModel):
     project: str = ""
     address: str = ""
@@ -93,6 +130,9 @@ class ScenarioMeta(BaseModel):
     # Site-condition flags consumed by src.rules.site_adjustments. Default
     # empty: a missing or empty dict keeps the baseline layout unchanged.
     siteConditions: dict[str, bool] = Field(default_factory=dict)
+    # #224 phase 4 — operator corrections of the scanned keys (see
+    # ``SiteConditionOverride``).  None/empty ⇒ the scan's verdict stands.
+    siteConditionOverrides: list[SiteConditionOverride] | None = Field(default=None, max_length=5)
     # Spec §4.1 (issue #150): the on-sheet device summary is on by default;
     # jurisdictions whose record carries requires=on_sheet_device_summary
     # render it regardless of this toggle.

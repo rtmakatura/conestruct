@@ -1,0 +1,2 @@
+grid cases drifted: 70/70
+  + sections.site_scan.corrections = []

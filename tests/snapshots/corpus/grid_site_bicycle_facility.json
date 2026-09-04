@@ -133,6 +133,7 @@
     "site_scan": {
       "buckets": {},
       "budget_s": 20.0,
+      "corrections": [],
       "disclosure": null,
       "duration_ms": null,
       "error": null,

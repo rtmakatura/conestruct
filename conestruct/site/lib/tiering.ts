@@ -75,11 +75,25 @@ export interface ScanBucketWire {
   nearest_distance_ft?: number | null;
   details?: string[];
 }
+/** One operator correction as the wire discloses it (src/api/site_scan.py
+ *  SiteScanCorrection, #224 phase 4).  ``disclosure`` is the one
+ *  backend-composed sentence every surface prints verbatim. */
+export interface ScanCorrectionWire {
+  flag: string;
+  action: "dismiss" | "assert";
+  reason?: string | null;
+  note?: string | null;
+  recorded_at?: string;
+  status: "applied" | "moot";
+  scan_detected?: boolean | null;
+  disclosure: string;
+}
 export interface ScanWire {
   status?: string;
   proceeded_anyway?: boolean;
   measured_at?: string | null;
   buckets?: Record<string, ScanBucketWire>;
+  corrections?: ScanCorrectionWire[];
 }
 
 /** The evidence line a section-03 row prints for a detected bucket —
@@ -275,11 +289,35 @@ export function assignTiers({ jurisdiction, audit, auditFailed = false }: Tierin
     // missing from the wire yields nothing: absence of signal is not
     // absence of a feature (rule 10).
     const scan = s.site_scan as ScanWire | undefined;
+    // #224 phase 4 — the operator's corrections (ruling c; MIRROR of
+    // tier_ledger.py): an applied dismiss keeps the condition's fact as
+    // ``audit:scan:<flag>`` checked (the detection no longer fires an
+    // adjustment record); an applied assert's fact IS the adjustment
+    // record above, so the scanned-absent pass is suppressed; a moot
+    // correction is reference, uncounted.  The pending item each applied
+    // correction emits already tiered pending above, as #177's does.
+    const dismissed = new Set<string>();
+    const asserted = new Set<string>();
+    for (const c of scan?.corrections ?? []) {
+      if (c.status === "moot") {
+        facts.push(
+          fact(`audit:scan:correction:${c.flag}`, "reference", "operator correction — moot"),
+        );
+      } else if (c.action === "dismiss") {
+        dismissed.add(c.flag);
+      } else if (c.action === "assert") {
+        asserted.add(c.flag);
+      }
+    }
     if (scan?.status === "ok") {
       const buckets = scan.buckets ?? {};
       for (const [bucket, flag] of SCAN_BUCKET_TO_FLAG) {
         const b = buckets[bucket];
-        if (b && b.detected !== true) {
+        if (dismissed.has(flag)) {
+          facts.push(fact(`audit:scan:${flag}`, "checked", "dismissed by the operator"));
+        } else if (asserted.has(flag)) {
+          continue;
+        } else if (b && b.detected !== true) {
           facts.push(fact(`audit:scan:${flag}`, "checked", "scanned — none along the corridor"));
         }
       }

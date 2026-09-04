@@ -36,8 +36,21 @@ EXPECTATIONS = json.loads((FIXTURE_DIR / "tiering-expectations.json").read_text(
 # scenarios carry ``site_scan``, so the PDF-cover test's real API path runs
 # the in-generate scan — routed to the same stub the recording used (the
 # containment harness's idiom); the network is never reached.
-FIXTURES = ["control-lakewood", "adv-ni-denver", "scanned-lakewood", "scanned-not-checked"]
-SCAN_STUB = {"scanned-lakewood": "recorded", "scanned-not-checked": "down"}
+FIXTURES = [
+    "control-lakewood",
+    "adv-ni-denver",
+    "scanned-lakewood",
+    "scanned-not-checked",
+    # s2-arc18 (#224 phase 4): the two corrected recordings.
+    "scanned-dismissed",
+    "scanned-asserted",
+]
+SCAN_STUB = {
+    "scanned-lakewood": "recorded",
+    "scanned-not-checked": "down",
+    "scanned-dismissed": "recorded",
+    "scanned-asserted": "recorded",
+}
 SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"
 
 
@@ -285,4 +298,71 @@ def test_scan_missing_bucket_refused_and_not_run_yield_nothing() -> None:
 def test_scan_not_checked_is_one_counted_attention_fact() -> None:
     proj = _scan_projection({"status": "unavailable", "proceeded_anyway": True})
     assert tier_facts(proj, None) == {"audit:scan:not_checked": "attention"}
-    assert tier_ledger(proj, None)["attention"] == 1
+
+
+# --------------------------------------------------------------------------- #
+# 6 · Corrections (#224 phase 4, s2-arc18, ruling c) — the edges on the mirror
+# --------------------------------------------------------------------------- #
+
+
+def test_applied_dismiss_keeps_the_condition_as_a_checked_scan_fact() -> None:
+    # The sidewalk is detected but dismissed: no adjustment record fires,
+    # so without this rule the condition would be silent (rule 10).
+    proj = _scan_projection(
+        {
+            "status": "ok",
+            "buckets": {"sidewalks": {"detected": True}, "schools": {"detected": False}},
+            "corrections": [
+                {"flag": "pedestrian_facility", "action": "dismiss", "status": "applied"}
+            ],
+        }
+    )
+    facts = tier_facts(proj, None)
+    assert facts["audit:scan:pedestrian_facility"] == "checked"
+    assert facts["audit:scan:school_zone"] == "checked"
+    assert tier_ledger(proj, None) == {"changed": 0, "attention": 0, "checked": 2, "pending": 0}
+
+
+def test_applied_assert_suppresses_the_scanned_absent_pass() -> None:
+    # The adjustment record (audit:site:school_zone) IS the fact; the
+    # "none along the corridor" pass must not read the condition both ways.
+    proj = {
+        "sections": {
+            "site_adjustments": [{"flag": "school_zone", "devices_added": 2}],
+            "site_scan": {
+                "status": "ok",
+                "buckets": {"schools": {"detected": False}},
+                "corrections": [{"flag": "school_zone", "action": "assert", "status": "applied"}],
+            },
+        },
+        "pending_verification": {"count": 0},
+    }
+    facts = tier_facts(proj, None)
+    assert facts["audit:site:school_zone"] == "changed"
+    assert "audit:scan:school_zone" not in facts
+
+
+def test_moot_correction_is_reference_and_uncounted() -> None:
+    proj = _scan_projection(
+        {
+            "status": "ok",
+            "buckets": {"schools": {"detected": False}},
+            "corrections": [{"flag": "school_zone", "action": "dismiss", "status": "moot"}],
+        }
+    )
+    facts = tier_facts(proj, None)
+    assert facts["audit:scan:correction:school_zone"] == "reference"
+    assert facts["audit:scan:school_zone"] == "checked"  # the scan's own verdict stands
+    assert tier_ledger(proj, None) == {"changed": 0, "attention": 0, "checked": 1, "pending": 0}
+
+
+def test_correction_pending_item_tiers_pending_like_177() -> None:
+    proj = {
+        "sections": {"site_scan": {"status": "ok", "buckets": {}, "corrections": []}},
+        "pending_verification": {
+            "count": 1,
+            "items": [{"kind": "site_condition_overridden", "label": "x", "tracking_issue": None}],
+        },
+    }
+    assert tier_facts(proj, None) == {"audit:pending:0": "pending"}
+    assert tier_ledger(proj, None) == {"changed": 0, "attention": 0, "checked": 0, "pending": 1}

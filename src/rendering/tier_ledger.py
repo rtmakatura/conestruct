@@ -117,11 +117,37 @@ def tier_facts(
             facts["audit:pending:0"] = "pending"
         # #224 phase 3 — the scan's own facts (module docstring).
         scan = sections.get("site_scan") or {}
+        # #224 phase 4 — the operator's corrections (ruling c):
+        #   · applied dismiss — the condition's fact is ``audit:scan:<flag>``
+        #     checked (the detection no longer fires an adjustment record;
+        #     without this the dismissed condition would be silent);
+        #   · applied assert — the adjustment record IS the fact
+        #     (``audit:site:<flag>`` above); the scanned-absent named pass
+        #     is suppressed so one condition never reads both ways;
+        #   · moot — ``audit:scan:correction:<flag>`` reference, uncounted.
+        # The pending item each applied correction emits tiers pending
+        # through ``pending_verification`` above, as #177's does.
+        dismissed: set[str] = set()
+        asserted: set[str] = set()
+        for c in scan.get("corrections") or []:
+            if not isinstance(c, dict):
+                continue
+            flag = str(c.get("flag", ""))
+            if c.get("status") == "moot":
+                facts[f"audit:scan:correction:{flag}"] = "reference"
+            elif c.get("action") == "dismiss":
+                dismissed.add(flag)
+            elif c.get("action") == "assert":
+                asserted.add(flag)
         if scan.get("status") == "ok":
             buckets = scan.get("buckets") or {}
             for bucket, flag in DETECTION_TO_FLAG.items():
                 b = buckets.get(bucket)
-                if isinstance(b, dict) and b.get("detected") is not True:
+                if flag in dismissed:
+                    facts[f"audit:scan:{flag}"] = "checked"
+                elif flag in asserted:
+                    continue
+                elif isinstance(b, dict) and b.get("detected") is not True:
                     facts[f"audit:scan:{flag}"] = "checked"
             for bucket in buckets:
                 if bucket not in DETECTION_TO_FLAG:

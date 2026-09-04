@@ -1,0 +1,24 @@
+# s2-arc18 commit 1 red-prove — 2026-09-04T18:27Z — mirrors (tier_ledger.py, tiering.ts) at main 9aee784; fixtures + tiering-expectations.json + harness lists staged
+
+## pytest tests/test_tier_ledger.py
+FAILED tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-dismissed]
+FAILED tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-asserted]
+FAILED tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-dismissed]
+FAILED tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-asserted]
+FAILED tests/test_tier_ledger.py::test_applied_dismiss_keeps_the_condition_as_a_checked_scan_fact
+FAILED tests/test_tier_ledger.py::test_applied_assert_suppresses_the_scanned_absent_pass
+FAILED tests/test_tier_ledger.py::test_moot_correction_is_reference_and_uncounted
+7 failed, 18 passed in 2.19s
+
+## vitest lib/tiering.test.ts components/TieredReference.fixtures.test.tsx
+   ✓ the ruled status→tier grid > colorado pass → checked; FAIL → attention (flag i) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-dismissed
+ FAIL  components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-asserted
+ FAIL  lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-dismissed
+ FAIL  lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-asserted
+ FAIL  lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > applied dismiss → the condition stays as audit:scan:<flag> checked (never silent)
+ FAIL  lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > applied assert → the audit:site row is the fact; the scanned-absent pass is suppressed
+ FAIL  lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > moot correction → audit:scan:correction:<flag> reference, uncounted; the scan's verdict stands
+ Test Files  2 failed (2)
+      Tests  7 failed | 42 passed (49)

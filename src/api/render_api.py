@@ -41,7 +41,13 @@ from src.api.schemas import (
     lanes_arithmetic_mismatch,
     scenario_to_call,
 )
-from src.api.site_scan import SiteScanResult, refusal_detail, run_site_scan
+from src.api.site_scan import (
+    SiteScanResult,
+    override_detail,
+    override_violation,
+    refusal_detail,
+    run_site_scan,
+)
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import (
@@ -599,6 +605,12 @@ def _placements_for(
     # ``scenario.site_scan``; absent ⇒ ``not_run`` and the manual flags
     # apply exactly as before.  The refusal sits after the geometry and
     # layout gates so an input problem is always reported as itself first.
+    # #224 phase 4 — a malformed correction list is the operator's input
+    # problem: honest 400 with the code the recovery affordance reads,
+    # before any scan runs (site_scan.override_violation owns the rules).
+    violation = override_violation(list(scenario.meta.siteConditionOverrides or []))
+    if violation is not None:
+        raise HTTPException(status_code=400, detail=override_detail(violation))
     site_scan = run_site_scan(scenario, params)
     if site_scan.refused:
         raise HTTPException(status_code=400, detail=refusal_detail(site_scan.provenance))

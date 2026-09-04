@@ -1563,6 +1563,9 @@ LANE_CONFIDENCE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/is
 # sides — what the map data reported and what the human asserted — so a
 # reviewer can re-check the one decision the system used to erase.
 DETECTION_OVERRIDE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/177"
+# #224 phase 4 — an operator correction of a scanned site condition rides
+# pending_verification exactly as the #177 override does (ruling c).
+SITE_CONDITION_OVERRIDE_ISSUE: str | None = "https://github.com/rtmakatura/conestruct/issues/224"
 
 
 def _ts_merging_taper_length(lane_width_ft: float, speed_mph: int) -> int:
@@ -1976,6 +1979,24 @@ def audit_projection(
                 "tracking_issue": DETECTION_OVERRIDE_ISSUE,
             }
         )
+
+    # #224 phase 4 — operator corrections of the scanned site conditions
+    # (site_scan.SiteScanCorrection): one pending item per APPLIED
+    # correction, the #177 shape and emission point (ruling c: a condition
+    # and the operator's override of it are two facts).  The label is the
+    # backend-composed disclosure sentence verbatim — the same words the
+    # strip, section 03, the sheet and the narrative print.  A moot
+    # correction is disclosed on the provenance and tiers as reference;
+    # it does not ask the TCS to verify anything.
+    for c in (site_scan or {}).get("corrections") or []:
+        if isinstance(c, dict) and c.get("status") == "applied" and c.get("disclosure"):
+            items.append(
+                {
+                    "kind": "site_condition_overridden",
+                    "label": str(c["disclosure"]),
+                    "tracking_issue": SITE_CONDITION_OVERRIDE_ISSUE,
+                }
+            )
 
     # #82: the corridor rule (validate_corridor_against_osm) emits rich
     # diagnostic dicts — anchor_lat/lng, detected_highway, bearing values,

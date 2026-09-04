@@ -90,6 +90,166 @@ DETECTION_TO_FLAG: dict[str, str] = {
 # (sheet, narrative, audit).  Authored once, backend-side.
 NOT_CHECKED_DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
 
+# ---------------------------------------------------------------------------
+# #224 phase 4 (s2-arc18) — operator corrections of the scanned keys
+# ---------------------------------------------------------------------------
+#
+# ``meta.siteConditionOverrides`` (schemas.SiteConditionOverride) is the
+# operator's explicit disagreement with the scan: ``dismiss`` a detected
+# condition with a reason, or ``assert`` one the scan did not find.  The
+# corrections apply AFTER the scan's precedence and BEFORE
+# ``effective_flags`` leave this module, so every consumer (the rules,
+# the sheet, the narrative, the audit, both tier mirrors) sees the
+# corrected plan and none re-derives it (Rule 3).  Each correction is
+# disclosed on the provenance as a :class:`SiteScanCorrection` carrying
+# what the scan said at apply time and ONE backend-composed sentence —
+# the phase-2 pattern: every surface prints the same words.
+#
+# A correction the scan now agrees with is ``moot`` — disclosed, never
+# dropped (Rule 10).  Without an ok scan (unavailable + proceeded,
+# not_run) an assert still applies (the operator's word is the only
+# word) and a dismiss is moot (nothing was detected to dismiss).
+
+SITE_CONDITION_LABELS: dict[str, str] = {
+    "adjacent_intersection": "adjacent at-grade intersection",
+    "adjacent_interchange": "adjacent interchange",
+    "pedestrian_facility": "pedestrian sidewalks",
+    "bicycle_facility": "bike lane / cycleway",
+    "school_zone": "school zone",
+}
+SCANNED_FLAGS: frozenset[str] = frozenset(DETECTION_TO_FLAG.values())
+FLAG_TO_DETECTION: dict[str, str] = {flag: det for det, flag in DETECTION_TO_FLAG.items()}
+
+DISMISS_REASON_TEXT: dict[str, str] = {
+    "fenced": "fenced off",
+    "removed": "removed",
+    "not_in_work_zone": "not in the work zone",
+    "other": "other",
+}
+
+SITE_CONDITION_OVERRIDE_ERROR = "site_condition_override_invalid"
+_VERIFY = (
+    " The plan is built to the correction — verify it in the field or on imagery before deploying."
+)
+
+
+def override_violation(overrides: list[Any]) -> str | None:
+    """The honest 400's message for a malformed correction list, or None.
+
+    Shape (types) is Pydantic's; these are the cross-field rules the
+    ruling set: a dismiss needs a reason; ``note`` exactly when the
+    reason is ``other``; an assert carries neither; one correction per
+    condition.
+    """
+    seen: set[str] = set()
+    for o in overrides:
+        flag = str(getattr(o, "flag", ""))
+        label = SITE_CONDITION_LABELS.get(flag, flag)
+        if flag in seen:
+            return f"Two corrections name {label}; keep one."
+        seen.add(flag)
+        action = getattr(o, "action", None)
+        reason = getattr(o, "reason", None)
+        note = (getattr(o, "note", None) or "").strip()
+        if action == "dismiss":
+            if reason is None:
+                return (
+                    f"Dismissing {label} needs a reason (fenced, removed, not in work zone, other)."
+                )
+            if reason == "other" and not note:
+                return f"Dismissing {label} for another reason needs a note saying which."
+            if reason != "other" and note:
+                return f"Dismissing {label}: a note goes only with the reason 'other'."
+        elif action == "assert":
+            if reason is not None or note:
+                return f"Asserting {label} takes no reason — the assertion is the fact."
+    return None
+
+
+def override_detail(message: str) -> dict[str, Any]:
+    """Structured ``detail`` for the correction 400 (the #180 code idiom)."""
+    return {
+        "error": SITE_CONDITION_OVERRIDE_ERROR,
+        "message": message,
+        "recovery": {"field": "meta.siteConditionOverrides"},
+    }
+
+
+def _reason_text(o: Any) -> str:
+    reason = str(getattr(o, "reason", "") or "")
+    if reason == "other":
+        return (getattr(o, "note", None) or "").strip() or "other"
+    return DISMISS_REASON_TEXT.get(reason, reason)
+
+
+def _apply_corrections(
+    effective: dict[str, bool], buckets: dict[str, Any] | None, overrides: list[Any]
+) -> tuple[dict[str, bool], list[SiteScanCorrection]]:
+    """Apply the operator's corrections on top of the scan's verdict.
+
+    ``buckets`` is the ok scan's result, or None when no scan result
+    exists (unavailable + proceeded, not_run).  Returns the corrected
+    flags and one disclosed record per correction, in wire order.
+    """
+    out = dict(effective)
+    records: list[SiteScanCorrection] = []
+    for o in overrides:
+        flag = str(getattr(o, "flag", ""))
+        action = str(getattr(o, "action", ""))
+        label = SITE_CONDITION_LABELS.get(flag, flag)
+        detected: bool | None = None
+        if buckets is not None:
+            b = buckets.get(FLAG_TO_DETECTION.get(flag, ""))
+            detected = bool(isinstance(b, dict) and b.get("detected"))
+        if action == "dismiss":
+            if detected is True:
+                out.pop(flag, None)
+                status, text = (
+                    "applied",
+                    f"Operator dismissed the scan's {label}: {_reason_text(o)}.{_VERIFY}",
+                )
+            elif detected is False:
+                status, text = (
+                    "moot",
+                    f"Operator dismissal of {label} is moot — the scan found none along "
+                    "the corridor; nothing to dismiss.",
+                )
+            else:
+                status, text = (
+                    "moot",
+                    f"Operator dismissal of {label} could not apply — the site scan did "
+                    "not complete; nothing was detected to dismiss.",
+                )
+        else:  # assert
+            if detected is True:
+                status, text = (
+                    "moot",
+                    f"Operator assertion of {label} is moot — the scan detected it; the "
+                    "assertion changes nothing.",
+                )
+            else:
+                out[flag] = True
+                found = (
+                    "the scan found none along the corridor"
+                    if detected is False
+                    else "the site scan did not complete"
+                )
+                status, text = ("applied", f"Operator asserted {label} — {found}.{_VERIFY}")
+        records.append(
+            SiteScanCorrection(
+                flag=flag,
+                action=action,
+                reason=getattr(o, "reason", None),
+                note=getattr(o, "note", None),
+                recorded_at=str(getattr(o, "recorded_at", "") or ""),
+                status=status,
+                scan_detected=detected,
+                disclosure=text,
+            )
+        )
+    return out, records
+
+
 # The honest 400's user-facing sentence (#224 ruling 2: refuse by default).
 SITE_SCAN_UNAVAILABLE_MESSAGE = (
     "Site scan unavailable — the plan can't verify school zones, sidewalks, "
@@ -160,6 +320,21 @@ class SiteScanBucket(BaseModel):
         return self
 
 
+class SiteScanCorrection(BaseModel):
+    """One applied-or-moot operator correction, disclosed (#224 phase 4)."""
+
+    flag: str
+    action: Literal["dismiss", "assert"]
+    reason: str | None = None
+    note: str | None = None
+    recorded_at: str = ""
+    status: Literal["applied", "moot"]
+    # What the scan said for this flag at apply time; None = no scan result.
+    scan_detected: bool | None = None
+    # The one backend-composed sentence every surface prints.
+    disclosure: str
+
+
 class SiteScanProvenance(BaseModel):
     """``sections.site_scan`` — always present on the audit."""
 
@@ -180,6 +355,9 @@ class SiteScanProvenance(BaseModel):
     # Manual values the scan overrode (ruling 1 disclosure).
     manual_flags_discarded: dict[str, bool] = Field(default_factory=dict)
     disclosure: str | None = None
+    # #224 phase 4 — the operator's corrections, applied or moot, in wire
+    # order.  Empty when the scenario carries none.
+    corrections: list[SiteScanCorrection] = Field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -194,8 +372,14 @@ class SiteScanResult:
         return self.provenance.status == "unavailable" and not self.provenance.proceeded_anyway
 
 
-def not_run_provenance(reason: SiteScanReason, error: str | None = None) -> SiteScanProvenance:
-    return SiteScanProvenance(status="not_run", reason=reason, error=error)
+def not_run_provenance(
+    reason: SiteScanReason,
+    error: str | None = None,
+    corrections: list[SiteScanCorrection] | None = None,
+) -> SiteScanProvenance:
+    return SiteScanProvenance(
+        status="not_run", reason=reason, error=error, corrections=corrections or []
+    )
 
 
 def not_checked_disclosure(scan: Mapping[str, Any] | None) -> str | None:
@@ -290,17 +474,26 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
     ScenarioParams ``scenario_to_call`` produced for it.
     """
     manual: dict[str, bool] = dict(getattr(scenario.meta, "siteConditions", None) or {})
+    overrides: list[Any] = list(getattr(scenario.meta, "siteConditionOverrides", None) or [])
     request: SiteScanRequest | None = getattr(scenario, "site_scan", None)
+
+    def _unscanned(prov: SiteScanProvenance) -> SiteScanResult:
+        # No scan result: asserts apply on the operator's word, dismisses
+        # are moot — and every correction is still disclosed (phase 4).
+        flags, corrections = _apply_corrections(manual, None, overrides)
+        prov.corrections = corrections
+        return SiteScanResult(prov, flags)
+
     if request is None:
-        return SiteScanResult(not_run_provenance("not_requested"), manual)
+        return _unscanned(not_run_provenance("not_requested"))
 
     lat = scenario.meta.lat or None
     lng = scenario.meta.lng or None
     if lat is None or lng is None:
-        return SiteScanResult(not_run_provenance("no_coords"), manual)
+        return _unscanned(not_run_provenance("no_coords"))
     bearing = getattr(params, "bearing_deg", None)
     if bearing is None:
-        return SiteScanResult(not_run_provenance("no_bearing"), manual)
+        return _unscanned(not_run_provenance("no_bearing"))
 
     centerline = getattr(params, "centerline", None)
     try:
@@ -321,8 +514,8 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         # A kind whose closure type the corridor math does not know — not a
         # service failure, so not ``unavailable``; an honest not_run with
         # the cause.  Unreachable for the enabled kinds (shoulder / lane).
-        return SiteScanResult(
-            not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}"), manual
+        return _unscanned(
+            not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}")
         )
 
     from src.rules.site_detection import (
@@ -373,13 +566,16 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
             inputs=inputs,
             disclosure=NOT_CHECKED_DISCLOSURE if proceed else None,
         )
-        # The plan (if it proceeds) builds from the manual flags only.
-        return SiteScanResult(prov, manual)
+        # The plan (if it proceeds) builds from the manual flags only —
+        # plus the operator's asserts (phase 4; dismisses are moot here).
+        return _unscanned(prov)
 
     if not memo_hit:
         _MEMO[key] = (time.monotonic(), buckets, measured_at, duration_ms)
 
     effective, discarded = _apply_precedence(manual, buckets)
+    # Phase 4: the operator's corrections, after the scan's precedence.
+    effective, corrections = _apply_corrections(effective, buckets, overrides)
     prov = SiteScanProvenance(
         status="ok",
         mode="corridor",
@@ -394,5 +590,6 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         },
         flags=effective,
         manual_flags_discarded=discarded,
+        corrections=corrections,
     )
     return SiteScanResult(prov, effective)

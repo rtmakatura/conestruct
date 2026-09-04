@@ -22,8 +22,16 @@ const FIXTURE_DIR = join(__dirname, "..", "..", "..", "tests", "fixtures", "tier
 
 // The recorded wire fixtures the pin covers.  s2-arc17 (#224 phase 3)
 // added the two scanned recordings — the pin's first growth since
-// s2-arc7; the two originals' expectations are byte-identical.
-const FIXTURES = ["control-lakewood", "adv-ni-denver", "scanned-lakewood", "scanned-not-checked"];
+// s2-arc7; s2-arc18 (#224 phase 4) the two corrected recordings.  The
+// earlier entries' expectations are byte-identical at each growth.
+const FIXTURES = [
+  "control-lakewood",
+  "adv-ni-denver",
+  "scanned-lakewood",
+  "scanned-not-checked",
+  "scanned-dismissed",
+  "scanned-asserted",
+];
 
 interface RecordedFixture {
   audit: AuditResponse;
@@ -337,5 +345,60 @@ describe("the scan family's ruled edges (#224 phase 3)", () => {
       const ids = assignTiers({ jurisdiction: null, audit: a }).facts.map((f) => f.id);
       expect(ids.some((i) => i.startsWith("audit:scan:"))).toBe(false);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Corrections (#224 phase 4, s2-arc18, ruling c) — the edges on the mirror
+// ---------------------------------------------------------------------------
+
+describe("operator corrections' ruled edges (#224 phase 4)", () => {
+  const scanned = (
+    buckets: Record<string, { detected: boolean }>,
+    corrections: { flag: string; action: "dismiss" | "assert"; status: "applied" | "moot" }[],
+    extra: Partial<AuditResponse["sections"]> = {},
+  ) => auditWith({ ...extra, site_scan: { status: "ok", buckets, corrections } as never });
+
+  it("applied dismiss → the condition stays as audit:scan:<flag> checked (never silent)", () => {
+    const a = scanned({ sidewalks: { detected: true }, schools: { detected: false } }, [
+      { flag: "pedestrian_facility", action: "dismiss", status: "applied" },
+    ]);
+    const model = assignTiers({ jurisdiction: null, audit: a });
+    expect(tierOf({ jurisdiction: null, audit: a }, "audit:scan:pedestrian_facility")).toBe("checked");
+    // auditWith's five baseline traces + the two scan facts.
+    expect(model.ledger).toEqual({ changed: 0, attention: 0, checked: 7, pending: 0 });
+  });
+  it("applied assert → the audit:site row is the fact; the scanned-absent pass is suppressed", () => {
+    const a = scanned(
+      { schools: { detected: false } },
+      [{ flag: "school_zone", action: "assert", status: "applied" }],
+      { site_adjustments: [{ flag: "school_zone", devices_added: 2 }] as never },
+    );
+    const model = assignTiers({ jurisdiction: null, audit: a });
+    expect(model.facts.find((f) => f.id === "audit:site:school_zone")?.tier).toBe("changed");
+    expect(model.facts.some((f) => f.id === "audit:scan:school_zone")).toBe(false);
+  });
+  it("moot correction → audit:scan:correction:<flag> reference, uncounted; the scan's verdict stands", () => {
+    const a = scanned({ schools: { detected: false } }, [
+      { flag: "school_zone", action: "dismiss", status: "moot" },
+    ]);
+    const model = assignTiers({ jurisdiction: null, audit: a });
+    expect(model.facts.find((f) => f.id === "audit:scan:correction:school_zone")?.tier).toBe("reference");
+    expect(tierOf({ jurisdiction: null, audit: a }, "audit:scan:school_zone")).toBe("checked");
+    // auditWith's five baseline traces + the one scan fact; the moot
+    // correction is reference, uncounted.
+    expect(model.ledger).toEqual({ changed: 0, attention: 0, checked: 6, pending: 0 });
+  });
+  it("the correction's pending item tiers pending, as #177's does", () => {
+    const a = auditWith(
+      { site_scan: { status: "ok", buckets: {}, corrections: [] } as never },
+      {
+        count: 1,
+        note: "x",
+        tracking_issue: null,
+        items: [{ kind: "site_condition_overridden", label: "x", tracking_issue: null }],
+      } as never,
+    );
+    expect(tierOf({ jurisdiction: null, audit: a }, "audit:pending:0")).toBe("pending");
   });
 });
