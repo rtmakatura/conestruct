@@ -1,0 +1,74 @@
+# s2-arc17 test accounting — main (9814b67) vs the arc tip, measured (a detached worktree of main for the baseline)
+# vitest list: main 883 → head 893; pytest --collect-only: main 1981 → head 1992
+
+## vitest list diff (< removed at main, > added at head)
+1,4d0
+< app/api/render/detect-site/route.test.ts > detect-site proxy centerline relay (#207) > a plain pre-#207 body is untouched
+< app/api/render/detect-site/route.test.ts > detect-site proxy centerline relay (#207) > omits a malformed or too-short centerline (degrade-not-400)
+< app/api/render/detect-site/route.test.ts > detect-site proxy centerline relay (#207) > passes a realistic centerline through to the upstream payload
+< app/api/render/detect-site/route.test.ts > detect-site proxy centerline relay (#207) > still rejects a body over the 32 KB render-family bound
+459,461c455,457
+< components/SiteConditionsField.rows.test.tsx > SiteConditionsField after the manual detect retirement (#224 phase 2) > #186 absent case: pre-generation the rows carry no evidence text, ever
+< components/SiteConditionsField.rows.test.tsx > SiteConditionsField after the manual detect retirement (#224 phase 2) > no detect button, no scan copy — one provenance sentence says the scan happens at Generate
+< components/SiteConditionsField.rows.test.tsx > SiteConditionsField after the manual detect retirement (#224 phase 2) > the seven checkbox rows survive and still write meta.siteConditions
+---
+> components/SiteConditionsField.rows.test.tsx > SiteConditionsField — the slim control (#224 phase 2 + 3) > #186 absent case: pre-generation the rows carry no evidence text, ever
+> components/SiteConditionsField.rows.test.tsx > SiteConditionsField — the slim control (#224 phase 2 + 3) > exactly the two manual-only rows remain and still write meta.siteConditions
+> components/SiteConditionsField.rows.test.tsx > SiteConditionsField — the slim control (#224 phase 2 + 3) > no detect button, no scan copy — one provenance sentence says the scan happens at Generate
+498a495,496
+> components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-lakewood
+> components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-not-checked
+503,504c501,507
+< components/TieredReference.site-scan.test.tsx > section 03 NOT-CHECKED item (#224 phase 2) > a proceed-anyway plan renders ▲ NOT CHECKED with the disclosure verbatim — uncounted
+< components/TieredReference.site-scan.test.tsx > section 03 NOT-CHECKED item (#224 phase 2) > an ok scan and a not_run scan render no item; the ledger is the same line
+---
+> components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > a detected condition's row carries the wire's evidence, printed as sent
+> components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > keyless buckets sit in the reference tier, uncounted
+> components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > scanned-and-absent conditions are named ✓ passes with the scan time
+> components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-lakewood > the rendered ledger equals the shared expectation
+> components/TieredReference.scan-rows.test.tsx > section 03 scan rows (#224 phase 3) — scanned-not-checked > NOT-CHECKED is one counted ⚠ item; the tier opens on its count alone; no scan rows elsewhere
+> components/TieredReference.site-scan.test.tsx > section 03 NOT-CHECKED item (#224 phase 2) > a proceed-anyway plan renders ▲ NOT CHECKED with the disclosure verbatim — counted once
+> components/TieredReference.site-scan.test.tsx > section 03 NOT-CHECKED item (#224 phase 2) > an ok scan without buckets and a not_run scan render no item; the ledger is the same line (a missing bucket is no fact — rule 10)
+858a862,863
+> lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-lakewood
+> lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-not-checked
+877a883,887
+> lib/tiering.test.ts > the scan family's ruled edges (#224 phase 3) > ok + a bucket missing from the wire → nothing (absence of signal is not absence of a feature)
+> lib/tiering.test.ts > the scan family's ruled edges (#224 phase 3) > ok + absent key → audit:scan:<flag> checked (the named pass)
+> lib/tiering.test.ts > the scan family's ruled edges (#224 phase 3) > ok + detected key → NO scan fact (the evidence rides the audit:site row — never two facts)
+> lib/tiering.test.ts > the scan family's ruled edges (#224 phase 3) > ok + keyless bucket → reference, uncounted
+> lib/tiering.test.ts > the scan family's ruled edges (#224 phase 3) > unavailable + proceeded_anyway → ONE counted attention fact; refused-without-proceed and not_run → nothing
+
+## pytest collected diff
+798c798,800
+< tests/test_audit_blocks_site_scan.py::test_ok_scan_prints_nothing_this_phase
+---
+> tests/test_audit_blocks_site_scan.py::test_ok_scan_discloses_overridden_manual_values
+> tests/test_audit_blocks_site_scan.py::test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition
+> tests/test_audit_blocks_site_scan.py::test_ok_scan_with_a_bucket_missing_from_the_wire_says_not_reported
+800a803
+> tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_an_ok_scan_names_every_condition_the_cover_counts
+1569,1574d1571
+< tests/test_render_api_detect_site.py::test_centerline_reaches_the_corridor
+< tests/test_render_api_detect_site.py::test_corridor_mode_spreads_and_does_not_mutate
+< tests/test_render_api_detect_site.py::test_corridor_valueerror_falls_back_to_point_with_reason
+< tests/test_render_api_detect_site.py::test_detector_error_key_passes_through
+< tests/test_render_api_detect_site.py::test_mid_bend_feature_classifies_in_the_road_frame
+< tests/test_render_api_detect_site.py::test_point_mode_spreads_and_does_not_mutate
+1760a1758,1763
+> tests/test_site_scan_disclosure_surfaces.py::test_narrative_markdown_carries_the_site_conditions_block
+> tests/test_site_scan_disclosure_surfaces.py::test_narrative_pdf_carries_the_same_sentence
+> tests/test_site_scan_disclosure_surfaces.py::test_narrative_prints_nothing_for_an_ok_scan_or_no_scan
+> tests/test_site_scan_disclosure_surfaces.py::test_not_checked_disclosure_prints_for_exactly_one_state
+> tests/test_site_scan_disclosure_surfaces.py::test_plan_sheet_carries_the_disclosure_after_a_proceeded_outage
+> tests/test_site_scan_disclosure_surfaces.py::test_plan_sheet_prints_nothing_for_an_ok_scan_or_no_scan
+1864a1868,1869
+> tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-lakewood]
+> tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-not-checked]
+1870a1876,1881
+> tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-lakewood]
+> tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-not-checked]
+> tests/test_tier_ledger.py::test_scan_keyless_buckets_are_reference_and_uncounted
+> tests/test_tier_ledger.py::test_scan_missing_bucket_refused_and_not_run_yield_nothing
+> tests/test_tier_ledger.py::test_scan_not_checked_is_one_counted_attention_fact
+> tests/test_tier_ledger.py::test_scan_ok_absent_key_is_a_named_pass_and_detected_key_adds_no_second_fact
