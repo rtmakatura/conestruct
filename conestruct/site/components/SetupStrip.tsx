@@ -24,6 +24,7 @@ import { SCAN_BUCKET_TO_FLAG, scanEvidence, type ScanBucketWire } from "@/lib/ti
 import {
   DISMISS_REASONS,
   SCANNED_FLAG_LABELS,
+  SITE_CORRECTIONS_ANCHOR,
   assertMarker,
   dismissIsComplete,
   dismissMarker,
@@ -332,7 +333,14 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
   }
   if (rows.length === 0) return null;
   return (
-    <div className="jbar-suggest live site-corrections mb-3">
+    // #246: the block is the jump target of the results-head line and
+    // the section 03 signposts (id + jump-anchor scroll margin; tabIndex
+    // -1 so jumpToAnchor's focus lands here, never in the Tab order).
+    <div
+      id={SITE_CORRECTIONS_ANCHOR}
+      tabIndex={-1}
+      className="jbar-suggest live site-corrections jump-anchor outline-none mb-3"
+    >
       <div className="tr-section mb-1.5">Site conditions — scanned</div>
       {rows}
       <div className="tr-prov mt-1.5">

@@ -1518,6 +1518,7 @@ export function CheckRow({
   tone = "pass",
   tag = "PASS",
   evidence,
+  signpost,
 }: {
   label: string;
   detail?: string;
@@ -1527,6 +1528,11 @@ export function CheckRow({
    *  34.1 ft from anchor · …"), one provenance line under the label,
    *  its own text node.  Absent ⇒ the row is byte-identical to before. */
   evidence?: string;
+  /** #246 — a read-only signpost under the row (a jump to the strip's
+   *  correction block; never a write — section 03 discloses only).
+   *  Rendered inside the label cell so the 3-column grid and the #200
+   *  junction rule are untouched.  Absent ⇒ byte-identical row. */
+  signpost?: ReactNode;
 }) {
   const ckClass = tone === "pass" ? "ck" : `ck ${tone}`;
   const symbol =
@@ -1549,6 +1555,7 @@ export function CheckRow({
           label
         )}
         {evidence && <span className="tr-prov block mt-1">{evidence}</span>}
+        {signpost && <span className="block mt-1">{signpost}</span>}
       </span>
       <span className="check-list-src">{tag}</span>
     </div>

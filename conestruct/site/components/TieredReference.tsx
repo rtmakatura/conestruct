@@ -28,6 +28,8 @@
 
 import { useState, type ReactNode } from "react";
 import { ReferenceChip } from "./ReferenceChip";
+import { jumpToAnchor } from "./GeneratorFormPrimitives";
+import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
 import {
   DeltaRowView,
   FactRows,
@@ -216,6 +218,25 @@ export function TieredReference({
   const corrections = new Map<string, ScanCorrectionWire>(
     (scan?.corrections ?? []).map((c) => [c.flag, c] as const),
   );
+  // #246 — read-only signposts from a condition row to the strip's
+  // correction block (its Dismiss / Assert / Undo live there; ruling a
+  // of arc 18: section 03 never writes).  A detected or corrected row
+  // points at "Correct in setup"; a scanned-absent row at "Assert in
+  // setup".  A LINK to the anchor (navigation semantics — the rows'
+  // "no button" sentinel in TieredReference.corrections.test stays the
+  // write guard); the click runs the reduced-motion-aware jump.
+  const signpost = (text: "Correct in setup ↑" | "Assert in setup ↑") => (
+    <a
+      className="tr-signpost"
+      href={`#${SITE_CORRECTIONS_ANCHOR}`}
+      onClick={(e) => {
+        e.preventDefault();
+        jumpToAnchor(SITE_CORRECTIONS_ANCHOR);
+      }}
+    >
+      {text}
+    </a>
+  );
   const siteRow = (rec: SiteAdjustmentRecord) => {
     const detail = SITE_ADJUSTMENT_DETAIL[rec.flag as SiteConditionFlag];
     // A detected condition's evidence rides its adjustment row (one
@@ -238,6 +259,7 @@ export function TieredReference({
         tone="pass"
         tag={c && c.status === "applied" && c.action === "assert" ? "OPERATOR" : rec.citation}
         evidence={evidence || undefined}
+        signpost={scanBuckets ? signpost("Correct in setup ↑") : undefined}
       />
     );
   };
@@ -276,6 +298,7 @@ export function TieredReference({
             tone="pass"
             tag="OPERATOR"
             evidence={c.disclosure}
+            signpost={signpost("Correct in setup ↑")}
           />,
         );
       } else if (c && c.status === "applied") {
@@ -289,6 +312,7 @@ export function TieredReference({
             tone="pass"
             tag="OPENSTREETMAP"
             evidence={scannedAt}
+            signpost={signpost("Assert in setup ↑")}
           />,
         );
       }

@@ -20,6 +20,11 @@ import type {
 } from "./types";
 
 /** The dismiss vocabulary (backend enum; ``other`` needs a note). */
+/** #246 — the DOM id of the strip's "Site conditions — scanned" block:
+ *  the jump target of the results-head line and the section 03
+ *  signposts (jumpToAnchor; a missing anchor is a no-op). */
+export const SITE_CORRECTIONS_ANCHOR = "site-corrections";
+
 export const DISMISS_REASONS: ReadonlyArray<{ v: SiteDismissReason; l: string }> = [
   { v: "fenced", l: "Fenced off" },
   { v: "removed", l: "Removed" },

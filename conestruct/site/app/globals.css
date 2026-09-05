@@ -1339,6 +1339,40 @@ input[type="number"] {
 .workbench .jump-anchor {
   scroll-margin-top: calc(var(--nav-h) + var(--rail-h) + 8px);
 }
+/* #246 — signposts to the strip's correction block.  A read-only jump
+   (jumpToAnchor), never a write: the results-head line (on --canvas,
+   --act 6.26:1) and the section 03 row signposts (on --paper, --act
+   4.82:1, AA).  The arrow glyph + the words carry the direction; act
+   marks the one interactive thing in the row (role rule). */
+.workbench .site-jump {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark);
+}
+.workbench .tr-signpost {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--act);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+.workbench .tr-signpost:hover,
+.workbench .tr-signpost:focus-visible {
+  color: var(--act-bright);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
 .workbench .zone-head {
   display: flex;
   align-items: baseline;
