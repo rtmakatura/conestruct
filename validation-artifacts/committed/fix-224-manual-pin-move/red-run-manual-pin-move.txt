@@ -1,0 +1,8 @@
+# fix-224-manual-pin-move red-prove — 2026-09-05T06:23Z — GeneratorSidebar.tsx + lib/scenarios/site-corrections.ts at main 6ad83c0 (stashed); the new mounted test present
+
+   × manual coordinate entry is a pin move (fix-224-manual-pin-move) > typing a new latitude drops siteConditionOverrides; re-typing the same value keeps them 528ms
+     → expected true to be false // Object.is equality
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorSidebar.manual-pin-move.test.tsx > manual coordinate entry is a pin move (fix-224-manual-pin-move) > typing a new latitude drops siteConditionOverrides; re-typing the same value keeps them
+AssertionError: expected true to be false // Object.is equality
+      Tests  1 failed (1)

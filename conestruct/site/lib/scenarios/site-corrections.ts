@@ -71,6 +71,28 @@ export function withoutSiteCorrection(meta: ScenarioMeta, flag: ScannedSiteFlag)
   return { ...meta, siteConditionOverrides: rest };
 }
 
+/**
+ * THE pin-move door (fix-224-manual-pin-move, ruling of 2026-09-05): every
+ * writer of ``meta.lat`` / ``meta.lng`` on a live scenario goes through
+ * here — the map picker's Save (GeneratorSidebar.onPickerSave) and the
+ * Location step's manual Latitude / Longitude fields (ManualFallback).
+ * Applies ``patch`` and, when the pin actually moved, clears the
+ * site-condition corrections in the same object (their subject, this
+ * corridor's scan, no longer exists).  A write that leaves the pin where
+ * it was (a re-save, a re-typed same value) keeps them.  A writer that
+ * bypasses this helper is a defect — the s2-arc18 prod J1 finding.
+ */
+export function withPin(
+  meta: ScenarioMeta,
+  patch: Partial<Pick<ScenarioMeta, "lat" | "lng">> & Partial<ScenarioMeta>,
+): ScenarioMeta {
+  const nextLat = patch.lat ?? meta.lat;
+  const nextLng = patch.lng ?? meta.lng;
+  const moved = nextLat !== meta.lat || nextLng !== meta.lng;
+  const base = moved ? withoutSiteCorrections(meta) : meta;
+  return { ...base, ...patch };
+}
+
 /** A pin move: the corrections' subject no longer exists — clear them
  *  all (key dropped, never an empty list). */
 export function withoutSiteCorrections(meta: ScenarioMeta): ScenarioMeta {

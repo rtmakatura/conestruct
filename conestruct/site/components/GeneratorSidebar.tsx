@@ -23,7 +23,7 @@ import {
   type ScenarioMeta,
 } from "@/lib/scenarios";
 import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
-import { withoutSiteCorrections } from "@/lib/scenarios/site-corrections";
+import { withPin } from "@/lib/scenarios/site-corrections";
 import {
   handoffEventIsCurrent,
   scenarioNoun,
@@ -308,16 +308,14 @@ export function GeneratorSidebar({
     // #224 phase 4: a moved pin clears the operator's site-condition
     // corrections in the same patch that rewrites the detection relays —
     // their subject (this corridor's scan) no longer exists.  A re-save
-    // at the same pin keeps them (a re-save is not a move).
-    const pinMoved = r.lat !== cur.meta.lat || r.lng !== cur.meta.lng;
-    const metaBase = pinMoved ? withoutSiteCorrections(cur.meta) : cur.meta;
+    // at the same pin keeps them (a re-save is not a move).  withPin is
+    // THE door: the manual Latitude / Longitude fields go through the
+    // same helper (fix-224-manual-pin-move).
     let next: Scenario = {
       ...cur,
       meta: {
-        ...metaBase,
+        ...withPin(cur.meta, { lat: r.lat, lng: r.lng }),
         address: r.address || cur.meta.address,
-        lat: r.lat,
-        lng: r.lng,
         bearingDeg: r.bearingDeg,
         // The committed road choice, persisted with the scenario so it
         // survives picker close/reopen and page reload (it rides the
@@ -1203,7 +1201,10 @@ function ManualFallback({
             step="0.000001"
             className="field-input w-full"
             value={meta.lat}
-            onChange={(e) => setMeta({ ...meta, lat: +e.target.value || 0 })}
+            // A typed coordinate is a pin move: through THE door
+            // (withPin), so the site-condition corrections clear exactly
+            // as they do on the picker's Save (fix-224-manual-pin-move).
+            onChange={(e) => setMeta(withPin(meta, { lat: +e.target.value || 0 }))}
           />
         </div>
         <div>
@@ -1215,7 +1216,7 @@ function ManualFallback({
             step="0.000001"
             className="field-input w-full"
             value={meta.lng}
-            onChange={(e) => setMeta({ ...meta, lng: +e.target.value || 0 })}
+            onChange={(e) => setMeta(withPin(meta, { lng: +e.target.value || 0 }))}
           />
         </div>
       </div>
