@@ -179,7 +179,29 @@ refusal container's Retry does.
   each chip's text is its own span; the ✓ is an `aria-hidden` span.
 - Payload senders — none changed.
 
-## Prod run — pending the ship
+## Prod run — `outS2A19Prod/` — ALL PASS 35/35 (+2 INFO), sha-gated on `0af99de`
 
-`outS2A19Prod/` after `.\scripts\ship.ps1`; the gate aborts unless healthz
-sha == origin/main.
+Gate: healthz sha `0af99de198dc8d71bacec22342365e1a40dcbace` == origin/main.
+Live scan on prod (Generate 4.8 s / 6.2 s); every leg as the local run:
+
+- the jump line inside the landing viewport — 1440: top 147–164 of 1000;
+  380: top 159–176 of 800 — while the block sits above the fold exactly
+  as measured on `ed878cf` (1440 −364…−74; 380 −796…−239); the click
+  lands it at top 98 at both;
+- the picker: four radios, no select, Confirm disabled; axe with the
+  picker open / chosen / other + note: zero targets in the picker, total
+  0 (1440) and exactly the two named (380); measured 10.68 / 6.19 / 6.26 /
+  16.46 / 6.19;
+- Confirm carries the same marker (reason other + note); the plan
+  re-generates (1.4 s / 1.1 s) and the × record shows;
+- section 03: 3 × "Correct in setup ↑", 2 × "Assert in setup ↑", zero
+  buttons in signposted rows; a signpost lands the block at top 98 / 97.
+
+**Run 1 (`outS2A19Prod-run1-superseded/`)** stopped at P9b on a prod scan
+refusal (`scan budget exceeded`, 22 s) on the corrected re-generate — the
+scan re-ran on the new wire and prod's Overpass hop exceeded the budget
+that once; P1–P9 (16 legs) had passed and agree with run 2. A finding
+first: the refusal container is the designed recovery, and the script did
+not drive it there the way it does at Generate — fixed in the committed
+script (Retry scan through the container, P10b guarded). Run 2 needed no
+retry.

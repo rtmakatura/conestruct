@@ -273,7 +273,17 @@ async function viewportRun(browser, vp) {
     // Confirm → the wire marker.
     const mark = requests.length;
     await confirmBtn.click();
-    const gd = await waitInFlightThenSettled(page, 90000);
+    let gd = await waitInFlightThenSettled(page, 90000);
+    // The corrected re-generate re-scans; a refusal here is the same
+    // recovery as at Generate — Retry scan through the container.
+    let rc = 0;
+    while ((await hasRefusal(page)) && rc < RETRIES) {
+      rc++;
+      log(`refusal on the corrected re-generate — Retry scan (${rc})`);
+      await page.getByRole("button", { name: /Retry scan/ }).click();
+      gd = await waitInFlightThenSettled(page, 90000);
+    }
+    if (rc) note(P("the corrected re-generate refused before settling"), `${rc} Retry scan click(s)`);
     const sent = requests.slice(mark).filter((r) => /audit$/.test(r.url)).pop();
     const o = sent?.meta?.siteConditionOverrides;
     ok(Array.isArray(o) && o.length === 1 && o[0].flag === "pedestrian_facility" && o[0].action === "dismiss" && o[0].reason === "other" && o[0].note === NOTE,
@@ -297,11 +307,15 @@ async function viewportRun(browser, vp) {
     ok(sp.correct >= 1 && sp.assert >= 1 && sp.buttonsInSignpostRows === 0,
       P("P10 section 03 rows carry Correct / Assert in setup LINKS, no button in a row"), JSON.stringify(sp));
     const link = page.locator('a.tr-signpost:text-is("Assert in setup ↑")').first();
-    await link.scrollIntoViewIfNeeded();
-    await link.click();
-    await page.waitForTimeout(1200);
-    const blockAfter03 = await rect(page, ".site-corrections");
-    ok(inView(blockAfter03), P("P10b a section 03 signpost brings the block inside the viewport"), fmt(blockAfter03));
+    if ((await link.count()) === 0) {
+      ok(false, P("P10b a section 03 signpost brings the block inside the viewport"), "no signpost to click");
+    } else {
+      await link.scrollIntoViewIfNeeded();
+      await link.click();
+      await page.waitForTimeout(1200);
+      const blockAfter03 = await rect(page, ".site-corrections");
+      ok(inView(blockAfter03), P("P10b a section 03 signpost brings the block inside the viewport"), fmt(blockAfter03));
+    }
     await page.screenshot({ path: path.join(OUT, `after-signpost-${tag}.png`) });
   } finally {
     await page.close();
