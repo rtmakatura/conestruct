@@ -5,25 +5,23 @@ import type { ReactElement } from "react";
 import {
   buildFlaggerItems,
   buildShoulderItems,
+  SITE_ADJUSTMENT_DETAIL,
   coloradoItem,
   finesDoubleItem,
   flaggerSightDistanceItem,
   geometryValidationItem,
   pendingVerificationItem,
   referenceItem,
-  siteAdjustmentsItem,
   type ItemSpec,
 } from "./AuditTrail";
 import type {
   AuditResponse,
   AuditState,
   PendingItem,
-  SiteAdjustmentRecord,
 } from "../lib/render-types";
 import type {
   FlaggerLaneClosureScenario,
   ShoulderScenario,
-  SiteConditions,
 } from "../lib/scenarios";
 
 // V1-Wide Item 1, Q-PLAN-1 (Option B): the AuditTrail renderer iterates
@@ -871,9 +869,7 @@ describe("#97 audit-panel citation edition guard", () => {
   });
 
   it("driveways site-adjustment rule cites §6K.01, not the stale §6C.09", () => {
-    const spec = siteAdjustmentsItem({ driveways_present: true } as SiteConditions);
-    expect(spec).not.toBeNull();
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    const html = SITE_ADJUSTMENT_DETAIL.driveways_present.rule;
     expect(html).not.toContain("§ 6C.09");
     expect(html).toContain("§ 6K.01");
   });
@@ -882,9 +878,7 @@ describe("#97 audit-panel citation edition guard", () => {
     // The backend rule (site_adjustments.py) was corrected to §6B.04; this
     // table had drifted. Holds the line until #104 makes the table read
     // backend-supplied citations.
-    const spec = siteAdjustmentsItem({ limited_sight_distance: true } as SiteConditions);
-    expect(spec).not.toBeNull();
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    const html = SITE_ADJUSTMENT_DETAIL.limited_sight_distance.rule;
     expect(html).not.toContain("§ 6C.04");
     expect(html).toContain("§ 6B.04");
   });
@@ -893,9 +887,7 @@ describe("#97 audit-panel citation edition guard", () => {
     // Verified by subject against the 11th-ed Part 6 PDF (§6N.12 = Work
     // within the Traveled Way at an Intersection); backend fixed in
     // lockstep (site_adjustments.py). Holds until #104.
-    const spec = siteAdjustmentsItem({ adjacent_intersection: true } as SiteConditions);
-    expect(spec).not.toBeNull();
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    const html = SITE_ADJUSTMENT_DETAIL.adjacent_intersection.rule;
     expect(html).not.toContain("6C.10");
     expect(html).toContain("§ 6N.12 p. 848");
   });
@@ -904,9 +896,7 @@ describe("#97 audit-panel citation edition guard", () => {
     // #16 — page-cited by subject (11th Ed. §6N.16 = Interchanges,
     // p. 851); the "+ Ch. 6H" rider is dropped (Ch. 6H is TTC Zone
     // Warning Signs generally, not interchange signing).
-    const spec = siteAdjustmentsItem({ adjacent_interchange: true } as SiteConditions);
-    expect(spec).not.toBeNull();
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    const html = SITE_ADJUSTMENT_DETAIL.adjacent_interchange.rule;
     expect(html).not.toContain("6C.10");
     expect(html).not.toContain("6F.60");
     expect(html).not.toContain("Ch. 6H");
@@ -918,9 +908,7 @@ describe("#97 audit-panel citation edition guard", () => {
     // Pedestrian Considerations; 11th-ed §6D.01 is Qualifications for
     // Flaggers — wrong subject). Backend fixed in lockstep
     // (site_adjustments.py). Holds until #104.
-    const spec = siteAdjustmentsItem({ pedestrian_facility: true } as SiteConditions);
-    expect(spec).not.toBeNull();
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
+    const html = SITE_ADJUSTMENT_DETAIL.pedestrian_facility.rule;
     expect(html).not.toContain("6D.01");
     expect(html).toContain("§ 6C.02");
   });
@@ -998,81 +986,6 @@ describe("#96 spacing card downstream-taper line", () => {
 });
 
 
-// #104 — siteAdjustmentsItem reads backend-supplied per-flag citations
-// (sections.site_adjustments[].citation) when present, and falls back to
-// the static SITE_ADJUSTMENT_DETAIL table when absent (deploy window /
-// first load). The two sources are byte-identical today, so the panel
-// renders the same chip either way — asserted below in both directions.
-describe("#104 site-adjustment citations read the backend, static fallback", () => {
-  // flag → the exact chip the panel displays today (mirrors the backend
-  // derivation pinned in tests/test_audit_endpoint.py).
-  const EXPECTED: Record<string, string> = {
-    limited_sight_distance: "MUTCD § 6B.04",
-    adjacent_intersection: "MUTCD § 6N.12 p. 848",
-    adjacent_interchange: "MUTCD § 6N.16 p. 851",
-    driveways_present: "MUTCD § 6K.01",
-    pedestrian_facility: "MUTCD § 6C.02",
-    bicycle_facility: "MUTCD § 9C.101",
-    school_zone: "MUTCD § 7B.08",
-  };
-  const ALL_FLAGS = Object.fromEntries(
-    Object.keys(EXPECTED).map((k) => [k, true]),
-  ) as SiteConditions;
-
-  function backendRecords(): SiteAdjustmentRecord[] {
-    return Object.entries(EXPECTED).map(([flag, citation]) => ({
-      flag,
-      citation,
-      action: `backend action for ${flag}`,
-      rule: `${citation.replace("§ ", "§")} — backend rule prose`,
-      devices_added: 2,
-    }));
-  }
-
-  it("renders the backend citation when the record is present (sentinel proof)", () => {
-    const records = backendRecords();
-    records[0] = { ...records[0], citation: "SENTINEL-CITE-FROM-BACKEND" };
-    const spec = siteAdjustmentsItem(ALL_FLAGS, records);
-    const html = renderToStaticMarkup(spec!.body as ReactElement);
-    expect(html).toContain("SENTINEL-CITE-FROM-BACKEND");
-    // Only the sentinel flag lost its normal chip; the rest still render.
-    expect(html).not.toContain("MUTCD § 6B.04");
-    expect(html).toContain("MUTCD § 6N.12");
-  });
-
-  it("backend-present output is byte-identical to the static fallback (behavior-preserving)", () => {
-    const withBackend = siteAdjustmentsItem(ALL_FLAGS, backendRecords());
-    const fallback = siteAdjustmentsItem(ALL_FLAGS);
-    expect(renderToStaticMarkup(withBackend!.body as ReactElement)).toBe(
-      renderToStaticMarkup(fallback!.body as ReactElement),
-    );
-    expect(withBackend!.cite).toBe(fallback!.cite);
-  });
-
-  it("falls back to the static table per flag when records are absent or partial", () => {
-    // No records at all (first load / deploy window).
-    const noRecords = siteAdjustmentsItem(ALL_FLAGS);
-    const htmlNone = renderToStaticMarkup(noRecords!.body as ReactElement);
-    for (const cite of Object.values(EXPECTED)) {
-      expect(htmlNone).toContain(cite);
-    }
-    // Partial records: missing flags fall back individually.
-    const onlyOne = backendRecords().slice(0, 1);
-    const partial = siteAdjustmentsItem(ALL_FLAGS, onlyOne);
-    const htmlPartial = renderToStaticMarkup(partial!.body as ReactElement);
-    for (const cite of Object.values(EXPECTED)) {
-      expect(htmlPartial).toContain(cite);
-    }
-  });
-
-  it("aggregate header is the neutral label, not the stale § 6C / § 6D", () => {
-    // The 7 rules span MUTCD Parts 6, 7, and 9 — no single aggregate
-    // section is honest, so the header defers to the per-flag chips.
-    const spec = siteAdjustmentsItem(ALL_FLAGS, backendRecords());
-    expect(spec!.cite).toBe("MUTCD — per-flag citations below");
-    expect(spec!.cite).not.toContain("6C / § 6D");
-  });
-});
 
 // Frontend-engine-removal PR A: sentinel tests proving the panel DISPLAYS
 // backend values rather than recomputing them.  Each fixture plants a

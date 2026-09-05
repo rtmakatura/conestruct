@@ -9,7 +9,6 @@ import type {
   Scenario,
   ShoulderScenario,
   SiteConditionFlag,
-  SiteConditions,
   WorkBeyondShoulderScenario,
 } from "@/lib/scenarios";
 import type {
@@ -991,58 +990,6 @@ export function referenceItem(
             Loading reference…
           </p>
         )}
-      </>
-    ),
-  };
-}
-
-export function siteAdjustmentsItem(
-  flags: SiteConditions | undefined,
-  records?: SiteAdjustmentRecord[],
-): ItemSpec | null {
-  const checked = (Object.keys(SITE_ADJUSTMENT_DETAIL) as SiteConditionFlag[])
-    .filter((k) => flags?.[k]);
-  if (checked.length === 0) return null;
-  // #104 — per-flag citation reads the backend record when present (same
-  // deploy-window fallback contract as sectionCitation above). The static
-  // values are byte-identical to the backend derivation, so either source
-  // renders the same chip.
-  const citationFor = (k: SiteConditionFlag): string =>
-    records?.find((r) => r.flag === k)?.citation ??
-    SITE_ADJUSTMENT_DETAIL[k].rule;
-  return {
-    title: "Site adjustments",
-    result: `${checked.length} flag${checked.length === 1 ? "" : "s"}`,
-    // The 7 rules span MUTCD Parts 6, 7, and 9, so no single aggregate
-    // section is honest here — the per-flag chips below carry the real
-    // citations (backend-fed).
-    cite: "MUTCD — per-flag citations below",
-    body: (
-      <>
-        <p>
-          Site-condition flags from the sidebar layered onto the baseline
-          MUTCD/CDOT layout. Each adjustment is traced to its source rule;
-          the rendered PDF, device list, and crew narrative reflect every
-          item below.
-        </p>
-        <div className="check-list">
-          {checked.map((k) => {
-            const d = SITE_ADJUSTMENT_DETAIL[k];
-            return (
-              <div className="check-list-item" key={k}>
-                <span className="ck">✓</span>
-                <span className="check-list-lbl">
-                  <strong>{d.label}</strong> — {d.action}
-                </span>
-                <span className="check-list-src">{citationFor(k)}</span>
-              </div>
-            );
-          })}
-        </div>
-        <div className="citation">
-          <span className="check">✓</span>
-          AUTO-DETECTION SOURCE · OPENSTREETMAP (OVERPASS API)
-        </div>
       </>
     ),
   };

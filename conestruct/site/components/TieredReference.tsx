@@ -50,7 +50,6 @@ import {
   geometryValidationItem,
   pendingVerificationItem,
   settledData,
-  siteAdjustmentsItem,
   type ItemSpec,
 } from "./AuditTrail";
 import { DeviceBreakdown, type DeviceBreakdownState } from "./DeviceBreakdown";
@@ -312,13 +311,6 @@ export function TieredReference({
       );
     }
   }
-  // Deploy-window fallback: no backend records → the legacy aggregate
-  // item renders (uncounted, matching the classifier's view of the wire).
-  const legacySiteItem =
-    settled && siteRecords.length === 0
-      ? siteAdjustmentsItem(scenario.meta.siteConditions, undefined)
-      : null;
-
   const colorado = settled?.sections.colorado as
     | {
         checks?: { pass: boolean; label: string; citation: string; detail: string }[];
@@ -592,7 +584,6 @@ export function TieredReference({
   const checkedItems: ItemSpec[] = [
     ...(approachesSpec && !approachesSignalized ? [approachesSpec] : []),
     ...(finesItem && !finesApplicable ? [finesItem] : []),
-    ...(legacySiteItem ? [legacySiteItem] : []),
   ];
   if (checkedItems.length > 0) {
     checkedBody.push(<ItemAccordion key="items" items={checkedItems} />);
