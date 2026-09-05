@@ -207,7 +207,24 @@ export interface SiteScanProvenance {
   proceeded_anyway?: boolean;
   flags?: Record<string, boolean>;
   disclosure?: string | null;
+  /** #224 phase 4 — the operator's corrections as the backend applied
+   *  them (src/api/site_scan.py SiteScanCorrection), wire order. */
+  corrections?: SiteScanCorrection[];
   [key: string]: unknown;
+}
+
+/** One correction as disclosed on the provenance: what the scan said at
+ *  apply time, whether it applied or was moot, and the ONE
+ *  backend-composed sentence every surface prints verbatim. */
+export interface SiteScanCorrection {
+  flag: string;
+  action: "dismiss" | "assert";
+  reason?: string | null;
+  note?: string | null;
+  recorded_at?: string;
+  status: "applied" | "moot";
+  scan_detected?: boolean | null;
+  disclosure: string;
 }
 
 /**

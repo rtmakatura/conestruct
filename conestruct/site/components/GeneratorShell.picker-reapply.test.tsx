@@ -443,3 +443,62 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
     expect(wireScenario().detectedLanesTotal).toBe(4);
   });
 });
+
+// #224 phase 4 (s2-arc18, ruling e): a pin MOVE clears the operator's
+// site-condition corrections in the same patch that rewrites the
+// detection relays (their subject, this corridor's scan, no longer
+// exists); a re-save at the same pin keeps them (a re-save is not a
+// move).  Seeded through initialScenario — the markers ride the saved
+// plan verbatim, so this is also the reload path.
+describe("pin move clears site-condition corrections (#224 phase 4)", () => {
+  const CORRECTIONS = [
+    {
+      flag: "pedestrian_facility" as const,
+      action: "dismiss" as const,
+      reason: "fenced" as const,
+      recorded_at: "2026-09-04T12:00:00+00:00",
+    },
+  ];
+  const wireScenario = () => bundleBody?.scenario as ShoulderScenario;
+  async function mountCorrected() {
+    render(
+      <GeneratorShell
+        mode="sandbox"
+        initialScenario={{
+          ...DEFAULT_SHOULDER,
+          meta: {
+            ...DEFAULT_SHOULDER.meta,
+            // Pin A's coordinates (result() above), so APPLY_PIN_A is a re-save.
+            lat: 39.9936,
+            lng: -105.0897,
+            siteConditionOverrides: CORRECTIONS,
+          },
+        }}
+      />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+  }
+
+  it("a re-save at the same pin keeps the corrections on the wire", async () => {
+    const user = userEvent.setup();
+    await mountCorrected();
+    await user.click(screen.getByText(/Edit Location & Corridor|Pick Location on Map/));
+    await user.click(screen.getByText("APPLY_PIN_A"));
+    await generate(user);
+    expect(wireScenario().meta.siteConditionOverrides).toEqual(CORRECTIONS);
+  });
+
+  it("a save at a NEW pin drops the key entirely — never an empty list", async () => {
+    const user = userEvent.setup();
+    await mountCorrected();
+    await user.click(screen.getByText(/Edit Location & Corridor|Pick Location on Map/));
+    await user.click(screen.getByText("SAVE_NULL_PIN_C"));
+    await generate(user);
+    const s = wireScenario();
+    expect(s.meta.lat).toBe(39.7312);
+    expect("siteConditionOverrides" in s.meta).toBe(false);
+  });
+});

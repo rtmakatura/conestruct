@@ -1,0 +1,31 @@
+# s2-arc18 commit 4 red-prove — 2026-09-05T03:39Z — frontend sources at commit 3 7d62650 (SetupStrip.tsx, TieredReference.tsx, GeneratorSidebar.tsx, DebugSnapshotButton.tsx, lib/scenarios/types.ts, lib/render-types.ts stashed); the new tests and lib/scenarios/site-corrections.ts present
+
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each 53ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature) 8ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides 12ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other 8ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing 7ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 6ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction 7ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows 5ms
+   × section 03 — scanned-dismissed (#224 phase 4) > the dismissed sidewalk is a ✓ checked row tagged OPERATOR with the backend sentence; no changed row 135ms
+   × section 03 — scanned-asserted (#224 phase 4) > the asserted school zone is a changed row whose evidence is the backend sentence, tagged OPERATOR 16ms
+   × section 03 — scanned-asserted (#224 phase 4) > the scanned-absent pass for the asserted key is suppressed and the ledger equals the pin 55ms
+   × section 03 — a moot correction (synthetic over scanned-lakewood) > renders as an info reference row with the backend sentence, and the scan's own ✓ row stands 88ms
+   × pin move clears site-condition corrections (#224 phase 4) > a save at a NEW pin drops the key entirely — never an empty list 270ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.picker-reapply.test.tsx > pin move clears site-condition corrections (#224 phase 4) > a save at a NEW pin drops the key entirely — never an empty list
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature)
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo)
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows
+ FAIL  components/TieredReference.corrections.test.tsx > section 03 — scanned-dismissed (#224 phase 4) > the dismissed sidewalk is a ✓ checked row tagged OPERATOR with the backend sentence; no changed row
+ FAIL  components/TieredReference.corrections.test.tsx > section 03 — scanned-asserted (#224 phase 4) > the asserted school zone is a changed row whose evidence is the backend sentence, tagged OPERATOR
+ FAIL  components/TieredReference.corrections.test.tsx > section 03 — scanned-asserted (#224 phase 4) > the scanned-absent pass for the asserted key is suppressed and the ledger equals the pin
+ FAIL  components/TieredReference.corrections.test.tsx > section 03 — a moot correction (synthetic over scanned-lakewood) > renders as an info reference row with the backend sentence, and the scan's own ✓ row stands
+ Test Files  3 failed | 1 passed (4)
+      Tests  13 failed | 18 passed (31)

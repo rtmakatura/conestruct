@@ -19,7 +19,19 @@ import {
   type ReactNode,
 } from "react";
 import { SCENARIO_KINDS, type RoadType, type Scenario } from "@/lib/scenarios";
-import type { SiteScanProvenance } from "@/lib/render-types";
+import type { SiteScanCorrection, SiteScanProvenance } from "@/lib/render-types";
+import { SCAN_BUCKET_TO_FLAG, scanEvidence, type ScanBucketWire } from "@/lib/tiering";
+import {
+  DISMISS_REASONS,
+  SCANNED_FLAG_LABELS,
+  assertMarker,
+  dismissIsComplete,
+  dismissMarker,
+  isScannedFlag,
+  withSiteCorrection,
+  withoutSiteCorrection,
+} from "@/lib/scenarios/site-corrections";
+import type { ScannedSiteFlag, SiteDismissReason } from "@/lib/scenarios/types";
 import {
   hhmm,
   JURISDICTION_OPTIONS,
@@ -134,6 +146,189 @@ function fmtWorkDate(iso: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+// ---------------------------------------------------------------------------
+// #224 phase 4 (s2-arc18, ruling a) — "Site conditions — scanned": the
+// post-generate home for operator corrections.  Five read-only rows from
+// the SERVED scan (sections.site_scan.buckets, the stamped view), each
+// with one explicit action: Dismiss on a detected row (reason required),
+// Assert on an absent row.  A click writes meta.siteConditionOverrides —
+// an explicit operator action (suggest-never-set), and a scenario edit,
+// so the wire scenario re-derives and both fetches refire: the plan
+// re-generates, the results zone reads VERIFYING meanwhile.  A corrected
+// row re-renders in place as the #227 resolved record (✓ / × + the
+// backend's disclosure sentence as ONE text node + Undo); undo removes
+// the marker (#179 shape) and re-generates the same way.  Section 03
+// discloses, never writes.
+// ---------------------------------------------------------------------------
+
+interface SiteCorrectionsProps {
+  scenario: Scenario;
+  setScenario: (next: Scenario) => void;
+  siteScan: SiteScanProvenance;
+}
+
+function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsProps) {
+  // Which flag's dismiss reason picker is open, and its draft.
+  const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
+  const [reason, setReason] = useState<SiteDismissReason | null>(null);
+  const [note, setNote] = useState("");
+
+  const buckets =
+    siteScan.status === "ok"
+      ? ((siteScan.buckets as Record<string, ScanBucketWire> | undefined) ?? {})
+      : null;
+  const corrections = (siteScan.corrections ?? []).filter((c) => isScannedFlag(c.flag));
+  const byFlag = new Map<string, SiteScanCorrection>(corrections.map((c) => [c.flag, c]));
+  if (buckets === null && corrections.length === 0) return null;
+
+  const write = (meta: Scenario["meta"]) => {
+    setDismissing(null);
+    setReason(null);
+    setNote("");
+    setScenario({ ...scenario, meta } as Scenario);
+  };
+  const undo = (flag: ScannedSiteFlag) => write(withoutSiteCorrection(scenario.meta, flag));
+  const confirmDismiss = (flag: ScannedSiteFlag) => {
+    if (reason === null || !dismissIsComplete(reason, note)) return;
+    write(withSiteCorrection(scenario.meta, dismissMarker(flag, reason, note)));
+  };
+  const assertFlag = (flag: ScannedSiteFlag) =>
+    write(withSiteCorrection(scenario.meta, assertMarker(flag)));
+
+  const record = (c: SiteScanCorrection) => {
+    const flag = c.flag as ScannedSiteFlag;
+    const variant = c.status === "moot" ? "warn" : c.action === "dismiss" ? "dismissed" : "confirmed";
+    const glyph = c.status === "moot" ? "⚠" : c.action === "dismiss" ? "×" : "✓";
+    return (
+      <div key={`corr-${flag}`} className={`sys-event ${variant} site-correction`}>
+        <div className="sugg-row">
+          <span className="sys-glyph" aria-hidden>
+            {glyph}
+          </span>
+          <span>{c.disclosure}</span>
+          <button type="button" className="ghost" onClick={() => undo(flag)}>
+            Undo
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const rows: ReactNode[] = [];
+  if (buckets !== null) {
+    for (const [bucketName, flagName] of SCAN_BUCKET_TO_FLAG) {
+      const b = buckets[bucketName];
+      // A bucket missing from the wire renders nothing (rule 10).
+      if (!b || !isScannedFlag(flagName)) continue;
+      const flag: ScannedSiteFlag = flagName;
+      const c = byFlag.get(flag);
+      if (c) {
+        rows.push(record(c));
+        continue;
+      }
+      const detected = b.detected === true;
+      const label = SCANNED_FLAG_LABELS[flag];
+      const evidence = scanEvidence(b);
+      if (dismissing === flag) {
+        rows.push(
+          <div key={`dismiss-${flag}`} className="sugg-row site-correction-picker">
+            <span>
+              Dismiss <b className="sugg-name">{label}</b> because
+            </span>
+            <select
+              aria-label={`Reason for dismissing ${label}`}
+              value={reason ?? ""}
+              onChange={(e) => setReason((e.target.value || null) as SiteDismissReason | null)}
+            >
+              <option value="">Choose a reason</option>
+              {DISMISS_REASONS.map((r) => (
+                <option key={r.v} value={r.v}>
+                  {r.l}
+                </option>
+              ))}
+            </select>
+            {reason === "other" && (
+              <input
+                type="text"
+                aria-label="Say what"
+                maxLength={200}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="say what"
+              />
+            )}
+            <button
+              type="button"
+              className="confirm"
+              disabled={!dismissIsComplete(reason, note)}
+              onClick={() => confirmDismiss(flag)}
+            >
+              Confirm dismiss
+            </button>
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => {
+                setDismissing(null);
+                setReason(null);
+                setNote("");
+              }}
+            >
+              Cancel
+            </button>
+          </div>,
+        );
+        continue;
+      }
+      rows.push(
+        <div key={`row-${flag}`} className="sugg-row site-correction-row">
+          <span>
+            <b className="sugg-name">{label}</b>
+            {" — "}
+            {detected ? `detected${evidence ? ` · ${evidence}` : ""}` : "none along the corridor"}
+          </span>
+          {detected ? (
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => {
+                setDismissing(flag);
+                setReason(null);
+                setNote("");
+              }}
+            >
+              Dismiss
+            </button>
+          ) : (
+            <button type="button" className="ghost" onClick={() => assertFlag(flag)}>
+              Assert
+            </button>
+          )}
+        </div>,
+      );
+    }
+  } else {
+    // No ok scan (a proceeded outage): only the records, with undo.
+    for (const c of corrections) rows.push(record(c));
+  }
+  if (rows.length === 0) return null;
+  return (
+    <div className="jbar-suggest live site-corrections mb-3">
+      <div className="tr-section mb-1.5">Site conditions — scanned</div>
+      {rows}
+      <div className="tr-prov mt-1.5">
+        {[
+          "site scan",
+          siteScan.measured_at ? `measured ${siteScan.measured_at}` : null,
+          "a correction re-generates the plan",
+        ]
+          .filter((p): p is string => p !== null)
+          .join(" · ")}
+      </div>
+    </div>
+  );
 }
 
 interface Props {
@@ -265,6 +460,9 @@ export function SetupStrip({
               .join(" · ")}
           </div>
         </div>
+      )}
+      {siteScan && (
+        <SiteCorrections scenario={scenario} setScenario={setScenario} siteScan={siteScan} />
       )}
     <div className="setup-strip">
       <Structural

@@ -169,6 +169,9 @@ export function buildFrontendSections(
     `- Lat/Lng: ${meta.lat}, ${meta.lng}`,
     `- Bearing (deg): ${meta.bearingDeg ?? "(unset)"}`,
     `- Site conditions: ${JSON.stringify(meta.siteConditions ?? {})}`,
+    // #224 phase 4 — the operator's corrections of the scanned keys, as
+    // the payload carries them (absent ⇒ none).
+    `- Site condition overrides: ${JSON.stringify(meta.siteConditionOverrides ?? [])}`,
     "",
   ];
   if (detection) {

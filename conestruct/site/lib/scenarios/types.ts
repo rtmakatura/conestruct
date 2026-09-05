@@ -215,6 +215,38 @@ export type SiteConditionFlag =
 
 export type SiteConditions = Partial<Record<SiteConditionFlag, boolean>>;
 
+/** The five keys the in-generate scan owns (src/api/site_scan.py
+ *  DETECTION_TO_FLAG); the two manual-only flags are never corrected. */
+export type ScannedSiteFlag =
+  | "adjacent_intersection"
+  | "adjacent_interchange"
+  | "pedestrian_facility"
+  | "bicycle_facility"
+  | "school_zone";
+export type SiteDismissReason = "fenced" | "removed" | "not_in_work_zone" | "other";
+
+/**
+ * An operator correction of one scanned site condition (#224 phase 4).
+ * Mirrors ``SiteConditionOverride`` in src/api/schemas.py.  Rides
+ * ``meta.siteConditionOverrides`` on the scenario itself (like the #177
+ * ``DetectionOverride`` markers): the backend re-generates from it and a
+ * saved plan must reload to the same plan.  Written ONLY by the strip's
+ * Dismiss / Assert click (suggest-never-set); undo removes the marker
+ * and drops the key when the list empties (byte-identical ``meta``);
+ * a pin move clears the list in the same patch that resets the
+ * detection relays.
+ */
+export interface SiteConditionOverride {
+  flag: ScannedSiteFlag;
+  action: "dismiss" | "assert";
+  /** Required for a dismiss; never on an assert (backend 400 otherwise). */
+  reason?: SiteDismissReason;
+  /** Required iff ``reason === "other"``. */
+  note?: string;
+  /** ISO-8601 UTC, seconds — the click. */
+  recorded_at: string;
+}
+
 export interface ScenarioMeta {
   project: string;
   address: string;
@@ -240,6 +272,9 @@ export interface ScenarioMeta {
    */
   bearingDeg?: number;
   siteConditions?: SiteConditions;
+  /** #224 phase 4 — operator corrections of the scanned keys; see
+   *  ``SiteConditionOverride``.  Absent ⇒ the scan's verdict stands. */
+  siteConditionOverrides?: SiteConditionOverride[];
   /**
    * The road choice confirmed in the location picker, keyed to the pin
    * it was confirmed at (lib/road-detection/types.ts).  Persisted here —

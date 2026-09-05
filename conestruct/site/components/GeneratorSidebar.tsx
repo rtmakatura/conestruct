@@ -23,6 +23,7 @@ import {
   type ScenarioMeta,
 } from "@/lib/scenarios";
 import { applyOverridesToScenario } from "@/lib/scenarios/overrides";
+import { withoutSiteCorrections } from "@/lib/scenarios/site-corrections";
 import {
   handoffEventIsCurrent,
   scenarioNoun,
@@ -304,10 +305,16 @@ export function GeneratorSidebar({
     // Dev-only snapshot wiring (Refs #102): keep the raw detection alive.
     onClassification?.(r.classification ?? null, { lat: r.lat, lng: r.lng });
     const cur = scenarioRef.current;
+    // #224 phase 4: a moved pin clears the operator's site-condition
+    // corrections in the same patch that rewrites the detection relays —
+    // their subject (this corridor's scan) no longer exists.  A re-save
+    // at the same pin keeps them (a re-save is not a move).
+    const pinMoved = r.lat !== cur.meta.lat || r.lng !== cur.meta.lng;
+    const metaBase = pinMoved ? withoutSiteCorrections(cur.meta) : cur.meta;
     let next: Scenario = {
       ...cur,
       meta: {
-        ...cur.meta,
+        ...metaBase,
         address: r.address || cur.meta.address,
         lat: r.lat,
         lng: r.lng,

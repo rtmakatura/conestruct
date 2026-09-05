@@ -60,6 +60,7 @@ import {
   assignTiers,
   ledgerLine,
   scanEvidence,
+  type ScanCorrectionWire,
   type ScanWire,
 } from "@/lib/tiering";
 import type {
@@ -209,33 +210,78 @@ export function TieredReference({
   const scan = settled?.sections.site_scan as ScanWire | undefined;
   const scanBuckets = scan?.status === "ok" ? (scan.buckets ?? {}) : null;
   const flagToBucket = new Map(SCAN_BUCKET_TO_FLAG.map(([b, f]) => [f, b] as const));
+  // #224 phase 4 (s2-arc18): the operator's corrections, as the backend
+  // applied and disclosed them (one sentence each, printed verbatim —
+  // the strip, the sheet, the narrative and the audit PDF print the same
+  // words).  Section 03 discloses; it never writes (ruling a).
+  const corrections = new Map<string, ScanCorrectionWire>(
+    (scan?.corrections ?? []).map((c) => [c.flag, c] as const),
+  );
   const siteRow = (rec: SiteAdjustmentRecord) => {
     const detail = SITE_ADJUSTMENT_DETAIL[rec.flag as SiteConditionFlag];
     // A detected condition's evidence rides its adjustment row (one
-    // fact per condition — the classifier adds no second fact).
+    // fact per condition — the classifier adds no second fact).  An
+    // ASSERTED condition's row carries the correction sentence instead:
+    // the scan found none; the operator's word is the provenance.
+    const c = corrections.get(rec.flag);
     const bucketName = flagToBucket.get(rec.flag);
     const evidence =
-      scanBuckets && bucketName ? scanEvidence(scanBuckets[bucketName]) : "";
+      c && c.status === "applied" && c.action === "assert"
+        ? c.disclosure
+        : scanBuckets && bucketName
+          ? scanEvidence(scanBuckets[bucketName])
+          : "";
     return (
       <CheckRow
         key={rec.flag}
         label={detail?.label ?? rec.flag}
         detail={detail?.action ?? rec.action}
         tone="pass"
-        tag={rec.citation}
+        tag={c && c.status === "applied" && c.action === "assert" ? "OPERATOR" : rec.citation}
         evidence={evidence || undefined}
       />
     );
   };
   // Scanned-and-absent conditions: the named passes (audit:scan:<flag>,
-  // ✓ checked).  A bucket missing from the wire renders nothing.
+  // ✓ checked).  A bucket missing from the wire renders nothing.  A
+  // DISMISSED condition keeps its ✓ row here (the fact survives the
+  // record's absence) with the backend sentence as its evidence; an
+  // asserted condition's fact is its adjustment row above; a moot
+  // correction is a reference row (uncounted), never dropped.
   const scanAbsentRows: ReactNode[] = [];
   const scanReferenceRows: ReactNode[] = [];
+  for (const c of corrections.values()) {
+    if (c.status !== "moot") continue;
+    scanReferenceRows.push(
+      <CheckRow
+        key={`scan-corr-${c.flag}`}
+        label={SITE_ADJUSTMENT_DETAIL[c.flag as SiteConditionFlag]?.label ?? c.flag}
+        detail="operator correction — moot"
+        tone="info"
+        tag="OPERATOR"
+        evidence={c.disclosure}
+      />,
+    );
+  }
   if (scanBuckets) {
     const scannedAt = scan?.measured_at ? `scanned ${scan.measured_at}` : "scanned";
     for (const [bucketName, flag] of SCAN_BUCKET_TO_FLAG) {
       const b = scanBuckets[bucketName];
-      if (b && b.detected !== true) {
+      const c = corrections.get(flag);
+      if (c && c.status === "applied" && c.action === "dismiss") {
+        scanAbsentRows.push(
+          <CheckRow
+            key={`scan-${flag}`}
+            label={SITE_ADJUSTMENT_DETAIL[flag as SiteConditionFlag]?.label ?? flag}
+            detail="dismissed by operator"
+            tone="pass"
+            tag="OPERATOR"
+            evidence={c.disclosure}
+          />,
+        );
+      } else if (c && c.status === "applied") {
+        continue; // asserted: the adjustment row above is the fact
+      } else if (b && b.detected !== true) {
         scanAbsentRows.push(
           <CheckRow
             key={`scan-${flag}`}
