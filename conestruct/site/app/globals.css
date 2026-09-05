@@ -1732,6 +1732,91 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
   opacity: 0.85;
 }
+/* #245 — the dismiss reason picker.  A native <select> under the
+   Tailwind preflight inherits the row's light ink onto the UA's white
+   field (measured #c8d1dd on #ffffff = 1.54:1) and its popup renders
+   outside the DOM, so it is an in-DOM radio-chip group on the block's
+   own pairs: ghost (--ink-on-dark-faint on --canvas, 6.19:1) unselected,
+   act (--act on --canvas, 6.26:1) chosen, legend in --ink-on-dark
+   (10.68:1).  Chosen = border + ink + ✓ glyph + the native :checked
+   state (rule 13: never hue alone).  The radio itself stays in the
+   tab order (visually hidden, not display:none). */
+.workbench .jbar-suggest .site-correction-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.workbench .jbar-suggest .site-correction-reasons legend {
+  float: left;
+  padding: 0;
+  margin-right: 4px;
+  font-size: 11.5px;
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest .reason-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border: 1px solid var(--rule);
+  color: var(--ink-on-dark-faint);
+  background: transparent;
+  cursor: pointer;
+}
+.workbench .jbar-suggest .reason-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+.workbench .jbar-suggest .reason-chip .reason-glyph {
+  width: 10px;
+  text-align: center;
+}
+.workbench .jbar-suggest .reason-chip:hover {
+  color: var(--ink-on-dark);
+  border-color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .reason-chip:focus-within {
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
+.workbench .jbar-suggest .reason-chip.chosen {
+  color: var(--act);
+  border-color: var(--act);
+}
+/* The "other" note: the .field-input workbench pair (--canvas, white
+   ink, faint placeholder) at the row's scale. */
+.workbench .jbar-suggest .site-correction-note {
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 3px 8px;
+  min-width: 160px;
+  outline: none;
+  border-radius: 0;
+}
+.workbench .jbar-suggest .site-correction-note::placeholder {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .jbar-suggest .site-correction-note:focus {
+  border-color: var(--act);
+  box-shadow: 0 0 0 2px var(--act-glow);
+}
 
 /* ─── #227 system-event container ───
    "A value the user didn't set is a system event, not a field

@@ -107,8 +107,11 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(picker).not.toBeNull();
     const confirm = within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement;
     expect(confirm.disabled).toBe(true);
-    const select = within(picker).getByLabelText("Reason for dismissing Pedestrian sidewalks");
-    await user.selectOptions(select, "other");
+    // #245: the reason is an in-DOM radio group, never a native select.
+    const group = within(picker).getByRole("radiogroup", {
+      name: "Reason for dismissing Pedestrian sidewalks",
+    });
+    await user.click(within(group).getByRole("radio", { name: "Other (say what)" }));
     expect((within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement).disabled).toBe(
       true,
     );
@@ -124,6 +127,37 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
         note: "construction fence",
       }),
     ]);
+  });
+
+  it("#245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph", async () => {
+    const user = userEvent.setup();
+    mount(ok());
+    const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row")!;
+    await user.click(within(sidewalk as HTMLElement).getByRole("button", { name: "Dismiss" }));
+    const picker = block()!.querySelector(".site-correction-picker") as HTMLElement;
+    expect(picker.querySelector("select")).toBeNull();
+    const group = within(picker).getByRole("radiogroup", {
+      name: "Reason for dismissing Pedestrian sidewalks",
+    });
+    const radios = within(group).getAllByRole("radio") as HTMLInputElement[];
+    expect(radios.map((r) => r.value)).toEqual(["fenced", "removed", "not_in_work_zone", "other"]);
+    // Each chip's label is one direct text node (getByText reads it).
+    for (const l of ["Fenced off", "Removed", "Not in the work zone", "Other (say what)"]) {
+      expect(within(group).getByText(l)).toBeTruthy();
+    }
+    expect(radios.every((r) => !r.checked)).toBe(true);
+    expect(group.querySelectorAll(".reason-chip.chosen")).toHaveLength(0);
+    await user.click(within(group).getByRole("radio", { name: "Removed" }));
+    const chosen = group.querySelectorAll(".reason-chip.chosen");
+    expect(chosen).toHaveLength(1);
+    expect(chosen[0].querySelector(".reason-glyph")?.textContent).toBe("✓");
+    expect(chosen[0].querySelector(".reason-text")?.textContent).toBe("Removed");
+    expect((within(group).getByRole("radio", { name: "Removed" }) as HTMLInputElement).checked).toBe(true);
+    // The note input exists only for other.
+    expect(within(picker).queryByLabelText("Say what")).toBeNull();
+    expect(
+      (within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement).disabled,
+    ).toBe(false);
   });
 
   it("Cancel closes the picker without writing", async () => {

@@ -234,24 +234,41 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       if (dismissing === flag) {
         rows.push(
           <div key={`dismiss-${flag}`} className="sugg-row site-correction-picker">
-            <span>
-              Dismiss <b className="sugg-name">{label}</b> because
-            </span>
-            <select
-              aria-label={`Reason for dismissing ${label}`}
-              value={reason ?? ""}
-              onChange={(e) => setReason((e.target.value || null) as SiteDismissReason | null)}
-            >
-              <option value="">Choose a reason</option>
-              {DISMISS_REASONS.map((r) => (
-                <option key={r.v} value={r.v}>
-                  {r.l}
-                </option>
-              ))}
-            </select>
+            {/* #245: the reason is an in-DOM radio-chip group, never a
+                native <select> — the UA's white field under the
+                inherited light ink measured 1.54:1 and its popup renders
+                outside the DOM where nothing measures it.  Chips use
+                the block's own pairs (ghost unselected, act chosen)
+                on --canvas; the chosen state is border + ink + a ✓
+                glyph + the native :checked state (rule 13, never hue
+                alone).  The legend keeps the accessible name. */}
+            <fieldset className="site-correction-reasons" role="radiogroup">
+              <legend>
+                Reason for dismissing <b className="sugg-name">{label}</b>
+              </legend>
+              {DISMISS_REASONS.map((r) => {
+                const chosen = reason === r.v;
+                return (
+                  <label key={r.v} className={`reason-chip${chosen ? " chosen" : ""}`}>
+                    <input
+                      type="radio"
+                      name={`dismiss-reason-${flag}`}
+                      value={r.v}
+                      checked={chosen}
+                      onChange={() => setReason(r.v)}
+                    />
+                    <span className="reason-glyph" aria-hidden>
+                      {chosen ? "✓" : ""}
+                    </span>
+                    <span className="reason-text">{r.l}</span>
+                  </label>
+                );
+              })}
+            </fieldset>
             {reason === "other" && (
               <input
                 type="text"
+                className="site-correction-note"
                 aria-label="Say what"
                 maxLength={200}
                 value={note}
