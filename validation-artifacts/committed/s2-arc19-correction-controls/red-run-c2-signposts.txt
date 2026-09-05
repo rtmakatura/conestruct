@@ -1,0 +1,20 @@
+ ❯ components/TieredReference.signposts.test.tsx (2 tests | 2 failed) 770ms
+   × #246 — section 03 signposts > scanned-lakewood: every detected row says Correct in setup, every keyed absent row says Assert in setup 618ms
+     → Unable to find an accessible element with the role "link" and name "Correct in setup ↑"
+                    ✓
+                    ✓
+   × #246 — section 03 signposts > scanned-dismissed: the dismissed row (OPERATOR) signposts Correct in setup — its Undo lives in the block 151ms
+     → expected undefined to be 'Correct in setup ↑' // Object.is equality
+ ❯ components/GeneratorShell.site-jump.test.tsx (2 tests | 2 failed) 1820ms
+   × #246 — the results-head jump line > names the settled scan's detected count and jumps to the strip's block (scroll + focus by id) 941ms
+     → Unable to find an element with the text: Site conditions — 2 detected ·. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+   × #246 — the results-head jump line > renders no line when the scan detected nothing keyed (absence renders as absence) 878ms
+     → expected null not to be null
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find an element with the text: Site conditions — 2 detected ·. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ components/GeneratorShell.site-jump.test.tsx:122:25
+AssertionError: expected null not to be null

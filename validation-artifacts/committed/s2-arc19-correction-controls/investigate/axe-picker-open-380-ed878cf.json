@@ -1,0 +1,44 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "targets": [
+      "select"
+    ],
+    "data": [
+      {
+        "fgColor": "#c8d1dd",
+        "bgColor": "#ffffff",
+        "contrastRatio": 1.54,
+        "fontSize": "8.6pt (11.5px)",
+        "fontWeight": "normal",
+        "messageKey": null,
+        "expectedContrastRatio": "4.5:1"
+      }
+    ]
+  },
+  {
+    "id": "scrollable-region-focusable",
+    "impact": "serious",
+    "targets": [
+      ".gap-8"
+    ],
+    "data": [
+      null
+    ]
+  },
+  {
+    "id": "target-size",
+    "impact": "serious",
+    "targets": [
+      ".strip-edit-all"
+    ],
+    "data": [
+      {
+        "minSize": 24,
+        "width": 130.2,
+        "height": 19.2
+      }
+    ]
+  }
+]

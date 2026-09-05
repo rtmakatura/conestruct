@@ -1,0 +1,40 @@
+ ❯ components/SetupStrip.corrections-tokens.test.tsx (3 tests | 3 failed) 12ms
+   × #245 — the reason picker's tokens > unselected chips are the ghost pair; chosen chips the act pair; the legend the row ink 9ms
+     → rule not found: .workbench .jbar-suggest .reason-chip: expected -1 to be greater than -1
+   × #245 — the reason picker's tokens > the radio stays focusable (hidden by opacity, never display:none) and focus shows on the chip 1ms
+     → rule not found: .workbench .jbar-suggest .reason-chip input: expected -1 to be greater than -1
+   × #245 — the reason picker's tokens > the other-note input is the field-input workbench pair, never the UA field 1ms
+     → rule not found: .workbench .jbar-suggest .site-correction-note: expected -1 to be greater than -1
+ ❯ components/SetupStrip.corrections.test.tsx (10 tests | 2 failed) 533ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each 73ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature) 5ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > null provenance (mid-refetch), not_run, and a refusal render nothing 11ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides 53ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other 74ms
+     → Unable to find an accessible element with the role "radiogroup" and name "Reason for dismissing Pedestrian sidewalks"
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph 53ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing 132ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 61ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction 63ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/SetupStrip.corrections-tokens.test.tsx > #245 — the reason picker's tokens > unselected chips are the ghost pair; chosen chips the act pair; the legend the row ink
+AssertionError: rule not found: .workbench .jbar-suggest .reason-chip: expected -1 to be greater than -1
+ ❯ rule components/SetupStrip.corrections-tokens.test.tsx:13:44
+     13|   expect(i, `rule not found: ${selector}`).toBeGreaterThan(-1);
+ ❯ components/SetupStrip.corrections-tokens.test.tsx:20:12
+ FAIL  components/SetupStrip.corrections-tokens.test.tsx > #245 — the reason picker's tokens > the radio stays focusable (hidden by opacity, never display:none) and focus shows on the chip
+AssertionError: rule not found: .workbench .jbar-suggest .reason-chip input: expected -1 to be greater than -1
+ ❯ rule components/SetupStrip.corrections-tokens.test.tsx:13:44
+     13|   expect(i, `rule not found: ${selector}`).toBeGreaterThan(-1);
+ ❯ components/SetupStrip.corrections-tokens.test.tsx:29:12
+ FAIL  components/SetupStrip.corrections-tokens.test.tsx > #245 — the reason picker's tokens > the other-note input is the field-input workbench pair, never the UA field
+AssertionError: rule not found: .workbench .jbar-suggest .site-correction-note: expected -1 to be greater than -1
+ ❯ rule components/SetupStrip.corrections-tokens.test.tsx:13:44
+     13|   expect(i, `rule not found: ${selector}`).toBeGreaterThan(-1);
+ ❯ components/SetupStrip.corrections-tokens.test.tsx:34:18
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other
+TestingLibraryElementError: Unable to find an accessible element with the role "radiogroup" and name "Reason for dismissing Pedestrian sidewalks"
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17

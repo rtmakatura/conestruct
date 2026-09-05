@@ -1,0 +1,10 @@
+# s2-arc19 test accounting (branch issue-245-246-correction-controls)
+
+## vitest — before (main ed878cf): 920 (handoff.md, s2-arc18); after commit 2:
+   ✓ pin suggestion contract: suggest never sets > Dismiss leaves a ×-record with undo — never a cleared slot (#227)  1120ms
+   ✓ street-class suggestion contract (#152 C): suggest never sets > Dismiss leaves a ×-record with undo — never a cleared row (#227)  301ms
+ Test Files  128 passed (128)
+      Tests  928 passed (928)
+
+## pytest — before (main ed878cf): 2038 collected (s2-arc18: 2036 passed + 2 skipped); after commit 2 (backend untouched):
+2036 passed, 2 skipped in 33.53s

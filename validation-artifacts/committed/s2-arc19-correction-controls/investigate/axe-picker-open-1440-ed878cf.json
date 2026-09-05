@@ -1,0 +1,20 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "targets": [
+      "select"
+    ],
+    "data": [
+      {
+        "fgColor": "#c8d1dd",
+        "bgColor": "#ffffff",
+        "contrastRatio": 1.54,
+        "fontSize": "8.6pt (11.5px)",
+        "fontWeight": "normal",
+        "messageKey": null,
+        "expectedContrastRatio": "4.5:1"
+      }
+    ]
+  }
+]
