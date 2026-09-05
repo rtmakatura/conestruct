@@ -1354,6 +1354,20 @@ input[type="number"] {
   letter-spacing: 0.04em;
   color: var(--ink-on-dark);
 }
+/* #247 — the results-head wait line: the act-cyan spinner glyph the
+   verifying strip draws (.status-bar.verifying .indicator), beside the
+   words (rule 13).  Chromeless ink: a wait is not a verdict. */
+.workbench .results-head-wait .rh-spin {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  align-self: center;
+  border: 1.5px solid var(--rule);
+  border-top-color: var(--act);
+  border-radius: 50%;
+  animation: sb-spin 0.7s linear infinite;
+}
 .workbench .tr-signpost {
   font-family: var(--font-mono);
   font-size: 10px;

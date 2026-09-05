@@ -36,9 +36,8 @@ import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
 import { PricingCard } from "./PricingCard";
 import { ResultsHero } from "./ResultsHero";
 import { TieredReference } from "./TieredReference";
-import { jumpToAnchor } from "./GeneratorFormPrimitives";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
-import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
+import { ResultsHead, type ResultsHeadState } from "./ResultsHead";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -61,6 +60,33 @@ import type {
 } from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
+
+// #247 + #246 — the results-head slot's state, DERIVED here and rendered
+// verbatim by <ResultsHead> (the deriveRail idiom: one derivation, one
+// voice).  ``wait`` while any fetch for the GENERATED scenario is in
+// flight — the breakdown (genState "generating") or the audit (the
+// stamped view still loading) — because the in-generate scan can run up
+// to 20 s and the strip's VERIFYING line sits under the fixed nav after
+// the landing (#247, measured on prod 0e4b4a1).  ``detected`` from the
+// SETTLED scan (the stamped view, same section the strip block and
+// section 03 read): how many of the five scanned conditions it found;
+// 0 ⇒ null (rule 10: absence renders as absence).  A refused scan is
+// neither: the refusal container owns that state.  Pre-generate: null.
+export function deriveResultsHead(args: {
+  generated: boolean;
+  genState: "pre" | "generating" | "post" | "error";
+  stripAudit: AuditState;
+}): ResultsHeadState | null {
+  const { generated, genState, stripAudit } = args;
+  if (!generated) return null;
+  if (genState === "generating" || stripAudit.state === "loading") return { kind: "wait" };
+  if (stripAudit.state !== "ready") return null;
+  const scan = stripAudit.data.sections?.site_scan as SiteScanProvenance | undefined;
+  if (!scan || scan.status !== "ok") return null;
+  const buckets = (scan.buckets as Record<string, ScanBucketWire> | undefined) ?? {};
+  const count = SCAN_BUCKET_TO_FLAG.filter(([b]) => buckets[b]?.detected === true).length;
+  return count > 0 ? { kind: "detected", count } : null;
+}
 
 // Cold-start honesty (Refs #122, rule 10): a warm audit round-trip
 // measures 0.5–0.7 s; past 2 s the wait is almost certainly the Modal
@@ -846,18 +872,11 @@ export function GeneratorShell({
       : null;
   // The refused scan's provenance, from the STAMPED audit view (so a
   // stale refusal for an edited input never renders as current).
-  // #246 — the results-head jump line: how many of the five scanned
-  // conditions the SETTLED scan detected (the stamped view, same
-  // section the strip block and section 03 read).  0 ⇒ no line (rule
-  // 10: absence renders as absence); the strip block still offers
-  // Assert on every absent row, reached from the section 03 signposts.
-  const siteDetected: number = (() => {
-    if (stripAudit.state !== "ready") return 0;
-    const scan = stripAudit.data.sections?.site_scan as SiteScanProvenance | undefined;
-    if (!scan || scan.status !== "ok") return 0;
-    const buckets = (scan.buckets as Record<string, ScanBucketWire> | undefined) ?? {};
-    return SCAN_BUCKET_TO_FLAG.filter(([b]) => buckets[b]?.detected === true).length;
-  })();
+  // #247 + #246 — the results-head slot (wait line / detected count /
+  // nothing), derived once; see deriveResultsHead above.  The strip
+  // block still offers Assert on every absent row, reached from the
+  // section 03 signposts.
+  const resultsHead = deriveResultsHead({ generated, genState, stripAudit });
 
   const scanRefusal: { message: string; scan: SiteScanProvenance | null } | null =
     stripAudit.state === "error" && stripAudit.code === SITE_SCAN_UNAVAILABLE_CODE
@@ -1156,21 +1175,12 @@ export function GeneratorShell({
                 results-stale wrapper: the dimmed stale results are the
                 previous answer, but the refusal is current and must
                 keep its measured contrast (rule 13). */}
-            {siteDetected > 0 && (
-              <div className="site-jump mb-3">
-                {`Site conditions — ${siteDetected} detected · `}
-                <a
-                  className="tr-signpost"
-                  href={`#${SITE_CORRECTIONS_ANCHOR}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    jumpToAnchor(SITE_CORRECTIONS_ANCHOR);
-                  }}
-                >
-                  correct in setup ↑
-                </a>
-              </div>
-            )}
+            {/* #247 + #246: the results-head slot — the wait line while a
+                fetch for the generated scenario runs (in view by
+                construction, below the landing), the detected-count jump
+                line once the scan settles, nothing otherwise.  Slot
+                order: this line → the refusal container → the plan. */}
+            <ResultsHead head={resultsHead} />
             {scanRefusal && (
               <div role="alert" className="sys-event warn scan-refusal">
                 <div className="tr-section mb-1.5">Site scan</div>
