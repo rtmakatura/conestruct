@@ -1,0 +1,108 @@
+# s2-arc18 test accounting — main (9aee784) vs the arc tip (59e9e9a), measured (a detached worktree of main at .claude/worktrees/s2a18-baseline, node_modules junctioned then UNLINKED before removal)
+# vitest list: main 893 → head 919; pytest --collect-only: main 1992 → head 2038
+
+## vitest list diff (< removed at main, > added at head)
+30,33d29
+< components/AuditTrail.test.tsx > #104 site-adjustment citations read the backend, static fallback > aggregate header is the neutral label, not the stale § 6C / § 6D
+< components/AuditTrail.test.tsx > #104 site-adjustment citations read the backend, static fallback > backend-present output is byte-identical to the static fallback (behavior-preserving)
+< components/AuditTrail.test.tsx > #104 site-adjustment citations read the backend, static fallback > falls back to the static table per flag when records are absent or partial
+< components/AuditTrail.test.tsx > #104 site-adjustment citations read the backend, static fallback > renders the backend citation when the record is present (sentinel proof)
+242a239,240
+> components/GeneratorShell.picker-reapply.test.tsx > pin move clears site-condition corrections (#224 phase 4) > a re-save at the same pin keeps the corrections on the wire
+> components/GeneratorShell.picker-reapply.test.tsx > pin move clears site-condition corrections (#224 phase 4) > a save at a NEW pin drops the key entirely — never an empty list
+438a437,445
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature)
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo)
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > null provenance (mid-refetch), not_run, and a refusal render nothing
+> components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction
+510a518,522
+> components/TieredReference.corrections.test.tsx > section 03 — a moot correction (synthetic over scanned-lakewood) > renders as an info reference row with the backend sentence, and the scan's own ✓ row stands
+> components/TieredReference.corrections.test.tsx > section 03 — scanned-asserted (#224 phase 4) > the asserted school zone is a changed row whose evidence is the backend sentence, tagged OPERATOR
+> components/TieredReference.corrections.test.tsx > section 03 — scanned-asserted (#224 phase 4) > the scanned-absent pass for the asserted key is suppressed and the ledger equals the pin
+> components/TieredReference.corrections.test.tsx > section 03 — scanned-dismissed (#224 phase 4) > the correction rides the pending tier as the #177 item and the ledger equals the pin
+> components/TieredReference.corrections.test.tsx > section 03 — scanned-dismissed (#224 phase 4) > the dismissed sidewalk is a ✓ checked row tagged OPERATOR with the backend sentence; no changed row
+512a525,526
+> components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-asserted
+> components/TieredReference.fixtures.test.tsx > the rendered ledger equals the shared expectation > scanned-dismissed
+808a823,828
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > a pin move clears every marker — key dropped, never an empty list
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > dismiss / assert markers carry the backend's shape and a seconds stamp
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > dismissIsComplete mirrors the backend's cross-field rule
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > one marker per condition — a new marker for a flag replaces the old one
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > undo of one of two markers keeps the other
+> lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > undo restores meta byte-identically (the key drops when the list empties)
+859a880,883
+> lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > applied assert → the audit:site row is the fact; the scanned-absent pass is suppressed
+> lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > applied dismiss → the condition stays as audit:scan:<flag> checked (never silent)
+> lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > moot correction → audit:scan:correction:<flag> reference, uncounted; the scan's verdict stands
+> lib/tiering.test.ts > operator corrections' ruled edges (#224 phase 4) > the correction's pending item tiers pending, as #177's does
+861a886,887
+> lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-asserted
+> lib/tiering.test.ts > recorded fixtures match the shared expectation file > scanned-dismissed
+
+## pytest collected diff (< removed at main, > added at head)
+795a796,797
+> tests/test_audit_blocks_site_scan.py::test_applied_assert_rewrites_the_result_cell_with_the_scan_verdict
+> tests/test_audit_blocks_site_scan.py::test_applied_dismiss_rewrites_the_result_cell_and_keeps_the_evidence
+796a799
+> tests/test_audit_blocks_site_scan.py::test_moot_correction_leaves_the_row_and_is_still_disclosed
+800a804
+> tests/test_audit_blocks_site_scan.py::test_proceeded_anyway_lists_the_corrections_after_the_disclosure
+802a807,808
+> tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_a_corrected_scan_carries_the_cover_line_and_the_result_cell[scanned-asserted-ASSERTED]
+> tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_a_corrected_scan_carries_the_cover_line_and_the_result_cell[scanned-dismissed-dismissed]
+1507a1514,1515
+> tests/test_pdf_containment.py::test_flowing_pdfs_stay_inside_margins[/render/audit-pdf-scanned-asserted]
+> tests/test_pdf_containment.py::test_flowing_pdfs_stay_inside_margins[/render/audit-pdf-scanned-dismissed]
+1513a1522,1523
+> tests/test_pdf_containment.py::test_flowing_pdfs_stay_inside_margins[/render/crew-pdf-scanned-asserted]
+> tests/test_pdf_containment.py::test_flowing_pdfs_stay_inside_margins[/render/crew-pdf-scanned-dismissed]
+1519a1530,1531
+> tests/test_pdf_containment.py::test_plan_sheet_containment[scanned-asserted]
+> tests/test_pdf_containment.py::test_plan_sheet_containment[scanned-dismissed]
+1521a1534,1535
+> tests/test_pdf_containment.py::test_scanned_fixtures_really_scan[scanned-asserted-ok-False]
+> tests/test_pdf_containment.py::test_scanned_fixtures_really_scan[scanned-dismissed-ok-False]
+1757a1772,1795
+> tests/test_site_scan_corrections.py::test_assert_of_an_absent_key_applies_and_its_record_fires
+> tests/test_site_scan_corrections.py::test_corrections_never_write_the_wire_scenario
+> tests/test_site_scan_corrections.py::test_cross_field_rules_are_an_honest_400_with_the_code[overrides0-needs a reason]
+> tests/test_site_scan_corrections.py::test_cross_field_rules_are_an_honest_400_with_the_code[overrides1-needs a note]
+> tests/test_site_scan_corrections.py::test_cross_field_rules_are_an_honest_400_with_the_code[overrides2-only with the reason 'other']
+> tests/test_site_scan_corrections.py::test_cross_field_rules_are_an_honest_400_with_the_code[overrides3-takes no reason]
+> tests/test_site_scan_corrections.py::test_cross_field_rules_are_an_honest_400_with_the_code[overrides4-Two corrections name school zone]
+> tests/test_site_scan_corrections.py::test_dismiss_of_a_detected_key_applies_and_its_record_no_longer_fires
+> tests/test_site_scan_corrections.py::test_moot_corrections_are_disclosed_and_change_nothing
+> tests/test_site_scan_corrections.py::test_no_corrections_is_the_phase_3_wire_exactly
+> tests/test_site_scan_corrections.py::test_not_run_applies_asserts_too
+> tests/test_site_scan_corrections.py::test_other_reason_carries_the_note_in_the_sentence
+> tests/test_site_scan_corrections.py::test_proceeded_after_outage_applies_asserts_and_moots_dismisses
+> tests/test_site_scan_corrections.py::test_shape_errors_stay_pydantics
+> tests/test_site_scan_corrections_surfaces.py::test_narrative_block_carries_both_not_checked_and_corrections
+> tests/test_site_scan_corrections_surfaces.py::test_narrative_markdown_lists_applied_and_moot_corrections
+> tests/test_site_scan_corrections_surfaces.py::test_narrative_pdf_carries_the_same_sentence
+> tests/test_site_scan_corrections_surfaces.py::test_narrative_prints_nothing_without_corrections
+> tests/test_site_scan_corrections_surfaces.py::test_plan_sheet_carries_the_corrections_line[scanned-asserted-halves1]
+> tests/test_site_scan_corrections_surfaces.py::test_plan_sheet_carries_the_corrections_line[scanned-dismissed-halves0]
+> tests/test_site_scan_corrections_surfaces.py::test_plan_sheet_prints_nothing_for_a_moot_correction
+> tests/test_site_scan_corrections_surfaces.py::test_plan_sheet_prints_nothing_without_corrections
+> tests/test_site_scan_corrections_surfaces.py::test_sentences_carry_every_correction_in_wire_order
+> tests/test_site_scan_corrections_surfaces.py::test_sheet_line_names_applied_corrections_only
+1864a1903,1904
+> tests/test_tier_ledger.py::test_applied_assert_suppresses_the_scanned_absent_pass
+> tests/test_tier_ledger.py::test_applied_dismiss_keeps_the_condition_as_a_checked_scan_fact
+1867a1908,1909
+> tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-asserted]
+> tests/test_tier_ledger.py::test_audit_pdf_cover_carries_the_screen_ledger[scanned-dismissed]
+1870a1913
+> tests/test_tier_ledger.py::test_correction_pending_item_tiers_pending_like_177
+1873a1917
+> tests/test_tier_ledger.py::test_moot_correction_is_reference_and_uncounted
+1875a1920,1921
+> tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-asserted]
+> tests/test_tier_ledger.py::test_recorded_fixtures_match_shared_expectation[scanned-dismissed]
