@@ -1,0 +1,40 @@
+{
+  "_provenance": {
+    "arc": "s2-arc18 (#224 phase 4) corrections containment, 2026-09-04",
+    "purpose": "Scanned path, scan OK, the operator ASSERTED a school zone the scan did not find: the S1-1 signs join the plan and the sheet prints the CORRECTED BY OPERATOR line beside the DRAFT trailer.",
+    "overpass": "recorded",
+    "reachability": "Passes the wire schema (SiteScanScenarioFields); rendered through the real /render/pdf, /render/audit-pdf and /render/crew-pdf paths with _overpass_request_with_fallback stubbed per the overpass key (the tests never reach the network)."
+  },
+  "scenario": {
+    "kind": "shoulder",
+    "meta": {
+      "project": "Lakewood Scanned Asserted",
+      "address": "W Alameda Ave, Lakewood",
+      "lat": 39.7113,
+      "lng": -105.0815,
+      "bearingDeg": 180,
+      "siteConditions": {
+        "pedestrian_facility": true
+      },
+      "siteConditionOverrides": [
+        {
+          "flag": "school_zone",
+          "action": "assert",
+          "recorded_at": "2026-09-04T12:00:00+00:00"
+        }
+      ]
+    },
+    "roadType": "urban_arterial",
+    "speed": 45,
+    "lanes": 2,
+    "laneWidth": 12,
+    "divided": true,
+    "workType": "utility_locate",
+    "duration": "short",
+    "workLen": 1000,
+    "night": false,
+    "site_scan": {
+      "proceed_if_unavailable": false
+    }
+  }
+}

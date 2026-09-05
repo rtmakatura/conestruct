@@ -37,7 +37,7 @@ from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 
 from src._dotenv import load_dotenv
-from src.api.site_scan import not_checked_disclosure
+from src.api.site_scan import corrections_disclosure, not_checked_disclosure
 from src.generation.layout import rightmost_lane_assumption_active
 from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
 from src.rules.device_aggregation import AggregatedDeviceRow
@@ -2973,10 +2973,14 @@ def _draw_notes(
     # sentence are the backend's own (src/api/site_scan.py), so the sheet
     # prints exactly what the audit PDF and the panel print.
     scan_disclosure = not_checked_disclosure(site_scan)
+    # #224 phase 4 (s2-arc18): the operator's applied corrections — the
+    # same fixed-obligation class, one line, 2 wrapped lines reserved.
+    corrections_line = corrections_disclosure(site_scan)
     extra_note_lines = (
         (5 if params.near_intersection else 0)
         + (2 if rightmost_lane_note else 0)
         + (2 if scan_disclosure else 0)
+        + (2 if corrections_line else 0)
     )
     layout = _notes_layout(len(schedule_order or []), len(advance) + extra_note_lines)
 
@@ -3274,6 +3278,16 @@ def _draw_notes(
             cv.setFillColor(colors.HexColor("#B05010"))
             for line in _wrap_to_width(
                 cv, scan_disclosure, "Helvetica-Bold", 6.5, width - 16.0, max_lines=2
+            ):
+                y[0] -= layout.footer_pads[1]
+                cv.drawString(x, y[0], line)
+        if corrections_line:
+            # #224 phase 4: the operator's applied corrections, same ink,
+            # same class — the plan the crew holds says what was overridden.
+            cv.setFont("Helvetica-Bold", 6.5)
+            cv.setFillColor(colors.HexColor("#B05010"))
+            for line in _wrap_to_width(
+                cv, corrections_line, "Helvetica-Bold", 6.5, width - 16.0, max_lines=2
             ):
                 y[0] -= layout.footer_pads[1]
                 cv.drawString(x, y[0], line)

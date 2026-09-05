@@ -25,7 +25,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.api.site_scan import not_checked_disclosure
+from src.api.site_scan import correction_sentences, not_checked_disclosure
 from src.generation.layout import (
     device_count_floors,
     near_intersection_stations,
@@ -872,6 +872,9 @@ def build_narrative_context(
         # the predicate and the words — one voice across the audit PDF,
         # the sheet, the panel and this narrative).
         "site_scan_not_checked": not_checked_disclosure(site_scan),
+        # #224 phase 4 (s2-arc18): every operator correction's sentence,
+        # applied and moot, verbatim from the provenance (one voice).
+        "site_scan_corrections": correction_sentences(site_scan),
         "night_adjustments": night_adjustments or [],
         "fines_double_notes": fines_double_notes,
         "trigger_condition": trigger_condition,

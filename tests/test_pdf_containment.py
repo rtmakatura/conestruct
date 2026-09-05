@@ -63,6 +63,11 @@ BASELINE = {
     # ``_provenance.overpass`` key: the recorded payload, or down).
     "scanned-ok": {"edge": 0, "box_cross": 0, "collisions": 0},
     "scanned-not-checked": {"edge": 0, "box_cross": 0, "collisions": 0},
+    # #224 phase 4 (s2-arc18): the corrected path — an applied dismiss and
+    # an applied assert over scanned-ok's scenario; the sheet prints the
+    # CORRECTED BY OPERATOR line beside the DRAFT trailer.
+    "scanned-dismissed": {"edge": 0, "box_cross": 0, "collisions": 0},
+    "scanned-asserted": {"edge": 0, "box_cross": 0, "collisions": 0},
 }
 
 SCAN_PAYLOAD = Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json"
@@ -238,7 +243,12 @@ def test_flowing_pdfs_stay_inside_margins(
 
 @pytest.mark.parametrize(
     ("name", "status", "proceeded"),
-    [("scanned-ok", "ok", False), ("scanned-not-checked", "unavailable", True)],
+    [
+        ("scanned-ok", "ok", False),
+        ("scanned-not-checked", "unavailable", True),
+        ("scanned-dismissed", "ok", False),
+        ("scanned-asserted", "ok", False),
+    ],
 )
 def test_scanned_fixtures_really_scan(
     name: str, status: str, proceeded: bool, client: TestClient

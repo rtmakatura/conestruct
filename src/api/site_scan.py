@@ -398,6 +398,60 @@ def not_checked_disclosure(scan: Mapping[str, Any] | None) -> str | None:
     return str(disclosure) if disclosure else None
 
 
+CORRECTIONS_SHEET_PREFIX = "SITE CONDITIONS CORRECTED BY OPERATOR — "
+
+
+def correction_sentences(scan: Mapping[str, Any] | None) -> list[str]:
+    """Every correction's backend-composed sentence, applied and moot, in
+    wire order (#224 phase 4).  The narrative and the audit print all of
+    them: a moot correction is disclosed, never dropped (rule 10)."""
+    if not scan:
+        return []
+    out: list[str] = []
+    for c in scan.get("corrections") or []:
+        if isinstance(c, Mapping) and c.get("disclosure"):
+            out.append(str(c["disclosure"]))
+    return out
+
+
+def corrections_disclosure(scan: Mapping[str, Any] | None) -> str | None:
+    """The one fixed-obligation line the plan sheet prints for APPLIED
+    corrections, or None (#224 phase 4, commit 2).
+
+    The notes box has room for a line, not a paragraph: one clause per
+    applied correction — "<label> dismissed (<reason>)" / "<label>
+    asserted" — behind a prefix of the same class as
+    :data:`NOT_CHECKED_DISCLOSURE`.  Moot corrections change nothing on
+    the sheet and are disclosed on the surfaces with room (narrative,
+    audit, panel).  Authored here so every sheet prints one voice.
+    """
+    if not scan:
+        return None
+    clauses: list[str] = []
+    for c in scan.get("corrections") or []:
+        if not isinstance(c, Mapping) or c.get("status") != "applied":
+            continue
+        label = SITE_CONDITION_LABELS.get(str(c.get("flag", "")), str(c.get("flag", "")))
+        if c.get("action") == "dismiss":
+            clauses.append(f"{label} dismissed ({_reason_text(_Obj(c))})")
+        else:
+            clauses.append(f"{label} asserted")
+    if not clauses:
+        return None
+    return CORRECTIONS_SHEET_PREFIX + "; ".join(clauses) + "."
+
+
+class _Obj:
+    """Attribute view over a wire dict so ``_reason_text`` serves both the
+    request model (attributes) and the provenance dict (keys)."""
+
+    def __init__(self, d: Mapping[str, Any]) -> None:
+        self._d = d
+
+    def __getattr__(self, name: str) -> Any:
+        return self._d.get(name)
+
+
 def refusal_detail(provenance: SiteScanProvenance) -> dict[str, Any]:
     """The honest 400's structured ``detail`` — machine-readable code (the
     #180 note: a gate with no scenario predicate needs a code, not
