@@ -441,6 +441,12 @@ def corrections_disclosure(scan: Mapping[str, Any] | None) -> str | None:
     return CORRECTIONS_SHEET_PREFIX + "; ".join(clauses) + "."
 
 
+def correction_reason_text(correction: Mapping[str, Any]) -> str:
+    """The dismiss reason as prose, from a provenance correction dict —
+    the words the sheet line and the audit-PDF Result cell share."""
+    return _reason_text(_Obj(correction))
+
+
 class _Obj:
     """Attribute view over a wire dict so ``_reason_text`` serves both the
     request model (attributes) and the provenance dict (keys)."""

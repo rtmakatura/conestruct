@@ -249,3 +249,120 @@ def test_real_audit_pdf_on_an_ok_scan_names_every_condition_the_cover_counts(
     assert "None along the corridor" in text
     assert "DETECTED" in text
     assert "found" in text and "ft from anchor" in text
+
+
+# --------------------------------------------------------------------------- #
+# #224 phase 4 (s2-arc18, commit 3) — operator corrections in the table
+# --------------------------------------------------------------------------- #
+
+
+def _correction(flag: str, action: str, status: str, reason: str | None = None) -> dict[str, Any]:
+    return {
+        "flag": flag,
+        "action": action,
+        "reason": reason,
+        "note": None,
+        "recorded_at": "2026-09-04T12:00:00+00:00",
+        "status": status,
+        "scan_detected": None,
+        "disclosure": f"Sentence for {flag} {action} ({status}).",
+    }
+
+
+def test_applied_dismiss_rewrites_the_result_cell_and_keeps_the_evidence() -> None:
+    scan = _ok(
+        {
+            "sidewalks": {"detected": True, "count": 18, "nearest_distance_m": 14.2},
+            "schools": {"detected": False, "count": 0},
+        }
+    )
+    scan["corrections"] = [_correction("pedestrian_facility", "dismiss", "applied", "fenced")]
+    blocks = _site_scan_blocks(scan)
+    by_label = {r[0]: r for r in _rows(blocks)}
+    assert by_label["Pedestrian sidewalks"][1] == "DETECTED — dismissed by operator (fenced off)"
+    assert by_label["Pedestrian sidewalks"][2] == "18 found · nearest 46.6 ft from anchor"
+    assert by_label["School zone"][1] == "None along the corridor"
+    texts = _texts(blocks)
+    assert "Operator corrections to the site scan" in texts
+    assert "Sentence for pedestrian_facility dismiss (applied)." in texts
+
+
+def test_applied_assert_rewrites_the_result_cell_with_the_scan_verdict() -> None:
+    scan = _ok({"schools": {"detected": False, "count": 0}})
+    scan["corrections"] = [
+        _correction("school_zone", "assert", "applied"),
+        _correction("bicycle_facility", "assert", "applied"),  # bucket missing from the wire
+    ]
+    by_label = {r[0]: r for r in _rows(_site_scan_blocks(scan))}
+    assert by_label["School zone"][1:] == ["ASSERTED by operator (scan: none)", ""]
+    assert by_label["Bike lane / cycleway"][1:] == ["ASSERTED by operator (scan: not reported)", ""]
+
+
+def test_moot_correction_leaves_the_row_and_is_still_disclosed() -> None:
+    scan = _ok({"schools": {"detected": False, "count": 0}})
+    scan["corrections"] = [_correction("school_zone", "dismiss", "moot", "removed")]
+    blocks = _site_scan_blocks(scan)
+    by_label = {r[0]: r for r in _rows(blocks)}
+    assert by_label["School zone"][1] == "None along the corridor"
+    assert "Sentence for school_zone dismiss (moot)." in _texts(blocks)
+
+
+def test_proceeded_anyway_lists_the_corrections_after_the_disclosure() -> None:
+    scan = _unavailable(True)
+    scan["corrections"] = [_correction("school_zone", "assert", "applied")]
+    texts = _texts(_site_scan_blocks(scan))
+    assert ss.NOT_CHECKED_DISCLOSURE in texts
+    assert texts.index("Sentence for school_zone assert (applied).") > texts.index(
+        ss.NOT_CHECKED_DISCLOSURE
+    )
+
+
+@pytest.mark.parametrize(
+    ("name", "fragment"),
+    # Wrap-safe fragments: pdfium breaks a cell's text at its column width.
+    [
+        ("scanned-dismissed", "dismissed"),
+        ("scanned-asserted", "ASSERTED"),
+    ],
+)
+def test_real_audit_pdf_on_a_corrected_scan_carries_the_cover_line_and_the_result_cell(
+    name: str, fragment: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Through the real route on the corrected fixtures: the Result cell
+    names the correction, the correction sentence is in the body, and
+    the cover's Plan status line equals the classifier over the served
+    audit for the same scenario (parity by construction)."""
+    import json
+
+    from src.api.render_api import app
+    from src.rendering.tier_ledger import ledger_line, tier_ledger
+
+    payload = json.loads(
+        (Path(__file__).parent / "fixtures" / "site_scan" / "lakewood_overpass.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
+    scenario = json.loads(
+        (Path(__file__).parent / "fixtures" / "pdf_worst_case" / f"{name}.json").read_text(
+            encoding="utf-8"
+        )
+    )["scenario"]
+    client = TestClient(app)
+    ss.clear_memo()
+    audit = client.post("/render/audit", json=scenario, headers=HEADERS)
+    assert audit.status_code == 200, audit.text[:300]
+    ss.clear_memo()
+    r = client.post("/render/audit-pdf", json=scenario, headers=HEADERS)
+    assert r.status_code == 200, r.text[:300]
+    ss.clear_memo()
+    p = tmp_path / "audit.pdf"
+    p.write_bytes(r.content)
+    doc = pdfium.PdfDocument(str(p))
+    try:
+        text = " ".join(page.get_textpage().get_text_bounded() for page in doc)
+    finally:
+        doc.close()
+    assert fragment in text
+    assert "Operator corrections to the site scan" in text
+    assert ledger_line(tier_ledger(audit.json(), None)) in text

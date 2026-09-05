@@ -7,9 +7,11 @@ Markdown step, no recompute.  Every value and citation in the PDF is the
 same one ``/render/audit`` serializes and the AuditTrail UI renders; this
 module only re-presents it.
 
-It imports nothing from ``src.api`` — only the block model from
-``document.py`` — so the rendering package stays free of an api→rendering
-cycle.
+It imports nothing from ``src.api`` except ``src.api.site_scan`` (the
+scan's bucket→flag mapping and the correction-sentence predicates, the
+same leaf ``tier_ledger.py`` already imports — a leaf module with no
+rendering dependency, so the rendering package stays free of an
+api→rendering cycle).
 
 Glyph note: the projection contains a few characters Helvetica's WinAnsi
 encoding can't draw (``→``, ``Δ``, ``≥``).  These are normalized to ASCII
@@ -23,6 +25,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.api.site_scan import DETECTION_TO_FLAG, correction_reason_text, correction_sentences
 from src.rendering.document import (
     Block,
     Body,
@@ -352,10 +355,26 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
         "condition fired the matching Site Adjustment that follows."
     )
     blocks.append(_body(intro))
+    # #224 phase 4 — the operator's APPLIED corrections rewrite the Result
+    # cell so the table says what the plan was built to (the scan's
+    # verdict stays in the words: "DETECTED — dismissed", "scan: none").
+    applied: dict[str, dict[str, Any]] = {
+        str(c.get("flag")): c
+        for c in scan.get("corrections") or []
+        if isinstance(c, dict) and c.get("status") == "applied"
+    }
     rows: list[list[Any]] = []
     for bucket_name, label in _SCAN_CONDITION_ROWS:
         b = buckets.get(bucket_name)
-        if not isinstance(b, dict):
+        correction = applied.get(DETECTION_TO_FLAG.get(bucket_name, ""))
+        if correction is not None and correction.get("action") == "dismiss":
+            result = f"DETECTED — dismissed by operator ({correction_reason_text(correction)})"
+            evidence = _scan_evidence(b) if isinstance(b, dict) else ""
+            rows.append([_cell(label), _cell(result), _cell(evidence)])
+        elif correction is not None:
+            scan_said = "scan: none" if isinstance(b, dict) else "scan: not reported"
+            rows.append([_cell(label), _cell(f"ASSERTED by operator ({scan_said})"), _cell("")])
+        elif not isinstance(b, dict):
             rows.append([_cell(label), _cell("not reported"), _cell("")])
         elif b.get("detected"):
             rows.append([_cell(label), _cell("DETECTED"), _cell(_scan_evidence(b))])
@@ -383,7 +402,26 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
                 + "."
             )
         )
+    _append_correction_sentences(blocks, scan)
     return blocks
+
+
+def _append_correction_sentences(blocks: list[Block], scan: dict[str, Any]) -> None:
+    """#224 phase 4 — every correction's backend-composed sentence, applied
+    and moot, verbatim (the same words the strip, section 03, the sheet
+    and the narrative print); a moot correction is disclosed, never
+    dropped (rule 10)."""
+    sentences = correction_sentences(scan)
+    if not sentences:
+        return
+    blocks.append(
+        _body(
+            "Operator corrections to the site scan (verify in the field or on imagery "
+            "before deploying):"
+        )
+    )
+    for s in sentences:
+        blocks.append(_body(s))
 
 
 def _site_scan_blocks(scan: dict[str, Any]) -> list[Block]:
@@ -422,6 +460,8 @@ def _site_scan_blocks(scan: dict[str, Any]) -> list[Block]:
         "only. Re-generate to retry the scan."
     )
     blocks.append(_body(detail))
+    # Phase 4: an assert still applies without a scan; a dismiss is moot.
+    _append_correction_sentences(blocks, scan)
     return blocks
 
 

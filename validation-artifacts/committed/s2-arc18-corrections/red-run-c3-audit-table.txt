@@ -1,0 +1,9 @@
+# s2-arc18 commit 3 red-prove — 2026-09-05T03:28Z — sources at commit 2 6beed1a (audit_blocks.py, site_scan.py stashed); tests/test_audit_blocks_site_scan.py with the six new cases present
+
+FAILED tests/test_audit_blocks_site_scan.py::test_applied_dismiss_rewrites_the_result_cell_and_keeps_the_evidence
+FAILED tests/test_audit_blocks_site_scan.py::test_applied_assert_rewrites_the_result_cell_with_the_scan_verdict
+FAILED tests/test_audit_blocks_site_scan.py::test_moot_correction_leaves_the_row_and_is_still_disclosed
+FAILED tests/test_audit_blocks_site_scan.py::test_proceeded_anyway_lists_the_corrections_after_the_disclosure
+FAILED tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_a_corrected_scan_carries_the_cover_line_and_the_result_cell[scanned-dismissed-dismissed]
+FAILED tests/test_audit_blocks_site_scan.py::test_real_audit_pdf_on_a_corrected_scan_carries_the_cover_line_and_the_result_cell[scanned-asserted-ASSERTED]
+6 failed, 9 passed in 1.88s
