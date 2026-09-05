@@ -243,7 +243,23 @@ it ships as `fix-224-manual-pin-move` before the #224 close or is filed.
 Until then, the corrections survive a manual coordinate edit and are
 disclosed everywhere they apply — never silent, but stale.
 
+## J re-check — `outS2A18Prod-J/` — ALL PASS 5/5 on `eb06add`
+
+`fix-224-manual-pin-move` shipped 2026-09-05 (`eb06add`; its own README
+under `validation-artifacts/committed/fix-224-manual-pin-move/`). The
+script gained `ONLY_J=1`: the gate, then the browser pin → Generate →
+Assert → the pin-move leg → axe, nothing else; the J leg itself moved
+into `pinMoveLeg`, shared by the full run and the re-check, and now
+logs the corrections on the wire at entry. Sha-gated on `/healthz` ==
+`origin/main` == `eb06add`: Generate 4.7 s; the assert put
+`[{school_zone, assert}]` on the wire (21.6 s, a cold container); the
+manual Latitude edit 39.7113 → 39.7114 re-generated (7.3 s) with the
+next request carrying `meta.lat 39.7114` and **no
+`siteConditionOverrides`** — J1 PASS, the prod defect closed at its own
+affordance. Axe after the pin move: 0 violations.
+
 ## Post-ship remaining
 
-Ryan's hand-confirm on a hard-refreshed tab; the J1 disposition; the
-#224 close comment chat-drafted; janitorial.
+Ryan's hand-confirm on a hard-refreshed tab; the #224 close comment
+chat-drafted; janitorial (`issue-224-phase4`, `fix-224-manual-pin-move`,
+`s2a18-live-checks`).

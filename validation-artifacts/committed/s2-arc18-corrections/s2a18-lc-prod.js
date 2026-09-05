@@ -74,6 +74,9 @@ const HEALTHZ = PROD ? HEALTHZ_PROD : process.env.HEALTHZ || "http://127.0.0.1:8
 // Absolute: the Python classifier is invoked with cwd = the repo root.
 const OUT = path.resolve(process.argv[2] || (PROD ? "outS2A18Prod" : "outS2A18Local"));
 const RETRIES = Number(process.env.RETRIES || 3);
+// ONLY_J=1: the gate, then the browser pin → Generate → Assert → the pin-move
+// leg (J) → axe, nothing else — the fix-224-manual-pin-move re-check.
+const ONLY_J = process.env.ONLY_J === "1";
 const REPO = execSync("git rev-parse --show-toplevel").toString().trim();
 const PY = path.join(REPO, ".venv", "Scripts", "python.exe");
 const AXE_SRC = fs.readFileSync(require.resolve("axe-core/axe.min.js"), "utf-8");
@@ -237,6 +240,36 @@ async function generateThroughRefusals(page) {
   return { ...g, refused: await hasRefusal(page), cycles };
 }
 
+// ---- J ---- the pin-move leg, shared by the full run and ONLY_J.  The
+// reachable pin-move affordance on /sandbox is the Location step's manual
+// entry (GeneratorSidebar ManualFallback — the Latitude field writes
+// meta.lat; since fix-224-manual-pin-move through withPin, THE door the
+// picker's Save also uses).  After "Edit full setup" the manual panel may
+// still be open from the pinning ("Hide manual entry"); otherwise "Edit
+// manually" opens it.  Expects a correction on the wire at entry.
+async function pinMoveLeg(page, requests) {
+  let moved = false;
+  try {
+    await page.getByRole("button", { name: /Edit full setup/ }).click();
+    await page.waitForTimeout(500);
+    const openToggle = page.getByRole("button", { name: "Edit manually", exact: true });
+    if ((await openToggle.count()) > 0) await openToggle.click();
+    const latInput = page.locator('label:text-is("Latitude")').locator("xpath=following-sibling::input[1]");
+    await latInput.waitFor({ timeout: 10000 });
+    const before = requests.filter((r) => /audit$/.test(r.url)).pop();
+    log(`J entry: the last audit request carried siteConditionOverrides ${JSON.stringify(before?.meta?.siteConditionOverrides ?? null)}`);
+    await latInput.fill("39.711400");
+    await page.waitForTimeout(400);
+    const mark = requests.length;
+    const gm = await generateThroughRefusals(page);
+    const sentM = requests.slice(mark).filter((r) => /audit$/.test(r.url)).pop();
+    moved = sentM?.meta?.lat !== undefined && Math.abs(Number(sentM.meta.lat) - 39.7114) < 1e-6;
+    if (moved) ok(sentM.meta.siteConditionOverrides === undefined, "J1 after a pin move the next request carries no siteConditionOverrides (key dropped)", `${gm.ms} ms; meta.lat ${sentM.meta.lat}; siteConditionOverrides ${JSON.stringify(sentM.meta.siteConditionOverrides ?? null)}`);
+    await page.screenshot({ path: path.join(OUT, "J-after-pin-move.png"), fullPage: true });
+  } catch (err) { log("J: " + String(err).slice(0, 160)); }
+  if (!moved) note("J1 the pin-move affordance was not reachable this way in the browser; the clearing is pinned on withPin (GeneratorSidebar.manual-pin-move.test, GeneratorShell.picker-reapply.test)");
+}
+
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   log(`# s2a18 live check — ${PROD ? "PRODUCTION" : "LOCAL"}`);
@@ -258,6 +291,53 @@ async function generateThroughRefusals(page) {
     log(`git rev-parse HEAD: ${head} — local mode: the served build is this working tree (next dev + uvicorn at ${HEALTHZ}), not a deploy.`);
   }
   log("");
+
+  if (ONLY_J) {
+    log("ONLY_J: the gate, then browser pin → Generate → Assert → J → axe. Legs A–I and L not run.");
+    const browser = await chromium.launch();
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+      const requests = [];
+      const audits = [];
+      page.on("request", (req) => {
+        const u = req.url();
+        if (/\/api\/render\/(audit|device-breakdown)$/.test(u) && req.method() === "POST") {
+          let scen = null;
+          try { scen = JSON.parse(req.postData() || "{}").scenario; } catch { /* ignore */ }
+          requests.push({ url: u.replace(BASE, ""), meta: scen?.meta ?? null, site_scan: scen?.site_scan ?? null, t: Date.now() });
+        }
+      });
+      page.on("response", async (res) => {
+        if (/\/api\/render\/audit$/.test(res.url()) && res.request().method() === "POST") {
+          try { audits.push({ status: res.status(), json: await res.json(), t: Date.now() }); } catch { /* not json */ }
+        }
+      });
+      await gotoSandbox(page);
+      await pinManually(page);
+      await waitSettled(page, 60000);
+      const gen = await generateThroughRefusals(page);
+      ok(gen.settled !== null && !gen.refused, "J0 Generate at Lakewood settles with an ok scan", `${gen.ms} ms — ${gen.settled?.slice(0, 70)}`);
+      const served0 = audits.filter((x) => x.status === 200 && x.json?.sections?.site_scan?.status === "ok").pop();
+      const schoolAbsent = served0 && served0.json.sections.site_scan.buckets?.schools && served0.json.sections.site_scan.buckets.schools.detected !== true;
+      if (schoolAbsent) {
+        const row = page.locator(".site-correction-row", { hasText: "School zone" }).first();
+        const mark = requests.length;
+        await row.getByRole("button", { name: "Assert" }).click();
+        const ga = await waitInFlightThenSettled(page, 90000);
+        const sentA = requests.slice(mark).filter((r) => /audit$/.test(r.url)).pop();
+        ok(sentA?.meta?.siteConditionOverrides?.[0]?.action === "assert", "J0 Assert puts a correction on the wire (the precondition)", `${ga.ms} ms; ${JSON.stringify(sentA?.meta?.siteConditionOverrides ?? null)}`);
+        await pinMoveLeg(page, requests);
+        const axe = await runAxe(page, "axe-after-pin-move.json");
+        ok(axe.length <= AXE_BASELINE, `K axe after the pin move: ${axe.length} violation(s) ≤ baseline ${AXE_BASELINE}`, axe.map((x) => `${x.id} ${x.targets.join(",").slice(0, 60)}`).join("; ") || "none");
+      } else ok(false, "J0 the browser's scan left no absent School zone row to assert on", `${audits.length} audit responses`);
+      await page.close();
+    } finally {
+      await browser.close();
+    }
+    log("");
+    log(`RESULT: ${fail === 0 ? "ALL PASS" : "FAILURES"} ${pass}/${pass + fail} (+${info} INFO)`);
+    finish(fail === 0 ? 0 : 1);
+  }
 
   // ---- A ---- baseline
   const a = await auditWithRetry(scenario(), "A");
@@ -473,28 +553,7 @@ async function generateThroughRefusals(page) {
           await page.screenshot({ path: path.join(OUT, "I-asserted.png"), fullPage: true });
           axeCounts.asserted = await runAxe(page, "axe-asserted.json");
           // ---- J ---- pin move clears the corrections
-          let moved = false;
-          try {
-            // The reachable pin-move affordance on /sandbox is the Location
-            // step's manual entry (GeneratorSidebar ManualFallback — the
-            // Latitude field writes meta.lat through setMeta).  After "Edit
-            // full setup" the manual panel may still be open from the
-            // pinning ("Hide manual entry"); otherwise "Edit manually" opens it.
-            await page.getByRole("button", { name: /Edit full setup/ }).click();
-            await page.waitForTimeout(500);
-            const openToggle = page.getByRole("button", { name: "Edit manually", exact: true });
-            if ((await openToggle.count()) > 0) await openToggle.click();
-            const latInput = page.locator('label:text-is("Latitude")').locator("xpath=following-sibling::input[1]");
-            await latInput.waitFor({ timeout: 10000 });
-            await latInput.fill("39.711400");
-            await page.waitForTimeout(400);
-            const mark4 = requests.length;
-            const gm = await generateThroughRefusals(page);
-            const sentM = requests.slice(mark4).filter((r) => /audit$/.test(r.url)).pop();
-            moved = sentM?.meta?.lat !== undefined && Math.abs(Number(sentM.meta.lat) - 39.7114) < 1e-6;
-            if (moved) ok(sentM.meta.siteConditionOverrides === undefined, "J1 after a pin move the next request carries no siteConditionOverrides (key dropped)", `${gm.ms} ms; meta.lat ${sentM.meta.lat}`);
-          } catch (err) { log("J: " + String(err).slice(0, 160)); }
-          if (!moved) note("J1 the pin-move affordance was not reachable this way in the browser; the clearing is pinned on the real onPickerSave (GeneratorShell.picker-reapply.test: same pin keeps, new pin drops the key)");
+          await pinMoveLeg(page, requests);
         } else ok(false, "I2 no asserted audit was captured from the browser");
       } else note("I the browser's scan reported a school zone or no schools bucket this run; the assert flow is on the wire in leg C and pinned mounted");
       if (!axeCounts.dismissed && !axeCounts.asserted) axeCounts.post = await runAxe(page, "axe-post-generate.json");
