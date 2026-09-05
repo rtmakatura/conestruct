@@ -1,0 +1,12 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "targets": [
+      ".opacity-80",
+      ".mb-2.text-\\[11px\\].text-\\[color\\:var\\(--ink-on-dark-faint\\)\\]",
+      "li:nth-child(1) > p:nth-child(2) > .tracking-\\[0\\.04em\\][target=\"_blank\"][rel=\"noreferrer\"]",
+      "li:nth-child(2) > p:nth-child(2) > .tracking-\\[0\\.04em\\][target=\"_blank\"][rel=\"noreferrer\"]"
+    ]
+  }
+]

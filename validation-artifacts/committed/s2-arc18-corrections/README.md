@@ -199,7 +199,51 @@ vitest list 893 → 919 (4 removed, 30 added), pytest collected
   `PlanSaveButton.tsx:78, 104` — every one posts the scenario object
   whole; `corridor-spec` posts three spec fields, not the scenario.
 
+## Prod run — `outS2A18Prod/` — 43/44 (+4 INFO) on `6ad83c0`, one real FAIL
+
+Shipped 2026-09-05; `/healthz` == `origin/main` == `6ad83c0` (gate line in
+`s2a18-lc.md`). One sha-gated run on the evidence branch
+`s2a18-live-checks`, with the pin-move leg rewritten to use the
+affordance that is actually on `/sandbox` (the Location step's manual
+entry — `GeneratorSidebar` `ManualFallback`, whose Latitude field writes
+`meta.lat` through `setMeta`).
+
+Measured on prod: the wire legs A–G all as the local run (baseline
+detected set `bike_facilities, intersections, sidewalks`; dismiss
+applied with the sentence, R9-9 gone, pending 1 → 2, `is_clean` false;
+assert applied, S1-1 present; moot disclosed and inert; the 400 with
+its code; the audit-PDF cover `1 change · 1 needs attention · 14 checked
+· 2 pending · reference` equal to the classifier over the served
+dismissed audit; the sheet's CORRECTED BY OPERATOR line; the narrative
+block). In the browser: Generate 5.7 s; the pre-correction ledger
+equals the classifier; Dismiss → reason → Confirm carried the marker,
+re-generated (24.1 s, a cold container), the × record with the
+sentence, section 03's dismissed row, pending 1 → 2, the ledger equal
+to the classifier over the served corrected audit; **Undo: the next
+request's `meta` byte-identical to the pre-dismiss request's `meta`**
+and the ledger back to `2 changes · 1 needs attention · 13 checked · 1
+pending`; Assert → the ✓ record, section 03's changed row with tag
+OPERATOR. Axe 1 ≤ 2 in both states (the pre-existing scope line).
+#243's Note 8 false FAIL recorded on all three divided-road plans, as
+expected.
+
+**J1 FAIL — a real defect, not a script judgement.** With the assert on
+the wire, editing the Latitude field in the Location step's manual
+entry (39.7113 → 39.7114) re-generated at the new pin with
+`meta.siteConditionOverrides` still present. The arc's pin-move clearing
+lives in `GeneratorSidebar.onPickerSave` (the map picker's Save), and
+the manual coordinate fields write `meta.lat` / `meta.lng` through
+`setMeta` without passing through it — so a manual pin move keeps the
+corrections whose subject (this corridor's scan) no longer exists.
+Rule 10. The fix is small and backend-free: clear the corrections in
+`GeneratorSidebar.setMeta` (or the two coordinate `onChange`s) whenever
+`lat` / `lng` change, the same `withoutSiteCorrections` the picker path
+uses, with a mounted test through the manual field. Ryan's call whether
+it ships as `fix-224-manual-pin-move` before the #224 close or is filed.
+Until then, the corrections survive a manual coordinate edit and are
+disclosed everywhere they apply — never silent, but stale.
+
 ## Post-ship remaining
 
-Ryan's hand-confirm on a hard-refreshed tab; the sha-gated prod run on
-`s2a18-live-checks`; the #224 close comment chat-drafted; janitorial.
+Ryan's hand-confirm on a hard-refreshed tab; the J1 disposition; the
+#224 close comment chat-drafted; janitorial.

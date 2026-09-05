@@ -475,11 +475,17 @@ async function generateThroughRefusals(page) {
           // ---- J ---- pin move clears the corrections
           let moved = false;
           try {
+            // The reachable pin-move affordance on /sandbox is the Location
+            // step's manual entry (GeneratorSidebar ManualFallback — the
+            // Latitude field writes meta.lat through setMeta).  After "Edit
+            // full setup" the manual panel may still be open from the
+            // pinning ("Hide manual entry"); otherwise "Edit manually" opens it.
             await page.getByRole("button", { name: /Edit full setup/ }).click();
             await page.waitForTimeout(500);
-            const edit = page.getByRole("button", { name: /Edit manually|Edit Location & Corridor/ }).first();
-            await edit.click();
+            const openToggle = page.getByRole("button", { name: "Edit manually", exact: true });
+            if ((await openToggle.count()) > 0) await openToggle.click();
             const latInput = page.locator('label:text-is("Latitude")').locator("xpath=following-sibling::input[1]");
+            await latInput.waitFor({ timeout: 10000 });
             await latInput.fill("39.711400");
             await page.waitForTimeout(400);
             const mark4 = requests.length;
