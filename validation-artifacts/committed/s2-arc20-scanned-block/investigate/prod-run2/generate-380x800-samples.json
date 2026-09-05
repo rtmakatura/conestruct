@@ -1,0 +1,162 @@
+[
+ {
+  "scrollY": 2154,
+  "docH": 2954,
+  "innerH": 800,
+  "statusBar": {
+   "top": -1067,
+   "bottom": -979,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": -916,
+   "bottom": -830,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": -955,
+  "resultsHeadBottom": -928,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": -814,
+   "bottom": -458,
+   "h": 356,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 15
+ },
+ {
+  "scrollY": 1210,
+  "docH": 2954,
+  "innerH": 800,
+  "statusBar": {
+   "top": -123,
+   "bottom": -35,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 28,
+   "bottom": 114,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": -11,
+  "resultsHeadBottom": 16,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 130,
+   "bottom": 486,
+   "h": 356,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 277
+ },
+ {
+  "scrollY": 1080,
+  "docH": 2954,
+  "innerH": 800,
+  "statusBar": {
+   "top": 7,
+   "bottom": 95,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 158,
+   "bottom": 244,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 119,
+  "resultsHeadBottom": 146,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 260,
+   "bottom": 616,
+   "h": 356,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 542
+ },
+ {
+  "scrollY": 1685,
+  "docH": 4687,
+  "innerH": 800,
+  "statusBar": {
+   "top": 7,
+   "bottom": 96,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 188,
+   "bottom": 274,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 120,
+  "resultsHeadBottom": 147,
+  "siteJump": {
+   "top": 159,
+   "bottom": 176,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": -833,
+   "bottom": -240,
+   "h": 594,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": {
+   "top": 290,
+   "bottom": 646,
+   "h": 356,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 10315
+ },
+ {
+  "scrollY": 1685,
+  "docH": 4748,
+  "innerH": 800,
+  "statusBar": {
+   "top": 7,
+   "bottom": 59,
+   "h": 52,
+   "text": "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": {
+   "top": 151,
+   "bottom": 237,
+   "h": 86,
+   "text": "⚠ Device breakdown failed — values below may be stale. Fix the input o"
+  },
+  "empty": null,
+  "resultsTop": 83,
+  "resultsHeadBottom": 110,
+  "siteJump": {
+   "top": 122,
+   "bottom": 139,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": -833,
+   "bottom": -240,
+   "h": 594,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": null,
+  "t": 21633
+ }
+]

@@ -1,0 +1,90 @@
+healthz sha 0e4b4a1dd229669e84afc73fbfdf831da7196506 expect 0e4b4a1dd229669e84afc73fbfdf831da7196506
+[1440x1000] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[1440x1000] before click: scrollY=1798 docH=2816 innerH=1000 status 605..657
+[1440x1000] --- Generate clicked; sampling to settle ---
+  [generate-1440x1000] t=    3  scrollY=742 docH=1822 | status -61..-14 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon 49..95 IN | empty — | resultsTop 10 | block —
+  [generate-1440x1000] t=  259  scrollY=654 docH=1822 | status 27..74 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 137..183 IN | empty — | resultsTop 98 | block —
+  [generate-1440x1000] t= 2637  scrollY=654 docH=1765 | status 27..74 IN "VERIFYING · scanning site conditions along the c" | ribbon — | empty — | resultsTop 98 | block —
+  [generate-1440x1000] t= 3432  scrollY=966 docH=2755 | status 27..79 IN "VERIFIED · 3 plan flags ▸REVIEW FLAGS" | ribbon — | empty — | resultsTop 103 | block -374..-74
+[1440x1000] settled at t=3432 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[1440x1000] landed: scrollY=966 status 27..79 siteJump {"top":147,"bottom":164,"h":17,"text":"Site conditions — 4 detected · correct in setup ↑"} block -374..-74
+[1440x1000] rows: block 170..1270 (w 1100) top -374 h 300
+    row h= 52 sugg-row site-correction-row                 textTop=-336 btns=Dismiss@x188-256,y-308  WRAPPED:Dismiss
+    row h= 24 sugg-row site-correction-row                 textTop=-276 btns=Dismiss@x1147-1215,y-279
+    row h= 52 sugg-row site-correction-row                 textTop=-250 btns=Dismiss@x188-256,y-221  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=-192 btns=Dismiss@x188-256,y-164  WRAPPED:Dismiss
+    row h= 24 sugg-row site-correction-row                 textTop=-132 btns=Assert@x477-538,y-135
+    action-button distinct x-lefts: 188, 477, 1147 (3)
+[1440x1000] picker-open: block 170..1270 (w 1100) top 399 h 306
+    row h= 58 sugg-row site-correction-picker              textTop=440 btns=Fenced off@x590-693,y437 Removed@x699-782,y437 Not in the work zone@x788-957,y437 Other (say what)@x963-1105,y437 Confirm dismiss@x1115-1236,y437 Cancel@x188-250,y471  WRAPPED:Cancel
+    row h= 24 sugg-row site-correction-row                 textTop=503 btns=Dismiss@x1147-1215,y500
+    row h= 52 sugg-row site-correction-row                 textTop=529 btns=Dismiss@x188-256,y557  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=586 btns=Dismiss@x188-256,y615  WRAPPED:Dismiss
+    row h= 24 sugg-row site-correction-row                 textTop=647 btns=Assert@x477-538,y644
+    action-button distinct x-lefts: 188, 477, 1115, 1147 (4)
+[1440x1000] picker-other: block 170..1270 (w 1100) top 399 h 309
+    row h= 61 sugg-row site-correction-picker              textTop=440 btns=Fenced off@x590-693,y437 Removed@x699-782,y437 Not in the work zone@x788-957,y437 ✓Other (say what)@x963-1105,y437 Confirm dismiss@x382-503,y473 Cancel@x513-575,y473  WRAPPED:Confirm dismiss,Cancel
+    row h= 24 sugg-row site-correction-row                 textTop=506 btns=Dismiss@x1147-1215,y503
+    row h= 52 sugg-row site-correction-row                 textTop=532 btns=Dismiss@x188-256,y561  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=590 btns=Dismiss@x188-256,y618  WRAPPED:Dismiss
+    row h= 24 sugg-row site-correction-row                 textTop=650 btns=Assert@x477-538,y647
+    action-button distinct x-lefts: 188, 382, 477, 513, 1147 (5)
+[1440x1000] --- Assert clicked from the block; sampling to settle ---
+  [assert-1440x1000] t=    1  scrollY=193 docH=2409 | status 488..535 IN "VERIFYING · taper · buffer · spacing · sign plac" | ribbon — | empty — | resultsTop 559 | block —
+  [assert-1440x1000] t=  258  scrollY=193 docH=2466 | status 488..535 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 598..644 IN | empty — | resultsTop 559 | block —
+  [assert-1440x1000] t= 1051  scrollY=193 docH=3043 | status 896..943 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 1035..1081 OUT | empty — | resultsTop 967 | block 399..795
+  [assert-1440x1000] t= 3437  scrollY=193 docH=2991 | status 896..948 IN "VERIFIED · 4 plan flags ▸REVIEW FLAGS" | ribbon — | empty — | resultsTop 972 | block 399..795
+[1440x1000] settled at t=3437 ms; strip: VERIFIED · 4 plan flags ▸REVIEW FLAGS
+[1440x1000] record: block 170..1270 (w 1100) top 399 h 396
+    row h= 52 sugg-row site-correction-row                 textTop=437 btns=Dismiss@x188-256,y465  WRAPPED:Dismiss
+    row h= 24 sugg-row site-correction-row                 textTop=497 btns=Dismiss@x1147-1215,y494
+    row h= 52 sugg-row site-correction-row                 textTop=523 btns=Dismiss@x188-256,y552  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=581 btns=Dismiss@x188-256,y609  WRAPPED:Dismiss
+    row h=120 sys-event confirmed site-correction          textTop=649 btns=Undo@x203-251,y723  WRAPPED:Undo
+    action-button distinct x-lefts: 188, 203, 1147 (3)
+[1440x1000] undone
+[380x800] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[380x800] before click: scrollY=3201 docH=4235 innerH=800 status 505..574
+[380x800] --- Generate clicked; sampling to settle ---
+  [generate-380x800] t=   15  scrollY=2154 docH=2954 | status -1067..-979 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon -916..-830 OUT | empty — | resultsTop -955 | block —
+  [generate-380x800] t=  277  scrollY=1210 docH=2954 | status -123..-35 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon 28..114 IN | empty — | resultsTop -11 | block —
+  [generate-380x800] t=  542  scrollY=1080 docH=2954 | status 7..95 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 158..244 IN | empty — | resultsTop 119 | block —
+  [generate-380x800] t=10315  scrollY=1685 docH=4687 | status 7..96 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 188..274 IN | empty — | resultsTop 120 | block -833..-240
+  [generate-380x800] t=21633  scrollY=1685 docH=4748 | status 7..59 IN "VERIFIED · 3 plan flags ▸REVIEW FLAGS" | ribbon 151..237 IN | empty — | resultsTop 83 | block -833..-240
+[380x800] settled at t=21633 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[380x800] landed: scrollY=1685 status 7..59 siteJump {"top":122,"bottom":139,"h":17,"text":"Site conditions — 4 detected · correct in setup ↑"} block -833..-240
+[380x800] rows: block 24..356 (w 332) top -833 h 594
+    row h=108 sugg-row site-correction-row                 textTop=-795 btns=Dismiss@x42-110,y-712  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=-683 btns=Dismiss@x42-110,y-599  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=-570 btns=Dismiss@x42-110,y-486  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=-457 btns=Dismiss@x42-110,y-374  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=-345 btns=Assert@x42-104,y-317  WRAPPED:Assert
+    action-button distinct x-lefts: 42 (1)
+[380x800] picker-open: block 24..356 (w 332) top 152 h 647
+    row h=161 sugg-row site-correction-picker              textTop=190 btns=Fenced off@x42-145,y233 Removed@x151-234,y233 Not in the work zone@x42-211,y263 Other (say what)@x42-185,y293 Confirm dismiss@x42-163,y327 Cancel@x173-235,y327  WRAPPED:Fenced off,Removed,Not in the work zone,Other (say what),Confirm dismiss,Cancel
+    row h=108 sugg-row site-correction-row                 textTop=356 btns=Dismiss@x42-110,y439  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=468 btns=Dismiss@x42-110,y552  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=581 btns=Dismiss@x42-110,y664  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=693 btns=Assert@x42-104,y722  WRAPPED:Assert
+    action-button distinct x-lefts: 42, 173 (2)
+[380x800] picker-other: block 24..356 (w 332) top 152 h 684
+    row h=198 sugg-row site-correction-picker              textTop=190 btns=Fenced off@x42-145,y233 Removed@x151-234,y233 Not in the work zone@x42-211,y263 ✓Other (say what)@x42-185,y293 Confirm dismiss@x42-163,y364 Cancel@x173-235,y364  WRAPPED:Fenced off,Removed,Not in the work zone,✓Other (say what),Confirm dismiss,Cancel
+    row h=108 sugg-row site-correction-row                 textTop=393 btns=Dismiss@x42-110,y476  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=505 btns=Dismiss@x42-110,y589  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=618 btns=Dismiss@x42-110,y701  WRAPPED:Dismiss
+    row h= 52 sugg-row site-correction-row                 textTop=730 btns=Assert@x42-104,y759  WRAPPED:Assert
+    action-button distinct x-lefts: 42, 173 (2)
+[380x800] --- Assert clicked from the block; sampling to settle ---
+  [assert-380x800] t=    1  scrollY=736 docH=4129 | status 351..418 IN "VERIFYING · taper · buffer · spacing · sign plac" | ribbon 481..567 IN | empty — | resultsTop 442 | block —
+  [assert-380x800] t=  260  scrollY=736 docH=1641 | status 351..439 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon — | empty 502..676 IN | resultsTop 463 | block —
+  [assert-380x800] t= 3694  scrollY=736 docH=3966 | status 351..418 IN "VERIFYING · scanning site conditions along the c" | ribbon — | empty — | resultsTop 442 | block —
+  [assert-380x800] t=11086  scrollY=736 docH=4940 | status 1079..1130 OUT "VERIFIED · 4 plan flags ▸REVIEW FLAGS" | ribbon — | empty — | resultsTop 1154 | block 116..832
+[380x800] settled at t=11086 ms; strip: VERIFIED · 4 plan flags ▸REVIEW FLAGS
+[380x800] record: block 24..356 (w 332) top 116 h 716
+    row h=108 sugg-row site-correction-row                 textTop=154 btns=Dismiss@x42-110,y237  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=266 btns=Dismiss@x42-110,y350  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=379 btns=Dismiss@x42-110,y463  WRAPPED:Dismiss
+    row h=108 sugg-row site-correction-row                 textTop=492 btns=Dismiss@x42-110,y575  WRAPPED:Dismiss
+    row h=175 sys-event confirmed site-correction          textTop=615 btns=Undo@x57-105,y744  WRAPPED:Undo
+    action-button distinct x-lefts: 42, 57 (2)
+[380x800] undone

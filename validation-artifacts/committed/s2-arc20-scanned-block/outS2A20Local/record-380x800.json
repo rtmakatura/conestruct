@@ -1,0 +1,135 @@
+{
+ "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected19 found · nearest 34.1 ftDismissAdjacent interchange (highway ramps)✓assertedOperator asserted adjacent interchange — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying.UndoPedestrian sidewalks▲detected22 found · nearest 46.6 ftDismissBike lane / cycleway▲detected35 found · nearest 71.2 ftDismissSchool zone✓none along the corridorAssertsite scan · measured 2026-09-05T19:37:54+00:00 · a correction re-generates the plan",
+ "rows": [
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 42,
+   "right": 338,
+   "top": 154,
+   "bottom": 224,
+   "h": 71,
+   "textTop": 161,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 270,
+     "right": 338,
+     "top": 161,
+     "bottom": 185,
+     "h": 24,
+     "inAction": true
+    }
+   ],
+   "result": "▲detected",
+   "evidenceNodes": 1,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row sc-record sys-event confirmed site-correction",
+   "left": 30,
+   "right": 350,
+   "top": 227,
+   "bottom": 385,
+   "h": 157,
+   "textTop": 234,
+   "buttons": [
+    {
+     "txt": "Undo",
+     "left": 290,
+     "right": 338,
+     "top": 234,
+     "bottom": 258,
+     "h": 24,
+     "inAction": true
+    }
+   ],
+   "result": "✓asserted",
+   "evidenceNodes": 1,
+   "detected": false,
+   "absent": false,
+   "record": true,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 42,
+   "right": 338,
+   "top": 388,
+   "bottom": 458,
+   "h": 71,
+   "textTop": 395,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 270,
+     "right": 338,
+     "top": 395,
+     "bottom": 419,
+     "h": 24,
+     "inAction": true
+    }
+   ],
+   "result": "▲detected",
+   "evidenceNodes": 1,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 42,
+   "right": 338,
+   "top": 458,
+   "bottom": 529,
+   "h": 71,
+   "textTop": 465,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 270,
+     "right": 338,
+     "top": 465,
+     "bottom": 489,
+     "h": 24,
+     "inAction": true
+    }
+   ],
+   "result": "▲detected",
+   "evidenceNodes": 1,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 42,
+   "right": 338,
+   "top": 529,
+   "bottom": 599,
+   "h": 71,
+   "textTop": 536,
+   "buttons": [
+    {
+     "txt": "Assert",
+     "left": 276,
+     "right": 338,
+     "top": 536,
+     "bottom": 560,
+     "h": 24,
+     "inAction": true
+    }
+   ],
+   "result": "✓none along the corridor",
+   "evidenceNodes": 0,
+   "detected": false,
+   "absent": true,
+   "record": false,
+   "picker": false
+  }
+ ]
+}

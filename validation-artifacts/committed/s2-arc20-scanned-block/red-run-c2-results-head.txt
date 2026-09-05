@@ -1,0 +1,12 @@
+stashed sources: GeneratorShell.tsx globals.css (ResultsHead.tsx + the test kept so the import resolves)
+   ✓ #247 + #246 — the results-head slot > #246: names the settled scan's detected count and jumps to the strip's block (scroll + focus by id)  1020ms
+   ✓ #247 + #246 — the results-head slot > #246: renders no line when the scan detected nothing keyed (absence renders as absence)  898ms
+   × #247 + #246 — the results-head slot > #247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the jump line on settle 888ms
+   × #247 + #246 — the results-head slot > #247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the jump line 881ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.results-head.test.tsx > #247 + #246 — the results-head slot > #247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the jump line on settle
+AssertionError: wait line present while the audit is pending: expected null not to be null
+ FAIL  components/GeneratorShell.results-head.test.tsx > #247 + #246 — the results-head slot > #247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the jump line
+AssertionError: expected null not to be null
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)

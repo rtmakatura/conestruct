@@ -1,0 +1,108 @@
+[
+ {
+  "scrollY": 736,
+  "docH": 4129,
+  "innerH": 800,
+  "statusBar": {
+   "top": 351,
+   "bottom": 418,
+   "h": 68,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "ribbon": {
+   "top": 481,
+   "bottom": 567,
+   "h": 86,
+   "text": "⚠ Device breakdown failed — values below may be stale. Fix the input o"
+  },
+  "empty": null,
+  "resultsTop": 442,
+  "resultsHeadBottom": 469,
+  "siteJump": null,
+  "block": null,
+  "hero": null,
+  "t": 1
+ },
+ {
+  "scrollY": 736,
+  "docH": 1641,
+  "innerH": 800,
+  "statusBar": {
+   "top": 351,
+   "bottom": 439,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": null,
+  "empty": {
+   "top": 502,
+   "bottom": 676,
+   "h": 174,
+   "text": "Generating…Scanning site conditions along the corridor (OpenStreetMap,"
+  },
+  "resultsTop": 463,
+  "resultsHeadBottom": 490,
+  "siteJump": null,
+  "block": null,
+  "hero": null,
+  "t": 260
+ },
+ {
+  "scrollY": 736,
+  "docH": 3966,
+  "innerH": 800,
+  "statusBar": {
+   "top": 351,
+   "bottom": 418,
+   "h": 68,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 442,
+  "resultsHeadBottom": 506,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 518,
+   "bottom": 874,
+   "h": 356,
+   "text": "Total devices41on the plan sheetUnique types13distinct device types to"
+  },
+  "t": 3694
+ },
+ {
+  "scrollY": 736,
+  "docH": 4940,
+  "innerH": 800,
+  "statusBar": {
+   "top": 1079,
+   "bottom": 1130,
+   "h": 52,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 1154,
+  "resultsHeadBottom": 1218,
+  "siteJump": {
+   "top": 1230,
+   "bottom": 1247,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 116,
+   "bottom": 832,
+   "h": 716,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": {
+   "top": 1259,
+   "bottom": 1616,
+   "h": 356,
+   "text": "Total devices41on the plan sheetUnique types13distinct device types to"
+  },
+  "t": 11086
+ }
+]

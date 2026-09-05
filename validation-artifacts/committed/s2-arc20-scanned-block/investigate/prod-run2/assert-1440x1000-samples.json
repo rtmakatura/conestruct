@@ -1,0 +1,128 @@
+[
+ {
+  "scrollY": 193,
+  "docH": 2409,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 488,
+   "bottom": 535,
+   "h": 47,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 559,
+  "resultsHeadBottom": 591,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 603,
+   "bottom": 791,
+   "h": 188,
+   "text": "Total devices39on the plan sheetUnique types12distinct device types to"
+  },
+  "t": 1
+ },
+ {
+  "scrollY": 193,
+  "docH": 2466,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 488,
+   "bottom": 535,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 598,
+   "bottom": 644,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 559,
+  "resultsHeadBottom": 586,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 660,
+   "bottom": 848,
+   "h": 188,
+   "text": "Total devices39on the plan sheetUnique types12distinct device types to"
+  },
+  "t": 258
+ },
+ {
+  "scrollY": 193,
+  "docH": 3043,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 896,
+   "bottom": 943,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 1035,
+   "bottom": 1081,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 967,
+  "resultsHeadBottom": 994,
+  "siteJump": {
+   "top": 1006,
+   "bottom": 1023,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 399,
+   "bottom": 795,
+   "h": 396,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": {
+   "top": 1097,
+   "bottom": 1285,
+   "h": 188,
+   "text": "Total devices39on the plan sheetUnique types12distinct device types to"
+  },
+  "t": 1051
+ },
+ {
+  "scrollY": 193,
+  "docH": 2991,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 896,
+   "bottom": 948,
+   "h": 52,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 972,
+  "resultsHeadBottom": 1004,
+  "siteJump": {
+   "top": 1016,
+   "bottom": 1033,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 399,
+   "bottom": 795,
+   "h": 396,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": {
+   "top": 1045,
+   "bottom": 1232,
+   "h": 188,
+   "text": "Total devices41on the plan sheetUnique types13distinct device types to"
+  },
+  "t": 3437
+ }
+]

@@ -1,0 +1,9 @@
+s2-arc20 test accounting — branch issue-247-248-scanned-block at 628d691 (base 0e4b4a1)
+
+vitest (conestruct/site): 129 files, 937 tests passed (arc-19 baseline 928 → +9: SetupStrip.corrections +3, SetupStrip.grid-tokens +4 new, GeneratorShell.site-jump 2 → GeneratorShell.results-head 4)
+ Test Files  129 passed (129)
+      Tests  937 passed (937)
+   Duration  37.54s (transform 10.54s, setup 0ms, collect 80.51s, tests 128.40s, environment 109.37s, prepare 34.35s)
+
+pytest (repo root, .venv): unchanged — no backend file touched
+2036 passed, 2 skipped in 71.72s (0:01:11)

@@ -1,0 +1,118 @@
+[
+ {
+  "scrollY": 742,
+  "docH": 1822,
+  "innerH": 1000,
+  "statusBar": {
+   "top": -61,
+   "bottom": -14,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 49,
+   "bottom": 95,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 10,
+  "resultsHeadBottom": 37,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 111,
+   "bottom": 299,
+   "h": 188,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 3
+ },
+ {
+  "scrollY": 654,
+  "docH": 1822,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 27,
+   "bottom": 74,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · s"
+  },
+  "ribbon": {
+   "top": 137,
+   "bottom": 183,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor (OpenStree"
+  },
+  "empty": null,
+  "resultsTop": 98,
+  "resultsHeadBottom": 125,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 199,
+   "bottom": 387,
+   "h": 188,
+   "text": "Total devices31on the plan sheetUnique types9distinct device types to "
+  },
+  "t": 259
+ },
+ {
+  "scrollY": 654,
+  "docH": 1765,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 27,
+   "bottom": 74,
+   "h": 47,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 98,
+  "resultsHeadBottom": 130,
+  "siteJump": null,
+  "block": null,
+  "hero": {
+   "top": 142,
+   "bottom": 330,
+   "h": 188,
+   "text": "Total devices39on the plan sheetUnique types12distinct device types to"
+  },
+  "t": 2637
+ },
+ {
+  "scrollY": 966,
+  "docH": 2755,
+  "innerH": 1000,
+  "statusBar": {
+   "top": 27,
+   "bottom": 79,
+   "h": 52,
+   "text": "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": null,
+  "empty": null,
+  "resultsTop": 103,
+  "resultsHeadBottom": 135,
+  "siteJump": {
+   "top": 147,
+   "bottom": 164,
+   "h": 17,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": -374,
+   "bottom": -74,
+   "h": 300,
+   "text": "Site conditions — scannedAdjacent at-grade intersection — detected · 4"
+  },
+  "hero": {
+   "top": 176,
+   "bottom": 364,
+   "h": 188,
+   "text": "Total devices39on the plan sheetUnique types12distinct device types to"
+  },
+  "t": 3432
+ }
+]

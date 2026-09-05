@@ -1,0 +1,31 @@
+stashed sources: SetupStrip.tsx globals.css tiering.ts (tests kept)
+ ❯ components/SetupStrip.grid-tokens.test.tsx (4 tests | 4 failed) 13ms
+   × #248 — the scanned block's grid > four tracks on the block, subgrid rows, the action cell on the end edge 6ms
+   × #248 — the scanned block's grid > the Result glyphs carry the tier tokens (▲ --dim, ✓ --pass) in a --glyph-cell 1ms
+   × #248 — the scanned block's grid > ≤480px collapses to two tracks with the action spanning the stacked facts 1ms
+   × #248 — the scanned block's grid > the band's shared rules are byte-identical to their arc-18 text 4ms
+ ❯ components/SetupStrip.corrections.test.tsx (13 tests | 4 failed) 1015ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each 55ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature) 5ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > null provenance (mid-refetch), not_run, and a refusal render nothing 12ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides 60ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other  484ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph 117ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing 87ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 46ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction 63ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #248: every row has the four cells and exactly one button, in the action cell 10ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none) 7ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #248: the open picker is exactly one extra row — Confirm in its action cell, Cancel in the condition row's 61ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #248: every row has the four cells and exactly one button, in the action cell
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none)
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #248: the open picker is exactly one extra row — Confirm in its action cell, Cancel in the condition row's
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #248 — the scanned block's grid > four tracks on the block, subgrid rows, the action cell on the end edge
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #248 — the scanned block's grid > the Result glyphs carry the tier tokens (▲ --dim, ✓ --pass) in a --glyph-cell
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #248 — the scanned block's grid > ≤480px collapses to two tracks with the action spanning the stacked facts
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #248 — the scanned block's grid > the band's shared rules are byte-identical to their arc-18 text
+ Test Files  2 failed (2)
+      Tests  8 failed | 9 passed (17)

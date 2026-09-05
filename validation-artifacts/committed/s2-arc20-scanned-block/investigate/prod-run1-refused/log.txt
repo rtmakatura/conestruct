@@ -1,0 +1,23 @@
+healthz sha 0e4b4a1dd229669e84afc73fbfdf831da7196506 expect 0e4b4a1dd229669e84afc73fbfdf831da7196506
+[1440x1000] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[1440x1000] before click: scrollY=1798 docH=2816 innerH=1000 status 605..657
+[1440x1000] --- Generate clicked; sampling to settle ---
+  [generate-1440x1000] t=   20  scrollY=761 docH=1822 | status -80..-33 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon 30..76 IN | empty — | resultsTop -9 | block —
+  [generate-1440x1000] t=  276  scrollY=654 docH=1822 | status 27..74 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 137..183 IN | empty — | resultsTop 98 | block —
+  [generate-1440x1000] t=21177  scrollY=654 docH=2127 | status 27..79 IN "PLAN DECLINED · the site scan could not complete" | ribbon 299..345 IN | empty — | resultsTop 103 | block —
+[1440x1000] settled at t=21177 ms; strip: PLAN DECLINED · the site scan could not complete — retry it, or genera
+[1440x1000] landed: scrollY=654 status 27..79 siteJump null block undefined..undefined
+[1440x1000] rows: no block
+[1440x1000] no detected row to open the picker on
+[380x800] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[380x800] before click: scrollY=3381 docH=4415 innerH=800 status 505..574
+[380x800] --- Generate clicked; sampling to settle ---
+  [generate-380x800] t=   13  scrollY=2154 docH=2954 | status -1067..-979 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon -916..-830 OUT | empty — | resultsTop -955 | block —
+  [generate-380x800] t=  280  scrollY=1189 docH=2954 | status -102..-14 OUT "COMPUTING · scanning site conditions (up to 20 s" | ribbon 49..135 IN | empty — | resultsTop 10 | block —
+  [generate-380x800] t=  544  scrollY=1080 docH=2954 | status 7..95 IN "COMPUTING · scanning site conditions (up to 20 s" | ribbon 158..244 IN | empty — | resultsTop 119 | block —
+  [generate-380x800] t= 3456  scrollY=1080 docH=2868 | status 7..74 IN "VERIFYING · scanning site conditions along the c" | ribbon — | empty — | resultsTop 98 | block —
+  [generate-380x800] t=20598  scrollY=1080 docH=3459 | status 7..157 IN "PLAN DECLINED · the site scan could not complete" | ribbon — | empty — | resultsTop 181 | block —
+[380x800] settled at t=20598 ms; strip: PLAN DECLINED · the site scan could not complete — retry it, or genera
+[380x800] landed: scrollY=1080 status 7..157 siteJump null block undefined..undefined
+[380x800] rows: no block
+[380x800] no detected row to open the picker on

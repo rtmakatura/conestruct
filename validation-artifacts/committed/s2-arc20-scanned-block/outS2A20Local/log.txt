@@ -1,0 +1,61 @@
+local run against http://localhost:3000 — no sha gate (A20_DELAY_S=8 on the stand-in)
+[1440x1000] pre settle: VERIFIED · 1 validation warning ▸REVIEW WARNINGS
+[1440x1000] generate settled at t=25013 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[1440x1000] PASS W1 generate — 120 pending samples, 120 with the wait line, 119 in view; after 600 ms 117/117 in view; first -193..-176 (nav 52, innerH 1000)
+[1440x1000] PASS W2 generate — settled: wait gone, jump "Site conditions — 3 detected · correct in setup ↑"
+[1440x1000] PASS W3 generate — 0 samples with both lines (of 127)
+[1440x1000] rows: h37 det[Dismiss] h37 abs[Assert] h37 det[Dismiss] h37 det[Dismiss] h37 abs[Assert]
+[1440x1000] PASS W2b jump iff detected — 3 detected rows; jump line present
+[1440x1000] PASS R1 rows — right edges 1252 across 5 buttons (Dismiss, Assert, Dismiss, Dismiss, Assert); all in .sc-action: true
+[1440x1000] PASS R2 rows — no action below its row's text
+[1440x1000] PASS R3 rows — row heights 37/37/37/37/37 (3 detected, 2 absent)
+[1440x1000] PASS R5 details — block text has no "from anchor" / details fragment: true
+[1440x1000] picker-open: h37 det[Cancel] h38 PICKER[Confirm dismiss] h37 abs[Assert] h37 det[Dismiss] h37 det[Dismiss] h37 abs[Assert]
+[1440x1000] PASS R4 picker — rows 5 → 6; picker row buttons [Confirm dismiss]; condition row buttons [Cancel]
+[1440x1000] PASS R1 picker-open — right edges 1252 across 6 buttons (Cancel, Confirm dismiss, Assert, Dismiss, Dismiss, Assert); all in .sc-action: true
+[1440x1000] PASS R2 picker-open — no action below its row's text
+[1440x1000] PASS R6 axe picker-open — color-contrast in the block: 0; total nodes 0 (baseline 2): none
+[1440x1000] PASS R6 axe picker-chosen — color-contrast in the block: 0; total nodes 0 (baseline 2): none
+[1440x1000] PASS R7 pairs — ▲ detected glyph (--dim) #ff8a2e on #14202e = 7 · ✓ absent glyph (--pass) #4fd787 on #14202e = 8.94 · Result word #c8d1dd on #14202e = 10.68 · Evidence (faint) #93a0b0 on #14202e = 6.19 · Condition (tr-field) #c8d1dd on #14202e = 10.68 · Column head (tr-step) #93a0b0 on #14202e = 6.19 · legend #c8d1dd on #14202e = 10.68 · chip unselected #93a0b0 on #14202e = 6.19 · chip chosen #34a9e8 on #14202e = 6.26 · note ink #ffffff on #14202e = 16.46 · Confirm (act) #34a9e8 on #14202e = 6.26 · ghost button #93a0b0 on #14202e = 6.19
+[1440x1000] picker-other: h37 det[Cancel] h70 PICKER[Confirm dismiss] h37 abs[Assert] h37 det[Dismiss] h37 det[Dismiss] h37 abs[Assert]
+[1440x1000] PASS R6 axe picker-other-note — color-contrast in the block: 0; total nodes 0 (baseline 2): none
+[1440x1000] assert settled at t=8571 ms; strip: VERIFIED · 5 plan flags ▸REVIEW FLAGS
+[1440x1000] PASS W1 assert — 41 pending samples, 41 with the wait line, 41 in view; after 600 ms 38/38 in view; first 613..630 (nav 52, innerH 1000)
+[1440x1000] PASS W2 assert — settled: wait gone, jump "Site conditions — 3 detected · correct in setup ↑"
+[1440x1000] PASS W3 assert — 0 samples with both lines (of 48)
+[1440x1000] record: h37 det[Dismiss] h67 REC[Undo] h37 det[Dismiss] h37 det[Dismiss] h37 abs[Assert]
+[1440x1000] PASS R8 record — record: result "✓asserted", sentence nodes 1, buttons [Undo]
+[1440x1000] PASS R1 record — right edges 1252 across 5 buttons (Dismiss, Undo, Dismiss, Dismiss, Assert); all in .sc-action: true
+[1440x1000] PASS R2 record — no action below its row's text
+[1440x1000] PASS R8 undo — 5 rows, records 0
+[380x800] pre settle: VERIFIED · 1 validation warning ▸REVIEW WARNINGS
+[380x800] generate settled at t=8511 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[380x800] PASS W1 generate — 41 pending samples, 41 with the wait line, 39 in view; after 600 ms 38/38 in view; first -1153..-1107 (nav 52, innerH 800)
+[380x800] PASS W2 generate — settled: wait gone, jump "Site conditions — 3 detected · correct in setup ↑"
+[380x800] PASS W3 generate — 0 samples with both lines (of 48)
+[380x800] rows: h71 det[Dismiss] h71 abs[Assert] h71 det[Dismiss] h71 det[Dismiss] h71 abs[Assert]
+[380x800] PASS W2b jump iff detected — 3 detected rows; jump line present
+[380x800] PASS R1 rows — right edges 338 across 5 buttons (Dismiss, Assert, Dismiss, Dismiss, Assert); all in .sc-action: true
+[380x800] PASS R2 rows — no action below its row's text
+[380x800] PASS R3 rows — row heights 71/71/71/71/71 (3 detected, 2 absent)
+[380x800] PASS R5 details — block text has no "from anchor" / details fragment: true
+[380x800] picker-open: h71 det[Cancel] h188 PICKER[Confirm dismiss] h90 abs[Assert] h71 det[Dismiss] h71 det[Dismiss] h71 abs[Assert]
+[380x800] PASS R4 picker — rows 5 → 6; picker row buttons [Confirm dismiss]; condition row buttons [Cancel]
+[380x800] PASS R1 picker-open — right edges 338 across 6 buttons (Cancel, Confirm dismiss, Assert, Dismiss, Dismiss, Assert); all in .sc-action: true
+[380x800] PASS R2 picker-open — no action below its row's text
+[380x800] PASS R6 axe picker-open — color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS R6 axe picker-chosen — color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS R7 pairs — ▲ detected glyph (--dim) #ff8a2e on #14202e = 7 · ✓ absent glyph (--pass) #4fd787 on #14202e = 8.94 · Result word #c8d1dd on #14202e = 10.68 · Evidence (faint) #93a0b0 on #14202e = 6.19 · Condition (tr-field) #c8d1dd on #14202e = 10.68 · Column head (tr-step) #93a0b0 on #14202e = 6.19 · legend #c8d1dd on #14202e = 10.68 · chip unselected #93a0b0 on #14202e = 6.19 · chip chosen #34a9e8 on #14202e = 6.26 · note ink #ffffff on #14202e = 16.46 · Confirm (act) #34a9e8 on #14202e = 6.26 · ghost button #93a0b0 on #14202e = 6.19
+[380x800] picker-other: h71 det[Cancel] h221 PICKER[Confirm dismiss] h90 abs[Assert] h71 det[Dismiss] h71 det[Dismiss] h71 abs[Assert]
+[380x800] PASS R6 axe picker-other-note — color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] assert settled at t=8684 ms; strip: VERIFIED · 5 plan flags ▸REVIEW FLAGS
+[380x800] PASS W1 assert — 42 pending samples, 42 with the wait line, 42 in view; after 600 ms 39/39 in view; first 518..564 (nav 52, innerH 800)
+[380x800] PASS W2 assert — settled: wait gone, jump "Site conditions — 3 detected · correct in setup ↑"
+[380x800] PASS W3 assert — 0 samples with both lines (of 49)
+[380x800] record: h71 det[Dismiss] h157 REC[Undo] h71 det[Dismiss] h71 det[Dismiss] h71 abs[Assert]
+[380x800] PASS R8 record — record: result "✓asserted", sentence nodes 1, buttons [Undo]
+[380x800] PASS R1 record — right edges 338 across 5 buttons (Dismiss, Undo, Dismiss, Dismiss, Assert); all in .sc-action: true
+[380x800] PASS R2 record — no action below its row's text
+[380x800] PASS R8 undo — 5 rows, records 0
+
+ALL PASS 44/44
