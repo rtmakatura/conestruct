@@ -162,6 +162,9 @@ function fmtWorkDate(iso: string): string {
 // backend's disclosure sentence as ONE text node + Undo); undo removes
 // the marker (#179 shape) and re-generates the same way.  Section 03
 // discloses, never writes.
+// #248 (s2-arc20): the block is a four-column grid — Condition · Result
+// · Evidence · Action — one row per condition, the open picker exactly
+// one extra row, the record a row in the same tracks.
 // ---------------------------------------------------------------------------
 
 interface SiteCorrectionsProps {
@@ -198,23 +201,50 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
   const assertFlag = (flag: ScannedSiteFlag) =>
     write(withSiteCorrection(scenario.meta, assertMarker(flag)));
 
+  // #248 — every row is one grid row (subgrid on the block's four
+  // tracks: Condition · Result · Evidence · Action) so the action
+  // column shares one edge across states.  Result = glyph + word
+  // (rule 13) mirroring section 03's tier glyphs: ▲ detected (the
+  // "changed this plan" tier), ✓ none along the corridor (checked &
+  // passed); words trace to the audit PDF's Result column
+  // (src/rendering/audit_blocks.py _site_scan_ok_blocks).  The issue's
+  // ●/○ are not in the reconciled vocabulary (◌ means unevaluated).
+  const result = (glyph: string, tone: string, word: string, glyphClass = "sc-glyph") => (
+    <span className="sc-result">
+      <span className={`${glyphClass} ${tone}`.trim()} aria-hidden>
+        {glyph}
+      </span>
+      {word}
+    </span>
+  );
+
+  // The #227 resolved record as a grid row: the row IS the system-event
+  // container (state changes reuse the container they replace, PDF
+  // p.4) — left rule + glyph by state; the backend's disclosure
+  // sentence stays ONE text node (#198) in the Evidence cell.
   const record = (c: SiteScanCorrection) => {
     const flag = c.flag as ScannedSiteFlag;
     const variant = c.status === "moot" ? "warn" : c.action === "dismiss" ? "dismissed" : "confirmed";
     const glyph = c.status === "moot" ? "⚠" : c.action === "dismiss" ? "×" : "✓";
+    const word = c.status === "moot" ? "moot" : c.action === "dismiss" ? "dismissed" : "asserted";
     return (
-      <div key={`corr-${flag}`} className={`sys-event ${variant} site-correction`}>
-        <div className="sugg-row">
-          <span className="sys-glyph" aria-hidden>
-            {glyph}
-          </span>
-          <span>{c.disclosure}</span>
+      <div key={`corr-${flag}`} className={`sc-row sc-record sys-event ${variant} site-correction`}>
+        <span className="sc-cond tr-field">{SCANNED_FLAG_LABELS[flag]}</span>
+        {result(glyph, "", word, "sys-glyph")}
+        <span className="sc-evidence sc-disclosure">{c.disclosure}</span>
+        <span className="sc-action">
           <button type="button" className="ghost" onClick={() => undo(flag)}>
             Undo
           </button>
-        </div>
+        </span>
       </div>
     );
+  };
+
+  const closePicker = () => {
+    setDismissing(null);
+    setReason(null);
+    setNote("");
   };
 
   const rows: ReactNode[] = [];
@@ -231,10 +261,45 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       }
       const detected = b.detected === true;
       const label = SCANNED_FLAG_LABELS[flag];
-      const evidence = scanEvidence(b);
-      if (dismissing === flag) {
+      // Count + nearest only: details[0] leaves this surface (ruling b);
+      // section 03 and the audit PDF keep the full string.
+      const evidence = scanEvidence(b, { details: false, anchorSuffix: false });
+      const open = dismissing === flag;
+      rows.push(
+        <div key={`row-${flag}`} className="sc-row site-correction-row">
+          <span className="sc-cond tr-field">{label}</span>
+          {detected
+            ? result("▲", "sc-detected", "detected")
+            : result("✓", "sc-absent", "none along the corridor")}
+          <span className="sc-evidence">{detected ? evidence : ""}</span>
+          <span className="sc-action">
+            {open ? (
+              <button type="button" className="ghost" onClick={closePicker}>
+                Cancel
+              </button>
+            ) : detected ? (
+              <button
+                type="button"
+                className="ghost"
+                onClick={() => {
+                  setDismissing(flag);
+                  setReason(null);
+                  setNote("");
+                }}
+              >
+                Dismiss
+              </button>
+            ) : (
+              <button type="button" className="ghost" onClick={() => assertFlag(flag)}>
+                Assert
+              </button>
+            )}
+          </span>
+        </div>,
+      );
+      if (open) {
         rows.push(
-          <div key={`dismiss-${flag}`} className="sugg-row site-correction-picker">
+          <div key={`dismiss-${flag}`} className="sc-row sc-sub site-correction-picker">
             {/* #245: the reason is an in-DOM radio-chip group, never a
                 native <select> — the UA's white field under the
                 inherited light ink measured 1.54:1 and its popup renders
@@ -242,90 +307,59 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
                 the block's own pairs (ghost unselected, act chosen)
                 on --canvas; the chosen state is border + ink + a ✓
                 glyph + the native :checked state (rule 13, never hue
-                alone).  The legend keeps the accessible name. */}
-            <fieldset className="site-correction-reasons" role="radiogroup">
-              <legend>
-                Reason for dismissing <b className="sugg-name">{label}</b>
-              </legend>
-              {DISMISS_REASONS.map((r) => {
-                const chosen = reason === r.v;
-                return (
-                  <label key={r.v} className={`reason-chip${chosen ? " chosen" : ""}`}>
-                    <input
-                      type="radio"
-                      name={`dismiss-reason-${flag}`}
-                      value={r.v}
-                      checked={chosen}
-                      onChange={() => setReason(r.v)}
-                    />
-                    <span className="reason-glyph" aria-hidden>
-                      {chosen ? "✓" : ""}
-                    </span>
-                    <span className="reason-text">{r.l}</span>
-                  </label>
-                );
-              })}
-            </fieldset>
-            {reason === "other" && (
-              <input
-                type="text"
-                className="site-correction-note"
-                aria-label="Say what"
-                maxLength={200}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="say what"
-              />
-            )}
-            <button
-              type="button"
-              className="confirm"
-              disabled={!dismissIsComplete(reason, note)}
-              onClick={() => confirmDismiss(flag)}
-            >
-              Confirm dismiss
-            </button>
-            <button
-              type="button"
-              className="ghost"
-              onClick={() => {
-                setDismissing(null);
-                setReason(null);
-                setNote("");
-              }}
-            >
-              Cancel
-            </button>
+                alone).  The legend keeps the accessible name.
+                #248: exactly one extra grid row — legend + chips (+ the
+                note) span the three fact columns; Confirm sits in the
+                action column; Cancel took the condition row's slot. */}
+            <div className="sc-picker">
+              <fieldset className="site-correction-reasons" role="radiogroup">
+                <legend>
+                  Reason for dismissing <b className="sugg-name">{label}</b>
+                </legend>
+                {DISMISS_REASONS.map((r) => {
+                  const chosen = reason === r.v;
+                  return (
+                    <label key={r.v} className={`reason-chip${chosen ? " chosen" : ""}`}>
+                      <input
+                        type="radio"
+                        name={`dismiss-reason-${flag}`}
+                        value={r.v}
+                        checked={chosen}
+                        onChange={() => setReason(r.v)}
+                      />
+                      <span className="reason-glyph" aria-hidden>
+                        {chosen ? "✓" : ""}
+                      </span>
+                      <span className="reason-text">{r.l}</span>
+                    </label>
+                  );
+                })}
+              </fieldset>
+              {reason === "other" && (
+                <input
+                  type="text"
+                  className="site-correction-note"
+                  aria-label="Say what"
+                  maxLength={200}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="say what"
+                />
+              )}
+            </div>
+            <span className="sc-action">
+              <button
+                type="button"
+                className="confirm"
+                disabled={!dismissIsComplete(reason, note)}
+                onClick={() => confirmDismiss(flag)}
+              >
+                Confirm dismiss
+              </button>
+            </span>
           </div>,
         );
-        continue;
       }
-      rows.push(
-        <div key={`row-${flag}`} className="sugg-row site-correction-row">
-          <span>
-            <b className="sugg-name">{label}</b>
-            {" — "}
-            {detected ? `detected${evidence ? ` · ${evidence}` : ""}` : "none along the corridor"}
-          </span>
-          {detected ? (
-            <button
-              type="button"
-              className="ghost"
-              onClick={() => {
-                setDismissing(flag);
-                setReason(null);
-                setNote("");
-              }}
-            >
-              Dismiss
-            </button>
-          ) : (
-            <button type="button" className="ghost" onClick={() => assertFlag(flag)}>
-              Assert
-            </button>
-          )}
-        </div>,
-      );
     }
   } else {
     // No ok scan (a proceeded outage): only the records, with undo.
@@ -342,7 +376,17 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       className="jbar-suggest live site-corrections jump-anchor outline-none mb-3"
     >
       <div className="tr-section mb-1.5">Site conditions — scanned</div>
-      {rows}
+      {/* #248: one grid, four tracks; column heads ride the step-index
+          register (the .dva-grid precedent); rows are subgrid rows. */}
+      <div className="sc-grid">
+        <div className="sc-row sc-head">
+          <span className="tr-step">Condition</span>
+          <span className="tr-step">Result</span>
+          <span className="tr-step">Evidence</span>
+          <span />
+        </div>
+        {rows}
+      </div>
       <div className="tr-prov mt-1.5">
         {[
           "site scan",

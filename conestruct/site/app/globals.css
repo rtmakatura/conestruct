@@ -1852,6 +1852,168 @@ input[type="number"] {
   box-shadow: 0 0 0 2px var(--act-glow);
 }
 
+/* ─── #248 the scanned block's grid (s2-arc20) ───
+   Four tracks — Condition · Result · Evidence · Action — on the block;
+   every row is a SUBGRID row so the action column shares one edge in
+   every state (detected / absent / picker-open / record).  Mechanics
+   from .sched-window-row (baseline-aligned grid rows: "same rows, same
+   widths, only glyph and value change" — PDF p.2/p.4), heads / gap /
+   numerals from .dva-grid.  Row inset 6px 0 (hairline) with dashed
+   --rule-soft separators (the gen2 .checkline idiom).  Block-scoped:
+   the band's .sugg-row / .sys-event / button rules above are untouched.
+   Specificity deliberately beats `.workbench .jbar-suggest .sys-event`
+   (the record row reuses that container's classes for its rule color).
+   Subgrid is the alignment mechanism (CHOSEN); the per-row template
+   before it is the fallback where subgrid is unsupported.
+   Evidence is minmax(0, 1fr), not auto (a recorded deviation from GO
+   ruling a): the record row's disclosure sentence lives in this cell,
+   and an auto track sized to that sentence starved the 1fr Condition
+   track to zero (measured locally, record-1440 first pass). */
+.workbench .jbar-suggest .sc-grid {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  column-gap: 14px;
+}
+.workbench .jbar-suggest .sc-grid .sc-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  grid-template-columns: subgrid;
+  align-items: baseline;
+  padding: 6px 0;
+  gap: 0;
+}
+.workbench .jbar-suggest .sc-grid .sc-row + .sc-row {
+  border-top: 1px dashed var(--rule-soft);
+}
+.workbench .jbar-suggest .sc-grid .sc-head {
+  padding: 0 0 4px;
+}
+.workbench .jbar-suggest .sc-grid .sc-result {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark);
+}
+/* Result glyphs mirror section 03's tiers: ▲ detected = the "changed
+   this plan" delta (--dim, 7.00:1 on --canvas); ✓ none = checked &
+   passed (--pass, 8.94:1).  Every glyph rides beside its word. */
+.workbench .jbar-suggest .sc-grid .sc-glyph {
+  width: var(--glyph-cell);
+  flex-shrink: 0;
+  text-align: center;
+}
+.workbench .jbar-suggest .sc-grid .sc-glyph.sc-detected {
+  color: var(--dim);
+}
+.workbench .jbar-suggest .sc-grid .sc-glyph.sc-absent {
+  color: var(--pass);
+}
+.workbench .jbar-suggest .sc-grid .sc-evidence {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-on-dark-faint);
+  min-width: 0;
+}
+.workbench .jbar-suggest .sc-grid .sc-row:not(.sc-record) .sc-evidence {
+  white-space: nowrap;
+}
+.workbench .jbar-suggest .sc-grid .sc-action {
+  justify-self: end;
+  white-space: nowrap;
+}
+/* The record row IS the #227 container (left rule by state via the
+   .sys-event variants above); the sentence is one text node in the
+   Evidence cell and may wrap.  Overrides that container's flex-column
+   layout inside .jbar-suggest without touching that rule. */
+.workbench .jbar-suggest .sc-grid .sc-row.sc-record {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  grid-template-columns: subgrid;
+  gap: 0;
+  /* The container's 3px rule + 9px inset on the left and 1px + 11px on
+     the right sit OUTSIDE the grid's tracks (negative margin), so the
+     record's label and its Undo share the other rows' edges. */
+  padding: 6px 11px 6px 9px;
+  margin: 3px -12px;
+}
+.workbench .jbar-suggest .sc-grid .sc-record .sys-glyph {
+  width: var(--glyph-cell);
+  font-size: 12px;
+  line-height: inherit;
+}
+.workbench .jbar-suggest .sc-grid .sc-disclosure {
+  color: var(--ink-on-dark);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  white-space: normal;
+}
+/* Picker-open: exactly one extra row.  Legend + chips (+ the note) span
+   the three fact columns; Confirm holds the action cell; Cancel moved
+   to the condition row's action slot. */
+.workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
+  grid-column: 1 / 4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.workbench .jbar-suggest .sc-grid .sc-sub {
+  border-top-style: dotted;
+}
+/* ≤480px — CHOSEN, not designed (the PDF drew no phone layout, p.5;
+   #153 open): two tracks.  The three facts stack in column 1; the
+   action spans them in column 2 so it never wraps under prose. */
+@media (max-width: 480px) {
+  .workbench .jbar-suggest .sc-grid,
+  .workbench .jbar-suggest .sc-grid .sc-row,
+  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
+    grid-template-columns: minmax(0, 1fr) max-content;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-row,
+  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
+    grid-template-columns: subgrid;
+    row-gap: 2px;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-head {
+    display: none;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-cond {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-result {
+    grid-column: 1;
+    grid-row: 2;
+    white-space: normal;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-evidence {
+    grid-column: 1;
+    grid-row: 3;
+    /* An empty Evidence cell keeps its line so detected and absent rows
+       stand the same height (PDF p.4: nothing reflows); it prints
+       nothing — absence renders as absence. */
+    min-height: 1lh;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-action {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: start;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+}
+
 /* ─── #227 system-event container ───
    "A value the user didn't set is a system event, not a field
    annotation" (PDF p.4): the #198 handoff notes' promoted home — amber

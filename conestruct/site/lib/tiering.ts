@@ -98,15 +98,24 @@ export interface ScanWire {
 
 /** The evidence line a section-03 row prints for a detected bucket —
  *  the wire's numbers, joined; nothing invented, nothing converted
- *  (rule 3).  Empty when the bucket carries no evidence. */
-export function scanEvidence(b: ScanBucketWire | undefined): string {
+ *  (rule 3).  Empty when the bucket carries no evidence.
+ *
+ *  #248 (s2-arc20, ruling b): the strip's grid prints count + nearest
+ *  only — ``details: false`` drops the first detail line and
+ *  ``anchorSuffix: false`` the "from anchor" tail.  Defaults keep the
+ *  section-03 / audit-PDF string byte-identical. */
+export function scanEvidence(
+  b: ScanBucketWire | undefined,
+  opts: { details?: boolean; anchorSuffix?: boolean } = {},
+): string {
+  const { details = true, anchorSuffix = true } = opts;
   if (!b || b.detected !== true) return "";
   const parts: string[] = [];
   if (typeof b.count === "number") parts.push(`${b.count} found`);
   if (typeof b.nearest_distance_ft === "number") {
-    parts.push(`nearest ${b.nearest_distance_ft} ft from anchor`);
+    parts.push(`nearest ${b.nearest_distance_ft} ft${anchorSuffix ? " from anchor" : ""}`);
   }
-  if (b.details && b.details.length > 0) parts.push(b.details[0]);
+  if (details && b.details && b.details.length > 0) parts.push(b.details[0]);
   return parts.join(" · ");
 }
 

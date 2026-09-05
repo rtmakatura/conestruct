@@ -54,11 +54,15 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(within(b!).getByText("Site conditions — scanned")).toBeTruthy();
     const rows = b!.querySelectorAll(".site-correction-row");
     expect(rows).toHaveLength(5); // hospitals is keyless — no row
+    // #248: Result = glyph + word, Evidence = count + nearest (the wire's
+    // numbers; details[0] stays in section 03 and the PDF).
     const sidewalk = within(b!).getByText("Pedestrian sidewalks").closest(".site-correction-row")!;
-    expect(sidewalk.textContent).toContain("detected · 18 found · nearest 46.6 ft from anchor");
+    expect(within(sidewalk as HTMLElement).getByText("detected")).toBeTruthy();
+    expect(sidewalk.querySelector(".sc-evidence")?.textContent).toBe("18 found · nearest 46.6 ft");
     expect(within(sidewalk as HTMLElement).getByRole("button", { name: "Dismiss" })).toBeTruthy();
     const school = within(b!).getByText("School zone").closest(".site-correction-row")!;
-    expect(school.textContent).toContain("none along the corridor");
+    expect(within(school as HTMLElement).getByText("none along the corridor")).toBeTruthy();
+    expect(school.querySelector(".sc-evidence")?.textContent).toBe("");
     expect(within(school as HTMLElement).getByRole("button", { name: "Assert" })).toBeTruthy();
     expect(b!.textContent).toContain("measured 2026-09-04T12:00:00+00:00");
     expect(b!.textContent).toContain("a correction re-generates the plan");
@@ -240,6 +244,73 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     await user.click(within(rec).getByRole("button", { name: "Undo" }));
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(JSON.stringify(next.meta)).toBe(JSON.stringify(DEFAULT_SCENARIO.meta));
+  });
+
+  // #248 — structure the grid must keep (happy-dom has no stylesheet, so
+  // these pin the DOM the CSS grid lays out; rects are the browser leg).
+  it("#248: every row has the four cells and exactly one button, in the action cell", () => {
+    mount(ok());
+    const rows = block()!.querySelectorAll(".sc-row:not(.sc-head)");
+    expect(rows).toHaveLength(5);
+    for (const row of Array.from(rows)) {
+      expect(row.querySelectorAll(":scope > .sc-cond")).toHaveLength(1);
+      expect(row.querySelectorAll(":scope > .sc-result")).toHaveLength(1);
+      expect(row.querySelectorAll(":scope > .sc-evidence")).toHaveLength(1);
+      expect(row.querySelectorAll(":scope > .sc-action")).toHaveLength(1);
+      expect(row.querySelectorAll("button")).toHaveLength(1);
+      expect(row.querySelector(".sc-action button")).not.toBeNull();
+      // Rule 13: the Result glyph rides beside a word.
+      const res = row.querySelector(".sc-result")!;
+      expect(res.querySelector("[aria-hidden]")?.textContent).toMatch(/^[▲✓]$/);
+      expect(res.textContent!.replace(/[▲✓]/, "").trim().length).toBeGreaterThan(0);
+    }
+    const heads = Array.from(block()!.querySelectorAll(".sc-head .tr-step")).map((h) => h.textContent);
+    expect(heads).toEqual(["Condition", "Result", "Evidence"]);
+  });
+
+  it("#248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none)", () => {
+    mount(ok());
+    const b = block()!;
+    expect(b.textContent).not.toContain("W Alameda Ave");
+    expect(b.textContent).not.toContain("from anchor");
+    const intersection = within(b).getByText("Adjacent at-grade intersection").closest(".sc-row")!;
+    expect(intersection.querySelector(".sc-glyph")?.textContent).toBe("▲");
+    expect(intersection.querySelector(".sc-glyph")?.classList.contains("sc-detected")).toBe(true);
+    const school = within(b).getByText("School zone").closest(".sc-row")!;
+    expect(school.querySelector(".sc-glyph")?.textContent).toBe("✓");
+    expect(school.querySelector(".sc-glyph")?.classList.contains("sc-absent")).toBe(true);
+  });
+
+  it("#248: the open picker is exactly one extra row — Confirm in its action cell, Cancel in the condition row's", async () => {
+    const user = userEvent.setup();
+    mount(ok());
+    const before = block()!.querySelectorAll(".sc-row:not(.sc-head)").length;
+    const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row") as HTMLElement;
+    await user.click(within(sidewalk).getByRole("button", { name: "Dismiss" }));
+    const rows = block()!.querySelectorAll(".sc-row:not(.sc-head)");
+    expect(rows).toHaveLength(before + 1);
+    const picker = sidewalk.nextElementSibling as HTMLElement;
+    expect(picker.classList.contains("site-correction-picker")).toBe(true);
+    expect(picker.classList.contains("sc-sub")).toBe(true);
+    expect(picker.querySelectorAll("button")).toHaveLength(1);
+    expect(picker.querySelector(".sc-action button")?.textContent).toBe("Confirm dismiss");
+    expect(within(sidewalk).getByRole("button", { name: "Cancel" })).toBeTruthy();
+    expect(within(sidewalk).queryByRole("button", { name: "Dismiss" })).toBeNull();
+    // The record row keeps the sentence as ONE text node in its Evidence cell (#198).
+    cleanup();
+    const disclosure = "Operator asserted school zone — the scan found none along the corridor.";
+    mount(
+      ok({
+        corrections: [
+          { flag: "school_zone", action: "assert", status: "applied", scan_detected: false, disclosure },
+        ],
+      }),
+    );
+    const cell = within(block()!).getByText(disclosure);
+    expect(cell.classList.contains("sc-evidence")).toBe(true);
+    expect(cell.childNodes).toHaveLength(1);
+    expect(cell.closest(".sc-row")!.querySelector(".sc-action button")?.textContent).toBe("Undo");
+    expect(cell.closest(".sc-row")!.querySelector(".sc-result")?.textContent).toBe("✓asserted");
   });
 
   it("a proceeded outage with an applied assert shows the record (undo-able) and no scan rows", () => {
