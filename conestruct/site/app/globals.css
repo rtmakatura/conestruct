@@ -1368,6 +1368,42 @@ input[type="number"] {
   border-radius: 50%;
   animation: sb-spin 0.7s linear infinite;
 }
+/* #249 — the results-head lockup (spec 54–59): figure · two stacked
+   labels · link on one row; no fill, no border, no icon — the 24px
+   figure is the whole weight (spec 58).  The figure's size is a one-off
+   display size, CHOSEN (spec 55; no #226 role at 24px); the labels ride
+   the field / step roles (12.5 and 9.5 snapped, spec 56); the link is
+   the signpost role (spec 57's 9.5 / 0.14em snapped).  --dim when ≥1
+   detected (the tier set's mark), chromeless --none at 0 (spec 59). */
+.workbench .results-head-lockup {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  column-gap: 11px;
+  align-items: center;
+}
+.workbench .results-head-lockup .rh-figure {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.workbench .results-head-lockup .rh-figure.rh-detected {
+  color: var(--dim);
+}
+.workbench .results-head-lockup .rh-figure.rh-none {
+  color: var(--none);
+}
+.workbench .results-head-lockup .rh-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.workbench .results-head-lockup .rh-link {
+  white-space: nowrap;
+  justify-self: end;
+}
 .workbench .tr-signpost {
   font-family: var(--font-mono);
   font-size: 10px;
