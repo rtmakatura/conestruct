@@ -1,0 +1,74 @@
+[
+ {
+  "name": "▲ detected glyph (--dim)",
+  "fg": "#ff8a2e",
+  "bg": "#14202e",
+  "ratio": 7
+ },
+ {
+  "name": "✓ absent glyph (--pass)",
+  "fg": "#4fd787",
+  "bg": "#14202e",
+  "ratio": 8.94
+ },
+ {
+  "name": "Result word",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "Evidence (faint)",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "Condition (tr-field)",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "Column head (tr-step)",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "legend",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "chip unselected",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "chip chosen",
+  "fg": "#34a9e8",
+  "bg": "#14202e",
+  "ratio": 6.26
+ },
+ {
+  "name": "note ink",
+  "fg": "#ffffff",
+  "bg": "#14202e",
+  "ratio": 16.46
+ },
+ {
+  "name": "Confirm (act)",
+  "fg": "#34a9e8",
+  "bg": "#14202e",
+  "ratio": 6.26
+ },
+ {
+  "name": "ghost button",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ }
+]

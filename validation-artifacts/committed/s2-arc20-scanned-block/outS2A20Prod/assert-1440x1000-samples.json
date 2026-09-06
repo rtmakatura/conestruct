@@ -1,0 +1,552 @@
+[
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · spacing · sign placem"
+  },
+  "wait": {
+   "top": 608,
+   "bottom": 625,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 210
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · spacing · sign placem"
+  },
+  "wait": {
+   "top": 608,
+   "bottom": 625,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 413
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 674
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 891
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1108
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1309
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1512
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1714
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 1917
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 2121
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 2339
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 2541
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 2742
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 2945
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 3147
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 3350
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 3552
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 3768
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 3984
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 4200
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 498,
+   "bottom": 545,
+   "text": "VERIFYING · scanning site conditions along the corridor — up to 20 s"
+  },
+  "wait": {
+   "top": 613,
+   "bottom": 630,
+   "text": "Scanning site conditions along the corridor — up to 20 s · the plan settles here"
+  },
+  "jump": null,
+  "block": null,
+  "t": 4402
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 4619
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 4836
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 5052
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 5269
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 5471
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 5687
+ },
+ {
+  "scrollY": 183,
+  "innerH": 1000,
+  "navH": 52,
+  "statusBar": {
+   "top": 827,
+   "bottom": 878,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "wait": null,
+  "jump": {
+   "top": 946,
+   "bottom": 963,
+   "text": "Site conditions — 4 detected · correct in setup ↑"
+  },
+  "block": {
+   "top": 409,
+   "bottom": 725,
+   "text": "Site conditions — scannedConditionResultEvidenceAdjacent at-grade intersection▲detected46 "
+  },
+  "t": 5890
+ }
+]

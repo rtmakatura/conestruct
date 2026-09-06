@@ -151,14 +151,27 @@ unchanged.
 frame: the COMPUTING bar clipped under the nav at the top, the wait line
 at y≈145 in the results head.
 
-## Prod run
+## Prod run — ALL PASS 44/44 (`outS2A20Prod/`, 2026-09-05)
 
-Pending — runs on `s2a20-live-checks` after the ship, sha-gated on
-healthz == origin/main:
+On `s2a20-live-checks`, sha-gated: healthz `6e4f6884…` == origin/main
+(the evidence merge, the prod tip Ryan confirmed). Denver repro pin
+(39.7269, −104.9873), live Overpass scan, no refusal on either viewport
+this run (scan settled in 3.9 s / 4.7 s on Generate, 4.6 s / 12.1 s on
+the Assert re-generate).
 
-```
-node validation-artifacts/committed/s2-arc20-scanned-block/s2a20-lc-prod.js <outDir> <sha>
-```
+| leg | 1440×1000 | 380×800 |
+|---|---|---|
+| W1 wait line in `[nav-h, innerH]` while pending | 15/15 samples after 600 ms | 19/19 (generate), 55/55 (assert) |
+| W2 / W3 | wait gone on settle; jump "Site conditions — 4 detected · correct in setup ↑"; 0 co-present | same |
+| R1 one action edge | right 1252 (Dismiss ×4 / Assert / Cancel / Confirm / Undo) | right 338 |
+| R2 no wrap · R3 row heights | none · 37 × 5 | none · 71 × 5 |
+| R4 picker | 5 → 6 rows; [Confirm dismiss] in the picker row, [Cancel] on the condition row | same |
+| R5 `details[0]` | absent | absent |
+| R6 axe (open / chosen / other+note) | 0 in block; total 0 (baseline 2) | 0 in block; total 2 = the two named pre-existing |
+| R7 pairs | ▲ 7.00 · ✓ 8.94 · 10.68 · 6.19 · 6.26 · 16.46 | same |
+| R8 record / undo | `✓asserted`, 1 text node, [Undo]; undo → 5 rows, 0 records | same |
+
+Command: `node validation-artifacts/committed/s2-arc20-scanned-block/s2a20-lc-prod.js <outDir> <sha>`.
 
 ## Churn — predicted (GO) vs actual
 

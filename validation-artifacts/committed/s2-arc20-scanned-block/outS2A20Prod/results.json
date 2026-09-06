@@ -1,0 +1,266 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "W1 generate",
+  "ok": true,
+  "detail": "18 pending samples, 18 with the wait line, 17 in view; after 600 ms 15/15 in view; first 2..19 (nav 52, innerH 1000)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W2 generate",
+  "ok": true,
+  "detail": "settled: wait gone, jump \"Site conditions — 4 detected · correct in setup ↑\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W3 generate",
+  "ok": true,
+  "detail": "0 samples with both lines (of 25)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W2b jump iff detected",
+  "ok": true,
+  "detail": "4 detected rows; jump line present"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 rows",
+  "ok": true,
+  "detail": "right edges 1252 across 5 buttons (Dismiss, Dismiss, Dismiss, Dismiss, Assert); all in .sc-action: true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R2 rows",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R3 rows",
+  "ok": true,
+  "detail": "row heights 37/37/37/37/37 (4 detected, 1 absent)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R5 details",
+  "ok": true,
+  "detail": "block text has no \"from anchor\" / details fragment: true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R4 picker",
+  "ok": true,
+  "detail": "rows 5 → 6; picker row buttons [Confirm dismiss]; condition row buttons [Cancel]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 picker-open",
+  "ok": true,
+  "detail": "right edges 1252 across 6 buttons (Cancel, Confirm dismiss, Dismiss, Dismiss, Dismiss, Assert); all in .sc-action: true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R2 picker-open",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R6 axe picker-open",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 0 (baseline 2): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R6 axe picker-chosen",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 0 (baseline 2): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R7 pairs",
+  "ok": true,
+  "detail": "▲ detected glyph (--dim) #ff8a2e on #14202e = 7 · ✓ absent glyph (--pass) #4fd787 on #14202e = 8.94 · Result word #c8d1dd on #14202e = 10.68 · Evidence (faint) #93a0b0 on #14202e = 6.19 · Condition (tr-field) #c8d1dd on #14202e = 10.68 · Column head (tr-step) #93a0b0 on #14202e = 6.19 · legend #c8d1dd on #14202e = 10.68 · chip unselected #93a0b0 on #14202e = 6.19 · chip chosen #34a9e8 on #14202e = 6.26 · note ink #ffffff on #14202e = 16.46 · Confirm (act) #34a9e8 on #14202e = 6.26 · ghost button #93a0b0 on #14202e = 6.19"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R6 axe picker-other-note",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 0 (baseline 2): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W1 assert",
+  "ok": true,
+  "detail": "22 pending samples, 22 with the wait line, 22 in view; after 600 ms 19/19 in view; first 613..630 (nav 52, innerH 1000)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W2 assert",
+  "ok": true,
+  "detail": "settled: wait gone, jump \"Site conditions — 4 detected · correct in setup ↑\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "W3 assert",
+  "ok": true,
+  "detail": "0 samples with both lines (of 29)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R8 record",
+  "ok": true,
+  "detail": "record: result \"✓asserted\", sentence nodes 1, buttons [Undo]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 record",
+  "ok": true,
+  "detail": "right edges 1252 across 5 buttons (Dismiss, Dismiss, Dismiss, Dismiss, Undo); all in .sc-action: true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R2 record",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R8 undo",
+  "ok": true,
+  "detail": "5 rows, records 0"
+ },
+ {
+  "tag": "380x800",
+  "id": "W1 generate",
+  "ok": true,
+  "detail": "22 pending samples, 22 with the wait line, 20 in view; after 600 ms 19/19 in view; first -974..-928 (nav 52, innerH 800)"
+ },
+ {
+  "tag": "380x800",
+  "id": "W2 generate",
+  "ok": true,
+  "detail": "settled: wait gone, jump \"Site conditions — 4 detected · correct in setup ↑\""
+ },
+ {
+  "tag": "380x800",
+  "id": "W3 generate",
+  "ok": true,
+  "detail": "0 samples with both lines (of 29)"
+ },
+ {
+  "tag": "380x800",
+  "id": "W2b jump iff detected",
+  "ok": true,
+  "detail": "4 detected rows; jump line present"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 rows",
+  "ok": true,
+  "detail": "right edges 338 across 5 buttons (Dismiss, Dismiss, Dismiss, Dismiss, Assert); all in .sc-action: true"
+ },
+ {
+  "tag": "380x800",
+  "id": "R2 rows",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "380x800",
+  "id": "R3 rows",
+  "ok": true,
+  "detail": "row heights 71/71/71/71/71 (4 detected, 1 absent)"
+ },
+ {
+  "tag": "380x800",
+  "id": "R5 details",
+  "ok": true,
+  "detail": "block text has no \"from anchor\" / details fragment: true"
+ },
+ {
+  "tag": "380x800",
+  "id": "R4 picker",
+  "ok": true,
+  "detail": "rows 5 → 6; picker row buttons [Confirm dismiss]; condition row buttons [Cancel]"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 picker-open",
+  "ok": true,
+  "detail": "right edges 338 across 6 buttons (Cancel, Confirm dismiss, Dismiss, Dismiss, Dismiss, Assert); all in .sc-action: true"
+ },
+ {
+  "tag": "380x800",
+  "id": "R2 picker-open",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "380x800",
+  "id": "R6 axe picker-open",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "R6 axe picker-chosen",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "R7 pairs",
+  "ok": true,
+  "detail": "▲ detected glyph (--dim) #ff8a2e on #14202e = 7 · ✓ absent glyph (--pass) #4fd787 on #14202e = 8.94 · Result word #c8d1dd on #14202e = 10.68 · Evidence (faint) #93a0b0 on #14202e = 6.19 · Condition (tr-field) #c8d1dd on #14202e = 10.68 · Column head (tr-step) #93a0b0 on #14202e = 6.19 · legend #c8d1dd on #14202e = 10.68 · chip unselected #93a0b0 on #14202e = 6.19 · chip chosen #34a9e8 on #14202e = 6.26 · note ink #ffffff on #14202e = 16.46 · Confirm (act) #34a9e8 on #14202e = 6.26 · ghost button #93a0b0 on #14202e = 6.19"
+ },
+ {
+  "tag": "380x800",
+  "id": "R6 axe picker-other-note",
+  "ok": true,
+  "detail": "color-contrast in the block: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "W1 assert",
+  "ok": true,
+  "detail": "58 pending samples, 58 with the wait line, 58 in view; after 600 ms 55/55 in view; first 518..564 (nav 52, innerH 800)"
+ },
+ {
+  "tag": "380x800",
+  "id": "W2 assert",
+  "ok": true,
+  "detail": "settled: wait gone, jump \"Site conditions — 4 detected · correct in setup ↑\""
+ },
+ {
+  "tag": "380x800",
+  "id": "W3 assert",
+  "ok": true,
+  "detail": "0 samples with both lines (of 65)"
+ },
+ {
+  "tag": "380x800",
+  "id": "R8 record",
+  "ok": true,
+  "detail": "record: result \"✓asserted\", sentence nodes 1, buttons [Undo]"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 record",
+  "ok": true,
+  "detail": "right edges 338 across 5 buttons (Dismiss, Dismiss, Dismiss, Dismiss, Undo); all in .sc-action: true"
+ },
+ {
+  "tag": "380x800",
+  "id": "R2 record",
+  "ok": true,
+  "detail": "no action below its row's text"
+ },
+ {
+  "tag": "380x800",
+  "id": "R8 undo",
+  "ok": true,
+  "detail": "5 rows, records 0"
+ }
+]
