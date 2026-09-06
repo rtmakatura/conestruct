@@ -78,6 +78,12 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(chosen).toMatch(/border-color:\s*var\(--act\)/);
     expect(chosen).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(chosen).toMatch(/color:\s*var\(--act-bright\)/);
+    // Confirm on the wash takes the same bright ink (6.15:1 measured; --act on the wash was 4.97).
+    const confirm = rule(".workbench .jbar-suggest .sc-picker button.confirm");
+    expect(confirm).toMatch(/background:\s*var\(--sc-act-wash\)/);
+    expect(confirm).toMatch(/color:\s*var\(--act-bright\)/);
+    // The footer stretches to the block like the grid (its leader spans the slack).
+    expect(rule(".workbench .jbar-suggest .sc-foot")).toMatch(/align-self:\s*stretch/);
     // K82: the Dismiss border keeps --rule; no amber trace anywhere.
     expect(rule(".workbench .jbar-suggest .sc-grid button.ghost")).toMatch(/border-color:\s*var\(--rule\)/);
     expect(css).not.toMatch(/rgba\(224, 166, 60/);

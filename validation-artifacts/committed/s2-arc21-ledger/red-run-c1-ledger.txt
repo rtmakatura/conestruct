@@ -1,0 +1,226 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+ ❯ components/SetupStrip.grid-tokens.test.tsx (4 tests | 3 failed) 11ms
+   × #249 — the scanned block as a ledger > two tracks on the block (ledger · 92px action), subgrid rows, the action cell on the end edge 7ms
+     → expected '\n  align-self: stretch;\n  display: …' to match /grid-template-columns:\s*minmax\(0, 1…/
+   × #249 — the scanned block as a ledger > the tier tokens ride symbol and word (▲ --dim, ✓ --pass; the none word stays body ink) in a --glyph-cell 1ms
+     → rule not found: .workbench .jbar-suggest .sc-grid .sc-result.sc-detected: expected -1 to be greater than -1
+   × #249 — the scanned block as a ledger > ≤420px of the block's own width narrows the action to 88px, hides the leader, lets the right group wrap 1ms
+     → expected -1 to be greater than -1
+   ✓ #249 — the scanned block as a ledger > the band's shared rules are byte-identical to their arc-18 text 1ms
+ ❯ lib/scenarios/site-corrections.test.ts (8 tests | 2 failed) 10ms
+   ✓ site-condition correction markers (#224 phase 4) > dismiss / assert markers carry the backend's shape and a seconds stamp 3ms
+   ✓ site-condition correction markers (#224 phase 4) > one marker per condition — a new marker for a flag replaces the old one 0ms
+   ✓ site-condition correction markers (#224 phase 4) > undo restores meta byte-identically (the key drops when the list empties) 1ms
+   ✓ site-condition correction markers (#224 phase 4) > undo of one of two markers keeps the other 0ms
+   ✓ site-condition correction markers (#224 phase 4) > a pin move clears every marker — key dropped, never an empty list 0ms
+   ✓ site-condition correction markers (#224 phase 4) > dismissIsComplete mirrors the backend's cross-field rule 0ms
+   × site-condition correction markers (#224 phase 4) > dismissAllowed (spec 46): only a DETECTED served bucket may enter the reason state 4ms
+     → (0 , dismissAllowed) is not a function
+   × site-condition correction markers (#224 phase 4) > fmtScanStamp (GO ruling e/a′): day · hh:mm utc by slicing the wire's UTC ISO; anything else verbatim 0ms
+     → (0 , fmtScanStamp) is not a function
+ ❯ components/SetupStrip.corrections.test.tsx (14 tests | 5 failed) 1001ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each 61ms
+     → Cannot read properties of null (reading 'textContent')
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10) 7ms
+     → Cannot read properties of null (reading 'textContent')
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature) 5ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > null provenance (mid-refetch), not_run, and a refusal render nothing 10ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides 44ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other  478ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph 130ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing 103ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 13ms
+     → expected <span class="sc-result">…(1)</span> to be null
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction 64ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #249: every row is a ledger line plus one action cell holding exactly one button 8ms
+     → expected …(6) to have a length of 5 but got 6
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none) 6ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #249: the open picker is exactly one extra row — Confirm last in its flex line, Cancel in the condition row's action cell 66ms
+     → expected <span class="sc-action">…(1)</span> to be null
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows 4ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each
+TypeError: Cannot read properties of null (reading 'textContent')
+ ❯ components/SetupStrip.corrections.test.tsx:70:17
+     68|     // stamp sliced from the ISO, the full ISO on the <time>; no radiu…
+     69|     const foot = b!.querySelector(".sc-foot") as HTMLElement;
+     70|     expect(foot.textContent).toContain("corridor scan · 4 sep · 12:00 …
+       |                 ^
+     71|     const time = foot.querySelector("time") as HTMLTimeElement;
+     72|     expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00+00:00…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10)
+TypeError: Cannot read properties of null (reading 'textContent')
+ ❯ components/SetupStrip.corrections.test.tsx:81:17
+     79|     mount(ok({ measured_at: "2026-09-04T12:00:00-06:00" }));
+     80|     const time = block()!.querySelector(".sc-foot time") as HTMLTimeEl…
+     81|     expect(time.textContent).toBe("2026-09-04T12:00:00-06:00");
+       |                 ^
+     82|     expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00-06:00…
+     83|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo)
+AssertionError: expected <span class="sc-result">…(1)</span> to be null
+
+- Expected: 
+null
+
++ Received: 
+<span
+  class="sc-result"
+>
+  <span
+    aria-hidden="true"
+    class="sys-glyph"
+  >
+    ×
+  </span>
+  dismissed
+</span>
+
+ ❯ components/SetupStrip.corrections.test.tsx:234:47
+    232|     // evidence — the sentence is the whole readout.
+    233|     for (const rec of [dRec, aRec]) {
+    234|       expect(rec.querySelector(".sc-result")).toBeNull();
+       |                                               ^
+    235|       expect(rec.querySelector(".sc-leader")).toBeNull();
+    236|       expect(rec.querySelector(".sc-evidence")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #249: every row is a ledger line plus one action cell holding exactly one button
+AssertionError: expected …(6) to have a length of 5 but got 6
+
+- Expected
++ Received
+
+- 5
++ 6
+
+ ❯ components/SetupStrip.corrections.test.tsx:282:18
+    280|     mount(ok());
+    281|     const rows = block()!.querySelectorAll(".sc-row");
+    282|     expect(rows).toHaveLength(5);
+       |                  ^
+    283|     for (const row of Array.from(rows)) {
+    284|       expect(row.querySelectorAll(":scope > .sc-lead")).toHaveLength(1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #249: the open picker is exactly one extra row — Confirm last in its flex line, Cancel in the condition row's action cell
+AssertionError: expected <span class="sc-action">…(1)</span> to be null
+
+- Expected: 
+null
+
++ Received: 
+<span
+  class="sc-action"
+>
+  <button
+    class="confirm"
+    disabled=""
+    type="button"
+  >
+    Confirm dismiss
+  </button>
+</span>
+
+ ❯ components/SetupStrip.corrections.test.tsx:331:48
+    329|     // Spec 38/42: legend + chips, (note), Confirm — one flex line, no
+    330|     // action cell on the sub-row (supersedes arc-20 ruling f).
+    331|     expect(picker.querySelector(".sc-action")).toBeNull();
+       |                                                ^
+    332|     expect(picker.querySelectorAll("button")).toHaveLength(1);
+    333|     const line = picker.querySelector(".sc-picker") as HTMLElement;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #249 — the scanned block as a ledger > two tracks on the block (ledger · 92px action), subgrid rows, the action cell on the end edge
+AssertionError: expected '\n  align-self: stretch;\n  display: …' to match /grid-template-columns:\s*minmax\(0, 1…/
+
+- Expected: 
+/grid-template-columns:\s*minmax\(0, 1fr\) 92px/
+
++ Received: 
+"
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  column-gap: 14px;
+"
+
+ ❯ components/SetupStrip.grid-tokens.test.tsx:31:55
+     29| describe("#249 — the scanned block as a ledger", () => {
+     30|   it("two tracks on the block (ledger · 92px action), subgrid rows, th…
+     31|     expect(rule(".workbench .jbar-suggest .sc-grid")).toMatch(/grid-te…
+       |                                                       ^
+     32|     const row = rule(".workbench .jbar-suggest .sc-grid .sc-row");
+     33|     expect(row).toMatch(/grid-template-columns:\s*subgrid/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #249 — the scanned block as a ledger > the tier tokens ride symbol and word (▲ --dim, ✓ --pass; the none word stays body ink) in a --glyph-cell
+AssertionError: rule not found: .workbench .jbar-suggest .sc-grid .sc-result.sc-detected: expected -1 to be greater than -1
+ ❯ rule components/SetupStrip.grid-tokens.test.tsx:24:44
+     22| function rule(selector: string, from = 0): string {
+     23|   const i = css.indexOf(selector + " {", from);
+     24|   expect(i, `rule not found: ${selector}`).toBeGreaterThan(-1);
+       |                                            ^
+     25|   const j = css.indexOf("}", i);
+     26|   return css.slice(i + selector.length + 2, j);
+ ❯ components/SetupStrip.grid-tokens.test.tsx:52:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  components/SetupStrip.grid-tokens.test.tsx > #249 — the scanned block as a ledger > ≤420px of the block's own width narrows the action to 88px, hides the leader, lets the right group wrap
+AssertionError: expected -1 to be greater than -1
+ ❯ components/SetupStrip.grid-tokens.test.tsx:79:16
+     77|   it("≤420px of the block's own width narrows the action to 88px, hide…
+     78|     const cq = css.indexOf("@container (max-width: 420px)");
+     79|     expect(cq).toBeGreaterThan(-1);
+       |                ^
+     80|     // The first rule in the query is a selector list (grid, row, reco…
+     81|     // ending in the 88px tracks.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > dismissAllowed (spec 46): only a DETECTED served bucket may enter the reason state
+TypeError: (0 , dismissAllowed) is not a function
+ ❯ lib/scenarios/site-corrections.test.ts:94:12
+     92|       sidewalks: { detected: false, count: 0 },
+     93|     };
+     94|     expect(dismissAllowed(buckets, "adjacent_intersection")).toBe(true…
+       |            ^
+     95|     expect(dismissAllowed(buckets, "pedestrian_facility")).toBe(false)…
+     96|     expect(dismissAllowed(buckets, "school_zone")).toBe(false); // buc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > fmtScanStamp (GO ruling e/a′): day · hh:mm utc by slicing the wire's UTC ISO; anything else verbatim
+TypeError: (0 , fmtScanStamp) is not a function
+ ❯ lib/scenarios/site-corrections.test.ts:102:12
+    100| 
+    101|   it("fmtScanStamp (GO ruling e/a′): day · hh:mm utc by slicing the wi…
+    102|     expect(fmtScanStamp("2026-09-03T23:14:50+00:00")).toBe("3 sep · 23…
+       |            ^
+    103|     expect(fmtScanStamp("2026-12-25T00:05:00Z")).toBe("25 dec · 00:05 …
+    104|     expect(fmtScanStamp("2026-01-09T07:30:00.123+00:00")).toBe("9 jan …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  10 failed | 16 passed (26)
+   Start at  23:17:56
+   Duration  2.51s (transform 201ms, setup 0ms, collect 489ms, tests 1.02s, environment 476ms, prepare 305ms)
+

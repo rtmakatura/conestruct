@@ -1,0 +1,122 @@
+[
+ {
+  "name": "lockup figure",
+  "fg": "#ff8a2e",
+  "bg": "#14202e",
+  "ratio": 7
+ },
+ {
+  "name": "lockup line 1 (tr-field)",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "lockup line 2 (tr-step)",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "lockup link (tr-signpost)",
+  "fg": "#34a9e8",
+  "bg": "#14202e",
+  "ratio": 6.26
+ },
+ {
+  "name": "▲ detected symbol (--dim)",
+  "fg": "#ff8a2e",
+  "bg": "#14202e",
+  "ratio": 7
+ },
+ {
+  "name": "✓ absent symbol (--pass)",
+  "fg": "#4fd787",
+  "bg": "#14202e",
+  "ratio": 8.94
+ },
+ {
+  "name": "detected word (--dim)",
+  "fg": "#ff8a2e",
+  "bg": "#14202e",
+  "ratio": 7
+ },
+ {
+  "name": "none word (body ink)",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "evidence (faint)",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "condition name (tr-field)",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "legend",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "chip unselected",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "chip chosen on the wash",
+  "fg": "#56bcf2",
+  "bg": "#183348",
+  "ratio": 6.15
+ },
+ {
+  "name": "note ink",
+  "fg": "#ffffff",
+  "bg": "#14202e",
+  "ratio": 16.46
+ },
+ {
+  "name": "Confirm on the wash",
+  "fg": "#56bcf2",
+  "bg": "#183348",
+  "ratio": 6.15
+ },
+ {
+  "name": "ghost button",
+  "fg": "#c8d1dd",
+  "bg": "#14202e",
+  "ratio": 10.68
+ },
+ {
+  "name": "Cancel (text button)",
+  "fg": "#34a9e8",
+  "bg": "#14202e",
+  "ratio": 6.26
+ },
+ {
+  "name": "footer label",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "footer stamp",
+  "fg": "#93a0b0",
+  "bg": "#14202e",
+  "ratio": 6.19
+ },
+ {
+  "name": "leader (decoration, exempt)",
+  "fg": "#4a6280",
+  "bg": "#14202e",
+  "ratio": 2.63
+ }
+]

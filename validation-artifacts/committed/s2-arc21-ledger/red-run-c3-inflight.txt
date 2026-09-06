@@ -1,0 +1,63 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+ ❯ components/SetupStrip.corrections.test.tsx (15 tests | 1 failed) 1151ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an ok scan renders one row per bucket on the wire with the wire's words and one action each 67ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10) 21ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a bucket missing from the wire renders no row (absence of signal is not absence of a feature) 6ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > null provenance (mid-refetch), not_run, and a refusal render nothing 14ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Assert on an absent row writes exactly one assert marker to meta.siteConditionOverrides 71ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Dismiss needs a reason: the confirm stays disabled until one is chosen, a note only for other  501ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #245: the four reasons render in the DOM as radios (measurable), the chosen one carries the ✓ glyph 112ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > Cancel closes the picker without writing 137ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 62ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > undo of the last correction drops the key: meta is byte-identical to before the correction 46ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #249: every row is a ledger line plus one action cell holding exactly one button 10ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none) 10ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > #249: the open picker is exactly one extra row — Confirm last in its flex line, Cancel in the condition row's action cell 75ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > a proceeded outage with an applied assert shows the record (undo-able) and no scan rows 4ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #249 spec 34: in flight, the held scan renders with every button disabled and aria-busy; a click writes nothing 15ms
+     → block mounted on the held scan: expected null not to be null
+ ❯ components/GeneratorShell.results-head.test.tsx (7 tests | 1 failed) 9368ms
+   ✓ #249 + #247 + #246 — the results-head slot > #246/#249: the lockup names the settled scan's detected count over the keyed buckets served and jumps to the strip's block (scroll + focus by id)  989ms
+   ✓ #249 + #247 + #246 — the results-head slot > #249 (GO ruling d, a stated change from arc-19/20): zero detected still renders — 0 · No site conditions detected · of 5 checked  894ms
+   ✓ #249 + #247 + #246 — the results-head slot > #249 rule 12: the total is the keyed buckets ON THE WIRE — three served ⇒ of 3 checked  886ms
+   ✓ #249 + #247 + #246 — the results-head slot > #249 rule 10: not_run, a proceeded outage, and a refused scan render NO lockup — each state's own container is the voice  2657ms
+   ✓ #249 + #247 + #246 — the results-head slot > #247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the lockup on settle  1303ms
+   ✓ #249 + #247 + #246 — the results-head slot > #247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the lockup  1307ms
+   × #249 + #247 + #246 — the results-head slot > #249 spec 34: after Assert the block stays mounted and fully disabled while the re-generation is in flight, alongside the wait line; it re-enables on settle 1333ms
+     → block stays mounted mid re-generation: expected null not to be null
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #249 spec 34: after Assert the block stays mounted and fully disabled while the re-generation is in flight, alongside the wait line; it re-enables on settle
+AssertionError: block stays mounted mid re-generation: expected null not to be null
+ ❯ components/GeneratorShell.results-head.test.tsx:353:66
+    351|     await settle();
+    352|     // In flight: block mounted on the held scan, aria-busy, every but…
+    353|     expect(block(), "block stays mounted mid re-generation").not.toBeN…
+       |                                                                  ^
+    354|     expect(block()!.getAttribute("aria-busy")).toBe("true");
+    355|     const buttons = Array.from(block()!.querySelectorAll("button")) as…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #249 spec 34: in flight, the held scan renders with every button disabled and aria-busy; a click writes nothing
+AssertionError: block mounted on the held scan: expected null not to be null
+ ❯ components/SetupStrip.corrections.test.tsx:407:53
+    405|     const setScenario = mount(null, DEFAULT_SCENARIO, { inFlight: true…
+    406|     const b = block();
+    407|     expect(b, "block mounted on the held scan").not.toBeNull();
+       |                                                     ^
+    408|     expect(b!.getAttribute("aria-busy")).toBe("true");
+    409|     expect(b!.classList.contains("sc-inflight")).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 20 passed (22)
+   Start at  09:20:48
+   Duration  11.36s (transform 399ms, setup 0ms, collect 1.11s, tests 10.52s, environment 987ms, prepare 295ms)
+

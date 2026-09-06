@@ -1,0 +1,89 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+ RUN  v3.2.4 C:/Users/rtmak/Documents/traffic-control-tool/conestruct/site
+
+ ❯ components/GeneratorShell.results-head.test.tsx (6 tests | 5 failed) 7916ms
+   × #249 + #247 + #246 — the results-head slot > #246/#249: the lockup names the settled scan's detected count over the keyed buckets served and jumps to the strip's block (scroll + focus by id) 927ms
+     → lockup present: expected null not to be null
+   × #249 + #247 + #246 — the results-head slot > #249 (GO ruling d, a stated change from arc-19/20): zero detected still renders — 0 · No site conditions detected · of 5 checked 879ms
+     → lockup present: expected null not to be null
+   × #249 + #247 + #246 — the results-head slot > #249 rule 12: the total is the keyed buckets ON THE WIRE — three served ⇒ of 3 checked 890ms
+     → lockup present: expected null not to be null
+   ✓ #249 + #247 + #246 — the results-head slot > #249 rule 10: not_run, a proceeded outage, and a refused scan render NO lockup — each state's own container is the voice  2627ms
+   × #249 + #247 + #246 — the results-head slot > #247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the lockup on settle 1294ms
+     → lockup present: expected null not to be null
+   × #249 + #247 + #246 — the results-head slot > #247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the lockup 1296ms
+     → expected null not to be null
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #246/#249: the lockup names the settled scan's detected count over the keyed buckets served and jumps to the strip's block (scroll + focus by id)
+AssertionError: lockup present: expected null not to be null
+ ❯ expectLockup components/GeneratorShell.results-head.test.tsx:193:35
+    191| function expectLockup(count: number, total: number) {
+    192|   const l = lockup();
+    193|   expect(l, "lockup present").not.toBeNull();
+       |                                   ^
+    194|   const figure = l!.querySelector(".rh-figure")!;
+    195|   expect(figure.textContent).toBe(String(count));
+ ❯ components/GeneratorShell.results-head.test.tsx:210:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #249 (GO ruling d, a stated change from arc-19/20): zero detected still renders — 0 · No site conditions detected · of 5 checked
+AssertionError: lockup present: expected null not to be null
+ ❯ expectLockup components/GeneratorShell.results-head.test.tsx:193:35
+    191| function expectLockup(count: number, total: number) {
+    192|   const l = lockup();
+    193|   expect(l, "lockup present").not.toBeNull();
+       |                                   ^
+    194|   const figure = l!.querySelector(".rh-figure")!;
+    195|   expect(figure.textContent).toBe(String(count));
+ ❯ components/GeneratorShell.results-head.test.tsx:227:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #249 rule 12: the total is the keyed buckets ON THE WIRE — three served ⇒ of 3 checked
+AssertionError: lockup present: expected null not to be null
+ ❯ expectLockup components/GeneratorShell.results-head.test.tsx:193:35
+    191| function expectLockup(count: number, total: number) {
+    192|   const l = lockup();
+    193|   expect(l, "lockup present").not.toBeNull();
+       |                                   ^
+    194|   const figure = l!.querySelector(".rh-figure")!;
+    195|   expect(figure.textContent).toBe(String(count));
+ ❯ components/GeneratorShell.results-head.test.tsx:235:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the lockup on settle
+AssertionError: lockup present: expected null not to be null
+ ❯ expectLockup components/GeneratorShell.results-head.test.tsx:193:35
+    191| function expectLockup(count: number, total: number) {
+    192|   const l = lockup();
+    193|   expect(l, "lockup present").not.toBeNull();
+       |                                   ^
+    194|   const figure = l!.querySelector(".rh-figure")!;
+    195|   expect(figure.textContent).toBe(String(count));
+ ❯ components/GeneratorShell.results-head.test.tsx:295:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the lockup
+AssertionError: expected null not to be null
+ ❯ components/GeneratorShell.results-head.test.tsx:318:26
+    316|     await settle();
+    317|     expect(waitLine()).toBeNull();
+    318|     expect(lockup()).not.toBeNull();
+       |                          ^
+    319|     expect(slotStates()).toHaveLength(1);
+    320|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  09:16:44
+   Duration  9.78s (transform 260ms, setup 0ms, collect 598ms, tests 7.92s, environment 455ms, prepare 97ms)
+

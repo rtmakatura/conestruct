@@ -2160,12 +2160,16 @@ input[type="number"] {
   background: var(--sc-act-wash);
   color: var(--act-bright);
 }
-/* Confirm (spec 42/43): the block's one filled control. */
+/* Confirm (spec 42/43): the block's one filled control.  Ink is
+   --act-bright on the wash (6.15:1 measured) — --act on the wash
+   measured 4.97:1 in the local run, above the floor but thin; the same
+   pair the chosen chip uses. */
 .workbench .jbar-suggest .sc-picker button.confirm {
   letter-spacing: 0.14em;
   padding: 6px 11px;
   margin-left: 2px;
   background: var(--sc-act-wash);
+  color: var(--act-bright);
   transition: background-color 120ms, color 120ms;
 }
 .workbench .jbar-suggest .sc-picker button.confirm:hover,
@@ -2188,6 +2192,10 @@ input[type="number"] {
    line; the provenance role's dotted underline moves to the stamp
    alone — the inspectable value (full ISO on its title). */
 .workbench .jbar-suggest .sc-foot {
+  /* Stretched like the grid: the band root is align-items flex-start,
+     and a shrink-to-fit footer stopped its leader at half the block
+     (local run 1). */
+  align-self: stretch;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;

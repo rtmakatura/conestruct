@@ -1,0 +1,222 @@
+{
+ "text": "Site conditions — scanned▲Adjacent at-grade intersectiondetected19 found · nearest 34.1 ftDismiss✓Operator asserted adjacent interchange — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying.Undo▲Pedestrian sidewalksdetected22 found · nearest 46.6 ftDismiss▲Bike lane / cyclewaydetected35 found · nearest 71.2 ftDismiss✓School zonenone along the corridorAssertscancorridor scan · 6 sep · 15:29 utc · a correction re-generates the plan",
+ "block": {
+  "left": 170,
+  "right": 1270,
+  "top": 387,
+  "bottom": 722,
+  "h": 335,
+  "w": 1100
+ },
+ "busy": null,
+ "lockup": {
+  "figure": "3",
+  "line1": "Site conditions detected",
+  "line2": "of 5 checked",
+  "link": "correct in setup ↑",
+  "left": 170,
+  "right": 1270,
+  "top": 943,
+  "bottom": 980,
+  "h": 37,
+  "w": 1100
+ },
+ "foot": {
+  "text": "scancorridor scan · 6 sep · 15:29 utc · a correction re-generates the plan",
+  "label": "scan",
+  "leader": true,
+  "time": {
+   "text": "6 sep · 15:29 utc",
+   "title": "2026-09-06T15:29:25+00:00",
+   "datetime": "2026-09-06T15:29:25+00:00"
+  }
+ },
+ "rows": [
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 429,
+   "bottom": 475,
+   "h": 46,
+   "w": 1064,
+   "textTop": 441,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 438,
+     "bottom": 466,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "19 found · nearest 34.1 ft",
+   "leader": {
+    "display": "block",
+    "w": 515,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row sc-record sys-event confirmed site-correction",
+   "left": 176,
+   "right": 1264,
+   "top": 478,
+   "bottom": 530,
+   "h": 52,
+   "w": 1088,
+   "textTop": 486,
+   "buttons": [
+    {
+     "txt": "Undo",
+     "left": 1222,
+     "right": 1252,
+     "top": 485,
+     "bottom": 501,
+     "h": 16,
+     "w": 30,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": null,
+   "evidence": null,
+   "leader": null,
+   "rightLines": null,
+   "rightH": null,
+   "nameLines": null,
+   "disclosureNodes": 1,
+   "detected": false,
+   "absent": false,
+   "record": true,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 533,
+   "bottom": 579,
+   "h": 46,
+   "w": 1064,
+   "textTop": 545,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 542,
+     "bottom": 570,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "22 found · nearest 46.6 ft",
+   "leader": {
+    "display": "block",
+    "w": 568,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 579,
+   "bottom": 625,
+   "h": 46,
+   "w": 1064,
+   "textTop": 591,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 588,
+     "bottom": 616,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "35 found · nearest 71.2 ft",
+   "leader": {
+    "display": "block",
+    "w": 573,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 625,
+   "bottom": 671,
+   "h": 46,
+   "w": 1064,
+   "textTop": 637,
+   "buttons": [
+    {
+     "txt": "Assert",
+     "left": 1188,
+     "right": 1252,
+     "top": 634,
+     "bottom": 662,
+     "h": 28,
+     "w": 64,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "none along the corridor",
+   "evidence": "",
+   "leader": {
+    "display": "block",
+    "w": 692,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": false,
+   "absent": true,
+   "record": false,
+   "picker": false
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+ Test Files  129 passed (129)
+      Tests  944 passed (944)
+   Duration  33.29s (transform 9.01s, setup 0ms, collect 69.55s, tests 119.59s, environment 93.66s, prepare 30.14s)
+--- pytest
+........................................................................ [ 98%]
+......................                                                   [100%]
+2036 passed, 2 skipped in 32.89s
