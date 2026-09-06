@@ -41,7 +41,15 @@ describe("#249 — the scanned block as a ledger", () => {
     // The ledger line: symbol → name (wraps) → leader (absorbs slack) → right group (nowrap).
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-lead")).toMatch(/display:\s*flex/);
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-name")).toMatch(/white-space:\s*normal/);
-    expect(rule(".workbench .jbar-suggest .sc-leader")).toMatch(/flex:\s*1 1 12px/);
+    expect(rule(".workbench .jbar-suggest .sc-leader")).toMatch(/flex:\s*1 1 18px/);
+    expect(rule(".workbench .jbar-suggest .sc-leader")).toMatch(/transform:\s*translateY\(-4px\)/);
+    // Spec 5/7/8: row inset 9px, ledger gap 8px, right-group gap 10px.
+    expect(row).toMatch(/padding:\s*9px 0/);
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-lead")).toMatch(/gap:\s*8px/);
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-right")).toMatch(/gap:\s*10px/);
+    // Spec 19: the record sentence is sans prose.
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-disclosure")).toMatch(/font-family:\s*var\(--font-sans\)/);
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-disclosure")).toMatch(/text-wrap:\s*pretty/);
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-right")).toMatch(/white-space:\s*nowrap/);
   });
   it("the tier tokens ride symbol and word (▲ --dim, ✓ --pass; the none word stays body ink) in a --glyph-cell", () => {

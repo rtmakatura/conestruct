@@ -398,12 +398,13 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       tabIndex={-1}
       className="jbar-suggest live site-corrections jump-anchor outline-none mb-3"
     >
-      <div className="tr-section mb-1.5">Site conditions — scanned</div>
+      {/* Spec 2: header → 10px → rows → 10px → the footer's rule. */}
+      <div className="tr-section mb-2.5">Site conditions — scanned</div>
       {/* #249: one grid, two tracks — ledger · action; every row is a
           subgrid row.  No column heads: the ledger reads symbol → name
           → leader → verdict (arc-20 ruling e superseded, recorded). */}
       <div className="sc-grid">{rows}</div>
-      <div className="sc-foot tr-prov mt-1.5">
+      <div className="sc-foot tr-prov mt-2.5">
         <span className="sc-foot-label">scan</span>
         <span className="sc-leader" aria-hidden />
         <span className="sc-foot-text">
