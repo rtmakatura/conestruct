@@ -263,7 +263,9 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
   });
 
   it("#247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the lockup on settle", async () => {
-    served = audit(BUCKETS_DETECTED);
+    // Pre-generate the audit runs WITHOUT the scan (withSiteScan applies
+    // only once generated): its provenance is not_run.
+    served = auditWithScan({ status: "not_run", reason: "not_requested" });
     // Before Generate nothing is in the slot, even with fetches in flight (pre-generate).
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -272,6 +274,7 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     // Generate with the audit held pending: the breakdown settles (the
     // landing fires), the scan has not answered — the wait line shows,
     // in the results zone, and the lockup does not.
+    served = audit(BUCKETS_DETECTED);
     const held = gate(served);
     auditGate = held;
     const user = userEvent.setup();
@@ -284,7 +287,9 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const results = document.querySelectorAll("section.zone")[1];
     expect(results.contains(wait!)).toBe(true);
     expect(lockup()).toBeNull();
-    // The strip block is the stamped view — absent mid-flight.
+    // First generate: the only held scan is the pre-generate not_run —
+    // nothing to hold, the block is absent (spec 34 holds a scan that
+    // RAN; see the Assert case below).
     expect(document.getElementById("site-corrections")).toBeNull();
     // Release the audit: the wait line goes, the lockup arrives.
     await act(async () => {
@@ -317,5 +322,52 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     expect(waitLine()).toBeNull();
     expect(lockup()).not.toBeNull();
     expect(slotStates()).toHaveLength(1);
+  });
+
+  // Spec 34 (#249): a correction re-generates the plan; while that
+  // re-generation is in flight the block stays MOUNTED (arc-20
+  // unmounted it: the stamped view nulls mid-refetch) with every button
+  // disabled, and the wait line is up — one derivation, two surfaces.
+  it("#249 spec 34: after Assert the block stays mounted and fully disabled while the re-generation is in flight, alongside the wait line; it re-enables on settle", async () => {
+    served = audit(BUCKETS_DETECTED);
+    const user = await generate();
+    const block = () => document.getElementById("site-corrections");
+    expect(block()).not.toBeNull();
+    expect(block()!.getAttribute("aria-busy")).toBeNull();
+    // Hold the NEXT audit; the served answer after release carries the record.
+    const asserted = {
+      flag: "school_zone",
+      action: "assert",
+      status: "applied",
+      scan_detected: false,
+      disclosure: "Operator asserted school zone — the scan found none along the corridor.",
+    };
+    served = { ...audit(BUCKETS_DETECTED) };
+    (served as { sections: { site_scan: { corrections: unknown[] } } }).sections.site_scan.corrections = [asserted];
+    const held = gate(served);
+    auditGate = held;
+    const school = within(block()!).getByText("School zone").closest(".site-correction-row") as HTMLElement;
+    await user.click(within(school).getByRole("button", { name: "Assert" }));
+    await settle();
+    // In flight: block mounted on the held scan, aria-busy, every button disabled; wait line up, no lockup.
+    expect(block(), "block stays mounted mid re-generation").not.toBeNull();
+    expect(block()!.getAttribute("aria-busy")).toBe("true");
+    const buttons = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
+    expect(buttons.length).toBe(5);
+    expect(buttons.every((b) => b.disabled)).toBe(true);
+    expect(waitLine()).not.toBeNull();
+    expect(lockup()).toBeNull();
+    // Release: the record replaces the row, buttons re-enable, the lockup returns.
+    await act(async () => {
+      held.release();
+    });
+    await settle();
+    expect(block()!.getAttribute("aria-busy")).toBeNull();
+    expect(within(block()!).getByText(asserted.disclosure)).toBeTruthy();
+    const after = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
+    expect(after.some((b) => b.disabled)).toBe(false);
+    expect(within(block()!).getByRole("button", { name: "Undo" })).toBeTruthy();
+    expect(waitLine()).toBeNull();
+    expectLockup(2, 5);
   });
 });

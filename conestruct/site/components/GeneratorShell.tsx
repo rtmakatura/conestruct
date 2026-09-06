@@ -886,6 +886,14 @@ export function GeneratorShell({
   // block still offers Assert on every absent row, reached from the
   // section 03 signposts.
   const resultsHead = deriveResultsHead({ generated, genState, stripAudit });
+  // Spec 34 (#249): ONE in-flight derivation for the generated scenario
+  // — the results-head wait line and the strip block's block-wide
+  // disable are the same fact.  The held scan is the last ready
+  // answer's, the #192 stale-while-revalidate shape.
+  const scanInFlight = resultsHead?.kind === "wait";
+  const scanHeld = scanInFlight
+    ? ((stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections?.site_scan ?? null)
+    : null;
 
   const scanRefusal: { message: string; scan: SiteScanProvenance | null } | null =
     stripAudit.state === "error" && stripAudit.code === SITE_SCAN_UNAVAILABLE_CODE
@@ -1103,6 +1111,8 @@ export function GeneratorShell({
                     ? (stripAudit.data.sections?.site_scan ?? null)
                     : null
                 }
+                siteScanInFlight={scanInFlight}
+                siteScanHeld={scanHeld}
                 jurisdiction={jurisdictionBlock}
                 setJurisdictionKey={(k) =>
                   setScenario({ ...scenario, jurisdiction_key: k })

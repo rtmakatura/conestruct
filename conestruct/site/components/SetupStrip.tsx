@@ -174,9 +174,13 @@ interface SiteCorrectionsProps {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
   siteScan: SiteScanProvenance;
+  /** Spec 34 (#249): a re-generation is in flight for the scenario on
+   *  screen — every button in the block is disabled (any correction
+   *  re-generates the whole plan), the block stays mounted. */
+  inFlight: boolean;
 }
 
-function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsProps) {
+function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorrectionsProps) {
   // Which flag's dismiss reason picker is open, and its draft.
   const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
   const [reason, setReason] = useState<SiteDismissReason | null>(null);
@@ -249,7 +253,7 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
           <span className="sc-disclosure">{c.disclosure}</span>
         </div>
         <span className="sc-action">
-          <button type="button" className="ghost sc-text-btn" onClick={() => undo(flag)}>
+          <button type="button" className="ghost sc-text-btn" disabled={inFlight} onClick={() => undo(flag)}>
             Undo
           </button>
         </span>
@@ -300,15 +304,15 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
             : lead("✓", "sc-absent", label, "none along the corridor", "")}
           <span className="sc-action">
             {open ? (
-              <button type="button" className="ghost sc-text-btn" onClick={closePicker}>
+              <button type="button" className="ghost sc-text-btn" disabled={inFlight} onClick={closePicker}>
                 Cancel
               </button>
             ) : detected ? (
-              <button type="button" className="ghost" onClick={() => openPicker(flag)}>
+              <button type="button" className="ghost" disabled={inFlight} onClick={() => openPicker(flag)}>
                 Dismiss
               </button>
             ) : (
-              <button type="button" className="ghost" onClick={() => assertFlag(flag)}>
+              <button type="button" className="ghost" disabled={inFlight} onClick={() => assertFlag(flag)}>
                 Assert
               </button>
             )}
@@ -368,7 +372,7 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
               <button
                 type="button"
                 className="confirm"
-                disabled={!dismissIsComplete(reason, note)}
+                disabled={inFlight || !dismissIsComplete(reason, note)}
                 onClick={() => confirmDismiss(flag)}
               >
                 Confirm dismiss
@@ -396,7 +400,8 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
     <div
       id={SITE_CORRECTIONS_ANCHOR}
       tabIndex={-1}
-      className="jbar-suggest live site-corrections jump-anchor outline-none mb-3"
+      aria-busy={inFlight || undefined}
+      className={`jbar-suggest live site-corrections jump-anchor outline-none mb-3${inFlight ? " sc-inflight" : ""}`}
     >
       {/* Spec 2: header → 10px → rows → 10px → the footer's rule. */}
       <div className="tr-section mb-2.5">Site conditions — scanned</div>
@@ -434,6 +439,17 @@ interface Props {
    * plan as a #227 system event; every other scan state prints nothing.
    */
   siteScan?: SiteScanProvenance | null;
+  /**
+   * Spec 34 (#249): the shell's one in-flight derivation (the same
+   * predicate as the results-head wait line).  While true the
+   * correction block renders ``siteScanHeld`` — the LAST READY scan,
+   * the #192 stale-while-revalidate shape — with every button
+   * disabled, instead of unmounting; the NOT-CHECKED container above
+   * still reads only the stamped ``siteScan`` (a prior outage never
+   * re-announces as current).
+   */
+  siteScanInFlight?: boolean;
+  siteScanHeld?: SiteScanProvenance | null;
   // Surface B (#152): a late jurisdiction / street-class change is a
   // real estimator move, so the post-generate strip edits them inline —
   // the Speed-edit treatment.  The evaluated block (when loaded) names
@@ -449,6 +465,8 @@ export function SetupStrip({
   setScenario,
   onReopen,
   siteScan = null,
+  siteScanInFlight = false,
+  siteScanHeld = null,
   jurisdiction = null,
   setJurisdictionKey,
   setStreetClass,
@@ -552,9 +570,22 @@ export function SetupStrip({
           </div>
         </div>
       )}
-      {siteScan && (
-        <SiteCorrections scenario={scenario} setScenario={setScenario} siteScan={siteScan} />
-      )}
+      {(() => {
+        // Spec 34: the block's scan is the stamped view when settled,
+        // the held (last ready) scan while a re-generation is in
+        // flight; nothing on a first generate or an error.
+        const blockScan = siteScan ?? (siteScanInFlight ? siteScanHeld : null);
+        return (
+          blockScan && (
+            <SiteCorrections
+              scenario={scenario}
+              setScenario={setScenario}
+              siteScan={blockScan}
+              inFlight={siteScanInFlight}
+            />
+          )
+        );
+      })()}
     <div className="setup-strip">
       <Structural
         k="Scenario"

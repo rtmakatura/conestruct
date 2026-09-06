@@ -36,10 +36,21 @@ function ok(over: Partial<SiteScanProvenance> = {}): SiteScanProvenance {
   };
 }
 
-function mount(siteScan: SiteScanProvenance | null, scenario: Scenario = DEFAULT_SCENARIO) {
+function mount(
+  siteScan: SiteScanProvenance | null,
+  scenario: Scenario = DEFAULT_SCENARIO,
+  held: { inFlight: boolean; scan: SiteScanProvenance | null } = { inFlight: false, scan: null },
+) {
   const setScenario = vi.fn();
   render(
-    <SetupStrip scenario={scenario} setScenario={setScenario} onReopen={vi.fn()} siteScan={siteScan} />,
+    <SetupStrip
+      scenario={scenario}
+      setScenario={setScenario}
+      onReopen={vi.fn()}
+      siteScan={siteScan}
+      siteScanInFlight={held.inFlight}
+      siteScanHeld={held.scan}
+    />,
   );
   return setScenario;
 }
@@ -377,5 +388,47 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(within(b).getByText(asserted.disclosure)).toBeTruthy();
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(0);
     expect(document.querySelector(".site-not-checked")).not.toBeNull();
+  });
+
+  // Spec 34 (#249) — in flight: the block stays mounted on the HELD scan
+  // with every button disabled; nothing writes.  Without a held scan
+  // (first generate) it still renders nothing.
+  it("#249 spec 34: in flight, the held scan renders with every button disabled and aria-busy; a click writes nothing", async () => {
+    const user = userEvent.setup();
+    const asserted = {
+      flag: "school_zone",
+      action: "assert" as const,
+      status: "applied" as const,
+      scan_detected: false,
+      disclosure: "Operator asserted school zone — the scan found none along the corridor.",
+    };
+    const setScenario = mount(null, DEFAULT_SCENARIO, { inFlight: true, scan: ok({ corrections: [asserted] }) });
+    const b = block();
+    expect(b, "block mounted on the held scan").not.toBeNull();
+    expect(b!.getAttribute("aria-busy")).toBe("true");
+    expect(b!.classList.contains("sc-inflight")).toBe(true);
+    const buttons = Array.from(b!.querySelectorAll("button")) as HTMLButtonElement[];
+    expect(buttons.map((x) => x.textContent)).toEqual(["Dismiss", "Assert", "Dismiss", "Assert", "Undo"]);
+    expect(buttons.every((x) => x.disabled)).toBe(true);
+    await user.click(within(b!).getAllByRole("button", { name: "Assert" })[0]);
+    await user.click(within(b!).getByRole("button", { name: "Undo" }));
+    expect(setScenario).not.toHaveBeenCalled();
+    // The NOT-CHECKED container reads only the stamped view: a held
+    // outage never re-announces as current.
+    cleanup();
+    mount(null, DEFAULT_SCENARIO, {
+      inFlight: true,
+      scan: { status: "unavailable", proceeded_anyway: true, disclosure: "SITE CONDITIONS NOT CHECKED — x", corrections: [asserted] },
+    });
+    expect(document.querySelector(".site-not-checked")).toBeNull();
+    expect(block()).not.toBeNull();
+    cleanup();
+    // No held scan (first generate): nothing.
+    mount(null, DEFAULT_SCENARIO, { inFlight: true, scan: null });
+    expect(block()).toBeNull();
+    // Settled (not in flight): the held scan is ignored, the stamped view rules.
+    cleanup();
+    mount(null, DEFAULT_SCENARIO, { inFlight: false, scan: ok() });
+    expect(block()).toBeNull();
   });
 });
