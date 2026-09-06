@@ -18,6 +18,7 @@ import type {
   SiteConditionOverride,
   SiteDismissReason,
 } from "./types";
+import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
 
 /** The dismiss vocabulary (backend enum; ``other`` needs a note). */
 /** #246 — the DOM id of the strip's "Site conditions — scanned" block:
@@ -130,4 +131,40 @@ export function assertMarker(flag: ScannedSiteFlag, now: Date = new Date()): Sit
 /** ISO-8601 UTC to the second (the backend field caps at 32 chars). */
 function stamp(d: Date): string {
   return d.toISOString().replace(/\.\d{3}Z$/, "+00:00");
+}
+
+// ---------------------------------------------------------------------------
+// #249 (s2-arc21) — the ledger's two pure helpers.
+// ---------------------------------------------------------------------------
+
+/** Spec 46: only a DETECTED row may enter the dismiss-reason state.  The
+ *  guard reads the served bucket for the flag (the backend's
+ *  DETECTION_TO_FLAG mirror decides which bucket names it); a missing
+ *  bucket, an absent row, or a null scan all refuse.  Nothing here
+ *  decides a verdict — it only gates a picker. */
+export function dismissAllowed(
+  buckets: Record<string, ScanBucketWire> | null | undefined,
+  flag: ScannedSiteFlag,
+): boolean {
+  if (!buckets) return false;
+  const bucketName = SCAN_BUCKET_TO_FLAG.find(([, f]) => f === flag)?.[0];
+  return bucketName !== undefined && buckets[bucketName]?.detected === true;
+}
+
+const MONTHS_LOWER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+/** GO ruling e (a′): the footer stamp ``3 sep · 23:14 utc`` from the
+ *  wire's ISO-8601 ``measured_at`` (src/api/site_scan.py:
+ *  ``datetime.now(UTC).isoformat(timespec="seconds")``) by PURE SLICING
+ *  — no ``Date``, no clock, no arithmetic (rule 3), so it is honest
+ *  under ``memo_hit`` and a stale tab (#242) by construction.  Anything
+ *  that is not a UTC ISO stamp (another offset, a bare date, garbage)
+ *  prints VERBATIM: no conversion is ever attempted (rule 10). */
+export function fmtScanStamp(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?(?:Z|\+00:00)$/.exec(iso);
+  if (!m) return iso;
+  const month = MONTHS_LOWER[Number(m[2]) - 1];
+  if (!month) return iso;
+  // Number(...) only drops the day's leading zero ("03" → "3").
+  return `${Number(m[3])} ${month} · ${m[4]}:${m[5]} utc`;
 }

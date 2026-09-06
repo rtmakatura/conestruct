@@ -64,8 +64,27 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(within(school as HTMLElement).getByText("none along the corridor")).toBeTruthy();
     expect(school.querySelector(".sc-evidence")?.textContent).toBe("");
     expect(within(school as HTMLElement).getByRole("button", { name: "Assert" })).toBeTruthy();
-    expect(b!.textContent).toContain("measured 2026-09-04T12:00:00+00:00");
-    expect(b!.textContent).toContain("a correction re-generates the plan");
+    // #249 footer (GO ruling b + e/a′): the scan mode from the wire, the
+    // stamp sliced from the ISO, the full ISO on the <time>; no radius.
+    const foot = b!.querySelector(".sc-foot") as HTMLElement;
+    expect(foot.textContent).toContain("corridor scan · 4 sep · 12:00 utc · a correction re-generates the plan");
+    const time = foot.querySelector("time") as HTMLTimeElement;
+    expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00+00:00");
+    expect(time.getAttribute("datetime")).toBe("2026-09-04T12:00:00+00:00");
+    expect(time.textContent).toBe("4 sep · 12:00 utc");
+    expect(b!.textContent).not.toMatch(/within \d+ ft|in scan|ft corridor/);
+  });
+
+  it("#249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10)", () => {
+    mount(ok({ measured_at: "2026-09-04T12:00:00-06:00" }));
+    const time = block()!.querySelector(".sc-foot time") as HTMLTimeElement;
+    expect(time.textContent).toBe("2026-09-04T12:00:00-06:00");
+    expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00-06:00");
+    cleanup();
+    mount(ok({ measured_at: null, mode: null }));
+    const foot = block()!.querySelector(".sc-foot") as HTMLElement;
+    expect(foot.querySelector("time")).toBeNull();
+    expect(foot.textContent).toContain("site scan · a correction re-generates the plan");
   });
 
   it("a bucket missing from the wire renders no row (absence of signal is not absence of a feature)", () => {
@@ -209,6 +228,13 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const aRec = within(b).getByText(asserted.disclosure).closest(".sys-event") as HTMLElement;
     expect(aRec.classList.contains("confirmed")).toBe(true);
     expect(aRec.querySelector(".sys-glyph")?.textContent).toBe("✓");
+    // #249 spec 25/50: a record row carries no result word, leader, or
+    // evidence — the sentence is the whole readout.
+    for (const rec of [dRec, aRec]) {
+      expect(rec.querySelector(".sc-result")).toBeNull();
+      expect(rec.querySelector(".sc-leader")).toBeNull();
+      expect(rec.querySelector(".sc-evidence")).toBeNull();
+    }
     // The three uncorrected rows keep their actions.
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(3);
     // Undo the dismiss: the marker for that flag goes, the other stays.
@@ -246,26 +272,34 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(JSON.stringify(next.meta)).toBe(JSON.stringify(DEFAULT_SCENARIO.meta));
   });
 
-  // #248 — structure the grid must keep (happy-dom has no stylesheet, so
-  // these pin the DOM the CSS grid lays out; rects are the browser leg).
-  it("#248: every row has the four cells and exactly one button, in the action cell", () => {
+  // #249 — structure the ledger must keep (happy-dom has no stylesheet,
+  // so these pin the DOM the CSS grid lays out; rects are the browser
+  // leg).  Row = ledger line (symbol · name · leader · right group) +
+  // action cell; exactly one button per row, in the action cell.
+  it("#249: every row is a ledger line plus one action cell holding exactly one button", () => {
     mount(ok());
-    const rows = block()!.querySelectorAll(".sc-row:not(.sc-head)");
+    const rows = block()!.querySelectorAll(".sc-row");
     expect(rows).toHaveLength(5);
     for (const row of Array.from(rows)) {
-      expect(row.querySelectorAll(":scope > .sc-cond")).toHaveLength(1);
-      expect(row.querySelectorAll(":scope > .sc-result")).toHaveLength(1);
-      expect(row.querySelectorAll(":scope > .sc-evidence")).toHaveLength(1);
+      expect(row.querySelectorAll(":scope > .sc-lead")).toHaveLength(1);
       expect(row.querySelectorAll(":scope > .sc-action")).toHaveLength(1);
       expect(row.querySelectorAll("button")).toHaveLength(1);
       expect(row.querySelector(".sc-action button")).not.toBeNull();
-      // Rule 13: the Result glyph rides beside a word.
-      const res = row.querySelector(".sc-result")!;
-      expect(res.querySelector("[aria-hidden]")?.textContent).toMatch(/^[▲✓]$/);
-      expect(res.textContent!.replace(/[▲✓]/, "").trim().length).toBeGreaterThan(0);
+      // Ledger order: symbol → name → leader → right group (spec K77).
+      const kids = Array.from(row.querySelector(":scope > .sc-lead")!.children).map((k) => k.className.split(" ")[0]);
+      expect(kids).toEqual(["sc-glyph", "sc-name", "sc-leader", "sc-right"]);
+      // The right group is the result word then the evidence (rule 13:
+      // the symbol always rides beside a word).
+      const right = row.querySelector(".sc-right")!;
+      expect(Array.from(right.children).map((k) => k.className.split(" ")[0])).toEqual(["sc-result", "sc-evidence"]);
+      expect(row.querySelector(".sc-glyph")?.textContent).toMatch(/^[▲✓]$/);
+      expect(row.querySelector(".sc-glyph")?.getAttribute("aria-hidden")).toBe("true");
+      expect(row.querySelector(".sc-result")!.textContent!.trim().length).toBeGreaterThan(0);
     }
-    const heads = Array.from(block()!.querySelectorAll(".sc-head .tr-step")).map((h) => h.textContent);
-    expect(heads).toEqual(["Condition", "Result", "Evidence"]);
+    // No column heads on a ledger (arc-20 ruling e superseded).
+    expect(block()!.querySelector(".sc-head")).toBeNull();
+    // Rule 12: no literal count of conditions in the block's copy.
+    expect(block()!.textContent).not.toMatch(/of (five|5) checked/i);
   });
 
   it("#248: details[0] is not printed in the block; the glyphs follow the tiers (▲ detected, ✓ none)", () => {
@@ -281,22 +315,30 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(school.querySelector(".sc-glyph")?.classList.contains("sc-absent")).toBe(true);
   });
 
-  it("#248: the open picker is exactly one extra row — Confirm in its action cell, Cancel in the condition row's", async () => {
+  it("#249: the open picker is exactly one extra row — Confirm last in its flex line, Cancel in the condition row's action cell", async () => {
     const user = userEvent.setup();
     mount(ok());
-    const before = block()!.querySelectorAll(".sc-row:not(.sc-head)").length;
+    const before = block()!.querySelectorAll(".sc-row").length;
     const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row") as HTMLElement;
     await user.click(within(sidewalk).getByRole("button", { name: "Dismiss" }));
-    const rows = block()!.querySelectorAll(".sc-row:not(.sc-head)");
+    const rows = block()!.querySelectorAll(".sc-row");
     expect(rows).toHaveLength(before + 1);
     const picker = sidewalk.nextElementSibling as HTMLElement;
     expect(picker.classList.contains("site-correction-picker")).toBe(true);
     expect(picker.classList.contains("sc-sub")).toBe(true);
+    // Spec 38/42: legend + chips, (note), Confirm — one flex line, no
+    // action cell on the sub-row (supersedes arc-20 ruling f).
+    expect(picker.querySelector(".sc-action")).toBeNull();
     expect(picker.querySelectorAll("button")).toHaveLength(1);
-    expect(picker.querySelector(".sc-action button")?.textContent).toBe("Confirm dismiss");
+    const line = picker.querySelector(".sc-picker") as HTMLElement;
+    expect(line.lastElementChild?.tagName).toBe("BUTTON");
+    expect(line.lastElementChild?.textContent).toBe("Confirm dismiss");
+    expect(line.firstElementChild?.classList.contains("site-correction-reasons")).toBe(true);
     expect(within(sidewalk).getByRole("button", { name: "Cancel" })).toBeTruthy();
     expect(within(sidewalk).queryByRole("button", { name: "Dismiss" })).toBeNull();
-    // The record row keeps the sentence as ONE text node in its Evidence cell (#198).
+    expect(sidewalk.querySelector(".sc-action button")?.textContent).toBe("Cancel");
+    // The record row keeps the sentence as ONE text node after the inline
+    // symbol (#198 / spec 48–49); Undo alone in the action cell.
     cleanup();
     const disclosure = "Operator asserted school zone — the scan found none along the corridor.";
     mount(
@@ -307,10 +349,13 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       }),
     );
     const cell = within(block()!).getByText(disclosure);
-    expect(cell.classList.contains("sc-evidence")).toBe(true);
+    expect(cell.classList.contains("sc-disclosure")).toBe(true);
     expect(cell.childNodes).toHaveLength(1);
+    const lead = cell.parentElement as HTMLElement;
+    expect(lead.classList.contains("sc-lead")).toBe(true);
+    expect(Array.from(lead.children).map((k) => k.className)).toEqual(["sys-glyph", "sc-disclosure"]);
     expect(cell.closest(".sc-row")!.querySelector(".sc-action button")?.textContent).toBe("Undo");
-    expect(cell.closest(".sc-row")!.querySelector(".sc-result")?.textContent).toBe("✓asserted");
+    expect(cell.closest(".sc-row")!.querySelector(".sc-result")).toBeNull();
   });
 
   it("a proceeded outage with an applied assert shows the record (undo-able) and no scan rows", () => {

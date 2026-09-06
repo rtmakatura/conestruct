@@ -1866,61 +1866,66 @@ input[type="number"] {
   box-shadow: 0 0 0 2px var(--act-glow);
 }
 
-/* ─── #248 the scanned block's grid (s2-arc20) ───
-   Four tracks — Condition · Result · Evidence · Action — on the block;
-   every row is a SUBGRID row so the action column shares one edge in
-   every state (detected / absent / picker-open / record).  Mechanics
-   from .sched-window-row (baseline-aligned grid rows: "same rows, same
-   widths, only glyph and value change" — PDF p.2/p.4), heads / gap /
-   numerals from .dva-grid.  Row inset 6px 0 (hairline) with dashed
-   --rule-soft separators (the gen2 .checkline idiom).  Block-scoped:
-   the band's .sugg-row / .sys-event / button rules above are untouched.
-   Specificity deliberately beats `.workbench .jbar-suggest .sys-event`
-   (the record row reuses that container's classes for its rule color).
-   Subgrid is the alignment mechanism (CHOSEN); the per-row template
-   before it is the fallback where subgrid is unsupported.
-   Evidence is minmax(0, 1fr), not auto (a recorded deviation from GO
-   ruling a): the record row's disclosure sentence lives in this cell,
-   and an auto track sized to that sentence starved the 1fr Condition
-   track to zero (measured locally, record-1440 first pass). */
+/* ─── #249 the scanned block as a ledger (s2-arc21, variation 4) ───
+   Two tracks — ledger · action — on the block; every row is a SUBGRID
+   row so the action column shares one right edge in every state
+   (detected / absent / picker-open / record).  Column 1 is a flex line:
+   state symbol → condition name → an elastic dotted leader → the right
+   group (result word + evidence).  The leader absorbs the slack on one
+   line, so column widths track content instead of a fixed Evidence
+   track (the #248 defect the issue names).  No rules between rows (spec
+   K75).  Block-scoped: the band's .sugg-row / .sys-event / .sugg-name
+   rules above are byte-identical (the arc-20 pin); every spec rule that
+   would tempt them is absorbed under .sc-grid / .sc-picker / .sc-record
+   / .sc-foot.  Specificity deliberately beats
+   `.workbench .jbar-suggest .sys-event` (the record row reuses that
+   container's classes for its rule color) and the band's button rules.
+   Three scoped values (GO ruling a): --sc-leader is DECORATION, exempt
+   from the 4.5:1 floor (2.63:1 on --canvas, chosen over the spec's
+   #3c5069 at 1.99 for sun-washed tablets, K80); --sc-act-wash is the
+   one wash the spec's three (.12/.14/.16) collapse to, CHOSEN;
+   --sc-disabled is inactive-control ink (WCAG 1.4.3 exempts it; the
+   disabled attribute is the second channel).  The detected hue is
+   --dim (7.00:1), the tier set's mark, not the spec's off-palette
+   amber.  container-type makes the ≤420px query answer to the block's
+   OWN width (spec 66) — the first @container in this stylesheet. */
+.workbench .site-corrections {
+  container-type: inline-size;
+  --sc-leader: #4a6280;
+  --sc-act-wash: rgba(52, 169, 232, 0.14);
+  --sc-disabled: rgba(147, 160, 176, 0.35);
+}
 .workbench .jbar-suggest .sc-grid {
   align-self: stretch;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 92px;
   column-gap: 14px;
 }
 .workbench .jbar-suggest .sc-grid .sc-row {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 92px;
   grid-template-columns: subgrid;
   align-items: baseline;
   padding: 6px 0;
   gap: 0;
 }
-.workbench .jbar-suggest .sc-grid .sc-row + .sc-row {
-  border-top: 1px dashed var(--rule-soft);
-}
-.workbench .jbar-suggest .sc-grid .sc-head {
-  padding: 0 0 4px;
-}
-.workbench .jbar-suggest .sc-grid .sc-result {
-  display: inline-flex;
+.workbench .jbar-suggest .sc-grid .sc-lead {
+  display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: 6px;
+  min-width: 0;
   white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--ink-on-dark);
 }
-/* Result glyphs mirror section 03's tiers: ▲ detected = the "changed
-   this plan" delta (--dim, 7.00:1 on --canvas); ✓ none = checked &
-   passed (--pass, 8.94:1).  Every glyph rides beside its word. */
+/* Symbols mirror section 03's tiers: ▲ detected = the "changed this
+   plan" delta (--dim, 7.00:1 on --canvas); ✓ none = checked & passed
+   (--pass, 8.94:1).  The symbol leads the row (spec K77). */
 .workbench .jbar-suggest .sc-grid .sc-glyph {
   width: var(--glyph-cell);
   flex-shrink: 0;
   text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 .workbench .jbar-suggest .sc-grid .sc-glyph.sc-detected {
   color: var(--dim);
@@ -1928,6 +1933,39 @@ input[type="number"] {
 .workbench .jbar-suggest .sc-grid .sc-glyph.sc-absent {
   color: var(--pass);
 }
+/* Names wrap, never truncate (spec 7b rejected under rule 10). */
+.workbench .jbar-suggest .sc-grid .sc-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: normal;
+}
+/* The leader: an empty flex item whose bottom border sits on the text
+   baseline (an empty box's baseline is its bottom edge). */
+.workbench .jbar-suggest .sc-leader {
+  flex: 1 1 12px;
+  min-width: 12px;
+  height: 0;
+  border-bottom: 1px dotted var(--sc-leader);
+  align-self: baseline;
+}
+.workbench .jbar-suggest .sc-grid .sc-right {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.workbench .jbar-suggest .sc-grid .sc-result {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest .sc-grid .sc-result.sc-detected {
+  color: var(--dim);
+}
+/* The none word stays body ink (spec 24 / K78, 10.68:1): green lives in
+   the 12px glyph only, so five clear rows are not five green claims. */
 .workbench .jbar-suggest .sc-grid .sc-evidence {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -1935,32 +1973,78 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
   min-width: 0;
 }
-.workbench .jbar-suggest .sc-grid .sc-row:not(.sc-record) .sc-evidence {
-  white-space: nowrap;
+.workbench .jbar-suggest .sc-grid .sc-evidence:empty {
+  display: none;
 }
 .workbench .jbar-suggest .sc-grid .sc-action {
   justify-self: end;
   white-space: nowrap;
 }
+/* Row buttons (spec 28–35): one per row, fit-to-content, never wrapping;
+   outlined only — the one filled control in the block is Confirm.  The
+   DISMISS border keeps --rule (K82: the amber trace dropped). */
+.workbench .jbar-suggest .sc-grid button.ghost {
+  letter-spacing: 0.14em;
+  padding: 5px 9px;
+  min-height: 26px;
+  border-color: var(--rule);
+  color: var(--ink-on-dark);
+  transition: border-color 120ms, color 120ms;
+}
+.workbench .jbar-suggest .sc-grid button.ghost:hover {
+  border-color: var(--act);
+  color: var(--act-bright);
+}
+.workbench .jbar-suggest .sc-grid button.ghost:active {
+  background: var(--sc-act-wash);
+}
+.workbench .jbar-suggest .sc-grid button:focus-visible,
+.workbench .jbar-suggest .sc-picker button:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+/* Cancel and Undo are borderless text buttons in the action column
+   (spec 44 / 51) — the dotted underline is the shared signpost idiom. */
+.workbench .jbar-suggest .sc-grid button.sc-text-btn {
+  border: 0;
+  padding: 5px 0;
+  min-height: 0;
+  color: var(--act);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.workbench .jbar-suggest .sc-grid button.sc-text-btn:hover {
+  color: var(--act-bright);
+  text-decoration-style: solid;
+  border: 0;
+}
 /* The record row IS the #227 container (left rule by state via the
-   .sys-event variants above); the sentence is one text node in the
-   Evidence cell and may wrap.  Overrides that container's flex-column
-   layout inside .jbar-suggest without touching that rule. */
+   .sys-event variants above); the sentence is the whole readout, one
+   text node, and wraps freely (spec 49–53).  Overrides that container's
+   flex-column layout inside .jbar-suggest without touching that rule. */
 .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 92px;
   grid-template-columns: subgrid;
   gap: 0;
+  align-items: start;
   /* The container's 3px rule + 9px inset on the left and 1px + 11px on
      the right sit OUTSIDE the grid's tracks (negative margin), so the
-     record's label and its Undo share the other rows' edges. */
+     record's sentence and its Undo share the other rows' edges. */
   padding: 6px 11px 6px 9px;
   margin: 3px -12px;
 }
+.workbench .jbar-suggest .sc-grid .sc-record .sc-lead {
+  display: block;
+  white-space: normal;
+}
 .workbench .jbar-suggest .sc-grid .sc-record .sys-glyph {
-  width: var(--glyph-cell);
+  display: inline;
+  width: auto;
   font-size: 12px;
   line-height: inherit;
+  margin-right: 6px;
 }
 .workbench .jbar-suggest .sc-grid .sc-disclosure {
   color: var(--ink-on-dark);
@@ -1969,62 +2053,143 @@ input[type="number"] {
   letter-spacing: 0.02em;
   white-space: normal;
 }
-/* Picker-open: exactly one extra row.  Legend + chips (+ the note) span
-   the three fact columns; Confirm holds the action cell; Cancel moved
-   to the condition row's action slot. */
+.workbench .jbar-suggest .sc-grid .sc-record button.sc-text-btn {
+  padding: 0;
+}
+/* Picker-open: exactly one extra row spanning both tracks (spec 37/38):
+   legend, chips (+ the note), Confirm last in the same flex line.
+   Cancel moved to the condition row's action slot (spec 44). */
+.workbench .jbar-suggest .sc-grid .sc-sub {
+  padding: 0;
+}
 .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
-  grid-column: 1 / 4;
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   min-width: 0;
+  border-top: 1px dashed var(--rule);
+  margin-top: 1px;
+  padding: 9px 0 11px;
 }
-.workbench .jbar-suggest .sc-grid .sc-sub {
-  border-top-style: dotted;
+.workbench .jbar-suggest .sc-picker .site-correction-reasons {
+  flex: 0 1 auto;
 }
-/* ≤480px — CHOSEN, not designed (the PDF drew no phone layout, p.5;
-   #153 open): two tracks.  The three facts stack in column 1; the
-   action spans them in column 2 so it never wraps under prose. */
-@media (max-width: 480px) {
+/* The legend keeps #245's accessible name in full; visually it rides
+   the step-index register (spec 39's bare "REASON" is a deviation,
+   recorded: the name is load-bearing). */
+.workbench .jbar-suggest .sc-picker .site-correction-reasons legend {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark-faint);
+  margin-right: 2px;
+}
+.workbench .jbar-suggest .sc-picker .site-correction-reasons legend .sugg-name {
+  color: var(--ink-on-dark);
+}
+/* Chips (spec 40/41): sentence case, outlined; chosen = --act border +
+   the wash + --act-bright ink (6.15:1 on the composited wash) + ✓ +
+   the native :checked state.  No aria-pressed: a radio is a radio. */
+.workbench .jbar-suggest .sc-picker .reason-chip {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10px;
+  padding: 5px 9px;
+  border-color: var(--rule);
+  color: var(--ink-on-dark);
+  transition: border-color 120ms, color 120ms;
+}
+.workbench .jbar-suggest .sc-picker .reason-chip:hover {
+  border-color: var(--act);
+  color: var(--ink-on-dark);
+}
+.workbench .jbar-suggest .sc-picker .reason-chip.chosen {
+  border-color: var(--act);
+  background: var(--sc-act-wash);
+  color: var(--act-bright);
+}
+/* Confirm (spec 42/43): the block's one filled control. */
+.workbench .jbar-suggest .sc-picker button.confirm {
+  letter-spacing: 0.14em;
+  padding: 6px 11px;
+  margin-left: 2px;
+  background: var(--sc-act-wash);
+  transition: background-color 120ms, color 120ms;
+}
+.workbench .jbar-suggest .sc-picker button.confirm:hover,
+.workbench .jbar-suggest .sc-picker button.confirm:focus-visible {
+  background: var(--act);
+  color: var(--on-act);
+}
+/* Disabled (spec 34/43) — last so it wins every hover above. */
+.workbench .jbar-suggest .sc-grid button:disabled,
+.workbench .jbar-suggest .sc-grid button:disabled:hover,
+.workbench .jbar-suggest .sc-picker button:disabled,
+.workbench .jbar-suggest .sc-picker button:disabled:hover {
+  color: var(--sc-disabled);
+  border-color: var(--sc-disabled);
+  background: transparent;
+  cursor: default;
+  text-decoration-style: dotted;
+}
+/* Footer (spec 61–65): label · leader · sentence, the ledger's last
+   line; the provenance role's dotted underline moves to the stamp
+   alone — the inspectable value (full ISO on its title). */
+.workbench .jbar-suggest .sc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 9px;
+  text-decoration: none;
+}
+.workbench .jbar-suggest .sc-foot .sc-foot-label {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.workbench .jbar-suggest .sc-foot .sc-time {
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+/* ≤420px of the block's own width (spec 66–73): the action column
+   narrows to 88px and never stacks; the ledger line wraps — symbol +
+   name on line 1, the right group on line 2 — and the leader (slack
+   absorber) goes; nothing is hidden or abbreviated. */
+@container (max-width: 420px) {
   .workbench .jbar-suggest .sc-grid,
   .workbench .jbar-suggest .sc-grid .sc-row,
   .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
-    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-columns: minmax(0, 1fr) 88px;
   }
   .workbench .jbar-suggest .sc-grid .sc-row,
   .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
     grid-template-columns: subgrid;
-    row-gap: 2px;
   }
-  .workbench .jbar-suggest .sc-grid .sc-head {
-    display: none;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-cond {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-result {
-    grid-column: 1;
-    grid-row: 2;
+  .workbench .jbar-suggest .sc-grid .sc-lead {
+    flex-wrap: wrap;
+    row-gap: 3px;
     white-space: normal;
   }
-  .workbench .jbar-suggest .sc-grid .sc-evidence {
-    grid-column: 1;
-    grid-row: 3;
-    /* An empty Evidence cell keeps its line so detected and absent rows
-       stand the same height (PDF p.4: nothing reflows); it prints
-       nothing — absence renders as absence. */
-    min-height: 1lh;
+  .workbench .jbar-suggest .sc-grid .sc-name {
+    flex: 1 1 auto;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-leader {
+    display: none;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-right {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    white-space: normal;
   }
   .workbench .jbar-suggest .sc-grid .sc-action {
-    grid-column: 2;
-    grid-row: 1 / span 3;
     align-self: start;
   }
-  .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
-    grid-column: 1;
-    grid-row: 1 / span 3;
+  .workbench .jbar-suggest .sc-picker .reason-chip {
+    padding: 4px 7px;
   }
 }
 

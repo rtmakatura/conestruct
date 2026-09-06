@@ -26,8 +26,10 @@ import {
   SCANNED_FLAG_LABELS,
   SITE_CORRECTIONS_ANCHOR,
   assertMarker,
+  dismissAllowed,
   dismissIsComplete,
   dismissMarker,
+  fmtScanStamp,
   isScannedFlag,
   withSiteCorrection,
   withoutSiteCorrection,
@@ -162,9 +164,10 @@ function fmtWorkDate(iso: string): string {
 // backend's disclosure sentence as ONE text node + Undo); undo removes
 // the marker (#179 shape) and re-generates the same way.  Section 03
 // discloses, never writes.
-// #248 (s2-arc20): the block is a four-column grid — Condition · Result
-// · Evidence · Action — one row per condition, the open picker exactly
-// one extra row, the record a row in the same tracks.
+// #248 (s2-arc20) made the block a grid; #249 (s2-arc21) re-laid it as
+// the variation-4 ledger — two tracks (ledger · action), one row per
+// condition, the open picker exactly one extra row, the record a row in
+// the same tracks, a footer that reads as the ledger's last line.
 // ---------------------------------------------------------------------------
 
 interface SiteCorrectionsProps {
@@ -201,39 +204,52 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
   const assertFlag = (flag: ScannedSiteFlag) =>
     write(withSiteCorrection(scenario.meta, assertMarker(flag)));
 
-  // #248 — every row is one grid row (subgrid on the block's four
-  // tracks: Condition · Result · Evidence · Action) so the action
-  // column shares one edge across states.  Result = glyph + word
-  // (rule 13) mirroring section 03's tier glyphs: ▲ detected (the
-  // "changed this plan" tier), ✓ none along the corridor (checked &
-  // passed); words trace to the audit PDF's Result column
-  // (src/rendering/audit_blocks.py _site_scan_ok_blocks).  The issue's
-  // ●/○ are not in the reconciled vocabulary (◌ means unevaluated).
-  const result = (glyph: string, tone: string, word: string, glyphClass = "sc-glyph") => (
-    <span className="sc-result">
-      <span className={`${glyphClass} ${tone}`.trim()} aria-hidden>
+  // #249 (s2-arc21) — the variation-4 ledger.  One grid, two tracks
+  // (ledger · action).  Column 1 is a flex line — the state symbol, the
+  // condition name, an elastic dotted leader, then the right group
+  // (result word + evidence) — so the verdict column is scannable down
+  // the left edge (spec K77) and the action column shares one right
+  // edge in every state.  Glyph + word in every state (rule 13); the
+  // words trace to the audit PDF's Result column
+  // (src/rendering/audit_blocks.py _site_scan_ok_blocks).  The detected
+  // hue is --dim — the tier set's "changed this plan" mark, already ▲
+  // in section 03 (GO ruling a; the spec's #e0a63c is off-palette); the
+  // none word is body ink, not green (spec 24 / K78).  The issue's ●/○
+  // are not in the reconciled vocabulary (◌ means unevaluated).
+  const lead = (glyph: string, tone: string, label: string, word: string, evidence: string) => (
+    <div className="sc-lead">
+      <span className={`sc-glyph ${tone}`} aria-hidden>
         {glyph}
       </span>
-      {word}
-    </span>
+      <span className="sc-name tr-field">{label}</span>
+      <span className="sc-leader" aria-hidden />
+      <span className="sc-right">
+        <span className={`sc-result ${tone}`}>{word}</span>
+        <span className="sc-evidence">{evidence}</span>
+      </span>
+    </div>
   );
 
-  // The #227 resolved record as a grid row: the row IS the system-event
-  // container (state changes reuse the container they replace, PDF
-  // p.4) — left rule + glyph by state; the backend's disclosure
-  // sentence stays ONE text node (#198) in the Evidence cell.
+  // The #227 resolved record as a ledger row: the row IS the system-
+  // event container (state changes reuse the container they replace,
+  // PDF p.4) — left rule + glyph by state (the vocabulary's colors, not
+  // the spec's flat gray: spec 48 deviation, recorded); the backend's
+  // disclosure sentence is the whole readout (spec 25/50 — no result
+  // word, no evidence) and stays ONE text node (#198).
   const record = (c: SiteScanCorrection) => {
     const flag = c.flag as ScannedSiteFlag;
     const variant = c.status === "moot" ? "warn" : c.action === "dismiss" ? "dismissed" : "confirmed";
     const glyph = c.status === "moot" ? "⚠" : c.action === "dismiss" ? "×" : "✓";
-    const word = c.status === "moot" ? "moot" : c.action === "dismiss" ? "dismissed" : "asserted";
     return (
       <div key={`corr-${flag}`} className={`sc-row sc-record sys-event ${variant} site-correction`}>
-        <span className="sc-cond tr-field">{SCANNED_FLAG_LABELS[flag]}</span>
-        {result(glyph, "", word, "sys-glyph")}
-        <span className="sc-evidence sc-disclosure">{c.disclosure}</span>
+        <div className="sc-lead">
+          <span className="sys-glyph" aria-hidden>
+            {glyph}
+          </span>
+          <span className="sc-disclosure">{c.disclosure}</span>
+        </div>
         <span className="sc-action">
-          <button type="button" className="ghost" onClick={() => undo(flag)}>
+          <button type="button" className="ghost sc-text-btn" onClick={() => undo(flag)}>
             Undo
           </button>
         </span>
@@ -243,6 +259,15 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
 
   const closePicker = () => {
     setDismissing(null);
+    setReason(null);
+    setNote("");
+  };
+  // Spec 46: only a detected row may enter the reason state.  Guarded
+  // at the state transition (dismissAllowed reads the served bucket),
+  // not by which button the view happened to draw.
+  const openPicker = (flag: ScannedSiteFlag) => {
+    if (!dismissAllowed(buckets, flag)) return;
+    setDismissing(flag);
     setReason(null);
     setNote("");
   };
@@ -261,32 +286,25 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       }
       const detected = b.detected === true;
       const label = SCANNED_FLAG_LABELS[flag];
-      // Count + nearest only: details[0] leaves this surface (ruling b);
-      // section 03 and the audit PDF keep the full string.
-      const evidence = scanEvidence(b, { details: false, anchorSuffix: false });
+      // Count + nearest only: details[0] leaves this surface (arc-20
+      // ruling b); section 03 and the audit PDF keep the full string.
+      // An absent row's evidence cell is EMPTY (GO ruling b: the wire
+      // carries no scan radius, and the relevance thresholds are three
+      // different tests — nothing is printed as one).
+      const evidence = detected ? scanEvidence(b, { details: false, anchorSuffix: false }) : "";
       const open = dismissing === flag;
       rows.push(
         <div key={`row-${flag}`} className="sc-row site-correction-row">
-          <span className="sc-cond tr-field">{label}</span>
           {detected
-            ? result("▲", "sc-detected", "detected")
-            : result("✓", "sc-absent", "none along the corridor")}
-          <span className="sc-evidence">{detected ? evidence : ""}</span>
+            ? lead("▲", "sc-detected", label, "detected", evidence)
+            : lead("✓", "sc-absent", label, "none along the corridor", "")}
           <span className="sc-action">
             {open ? (
-              <button type="button" className="ghost" onClick={closePicker}>
+              <button type="button" className="ghost sc-text-btn" onClick={closePicker}>
                 Cancel
               </button>
             ) : detected ? (
-              <button
-                type="button"
-                className="ghost"
-                onClick={() => {
-                  setDismissing(flag);
-                  setReason(null);
-                  setNote("");
-                }}
-              >
+              <button type="button" className="ghost" onClick={() => openPicker(flag)}>
                 Dismiss
               </button>
             ) : (
@@ -303,14 +321,15 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
             {/* #245: the reason is an in-DOM radio-chip group, never a
                 native <select> — the UA's white field under the
                 inherited light ink measured 1.54:1 and its popup renders
-                outside the DOM where nothing measures it.  Chips use
-                the block's own pairs (ghost unselected, act chosen)
-                on --canvas; the chosen state is border + ink + a ✓
-                glyph + the native :checked state (rule 13, never hue
-                alone).  The legend keeps the accessible name.
-                #248: exactly one extra grid row — legend + chips (+ the
-                note) span the three fact columns; Confirm sits in the
-                action column; Cancel took the condition row's slot. */}
+                outside the DOM where nothing measures it.  The chosen
+                state is border + wash + ink + a ✓ glyph + the native
+                :checked state (rule 13, never hue alone); no aria-pressed
+                (a radio carries its own checked semantics).  The legend
+                keeps the accessible name.
+                #249: exactly one extra grid row spanning both tracks —
+                legend, chips (+ the note), then Confirm last in the same
+                flex line (spec 38/42); Cancel took the condition row's
+                action slot (spec 44).  Supersedes arc-20 ruling f. */}
             <div className="sc-picker">
               <fieldset className="site-correction-reasons" role="radiogroup">
                 <legend>
@@ -346,8 +365,6 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
                   placeholder="say what"
                 />
               )}
-            </div>
-            <span className="sc-action">
               <button
                 type="button"
                 className="confirm"
@@ -356,7 +373,7 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
               >
                 Confirm dismiss
               </button>
-            </span>
+            </div>
           </div>,
         );
       }
@@ -366,6 +383,12 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
     for (const c of corrections) rows.push(record(c));
   }
   if (rows.length === 0) return null;
+  // Footer (spec 61–65, GO ruling e / a′): the label, an elastic leader
+  // (the footer reads as the ledger's last line), then the sentence —
+  // the scan mode from the wire, the stamp as day · hh:mm utc by pure
+  // slicing of the ISO measured_at (fmtScanStamp: no clock, no
+  // arithmetic), the full ISO on the <time> for copy and audit.
+  const stamp = siteScan.measured_at ?? null;
   return (
     // #246: the block is the jump target of the results-head line and
     // the section 03 signposts (id + jump-anchor scroll margin; tabIndex
@@ -376,25 +399,23 @@ function SiteCorrections({ scenario, setScenario, siteScan }: SiteCorrectionsPro
       className="jbar-suggest live site-corrections jump-anchor outline-none mb-3"
     >
       <div className="tr-section mb-1.5">Site conditions — scanned</div>
-      {/* #248: one grid, four tracks; column heads ride the step-index
-          register (the .dva-grid precedent); rows are subgrid rows. */}
-      <div className="sc-grid">
-        <div className="sc-row sc-head">
-          <span className="tr-step">Condition</span>
-          <span className="tr-step">Result</span>
-          <span className="tr-step">Evidence</span>
-          <span />
-        </div>
-        {rows}
-      </div>
-      <div className="tr-prov mt-1.5">
-        {[
-          "site scan",
-          siteScan.measured_at ? `measured ${siteScan.measured_at}` : null,
-          "a correction re-generates the plan",
-        ]
-          .filter((p): p is string => p !== null)
-          .join(" · ")}
+      {/* #249: one grid, two tracks — ledger · action; every row is a
+          subgrid row.  No column heads: the ledger reads symbol → name
+          → leader → verdict (arc-20 ruling e superseded, recorded). */}
+      <div className="sc-grid">{rows}</div>
+      <div className="sc-foot tr-prov mt-1.5">
+        <span className="sc-foot-label">scan</span>
+        <span className="sc-leader" aria-hidden />
+        <span className="sc-foot-text">
+          {siteScan.mode ? `${siteScan.mode} scan` : "site scan"}
+          {stamp ? " · " : ""}
+          {stamp ? (
+            <time className="sc-time" dateTime={stamp} title={stamp}>
+              {fmtScanStamp(stamp)}
+            </time>
+          ) : null}
+          {" · a correction re-generates the plan"}
+        </span>
       </div>
     </div>
   );
