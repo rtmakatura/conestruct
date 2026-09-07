@@ -1,0 +1,75 @@
+healthz sha 4443ccfef7707acde61cc2c2f86d753c5b5ea79a expect 4443ccfef7707acde61cc2c2f86d753c5b5ea79a
+[1440x1000] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[1440x1000] generate settled at t=9244 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[1440x1000] FAIL W1 generate — 85 pending samples, 85 with the wait line, 0 in view; after 600 ms 0/79 in view; first -60..-43 (nav 52, innerH 1000)
+[1440x1000] PASS W2 generate — settled: wait gone, lockup "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+[1440x1000] PASS W3 generate — 0 samples with both states (of 98)
+[1440x1000] rows (block w1100): h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 abs[Assert]
+[1440x1000] PASS L3 lockup — figure "4" (detected rows 4), "Site conditions detected", "of 5 checked" (rows 5), link "correct in setup ↑"
+[1440x1000] PASS R1 rows — right edges 1252 across 5 action buttons (Dismiss, Dismiss, Dismiss, Dismiss, Assert)
+[1440x1000] PASS R2 rows — no action below its row's text
+[1440x1000] PASS R3 rows — row heights 46/46/46/46/46 (4 detected, 1 absent)
+[1440x1000] PASS L1 leader — leader display block, widths 515/467/555/567/692, color rgb(74, 98, 128)
+[1440x1000] PASS L2 right group — right-group line boxes 1/1/1/1/1, heights 18/18/18/18/18
+[1440x1000] PASS R5 details — no "from anchor" / details fragment / radius phrase in the block text
+[1440x1000] PASS L5 footer — label "scan", leader true, time "7 sep · 05:48 utc" (title 2026-09-07T05:48:56+00:00), text "scancorridor scan · 7 sep · 05:48 utc · a correction re-generates the plan"
+[1440x1000] picker-open (block w1100): h44 det[Cancel] h52 PICKER[Confirm dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 abs[Assert]
+[1440x1000] PASS R4 picker — rows 5 → 6; picker row buttons [Confirm dismiss(flex line)]; condition row buttons [Cancel]
+[1440x1000] PASS R1 picker-open — right edges 1252 across 5 action buttons (Cancel, Dismiss, Dismiss, Dismiss, Assert)
+[1440x1000] PASS R2 picker-open — no action below its row's text
+[1440x1000] PASS R6 axe picker-open — color-contrast in the block/lockup: 0; total nodes 0 (baseline 2): none
+[1440x1000] PASS R6 axe picker-chosen — color-contrast in the block/lockup: 0; total nodes 0 (baseline 2): none
+[1440x1000] PASS R7 pairs — lockup figure #ff8a2e on #14202e = 7 · lockup line 1 (tr-field) #c8d1dd on #14202e = 10.68 · lockup line 2 (tr-step) #93a0b0 on #14202e = 6.19 · lockup link (tr-signpost) #34a9e8 on #14202e = 6.26 · ▲ detected symbol (--dim) #ff8a2e on #14202e = 7 · ✓ absent symbol (--pass) #4fd787 on #14202e = 8.94 · detected word (--dim) #ff8a2e on #14202e = 7 · none word (body ink) #c8d1dd on #14202e = 10.68 · evidence (faint) #93a0b0 on #14202e = 6.19 · condition name (tr-field) #c8d1dd on #14202e = 10.68 · legend #93a0b0 on #14202e = 6.19 · chip unselected #c8d1dd on #14202e = 10.68 · chip chosen on the wash #56bcf2 on #183348 = 6.15 · note ink #ffffff on #14202e = 16.46 · Confirm on the wash #56bcf2 on #183348 = 6.15 · ghost button #c8d1dd on #14202e = 10.68 · Cancel (text button) #34a9e8 on #14202e = 6.26 · footer label #93a0b0 on #14202e = 6.19 · footer stamp #93a0b0 on #14202e = 6.19 · leader (decoration, exempt) #4a6280 on #14202e = 2.63
+[1440x1000] picker-other (block w1100): h44 det[Cancel] h86 PICKER[Confirm dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 abs[Assert]
+[1440x1000] PASS R6 axe picker-other-note — color-contrast in the block/lockup: 0; total nodes 0 (baseline 2): none
+[1440x1000] assert settled at t=14508 ms; strip: VERIFIED · 4 plan flags ▸REVIEW FLAGS
+[1440x1000] PASS L4 in-flight disable — 133 pending samples; 133 with the block mounted + aria-busy + 5/5 buttons disabled + wait line, no lockup; 0 with the block unmounted
+[1440x1000] in-flight first seen at t=1 ms
+[1440x1000] PASS W1 assert — 133 pending samples, 133 with the wait line, 133 in view; after 600 ms 128/128 in view; first 926..943 (nav 52, innerH 1000)
+[1440x1000] PASS W2 assert — settled: wait gone, lockup "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+[1440x1000] PASS W3 assert — 0 samples with both states (of 146)
+[1440x1000] record (block w1100): h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h46 det[Dismiss] h33 REC[Undo]
+[1440x1000] PASS L4 settled — aria-busy null, disabled buttons 0
+[1440x1000] PASS R8 record — record: sentence nodes 1, result word none, leader none, buttons [Undo]
+[1440x1000] PASS R1 record — right edges 1252 across 5 action buttons (Dismiss, Dismiss, Dismiss, Dismiss, Undo)
+[1440x1000] PASS R2 record — no action below its row's text
+[1440x1000] INFO R8 sentence face — __Inter_8b3a0b, __Inter_Fallback_8b3a0b 12px rgb(200, 209, 221)
+[1440x1000] PASS R8 undo — 5 rows, records 0
+[380x800] pre settle: VERIFIED · 0 validation warningsREADY FOR TCS REVIEW
+[380x800] generate settled at t=15670 ms; strip: VERIFIED · 3 plan flags ▸REVIEW FLAGS
+[380x800] PASS W1 generate — 143 pending samples, 143 with the wait line, 140 in view; after 600 ms 137/137 in view; first -974..-928 (nav 52, innerH 800)
+[380x800] PASS W2 generate — settled: wait gone, lockup "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+[380x800] PASS W3 generate — 0 samples with both states (of 156)
+[380x800] rows (block w332): h85 det[Dismiss] h119 det[Dismiss] h85 det[Dismiss] h85 det[Dismiss] h58 abs[Assert]
+[380x800] PASS L3 lockup — figure "4" (detected rows 4), "Site conditions detected", "of 5 checked" (rows 5), link "correct in setup ↑"
+[380x800] PASS R1 rows — right edges 338 across 5 action buttons (Dismiss, Dismiss, Dismiss, Dismiss, Assert)
+[380x800] PASS R2 rows — no action below its row's text
+[380x800] INFO R3 rows — row heights 85/119/85/85/58 (4 detected, 1 absent) — the ledger line wraps at this width (spec 68)
+[380x800] PASS L1 leader — leader display none (block w332 ≤ 420 → hidden)
+[380x800] INFO L2 right group — right-group line boxes 1/1/1/1/1, heights 44/44/44/44/18, name heights 19/38/19/19/19
+[380x800] PASS R5 details — no "from anchor" / details fragment / radius phrase in the block text
+[380x800] PASS L5 footer — label "scan", leader true, time "7 sep · 05:49 utc" (title 2026-09-07T05:49:10+00:00), text "scancorridor scan · 7 sep · 05:49 utc · a correction re-generates the plan"
+[380x800] picker-open (block w332): h85 det[Cancel] h154 PICKER[Confirm dismiss] h119 det[Dismiss] h85 det[Dismiss] h85 det[Dismiss] h58 abs[Assert]
+[380x800] PASS R4 picker — rows 5 → 6; picker row buttons [Confirm dismiss(flex line)]; condition row buttons [Cancel]
+[380x800] PASS R1 picker-open — right edges 338 across 5 action buttons (Cancel, Dismiss, Dismiss, Dismiss, Assert)
+[380x800] PASS R2 picker-open — no action below its row's text
+[380x800] PASS R6 axe picker-open — color-contrast in the block/lockup: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS R6 axe picker-chosen — color-contrast in the block/lockup: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS R7 pairs — lockup figure #ff8a2e on #14202e = 7 · lockup line 1 (tr-field) #c8d1dd on #14202e = 10.68 · lockup line 2 (tr-step) #93a0b0 on #14202e = 6.19 · lockup link (tr-signpost) #34a9e8 on #14202e = 6.26 · ▲ detected symbol (--dim) #ff8a2e on #14202e = 7 · ✓ absent symbol (--pass) #4fd787 on #14202e = 8.94 · detected word (--dim) #ff8a2e on #14202e = 7 · none word (body ink) #c8d1dd on #14202e = 10.68 · evidence (faint) #93a0b0 on #14202e = 6.19 · condition name (tr-field) #c8d1dd on #14202e = 10.68 · legend #93a0b0 on #14202e = 6.19 · chip unselected #c8d1dd on #14202e = 10.68 · chip chosen on the wash #56bcf2 on #183348 = 6.15 · note ink #ffffff on #14202e = 16.46 · Confirm on the wash #56bcf2 on #183348 = 6.15 · ghost button #c8d1dd on #14202e = 10.68 · Cancel (text button) #34a9e8 on #14202e = 6.26 · footer label #93a0b0 on #14202e = 6.19 · footer stamp #93a0b0 on #14202e = 6.19 · leader (decoration, exempt) #4a6280 on #14202e = 2.63
+[380x800] picker-other (block w332): h85 det[Cancel] h187 PICKER[Confirm dismiss] h119 det[Dismiss] h85 det[Dismiss] h85 det[Dismiss] h58 abs[Assert]
+[380x800] PASS R6 axe picker-other-note — color-contrast in the block/lockup: 0; total nodes 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] assert settled at t=1311 ms; strip: VERIFIED · 4 plan flags ▸REVIEW FLAGS
+[380x800] PASS L4 in-flight disable — 12 pending samples; 12 with the block mounted + aria-busy + 5/5 buttons disabled + wait line, no lockup; 0 with the block unmounted
+[380x800] in-flight first seen at t=2 ms
+[380x800] INFO W1 assert (FINDING) — mid-flight t=660: block 98..657 (in view, busy, 5/5 disabled); status bar 904..992; wait line 1055..1101; innerH 800 — the wait line is BELOW the fold while the block is held
+[380x800] PASS W2 assert — settled: wait gone, lockup present
+[380x800] PASS W3 assert — 0 samples with both states (of 25)
+[380x800] record (block w332): h85 det[Dismiss] h119 det[Dismiss] h85 det[Dismiss] h85 det[Dismiss] h108 REC[Undo]
+[380x800] PASS L4 settled — aria-busy null, disabled buttons 0
+[380x800] PASS R8 record — record: sentence nodes 1, result word none, leader none, buttons [Undo]
+[380x800] PASS R1 record — right edges 338 across 5 action buttons (Dismiss, Dismiss, Dismiss, Dismiss, Undo)
+[380x800] PASS R2 record — no action below its row's text
+[380x800] INFO R8 sentence face — __Inter_8b3a0b, __Inter_Fallback_8b3a0b 12px rgb(200, 209, 221)
+[380x800] PASS R8 undo — 5 rows, records 0
+
+FAIL 50/51 (+5 info) — [1440x1000] W1 generate

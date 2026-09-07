@@ -125,6 +125,46 @@ for ruling: (a) accept — the disabled state is spec 34's own signal and the
 strip's polite region still announces VERIFYING to assistive tech; (b) a
 one-line in-block status while busy (new copy, not in the spec). Not built.
 
+## Prod runs on `4443ccf` (healthz == origin/main, sha-gated; www.conestruct.com, Denver pin 39.7269 / −104.9873, live scan)
+
+Rulings before the run (2026-09-07): the 380 in-flight finding accepted as-is
+(not this arc); the Confirm ink change accepted; the asserted record keeps ✓.
+
+**Run 2 — ALL PASS 51/51 (+5 info) (`outS2A21Prod/`).** Live scan: 4 of 5
+detected on this corridor (intersection, sidewalks, bike, interchange), no
+refusal. Generate settled 5.1 s / 1.6 s; Assert 16.1 s / 18.4 s.
+
+| leg | 1440×1000 | 380×800 |
+|---|---|---|
+| W1 wait line in view (Generate) | 41/41 after 600 ms; landing 789 → 654, wait line 137..154 | 8/8 |
+| L3 lockup | `4` · "Site conditions detected" · "of 5 checked" · link | same |
+| R1 one action edge (rows / picker / record) | 1252 | 338 |
+| R3 | 46 × 5 | 85/119/85/85/58 reported (the 119 is the wrapped interchange name plus a wrapped evidence line) |
+| L1 / L2 | leader shown (467–692 wide), right group one line-box | leader hidden (block w 332) |
+| L5 footer | "corridor scan · 7 sep · 05:5x utc · a correction re-generates the plan", `<time title>` the ISO | same |
+| R6 axe | total 0 (baseline 2) | 2, the two named |
+| R7 pairs | as the local table, all ≥ 6.15; leader 2.63 exempt | same |
+| L4 in-flight | 148/148 pending samples held, busy, 5/5 disabled, wait line in view (926..943) | held, busy, 5/5 disabled; wait line 1071..1117 below the fold (the accepted finding) |
+| R8 | record one node, no word, [Undo]; Undo → 5 rows | same |
+
+**Run 1 — 50/51 (`outS2A21Prod-run1/`), kept as a finding.** Identical on
+every leg except `W1 generate` at 1440: the post-Generate landing put
+`scrollY` at 851 and it never moved — the scroll anchoring that follows the
+sidebar's unmount (arc-20 prod: 789 → 654 by 220 ms; this arc's local run:
+984 → 654; run 2: 789 → 654) did not fire, so the status bar sat at −170..−123
+and the wait line at −60..−43 under the fixed nav for the whole 9.2 s scan
+(`outS2A21Prod-run1/generate-1440x1000-samples.json`, 85 pending samples,
+0 in view). The wait-state markup is byte-identical to arc-20 (`ResultsHead`
+wait branch unchanged; the block is absent during a first Generate), so this
+is not something the ledger changed: it is the #152 E landing racing the DOM
+swap — Chrome suppresses scroll anchoring for a frame in which a programmatic
+scroll occurred, and whether the swap lands in that frame depends on when the
+breakdown answers. Intermittent (1 of 2 prod runs; 0 of 2 arc-20 prod runs; 0
+of 3 local). **#247's fix relied on the anchoring, so when the race goes the
+other way the original defect is back for that generate.** For a follow-up
+issue on the landing (`.zone` scroll margin / #152 E), out of this arc's scope
+by the GO.
+
 ## Rule 5 churn — predicted vs actual
 
 | surface | predicted (GO) | actual |

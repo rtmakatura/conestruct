@@ -1,0 +1,260 @@
+{
+ "text": "Site conditions — scanned▲Adjacent at-grade intersectiondetected46 found · nearest 95.8 ftCancelReason for dismissing Adjacent at-grade intersectionFenced offRemovedNot in the work zone✓Other (say what)Confirm dismiss▲Adjacent interchange (highway ramps)detected10 found · nearest 10.8 ftDismiss▲Pedestrian sidewalksdetected103 found · nearest 100.1 ftDismiss▲Bike lane / cyclewaydetected11 found · nearest 109.6 ftDismiss✓School zonenone along the corridorAssertscancorridor scan · 7 sep · 05:48 utc · a correction re-generates the plan",
+ "block": {
+  "left": 170,
+  "right": 1270,
+  "top": 387,
+  "bottom": 794,
+  "h": 407,
+  "w": 1100
+ },
+ "busy": null,
+ "lockup": {
+  "figure": "4",
+  "line1": "Site conditions detected",
+  "line2": "of 5 checked",
+  "link": "correct in setup ↑",
+  "left": 170,
+  "right": 1270,
+  "top": 1015,
+  "bottom": 1052,
+  "h": 37,
+  "w": 1100
+ },
+ "foot": {
+  "text": "scancorridor scan · 7 sep · 05:48 utc · a correction re-generates the plan",
+  "label": "scan",
+  "leader": true,
+  "time": {
+   "text": "7 sep · 05:48 utc",
+   "title": "2026-09-07T05:48:56+00:00",
+   "datetime": "2026-09-07T05:48:56+00:00"
+  }
+ },
+ "rows": [
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 429,
+   "bottom": 473,
+   "h": 44,
+   "w": 1064,
+   "textTop": 440,
+   "buttons": [
+    {
+     "txt": "Cancel",
+     "left": 1208,
+     "right": 1252,
+     "top": 438,
+     "bottom": 464,
+     "h": 26,
+     "w": 44,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "46 found · nearest 95.8 ft",
+   "leader": {
+    "display": "block",
+    "w": 515,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row sc-sub site-correction-picker",
+   "left": 188,
+   "right": 1252,
+   "top": 473,
+   "bottom": 559,
+   "h": 86,
+   "w": 1064,
+   "textTop": 490,
+   "buttons": [
+    {
+     "txt": "Confirm dismiss",
+     "left": 190,
+     "right": 325,
+     "top": 518,
+     "bottom": 548,
+     "h": 30,
+     "w": 135,
+     "inAction": false,
+     "disabled": false
+    }
+   ],
+   "result": null,
+   "evidence": null,
+   "leader": null,
+   "rightLines": null,
+   "rightH": null,
+   "nameLines": null,
+   "disclosureNodes": null,
+   "detected": false,
+   "absent": false,
+   "record": false,
+   "picker": true
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 559,
+   "bottom": 605,
+   "h": 46,
+   "w": 1064,
+   "textTop": 571,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 568,
+     "bottom": 596,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "10 found · nearest 10.8 ft",
+   "leader": {
+    "display": "block",
+    "w": 467,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 605,
+   "bottom": 651,
+   "h": 46,
+   "w": 1064,
+   "textTop": 617,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 614,
+     "bottom": 642,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "103 found · nearest 100.1 ft",
+   "leader": {
+    "display": "block",
+    "w": 555,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 651,
+   "bottom": 697,
+   "h": 46,
+   "w": 1064,
+   "textTop": 663,
+   "buttons": [
+    {
+     "txt": "Dismiss",
+     "left": 1180,
+     "right": 1252,
+     "top": 660,
+     "bottom": 688,
+     "h": 28,
+     "w": 72,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "detected",
+   "evidence": "11 found · nearest 109.6 ft",
+   "leader": {
+    "display": "block",
+    "w": 567,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": true,
+   "absent": false,
+   "record": false,
+   "picker": false
+  },
+  {
+   "cls": "sc-row site-correction-row",
+   "left": 188,
+   "right": 1252,
+   "top": 697,
+   "bottom": 743,
+   "h": 46,
+   "w": 1064,
+   "textTop": 709,
+   "buttons": [
+    {
+     "txt": "Assert",
+     "left": 1188,
+     "right": 1252,
+     "top": 706,
+     "bottom": 734,
+     "h": 28,
+     "w": 64,
+     "inAction": true,
+     "disabled": false
+    }
+   ],
+   "result": "none along the corridor",
+   "evidence": "",
+   "leader": {
+    "display": "block",
+    "w": 692,
+    "color": "rgb(74, 98, 128)"
+   },
+   "rightLines": 1,
+   "rightH": 18,
+   "nameLines": 19,
+   "disclosureNodes": null,
+   "detected": false,
+   "absent": true,
+   "record": false,
+   "picker": false
+  }
+ ]
+}
