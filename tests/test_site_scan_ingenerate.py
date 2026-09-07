@@ -409,6 +409,98 @@ def test_budget_constants_are_the_ruled_values() -> None:
 
 
 # ---------------------------------------------------------------------------
+# #251 (s2-arc22) — a 200 with ``remark`` is not an answer
+# ---------------------------------------------------------------------------
+#
+# Measured on overpass-api.de 2026-09-07 (validation-artifacts/committed/
+# s2-arc22-scan-honesty/remark.json): the corridor query shape past its
+# ``[timeout:N]`` answers HTTP 200, ``"remark": "runtime error: Query
+# timed out in \"query\" at line 3 after 2 seconds."``, ``elements: []``.
+# Before this arc that body scored ``ok`` with every bucket absent.
+
+_REMARK = 'runtime error: Query timed out in "query" at line 3 after 10 seconds.'
+
+
+def _fake_overpass(
+    answers: dict[str, dict[str, Any]],
+) -> tuple[Any, list[str]]:
+    """``httpx.post`` stand-in: ``answers`` maps a mirror URL to the JSON
+    body it returns with HTTP 200; unmapped mirrors 504."""
+    posts: list[str] = []
+
+    def fake_post(url: str, **_kw: Any) -> httpx.Response:
+        posts.append(url)
+        req = httpx.Request("POST", url)
+        if url in answers:
+            return httpx.Response(200, json=answers[url], request=req)
+        return httpx.Response(504, request=req)
+
+    return fake_post, posts
+
+
+def test_remark_on_the_first_mirror_tries_the_next(monkeypatch: pytest.MonkeyPatch) -> None:
+    first, second = sd.OVERPASS_MIRRORS[0], sd.OVERPASS_MIRRORS[1]
+    clean = {"elements": [{"type": "node", "id": 1, "lat": LAT, "lon": LNG, "tags": {}}]}
+    fake_post, posts = _fake_overpass({first: {"elements": [], "remark": _REMARK}, second: clean})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert error is None
+    assert payload == clean
+    assert posts == [first, second]
+
+
+def test_remark_on_every_mirror_is_unavailable_with_the_remark_text(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    body = {"elements": [], "remark": _REMARK + "\nsecond line the wire never carries"}
+    fake_post, posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert payload is None
+    assert error == f"{sd.OVERPASS_MIRRORS[-1]}: overpass remark: {_REMARK}"
+    assert posts == list(sd.OVERPASS_MIRRORS)
+
+
+def test_clean_empty_body_without_remark_is_a_complete_answer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Rule 10 both ways: an empty corridor is a measurement."""
+    fake_post, posts = _fake_overpass({sd.OVERPASS_MIRRORS[0]: {"elements": []}})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    payload, error = sd._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert (payload, error) == ({"elements": []}, None)
+    assert posts == [sd.OVERPASS_MIRRORS[0]]
+
+
+def test_remark_never_scores_ok_end_to_end_and_is_never_memoised(
+    client: TestClient, auth: dict[str, str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    body = {"elements": [], "remark": _REMARK}
+    fake_post, _posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
+    assert res.status_code == 400, res.text
+    detail = res.json()["detail"]
+    assert detail["error"] == "site_scan_unavailable"
+    prov = detail["site_scan"]
+    assert prov["status"] == "unavailable"
+    assert prov["error"].endswith(f"overpass remark: {_REMARK}")
+    assert prov["buckets"] == {} and prov["flags"] == {}
+    assert ss._MEMO == {}  # an unavailable scan is never memoised
+    # Proceed-anyway carries it as the NOT-CHECKED plan, still never ok.
+    res = client.post(
+        "/render/audit", headers=auth, json=scenario(site_scan={"proceed_if_unavailable": True})
+    )
+    assert res.status_code == 200, res.text
+    prov = res.json()["sections"]["site_scan"]
+    assert prov["status"] == "unavailable" and prov["proceeded_anyway"] is True
+    assert prov["disclosure"] == ss.NOT_CHECKED_DISCLOSURE
+    assert prov["flags"] == {}
+    assert "site_adjustments" not in res.json()["sections"]
+    assert ss._MEMO == {}
+
+
+# ---------------------------------------------------------------------------
 # one scan per Generate — the per-container memo
 # ---------------------------------------------------------------------------
 

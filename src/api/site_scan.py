@@ -15,7 +15,9 @@ Three outcomes, all distinct on the wire (Rule 10):
 
 * ``ok``          — the scan completed; an empty result is a measurement.
 * ``unavailable`` — Overpass never answered (every mirror failed, a 4xx,
-                    or the budget ran out).  Generation refuses with an
+                    a ``remark`` from every mirror — #251, the query
+                    did not complete — or the budget ran out).
+                    Generation refuses with an
                     honest 400 unless ``proceed_if_unavailable`` is set,
                     in which case the plan builds from the manual flags
                     only and carries :data:`NOT_CHECKED_DISCLOSURE`.

@@ -139,7 +139,8 @@ def _overpass_request_with_fallback(
 ) -> tuple[dict[str, Any] | None, str | None]:
     """POST the Overpass query to each mirror until one returns a valid payload.
 
-    Retries on 5xx and connection errors (mirror is overloaded or down).
+    Retries on 5xx, connection errors, and a 200 whose body carries a
+    ``remark`` (#251: the query did not complete — mirror is overloaded).
     Stops on 4xx (the query itself is malformed; trying another mirror
     will produce the same error).  Returns ``(payload, None)`` on
     success or ``(None, error_message)`` after exhausting mirrors.
@@ -176,11 +177,36 @@ def _overpass_request_with_fallback(
             last_error = f"{url}: {resp.status_code} {resp.reason_phrase}"
             continue
         try:
-            return resp.json(), None
+            payload = resp.json()
         except ValueError as exc:
             last_error = f"{url}: invalid JSON: {exc}"
             continue
+        remark = _overpass_remark(payload)
+        if remark is not None:
+            # #251 (s2-arc22): a 200 whose body carries ``remark`` is
+            # Overpass saying the query did NOT complete ("runtime error:
+            # Query timed out ...", "... ran out of memory") — the
+            # element list is truncated or empty.  Measured 2026-09-07:
+            # HTTP 200, remark, ``elements: []``.  It is a mirror failure
+            # like a 5xx (next mirror inside the budget), never a payload;
+            # scoring it complete made an empty corridor out of a loaded
+            # server (Rule 10).
+            last_error = f"{url}: overpass remark: {remark}"
+            continue
+        return payload, None
     return None, last_error
+
+
+def _overpass_remark(payload: Any) -> str | None:
+    """The first line of a body's ``remark``, or ``None`` when the body
+    carries none (a complete answer).  A remark is never truncated to
+    nothing: an empty or non-string value counts as absent."""
+    if not isinstance(payload, dict):
+        return None
+    remark = payload.get("remark")
+    if not isinstance(remark, str) or not remark.strip():
+        return None
+    return remark.strip().splitlines()[0]
 
 
 def _empty(detail_msg: str = "") -> dict[str, Any]:
