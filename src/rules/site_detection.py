@@ -136,6 +136,7 @@ def _junction_ref(el: dict[str, Any]) -> str | None:
 def _overpass_request_with_fallback(
     query: str,
     budget_s: float | None = None,
+    meta: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     """POST the Overpass query to each mirror until one returns a valid payload.
 
@@ -151,8 +152,17 @@ def _overpass_request_with_fallback(
     the caller gets ``(None, "scan budget exceeded (N s)")``, an honest
     ``unavailable``.  ``None`` (every pre-phase-1 caller) keeps the
     unbounded three-mirror chain exactly as before.
+
+    ``meta`` (#251, s2-arc22) is an out-param: when a dict is passed it
+    is filled with ``mirror`` (the URL that answered — the clean answer,
+    or the last one tried), ``response_bytes`` (that answer's body size)
+    and ``remark`` (the remark that made the last mirror fail, ``None``
+    on a clean answer), so the scan's provenance can say which server
+    said what.  The 2-tuple return is unchanged for every stub.
     """
     last_error = "no mirrors configured"
+    if meta is not None:
+        meta.update(mirror=None, response_bytes=None, remark=None)
     deadline = time.monotonic() + budget_s if budget_s is not None else None
     for url in OVERPASS_MIRRORS:
         timeout = HTTP_TIMEOUT_S
@@ -171,6 +181,8 @@ def _overpass_request_with_fallback(
         except httpx.HTTPError as exc:
             last_error = f"{url}: {type(exc).__name__}: {exc}"
             continue
+        if meta is not None:
+            meta.update(mirror=url, response_bytes=len(resp.content), remark=None)
         if 400 <= resp.status_code < 500:
             return None, f"{url}: {resp.status_code} {resp.reason_phrase}"
         if resp.status_code >= 500:
@@ -183,6 +195,8 @@ def _overpass_request_with_fallback(
             continue
         remark = _overpass_remark(payload)
         if remark is not None:
+            if meta is not None:
+                meta["remark"] = remark
             # #251 (s2-arc22): a 200 whose body carries ``remark`` is
             # Overpass saying the query did NOT complete ("runtime error:
             # Query timed out ...", "... ran out of memory") — the
@@ -497,6 +511,11 @@ def detect_along_corridor(
     ``error`` key carrying the failure message.  ``budget_s`` bounds the
     Overpass mirror chain (see ``_overpass_request_with_fallback``); the
     in-generate scan passes its CHOSEN budget, the manual endpoint none.
+
+    #251 (s2-arc22): the budgeted call also returns an ``overpass`` key —
+    NOT a bucket — with ``mirror``, ``response_bytes``, ``remark`` and
+    ``element_count`` (``None`` each when the transport was stubbed), so
+    two scans of one corridor can be told apart on the wire.
     """
     buckets: dict[str, Any] = {
         "intersections": _empty_corridor_bucket(),
@@ -521,16 +540,24 @@ def detect_along_corridor(
     query = _build_bbox_query(bbox)
     # Positional call when unbudgeted so the pre-phase-1 stubs
     # (``lambda q: ...``) keep working unchanged.
-    payload, error = (
-        _overpass_request_with_fallback(query)
-        if budget_s is None
-        else _overpass_request_with_fallback(query, budget_s=budget_s)
-    )
+    if budget_s is None:
+        payload, error = _overpass_request_with_fallback(query)
+    else:
+        fetch: dict[str, Any] = {}
+        payload, error = _overpass_request_with_fallback(query, budget_s=budget_s, meta=fetch)
+        buckets["overpass"] = {
+            "mirror": fetch.get("mirror"),
+            "response_bytes": fetch.get("response_bytes"),
+            "remark": fetch.get("remark"),
+            "element_count": None,
+        }
     if payload is None:
         buckets["error"] = error or "Overpass request failed"
         return buckets
 
     elements = payload.get("elements", []) or []
+    if "overpass" in buckets:
+        buckets["overpass"]["element_count"] = len(elements)
 
     for el in elements:
         bucket_name = _categorize(el)

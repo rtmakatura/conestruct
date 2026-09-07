@@ -349,7 +349,11 @@ def _site_scan_ok_blocks(scan: dict[str, Any]) -> list[Block]:
         intro += f" at {when}"
     duration = scan.get("duration_ms")
     if isinstance(duration, int) and not isinstance(duration, bool):
-        intro += f" ({duration} ms{', memoised' if scan.get('memo_hit') else ''})"
+        # #251: the mirror that answered, verbatim from the wire, so two
+        # scans of one corridor can be told apart on paper.
+        mirror = scan.get("mirror")
+        via = f", via {mirror}" if isinstance(mirror, str) and mirror else ""
+        intro += f" ({duration} ms{', memoised' if scan.get('memo_hit') else ''}{via})"
     intro += (
         ". The five rule-bearing conditions below are plan facts; a detected "
         "condition fired the matching Site Adjustment that follows."

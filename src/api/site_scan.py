@@ -88,6 +88,24 @@ DETECTION_TO_FLAG: dict[str, str] = {
     "schools": "school_zone",
 }
 
+# Keys ``detect_along_corridor`` returns beside the buckets (#251): never
+# a SiteScanBucket, excluded from ``provenance.buckets`` BY NAME.
+_NON_BUCKET_KEYS: frozenset[str] = frozenset({"error", "overpass"})
+
+
+def _fetch_fields(buckets: Mapping[str, Any]) -> dict[str, Any]:
+    """The four #251 provenance fields from the detector's ``overpass`` key."""
+    fetch = buckets.get("overpass")
+    if not isinstance(fetch, Mapping):
+        return {}
+    return {
+        "mirror": fetch.get("mirror"),
+        "overpass_remark": fetch.get("remark"),
+        "response_bytes": fetch.get("response_bytes"),
+        "element_count": fetch.get("element_count"),
+    }
+
+
 # The one NOT-CHECKED sentence every surface will print in phase 2
 # (sheet, narrative, audit).  Authored once, backend-side.
 NOT_CHECKED_DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation."
@@ -348,6 +366,17 @@ class SiteScanProvenance(BaseModel):
     duration_ms: int | None = None
     budget_s: float = SCAN_BUDGET_S
     memo_hit: bool = False
+    # #251 (s2-arc22): which server said what.  ``mirror`` is the URL that
+    # answered (or the last one tried), ``response_bytes`` that answer's
+    # size, ``overpass_remark`` the remark that made it a non-answer
+    # (``None`` on a clean answer), ``element_count`` the elements the
+    # scan bucketed.  ``None`` each when nothing was fetched (not_run,
+    # a stubbed transport).  A memo hit re-serves the original fetch's
+    # values with ``memo_hit`` true.
+    mirror: str | None = None
+    overpass_remark: str | None = None
+    response_bytes: int | None = None
+    element_count: int | None = None
     proceeded_anyway: bool = False
     inputs: SiteScanInputs | None = None
     buckets: dict[str, SiteScanBucket] = Field(default_factory=dict)
@@ -627,6 +656,7 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
             proceeded_anyway=proceed,
             inputs=inputs,
             disclosure=NOT_CHECKED_DISCLOSURE if proceed else None,
+            **_fetch_fields(buckets),
         )
         # The plan (if it proceeds) builds from the manual flags only —
         # plus the operator's asserts (phase 4; dismisses are moot here).
@@ -648,10 +678,11 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         buckets={
             name: SiteScanBucket.model_validate(b)
             for name, b in buckets.items()
-            if isinstance(b, dict)
+            if isinstance(b, dict) and name not in _NON_BUCKET_KEYS
         },
         flags=effective,
         manual_flags_discarded=discarded,
         corrections=corrections,
+        **_fetch_fields(buckets),
     )
     return SiteScanResult(prov, effective)

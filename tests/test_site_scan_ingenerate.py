@@ -501,6 +501,79 @@ def test_remark_never_scores_ok_end_to_end_and_is_never_memoised(
 
 
 # ---------------------------------------------------------------------------
+# #251 — which server said what: mirror / remark / bytes / elements on the wire
+# ---------------------------------------------------------------------------
+
+_FETCH_KEYS = ("mirror", "overpass_remark", "response_bytes", "element_count")
+
+
+def test_ok_scan_carries_the_fetch_provenance_and_never_a_ninth_bucket(
+    client: TestClient, auth: dict[str, str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = sd.OVERPASS_MIRRORS[0]
+    clean = {
+        "elements": [
+            {
+                "type": "node",
+                "id": 1,
+                "lat": LAT + 0.0001,
+                "lon": LNG,
+                "tags": {"highway": "crossing"},
+            },
+            {"type": "node", "id": 2, "lat": LAT + 0.0002, "lon": LNG, "tags": {"amenity": "cafe"}},
+        ]
+    }
+    fake_post, _posts = _fake_overpass({first: clean})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
+    assert res.status_code == 200, res.text
+    prov = res.json()["sections"]["site_scan"]
+    assert prov["status"] == "ok" and prov["memo_hit"] is False
+    assert prov["mirror"] == first
+    assert prov["overpass_remark"] is None
+    assert prov["response_bytes"] == len(json.dumps(clean, separators=(",", ":")).encode())
+    assert prov["element_count"] == 2  # bucketed or not, every element the server sent
+    assert "overpass" not in prov["buckets"] and "error" not in prov["buckets"]
+    assert len(prov["buckets"]) == 8  # the eight named buckets, nothing else
+    # A memo hit re-serves the same fetch, marked as such.
+    again = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
+    prov2 = again.json()["sections"]["site_scan"]
+    assert prov2["memo_hit"] is True
+    assert {k: prov2[k] for k in _FETCH_KEYS} == {k: prov[k] for k in _FETCH_KEYS}
+
+
+def test_refused_scan_names_the_mirror_and_the_remark(
+    client: TestClient, auth: dict[str, str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    body = {"elements": [], "remark": _REMARK}
+    fake_post, _posts = _fake_overpass({url: body for url in sd.OVERPASS_MIRRORS})
+    monkeypatch.setattr(sd.httpx, "post", fake_post)
+    res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
+    assert res.status_code == 400, res.text
+    prov = res.json()["detail"]["site_scan"]
+    assert prov["mirror"] == sd.OVERPASS_MIRRORS[-1]
+    assert prov["overpass_remark"] == _REMARK
+    assert prov["response_bytes"] == len(json.dumps(body, separators=(",", ":")).encode())
+    assert prov["element_count"] is None
+
+
+def test_stubbed_transport_leaves_the_transport_fields_null(
+    client: TestClient, auth: dict[str, str], overpass: Overpass, payload: dict[str, Any]
+) -> None:
+    """The recorded-fixture path (every other test here) fetched nothing:
+    mirror / remark / bytes are present and null, never invented (Rule
+    10); the element count is the fixture's, a real count of what the
+    detector bucketed."""
+    res = client.post("/render/audit", headers=auth, json=scenario(site_scan={}))
+    assert res.status_code == 200, res.text
+    prov = res.json()["sections"]["site_scan"]
+    assert prov["status"] == "ok"
+    assert (prov["mirror"], prov["overpass_remark"], prov["response_bytes"]) == (None, None, None)
+    assert prov["element_count"] == len(payload["elements"])
+    assert "overpass" not in prov["buckets"]
+
+
+# ---------------------------------------------------------------------------
 # one scan per Generate — the per-container memo
 # ---------------------------------------------------------------------------
 

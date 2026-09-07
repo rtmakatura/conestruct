@@ -1,0 +1,7 @@
+tests\test_audit_blocks_site_scan.py:132: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_site_scan_ingenerate.py::test_ok_scan_carries_the_fetch_provenance_and_never_a_ninth_bucket
+FAILED tests/test_site_scan_ingenerate.py::test_refused_scan_names_the_mirror_and_the_remark
+FAILED tests/test_site_scan_ingenerate.py::test_stubbed_transport_leaves_the_fetch_fields_null
+FAILED tests/test_audit_blocks_site_scan.py::test_ok_scan_intro_names_the_mirror_after_duration_and_memoised
+4 failed, 35 deselected in 1.97s

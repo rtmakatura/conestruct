@@ -124,6 +124,16 @@ def test_ok_scan_prints_the_conditions_table_one_row_per_rule_bearing_condition(
     assert "Road curvature" not in by_label
 
 
+def test_ok_scan_intro_names_the_mirror_after_duration_and_memoised() -> None:
+    """#251: the wire's ``mirror`` verbatim, only when present."""
+    scan = _ok({"intersections": {"detected": False, "count": 0}})
+    assert "(1234 ms)" in _texts(_site_scan_blocks(scan))
+    scan.update(memo_hit=True, mirror="https://overpass.kumi.systems/api/interpreter")
+    assert "(1234 ms, memoised, via https://overpass.kumi.systems/api/interpreter)" in _texts(
+        _site_scan_blocks(scan)
+    )
+
+
 def test_ok_scan_with_a_bucket_missing_from_the_wire_says_not_reported() -> None:
     rows = _rows(_site_scan_blocks(_ok({"schools": {"detected": False, "count": 0}})))
     by_label = {r[0]: r for r in rows}
