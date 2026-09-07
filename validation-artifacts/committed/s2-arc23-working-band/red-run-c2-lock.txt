@@ -1,0 +1,86 @@
+   × #252 — the write lock's enumeration is honest > under the lock every control is a disabled write, a live read, or a route link — anything else fails by name 1542ms
+     → expected [ …(33) ] to deeply equal []
+   × #252 — the write lock's enumeration is honest > at settle every write control re-enables unless it has a reason of its own; the root drops the lock 1876ms
+     → expected [ …(34) ] to deeply equal []
+   × #252 — the write lock's enumeration is honest > the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier) 1ms
+     → expected -1 to be greater than -1
+   ✓ focus policy after Generate (#193) > keyboard Generate (Enter) lands focus on the results zone; scroll still fires 161ms
+   ✓ focus policy after Generate (#193) > with the fetch still in flight, focus moves only when it settles to post  492ms
+   ✓ focus policy after Generate (#193) > a failed generation focuses the results zone (it holds the alert) without scrolling  1386ms
+   × focus policy after Generate (#193) > a background settle never moves focus (debounced strip edit) 1080ms
+     → expected 3 to be 2 // Object.is equality
+   ✓ focus policy after Generate (#193) > Reopen lands focus on the Setup zone  596ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/GeneratorShell.a11y-focus.test.tsx > focus policy after Generate (#193) > a background settle never moves focus (debounced strip edit)
+ FAIL  components/WriteLock.test.tsx > #252 — the write lock's enumeration is honest > under the lock every control is a disabled write, a live read, or a route link — anything else fails by name
++   "unclassified control (declare data-write or data-read): button.ghost \"Dismiss\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Dismiss\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.sv.structural \"Scenario — reopen full setup to change\"",
++   "unclassified control (declare data-write or data-read): button.sv.structural \"Road — reopen full setup to change\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Jurisdiction\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Class\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Speed\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Lane W\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Work zone\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Date\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Hours\"",
++   "unclassified control (declare data-write or data-read): button.strip-edit-all \"Edit full setup ⤢\"",
++   "unclassified control (declare data-write or data-read): button.font-sans.font-semibold \"↓ All (.zip)\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download PDF↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download XLSX↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download PDF↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download .md↓\"",
++   "unclassified control (declare data-write or data-read): button.price-head \"›Pricing quoteFYI · contractor estimate \"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): button.md:flex-1.font-sans \"Preview breakdown\"",
++   "unclassified control (declare data-write or data-read): button.md:flex-1.font-sans \"Download Quote (XLSX)↓\"",
++   "unclassified control (declare data-write or data-read): button.chip-sum \"✓Checked & passed8 · each cited›\"",
++   "unclassified control (declare data-write or data-read): button.chip-sum \"iReferencepermit · hours windows · devic\"",
+ FAIL  components/WriteLock.test.tsx > #252 — the write lock's enumeration is honest > at settle every write control re-enables unless it has a reason of its own; the root drops the lock
++   "unclassified control (declare data-write or data-read): button.ghost \"Dismiss\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Dismiss\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.ghost \"Assert\"",
++   "unclassified control (declare data-write or data-read): button.sv.structural \"Scenario — reopen full setup to change\"",
++   "unclassified control (declare data-write or data-read): button.sv.structural \"Road — reopen full setup to change\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Jurisdiction\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Class\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Speed\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Lane W\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Work zone\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Date\"",
++   "unclassified control (declare data-write or data-read): button.sv \"Edit Hours\"",
++   "unclassified control (declare data-write or data-read): button.strip-edit-all \"Edit full setup ⤢\"",
++   "unclassified control (declare data-write or data-read): a.tr-signpost.rh-link \"correct in setup ↑\"",
++   "unclassified control (declare data-write or data-read): button.font-sans.font-semibold \"↓ All (.zip)\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download PDF↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download XLSX↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download PDF↓\"",
++   "unclassified control (declare data-write or data-read): button.dl-btn \"Download .md↓\"",
++   "unclassified control (declare data-write or data-read): button.price-head \"›Pricing quoteFYI · contractor estimate \"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): input.bg-[color:var(--canvas)].border \"\"",
++   "unclassified control (declare data-write or data-read): button.md:flex-1.font-sans \"Preview breakdown\"",
++   "unclassified control (declare data-write or data-read): button.md:flex-1.font-sans \"Download Quote (XLSX)↓\"",
++   "unclassified control (declare data-write or data-read): button.chip-sum \"✓Checked & passed8 · each cited›\"",
++   "unclassified control (declare data-write or data-read): button.chip-sum \"iReferencepermit · hours windows · devic\"",
+ FAIL  components/WriteLock.test.tsx > #252 — the write lock's enumeration is honest > the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier)
+ Test Files  2 failed (2)
+      Tests  4 failed | 4 passed (8)

@@ -119,6 +119,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // Restage lifecycle: the quote inputs live in Zone 2's collapsed
     // pricing card, so generate first, expand the card, then edit.
     await user.click(screen.getByText("Generate package"));
+    // #252: the generated pair's deferred window locks the rate inputs.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
@@ -137,6 +141,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await mountSandbox();
 
     await user.click(screen.getByText("Generate package"));
+    // #252: the generated pair's deferred window locks the rate inputs.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
     const overhead = screen.getByLabelText(/Overhead/i) as HTMLInputElement;
     fireEvent.change(overhead, { target: { value: "25" } });
@@ -146,6 +154,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // shell, so the remount must NOT reinitialize them to DEFAULT.
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByText("Generate package"));
+    // #252: the generated pair's deferred window locks the rate inputs.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const overheadAfter = screen.getByLabelText(
@@ -159,6 +171,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     await mountSandbox();
 
     await user.click(screen.getByText("Generate package"));
+    // #252: the generated pair's deferred window locks the rate inputs.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
 
     const flaggers = screen.getByLabelText(/Flaggers/i) as HTMLInputElement;
@@ -184,6 +200,10 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // re-clobbered the manual entries.
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByText("Generate package"));
+    // #252: the generated pair's deferred window locks the rate inputs.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Pricing quote/i }));
     expect((screen.getByLabelText(/Flaggers/i) as HTMLInputElement).value).toBe(
       "3",

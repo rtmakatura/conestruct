@@ -42,6 +42,7 @@ import {
   type JurisdictionBlock,
   type StreetClass,
 } from "@/lib/jurisdiction";
+import { useWriteLock } from "./WriteLock";
 
 const STREET_CLASS_LABEL: Record<StreetClass, string> = {
   local: "Local",
@@ -91,6 +92,12 @@ function Simple({
   cellRefs: MutableRefObject<Record<string, HTMLButtonElement | null>>;
   children: ReactNode;
 }) {
+  // #252: an opener leads to a write; under the lock it is one.  It
+  // locks as ``aria-disabled`` (inert, dimmed by the same rule) rather
+  // than ``disabled`` so it stays FOCUSABLE: an editor that commits
+  // under the lock hands focus back to its opener (the effect below),
+  // and a disabled button cannot take it (#193's failure class).
+  const locked = useWriteLock();
   return edit === id ? (
     <div className="sv-editor">{children}</div>
   ) : (
@@ -100,7 +107,11 @@ function Simple({
         cellRefs.current[id] = el;
       }}
       className="sv"
-      onClick={() => open(id)}
+      data-write=""
+      aria-disabled={locked || undefined}
+      onClick={() => {
+        if (!locked) open(id);
+      }}
       aria-label={`Edit ${k}`}
     >
       <span className="k">{k}</span>
@@ -121,11 +132,16 @@ function Structural({
   val: ReactNode;
   onReopen: () => void;
 }) {
+  const locked = useWriteLock();
   return (
     <button
       type="button"
       className="sv structural"
-      onClick={onReopen}
+      data-write=""
+      aria-disabled={locked || undefined}
+      onClick={() => {
+        if (!locked) onReopen();
+      }}
       title="Reopen full setup to change"
       aria-label={`${k} — reopen full setup to change`}
     >
@@ -254,7 +270,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
           <span className="sc-disclosure">{c.disclosure}</span>
         </div>
         <span className="sc-action">
-          <button type="button" className="ghost sc-text-btn" disabled={inFlight} onClick={() => undo(flag)}>
+          <button type="button" className="ghost sc-text-btn" data-write="" disabled={inFlight} onClick={() => undo(flag)}>
             Undo
           </button>
         </span>
@@ -305,15 +321,15 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
             : lead("✓", "sc-absent", label, "none along the corridor", "")}
           <span className="sc-action">
             {open ? (
-              <button type="button" className="ghost sc-text-btn" disabled={inFlight} onClick={closePicker}>
+              <button type="button" className="ghost sc-text-btn" data-write="" disabled={inFlight} onClick={closePicker}>
                 Cancel
               </button>
             ) : detected ? (
-              <button type="button" className="ghost" disabled={inFlight} onClick={() => openPicker(flag)}>
+              <button type="button" className="ghost" data-write="" disabled={inFlight} onClick={() => openPicker(flag)}>
                 Dismiss
               </button>
             ) : (
-              <button type="button" className="ghost" disabled={inFlight} onClick={() => assertFlag(flag)}>
+              <button type="button" className="ghost" data-write="" disabled={inFlight} onClick={() => assertFlag(flag)}>
                 Assert
               </button>
             )}
@@ -347,6 +363,8 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
                       <input
                         type="radio"
                         name={`dismiss-reason-${flag}`}
+                        data-write=""
+                        disabled={inFlight}
                         value={r.v}
                         checked={chosen}
                         onChange={() => setReason(r.v)}
@@ -363,6 +381,8 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
                 <input
                   type="text"
                   className="site-correction-note"
+                  data-write=""
+                  disabled={inFlight}
                   aria-label="Say what"
                   maxLength={200}
                   value={note}
@@ -373,6 +393,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
               <button
                 type="button"
                 className="confirm"
+                data-write=""
                 disabled={inFlight || !dismissIsComplete(reason, note)}
                 onClick={() => confirmDismiss(flag)}
               >
@@ -478,6 +499,8 @@ export function SetupStrip({
   setJurisdictionKey,
   setStreetClass,
 }: Props) {
+  // #252 (ruling b): every inline editor is a write control.
+  const locked = useWriteLock();
   const [edit, setEdit] = useState<string | null>(null);
   // #193: closing an editor unmounts the focused control (autoFocus
   // handled the way IN; nothing handled the way out — focus fell to
@@ -488,6 +511,19 @@ export function SetupStrip({
   const done = () => {
     restoreRef.current = edit;
     setEdit(null);
+  };
+  // #252: the work-zone editor's draft (see the input): the scenario is
+  // written once, at commit; an unchanged or unparsable draft writes
+  // nothing (suggest-never-set).
+  const [workLenDraft, setWorkLenDraft] = useState<string | null>(null);
+  const commitWorkLen = () => {
+    if (workLenDraft !== null) {
+      const n = parseInt(workLenDraft, 10);
+      const next = Number.isFinite(n) ? n : 0;
+      if (next !== scenario.workLen) setScenario({ ...scenario, workLen: next } as Scenario);
+      setWorkLenDraft(null);
+    }
+    done();
   };
   useEffect(() => {
     if (edit !== null || restoreRef.current === null) return;
@@ -621,6 +657,8 @@ export function SetupStrip({
           </label>
           <select
             id="strip-jurisdiction"
+            data-write=""
+            disabled={locked}
             autoFocus
             value={jurisdictionKey ?? ""}
             onChange={(e) => {
@@ -658,6 +696,8 @@ export function SetupStrip({
               <button
                 key={v}
                 type="button"
+                data-write=""
+                disabled={locked}
                 aria-pressed={streetClass === v}
                 onClick={() => {
                   setStreetClass(v);
@@ -685,6 +725,8 @@ export function SetupStrip({
         </label>
         <select
           id="strip-speed"
+          data-write=""
+          disabled={locked}
           autoFocus
           value={scenario.speed}
           onChange={(e) => {
@@ -715,6 +757,8 @@ export function SetupStrip({
           </label>
           <select
             id="strip-width"
+            data-write=""
+            disabled={locked}
             autoFocus
             value={scenario.laneWidth}
             onChange={(e) => {
@@ -746,22 +790,25 @@ export function SetupStrip({
         <label className="k" htmlFor="strip-worklen">
           Work zone (ft)
         </label>
+        {/* #252: the value commits on blur / Enter, not per keystroke —
+            each keystroke used to write the scenario and open a request,
+            and under the lock the first digit would have disabled the
+            field under the cursor.  One edit, one request (declared). */}
         <input
           id="strip-worklen"
+          data-write=""
+          disabled={locked}
           autoFocus
           type="number"
           step={10}
           min={0}
-          value={scenario.workLen || ""}
+          value={workLenDraft ?? (scenario.workLen || "")}
           style={{ width: 90 }}
-          onChange={(e) => {
-            const n = parseInt(e.target.value, 10);
-            setScenario({
-              ...scenario,
-              workLen: Number.isFinite(n) ? n : 0,
-            } as Scenario);
+          onChange={(e) => setWorkLenDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commitWorkLen();
           }}
-          onBlur={done}
+          onBlur={commitWorkLen}
         />
       </Simple>
 
@@ -778,6 +825,8 @@ export function SetupStrip({
         </label>
         <input
           id="strip-date"
+          data-write=""
+          disabled={locked}
           autoFocus
           type="date"
           value={
@@ -806,6 +855,8 @@ export function SetupStrip({
             showed a schedule the payload didn't carry (#188 defect 3). */}
         <select
           id="strip-start"
+          data-write=""
+          disabled={locked}
           autoFocus
           value={schedule?.start_time ?? ""}
           onChange={(e) => {
@@ -827,6 +878,8 @@ export function SetupStrip({
         <span aria-hidden>–</span>
         <select
           aria-label="End time"
+          data-write=""
+          disabled={locked}
           value={schedule?.end_time ?? ""}
           onChange={(e) => {
             setSchedule({
@@ -849,7 +902,15 @@ export function SetupStrip({
         </select>
       </Simple>
 
-      <button type="button" className="strip-edit-all" onClick={onReopen}>
+      <button
+        type="button"
+        className="strip-edit-all"
+        data-write=""
+        aria-disabled={locked || undefined}
+        onClick={() => {
+          if (!locked) onReopen();
+        }}
+      >
         Edit full setup <span aria-hidden>⤢</span>
       </button>
     </div>

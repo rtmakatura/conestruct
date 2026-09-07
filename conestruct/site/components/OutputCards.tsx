@@ -7,6 +7,7 @@ import type { AuditSummary } from "@/lib/render-types";
 import { stampMatches } from "@/lib/answer-stamp";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
+import { lockedAnchorProps, useWriteLock } from "./WriteLock";
 
 type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf";
 
@@ -130,6 +131,7 @@ export function OutputCards({
   onDownloadAll,
   bundling,
 }: Props) {
+  const locked = useWriteLock(); // #252 (ruling b)
   if (!generated) {
     return (
       <div className="empty-state">
@@ -182,8 +184,9 @@ export function OutputCards({
         {mode.kind === "public" && onDownloadAll && (
           <button
             type="button"
+            data-write=""
             onClick={onDownloadAll}
-            disabled={bundling}
+            disabled={bundling || locked}
             className="font-sans font-semibold text-[12px] px-3 py-2 cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
             <span className="font-mono">↓</span>{" "}
@@ -201,6 +204,7 @@ export function OutputCards({
 }
 
 function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
+  const locked = useWriteLock(); // #252 (ruling b)
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
   // #197: the error is an answer — stamped with the scenario the failed
   // request POSTed (``for``), and presented only while that scenario is
@@ -285,8 +289,9 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
               key={k}
               type="button"
               className="dl-btn"
+              data-write=""
               onClick={() => onPublicDownload(k)}
-              disabled={busyKind !== null}
+              disabled={busyKind !== null || locked}
             >
               {busyKind === k
                 ? "Rendering…"
@@ -306,7 +311,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
         mode.dirty ? (
           <>
             {kinds.map((k) => (
-              <button key={k} type="button" className="dl-btn" disabled>
+              <button key={k} type="button" className="dl-btn" data-write="" disabled>
                 {labelFor(k)}
                 <span className="font-mono">↓</span>
               </button>
@@ -323,6 +328,8 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
               href={`/api/plans/${mode.planId}/${k}`}
               download
               className="dl-btn"
+              data-write=""
+              {...lockedAnchorProps(locked)}
             >
               {labelFor(k)}
               <span className="font-mono">↓</span>

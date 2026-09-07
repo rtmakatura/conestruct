@@ -109,6 +109,10 @@ describe("workbench downloads gate on dirty state (#183)", () => {
 
   it("an edit disables the row-backed downloads and names the resolution", async () => {
     const user = await mountSavedPlan();
+    // #252: the mount's deferred fetch window is the lock; let it settle.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     // #182: the edit reaches the wire through the 350 ms fetch debounce.
@@ -129,6 +133,10 @@ describe("workbench downloads gate on dirty state (#183)", () => {
 
   it("saving re-enables downloads that match the screen", async () => {
     const user = await mountSavedPlan();
+    // #252: the mount's deferred fetch window is the lock; let it settle.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 400));
+    });
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     expect(pdfAnchor()).toBeNull();

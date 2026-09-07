@@ -48,6 +48,7 @@ export function ReferenceChip({
       <button
         type="button"
         className="chip-sum"
+        data-read=""
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >

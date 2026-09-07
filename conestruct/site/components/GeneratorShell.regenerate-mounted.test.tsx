@@ -113,9 +113,13 @@ async function generateThenEdit() {
   await release(bdCalls, 0, okBd());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
   expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
+  // #252: settle the generated pair — the strip is locked while it is open.
+  await flushDebounce();
+  await release(bdCalls, 1, okBd());
+  await release(auditCalls, 1, okAudit());
   await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
   await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    await flushDebounce();
+  await flushDebounce();
   return user;
 }
 
@@ -144,7 +148,7 @@ describe("results stay mounted through regeneration (#192)", () => {
     expect(screen.getByText(/183 ft/)).toBeTruthy();
 
     // Settling clears the ribbon and the dim.
-    await release(bdCalls, 1, okBd());
+    await release(bdCalls, 2, okBd());
     expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
@@ -176,11 +180,11 @@ describe("results stay mounted through regeneration (#192)", () => {
     // Audit answers 400 for the CURRENT scenario while the breakdown is
     // still in flight — the verdict shows; the band stays (a request
     // IS open) and leaves in the frame the breakdown settles.
-    await release(auditCalls, 1, refusal400());
+    await release(auditCalls, 2, refusal400());
     expect(stripText()).toContain("PLAN DECLINED");
     expect(stripText()).not.toContain("COMPUTING");
     expect(document.querySelector(".working-band")).not.toBeNull();
-    await release(bdCalls, 1, okBd());
+    await release(bdCalls, 2, okBd());
     expect(document.querySelector(".working-band")).toBeNull();
     expect(stripText()).toContain("PLAN DECLINED");
   });

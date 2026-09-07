@@ -151,6 +151,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
     <div className="relative flex items-stretch">
       <button
         type="button"
+        data-read=""
         onClick={onClick}
         disabled={status === "saving"}
         className="flex items-center px-5 border-l border-[color:var(--rule)] font-sans font-medium text-[13px] text-[color:var(--ink-on-dark)] hover:text-white hover:bg-[color:var(--rule)] transition-colors disabled:opacity-50"
@@ -171,6 +172,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
             </label>
             <input
               id="plan-name-input"
+              data-read=""
               autoFocus
               type="text"
               value={nameDraft}
@@ -181,6 +183,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
               <label className="flex items-start gap-2 mt-3 text-[12px] text-[color:var(--ink-on-dark-faint)] leading-snug cursor-pointer">
                 <input
                   type="checkbox"
+                  data-read=""
                   checked={ackChecked}
                   onChange={(e) => setAckChecked(e.target.checked)}
                   className="mt-0.5 accent-[color:var(--act)]"
@@ -211,6 +214,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
             <div className="flex justify-end gap-2 mt-3">
               <button
                 type="button"
+                data-read=""
                 onClick={() => setPopoverOpen(false)}
                 className="px-3 py-1.5 font-sans text-[12px] text-[color:var(--ink-on-dark-faint)] hover:text-white"
               >
@@ -218,6 +222,7 @@ export function PlanSaveButton({ scenario, planId, planName, onSaved }: Props) {
               </button>
               <button
                 type="submit"
+                data-read=""
                 disabled={!canSubmit}
                 className="px-3 py-1.5 font-sans text-[12px] bg-[color:var(--act)] text-[color:var(--on-act)] disabled:opacity-50 hover:bg-white"
               >
@@ -236,6 +241,7 @@ export function PlanSignInToSaveButton() {
     <SignInButton mode="modal">
       <button
         type="button"
+        data-read=""
         className="flex items-center px-5 border-l border-[color:var(--rule)] font-sans font-medium text-[13px] text-[color:var(--ink-on-dark)] hover:text-white hover:bg-[color:var(--rule)] transition-colors"
       >
         Sign in to save

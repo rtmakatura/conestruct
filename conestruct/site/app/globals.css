@@ -2182,16 +2182,33 @@ input[type="number"] {
   background: var(--act);
   color: var(--on-act);
 }
-/* Disabled (spec 34/43) — last so it wins every hover above. */
-.workbench .jbar-suggest .sc-grid button:disabled,
-.workbench .jbar-suggest .sc-grid button:disabled:hover,
-.workbench .jbar-suggest .sc-picker button:disabled,
-.workbench .jbar-suggest .sc-picker button:disabled:hover {
+/* Disabled (spec 34/43) — last so it wins every hover above.  #252: only
+   OUTSIDE the lock — under it every write control takes the one uniform
+   dim below; this ink remains for the incomplete-Confirm state alone. */
+.workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,
+.workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled:hover,
+.workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled,
+.workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled:hover {
   color: var(--sc-disabled);
   border-color: var(--sc-disabled);
   background: transparent;
   cursor: default;
   text-decoration-style: dotted;
+}
+/* ─── #252 — the write lock (spec 25, GO ruling b) ───
+   While a request for the generated scenario is open (.ws-locked on the
+   root, the same fact the working band mounts on) every write control
+   renders disabled + data-write (components/WriteLock.tsx) and takes ONE
+   treatment: opacity .45, no pointer, no hover.  Inactive-control ink —
+   WCAG 1.4.3 exempts it; ``disabled`` (or aria-disabled on an anchor)
+   is the second channel and the band says "controls locked" once for
+   all of them (spec 29).  Read controls (data-read) and route links
+   never match: reading is never blocked (spec 26/27). */
+.workbench.ws-locked [data-write]:disabled,
+.workbench.ws-locked [data-write][aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
 }
 /* Footer (spec 61–65): label · leader · sentence, the ledger's last
    line; the provenance role's dotted underline moves to the stamp

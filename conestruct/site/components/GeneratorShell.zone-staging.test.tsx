@@ -128,7 +128,10 @@ describe("zone staging lifecycle", () => {
     await release(0, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    // Post (breakdown already ready).
+    // Post (breakdown already ready).  #252: settle the generated pair
+    // — a strip edit is locked while it is open.
+    await flushDebounce();
+    await release(1, okBreakdown());
     expect(document.querySelector(".setup-strip")).not.toBeNull();
 
     // A strip edit (speed) refires the breakdown fetch → the subtree
@@ -144,7 +147,7 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".hero")).not.toBeNull();
 
     // Resolve → back to post, ribbon and dim gone.
-    await release(1, okBreakdown());
+    await release(2, okBreakdown());
     expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
@@ -175,11 +178,13 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
-    await release(1, errBreakdown());
+    await release(2, errBreakdown());
 
     expect(document.querySelector(".stale-ribbon")).not.toBeNull();
     expect(document.querySelector(".results-stale")).not.toBeNull();
@@ -191,6 +196,8 @@ describe("zone staging lifecycle", () => {
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(document.querySelector(".hero")).not.toBeNull();
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByText(/Edit full setup/));
     const [setup, results] = zones();
@@ -244,6 +251,8 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");

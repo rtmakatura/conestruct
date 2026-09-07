@@ -1500,7 +1500,7 @@ export function AuditItem({
     <div
       className={`audit-item ${open ? "open" : ""} ${dim ? "opacity-70" : ""}`}
     >
-      <button type="button" className="audit-head" onClick={onClick}>
+      <button type="button" className="audit-head" data-read="" onClick={onClick}>
         <span className="num">{num}</span>
         <span className="title">{title}</span>
         <span className="result">{result}</span>

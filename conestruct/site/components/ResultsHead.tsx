@@ -51,6 +51,7 @@ export function ResultsHead({ head }: { head: ResultsHeadState | null }) {
       </span>
       <a
         className="tr-signpost rh-link"
+        data-read=""
         href={`#${SITE_CORRECTIONS_ANCHOR}`}
         onClick={(e) => {
           e.preventDefault();

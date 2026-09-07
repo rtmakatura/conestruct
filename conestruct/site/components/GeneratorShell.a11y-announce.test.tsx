@@ -149,17 +149,19 @@ describe("generation announcements (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-
-    // Reopen; edit leaves a fetch pending; Generate mid-flight — the
-    // region must be visibly cleared during the window, then repopulate.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
+    await release(1, okBreakdown());
+
+    // Reopen (settled — #252 locks edits mid-flight); Generate with the
+    // pre-generate refire pending — the region must be visibly cleared
+    // during the window, then repopulate.
     await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(statusRegion().textContent).toBe("");
 
-    await release(1, okBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(statusRegion().textContent).toBe(
       "Plan generated — 42 devices, 6 types.",
     );
@@ -170,12 +172,14 @@ describe("generation announcements (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
     const announced = statusRegion().textContent;
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
-    await release(1, okBreakdown());
+    await release(2, okBreakdown());
     // Unchanged — same text, no re-announcement for an edit settle.
     expect(statusRegion().textContent).toBe(announced);
   });
@@ -185,14 +189,15 @@ describe("generation announcements (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
+    await release(1, okBreakdown());
+
     await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(statusRegion().textContent).toBe("");
-    await release(1, errBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, errBreakdown());
 
     const alerts = screen.getAllByRole("alert");
     expect(
@@ -209,6 +214,9 @@ describe("generation announcements (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // #252: the zip button is a write control — settle the pair first.
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /All \(\.zip\)/ }));
     const alerts = screen.getAllByRole("alert");
@@ -222,6 +230,8 @@ describe("generation announcements (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");

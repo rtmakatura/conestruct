@@ -32,6 +32,7 @@ export function PricingCard(props: QuotePanelProps) {
       <button
         type="button"
         className="price-head"
+        data-read=""
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >

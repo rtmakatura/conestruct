@@ -1,5 +1,6 @@
 import type { JurisdictionBlock, SourceRef } from "@/lib/jurisdiction";
 import { ReferenceChip } from "./ReferenceChip";
+import { useWriteLock } from "./WriteLock";
 
 export interface DeviceBreakdownRow {
   device: string;
@@ -66,6 +67,7 @@ interface Props {
 // never by hue alone (diff-note §2: already-present response fields the
 // old table ignored).
 export function DeviceBreakdown({ state, onRetry }: Props) {
+  const locked = useWriteLock(); // #252 (ruling b)
   // #184 — declined, not broken (same contract as AuditTrail): a 400 is
   // the backend refusing the input for a stated reason.  The StatusBar
   // owns that reason's single voice; this chip neither re-quotes it nor
@@ -127,6 +129,8 @@ export function DeviceBreakdown({ state, onRetry }: Props) {
             </div>
             <button
               type="button"
+              data-write=""
+              disabled={locked}
               onClick={onRetry}
               className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
             >

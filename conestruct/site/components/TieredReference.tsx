@@ -71,6 +71,7 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
+import { useWriteLock } from "./WriteLock";
 
 // #224 phase 3 (ruling e3): panel labels for the scanned buckets that
 // map to no rule — reference rows, uncounted.
@@ -143,6 +144,7 @@ export function TieredReference({
   showAudit,
   breakdown,
 }: Props) {
+  const locked = useWriteLock(); // #252 (ruling b)
   const r = (n: number | string) => (generated ? String(n) : "—");
 
   // Audit-PDF export — unchanged from the retired panel: POSTs the live
@@ -228,6 +230,7 @@ export function TieredReference({
   const signpost = (text: "Correct in setup ↑" | "Assert in setup ↑") => (
     <a
       className="tr-signpost"
+      data-read=""
       href={`#${SITE_CORRECTIONS_ANCHOR}`}
       onClick={(e) => {
         e.preventDefault();
@@ -453,6 +456,8 @@ export function TieredReference({
           </span>
           <button
             type="button"
+            data-write=""
+            disabled={locked}
             onClick={onRetry}
             className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--act)] hover:underline cursor-pointer"
           >
@@ -536,8 +541,9 @@ export function TieredReference({
           </div>
           <button
             type="button"
+            data-write=""
             onClick={onDownloadAuditPdf}
-            disabled={!generated || audit.state === "error" || auditDl === "busy"}
+            disabled={!generated || audit.state === "error" || auditDl === "busy" || locked}
             title={
               declined
                 ? "Unavailable — generation declined for this input"

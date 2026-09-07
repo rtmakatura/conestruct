@@ -1,0 +1,30 @@
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 500 -> exit 1, distinct non-200 error  386ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a DRIFTED sha -> exit 0, sha faithfully extracted  408ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with the MATCHING sha -> exit 0, sha faithfully extracted  356ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 without a sha field -> exit 0, served_sha=unknown (jq `.sha // "unknown"` preserved)  373ms
+   ✓ modal-healthz-probe exit-code taxonomy (#169 / PR #168) > mock 200 with a non-JSON body -> exit 1 (deliberately red)  374ms
+ ✓ lib/scenarios/site-corrections.test.ts (9 tests) 14ms
+ ✓ lib/road-detection/dedup.test.ts (9 tests) 11ms
+ ✓ lib/design/type-roles.test.ts (13 tests) 11ms
+ ✓ lib/corridor-polyline.coverage.test.ts (4 tests) 16ms
+ ✓ lib/scenarios/undo-override.test.ts (11 tests) 11ms
+ ✓ lib/design/tokens.test.ts (5 tests) 9ms
+ ✓ lib/scenarios/carry-across-kinds.test.ts (4 tests) 9ms
+ ✓ lib/working-band.test.ts (8 tests) 9ms
+ ✓ lib/corridor-zones.test.ts (7 tests) 9ms
+ ✓ lib/scenarios/overrides.test.ts (10 tests) 9ms
+ ✓ lib/road-detection/labels.test.ts (7 tests) 7ms
+ ✓ lib/scenarios/sidebar-payload.test.ts (6 tests) 8ms
+ ✓ lib/answer-stamp.test.ts (6 tests) 7ms
+ ✓ components/SetupStrip.corrections-tokens.test.tsx (3 tests) 6ms
+ ✓ lib/scenarios/centerline-relay.test.ts (3 tests) 6ms
+ ✓ lib/geocode-precision.test.ts (3 tests) 6ms
+ ✓ lib/scenarios/refusal-code.test.ts (3 tests) 5ms
+ ✓ components/LocationPickerModal.spacing.test.ts (2 tests) 5ms
+ ✓ lib/scenarios/clear-detection-relays.test.ts (3 tests) 6ms
+
+ Test Files  131 passed (131)
+      Tests  964 passed (964)
+   Start at  10:36:57
+   Duration  33.46s (transform 6.18s, setup 0ms, collect 62.90s, tests 147.63s, environment 88.33s, prepare 26.59s)
+

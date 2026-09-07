@@ -30,6 +30,7 @@ import {
   type QuoteSettings,
 } from "@/lib/quote-settings";
 import type { RoadClassification } from "@/lib/road-detection/types";
+import { useWriteLock } from "./WriteLock";
 
 // The last picker classification this session plus the pin it was
 // captured at — transient state the sidebar surfaces up via
@@ -261,6 +262,7 @@ export function buildFrontendSections(
 }
 
 export function DebugSnapshotButton({ scenario, settings, detection }: Props) {
+  const locked = useWriteLock(); // #252 (ruling b)
   // Gate read from window.location after mount rather than
   // useSearchParams(): the hook forces a Suspense boundary on every
   // statically prerendered page that mounts the shell (next build fails
@@ -314,8 +316,9 @@ export function DebugSnapshotButton({ scenario, settings, detection }: Props) {
     <div className="px-6 py-2">
       <button
         type="button"
+        data-write=""
         onClick={onClick}
-        disabled={busy}
+        disabled={busy || locked}
         className="font-mono text-[10px] uppercase tracking-[0.12em] border border-dashed border-amber-500 text-amber-500 px-3 py-1.5 disabled:opacity-50"
         title="Dev-only: download a full replication snapshot (.md) for this scenario"
       >

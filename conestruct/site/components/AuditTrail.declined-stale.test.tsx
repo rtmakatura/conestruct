@@ -129,6 +129,12 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await releaseAudit(0, okAudit());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+  // #252: the generated pair's audit ([1]) must settle before a strip
+  // edit — the lock holds every write while it is open.
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 360));
+  });
+  await releaseAudit(1, okAudit());
   // #219: the trace rows live in the collapsed ✓ CHECKED & PASSED tier —
   // expand it so the rows under test are actually rendered.  (The
   // declined/failed banners auto-open in ⚠; the blank-value contract
@@ -175,7 +181,7 @@ describe("audit rows never present a prior input's numbers under a declined bann
 
   it("a declined (400) audit blanks the cited values and disables the Audit PDF", async () => {
     await generateThenEdit();
-    await releaseAudit(1, declined400());
+    await releaseAudit(2, declined400());
 
     expect(
       screen.getByText(/unavailable while generation is declined/i),
@@ -192,7 +198,7 @@ describe("audit rows never present a prior input's numbers under a declined bann
 
   it("a failed (5xx) audit blanks the values too, keeping the retry line", async () => {
     await generateThenEdit();
-    await releaseAudit(1, failed500());
+    await releaseAudit(2, failed500());
 
     expect(screen.getByText(/Audit trail failed/)).toBeTruthy();
     expect(screen.getByRole("button", { name: /Retry/ })).toBeTruthy();

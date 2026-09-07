@@ -149,18 +149,13 @@ describe("focus policy after Generate (#193)", () => {
   it("with the fetch still in flight, focus moves only when it settles to post", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await release(0, okBreakdown());
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-
-    // Strip edit leaves a fetch pending; reopen → Generate mid-flight.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    await flushDebounce();
-    await user.click(screen.getByText(/Edit full setup/));
+    // #252: a strip edit mid-flight is impossible (the lock); the
+    // in-flight Generate is the click while the mount fetch is pending.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(activeIsResultsZone()).toBe(false);
 
-    await release(1, okBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(activeIsResultsZone()).toBe(true);
   });
 
@@ -169,14 +164,16 @@ describe("focus policy after Generate (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // #252: settle the generated pair (the lock) before reopening.
+    await flushDebounce();
+    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    await flushDebounce();
     await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await release(1, errBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, errBreakdown());
 
     expect(activeIsResultsZone()).toBe(true);
     expect(scrollSpy).not.toHaveBeenCalled();
@@ -187,15 +184,25 @@ describe("focus policy after Generate (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Edit Work zone/i }));
     const input = screen.getByLabelText("Work zone (ft)");
     await user.clear(input);
     await user.type(input, "600");
+    // #252: typing is a draft — no request opens, so nothing locks the
+    // field under the cursor; focus stays put through the whole entry.
+    const calls = breakdownCalls.length;
     await flushDebounce();
     expect(document.activeElement).toBe(input);
-    await release(1, okBreakdown());
-    expect(document.activeElement).toBe(input);
+    expect(breakdownCalls.length).toBe(calls);
+    // Commit (blur): one request, the lock, then the settle — which
+    // never moves focus to the results zone (the #193 contract).
+    await user.tab();
+    await flushDebounce();
+    expect(breakdownCalls.length).toBe(calls + 1);
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(activeIsResultsZone()).toBe(false);
   });
 
@@ -204,6 +211,9 @@ describe("focus policy after Generate (#193)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // #252: Reopen is a write control — settle the generated pair first.
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     await user.click(screen.getByText(/Edit full setup/));
     expect(activeIsSetupZone()).toBe(true);

@@ -136,22 +136,23 @@ describe("post-generate scroll (#152 E)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    // A strip edit refires the fetch and leaves it pending; then
-    // reopen → Generate with the answer still in flight must scroll
-    // only when it lands.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    await flushDebounce();
+    // #252: a strip edit mid-flight is locked; reopen (settled) →
+    // Generate with the pre-generate refire still pending must scroll
+    // only when the generated answer lands.
     await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     // #192: with prior results the in-flight state dims in place under
     // the stale ribbon (no "Generating…" empty-state swap; #252 wording).
     expect(screen.getByText(/Previous answer/)).toBeTruthy();
     expect(scrollSpy).not.toHaveBeenCalled();
 
-    await release(1, okBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -171,13 +172,15 @@ describe("post-generate scroll (#152 E)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
     // A strip edit refetches and re-lands on post — no new scroll.
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
-    await release(1, okBreakdown());
+    await release(2, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
   });
 
@@ -186,16 +189,17 @@ describe("post-generate scroll (#152 E)", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    // Strip edit leaves a fetch in flight; reopen and regenerate; the
-    // fetch then FAILS: no scroll on the error.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
-    await flushDebounce();
+    // Reopen (settled) and regenerate; the fetch then FAILS: no scroll
+    // on the error.
     await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await release(1, errBreakdown());
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, errBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
   });
 });

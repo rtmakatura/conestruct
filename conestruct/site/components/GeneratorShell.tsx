@@ -32,6 +32,7 @@ import { GeneratorSidebar } from "./GeneratorSidebar";
 import { SetupStrip } from "./SetupStrip";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
+import { WriteLockContext } from "./WriteLock";
 import { deriveWorkingBand } from "@/lib/working-band";
 import { OutputCards } from "./OutputCards";
 import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
@@ -1046,6 +1047,9 @@ export function GeneratorShell({
   );
 
   return (
+    // #252 (ruling b): the root carries the lock class the one dim rule
+    // keys on, and the context every write control reads (WriteLock.tsx).
+    <WriteLockContext.Provider value={planInFlight}>
     <div className={`workbench min-h-screen${planInFlight ? " ws-locked" : ""}`}>
       <div className="workbench-frame" aria-hidden>
         <span className="ftick tl" />
@@ -1266,6 +1270,8 @@ export function GeneratorShell({
                 <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                   <button
                     type="button"
+                    data-write=""
+                    disabled={planInFlight}
                     onClick={onRetry}
                     className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline cursor-pointer"
                   >
@@ -1273,6 +1279,8 @@ export function GeneratorShell({
                   </button>
                   <button
                     type="button"
+                    data-write=""
+                    disabled={planInFlight}
                     onClick={onProceedWithoutScan}
                     className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-2 py-1 hover:border-[color:var(--warn)] hover:text-[color:var(--ink-on-dark)] cursor-pointer transition-colors"
                   >
@@ -1396,5 +1404,6 @@ export function GeneratorShell({
           open, rendered verbatim from ``bandState``. */}
       <WorkingBand state={bandState} />
     </div>
+    </WriteLockContext.Provider>
   );
 }

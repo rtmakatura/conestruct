@@ -11,6 +11,7 @@ import Link from "next/link";
 import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
+import { lockedAnchorProps, useWriteLock } from "./WriteLock";
 
 // Lifted to GeneratorShell (restage): the pricing card unmounts across
 // reopen → regenerate cycles now, so any state guarding a manual edit
@@ -147,6 +148,7 @@ export function QuotePanel({
   embedded = false,
   onTotalChange,
 }: Props) {
+  const locked = useWriteLock(); // #252 (ruling b)
   // #185 — the previewed breakdown carries the #197 input-identity stamp
   // (lib/answer-stamp.ts): the settings + scenario objects the preview
   // POST was built from.  It renders as current only while BOTH are still
@@ -379,16 +381,18 @@ export function QuotePanel({
         <div className="flex flex-col md:flex-row gap-3">
           <button
             type="button"
+            data-write=""
             onClick={onPreview}
-            disabled={busy}
+            disabled={busy || locked}
             className="md:flex-1 font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
             {busy ? "Calculating…" : "Preview breakdown"}
           </button>
           <button
             type="button"
+            data-write=""
             onClick={onDownload}
-            disabled={downloading}
+            disabled={downloading || locked}
             className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
           >
             {downloading ? "Rendering…" : "Download Quote (XLSX)"}
@@ -399,6 +403,7 @@ export function QuotePanel({
         mode.dirty ? (
           <button
             type="button"
+            data-write=""
             disabled
             className="block w-full font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink-faint)] px-3 py-3 flex items-center justify-center gap-2 cursor-default"
           >
@@ -408,6 +413,8 @@ export function QuotePanel({
           <a
             href={`/api/plans/${mode.planId}/quote`}
             download
+            data-write=""
+            {...lockedAnchorProps(locked)}
             className="block w-full font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors"
           >
             Download Quote (XLSX)
@@ -655,6 +662,8 @@ function NumberField({
   onChange: (v: number) => void;
   caption?: { text: string; tone: "muted" | "accent" };
 }) {
+  // #252: a rate edit re-prices the quote — a write control.
+  const locked = useWriteLock();
   return (
     <label className="flex flex-col gap-1">
       <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-faint)]">
@@ -662,6 +671,8 @@ function NumberField({
       </span>
       <input
         type="number"
+        data-write=""
+        disabled={locked}
         value={value}
         min={min}
         max={max}
@@ -725,6 +736,7 @@ function BreakdownGroup({
     <div className="border-t border-[color:var(--rule-soft)] py-2">
       <button
         type="button"
+        data-read=""
         onClick={() => setOpen((o) => !o)}
         className="w-full flex justify-between items-baseline py-1.5 cursor-pointer hover:opacity-80"
       >
