@@ -77,13 +77,31 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(within(school as HTMLElement).getByRole("button", { name: "Assert" })).toBeTruthy();
     // #249 footer (GO ruling b + e/a′): the scan mode from the wire, the
     // stamp sliced from the ISO, the full ISO on the <time>; no radius.
+    // #251 (ruling d): no duration on the wire → no duration segment,
+    // memo_hit absent → no "memoised".
     const foot = b!.querySelector(".sc-foot") as HTMLElement;
     expect(foot.textContent).toContain("corridor scan · 4 sep · 12:00 utc · a correction re-generates the plan");
+    expect(foot.textContent).not.toMatch(/ s ·|memoised/);
     const time = foot.querySelector("time") as HTMLTimeElement;
     expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00+00:00");
     expect(time.getAttribute("datetime")).toBe("2026-09-04T12:00:00+00:00");
     expect(time.textContent).toBe("4 sep · 12:00 utc");
     expect(b!.textContent).not.toMatch(/within \d+ ft|in scan|ft corridor/);
+  });
+
+  it("#251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire", () => {
+    mount(ok({ duration_ms: 2739, memo_hit: true }));
+    const foot = block()!.querySelector(".sc-foot") as HTMLElement;
+    expect(foot.textContent).toContain(
+      "corridor scan · 4 sep · 12:00 utc · 2.7 s · memoised · a correction re-generates the plan",
+    );
+    cleanup();
+    // A fresh fetch: the duration, no "memoised".  A null duration: neither.
+    mount(ok({ duration_ms: 20299, memo_hit: false }));
+    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · 20.3 s · a correction");
+    cleanup();
+    mount(ok({ duration_ms: null, memo_hit: true }));
+    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · memoised · a correction");
   });
 
   it("#249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10)", () => {

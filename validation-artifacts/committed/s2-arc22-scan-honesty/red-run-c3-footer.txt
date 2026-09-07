@@ -1,0 +1,9 @@
+red run — commit 3 sources stashed (SetupStrip.tsx, site-corrections.ts); tests in place
+   × site-condition correction markers (#224 phase 4) > fmtScanDuration (#251, ruling d): the wire's duration_ms as seconds to one decimal; nothing else prints 5ms
+   × SetupStrip — Site conditions — scanned (#224 phase 4) > #251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire 17ms
+   ✓ SetupStrip — Site conditions — scanned (#224 phase 4) > an applied correction re-renders its row as the resolved record (× / ✓ + the backend sentence + Undo) 76ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/SetupStrip.corrections.test.tsx > SetupStrip — Site conditions — scanned (#224 phase 4) > #251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire
+ FAIL  lib/scenarios/site-corrections.test.ts > site-condition correction markers (#224 phase 4) > fmtScanDuration (#251, ruling d): the wire's duration_ms as seconds to one decimal; nothing else prints
+ Test Files  2 failed (2)
+      Tests  2 failed | 23 passed (25)

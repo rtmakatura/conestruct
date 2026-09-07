@@ -168,3 +168,13 @@ export function fmtScanStamp(iso: string): string {
   // Number(...) only drops the day's leading zero ("03" → "3").
   return `${Number(m[3])} ${month} · ${m[4]}:${m[5]} utc`;
 }
+
+/** #251 (s2-arc22, GO ruling d): the footer's ``2.7 s`` from the wire's
+ *  integer ``duration_ms`` — display formatting only (ms → s, one
+ *  decimal; rule 3: the number is the backend's, this is its unit).
+ *  Anything that is not a finite number prints nothing: the caller
+ *  omits the segment rather than invent a duration (rule 10). */
+export function fmtScanDuration(ms: unknown): string | null {
+  if (typeof ms !== "number" || !Number.isFinite(ms)) return null;
+  return `${(ms / 1000).toFixed(1)} s`;
+}

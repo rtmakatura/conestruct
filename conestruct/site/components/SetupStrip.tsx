@@ -29,6 +29,7 @@ import {
   dismissAllowed,
   dismissIsComplete,
   dismissMarker,
+  fmtScanDuration,
   fmtScanStamp,
   isScannedFlag,
   withSiteCorrection,
@@ -392,7 +393,11 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
   // the scan mode from the wire, the stamp as day · hh:mm utc by pure
   // slicing of the ISO measured_at (fmtScanStamp: no clock, no
   // arithmetic), the full ISO on the <time> for copy and audit.
+  // #251 (ruling d): then the scan's own duration (ms → s, one decimal)
+  // and the word "memoised" when the backend re-served a prior fetch —
+  // the two facts that let two Generates of one corridor be compared.
   const stamp = siteScan.measured_at ?? null;
+  const duration = fmtScanDuration(siteScan.duration_ms);
   return (
     // #246: the block is the jump target of the results-head line and
     // the section 03 signposts (id + jump-anchor scroll margin; tabIndex
@@ -420,6 +425,8 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
               {fmtScanStamp(stamp)}
             </time>
           ) : null}
+          {duration ? ` · ${duration}` : ""}
+          {siteScan.memo_hit === true ? " · memoised" : ""}
           {" · a correction re-generates the plan"}
         </span>
       </div>

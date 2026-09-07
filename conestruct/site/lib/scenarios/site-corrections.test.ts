@@ -12,7 +12,7 @@ import {
   withoutSiteCorrection,
   withoutSiteCorrections,
 } from "./site-corrections";
-import { dismissAllowed, fmtScanStamp } from "./site-corrections";
+import { dismissAllowed, fmtScanDuration, fmtScanStamp } from "./site-corrections";
 
 const NOW = new Date("2026-09-04T12:00:00.000Z");
 
@@ -108,5 +108,15 @@ describe("site-condition correction markers (#224 phase 4)", () => {
     }
     // An impossible month is not "fixed": verbatim.
     expect(fmtScanStamp("2026-13-03T23:14:50+00:00")).toBe("2026-13-03T23:14:50+00:00");
+  });
+
+  it("fmtScanDuration (#251, ruling d): the wire's duration_ms as seconds to one decimal; nothing else prints", () => {
+    expect(fmtScanDuration(2739)).toBe("2.7 s");
+    expect(fmtScanDuration(20299)).toBe("20.3 s");
+    expect(fmtScanDuration(0)).toBe("0.0 s");
+    expect(fmtScanDuration(950)).toBe("0.9 s"); // toFixed, never a rounded-up "1 s"
+    for (const raw of [null, undefined, "2739", Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(fmtScanDuration(raw)).toBeNull();
+    }
   });
 });
