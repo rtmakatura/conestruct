@@ -1,7 +1,5 @@
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
 
-export type Status = "idle" | "generating" | "done";
-
 // ---------------------------------------------------------------------------
 // PR 7 (UX audit findings UX-21 + UX-22): this strip used to be
 // hardcoded demo chrome — "GENERATED · 3 validation warnings · all CDOT
@@ -36,12 +34,12 @@ export type Status = "idle" | "generating" | "done";
 //                            10; the pre-#186 strip rendered green READY
 //                            on a fresh, untouched /sandbox load).
 //                            Chromeless neutral (rule 13 no-verdict).
-//   2. generating          → COMPUTING (the spinner state).  #192: this
-//                            branch sits BELOW the two above — "no
-//                            answer yet" must never mask "answer
-//                            refused"; a computing line over a refused
-//                            or invalid input inverts the strip's
-//                            honesty contract.
+//   2. (retired, #252)     COMPUTING lived here — the breakdown's
+//                            in-flight state.  Post-generate the working
+//                            band is the page's one working voice
+//                            (components/WorkingBand.tsx); pre-generate
+//                            the breakdown has no strip state of its
+//                            own (it never did beyond this line).
 //   3. audit fetch 429     → VERIFICATION PAUSED (#182) — the rate
 //                            limiter answered; the actual cause (edit
 //                            pace) is named, never presented as an
@@ -53,7 +51,11 @@ export type Status = "idle" | "generating" | "done";
 //   4. verification        → VERIFYING (Decision 2, frontend-engine-
 //      in flight             removal: any in-flight state, not just the
 //                            first load — the strip never shows a stale
-//                            verdict as if it were current)
+//                            verdict as if it were current).  #252:
+//                            PRE-GENERATE only.  Once generated, the
+//                            working band speaks for every open request
+//                            and this branch renders nothing (one
+//                            voice) — still never the stale verdict.
 //   5. plan_flags absent   → VERIFICATION UNAVAILABLE (a response with
 //                            no verdict gets no derived one)
 //   6. warnings > 0        → amber CAUTION, expandable disclosure
@@ -138,7 +140,6 @@ export function collectValidationWarnings(
 }
 
 interface Props {
-  status: Status;
   /**
    * Client schema-bounds message (required / ceiling — genuinely invalid
    * input), or null.  Since #180 this NEVER carries a backend 400: a
@@ -173,13 +174,11 @@ interface Props {
    */
   verifySlow?: boolean;
   /**
-   * #224 phase 2 (ruling 2): true while the request in flight carries the
-   * in-generate site scan (every post-generate request does).  The
-   * COMPUTING line and the slow-verify copy name the scan — the #122
-   * "waking up" claim is false during a scan (the server is up; it is
-   * scanning OpenStreetMap, up to the 20 s budget) and never shows then.
+   * #252: true once the plan is generated — the working band is then
+   * the page's one working voice, so the in-flight branch below renders
+   * nothing instead of VERIFYING.  Every verdict branch is unchanged.
    */
-  scanning?: boolean;
+  bandVoice?: boolean;
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -196,13 +195,12 @@ export function StatusBar(props: Props) {
 }
 
 function StatusBarState({
-  status,
   inputError,
   refusal = null,
   locationUnset = false,
   audit,
   verifySlow,
-  scanning = false,
+  bandVoice = false,
 }: Props) {
   if (inputError) {
     return (
@@ -258,21 +256,6 @@ function StatusBarState({
     );
   }
 
-  // #192: below inputError/refusal on purpose — the spinner never masks
-  // a refused or invalid input (see the precedence block up top).
-  if (status === "generating") {
-    return (
-      <div className="status-bar warn">
-        <span className="indicator" />
-        <span>
-          {scanning
-            ? "COMPUTING · scanning site conditions (up to 20 s) · taper · buffer · spacing · sign placement"
-            : "COMPUTING · taper · buffer · spacing · sign placement"}
-        </span>
-      </div>
-    );
-  }
-
   // fix-spec-02 P1·02: ``verifying`` / ``unavail`` are additive style
   // modifiers on the ``idle`` base (spinner vs. chromaless hollow dot);
   // the derivation order and every string of copy are unchanged.
@@ -310,14 +293,15 @@ function StatusBarState({
   // rule 10.)  The failure state stays reachable from here: a fetch
   // that errors flips to "error" → VERIFICATION UNAVAILABLE above.
   if (audit.state !== "ready") {
+    // #252: post-generate the working band is the voice; the strip says
+    // nothing rather than a second VERIFYING (and never the old verdict).
+    if (bandVoice) return null;
     return (
       <div className="status-bar idle verifying">
         <span className="indicator" />
         <span>
           {verifySlow
-            ? scanning
-              ? "VERIFYING · scanning site conditions along the corridor — up to 20 s"
-              : "VERIFYING · waking the verification server — the first check can take a few extra seconds"
+            ? "VERIFYING · waking the verification server — the first check can take a few extra seconds"
             : "VERIFYING · taper · buffer · spacing · sign placement"}
         </span>
       </div>

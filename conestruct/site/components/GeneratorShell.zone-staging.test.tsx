@@ -140,12 +140,12 @@ describe("zone staging lifecycle", () => {
     await flushDebounce();
     expect(screen.queryByText("Generating…")).toBeNull();
     expect(document.querySelector(".results-stale")).not.toBeNull();
-    expect(screen.getByText(/Recomputing/)).toBeTruthy();
+    expect(screen.getByText(/Previous answer/)).toBeTruthy();
     expect(document.querySelector(".hero")).not.toBeNull();
 
     // Resolve → back to post, ribbon and dim gone.
     await release(1, okBreakdown());
-    expect(screen.queryByText(/Recomputing/)).toBeNull();
+    expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
   });

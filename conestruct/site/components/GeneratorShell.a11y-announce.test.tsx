@@ -97,7 +97,11 @@ async function flushDebounce() {
 }
 
 function statusRegion(): HTMLElement {
-  const regions = document.querySelectorAll('[role="status"]');
+  // #252: the working band's row is a second role=status while a
+  // request is open — a different speaker for a different event (the
+  // flight, never the package).  The package region is the sr-only one,
+  // and there is exactly one of it.
+  const regions = document.querySelectorAll('[role="status"]:not(.wb-row)');
   expect(regions.length).toBe(1);
   return regions[0] as HTMLElement;
 }
@@ -213,7 +217,7 @@ describe("generation announcements (#193)", () => {
     ).toBe(true);
   });
 
-  it("the recomputing ribbon stays visual-only (strip announces COMPUTING)", async () => {
+  it("the stale ribbon stays visual-only (the band's region announces the flight, #252)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
@@ -222,8 +226,13 @@ describe("generation announcements (#193)", () => {
     await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
     await user.selectOptions(screen.getByLabelText("Speed"), "35");
     await flushDebounce();
-    const ribbon = screen.getByText(/Recomputing/);
+    const ribbon = screen.getByText(/Previous answer/);
     expect(ribbon.getAttribute("role")).toBeNull();
+    // Exactly one live region carries the flight: the band's row.
+    const bandRow = document.querySelector(".working-band [role=status]");
+    expect(bandRow).not.toBeNull();
+    expect(bandRow!.getAttribute("aria-live")).toBe("polite");
+    expect(document.querySelector(".status-bar")).toBeNull();
     await release(1, okBreakdown());
   });
 });

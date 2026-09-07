@@ -1,0 +1,188 @@
+[
+ {
+  "scrollY": 682,
+  "docH": 4595,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 976,
+   "bottom": 1043,
+   "h": 68,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": {
+   "top": 1143,
+   "bottom": 1189,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": {
+   "top": 170,
+   "bottom": 729,
+   "h": 559,
+   "text": "Site conditions — scanned▲Adjacent at-grade intersectiondete"
+  },
+  "refusal": null,
+  "resultsTop": 1067,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 3684,
+  "t": 1
+ },
+ {
+  "scrollY": 682,
+  "docH": 4681,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 976,
+   "bottom": 1064,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 1185,
+   "bottom": 1271,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 1127,
+   "bottom": 1173,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": {
+   "top": 170,
+   "bottom": 729,
+   "h": 559,
+   "text": "Site conditions — scanned▲Adjacent at-grade intersectiondete"
+  },
+  "refusal": null,
+  "resultsTop": 1088,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 3770,
+  "t": 265
+ },
+ {
+  "scrollY": 682,
+  "docH": 4970,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 1032,
+   "bottom": 1120,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 1241,
+   "bottom": 1327,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 1183,
+   "bottom": 1229,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": {
+   "top": 170,
+   "bottom": 785,
+   "h": 615,
+   "text": "Site conditions — scanned▲Adjacent at-grade intersectiondete"
+  },
+  "refusal": null,
+  "resultsTop": 1144,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 4059,
+  "t": 3148
+ },
+ {
+  "scrollY": 682,
+  "docH": 4862,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 1032,
+   "bottom": 1083,
+   "h": 52,
+   "text": "VERIFIED · 4 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": null,
+  "lockup": {
+   "top": 1183,
+   "bottom": 1220,
+   "h": 37,
+   "text": "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+  },
+  "block": {
+   "top": 170,
+   "bottom": 785,
+   "h": 615,
+   "text": "Site conditions — scanned▲Adjacent at-grade intersectiondete"
+  },
+  "refusal": null,
+  "resultsTop": 1107,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 3951,
+  "t": 4983
+ }
+]

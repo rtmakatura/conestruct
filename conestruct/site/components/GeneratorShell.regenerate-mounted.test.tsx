@@ -6,10 +6,12 @@
 // ``generating`` branch preceded ``inputError``/``refusal`` — a refused
 // input could sit behind a reassuring COMPUTING line.  Post-fix: with
 // prior results on screen, a regenerate dims and refreshes in place
-// under an explicit recomputing ribbon (stale-while-revalidate, marked
-// — same contract as the audit trail's "(refreshing…)"), and a refusal
-// or invalid input always outranks COMPUTING ("no answer yet" never
-// masks "answer refused").
+// under an explicit stale ribbon (stale-while-revalidate, marked —
+// same contract as the audit trail's "(refreshing…)"), and a refusal
+// or invalid input always outranks "no answer yet".  #252: the working
+// band is the one working voice post-generate (the strip's COMPUTING
+// line is gone); the ribbon says only that the values are the previous
+// answer.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -65,6 +67,16 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
 
 const okBd = () =>
   ({ ok: true, status: 200, json: async () => BREAKDOWN }) as unknown as Response;
+const okAudit = () =>
+  ({
+    ok: true,
+    status: 200,
+    json: async () => ({
+      summary: {},
+      sections: {},
+      plan_flags: { validation_warnings: 0, compliance_fails: 0, v1_limitations: 0, is_clean: true },
+    }),
+  }) as unknown as Response;
 const refusal400 = () =>
   ({
     ok: false,
@@ -126,70 +138,88 @@ describe("results stay mounted through regeneration (#192)", () => {
     expect(screen.queryByText("Generating…")).toBeNull();
     expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
     expect(document.querySelector(".results-stale")).not.toBeNull();
-    expect(screen.getByText(/Recomputing/)).toBeTruthy();
+    expect(screen.getByText(/Previous answer/)).toBeTruthy();
     // Last-known hero values stay visible under the dim (marked stale by
     // the ribbon, so this is the sanctioned SWR presentation).
     expect(screen.getByText(/183 ft/)).toBeTruthy();
 
     // Settling clears the ribbon and the dim.
     await release(bdCalls, 1, okBd());
-    expect(screen.queryByText(/Recomputing/)).toBeNull();
+    expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
   });
 
-  it("first generate with the answer still in flight keeps the empty-state (no prior results to hold)", async () => {
+  it("#252: first generate with the answer still in flight shows no 'Generating…' placeholder — the band is the voice", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     // Click Generate while the mount fetch is still pending.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    expect(screen.getByText("Generating…")).toBeTruthy();
-    await release(bdCalls, 0, okBd());
     expect(screen.queryByText("Generating…")).toBeNull();
+    const band = document.querySelector(".working-band");
+    expect(band).not.toBeNull();
+    expect(band!.querySelector(".wb-verb")!.textContent).toBe("GENERATING");
+    // The mount fetch settling is not the wire scenario's answer (the
+    // Generate click changed it): the band holds through the deferred
+    // debounce window until the pair for the generated scenario settles.
+    await release(bdCalls, 0, okBd());
+    expect(document.querySelector(".working-band")).not.toBeNull();
+    await flushDebounce();
+    await release(bdCalls, 1, okBd());
+    expect(document.querySelector(".working-band")).not.toBeNull();
+    await release(auditCalls, 1, okAudit());
+    expect(document.querySelector(".working-band")).toBeNull();
   });
 
-  it("a refusal settling mid-regeneration is never masked by COMPUTING", async () => {
+  it("#252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED while the band stays up for the open breakdown", async () => {
     await generateThenEdit();
     // Audit answers 400 for the CURRENT scenario while the breakdown is
-    // still in flight — the strip must show the refusal, not COMPUTING.
+    // still in flight — the verdict shows; the band stays (a request
+    // IS open) and leaves in the frame the breakdown settles.
     await release(auditCalls, 1, refusal400());
     expect(stripText()).toContain("PLAN DECLINED");
     expect(stripText()).not.toContain("COMPUTING");
+    expect(document.querySelector(".working-band")).not.toBeNull();
+    await release(bdCalls, 1, okBd());
+    expect(document.querySelector(".working-band")).toBeNull();
+    expect(stripText()).toContain("PLAN DECLINED");
   });
 });
 
-describe("StatusBar precedence: input honesty outranks the spinner (#192)", () => {
+describe("StatusBar precedence: input honesty outranks 'no answer yet' (#192, #252)", () => {
   const loadingAudit: AuditState = { state: "loading", lastReady: null };
 
-  it("inputError renders over generating", () => {
+  it("inputError renders over a pending answer — under the band's voice too", () => {
     render(
       <StatusBar
-        status="generating"
         inputError="Work zone length is required."
         audit={loadingAudit}
+        bandVoice
       />,
     );
     expect(stripText()).toContain("INVALID INPUT");
-    expect(stripText()).not.toContain("COMPUTING");
+    expect(stripText()).not.toContain("VERIFYING");
   });
 
-  it("refusal renders over generating", () => {
+  it("refusal renders over a pending answer — under the band's voice too", () => {
     render(
       <StatusBar
-        status="generating"
         inputError={null}
         refusal={{ message: "declined", pointer: "see the Road section" }}
         audit={loadingAudit}
+        bandVoice
       />,
     );
     expect(stripText()).toContain("PLAN DECLINED");
-    expect(stripText()).not.toContain("COMPUTING");
+    expect(stripText()).not.toContain("VERIFYING");
   });
 
-  it("with honest inputs, generating still shows COMPUTING", () => {
-    render(
-      <StatusBar status="generating" inputError={null} audit={loadingAudit} />,
-    );
-    expect(stripText()).toContain("COMPUTING");
+  it("with honest inputs a pending answer is VERIFYING pre-generate and nothing under the band's voice — never COMPUTING", () => {
+    const { unmount } = render(<StatusBar inputError={null} audit={loadingAudit} />);
+    expect(stripText()).toContain("VERIFYING");
+    expect(stripText()).not.toContain("COMPUTING");
+    unmount();
+    render(<StatusBar inputError={null} audit={loadingAudit} bandVoice />);
+    expect(document.querySelector(".status-bar")).toBeNull();
   });
 });

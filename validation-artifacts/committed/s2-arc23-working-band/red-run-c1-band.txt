@@ -1,0 +1,21 @@
+# red-run: sources stashed (WorkingBand.tsx, working-band.ts, GeneratorShell.tsx, StatusBar.tsx, ResultsHead.tsx, AppNav.tsx, globals.css, render-types.ts) — the arc's suites against main 00ecbf0
+ FAIL  lib/working-band.test.ts [ lib/working-band.test.ts ]
+ FAIL  components/WorkingBand.test.tsx [ components/WorkingBand.test.tsx ]
+ FAIL  components/GeneratorShell.a11y-announce.test.tsx > generation announcements (#193) > the stale ribbon stays visual-only (the band's region announces the flight, #252)
+ FAIL  components/GeneratorShell.post-generate-scroll.test.tsx > post-generate scroll (#152 E) > waits for a pending breakdown: scroll fires when generating resolves to post
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > results stay mounted through regeneration (#192) > a post-generate edit dims in place: no empty-state swap, panel stays mounted, ribbon marks the refresh
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > results stay mounted through regeneration (#192) > #252: first generate with the answer still in flight shows no 'Generating…' placeholder — the band is the voice
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > results stay mounted through regeneration (#192) > #252: a refusal settling mid-regeneration is never masked — the strip says PLAN DECLINED while the band stays up for the open breakdown
+ FAIL  components/GeneratorShell.regenerate-mounted.test.tsx > StatusBar precedence: input honesty outranks 'no answer yet' (#192, #252) > with honest inputs a pending answer is VERIFYING pre-generate and nothing under the band's voice — never COMPUTING
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #252 (was #247): while the generated scenario's audit is in flight the slot is empty and the band is up; the lockup lands on settle
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #252 (was #247): a pending breakdown also keeps the band up and the slot empty — the lockup never renders alongside an open request
+ FAIL  components/GeneratorShell.results-head.test.tsx > #249 + #247 + #246 — the results-head slot > #249 spec 34 + #252: after Assert the block stays mounted and fully disabled while the re-generation is in flight, the band names the correction; it re-enables on settle
+ FAIL  components/GeneratorShell.scan-wire.test.tsx > Generate sets site_scan on the wire (#224 phase 2) > #252: a first Generate raises the band naming the new plan; the ribbon says only that the values are the previous answer
+ FAIL  components/GeneratorShell.scan-wire.test.tsx > Generate sets site_scan on the wire (#224 phase 2) > #252: with no prior breakdown to hold there is no 'Generating…' placeholder either — the band alone speaks
+ FAIL  components/GeneratorShell.zone-staging.test.tsx > zone staging lifecycle > generating: a regenerate with prior results dims in place (#192); the placeholder is first-generate only
+ FAIL  components/StatusBar.test.tsx > StatusBar (UX-21/22 derived states) > #252: under the band's voice the in-flight strip renders nothing — pre-generate it still says VERIFYING; a verdict is unchanged either way
+ FAIL  lib/design/tokens.test.ts > #252 chrome + surface tokens > defines the z stack and the band surface exactly as ruled, and the chrome reads them
+ FAIL  lib/design/tokens.test.ts > #252 chrome + surface tokens > the band's track is the only motion and stops under reduced motion (spec 23: a static --act-glow fill, no sweep)
+   ✓ confirmed = --pass; × dismissed = chromeless --none (a dismissal
+ Test Files  10 failed | 1 passed (11)
+      Tests  15 failed | 60 passed (75)

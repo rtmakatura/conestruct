@@ -141,17 +141,25 @@ describe("collectValidationWarnings", () => {
 });
 
 describe("StatusBar (UX-21/22 derived states)", () => {
-  it("generating state keeps the COMPUTING line", () => {
+  it("#252: the strip has no working state of its own — a ready audit is its verdict, never a COMPUTING line", () => {
     const html = renderToStaticMarkup(
-      <StatusBar
-        status="generating"
-        inputError={null}
-        audit={ready(makeAudit())}
-      />,
+      <StatusBar inputError={null} audit={ready(makeAudit())} />,
     );
-    expect(html).toContain("COMPUTING");
-    expect(html).toContain("status-bar warn");
-    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("COMPUTING");
+    expect(html).not.toContain("status-bar warn");
+    expect(html).toContain("READY FOR TCS REVIEW");
+  });
+
+  it("#252: under the band's voice the in-flight strip renders nothing — pre-generate it still says VERIFYING; a verdict is unchanged either way", () => {
+    const loading: AuditState = { state: "loading", lastReady: null };
+    const pre = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} />);
+    expect(pre).toContain("VERIFYING");
+    const band = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} bandVoice />);
+    expect(band).toBe('<div aria-live="polite"></div>');
+    const verdict = renderToStaticMarkup(
+      <StatusBar inputError={null} audit={ready(makeAudit())} bandVoice />,
+    );
+    expect(verdict).toContain("READY FOR TCS REVIEW");
   });
 
   it("invalid input (client schema-bounds) is red and blocks — never READY", () => {
@@ -160,7 +168,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     // renders with the declined vocabulary instead — see below.
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError="Work zone length is required."
         audit={ready(makeAudit())}
       />,
@@ -182,7 +189,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("refusal without an affordance renders the full 400 with declined vocabulary", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         refusal={{ message: FLOOR_400, pointer: null }}
         audit={{ state: "error", message: FLOOR_400, httpStatus: 400, lastReady: null }}
@@ -201,7 +207,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("refusal with an affordance renders the short pointer, never the 400 text", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         refusal={{
           message:
@@ -223,7 +228,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("client bounds win over a refusal (matches the shell's precedence)", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError="Work zone length is required."
         refusal={{ message: FLOOR_400, pointer: null }}
         audit={ready(makeAudit())}
@@ -237,7 +241,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("locationUnset renders AWAITING LOCATION — chromeless, no verdict, even over a clean audit", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         locationUnset
         audit={ready(makeAudit())}
@@ -252,23 +255,21 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("INVALID INPUT");
   });
 
-  it("locationUnset outranks COMPUTING — the spinner never masks the missing pin", () => {
+  it("locationUnset outranks a pending verification — no verdict, no VERIFYING, for a site nobody chose", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="generating"
         inputError={null}
         locationUnset
-        audit={ready(makeAudit())}
+        audit={{ state: "loading", lastReady: null }}
       />,
     );
     expect(html).toContain("AWAITING LOCATION");
-    expect(html).not.toContain("COMPUTING");
+    expect(html).not.toContain("VERIFYING");
   });
 
   it("a genuine input error outranks the missing pin", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError="Work zone length is required."
         locationUnset
         audit={ready(makeAudit())}
@@ -281,7 +282,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("a refusal outranks the missing pin", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         refusal={{ message: FLOOR_400, pointer: null }}
         locationUnset
@@ -295,7 +295,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("first load shows VERIFYING, not a verdict", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={{ state: "loading", lastReady: null }}
       />,
@@ -308,7 +307,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("audit fetch failure shows VERIFICATION UNAVAILABLE, not green", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={{ state: "error", message: "Network error", lastReady: null }}
       />,
@@ -319,7 +317,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
 
   it("zero warnings is green READY — with a real zero, not demo copy", () => {
     const html = renderToStaticMarkup(
-      <StatusBar status="done" inputError={null} audit={ready(makeAudit())} />,
+      <StatusBar inputError={null} audit={ready(makeAudit())} />,
     );
     expect(html).toContain("status-bar pass");
     expect(html).toContain("VERIFIED · 0 validation warnings");
@@ -333,7 +331,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("warnings present is amber with an expandable list — never green READY", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(
           makeAudit({
@@ -363,7 +360,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
   it("singular count reads '1 validation warning'", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(makeAudit({ geoViolations: [GEO_WARNING] }))}
       />,
@@ -380,7 +376,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     // must NOT leak through — and a green lastReady must not either.
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={{
           state: "loading",
@@ -394,7 +389,6 @@ describe("StatusBar (UX-21/22 derived states)", () => {
 
     const greenStale = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={{ state: "loading", lastReady: makeAudit() }}
       />,
@@ -415,7 +409,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     // had no validation warnings; the failing colorado check was invisible.
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(makeAudit({ coloradoFails: 1 }))}
       />,
@@ -431,7 +424,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
   it("a V1 limitation with zero validation warnings is amber, not green", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(makeAudit({ pendingItems: 1 }))}
       />,
@@ -446,7 +438,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
   it("breaks a mixed flag set down by category — input vs compliance vs V1", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(
           makeAudit({
@@ -472,7 +463,7 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
 
   it("clean rollup (all categories zero) is green READY", () => {
     const html = renderToStaticMarkup(
-      <StatusBar status="done" inputError={null} audit={ready(makeAudit())} />,
+      <StatusBar inputError={null} audit={ready(makeAudit())} />,
     );
     expect(html).toContain("status-bar pass");
     expect(html).toContain("READY FOR TCS REVIEW");
@@ -483,7 +474,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     // validation warning, exactly as pre-#60 — not the generalized breakdown.
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(makeAudit({ geoViolations: [GEO_WARNING] }))}
       />,
@@ -503,7 +493,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     it("no plan_flags + clean warnings → UNAVAILABLE, never green, never crashes", () => {
       const html = renderToStaticMarkup(
         <StatusBar
-          status="done"
           inputError={null}
           audit={ready(makeAudit({ omitPlanFlags: true }))}
         />,
@@ -516,7 +505,6 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
     it("no plan_flags + a validation warning → UNAVAILABLE, no derived amber verdict", () => {
       const html = renderToStaticMarkup(
         <StatusBar
-          status="done"
           inputError={null}
           audit={ready(
             makeAudit({ geoViolations: [GEO_WARNING], omitPlanFlags: true }),
@@ -539,7 +527,6 @@ describe("arc12 coda — compliance-fails source tag cites CDOT S-630-1", () => 
   it("src tag reads CDOT S-630-1; no Supplement attribution", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="done"
         inputError={null}
         audit={ready(makeAudit({ coloradoFails: 2 }))}
       />,

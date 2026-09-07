@@ -30,7 +30,9 @@ import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { SetupStrip } from "./SetupStrip";
-import { StatusBar, type Status } from "./StatusBar";
+import { StatusBar } from "./StatusBar";
+import { WorkingBand } from "./WorkingBand";
+import { deriveWorkingBand } from "@/lib/working-band";
 import { OutputCards } from "./OutputCards";
 import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
 import { PricingCard } from "./PricingCard";
@@ -63,11 +65,11 @@ type Mode = "sandbox" | "workbench";
 
 // #249 + #247 + #246 — the results-head slot's state, DERIVED here and
 // rendered verbatim by <ResultsHead> (the deriveRail idiom: one
-// derivation, one voice).  ``wait`` while any fetch for the GENERATED
+// derivation, one voice).  Null while any fetch for the GENERATED
 // scenario is in flight — the breakdown (genState "generating") or the
-// audit (the stamped view still loading) — because the in-generate scan
-// can run up to 20 s and the strip's VERIFYING line sits under the fixed
-// nav after the landing (#247, measured on prod 0e4b4a1).  ``scanned``
+// audit (the stamped view still loading): #252 retired the wait line
+// that rendered here (#247); the working band is the one working voice
+// and this slot says nothing until the answer lands.  ``scanned``
 // from the SETTLED scan (the stamped view, same section the strip block
 // and section 03 read) when it RAN (status ok): the detected count over
 // the keyed buckets present on the wire — ``total`` is counted, never
@@ -85,8 +87,7 @@ export function deriveResultsHead(args: {
 }): ResultsHeadState | null {
   const { generated, genState, stripAudit } = args;
   if (!generated) return null;
-  if (genState === "generating" || stripAudit.state === "loading") return { kind: "wait" };
-  if (stripAudit.state !== "ready") return null;
+  if (genState === "generating" || stripAudit.state !== "ready") return null;
   const scan = stripAudit.data.sections?.site_scan as SiteScanProvenance | undefined;
   if (!scan || scan.status !== "ok") return null;
   const buckets = (scan.buckets as Record<string, ScanBucketWire> | undefined) ?? {};
@@ -359,6 +360,10 @@ export function GeneratorShell({
     setAuditState((prev) => ({
       state: "loading",
       lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
+      // #252: the stamp of the answer that settled before this fetch —
+      // the working band diffs it against the wire to name the flight.
+      lastSettledFor:
+        prev.state === "loading" ? prev.lastSettledFor : prev.forScenario,
     }));
     (async () => {
       try {
@@ -402,11 +407,17 @@ export function GeneratorShell({
             siteScan,
             lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
             forScenario: fetchScenario,
+            lastSettledFor: prev.lastSettledFor,
           }));
           return;
         }
         const data = (await res.json()) as AuditResponse;
-        setAuditState({ state: "ready", data, forScenario: fetchScenario });
+        setAuditState((prev) => ({
+          state: "ready",
+          data,
+          forScenario: fetchScenario,
+          lastSettledFor: prev.lastSettledFor,
+        }));
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
         clearTimeout(slowTimer);
@@ -416,6 +427,7 @@ export function GeneratorShell({
           message: "Network error",
           lastReady: prev.state === "ready" ? prev.data : prev.lastReady,
           forScenario: fetchScenario,
+          lastSettledFor: prev.lastSettledFor,
         }));
       }
     })();
@@ -715,7 +727,6 @@ export function GeneratorShell({
     (deviceBreakdown.lastReady ?? null) !== null;
   const showResults =
     genState === "post" || genState === "error" || regenerating;
-  const status: Status = genState === "generating" ? "generating" : "done";
 
   // #152 E: on successful generation, land the viewport on the Zone-2
   // hero.  Armed per Generate click (never on ordinary edits), fired
@@ -886,17 +897,46 @@ export function GeneratorShell({
   // block still offers Assert on every absent row, reached from the
   // section 03 signposts.
   const resultsHead = deriveResultsHead({ generated, genState, stripAudit });
-  // Spec 34 (#249): ONE in-flight derivation for the generated scenario
-  // — the results-head wait line and the strip block's block-wide
-  // disable are the same fact.  The held scan is the last ready
-  // answer's, the #192 stale-while-revalidate shape.
-  const scanInFlight = resultsHead?.kind === "wait";
+  // #252 — ONE in-flight derivation for the generated scenario: a
+  // request for it is open while the breakdown is loading or the
+  // stamped audit view is (the deferred debounce window included, as
+  // for every verdict derivation).  Post-generate only: pre-generate
+  // the same pair fires per keystroke and must never lock the input
+  // under the cursor.  Read off the live request state, never a timer.
+  // Spec 34 (#249) reads the same fact for the strip block's disable;
+  // the working band mounts on it; the root's write lock keys on it.
+  const planInFlight =
+    generated &&
+    (deviceBreakdown.state === "loading" || stripAudit.state === "loading");
+  const scanInFlight = planInFlight;
   const scanHeld = scanInFlight
     ? ((stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections?.site_scan ?? null)
     : null;
+  // The band's sentence, from the two wire objects (lib/working-band.ts):
+  // ``prev`` is the answer settled BEFORE this flight — the stamped
+  // audit's own ``forScenario`` when that answer predates the wire on
+  // screen (the deferred window), else the carried ``lastSettledFor``.
+  const auditFor = auditState.state === "loading" ? undefined : auditState.forScenario;
+  const bandPrev = (
+    auditFor !== undefined && !stampMatches([auditFor], [wireScenario])
+      ? auditFor
+      : (auditState.lastSettledFor ?? null)
+  ) as Scenario | null;
+  const bandState = deriveWorkingBand({
+    inFlight: planInFlight,
+    prev: bandPrev,
+    next: wireScenario,
+  });
 
+  // #252 spec 31: the refusal container renders only once the pair has
+  // settled — never in a frame the band is up (the audit can refuse
+  // while the breakdown is still open; the strip's PLAN DECLINED verdict
+  // is unchanged and still never masked, #192).  The recovery actions it
+  // carries are write controls, locked under the band anyway.
   const scanRefusal: { message: string; scan: SiteScanProvenance | null } | null =
-    stripAudit.state === "error" && stripAudit.code === SITE_SCAN_UNAVAILABLE_CODE
+    !planInFlight &&
+    stripAudit.state === "error" &&
+    stripAudit.code === SITE_SCAN_UNAVAILABLE_CODE
       ? { message: stripAudit.message, scan: stripAudit.siteScan ?? null }
       : null;
 
@@ -1006,7 +1046,7 @@ export function GeneratorShell({
   );
 
   return (
-    <div className="workbench min-h-screen">
+    <div className={`workbench min-h-screen${planInFlight ? " ws-locked" : ""}`}>
       <div className="workbench-frame" aria-hidden>
         <span className="ftick tl" />
         <span className="ftick tr" />
@@ -1129,13 +1169,12 @@ export function GeneratorShell({
               post-generation chrome; the prototype's hidden-in-pre strip
               had no live verification behind it. */}
           <StatusBar
-            status={status}
             inputError={inputError}
             refusal={refusal}
             locationUnset={!hasLocation(scenario.meta)}
             audit={stripAudit}
             verifySlow={verifySlow}
-            scanning={generated}
+            bandVoice={generated}
           />
           {/* #193 — generation-lifecycle announcements (WCAG 4.1.3).
               Visually hidden, persistently mounted; content set only at
@@ -1194,11 +1233,10 @@ export function GeneratorShell({
                 results-stale wrapper: the dimmed stale results are the
                 previous answer, but the refusal is current and must
                 keep its measured contrast (rule 13). */}
-            {/* #249 + #247 + #246: the results-head slot — the wait line
-                while a fetch for the generated scenario runs (in view by
-                construction, below the landing), the count lockup once
-                the scan settles and RAN, nothing otherwise.  Slot order:
-                this line → the refusal container → the plan. */}
+            {/* #249 + #246 (+ #252): the results-head slot — the count
+                lockup once the scan settles and RAN, nothing otherwise
+                (the #247 wait line retired: the band is the voice).
+                Slot order: this slot → the refusal container → the plan. */}
             <ResultsHead head={resultsHead} />
             {scanRefusal && (
               <div role="alert" className="sys-event warn scan-refusal">
@@ -1244,17 +1282,11 @@ export function GeneratorShell({
                 </div>
               </div>
             )}
-            {genState === "generating" && !regenerating ? (
-              <div className="empty-state">
-                <span className="big text-[color:var(--act)]">Generating…</span>
-                {/* #224 phase 2: the scan is part of generation; one
-                    sentence, no fabricated stage progress (one request,
-                    no signal of which stage the backend is in). */}
-                Scanning site conditions along the corridor (OpenStreetMap,
-                up to 20 s), then computing taper, buffer, device spacing,
-                and sign placement.
-              </div>
-            ) : (
+            {/* #252: the "Generating…" empty state (a first Generate with
+                no prior breakdown to hold) is gone — the band is the one
+                working voice; the zone holds the pre-generate cards
+                until the answer lands. */}
+            {
               <div
                 className={
                   genState === "error" || regenerating ? "results-stale" : ""
@@ -1269,18 +1301,15 @@ export function GeneratorShell({
                     the input or retry from the plan details panel.
                   </div>
                 )}
-                {/* Deliberately visual-only (#193): the strip already
-                    announces COMPUTING for this state; a second polite
-                    region saying the same thing is noise. */}
+                {/* Deliberately visual-only (#193): the band's live
+                    region announces the flight; a second polite region
+                    saying the same thing is noise.  #252: the ribbon is
+                    the text channel of the results-stale dim (rule 13)
+                    and says only that — what the system is DOING is the
+                    band's sentence, spoken once. */}
                 {regenerating && (
                   <div className="stale-ribbon">
-                    {/* #224 phase 2: a first Generate lands here, not in
-                        the empty state — the pre-generate loop already
-                        holds a breakdown — so this ribbon is the wait
-                        the user actually sees during the scan.  Name it. */}
-                    {generated
-                      ? "⟳ Recomputing — scanning site conditions along the corridor (OpenStreetMap, up to 20 s); values below are the previous answer until this settles."
-                      : "⟳ Recomputing for the edited input — values below are the previous answer until this settles."}
+                    Previous answer — values below predate the request in flight.
                   </div>
                 )}
                 {showResults && (
@@ -1320,7 +1349,7 @@ export function GeneratorShell({
                   />
                 )}
               </div>
-            )}
+            }
           </section>
 
           {/* ——— Zone 3 · Reference ——— */}
@@ -1362,6 +1391,10 @@ export function GeneratorShell({
       </div>
 
       <AppFooter />
+      {/* #252: the one working voice — fixed to the viewport's bottom
+          edge, mounted iff a request for the generated scenario is
+          open, rendered verbatim from ``bandState``. */}
+      <WorkingBand state={bandState} />
     </div>
   );
 }

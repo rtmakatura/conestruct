@@ -156,7 +156,16 @@ export interface AuditResponse {
  * any audit has resolved.
  */
 export type AuditState =
-  | { state: "loading"; lastReady: AuditResponse | null }
+  | {
+      state: "loading";
+      lastReady: AuditResponse | null;
+      // #252: the stamp (``forScenario``) of the answer that SETTLED
+      // before this fetch opened — ready or refused alike — carried on
+      // every variant so the working band can name what this flight
+      // changes by diffing two wire objects (lib/working-band.ts).
+      // Client state only; never on the wire.
+      lastSettledFor?: unknown;
+    }
   | {
       state: "ready";
       data: AuditResponse;
@@ -170,6 +179,7 @@ export type AuditState =
       // is the original instance of the #197 input-identity stamp; the
       // shared idiom and its full contract live in lib/answer-stamp.ts.
       forScenario?: unknown;
+      lastSettledFor?: unknown;
     }
   | {
       state: "error";
@@ -187,6 +197,7 @@ export type AuditState =
       siteScan?: SiteScanProvenance;
       lastReady: AuditResponse | null;
       forScenario?: unknown;
+      lastSettledFor?: unknown;
     };
 
 /**

@@ -147,8 +147,8 @@ describe("post-generate scroll (#152 E)", () => {
     await user.click(screen.getByText(/Edit full setup/));
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     // #192: with prior results the in-flight state dims in place under
-    // the recomputing ribbon (no "Generating…" empty-state swap).
-    expect(screen.getByText(/Recomputing/)).toBeTruthy();
+    // the stale ribbon (no "Generating…" empty-state swap; #252 wording).
+    expect(screen.getByText(/Previous answer/)).toBeTruthy();
     expect(scrollSpy).not.toHaveBeenCalled();
 
     await release(1, okBreakdown());

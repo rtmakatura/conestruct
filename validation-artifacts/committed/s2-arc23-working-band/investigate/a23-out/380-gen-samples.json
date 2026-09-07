@@ -1,0 +1,256 @@
+[
+ {
+  "scrollY": 2212,
+  "docH": 3012,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": -1125,
+   "bottom": -1037,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": -916,
+   "bottom": -830,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": -974,
+   "bottom": -928,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": -1013,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 571,
+  "t": 13
+ },
+ {
+  "scrollY": 1206,
+  "docH": 3012,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": -119,
+   "bottom": -31,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 90,
+   "bottom": 176,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 32,
+   "bottom": 78,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": -7,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 1577,
+  "t": 279
+ },
+ {
+  "scrollY": 1080,
+  "docH": 3012,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 7,
+   "bottom": 95,
+   "h": 88,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 216,
+   "bottom": 302,
+   "h": 86,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 158,
+   "bottom": 204,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": 119,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 1703,
+  "t": 546
+ },
+ {
+  "scrollY": 1080,
+  "docH": 2926,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 7,
+   "bottom": 74,
+   "h": 68,
+   "text": "VERIFYING · taper · buffer · spacing · sign placement"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": {
+   "top": 174,
+   "bottom": 220,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": 98,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 1617,
+  "t": 812
+ },
+ {
+  "scrollY": 1080,
+  "docH": 2926,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 7,
+   "bottom": 74,
+   "h": 68,
+   "text": "VERIFYING · scanning site conditions along the corridor — up"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": {
+   "top": 174,
+   "bottom": 220,
+   "h": 46,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": 98,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 1617,
+  "t": 2128
+ },
+ {
+  "scrollY": 1651,
+  "docH": 4573,
+  "innerH": 800,
+  "innerW": 380,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 792,
+  "statusBar": {
+   "top": 7,
+   "bottom": 58,
+   "h": 52,
+   "text": "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": null,
+  "lockup": {
+   "top": 158,
+   "bottom": 196,
+   "h": 37,
+   "text": "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+  },
+  "block": {
+   "top": -799,
+   "bottom": -240,
+   "h": 559,
+   "text": "Site conditions — scanned▲Adjacent at-grade intersectiondete"
+  },
+  "refusal": null,
+  "resultsTop": 82,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 2693,
+  "t": 6583
+ }
+]

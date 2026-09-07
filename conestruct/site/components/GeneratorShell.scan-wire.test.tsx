@@ -218,7 +218,7 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     window.history.replaceState({}, "", "/");
   });
 
-  it("the strip settles on the scanned answer — never a permanent VERIFYING (the #197 stamp)", async () => {
+  it("the strip settles on the scanned answer and the band unmounts — never a permanent in-flight state (the #197 stamp, #252)", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -228,6 +228,7 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     await settle();
     expect(strip()).toContain("READY FOR TCS REVIEW");
     expect(strip()).not.toContain("VERIFYING");
+    expect(document.querySelector(".working-band")).toBeNull();
   });
 
   it("Reopen drops the flag: the next request is scan-free again", async () => {
@@ -284,7 +285,7 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     };
   }
 
-  it("a first Generate shows the recomputing ribbon — and it names the scan", async () => {
+  it("#252: a first Generate raises the band naming the new plan; the ribbon says only that the values are the previous answer", async () => {
     const release = holdScannedBreakdown("ok");
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
@@ -293,29 +294,30 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     await settle();
     // Not the empty state: the pre-generate breakdown is the carry.
     expect(screen.queryByText("Generating…")).toBeNull();
-    expect(document.body.textContent).toContain(
-      "⟳ Recomputing — scanning site conditions along the corridor (OpenStreetMap, up to 20 s); values below are the previous answer until this settles.",
-    );
-    // The strip's COMPUTING line names the scan too.
-    expect(strip()).toContain("scanning site conditions");
+    expect(screen.getByText("Previous answer — values below predate the request in flight.")).toBeTruthy();
+    expect(document.body.textContent).not.toContain("Recomputing");
+    const band = document.querySelector(".working-band")!;
+    expect(band.querySelector(".wb-verb")!.textContent).toBe("GENERATING");
+    expect(band.querySelector(".wb-object")!.textContent).toBe("new plan · pin 39.7400, -104.9663");
+    // No second working voice anywhere on the page.
+    expect(document.body.textContent).not.toMatch(/COMPUTING|VERIFYING|scanning site conditions/);
     await act(async () => {
       release();
       await Promise.resolve();
     });
   });
 
-  it("the generating empty state names the scan (no fabricated stage progress)", async () => {
+  it("#252: with no prior breakdown to hold there is no 'Generating…' placeholder either — the band alone speaks", async () => {
     const release = holdScannedBreakdown("fail");
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     await user.click(screen.getByText("Generate package"));
     await settle();
-    expect(screen.getByText("Generating…")).toBeTruthy();
-    expect(document.body.textContent).toContain(
-      "Scanning site conditions along the corridor (OpenStreetMap, up to 20 s), then computing taper, buffer, device spacing, and sign placement.",
-    );
-    expect(strip()).toContain("scanning site conditions");
+    expect(screen.queryByText("Generating…")).toBeNull();
+    expect(document.body.textContent).not.toContain("then computing taper");
+    expect(document.querySelector(".working-band")).not.toBeNull();
+    expect(document.body.textContent).not.toMatch(/COMPUTING|VERIFYING|scanning site conditions/);
     await act(async () => {
       release();
       await Promise.resolve();

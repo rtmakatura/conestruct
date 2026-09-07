@@ -16,19 +16,20 @@ const noVerdict = { summary: {}, sections: {} } as unknown as AuditResponse;
 describe("StatusBar aria-live region", () => {
   it("wraps every state in aria-live=polite", () => {
     const states = [
+      // #252: under the band's voice the wrapper stays, empty — the
+      // verdict that lands next is announced from the same region.
       renderToStaticMarkup(
         <StatusBar
-          status="idle"
           inputError={null}
           audit={{ state: "loading", lastReady: null }}
+          bandVoice
         />,
       ),
       renderToStaticMarkup(
-        <StatusBar status="generating" inputError={null} audit={{ state: "loading", lastReady: null }} />,
+        <StatusBar inputError={null} audit={{ state: "loading", lastReady: null }} />,
       ),
       renderToStaticMarkup(
         <StatusBar
-          status="idle"
           inputError="speed out of range"
           audit={{ state: "loading", lastReady: null }}
         />,
@@ -44,7 +45,6 @@ describe("verifying / unavail style modifiers", () => {
   it("in-flight verification renders idle + verifying", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="idle"
         inputError={null}
         audit={{ state: "loading", lastReady: null }}
       />,
@@ -56,7 +56,6 @@ describe("verifying / unavail style modifiers", () => {
   it("audit fetch error renders idle + unavail", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="idle"
         inputError={null}
         audit={{ state: "error", message: "Network error", lastReady: null }}
       />,
@@ -68,7 +67,6 @@ describe("verifying / unavail style modifiers", () => {
   it("a response with no plan verdict renders idle + unavail", () => {
     const html = renderToStaticMarkup(
       <StatusBar
-        status="idle"
         inputError={null}
         audit={{ state: "ready", data: noVerdict }}
       />,

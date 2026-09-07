@@ -1,11 +1,10 @@
 // @vitest-environment happy-dom
 //
-// #249 + #247 + #246 — the results-head slot, one derived state rendered
-// by one component.  After Generate the viewport lands on the results
-// zone (#152 E); the strip's VERIFYING line sits under the fixed nav
-// there, so while a fetch for the generated scenario is in flight the
-// results head carries the wait line (#247).  Once the scan settles and
-// RAN: the count lockup — figure, "Site conditions detected / No site
+// #249 + #247 + #246 (+ #252) — the results-head slot, one derived state
+// rendered by one component.  While a fetch for the generated scenario
+// is in flight the slot is EMPTY and the working band is the voice
+// (#252 retired the #247 wait line that rendered here).  Once the scan
+// settles and RAN: the count lockup — figure, "Site conditions detected / No site
 // conditions detected", "of N checked" over the keyed buckets on the
 // wire, and the jump to the strip's correction block (#246).  Every
 // other scan state renders nothing here: that state's own container is
@@ -32,7 +31,6 @@ vi.mock("./GeneratorSidebar", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { RESULTS_HEAD_WAIT_COPY } from "./ResultsHead";
 import { PINNED_SHOULDER } from "./test-fixtures";
 
 const BUCKETS_DETECTED = {
@@ -185,6 +183,8 @@ async function generate() {
   await settle();
   return user;
 }
+// #252: the in-flight voice is the band; the slot itself has one state.
+const band = () => document.querySelector(".working-band");
 const waitLine = () => document.querySelector(".results-head-wait");
 const lockup = () => document.querySelector(".results-head-lockup") as HTMLElement | null;
 const slotStates = () => document.querySelectorAll(".results-head-wait, .results-head-lockup");
@@ -262,46 +262,45 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     expect(screen.getByText(REFUSAL_MESSAGE)).toBeTruthy();
   });
 
-  it("#247: while the generated scenario's audit is in flight the wait line renders in the results head; it yields to the lockup on settle", async () => {
+  it("#252 (was #247): while the generated scenario's audit is in flight the slot is empty and the band is up; the lockup lands on settle", async () => {
     // Pre-generate the audit runs WITHOUT the scan (withSiteScan applies
     // only once generated): its provenance is not_run.
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
-    // Before Generate nothing is in the slot, even with fetches in flight (pre-generate).
+    // Before Generate nothing is in the slot and no band, even with
+    // fetches in flight (pre-generate is exempt: it would lock typing).
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     expect(waitLine()).toBeNull();
     expect(lockup()).toBeNull();
+    expect(band()).toBeNull();
     // Generate with the audit held pending: the breakdown settles (the
-    // landing fires), the scan has not answered — the wait line shows,
-    // in the results zone, and the lockup does not.
+    // landing fires), the scan has not answered — the band is up, the
+    // slot holds nothing, no wait line anywhere.
     served = audit(BUCKETS_DETECTED);
     const held = gate(served);
     auditGate = held;
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
-    const wait = waitLine();
-    expect(wait, "wait line present while the audit is pending").not.toBeNull();
-    expect(wait!.textContent).toBe(RESULTS_HEAD_WAIT_COPY);
-    expect(wait!.querySelector(".rh-spin[aria-hidden]")).not.toBeNull();
-    const results = document.querySelectorAll("section.zone")[1];
-    expect(results.contains(wait!)).toBe(true);
+    expect(band(), "band present while the audit is pending").not.toBeNull();
+    expect(waitLine()).toBeNull();
+    expect(slotStates()).toHaveLength(0);
     expect(lockup()).toBeNull();
     // First generate: the only held scan is the pre-generate not_run —
     // nothing to hold, the block is absent (spec 34 holds a scan that
     // RAN; see the Assert case below).
     expect(document.getElementById("site-corrections")).toBeNull();
-    // Release the audit: the wait line goes, the lockup arrives.
+    // Release the audit: the band goes, the lockup arrives.
     await act(async () => {
       held.release();
     });
     await settle();
-    expect(waitLine()).toBeNull();
+    expect(band()).toBeNull();
     expectLockup(2, 5);
     expect(document.getElementById("site-corrections")).not.toBeNull();
   });
 
-  it("#247: the two states are mutually exclusive — a pending breakdown also reads as wait, never alongside the lockup", async () => {
+  it("#252 (was #247): a pending breakdown also keeps the band up and the slot empty — the lockup never renders alongside an open request", async () => {
     served = audit(BUCKETS_DETECTED);
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -312,14 +311,14 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     await settle();
     // The audit answered (the block is up) but generation is still computing.
     expect(document.getElementById("site-corrections")).not.toBeNull();
-    expect(waitLine()).not.toBeNull();
+    expect(band()).not.toBeNull();
     expect(lockup()).toBeNull();
-    expect(slotStates()).toHaveLength(1);
+    expect(slotStates()).toHaveLength(0);
     await act(async () => {
       held.release();
     });
     await settle();
-    expect(waitLine()).toBeNull();
+    expect(band()).toBeNull();
     expect(lockup()).not.toBeNull();
     expect(slotStates()).toHaveLength(1);
   });
@@ -327,8 +326,9 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
   // Spec 34 (#249): a correction re-generates the plan; while that
   // re-generation is in flight the block stays MOUNTED (arc-20
   // unmounted it: the stamped view nulls mid-refetch) with every button
-  // disabled, and the wait line is up — one derivation, two surfaces.
-  it("#249 spec 34: after Assert the block stays mounted and fully disabled while the re-generation is in flight, alongside the wait line; it re-enables on settle", async () => {
+  // disabled, and the band is up naming the correction (#252) — one
+  // derivation, two surfaces.
+  it("#249 spec 34 + #252: after Assert the block stays mounted and fully disabled while the re-generation is in flight, the band names the correction; it re-enables on settle", async () => {
     served = audit(BUCKETS_DETECTED);
     const user = await generate();
     const block = () => document.getElementById("site-corrections");
@@ -349,13 +349,17 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const school = within(block()!).getByText("School zone").closest(".site-correction-row") as HTMLElement;
     await user.click(within(school).getByRole("button", { name: "Assert" }));
     await settle();
-    // In flight: block mounted on the held scan, aria-busy, every button disabled; wait line up, no lockup.
+    // In flight: block mounted on the held scan, aria-busy, every button disabled; band up, no lockup.
     expect(block(), "block stays mounted mid re-generation").not.toBeNull();
     expect(block()!.getAttribute("aria-busy")).toBe("true");
     const buttons = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
     expect(buttons.length).toBe(5);
     expect(buttons.every((b) => b.disabled)).toBe(true);
-    expect(waitLine()).not.toBeNull();
+    expect(band()).not.toBeNull();
+    expect(band()!.querySelector(".wb-verb")!.textContent).toBe("RE-GENERATING");
+    expect(band()!.querySelector(".wb-object")!.textContent).toBe("after a correction to School zone");
+    expect(band()!.querySelector(".wb-named")!.textContent).toBe("School zone");
+    expect(waitLine()).toBeNull();
     expect(lockup()).toBeNull();
     // Release: the record replaces the row, buttons re-enable, the lockup returns.
     await act(async () => {
@@ -367,7 +371,7 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const after = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
     expect(after.some((b) => b.disabled)).toBe(false);
     expect(within(block()!).getByRole("button", { name: "Undo" })).toBeTruthy();
-    expect(waitLine()).toBeNull();
+    expect(band()).toBeNull();
     expectLockup(2, 5);
   });
 });

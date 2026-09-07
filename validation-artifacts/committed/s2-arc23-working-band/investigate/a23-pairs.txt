@@ -1,0 +1,25 @@
+| ink | #0f1a26 (spec band) | --canvas #14202e | --canvas-tint #1b2838 |
+|---|---|---|---|
+| --act #34a9e8 | 6.68 | 6.26 | 5.68 |
+| --act-bright #56bcf2 | 8.25 | 7.74 | 7.01 |
+| spec #5cbef0 | 8.43 | 7.90 | 7.16 |
+| spec verb #a9dcf8 | 11.94 | 11.19 | 10.15 |
+| --ink #eaf0f7 | 15.30 | 14.35 | 13.01 |
+| --ink-on-dark #c8d1dd | 11.39 | 10.68 | 9.68 |
+| --ink-on-dark-faint #93a0b0 | 6.60 | 6.19 | 5.61 |
+| --warn #f4c020 | 10.37 | 9.73 | 8.82 |
+| --rule #2c3e53 | 1.61 | 1.51 | 1.37 |
+| --none #93a0b0 | 6.60 | 6.19 | 5.61 |
+
+track 0.16 #153145 1.30 vs band; 1.22 vs canvas
+track 0.4 #1e5374 2.13 vs band; 1.99 vs canvas
+border --act on band 6.68 band surface vs canvas 1.07 vs tint 1.18
+0.45 --act on canvas: #225e82 2.34
+0.45 --act on paper: #2b698f 2.12
+0.45 --ink-on-dark on canvas: #65707d 3.27
+0.45 --ink-on-dark on paper: #6e7b8a 2.93
+0.45 --ink on canvas: #747e88 3.98
+0.45 --ink on paper: #7d8996 3.55
+0.45 --act-bright on canvas: #326686 2.65
+0.45 --act-bright on paper: #3a7194 2.40
+--sc-disabled rgba(147,160,176,.35) on canvas 1.91

@@ -703,6 +703,15 @@ body {
      heading clear of the nav + rail instead of under them. */
   --nav-h: 52px;
   --rail-h: 38px;
+  /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
+     #253's step strip) < nav < frame < the working band — the band is
+     the topmost chrome so the frame's corner ticks never draw over it
+     (ruled; measured on prod 00ecbf0 with the frame at 60 above a
+     band at 50).  AppNav reads --z-nav; nothing else sits between. */
+  --z-strip: 30;
+  --z-nav: 40;
+  --z-frame: 60;
+  --z-band: 70;
 
   /* dark canvas (fix-spec-02 surface set) */
   --canvas: #14202e;
@@ -730,6 +739,16 @@ body {
   /* on-canvas ink */
   --ink-on-dark: #c8d1dd;
   --ink-on-dark-faint: #93a0b0;
+
+  /* #252: the working band's surface — darker than --canvas (1.07:1;
+     the band reads as chrome from its --act border and shadow, not
+     its fill).  Shared with #253's step strip, which composites it at
+     .97: hence the channel triplet.  Ink pairs on it, measured (WCAG
+     AA floor 4.5): --act 6.68, --act-bright 8.25, --ink 15.30,
+     --ink-on-dark 11.39, --ink-on-dark-faint / --none 6.60, --warn
+     10.37 (validation-artifacts/committed/s2-arc23-working-band). */
+  --ws-surface-rgb: 15 26 38;
+  --ws-surface: rgb(var(--ws-surface-rgb));
 
   /* ─── Role colors — one job each (fix-spec-02, P1·01) ───
      act  = INTERACTIVE: anything you touch (buttons, links, focus,
@@ -812,7 +831,7 @@ body {
   border: 1px solid var(--rule);
   border-bottom: none;
   pointer-events: none;
-  z-index: 60;
+  z-index: var(--z-frame);
 }
 .workbench-frame .ftick {
   position: absolute;
@@ -1353,20 +1372,6 @@ input[type="number"] {
   font-size: 10.5px;
   letter-spacing: 0.04em;
   color: var(--ink-on-dark);
-}
-/* #247 — the results-head wait line: the act-cyan spinner glyph the
-   verifying strip draws (.status-bar.verifying .indicator), beside the
-   words (rule 13).  Chromeless ink: a wait is not a verdict. */
-.workbench .results-head-wait .rh-spin {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  align-self: center;
-  border: 1.5px solid var(--rule);
-  border-top-color: var(--act);
-  border-radius: 50%;
-  animation: sb-spin 0.7s linear infinite;
 }
 /* #249 — the results-head lockup (spec 54–59): figure · two stacked
    labels · link on one row; no fill, no border, no icon — the 24px
@@ -2435,7 +2440,7 @@ input[type="number"] {
   /* #232: park under the sticky nav (was 0: the rail painted over the
      nav band, boxed between the frame's top rule and its own border). */
   top: var(--nav-h);
-  z-index: 30;
+  z-index: var(--z-strip);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -3122,4 +3127,117 @@ input[type="number"] {
   padding: 12px 16px;
   margin-bottom: 16px;
   font-weight: 500;
+}
+
+/* ─── #252 — the working band (spec A "docked band", as ruled) ───
+   One fixed element at the viewport's bottom edge, mounted iff a
+   request for the generated scenario is open (components/WorkingBand
+   .tsx; the derivation is lib/working-band.ts).  Spec 7–11: a 2 px
+   track on the top edge + one content row; the row wraps at 380
+   (source order = wrap order).  Spec 9–10 colours mapped to tokens:
+   surface --ws-surface, border-top --act, the one shadow a literal
+   (decorative).  No radius, no appear/disappear motion (spec 21): the
+   mount IS the state change.
+   While the band is up the root carries .ws-locked: the page gets
+   150 px of bottom padding BELOW the footer (spec 4 said the content
+   area; ruled to the root so Terms / Privacy stay reachable at max
+   scroll — spec 26) and, from the write-lock commit, every write
+   control dims uniformly. */
+.workbench.ws-locked {
+  padding-bottom: 150px;
+}
+.workbench .working-band {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-band);
+  background: var(--ws-surface);
+  border-top: 1px solid var(--act);
+  box-shadow: 0 -10px 22px rgba(6, 12, 20, 0.55);
+}
+/* Spec 22: the indeterminate track — base wash, a translating gradient
+   over it.  It encodes "alive", never percent done; the words carry
+   the state, so under reduced motion it is a static solid (spec 23,
+   --act-glow reused: decorative, not a text pair). */
+.workbench .wb-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(52, 169, 232, 0.16);
+  overflow: hidden;
+}
+.workbench .wb-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--act), transparent);
+  animation: wb-sweep 1.5s linear infinite;
+}
+@keyframes wb-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workbench .wb-track {
+    background: var(--act-glow);
+  }
+  .workbench .wb-track::after {
+    animation: none;
+    background: none;
+  }
+}
+/* Spec 8: the row — baseline-aligned, wrapping, column gap 14 / row
+   gap 6, padding 11 × 26, inner content capped at the page column. */
+.workbench .wb-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 6px;
+  padding: 11px 26px;
+  max-width: 1180px;
+  margin: 0 auto;
+  font-family: var(--font-mono);
+}
+/* Spec 19 text roles, colours mapped (conflict 4 ruling): glyph ◌ in
+   --none (the vocabulary's pending colour, not the design's cyan);
+   verb --act-bright (the design's #a9dcf8 was rejected in #249);
+   object sans in --ink, the user-named part only (spec 18); lock
+   notice --warn, symbol + words one unit.  The object is the elastic
+   child (the stage line it replaces was, spec 13). */
+.workbench .wb-glyph {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--none);
+}
+.workbench .wb-verb {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--act-bright);
+}
+.workbench .wb-object {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.workbench .wb-named {
+  font-family: var(--font-sans);
+}
+.workbench .wb-lock {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--warn);
+  white-space: nowrap;
 }

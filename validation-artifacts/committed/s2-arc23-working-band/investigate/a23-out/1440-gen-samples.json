@@ -1,0 +1,169 @@
+[
+ {
+  "scrollY": 789,
+  "docH": 1851,
+  "innerH": 1000,
+  "innerW": 1440,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 992,
+  "statusBar": {
+   "top": -108,
+   "bottom": -61,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 31,
+   "bottom": 77,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 2,
+   "bottom": 19,
+   "h": 17,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": -37,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 893,
+  "t": 16
+ },
+ {
+  "scrollY": 654,
+  "docH": 1851,
+  "innerH": 1000,
+  "innerW": 1440,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 992,
+  "statusBar": {
+   "top": 27,
+   "bottom": 74,
+   "h": 47,
+   "text": "COMPUTING · scanning site conditions (up to 20 s) · taper · "
+  },
+  "ribbon": {
+   "top": 166,
+   "bottom": 212,
+   "h": 46,
+   "text": "⟳ Recomputing — scanning site conditions along the corridor "
+  },
+  "empty": null,
+  "waitLine": {
+   "top": 137,
+   "bottom": 154,
+   "h": 17,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": 98,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 1028,
+  "t": 273
+ },
+ {
+  "scrollY": 654,
+  "docH": 1794,
+  "innerH": 1000,
+  "innerW": 1440,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 992,
+  "statusBar": {
+   "top": 27,
+   "bottom": 74,
+   "h": 47,
+   "text": "VERIFYING · scanning site conditions along the corridor — up"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": {
+   "top": 142,
+   "bottom": 159,
+   "h": 17,
+   "text": "Scanning site conditions along the corridor — up to 20 s · t"
+  },
+  "lockup": null,
+  "block": null,
+  "refusal": null,
+  "resultsTop": 98,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]"
+  ],
+  "lastEl": 971,
+  "t": 8456
+ },
+ {
+  "scrollY": 654,
+  "docH": 2070,
+  "innerH": 1000,
+  "innerW": 1440,
+  "nav": {
+   "top": 0,
+   "bottom": 52,
+   "pos": "sticky",
+   "z": "30"
+  },
+  "mainPadB": "80px",
+  "frameBottom": 992,
+  "statusBar": {
+   "top": 27,
+   "bottom": 79,
+   "h": 52,
+   "text": "PLAN DECLINED · the site scan could not complete — retry it,"
+  },
+  "ribbon": null,
+  "empty": null,
+  "waitLine": null,
+  "lockup": null,
+  "block": null,
+  "refusal": {
+   "top": 147,
+   "bottom": 304,
+   "h": 157,
+   "text": "Site scan⚠Site scan unavailable — the plan can't verify scho"
+  },
+  "resultsTop": 103,
+  "resultsMargin": "98px",
+  "liveRegions": [
+   "div[/polite]",
+   "div.sr-only[status/]",
+   "div.sys-event[alert/]"
+  ],
+  "lastEl": 1247,
+  "t": 21407
+ }
+]

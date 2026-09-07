@@ -1,0 +1,29 @@
+healthz 00ecbf09db3d6de8e1355af65025a419fd78b386
+[1440] pre-generate: nav {"top":0,"bottom":52,"pos":"sticky","z":"30"} main padding-bottom 80px zone scroll-margin 98px frameBottom 992 innerH 1000 live regions: div.jbar-suggest[/polite] div[/polite] div.sr-only[status/]
+  [1440-gen] t=   16 scrollY=789 docH=1851 | status -108..-61 OUT "COMPUTING · scanning site conditions (up" | ribbon 31..77 IN | empty — | wait 2..19 IN | lockup — | refusal — | resultsTop -37
+  [1440-gen] t=  273 scrollY=654 docH=1851 | status 27..74 IN "COMPUTING · scanning site conditions (up" | ribbon 166..212 IN | empty — | wait 137..154 IN | lockup — | refusal — | resultsTop 98
+  [1440-gen] t= 8456 scrollY=654 docH=1794 | status 27..74 IN "VERIFYING · scanning site conditions alo" | ribbon — | empty — | wait 142..159 IN | lockup — | refusal — | resultsTop 98
+  [1440-gen] t=21407 scrollY=654 docH=2070 | status 27..79 IN "PLAN DECLINED · the site scan could not " | ribbon — | empty — | wait — | lockup — | refusal YES | resultsTop 103
+[1440] settled at 21407 ms
+[1440] post: scrollY 654 docH 2070 resultsTop 103 lockup null lastEl 1247 live regions: div[/polite] div.sr-only[status/] div.sys-event[alert/]
+[1440] landing (no band): {"scrollY":659,"docH":2070,"innerH":1000,"resultsTop":98,"maxScroll":1070,"clamped":false,"band":null,"ticks":[{"cls":"tl","top":8,"bottom":22},{"cls":"tr","top":8,"bottom":22},{"cls":"bl","top":979,"bottom":993},{"cls":"br","top":979,"bottom":993}]}
+[1440] landing (mock band + 150px): {"scrollY":659,"docH":2140,"innerH":1000,"resultsTop":98,"maxScroll":1140,"clamped":false,"band":{"top":954,"h":46},"ticks":[{"cls":"tl","top":8,"bottom":22},{"cls":"tr","top":8,"bottom":22},{"cls":"bl","top":979,"bottom":993},{"cls":"br","top":979,"bottom":993}]}
+[1440] scrolled to bottom with mock band: {"mainLastBottom":761,"footerBottom":1000,"bandTop":954,"innerH":1000}
+[1440] no Assert button — correction leg skipped
+[380] pre-generate: nav {"top":0,"bottom":52,"pos":"sticky","z":"30"} main padding-bottom 80px zone scroll-margin 98px frameBottom 792 innerH 800 live regions: div.jbar-suggest[/polite] div[/polite] div.sr-only[status/]
+  [380-gen] t=   13 scrollY=2212 docH=3012 | status -1125..-1037 OUT "COMPUTING · scanning site conditions (up" | ribbon -916..-830 OUT | empty — | wait -974..-928 OUT | lockup — | refusal — | resultsTop -1013
+  [380-gen] t=  279 scrollY=1206 docH=3012 | status -119..-31 OUT "COMPUTING · scanning site conditions (up" | ribbon 90..176 IN | empty — | wait 32..78 IN | lockup — | refusal — | resultsTop -7
+  [380-gen] t=  546 scrollY=1080 docH=3012 | status 7..95 IN "COMPUTING · scanning site conditions (up" | ribbon 216..302 IN | empty — | wait 158..204 IN | lockup — | refusal — | resultsTop 119
+  [380-gen] t=  812 scrollY=1080 docH=2926 | status 7..74 IN "VERIFYING · taper · buffer · spacing · s" | ribbon — | empty — | wait 174..220 IN | lockup — | refusal — | resultsTop 98
+  [380-gen] t= 2128 scrollY=1080 docH=2926 | status 7..74 IN "VERIFYING · scanning site conditions alo" | ribbon — | empty — | wait 174..220 IN | lockup — | refusal — | resultsTop 98
+  [380-gen] t= 6583 scrollY=1651 docH=4573 | status 7..58 IN "VERIFIED · 3 plan flags ▸REVIEW FLAGS" | ribbon — | empty — | wait — | lockup 158..196 IN | refusal — | resultsTop 82
+[380] settled at 6583 ms
+[380] post: scrollY 1651 docH 4573 resultsTop 82 lockup {"top":158,"bottom":196,"h":37,"text":"4Site conditions detectedof 5 checkedcorrect in setup ↑"} lastEl 2693 live regions: div[/polite] div.sr-only[status/]
+[380] landing (no band): {"scrollY":1635,"docH":4573,"innerH":800,"resultsTop":98,"maxScroll":3773,"clamped":false,"band":null,"ticks":[{"cls":"tl","top":8,"bottom":22},{"cls":"tr","top":8,"bottom":22},{"cls":"bl","top":779,"bottom":793},{"cls":"br","top":779,"bottom":793}]}
+[380] landing (mock band + 150px): {"scrollY":1635,"docH":4643,"innerH":800,"resultsTop":98,"maxScroll":3843,"clamped":false,"band":{"top":688,"h":112},"ticks":[{"cls":"tl","top":8,"bottom":22},{"cls":"tr","top":8,"bottom":22},{"cls":"bl","top":779,"bottom":793},{"cls":"br","top":779,"bottom":793}]}
+[380] scrolled to bottom with mock band: {"mainLastBottom":501,"footerBottom":800,"bandTop":688,"innerH":800}
+  [380-assert] t=    1 scrollY=682 docH=4595 | status 976..1043 OUT "VERIFYING · taper · buffer · spacing · s" | ribbon — | empty — | wait 1143..1189 OUT | lockup — | refusal — | resultsTop 1067
+  [380-assert] t=  265 scrollY=682 docH=4681 | status 976..1064 OUT "COMPUTING · scanning site conditions (up" | ribbon 1185..1271 OUT | empty — | wait 1127..1173 OUT | lockup — | refusal — | resultsTop 1088
+  [380-assert] t= 3148 scrollY=682 docH=4970 | status 1032..1120 OUT "COMPUTING · scanning site conditions (up" | ribbon 1241..1327 OUT | empty — | wait 1183..1229 OUT | lockup — | refusal — | resultsTop 1144
+  [380-assert] t= 4983 scrollY=682 docH=4862 | status 1032..1083 OUT "VERIFIED · 4 plan flags ▸REVIEW FLAGS" | ribbon — | empty — | wait — | lockup 1183..1220 OUT | refusal — | resultsTop 1107
+[380] assert settled at 4983 ms
