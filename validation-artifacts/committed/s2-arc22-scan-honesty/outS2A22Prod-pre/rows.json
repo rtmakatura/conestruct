@@ -1,0 +1,572 @@
+[
+  {
+    "run": 1,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13677,
+    "ms": 10219,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 6131,
+    "measured_at": "2026-09-07T14:18:48+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 1,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12023,
+    "ms": 9684,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 8942,
+    "measured_at": "2026-09-07T14:18:55+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 2,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13676,
+    "ms": 5023,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2624,
+    "measured_at": "2026-09-07T14:18:36+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 2,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12022,
+    "ms": 817,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 8942,
+    "measured_at": "2026-09-07T14:18:55+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 3,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13744,
+    "ms": 20650,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2624,
+    "measured_at": "2026-09-07T14:18:36+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 3,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12023,
+    "ms": 6869,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 3773,
+    "measured_at": "2026-09-07T14:20:34+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 4,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13677,
+    "ms": 3525,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 2227,
+    "measured_at": "2026-09-07T14:21:11+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 4,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12125,
+    "ms": 11021,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 3773,
+    "measured_at": "2026-09-07T14:20:34+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 5,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13676,
+    "ms": 1769,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2227,
+    "measured_at": "2026-09-07T14:21:11+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 5,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12090,
+    "ms": 20719,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 3773,
+    "measured_at": "2026-09-07T14:20:34+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 6,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13676,
+    "ms": 1408,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2227,
+    "measured_at": "2026-09-07T14:21:11+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 6,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12023,
+    "ms": 4185,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 2810,
+    "measured_at": "2026-09-07T14:22:52+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 7,
+    "pin": "denver",
+    "http": 400,
+    "bytes": 917,
+    "ms": 20840,
+    "status": "HTTP 400",
+    "error": "site_scan_unavailable",
+    "counts": {}
+  },
+  {
+    "run": 7,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12022,
+    "ms": 2981,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2810,
+    "measured_at": "2026-09-07T14:22:52+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 8,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13745,
+    "ms": 23565,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 2739,
+    "measured_at": "2026-09-07T14:24:22+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 8,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12022,
+    "ms": 920,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2810,
+    "measured_at": "2026-09-07T14:22:52+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 9,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13676,
+    "ms": 1457,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2739,
+    "measured_at": "2026-09-07T14:24:22+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 9,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12091,
+    "ms": 27724,
+    "status": "ok",
+    "memo_hit": false,
+    "duration_ms": 7070,
+    "measured_at": "2026-09-07T14:25:19+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 10,
+    "pin": "denver",
+    "http": 200,
+    "bytes": 13744,
+    "ms": 20869,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 2739,
+    "measured_at": "2026-09-07T14:24:22+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D46",
+      "interchanges": "D10",
+      "sidewalks": "D103",
+      "bike_facilities": "D11",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "adjacent_interchange": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "not-checked/check_unavailable",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  },
+  {
+    "run": 10,
+    "pin": "lakewood",
+    "http": 200,
+    "bytes": 12022,
+    "ms": 1362,
+    "status": "ok",
+    "memo_hit": true,
+    "duration_ms": 7070,
+    "measured_at": "2026-09-07T14:25:19+00:00",
+    "error": null,
+    "counts": {
+      "intersections": "D19",
+      "interchanges": "-0",
+      "sidewalks": "D22",
+      "bike_facilities": "D37",
+      "schools": "-0",
+      "railroad_crossings": "-0",
+      "hospitals": "-0",
+      "road_curvature": "-0"
+    },
+    "flags": {
+      "adjacent_intersection": true,
+      "pedestrian_facility": true,
+      "bicycle_facility": true
+    },
+    "corridor": "checked",
+    "note8": "FAIL (Required: True. Signs placed: 7 left, 11 right.)"
+  }
+]

@@ -1,0 +1,1 @@
+{"scenario":{"kind":"shoulder","meta":{"project":"","address":"","lat":39.7113,"lng":-105.0815,"bearingDeg":180},"roadType":"rural_divided","speed":65,"lanes":2,"laneWidth":12,"divided":true,"workType":"utility_locate","duration":"short","workLen":1000,"night":false,"site_scan":{"proceed_if_unavailable":false}}}
