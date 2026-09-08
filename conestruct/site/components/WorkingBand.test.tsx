@@ -162,6 +162,8 @@ describe("#252 — the working band is present iff a request for the generated s
     await settle();
     expect(band()).not.toBeNull();
     expect(locked()).toBe(true);
+    // The band's room: a spacer sibling after the footer, present iff the band is.
+    expect(document.querySelector(".workbench > .ws-spacer")).not.toBeNull();
     // No timer anywhere: the band is read off the open request.  Held
     // well past any threshold the shell owns (SLOW_VERIFY_MS is 2 s) it
     // stays exactly as it was.
@@ -174,6 +176,7 @@ describe("#252 — the working band is present iff a request for the generated s
     await settle();
     expect(band()).toBeNull();
     expect(locked()).toBe(false);
+    expect(document.querySelector(".ws-spacer")).toBeNull();
   });
 
   it("the band and its derivation own no clock: no timer, no Date, no animation frame in either module", () => {

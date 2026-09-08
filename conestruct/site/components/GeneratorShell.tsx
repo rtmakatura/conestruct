@@ -1421,6 +1421,10 @@ export function GeneratorShell({
       </div>
 
       <AppFooter />
+      {/* #252: the band's room — a spacer sibling after the footer, never
+          padding on the root (a scroll-anchoring suppression trigger in
+          the settle frame; see globals.css .ws-spacer). */}
+      {inFlight ? <div className="ws-spacer" aria-hidden="true" /> : null}
       {/* #252: the one working voice — fixed to the viewport's bottom
           edge, mounted iff a request for the generated scenario is
           open, rendered verbatim from ``bandState``. */}

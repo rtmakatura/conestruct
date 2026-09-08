@@ -3155,13 +3155,19 @@ input[type="number"] {
    surface --ws-surface, border-top --act, the one shadow a literal
    (decorative).  No radius, no appear/disappear motion (spec 21): the
    mount IS the state change.
-   While the band is up the root carries .ws-locked: the page gets
-   150 px of bottom padding BELOW the footer (spec 4 said the content
-   area; ruled to the root so Terms / Privacy stay reachable at max
-   scroll — spec 26) and, from the write-lock commit, every write
-   control dims uniformly. */
-.workbench.ws-locked {
-  padding-bottom: 150px;
+   While the band is up the root carries .ws-locked (the write lock's
+   hook) and a 150 px SPACER sits after the footer so the last element
+   on the page — Terms / Privacy included — can always be scrolled
+   clear of the band (spec 4 said padding on the content area; ruled
+   below the footer, spec 26).  A spacer SIBLING, not padding on the
+   root: a padding change on an ancestor of the scroll anchor node is
+   a scroll-anchoring suppression trigger (CSS Scroll Anchoring §3.3),
+   and the settle frame — band gone, verdict strip and correction
+   block mounting above the results zone — is exactly the frame that
+   relies on anchoring (#250; measured on the local stack: the results
+   zone landed 411 px low with root padding, 98 with the spacer). */
+.workbench .ws-spacer {
+  height: 150px;
 }
 .workbench .working-band {
   position: fixed;

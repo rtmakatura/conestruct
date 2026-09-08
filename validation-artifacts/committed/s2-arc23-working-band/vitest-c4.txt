@@ -1,0 +1,30 @@
+ ✓ components/StatusBar.a11y.test.tsx (4 tests) 14ms
+ ✓ lib/scenarios/auto-apply.test.ts (34 tests) 15ms
+ ✓ lib/road-detection/cross-street.test.ts (17 tests) 15ms
+ ✓ lib/corridor-polyline.coverage.test.ts (4 tests) 14ms
+ ✓ lib/scenarios/site-corrections.test.ts (9 tests) 14ms
+ ✓ components/SetupStrip.grid-tokens.test.tsx (4 tests) 12ms
+ ✓ components/GeneratorFormPrimitives.test.tsx (5 tests) 13ms
+ ✓ lib/road-detection/dedup.test.ts (9 tests) 11ms
+ ✓ lib/scenarios/undo-override.test.ts (11 tests) 10ms
+ ✓ lib/working-band.test.ts (9 tests) 10ms
+ ✓ lib/design/tokens.test.ts (5 tests) 10ms
+ ✓ lib/design/type-roles.test.ts (13 tests) 12ms
+ ✓ lib/scenarios/carry-across-kinds.test.ts (4 tests) 9ms
+ ✓ lib/corridor-zones.test.ts (7 tests) 9ms
+ ✓ components/SetupStrip.corrections-tokens.test.tsx (3 tests) 6ms
+ ✓ lib/scenarios/overrides.test.ts (10 tests) 8ms
+ ✓ lib/scenarios/sidebar-payload.test.ts (6 tests) 7ms
+ ✓ lib/road-detection/labels.test.ts (7 tests) 7ms
+ ✓ lib/answer-stamp.test.ts (6 tests) 6ms
+ ✓ lib/scenarios/centerline-relay.test.ts (3 tests) 6ms
+ ✓ lib/scenarios/refusal-code.test.ts (3 tests) 5ms
+ ✓ components/LocationPickerModal.spacing.test.ts (2 tests) 4ms
+ ✓ lib/geocode-precision.test.ts (3 tests) 6ms
+ ✓ lib/scenarios/clear-detection-relays.test.ts (3 tests) 4ms
+
+ Test Files  132 passed (132)
+      Tests  968 passed (968)
+   Start at  21:40:11
+   Duration  33.60s (transform 6.57s, setup 0ms, collect 62.17s, tests 150.74s, environment 84.98s, prepare 26.32s)
+

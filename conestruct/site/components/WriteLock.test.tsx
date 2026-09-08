@@ -210,8 +210,9 @@ describe("#252 — the write lock's enumeration is honest", () => {
     expect(css).toMatch(
       /\.workbench\.ws-locked \[data-write\]:disabled,\s*\.workbench\.ws-locked \[data-write\]\[aria-disabled="true"\] \{\s*opacity: 0\.45;\s*pointer-events: none;\s*cursor: default;\s*\}/,
     );
-    // No other selector reaches for the lock class: the root padding
-    // (commit 1), the block's step-aside, and the one dim rule.
+    // No other selector reaches for the lock class: the block's
+    // step-aside and the one dim rule (the band's room is a spacer
+    // sibling, .ws-spacer, not root padding — a suppression trigger).
     const selectors = css
       .split(/\r?\n/)
       .filter((l) => /^\.workbench(\.|:not\(\.)ws-locked/.test(l));
@@ -222,7 +223,8 @@ describe("#252 — the write lock's enumeration is honest", () => {
       ".workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled:hover {",
       ".workbench.ws-locked [data-write]:disabled,",
       ".workbench.ws-locked [data-write][aria-disabled=\"true\"] {",
-      ".workbench.ws-locked {",
     ]);
+    expect(css).toMatch(/\.workbench \.ws-spacer \{\s*height: 150px;\s*\}/);
+    expect(css).not.toMatch(/\.ws-locked \{[^}]*padding/);
   });
 });

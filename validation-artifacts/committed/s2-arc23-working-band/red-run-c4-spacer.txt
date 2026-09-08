@@ -1,0 +1,18 @@
+   ✓ #252 — the write lock's enumeration is honest > under the lock every control is a disabled write, a live read, or a route link — anything else fails by name  1857ms
+   ✓ #252 — the write lock's enumeration is honest > at settle every write control re-enables unless it has a reason of its own; the root drops the lock  1867ms
+   × #252 — the write lock's enumeration is honest > the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier) 8ms
+     → expected [ …(7) ] to deeply equal [ …(6) ]
+   × #252 — the working band is present iff a request for the generated scenario is open > absent pre-generate (the per-edit pair never locks typing); mounts on Generate; unmounts when the pair settles; the root lock follows it 982ms
+     → expected null not to be null
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > the band and its derivation own no clock: no timer, no Date, no animation frame in either module 1ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > GENERATING · new plan · the address the user typed (sans), or the pin when there is none — never a placeholder  1757ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > RE-GENERATING · after a correction to {condition} on Assert; after undoing the correction on Undo  2600ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > RE-GENERATING · after an edit to speed from the strip's inline editor — up from the deferred debounce window, not only the fetch  1427ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > spec 31: the refusal container never shares a frame with the band — it renders once the pair has settled; Retry says 'retrying the site scan', proceed-anyway 'without the site check'  2137ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > RE-GENERATING · without the site check when proceed-anyway is the acknowledgement that opened the request  1758ms
+   ✓ #252 — the working band is present iff a request for the generated scenario is open > aria: the band's row is the one polite region that speaks the flight; the strip's region is empty while it is up; the sentence is the visible text  867ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/WorkingBand.test.tsx > #252 — the working band is present iff a request for the generated scenario is open > absent pre-generate (the per-edit pair never locks typing); mounts on Generate; unmounts when the pair settles; the root lock follows it
+ FAIL  components/WriteLock.test.tsx > #252 — the write lock's enumeration is honest > the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier)
+ Test Files  2 failed (2)
+      Tests  2 failed | 9 passed (11)
