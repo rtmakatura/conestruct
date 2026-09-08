@@ -1,0 +1,323 @@
+healthz sha 2e0b25e776732c64988bbdd57c444f5d613d2eea expect 2e0b25e776732c64988bbdd57c444f5d613d2eea
+s2-audit-1 walk · prod 2e0b25e776732c64988bbdd57c444f5d613d2eea · 2026-09-08T16:06:11.134Z
+[1440x1000-denver] S1 empty · P2 · deviates-by-ruling — the location blocker sentence is stated by the rail and under the CTA (one export, #228) | rail-blocker "Set a location first — pick on map or enter manually." ; cta-reason "Set a location first — pick on map or enter manually." ; strip "AWAITING LOCATION · pick a location on the map to verify this plan" | 1440x1000-denver-s1-empty.png
+[1440x1000-denver] S1 empty · P3 · violated — status strip in the first viewport on load | status-bar vtop 2114 vbottom 2161 innerH 1000; first-viewport shows the pick CTA: false | 1440x1000-denver-s1-empty.png
+[1440x1000-denver] S1 empty · P2 · note — live regions mounted pre-pin | 4: div.jbar-suggest.quiet[polite]="◌Drop a site pin for a jurisdiction sugg" ; div.mt-2.font-mono[alert]="Set a location first — pick on map or en" ; div.[polite]="AWAITING LOCATION · pick a location on t" ; div.sr-only[status]=""
+[1440x1000-denver] S1 empty · P9 · violated — contrast under 4.5:1 in .setup-panel | label.k "Jurisdiction" #586372/#1b2838 2.45 (opacity 0.35) ; option "None — baseline (MUTCD + CDOT) only" #5f6974/#14202e 2.95 (opacity 0.35) ; option "CDOT (state highway)" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Denver" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Lakewood" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Englewood" #5f6974/#14202e 2.95 (opacity 0.35) … +51
+[1440x1000-denver] S1 empty · P10 · note — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — needs attention: Set a locati" 582×21 ; button.rail-entry "Road — pending — set a location first" 113×21 ; button.rail-entry "Work — pending — set a location first" 113×21 ; button.rail-entry "Schedule — pending — set a location firs" 142×21 ; button.rail-entry "Generate — blocked, see the marked step" 76×21 ; button.font-mono "Enter manually" 95×16 ; button.w-full "Project detailsOPTIONAL" 500×16 ; input.range-orange "65" 500×2
+[1440x1000-denver] S1 empty · P9 · note — glyph audit .setup-panel | 12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden
+[1440x1000-denver] S1 empty · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 empty · P9 · violated — contrast under 4.5:1 in .jbar | span.sep "›" #2c3e53/#1b2838 1.37 (opacity 1)
+[1440x1000-denver] S1 empty · P9 · note — glyph audit .jbar | 1 glyph nodes: › ; 0 not aria-hidden
+[1440x1000-denver] S1 empty · P10 · note — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[1440x1000-denver] S1 empty · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 empty · P9 · note — glyph audit nav | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 empty · P10 · honoured — axe target-size + full run | region×1[.gap-8]
+[1440x1000-denver] S1 empty · P14 · honoured — results zone empty state names the steps | "No package yetDescribe the work zone → press generate→ download the package"
+[1440x1000-denver] S1 picker · P6 · honoured — dialog fits the viewport | dialog 1280×880 at 80,60 bottom 940 (innerH 1000); overflow-y hidden scrollH 878/878 | 1440x1000-denver-s1-picker.png
+[1440x1000-denver] S1 picker · P9 · honoured — a disabled Save carries a word saying why | Save & Close disabled=true; gate words: "Click the map or search to drop a pin" | 1440x1000-denver-s1-picker.png
+[1440x1000-denver] S1 picker · P9 · violated — contrast under 4.5:1 in [role=dialog] | button.border.border-[color:var(--act)] "Search" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border "Use Detected" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border "⟲ Flip" #606c7a/#1b2838 2.79 (opacity 0.4) ; button.px-6.py-2 "Save & Close" #22739e/#34a9e8 1.99 (opacity 0.4)
+[1440x1000-denver] S1 picker · P10 · note — 6 enabled control(s) under 24 px in [role=dialog] | button.font-mono "+ Or enter coordinates manually" 211×16 ; a. "© Mapbox" 55×14 ; a. "© OpenStreetMap" 97×14 ; a.mapbox-improve-map "Improve this map" 99×14 ; a. "© Maxar" 46×14 ; a.mapboxgl-ctrl-logo "Mapbox homepage" 88×23
+[1440x1000-denver] S1 picker · P9 · note — glyph audit [role=dialog] | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 picker · P10 · honoured — axe with the dialog open | region×1[.gap-8]
+[1440x1000-denver] S1 picker · P1 · honoured — open + cancel leaves the page where it was | 0 rects moved
+[1440x1000-denver] S1 band · P1 · honoured — band state 1: "◌Checking boundary data…" → "⌁Pin suggests: DenverConfirm D" | band h 184→356; strip h 47→47; moved: .jctl-band[0] dTop 0 dH 172 ; .jbar-suggest[0] dTop 0 dH 172; docH +0
+[1440x1000-denver] S1 band · P8 · note — band states observed after the pin | 1ms "◌Checking boundary data…" [strip VERIFYING · taper · buff] → 1310ms "⌁Pin suggests: DenverConfirm DenverDismissPin is i" [strip VERIFYING · taper · buff] | 1440x1000-denver-s1-pinned.png
+[1440x1000-denver] S1 band · P10 · honoured — suggestion Confirm / Dismiss targets | "None — baseline (MUTCD + CDOT) onlyCDOT " 216×37 ; "Confirm Denver" 114×24 ; "Dismiss" 68×24 ; "Local" 60×33 ; "Collector" 80×33 ; "Arterial" 69×33
+[1440x1000-denver] S1 band · P4 · note — Confirm and Dismiss share an edge? | tops 999/1133/1133/1002/1002/1002 rights 975/873/952/1075/1155/1224 heights 37/24/24/33/33/33
+[1440x1000-denver] S1 band · P1 · honoured — Confirm → resolved record | pending slot h 210 → record h 343; moved: .jctl-band[0] dTop 0 dH 126 ; .jbar-suggest[0] dTop -29 dH 154 ; footer[0] dTop 199 dH 0 | 1440x1000-denver-s1-band-resolved.png
+[1440x1000-denver] S1 band · P15 · honoured — resolved record keeps ✓ + sentence + Undo | "✓Confirmed Denver — was None — baseline.Undo✓ Pin agrees with your selection (Denver).Pin is inside " | 1440x1000-denver-s1-band-resolved.png
+[1440x1000-denver] S1 band · P9 · honoured — record glyph + word | ✓ rgb(79, 215, 135) beside "✓Confirmed Denver — was None — baseline." ; ✓ rgb(147, 160, 176) beside "✓ Pin agrees with your selection (Denver"
+[1440x1000-denver] S1 band · P1 · honoured — Undo → proposal again | moved: .jctl-band[0] dTop 0 dH -126 ; .jbar-suggest[0] dTop 29 dH -154 ; footer[0] dTop -199 dH 0
+[1440x1000-denver] S1 strip · P9 · honoured — INVALID INPUT provoked with work zone 0 | strip "INVALID INPUT · Work zone length is required.GENERATION BLOCKED" h 52; cta-reason "Work zone length is required." | 1440x1000-denver-s1-invalid.png
+[1440x1000-denver] S1 strip · P1 · violated — strip height across VERIFYING → verdict | heights 47/52; settled "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" after 23025 ms
+[1440x1000-denver] S1 pinned · P9 · violated — contrast under 4.5:1 in .setup-panel | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[1440x1000-denver] S1 pinned · P10 · note — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21 ; button.font-mono "Hide manual entry" 116×16 ; button.w-full "Project detailsOPTIONAL" 500×16 ; input.range-orange "65" 500×2
+[1440x1000-denver] S1 pinned · P9 · note — glyph audit .setup-panel | 9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden
+[1440x1000-denver] S1 pinned · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 pinned · P9 · violated — contrast under 4.5:1 in .jctl-band | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[1440x1000-denver] S1 pinned · P9 · note — glyph audit .jctl-band | 2 glyph nodes: ✓ ; 0 not aria-hidden
+[1440x1000-denver] S1 pinned · P9 · note — glyph audit .fact-strip | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S1 pinned · P10 · note — 5 enabled control(s) under 24 px in .progress-rail | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21
+[1440x1000-denver] S1 pinned · P9 · note — glyph audit .progress-rail | 5 glyph nodes: ✓ ◌ ; 0 not aria-hidden
+[1440x1000-denver] S1 pinned · P10 · honoured — axe pinned | color-contrast×1[.honesty] ; label×2[input[value="39.7269"],input[value="-104.9873"]] ; region×1[.gap-8] | 1440x1000-denver-s1-pre-generate.png
+[1440x1000-denver] S1 rail · P10 · violated — rail entries are buttons | "Location — done" 93×21 ; "Road — done" 63×21 ; "Work — done" 63×21 ; "Schedule — not set" 214×21 ; "Generate — ready" 73×21
+[1440x1000-denver] S1 fact strip · P4 · honoured — label and value share a left edge per cell | Lat 206/206 w99 ; Lng 305/305 w113 ; Bearing 418/418 w86 ; Speed 505/505 w77 ; Jurisdiction 582/582 w122
+[1440x1000-denver] S2 in flight · P8 · honoured — band present, bottom-fixed, one voice | 47 samples with the band ("GENERATING · new plan · pin 39.7269, -104.9873"), first at 4 ms, settled at 5154 ms; band h 41
+[1440x1000-denver] S2 in flight · P1 · violated — scroll jumps in the first 2.5 s after Generate (#240) | scrollY samples 1357,976,691,602,583,583,583,583,583,583,583,583,583,583,583; 3 jumps > 40 px; docH 2357→3064
+[1440x1000-denver] S2 in flight · P2 · honoured — no second working voice while the band is up | strip text seen in 0/47 band samples (""); stale ribbon in 29
+[1440x1000-denver] S2 settle · P3 · honoured — post-generate viewport contains the verdict or the next step | results top 174; strip 98..150 "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; lockup 218..255; refusal —; innerH 1000
+[1440x1000-denver] S2 settle · P1 · violated — results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24 | results top 174; strip h 52; scrollY 918
+[1440x1000-denver] S3 · P2 · note — live regions post-generate | 2: div.[polite]="VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 " ; div.sr-only[status]="Plan generated — 31 devices, 9 types."
+[1440x1000-denver] S3 section 03 · P2 · violated — the tier counts are stated twice: the ledger line and each chip | ledger "◌ checking against the updated inputs…" ; chips "▲Changed this plan2›", "⚠Needs attention4›", "✓Checked & passed13 · each cited›", "◌Pending / not verified3›", "iReferencepermit · hours windows · devic" | 1440x1000-denver-s3-settled.png
+[1440x1000-denver] S3 results head · P2 · note — lockup count vs block detected rows (one field, two surfaces — #253 rules one goes) | lockup "4Site conditions detectedof 5 checkedcorrect in setup ↑" ; block "Site conditions — scanned" rows 5, detected 4
+[1440x1000-denver] S3 hero/cards · P2 · note — hero device count vs plan-sheet card count | hero 39/12 ; cards 39/12/11
+[1440x1000-denver] S3 OutputCards · P4 · violated — download buttons share a bottom edge across the three cards | dl-btn tops 1589/1589/1537/1589 (spread 52); bottoms 1629/1629/1577/1629; heights 40/40/40/40; card heights 206/206/206 | 1440x1000-denver-s3-settled.png
+[1440x1000-denver] S3 hero · P4 · honoured — hero meta values right-align | rights 1245/1245/1245/1245
+[1440x1000-denver] S3 setup strip · P4 · honoured — strip cells share height and top | heights 63/63/63/63/63/63/63/63/63; tops 928/928/928/928/928/928/928/928/928; widths 123/131/111/78/80/72/91/59/65
+[1440x1000-denver] S3 setup strip · P1 · honoured — opening an inline editor (Speed) | strip h 65→65; moved: none | 1440x1000-denver-s3-strip-editor.png
+[1440x1000-denver] S3 setup strip · P3 · violated — open editor shows how to close it (no Done/Cancel affordance) | editor 149×63, control 82×28, close affordance false | 1440x1000-denver-s3-strip-editor.png
+[1440x1000-denver] S3 setup strip · P7 · note — Escape closes the editor without a request | editor closed on Escape: false
+[1440x1000-denver] S3 setup strip · P7 · note — outside click closes the editor | closed: true
+[1440x1000-denver] S3 PricingCard · P1 · honoured — opening the quote moves nothing above it | price h 52→372; moved above: none | 1440x1000-denver-s3-quote-open.png
+[1440x1000-denver] S3 QuotePanel · P4 · honoured — field label and input share a left edge | Duration (days) 187/187 347×39 ; Flaggers 546/546 347×39 "Auto · 0 from layout" ; Delivery (mi) 906/906 347×39 "Auto · 5 mi from HQ" ; Overhead (%) 187/187 347×39 ; Profit (%) 546/546 347×39 ; Flagger ($/hr) 906/906 347×39 ; TCS ($/hr) 187/187 347×39 ; Crew ($/hr) 546/546 347×39
+[1440x1000-denver] S3 QuotePanel · P11 · note — the two actions' treatments + the head total | "Preview breakdown" 528×47 bg rgba(0, 0, 0, 0) border 1px ; "Download Quote (XLSX)↓" 526×47 bg rgb(52, 169, 232) border 0px; head total "expand to configure & preview"
+[1440x1000-denver] S3 QuotePanel · P16 · note — the Flaggers caption asserts an auto-count | Flaggers: "Auto · 0 from layout" ; Delivery (mi): "Auto · 5 mi from HQ"
+[1440x1000-denver] S3 section 03 · P1 · honoured — open tier "✓Checked & passed13 · each cit" | chip body grew 1181 px; above moved: none
+[1440x1000-denver] S3 section 03 · P1 · honoured — open tier "◌Pending / not verified3›" | chip body grew 313 px; above moved: none
+[1440x1000-denver] S3 section 03 · P1 · honoured — open tier "iReferencepermit · hours windo" | chip body grew 410 px; above moved: none
+[1440x1000-denver] S3 AuditTrail · P13 · note — audit items are expanders (data-read) | 0 audit-head buttons; sizes 
+[1440x1000-denver] S3 section 03 · P5 · violated — two headings for one zone (zone title + a second h2 inside) | zone-title "Rules, permit & audit" 17px/700 at 1737; inner h2 "Denver — jurisdiction rules" 20px/700 at 1776
+[1440x1000-denver] S3 footer · P2 · honoured — "Output requires TCS review" under Generate and in the footer | both present: false
+[1440x1000-denver] S3 page · P12 · honoured — raw ISO timestamps visible | none
+[1440x1000-denver] S3 block · P12 · honoured — block footer stamp is sliced, ISO on title | "scancorridor scan · 8 sep · 16:06 utc · 2.5 s · a correction re-generates the plan" (title 2026-09-08T16:06:52+00:00)
+[1440x1000-denver] S3 · P9 · violated — contrast under 4.5:1 in .setup-strip | span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) … +3
+[1440x1000-denver] S3 · P9 · note — glyph audit .setup-strip | 11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden
+[1440x1000-denver] S3 · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S3 · P10 · note — 1 enabled control(s) under 24 px in .results-head-lockup | a.tr-signpost "correct in setup ↑" 119×16
+[1440x1000-denver] S3 · P9 · note — glyph audit .results-head-lockup | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S3 · P9 · note — glyph audit .hero | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S3 · P9 · note — glyph audit .dls | 4 glyph nodes: ↓ ; 4 not aria-hidden
+[1440x1000-denver] S3 · P9 · note — glyph audit .price | 2 glyph nodes: › ↓ ; 1 not aria-hidden
+[1440x1000-denver] S3 · P10 · note — 2 enabled control(s) under 24 px in .ref-stack | a.tr-signpost "Correct in setup ↑" 119×13 ; a.tr-signpost "Correct in setup ↑" 119×13
+[1440x1000-denver] S3 · P9 · note — glyph audit .ref-stack | 15 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 6 not aria-hidden
+[1440x1000-denver] S3 · P9 · note — glyph audit #site-corrections | 5 glyph nodes: ▲ ✓ ; 0 not aria-hidden
+[1440x1000-denver] S3 · P10 · note — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[1440x1000-denver] S3 · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-denver] S3 · P10 · honoured — axe settled | heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]
+[1440x1000-denver] S3 page · P5 · note — distinct type tuples on the settled page | 63 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role
+[1440x1000-denver] S3 block · P4 · honoured — names share a left edge; actions share a right edge | name lefts 212/212/212/212/212; action rights 1252/1252/1252/1252/1252; result lefts 917/917/904/911/991 rights 974/974/961/967/1153; grid "958px 92px"; block w 1100 | 1440x1000-denver-s3-block.png
+[1440x1000-denver] S3 block · P6 · honoured — one row height per row kind | sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 | 1440x1000-denver-s3-block.png
+[1440x1000-denver] S3 block · P9 · honoured — every row has glyph + word | ▲ detected ; ▲ detected ; ▲ detected ; ▲ detected ; ✓ none along the corridor
+[1440x1000-denver] S3 block · P10 · honoured — row action button size | "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Assert" 64×28
+[1440x1000-denver] S3 block · P14 · honoured — absent conditions render as words | detected ; detected ; detected ; detected ; none along the corridor
+[1440x1000-denver] S3 block · P4 · honoured — block head and foot share the block's left edge | head "Site conditions — scanned" l 188; foot "scancorridor scan · 8 sep · 16:06 utc · 2.5 s · a correction re-generates the plan" l 188
+[1440x1000-denver] S4 picker · P1 · note — Dismiss "Adjacent at-grade intersection" mounts the reason picker (a user-asked mount; rows below move by its height) | block h 323→373; rows 5→6; moved: .sc-row[0] dTop 0 dH -2 ; .sc-row[1] dTop -2 dH 6 ; .sc-row[2] dTop 4 dH 0 ; .sc-row[3] dTop 4 dH 0 ; .sc-row[4] dTop 4 dH 0 | 1440x1000-denver-s4-picker.png
+[1440x1000-denver] S4 picker · P4 · violated — chip label centred in its box (#255-1) | "Fenced off" 95×28 box-cx 628.3 text-cx 635.8 pad 25/10 ; "Removed" 77×28 box-cx 720.3 text-cx 727.8 pad 25/10 ; "Not in the work zone" 155×28 box-cx 842.3 text-cx 849.8 pad 25/10 ; "Other (say what)" 131×28 box-cx 991.3 text-cx 998.8 pad 25/10 | 1440x1000-denver-s4-picker.png
+[1440x1000-denver] S4 picker · P10 · honoured — reason chip hit height | 95×28 77×28 155×28 131×28
+[1440x1000-denver] S4 picker · P1 · violated — choosing Other moves Confirm (#255-3) | Confirm 1065,689 → 190,723; note input 184×27 at 1063,689 | 1440x1000-denver-s4-other.png
+[1440x1000-denver] S4 picker · P9 · violated — a disabled Confirm (note required) says why | Confirm disabled=true title="" text "Confirm dismiss" | 1440x1000-denver-s4-other.png
+[1440x1000-denver] S4 picker · P4 · note — action edges with the picker open (Cancel / Confirm / other rows) | "Cancel" right 1252 top 643 44×26 ; "Confirm dismiss" right 325 top 723 135×30 ; "Dismiss" right 1252 top 773 72×28 ; "Dismiss" right 1252 top 819 72×28 ; "Dismiss" right 1252 top 865 72×28 ; "Assert" right 1252 top 911 64×28
+[1440x1000-denver] S4 confirm · P7 · violated — one Confirm re-generates and locks (a per-edit request; #254) | band "RE-GENERATING · after a correction to Adjacent at-grade intersection" for 37 samples, settled 4081 ms
+[1440x1000-denver] S4 record · P6 · honoured — record row grows past the scan rows (#255-2) | record h 33 (1 lines) vs scan row h 46; sentence "Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…" | 1440x1000-denver-s4-record.png
+[1440x1000-denver] S4 record · P15 · honoured — record keeps glyph + sentence + Undo | × "Undo" 30×16 right 1252 vs scan-row action right 1252 | 1440x1000-denver-s4-record.png
+[1440x1000-denver] S4 record · P4 · honoured — Undo shares the action edge | Undo right 1252; Dismiss/Assert right 1252
+[1440x1000-denver] S4 record · P2 · note — lockup after the correction | "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+[1440x1000-denver] S4 undo · P15 · honoured — Undo removes the record (and re-generates: P7) | band "after undoing the correction to Adjacent at-grade intersection"; records after 0, rows 5
+[1440x1000-denver] S6 downloads · P8 · honoured — plan.pdf: band RENDERING, button label unchanged | band "RENDERING · plan sheet PDF" 36 samples; button "Download PDF↓"; file saved
+[1440x1000-denver] S6 downloads · P8 · honoured — devices.xlsx: band RENDERING, button label unchanged | band "RENDERING · device list XLSX" 106 samples; button "Download XLSX↓"; file saved
+[1440x1000-denver] S6 downloads · P8 · honoured — crew.pdf: band RENDERING, button label unchanged | band "RENDERING · crew instructions PDF" 5 samples; button "Download PDF↓"; file saved
+[1440x1000-denver] S6 downloads · P8 · honoured — crew.md: band RENDERING, button label unchanged | band "RENDERING · crew instructions MD" 5 samples; button "Download .md↓"; file saved
+[1440x1000-denver] S6 downloads · P8 · honoured — quote XLSX render raises the band | band "quote XLSX"; file saved
+[1440x1000-denver] S6 downloads · P8 · honoured — zip render raises the band | band "MHT package ZIP"; file saved
+[380x800-denver] S1 empty · P2 · deviates-by-ruling — the location blocker sentence is stated by the rail and under the CTA (one export, #228) | rail-blocker "Set a location first — pick on map or enter manually." ; cta-reason "Set a location first — pick on map or enter manually." ; strip "AWAITING LOCATION · pick a location on the map to verify this plan" | 380x800-denver-s1-empty.png
+[380x800-denver] S1 empty · P3 · violated — status strip in the first viewport on load | status-bar vtop 3408 vbottom 3476 innerH 800; first-viewport shows the pick CTA: false | 380x800-denver-s1-empty.png
+[380x800-denver] S1 empty · P2 · note — live regions mounted pre-pin | 4: div.jbar-suggest.quiet[polite]="◌Drop a site pin for a jurisdiction sugg" ; div.mt-2.font-mono[alert]="Set a location first — pick on map or en" ; div.[polite]="AWAITING LOCATION · pick a location on t" ; div.sr-only[status]=""
+[380x800-denver] S1 empty · P9 · violated — contrast under 4.5:1 in .setup-panel | label.k "Jurisdiction" #586372/#1b2838 2.45 (opacity 0.35) ; option "None — baseline (MUTCD + CDOT) only" #5f6974/#14202e 2.95 (opacity 0.35) ; option "CDOT (state highway)" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Denver" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Lakewood" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Englewood" #5f6974/#14202e 2.95 (opacity 0.35) … +51
+[380x800-denver] S1 empty · P10 · violated — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — needs attention: Set a locati" 53×21 ; button.rail-entry "Road — pending — set a location first" 113×21 ; button.rail-entry "Work — pending — set a location first" 113×21 ; button.rail-entry "Schedule — pending — set a location firs" 142×21 ; button.rail-entry "Generate — blocked, see the marked step" 76×21 ; button.font-mono "Enter manually" 95×16 ; button.w-full "Project detailsOPTIONAL" 282×16 ; input.range-orange "65" 282×2
+[380x800-denver] S1 empty · P9 · note — glyph audit .setup-panel | 12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden
+[380x800-denver] S1 empty · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 empty · P9 · violated — contrast under 4.5:1 in .jbar | span.sep "›" #2c3e53/#1b2838 1.37 (opacity 1)
+[380x800-denver] S1 empty · P9 · note — glyph audit .jbar | 1 glyph nodes: › ; 0 not aria-hidden
+[380x800-denver] S1 empty · P10 · violated — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[380x800-denver] S1 empty · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 empty · P9 · note — glyph audit nav | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 empty · P10 · honoured — axe target-size + full run | region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8]
+[380x800-denver] S1 empty · P14 · honoured — results zone empty state names the steps | "No package yetDescribe the work zone → press generate→ download the package"
+[380x800-denver] S1 picker · P6 · honoured — dialog fits the viewport | dialog 364×784 at 8,8 bottom 792 (innerH 800); overflow-y hidden scrollH 782/782 | 380x800-denver-s1-picker.png
+[380x800-denver] S1 picker · P9 · honoured — a disabled Save carries a word saying why | Save & Close disabled=true; gate words: "Click the map or search to drop a pin" | 380x800-denver-s1-picker.png
+[380x800-denver] S1 picker · P9 · violated — contrast under 4.5:1 in [role=dialog] | button.border.border-[color:var(--act)] "Search" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border "Use Detected" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border "⟲ Flip" #606c7a/#1b2838 2.79 (opacity 0.4) ; button.px-6.py-2 "Save & Close" #22739e/#34a9e8 1.99 (opacity 0.4)
+[380x800-denver] S1 picker · P10 · violated — 2 enabled control(s) under 24 px in [role=dialog] | button.font-mono "+ Or enter coordinates manually" 211×16 ; a.mapboxgl-ctrl-logo "Mapbox homepage" 88×23
+[380x800-denver] S1 picker · P9 · note — glyph audit [role=dialog] | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 picker · P10 · honoured — axe with the dialog open | region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8]
+[380x800-denver] S1 picker · P1 · violated — open + cancel leaves the page where it was | .progress-rail[0] dTop 20 dH 0
+[380x800-denver] S1 band · P1 · violated — band state 1: "◌Checking boundary data…" → "⌁Pin suggests: DenverConfirm D" | band h 291→447; strip h 68→68; moved: .zone[0] dTop 0 dH 180 ; .zone[1] dTop 179 dH 0 ; .zone-head[1] dTop 179 dH 0 ; .status-bar[0] dTop 180 dH 0 ; .progress-rail[0] dTop 23 dH 23 ; .jctl-band[0] dTop 23 dH 156; docH +180
+[380x800-denver] S1 band · P1 · honoured — band state 2: "⌁Pin suggests: DenverConfirm D" → "⌁Pin suggests: DenverConfirm D" | band h 447→447; strip h 68→69; moved: .zone[1] dTop 2 dH 0 ; .zone-head[1] dTop 2 dH 0 ; .status-bar[0] dTop 0 dH 1 ; footer[0] dTop 2 dH 0; docH +2
+[380x800-denver] S1 band · P8 · note — band states observed after the pin | 2ms "◌Checking boundary data…" [strip VERIFYING · taper · buff] → 531ms "⌁Pin suggests: DenverConfirm DenverDismissPin is i" [strip VERIFYING · taper · buff] → 797ms "⌁Pin suggests: DenverConfirm DenverDismissPin is i" [strip VERIFIED · 0 validation ] | 380x800-denver-s1-pinned.png
+[380x800-denver] S1 band · P10 · honoured — suggestion Confirm / Dismiss targets | "None — baseline (MUTCD + CDOT) onlyCDOT " 252×37 ; "Confirm Denver" 114×24 ; "Dismiss" 68×24 ; "Local" 60×33 ; "Collector" 80×33 ; "Arterial" 69×33
+[380x800-denver] S1 band · P4 · note — Confirm and Dismiss share an edge? | tops 2049/2183/2183/2403/2403/2403 rights 316/178/257/125/205/274 heights 37/24/24/33/33/33
+[380x800-denver] S1 band · P1 · violated — Confirm → resolved record | pending slot h 195 → record h 311; moved: .zone[0] dTop 2 dH 180 ; .zone[1] dTop 181 dH 0 ; .zone-head[0] dTop 2 dH 0 ; .zone-head[1] dTop 181 dH 0 ; .status-bar[0] dTop 182 dH -1 ; .progress-rail[0] dTop 691 dH -23 | 380x800-denver-s1-band-resolved.png
+[380x800-denver] S1 band · P15 · honoured — resolved record keeps ✓ + sentence + Undo | "✓Confirmed Denver — was None — baseline.Undo✓ Pin agrees with your selection (Denver).Pin is inside " | 380x800-denver-s1-band-resolved.png
+[380x800-denver] S1 band · P9 · honoured — record glyph + word | ✓ rgb(79, 215, 135) beside "✓Confirmed Denver — was None — baseline." ; ✓ rgb(147, 160, 176) beside "✓ Pin agrees with your selection (Denver"
+[380x800-denver] S1 band · P1 · violated — Undo → proposal again | moved: .zone[0] dTop -2 dH -180 ; .zone[1] dTop -183 dH 0 ; .zone-head[0] dTop -2 dH 0 ; .zone-head[1] dTop -183 dH 0 ; .status-bar[0] dTop -182 dH 0 ; .progress-rail[0] dTop 21 dH 23
+[380x800-denver] S1 strip · P9 · honoured — INVALID INPUT provoked with work zone 0 | strip "INVALID INPUT · Work zone length is required.GENERATION BLOCKED" h 69; cta-reason "Work zone length is required." | 380x800-denver-s1-invalid.png
+[380x800-denver] S1 strip · P1 · violated — strip height across VERIFYING → verdict | heights 68/88/69; settled "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" after 2174 ms
+[380x800-denver] S1 pinned · P9 · violated — contrast under 4.5:1 in .setup-panel | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[380x800-denver] S1 pinned · P10 · violated — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21 ; button.font-mono "Hide manual entry" 116×16 ; button.w-full "Project detailsOPTIONAL" 282×16 ; input.range-orange "65" 282×2
+[380x800-denver] S1 pinned · P9 · note — glyph audit .setup-panel | 9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden
+[380x800-denver] S1 pinned · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 pinned · P9 · violated — contrast under 4.5:1 in .jctl-band | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[380x800-denver] S1 pinned · P9 · note — glyph audit .jctl-band | 2 glyph nodes: ✓ ; 0 not aria-hidden
+[380x800-denver] S1 pinned · P9 · note — glyph audit .fact-strip | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S1 pinned · P10 · violated — 5 enabled control(s) under 24 px in .progress-rail | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21
+[380x800-denver] S1 pinned · P9 · note — glyph audit .progress-rail | 5 glyph nodes: ✓ ◌ ; 0 not aria-hidden
+[380x800-denver] S1 pinned · P10 · violated — axe pinned | color-contrast×1[.honesty] ; label×2[input[value="39.7269"],input[value="-104.9873"]] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×1[input[value="39.7269"]] | 380x800-denver-s1-pre-generate.png
+[380x800-denver] S1 rail · P10 · violated — rail entries are buttons | "Location — done" 93×21 ; "Road — done" 63×21 ; "Work — done" 63×21 ; "Schedule — not set" 214×21 ; "Generate — ready" 73×21
+[380x800-denver] S1 fact strip · P4 · honoured — label and value share a left edge per cell | Lat 60/60 w93 ; Lng 153/153 w107 ; Bearing 260/260 w80 ; Speed 60/60 w118 ; Jurisdiction 178/178 w162
+[380x800-denver] S2 in flight · P8 · honoured — band present, bottom-fixed, one voice | 20 samples with the band ("GENERATING · new plan · pin 39.7269, -104.9873"), first at 7 ms, settled at 2208 ms; band h 80
+[380x800-denver] S2 in flight · P1 · violated — scroll jumps in the first 2.5 s after Generate (#240) | scrollY samples 2787,2456,1609,1237,1095,1010,991,991,991,991,991,991,991,991,991; 6 jumps > 40 px; docH 3589→5048
+[380x800-denver] S2 in flight · P2 · honoured — no second working voice while the band is up | strip text seen in 0/20 band samples (""); stale ribbon in 5
+[380x800-denver] S2 settle · P3 · honoured — post-generate viewport contains the verdict or the next step | results top 173; strip 98..149 "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; lockup 249..287; refusal —; innerH 800
+[380x800-denver] S2 settle · P1 · violated — results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24 | results top 173; strip h 52; scrollY 1562
+[380x800-denver] S3 · P2 · note — live regions post-generate | 2: div.[polite]="VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 " ; div.sr-only[status]="Plan generated — 31 devices, 9 types."
+[380x800-denver] S3 section 03 · P2 · violated — the tier counts are stated twice: the ledger line and each chip | ledger "◌ checking against the updated inputs…" ; chips "▲Changed this plan2›", "⚠Needs attention4›", "✓Checked & passed13 · each cited›", "◌Pending / not verified3›", "iReferencepermit · hours windows · devic" | 380x800-denver-s3-settled.png
+[380x800-denver] S3 results head · P2 · note — lockup count vs block detected rows (one field, two surfaces — #253 rules one goes) | lockup "4Site conditions detectedof 5 checkedcorrect in setup ↑" ; block "Site conditions — scanned" rows 5, detected 4
+[380x800-denver] S3 hero/cards · P2 · note — hero device count vs plan-sheet card count | hero 39/12 ; cards 39/12/11
+[380x800-denver] S3 OutputCards · P4 · honoured — download buttons share a bottom edge across the three cards | dl-btn tops 2381/2547/2712/2764 (spread 383); bottoms 2421/2587/2752/2804; heights 40/40/40/40; card heights 154/154/206 | 380x800-denver-s3-settled.png
+[380x800-denver] S3 hero · P4 · honoured — hero meta values right-align | rights 331/331/331/331
+[380x800-denver] S3 setup strip · P4 · violated — strip cells share height and top | heights 63/63/63/63/63/63/63/63/63; tops 1426/1426/1489/1489/1489/1552/1552/1552/1552; widths 123/131/111/78/80/72/91/59/65
+[380x800-denver] S3 setup strip · P1 · violated — opening an inline editor (Speed) | strip h 211→255; moved: .zone[0] dTop 0 dH 44 ; .zone[1] dTop 44 dH 0 ; .zone[2] dTop 44 dH 0 ; .zone-head[1] dTop 44 dH 0 ; .zone-head[2] dTop 44 dH 0 ; .status-bar[0] dTop 44 dH 0 | 380x800-denver-s3-strip-editor.png
+[380x800-denver] S3 setup strip · P3 · violated — open editor shows how to close it (no Done/Cancel affordance) | editor 149×63, control 82×28, close affordance false | 380x800-denver-s3-strip-editor.png
+[380x800-denver] S3 setup strip · P7 · note — Escape closes the editor without a request | editor closed on Escape: false
+[380x800-denver] S3 setup strip · P7 · note — outside click closes the editor | closed: true
+[380x800-denver] S3 PricingCard · P1 · honoured — opening the quote moves nothing above it | price h 88→556; moved above: none | 380x800-denver-s3-quote-open.png
+[380x800-denver] S3 QuotePanel · P4 · honoured — field label and input share a left edge | Duration (days) 41/41 143×39 ; Flaggers 196/196 143×39 "Auto · 0 from layout" ; Delivery (mi) 41/41 143×39 "Auto · 5 mi from HQ" ; Overhead (%) 196/196 143×39 ; Profit (%) 41/41 143×39 ; Flagger ($/hr) 196/196 143×39 ; TCS ($/hr) 41/41 143×39 ; Crew ($/hr) 196/196 143×39
+[380x800-denver] S3 QuotePanel · P11 · note — the two actions' treatments + the head total | "Preview breakdown" 298×47 bg rgba(0, 0, 0, 0) border 1px ; "Download Quote (XLSX)↓" 298×45 bg rgb(52, 169, 232) border 0px; head total "expand to configure & preview"
+[380x800-denver] S3 QuotePanel · P16 · note — the Flaggers caption asserts an auto-count | Flaggers: "Auto · 0 from layout" ; Delivery (mi): "Auto · 5 mi from HQ"
+[380x800-denver] S3 section 03 · P1 · honoured — open tier "✓Checked & passed13 · each cit" | chip body grew 2854 px; above moved: none
+[380x800-denver] S3 section 03 · P1 · honoured — open tier "◌Pending / not verified3›" | chip body grew 742 px; above moved: none
+[380x800-denver] S3 section 03 · P1 · honoured — open tier "iReferencepermit · hours windo" | chip body grew 696 px; above moved: none
+[380x800-denver] S3 AuditTrail · P13 · note — audit items are expanders (data-read) | 0 audit-head buttons; sizes 
+[380x800-denver] S3 section 03 · P5 · violated — two headings for one zone (zone title + a second h2 inside) | zone-title "Rules, permit & audit" 17px/700 at 2950; inner h2 "Denver — jurisdiction rules" 20px/700 at 2989
+[380x800-denver] S3 footer · P2 · honoured — "Output requires TCS review" under Generate and in the footer | both present: false
+[380x800-denver] S3 page · P12 · honoured — raw ISO timestamps visible | none
+[380x800-denver] S3 block · P12 · honoured — block footer stamp is sliced, ISO on title | "scancorridor scan · 8 sep · 16:07 utc · 3.6 s · memoised · a correction re-generates the plan" (title 2026-09-08T16:07:08+00:00)
+[380x800-denver] S3 · P9 · violated — contrast under 4.5:1 in .setup-strip | span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) … +3
+[380x800-denver] S3 · P10 · violated — 1 enabled control(s) under 24 px in .setup-strip | button.strip-edit-all "Edit full setup ⤢" 130×19
+[380x800-denver] S3 · P9 · note — glyph audit .setup-strip | 11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden
+[380x800-denver] S3 · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S3 · P10 · violated — 1 enabled control(s) under 24 px in .results-head-lockup | a.tr-signpost "correct in setup ↑" 119×16
+[380x800-denver] S3 · P9 · note — glyph audit .results-head-lockup | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S3 · P9 · note — glyph audit .hero | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S3 · P9 · note — glyph audit .dls | 4 glyph nodes: ↓ ; 4 not aria-hidden
+[380x800-denver] S3 · P9 · note — glyph audit .price | 2 glyph nodes: › ↓ ; 1 not aria-hidden
+[380x800-denver] S3 · P10 · violated — 2 enabled control(s) under 24 px in .ref-stack | a.tr-signpost "Correct in setup ↑" 119×13 ; a.tr-signpost "Correct in setup ↑" 119×13
+[380x800-denver] S3 · P9 · note — glyph audit .ref-stack | 15 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 6 not aria-hidden
+[380x800-denver] S3 · P9 · note — glyph audit #site-corrections | 5 glyph nodes: ▲ ✓ ; 0 not aria-hidden
+[380x800-denver] S3 · P10 · violated — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[380x800-denver] S3 · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[380x800-denver] S3 · P10 · violated — axe settled | heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×1[.strip-edit-all]
+[380x800-denver] S3 page · P5 · note — distinct type tuples on the settled page | 63 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 60px; 1 carry a tr-* role
+[380x800-denver] S3 block · P4 · violated — names share a left edge; actions share a right edge | name lefts 66/42/66/66/66; action rights 338/338/338/338/338; result lefts 42/42/42/42/42 rights 98/98/98/98/204; grid "194px 88px"; block w 332 | 380x800-denver-s3-block.png
+[380x800-denver] S3 block · P6 · violated — one row height per row kind | sc-row h85 ; sc-row h119 (2 lines) ; sc-row h85 ; sc-row h85 ; sc-row h58 | 380x800-denver-s3-block.png
+[380x800-denver] S3 block · P9 · honoured — every row has glyph + word | ▲ detected ; ▲ detected ; ▲ detected ; ▲ detected ; ✓ none along the corridor
+[380x800-denver] S3 block · P10 · honoured — row action button size | "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Assert" 64×28
+[380x800-denver] S3 block · P14 · honoured — absent conditions render as words | detected ; detected ; detected ; detected ; none along the corridor
+[380x800-denver] S3 block · P4 · honoured — block head and foot share the block's left edge | head "Site conditions — scanned" l 42; foot "scancorridor scan · 8 sep · 16:07 utc · 3.6 s · memoised · a correction re-generates the plan" l 42
+[380x800-denver] S4 picker · P1 · note — Dismiss "Adjacent at-grade intersection" mounts the reason picker (a user-asked mount; rows below move by its height) | block h 559→713; rows 5→6; moved: .sc-row[1] dTop 0 dH 35 ; .sc-row[2] dTop 35 dH 34 ; .sc-row[3] dTop 69 dH 0 ; .sc-row[4] dTop 70 dH 27 ; .sc-foot[0] dTop 154 dH 0 | 380x800-denver-s4-picker.png
+[380x800-denver] S4 picker · P4 · violated — chip label centred in its box (#255-1) | "Fenced off" 91×26 box-cx 87.5 text-cx 95 pad 23/8 ; "Removed" 73×26 box-cx 175.5 text-cx 183 pad 23/8 ; "Not in the work zone" 151×26 box-cx 117.5 text-cx 125 pad 23/8 ; "Other (say what)" 127×26 box-cx 262.5 text-cx 270 pad 23/8 | 380x800-denver-s4-picker.png
+[380x800-denver] S4 picker · P10 · honoured — reason chip hit height | 91×26 73×26 151×26 127×26
+[380x800-denver] S4 picker · P1 · violated — choosing Other moves Confirm (#255-3) | Confirm 44,1093 → 44,1127; note input 184×27 at 42,1093 | 380x800-denver-s4-other.png
+[380x800-denver] S4 picker · P9 · violated — a disabled Confirm (note required) says why | Confirm disabled=true title="" text "Confirm dismiss" | 380x800-denver-s4-other.png
+[380x800-denver] S4 picker · P4 · note — action edges with the picker open (Cancel / Confirm / other rows) | "Cancel" right 338 top 905 44×26 ; "Confirm dismiss" right 179 top 1127 135×30 ; "Dismiss" right 338 top 1177 72×28 ; "Dismiss" right 338 top 1295 72×28 ; "Dismiss" right 338 top 1380 72×28 ; "Assert" right 338 top 1465 64×28
+[380x800-denver] S4 confirm · P7 · violated — one Confirm re-generates and locks (a per-edit request; #254) | band "RE-GENERATING · after a correction to Adjacent at-grade intersection" for 34 samples, settled 3737 ms
+[380x800-denver] S4 record · P6 · honoured — record row grows past the scan rows (#255-2) | record h 108 (5 lines) vs scan row h 119; sentence "Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…" | 380x800-denver-s4-record.png
+[380x800-denver] S4 record · P15 · honoured — record keeps glyph + sentence + Undo | × "Undo" 30×16 right 338 vs scan-row action right 338 | 380x800-denver-s4-record.png
+[380x800-denver] S4 record · P4 · honoured — Undo shares the action edge | Undo right 338; Dismiss/Assert right 338
+[380x800-denver] S4 record · P2 · note — lockup after the correction | "4Site conditions detectedof 5 checkedcorrect in setup ↑"
+[380x800-denver] S4 undo · P15 · honoured — Undo removes the record (and re-generates: P7) | band "after undoing the correction to Adjacent at-grade intersection"; records after 0, rows 5
+[380x800-denver] S6 downloads · P8 · honoured — plan.pdf: band RENDERING, button label unchanged | band "RENDERING · plan sheet PDF" 18 samples; button "Download PDF↓"; file saved
+[380x800-denver] S6 downloads · P8 · honoured — devices.xlsx: band RENDERING, button label unchanged | band "RENDERING · device list XLSX" 4 samples; button "Download XLSX↓"; file saved
+[380x800-denver] S6 downloads · P8 · honoured — crew.pdf: band RENDERING, button label unchanged | band "RENDERING · crew instructions PDF" 7 samples; button "Download PDF↓"; file saved
+[380x800-denver] S6 downloads · P8 · honoured — crew.md: band RENDERING, button label unchanged | band "RENDERING · crew instructions MD" 5 samples; button "Download .md↓"; file saved
+[380x800-denver] S6 downloads · P8 · honoured — quote XLSX render raises the band | band "quote XLSX"; file saved
+[380x800-denver] S6 downloads · P8 · honoured — zip render raises the band | band "MHT package ZIP"; file saved
+[1440x1000-lakewood] S1 empty · P2 · deviates-by-ruling — the location blocker sentence is stated by the rail and under the CTA (one export, #228) | rail-blocker "Set a location first — pick on map or enter manually." ; cta-reason "Set a location first — pick on map or enter manually." ; strip "AWAITING LOCATION · pick a location on the map to verify this plan" | 1440x1000-lakewood-s1-empty.png
+[1440x1000-lakewood] S1 empty · P3 · violated — status strip in the first viewport on load | status-bar vtop 2114 vbottom 2161 innerH 1000; first-viewport shows the pick CTA: false | 1440x1000-lakewood-s1-empty.png
+[1440x1000-lakewood] S1 empty · P2 · note — live regions mounted pre-pin | 4: div.jbar-suggest.quiet[polite]="◌Drop a site pin for a jurisdiction sugg" ; div.mt-2.font-mono[alert]="Set a location first — pick on map or en" ; div.[polite]="AWAITING LOCATION · pick a location on t" ; div.sr-only[status]=""
+[1440x1000-lakewood] S1 empty · P9 · violated — contrast under 4.5:1 in .setup-panel | label.k "Jurisdiction" #586372/#1b2838 2.45 (opacity 0.35) ; option "None — baseline (MUTCD + CDOT) only" #5f6974/#14202e 2.95 (opacity 0.35) ; option "CDOT (state highway)" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Denver" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Lakewood" #5f6974/#14202e 2.95 (opacity 0.35) ; option "Englewood" #5f6974/#14202e 2.95 (opacity 0.35) … +51
+[1440x1000-lakewood] S1 empty · P10 · note — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — needs attention: Set a locati" 582×21 ; button.rail-entry "Road — pending — set a location first" 113×21 ; button.rail-entry "Work — pending — set a location first" 113×21 ; button.rail-entry "Schedule — pending — set a location firs" 142×21 ; button.rail-entry "Generate — blocked, see the marked step" 76×21 ; button.font-mono "Enter manually" 95×16 ; button.w-full "Project detailsOPTIONAL" 500×16 ; input.range-orange "65" 500×2
+[1440x1000-lakewood] S1 empty · P9 · note — glyph audit .setup-panel | 12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden
+[1440x1000-lakewood] S1 empty · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S1 empty · P9 · violated — contrast under 4.5:1 in .jbar | span.sep "›" #2c3e53/#1b2838 1.37 (opacity 1)
+[1440x1000-lakewood] S1 empty · P9 · note — glyph audit .jbar | 1 glyph nodes: › ; 0 not aria-hidden
+[1440x1000-lakewood] S1 empty · P10 · note — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[1440x1000-lakewood] S1 empty · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S1 empty · P9 · note — glyph audit nav | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S1 empty · P10 · honoured — axe target-size + full run | region×1[.gap-8]
+[1440x1000-lakewood] S1 empty · P14 · honoured — results zone empty state names the steps | "No package yetDescribe the work zone → press generate→ download the package"
+[1440x1000-lakewood] S1 band · P1 · honoured — band state 1: "◌Checking boundary data…" → "⌁Pin suggests: LakewoodConfirm" | band h 184→356; strip h 47→47; moved: .jctl-band[0] dTop 0 dH 172 ; .jbar-suggest[0] dTop 0 dH 172; docH +0
+[1440x1000-lakewood] S1 band · P8 · note — band states observed after the pin | 2ms "◌Checking boundary data…" [strip VERIFYING · taper · buff] → 528ms "⌁Pin suggests: LakewoodConfirm LakewoodDismissPin " [strip VERIFYING · taper · buff] | 1440x1000-lakewood-s1-pinned.png
+[1440x1000-lakewood] S1 band · P10 · honoured — suggestion Confirm / Dismiss targets | "None — baseline (MUTCD + CDOT) onlyCDOT " 216×37 ; "Confirm Lakewood" 128×24 ; "Dismiss" 68×24 ; "Local" 60×33 ; "Collector" 80×33 ; "Arterial" 69×33
+[1440x1000-lakewood] S1 band · P4 · note — Confirm and Dismiss share an edge? | tops 999/1133/1133/1002/1002/1002 rights 975/887/965/1075/1155/1224 heights 37/24/24/33/33/33
+[1440x1000-lakewood] S1 band · P1 · honoured — Confirm → resolved record | pending slot h 210 → record h 343; moved: .jctl-band[0] dTop 0 dH 155 ; .jbar-suggest[0] dTop 0 dH 154 ; footer[0] dTop 666 dH 0 | 1440x1000-lakewood-s1-band-resolved.png
+[1440x1000-lakewood] S1 band · P15 · honoured — resolved record keeps ✓ + sentence + Undo | "✓Confirmed Lakewood — was None — baseline.Undo✓ Pin agrees with your selection (Lakewood).Pin is ins" | 1440x1000-lakewood-s1-band-resolved.png
+[1440x1000-lakewood] S1 band · P9 · honoured — record glyph + word | ✓ rgb(79, 215, 135) beside "✓Confirmed Lakewood — was None — baselin" ; ✓ rgb(147, 160, 176) beside "✓ Pin agrees with your selection (Lakewo"
+[1440x1000-lakewood] S1 band · P1 · honoured — Undo → proposal again | moved: .jctl-band[0] dTop 0 dH -155 ; .jbar-suggest[0] dTop 0 dH -154 ; footer[0] dTop -666 dH 0
+[1440x1000-lakewood] S1 strip · P9 · honoured — INVALID INPUT provoked with work zone 0 | strip "INVALID INPUT · Work zone length is required.GENERATION BLOCKED" h 52; cta-reason "Work zone length is required." | 1440x1000-lakewood-s1-invalid.png
+[1440x1000-lakewood] S1 strip · P1 · violated — strip height across VERIFYING → verdict | heights 47/52; settled "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW" after 14310 ms
+[1440x1000-lakewood] S1 pinned · P9 · violated — contrast under 4.5:1 in .setup-panel | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[1440x1000-lakewood] S1 pinned · P10 · note — 9 enabled control(s) under 24 px in .setup-panel | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21 ; button.font-mono "Hide manual entry" 116×16 ; button.w-full "Project detailsOPTIONAL" 500×16 ; input.range-orange "65" 500×2
+[1440x1000-lakewood] S1 pinned · P9 · note — glyph audit .setup-panel | 9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden
+[1440x1000-lakewood] S1 pinned · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S1 pinned · P9 · violated — contrast under 4.5:1 in .jctl-band | div.honesty "Boundary data is approximate (" #818e9e/#1b2838 4.47 (opacity 0.85)
+[1440x1000-lakewood] S1 pinned · P9 · note — glyph audit .jctl-band | 2 glyph nodes: ✓ ; 0 not aria-hidden
+[1440x1000-lakewood] S1 pinned · P9 · note — glyph audit .fact-strip | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S1 pinned · P10 · note — 5 enabled control(s) under 24 px in .progress-rail | button.rail-entry "Location — done" 93×21 ; button.rail-entry "Road — done" 63×21 ; button.rail-entry "Work — done" 63×21 ; button.rail-entry "Schedule — not set" 214×21 ; button.rail-entry "Generate — ready" 73×21
+[1440x1000-lakewood] S1 pinned · P9 · note — glyph audit .progress-rail | 5 glyph nodes: ✓ ◌ ; 0 not aria-hidden
+[1440x1000-lakewood] S1 pinned · P10 · honoured — axe pinned | color-contrast×1[.honesty] ; label×2[input[value="39.7113"],input[value="-105.0815"]] ; region×1[.gap-8] | 1440x1000-lakewood-s1-pre-generate.png
+[1440x1000-lakewood] S1 rail · P10 · violated — rail entries are buttons | "Location — done" 93×21 ; "Road — done" 63×21 ; "Work — done" 63×21 ; "Schedule — not set" 214×21 ; "Generate — ready" 73×21
+[1440x1000-lakewood] S1 fact strip · P4 · honoured — label and value share a left edge per cell | Lat 206/206 w99 ; Lng 305/305 w113 ; Bearing 418/418 w86 ; Speed 505/505 w77 ; Jurisdiction 582/582 w122
+[1440x1000-lakewood] S2 in flight · P8 · honoured — band present, bottom-fixed, one voice | 59 samples with the band ("GENERATING · new plan · pin 39.7113, -105.0815"), first at 6 ms, settled at 6483 ms; band h 41
+[1440x1000-lakewood] S2 in flight · P1 · violated — scroll jumps in the first 2.5 s after Generate (#240) | scrollY samples 1352,971,669,601,583,583,583,583,583,583,583,583,583,583,583; 3 jumps > 40 px; docH 2352→3109
+[1440x1000-lakewood] S2 in flight · P2 · honoured — no second working voice while the band is up | strip text seen in 0/59 band samples (""); stale ribbon in 30
+[1440x1000-lakewood] S2 settle · P3 · honoured — post-generate viewport contains the verdict or the next step | results top 174; strip 98..150 "VERIFIED · 2 plan flags ▸REVIEW FLAGS"; lockup 218..255; refusal —; innerH 1000
+[1440x1000-lakewood] S2 settle · P1 · violated — results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24 | results top 174; strip h 52; scrollY 918
+[1440x1000-lakewood] S3 · P2 · note — live regions post-generate | 2: div.[polite]="VERIFIED · 2 plan flags ▸REVIEW FLAGS✕1 " ; div.sr-only[status]="Plan generated — 31 devices, 9 types."
+[1440x1000-lakewood] S3 section 03 · P2 · violated — the tier counts are stated twice: the ledger line and each chip | ledger "◌ checking against the updated inputs…" ; chips "▲Changed this plan2›", "⚠Needs attention4›", "✓Checked & passed13 · each cited›", "◌Pending / not verified2›", "iReferencepermit · hours windows · devic" | 1440x1000-lakewood-s3-settled.png
+[1440x1000-lakewood] S3 results head · P2 · note — lockup count vs block detected rows (one field, two surfaces — #253 rules one goes) | lockup "3Site conditions detectedof 5 checkedcorrect in setup ↑" ; block "Site conditions — scanned" rows 5, detected 3
+[1440x1000-lakewood] S3 hero/cards · P2 · note — hero device count vs plan-sheet card count | hero 39/12 ; cards 39/12/11
+[1440x1000-lakewood] S3 OutputCards · P4 · violated — download buttons share a bottom edge across the three cards | dl-btn tops 1589/1589/1537/1589 (spread 52); bottoms 1629/1629/1577/1629; heights 40/40/40/40; card heights 206/206/206 | 1440x1000-lakewood-s3-settled.png
+[1440x1000-lakewood] S3 hero · P4 · honoured — hero meta values right-align | rights 1245/1245/1245/1245
+[1440x1000-lakewood] S3 setup strip · P4 · honoured — strip cells share height and top | heights 63/63/63/63/63/63/63/63/63; tops 928/928/928/928/928/928/928/928/928; widths 123/131/111/78/80/72/91/59/65
+[1440x1000-lakewood] S3 setup strip · P1 · honoured — opening an inline editor (Speed) | strip h 65→65; moved: none | 1440x1000-lakewood-s3-strip-editor.png
+[1440x1000-lakewood] S3 setup strip · P3 · violated — open editor shows how to close it (no Done/Cancel affordance) | editor 149×63, control 82×28, close affordance false | 1440x1000-lakewood-s3-strip-editor.png
+[1440x1000-lakewood] S3 setup strip · P7 · note — Escape closes the editor without a request | editor closed on Escape: false
+[1440x1000-lakewood] S3 setup strip · P7 · note — outside click closes the editor | closed: true
+[1440x1000-lakewood] S3 PricingCard · P1 · honoured — opening the quote moves nothing above it | price h 52→372; moved above: none | 1440x1000-lakewood-s3-quote-open.png
+[1440x1000-lakewood] S3 QuotePanel · P4 · honoured — field label and input share a left edge | Duration (days) 187/187 347×39 ; Flaggers 546/546 347×39 "Auto · 0 from layout" ; Delivery (mi) 906/906 347×39 "Auto · 5 mi from HQ" ; Overhead (%) 187/187 347×39 ; Profit (%) 546/546 347×39 ; Flagger ($/hr) 906/906 347×39 ; TCS ($/hr) 187/187 347×39 ; Crew ($/hr) 546/546 347×39
+[1440x1000-lakewood] S3 QuotePanel · P11 · note — the two actions' treatments + the head total | "Preview breakdown" 528×47 bg rgba(0, 0, 0, 0) border 1px ; "Download Quote (XLSX)↓" 526×47 bg rgb(52, 169, 232) border 0px; head total "expand to configure & preview"
+[1440x1000-lakewood] S3 QuotePanel · P16 · note — the Flaggers caption asserts an auto-count | Flaggers: "Auto · 0 from layout" ; Delivery (mi): "Auto · 5 mi from HQ"
+[1440x1000-lakewood] S3 section 03 · P1 · honoured — open tier "✓Checked & passed13 · each cit" | chip body grew 1120 px; above moved: none
+[1440x1000-lakewood] S3 section 03 · P1 · honoured — open tier "◌Pending / not verified2›" | chip body grew 203 px; above moved: none
+[1440x1000-lakewood] S3 section 03 · P1 · honoured — open tier "iReferencepermit · hours windo" | chip body grew 352 px; above moved: none
+[1440x1000-lakewood] S3 AuditTrail · P13 · note — audit items are expanders (data-read) | 0 audit-head buttons; sizes 
+[1440x1000-lakewood] S3 section 03 · P5 · violated — two headings for one zone (zone title + a second h2 inside) | zone-title "Rules, permit & audit" 17px/700 at 1737; inner h2 "Lakewood — jurisdiction rules" 20px/700 at 1776
+[1440x1000-lakewood] S3 footer · P2 · honoured — "Output requires TCS review" under Generate and in the footer | both present: false
+[1440x1000-lakewood] S3 page · P12 · honoured — raw ISO timestamps visible | none
+[1440x1000-lakewood] S3 block · P12 · honoured — block footer stamp is sliced, ISO on title | "scancorridor scan · 8 sep · 16:09 utc · 4.8 s · a correction re-generates the plan" (title 2026-09-08T16:09:39+00:00)
+[1440x1000-lakewood] S3 · P9 · violated — contrast under 4.5:1 in .setup-strip | span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "⤢" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic "✎" #1b2838/#1b2838 1 (opacity 0) … +3
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .setup-strip | 11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .status-bar | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S3 · P10 · note — 1 enabled control(s) under 24 px in .results-head-lockup | a.tr-signpost "correct in setup ↑" 119×16
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .results-head-lockup | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .hero | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .dls | 4 glyph nodes: ↓ ; 4 not aria-hidden
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .price | 2 glyph nodes: › ↓ ; 1 not aria-hidden
+[1440x1000-lakewood] S3 · P10 · note — 2 enabled control(s) under 24 px in .ref-stack | a.tr-signpost "Correct in setup ↑" 119×13 ; a.tr-signpost "Correct in setup ↑" 119×13
+[1440x1000-lakewood] S3 · P9 · note — glyph audit .ref-stack | 18 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 7 not aria-hidden
+[1440x1000-lakewood] S3 · P9 · note — glyph audit #site-corrections | 5 glyph nodes: ▲ ✓ ; 0 not aria-hidden
+[1440x1000-lakewood] S3 · P10 · note — 2 enabled control(s) under 24 px in footer | a.hover:text-white "Terms" 35×16 ; a.hover:text-white "Privacy" 49×16
+[1440x1000-lakewood] S3 · P9 · note — glyph audit footer | 0 glyph nodes:  ; 0 not aria-hidden
+[1440x1000-lakewood] S3 · P10 · honoured — axe settled | heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]
+[1440x1000-lakewood] S3 page · P5 · note — distinct type tuples on the settled page | 65 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 15px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role
+[1440x1000-lakewood] S3 block · P4 · honoured — names share a left edge; actions share a right edge | name lefts 212/212/212/212/212; action rights 1252/1252/1252/1252/1252; result lefts 917/991/917/917/991 rights 974/1153/974/974/1153; grid "958px 92px"; block w 1100 | 1440x1000-lakewood-s3-block.png
+[1440x1000-lakewood] S3 block · P6 · honoured — one row height per row kind | sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 | 1440x1000-lakewood-s3-block.png
+[1440x1000-lakewood] S3 block · P9 · honoured — every row has glyph + word | ▲ detected ; ✓ none along the corridor ; ▲ detected ; ▲ detected ; ✓ none along the corridor
+[1440x1000-lakewood] S3 block · P10 · honoured — row action button size | "Dismiss" 72×28 ; "Assert" 64×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Assert" 64×28
+[1440x1000-lakewood] S3 block · P14 · honoured — absent conditions render as words | detected ; none along the corridor ; detected ; detected ; none along the corridor
+[1440x1000-lakewood] S3 block · P4 · honoured — block head and foot share the block's left edge | head "Site conditions — scanned" l 188; foot "scancorridor scan · 8 sep · 16:09 utc · 4.8 s · a correction re-generates the plan" l 188
+[1440x1000-lakewood] S4 picker · P1 · note — Dismiss "Adjacent at-grade intersection" mounts the reason picker (a user-asked mount; rows below move by its height) | block h 323→373; rows 5→6; moved: .sc-row[0] dTop 0 dH -2 ; .sc-row[1] dTop -2 dH 6 ; .sc-row[2] dTop 4 dH 0 ; .sc-row[3] dTop 4 dH 0 ; .sc-row[4] dTop 4 dH 0 | 1440x1000-lakewood-s4-picker.png
+[1440x1000-lakewood] S4 picker · P4 · violated — chip label centred in its box (#255-1) | "Fenced off" 95×28 box-cx 628.3 text-cx 635.8 pad 25/10 ; "Removed" 77×28 box-cx 720.3 text-cx 727.8 pad 25/10 ; "Not in the work zone" 155×28 box-cx 842.3 text-cx 849.8 pad 25/10 ; "Other (say what)" 131×28 box-cx 991.3 text-cx 998.8 pad 25/10 | 1440x1000-lakewood-s4-picker.png
+[1440x1000-lakewood] S4 picker · P10 · honoured — reason chip hit height | 95×28 77×28 155×28 131×28
+[1440x1000-lakewood] S4 picker · P1 · violated — choosing Other moves Confirm (#255-3) | Confirm 1065,689 → 190,723; note input 184×27 at 1063,689 | 1440x1000-lakewood-s4-other.png
+[1440x1000-lakewood] S4 picker · P9 · violated — a disabled Confirm (note required) says why | Confirm disabled=true title="" text "Confirm dismiss" | 1440x1000-lakewood-s4-other.png
+[1440x1000-lakewood] S4 picker · P4 · note — action edges with the picker open (Cancel / Confirm / other rows) | "Cancel" right 1252 top 643 44×26 ; "Confirm dismiss" right 325 top 723 135×30 ; "Assert" right 1252 top 773 64×28 ; "Dismiss" right 1252 top 819 72×28 ; "Dismiss" right 1252 top 865 72×28 ; "Assert" right 1252 top 911 64×28
+[1440x1000-lakewood] S4 confirm · P7 · violated — one Confirm re-generates and locks (a per-edit request; #254) | band "RE-GENERATING · after a correction to Adjacent at-grade intersection" for 209 samples, settled 22843 ms
+[1440x1000-lakewood] S4 record · P6 · honoured — record row grows past the scan rows (#255-2) | record h 33 (1 lines) vs scan row h 46; sentence "Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…" | 1440x1000-lakewood-s4-record.png
+[1440x1000-lakewood] S4 record · P15 · honoured — record keeps glyph + sentence + Undo | × "Undo" 30×16 right 1252 vs scan-row action right 1252 | 1440x1000-lakewood-s4-record.png
+[1440x1000-lakewood] S4 record · P4 · honoured — Undo shares the action edge | Undo right 1252; Dismiss/Assert right 1252
+[1440x1000-lakewood] S4 record · P2 · note — lockup after the correction | "3Site conditions detectedof 5 checkedcorrect in setup ↑"
+[1440x1000-lakewood] S4 undo · P15 · honoured — Undo removes the record (and re-generates: P7) | band "after undoing the correction to Adjacent at-grade intersection"; records after 0, rows 5
+[1440x1000] S7 debug · P13 · honoured — snapshot button renders only with ?debug=1 | ?debug=1: 1 (227×30 at 194,2193); plain: 0 | 1440-debug-1.png
+done · out-run1 · rows 87906 bytes

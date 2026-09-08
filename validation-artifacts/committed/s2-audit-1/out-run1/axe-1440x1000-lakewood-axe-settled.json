@@ -1,0 +1,32 @@
+[
+ {
+  "id": "heading-order",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".dl-card:nth-child(1) > .top > h4",
+    "summary": "Fix any of the following:\n  Heading order invalid",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ }
+]

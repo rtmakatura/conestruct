@@ -1,0 +1,108 @@
+[
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "refusal container inside the settle viewport",
+  "measure": "container 348..675 (h 326, w 332); strip 98..249 \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, from the notice in the \"; results top 272; settled 18378 ms",
+  "shot": "380x800-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P11",
+  "verdict": "violated",
+  "what": "two actions, two treatments; the proceed button wraps",
+  "measure": "\"↻ Retry scan\" 94×18 border 0px lines 1 at 39,575 ; \"Generate without site check — \" 304×63 border 1px lines 4 at 39,601",
+  "shot": "380x800-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "refusal action hit sizes",
+  "measure": "\"↻ Retry scan\" 94×18 ; \"Generate without site check — \" 304×63",
+  "shot": "380x800-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "refusal stated twice (strip + container); pill is a third",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, from the notice in the \"; pill \"SERVICE UNAVAILABLE\"; hero true; 4 downloads enabled; sr \"Plan generated — 31 devices, 9 types.\"",
+  "shot": "380x800-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P12",
+  "verdict": "violated",
+  "what": "raw ISO in the provenance line",
+  "measure": "\"corridor scan · scan budget exceeded (20 s) · attempted 2026-09-08T16:14:59+00:00 · budget 20 s\"",
+  "shot": "380x800-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "axe with the refusal up",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×3[button[aria-label=\"Edit Lane W\"],button[aria-label=\"Edit Work zone\"],.strip-edit-all]"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "refusal container inside the settle viewport",
+  "measure": "container 218..375 (h 157, w 1100); strip 98..150 \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, from the notice in the \"; results top 174; settled 549 ms",
+  "shot": "1440x1000-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P11",
+  "verdict": "violated",
+  "what": "two actions, two treatments; the proceed button wraps",
+  "measure": "\"↻ Retry scan\" 94×18 border 0px lines 1 at 185,341 ; \"Generate without site check — \" 596×28 border 1px lines 2 at 299,336",
+  "shot": "1440x1000-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "refusal action hit sizes",
+  "measure": "\"↻ Retry scan\" 94×18 ; \"Generate without site check — \" 596×28",
+  "shot": "1440x1000-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "refusal stated twice (strip + container); pill is a third",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, from the notice in the \"; pill \"SERVICE UNAVAILABLE\"; hero true; 4 downloads enabled; sr \"Plan generated — 31 devices, 9 types.\"",
+  "shot": "1440x1000-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P12",
+  "verdict": "violated",
+  "what": "raw ISO in the provenance line",
+  "measure": "\"corridor scan · scan budget exceeded (20 s) · attempted 2026-09-08T16:14:59+00:00 · budget 20 s\"",
+  "shot": "1440x1000-denver-s5-refusal-replay.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe with the refusal up",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]"
+ }
+]

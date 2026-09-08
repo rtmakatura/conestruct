@@ -1,0 +1,18 @@
+[
+ {
+  "cls": "jbar-suggest quiet",
+  "text": "◌Checking boundary data…",
+  "bandH": 184,
+  "strip": "VERIFYING · taper · buffer · spacing · sign placement",
+  "stripH": 47,
+  "t": 2
+ },
+ {
+  "cls": "jbar-suggest live",
+  "text": "⌁Pin suggests: LakewoodConfirm LakewoodDismissPin is inside Lakewood municipal limits (US Census TIGER/Line Place bounda",
+  "bandH": 356,
+  "strip": "VERIFYING · taper · buffer · spacing · sign placement",
+  "stripH": 47,
+  "t": 528
+ }
+]

@@ -1,0 +1,326 @@
+[
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "inputs overflow the dialog's right edge",
+  "measure": "dialog 8..372 (w 364); \"Address or intersection search\" 33..259 (-113) ; \"Work zone length in feet\" 197..347 (-25) ; \"Direction of travel in degrees\" 197..347 (-25)",
+  "shot": "380x800-f3-picker.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "disabled Save & Close carries a word saying why, in the viewport",
+  "measure": "Save disabled=true opacity 0.4 title \"\"; gate words [\"Click the map or search to drop a pin\",\"Drop a pin on the map\"]; footer top 729; dialog 8..792; scroller {\"cls\":\"flex-1 min-h-0 flex flex-col overflow-y-\",\"sh\":820,\"ch\":606}",
+  "shot": "380x800-f3-picker.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "first viewport on load: no actionable element (CTA below the fold)",
+  "measure": "h1 155..186 ; draft banner 261..341 ; jbar 365..529 ; zone head 553..585 ; rail 658..696 ; scenario picker 597..2090 ; pick CTA 960..1004 ; status strip 2114..2161; innerH 1000"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "\"Output requires TCS review\" printed more than once (under Generate + footer)",
+  "measure": "2 text nodes"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "refusal container inside the settle viewport",
+  "measure": "container 218..375 (h 157, w 1100); innerH 1000; results top 174; strip 98..150",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P11",
+  "verdict": "violated",
+  "what": "two actions in one row wear two treatments (text link vs bordered)",
+  "measure": "\"↻ Retry scan\" 94×18 border 0px lines 1 top 924 left 185 ; \"Generate without site check — \" 596×28 border 1px lines 2 top 919 left 299",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "refusal action hit sizes",
+  "measure": "\"↻ Retry scan\" 94×18 ; \"Generate without site check — \" 596×28",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P12",
+  "verdict": "violated",
+  "what": "provenance line prints a raw ISO timestamp",
+  "measure": "\"corridor scan · scan budget exceeded (20 s) · attempted 2026-09-08T16:14:59+00:00 · budget 20 s\"",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "strip says PLAN DECLINED while a plan (hero, live downloads, sr announcement) is on screen",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or genera\"; hero true; 4 download buttons enabled; sr-only \"Plan generated — 39 devices, 12 types.\"",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "the refusal is stated twice — strip sentence and container sentence",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, fro\" ; container \"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, \"",
+  "shot": "1440x1000-denver-s5-refusal-natural-f1.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "contrast in the container",
+  "measure": "div.tr-section.mb-1.5 14.92 ; span.sys-glyph 8.82 ; span 9.68 ; div.tr-prov.mt-1.5 5.61 ; button.font-mono.text-[11px] 5.68 ; button.font-mono.text-[11px] 5.61"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P14",
+  "verdict": "note",
+  "what": "section 03 under the refusal",
+  "measure": "ledger \"0 changes · 1 needs attention · 0 checked · 0 pending · reference\"; attention body \"Audit trail unavailable while generation is declined — see the notice above.\"; audit button null"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P13",
+  "verdict": "honoured",
+  "what": "audit items are expanders inside Checked & passed",
+  "measure": "5 audit-head buttons; \"Taper length calculation\" 1066×50 num 203 title 255 cite-r 1211 chev-r 1237 \"L/3 = 217 ft\" ; \"Buffer space calculation\" 1066×50 num 203 title 255 cite-r 1211 chev-r 1237 \"B = 645 ft\" ; \"Channelizing device spacing\" 1066×50 num 203 title 255 cite-r 1211 chev-r 1237 \"14 devices · 65/130 ft o.c.\" ; \"Advance warning sign set\" 1066×50 num 203 title 255 cite-r 1211 chev-r 1237 \"3 signs\" ; \"TA-3 · S-630-1 reference\" 1066×50 num 203 title 255 cite-r 1211 chev-r 1237 \"Case 11: Shoulder closure on d\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "audit rows share the title left edge and the cite right edge",
+  "measure": "title lefts 255; cite rights 1211"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P5",
+  "verdict": "note",
+  "what": "type tuples in an open audit body",
+  "measure": "__JetBrains_Mono_e896d9 16px 400 ×2 ; __Inter_8b3a0b 14px 400 ×1 ; __JetBrains_Mono_e896d9 9px 700 ×1 ; __JetBrains_Mono_e896d9 10px 400 ×1",
+  "shot": "1440-f1-checked-open.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "contrast in an open audit body",
+  "measure": "5 pairs ≥ 4.5"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "audit PDF render raises the band",
+  "measure": "band \"RENDERING · audit PDF\" 69 samples; button 85×18 border 0px; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P11",
+  "verdict": "violated",
+  "what": "the audit PDF download is a text link inside a tier body while every other download is a bordered .dl-btn",
+  "measure": "\"↓ Audit PDF\" 85×18 border 0px vs .dl-btn 40 px bordered"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 re-generate",
+  "p": "P16",
+  "verdict": "honoured",
+  "what": "previous answer stays, dimmed, labelled",
+  "measure": "results-stale opacity 0.5 filter grayscale(0.4) (104 nodes); ribbon \"Previous answer — values below predate the request in flight.\" at vtop 850 (viewport 1000, scrollY 205); band \"after a correction to School zone\"",
+  "shot": "1440-f2-midflight.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 re-generate",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "the dimmed previous answer fails 4.5:1 by construction (#192)",
+  "measure": "56/59 text pairs under 4.5:1 in .results-stale; e.g. div.stale-ribbon \"Previous answer — values below predate t\" 2.39 ; span.k \"Total devices\" 2.47 ; div.num \"39\" 2.56 ; div.sub \"on the plan sheet\" 2.47",
+  "shot": "1440-f2-midflight.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 re-generate",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "the ribbon is in the viewport while the operator is at the block",
+  "measure": "ribbon vtop 850; band fixed at bottom",
+  "shot": "1440-f2-midflight.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 hunt",
+  "p": "P8",
+  "verdict": "note",
+  "what": "attempt 1: no refusal",
+  "measure": "settled 831 ms"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P8",
+  "verdict": "note",
+  "what": "natural refusal on attempt 2",
+  "measure": "settled at 22156 ms; strip \"PLAN DECLINED · the site scan could not complete — retry it, or generate without\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "refusal container inside the settle viewport",
+  "measure": "container -65..92 (h 157, w 1100); innerH 1000; results top -104; strip -180..-128",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P11",
+  "verdict": "violated",
+  "what": "two actions in one row wear two treatments (text link vs bordered)",
+  "measure": "\"↻ Retry scan\" 94×18 border 0px lines 1 top 919 left 185 ; \"Generate without site check — \" 596×28 border 1px lines 2 top 914 left 299",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "refusal action hit sizes",
+  "measure": "\"↻ Retry scan\" 94×18 ; \"Generate without site check — \" 596×28",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P12",
+  "verdict": "violated",
+  "what": "provenance line prints a raw ISO timestamp",
+  "measure": "\"corridor scan · scan budget exceeded (20 s) · attempted 2026-09-08T16:18:17+00:00 · budget 20 s\"",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "strip says PLAN DECLINED while a plan (hero, live downloads, sr announcement) is on screen",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or genera\"; hero false; 4 download buttons enabled; sr-only \"\"",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "the refusal is stated twice — strip sentence and container sentence",
+  "measure": "strip \"PLAN DECLINED · the site scan could not complete — retry it, or generate without the site check, fro\" ; container \"Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, \"",
+  "shot": "1440x1000-denver-s5-refusal-natural.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "contrast in the container",
+  "measure": "div.tr-section.mb-1.5 14.92 ; span.sys-glyph 8.82 ; span 9.68 ; div.tr-prov.mt-1.5 5.61 ; button.font-mono.text-[11px] 5.68 ; button.font-mono.text-[11px] 5.61"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal",
+  "p": "P14",
+  "verdict": "note",
+  "what": "section 03 under the refusal",
+  "measure": "ledger \"0 changes · 1 needs attention · 0 checked · 0 pending · reference\"; attention body \"Audit trail unavailable while generation is declined — see the notice above.\"; audit button null"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 proceed",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "proceed-anyway raises the band",
+  "measure": "band \"RE-GENERATING · without the site check\"; settled 8571 ms; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 proceed",
+  "p": "P14",
+  "verdict": "violated",
+  "what": "NOT-CHECKED disclosed on the strip and in section 03 (chip counts)",
+  "measure": "strip \"null\" (h null); section-03 NOT CHECKED tags 0; ledger \"2 changes · 1 needs attention · 13 checked · 2 pending · reference\"; chips ▲Changed this plan2› | ⚠Needs attention1› | ✓Checked & passed13 · each cited› | ◌Pending / not verified2› | iReferencepermit · hours windows · d; lockup \"4Site conditions detectedof 5 checkedcorrect in setup ↑\"; block true; verdict \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"",
+  "shot": "1440-f4-not-checked.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 proceed",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "NOT-CHECKED provenance prints a raw ISO timestamp",
+  "measure": "\"null\"",
+  "shot": "1440-f4-not-checked.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P8",
+  "verdict": "note",
+  "what": "replayed refusal body — settle",
+  "measure": "settled 28986 ms; results top 173; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "axe with the refusal up",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×3[button[aria-label=\"Edit Lane W\"],button[aria-label=\"Edit Work zone\"],.strip-edit-all]"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P8",
+  "verdict": "note",
+  "what": "replayed refusal body — settle",
+  "measure": "settled 9259 ms; results top 174; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S5 refusal (replayed)",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe with the refusal up",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]"
+ }
+]

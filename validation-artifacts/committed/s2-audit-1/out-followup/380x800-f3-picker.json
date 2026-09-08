@@ -1,0 +1,53 @@
+{
+ "dialog": {
+  "left": 8,
+  "right": 372,
+  "w": 364,
+  "h": 784,
+  "top": 8,
+  "bottom": 792
+ },
+ "inputs": [
+  {
+   "name": "Address or intersection search",
+   "left": 33,
+   "right": 259,
+   "w": 226,
+   "h": 44,
+   "overflow": -113
+  },
+  {
+   "name": "Work zone length in feet",
+   "left": 197,
+   "right": 347,
+   "w": 150,
+   "h": 44,
+   "overflow": -25
+  },
+  {
+   "name": "Direction of travel in degrees",
+   "left": 197,
+   "right": 347,
+   "w": 150,
+   "h": 44,
+   "overflow": -25
+  }
+ ],
+ "save": {
+  "disabled": true,
+  "w": 129,
+  "h": 37,
+  "opacity": "0.4",
+  "title": ""
+ },
+ "words": [
+  "Click the map or search to drop a pin",
+  "Drop a pin on the map"
+ ],
+ "footTop": 729,
+ "scroller": {
+  "cls": "flex-1 min-h-0 flex flex-col overflow-y-",
+  "sh": 820,
+  "ch": 606
+ }
+}

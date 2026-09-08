@@ -1,0 +1,3258 @@
+{
+ ".setup-panel": {
+  "pairs": [
+   {
+    "sel": "h2.text-[15px].font-semibold",
+    "text": "Plan",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 15,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "INPUT",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "02",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Location",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "03",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Road",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "04",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Work",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "◌",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "05",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Schedule",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-note",
+    "text": "optional · not set",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Generate",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Scenario",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 1",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[13px].font-medium",
+    "text": "Shoulder work",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 13,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-prov",
+    "text": "TA-3/TA-5 · S-630-1",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[13px].font-medium",
+    "text": "Flagger lane closure",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 13,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-prov",
+    "text": "TA-10 · S-630-1",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[13px].font-medium",
+    "text": "Lane closure near intersection",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 13,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-prov",
+    "text": "Cases 18/19 · S-630-1",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Location",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 2",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.tr-section.mb-1",
+    "text": "Location",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.text-[13px].text-white",
+    "text": "—",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Lat",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "39.726900",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Lng",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "-104.987300",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Bearing",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "180°",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Speed",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "65 mph",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Jurisdiction",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "Denver",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.tr-section.mb-1",
+    "text": "Corridor extent",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-field",
+    "text": "Total",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.text-white.font-semibold",
+    "text": "3,412",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 14,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.text-[10px].font-normal",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Advance warning",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.font-mono.text-[11px]",
+    "text": "1,500",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[9px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 9,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Taper",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.font-mono.text-[11px]",
+    "text": "217",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[9px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 9,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Buffer",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.font-mono.text-[11px]",
+    "text": "645",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[9px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 9,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Work zone",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.font-mono.text-[11px]",
+    "text": "1,000",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[9px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 9,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Downstream",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.font-mono.text-[11px]",
+    "text": "50",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[9px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "ft",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 9,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.w-full.border",
+    "text": "Edit Location & Corridor →",
+    "fg": "#34a9e8",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.font-mono.text-[10px]",
+    "text": "Hide manual entry",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.tr-section.mb-2",
+    "text": "Manual entry (fallback)",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "label.tr-field.block",
+    "text": "Latitude",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "label.tr-field.block",
+    "text": "Longitude",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "label.tr-field.block",
+    "text": "Bearing (° from N)",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "label.tr-field.block",
+    "text": "Work zone (ft)",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span",
+    "text": "Project details",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "OPTIONAL",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Jurisdiction & classification",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "label.k",
+    "text": "Jurisdiction",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "None — baseline (MUTCD + CDOT) only",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "CDOT (state highway)",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Denver",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Lakewood",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Englewood",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Littleton",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Centennial",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Parker",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Greeley",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Thornton",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "E-470",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "b",
+    "text": "Denver",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.jbar-auth",
+    "text": "·",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.term",
+    "text": "TCP",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.term",
+    "text": "right-of-way",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.sys-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 8.1,
+    "size": 13,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Confirmed",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "b.sugg-name",
+    "text": "Denver",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11.5,
+    "weight": "700",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.ghost",
+    "text": "Undo",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "✓",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.sugg-row.passive",
+    "text": "Pin agrees with your selection (",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.sugg-reason",
+    "text": "Pin is inside Denver municipal limits (U",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.honesty",
+    "text": "Boundary data is approximate (",
+    "fg": "#818e9e",
+    "bg": "#1b2838",
+    "opacity": 0.85,
+    "ratio": 4.47,
+    "size": 9.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.k",
+    "text": "Street classification",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Local",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Collector",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Arterial",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.mapchip",
+    "text": "◎",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Road",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 3",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Road type",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Rural — undivided",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Rural — divided hwy",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Urban arterial",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Freeway / interstate",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span",
+    "text": "Speed limit",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.field-val.text-[color:var(--act)]",
+    "text": "65 mph",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.tr-prov.mt-1.5",
+    "text": "MUTCD: ≥45 mph uses L=W·S",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Lanes per direction",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip",
+    "text": "1",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip.on",
+    "text": "2",
+    "fg": "#06222f",
+    "bg": "#34a9e8",
+    "opacity": 1,
+    "ratio": 6.25,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip",
+    "text": "3",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip",
+    "text": "4",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span",
+    "text": "Lane width",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.field-val.text-[color:var(--act)]",
+    "text": "12 ft",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Work",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 4",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Work type",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Utility locate",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Survey crew",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Signal cabinet",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Guardrail repair",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Other",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 14,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span",
+    "text": "Work zone length (ft)",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.check-lbl",
+    "text": "Night operation",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 14,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.check-desc",
+    "text": "+ retroreflective",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.check-lbl",
+    "text": "Apply work-zone speed reduction",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 14,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.check-desc",
+    "text": "Lower limit through zone",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Schedule",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 5",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Work dates",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip",
+    "text": "Single day",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip",
+    "text": "Date range",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.chip.on",
+    "text": "Not set",
+    "fg": "#06222f",
+    "bg": "#34a9e8",
+    "opacity": 1,
+    "ratio": 6.25,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.tr-step.mb-1",
+    "text": "Denver",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.sw-glyph.text-[color:var(--none)]",
+    "text": "◌",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 16,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--ink-on-dark)]",
+    "text": "Arterial / Collector",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-prov",
+    "text": "·",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.text-[11px].text-[color:var(--none)]",
+    "text": "— set dates to check",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.tr-section",
+    "text": "Site conditions you assert",
+    "fg": "#ffffff",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 16.46,
+    "size": 10,
+    "weight": "500",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "STEP 6",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.mb-3.tr-prov",
+    "text": "Site conditions are scanned along the co",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.check-lbl",
+    "text": "Limited sight distance",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 14,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.check-desc",
+    "text": "Curve, hill crest — moves advance signs ",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.check-lbl",
+    "text": "Driveways present",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 14,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.check-desc",
+    "text": "Advisory: maintain access gaps in channe",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.generate-btn",
+    "text": "Generate plan",
+    "fg": "#06222f",
+    "bg": "#34a9e8",
+    "opacity": 1,
+    "ratio": 6.25,
+    "size": 15,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.mt-3.font-mono",
+    "text": "Output requires TCS review",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   }
+  ],
+  "glyphs": [
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓02Location",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓03Road",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓04Work",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "◌",
+    "color": "rgb(147, 160, 176)",
+    "hidden": "true",
+    "sibling": "◌05Scheduleoptional · not set",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(200, 209, 221)",
+    "hidden": "true",
+    "sibling": "✓Generate",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "—",
+    "color": "rgb(255, 255, 255)",
+    "hidden": null,
+    "sibling": "—Lat39.726900Lng-104.987300Bearing180°Speed65 mphJ",
+    "cls": "text-[13px] text-white leading-tight mb-"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓Confirmed Denver — was None — baseline.Undo",
+    "cls": "sys-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(147, 160, 176)",
+    "hidden": "true",
+    "sibling": "✓ Pin agrees with your selection (Denver).",
+    "cls": ""
+   },
+   {
+    "glyph": "◌",
+    "color": "rgb(147, 160, 176)",
+    "hidden": "true",
+    "sibling": "◌Arterial / Collector · Weekday— set dates to chec",
+    "cls": "sw-glyph text-[color:var(--none)]"
+   }
+  ],
+  "type": [
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 24,
+    "ex": "INPUT",
+    "tr": "tr-step"
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|500|none|rgb(200, 209, 221)",
+    "n": 19,
+    "ex": "Total",
+    "tr": "tr-field"
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+    "n": 11,
+    "ex": "TA-3/TA-5 · S-630-1",
+    "tr": "tr-prov"
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(234, 240, 247)",
+    "n": 11,
+    "ex": "None — baseline (MUTCD + CDOT)",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(255, 255, 255)",
+    "n": 10,
+    "ex": "Scenario",
+    "tr": "tr-section"
+   },
+   {
+    "key": "__Inter_8b3a0b|14px|400|none|rgb(255, 255, 255)",
+    "n": 9,
+    "ex": "Rural — undivided",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|400|none|rgb(147, 160, 176)",
+    "n": 7,
+    "ex": "·",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|11px|400|none|rgb(200, 209, 221)",
+    "n": 6,
+    "ex": "Advance warning",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(200, 209, 221)",
+    "n": 5,
+    "ex": "Location",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(255, 255, 255)",
+    "n": 5,
+    "ex": "39.726900",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(255, 255, 255)",
+    "n": 5,
+    "ex": "1,500",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|9px|400|none|rgb(147, 160, 176)",
+    "n": 5,
+    "ex": "ft",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|9.5px|400|none|rgb(147, 160, 176)",
+    "n": 5,
+    "ex": "Boundary data is approximate (",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(200, 209, 221)",
+    "n": 4,
+    "ex": "Confirmed",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(147, 160, 176)",
+    "n": 4,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|11px|400|none|rgb(147, 160, 176)",
+    "n": 4,
+    "ex": "◎",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|14px|500|none|rgb(200, 209, 221)",
+    "n": 4,
+    "ex": "Night operation",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(79, 215, 135)",
+    "n": 3,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|500|none|rgb(200, 209, 221)",
+    "n": 2,
+    "ex": "Flagger lane closure",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(200, 209, 221)",
+    "n": 2,
+    "ex": "TCP",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|600|none|rgb(255, 255, 255)",
+    "n": 2,
+    "ex": "65 mph",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|500|none|rgb(6, 34, 47)",
+    "n": 2,
+    "ex": "2",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|15px|600|none|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "Plan",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "◌",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|500|none|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "Shoulder work",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "—",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|14px|600|none|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "3,412",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|none|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "ft",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|400|uppercase|rgb(52, 169, 232)",
+    "n": 1,
+    "ex": "Edit Location & Corridor →",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|600|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "Denver",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|13px|400|none|rgb(79, 215, 135)",
+    "n": 1,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|700|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "Denver",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "Pin is inside Denver municipal",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|16px|400|none|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "◌",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|15px|600|none|rgb(6, 34, 47)",
+    "n": 1,
+    "ex": "Generate plan",
+    "tr": ""
+   }
+  ],
+  "targets": [
+   {
+    "tag": "button",
+    "name": "Location — done",
+    "cls": "rail-entry st-done",
+    "w": 93,
+    "h": 21,
+    "top": 666,
+    "left": 187,
+    "right": 280,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Road — done",
+    "cls": "rail-entry st-done",
+    "w": 63,
+    "h": 21,
+    "top": 666,
+    "left": 290,
+    "right": 353,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Work — done",
+    "cls": "rail-entry st-done",
+    "w": 63,
+    "h": 21,
+    "top": 666,
+    "left": 363,
+    "right": 427,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Schedule — not set",
+    "cls": "rail-entry st-notset",
+    "w": 214,
+    "h": 21,
+    "top": 666,
+    "left": 437,
+    "right": 650,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Generate — ready",
+    "cls": "rail-entry st-generate",
+    "w": 73,
+    "h": 21,
+    "top": 666,
+    "left": 660,
+    "right": 733,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Shoulder workTA-3/TA-5 · S-630-1",
+    "cls": "flex items-baseline justify-between text",
+    "w": 1050,
+    "h": 47,
+    "top": 737,
+    "left": 195,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Flagger lane closureTA-10 · S-630-1",
+    "cls": "flex items-baseline justify-between text",
+    "w": 1050,
+    "h": 47,
+    "top": 792,
+    "left": 195,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Lane closure near intersectionCases 18/1",
+    "cls": "flex items-baseline justify-between text",
+    "w": 1050,
+    "h": 47,
+    "top": 846,
+    "left": 195,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Edit Location & Corridor →",
+    "cls": "w-full border border-[color:var(--act)] ",
+    "w": 500,
+    "h": 40,
+    "top": 1256,
+    "left": 195,
+    "right": 695,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Hide manual entry",
+    "cls": "font-mono text-[10px] uppercase tracking",
+    "w": 116,
+    "h": 16,
+    "top": 1314,
+    "left": 387,
+    "right": 503,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "39.7269",
+    "cls": "field-input w-full",
+    "w": 233,
+    "h": 44,
+    "top": 1405,
+    "left": 208,
+    "right": 441,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "-104.987300",
+    "cls": "field-input w-full",
+    "w": 233,
+    "h": 44,
+    "top": 1405,
+    "left": 449,
+    "right": 682,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "180",
+    "cls": "field-input w-full",
+    "w": 233,
+    "h": 44,
+    "top": 1481,
+    "left": 208,
+    "right": 441,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "1000",
+    "cls": "field-input w-full",
+    "w": 233,
+    "h": 44,
+    "top": 1481,
+    "left": 449,
+    "right": 682,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Project detailsOPTIONAL",
+    "cls": "w-full flex justify-between items-center",
+    "w": 500,
+    "h": 16,
+    "top": 1555,
+    "left": 195,
+    "right": 695,
+    "disabled": false
+   },
+   {
+    "tag": "select",
+    "name": "None — baseline (MUTCD + CDOT) onlyCDOT ",
+    "cls": "",
+    "w": 216,
+    "h": 37,
+    "top": 999,
+    "left": 759,
+    "right": 975,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Undo",
+    "cls": "ghost",
+    "w": 48,
+    "h": 24,
+    "top": 1190,
+    "left": 774,
+    "right": 822,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Local",
+    "cls": "",
+    "w": 60,
+    "h": 33,
+    "top": 1002,
+    "left": 1016,
+    "right": 1075,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Collector",
+    "cls": "",
+    "w": 80,
+    "h": 33,
+    "top": 1002,
+    "left": 1075,
+    "right": 1155,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Arterial",
+    "cls": "",
+    "w": 69,
+    "h": 33,
+    "top": 1002,
+    "left": 1155,
+    "right": 1224,
+    "disabled": false
+   },
+   {
+    "tag": "select",
+    "name": "Rural — undividedRural — divided hwyUrba",
+    "cls": "field-input field-select",
+    "w": 500,
+    "h": 44,
+    "top": 1663,
+    "left": 195,
+    "right": 695,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "65",
+    "cls": "range-orange w-full my-1.5",
+    "w": 500,
+    "h": 2,
+    "top": 1761,
+    "left": 195,
+    "right": 695,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "1",
+    "cls": "chip ",
+    "w": 125,
+    "h": 37,
+    "top": 1831,
+    "left": 196,
+    "right": 321,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "2",
+    "cls": "chip on",
+    "w": 125,
+    "h": 37,
+    "top": 1831,
+    "left": 321,
+    "right": 445,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "3",
+    "cls": "chip ",
+    "w": 125,
+    "h": 37,
+    "top": 1831,
+    "left": 445,
+    "right": 570,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "4",
+    "cls": "chip ",
+    "w": 125,
+    "h": 37,
+    "top": 1831,
+    "left": 570,
+    "right": 694,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "12",
+    "cls": "range-orange w-full my-1.5",
+    "w": 500,
+    "h": 2,
+    "top": 1922,
+    "left": 195,
+    "right": 695,
+    "disabled": false
+   },
+   {
+    "tag": "select",
+    "name": "Utility locateSurvey crewSignal cabinetG",
+    "cls": "field-input field-select",
+    "w": 501,
+    "h": 44,
+    "top": 1663,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "1000",
+    "cls": "field-input",
+    "w": 501,
+    "h": 44,
+    "top": 1745,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Night operation+ retroreflective",
+    "cls": "check-row ",
+    "w": 501,
+    "h": 47,
+    "top": 1801,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Apply work-zone speed reductionLower lim",
+    "cls": "check-row ",
+    "w": 501,
+    "h": 48,
+    "top": 1849,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Single day",
+    "cls": "chip ",
+    "w": 166,
+    "h": 37,
+    "top": 2025,
+    "left": 196,
+    "right": 362,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Date range",
+    "cls": "chip ",
+    "w": 166,
+    "h": 37,
+    "top": 2025,
+    "left": 362,
+    "right": 528,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Not set",
+    "cls": "chip on",
+    "w": 166,
+    "h": 37,
+    "top": 2025,
+    "left": 528,
+    "right": 694,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Limited sight distanceCurve, hill crest ",
+    "cls": "check-row ",
+    "w": 501,
+    "h": 75,
+    "top": 2043,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Driveways presentAdvisory: maintain acce",
+    "cls": "check-row ",
+    "w": 501,
+    "h": 76,
+    "top": 2124,
+    "left": 744,
+    "right": 1245,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Generate plan",
+    "cls": "generate-btn",
+    "w": 1050,
+    "h": 56,
+    "top": 2270,
+    "left": 195,
+    "right": 1245,
+    "disabled": false
+   }
+  ]
+ },
+ ".status-bar": {
+  "pairs": [
+   {
+    "sel": "span",
+    "text": "VERIFIED · 0 validation warnings",
+    "fg": "#c8d1dd",
+    "bg": "#0f1823",
+    "opacity": 1,
+    "ratio": 11.59,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.pill.pass",
+    "text": "READY FOR TCS REVIEW",
+    "fg": "#4fd787",
+    "bg": "#14362f",
+    "opacity": 1,
+    "ratio": 7.13,
+    "size": 11,
+    "weight": "600",
+    "family": "__JetBrains_Mono_e896d9"
+   }
+  ],
+  "glyphs": [],
+  "type": [
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "VERIFIED · 0 validation warnin",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|600|uppercase|rgb(79, 215, 135)",
+    "n": 1,
+    "ex": "READY FOR TCS REVIEW",
+    "tr": ""
+   }
+  ],
+  "targets": []
+ },
+ ".jctl-band": {
+  "pairs": [
+   {
+    "sel": "label.k",
+    "text": "Jurisdiction",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "None — baseline (MUTCD + CDOT) only",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "CDOT (state highway)",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Denver",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Lakewood",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Englewood",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Littleton",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Centennial",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Parker",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Greeley",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "Thornton",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "option",
+    "text": "E-470",
+    "fg": "#eaf0f7",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 14.35,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "b",
+    "text": "Denver",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.jbar-auth",
+    "text": "·",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.term",
+    "text": "TCP",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.term",
+    "text": "right-of-way",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.sys-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 8.1,
+    "size": 13,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "Confirmed",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "b.sugg-name",
+    "text": "Denver",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 11.5,
+    "weight": "700",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.ghost",
+    "text": "Undo",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span",
+    "text": "✓",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.sugg-row.passive",
+    "text": "Pin agrees with your selection (",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.sugg-reason",
+    "text": "Pin is inside Denver municipal limits (U",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.honesty",
+    "text": "Boundary data is approximate (",
+    "fg": "#818e9e",
+    "bg": "#1b2838",
+    "opacity": 0.85,
+    "ratio": 4.47,
+    "size": 9.5,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.k",
+    "text": "Street classification",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 12,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Local",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Collector",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button",
+    "text": "Arterial",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.mapchip",
+    "text": "◎",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 11,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   }
+  ],
+  "glyphs": [
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓Confirmed Denver — was None — baseline.Undo",
+    "cls": "sys-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(147, 160, 176)",
+    "hidden": "true",
+    "sibling": "✓ Pin agrees with your selection (Denver).",
+    "cls": ""
+   }
+  ],
+  "type": [
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(234, 240, 247)",
+    "n": 11,
+    "ex": "None — baseline (MUTCD + CDOT)",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|400|none|rgb(147, 160, 176)",
+    "n": 7,
+    "ex": "·",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|9.5px|400|none|rgb(147, 160, 176)",
+    "n": 5,
+    "ex": "Boundary data is approximate (",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(200, 209, 221)",
+    "n": 4,
+    "ex": "Confirmed",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(147, 160, 176)",
+    "n": 4,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|11px|400|none|rgb(147, 160, 176)",
+    "n": 3,
+    "ex": "◎",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|500|none|rgb(200, 209, 221)",
+    "n": 2,
+    "ex": "Jurisdiction",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(200, 209, 221)",
+    "n": 2,
+    "ex": "TCP",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|600|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "Denver",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|13px|400|none|rgb(79, 215, 135)",
+    "n": 1,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11.5px|700|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "Denver",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "Undo",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "Pin is inside Denver municipal",
+    "tr": ""
+   }
+  ],
+  "targets": [
+   {
+    "tag": "select",
+    "name": "None — baseline (MUTCD + CDOT) onlyCDOT ",
+    "cls": "",
+    "w": 216,
+    "h": 37,
+    "top": 999,
+    "left": 759,
+    "right": 975,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Undo",
+    "cls": "ghost",
+    "w": 48,
+    "h": 24,
+    "top": 1190,
+    "left": 774,
+    "right": 822,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Local",
+    "cls": "",
+    "w": 60,
+    "h": 33,
+    "top": 1002,
+    "left": 1016,
+    "right": 1075,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Collector",
+    "cls": "",
+    "w": 80,
+    "h": 33,
+    "top": 1002,
+    "left": 1075,
+    "right": 1155,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Arterial",
+    "cls": "",
+    "w": 69,
+    "h": 33,
+    "top": 1002,
+    "left": 1155,
+    "right": 1224,
+    "disabled": false
+   }
+  ]
+ },
+ ".fact-strip": {
+  "pairs": [
+   {
+    "sel": "span.tr-step",
+    "text": "Lat",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "39.726900",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Lng",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "-104.987300",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Bearing",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "180°",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Speed",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "65 mph",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.tr-step",
+    "text": "Jurisdiction",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.font-mono.text-[12px]",
+    "text": "Denver",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   }
+  ],
+  "glyphs": [],
+  "type": [
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 5,
+    "ex": "Lat",
+    "tr": "tr-step"
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(255, 255, 255)",
+    "n": 5,
+    "ex": "39.726900",
+    "tr": ""
+   }
+  ],
+  "targets": []
+ },
+ ".progress-rail": {
+  "pairs": [
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "02",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Location",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "03",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Road",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#4fd787",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 8.94,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "04",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Work",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "◌",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-step",
+    "text": "05",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Schedule",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-note",
+    "text": "optional · not set",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "span.rail-glyph",
+    "text": "✓",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "span.rail-label",
+    "text": "Generate",
+    "fg": "#c8d1dd",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 10.68,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   }
+  ],
+  "glyphs": [
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓02Location",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓03Road",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(79, 215, 135)",
+    "hidden": "true",
+    "sibling": "✓04Work",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "◌",
+    "color": "rgb(147, 160, 176)",
+    "hidden": "true",
+    "sibling": "◌05Scheduleoptional · not set",
+    "cls": "rail-glyph"
+   },
+   {
+    "glyph": "✓",
+    "color": "rgb(200, 209, 221)",
+    "hidden": "true",
+    "sibling": "✓Generate",
+    "cls": "rail-glyph"
+   }
+  ],
+  "type": [
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 5,
+    "ex": "02",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(200, 209, 221)",
+    "n": 5,
+    "ex": "Location",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(79, 215, 135)",
+    "n": 3,
+    "ex": "✓",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "◌",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|10px|400|uppercase|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "✓",
+    "tr": ""
+   }
+  ],
+  "targets": [
+   {
+    "tag": "button",
+    "name": "Location — done",
+    "cls": "rail-entry st-done",
+    "w": 93,
+    "h": 21,
+    "top": 666,
+    "left": 187,
+    "right": 280,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Road — done",
+    "cls": "rail-entry st-done",
+    "w": 63,
+    "h": 21,
+    "top": 666,
+    "left": 290,
+    "right": 353,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Work — done",
+    "cls": "rail-entry st-done",
+    "w": 63,
+    "h": 21,
+    "top": 666,
+    "left": 363,
+    "right": 427,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Schedule — not set",
+    "cls": "rail-entry st-notset",
+    "w": 214,
+    "h": 21,
+    "top": 666,
+    "left": 437,
+    "right": 650,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Generate — ready",
+    "cls": "rail-entry st-generate",
+    "w": 73,
+    "h": 21,
+    "top": 666,
+    "left": 660,
+    "right": 733,
+    "disabled": false
+   }
+  ]
+ }
+}

@@ -1,0 +1,204 @@
+{
+ "rows": [
+  {
+   "cls": "sc-row",
+   "h": 46,
+   "top": 634,
+   "name": {
+    "l": 212,
+    "r": 387,
+    "w": 175,
+    "h": 19,
+    "t": "Adjacent at-grade intersection"
+   },
+   "result": {
+    "l": 917,
+    "r": 974,
+    "w": 56,
+    "h": 18,
+    "t": "detected"
+   },
+   "action": {
+    "l": 1180,
+    "r": 1252,
+    "w": 72,
+    "h": 28,
+    "t": "Dismiss"
+   },
+   "evidence": {
+    "l": 984,
+    "r": 1153,
+    "w": 169,
+    "h": 17,
+    "t": "19 found · nearest 34.1 ft"
+   },
+   "glyph": {
+    "t": "▲",
+    "color": "rgb(255, 138, 46)"
+   },
+   "lines": 1
+  },
+  {
+   "cls": "sc-row",
+   "h": 46,
+   "top": 680,
+   "name": {
+    "l": 212,
+    "r": 434,
+    "w": 222,
+    "h": 19,
+    "t": "Adjacent interchange (highway ramps)"
+   },
+   "result": {
+    "l": 991,
+    "r": 1153,
+    "w": 162,
+    "h": 18,
+    "t": "none along the corridor"
+   },
+   "action": {
+    "l": 1188,
+    "r": 1252,
+    "w": 64,
+    "h": 28,
+    "t": "Assert"
+   },
+   "evidence": {
+    "l": 0,
+    "r": 0,
+    "w": 0,
+    "h": 0,
+    "t": ""
+   },
+   "glyph": {
+    "t": "✓",
+    "color": "rgb(79, 215, 135)"
+   },
+   "lines": 1
+  },
+  {
+   "cls": "sc-row",
+   "h": 46,
+   "top": 726,
+   "name": {
+    "l": 212,
+    "r": 333,
+    "w": 121,
+    "h": 19,
+    "t": "Pedestrian sidewalks"
+   },
+   "result": {
+    "l": 917,
+    "r": 974,
+    "w": 56,
+    "h": 18,
+    "t": "detected"
+   },
+   "action": {
+    "l": 1180,
+    "r": 1252,
+    "w": 72,
+    "h": 28,
+    "t": "Dismiss"
+   },
+   "evidence": {
+    "l": 984,
+    "r": 1153,
+    "w": 169,
+    "h": 17,
+    "t": "22 found · nearest 46.6 ft"
+   },
+   "glyph": {
+    "t": "▲",
+    "color": "rgb(255, 138, 46)"
+   },
+   "lines": 1
+  },
+  {
+   "cls": "sc-row",
+   "h": 46,
+   "top": 772,
+   "name": {
+    "l": 212,
+    "r": 328,
+    "w": 116,
+    "h": 19,
+    "t": "Bike lane / cycleway"
+   },
+   "result": {
+    "l": 917,
+    "r": 974,
+    "w": 56,
+    "h": 18,
+    "t": "detected"
+   },
+   "action": {
+    "l": 1180,
+    "r": 1252,
+    "w": 72,
+    "h": 28,
+    "t": "Dismiss"
+   },
+   "evidence": {
+    "l": 984,
+    "r": 1153,
+    "w": 169,
+    "h": 17,
+    "t": "37 found · nearest 71.2 ft"
+   },
+   "glyph": {
+    "t": "▲",
+    "color": "rgb(255, 138, 46)"
+   },
+   "lines": 1
+  },
+  {
+   "cls": "sc-row",
+   "h": 46,
+   "top": 818,
+   "name": {
+    "l": 212,
+    "r": 283,
+    "w": 71,
+    "h": 19,
+    "t": "School zone"
+   },
+   "result": {
+    "l": 991,
+    "r": 1153,
+    "w": 162,
+    "h": 18,
+    "t": "none along the corridor"
+   },
+   "action": {
+    "l": 1188,
+    "r": 1252,
+    "w": 64,
+    "h": 28,
+    "t": "Assert"
+   },
+   "evidence": {
+    "l": 0,
+    "r": 0,
+    "w": 0,
+    "h": 0,
+    "t": ""
+   },
+   "glyph": {
+    "t": "✓",
+    "color": "rgb(79, 215, 135)"
+   },
+   "lines": 1
+  }
+ ],
+ "foot": {
+  "t": "scancorridor scan · 8 sep · 16:09 utc · 4.8 s · a correction re-generates the plan",
+  "l": 188
+ },
+ "head": {
+  "t": "Site conditions — scanned",
+  "l": 188
+ },
+ "w": 1100,
+ "cols": "958px 92px"
+}

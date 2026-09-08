@@ -1,0 +1,87 @@
+[
+ {
+  "id": "heading-order",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".dl-card:nth-child(1) > .top > h4",
+    "summary": "Fix any of the following:\n  Heading order invalid",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ },
+ {
+  "id": "scrollable-region-focusable",
+  "impact": "serious",
+  "tags": [
+   "wcag2a",
+   "wcag211",
+   "wcag213"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "target-size",
+  "impact": "serious",
+  "tags": [
+   "wcag22aa",
+   "wcag258"
+  ],
+  "nodes": [
+   {
+    "target": "button[aria-label=\"Edit Lane W\"]",
+    "summary": "Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 71.9px by 9.5px, should be at least 24px by 24px)\n  Target has insufficient space to its cl",
+    "data": {
+     "messageKey": "partiallyObscured",
+     "minSize": 24,
+     "width": 71.9,
+     "height": 9.5
+    }
+   },
+   {
+    "target": "button[aria-label=\"Edit Work zone\"]",
+    "summary": "Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 19.1px by 63.2px, should be at least 24px by 24px)\n  Target has insufficient space to its c",
+    "data": {
+     "messageKey": "partiallyObscured",
+     "minSize": 24,
+     "width": 19.1,
+     "height": 63.2
+    }
+   },
+   {
+    "target": ".strip-edit-all",
+    "summary": "Fix any of the following:\n  Target has insufficient size (130.2px by 19.2px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diame",
+    "data": {
+     "minSize": 24,
+     "width": 130.2,
+     "height": 19.2
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,380 @@
+[
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+  "n": 31,
+  "ex": "Setup",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|9px|400|uppercase|rgb(147, 160, 176)",
+  "n": 20,
+  "ex": "local override rendered last &",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|500|none|rgb(200, 209, 221)",
+  "n": 9,
+  "ex": "Jurisdiction",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|14px|700|none|rgb(255, 255, 255)",
+  "n": 9,
+  "ex": "1",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|400|none|rgb(200, 209, 221)",
+  "n": 8,
+  "ex": "VERIFIED ·",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|14px|400|none|rgb(255, 255, 255)",
+  "n": 8,
+  "ex": "— see the audit trail below fo",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(200, 209, 221)",
+  "n": 8,
+  "ex": "217",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|400|none|rgb(147, 160, 176)",
+  "n": 7,
+  "ex": "·",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11.5px|400|none|rgb(147, 160, 176)",
+  "n": 7,
+  "ex": "MUTCD 2009 R2 (pinned)",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|none|rgb(147, 160, 176)",
+  "n": 7,
+  "ex": "corridor scan",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|500|none|rgb(200, 209, 221)",
+  "n": 7,
+  "ex": "Denver",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|9px|400|none|rgb(147, 160, 176)",
+  "n": 7,
+  "ex": "✎",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+  "n": 6,
+  "ex": "01",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|9.5px|400|uppercase|rgb(147, 160, 176)",
+  "n": 6,
+  "ex": "PDF",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|16px|400|none|rgb(147, 160, 176)",
+  "n": 6,
+  "ex": "›",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(200, 209, 221)",
+  "n": 5,
+  "ex": "Dismiss",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|500|none|rgb(234, 240, 247)",
+  "n": 5,
+  "ex": "Changed this plan",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|400|none|rgb(147, 160, 176)",
+  "n": 4,
+  "ex": "Output is engineering referenc",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(255, 138, 46)",
+  "n": 4,
+  "ex": "▲",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(255, 138, 46)",
+  "n": 4,
+  "ex": "detected",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10.5px|400|none|rgb(147, 160, 176)",
+  "n": 4,
+  "ex": "46 found · nearest 95.8 ft",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12.5px|600|none|rgb(86, 188, 242)",
+  "n": 4,
+  "ex": "Download PDF",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12.5px|600|none|rgb(86, 188, 242)",
+  "n": 4,
+  "ex": "↓",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12.5px|600|none|rgb(200, 209, 221)",
+  "n": 4,
+  "ex": "2",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(200, 209, 221)",
+  "n": 3,
+  "ex": "TCP",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|400|none|rgb(147, 160, 176)",
+  "n": 3,
+  "ex": "·",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(44, 62, 83)",
+  "n": 3,
+  "ex": "›",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|11px|700|none|rgb(79, 215, 135)",
+  "n": 3,
+  "ex": "ℹ",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|14px|600|none|rgb(255, 255, 255)",
+  "n": 3,
+  "ex": "Plan sheet",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|11.5px|600|none|rgb(255, 138, 46)",
+  "n": 3,
+  "ex": "39",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|11.5px|400|none|rgb(147, 160, 176)",
+  "n": 3,
+  "ex": "devices",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|400|none|rgb(200, 209, 221)",
+  "n": 3,
+  "ex": "TCP 'must be prepared by a cer",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12.5px|400|none|rgb(147, 160, 176)",
+  "n": 3,
+  "ex": "·",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|17px|700|none|rgb(255, 255, 255)",
+  "n": 2,
+  "ex": "Scenario",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|500|none|rgb(255, 255, 255)",
+  "n": 2,
+  "ex": "Shoulder work",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|9px|400|none|rgb(52, 169, 232)",
+  "n": 2,
+  "ex": "⤢",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|600|none|rgb(52, 169, 232)",
+  "n": 2,
+  "ex": "Edit full setup",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|11px|700|none|rgb(255, 122, 122)",
+  "n": 2,
+  "ex": "✕",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|20px|700|none|rgb(255, 255, 255)",
+  "n": 2,
+  "ex": "MHT package",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|76px|600|none|rgb(255, 138, 46)",
+  "n": 2,
+  "ex": "39",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(255, 138, 46)",
+  "n": 2,
+  "ex": "Auto · 0 from layout",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|400|uppercase|rgb(52, 169, 232)",
+  "n": 1,
+  "ex": "02 · GENERATOR",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|28px|700|none|rgb(255, 255, 255)",
+  "n": 1,
+  "ex": "Method of Handling Traffic — p",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|14px|400|none|rgb(147, 160, 176)",
+  "n": 1,
+  "ex": "Generate a CDOT-compliant MHT ",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(244, 192, 32)",
+  "n": 1,
+  "ex": "Draft — not a sealed plan",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|600|none|rgb(200, 209, 221)",
+  "n": 1,
+  "ex": "Denver",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11.5px|700|none|rgb(255, 255, 255)",
+  "n": 1,
+  "ex": "2024 Fee Sched.",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|10px|500|uppercase|rgb(255, 255, 255)",
+  "n": 1,
+  "ex": "Site conditions — scanned",
+  "tr": "tr-section"
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(79, 215, 135)",
+  "n": 1,
+  "ex": "✓",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|600|uppercase|rgb(244, 192, 32)",
+  "n": 1,
+  "ex": "REVIEW FLAGS",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|16px|400|none|rgb(200, 209, 221)",
+  "n": 1,
+  "ex": "Plan generated — 31 devices, 9",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|24px|500|none|rgb(255, 138, 46)",
+  "n": 1,
+  "ex": "4",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12px|400|none|rgb(200, 209, 221)",
+  "n": 1,
+  "ex": "Denver · TCP",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|12px|600|none|rgb(234, 240, 247)",
+  "n": 1,
+  "ex": "↓",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12px|600|none|rgb(234, 240, 247)",
+  "n": 1,
+  "ex": "All (.zip)",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|13px|400|none|rgb(147, 160, 176)",
+  "n": 1,
+  "ex": "expand to configure & preview",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|600|none|rgb(234, 240, 247)",
+  "n": 1,
+  "ex": "Preview breakdown",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|600|none|rgb(6, 34, 47)",
+  "n": 1,
+  "ex": "Download Quote (XLSX)",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|13px|600|none|rgb(6, 34, 47)",
+  "n": 1,
+  "ex": "↓",
+  "tr": ""
+ },
+ {
+  "key": "__JetBrains_Mono_e896d9|11px|400|uppercase|rgb(200, 209, 221)",
+  "n": 1,
+  "ex": "◌ checking against the updated",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|400|none|rgb(255, 138, 46)",
+  "n": 1,
+  "ex": "▲",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|13px|400|none|rgb(244, 192, 32)",
+  "n": 1,
+  "ex": "⚠",
+  "tr": ""
+ },
+ {
+  "key": "__Inter_8b3a0b|12.5px|400|none|rgb(79, 215, 135)",
+  "n": 1,
+  "ex": "each cited",
+  "tr": ""
+ }
+]

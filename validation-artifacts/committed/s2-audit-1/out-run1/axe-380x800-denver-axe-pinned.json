@@ -1,0 +1,97 @@
+[
+ {
+  "id": "color-contrast",
+  "impact": "serious",
+  "tags": [
+   "wcag2aa",
+   "wcag143"
+  ],
+  "nodes": [
+   {
+    "target": ".honesty",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.47 (foreground color: #818e9e, background color: #1b2838, font size: 7.1pt (9.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#818e9e",
+     "bgColor": "#1b2838",
+     "contrastRatio": 4.47,
+     "fontSize": "7.1pt (9.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   }
+  ]
+ },
+ {
+  "id": "label",
+  "impact": "critical",
+  "tags": [
+   "wcag2a",
+   "wcag412"
+  ],
+  "nodes": [
+   {
+    "target": "input[value=\"39.7269\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   },
+   {
+    "target": "input[value=\"-104.9873\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ },
+ {
+  "id": "scrollable-region-focusable",
+  "impact": "serious",
+  "tags": [
+   "wcag2a",
+   "wcag211",
+   "wcag213"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "target-size",
+  "impact": "serious",
+  "tags": [
+   "wcag22aa",
+   "wcag258"
+  ],
+  "nodes": [
+   {
+    "target": "input[value=\"39.7269\"]",
+    "summary": "Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 124px by 18.2px, should be at least 24px by 24px)\n  Target has insufficient space to its cl",
+    "data": {
+     "messageKey": "partiallyObscured",
+     "minSize": 24,
+     "width": 124,
+     "height": 18.2
+    }
+   }
+  ]
+ }
+]

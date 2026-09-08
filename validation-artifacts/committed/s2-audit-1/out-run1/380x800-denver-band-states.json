@@ -1,0 +1,26 @@
+[
+ {
+  "cls": "jbar-suggest quiet",
+  "text": "◌Checking boundary data…",
+  "bandH": 291,
+  "strip": "VERIFYING · taper · buffer · spacing · sign placement",
+  "stripH": 68,
+  "t": 2
+ },
+ {
+  "cls": "jbar-suggest live",
+  "text": "⌁Pin suggests: DenverConfirm DenverDismissPin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, ",
+  "bandH": 447,
+  "strip": "VERIFYING · taper · buffer · spacing · sign placement",
+  "stripH": 68,
+  "t": 531
+ },
+ {
+  "cls": "jbar-suggest live",
+  "text": "⌁Pin suggests: DenverConfirm DenverDismissPin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, ",
+  "bandH": 447,
+  "strip": "VERIFIED · 0 validation warningsREADY FOR TCS REVIEW",
+  "stripH": 69,
+  "t": 797
+ }
+]

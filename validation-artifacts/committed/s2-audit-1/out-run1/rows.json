@@ -1,0 +1,2627 @@
+[
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "deviates-by-ruling",
+  "what": "the location blocker sentence is stated by the rail and under the CTA (one export, #228)",
+  "measure": "rail-blocker \"Set a location first — pick on map or enter manually.\" ; cta-reason \"Set a location first — pick on map or enter manually.\" ; strip \"AWAITING LOCATION · pick a location on the map to verify this plan\"",
+  "shot": "1440x1000-denver-s1-empty.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "status strip in the first viewport on load",
+  "measure": "status-bar vtop 2114 vbottom 2161 innerH 1000; first-viewport shows the pick CTA: false",
+  "shot": "1440x1000-denver-s1-empty.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions mounted pre-pin",
+  "measure": "4: div.jbar-suggest.quiet[polite]=\"◌Drop a site pin for a jurisdiction sugg\" ; div.mt-2.font-mono[alert]=\"Set a location first — pick on map or en\" ; div.[polite]=\"AWAITING LOCATION · pick a location on t\" ; div.sr-only[status]=\"\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "label.k \"Jurisdiction\" #586372/#1b2838 2.45 (opacity 0.35) ; option \"None — baseline (MUTCD + CDOT) only\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"CDOT (state highway)\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Denver\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Lakewood\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Englewood\" #5f6974/#14202e 2.95 (opacity 0.35) … +51"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "note",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — needs attention: Set a locati\" 582×21 ; button.rail-entry \"Road — pending — set a location first\" 113×21 ; button.rail-entry \"Work — pending — set a location first\" 113×21 ; button.rail-entry \"Schedule — pending — set a location firs\" 142×21 ; button.rail-entry \"Generate — blocked, see the marked step\" 76×21 ; button.font-mono \"Enter manually\" 95×16 ; button.w-full \"Project detailsOPTIONAL\" 500×16 ; input.range-orange \"65\" 500×2"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jbar",
+  "measure": "span.sep \"›\" #2c3e53/#1b2838 1.37 (opacity 1)"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jbar",
+  "measure": "1 glyph nodes: › ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit nav",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe target-size + full run",
+  "measure": "region×1[.gap-8]"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 empty",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "results zone empty state names the steps",
+  "measure": "\"No package yetDescribe the work zone → press generate→ download the package\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "dialog fits the viewport",
+  "measure": "dialog 1280×880 at 80,60 bottom 940 (innerH 1000); overflow-y hidden scrollH 878/878",
+  "shot": "1440x1000-denver-s1-picker.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "a disabled Save carries a word saying why",
+  "measure": "Save & Close disabled=true; gate words: \"Click the map or search to drop a pin\"",
+  "shot": "1440x1000-denver-s1-picker.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in [role=dialog]",
+  "measure": "button.border.border-[color:var(--act)] \"Search\" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border \"Use Detected\" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border \"⟲ Flip\" #606c7a/#1b2838 2.79 (opacity 0.4) ; button.px-6.py-2 \"Save & Close\" #22739e/#34a9e8 1.99 (opacity 0.4)"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P10",
+  "verdict": "note",
+  "what": "6 enabled control(s) under 24 px in [role=dialog]",
+  "measure": "button.font-mono \"+ Or enter coordinates manually\" 211×16 ; a. \"© Mapbox\" 55×14 ; a. \"© OpenStreetMap\" 97×14 ; a.mapbox-improve-map \"Improve this map\" 99×14 ; a. \"© Maxar\" 46×14 ; a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88×23"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit [role=dialog]",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe with the dialog open",
+  "measure": "region×1[.gap-8]"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 picker",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open + cancel leaves the page where it was",
+  "measure": "0 rects moved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "band state 1: \"◌Checking boundary data…\" → \"⌁Pin suggests: DenverConfirm D\"",
+  "measure": "band h 184→356; strip h 47→47; moved: .jctl-band[0] dTop 0 dH 172 ; .jbar-suggest[0] dTop 0 dH 172; docH +0"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P8",
+  "verdict": "note",
+  "what": "band states observed after the pin",
+  "measure": "1ms \"◌Checking boundary data…\" [strip VERIFYING · taper · buff] → 1310ms \"⌁Pin suggests: DenverConfirm DenverDismissPin is i\" [strip VERIFYING · taper · buff]",
+  "shot": "1440x1000-denver-s1-pinned.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "suggestion Confirm / Dismiss targets",
+  "measure": "\"None — baseline (MUTCD + CDOT) onlyCDOT \" 216×37 ; \"Confirm Denver\" 114×24 ; \"Dismiss\" 68×24 ; \"Local\" 60×33 ; \"Collector\" 80×33 ; \"Arterial\" 69×33"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P4",
+  "verdict": "note",
+  "what": "Confirm and Dismiss share an edge?",
+  "measure": "tops 999/1133/1133/1002/1002/1002 rights 975/873/952/1075/1155/1224 heights 37/24/24/33/33/33"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "Confirm → resolved record",
+  "measure": "pending slot h 210 → record h 343; moved: .jctl-band[0] dTop 0 dH 126 ; .jbar-suggest[0] dTop -29 dH 154 ; footer[0] dTop 199 dH 0",
+  "shot": "1440x1000-denver-s1-band-resolved.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "resolved record keeps ✓ + sentence + Undo",
+  "measure": "\"✓Confirmed Denver — was None — baseline.Undo✓ Pin agrees with your selection (Denver).Pin is inside \"",
+  "shot": "1440x1000-denver-s1-band-resolved.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "record glyph + word",
+  "measure": "✓ rgb(79, 215, 135) beside \"✓Confirmed Denver — was None — baseline.\" ; ✓ rgb(147, 160, 176) beside \"✓ Pin agrees with your selection (Denver\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "Undo → proposal again",
+  "measure": "moved: .jctl-band[0] dTop 0 dH -126 ; .jbar-suggest[0] dTop 29 dH -154 ; footer[0] dTop -199 dH 0"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 strip",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "INVALID INPUT provoked with work zone 0",
+  "measure": "strip \"INVALID INPUT · Work zone length is required.GENERATION BLOCKED\" h 52; cta-reason \"Work zone length is required.\"",
+  "shot": "1440x1000-denver-s1-invalid.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 strip",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "strip height across VERIFYING → verdict",
+  "measure": "heights 47/52; settled \"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW\" after 23025 ms"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "note",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21 ; button.font-mono \"Hide manual entry\" 116×16 ; button.w-full \"Project detailsOPTIONAL\" 500×16 ; input.range-orange \"65\" 500×2"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jctl-band",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jctl-band",
+  "measure": "2 glyph nodes: ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .fact-strip",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "note",
+  "what": "5 enabled control(s) under 24 px in .progress-rail",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .progress-rail",
+  "measure": "5 glyph nodes: ✓ ◌ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe pinned",
+  "measure": "color-contrast×1[.honesty] ; label×2[input[value=\"39.7269\"],input[value=\"-104.9873\"]] ; region×1[.gap-8]",
+  "shot": "1440x1000-denver-s1-pre-generate.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 rail",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "rail entries are buttons",
+  "measure": "\"Location — done\" 93×21 ; \"Road — done\" 63×21 ; \"Work — done\" 63×21 ; \"Schedule — not set\" 214×21 ; \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S1 fact strip",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "label and value share a left edge per cell",
+  "measure": "Lat 206/206 w99 ; Lng 305/305 w113 ; Bearing 418/418 w86 ; Speed 505/505 w77 ; Jurisdiction 582/582 w122"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 in flight",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "band present, bottom-fixed, one voice",
+  "measure": "47 samples with the band (\"GENERATING · new plan · pin 39.7269, -104.9873\"), first at 4 ms, settled at 5154 ms; band h 41"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 in flight",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "scroll jumps in the first 2.5 s after Generate (#240)",
+  "measure": "scrollY samples 1357,976,691,602,583,583,583,583,583,583,583,583,583,583,583; 3 jumps > 40 px; docH 2357→3064"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 in flight",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "no second working voice while the band is up",
+  "measure": "strip text seen in 0/47 band samples (\"\"); stale ribbon in 29"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 settle",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "post-generate viewport contains the verdict or the next step",
+  "measure": "results top 174; strip 98..150 \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; lockup 218..255; refusal —; innerH 1000"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S2 settle",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24",
+  "measure": "results top 174; strip h 52; scrollY 918"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions post-generate",
+  "measure": "2: div.[polite]=\"VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 \" ; div.sr-only[status]=\"Plan generated — 31 devices, 9 types.\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 section 03",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "the tier counts are stated twice: the ledger line and each chip",
+  "measure": "ledger \"◌ checking against the updated inputs…\" ; chips \"▲Changed this plan2›\", \"⚠Needs attention4›\", \"✓Checked & passed13 · each cited›\", \"◌Pending / not verified3›\", \"iReferencepermit · hours windows · devic\"",
+  "shot": "1440x1000-denver-s3-settled.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 results head",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup count vs block detected rows (one field, two surfaces — #253 rules one goes)",
+  "measure": "lockup \"4Site conditions detectedof 5 checkedcorrect in setup ↑\" ; block \"Site conditions — scanned\" rows 5, detected 4"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 hero/cards",
+  "p": "P2",
+  "verdict": "note",
+  "what": "hero device count vs plan-sheet card count",
+  "measure": "hero 39/12 ; cards 39/12/11"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 OutputCards",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "download buttons share a bottom edge across the three cards",
+  "measure": "dl-btn tops 1589/1589/1537/1589 (spread 52); bottoms 1629/1629/1577/1629; heights 40/40/40/40; card heights 206/206/206",
+  "shot": "1440x1000-denver-s3-settled.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 hero",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "hero meta values right-align",
+  "measure": "rights 1245/1245/1245/1245"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 setup strip",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "strip cells share height and top",
+  "measure": "heights 63/63/63/63/63/63/63/63/63; tops 928/928/928/928/928/928/928/928/928; widths 123/131/111/78/80/72/91/59/65"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 setup strip",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "opening an inline editor (Speed)",
+  "measure": "strip h 65→65; moved: none",
+  "shot": "1440x1000-denver-s3-strip-editor.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 setup strip",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "open editor shows how to close it (no Done/Cancel affordance)",
+  "measure": "editor 149×63, control 82×28, close affordance false",
+  "shot": "1440x1000-denver-s3-strip-editor.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "Escape closes the editor without a request",
+  "measure": "editor closed on Escape: false"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "outside click closes the editor",
+  "measure": "closed: true"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 PricingCard",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "opening the quote moves nothing above it",
+  "measure": "price h 52→372; moved above: none",
+  "shot": "1440x1000-denver-s3-quote-open.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "field label and input share a left edge",
+  "measure": "Duration (days) 187/187 347×39 ; Flaggers 546/546 347×39 \"Auto · 0 from layout\" ; Delivery (mi) 906/906 347×39 \"Auto · 5 mi from HQ\" ; Overhead (%) 187/187 347×39 ; Profit (%) 546/546 347×39 ; Flagger ($/hr) 906/906 347×39 ; TCS ($/hr) 187/187 347×39 ; Crew ($/hr) 546/546 347×39"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P11",
+  "verdict": "note",
+  "what": "the two actions' treatments + the head total",
+  "measure": "\"Preview breakdown\" 528×47 bg rgba(0, 0, 0, 0) border 1px ; \"Download Quote (XLSX)↓\" 526×47 bg rgb(52, 169, 232) border 0px; head total \"expand to configure & preview\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P16",
+  "verdict": "note",
+  "what": "the Flaggers caption asserts an auto-count",
+  "measure": "Flaggers: \"Auto · 0 from layout\" ; Delivery (mi): \"Auto · 5 mi from HQ\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"✓Checked & passed13 · each cit\"",
+  "measure": "chip body grew 1181 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"◌Pending / not verified3›\"",
+  "measure": "chip body grew 313 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"iReferencepermit · hours windo\"",
+  "measure": "chip body grew 410 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P13",
+  "verdict": "note",
+  "what": "audit items are expanders (data-read)",
+  "measure": "0 audit-head buttons; sizes "
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 section 03",
+  "p": "P5",
+  "verdict": "violated",
+  "what": "two headings for one zone (zone title + a second h2 inside)",
+  "measure": "zone-title \"Rules, permit & audit\" 17px/700 at 1737; inner h2 \"Denver — jurisdiction rules\" 20px/700 at 1776"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 footer",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "\"Output requires TCS review\" under Generate and in the footer",
+  "measure": "both present: false"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 page",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "raw ISO timestamps visible",
+  "measure": "none"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "block footer stamp is sliced, ISO on title",
+  "measure": "\"scancorridor scan · 8 sep · 16:06 utc · 2.5 s · a correction re-generates the plan\" (title 2026-09-08T16:06:52+00:00)"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-strip",
+  "measure": "span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) … +3"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-strip",
+  "measure": "11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "1 enabled control(s) under 24 px in .results-head-lockup",
+  "measure": "a.tr-signpost \"correct in setup ↑\" 119×16"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .results-head-lockup",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .hero",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .dls",
+  "measure": "4 glyph nodes: ↓ ; 4 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .price",
+  "measure": "2 glyph nodes: › ↓ ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in .ref-stack",
+  "measure": "a.tr-signpost \"Correct in setup ↑\" 119×13 ; a.tr-signpost \"Correct in setup ↑\" 119×13"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .ref-stack",
+  "measure": "15 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 6 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit #site-corrections",
+  "measure": "5 glyph nodes: ▲ ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe settled",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 page",
+  "p": "P5",
+  "verdict": "note",
+  "what": "distinct type tuples on the settled page",
+  "measure": "63 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "names share a left edge; actions share a right edge",
+  "measure": "name lefts 212/212/212/212/212; action rights 1252/1252/1252/1252/1252; result lefts 917/917/904/911/991 rights 974/974/961/967/1153; grid \"958px 92px\"; block w 1100",
+  "shot": "1440x1000-denver-s3-block.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "one row height per row kind",
+  "measure": "sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46",
+  "shot": "1440x1000-denver-s3-block.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "every row has glyph + word",
+  "measure": "▲ detected ; ▲ detected ; ▲ detected ; ▲ detected ; ✓ none along the corridor"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "row action button size",
+  "measure": "\"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Assert\" 64×28"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "absent conditions render as words",
+  "measure": "detected ; detected ; detected ; detected ; none along the corridor"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "block head and foot share the block's left edge",
+  "measure": "head \"Site conditions — scanned\" l 188; foot \"scancorridor scan · 8 sep · 16:06 utc · 2.5 s · a correction re-generates the plan\" l 188"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "note",
+  "what": "Dismiss \"Adjacent at-grade intersection\" mounts the reason picker (a user-asked mount; rows below move by its height)",
+  "measure": "block h 323→373; rows 5→6; moved: .sc-row[0] dTop 0 dH -2 ; .sc-row[1] dTop -2 dH 6 ; .sc-row[2] dTop 4 dH 0 ; .sc-row[3] dTop 4 dH 0 ; .sc-row[4] dTop 4 dH 0",
+  "shot": "1440x1000-denver-s4-picker.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "chip label centred in its box (#255-1)",
+  "measure": "\"Fenced off\" 95×28 box-cx 628.3 text-cx 635.8 pad 25/10 ; \"Removed\" 77×28 box-cx 720.3 text-cx 727.8 pad 25/10 ; \"Not in the work zone\" 155×28 box-cx 842.3 text-cx 849.8 pad 25/10 ; \"Other (say what)\" 131×28 box-cx 991.3 text-cx 998.8 pad 25/10",
+  "shot": "1440x1000-denver-s4-picker.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "reason chip hit height",
+  "measure": "95×28 77×28 155×28 131×28"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "choosing Other moves Confirm (#255-3)",
+  "measure": "Confirm 1065,689 → 190,723; note input 184×27 at 1063,689",
+  "shot": "1440x1000-denver-s4-other.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "a disabled Confirm (note required) says why",
+  "measure": "Confirm disabled=true title=\"\" text \"Confirm dismiss\"",
+  "shot": "1440x1000-denver-s4-other.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "note",
+  "what": "action edges with the picker open (Cancel / Confirm / other rows)",
+  "measure": "\"Cancel\" right 1252 top 643 44×26 ; \"Confirm dismiss\" right 325 top 723 135×30 ; \"Dismiss\" right 1252 top 773 72×28 ; \"Dismiss\" right 1252 top 819 72×28 ; \"Dismiss\" right 1252 top 865 72×28 ; \"Assert\" right 1252 top 911 64×28"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 confirm",
+  "p": "P7",
+  "verdict": "violated",
+  "what": "one Confirm re-generates and locks (a per-edit request; #254)",
+  "measure": "band \"RE-GENERATING · after a correction to Adjacent at-grade intersection\" for 37 samples, settled 4081 ms"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 record",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "record row grows past the scan rows (#255-2)",
+  "measure": "record h 33 (1 lines) vs scan row h 46; sentence \"Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…\"",
+  "shot": "1440x1000-denver-s4-record.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 record",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "record keeps glyph + sentence + Undo",
+  "measure": "× \"Undo\" 30×16 right 1252 vs scan-row action right 1252",
+  "shot": "1440x1000-denver-s4-record.png"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 record",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "Undo shares the action edge",
+  "measure": "Undo right 1252; Dismiss/Assert right 1252"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 record",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup after the correction",
+  "measure": "\"4Site conditions detectedof 5 checkedcorrect in setup ↑\""
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S4 undo",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "Undo removes the record (and re-generates: P7)",
+  "measure": "band \"after undoing the correction to Adjacent at-grade intersection\"; records after 0, rows 5"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "plan.pdf: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · plan sheet PDF\" 36 samples; button \"Download PDF↓\"; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "devices.xlsx: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · device list XLSX\" 106 samples; button \"Download XLSX↓\"; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "crew.pdf: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · crew instructions PDF\" 5 samples; button \"Download PDF↓\"; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "crew.md: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · crew instructions MD\" 5 samples; button \"Download .md↓\"; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "quote XLSX render raises the band",
+  "measure": "band \"quote XLSX\"; file saved"
+ },
+ {
+  "vp": "1440x1000-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "zip render raises the band",
+  "measure": "band \"MHT package ZIP\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "deviates-by-ruling",
+  "what": "the location blocker sentence is stated by the rail and under the CTA (one export, #228)",
+  "measure": "rail-blocker \"Set a location first — pick on map or enter manually.\" ; cta-reason \"Set a location first — pick on map or enter manually.\" ; strip \"AWAITING LOCATION · pick a location on the map to verify this plan\"",
+  "shot": "380x800-denver-s1-empty.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "status strip in the first viewport on load",
+  "measure": "status-bar vtop 3408 vbottom 3476 innerH 800; first-viewport shows the pick CTA: false",
+  "shot": "380x800-denver-s1-empty.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions mounted pre-pin",
+  "measure": "4: div.jbar-suggest.quiet[polite]=\"◌Drop a site pin for a jurisdiction sugg\" ; div.mt-2.font-mono[alert]=\"Set a location first — pick on map or en\" ; div.[polite]=\"AWAITING LOCATION · pick a location on t\" ; div.sr-only[status]=\"\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "label.k \"Jurisdiction\" #586372/#1b2838 2.45 (opacity 0.35) ; option \"None — baseline (MUTCD + CDOT) only\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"CDOT (state highway)\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Denver\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Lakewood\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Englewood\" #5f6974/#14202e 2.95 (opacity 0.35) … +51"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — needs attention: Set a locati\" 53×21 ; button.rail-entry \"Road — pending — set a location first\" 113×21 ; button.rail-entry \"Work — pending — set a location first\" 113×21 ; button.rail-entry \"Schedule — pending — set a location firs\" 142×21 ; button.rail-entry \"Generate — blocked, see the marked step\" 76×21 ; button.font-mono \"Enter manually\" 95×16 ; button.w-full \"Project detailsOPTIONAL\" 282×16 ; input.range-orange \"65\" 282×2"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jbar",
+  "measure": "span.sep \"›\" #2c3e53/#1b2838 1.37 (opacity 1)"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jbar",
+  "measure": "1 glyph nodes: › ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit nav",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe target-size + full run",
+  "measure": "region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8]"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 empty",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "results zone empty state names the steps",
+  "measure": "\"No package yetDescribe the work zone → press generate→ download the package\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "dialog fits the viewport",
+  "measure": "dialog 364×784 at 8,8 bottom 792 (innerH 800); overflow-y hidden scrollH 782/782",
+  "shot": "380x800-denver-s1-picker.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "a disabled Save carries a word saying why",
+  "measure": "Save & Close disabled=true; gate words: \"Click the map or search to drop a pin\"",
+  "shot": "380x800-denver-s1-picker.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in [role=dialog]",
+  "measure": "button.border.border-[color:var(--act)] \"Search\" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border \"Use Detected\" #255c7e/#1b2838 2.07 (opacity 0.4) ; button.flex-1.border \"⟲ Flip\" #606c7a/#1b2838 2.79 (opacity 0.4) ; button.px-6.py-2 \"Save & Close\" #22739e/#34a9e8 1.99 (opacity 0.4)"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "2 enabled control(s) under 24 px in [role=dialog]",
+  "measure": "button.font-mono \"+ Or enter coordinates manually\" 211×16 ; a.mapboxgl-ctrl-logo \"Mapbox homepage\" 88×23"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit [role=dialog]",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe with the dialog open",
+  "measure": "region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8]"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 picker",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "open + cancel leaves the page where it was",
+  "measure": ".progress-rail[0] dTop 20 dH 0"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "band state 1: \"◌Checking boundary data…\" → \"⌁Pin suggests: DenverConfirm D\"",
+  "measure": "band h 291→447; strip h 68→68; moved: .zone[0] dTop 0 dH 180 ; .zone[1] dTop 179 dH 0 ; .zone-head[1] dTop 179 dH 0 ; .status-bar[0] dTop 180 dH 0 ; .progress-rail[0] dTop 23 dH 23 ; .jctl-band[0] dTop 23 dH 156; docH +180"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "band state 2: \"⌁Pin suggests: DenverConfirm D\" → \"⌁Pin suggests: DenverConfirm D\"",
+  "measure": "band h 447→447; strip h 68→69; moved: .zone[1] dTop 2 dH 0 ; .zone-head[1] dTop 2 dH 0 ; .status-bar[0] dTop 0 dH 1 ; footer[0] dTop 2 dH 0; docH +2"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P8",
+  "verdict": "note",
+  "what": "band states observed after the pin",
+  "measure": "2ms \"◌Checking boundary data…\" [strip VERIFYING · taper · buff] → 531ms \"⌁Pin suggests: DenverConfirm DenverDismissPin is i\" [strip VERIFYING · taper · buff] → 797ms \"⌁Pin suggests: DenverConfirm DenverDismissPin is i\" [strip VERIFIED · 0 validation ]",
+  "shot": "380x800-denver-s1-pinned.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "suggestion Confirm / Dismiss targets",
+  "measure": "\"None — baseline (MUTCD + CDOT) onlyCDOT \" 252×37 ; \"Confirm Denver\" 114×24 ; \"Dismiss\" 68×24 ; \"Local\" 60×33 ; \"Collector\" 80×33 ; \"Arterial\" 69×33"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P4",
+  "verdict": "note",
+  "what": "Confirm and Dismiss share an edge?",
+  "measure": "tops 2049/2183/2183/2403/2403/2403 rights 316/178/257/125/205/274 heights 37/24/24/33/33/33"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "Confirm → resolved record",
+  "measure": "pending slot h 195 → record h 311; moved: .zone[0] dTop 2 dH 180 ; .zone[1] dTop 181 dH 0 ; .zone-head[0] dTop 2 dH 0 ; .zone-head[1] dTop 181 dH 0 ; .status-bar[0] dTop 182 dH -1 ; .progress-rail[0] dTop 691 dH -23",
+  "shot": "380x800-denver-s1-band-resolved.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "resolved record keeps ✓ + sentence + Undo",
+  "measure": "\"✓Confirmed Denver — was None — baseline.Undo✓ Pin agrees with your selection (Denver).Pin is inside \"",
+  "shot": "380x800-denver-s1-band-resolved.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "record glyph + word",
+  "measure": "✓ rgb(79, 215, 135) beside \"✓Confirmed Denver — was None — baseline.\" ; ✓ rgb(147, 160, 176) beside \"✓ Pin agrees with your selection (Denver\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "Undo → proposal again",
+  "measure": "moved: .zone[0] dTop -2 dH -180 ; .zone[1] dTop -183 dH 0 ; .zone-head[0] dTop -2 dH 0 ; .zone-head[1] dTop -183 dH 0 ; .status-bar[0] dTop -182 dH 0 ; .progress-rail[0] dTop 21 dH 23"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 strip",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "INVALID INPUT provoked with work zone 0",
+  "measure": "strip \"INVALID INPUT · Work zone length is required.GENERATION BLOCKED\" h 69; cta-reason \"Work zone length is required.\"",
+  "shot": "380x800-denver-s1-invalid.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 strip",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "strip height across VERIFYING → verdict",
+  "measure": "heights 68/88/69; settled \"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW\" after 2174 ms"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21 ; button.font-mono \"Hide manual entry\" 116×16 ; button.w-full \"Project detailsOPTIONAL\" 282×16 ; input.range-orange \"65\" 282×2"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jctl-band",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jctl-band",
+  "measure": "2 glyph nodes: ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .fact-strip",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "5 enabled control(s) under 24 px in .progress-rail",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .progress-rail",
+  "measure": "5 glyph nodes: ✓ ◌ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "axe pinned",
+  "measure": "color-contrast×1[.honesty] ; label×2[input[value=\"39.7269\"],input[value=\"-104.9873\"]] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×1[input[value=\"39.7269\"]]",
+  "shot": "380x800-denver-s1-pre-generate.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 rail",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "rail entries are buttons",
+  "measure": "\"Location — done\" 93×21 ; \"Road — done\" 63×21 ; \"Work — done\" 63×21 ; \"Schedule — not set\" 214×21 ; \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S1 fact strip",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "label and value share a left edge per cell",
+  "measure": "Lat 60/60 w93 ; Lng 153/153 w107 ; Bearing 260/260 w80 ; Speed 60/60 w118 ; Jurisdiction 178/178 w162"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S2 in flight",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "band present, bottom-fixed, one voice",
+  "measure": "20 samples with the band (\"GENERATING · new plan · pin 39.7269, -104.9873\"), first at 7 ms, settled at 2208 ms; band h 80"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S2 in flight",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "scroll jumps in the first 2.5 s after Generate (#240)",
+  "measure": "scrollY samples 2787,2456,1609,1237,1095,1010,991,991,991,991,991,991,991,991,991; 6 jumps > 40 px; docH 3589→5048"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S2 in flight",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "no second working voice while the band is up",
+  "measure": "strip text seen in 0/20 band samples (\"\"); stale ribbon in 5"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S2 settle",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "post-generate viewport contains the verdict or the next step",
+  "measure": "results top 173; strip 98..149 \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; lockup 249..287; refusal —; innerH 800"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S2 settle",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24",
+  "measure": "results top 173; strip h 52; scrollY 1562"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions post-generate",
+  "measure": "2: div.[polite]=\"VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 \" ; div.sr-only[status]=\"Plan generated — 31 devices, 9 types.\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 section 03",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "the tier counts are stated twice: the ledger line and each chip",
+  "measure": "ledger \"◌ checking against the updated inputs…\" ; chips \"▲Changed this plan2›\", \"⚠Needs attention4›\", \"✓Checked & passed13 · each cited›\", \"◌Pending / not verified3›\", \"iReferencepermit · hours windows · devic\"",
+  "shot": "380x800-denver-s3-settled.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 results head",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup count vs block detected rows (one field, two surfaces — #253 rules one goes)",
+  "measure": "lockup \"4Site conditions detectedof 5 checkedcorrect in setup ↑\" ; block \"Site conditions — scanned\" rows 5, detected 4"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 hero/cards",
+  "p": "P2",
+  "verdict": "note",
+  "what": "hero device count vs plan-sheet card count",
+  "measure": "hero 39/12 ; cards 39/12/11"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 OutputCards",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "download buttons share a bottom edge across the three cards",
+  "measure": "dl-btn tops 2381/2547/2712/2764 (spread 383); bottoms 2421/2587/2752/2804; heights 40/40/40/40; card heights 154/154/206",
+  "shot": "380x800-denver-s3-settled.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 hero",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "hero meta values right-align",
+  "measure": "rights 331/331/331/331"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 setup strip",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "strip cells share height and top",
+  "measure": "heights 63/63/63/63/63/63/63/63/63; tops 1426/1426/1489/1489/1489/1552/1552/1552/1552; widths 123/131/111/78/80/72/91/59/65"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 setup strip",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "opening an inline editor (Speed)",
+  "measure": "strip h 211→255; moved: .zone[0] dTop 0 dH 44 ; .zone[1] dTop 44 dH 0 ; .zone[2] dTop 44 dH 0 ; .zone-head[1] dTop 44 dH 0 ; .zone-head[2] dTop 44 dH 0 ; .status-bar[0] dTop 44 dH 0",
+  "shot": "380x800-denver-s3-strip-editor.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 setup strip",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "open editor shows how to close it (no Done/Cancel affordance)",
+  "measure": "editor 149×63, control 82×28, close affordance false",
+  "shot": "380x800-denver-s3-strip-editor.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "Escape closes the editor without a request",
+  "measure": "editor closed on Escape: false"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "outside click closes the editor",
+  "measure": "closed: true"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 PricingCard",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "opening the quote moves nothing above it",
+  "measure": "price h 88→556; moved above: none",
+  "shot": "380x800-denver-s3-quote-open.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "field label and input share a left edge",
+  "measure": "Duration (days) 41/41 143×39 ; Flaggers 196/196 143×39 \"Auto · 0 from layout\" ; Delivery (mi) 41/41 143×39 \"Auto · 5 mi from HQ\" ; Overhead (%) 196/196 143×39 ; Profit (%) 41/41 143×39 ; Flagger ($/hr) 196/196 143×39 ; TCS ($/hr) 41/41 143×39 ; Crew ($/hr) 196/196 143×39"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P11",
+  "verdict": "note",
+  "what": "the two actions' treatments + the head total",
+  "measure": "\"Preview breakdown\" 298×47 bg rgba(0, 0, 0, 0) border 1px ; \"Download Quote (XLSX)↓\" 298×45 bg rgb(52, 169, 232) border 0px; head total \"expand to configure & preview\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 QuotePanel",
+  "p": "P16",
+  "verdict": "note",
+  "what": "the Flaggers caption asserts an auto-count",
+  "measure": "Flaggers: \"Auto · 0 from layout\" ; Delivery (mi): \"Auto · 5 mi from HQ\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"✓Checked & passed13 · each cit\"",
+  "measure": "chip body grew 2854 px; above moved: none"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"◌Pending / not verified3›\"",
+  "measure": "chip body grew 742 px; above moved: none"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"iReferencepermit · hours windo\"",
+  "measure": "chip body grew 696 px; above moved: none"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 AuditTrail",
+  "p": "P13",
+  "verdict": "note",
+  "what": "audit items are expanders (data-read)",
+  "measure": "0 audit-head buttons; sizes "
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 section 03",
+  "p": "P5",
+  "verdict": "violated",
+  "what": "two headings for one zone (zone title + a second h2 inside)",
+  "measure": "zone-title \"Rules, permit & audit\" 17px/700 at 2950; inner h2 \"Denver — jurisdiction rules\" 20px/700 at 2989"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 footer",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "\"Output requires TCS review\" under Generate and in the footer",
+  "measure": "both present: false"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 page",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "raw ISO timestamps visible",
+  "measure": "none"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "block footer stamp is sliced, ISO on title",
+  "measure": "\"scancorridor scan · 8 sep · 16:07 utc · 3.6 s · memoised · a correction re-generates the plan\" (title 2026-09-08T16:07:08+00:00)"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-strip",
+  "measure": "span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) … +3"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "1 enabled control(s) under 24 px in .setup-strip",
+  "measure": "button.strip-edit-all \"Edit full setup ⤢\" 130×19"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-strip",
+  "measure": "11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "1 enabled control(s) under 24 px in .results-head-lockup",
+  "measure": "a.tr-signpost \"correct in setup ↑\" 119×16"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .results-head-lockup",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .hero",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .dls",
+  "measure": "4 glyph nodes: ↓ ; 4 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .price",
+  "measure": "2 glyph nodes: › ↓ ; 1 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "2 enabled control(s) under 24 px in .ref-stack",
+  "measure": "a.tr-signpost \"Correct in setup ↑\" 119×13 ; a.tr-signpost \"Correct in setup ↑\" 119×13"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .ref-stack",
+  "measure": "15 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 6 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit #site-corrections",
+  "measure": "5 glyph nodes: ▲ ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "axe settled",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8] ; scrollable-region-focusable×1[.gap-8] ; target-size×1[.strip-edit-all]"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 page",
+  "p": "P5",
+  "verdict": "note",
+  "what": "distinct type tuples on the settled page",
+  "measure": "63 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 60px; 1 carry a tr-* role"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "names share a left edge; actions share a right edge",
+  "measure": "name lefts 66/42/66/66/66; action rights 338/338/338/338/338; result lefts 42/42/42/42/42 rights 98/98/98/98/204; grid \"194px 88px\"; block w 332",
+  "shot": "380x800-denver-s3-block.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P6",
+  "verdict": "violated",
+  "what": "one row height per row kind",
+  "measure": "sc-row h85 ; sc-row h119 (2 lines) ; sc-row h85 ; sc-row h85 ; sc-row h58",
+  "shot": "380x800-denver-s3-block.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "every row has glyph + word",
+  "measure": "▲ detected ; ▲ detected ; ▲ detected ; ▲ detected ; ✓ none along the corridor"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "row action button size",
+  "measure": "\"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Assert\" 64×28"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "absent conditions render as words",
+  "measure": "detected ; detected ; detected ; detected ; none along the corridor"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "block head and foot share the block's left edge",
+  "measure": "head \"Site conditions — scanned\" l 42; foot \"scancorridor scan · 8 sep · 16:07 utc · 3.6 s · memoised · a correction re-generates the plan\" l 42"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "note",
+  "what": "Dismiss \"Adjacent at-grade intersection\" mounts the reason picker (a user-asked mount; rows below move by its height)",
+  "measure": "block h 559→713; rows 5→6; moved: .sc-row[1] dTop 0 dH 35 ; .sc-row[2] dTop 35 dH 34 ; .sc-row[3] dTop 69 dH 0 ; .sc-row[4] dTop 70 dH 27 ; .sc-foot[0] dTop 154 dH 0",
+  "shot": "380x800-denver-s4-picker.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "chip label centred in its box (#255-1)",
+  "measure": "\"Fenced off\" 91×26 box-cx 87.5 text-cx 95 pad 23/8 ; \"Removed\" 73×26 box-cx 175.5 text-cx 183 pad 23/8 ; \"Not in the work zone\" 151×26 box-cx 117.5 text-cx 125 pad 23/8 ; \"Other (say what)\" 127×26 box-cx 262.5 text-cx 270 pad 23/8",
+  "shot": "380x800-denver-s4-picker.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "reason chip hit height",
+  "measure": "91×26 73×26 151×26 127×26"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "choosing Other moves Confirm (#255-3)",
+  "measure": "Confirm 44,1093 → 44,1127; note input 184×27 at 42,1093",
+  "shot": "380x800-denver-s4-other.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "a disabled Confirm (note required) says why",
+  "measure": "Confirm disabled=true title=\"\" text \"Confirm dismiss\"",
+  "shot": "380x800-denver-s4-other.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "note",
+  "what": "action edges with the picker open (Cancel / Confirm / other rows)",
+  "measure": "\"Cancel\" right 338 top 905 44×26 ; \"Confirm dismiss\" right 179 top 1127 135×30 ; \"Dismiss\" right 338 top 1177 72×28 ; \"Dismiss\" right 338 top 1295 72×28 ; \"Dismiss\" right 338 top 1380 72×28 ; \"Assert\" right 338 top 1465 64×28"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 confirm",
+  "p": "P7",
+  "verdict": "violated",
+  "what": "one Confirm re-generates and locks (a per-edit request; #254)",
+  "measure": "band \"RE-GENERATING · after a correction to Adjacent at-grade intersection\" for 34 samples, settled 3737 ms"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 record",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "record row grows past the scan rows (#255-2)",
+  "measure": "record h 108 (5 lines) vs scan row h 119; sentence \"Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…\"",
+  "shot": "380x800-denver-s4-record.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 record",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "record keeps glyph + sentence + Undo",
+  "measure": "× \"Undo\" 30×16 right 338 vs scan-row action right 338",
+  "shot": "380x800-denver-s4-record.png"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 record",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "Undo shares the action edge",
+  "measure": "Undo right 338; Dismiss/Assert right 338"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 record",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup after the correction",
+  "measure": "\"4Site conditions detectedof 5 checkedcorrect in setup ↑\""
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S4 undo",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "Undo removes the record (and re-generates: P7)",
+  "measure": "band \"after undoing the correction to Adjacent at-grade intersection\"; records after 0, rows 5"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "plan.pdf: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · plan sheet PDF\" 18 samples; button \"Download PDF↓\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "devices.xlsx: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · device list XLSX\" 4 samples; button \"Download XLSX↓\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "crew.pdf: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · crew instructions PDF\" 7 samples; button \"Download PDF↓\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "crew.md: band RENDERING, button label unchanged",
+  "measure": "band \"RENDERING · crew instructions MD\" 5 samples; button \"Download .md↓\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "quote XLSX render raises the band",
+  "measure": "band \"quote XLSX\"; file saved"
+ },
+ {
+  "vp": "380x800-denver",
+  "surface": "S6 downloads",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "zip render raises the band",
+  "measure": "band \"MHT package ZIP\"; file saved"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "deviates-by-ruling",
+  "what": "the location blocker sentence is stated by the rail and under the CTA (one export, #228)",
+  "measure": "rail-blocker \"Set a location first — pick on map or enter manually.\" ; cta-reason \"Set a location first — pick on map or enter manually.\" ; strip \"AWAITING LOCATION · pick a location on the map to verify this plan\"",
+  "shot": "1440x1000-lakewood-s1-empty.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "status strip in the first viewport on load",
+  "measure": "status-bar vtop 2114 vbottom 2161 innerH 1000; first-viewport shows the pick CTA: false",
+  "shot": "1440x1000-lakewood-s1-empty.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions mounted pre-pin",
+  "measure": "4: div.jbar-suggest.quiet[polite]=\"◌Drop a site pin for a jurisdiction sugg\" ; div.mt-2.font-mono[alert]=\"Set a location first — pick on map or en\" ; div.[polite]=\"AWAITING LOCATION · pick a location on t\" ; div.sr-only[status]=\"\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "label.k \"Jurisdiction\" #586372/#1b2838 2.45 (opacity 0.35) ; option \"None — baseline (MUTCD + CDOT) only\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"CDOT (state highway)\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Denver\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Lakewood\" #5f6974/#14202e 2.95 (opacity 0.35) ; option \"Englewood\" #5f6974/#14202e 2.95 (opacity 0.35) … +51"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "note",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — needs attention: Set a locati\" 582×21 ; button.rail-entry \"Road — pending — set a location first\" 113×21 ; button.rail-entry \"Work — pending — set a location first\" 113×21 ; button.rail-entry \"Schedule — pending — set a location firs\" 142×21 ; button.rail-entry \"Generate — blocked, see the marked step\" 76×21 ; button.font-mono \"Enter manually\" 95×16 ; button.w-full \"Project detailsOPTIONAL\" 500×16 ; input.range-orange \"65\" 500×2"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "12 glyph nodes: ⚠ ◌ → ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jbar",
+  "measure": "span.sep \"›\" #2c3e53/#1b2838 1.37 (opacity 1)"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jbar",
+  "measure": "1 glyph nodes: › ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit nav",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe target-size + full run",
+  "measure": "region×1[.gap-8]"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 empty",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "results zone empty state names the steps",
+  "measure": "\"No package yetDescribe the work zone → press generate→ download the package\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "band state 1: \"◌Checking boundary data…\" → \"⌁Pin suggests: LakewoodConfirm\"",
+  "measure": "band h 184→356; strip h 47→47; moved: .jctl-band[0] dTop 0 dH 172 ; .jbar-suggest[0] dTop 0 dH 172; docH +0"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P8",
+  "verdict": "note",
+  "what": "band states observed after the pin",
+  "measure": "2ms \"◌Checking boundary data…\" [strip VERIFYING · taper · buff] → 528ms \"⌁Pin suggests: LakewoodConfirm LakewoodDismissPin \" [strip VERIFYING · taper · buff]",
+  "shot": "1440x1000-lakewood-s1-pinned.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "suggestion Confirm / Dismiss targets",
+  "measure": "\"None — baseline (MUTCD + CDOT) onlyCDOT \" 216×37 ; \"Confirm Lakewood\" 128×24 ; \"Dismiss\" 68×24 ; \"Local\" 60×33 ; \"Collector\" 80×33 ; \"Arterial\" 69×33"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P4",
+  "verdict": "note",
+  "what": "Confirm and Dismiss share an edge?",
+  "measure": "tops 999/1133/1133/1002/1002/1002 rights 975/887/965/1075/1155/1224 heights 37/24/24/33/33/33"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "Confirm → resolved record",
+  "measure": "pending slot h 210 → record h 343; moved: .jctl-band[0] dTop 0 dH 155 ; .jbar-suggest[0] dTop 0 dH 154 ; footer[0] dTop 666 dH 0",
+  "shot": "1440x1000-lakewood-s1-band-resolved.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "resolved record keeps ✓ + sentence + Undo",
+  "measure": "\"✓Confirmed Lakewood — was None — baseline.Undo✓ Pin agrees with your selection (Lakewood).Pin is ins\"",
+  "shot": "1440x1000-lakewood-s1-band-resolved.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "record glyph + word",
+  "measure": "✓ rgb(79, 215, 135) beside \"✓Confirmed Lakewood — was None — baselin\" ; ✓ rgb(147, 160, 176) beside \"✓ Pin agrees with your selection (Lakewo\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 band",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "Undo → proposal again",
+  "measure": "moved: .jctl-band[0] dTop 0 dH -155 ; .jbar-suggest[0] dTop 0 dH -154 ; footer[0] dTop -666 dH 0"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 strip",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "INVALID INPUT provoked with work zone 0",
+  "measure": "strip \"INVALID INPUT · Work zone length is required.GENERATION BLOCKED\" h 52; cta-reason \"Work zone length is required.\"",
+  "shot": "1440x1000-lakewood-s1-invalid.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 strip",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "strip height across VERIFYING → verdict",
+  "measure": "heights 47/52; settled \"VERIFIED · 0 validation warningsREADY FOR TCS REVIEW\" after 14310 ms"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-panel",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "note",
+  "what": "9 enabled control(s) under 24 px in .setup-panel",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21 ; button.font-mono \"Hide manual entry\" 116×16 ; button.w-full \"Project detailsOPTIONAL\" 500×16 ; input.range-orange \"65\" 500×2"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-panel",
+  "measure": "9 glyph nodes: ✓ ◌ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .jctl-band",
+  "measure": "div.honesty \"Boundary data is approximate (\" #818e9e/#1b2838 4.47 (opacity 0.85)"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .jctl-band",
+  "measure": "2 glyph nodes: ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .fact-strip",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "note",
+  "what": "5 enabled control(s) under 24 px in .progress-rail",
+  "measure": "button.rail-entry \"Location — done\" 93×21 ; button.rail-entry \"Road — done\" 63×21 ; button.rail-entry \"Work — done\" 63×21 ; button.rail-entry \"Schedule — not set\" 214×21 ; button.rail-entry \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .progress-rail",
+  "measure": "5 glyph nodes: ✓ ◌ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 pinned",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe pinned",
+  "measure": "color-contrast×1[.honesty] ; label×2[input[value=\"39.7113\"],input[value=\"-105.0815\"]] ; region×1[.gap-8]",
+  "shot": "1440x1000-lakewood-s1-pre-generate.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 rail",
+  "p": "P10",
+  "verdict": "violated",
+  "what": "rail entries are buttons",
+  "measure": "\"Location — done\" 93×21 ; \"Road — done\" 63×21 ; \"Work — done\" 63×21 ; \"Schedule — not set\" 214×21 ; \"Generate — ready\" 73×21"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S1 fact strip",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "label and value share a left edge per cell",
+  "measure": "Lat 206/206 w99 ; Lng 305/305 w113 ; Bearing 418/418 w86 ; Speed 505/505 w77 ; Jurisdiction 582/582 w122"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S2 in flight",
+  "p": "P8",
+  "verdict": "honoured",
+  "what": "band present, bottom-fixed, one voice",
+  "measure": "59 samples with the band (\"GENERATING · new plan · pin 39.7113, -105.0815\"), first at 6 ms, settled at 6483 ms; band h 41"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S2 in flight",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "scroll jumps in the first 2.5 s after Generate (#240)",
+  "measure": "scrollY samples 1352,971,669,601,583,583,583,583,583,583,583,583,583,583,583; 3 jumps > 40 px; docH 2352→3109"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S2 in flight",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "no second working voice while the band is up",
+  "measure": "strip text seen in 0/59 band samples (\"\"); stale ribbon in 30"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S2 settle",
+  "p": "P3",
+  "verdict": "honoured",
+  "what": "post-generate viewport contains the verdict or the next step",
+  "measure": "results top 174; strip 98..150 \"VERIFIED · 2 plan flags ▸REVIEW FLAGS\"; lockup 218..255; refusal —; innerH 1000"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S2 settle",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "results zone lands at 98 (#152 E) — ruling-f shift is 98 + strip + 24",
+  "measure": "results top 174; strip h 52; scrollY 918"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P2",
+  "verdict": "note",
+  "what": "live regions post-generate",
+  "measure": "2: div.[polite]=\"VERIFIED · 2 plan flags ▸REVIEW FLAGS✕1 \" ; div.sr-only[status]=\"Plan generated — 31 devices, 9 types.\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 section 03",
+  "p": "P2",
+  "verdict": "violated",
+  "what": "the tier counts are stated twice: the ledger line and each chip",
+  "measure": "ledger \"◌ checking against the updated inputs…\" ; chips \"▲Changed this plan2›\", \"⚠Needs attention4›\", \"✓Checked & passed13 · each cited›\", \"◌Pending / not verified2›\", \"iReferencepermit · hours windows · devic\"",
+  "shot": "1440x1000-lakewood-s3-settled.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 results head",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup count vs block detected rows (one field, two surfaces — #253 rules one goes)",
+  "measure": "lockup \"3Site conditions detectedof 5 checkedcorrect in setup ↑\" ; block \"Site conditions — scanned\" rows 5, detected 3"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 hero/cards",
+  "p": "P2",
+  "verdict": "note",
+  "what": "hero device count vs plan-sheet card count",
+  "measure": "hero 39/12 ; cards 39/12/11"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 OutputCards",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "download buttons share a bottom edge across the three cards",
+  "measure": "dl-btn tops 1589/1589/1537/1589 (spread 52); bottoms 1629/1629/1577/1629; heights 40/40/40/40; card heights 206/206/206",
+  "shot": "1440x1000-lakewood-s3-settled.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 hero",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "hero meta values right-align",
+  "measure": "rights 1245/1245/1245/1245"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 setup strip",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "strip cells share height and top",
+  "measure": "heights 63/63/63/63/63/63/63/63/63; tops 928/928/928/928/928/928/928/928/928; widths 123/131/111/78/80/72/91/59/65"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 setup strip",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "opening an inline editor (Speed)",
+  "measure": "strip h 65→65; moved: none",
+  "shot": "1440x1000-lakewood-s3-strip-editor.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 setup strip",
+  "p": "P3",
+  "verdict": "violated",
+  "what": "open editor shows how to close it (no Done/Cancel affordance)",
+  "measure": "editor 149×63, control 82×28, close affordance false",
+  "shot": "1440x1000-lakewood-s3-strip-editor.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "Escape closes the editor without a request",
+  "measure": "editor closed on Escape: false"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 setup strip",
+  "p": "P7",
+  "verdict": "note",
+  "what": "outside click closes the editor",
+  "measure": "closed: true"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 PricingCard",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "opening the quote moves nothing above it",
+  "measure": "price h 52→372; moved above: none",
+  "shot": "1440x1000-lakewood-s3-quote-open.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 QuotePanel",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "field label and input share a left edge",
+  "measure": "Duration (days) 187/187 347×39 ; Flaggers 546/546 347×39 \"Auto · 0 from layout\" ; Delivery (mi) 906/906 347×39 \"Auto · 5 mi from HQ\" ; Overhead (%) 187/187 347×39 ; Profit (%) 546/546 347×39 ; Flagger ($/hr) 906/906 347×39 ; TCS ($/hr) 187/187 347×39 ; Crew ($/hr) 546/546 347×39"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 QuotePanel",
+  "p": "P11",
+  "verdict": "note",
+  "what": "the two actions' treatments + the head total",
+  "measure": "\"Preview breakdown\" 528×47 bg rgba(0, 0, 0, 0) border 1px ; \"Download Quote (XLSX)↓\" 526×47 bg rgb(52, 169, 232) border 0px; head total \"expand to configure & preview\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 QuotePanel",
+  "p": "P16",
+  "verdict": "note",
+  "what": "the Flaggers caption asserts an auto-count",
+  "measure": "Flaggers: \"Auto · 0 from layout\" ; Delivery (mi): \"Auto · 5 mi from HQ\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"✓Checked & passed13 · each cit\"",
+  "measure": "chip body grew 1120 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"◌Pending / not verified2›\"",
+  "measure": "chip body grew 203 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 section 03",
+  "p": "P1",
+  "verdict": "honoured",
+  "what": "open tier \"iReferencepermit · hours windo\"",
+  "measure": "chip body grew 352 px; above moved: none"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 AuditTrail",
+  "p": "P13",
+  "verdict": "note",
+  "what": "audit items are expanders (data-read)",
+  "measure": "0 audit-head buttons; sizes "
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 section 03",
+  "p": "P5",
+  "verdict": "violated",
+  "what": "two headings for one zone (zone title + a second h2 inside)",
+  "measure": "zone-title \"Rules, permit & audit\" 17px/700 at 1737; inner h2 \"Lakewood — jurisdiction rules\" 20px/700 at 1776"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 footer",
+  "p": "P2",
+  "verdict": "honoured",
+  "what": "\"Output requires TCS review\" under Generate and in the footer",
+  "measure": "both present: false"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 page",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "raw ISO timestamps visible",
+  "measure": "none"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P12",
+  "verdict": "honoured",
+  "what": "block footer stamp is sliced, ISO on title",
+  "measure": "\"scancorridor scan · 8 sep · 16:09 utc · 4.8 s · a correction re-generates the plan\" (title 2026-09-08T16:09:39+00:00)"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "contrast under 4.5:1 in .setup-strip",
+  "measure": "span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"⤢\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) ; span.edit-ic \"✎\" #1b2838/#1b2838 1 (opacity 0) … +3"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .setup-strip",
+  "measure": "11 glyph nodes: ⤢ ✎ — ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .status-bar",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "1 enabled control(s) under 24 px in .results-head-lockup",
+  "measure": "a.tr-signpost \"correct in setup ↑\" 119×16"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .results-head-lockup",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .hero",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .dls",
+  "measure": "4 glyph nodes: ↓ ; 4 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .price",
+  "measure": "2 glyph nodes: › ↓ ; 1 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in .ref-stack",
+  "measure": "a.tr-signpost \"Correct in setup ↑\" 119×13 ; a.tr-signpost \"Correct in setup ↑\" 119×13"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit .ref-stack",
+  "measure": "18 glyph nodes: ▲ › ✓ — ⚠ ◌ ; 7 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit #site-corrections",
+  "measure": "5 glyph nodes: ▲ ✓ ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "note",
+  "what": "2 enabled control(s) under 24 px in footer",
+  "measure": "a.hover:text-white \"Terms\" 35×16 ; a.hover:text-white \"Privacy\" 49×16"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P9",
+  "verdict": "note",
+  "what": "glyph audit footer",
+  "measure": "0 glyph nodes:  ; 0 not aria-hidden"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "axe settled",
+  "measure": "heading-order×1[.dl-card:nth-child(1) > .top > h4] ; region×1[.gap-8]"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 page",
+  "p": "P5",
+  "verdict": "note",
+  "what": "distinct type tuples on the settled page",
+  "measure": "65 tuples; sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 15px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "names share a left edge; actions share a right edge",
+  "measure": "name lefts 212/212/212/212/212; action rights 1252/1252/1252/1252/1252; result lefts 917/991/917/917/991 rights 974/1153/974/974/1153; grid \"958px 92px\"; block w 1100",
+  "shot": "1440x1000-lakewood-s3-block.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "one row height per row kind",
+  "measure": "sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46 ; sc-row h46",
+  "shot": "1440x1000-lakewood-s3-block.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P9",
+  "verdict": "honoured",
+  "what": "every row has glyph + word",
+  "measure": "▲ detected ; ✓ none along the corridor ; ▲ detected ; ▲ detected ; ✓ none along the corridor"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "row action button size",
+  "measure": "\"Dismiss\" 72×28 ; \"Assert\" 64×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Assert\" 64×28"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P14",
+  "verdict": "honoured",
+  "what": "absent conditions render as words",
+  "measure": "detected ; none along the corridor ; detected ; detected ; none along the corridor"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S3 block",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "block head and foot share the block's left edge",
+  "measure": "head \"Site conditions — scanned\" l 188; foot \"scancorridor scan · 8 sep · 16:09 utc · 4.8 s · a correction re-generates the plan\" l 188"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "note",
+  "what": "Dismiss \"Adjacent at-grade intersection\" mounts the reason picker (a user-asked mount; rows below move by its height)",
+  "measure": "block h 323→373; rows 5→6; moved: .sc-row[0] dTop 0 dH -2 ; .sc-row[1] dTop -2 dH 6 ; .sc-row[2] dTop 4 dH 0 ; .sc-row[3] dTop 4 dH 0 ; .sc-row[4] dTop 4 dH 0",
+  "shot": "1440x1000-lakewood-s4-picker.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "violated",
+  "what": "chip label centred in its box (#255-1)",
+  "measure": "\"Fenced off\" 95×28 box-cx 628.3 text-cx 635.8 pad 25/10 ; \"Removed\" 77×28 box-cx 720.3 text-cx 727.8 pad 25/10 ; \"Not in the work zone\" 155×28 box-cx 842.3 text-cx 849.8 pad 25/10 ; \"Other (say what)\" 131×28 box-cx 991.3 text-cx 998.8 pad 25/10",
+  "shot": "1440x1000-lakewood-s4-picker.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P10",
+  "verdict": "honoured",
+  "what": "reason chip hit height",
+  "measure": "95×28 77×28 155×28 131×28"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P1",
+  "verdict": "violated",
+  "what": "choosing Other moves Confirm (#255-3)",
+  "measure": "Confirm 1065,689 → 190,723; note input 184×27 at 1063,689",
+  "shot": "1440x1000-lakewood-s4-other.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P9",
+  "verdict": "violated",
+  "what": "a disabled Confirm (note required) says why",
+  "measure": "Confirm disabled=true title=\"\" text \"Confirm dismiss\"",
+  "shot": "1440x1000-lakewood-s4-other.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 picker",
+  "p": "P4",
+  "verdict": "note",
+  "what": "action edges with the picker open (Cancel / Confirm / other rows)",
+  "measure": "\"Cancel\" right 1252 top 643 44×26 ; \"Confirm dismiss\" right 325 top 723 135×30 ; \"Assert\" right 1252 top 773 64×28 ; \"Dismiss\" right 1252 top 819 72×28 ; \"Dismiss\" right 1252 top 865 72×28 ; \"Assert\" right 1252 top 911 64×28"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 confirm",
+  "p": "P7",
+  "verdict": "violated",
+  "what": "one Confirm re-generates and locks (a per-edit request; #254)",
+  "measure": "band \"RE-GENERATING · after a correction to Adjacent at-grade intersection\" for 209 samples, settled 22843 ms"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 record",
+  "p": "P6",
+  "verdict": "honoured",
+  "what": "record row grows past the scan rows (#255-2)",
+  "measure": "record h 33 (1 lines) vs scan row h 46; sentence \"Operator dismissed the scan's adjacent at-grade intersection: audit walk. The plan is built to the correction — verify i…\"",
+  "shot": "1440x1000-lakewood-s4-record.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 record",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "record keeps glyph + sentence + Undo",
+  "measure": "× \"Undo\" 30×16 right 1252 vs scan-row action right 1252",
+  "shot": "1440x1000-lakewood-s4-record.png"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 record",
+  "p": "P4",
+  "verdict": "honoured",
+  "what": "Undo shares the action edge",
+  "measure": "Undo right 1252; Dismiss/Assert right 1252"
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 record",
+  "p": "P2",
+  "verdict": "note",
+  "what": "lockup after the correction",
+  "measure": "\"3Site conditions detectedof 5 checkedcorrect in setup ↑\""
+ },
+ {
+  "vp": "1440x1000-lakewood",
+  "surface": "S4 undo",
+  "p": "P15",
+  "verdict": "honoured",
+  "what": "Undo removes the record (and re-generates: P7)",
+  "measure": "band \"after undoing the correction to Adjacent at-grade intersection\"; records after 0, rows 5"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "S7 debug",
+  "p": "P13",
+  "verdict": "honoured",
+  "what": "snapshot button renders only with ?debug=1",
+  "measure": "?debug=1: 1 (227×30 at 194,2193); plain: 0",
+  "shot": "1440-debug-1.png"
+ }
+]

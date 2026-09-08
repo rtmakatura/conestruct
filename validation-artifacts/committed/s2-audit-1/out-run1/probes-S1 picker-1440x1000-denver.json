@@ -1,0 +1,568 @@
+{
+ "[role=dialog]": {
+  "pairs": [
+   {
+    "sel": "div.font-mono.text-[10px]",
+    "text": "Work zone · Define",
+    "fg": "#ff8a2e",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 6.34,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "h2.text-white.text-[17px]",
+    "text": "Define Work Zone",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 17,
+    "weight": "600",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "p.text-[12px].text-[color:var(--ink-on-dark-faint)]",
+    "text": "Drop a pin, review the detected road pro",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 12,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.border.border-[color:var(--act)]",
+    "text": "Search",
+    "fg": "#255c7e",
+    "bg": "#1b2838",
+    "opacity": 0.4,
+    "ratio": 2.07,
+    "size": 11,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.font-mono.text-[10px]",
+    "text": "+ Or enter coordinates manually",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.absolute.top-3",
+    "text": "Streets",
+    "fg": "#ffffff",
+    "bg": "#080b10",
+    "opacity": 1,
+    "ratio": 19.71,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.absolute.bottom-3",
+    "text": "Click the map or search to drop a pin",
+    "fg": "#ffffff",
+    "bg": "#06080c",
+    "opacity": 1,
+    "ratio": 20.04,
+    "size": 12,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "a",
+    "text": "© Mapbox",
+    "fg": "#222425",
+    "bg": "#898e93",
+    "opacity": 1,
+    "ratio": 4.72,
+    "size": 12,
+    "weight": "400",
+    "family": "\"Helvetica Neue\""
+   },
+   {
+    "sel": "a",
+    "text": "© OpenStreetMap",
+    "fg": "#222425",
+    "bg": "#898e93",
+    "opacity": 1,
+    "ratio": 4.72,
+    "size": 12,
+    "weight": "400",
+    "family": "\"Helvetica Neue\""
+   },
+   {
+    "sel": "a.mapbox-improve-map",
+    "text": "Improve this map",
+    "fg": "#222425",
+    "bg": "#898e93",
+    "opacity": 1,
+    "ratio": 4.72,
+    "size": 12,
+    "weight": "700",
+    "family": "\"Helvetica Neue\""
+   },
+   {
+    "sel": "a",
+    "text": "© Maxar",
+    "fg": "#222425",
+    "bg": "#898e93",
+    "opacity": 1,
+    "ratio": 4.72,
+    "size": 12,
+    "weight": "400",
+    "family": "\"Helvetica Neue\""
+   },
+   {
+    "sel": "span",
+    "text": "Road properties",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.font-mono.text-[10px]",
+    "text": "Drop a pin on the map to auto-detect roa",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.px-6.py-2",
+    "text": "Work zone",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.text-[13px].text-white",
+    "text": "Work zone length (ft)",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 13,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.mt-1.font-mono",
+    "text": "Whole feet, < 50,000",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.text-[13px].text-white",
+    "text": "Direction of travel (°)",
+    "fg": "#ffffff",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 14.92,
+    "size": 13,
+    "weight": "500",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "div.mt-1.font-mono",
+    "text": "0–359 clockwise from north",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.flex-1.border",
+    "text": "Use Detected",
+    "fg": "#255c7e",
+    "bg": "#1b2838",
+    "opacity": 0.4,
+    "ratio": 2.07,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.flex-1.border",
+    "text": "⟲ Flip",
+    "fg": "#606c7a",
+    "bg": "#1b2838",
+    "opacity": 0.4,
+    "ratio": 2.79,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.px-6.py-2",
+    "text": "Corridor extent",
+    "fg": "#93a0b0",
+    "bg": "#14202e",
+    "opacity": 1,
+    "ratio": 6.19,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "div.font-mono.text-[10px]",
+    "text": "Drop a pin to compute the corridor.",
+    "fg": "#93a0b0",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 5.61,
+    "size": 10,
+    "weight": "400",
+    "family": "__JetBrains_Mono_e896d9"
+   },
+   {
+    "sel": "button.px-4.py-2",
+    "text": "Cancel",
+    "fg": "#c8d1dd",
+    "bg": "#1b2838",
+    "opacity": 1,
+    "ratio": 9.68,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   },
+   {
+    "sel": "button.px-6.py-2",
+    "text": "Save & Close",
+    "fg": "#22739e",
+    "bg": "#34a9e8",
+    "opacity": 0.4,
+    "ratio": 1.99,
+    "size": 13,
+    "weight": "400",
+    "family": "__Inter_8b3a0b"
+   }
+  ],
+  "glyphs": [],
+  "type": [
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(147, 160, 176)",
+    "n": 8,
+    "ex": "+ Or enter coordinates manuall",
+    "tr": ""
+   },
+   {
+    "key": "Helvetica Neue|12px|400|none|rgba(0, 0, 0, 0.75)",
+    "n": 3,
+    "ex": "© Mapbox",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|500|none|rgb(255, 255, 255)",
+    "n": 2,
+    "ex": "Work zone length (ft)",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(255, 138, 46)",
+    "n": 1,
+    "ex": "Work zone · Define",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|17px|600|none|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "Define Work Zone",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|12px|400|none|rgb(147, 160, 176)",
+    "n": 1,
+    "ex": "Drop a pin, review the detecte",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|11px|400|uppercase|rgb(52, 169, 232)",
+    "n": 1,
+    "ex": "Search",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "Streets",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|12px|400|uppercase|rgb(255, 255, 255)",
+    "n": 1,
+    "ex": "Click the map or search to dro",
+    "tr": ""
+   },
+   {
+    "key": "Helvetica Neue|12px|700|none|rgba(0, 0, 0, 0.75)",
+    "n": 1,
+    "ex": "Improve this map",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(52, 169, 232)",
+    "n": 1,
+    "ex": "Use Detected",
+    "tr": ""
+   },
+   {
+    "key": "__JetBrains_Mono_e896d9|10px|400|uppercase|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "⟲ Flip",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(200, 209, 221)",
+    "n": 1,
+    "ex": "Cancel",
+    "tr": ""
+   },
+   {
+    "key": "__Inter_8b3a0b|13px|400|none|rgb(6, 34, 47)",
+    "n": 1,
+    "ex": "Save & Close",
+    "tr": ""
+   }
+  ],
+  "targets": [
+   {
+    "tag": "button",
+    "name": "Close",
+    "cls": "text-[color:var(--ink-on-dark-faint)] ho",
+    "w": 34,
+    "h": 26,
+    "top": 77,
+    "left": 1301,
+    "right": 1335,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "Address or intersection search",
+    "cls": "field-input flex-1",
+    "w": 686,
+    "h": 44,
+    "top": 168,
+    "left": 105,
+    "right": 791,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Search",
+    "cls": "border border-[color:var(--act)] bg-tran",
+    "w": 80,
+    "h": 44,
+    "top": 168,
+    "left": 799,
+    "right": 879,
+    "disabled": true
+   },
+   {
+    "tag": "button",
+    "name": "+ Or enter coordinates manually",
+    "cls": "font-mono text-[10px] uppercase tracking",
+    "w": 211,
+    "h": 16,
+    "top": 228,
+    "left": 105,
+    "right": 316,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Streets",
+    "cls": "absolute top-3 left-3 z-10 border border",
+    "w": 74,
+    "h": 34,
+    "top": 263,
+    "left": 93,
+    "right": 167,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Zoom in",
+    "cls": "mapboxgl-ctrl-zoom-in",
+    "w": 32,
+    "h": 32,
+    "top": 261,
+    "left": 861,
+    "right": 893,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Zoom out",
+    "cls": "mapboxgl-ctrl-zoom-out",
+    "w": 32,
+    "h": 32,
+    "top": 293,
+    "left": 861,
+    "right": 893,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Reset bearing to north",
+    "cls": "mapboxgl-ctrl-compass",
+    "w": 32,
+    "h": 32,
+    "top": 325,
+    "left": 861,
+    "right": 893,
+    "disabled": false
+   },
+   {
+    "tag": "a",
+    "name": "© Mapbox",
+    "cls": "",
+    "w": 55,
+    "h": 14,
+    "top": 864,
+    "left": 589,
+    "right": 644,
+    "disabled": false
+   },
+   {
+    "tag": "a",
+    "name": "© OpenStreetMap",
+    "cls": "",
+    "w": 97,
+    "h": 14,
+    "top": 864,
+    "left": 648,
+    "right": 744,
+    "disabled": false
+   },
+   {
+    "tag": "a",
+    "name": "Improve this map",
+    "cls": "mapbox-improve-map",
+    "w": 99,
+    "h": 14,
+    "top": 864,
+    "left": 750,
+    "right": 849,
+    "disabled": false
+   },
+   {
+    "tag": "a",
+    "name": "© Maxar",
+    "cls": "",
+    "w": 46,
+    "h": 14,
+    "top": 864,
+    "left": 852,
+    "right": 898,
+    "disabled": false
+   },
+   {
+    "tag": "a",
+    "name": "Mapbox homepage",
+    "cls": "mapboxgl-ctrl-logo",
+    "w": 88,
+    "h": 23,
+    "top": 852,
+    "left": 87,
+    "right": 175,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "Work zone length in feet",
+    "cls": "field-input flex-1 min-w-0 text-right",
+    "w": 150,
+    "h": 44,
+    "top": 287,
+    "left": 1185,
+    "right": 1335,
+    "disabled": false
+   },
+   {
+    "tag": "input",
+    "name": "Direction of travel in degrees",
+    "cls": "field-input flex-1 min-w-0 text-right",
+    "w": 150,
+    "h": 44,
+    "top": 349,
+    "left": 1185,
+    "right": 1335,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Use Detected",
+    "cls": "flex-1 border border-[color:var(--act)] ",
+    "w": 200,
+    "h": 30,
+    "top": 397,
+    "left": 928,
+    "right": 1128,
+    "disabled": true
+   },
+   {
+    "tag": "button",
+    "name": "⟲ Flip",
+    "cls": "flex-1 border border-[color:var(--ink-on",
+    "w": 200,
+    "h": 30,
+    "top": 397,
+    "left": 1136,
+    "right": 1335,
+    "disabled": true
+   },
+   {
+    "tag": "button",
+    "name": "Cancel",
+    "cls": "px-4 py-2 font-sans text-[13px] text-[co",
+    "w": 75,
+    "h": 37,
+    "top": 894,
+    "left": 1120,
+    "right": 1194,
+    "disabled": false
+   },
+   {
+    "tag": "button",
+    "name": "Save & Close",
+    "cls": "px-6 py-2 font-sans text-[13px] bg-[colo",
+    "w": 129,
+    "h": 37,
+    "top": 894,
+    "left": 1206,
+    "right": 1335,
+    "disabled": true
+   }
+  ]
+ }
+}
