@@ -506,7 +506,14 @@ def _placements_for(
     # and a shoulder/flagger plan whose mainline tags do the same within
     # SIGNAL_GATE_NEARBY_M of a detected traffic signal, same chokepoint.
     _ensure_lane_confidence(scenario)
-    params, generator, kwargs = scenario_to_call(scenario)
+    try:
+        params, generator, kwargs = scenario_to_call(scenario)
+    except UnknownJurisdictionError as exc:
+        # #257: the bridge resolves ``jurisdiction_key`` to the record's
+        # display name (``params.jurisdiction_name``); a bad key is an
+        # honest 400 here, the chokepoint every render path funnels
+        # through, mirroring the other jurisdiction-reading endpoints.
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     geo_violations = validate_corridor_geometry(params)
     geo_errors = [v for v in geo_violations if v.severity == "error"]
     if geo_errors:
@@ -765,28 +772,9 @@ def render_xlsx(scenario: Scenario) -> Response:
     )
 
 
-def _jurisdiction_display_name(scenario: Scenario) -> str | None:
-    """Resolved record name for the narrative header (#156), or None.
-
-    The narrative header shows the RESOLVED jurisdiction's name;
-    ``params.jurisdiction`` stays the engine-math switch (the seven
-    schemas.py "CDOT" literals) and is the display fallback when the
-    scenario names no jurisdiction_key.  A bad key is an honest 400,
-    mirroring the other jurisdiction-reading endpoints.
-    """
-    jurisdiction_key = getattr(scenario, "jurisdiction_key", None)
-    if not jurisdiction_key:
-        return None
-    try:
-        return load_jurisdiction(jurisdiction_key)["name"]
-    except UnknownJurisdictionError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
 @app.post("/render/markdown")
 def render_markdown(scenario: Scenario) -> Response:
     _ensure_scenario_enabled(scenario)
-    jurisdiction_name = _jurisdiction_display_name(scenario)
     try:
         body = _render_with(
             scenario,
@@ -802,7 +790,6 @@ def render_markdown(scenario: Scenario) -> Response:
                     # trace (G20-4 is vehicle-mounted per S-630-1
                     # Sheet 26) — threaded from the scenario (PR 3).
                     pilot_car=getattr(scenario, "pilotCar", False),
-                    jurisdiction_name=jurisdiction_name,
                     # Jurisdiction-scoped ped/bike rules (#125) key off the
                     # record key, not the display name.
                     jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
@@ -834,7 +821,6 @@ def render_crew_pdf(scenario: Scenario) -> Response:
     rendered through the shared document renderer instead of served raw.
     """
     _ensure_scenario_enabled(scenario)
-    jurisdiction_name = _jurisdiction_display_name(scenario)
     try:
         body = _render_with(
             scenario,
@@ -847,7 +833,6 @@ def render_crew_pdf(scenario: Scenario) -> Response:
                     site_adjustments=site_adj,
                     night_adjustments=night_adj,
                     pilot_car=getattr(scenario, "pilotCar", False),
-                    jurisdiction_name=jurisdiction_name,
                     jurisdiction_key=getattr(scenario, "jurisdiction_key", None),
                     approaches=approaches,
                     # #224 phase 3 — the NOT-CHECKED disclosure surface.

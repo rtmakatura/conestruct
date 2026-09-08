@@ -21,17 +21,25 @@ invariants — the same bodies the Phase 5 harness pins.
 
 from __future__ import annotations
 
+import dataclasses
+import json
 import re
+from pathlib import Path
 from typing import Any
 
+import pypdfium2 as pdfium
 import pytest
+from fastapi.testclient import TestClient
 from openpyxl import load_workbook
 
 from src.api.render_api import _build_device_breakdown
+from src.api.render_api import app as _render_app
 from src.api.schemas import FlaggerLaneClosureScenario, ShoulderScenario, scenario_to_call
 from src.export.device_list import export_device_list
 from src.export.quote_generator import generate_quote
 from src.narrative.crew_narrative import build_narrative_context
+from src.rendering import audit_blocks as _audit_blocks
+from src.rendering import plan_sheet as _ps
 from src.rendering.plan_sheet import _scenario_label
 from src.rules.devices import DeviceType
 from src.rules.validators import (
@@ -431,3 +439,183 @@ def test_narrative_rural_road_type_makes_no_lane_claim() -> None:
     )
     assert params.road_type == "rural"
     assert build_narrative_context(placements, params)["road_type_human"] == "Rural"
+
+
+# ---------------------------------------------------------------------------
+# T-04 — deliverables agree with the screen: jurisdiction (Refs #257)
+#
+# The screen names the jurisdiction from the evaluated record block on
+# ``/render/device-breakdown`` (``jurisdiction.name``); every deliverable
+# that prints a jurisdiction must print that same name, and "Not set"
+# when the scenario names no record — never the engine's buffer-table
+# switch (``params.jurisdiction``, the seven schemas.py "CDOT" literals).
+# Runs the committed worst-case fixtures through the REAL API path, the
+# containment harness's pattern (tests/test_pdf_containment.py), so the
+# invariant holds on the same bodies the PDF containment pins.
+# ---------------------------------------------------------------------------
+
+_FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
+_WORST_CASE_DIR = _FIXTURES / "pdf_worst_case"
+_SCAN_PAYLOAD = _FIXTURES / "site_scan" / "lakewood_overpass.json"
+_WORST_CASE = sorted(p.stem for p in _WORST_CASE_DIR.glob("*.json"))
+_API_HEADERS = {"Authorization": "Bearer test-secret-do-not-deploy"}
+
+
+def _worst_case(name: str) -> dict[str, Any]:
+    return json.loads((_WORST_CASE_DIR / f"{name}.json").read_text(encoding="utf-8"))["scenario"]
+
+
+def _stub_scan(name: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The scanned fixtures' Overpass trip goes to a stub (recorded payload
+    or mirrors down, per the fixture's ``_provenance.overpass``); the
+    network is never reached.  Mirrors test_pdf_containment's stub."""
+    from src.api import site_scan as ss
+    from src.rules import site_detection as sd
+
+    ss.clear_memo()
+    prov = json.loads((_WORST_CASE_DIR / f"{name}.json").read_text(encoding="utf-8"))
+    mode = prov.get("_provenance", {}).get("overpass")
+    if mode == "recorded":
+        payload = json.loads(_SCAN_PAYLOAD.read_text(encoding="utf-8"))
+        monkeypatch.setattr(sd, "_overpass_request_with_fallback", lambda q, **_k: (payload, None))
+    elif mode == "down":
+        monkeypatch.setattr(
+            sd, "_overpass_request_with_fallback", lambda q, **_k: (None, "stub: mirrors down")
+        )
+
+
+def _tiny_png_bytes() -> bytes:
+    import io
+
+    from PIL import Image
+
+    buf = io.BytesIO()
+    Image.new("RGB", (4, 4), (128, 128, 128)).save(buf, format="PNG")
+    return buf.getvalue()
+
+
+class _FakeTile:
+    content = _tiny_png_bytes()
+
+    def raise_for_status(self) -> None:
+        return None
+
+
+@pytest.fixture()
+def api(monkeypatch: pytest.MonkeyPatch) -> TestClient:
+    """The real API, offline: a fake Mapbox tile so page 2 (the corridor
+    details box) renders, the OSM bearing soft-check silenced."""
+    monkeypatch.setenv("RENDER_API_SECRET", "test-secret-do-not-deploy")
+    monkeypatch.setenv("MAPBOX_TOKEN", "test-token")
+    monkeypatch.setattr(_ps.httpx, "get", lambda *a, **k: _FakeTile())
+    monkeypatch.setattr(_ps, "_validate_corridor_bearing", lambda corridor: None)
+    return TestClient(_render_app)
+
+
+def _post(api: TestClient, route: str, scenario: dict[str, Any]):
+    r = api.post(route, json=scenario, headers=_API_HEADERS)
+    assert r.status_code == 200, f"{route}: {r.status_code} {r.text[:300]}"
+    return r
+
+
+def _pdf_text(pdf_bytes: bytes) -> list[str]:
+    """Extracted text per page."""
+    doc = pdfium.PdfDocument(pdf_bytes)
+    try:
+        out = []
+        for page in doc:
+            tp = page.get_textpage()
+            out.append(tp.get_text_range(0, tp.count_chars()))
+        return out
+    finally:
+        doc.close()
+
+
+def _xlsx_summary(xlsx_bytes: bytes, tmp_path: Path) -> dict[str, Any]:
+    path = tmp_path / "devices.xlsx"
+    path.write_bytes(xlsx_bytes)
+    wb = load_workbook(str(path), read_only=True)
+    summary = {str(r[0]): r[1] for r in wb["Summary"].iter_rows(values_only=True)}
+    wb.close()
+    return summary
+
+
+def _screen_jurisdiction(api: TestClient, scenario: dict[str, Any]) -> str:
+    """What the strip prints: the evaluated record's name, else "Not set"."""
+    block = _post(api, "/render/device-breakdown", scenario).json().get("jurisdiction")
+    return str(block["name"]) if block else "Not set"
+
+
+@pytest.mark.parametrize("name", _WORST_CASE)
+def test_jurisdiction_is_one_name_on_every_deliverable(
+    name: str, api: TestClient, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    scenario = _worst_case(name)
+    _stub_scan(name, monkeypatch)
+    expected = _screen_jurisdiction(api, scenario)
+    # The engine switch is never displayed as a jurisdiction: a fixture
+    # naming no record reads "Not set", one naming a record reads its name.
+    assert expected == ("Not set" if not scenario.get("jurisdiction_key") else expected)
+    assert expected != "CDOT"
+
+    summary = _xlsx_summary(_post(api, "/render/xlsx", scenario).content, tmp_path)
+    assert summary["Jurisdiction"] == expected, f"XLSX Summary: {summary['Jurisdiction']!r}"
+
+    md = _post(api, "/render/markdown", scenario).text
+    assert f"- **Jurisdiction:** {expected}" in md, "crew MD header"
+
+    crew_pages = _pdf_text(_post(api, "/render/crew-pdf", scenario).content)
+    assert f"Jurisdiction: {expected}" in crew_pages[0], "crew PDF header"
+
+    audit_pages = "\n".join(_pdf_text(_post(api, "/render/audit-pdf", scenario).content))
+    assert "Jurisdiction: CDOT" not in audit_pages, (
+        "audit PDF names the buffer table as a jurisdiction"
+    )
+
+
+# Rule 10 at the export level (Rule 11: the test sits where the value is
+# printed): the XLSX Summary reads ``params.jurisdiction_name`` and prints
+# "Not set" when it is None — never the buffer-table switch.
+
+
+def test_xlsx_summary_prints_not_set_without_a_record(tmp_path: Path) -> None:
+    placements, params = _pipeline(CASE_11_GENERAL_BODY)
+    assert params.jurisdiction_name is None
+    path = tmp_path / "devices.xlsx"
+    export_device_list(placements, params, str(path))
+    wb = load_workbook(str(path), read_only=True)
+    summary = {str(r[0]): r[1] for r in wb["Summary"].iter_rows(values_only=True)}
+    wb.close()
+    assert summary["Jurisdiction"] == "Not set"
+
+
+def test_xlsx_summary_prints_the_record_name(tmp_path: Path) -> None:
+    placements, params = _pipeline(CASE_11_GENERAL_BODY)
+    named = dataclasses.replace(params, jurisdiction_name="Denver")
+    path = tmp_path / "devices.xlsx"
+    export_device_list(placements, named, str(path))
+    wb = load_workbook(str(path), read_only=True)
+    summary = {str(r[0]): r[1] for r in wb["Summary"].iter_rows(values_only=True)}
+    wb.close()
+    assert summary["Jurisdiction"] == "Denver"
+
+
+def test_bridge_carries_the_record_name_from_the_key() -> None:
+    """The one producer: scenario_to_call resolves ``jurisdiction_key`` to
+    the record's name on ScenarioParams; the switch stays "CDOT"."""
+    _placements, params = _pipeline({**CASE_11_GENERAL_BODY, "jurisdiction_key": "denver"})
+    assert params.jurisdiction_name == "Denver"
+    assert params.jurisdiction == "CDOT"
+
+
+def test_audit_buffer_line_names_the_table_not_a_jurisdiction() -> None:
+    """The audit's ``buffer.jurisdiction`` key is the buffer-TABLE switch
+    (wire unchanged); the PDF line says so instead of printing it as the
+    plan's jurisdiction."""
+    blocks = _audit_blocks._buffer_blocks(
+        {"lookup_text": "x", "source": "y", "jurisdiction": "CDOT"}
+    )
+    texts = [str(getattr(b, "text", "")) for b in blocks]
+    joined = "\n".join(texts)
+    assert "Buffer table: CDOT supplement" in joined, joined
+    assert "Jurisdiction:" not in joined, joined

@@ -152,9 +152,21 @@ def _buffer_blocks(buffer: dict[str, Any]) -> list[Block]:
     blocks: list[Block] = [Heading(2, _cell("Buffer Space"))]
     blocks.append(_body(_str(buffer, "lookup_text")))
     if "jurisdiction" in buffer:
-        blocks.append(_body(f"Jurisdiction: {_str(buffer, 'jurisdiction')}"))
+        # #257: the wire key is the engine's buffer-TABLE switch ("CDOT" |
+        # "federal"), not the jurisdiction the plan names — the line says
+        # which table governed the buffer, and never prints the switch as
+        # an authority.  Wire unchanged; the label is what changed.
+        switch = _str(buffer, "jurisdiction")
+        blocks.append(_body(f"Buffer table: {_BUFFER_TABLE_LABEL.get(switch, switch)}"))
     blocks.append(_body(f"Source: {_str(buffer, 'source')}"))
     return blocks
+
+
+# The audit's ``buffer.jurisdiction`` values, named for what they select.
+_BUFFER_TABLE_LABEL: dict[str, str] = {
+    "CDOT": "CDOT supplement",
+    "federal": "MUTCD Table 6B-2 (federal)",
+}
 
 
 def _spacing_blocks(spacing: dict[str, Any]) -> list[Block]:

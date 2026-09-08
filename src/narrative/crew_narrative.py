@@ -273,7 +273,6 @@ def build_narrative_context(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
-    jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -820,11 +819,13 @@ def build_narrative_context(
 
     return {
         "params": params,
-        # #156: the header shows the RESOLVED jurisdiction record's name
-        # when the scenario carries one; params.jurisdiction stays the
-        # engine-math switch (always "CDOT" today) and doubles as the
-        # display fallback when no jurisdiction_key is set.
-        "jurisdiction_display": jurisdiction_name or params.jurisdiction,
+        # #156 / #257: the header shows the jurisdiction the plan NAMES —
+        # ``params.jurisdiction_name``, the resolved record's name bridged
+        # from ``jurisdiction_key`` (the same field the XLSX Summary
+        # prints); "Not set" when the scenario names none (Rule 10).
+        # ``params.jurisdiction`` is the engine's buffer-table switch and
+        # is never displayed as a jurisdiction.
+        "jurisdiction_display": params.jurisdiction_name or "Not set",
         "road_type_human": _ROAD_TYPE_HUMAN.get(params.road_type, params.road_type),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
         "closure_type_display": scenario_display_name(params),
@@ -975,7 +976,6 @@ def render_crew_narrative_markdown(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
-    jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
 ) -> str:
@@ -994,7 +994,6 @@ def render_crew_narrative_markdown(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
-        jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
     )
@@ -1013,7 +1012,6 @@ def generate_crew_narrative(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
-    jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
 ) -> str:
@@ -1039,7 +1037,6 @@ def generate_crew_narrative(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
-        jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
     )
@@ -1056,7 +1053,6 @@ def generate_crew_narrative_pdf(
     night_adjustments: list[dict[str, Any]] | None = None,
     pilot_car: bool = False,
     approaches: list[ApproachParams] | None = None,
-    jurisdiction_name: str | None = None,
     jurisdiction_key: str | None = None,
     site_scan: Mapping[str, Any] | None = None,
 ) -> str:
@@ -1078,7 +1074,6 @@ def generate_crew_narrative_pdf(
         night_adjustments=night_adjustments,
         pilot_car=pilot_car,
         approaches=approaches,
-        jurisdiction_name=jurisdiction_name,
         jurisdiction_key=jurisdiction_key,
         site_scan=site_scan,
     )

@@ -216,6 +216,16 @@ class ScenarioParams:
     # constructor is untouched (same zero-churn move as
     # ``near_intersection`` above).
     centerline: tuple[tuple[float, float], ...] | None = None
+    # The jurisdiction the plan NAMES — the resolved record's display name
+    # ("Denver", "Lakewood"), bridged from the scenario's
+    # ``jurisdiction_key`` by ``scenario_to_call``; None when the scenario
+    # names no record.  This is the ONE field every deliverable prints as
+    # the jurisdiction (#257, Rule 3): the XLSX Summary, the crew header.
+    # ``jurisdiction`` above is a different thing — the engine's
+    # buffer-table switch ("CDOT" | "federal") — and is displayed nowhere.
+    # A None prints "Not set" (Rule 10), never the switch.  Appended with
+    # a default so every existing constructor is untouched.
+    jurisdiction_name: str | None = None
 
 
 @dataclass(frozen=True)

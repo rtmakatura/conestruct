@@ -238,7 +238,11 @@ def _populate_summary_sheet(
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
         ("Closure type", scenario_display_name(params)),
         ("Work zone length (ft)", params.work_zone_length_ft),
-        ("Jurisdiction", params.jurisdiction),
+        # #257: the jurisdiction the plan NAMES (the resolved record's
+        # name, the same field the crew header prints), "Not set" when the
+        # scenario names none — never ``params.jurisdiction``, which is the
+        # engine's buffer-table switch and read "CDOT" on every Denver plan.
+        ("Jurisdiction", params.jurisdiction_name or "Not set"),
         ("Generated", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
     )
 

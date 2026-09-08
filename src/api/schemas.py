@@ -864,6 +864,25 @@ def _meta_params(meta: ScenarioMeta) -> dict:
     }
 
 
+def _jurisdiction_name(scenario: Scenario) -> str | None:
+    """The jurisdiction the plan NAMES: the resolved record's display name
+    for the scenario's ``jurisdiction_key``, None when it names none.
+
+    The one producer of the name every deliverable prints (#257, Rule 3);
+    ``jurisdiction="CDOT"`` below stays the engine's buffer-table switch
+    and is displayed nowhere.  A bad key raises
+    :class:`UnknownJurisdictionError`; the API turns it into an honest
+    400 at ``_placements_for``, mirroring the other jurisdiction-reading
+    endpoints.
+    """
+    from src.rules.jurisdiction import load_jurisdiction
+
+    key = getattr(scenario, "jurisdiction_key", None)
+    if not key:
+        return None
+    return str(load_jurisdiction(key)["name"])
+
+
 def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     """Translate a parsed Scenario into a generator invocation.
 
@@ -871,7 +890,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     ``placements = generator_fn(params, **kwargs)`` and feed the
     placements to the renderers along with ``params``.
     """
-    meta_kw = _meta_params(scenario.meta)
+    meta_kw = {**_meta_params(scenario.meta), "jurisdiction_name": _jurisdiction_name(scenario)}
 
     if isinstance(scenario, ShoulderScenario):
         # Normalize workZoneSpeed == speed (or unset) to None — both

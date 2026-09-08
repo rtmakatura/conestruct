@@ -70,9 +70,12 @@ def test_newly_reachable_key_renders_record_name(client: TestClient) -> None:
     assert "- **Jurisdiction:** Greeley" in md
 
 
-def test_null_key_falls_back_to_cdot(client: TestClient) -> None:
+def test_null_key_prints_not_set(client: TestClient) -> None:
+    """#257 (Rule 10): no record named → "Not set", never the engine's
+    buffer-table switch printed as if it were an authority."""
     md = _markdown(client, _shoulder_body())
-    assert "- **Jurisdiction:** CDOT" in md
+    assert "- **Jurisdiction:** Not set" in md
+    assert "- **Jurisdiction:** CDOT" not in md
 
 
 def test_bad_key_is_an_honest_400(client: TestClient) -> None:
