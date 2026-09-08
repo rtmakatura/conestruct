@@ -887,7 +887,6 @@ class CorridorSpecRequest(BaseModel):
     speed: int = Field(ge=20, le=75, multiple_of=5)
     laneWidth: float = Field(default=12.0, ge=8.0, le=20.0)
     shoulderWidth: float = Field(default=10.0, ge=0.0, le=20.0)
-    numLanesClosed: int = Field(default=1, ge=1, le=4)
     roadType: str | None = None
 
 
@@ -951,7 +950,12 @@ def render_corridor_spec(req: CorridorSpecRequest) -> JSONResponse:
             "taper_ft": round(taper_ft),
             "buffer_ft": round(buffer_space(req.speed)),
             "advance_warning_ft": round(abc["A"] + abc["B"] + abc["C"]),
-            "downstream_taper_ft": round(downstream_taper_length(req.numLanesClosed, use_max=True)),
+            # #257: the floor the plan builds (layout.py's CHOSEN marker) —
+            # the same figure the audit's corridor_spec carries once the
+            # layout exists, so the picker legend equals the sidebar.  The
+            # former ``numLanesClosed`` × ceiling was a length no surface
+            # built and no client ever sent.
+            "downstream_taper_ft": round(downstream_taper_length(1)),
             "road_category": category,
         }
     )

@@ -65,6 +65,11 @@ def _lookout_corridor() -> WorkCorridor:
         closure_type="shoulder",
         road_type="urban_high",
         centerline=tuple((p[0], p[1]) for p in data["centerline"]),
+        # The scan's search frame (site_scan.py passes the §6B.08 ceiling
+        # explicitly under its CHOSEN marker) — the zone boundaries this
+        # class documents (100 / 900 / 1205 / 1294 ft) are that frame's.
+        # #257 flipped the builder's default to the placed floor.
+        downstream_taper_use_max=True,
     )
 
 

@@ -101,16 +101,17 @@ def test_brighton_segment_lengths_match_hand_calc() -> None:
     # Buffer at 55 mph from MUTCD Table 6B-2.
     assert corridor.buffer_ft == 495.0
     assert corridor.work_zone_ft == 800.0
-    # Downstream taper: 1 lane × 100 ft (upper bound).
-    assert corridor.downstream_taper_ft == 100.0
+    # Downstream taper: 1 lane × 50 ft — the §6B.08 floor the plan builds
+    # (#257: the builder default flipped from the ceiling to the floor).
+    assert corridor.downstream_taper_ft == 50.0
 
 
-def test_brighton_total_length_3078_ft() -> None:
+def test_brighton_total_length_3028_ft() -> None:
     corridor = _brighton()
-    expected = 1500 + 550 / 3 + 495 + 800 + 100
+    expected = 1500 + 550 / 3 + 495 + 800 + 50
     assert corridor.total_length_ft == pytest.approx(expected, abs=0.1)
-    assert corridor.total_length_ft == pytest.approx(3078.33, abs=0.1)
-    assert corridor.total_length_m == pytest.approx(3078.33 * 0.3048, abs=0.1)
+    assert corridor.total_length_ft == pytest.approx(3028.33, abs=0.1)
+    assert corridor.total_length_m == pytest.approx(3028.33 * 0.3048, abs=0.1)
 
 
 def test_brighton_upstream_point_is_total_length_north_of_anchor() -> None:
@@ -272,8 +273,8 @@ def test_build_corridor_flagger_uses_one_lane_two_way_taper() -> None:
     assert corridor.taper_ft == pytest.approx(100.0, abs=0.1)
     assert corridor.advance_warning_ft == pytest.approx(1500.0, abs=0.1)
     assert corridor.buffer_ft == pytest.approx(360.0, abs=0.1)
-    assert corridor.downstream_taper_ft == pytest.approx(100.0, abs=0.1)
-    assert corridor.total_length_ft == pytest.approx(2460.0, abs=0.1)
+    assert corridor.downstream_taper_ft == pytest.approx(50.0, abs=0.1)
+    assert corridor.total_length_ft == pytest.approx(2410.0, abs=0.1)
 
 
 def test_plan_sheet_corridor_closure_type_maps_flagger() -> None:

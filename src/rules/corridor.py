@@ -37,8 +37,11 @@ Convention
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import Any
 
+from src.rules.devices import DeviceType
 from src.rules.spacing import (
     advance_warning_spacing,
     buffer_space,
@@ -785,9 +788,10 @@ def build_corridor(
     shoulder_width_ft: float = 10.0,
     num_lanes_closed: int = 1,
     anchor_description: str = "user-supplied anchor",
-    downstream_taper_use_max: bool = True,
+    downstream_taper_use_max: bool = False,
     jurisdiction: str = "CDOT",
     centerline: tuple[tuple[float, float], ...] | None = None,
+    downstream_taper_ft: float | None = None,
 ) -> WorkCorridor:
     """Build a :class:`WorkCorridor` from user inputs and MUTCD/CDOT distances.
 
@@ -817,10 +821,17 @@ def build_corridor(
         anchor_description: free-form label preserved in the corridor
             (e.g., ``'US-85 & Bromley Ln'``, ``'MP 241.3'``,
             ``'dropped pin'``).
-        downstream_taper_use_max: when ``True`` (default), use the
-            upper bound of the 50–100 ft-per-lane MUTCD range for the
-            downstream taper.  The longer figure produces a more
-            conservative corridor for site-detection bboxes.
+        downstream_taper_use_max: when ``True``, use the upper bound of
+            the 50–100 ft-per-lane MUTCD §6B.08 range for the downstream
+            taper.  Default ``False`` (#257): the floor is what the plan
+            builds (``layout.py``'s CHOSEN marker), so a corridor built
+            from inputs alone agrees with the placed devices.  Only the
+            site-scan search frame passes ``True`` — a wider detection
+            bbox — and that frame is never printed.
+        downstream_taper_ft: the placed downstream run, when the caller
+            has the layout (:func:`placed_downstream_taper_ft`); overrides
+            the computed figure so a printed corridor carries the length
+            the plan actually built.
         centerline: optional (lat, lng) road-geometry vertices — see
             :attr:`WorkCorridor.centerline`.  Drawing frame only (#140);
             zone lengths above are unaffected.
@@ -833,7 +844,11 @@ def build_corridor(
 
     taper_ft = _resolve_taper_ft(closure_type, speed_mph, lane_width_ft, shoulder_width_ft)
     buffer_ft = buffer_space(speed_mph, jurisdiction=jurisdiction)
-    downstream_ft = downstream_taper_length(num_lanes_closed, use_max=downstream_taper_use_max)
+    downstream_ft = (
+        downstream_taper_ft
+        if downstream_taper_ft is not None
+        else downstream_taper_length(num_lanes_closed, use_max=downstream_taper_use_max)
+    )
 
     return WorkCorridor(
         anchor_lat=lat,
@@ -847,6 +862,30 @@ def build_corridor(
         downstream_taper_ft=float(downstream_ft),
         centerline=centerline,
     )
+
+
+def placed_downstream_taper_ft(placements: Iterable[Any]) -> float:
+    """The downstream taper the plan BUILT, in feet — the one figure every
+    surface prints for the word "downstream" (#257, Rule 3).
+
+    The run of downstream-taper cones the layout placed: mainline CONE
+    placements at negative stations (past the downstream end of the work
+    zone), its length the far cone's station.  When the layout placed
+    none (the gated no-cone kinds), the MUTCD §6B.08 one-lane floor —
+    the same choice the generators make (``layout.py``'s CHOSEN marker).
+
+    Readers: the audit's ``corridor_spec`` (the sidebar), the plan sheet's
+    CORRIDOR DETAILS box, the crew's step-3 station; the corridor-spec
+    preview returns the floor because it has no layout yet.
+    """
+    stations = [
+        float(p.station_ft)
+        for p in placements
+        if p.device_type == DeviceType.CONE
+        and p.station_ft < 0.0
+        and getattr(p, "approach_id", "mainline") == "mainline"
+    ]
+    return -min(stations) if stations else downstream_taper_length(1)
 
 
 def _point_along_corridor(corridor: WorkCorridor, fraction: float) -> tuple[float, float]:

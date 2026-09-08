@@ -619,3 +619,91 @@ def test_audit_buffer_line_names_the_table_not_a_jurisdiction() -> None:
     joined = "\n".join(texts)
     assert "Buffer table: CDOT supplement" in joined, joined
     assert "Jurisdiction:" not in joined, joined
+
+
+# ---------------------------------------------------------------------------
+# T-05 — deliverables agree with the screen: the downstream taper (Refs #257)
+#
+# One length for the word "downstream": the run of downstream-taper cones
+# the layout actually placed (the §6B.08 floor when it placed none).  The
+# sidebar reads it from the audit's ``sections.corridor_spec``; the plan
+# sheet's CORRIDOR DETAILS box, the picker's ``/render/corridor-spec``
+# and the crew's step-3 station must print the same figure, and the
+# sheet's total corridor must be the sum of the rows it prints.  On
+# d6bd79d the sheet and the picker carried the §6B.08 ceiling (100 ft)
+# from the scan-bbox corridor frame while every other surface said 50.
+# ---------------------------------------------------------------------------
+
+_CREW_DS_STATION = re.compile(r"downstream (?:reopening )?taper, between station -([\d,]+) ft")
+_SHEET_ROW = r"{label}:\s*([\d,]+) ft"
+
+
+def _sheet_ft(page_text: str, label: str) -> int:
+    m = re.search(_SHEET_ROW.format(label=label), page_text)
+    assert m, f"plan sheet p.2 has no {label!r} row: {page_text[-600:]!r}"
+    return int(m.group(1).replace(",", ""))
+
+
+@pytest.mark.parametrize("name", _WORST_CASE)
+def test_downstream_taper_is_one_length_on_every_surface(
+    name: str, api: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scenario = _worst_case(name)
+    _stub_scan(name, monkeypatch)
+
+    # The sidebar's source: the audit's own corridor block.
+    spec = _post(api, "/render/audit", scenario).json()["sections"]["corridor_spec"]
+    downstream = int(spec["downstream_taper_ft"])
+    assert downstream > 0
+
+    # The picker's source: the corridor-spec endpoint (the body the proxy
+    # sends — kind, speed, roadType; nothing else).
+    picker = _post(
+        api,
+        "/render/corridor-spec",
+        {
+            "kind": scenario["kind"],
+            "speed": scenario["speed"],
+            "roadType": scenario.get("roadType"),
+        },
+    ).json()
+    assert picker["downstream_taper_ft"] == downstream, "picker legend vs sidebar"
+
+    # The crew's step 3 names the same station when it places the run.
+    md = _post(api, "/render/markdown", scenario).text
+    m = _CREW_DS_STATION.search(md)
+    if m:
+        assert int(m.group(1).replace(",", "")) == downstream, "crew step 3 vs sidebar"
+
+    # The plan sheet's CORRIDOR DETAILS box (page 2 — rendered for the
+    # pinned fixtures, where the aerial page exists).
+    pages = _pdf_text(_post(api, "/render/pdf", scenario).content)
+    if scenario["meta"].get("lat") and scenario["meta"].get("bearingDeg") is not None:
+        assert len(pages) == 2, "pinned fixture with a bearing must carry the aerial page"
+        p2 = pages[1]
+        assert _sheet_ft(p2, "Downstream") == downstream, "plan sheet p.2 vs sidebar"
+        assert _sheet_ft(p2, "Advance warning") == int(spec["advance_warning_ft"])
+        assert _sheet_ft(p2, "Taper") == int(spec["taper_ft"])
+        assert _sheet_ft(p2, "Buffer") == int(spec["buffer_ft"])
+        assert _sheet_ft(p2, "Work zone") == int(round(scenario["workLen"]))
+        rows = sum(
+            _sheet_ft(p2, k)
+            for k in ("Advance warning", "Taper", "Buffer", "Work zone", "Downstream")
+        )
+        # The sheet sums the unrounded lengths, its rows print them
+        # rounded: the printed total may differ from the row sum by the
+        # rounding of one part, never by a zone.
+        assert abs(_sheet_ft(p2, "Total corridor") - rows) <= 1, "plan sheet total vs its rows"
+
+
+def test_placed_downstream_taper_is_the_layouts_run() -> None:
+    """The helper every surface reads: the placed run when the layout
+    placed downstream cones, the §6B.08 one-lane floor otherwise."""
+    from src.rules.corridor import placed_downstream_taper_ft
+    from src.rules.spacing import downstream_taper_length
+
+    placements, _params = _pipeline(CASE_11_GENERAL_BODY)
+    ds = [p.station_ft for p in placements if p.device_type == DeviceType.CONE and p.station_ft < 0]
+    assert ds, "the shoulder layout places downstream cones"
+    assert placed_downstream_taper_ft(placements) == pytest.approx(-min(ds))
+    assert placed_downstream_taper_ft([]) == pytest.approx(downstream_taper_length(1))

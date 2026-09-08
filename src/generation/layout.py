@@ -421,9 +421,16 @@ def generate_shoulder_closure_divided(
             )
         )
 
-    # 7. Downstream taper — kept short (2 cones) so the merging taper
-    # upstream is unambiguously the longest monotonic-offset run and
-    # ``_extract_taper_indices`` selects it rather than this one.
+    # 7. Downstream taper.  CHOSEN (#257): MUTCD §6B.08 gives 50–100 ft
+    # per lane closed and the designer picks within the range; the plan
+    # builds the 50 ft floor (``downstream_taper_length(1)`` — one lane,
+    # lower bound), the shortest compliant run, kept short (2 cones) so
+    # the merging taper upstream is unambiguously the longest monotonic-
+    # offset run and ``_extract_taper_indices`` selects it rather than
+    # this one.  This placed run is the ONE downstream length every
+    # surface prints (``placed_downstream_taper_ft``); the site scan's
+    # 100 ft ceiling is a search frame and is never displayed.  The
+    # sibling generators below make the same choice.
     ds_taper_len = downstream_taper_length(1)
     n_ds_cones = 2
     for k in range(n_ds_cones):

@@ -217,7 +217,8 @@ def test_corridor_spec_endpoint_shoulder(client: TestClient) -> None:
     assert j["buffer_ft"] == 645
     assert j["advance_warning_ft"] == 1500
     assert j["road_category"] == "rural"
-    assert j["downstream_taper_ft"] == 100
+    # #257: the floor the plan builds — the sidebar's figure, not the ceiling.
+    assert j["downstream_taper_ft"] == 50
 
 
 def test_corridor_spec_endpoint_accepts_gated_kinds(client: TestClient) -> None:

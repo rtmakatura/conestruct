@@ -39,7 +39,13 @@ from reportlab.pdfgen import canvas
 from src._dotenv import load_dotenv
 from src.api.site_scan import corrections_disclosure, not_checked_disclosure
 from src.generation.layout import rightmost_lane_assumption_active
-from src.rules.corridor import M_PER_FT, WorkCorridor, build_corridor, encode_polyline
+from src.rules.corridor import (
+    M_PER_FT,
+    WorkCorridor,
+    build_corridor,
+    encode_polyline,
+    placed_downstream_taper_ft,
+)
 from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
@@ -4050,6 +4056,10 @@ def render_plan_sheet(
                         shoulder_width_ft=params.shoulder_width_ft,
                         jurisdiction=params.jurisdiction,
                         centerline=getattr(params, "centerline", None),
+                        # #257: CORRIDOR DETAILS prints the downstream
+                        # taper the plan BUILT — the placed run every
+                        # surface reads — never the scan frame's ceiling.
+                        downstream_taper_ft=placed_downstream_taper_ft(placements),
                     )
                 except Exception as exc:  # noqa: BLE001
                     print(

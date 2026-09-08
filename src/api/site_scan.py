@@ -600,6 +600,14 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
             shoulder_width_ft=float(params.shoulder_width_ft),
             jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
             centerline=centerline,
+            # CHOSEN (#257): this corridor is the scan's search FRAME, not
+            # a printed length — it takes the MUTCD §6B.08 ceiling (100 ft
+            # per lane closed) so the detection bbox reaches past the
+            # longest downstream taper a designer could choose.  Every
+            # printed "Downstream" reads ``placed_downstream_taper_ft``
+            # (the 50 ft floor the plan builds); this value is never
+            # displayed.
+            downstream_taper_use_max=True,
         )
     except ValueError as exc:
         # A kind whose closure type the corridor math does not know — not a

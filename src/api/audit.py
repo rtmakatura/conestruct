@@ -21,6 +21,7 @@ from src.generation.layout import (
     flagger_chain_stations,
     near_intersection_stations,
 )
+from src.rules.corridor import placed_downstream_taper_ft
 from src.rules.devices import DeviceType
 from src.rules.sign_codes import PLAQUE_CODES, substitute_sign_description
 from src.rules.spacing import (
@@ -31,7 +32,6 @@ from src.rules.spacing import (
     co_speed_reduction_signs,
     device_spacing_in_taper,
     device_spacing_on_tangent,
-    downstream_taper_length,
     one_lane_two_way_device_spacing,
     one_lane_two_way_taper_length,
     pick_device_count,
@@ -1469,15 +1469,15 @@ def build_audit_trail(
         # the kind-appropriate taper (L_required), the CDOT-aware
         # buffer, the Table 6B-1 A+B+C sum, and the layout's actual
         # downstream-taper run when it placed one (the §6B.08 50-ft-
-        # per-lane floor otherwise).  Geometry (anchor/bearing) stays
-        # with the client — this block is lengths only.
+        # per-lane floor otherwise) — ``placed_downstream_taper_ft``,
+        # the one producer the plan sheet's CORRIDOR DETAILS and the
+        # corridor-spec preview share (#257).  Geometry (anchor/bearing)
+        # stays with the client — this block is lengths only.
         "corridor_spec": {
             "taper_ft": _ft(L_required),
             "buffer_ft": _ft(buf),
             "advance_warning_ft": _ft(a_ft + b_ft + c_ft),
-            "downstream_taper_ft": _ft(
-                -min(ds_cone_stations) if n_ds_cones else downstream_taper_length(1)
-            ),
+            "downstream_taper_ft": _ft(placed_downstream_taper_ft(mainline_placements)),
             "road_category": resolved_category,
         },
     }
