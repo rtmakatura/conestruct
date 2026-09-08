@@ -1,0 +1,10 @@
+healthz sha 196c116885899cdb38343a7b8d774f7c10ab77ef expect 196c116885899cdb38343a7b8d774f7c10ab77ef
+B1 healthz sha 196c116885899cdb38343a7b8d774f7c10ab77ef == expected 196c116885899cdb38343a7b8d774f7c10ab77ef: PASS
+B2 sidebar corridor block: Downstream 50 ft · Total 3,412 ft — PASS
+B4a no key: fact-strip Jurisdiction "None — baseline" · setup-strip cell "null" (setup-strip cell mounts post-generate — not observed here; "None — baseline" on main today, "Not set" once f36960d deploys)
+  shot b2-pinned.png
+B3 picker legend: Downstream 50 ft · Total ? ft — PASS
+  shot b3-picker.png
+B4b confirmed: fact-strip Jurisdiction "Denver" · setup-strip cell "null" — PASS
+  shot b4-confirmed.png
+done

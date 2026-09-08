@@ -1,0 +1,19 @@
+healthz: {'status': 'ok', 'sha': '196c116885899cdb38343a7b8d774f7c10ab77ef'}
+== DENVER
+  XLSX Summary: 200 Jurisdiction = Denver | Work zone length (ft) = 1000
+  crew MD: - **Jurisdiction:** Denver | - **Work zone length:** 1,000 ft | step 3 station - 50
+  crew PDF: Jurisdiction: Denver
+  plan p.2: CORRIDOR DETAILS | Anchor: 39.72690, -104.98730 | Bearing: 180° | Total corridor: 3,412 ft (0.65 mi) | Advance warning: 1,500 ft | Taper: 217 ft | Buffer: 645 ft | Work zone: 1,000 ft | Downstream: 50 ft | DRAFT FOR PE REVIEW — Generated b
+  plan p.1 callout: WORK ZONE = 1000 ft
+  audit corridor_spec: {'taper_ft': 217, 'buffer_ft': 645, 'advance_warning_ft': 1500, 'downstream_taper_ft': 50, 'road_category': 'rural'}
+  corridor-spec (picker): {'taper_ft': 217, 'buffer_ft': 645, 'advance_warning_ft': 1500, 'downstream_taper_ft': 50, 'road_category': 'rural'}
+  quote header: ['Speed 65 mph  |  Closure: Shoulder Closure — Divided Highway  |  Road: rural', 'Work zone: 1000 ft  |  Duration: 1 day(s)']
+== NO KEY
+  XLSX Summary: 200 Jurisdiction = Not set | Work zone length (ft) = 1000
+  crew MD: - **Jurisdiction:** Not set | - **Work zone length:** 1,000 ft | step 3 station - 50
+  crew PDF: Jurisdiction: Not set
+  plan p.2: CORRIDOR DETAILS | Anchor: 39.72690, -104.98730 | Bearing: 180° | Total corridor: 3,412 ft (0.65 mi) | Advance warning: 1,500 ft | Taper: 217 ft | Buffer: 645 ft | Work zone: 1,000 ft | Downstream: 50 ft | DRAFT FOR PE REVIEW — Generated b
+  plan p.1 callout: WORK ZONE = 1000 ft
+  audit corridor_spec: {'taper_ft': 217, 'buffer_ft': 645, 'advance_warning_ft': 1500, 'downstream_taper_ft': 50, 'road_category': 'rural'}
+  corridor-spec (picker): {'taper_ft': 217, 'buffer_ft': 645, 'advance_warning_ft': 1500, 'downstream_taper_ft': 50, 'road_category': 'rural'}
+  quote header: ['Speed 65 mph  |  Closure: Shoulder Closure — Divided Highway  |  Road: rural', 'Work zone: 1000 ft  |  Duration: 1 day(s)']
