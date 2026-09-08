@@ -21,37 +21,37 @@ const withMarker = (s: Scenario, m = MARK): Scenario => ({
 
 describe("deriveWorkingBand (#252)", () => {
   it("renders nothing when no request is open — whatever the two objects say", () => {
-    expect(deriveWorkingBand({ inFlight: false, prev: null, next: scanned })).toBeNull();
-    expect(deriveWorkingBand({ inFlight: false, prev: pinned, next: withMarker(scanned) })).toBeNull();
+    expect(deriveWorkingBand({ plan: false, render: null, prev: null, next: scanned })).toBeNull();
+    expect(deriveWorkingBand({ plan: false, render: null, prev: pinned, next: withMarker(scanned) })).toBeNull();
   });
 
   it("GENERATING when the settled answer carried no scan (or there is none): the address the user typed, in the named slot", () => {
     const addressed = { ...scanned, meta: { ...scanned.meta, address: "E Colfax Ave & Race St, Denver" } };
-    expect(deriveWorkingBand({ inFlight: true, prev: pinned, next: addressed })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: pinned, next: addressed })).toEqual({
       verb: "GENERATING",
       lead: "new plan · ",
       named: "E Colfax Ave & Race St, Denver",
     });
-    expect(deriveWorkingBand({ inFlight: true, prev: null, next: addressed })!.verb).toBe("GENERATING");
+    expect(deriveWorkingBand({ plan: true, render: null, prev: null, next: addressed })!.verb).toBe("GENERATING");
   });
 
   it("GENERATING with no address names the pin from the wire — never a placeholder name (rule 10)", () => {
-    expect(deriveWorkingBand({ inFlight: true, prev: pinned, next: scanned })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: pinned, next: scanned })).toEqual({
       verb: "GENERATING",
       lead: "new plan · pin ",
       named: "39.7400, -104.9663",
     });
     const blank = { ...scanned, meta: { ...scanned.meta, address: "   " } };
-    expect(deriveWorkingBand({ inFlight: true, prev: null, next: blank })!.named).toBe("39.7400, -104.9663");
+    expect(deriveWorkingBand({ plan: true, render: null, prev: null, next: blank })!.named).toBe("39.7400, -104.9663");
   });
 
   it("RE-GENERATING after a correction: the condition's own words in the named slot; undoing one says so", () => {
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: withMarker(scanned) })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: withMarker(scanned) })).toEqual({
       verb: "RE-GENERATING",
       lead: "after a correction to ",
       named: "School zone",
     });
-    expect(deriveWorkingBand({ inFlight: true, prev: withMarker(scanned), next: scanned })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: withMarker(scanned), next: scanned })).toEqual({
       verb: "RE-GENERATING",
       lead: "after undoing the correction to ",
       named: "School zone",
@@ -59,12 +59,12 @@ describe("deriveWorkingBand (#252)", () => {
     // A replaced marker (dismiss after assert) reads as the new correction.
     const dismissed: SiteConditionOverride = { ...MARK, action: "dismiss", reason: "fenced" };
     expect(
-      deriveWorkingBand({ inFlight: true, prev: withMarker(scanned), next: withMarker(scanned, dismissed) })!.lead,
+      deriveWorkingBand({ plan: true, render: null, prev: withMarker(scanned), next: withMarker(scanned, dismissed) })!.lead,
     ).toBe("after a correction to ");
   });
 
   it("RE-GENERATING without the site check when the proceed acknowledgement is what changed", () => {
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: withSiteScan(pinned, true) })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: withSiteScan(pinned, true) })).toEqual({
       verb: "RE-GENERATING",
       lead: "without the site check",
       named: null,
@@ -84,7 +84,7 @@ describe("deriveWorkingBand (#252)", () => {
       [{ ...scanned, schedule: { date_mode: "single", end_time: 15 } } as Scenario, "end time"],
     ];
     for (const [next, label] of cases) {
-      expect(deriveWorkingBand({ inFlight: true, prev: scanned, next })).toEqual({
+      expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next })).toEqual({
         verb: "RE-GENERATING",
         lead: `after an edit to ${label}`,
         named: null,
@@ -93,20 +93,32 @@ describe("deriveWorkingBand (#252)", () => {
   });
 
   it("the same wire object again is a Retry; an unnamed difference is 'the plan' — never a guess", () => {
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: scanned })).toEqual({
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: scanned })).toEqual({
       verb: "RE-GENERATING",
       lead: "retrying the site scan",
       named: null,
     });
     // Equal by value, new identity, nothing the band names: not a retry.
     const clone = { ...scanned };
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: clone })!.lead).toBe("the plan");
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: clone })!.lead).toBe("the plan");
     const other = { ...scanned, roadType: "urban_undivided" } as unknown as Scenario;
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: other })!.lead).toBe("the plan");
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: other })!.lead).toBe("the plan");
   });
 
   it("a correction outranks an edit in the same flight (the debounce can fold two writes into one request)", () => {
     const both = withMarker({ ...scanned, speed: 35 });
-    expect(deriveWorkingBand({ inFlight: true, prev: scanned, next: both })!.lead).toBe("after a correction to ");
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: both })!.lead).toBe("after a correction to ");
+  });
+
+  it("RENDERING · the file's declared name when only a render is open; the plan pair outranks it; nothing open is nothing", () => {
+    expect(deriveWorkingBand({ plan: false, render: "plan sheet PDF", prev: scanned, next: scanned })).toEqual({
+      verb: "RENDERING",
+      lead: "plan sheet PDF",
+      named: null,
+    });
+    expect(deriveWorkingBand({ plan: true, render: "quote XLSX", prev: scanned, next: withMarker(scanned) })!.lead).toBe(
+      "after a correction to ",
+    );
+    expect(deriveWorkingBand({ plan: false, render: null, prev: scanned, next: scanned })).toBeNull();
   });
 });

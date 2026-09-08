@@ -11,7 +11,7 @@ import Link from "next/link";
 import { type QuoteSettings } from "@/lib/quote-settings";
 import { expectedFlaggerCount, type Scenario } from "@/lib/scenarios";
 import { stampMatches, type AnswerStamp } from "@/lib/answer-stamp";
-import { lockedAnchorProps, useWriteLock } from "./WriteLock";
+import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
 
 // Lifted to GeneratorShell (restage): the pricing card unmounts across
 // reopen → regenerate cycles now, so any state guarding a manual edit
@@ -240,10 +240,12 @@ export function QuotePanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lat, lng]);
 
+  const beginRender = useRenderRequest();
   const onPreview = async () => {
     if (mode.kind !== "public") return;
     setBusy(true);
     setErr(null);
+    const endRender = beginRender("quote preview");
     try {
       const res = await fetch("/api/render/quote-breakdown", {
         method: "POST",
@@ -260,6 +262,7 @@ export function QuotePanel({
     } catch {
       setErr("Network error");
     } finally {
+      endRender();
       setBusy(false);
     }
   };
@@ -268,6 +271,7 @@ export function QuotePanel({
     if (mode.kind !== "public") return;
     setDownloading(true);
     setErr(null);
+    const endRender = beginRender("quote XLSX");
     try {
       const res = await fetch("/api/render/quote", {
         method: "POST",
@@ -290,6 +294,7 @@ export function QuotePanel({
     } catch {
       setErr("Network error");
     } finally {
+      endRender();
       setDownloading(false);
     }
   };
@@ -386,7 +391,7 @@ export function QuotePanel({
             disabled={busy || locked}
             className="md:flex-1 font-sans font-semibold text-[13px] bg-transparent border border-[color:var(--rule)] text-[color:var(--ink)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
-            {busy ? "Calculating…" : "Preview breakdown"}
+            Preview breakdown
           </button>
           <button
             type="button"
@@ -395,7 +400,7 @@ export function QuotePanel({
             disabled={downloading || locked}
             className="md:flex-1 font-sans font-semibold text-[13px] bg-[color:var(--act)] text-[color:var(--on-act)] px-3 py-3 cursor-pointer flex items-center justify-center gap-2 hover:bg-[color:var(--act-bright)] transition-colors disabled:opacity-60"
           >
-            {downloading ? "Rendering…" : "Download Quote (XLSX)"}
+            Download Quote (XLSX)
             <span className="font-mono">↓</span>
           </button>
         </div>

@@ -7,7 +7,7 @@ import type { AuditSummary } from "@/lib/render-types";
 import { stampMatches } from "@/lib/answer-stamp";
 import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
-import { lockedAnchorProps, useWriteLock } from "./WriteLock";
+import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
 
 type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf";
 
@@ -80,6 +80,14 @@ const SIGNUP_LABELS: Record<RenderKind, string> = {
   xlsx: "Sign up to download XLSX",
   markdown: "Sign up to download .md",
   "crew-pdf": "Sign up to download PDF",
+};
+
+// #252: what the band says while each file renders (RENDERING · …).
+const RENDER_LABELS: Record<RenderKind, string> = {
+  pdf: "plan sheet PDF",
+  xlsx: "device list XLSX",
+  markdown: "crew instructions MD",
+  "crew-pdf": "crew instructions PDF",
 };
 
 const EXT: Record<RenderKind, string> = {
@@ -189,8 +197,7 @@ export function OutputCards({
             disabled={bundling || locked}
             className="font-sans font-semibold text-[12px] px-3 py-2 cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
           >
-            <span className="font-mono">↓</span>{" "}
-            {bundling ? "Bundling…" : "All (.zip)"}
+            <span className="font-mono">↓</span> All (.zip)
           </button>
         )}
       </div>
@@ -230,10 +237,13 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
   const labelFor = (k: RenderKind) =>
     mode.kind === "saved" && !mode.planId ? SIGNUP_LABELS[k] : LABELS[k];
 
+  const beginRender = useRenderRequest();
   const onPublicDownload = async (dlKind: RenderKind) => {
     if (mode.kind !== "public") return;
     setBusyKind(dlKind);
     setError(null);
+    // #252: the band names the file while it renders; the lock holds.
+    const endRender = beginRender(RENDER_LABELS[dlKind]);
     try {
       const res = await fetch(`/api/render/${dlKind}`, {
         method: "POST",
@@ -265,6 +275,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
     } catch {
       setError({ kind: dlKind, msg: "Network error", for: mode.scenario });
     } finally {
+      endRender();
       setBusyKind(null);
     }
   };
@@ -293,11 +304,9 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
               onClick={() => onPublicDownload(k)}
               disabled={busyKind !== null || locked}
             >
-              {busyKind === k
-                ? "Rendering…"
-                : currentError?.kind === k
-                  ? "Try again"
-                  : labelFor(k)}
+              {/* #252: no per-button "Rendering…" — the band is the one
+                  working voice; "Try again" is an outcome, kept. */}
+              {currentError?.kind === k ? "Try again" : labelFor(k)}
               <span className="font-mono">↓</span>
             </button>
           ))}

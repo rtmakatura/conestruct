@@ -71,7 +71,7 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
-import { useWriteLock } from "./WriteLock";
+import { useRenderRequest, useWriteLock } from "./WriteLock";
 
 // #224 phase 3 (ruling e3): panel labels for the scanned buckets that
 // map to no rule — reference rows, uncounted.
@@ -151,9 +151,11 @@ export function TieredReference({
   // scenario to the public render route; disabled while the audit for
   // this input failed or was declined.
   const [auditDl, setAuditDl] = useState<"idle" | "busy" | "error">("idle");
+  const beginRender = useRenderRequest();
   const onDownloadAuditPdf = async () => {
     if (!generated || audit.state === "error" || auditDl === "busy") return;
     setAuditDl("busy");
+    const endRender = beginRender("audit PDF");
     try {
       const res = await fetch("/api/render/audit-pdf", {
         method: "POST",
@@ -176,6 +178,8 @@ export function TieredReference({
       setAuditDl("idle");
     } catch {
       setAuditDl("error");
+    } finally {
+      endRender();
     }
   };
 
@@ -553,11 +557,7 @@ export function TieredReference({
             }
             className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer whitespace-nowrap"
           >
-            {auditDl === "busy"
-              ? "Rendering…"
-              : auditDl === "error"
-                ? "Try again"
-                : "↓ Audit PDF"}
+            {auditDl === "error" ? "Try again" : "↓ Audit PDF"}
           </button>
         </div>
         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-4 max-w-[620px] leading-relaxed">

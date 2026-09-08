@@ -25,6 +25,19 @@ import { createContext, useContext } from "react";
 
 export const WriteLockContext = createContext<boolean>(false);
 
+// #252 (GO ruling a, RENDERING): a file render — the zip, a per-file
+// render, the audit PDF, the quote preview / XLSX — is a server request
+// too.  The shell owns the set of open ones; a renderer brackets its
+// fetch with ``begin(label)`` … ``end()`` and the band names the file
+// while it renders.  The default (outside the shell) records nothing.
+export type BeginRender = (label: string) => () => void;
+export const RenderRequestContext = createContext<BeginRender>(() => () => {});
+
+/** ``const end = beginRender("plan sheet PDF"); try { … } finally { end(); }`` */
+export function useRenderRequest(): BeginRender {
+  return useContext(RenderRequestContext);
+}
+
 /** True while a request for the generated scenario is open. */
 export function useWriteLock(): boolean {
   return useContext(WriteLockContext);

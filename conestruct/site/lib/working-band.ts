@@ -20,16 +20,20 @@
 //                  site check"; one of the strip's inline fields →
 //                  "after an edit to {field}"; the same object again
 //                  (Retry) → "retrying the site scan"; else "the plan".
+//   RENDERING      no plan request is open but a file render is: the
+//                  object is the file's name as the renderer declared it
+//                  ("plan sheet PDF", "quote preview" …).  A plan request
+//                  outranks a render when both are open — the plan is
+//                  what the file will be of.
 //
 // Rule 3: lookups and comparisons only.  ``toFixed(4)`` on the pin is
-// display formatting of a wire number.  RENDERING (file renders) joins
-// in a later commit.
+// display formatting of a wire number.
 
 import type { Scenario, SiteConditionOverride } from "./scenarios/types";
 import { SCANNED_FLAG_LABELS } from "./scenarios/site-corrections";
 import { carriesSiteScan } from "./scenarios/site-scan";
 
-export type WorkingVerb = "GENERATING" | "RE-GENERATING";
+export type WorkingVerb = "GENERATING" | "RE-GENERATING" | "RENDERING";
 
 export interface WorkingBandState {
   verb: WorkingVerb;
@@ -63,12 +67,18 @@ function conditionName(flag: string): string {
 }
 
 export function deriveWorkingBand(args: {
-  inFlight: boolean;
+  /** A request for the generated scenario (the breakdown / audit pair) is open. */
+  plan: boolean;
+  /** The first open file render's label, or null. */
+  render: string | null;
   prev: Scenario | null;
   next: Scenario;
 }): WorkingBandState | null {
-  const { inFlight, prev, next } = args;
-  if (!inFlight) return null;
+  const { plan, render, prev, next } = args;
+  if (!plan) {
+    if (render !== null) return { verb: "RENDERING", lead: render, named: null };
+    return null;
+  }
 
   if (prev === null || !carriesSiteScan(prev)) {
     const address = (next.meta.address ?? "").trim();

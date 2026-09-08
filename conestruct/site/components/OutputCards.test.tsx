@@ -138,11 +138,12 @@ describe("OutputCards download cards", () => {
     expect(onDownloadAll).toHaveBeenCalledTimes(1);
 
     cleanup();
+    // #252: no "Bundling…" word on the button — the working band is the
+    // one working voice; the button keeps its label and disables.
     renderPublic({ onDownloadAll, bundling: true });
-    expect(
-      (screen.getByRole("button", { name: /Bundling/ }) as HTMLButtonElement)
-        .disabled,
-    ).toBe(true);
+    const busy = screen.getByRole("button", { name: /All \(\.zip\)/ }) as HTMLButtonElement;
+    expect(busy.disabled).toBe(true);
+    expect(document.body.textContent).not.toMatch(/Bundling/);
   });
 
   it("saved mode with a plan id: cards link to the plan's download routes and no zip button renders", () => {

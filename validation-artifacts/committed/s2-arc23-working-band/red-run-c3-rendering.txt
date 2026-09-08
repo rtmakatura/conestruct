@@ -1,0 +1,49 @@
+   ✓ deriveWorkingBand (#252) > renders nothing when no request is open — whatever the two objects say 2ms
+   × deriveWorkingBand (#252) > GENERATING when the settled answer carried no scan (or there is none): the address the user typed, in the named slot 12ms
+     → expected null to deeply equal { verb: 'GENERATING', …(2) }
+   × deriveWorkingBand (#252) > GENERATING with no address names the pin from the wire — never a placeholder name (rule 10) 2ms
+     → expected null to deeply equal { verb: 'GENERATING', …(2) }
+   × deriveWorkingBand (#252) > RE-GENERATING after a correction: the condition's own words in the named slot; undoing one says so 1ms
+     → expected null to deeply equal { verb: 'RE-GENERATING', …(2) }
+   × deriveWorkingBand (#252) > RE-GENERATING without the site check when the proceed acknowledgement is what changed 1ms
+     → expected null to deeply equal { verb: 'RE-GENERATING', …(2) }
+   × deriveWorkingBand (#252) > RE-GENERATING after an edit: each of the strip's nine inline fields by its words 1ms
+     → expected null to deeply equal { verb: 'RE-GENERATING', …(2) }
+   × deriveWorkingBand (#252) > the same wire object again is a Retry; an unnamed difference is 'the plan' — never a guess 1ms
+     → expected null to deeply equal { verb: 'RE-GENERATING', …(2) }
+   × deriveWorkingBand (#252) > a correction outranks an edit in the same flight (the debounce can fold two writes into one request) 1ms
+     → Cannot read properties of null (reading 'lead')
+   × deriveWorkingBand (#252) > RENDERING · the file's declared name when only a render is open; the plan pair outranks it; nothing open is nothing 1ms
+     → expected null to deeply equal { verb: 'RENDERING', …(2) }
+   ✓ OutputCards download cards > renders one card per deliverable with backend values 27ms
+   ✓ OutputCards download cards > derives the header file count from the actual bundle contents, not the card count 9ms
+   ✓ OutputCards download cards > shows the loading ellipsis and error dash fallbacks for breakdown stats 9ms
+   ✓ OutputCards download cards > public mode: the crew card offers PDF plus a secondary .md download, and clicking posts the scenario 27ms
+   × OutputCards download cards > public mode: renders the All (.zip) button wired to the bundle handler, disabled while bundling 98ms
+     → Unable to find an accessible element with the role "button" and name `/All \(\.zip\)/`
+   ✓ OutputCards download cards > saved mode with a plan id: cards link to the plan's download routes and no zip button renders 6ms
+   ✓ OutputCards download cards > saved mode without a plan id: each card funnels to signup 7ms
+   ✓ OutputCards download cards > renders the empty state before generation 2ms
+   ✓ download errors carry their input identity (#197) > shows the error for the scenario it answered, then drops it when the scenario changes 26ms
+   ✓ download errors carry their input identity (#197) > the error stays while its own scenario stays (unchanged input keeps the honest failure) 14ms
+   × #252 — RENDERING: a file render raises the band and the lock > a per-file render says RENDERING · {file}, locks the page, and the band leaves with the response; the button never says 'Rendering…' 1089ms
+     → expected null not to be null
+   × #252 — RENDERING: a file render raises the band and the lock > the zip, the quote preview, the quote XLSX and the audit PDF each name their file 975ms
+     → expected null to be 'MHT package ZIP' // Object.is equality
+   × #252 — RENDERING: a file render raises the band and the lock > a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's) 975ms
+     → expected null to be 'plan sheet PDF' // Object.is equality
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  components/OutputCards.test.tsx > OutputCards download cards > public mode: renders the All (.zip) button wired to the bundle handler, disabled while bundling
+ FAIL  components/WorkingBand.render.test.tsx > #252 — RENDERING: a file render raises the band and the lock > a per-file render says RENDERING · {file}, locks the page, and the band leaves with the response; the button never says 'Rendering…'
+ FAIL  components/WorkingBand.render.test.tsx > #252 — RENDERING: a file render raises the band and the lock > the zip, the quote preview, the quote XLSX and the audit PDF each name their file
+ FAIL  components/WorkingBand.render.test.tsx > #252 — RENDERING: a file render raises the band and the lock > a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's)
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > GENERATING when the settled answer carried no scan (or there is none): the address the user typed, in the named slot
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > GENERATING with no address names the pin from the wire — never a placeholder name (rule 10)
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > RE-GENERATING after a correction: the condition's own words in the named slot; undoing one says so
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > RE-GENERATING without the site check when the proceed acknowledgement is what changed
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > RE-GENERATING after an edit: each of the strip's nine inline fields by its words
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > the same wire object again is a Retry; an unnamed difference is 'the plan' — never a guess
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > a correction outranks an edit in the same flight (the debounce can fold two writes into one request)
+ FAIL  lib/working-band.test.ts > deriveWorkingBand (#252) > RENDERING · the file's declared name when only a render is open; the plan pair outranks it; nothing open is nothing
+ Test Files  3 failed (3)
+      Tests  12 failed | 10 passed (22)

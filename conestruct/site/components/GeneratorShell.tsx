@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
 import {
   SITE_SCAN_UNAVAILABLE_CODE,
@@ -32,7 +32,7 @@ import { GeneratorSidebar } from "./GeneratorSidebar";
 import { SetupStrip } from "./SetupStrip";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
-import { WriteLockContext } from "./WriteLock";
+import { RenderRequestContext, WriteLockContext } from "./WriteLock";
 import { deriveWorkingBand } from "@/lib/working-band";
 import { OutputCards } from "./OutputCards";
 import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
@@ -205,6 +205,21 @@ export function GeneratorShell({
     setFlaggerSource("auto");
   }, [scenarioKind]);
   const [bundling, setBundling] = useState(false);
+  // #252 (ruling a): the open file renders, by the label each renderer
+  // declared (RenderRequestContext).  The band names the first; the
+  // write lock holds while any is open.  Read off the requests, never a
+  // timer; ``end`` removes exactly one entry so two renders of one kind
+  // are counted twice.
+  const [openRenders, setOpenRenders] = useState<string[]>([]);
+  const beginRender = useCallback((label: string) => {
+    setOpenRenders((o) => [...o, label]);
+    return () => {
+      setOpenRenders((o) => {
+        const i = o.indexOf(label);
+        return i === -1 ? o : [...o.slice(0, i), ...o.slice(i + 1)];
+      });
+    };
+  }, []);
   // Dev-only replication snapshot (Refs #102, TEMPORARY): the last picker
   // classification + the pin it was captured at, surfaced by
   // GeneratorSidebar. Delete with DebugSnapshotButton.
@@ -679,6 +694,7 @@ export function GeneratorShell({
       return;
     }
 
+    const endRender = beginRender("MHT package ZIP");
     try {
       const res = await fetch("/api/render/bundle", {
         method: "POST",
@@ -705,6 +721,7 @@ export function GeneratorShell({
     } catch {
       setBundleError("Network error while building bundle");
     } finally {
+      endRender();
       setBundling(false);
     }
   };
@@ -909,6 +926,9 @@ export function GeneratorShell({
   const planInFlight =
     generated &&
     (deviceBreakdown.state === "loading" || stripAudit.state === "loading");
+  // Ruling a: a file render is a request too — the band and the lock
+  // cover it; the plan pair outranks it in the sentence.
+  const inFlight = planInFlight || openRenders.length > 0;
   const scanInFlight = planInFlight;
   const scanHeld = scanInFlight
     ? ((stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections?.site_scan ?? null)
@@ -924,7 +944,8 @@ export function GeneratorShell({
       : (auditState.lastSettledFor ?? null)
   ) as Scenario | null;
   const bandState = deriveWorkingBand({
-    inFlight: planInFlight,
+    plan: planInFlight,
+    render: openRenders[0] ?? null,
     prev: bandPrev,
     next: wireScenario,
   });
@@ -1049,8 +1070,9 @@ export function GeneratorShell({
   return (
     // #252 (ruling b): the root carries the lock class the one dim rule
     // keys on, and the context every write control reads (WriteLock.tsx).
-    <WriteLockContext.Provider value={planInFlight}>
-    <div className={`workbench min-h-screen${planInFlight ? " ws-locked" : ""}`}>
+    <WriteLockContext.Provider value={inFlight}>
+    <RenderRequestContext.Provider value={beginRender}>
+    <div className={`workbench min-h-screen${inFlight ? " ws-locked" : ""}`}>
       <div className="workbench-frame" aria-hidden>
         <span className="ftick tl" />
         <span className="ftick tr" />
@@ -1404,6 +1426,7 @@ export function GeneratorShell({
           open, rendered verbatim from ``bandState``. */}
       <WorkingBand state={bandState} />
     </div>
+    </RenderRequestContext.Provider>
     </WriteLockContext.Provider>
   );
 }
