@@ -1765,7 +1765,8 @@ def _draw_landmarks(
     segs = [
         (x_of(taper_start), x_of(taper_end), f"{taper_label} = {taper_len:.0f} ft"),
         (x_of(taper_end), x_of(wz_start), f"BUFFER = {buf_len:.0f} ft (NTS)"),
-        (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:.0f} ft"),
+        # #257: one format for the length on every surface ("1,000 ft").
+        (x_of(wz_start), x_of(wz_end), f"WORK ZONE = {wz_len:,.0f} ft"),
     ]
     occupied: list[tuple[int, float, float]] = []  # (tier, x_lo, x_hi)
     for x1, x2, label in segs:
@@ -3048,7 +3049,7 @@ def _draw_notes(
         elif is_off_road:
             rows.append(("Advance sign A", f"{sign_a_dist:.0f} ft"))
         else:
-            rows.append(("Work zone", f"{params.work_zone_length_ft:.0f} ft"))
+            rows.append(("Work zone", f"{params.work_zone_length_ft:,.0f} ft"))
             rows.append((taper_label, f"{taper_len:.0f} ft"))
             rows.append(("Buffer", f"{buf_len:.0f} ft"))
         col_x = [x, x + width / 2.0]

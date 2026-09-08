@@ -707,3 +707,65 @@ def test_placed_downstream_taper_is_the_layouts_run() -> None:
     assert ds, "the shoulder layout places downstream cones"
     assert placed_downstream_taper_ft(placements) == pytest.approx(-min(ds))
     assert placed_downstream_taper_ft([]) == pytest.approx(downstream_taper_length(1))
+
+
+# ---------------------------------------------------------------------------
+# T-06 — the #257 folds: the quote header's road name and one work-zone
+# format.  The quote printed the raw ``road_type`` enum ("Road: rural")
+# where the crew header printed the display name; the work-zone length
+# printed as "1000 ft" on the plan sheet's dimension and PARAMETERS box
+# and on the quote header, "1,000 ft" on the crew header and the plan's
+# CORRIDOR DETAILS.  One producer for the road name
+# (``road_type_display``), one format for the length.
+# ---------------------------------------------------------------------------
+
+
+def test_quote_header_prints_the_road_display_name(tmp_path: Path) -> None:
+    from src.rules.validators import ROAD_TYPE_DISPLAY, road_type_display
+
+    placements, params = _pipeline(CASE_11_GENERAL_BODY)
+    expected = ROAD_TYPE_DISPLAY[params.road_type]
+    assert expected != params.road_type, "the display name is not the enum"
+    assert road_type_display(params) == expected
+    assert build_narrative_context(placements, params)["road_type_human"] == expected
+    quote_path = tmp_path / "quote.xlsx"
+    generate_quote(placements, params, output_path=str(quote_path))
+    qwb = load_workbook(str(quote_path), read_only=True)
+    header = next(qwb["Quote Summary"].iter_rows(min_row=6, max_row=6, max_col=1, values_only=True))
+    wz = next(qwb["Quote Summary"].iter_rows(min_row=7, max_row=7, max_col=1, values_only=True))
+    qwb.close()
+    assert f"Road: {expected}" in str(header[0]), header
+    assert f"Road: {params.road_type}" not in str(header[0])
+    assert f"Work zone: {params.work_zone_length_ft:,.0f} ft" in str(wz[0]), wz
+
+
+@pytest.mark.parametrize("name", [n for n in _WORST_CASE if _worst_case(n)["workLen"] >= 1000])
+def test_work_zone_length_is_one_format_on_every_surface(
+    name: str, api: TestClient, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    scenario = _worst_case(name)
+    _stub_scan(name, monkeypatch)
+    expected = f"{scenario['workLen']:,.0f} ft"
+    assert "," in expected, "filtered to four-digit work zones above"
+
+    pages = _pdf_text(_post(api, "/render/pdf", scenario).content)
+    assert f"WORK ZONE = {expected}" in pages[0], "plan sheet dimension callout"
+    assert re.search(rf"Work zone:\s*{re.escape(expected)}", pages[0]), "plan sheet PARAMETERS"
+    if len(pages) > 1:
+        assert re.search(rf"Work zone:\s*{re.escape(expected)}", pages[1]), "CORRIDOR DETAILS"
+
+    md = _post(api, "/render/markdown", scenario).text
+    assert f"- **Work zone length:** {expected}" in md
+
+    quote = _post(api, "/render/quote", {"scenario": scenario}).content
+    qpath = tmp_path / "quote.xlsx"
+    qpath.write_bytes(quote)
+    qwb = load_workbook(str(qpath), read_only=True)
+    wz = next(qwb["Quote Summary"].iter_rows(min_row=7, max_row=7, max_col=1, values_only=True))
+    qwb.close()
+    assert f"Work zone: {expected}" in str(wz[0]), wz
+
+    # The XLSX Summary keeps a numeric cell (a bid document sums it); the
+    # unit lives in the label.
+    summary = _xlsx_summary(_post(api, "/render/xlsx", scenario).content, tmp_path)
+    assert summary["Work zone length (ft)"] == scenario["workLen"]

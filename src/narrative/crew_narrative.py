@@ -47,10 +47,12 @@ from src.rules.spacing import (
     shoulder_taper_length,
 )
 from src.rules.validators import (
+    ROAD_TYPE_DISPLAY,
     ApproachParams,
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    road_type_display,
     scenario_display_name,
 )
 
@@ -92,16 +94,6 @@ _DEVICE_HUMAN_NAMES: dict[DeviceType, str] = {
     DeviceType.CHANNELIZER_OPTIONAL: "Optional Channelizer",
     DeviceType.WARNING_LIGHT_TYPE_C: "Type C Steady-Burn Warning Light",
     DeviceType.PORTABLE_LIGHT_PLANT: "Portable Light Plant",
-}
-
-_ROAD_TYPE_HUMAN: dict[str, str] = {
-    "urban_low": "Urban (low-speed)",
-    "urban_high": "Urban (high-speed)",
-    # "Rural" only — Table 6B-1's category is speed/access, not a lane
-    # count; the road may carry any num_lanes (Refs #118).
-    "rural": "Rural",
-    "expressway": "Expressway",
-    "freeway": "Freeway",
 }
 
 
@@ -676,7 +668,7 @@ def build_narrative_context(
                 {
                     "id": a.id,
                     "speed_mph": a.speed_mph,
-                    "road_type_human": _ROAD_TYPE_HUMAN.get(a.road_type, a.road_type),
+                    "road_type_human": ROAD_TYPE_DISPLAY.get(a.road_type, a.road_type),
                     "signalized": a.signalized,
                     "a_dist_ft": a_st["a_dist"],
                     "w20_1_ft": a_st["w20_1"],
@@ -826,7 +818,8 @@ def build_narrative_context(
         # ``params.jurisdiction`` is the engine's buffer-table switch and
         # is never displayed as a jurisdiction.
         "jurisdiction_display": params.jurisdiction_name or "Not set",
-        "road_type_human": _ROAD_TYPE_HUMAN.get(params.road_type, params.road_type),
+        # #257: the shared producer — the quote header prints the same words.
+        "road_type_human": road_type_display(params),
         # UX-11: display name, not the raw "lane" / "shoulder" enum.
         "closure_type_display": scenario_display_name(params),
         "device_summary": device_summary,

@@ -569,7 +569,10 @@ export function SetupStrip({
     ? (jurisdiction?.name ??
       JURISDICTION_OPTIONS.find((o) => o.key === jurisdictionKey)?.label ??
       jurisdictionKey)
-    : "None";
+    : // #257 (P11): one word for the unset state on every surface — the
+      // strip's own class cell, the fact strip, the XLSX Summary and the
+      // crew header all print "Not set".
+      "Not set";
   const streetClass = scenario.street_class ?? null;
   const classLabelText = streetClass
     ? STREET_CLASS_LABEL[streetClass]

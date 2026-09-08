@@ -5,7 +5,7 @@
 // jurisdiction), instrument output rather than field-lookalikes.
 // Pinned state only (GO ruling 1): pre-pin the Location step keeps the
 // pick CTA + manual fallback unchanged (#222).  The jurisdiction cell
-// is a real answer in every state — "None — baseline" when nothing is
+// is a real answer in every state — "Not set" when nothing is
 // named (guess-correction on record), never an empty.
 
 import fs from "node:fs";
@@ -99,8 +99,12 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     expect(cellValue("Lng")).toBe("-104.940710");
     expect(cellValue("Bearing")).toBe("85°");
     expect(cellValue("Speed")).toBe(`${DEFAULT_SHOULDER.speed} mph`);
-    // No jurisdiction named: the cell answers, it never blanks.
-    expect(cellValue("Jurisdiction")).toBe("None — baseline");
+    // No jurisdiction named: the cell answers, it never blanks — with
+    // the one word every surface uses for the unset state (#257).
+    expect(cellValue("Jurisdiction")).toBe("Not set");
+    // A direct text node (the class cell says it too — one word, every
+    // unset state).
+    expect(screen.getAllByText("Not set").length).toBeGreaterThan(0);
   });
 
   it("a named jurisdiction reaches the cell (option label before the block loads)", async () => {

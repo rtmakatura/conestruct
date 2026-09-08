@@ -342,8 +342,14 @@ async function fetchPartFromModal(
 ): Promise<BundlePart> {
   const url = process.env.MODAL_RENDER_URL!;
   const secret = process.env.MODAL_RENDER_SECRET!;
+  // #257: the zipped parts relay the confirmed road's centerline exactly
+  // as every single-file POST in this module does (#140) — the bundle
+  // was the one sender that shipped the raw scenario, so its plan sheet
+  // drew the straight frame while the same plan's direct download
+  // followed the road.
+  const wireScenario = withRelayedCenterline(scenario);
   const requestBody =
-    kind === "quote" ? { scenario, settings: quoteSettings } : scenario;
+    kind === "quote" ? { scenario: wireScenario, settings: quoteSettings } : wireScenario;
   const upstream = await fetch(`${url.replace(/\/$/, "")}/render/${kind}`, {
     method: "POST",
     headers: {

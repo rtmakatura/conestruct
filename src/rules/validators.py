@@ -250,6 +250,24 @@ class ApproachParams:
     signalized: bool = False
 
 
+# MUTCD Table 6B-1 road category → the words every deliverable prints
+# (#257, Rule 3: one producer — the crew header and the quote header
+# read this; the enum itself is never displayed).  "Rural" only —
+# Table 6B-1's category is speed/access, not a lane count (Refs #118).
+ROAD_TYPE_DISPLAY: dict[str, str] = {
+    "urban_low": "Urban (low-speed)",
+    "urban_high": "Urban (high-speed)",
+    "rural": "Rural",
+    "expressway": "Expressway",
+    "freeway": "Freeway",
+}
+
+
+def road_type_display(params: ScenarioParams) -> str:
+    """Human-readable Table 6B-1 road category for ``params.road_type``."""
+    return ROAD_TYPE_DISPLAY.get(params.road_type, params.road_type)
+
+
 def scenario_display_name(params: ScenarioParams) -> str:
     """Human-readable scenario name in Title Case.
 

@@ -109,7 +109,7 @@ interface Props {
   // #227 fact strip: the evaluated jurisdiction's display name (the
   // device-breakdown block's ``name``), null before it loads or when no
   // jurisdiction is named.  The strip falls back to the option label /
-  // "None — baseline" — a real answer, never blank.
+  // "Not set" — a real answer, never blank.
   jurisdictionName?: string | null;
   // #227 schedule reference block: the full evaluated block — window
   // set + hours_eval — for the Schedule step's window rows.
@@ -827,14 +827,15 @@ function LocationSummary({
 
   // #227 fact strip: the jurisdiction cell is a real answer in every
   // state — the evaluated block's name, the option label while that
-  // block is in flight, or "None — baseline" (a valid answer, not an
-  // empty; guess-correction on record).
+  // block is in flight, or "Not set" (a valid answer, not an empty;
+  // guess-correction on record).  #257 (P11): "Not set" is the one word
+  // the setup strip, the XLSX Summary and the crew header print too.
   const jurisdictionCell =
     jurisdictionName ??
     (scenario.jurisdiction_key
       ? (JURISDICTION_OPTIONS.find((o) => o.key === scenario.jurisdiction_key)
           ?.label ?? scenario.jurisdiction_key)
-      : "None — baseline");
+      : "Not set");
 
   // Engine-removal PR D: zone lengths come from the backend
   // (sections.corridor_spec off the audit fetch the shell already makes

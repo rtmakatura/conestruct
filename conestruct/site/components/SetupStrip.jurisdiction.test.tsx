@@ -35,14 +35,18 @@ function mountStrip(over: Partial<Scenario> = {}) {
 }
 
 describe("strip inline jurisdiction + class edit (#152 B)", () => {
-  it("shows the current jurisdiction and class; 'None'/'Not set' by default", () => {
+  it("shows the current jurisdiction and class; 'Not set' by default (#257: one word)", () => {
     mountStrip();
     expect(screen.getByLabelText("Edit Jurisdiction").textContent).toContain(
-      "None",
+      "Not set",
     );
     expect(screen.getByLabelText("Edit Class").textContent).toContain(
       "Not set",
     );
+    // The word is a direct text node in both cells — the same word the
+    // XLSX Summary and the crew header print for the unset state.
+    expect(screen.getAllByText("Not set")).toHaveLength(2);
+    expect(screen.queryByText("None")).toBeNull();
   });
 
   it("editing jurisdiction inline writes jurisdiction_key (not a reopen)", async () => {

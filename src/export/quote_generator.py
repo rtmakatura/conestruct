@@ -24,7 +24,12 @@ from src.rules.device_aggregation import AggregatedDeviceRow
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import display_code, substitute_sign_description
-from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    road_type_display,
+    scenario_display_name,
+)
 
 # ---------------------------------------------------------------------------
 # Pricing constants
@@ -594,7 +599,9 @@ def _populate_summary_sheet(
     sheet.cell(row=5, column=1, value=f"Project: {project_name}").font = _SUBTOTAL_FONT
     # UX-11: display name, not the raw "lane" / "shoulder" enum.
     closure = scenario_display_name(params)
-    road = params.road_type.replace("_", " ")
+    # #257: the road category's display name — the crew header's words,
+    # never the raw enum ("rural") on a priced document.
+    road = road_type_display(params)
     sheet.cell(
         row=6,
         column=1,
@@ -604,7 +611,8 @@ def _populate_summary_sheet(
         row=7,
         column=1,
         value=(
-            f"Work zone: {params.work_zone_length_ft:.0f} ft  |  "
+            # #257: one format for the length on every surface ("1,000 ft").
+            f"Work zone: {params.work_zone_length_ft:,.0f} ft  |  "
             f"Duration: {project_duration_days} day(s)"
             + ("  |  Night operation" if params.is_night else "")
         ),
