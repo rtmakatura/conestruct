@@ -1,0 +1,18 @@
+s2-arc23 (#252) — test accounting, branch issue-252-working-band off main 00ecbf0
+
+vitest (conestruct/site, `npx vitest run`)
+  main 00ecbf0 ................. 129 files / 946 tests   (arc-22 close)
+  commit 1  4802ffc  band ...... 130 files / 961 tests   (vitest-c1.txt)   +8 lib/working-band.test, +8 WorkingBand.test, +2 tokens.test, +1 StatusBar.test; -4 StatusBar.scan-copy.test (deleted)
+  commit 2  656b431  lock ...... 131 files / 964 tests   (vitest-c2.txt)   +3 WriteLock.test
+  commit 3  b7198f4  RENDERING . 132 files / 968 tests   (vitest-c3.txt)   +3 WorkingBand.render.test, +1 lib/working-band.test
+  commit 4a          spacer .... 132 files / 968 tests   (vitest-c4.txt)   0 new (two cases extended)
+
+red runs (sources stashed, the arc's suites against the prior tree)
+  red-run-c1-band.txt ......... 15 failed | 60 passed  (eleven suites against main)
+  red-run-c2-lock.txt .........  4 failed |  4 passed  (WriteLock.test + a11y-focus against commit 1)
+  red-run-c3-rendering.txt .... 12 failed | 10 passed  (render / working-band / OutputCards suites against commit 2)
+  red-run-c4-spacer.txt .......  2 failed |  9 passed  (WriteLock.test + WorkingBand.test against commit 3)
+
+pytest / snapshots / wire / pin fixtures / payload senders ... 0 (`git diff main...HEAD -- src tests` empty at every commit)
+tsc ... clean at every commit
+lint ... one pre-existing warning (LocationPickerModal.tsx:768 react-hooks/exhaustive-deps), untouched
