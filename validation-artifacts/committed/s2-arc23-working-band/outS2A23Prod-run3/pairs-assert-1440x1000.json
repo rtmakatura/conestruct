@@ -1,0 +1,38 @@
+{
+ "surface": "#0f1a26",
+ "border": "#34a9e8",
+ "pairs": [
+  {
+   "name": "glyph ◌ (--none)",
+   "fg": "#93a0b0",
+   "bg": "#0f1a26",
+   "ratio": 6.6
+  },
+  {
+   "name": "verb (--act-bright)",
+   "fg": "#56bcf2",
+   "bg": "#0f1a26",
+   "ratio": 8.25
+  },
+  {
+   "name": "object (--ink)",
+   "fg": "#eaf0f7",
+   "bg": "#0f1a26",
+   "ratio": 15.3
+  },
+  {
+   "name": "named (sans, --ink)",
+   "fg": "#eaf0f7",
+   "bg": "#0f1a26",
+   "ratio": 15.3
+  },
+  {
+   "name": "lock notice (--warn)",
+   "fg": "#f4c020",
+   "bg": "#0f1a26",
+   "ratio": 10.37
+  }
+ ],
+ "named": "__Inter_8b3a0b, __Inter_Fallback_8b3a0b",
+ "mono": "__JetBrains_Mono_e896d9, __JetBrains_Mono_Fallback_e896d9"
+}

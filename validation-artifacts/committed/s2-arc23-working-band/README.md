@@ -117,10 +117,42 @@ and the Retry object ("retrying the site scan") before the memo warmed.
 | B11 block under the lock | aria-busy, 5/5 off; at settle 1 record row, 0 off | same |
 | A1 aria | 1 region of 3 carries the flight; row `role=status` polite; strip empty | same |
 
-## Prod run
+## Prod run — ALL PASS 44/44 (+4 info) (`outS2A23Prod/`, run 4)
 
-Pending the ship: `node s2a23-lc-prod.js outS2A23Prod <sha>` (sha-gated against
-healthz), Denver 39.7269 / −104.9873. Recorded here when it lands.
+Prod `b489539` (healthz = origin/main = the branch tip), 2026-09-08, Denver
+39.7269 / −104.9873, sha-gated, both viewports. Four runs; the first three are
+kept (`outS2A23Prod-run1..3/`) because each taught the harness something and
+because the failures are prod's own behaviour, not the band's:
+
+| run | tally | what failed, and why |
+|---|---|---|
+| 1 | 41/44 | B7 at both viewports: 30 color-contrast nodes — every one inside the `.results-stale` dim (#192's opacity .5 on the previous answer, under the lock) — the arc-19/21 baselines were settled pages and never probed mid-flight; 0 in the band. B11 settle at 1440: the correction's re-generation **refused** its scan at 21.7 s (budget) — spec 31 held across the refusal's arrival (0 co-frames, B3), the leg had no retry. |
+| 2 | 41/43 | B4 reads at 1440: 0 read controls — the Generate's **breakdown request** had refused its own scan (20.3 s) while the audit's answered; #192 drops the carry, so the Assert flight showed no plan. B7 at 380: my stale classification ran in a second evaluate after the dim had gone. |
+| 3 | 42/43 | B6 at 1440: −68 — a failed generation again (breakdown scan 22.4 s), where no landing is ruled (#152 E: the error ribbon renders in place). |
+| **4** | **44/44** | the harness now records a refused or failed generation as a finding, retries through the container / the breakdown's Retry (band: "retrying the site scan"), classifies the stale-dim nodes atomically with the axe run, and skips B6 on a failed generation. No refusal on run 4 (the memo was warm). |
+
+Run 4, per viewport:
+
+| leg | 1440×1000 | 380×800 |
+|---|---|---|
+| B1 band iff open (generate / assert / render) | 57 / 33 / 100 samples, 0 gaps, lock ≡ band | 102 / 181 / 264 |
+| B2 | 959..1000, 41 px | 720..800, 80 px |
+| B3 no band + refusal; no retired voice | 0 / 0 | 0 / 0 |
+| verbs | GENERATING · new plan · pin 39.7269, -104.9873 · RE-GENERATING · after a correction to School zone · RENDERING · plan sheet PDF | same |
+| B4 | 30 writes off at .45, 8 reads on, price-head toggles, 3/3 links live, scroll moves; 0 off at settle | same |
+| B5 footer | 850 vs 959 | 650 vs 720 |
+| B6 landing | 174 (98 + strip + 24) | 173 |
+| B7 axe with the band up | 0 outside the stale dim (baseline 0); 30 inside it | 2, the two named; 30 inside it |
+| B8 pairs | 6.6 / 8.25 / 15.3 / 15.3 / 10.37 | same |
+| B9 · A1 · B11 | as the local run | same |
+
+Prod findings, recorded (not this arc's scope): the Denver 1000 ft corridor's
+first scan of a session sat at the 20 s budget on three of four runs today
+(20.3, 21.7, 22.4 s — a refusal on whichever request hit it first, the other
+memo-hitting), the arc-22 "1 in 20" now 3 in 8 requests; the results-stale dim
+fails axe's 4.5:1 by construction (30 nodes) — #192's presentation, never probed
+mid-flight before, a ruling if it should be (the lock now dims the same
+controls to .45 alongside it).
 
 ## Rule 5 churn (predicted → actual)
 

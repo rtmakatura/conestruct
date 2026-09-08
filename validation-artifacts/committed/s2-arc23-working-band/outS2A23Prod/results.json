@@ -1,0 +1,294 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "B1 pre-generate",
+  "ok": true,
+  "detail": "band absent, lock false"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B1 generate",
+  "ok": true,
+  "detail": "57 samples with the band (first at 5 ms, last at 6152 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B2 generate",
+  "ok": true,
+  "detail": "57/57 samples with bottom === innerH (1000) and top > nav (52); band 959..1000, heights 41 px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B3 generate",
+  "ok": true,
+  "detail": "0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "verb generate",
+  "ok": true,
+  "detail": "\"GENERATING\" · \"new plan · pin 39.7269, -104.9873\" (named \"39.7269, -104.9873\") · \"⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B6 landing",
+  "ok": true,
+  "detail": "results zone top 174 (target 98; strip re-mount shift would be 174; scroll-margin 98px) at scrollY 918"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B4 settle re-enable",
+  "ok": true,
+  "detail": "30 write controls, still off: none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B10 RENDERING",
+  "ok": true,
+  "detail": "100 samples with the band: \"RENDERING\" · \"plan sheet PDF\"; retired voice 0×; download received; band gone at end true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B4 assert writes off",
+  "ok": true,
+  "detail": "30 write controls, on: none; opacities 0.45"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B4 assert reads on",
+  "ok": true,
+  "detail": "8 read controls (0 off), 3/3 nav+footer links live, scroll moves"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B4 assert read toggles",
+  "ok": true,
+  "detail": "price-head aria-expanded false → true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B5 assert",
+  "ok": true,
+  "detail": "footer bottom 850 vs band top 959 (innerH 1000)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B7 axe band-up",
+  "ok": true,
+  "detail": "color-contrast in the band: 0; nodes outside the #192 stale dim 0 (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B7 stale dim band-up",
+  "ok": true,
+  "info": true,
+  "detail": "30 color-contrast node(s) inside .results-stale / .stale-ribbon (the #192 dim of the previous answer, opacity .5 — pre-existing, under the lock; 104 elements in the dim)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B8 assert",
+  "ok": true,
+  "detail": "surface #0f1a26 border #34a9e8; glyph ◌ (--none) #93a0b0/#0f1a26 6.6 ; verb (--act-bright) #56bcf2/#0f1a26 8.25 ; object (--ink) #eaf0f7/#0f1a26 15.3 ; named (sans, --ink) #eaf0f7/#0f1a26 15.3 ; lock notice (--warn) #f4c020/#0f1a26 10.37"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B8 fonts assert",
+  "ok": true,
+  "info": true,
+  "detail": "named \"__Inter_8b3a0b, __Inter_Fallback_8b3a0b\" · mono \"__JetBrains_Mono_e896d9, __JetBrains_Mon\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A1 assert",
+  "ok": true,
+  "detail": "1 region(s) carry the band's words of 3; row role=status aria-live=polite; strip empty; sentence \"◌RE-GENERATINGafter a correction to School zone⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B9 assert",
+  "ok": true,
+  "detail": "reduced: animation none, track rgba(52, 169, 232, 0.32), ::after image none; normal: animation wb-sweep"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B11 block under the lock",
+  "ok": true,
+  "detail": "aria-busy true; 5/5 block buttons off; band \"RE-GENERATING\" · \"after a correction to School zone\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B1 assert",
+  "ok": true,
+  "detail": "33 samples with the band (first at 1 ms, last at 3526 ms), 0 gaps while open, 12 after (12 settled), lock≠band in 0"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B2 assert",
+  "ok": true,
+  "detail": "33/33 samples with bottom === innerH (1000) and top > nav (52); band 959..1000, heights 41 px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B3 assert",
+  "ok": true,
+  "detail": "0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "verb assert",
+  "ok": true,
+  "detail": "\"RE-GENERATING\" · \"after a correction to School zone\" (named \"School zone\") · \"⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B11 settle",
+  "ok": true,
+  "detail": "aria-busy null; 1 record row(s); 0/5 block buttons off"
+ },
+ {
+  "tag": "380x800",
+  "id": "B1 pre-generate",
+  "ok": true,
+  "detail": "band absent, lock false"
+ },
+ {
+  "tag": "380x800",
+  "id": "B1 generate",
+  "ok": true,
+  "detail": "102 samples with the band (first at 2 ms, last at 11012 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0"
+ },
+ {
+  "tag": "380x800",
+  "id": "B2 generate",
+  "ok": true,
+  "detail": "102/102 samples with bottom === innerH (800) and top > nav (52); band 720..800, heights 80 px"
+ },
+ {
+  "tag": "380x800",
+  "id": "B3 generate",
+  "ok": true,
+  "detail": "0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×"
+ },
+ {
+  "tag": "380x800",
+  "id": "verb generate",
+  "ok": true,
+  "detail": "\"GENERATING\" · \"new plan · pin 39.7269, -104.9873\" (named \"39.7269, -104.9873\") · \"⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "380x800",
+  "id": "B6 landing",
+  "ok": true,
+  "detail": "results zone top 173 (target 98; strip re-mount shift would be 174; scroll-margin 98px) at scrollY 1560"
+ },
+ {
+  "tag": "380x800",
+  "id": "B4 settle re-enable",
+  "ok": true,
+  "detail": "30 write controls, still off: none"
+ },
+ {
+  "tag": "380x800",
+  "id": "B10 RENDERING",
+  "ok": true,
+  "detail": "264 samples with the band: \"RENDERING\" · \"plan sheet PDF\"; retired voice 0×; download received; band gone at end true"
+ },
+ {
+  "tag": "380x800",
+  "id": "B4 assert writes off",
+  "ok": true,
+  "detail": "30 write controls, on: none; opacities 0.45"
+ },
+ {
+  "tag": "380x800",
+  "id": "B4 assert reads on",
+  "ok": true,
+  "detail": "8 read controls (0 off), 3/3 nav+footer links live, scroll moves"
+ },
+ {
+  "tag": "380x800",
+  "id": "B4 assert read toggles",
+  "ok": true,
+  "detail": "price-head aria-expanded false → true"
+ },
+ {
+  "tag": "380x800",
+  "id": "B5 assert",
+  "ok": true,
+  "detail": "footer bottom 650 vs band top 720 (innerH 800)"
+ },
+ {
+  "tag": "380x800",
+  "id": "B7 axe band-up",
+  "ok": true,
+  "detail": "color-contrast in the band: 0; nodes outside the #192 stale dim 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "B7 stale dim band-up",
+  "ok": true,
+  "info": true,
+  "detail": "30 color-contrast node(s) inside .results-stale / .stale-ribbon (the #192 dim of the previous answer, opacity .5 — pre-existing, under the lock; 104 elements in the dim)"
+ },
+ {
+  "tag": "380x800",
+  "id": "B8 assert",
+  "ok": true,
+  "detail": "surface #0f1a26 border #34a9e8; glyph ◌ (--none) #93a0b0/#0f1a26 6.6 ; verb (--act-bright) #56bcf2/#0f1a26 8.25 ; object (--ink) #eaf0f7/#0f1a26 15.3 ; named (sans, --ink) #eaf0f7/#0f1a26 15.3 ; lock notice (--warn) #f4c020/#0f1a26 10.37"
+ },
+ {
+  "tag": "380x800",
+  "id": "B8 fonts assert",
+  "ok": true,
+  "info": true,
+  "detail": "named \"__Inter_8b3a0b, __Inter_Fallback_8b3a0b\" · mono \"__JetBrains_Mono_e896d9, __JetBrains_Mon\""
+ },
+ {
+  "tag": "380x800",
+  "id": "A1 assert",
+  "ok": true,
+  "detail": "1 region(s) carry the band's words of 3; row role=status aria-live=polite; strip empty; sentence \"◌RE-GENERATINGafter a correction to School zone⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "380x800",
+  "id": "B9 assert",
+  "ok": true,
+  "detail": "reduced: animation none, track rgba(52, 169, 232, 0.32), ::after image none; normal: animation wb-sweep"
+ },
+ {
+  "tag": "380x800",
+  "id": "B11 block under the lock",
+  "ok": true,
+  "detail": "aria-busy true; 5/5 block buttons off; band \"RE-GENERATING\" · \"after a correction to School zone\""
+ },
+ {
+  "tag": "380x800",
+  "id": "B1 assert",
+  "ok": true,
+  "detail": "181 samples with the band (first at 2 ms, last at 19610 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0"
+ },
+ {
+  "tag": "380x800",
+  "id": "B2 assert",
+  "ok": true,
+  "detail": "181/181 samples with bottom === innerH (800) and top > nav (52); band 720..800, heights 80 px"
+ },
+ {
+  "tag": "380x800",
+  "id": "B3 assert",
+  "ok": true,
+  "detail": "0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×"
+ },
+ {
+  "tag": "380x800",
+  "id": "verb assert",
+  "ok": true,
+  "detail": "\"RE-GENERATING\" · \"after a correction to School zone\" (named \"School zone\") · \"⚠ CONTROLS LOCKED\""
+ },
+ {
+  "tag": "380x800",
+  "id": "B11 settle",
+  "ok": true,
+  "detail": "aria-busy null; 1 record row(s); 0/5 block buttons off"
+ }
+]

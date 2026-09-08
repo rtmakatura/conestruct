@@ -1,0 +1,52 @@
+healthz sha b48953972d7c23efc2a97605bfe164566ba94e08 expect b48953972d7c23efc2a97605bfe164566ba94e08
+[1440x1000] PASS B1 pre-generate — band absent, lock false
+[1440x1000] PASS B1 generate — 206 samples with the band (first at 3 ms, last at 22356 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0
+[1440x1000] PASS B2 generate — 206/206 samples with bottom === innerH (1000) and top > nav (52); band 959..1000, heights 41 px
+[1440x1000] PASS B3 generate — 0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×
+[1440x1000] PASS verb generate — "GENERATING" · "new plan · pin 39.7269, -104.9873" (named "39.7269, -104.9873") · "⚠ CONTROLS LOCKED"
+[1440x1000] FAIL B6 landing — results zone top -68 (target 98; strip re-mount shift would be 174; scroll-margin 98px) at scrollY 1160
+[1440x1000] PASS B4 settle re-enable — 30 write controls, still off: none
+[1440x1000] PASS B10 RENDERING — 251 samples with the band: "RENDERING" · "plan sheet PDF"; retired voice 0×; download received; band gone at end true
+[1440x1000] PASS B4 assert writes off — 15 write controls, on: none; opacities 0.45
+[1440x1000] INFO B4 assert reads — 0 read controls in the DOM — the results zone is empty for this flight (a prior breakdown failure drops the carry, #192); links and scroll checked below
+[1440x1000] PASS B4 assert links + scroll — 3/3 nav+footer links live, scroll moves
+[1440x1000] PASS B5 assert — footer bottom 850 vs band top 959 (innerH 1000)
+[1440x1000] PASS B7 axe band-up — color-contrast in the band: 0; nodes outside the #192 stale dim 0 (baseline 0): none
+[1440x1000] INFO B7 stale dim band-up — 0 color-contrast node(s) inside .results-stale / .stale-ribbon (the #192 dim of the previous answer, opacity .5 — pre-existing, under the lock; 0 elements in the dim)
+[1440x1000] PASS B8 assert — surface #0f1a26 border #34a9e8; glyph ◌ (--none) #93a0b0/#0f1a26 6.6 ; verb (--act-bright) #56bcf2/#0f1a26 8.25 ; object (--ink) #eaf0f7/#0f1a26 15.3 ; named (sans, --ink) #eaf0f7/#0f1a26 15.3 ; lock notice (--warn) #f4c020/#0f1a26 10.37
+[1440x1000] INFO B8 fonts assert — named "__Inter_8b3a0b, __Inter_Fallback_8b3a0b" · mono "__JetBrains_Mono_e896d9, __JetBrains_Mon"
+[1440x1000] PASS A1 assert — 1 region(s) carry the band's words of 3; row role=status aria-live=polite; strip empty; sentence "◌RE-GENERATINGafter a correction to School zone⚠ CONTROLS LOCKED"
+[1440x1000] PASS B9 assert — reduced: animation none, track rgba(52, 169, 232, 0.32), ::after image none; normal: animation wb-sweep
+[1440x1000] PASS B11 block under the lock — aria-busy true; 5/5 block buttons off; band "RE-GENERATING" · "after a correction to School zone"
+[1440x1000] PASS B1 assert — 23 samples with the band (first at 1 ms, last at 2441 ms), 0 gaps while open, 12 after (12 settled), lock≠band in 0
+[1440x1000] PASS B2 assert — 23/23 samples with bottom === innerH (1000) and top > nav (52); band 959..1000, heights 41 px
+[1440x1000] PASS B3 assert — 0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×
+[1440x1000] PASS verb assert — "RE-GENERATING" · "after a correction to School zone" (named "School zone") · "⚠ CONTROLS LOCKED"
+[1440x1000] PASS B11 settle — aria-busy null; 1 record row(s); 0/5 block buttons off
+[380x800] PASS B1 pre-generate — band absent, lock false
+[380x800] PASS B1 generate — 21 samples with the band (first at 2 ms, last at 2231 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0
+[380x800] PASS B2 generate — 21/21 samples with bottom === innerH (800) and top > nav (52); band 720..800, heights 80 px
+[380x800] PASS B3 generate — 0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×
+[380x800] PASS verb generate — "GENERATING" · "new plan · pin 39.7269, -104.9873" (named "39.7269, -104.9873") · "⚠ CONTROLS LOCKED"
+[380x800] PASS B6 landing — results zone top 173 (target 98; strip re-mount shift would be 174; scroll-margin 98px) at scrollY 1560
+[380x800] PASS B4 settle re-enable — 30 write controls, still off: none
+[380x800] PASS B10 RENDERING — 66 samples with the band: "RENDERING" · "plan sheet PDF"; retired voice 0×; download received; band gone at end true
+[380x800] PASS B4 assert writes off — 30 write controls, on: none; opacities 0.45
+[380x800] PASS B4 assert reads on — 8 read controls (0 off), 3/3 nav+footer links live, scroll moves
+[380x800] PASS B4 assert read toggles — price-head aria-expanded false → true
+[380x800] PASS B5 assert — footer bottom 650 vs band top 720 (innerH 800)
+[380x800] PASS B7 axe band-up — color-contrast in the band: 0; nodes outside the #192 stale dim 2 (baseline 2): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] INFO B7 stale dim band-up — 0 color-contrast node(s) inside .results-stale / .stale-ribbon (the #192 dim of the previous answer, opacity .5 — pre-existing, under the lock; 0 elements in the dim)
+[380x800] PASS B8 assert — surface #0f1a26 border #34a9e8; glyph ◌ (--none) #93a0b0/#0f1a26 6.6 ; verb (--act-bright) #56bcf2/#0f1a26 8.25 ; object (--ink) #eaf0f7/#0f1a26 15.3 ; named (sans, --ink) #eaf0f7/#0f1a26 15.3 ; lock notice (--warn) #f4c020/#0f1a26 10.37
+[380x800] INFO B8 fonts assert — named "__Inter_8b3a0b, __Inter_Fallback_8b3a0b" · mono "__JetBrains_Mono_e896d9, __JetBrains_Mon"
+[380x800] PASS A1 assert — 1 region(s) carry the band's words of 3; row role=status aria-live=polite; strip empty; sentence "◌RE-GENERATINGafter a correction to School zone⚠ CONTROLS LOCKED"
+[380x800] PASS B9 assert — reduced: animation none, track rgba(52, 169, 232, 0.32), ::after image none; normal: animation wb-sweep
+[380x800] PASS B11 block under the lock — aria-busy true; 5/5 block buttons off; band "RE-GENERATING" · "after a correction to School zone"
+[380x800] PASS B1 assert — 25 samples with the band (first at 2 ms, last at 2651 ms), 0 gaps while open, 13 after (13 settled), lock≠band in 0
+[380x800] PASS B2 assert — 25/25 samples with bottom === innerH (800) and top > nav (52); band 720..800, heights 80 px
+[380x800] PASS B3 assert — 0 samples with band + refusal; 0 samples with a retired voice; wait line seen 0×
+[380x800] PASS verb assert — "RE-GENERATING" · "after a correction to School zone" (named "School zone") · "⚠ CONTROLS LOCKED"
+[380x800] PASS B11 settle — aria-busy null; 1 record row(s); 0/5 block buttons off
+
+FAILURES 42/43 (+5 info)
+  FAIL [1440x1000] B6 landing — results zone top -68 (target 98; strip re-mount shift would be 174; scroll-margin 98px) at scrollY 1160
