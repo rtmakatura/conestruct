@@ -1,0 +1,130 @@
+[
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "T2",
+  "verdict": "PASS",
+  "what": "T2 .honesty ≥ 4.5:1 (pinned)",
+  "measure": "div.honesty \"Boundary data is approximate (\" #93a0b0/#1b2838 5.61 (opacity 1)"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "P9",
+  "verdict": "measured",
+  "what": "T2b other .jbar-suggest pairs under 4.5 (pinned)",
+  "measure": "none"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "T3a",
+  "verdict": "PASS",
+  "what": "T3a axe color-contrast 0 (pinned)",
+  "measure": "0 nodes"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "T0",
+  "verdict": "PASS",
+  "what": "T0 settled plan",
+  "measure": "strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; settled 5492 ms on attempt 1"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "P5",
+  "verdict": "measured",
+  "what": "T1 distinct type tuples on the settled page",
+  "measure": "60 tuples; 16 sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "T3",
+  "verdict": "PASS",
+  "what": "T3 axe color-contrast 0 (settled)",
+  "measure": "0 nodes"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "P10",
+  "verdict": "measured",
+  "what": "T3b axe full run (all rules)",
+  "measure": "heading-order×1 ; region×1"
+ },
+ {
+  "vp": "1440x1000",
+  "surface": "census",
+  "p": "T4",
+  "verdict": "PASS",
+  "what": "T4 .tr-section reads --ink-bright",
+  "measure": "computed rgb(255, 255, 255)"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "T2",
+  "verdict": "PASS",
+  "what": "T2 .honesty ≥ 4.5:1 (pinned)",
+  "measure": "div.honesty \"Boundary data is approximate (\" #93a0b0/#1b2838 5.61 (opacity 1)"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "P9",
+  "verdict": "measured",
+  "what": "T2b other .jbar-suggest pairs under 4.5 (pinned)",
+  "measure": "none"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "T3a",
+  "verdict": "PASS",
+  "what": "T3a axe color-contrast 0 (pinned)",
+  "measure": "0 nodes"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "T0",
+  "verdict": "PASS",
+  "what": "T0 settled plan",
+  "measure": "strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; settled 14609 ms on attempt 1"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "P5",
+  "verdict": "measured",
+  "what": "T1 distinct type tuples on the settled page",
+  "measure": "60 tuples; 16 sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 60px; 1 carry a tr-* role"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "T3",
+  "verdict": "PASS",
+  "what": "T3 axe color-contrast 0 (settled)",
+  "measure": "0 nodes"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "P10",
+  "verdict": "measured",
+  "what": "T3b axe full run (all rules)",
+  "measure": "heading-order×1 ; region×1 ; scrollable-region-focusable×1 ; target-size×3"
+ },
+ {
+  "vp": "380x800",
+  "surface": "census",
+  "p": "T4",
+  "verdict": "PASS",
+  "what": "T4 .tr-section reads --ink-bright",
+  "measure": "computed rgb(255, 255, 255)"
+ }
+]

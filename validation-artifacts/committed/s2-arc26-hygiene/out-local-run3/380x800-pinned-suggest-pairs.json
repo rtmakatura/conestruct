@@ -1,0 +1,79 @@
+[
+ {
+  "sel": "span.sugg-glyph",
+  "text": "⌁",
+  "fg": "#c8d1dd",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 9.68,
+  "size": 11.5,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "span",
+  "text": "Pin suggests:",
+  "fg": "#c8d1dd",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 9.68,
+  "size": 11.5,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "b.sugg-name",
+  "text": "Denver",
+  "fg": "#c8d1dd",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 9.68,
+  "size": 11.5,
+  "weight": "700",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "button.confirm",
+  "text": "Confirm",
+  "fg": "#34a9e8",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.68,
+  "size": 10,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "button.ghost",
+  "text": "Dismiss",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 10,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "div.sugg-reason",
+  "text": "Pin is inside Denver municipal limits (U",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 10.5,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "div.honesty",
+  "text": "Boundary data is approximate (",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 9.5,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ }
+]

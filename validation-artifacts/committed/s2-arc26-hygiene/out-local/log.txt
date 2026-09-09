@@ -1,0 +1,18 @@
+backend healthz sha a88caad9d6e2dfac20d5559eb2c4211d28203751 · frontend sha a6b5618 · base http://127.0.0.1:3004
+[1440x1000] census · T2 · PASS — T2 .honesty ≥ 4.5:1 (pinned) | div.honesty "Boundary data is approximate (" #93a0b0/#1b2838 5.61 (opacity 1)
+[1440x1000] census · P9 · measured — T2b other .jbar-suggest pairs under 4.5 (pinned) | none
+[1440x1000] census · T3a · PASS — T3a axe color-contrast 0 (pinned) | 0 nodes
+[1440x1000] census · T0 · PASS — T0 settled plan | strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; settled 5492 ms on attempt 1
+[1440x1000] census · P5 · measured — T1 distinct type tuples on the settled page | 60 tuples; 16 sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 76px; 1 carry a tr-* role
+[1440x1000] census · T3 · PASS — T3 axe color-contrast 0 (settled) | 0 nodes
+[1440x1000] census · P10 · measured — T3b axe full run (all rules) | heading-order×1 ; region×1
+[1440x1000] census · T4 · PASS — T4 .tr-section reads --ink-bright | computed rgb(255, 255, 255)
+[380x800] census · T2 · PASS — T2 .honesty ≥ 4.5:1 (pinned) | div.honesty "Boundary data is approximate (" #93a0b0/#1b2838 5.61 (opacity 1)
+[380x800] census · P9 · measured — T2b other .jbar-suggest pairs under 4.5 (pinned) | none
+[380x800] census · T3a · PASS — T3a axe color-contrast 0 (pinned) | 0 nodes
+[380x800] census · T0 · PASS — T0 settled plan | strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; settled 14609 ms on attempt 1
+[380x800] census · P5 · measured — T1 distinct type tuples on the settled page | 60 tuples; 16 sizes 9px 9.5px 10px 10.5px 11px 11.5px 12px 12.5px 13px 14px 16px 17px 20px 24px 28px 60px; 1 carry a tr-* role
+[380x800] census · T3 · PASS — T3 axe color-contrast 0 (settled) | 0 nodes
+[380x800] census · P10 · measured — T3b axe full run (all rules) | heading-order×1 ; region×1 ; scrollable-region-focusable×1 ; target-size×3
+[380x800] census · T4 · PASS — T4 .tr-section reads --ink-bright | computed rgb(255, 255, 255)
+RESULT ALL PASS 10/10 · frontend a6b5618 · backend a88caad9d6e2dfac20d5559eb2c4211d28203751

@@ -1,0 +1,38 @@
+[
+ {
+  "id": "label",
+  "impact": "critical",
+  "tags": [
+   "wcag2a",
+   "wcag412"
+  ],
+  "nodes": [
+   {
+    "target": "input[value=\"39.7269\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   },
+   {
+    "target": "input[value=\"-104.9873\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ }
+]

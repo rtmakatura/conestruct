@@ -1,0 +1,82 @@
+[
+ {
+  "id": "label",
+  "impact": "critical",
+  "tags": [
+   "wcag2a",
+   "wcag412"
+  ],
+  "nodes": [
+   {
+    "target": "input[value=\"39.7269\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   },
+   {
+    "target": "input[value=\"-104.9873\"]",
+    "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ },
+ {
+  "id": "scrollable-region-focusable",
+  "impact": "serious",
+  "tags": [
+   "wcag2a",
+   "wcag211",
+   "wcag213"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+    "data": null
+   }
+  ]
+ },
+ {
+  "id": "target-size",
+  "impact": "serious",
+  "tags": [
+   "wcag22aa",
+   "wcag258"
+  ],
+  "nodes": [
+   {
+    "target": "button[aria-label=\"Work — done\"]",
+    "summary": "Fix any of the following:\n  Target has insufficient size (63.3px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter",
+    "data": {
+     "minSize": 24,
+     "width": 63.3,
+     "height": 21
+    }
+   },
+   {
+    "target": ".st-generate",
+    "summary": "Fix any of the following:\n  Target has insufficient size (73.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter",
+    "data": {
+     "minSize": 24,
+     "width": 73.1,
+     "height": 21
+    }
+   }
+  ]
+ }
+]
