@@ -71,10 +71,15 @@ export function ProgressRail({
             </span>
             <span className="rail-label">{e.label}</span>
             {ownsBlocker ? (
+              // #260 (P2): visual only — the same sentence is the CTA
+              // reason's (role=alert, the gate's one live speaker) and
+              // the entry's own aria-label names the state; #228's
+              // derivation (one export) is untouched.
               <span
                 className="rail-blocker"
                 data-testid="rail-blocker"
                 title={blocker.message}
+                aria-hidden="true"
               >
                 {blocker.message}
               </span>

@@ -200,7 +200,8 @@ describe("pin suggestion contract: suggest never sets", () => {
     // the evidence it carried.
     expect(screen.queryByText(/Pin suggests:/)).toBeNull();
     expect(
-      screen.getByText(/Dismissed the Denver suggestion — None — baseline stands\./),
+      // #260: the unset jurisdiction is "Not set" everywhere (the #257 fold).
+      screen.getByText(/Dismissed the Denver suggestion — Not set stands\./),
     ).toBeTruthy();
     expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
     // A dismiss writes nothing — every payload stays jurisdiction-free.

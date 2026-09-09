@@ -250,13 +250,14 @@ function StatusBarState({
   // for a site nobody chose.  Chromeless neutral — absence is not an
   // error the user made (rule 13 no-verdict treatment; the words carry
   // the distinction, same as the 429 state below).
+  // #260 (P2): the state, not the instruction — "pick a location on the
+  // map …" was the gate's third voice (the rail blocker and the CTA
+  // reason say it; the CTA reason is the one live speaker).
   if (locationUnset) {
     return (
       <div className="status-bar idle unavail">
         <span className="indicator" />
-        <span>
-          AWAITING LOCATION · pick a location on the map to verify this plan
-        </span>
+        <span>AWAITING LOCATION · no site chosen</span>
       </div>
     );
   }

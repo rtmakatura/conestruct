@@ -137,7 +137,8 @@ describe("#227 resolved-state records — confirm, then undo", () => {
     expect(
       screen.getByText(/Confirmed/, { selector: "span" }),
     ).toBeTruthy();
-    expect(screen.getByText(/was None — baseline\./)).toBeTruthy();
+    // #260: the unset jurisdiction is "Not set" everywhere (the #257 fold).
+    expect(screen.getByText(/was Not set\./)).toBeTruthy();
     expect(screen.getByText(/Pin agrees with your selection/)).toBeTruthy();
     expect(screen.getByText(/Boundary data is approximate/)).toBeTruthy();
     const select = document.querySelector(

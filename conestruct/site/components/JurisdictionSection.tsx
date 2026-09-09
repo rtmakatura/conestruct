@@ -107,7 +107,7 @@ export interface SuggestionResolution<V extends string = string> {
   resolution: "confirmed" | "dismissed";
   prior: V | null;
   /** Whether the field was PRESENT at click — an absent key and an
-   *  explicit null both display "None — baseline"/"Not set", but undo
+   *  explicit null both display "Not set", but undo
    *  must restore absence as absence (rule 10): a confirm-then-undo
    *  payload is byte-identical to one that never confirmed. */
   priorPresent: boolean;
@@ -231,7 +231,9 @@ export function JurisdictionControls({
           value={jurisdictionKey ?? ""}
           onChange={(e) => setJurisdictionKey(e.target.value || null)}
         >
-          <option value="">None — baseline (MUTCD + CDOT) only</option>
+          {/* #260: "Not set" — the #257 fold's one word for an unset
+              jurisdiction, on every surface. */}
+          <option value="">Not set — MUTCD + CDOT only</option>
           {JURISDICTION_OPTIONS.map((o) => (
             <option key={o.key} value={o.key}>
               {o.label}
@@ -373,7 +375,7 @@ export function JurisdictionContextBar({
               <span className="jbar-skel-line w-3/4" aria-hidden />
             ) : (
               <>
-                <b>None — baseline</b> · MUTCD + Colorado Supplement only.
+                <b>Not set</b> · MUTCD + Colorado Supplement only.
               </>
             )}
           </div>
@@ -621,9 +623,12 @@ function SuggestSlot({
   // keeps its band (fixed min-height) so the slot appearing later never
   // surprises the layout; the picker above is fully functional
   // regardless (B is additive, never load-bearing).
+  // #260 (P2): no live attribute on the empty state — nothing changed,
+  // nothing to announce (it was one of four regions mounted pre-pin).
+  // The loading state below keeps its: the boundary lookup IS a change.
   if (!suggest && !loading) {
     return (
-      <div className="jbar-suggest quiet" aria-live="polite">
+      <div className="jbar-suggest quiet">
         <span aria-hidden>◌</span>
         <span>Drop a site pin for a jurisdiction suggestion</span>
       </div>
@@ -667,7 +672,7 @@ function SuggestSlot({
   if (resolution && key) {
     const priorLabel = resolution.prior
       ? jurisdictionLabel(resolution.prior)
-      : "None — baseline";
+      : "Not set"; // #260: the #257 fold's word for an unset jurisdiction
     return (
       <div className="jbar-suggest live" aria-live="polite">
         <div className={`sys-event ${resolution.resolution}`}>

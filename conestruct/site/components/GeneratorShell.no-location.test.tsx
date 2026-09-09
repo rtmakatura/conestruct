@@ -148,6 +148,11 @@ describe("no location, no certification (#186)", () => {
 
     const text = document.body.textContent ?? "";
     expect(text).toContain("AWAITING LOCATION");
+    // #260 (P2): the strip's line is the state alone; the instruction
+    // below is the CTA reason's (one speaker).
+    expect(document.querySelector(".status-bar")?.textContent).toBe(
+      "AWAITING LOCATION · no site chosen",
+    );
     expect(text).not.toContain("READY FOR TCS REVIEW");
     expect(text).not.toContain("VERIFIED");
     // Not an error voice: the user did nothing wrong.

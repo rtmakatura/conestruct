@@ -248,6 +248,10 @@ describe("StatusBar (UX-21/22 derived states)", () => {
       />,
     );
     expect(html).toContain("AWAITING LOCATION");
+    // #260 (P2): the strip names the state, not the instruction — the
+    // CTA reason is the gate's one live speaker.
+    expect(html).toContain("AWAITING LOCATION · no site chosen");
+    expect(html).not.toContain("pick a location");
     // Chromeless neutral (rule 13 no-verdict), not an error voice.
     expect(html).toContain("status-bar idle unavail");
     expect(html).not.toContain("READY FOR TCS REVIEW");

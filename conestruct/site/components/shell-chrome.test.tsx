@@ -99,6 +99,12 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
     const block = css.slice(q, css.indexOf("\n}\n", q));
     expect(block).toMatch(/\.workbench \{[^}]*--status-h:\s*70px/);
   });
+  // #260 (3): the strip itself takes the token too — one height across
+  // AWAITING → VERIFYING → INVALID → VERIFIED (47 → 52 at 1440 before;
+  // F-S1-4), not just the room around it.
+  it("#260: .status-bar carries min-height: var(--status-h) — one height across the pre-generate states", () => {
+    expect(rule(".workbench .status-bar")).toMatch(/min-height:\s*var\(--status-h\)/);
+  });
   it(".status-slot reserves the strip's height and owns the 24 px gap; the strip's margin is zero inside it", () => {
     const slot = rule(".workbench .status-slot");
     expect(slot).toMatch(/min-height:\s*var\(--status-h\)/);
