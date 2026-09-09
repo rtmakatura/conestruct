@@ -19,7 +19,6 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Mapping
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +51,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    generated_stamp,
     road_type_display,
     scenario_display_name,
 )
@@ -896,7 +896,9 @@ def build_narrative_context(
         "ni_r2_10_station_ft": ni["r2_10"] if ni is not None else 0.0,
         "ni_r2_11_station_ft": ni["r2_11"] if ni is not None else 0.0,
         "ni_g20_1_station_ft": ni["g20_1"] if ni is not None else 0.0,
-        "generation_date": datetime.now().strftime("%Y-%m-%d"),
+        # #268: the one generated stamp (UTC date), shared with the plan
+        # sheet's DATE and the two workbooks.
+        "generation_date": generated_stamp(),
     }
 
 

@@ -21,7 +21,16 @@ from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_r
 from src.rules.devices import DEVICE_CATALOG, DeviceType, cone_display_name
 from src.rules.jurisdiction import aggregate_device_rows_with_deltas
 from src.rules.sign_codes import substitute_sign_description
-from src.rules.validators import DevicePlacement, ScenarioParams, scenario_display_name
+from src.rules.validators import (
+    DevicePlacement,
+    ScenarioParams,
+    generated_at,
+    scenario_display_name,
+)
+
+# #268: the stamp format every deliverable shares (the plan sheet's
+# YYYY-MM-DD) in Excel number-format spelling.
+_GENERATED_FORMAT = "yyyy-mm-dd"
 
 # Light-gray header fill from the V1 spec.
 _HEADER_FILL: PatternFill = PatternFill(
@@ -243,7 +252,10 @@ def _populate_summary_sheet(
         # scenario names none — never ``params.jurisdiction``, which is the
         # engine's buffer-table switch and read "CDOT" on every Denver plan.
         ("Jurisdiction", params.jurisdiction_name or "Not set"),
-        ("Generated", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+        # #268: the one generated stamp — a real date cell on the UTC
+        # instant, shown yyyy-mm-dd like every other deliverable (the
+        # cell keeps the instant to the second; the format shows the date).
+        ("Generated", generated_at()),
     )
 
     sheet.append(("Field", "Value"))
@@ -254,6 +266,8 @@ def _populate_summary_sheet(
 
     for label, value in rows:
         sheet.append((label, value))
+        if isinstance(value, datetime):
+            sheet.cell(row=sheet.max_row, column=2).number_format = _GENERATED_FORMAT
 
 
 def export_device_list(

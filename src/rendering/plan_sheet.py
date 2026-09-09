@@ -27,7 +27,6 @@ import os
 import tempfile
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from datetime import date
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote as urllib_quote
@@ -62,6 +61,7 @@ from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
     _is_flagger_scenario,
+    generated_stamp,
     scenario_display_name,
     scenario_display_name_short,
     shoulder_ta_reference,
@@ -2119,7 +2119,9 @@ def _draw_structured_title_block(
             "SHEET",
             [
                 ("SCALE", scale_label),
-                ("DATE", date.today().isoformat()),
+                # #268: the one generated stamp — same string as the
+                # crew narrative and the two workbooks (UTC date).
+                ("DATE", generated_stamp()),
                 ("SHEET", f"{sheet_number} OF {total_sheets}"),
                 *([("AERIAL", f"See page {aerial_page}")] if aerial_page else []),
             ],

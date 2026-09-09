@@ -13,7 +13,6 @@ Authoritative sources:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
@@ -27,6 +26,7 @@ from src.rules.sign_codes import display_code, substitute_sign_description
 from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
+    generated_at,
     road_type_display,
     scenario_display_name,
 )
@@ -594,7 +594,11 @@ def _populate_summary_sheet(
 
     sheet.cell(row=1, column=1, value=company_name).font = _TITLE_FONT
     sheet.cell(row=2, column=1, value="TRAFFIC CONTROL COST ESTIMATE").font = _SUBTITLE_FONT
-    sheet.cell(row=3, column=1, value=datetime.now().strftime("%Y-%m-%d"))
+    # #268: row 3 was a bare local-clock date with no label; now the
+    # one generated stamp — "Generated" + a real date cell on the UTC
+    # instant, shown yyyy-mm-dd like the device list's Summary row.
+    sheet.cell(row=3, column=1, value="Generated")
+    sheet.cell(row=3, column=2, value=generated_at()).number_format = "yyyy-mm-dd"
 
     sheet.cell(row=5, column=1, value=f"Project: {project_name}").font = _SUBTOTAL_FONT
     # UX-11: display name, not the raw "lane" / "shoulder" enum.
