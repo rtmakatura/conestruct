@@ -223,3 +223,40 @@ component).
 - **Dismiss-honesty** (PDF p. 4 corollary): dismissing without
   choosing removes only the count line -- no state moves, no ✓ is
   manufactured (asserted mounted).
+
+## Type census (issue #263)
+
+P5's measure — *every text node maps to one `tr-*` role; no ad-hoc
+sizes* — became a CI gate on 2026-09-09 (GO, bucket D). The declaration
+is `lib/design/type-exceptions.ts`; `lib/design/type-census.test.ts`
+parses every `font-size` in `globals.css` (innermost selector, `:root`
+excluded) and every Tailwind size class in `components/` + `app/`, and
+asserts the observed set equals the declaration in both directions.
+
+| Disposition | What it covers | This round |
+|---|---|---|
+| **role** | the four `.tr-*` blocks, checked against `type-roles.ts` | 4 |
+| **exception** (named, ruled) | 76/60 hero numerals · 28 page h1 · 24 results-head figure (CHOSEN, arc 20) · 20/17 zone h2 · 16 audit formula line · 14 body copy · 9 control glyphs | 14 CSS rows + 6 Tailwind rows |
+| **debt** (owned) | every other size — 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 15, 18, 26 in CSS; the Tailwind literals per file | 85 CSS rows + 103 Tailwind rows |
+
+Figures pinned by the test (`CENSUS_PINS`): 103 `font-size`
+declarations on 20 values; 325 Tailwind size-class uses at 109
+(file, class) sites in 37 files. Rendered tuples on `/sandbox`: **63 →
+63, zero folds** (Rule 5: declare first; the Playwright census in the
+arc's evidence dir is the rendered leg, this table the static one).
+
+Rules:
+
+- **Editing a size means editing the declaration in the same commit.**
+  A new `font-size`, a new `text-[Npx]`, a resized rule, an extra use of
+  a declared class, or a stale row — each fails the census by name.
+  Folding a debt row into a role deletes its row here; that is the
+  ratchet.
+- **Debt rows carry an owner** — the batch bucket that owns the surface
+  (A: the corrections block; C: cards, reference chips, audit body) or
+  "later round". Landing, legal and app-shell pages are declared "not
+  on /sandbox" and are not this table's concern until they are.
+- **`.tr-signpost` is not a role** — it is a debt row (the results-head
+  signpost register, arc 19), not a fifth entry in the four-role table.
+- **60 px** is the ≤480 variant of the 76 px hero numeral (one selector,
+  two sizes) — declared under the same exception, not a new register.
