@@ -56,6 +56,9 @@ function mount(
 }
 
 const block = () => document.querySelector(".site-corrections") as HTMLElement | null;
+// #255: the backend's advisory (src/api/site_scan.py _VERIFY.strip()) —
+// on the provenance once, never per record.
+const ADVISORY = "The plan is built to the correction — verify it in the field or on imagery before deploying.";
 
 describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
   it("an ok scan renders one row per bucket on the wire with the wire's words and one action each", () => {
@@ -159,15 +162,27 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(picker).not.toBeNull();
     const confirm = within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement;
     expect(confirm.disabled).toBe(true);
+    expect(confirm.getAttribute("title")).toBe("choose a reason"); // #255: the disable says why
     // #245: the reason is an in-DOM radio group, never a native select.
     const group = within(picker).getByRole("radiogroup", {
       name: "Reason for dismissing Pedestrian sidewalks",
     });
     await user.click(within(group).getByRole("radio", { name: "Other (say what)" }));
-    expect((within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement).disabled).toBe(
-      true,
-    );
-    await user.type(within(picker).getByLabelText("Say what"), "construction fence");
+    // #255: a chosen reason ENABLES Confirm; the note is validated on the
+    // click — focus lands on it, aria-invalid, the placeholder says
+    // required — so Confirm never moves and a click always answers.
+    const confirmAfter = within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement;
+    expect(confirmAfter.disabled).toBe(false);
+    expect(confirmAfter.getAttribute("title")).toBeNull();
+    await user.click(confirmAfter);
+    expect(setScenario).not.toHaveBeenCalled();
+    const noteEl = within(picker).getByLabelText("Say what") as HTMLInputElement;
+    expect(noteEl.getAttribute("aria-invalid")).toBe("true");
+    expect(noteEl.placeholder).toBe("say what — required");
+    expect(document.activeElement).toBe(noteEl);
+    await user.type(noteEl, "construction fence");
+    expect(noteEl.getAttribute("aria-invalid")).toBeNull();
+    expect(noteEl.placeholder).toBe("say what");
     await user.click(within(picker).getByRole("button", { name: "Confirm dismiss" }));
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
@@ -205,8 +220,15 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(chosen[0].querySelector(".reason-glyph")?.textContent).toBe("✓");
     expect(chosen[0].querySelector(".reason-text")?.textContent).toBe("Removed");
     expect((within(group).getByRole("radio", { name: "Removed" }) as HTMLInputElement).checked).toBe(true);
-    // The note input exists only for other.
-    expect(within(picker).queryByLabelText("Say what")).toBeNull();
+    // #255 (P1): the note slot is ALWAYS mounted — void until Other:
+    // disabled, out of the tree and the Tab order, so choosing Other
+    // never moves Confirm.
+    const voidNote = picker.querySelector(".site-correction-note") as HTMLInputElement;
+    expect(voidNote).not.toBeNull();
+    expect(voidNote.classList.contains("is-void")).toBe(true);
+    expect(voidNote.disabled).toBe(true);
+    expect(voidNote.getAttribute("aria-hidden")).toBe("true");
+    expect(voidNote.tabIndex).toBe(-1);
     expect(
       (within(picker).getByRole("button", { name: "Confirm dismiss" }) as HTMLButtonElement).disabled,
     ).toBe(false);
@@ -230,14 +252,16 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       reason: "fenced",
       status: "applied" as const,
       scan_detected: true,
-      disclosure: "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction.",
+      disclosure: "Operator dismissed the scan's pedestrian sidewalks: fenced off. " + ADVISORY,
+      record_clause: "Operator dismissed the scan's pedestrian sidewalks: fenced off.",
     };
     const asserted = {
       flag: "school_zone",
       action: "assert" as const,
       status: "applied" as const,
       scan_detected: false,
-      disclosure: "Operator asserted school zone — the scan found none along the corridor.",
+      disclosure: "Operator asserted school zone — the scan found none along the corridor. " + ADVISORY,
+      record_clause: "Operator asserted school zone — the scan found none along the corridor.",
     };
     const scenario: Scenario = {
       ...DEFAULT_SCENARIO,
@@ -249,12 +273,17 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
         ],
       },
     };
-    const setScenario = mount(ok({ corrections: [dismissed, asserted] }), scenario);
+    const setScenario = mount(ok({ corrections: [dismissed, asserted], corrections_advisory: ADVISORY }), scenario);
     const b = block()!;
-    const dRec = within(b).getByText(dismissed.disclosure).closest(".sys-event") as HTMLElement;
+    // #255: the row prints record_clause (one text node); the advisory is
+    // the footer's second line, ONCE for two records — never per row.
+    const dRec = within(b).getByText(dismissed.record_clause).closest(".sys-event") as HTMLElement;
+    expect(b.textContent!.split(ADVISORY).length - 1).toBe(1);
+    expect(b.querySelector(".sc-foot .sc-foot-advisory")?.textContent).toBe(ADVISORY);
+    expect(within(b).queryByText(dismissed.disclosure)).toBeNull();
     expect(dRec.classList.contains("dismissed")).toBe(true);
     expect(dRec.querySelector(".sys-glyph")?.textContent).toBe("×");
-    const aRec = within(b).getByText(asserted.disclosure).closest(".sys-event") as HTMLElement;
+    const aRec = within(b).getByText(asserted.record_clause).closest(".sys-event") as HTMLElement;
     expect(aRec.classList.contains("confirmed")).toBe(true);
     expect(aRec.querySelector(".sys-glyph")?.textContent).toBe("✓");
     // #249 spec 25/50: a record row carries no result word, leader, or
@@ -282,6 +311,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       status: "moot" as const,
       scan_detected: false,
       disclosure: "Operator dismissal of school zone is moot — the scan found none along the corridor; nothing to dismiss.",
+      record_clause: "Operator dismissal of school zone is moot — the scan found none along the corridor; nothing to dismiss.",
     };
     const scenario: Scenario = {
       ...DEFAULT_SCENARIO,
@@ -293,8 +323,12 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       },
     };
     const setScenario = mount(ok({ corrections: [moot] }), scenario);
-    const rec = within(block()!).getByText(moot.disclosure).closest(".sys-event") as HTMLElement;
+    const rec = within(block()!).getByText(moot.record_clause).closest(".sys-event") as HTMLElement;
     expect(rec.classList.contains("warn")).toBe(true); // moot: ⚠, disclosed, never dropped
+    // A moot record built nothing: the wire carries no advisory and the
+    // footer prints none (rule 10 — absence renders as absence).
+    expect(block()!.querySelector(".sc-foot-advisory")).toBeNull();
+    expect(block()!.textContent).not.toContain(ADVISORY);
     expect(rec.querySelector(".sys-glyph")?.textContent).toBe("⚠");
     await user.click(within(rec).getByRole("button", { name: "Undo" }));
     const next = setScenario.mock.calls[0][0] as Scenario;
@@ -373,7 +407,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     mount(
       ok({
         corrections: [
-          { flag: "school_zone", action: "assert", status: "applied", scan_detected: false, disclosure },
+          { flag: "school_zone", action: "assert", status: "applied", scan_detected: false, disclosure, record_clause: disclosure },
         ],
       }),
     );
@@ -393,7 +427,8 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       action: "assert" as const,
       status: "applied" as const,
       scan_detected: null,
-      disclosure: "Operator asserted school zone — the site scan did not complete.",
+      disclosure: "Operator asserted school zone — the site scan did not complete. " + ADVISORY,
+      record_clause: "Operator asserted school zone — the site scan did not complete.",
     };
     mount({
       status: "unavailable",
@@ -401,9 +436,11 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       proceeded_anyway: true,
       disclosure: "SITE CONDITIONS NOT CHECKED — service unavailable at generation.",
       corrections: [asserted],
+      corrections_advisory: ADVISORY,
     });
     const b = block()!;
-    expect(within(b).getByText(asserted.disclosure)).toBeTruthy();
+    expect(within(b).getByText(asserted.record_clause)).toBeTruthy();
+    expect(b.querySelectorAll(".sc-foot-advisory")).toHaveLength(1);
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(0);
     expect(document.querySelector(".site-not-checked")).not.toBeNull();
   });

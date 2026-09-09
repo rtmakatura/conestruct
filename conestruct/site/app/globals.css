@@ -1921,6 +1921,7 @@ input[type="number"] {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -1944,6 +1945,14 @@ input[type="number"] {
   width: 10px;
   text-align: center;
 }
+/* #255 (F-S4-2): the glyph cell is mirrored on the trailing edge so the
+   label sits at the chip's centre in both states — the left-only cell
+   measured the label +7.5 px off centre. */
+.workbench .jbar-suggest .reason-chip::after {
+  content: "";
+  width: 10px;
+  flex-shrink: 0;
+}
 .workbench .jbar-suggest .reason-chip:hover {
   color: var(--ink-on-dark);
   border-color: var(--ink-on-dark-faint);
@@ -1965,9 +1974,21 @@ input[type="number"] {
   font-family: var(--font-sans);
   font-size: 12px;
   padding: 3px 8px;
-  min-width: 160px;
+  /* #255 (P1): a fixed slot in the picker's flex line — 184 px is the
+     measured width of the arc-21 note (F-S4-3) — so choosing Other
+     never moves Confirm. */
+  flex: 0 0 184px;
+  width: 184px;
   outline: none;
   border-radius: 0;
+}
+/* Void until Other: hidden but laid out (never display:none — the slot
+   IS the reservation); disabled + aria-hidden + tabIndex -1 in the DOM. */
+.workbench .jbar-suggest .site-correction-note.is-void {
+  visibility: hidden;
+}
+.workbench .jbar-suggest .site-correction-note[aria-invalid="true"] {
+  border-color: var(--warn);
 }
 .workbench .jbar-suggest .site-correction-note::placeholder {
   color: var(--ink-on-dark-faint);
@@ -2002,6 +2023,9 @@ input[type="number"] {
    OWN width (spec 66) — the first @container in this stylesheet. */
 .workbench .site-corrections {
   container-type: inline-size;
+  /* #255: one row height for every row kind — 46 is the measured scan
+     row (9 + line + 9); min-height, so a wrapped record may still grow. */
+  --sc-row-h: 46px;
   --sc-leader: #4a6280;
   --sc-act-wash: rgba(52, 169, 232, 0.14);
   --sc-disabled: rgba(147, 160, 176, 0.35);
@@ -2018,6 +2042,7 @@ input[type="number"] {
   grid-template-columns: minmax(0, 1fr) 92px;
   grid-template-columns: subgrid;
   align-items: baseline;
+  min-height: var(--sc-row-h);
   padding: 9px 0;
   gap: 0;
 }
@@ -2147,12 +2172,15 @@ input[type="number"] {
   grid-template-columns: minmax(0, 1fr) 92px;
   grid-template-columns: subgrid;
   gap: 0;
-  align-items: start;
+  /* #255: centred (was start) so a one-line record sits at --sc-row-h
+     like its peers; vertical inset 9 like the other rows, no vertical
+     margin (the 33 px record + 3 px margins measured F-S4-5). */
+  align-items: center;
   /* The container's 3px rule + 9px inset on the left and 1px + 11px on
      the right sit OUTSIDE the grid's tracks (negative margin), so the
      record's sentence and its Undo share the other rows' edges. */
-  padding: 6px 11px 6px 9px;
-  margin: 3px -12px;
+  padding: 9px 11px 9px 9px;
+  margin: 0 -12px;
 }
 .workbench .jbar-suggest .sc-grid .sc-record .sc-lead {
   display: block;
@@ -2300,6 +2328,11 @@ input[type="number"] {
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
+/* #255: the verify advisory (the backend's corrections_advisory) is the
+   footer's second line, once per plan — not once per record. */
+.workbench .jbar-suggest .sc-foot .sc-foot-advisory {
+  flex: 1 1 100%;
+}
 .workbench .jbar-suggest .sc-foot .sc-time {
   text-decoration: underline dotted;
   text-underline-offset: 2px;
@@ -2336,6 +2369,11 @@ input[type="number"] {
   }
   .workbench .jbar-suggest .sc-grid .sc-action {
     align-self: start;
+  }
+  /* #255 / #153: a wrapped record grows past --sc-row-h here; Undo
+     rides the top line again. */
+  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
+    align-items: start;
   }
   .workbench .jbar-suggest .sc-picker .reason-chip {
     padding: 4px 7px;

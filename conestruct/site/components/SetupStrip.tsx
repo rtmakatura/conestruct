@@ -202,6 +202,11 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
   const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
   const [reason, setReason] = useState<SiteDismissReason | null>(null);
   const [note, setNote] = useState("");
+  // #255: Confirm is enabled once a reason is chosen; an Other with an
+  // empty note is answered AT the note on the click (focus, aria-invalid,
+  // the required placeholder) — the button never moves, never dead.
+  const [noteInvalid, setNoteInvalid] = useState(false);
+  const noteRef = useRef<HTMLInputElement | null>(null);
 
   const buckets =
     siteScan.status === "ok"
@@ -215,11 +220,18 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
     setDismissing(null);
     setReason(null);
     setNote("");
+    setNoteInvalid(false);
     setScenario({ ...scenario, meta } as Scenario);
   };
   const undo = (flag: ScannedSiteFlag) => write(withoutSiteCorrection(scenario.meta, flag));
   const confirmDismiss = (flag: ScannedSiteFlag) => {
-    if (reason === null || !dismissIsComplete(reason, note)) return;
+    if (reason === null) return;
+    if (!dismissIsComplete(reason, note)) {
+      // Other with an empty note: the click answers at the note (#255).
+      setNoteInvalid(true);
+      noteRef.current?.focus();
+      return;
+    }
     write(withSiteCorrection(scenario.meta, dismissMarker(flag, reason, note)));
   };
   const assertFlag = (flag: ScannedSiteFlag) =>
@@ -267,7 +279,10 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
           <span className="sys-glyph" aria-hidden>
             {glyph}
           </span>
-          <span className="sc-disclosure">{c.disclosure}</span>
+          {/* #255: the clause alone — the advisory prints once in the
+              footer.  ``disclosure`` (the whole sentence) is the wire
+              before the split shipped; never a fabricated value. */}
+          <span className="sc-disclosure">{c.record_clause ?? c.disclosure}</span>
         </div>
         <span className="sc-action">
           <button type="button" className="ghost sc-text-btn" data-write="" disabled={inFlight} onClick={() => undo(flag)}>
@@ -282,6 +297,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
     setDismissing(null);
     setReason(null);
     setNote("");
+    setNoteInvalid(false);
   };
   // Spec 46: only a detected row may enter the reason state.  Guarded
   // at the state transition (dismissAllowed reads the served bucket),
@@ -291,6 +307,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
     setDismissing(flag);
     setReason(null);
     setNote("");
+    setNoteInvalid(false);
   };
 
   const rows: ReactNode[] = [];
@@ -367,7 +384,10 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
                         disabled={inFlight}
                         value={r.v}
                         checked={chosen}
-                        onChange={() => setReason(r.v)}
+                        onChange={() => {
+                          setReason(r.v);
+                          setNoteInvalid(false);
+                        }}
                       />
                       <span className="reason-glyph" aria-hidden>
                         {chosen ? "✓" : ""}
@@ -377,24 +397,36 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
                   );
                 })}
               </fieldset>
-              {reason === "other" && (
-                <input
-                  type="text"
-                  className="site-correction-note"
-                  data-write=""
-                  disabled={inFlight}
-                  aria-label="Say what"
-                  maxLength={200}
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="say what"
-                />
-              )}
+              {/* #255 (P1): the note slot is ALWAYS mounted — a fixed
+                  184px reservation in the flex line, void (hidden,
+                  disabled, out of the tree and the Tab order) until the
+                  reason is Other — so choosing Other never moves
+                  Confirm.  Validated on the Confirm click, not by
+                  disabling the button. */}
+              <input
+                ref={noteRef}
+                type="text"
+                className={`site-correction-note${reason === "other" ? "" : " is-void"}`}
+                data-write=""
+                disabled={inFlight || reason !== "other"}
+                aria-hidden={reason === "other" ? undefined : true}
+                tabIndex={reason === "other" ? undefined : -1}
+                aria-label="Say what"
+                aria-invalid={noteInvalid || undefined}
+                maxLength={200}
+                value={note}
+                onChange={(e) => {
+                  setNote(e.target.value);
+                  setNoteInvalid(false);
+                }}
+                placeholder={noteInvalid ? "say what — required" : "say what"}
+              />
               <button
                 type="button"
                 className="confirm"
                 data-write=""
-                disabled={inFlight || !dismissIsComplete(reason, note)}
+                disabled={inFlight || reason === null}
+                title={reason === null ? "choose a reason" : undefined}
                 onClick={() => confirmDismiss(flag)}
               >
                 Confirm dismiss
@@ -450,6 +482,14 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
           {siteScan.memo_hit === true ? " · memoised" : ""}
           {" · a correction re-generates the plan"}
         </span>
+        {/* #255: the backend's verify advisory ONCE per plan (the
+            footer's second line) — the record rows print their clause
+            alone.  Absent on the wire (no applied record) = absent here
+            (rule 10).  Recorded P1 residual: the footer grows one line
+            on the first applied record. */}
+        {typeof siteScan.corrections_advisory === "string" && siteScan.corrections_advisory ? (
+          <span className="sc-foot-advisory">{siteScan.corrections_advisory}</span>
+        ) : null}
       </div>
     </div>
   );

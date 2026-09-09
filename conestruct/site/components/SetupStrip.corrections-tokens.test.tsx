@@ -30,6 +30,19 @@ describe("#245 — the reason picker's tokens", () => {
     expect(rule(".workbench .jbar-suggest .reason-chip input")).not.toMatch(/display:\s*none/);
     expect(rule(".workbench .jbar-suggest .reason-chip:focus-within")).toMatch(/var\(--act-glow\)/);
   });
+  it("#255: the chip centres its label — a mirror glyph slot on the trailing edge (F-S4-2)", () => {
+    expect(rule(".workbench .jbar-suggest .reason-chip")).toMatch(/justify-content:\s*center/);
+    expect(rule(".workbench .jbar-suggest .reason-chip .reason-glyph")).toMatch(/width:\s*10px/);
+    expect(rule(".workbench .jbar-suggest .reason-chip::after")).toMatch(/width:\s*10px/);
+    expect(rule(".workbench .jbar-suggest .reason-chip::after")).toMatch(/content:\s*""/);
+  });
+  it("#255: the note slot is a fixed 184px reserved in the flex line; void = hidden, still laid out (P1)", () => {
+    expect(rule(".workbench .jbar-suggest .site-correction-note")).toMatch(/flex:\s*0 0 184px/);
+    expect(rule(".workbench .jbar-suggest .site-correction-note")).not.toMatch(/min-width/);
+    const voided = rule(".workbench .jbar-suggest .site-correction-note.is-void");
+    expect(voided).toMatch(/visibility:\s*hidden/);
+    expect(voided).not.toMatch(/display:\s*none/);
+  });
   it("the other-note input is the field-input workbench pair, never the UA field", () => {
     const note = rule(".workbench .jbar-suggest .site-correction-note");
     expect(note).toMatch(/background:\s*var\(--canvas\)/);

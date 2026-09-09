@@ -33,11 +33,17 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(row).toMatch(/grid-template-columns:\s*subgrid/);
     expect(row).toMatch(/align-items:\s*baseline/);
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-action")).toMatch(/justify-self:\s*end/);
-    // The record row: same tracks, top-aligned so a wrapped sentence
-    // never pushes Undo down (spec 53).
+    // #255: one row height for every row kind — the scoped --sc-row-h
+    // (46, the measured scan row) as min-height on .sc-row; the record
+    // row keeps the shared edges (horizontal margin only), vertical
+    // inset 9 like its peers, centred so a one-line record sits at 46.
+    expect(rule(".workbench .site-corrections")).toMatch(/--sc-row-h:\s*46px/);
+    expect(row).toMatch(/min-height:\s*var\(--sc-row-h\)/);
     const record = rule(".workbench .jbar-suggest .sc-grid .sc-row.sc-record");
     expect(record).toMatch(/grid-template-columns:\s*subgrid/);
-    expect(record).toMatch(/align-items:\s*start/);
+    expect(record).toMatch(/align-items:\s*center/);
+    expect(record).toMatch(/margin:\s*0 -12px/);
+    expect(record).toMatch(/padding:\s*9px 11px 9px 9px/);
     // The ledger line: symbol → name (wraps) → leader (absorbs slack) → right group (nowrap).
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-lead")).toMatch(/display:\s*flex/);
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-name")).toMatch(/white-space:\s*normal/);
@@ -101,6 +107,13 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(right).toMatch(/flex:\s*1 1 100%/);
     expect(right).toMatch(/white-space:\s*normal/);
     expect(rule(".workbench .jbar-suggest .sc-grid .sc-lead", cq)).toMatch(/flex-wrap:\s*wrap/);
+    // #255 / #153: under the block's own ≤420 a wrapped record may grow;
+    // Undo rides the top line again.
+    // (Anchored past the query's selector-list rule, whose tail is the
+    // same selector.)
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-row.sc-record", css.indexOf("#255 / #153", cq))).toMatch(
+      /align-items:\s*start/,
+    );
     // The arc-20 viewport query is gone with the four-track grid.
     expect(ledger).not.toContain("@media");
   });
