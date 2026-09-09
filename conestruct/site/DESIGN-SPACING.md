@@ -51,7 +51,7 @@ mirror's agreement.
 
 | Role | class | family | casing | size | tracking | color | decoration |
 |---|---|---|---|---|---|---|---|
-| **section** | `tr-section` | mono 500 | UPPERCASE | 10px | 0.20em | `#ffffff` CHOSEN | none |
+| **section** | `tr-section` | mono 500 | UPPERCASE | 10px | 0.20em | `--ink-bright` CHOSEN (#ffffff; tokenised #263) | none |
 | **step index** | `tr-step` | mono 400 | UPPERCASE | 10px | 0.14em | `--ink-on-dark-faint` CHOSEN | none |
 | **field label** | `tr-field` | sans 500 | Sentence case | 12px | 0 | `--ink-on-dark` CHOSEN | none |
 | **provenance** | `tr-prov` | mono 400 | lowercase voice | 10px | 0.04em | `--ink-on-dark-faint` CHOSEN | dotted underline |

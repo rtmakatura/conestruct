@@ -730,6 +730,11 @@ body {
 
   /* on-paper ink (slate-tuned) */
   --ink: #eaf0f7;
+  /* #263 P11: the brightest ink on the workbench — the .tr-section
+     role, the breadcrumb's local override, the read-only slot hint's
+     bold, and (per owner) every former `#fff` literal.  Not
+     --heading-on-paper: that name lies on the canvas. */
+  --ink-bright: #ffffff;
   --ink-mute: #aebbcc;
   --ink-faint: #93a0b0;
   --heading-on-paper: #ffffff;
@@ -1629,7 +1634,7 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
 }
 .workbench .jbar-readonly .jbar-slot-hint b {
-  color: #fff;
+  color: var(--ink-bright);
   font-weight: 600;
 }
 .workbench .jbar-readonly .jbar-slot-hint .term {
@@ -1654,7 +1659,7 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
 }
 .workbench .chain .seg.local {
-  color: #fff;
+  color: var(--ink-bright);
   font-weight: 700;
 }
 /* compact breadcrumb: full title on hover — the dotted underline is the
@@ -1797,7 +1802,10 @@ input[type="number"] {
 .workbench .jbar-suggest button.confirm:hover,
 .workbench .jbar-suggest button.confirm:focus-visible {
   background: var(--act);
-  color: #0b1420;
+  /* #263: the existing on-act ink, not a fourth literal — 6.25:1 on
+     --act (the former literal measured 7.04:1; declared change,
+     still AA; pinned in tokens.test.ts). */
+  color: var(--on-act);
 }
 .workbench .jbar-suggest button.ghost {
   border: 1px solid var(--rule);
@@ -2418,7 +2426,7 @@ input[type="number"] {
   font-size: 10px;
   letter-spacing: 0.20em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--ink-bright);
 }
 .workbench .tr-step {
   font-family: var(--font-mono);

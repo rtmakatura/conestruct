@@ -21,8 +21,8 @@
 // color below and the Inter/JetBrains Mono families are CHOSEN
 // (GO ruling 2, 2026-08-26), mapped onto the existing workbench
 // palette:
-//   section    #ffffff                 "brightest ink" (ruling 3; matches
-//                                      .field-val's white)
+//   section    var(--ink-bright)       "brightest ink" (ruling 3; #ffffff,
+//                                      tokenised in #263)
 //   step       var(--ink-on-dark-faint) "dim"  (#93a0b0 — 6.19:1 on
 //                                      --canvas, 5.61:1 on --canvas-tint)
 //   field      var(--ink-on-dark)       "mid"  (#c8d1dd — 10.68:1 / 9.68:1)
@@ -70,7 +70,7 @@ export const TYPE_ROLES = {
     casing: "uppercase",
     size: "10px",
     tracking: "0.20em",
-    color: "#ffffff", // CHOSEN — "brightest ink" (GO rulings 2-3)
+    color: "var(--ink-bright)", // CHOSEN — "brightest ink" (GO rulings 2-3; tokenised #263)
     decoration: "none",
   },
   /** The step number and nothing else — right edge of the section
