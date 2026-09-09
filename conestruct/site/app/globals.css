@@ -1404,8 +1404,8 @@ input[type="number"] {
 .workbench:not([data-stage="pre"]) {
   --pin-h: 0px;
 }
-/* s2-batch-1 GO.md, cross-bucket ruling 1 (Ryan, 2026-09-09; the brief
-   is committed to the repo with bucket B's evidence, s2-arc26-landing):
+/* validation-artifacts/committed/s2-arc26-landing/GO-rulings.md — the
+   s2-batch-1 GO cross-bucket ruling 1 (Ryan, 2026-09-09), transcribed:
    "Post-generate landing target = 136 ±1
    (calc(var(--nav-h) + 8px + var(--status-h) + 24px)), not 98.  Reason:
    98 puts the verdict strip at 22..74, under the nav."  The strip sits
