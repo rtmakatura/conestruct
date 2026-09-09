@@ -710,6 +710,12 @@ body {
      strip's re-mount at the pair's settle, and the first verdict's
      pill, move nothing below them (P1; audit F-S1-4, F-S2-3). */
   --status-h: 52px;
+  /* #250 (c): the pinned-chrome budget every scroll target adds to the
+     nav.  The rail's height while the rail is mounted (pre-generate);
+     0 once the lifecycle leaves "pre" — the rail unmounts with the
+     sidebar, and a margin that kept budgeting it left the landing to
+     Chrome's scroll anchoring (which the swap's frame suppresses). */
+  --pin-h: var(--rail-h);
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -1375,13 +1381,26 @@ input[type="number"] {
    right-aligned note.  `.zone.dominant` is the stage direction — the
    pre-generation Setup panel and the post-generation Results zone get
    the larger title. */
-/* #231: scroll targets clear the sticky chrome (nav + rail + 8px). */
+/* #231: scroll targets clear the sticky chrome (nav + pinned chrome +
+   8px).  #250 (c): the pinned budget is --pin-h — the rail pre-generate
+   (98, unchanged), 0 after (the shell stamps data-stage on the root). */
 .workbench .zone {
-  scroll-margin-top: calc(var(--nav-h) + var(--rail-h) + 8px);
+  scroll-margin-top: calc(var(--nav-h) + var(--pin-h) + 8px);
   margin-bottom: 24px;
 }
 .workbench .jump-anchor {
-  scroll-margin-top: calc(var(--nav-h) + var(--rail-h) + 8px);
+  scroll-margin-top: calc(var(--nav-h) + var(--pin-h) + 8px);
+}
+.workbench:not([data-stage="pre"]) {
+  --pin-h: 0px;
+}
+/* Ruling 1 (GO 2026-09-09): "Post-generate landing target = 136 ±1
+   (calc(var(--nav-h) + 8px + var(--status-h) + 24px)), not 98.  Reason:
+   98 puts the verdict strip at 22..74, under the nav."  The strip sits
+   above the results zone in the DOM, so the zone's margin budgets it:
+   52 + 8 + 52 + 24 = 136 — the strip lands at 60..112, in view. */
+.workbench:not([data-stage="pre"]) .zone.results {
+  scroll-margin-top: calc(var(--nav-h) + 8px + var(--status-h) + 24px);
 }
 /* #246 — signposts to the strip's correction block.  A read-only jump
    (jumpToAnchor), never a write: the results-head line (on --canvas,

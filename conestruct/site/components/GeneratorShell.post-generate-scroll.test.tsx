@@ -20,7 +20,7 @@ vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
-import { GeneratorShell } from "./GeneratorShell";
+import { GeneratorShell, armLandingCheck } from "./GeneratorShell";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER } from "./test-fixtures";
 
@@ -165,6 +165,21 @@ describe("post-generate scroll (#152 E)", () => {
     // The scrolled element is the results zone (it holds the hero).
     const target = scrollSpy.mock.instances[0] as unknown as HTMLElement;
     expect(target.querySelector(".hero")).not.toBeNull();
+    // #250 (c): the zone carries the class the post-generate landing rule
+    // keys on, and the root's data-stage has left "pre" (the rail is gone,
+    // so --pin-h is 0 and the results rule budgets the strip instead).
+    // The click also refires the breakdown for the generated wire, so the
+    // stage read here is "generating" or "post" — never "pre".
+    expect(target.classList.contains("results")).toBe(true);
+    expect(["generating", "post"]).toContain(
+      document.querySelector(".workbench")?.getAttribute("data-stage"),
+    );
+  });
+
+  it("#250 (c): the root carries data-stage=pre before Generate", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await release(0, okBreakdown());
+    expect(document.querySelector(".workbench")?.getAttribute("data-stage")).toBe("pre");
   });
 
   it("waits for a pending breakdown: scroll fires when generating resolves to post", async () => {
@@ -274,6 +289,100 @@ describe("post-generate scroll (#152 E)", () => {
     // Focus lands there too (#193), and only once: the arming is spent.
     expect(document.activeElement).toBe(target);
     await flushDebounce();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+// #250 (a) — the landing check.  happy-dom has no layout (every rect is
+// 0 and no stylesheet is loaded), so the mounted cases above prove only
+// that the check never ADDS a scroll on the good path; the arming and
+// re-issue logic is proven here with mocked rects and a mocked
+// scroll-margin: after the landing scroll settles (one ``scrollend``,
+// or scrollY stable across frames as the fallback) the zone's top is
+// compared with its scroll-margin-top and the scroll is re-issued ONCE
+// if off by more than 1 px; a wheel/touch/key from the user disarms it;
+// the pair's settle gets one more check, still under the one-re-issue cap.
+describe("#250 (a) — armLandingCheck re-issues the landing once, never twice", () => {
+  let el: HTMLElement;
+  let top: number;
+  let frames: FrameRequestCallback[];
+  beforeEach(() => {
+    el = document.createElement("section");
+    document.body.appendChild(el);
+    top = 136;
+    el.getBoundingClientRect = () => ({ top, bottom: top + 100, left: 0, right: 0, width: 0, height: 100, x: 0, y: top, toJSON: () => ({}) });
+    vi.stubGlobal("getComputedStyle", () => ({ scrollMarginTop: "136px" }));
+    frames = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      frames.push(cb);
+      return frames.length;
+    });
+    vi.stubGlobal("cancelAnimationFrame", () => {});
+  });
+  const settledScroll = () => window.dispatchEvent(new Event("scrollend"));
+  const userWheel = () => window.dispatchEvent(new Event("wheel"));
+  const flushFrames = (n: number) => {
+    for (let i = 0; i < n; i++) {
+      const batch = frames.splice(0);
+      for (const cb of batch) cb(i * 16);
+    }
+  };
+
+  it("lands off by more than 1 px → one re-issue with the same behaviour; a second scrollend and the settle add nothing", () => {
+    top = 140; // under-nav race: the swap landed the zone 4 px low
+    const check = armLandingCheck(el, "smooth");
+    expect(scrollSpy).not.toHaveBeenCalled();
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "smooth", block: "start" });
+    expect(scrollSpy.mock.instances[0]).toBe(el);
+    settledScroll();
+    flushFrames(100);
+    check.settle();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("within 1 px → no re-issue; exactly on target → none", () => {
+    top = 137;
+    armLandingCheck(el, "smooth").settle();
+    settledScroll();
+    top = 136;
+    armLandingCheck(el, "auto");
+    settledScroll();
+    expect(scrollSpy).not.toHaveBeenCalled();
+  });
+
+  it("a user scroll before the check disarms it — no re-issue at the settle either", () => {
+    top = 200;
+    const check = armLandingCheck(el, "smooth");
+    userWheel();
+    settledScroll();
+    flushFrames(100);
+    check.settle();
+    expect(scrollSpy).not.toHaveBeenCalled();
+  });
+
+  it("the pair's settle gets one more check: on target at the landing, off at the settle → one re-issue; a further drift is not chased", () => {
+    const check = armLandingCheck(el, "auto");
+    settledScroll();
+    expect(scrollSpy).not.toHaveBeenCalled();
+    top = 150;
+    check.settle();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    top = 170;
+    check.settle();
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("no scrollend (the scroll had nothing to move): the rAF fallback checks once scrollY is stable across frames", () => {
+    top = 130;
+    armLandingCheck(el, "smooth");
+    flushFrames(2);
+    expect(scrollSpy).not.toHaveBeenCalled();
+    flushFrames(30);
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    flushFrames(200);
     expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
 });

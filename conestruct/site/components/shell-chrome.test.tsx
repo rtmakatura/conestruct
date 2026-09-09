@@ -49,10 +49,27 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
     expect(nav).toContain("h-[var(--nav-h)]");
     expect(nav).not.toContain("h-[52px]");
   });
-  it(".zone and the jump anchors carry scroll-margin-top = nav + rail + 8px", () => {
-    const margin = /scroll-margin-top:\s*calc\(var\(--nav-h\)\s*\+\s*var\(--rail-h\)\s*\+\s*8px\)/;
+  // #250 (c): the budget for the pinned chrome is a token, --pin-h — the
+  // rail's height while the rail is mounted (pre-generate: 98 unchanged),
+  // 0 once the lifecycle leaves "pre" (the rail unmounts with the
+  // sidebar; the old formula kept budgeting it, and the landing depended
+  // on Chrome's scroll anchoring to make up the difference).
+  it(".zone and the jump anchors carry scroll-margin-top = nav + pin + 8px; --pin-h is the rail pre-generate and 0 after", () => {
+    const margin = /scroll-margin-top:\s*calc\(var\(--nav-h\)\s*\+\s*var\(--pin-h\)\s*\+\s*8px\)/;
     expect(rule(".workbench .zone")).toMatch(margin);
     expect(rule(".workbench .jump-anchor")).toMatch(margin);
+    expect(rule(".workbench")).toMatch(/--pin-h:\s*var\(--rail-h\)/);
+    expect(rule('.workbench:not([data-stage="pre"])')).toMatch(/--pin-h:\s*0px/);
+  });
+  // Ruling 1 (GO 2026-09-09): "Post-generate landing target = 136 ±1
+  // (calc(var(--nav-h) + 8px + var(--status-h) + 24px)), not 98.
+  // Reason: 98 puts the verdict strip at 22..74, under the nav."  The
+  // strip sits ABOVE the results zone in the DOM, so the zone's own
+  // scroll-margin budgets it: 52 + 8 + 52 + 24 = 136, the strip at 60..112.
+  it("post-generate the results zone lands at nav + 8 + status-h + 24 (= 136, ruling 1)", () => {
+    expect(rule('.workbench:not([data-stage="pre"]) .zone.results')).toMatch(
+      /scroll-margin-top:\s*calc\(var\(--nav-h\)\s*\+\s*8px\s*\+\s*var\(--status-h\)\s*\+\s*24px\)/,
+    );
   });
   it("FieldGroup's anchored header carries the jump-anchor hook", () => {
     const { container } = render(

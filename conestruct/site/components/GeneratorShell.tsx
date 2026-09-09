@@ -100,6 +100,107 @@ export function deriveResultsHead(args: {
   return { kind: "scanned", count, total: keyed.length };
 }
 
+// #250 (a) — the landing check.  The post-generate ``scrollIntoView``
+// lands the results zone at its scroll-margin-top only if nothing moves
+// in the same frame; when the sidebar's unmount lands in the frame of
+// the programmatic scroll, Chrome suppresses scroll anchoring and the
+// zone settles wherever the swap left it (1 of 2 prod runs in arc 21;
+// the refused generate in audit F-S5-3 at −104).  So the landing is
+// checked once after the scroll settles — one ``scrollend``, or, where
+// it never fires (nothing to move, or no support), scrollY stable
+// across LANDING_STABLE_FRAMES — and re-issued ONCE if the zone's top
+// is more than LANDING_TOLERANCE_PX from its scroll-margin-top.  A
+// wheel / touch / navigation key from the user disarms it (the viewport
+// is theirs from that moment).  The pair's settle (the strip's verdict
+// re-mounting into its f2 slot) gets one more check under the same
+// one-re-issue cap: never twice.  Idempotent on the good path — a
+// landing within tolerance issues nothing.
+export interface LandingCheck {
+  /** The pair's settle: one more check, still capped at one re-issue. */
+  settle: () => void;
+  /** Drop every listener without checking (unmount, a new arming). */
+  cancel: () => void;
+}
+const LANDING_TOLERANCE_PX = 1;
+const LANDING_STABLE_FRAMES = 6;
+const LANDING_MAX_FRAMES = 90;
+const USER_SCROLL_EVENTS = ["wheel", "touchmove", "keydown"] as const;
+const NAV_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " ", "Space"]);
+export function armLandingCheck(
+  el: HTMLElement,
+  behavior: ScrollBehavior,
+): LandingCheck {
+  let reissued = false;
+  let userScrolled = false;
+  let checked = false;
+  let settleWanted = false;
+  let raf = 0;
+  const offBy = () => {
+    const margin = parseFloat(window.getComputedStyle(el).scrollMarginTop ?? "") || 0;
+    return Math.abs(el.getBoundingClientRect().top - margin);
+  };
+  const reissueIfOff = () => {
+    if (reissued || userScrolled) return;
+    if (offBy() > LANDING_TOLERANCE_PX) {
+      reissued = true;
+      el.scrollIntoView({ behavior, block: "start" });
+    }
+  };
+  const onUser = (e: Event) => {
+    if (e.type === "keydown" && !NAV_KEYS.has((e as KeyboardEvent).key)) return;
+    userScrolled = true;
+    finish();
+  };
+  const stopWaiting = () => {
+    window.removeEventListener("scrollend", onScrollEnd);
+    if (raf) window.cancelAnimationFrame(raf);
+    raf = 0;
+  };
+  const finish = () => {
+    stopWaiting();
+    for (const t of USER_SCROLL_EVENTS) window.removeEventListener(t, onUser);
+  };
+  const landingCheck = () => {
+    if (checked) return;
+    checked = true;
+    stopWaiting();
+    reissueIfOff();
+    if (settleWanted) finish();
+  };
+  const onScrollEnd = () => landingCheck();
+  window.addEventListener("scrollend", onScrollEnd);
+  for (const t of USER_SCROLL_EVENTS) window.addEventListener(t, onUser, { passive: true });
+  // The fallback: scrollY unchanged across consecutive frames, bounded.
+  let last = window.scrollY;
+  let stable = 0;
+  let frames = 0;
+  const tick = () => {
+    frames += 1;
+    const y = window.scrollY;
+    stable = y === last ? stable + 1 : 0;
+    last = y;
+    if (stable >= LANDING_STABLE_FRAMES || frames >= LANDING_MAX_FRAMES) {
+      raf = 0;
+      landingCheck();
+      return;
+    }
+    raf = window.requestAnimationFrame(tick);
+  };
+  raf = window.requestAnimationFrame(tick);
+  return {
+    settle() {
+      if (!checked) {
+        // The landing has not settled yet: the one check covers both.
+        settleWanted = true;
+        return;
+      }
+      reissueIfOff();
+      finish();
+    },
+    cancel: finish,
+  };
+}
+
 // Cold-start honesty (Refs #122, rule 10): a warm audit round-trip
 // measures 0.5–0.7 s; past 2 s the wait is almost certainly the Modal
 // container cold-starting (~5.5 s measured), and an unexplained
@@ -673,6 +774,10 @@ export function GeneratorShell({
   // fires it once on ``post``.
   const resultsRef = useRef<HTMLElement | null>(null);
   const scrollPendingRef = useRef(false);
+  // #250 (a): the landing check armed by each landing scroll; its
+  // settle() runs at the pair's settle, cancel() on unmount.
+  const landingRef = useRef<LandingCheck | null>(null);
+  useEffect(() => () => landingRef.current?.cancel(), []);
 
   // #193 (WCAG 4.1.3): the results render without any announcement —
   // the strip's live region covers VERIFICATION states, not generation.
@@ -805,10 +910,13 @@ export function GeneratorShell({
       const reduceMotion =
         typeof window.matchMedia === "function" &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      resultsRef.current?.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start",
-      });
+      const behavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
+      resultsRef.current?.scrollIntoView({ behavior, block: "start" });
+      // #250 (a): check the landing once it settles; re-issue once if off.
+      landingRef.current?.cancel();
+      landingRef.current = resultsRef.current
+        ? armLandingCheck(resultsRef.current, behavior)
+        : null;
       resultsRef.current?.focus({ preventScroll: true });
       // #258: the announcement left this branch — it waits for the
       // pair's verdict (the effect after ``planDeclined`` below).
@@ -827,10 +935,13 @@ export function GeneratorShell({
         const reduceMotion =
           typeof window.matchMedia === "function" &&
           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        resultsRef.current?.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "start",
-        });
+        const behavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
+        resultsRef.current?.scrollIntoView({ behavior, block: "start" });
+        // #250 (a): the declined pair's landing is checked the same way.
+        landingRef.current?.cancel();
+        landingRef.current = resultsRef.current
+          ? armLandingCheck(resultsRef.current, behavior)
+          : null;
       }
       resultsRef.current?.focus({ preventScroll: true });
       // No status text on failure: the error ribbon is role="alert"
@@ -909,6 +1020,10 @@ export function GeneratorShell({
     if (!announcePendingRef.current) return;
     if (genState === "generating" || !auditSettled) return;
     announcePendingRef.current = false;
+    // #250 (a): the pair's settle — the verdict re-mounts into its slot;
+    // one more landing check, still under the one-re-issue cap.
+    landingRef.current?.settle();
+    landingRef.current = null;
     if (genState !== "post" || auditDeclined) return;
     const d = deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
     setGenAnnouncement(
@@ -1137,7 +1252,12 @@ export function GeneratorShell({
     // keys on, and the context every write control reads (WriteLock.tsx).
     <WriteLockContext.Provider value={inFlight}>
     <RenderRequestContext.Provider value={beginRender}>
-    <div className={`workbench min-h-screen${inFlight ? " ws-locked" : ""}`}>
+    {/* #250 (c): data-stage drives --pin-h (the rail's budget pre-generate,
+        0 after) and the post-generate results landing rule (globals.css). */}
+    <div
+      className={`workbench min-h-screen${inFlight ? " ws-locked" : ""}`}
+      data-stage={genState}
+    >
       <div className="workbench-frame" aria-hidden>
         <span className="ftick tl" />
         <span className="ftick tr" />
@@ -1299,7 +1419,7 @@ export function GeneratorShell({
           <section
             ref={resultsRef}
             tabIndex={-1}
-            className={`zone outline-none${genState === "post" && resultsVisible ? " dominant" : ""}`}
+            className={`zone results outline-none${genState === "post" && resultsVisible ? " dominant" : ""}`}
           >
             <div className="zone-head">
               <span className="zone-tag">
