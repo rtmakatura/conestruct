@@ -1289,34 +1289,13 @@ export function GeneratorShell({
             <h1 className="text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]">
               Method of Handling Traffic — plan generator
             </h1>
-            <p className="text-[14px] m-0 max-w-[620px] text-[color:var(--ink-on-dark-faint)]">
-              Generate a CDOT-compliant MHT package: PDF plan sheet, device
-              list, and crew instructions. Every dimension cited to MUTCD or
-              CDOT standards.
-            </p>
+            {/* #260 (1): the intro sentence, the draft notice and the
+                read-only jurisdiction bar moved below the Results zone
+                (P3 — on load the first viewport held 550 px of preamble
+                and the pick CTA sat at 960..1004 in a 1000 px viewport,
+                audit F-S1-1).  Every stage: the block is context, not a
+                step. */}
           </div>
-
-          <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
-              Draft — not a sealed plan
-            </div>
-            <div className="text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]">
-              Output is engineering reference. Requires review and seal by a
-              licensed Professional Engineer prior to field use.
-            </div>
-          </div>
-
-          {/* Persistent jurisdiction summary — READ-ONLY (Surface B).
-              The interactive dropdown, pills, and suggestions moved into
-              the Location step below (pre-gen) and the strip's inline
-              edit (post-gen), so this strip never reads as a dead
-              control above the pin it depends on. */}
-          <JurisdictionContextBar
-            jurisdiction={jurisdictionBlock}
-            jurisdictionKey={scenario.jurisdiction_key ?? null}
-            streetClass={scenario.street_class ?? null}
-            loading={jurisdictionLoading}
-          />
 
           {/* ——— Zone 1 · Setup ——— */}
           {/* tabIndex -1: programmatic focus target for the Reopen
@@ -1600,6 +1579,35 @@ export function GeneratorShell({
               </div>
             }
           </section>
+
+          {/* ——— Context — below Results, above Reference (#260 (1)) ——— */}
+          <p className="text-[14px] m-0 mb-6 max-w-[620px] text-[color:var(--ink-on-dark-faint)]">
+            Generate a CDOT-compliant MHT package: PDF plan sheet, device
+            list, and crew instructions. Every dimension cited to MUTCD or
+            CDOT standards.
+          </p>
+
+          <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
+            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
+              Draft — not a sealed plan
+            </div>
+            <div className="text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]">
+              Output is engineering reference. Requires review and seal by a
+              licensed Professional Engineer prior to field use.
+            </div>
+          </div>
+
+          {/* Persistent jurisdiction summary — READ-ONLY (Surface B).
+              The interactive dropdown, pills, and suggestions live in
+              the Location step (pre-gen) and the strip's inline edit
+              (post-gen), so this strip never reads as a dead control
+              beside the pin it depends on. */}
+          <JurisdictionContextBar
+            jurisdiction={jurisdictionBlock}
+            jurisdictionKey={scenario.jurisdiction_key ?? null}
+            streetClass={scenario.street_class ?? null}
+            loading={jurisdictionLoading}
+          />
 
           {/* ——— Zone 3 · Reference ——— */}
           {(jurisdictionBlock ||

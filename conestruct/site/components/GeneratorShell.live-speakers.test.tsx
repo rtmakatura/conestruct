@@ -133,3 +133,48 @@ describe("#260 (2) — one live speaker for the location gate", () => {
     await settle();
   });
 });
+
+describe("#260 (1) — the context block sits below Results, above Reference, at every stage", () => {
+  const order = () => {
+    const main = document.querySelector("main")!;
+    const all = Array.from(main.querySelectorAll("*"));
+    const at = (el: Element | null) => (el ? all.indexOf(el) : -1);
+    const h1 = main.querySelector("h1");
+    const intro = screen.getByText(/Generate a CDOT-compliant MHT package/);
+    const draft = screen.getByText("Draft — not a sealed plan");
+    const jbar = main.querySelector(".jbar");
+    const zones = Array.from(main.querySelectorAll("section.zone"));
+    const setup = zones[0];
+    const results = main.querySelector("section.zone.results");
+    const reference = zones.find((z) => /Reference/.test(z.querySelector(".zone-tag")?.textContent ?? "")) ?? null;
+    return { h1: at(h1), intro: at(intro), draft: at(draft), jbar: at(jbar), setup: at(setup), results: at(results), reference: at(reference) };
+  };
+
+  it("pre-generate: h1 → Setup → Results → intro · draft · jurisdiction bar (→ Reference when mounted)", async () => {
+    render(<GeneratorShell mode="sandbox" />);
+    await settle();
+    const o = order();
+    expect(o.h1).toBeGreaterThan(-1);
+    expect(o.setup).toBeGreaterThan(o.h1);
+    expect(o.results).toBeGreaterThan(o.setup);
+    expect(o.intro).toBeGreaterThan(o.results);
+    expect(o.draft).toBeGreaterThan(o.intro);
+    expect(o.jbar).toBeGreaterThan(o.draft);
+    // Nothing of the block precedes the setup zone.
+    expect(Math.min(o.intro, o.draft, o.jbar)).toBeGreaterThan(o.setup);
+  });
+
+  it("post-generate: the block still sits between Results and Reference", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await settle();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await settle();
+    const o = order();
+    expect(o.reference, "the Reference zone mounts with the results").toBeGreaterThan(-1);
+    expect(o.intro).toBeGreaterThan(o.results);
+    expect(o.draft).toBeGreaterThan(o.intro);
+    expect(o.jbar).toBeGreaterThan(o.draft);
+    expect(o.reference).toBeGreaterThan(o.jbar);
+  });
+});
