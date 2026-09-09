@@ -35,7 +35,8 @@ the button label and the wire sentence itself (`src/api/site_scan.py:274`).
 | `e15768f` | **one voice + the stamp** — the strip pointer is "see the notice in the Results zone."; `fmtScanStamp` in the refusal container and the strip's NOT-CHECKED container, ISO on `<time dateTime title>`. Red-proved: 2 flipped cases. |
 | `99f6bf5` | **the actions** — both `.dl-btn` inside `.scan-actions`, Retry first, "Generate anyway" with "tries the scan once more · the plan says whether it ran" beneath; two scoped layout rules + one ≤ 480 px query in `globals.css`; both disabled under `inFlight`. Red-proved: 8 cases (label pins + the CSS pin). |
 | `9681276` | **the declined-pair landing (ruling c2)** — the error branch of the #152 E effect waits for the stamped audit, scrolls when the pair is declined, focuses either way; the `post` branch byte-identical. Red-proved: 1 case. |
-| this | **evidence** — README, `s2a25-lc.js`, the local run, the replay body. |
+| `7c52c67` | **evidence** — README, `s2a25-lc.js`, the local run, the replay body. |
+| this | **prod evidence** — the sha-gated run on `www.conestruct.com` at 7c52c67 (`outS2A25Prod/`), a docs commit on its own branch cut from `main` after the ship. |
 
 ## The rulings recorded
 
@@ -76,7 +77,7 @@ are not conflated.
 The local run: the dev server on this branch (commits 1–5) proxying to the deployed
 backend, healthz gate == `67bf9a0` (B1 PASS). Denver pin 39.7269, −104.9873, bearing
 180, 1,000 ft. 1440×1000 and 380×800. **ALL PASS 172/172** (`log.txt`,
-`results.json`). The prod run after the ship is a separate docs commit.
+`results.json`). The prod run after the ship is the section below.
 
 Natural vs replayed: neither viewport's first Generate refused naturally (D0: a clean
 plan, hero, 4/4 downloads, "Plan generated — 39 devices, 12 types." written once), so
@@ -121,6 +122,37 @@ line-height (one line read as two); the settle detector fired on the stale conta
 in the first sample after a Retry click (recovery legs now require the band to have
 been seen and gone); and the one-edge rule accepted only a shared left or right (a row
 shares its top). Runs 1–2 are not committed (their substance matched run 3).
+
+## Prod run (`outS2A25Prod/`)
+
+Ship: `main` fast-forwarded to `7c52c67` (the branch's tip); healthz `sha` ==
+`7c52c67c6927b640442808d1e6a812dac0238dfd` == `origin/main` before the run. The harness
+against `https://www.conestruct.com`, same pin, same viewports, 3 runs per branch.
+**ALL PASS 172/172** (`log.txt`, `results.json`), first attempt. The harness's sha gate
+compares the full 40-char sha — a first invocation with the short sha failed the gate
+by design (`SHA GATE FAILED`, exit 2) before any page was opened; nothing else changed.
+
+Natural vs replayed: the same as local — neither viewport's first Generate refused
+naturally (D0: clean plan, 4/4 downloads, "Plan generated — 39 devices, 12 types."
+once), so all 12 declined legs are replays of `refusal-replay.json`; the 12 recovery
+legs (10 Retry, 2 proceed) ran on the live backend and none refused. 14 Generates,
+0 natural refusals.
+
+Every measured figure equals the local table: D1 six-of-six on every run; D3 one voice;
+D4 container 213..404 / 230..590, results top 174 / 191, **A: 3 of 3, B: 3 of 3 at
+both viewports**; D5 buttons 99×40 + 125×40 on one row at y 331, 304×44 stacked at
+y 441 / 497, `.dl-btn`, one line each; D7 "attempted 8 sep · 16:14 utc", no ISO on the
+surface, `<time title>` = the ISO; D8 0 band+refusal co-frames on every run (up to 209
+samples on A1); D9 lowest pair 5.61, buttons 7.74; D11 axe 0 at 1440 and the audit's
+own four at 380; R1 recovered on every run with one click; R2 the announcement written
+exactly once per recovery; NOT-CHECKED absent after the proceed (the re-run scan
+succeeded on prod too).
+
+Landing count, honestly: 12 of 12 replayed pairs on prod settled between 13 ms and
+21 s after a first Generate's click, where the scroll fires at the click — so the
+count measures the current landing plus the container mounting inside the zone.
+#250's race did not occur in any run (prod or local); it is measured absent here, not
+fixed, and stays open under #250.
 
 ## Rule 5 churn (predicted → actual)
 
@@ -215,3 +247,4 @@ Found by s2-arc25 (#258) — `validation-artifacts/committed/s2-arc25-refusal-su
   capture, `detail.message` updated to the 67bf9a0 constant).
 - `outS2A25Local/` — the local run: `log.txt`, `results.json`, per-run samples,
   measures, pairs, axe, screenshots.
+- `outS2A25Prod/` — the prod run at 7c52c67: the same set.

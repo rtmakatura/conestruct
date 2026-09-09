@@ -1,0 +1,72 @@
+{
+ "navH": 52,
+ "innerH": 1000,
+ "container": {
+  "vtop": 213,
+  "vbottom": 404,
+  "h": 191,
+  "w": 1100,
+  "left": 170,
+  "role": "alert",
+  "label": "Site scan"
+ },
+ "labelLeft": 185,
+ "message": "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+ "messageCount": 1,
+ "declinedCount": 1,
+ "strip": "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE",
+ "pill": "SERVICE UNAVAILABLE",
+ "hero": false,
+ "dlAll": 0,
+ "dlOn": 0,
+ "dlCards": 0,
+ "sr": "",
+ "empty": "No package yet",
+ "zoneNote": false,
+ "dominant": false,
+ "ribbons": {
+  "failed": 0,
+  "previous": 0
+ },
+ "btns": [
+  {
+   "name": "↻ Retry scan",
+   "cls": "dl-btn",
+   "w": 99,
+   "h": 40,
+   "left": 185,
+   "right": 284,
+   "vtop": 331,
+   "border": "1px solid rgb(31, 123, 176)",
+   "bg": "rgb(20, 32, 46)",
+   "fg": "rgb(86, 188, 242)",
+   "font": "12.5px/600",
+   "lines": 1,
+   "disabled": false
+  },
+  {
+   "name": "Generate anyway",
+   "cls": "dl-btn",
+   "w": 125,
+   "h": 40,
+   "left": 296,
+   "right": 421,
+   "vtop": 331,
+   "border": "1px solid rgb(31, 123, 176)",
+   "bg": "rgb(20, 32, 46)",
+   "fg": "rgb(86, 188, 242)",
+   "font": "12.5px/600",
+   "lines": 1,
+   "disabled": false
+  }
+ ],
+ "prov": [
+  "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s",
+  "tries the scan once more · the plan says whether it ran"
+ ],
+ "containerISO": false,
+ "timeTitle": "2026-09-08T16:14:59+00:00",
+ "notCheckedISO": null,
+ "resultsTop": 174,
+ "scrollY": 583
+}
