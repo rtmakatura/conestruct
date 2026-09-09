@@ -291,10 +291,74 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
     }
   };
 
+  // #261 (P4/P11): the card's actions are ONE bottom-anchored row
+  // (`.dl-actions`, the card's last child) — the crew card's PDF and .md
+  // sit side by side in it — so every card's first button shares one top
+  // and one bottom edge.  Any note (a 400's message, the unsaved-edits
+  // line) prints ABOVE the row, so the edge never moves (P1).
+  const actions =
+    mode.kind === "public"
+      ? kinds.map((k) => (
+          <button
+            key={k}
+            type="button"
+            className="dl-btn"
+            data-write=""
+            onClick={() => onPublicDownload(k)}
+            disabled={busyKind !== null || locked}
+          >
+            {/* #252: no per-button "Rendering…" — the band is the one
+                working voice; "Try again" is an outcome, kept. */}
+            {currentError?.kind === k ? "Try again" : labelFor(k)}
+            <span className="font-mono">↓</span>
+          </button>
+        ))
+      : mode.planId
+        ? mode.dirty
+          ? kinds.map((k) => (
+              <button key={k} type="button" className="dl-btn" data-write="" disabled>
+                {labelFor(k)}
+                <span className="font-mono">↓</span>
+              </button>
+            ))
+          : kinds.map((k) => (
+              <a
+                key={k}
+                href={`/api/plans/${mode.planId}/${k}`}
+                download
+                className="dl-btn"
+                data-write=""
+                {...lockedAnchorProps(locked)}
+              >
+                {labelFor(k)}
+                <span className="font-mono">↓</span>
+              </a>
+            ))
+        : [
+            <Link key={card.kind} href={SIGNUP_HREF} className="dl-btn">
+              {labelFor(card.kind)}
+              <span className="font-mono">↓</span>
+            </Link>,
+          ];
+
+  const note =
+    mode.kind === "public" ? (
+      currentError ? (
+        <div className="text-[12px] leading-snug text-[color:var(--fail)] font-sans">
+          {currentError.msg}
+        </div>
+      ) : null
+    ) : mode.planId && mode.dirty ? (
+      <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
+        Unsaved edits — Save to download the plan on screen. The saved copy
+        no longer matches it.
+      </div>
+    ) : null;
+
   return (
     <div className="dl-card">
       <div className="top">
-        <h4>{card.title}</h4>
+        <h3>{card.title}</h3>
         <span className="fmt">{card.format}</span>
       </div>
       <div className="desc">
@@ -304,64 +368,8 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
         <br />
         <b>{card.qty}</b> {card.qtyLbl}
       </div>
-      {mode.kind === "public" ? (
-        <>
-          {kinds.map((k) => (
-            <button
-              key={k}
-              type="button"
-              className="dl-btn"
-              data-write=""
-              onClick={() => onPublicDownload(k)}
-              disabled={busyKind !== null || locked}
-            >
-              {/* #252: no per-button "Rendering…" — the band is the one
-                  working voice; "Try again" is an outcome, kept. */}
-              {currentError?.kind === k ? "Try again" : labelFor(k)}
-              <span className="font-mono">↓</span>
-            </button>
-          ))}
-          {currentError && (
-            <div className="text-[12px] leading-snug text-[color:var(--fail)] font-sans">
-              {currentError.msg}
-            </div>
-          )}
-        </>
-      ) : mode.planId ? (
-        mode.dirty ? (
-          <>
-            {kinds.map((k) => (
-              <button key={k} type="button" className="dl-btn" data-write="" disabled>
-                {labelFor(k)}
-                <span className="font-mono">↓</span>
-              </button>
-            ))}
-            <div className="text-[12px] leading-snug text-[color:var(--ink-faint)] font-sans">
-              Unsaved edits — Save to download the plan on screen. The saved
-              copy no longer matches it.
-            </div>
-          </>
-        ) : (
-          kinds.map((k) => (
-            <a
-              key={k}
-              href={`/api/plans/${mode.planId}/${k}`}
-              download
-              className="dl-btn"
-              data-write=""
-              {...lockedAnchorProps(locked)}
-            >
-              {labelFor(k)}
-              <span className="font-mono">↓</span>
-            </a>
-          ))
-        )
-      ) : (
-        <Link href={SIGNUP_HREF} className="dl-btn">
-          {labelFor(card.kind)}
-          <span className="font-mono">↓</span>
-        </Link>
-      )}
+      {note}
+      <div className="dl-actions">{actions}</div>
     </div>
   );
 }

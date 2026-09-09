@@ -3041,7 +3041,10 @@ input[type="number"] {
   align-items: baseline;
   justify-content: space-between;
 }
-.workbench .dl-card h4 {
+/* #261: the card title is an h3 under the zone's h2 (axe heading-order).
+   The `#fff` here is D's hand-off (#263) — it becomes var(--ink-bright)
+   once that token lands; not swapped in this arc. */
+.workbench .dl-card h3 {
   font-size: 14px;
   font-weight: 600;
   color: #fff;
@@ -3088,6 +3091,25 @@ input[type="number"] {
 }
 .workbench .dl-btn:disabled:hover {
   background: var(--canvas);
+}
+/* #261 (P4): one bottom-anchored action row per card — the crew card's
+   PDF and .md share it side by side — so the first button of every card
+   sits on one top edge and one bottom edge.  The buttons split the row
+   evenly and drop their own auto margin (the row carries it).  At phone
+   width the buttons are 44 px targets (WCAG 2.5.5, P10). */
+.workbench .dl-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
+.workbench .dl-actions .dl-btn {
+  margin-top: 0;
+  flex: 1 1 0;
+}
+@media (max-width: 480px) {
+  .workbench .dl-actions .dl-btn {
+    min-height: 44px;
+  }
 }
 /* #258 (P11/P10/P4): the refusal container's two recovery actions are
    .dl-btn — one class, one treatment; a row on the section label's

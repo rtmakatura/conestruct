@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
@@ -289,5 +291,96 @@ describe("download errors carry their input identity (#197)", () => {
     fireEvent.click(document.querySelector(".dl-btn") as HTMLButtonElement);
     expect(await screen.findByText(FLOOR_400)).toBeTruthy();
     expect(screen.getByText("Try again")).toBeTruthy();
+  });
+});
+
+// #261 (P4/P11): every card's actions live in ONE bottom-anchored row —
+// the crew card's PDF + .md sit side by side inside it — so the first
+// button of every card shares one top and one bottom edge (the audit
+// measured 1589 / 1589 / 1537 / 1589 with the crew card's two stacked
+// buttons; F-S3-4).  The row is the card's last child; any note (a 400's
+// message, the unsaved-edits line) prints ABOVE the row so the edge
+// never moves (P1, declared).  The card title is an h3 under the zone's
+// h2 (axe heading-order, F-S3-19).
+describe("the action row (#261a)", () => {
+  const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+  const rule = (selector: string) => {
+    const m = css.match(
+      new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + " \\{[^}]*\\}"),
+    );
+    expect(m, `no rule for ${selector}`).not.toBeNull();
+    return m![0].replace(/\s+/g, " ");
+  };
+
+  it("every card ends in one .dl-actions row holding all of its buttons; the crew card's two are siblings in it", () => {
+    const { container } = renderPublic();
+    for (const card of cards(container)) {
+      const rows = card.querySelectorAll(":scope > .dl-actions");
+      expect(rows).toHaveLength(1);
+      expect(card.lastElementChild).toBe(rows[0]);
+      const inRow = rows[0].querySelectorAll(":scope > .dl-btn").length;
+      expect(inRow).toBe(card.querySelectorAll(".dl-btn").length);
+      expect(inRow).toBeGreaterThanOrEqual(1);
+    }
+    const crew = cards(container).find((c) => c.textContent!.includes("Crew instructions"))!;
+    expect(crew.querySelectorAll(":scope > .dl-actions > .dl-btn")).toHaveLength(2);
+  });
+
+  it("a 400's message prints above the row, never after it (the edge holds — P1)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: false,
+          status: 400,
+          json: async () => ({ detail: { message: "Work zone too short." } }),
+        } as unknown as Response),
+      ),
+    );
+    const { container } = renderPublic();
+    fireEvent.click(document.querySelector(".dl-btn") as HTMLButtonElement);
+    const msg = await screen.findByText("Work zone too short.");
+    const card = msg.closest(".dl-card")!;
+    expect(card.lastElementChild!.classList.contains("dl-actions")).toBe(true);
+    expect(msg.compareDocumentPosition(card.lastElementChild!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(container.querySelectorAll(".dl-card .dl-actions")).toHaveLength(cards(container).length);
+  });
+
+  it("saved mode with unsaved edits: the note prints above the row too", () => {
+    const { container } = render(
+      <OutputCards
+        summary={SUMMARY}
+        generated={true}
+        mode={{ kind: "saved", planId: "plan-1", dirty: true }}
+        breakdown={READY_BREAKDOWN}
+      />,
+    );
+    for (const card of cards(container)) {
+      expect(card.lastElementChild!.classList.contains("dl-actions")).toBe(true);
+      expect(card.textContent).toContain("Unsaved edits");
+    }
+  });
+
+  it("the card title is an h3 (one h2 per zone; no h4 anywhere in a card)", () => {
+    const { container } = renderPublic();
+    expect(container.querySelectorAll(".dl-card h4")).toHaveLength(0);
+    const h3 = Array.from(container.querySelectorAll(".dl-card > .top > h3")).map((h) => h.textContent);
+    expect(h3).toEqual(cards(container).map((c) => c.querySelector(".top")!.firstElementChild!.textContent));
+    expect(h3).toContain("Plan sheet");
+  });
+
+  it("globals.css: the row is bottom-anchored flex with an 8px gap, its buttons share the row (flex: 1 1 0, no own margin), 44 px targets at phone width; the title rule follows the h3", () => {
+    expect(rule(".workbench .dl-actions")).toContain("margin-top: auto");
+    expect(rule(".workbench .dl-actions")).toContain("display: flex");
+    expect(rule(".workbench .dl-actions")).toContain("gap: 8px");
+    expect(rule(".workbench .dl-actions .dl-btn")).toContain("margin-top: 0");
+    expect(rule(".workbench .dl-actions .dl-btn")).toContain("flex: 1 1 0");
+    expect(rule(".workbench .dl-card h3")).toContain("font-size: 14px");
+    expect(css).not.toMatch(/\.dl-card h4/);
+    const phone = css.slice(css.indexOf(".workbench .dl-actions {"));
+    const q = phone.slice(phone.indexOf("@media (max-width: 480px)"));
+    expect(q.slice(0, q.indexOf("}\n}") + 3).replace(/\s+/g, " ")).toContain(
+      ".workbench .dl-actions .dl-btn { min-height: 44px; }",
+    );
   });
 });
