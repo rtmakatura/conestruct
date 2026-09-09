@@ -1,0 +1,158 @@
+{
+ "cards": [
+  {
+   "title": "Plan sheet",
+   "h4": false,
+   "rect": {
+    "top": 1440,
+    "bottom": 1594,
+    "left": 170,
+    "right": 436,
+    "w": 266,
+    "h": 154
+   },
+   "row": {
+    "top": 1537,
+    "bottom": 1577,
+    "left": 187,
+    "right": 419,
+    "w": 232,
+    "h": 40
+   },
+   "rowLast": true,
+   "qty": "37 devices",
+   "btns": [
+    {
+     "top": 1537,
+     "bottom": 1577,
+     "left": 187,
+     "right": 419,
+     "w": 232,
+     "h": 40,
+     "name": "Download PDF↓",
+     "disabled": false,
+     "cls": "dl-btn"
+    }
+   ]
+  },
+  {
+   "title": "Device list",
+   "h4": false,
+   "rect": {
+    "top": 1440,
+    "bottom": 1594,
+    "left": 448,
+    "right": 714,
+    "w": 266,
+    "h": 154
+   },
+   "row": {
+    "top": 1537,
+    "bottom": 1577,
+    "left": 465,
+    "right": 697,
+    "w": 232,
+    "h": 40
+   },
+   "rowLast": true,
+   "qty": "11 types",
+   "btns": [
+    {
+     "top": 1537,
+     "bottom": 1577,
+     "left": 465,
+     "right": 697,
+     "w": 232,
+     "h": 40,
+     "name": "Download XLSX↓",
+     "disabled": false,
+     "cls": "dl-btn"
+    }
+   ]
+  },
+  {
+   "title": "Crew instructions",
+   "h4": false,
+   "rect": {
+    "top": 1440,
+    "bottom": 1594,
+    "left": 726,
+    "right": 992,
+    "w": 266,
+    "h": 154
+   },
+   "row": {
+    "top": 1537,
+    "bottom": 1577,
+    "left": 743,
+    "right": 975,
+    "w": 232,
+    "h": 40
+   },
+   "rowLast": true,
+   "qty": "11 steps",
+   "btns": [
+    {
+     "top": 1537,
+     "bottom": 1577,
+     "left": 743,
+     "right": 855,
+     "w": 112,
+     "h": 40,
+     "name": "Download PDF↓",
+     "disabled": false,
+     "cls": "dl-btn"
+    },
+    {
+     "top": 1537,
+     "bottom": 1577,
+     "left": 863,
+     "right": 975,
+     "w": 112,
+     "h": 40,
+     "name": "Download .md↓",
+     "disabled": false,
+     "cls": "dl-btn"
+    }
+   ]
+  },
+  {
+   "title": "Audit trail",
+   "h4": false,
+   "rect": {
+    "top": 1440,
+    "bottom": 1594,
+    "left": 1004,
+    "right": 1270,
+    "w": 266,
+    "h": 154
+   },
+   "row": {
+    "top": 1537,
+    "bottom": 1577,
+    "left": 1021,
+    "right": 1253,
+    "w": 232,
+    "h": 40
+   },
+   "rowLast": true,
+   "qty": "13 checks",
+   "btns": [
+    {
+     "top": 1537,
+     "bottom": 1577,
+     "left": 1021,
+     "right": 1253,
+     "w": 232,
+     "h": 40,
+     "name": "Download PDF↓",
+     "disabled": false,
+     "cls": "dl-btn"
+    }
+   ]
+  }
+ ],
+ "header": "MHT PACKAGE · 4 FILES",
+ "h4s": 0,
+ "h3s": 4
+}

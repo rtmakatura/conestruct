@@ -1,0 +1,56 @@
+[
+ {
+  "list": 298,
+  "listRight": 339,
+  "rows": [
+   {
+    "text": "FIX INPUTS",
+    "right": 141,
+    "left": 73,
+    "w": 68,
+    "scrollW": 68,
+    "srcTop": 488,
+    "lblTop": 458,
+    "lblRight": 339,
+    "cols": "24px 266px",
+    "lines": 1
+   },
+   {
+    "text": "OSM GROUND-TRUTH (SOFT CHECK)",
+    "right": 270,
+    "left": 73,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": 686,
+    "lblTop": 521,
+    "lblRight": 339,
+    "cols": "24px 266px",
+    "lines": 7
+   },
+   {
+    "text": "CDOT S-630-1",
+    "right": 155,
+    "left": 73,
+    "w": 82,
+    "scrollW": 82,
+    "srcTop": 772,
+    "lblTop": 719,
+    "lblRight": 339,
+    "cols": "24px 266px",
+    "lines": 2
+   },
+   {
+    "text": "MANUAL HANDLING",
+    "right": 175,
+    "left": 73,
+    "w": 102,
+    "scrollW": 102,
+    "srcTop": 858,
+    "lblTop": 805,
+    "lblRight": 339,
+    "cols": "24px 266px",
+    "lines": 2
+   }
+  ]
+ }
+]

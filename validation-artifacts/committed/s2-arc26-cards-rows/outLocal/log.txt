@@ -1,0 +1,29 @@
+healthz sha a88caad9d6e2dfac20d5559eb2c4211d28203751 expect a88caad9d6e2dfac20d5559eb2c4211d28203751
+B1 healthz a88caad9d6e2dfac20d5559eb2c4211d28203751 == a88caad9d6e2dfac20d5559eb2c4211d28203751: PASS · base http://localhost:3003 · frontend e363d98
+[1440x1000] info C0 plan — strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; settled 4620 ms; band objects ["new plan · pin 39.7451, -104.9635"]
+[1440x1000] PASS C1 four cards — 4 cards [Plan sheet, Device list, Crew instructions, Audit trail]; header "MHT PACKAGE · 4 FILES"; h3 4, h4 0; qty ["37 devices", "11 types", "11 steps", "13 checks"] | 1440x1000-cards.png
+[1440x1000] PASS C2 one edge — first-button tops [1537, 1537, 1537, 1537] spread 0; bottoms [1577, 1577, 1577, 1577] spread 0; row bottoms spread 0; rows last true; crew side by side true (743..855@1537 / 863..975@1537); heights [40, 40, 40, 40, 40] ≥ 32; card widths [266, 266, 266, 266]
+[1440x1000] PASS C2 buttons live — disabled: false, false, false/false, false; classes one: true
+[1440x1000] PASS C3 audit PDF via the card — download "plan.audit.pdf"; band objects in flight ["audit PDF"] (band seen true); button live after true
+[1440x1000] PASS C4 one heading, no ledger — headings inside 0; zone h2 ["Rules, permit & audit"]; section <DIV> "Plan reference"; ledger el false copy false checking false suffix false; cue "" h 15 (min 15px, lh 15px); audit link in tier false; chips Changed this plan=1, Needs attention=2, Checked & passed=13, Pending / not verified=1, Reference=null | 1440x1000-zone3.png
+[1440x1000] PASS C7 contrast — tr-section #ffffff/#14202e 16.46 10px/500; tr-prov #93a0b0/#14202e 6.19 10px
+[1440x1000] PASS C5 axe heading-order — heading-order nodes: none
+[1440x1000] PASS C5 axe baseline — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS C6 strip rows one right edge — 4 row(s): "FIX INPUTS" right 1253 w 68 scrollW 68 lines 1 ; "OSM GROUND-TRUTH (SOFT CHECK)" right 1253 w 197 scrollW 197 lines 2 ; "CDOT S-630-1" right 1253 w 82 scrollW 82 lines 1 ; "MANUAL HANDLING" right 1253 w 102 scrollW 102 lines 1; list width 1066; cols "24px 826px 200px" | 1440x1000-flags.png
+[1440x1000] PASS C6 longest annotation fits the 200 px gutter — "OSM GROUND-TRUTH (SOFT CHECK)" natural width 197 px (rect 197) at 10px — gutter 200 px, chosen; slack 3
+[1440x1000] PASS C6 section-03 rows one right edge per list — 4 list(s), 13 row(s); per list [1 rows spread 0 right 1253 (list right 1253); 1 rows spread 0 right 1253 (list right 1253); 8 rows spread 0 right 1253 (list right 1253); 3 rows spread 0 right 1253 (list right 1253)]; max annotation scrollWidth 200 ("CDOT S-630-1 (July 2026) Sheet 2, General Note 8") | 1440x1000-s3-rows.png
+[1440x1000] PASS C8 refresh cue — cues seen in flight ["◌ previous answer — refreshing…"]; band objects ["after an edit to speed"]; settled 11282 ms (12845 ms total); after: cue "" h 15
+[380x800] info C0 plan — strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; settled 994 ms; band objects ["new plan · pin 39.7451, -104.9635"]
+[380x800] PASS C1 four cards — 4 cards [Plan sheet, Device list, Crew instructions, Audit trail]; header "MHT PACKAGE · 4 FILES"; h3 4, h4 0; qty ["37 devices", "11 types", "11 steps", "13 checks"] | 380x800-cards.png
+[380x800] PASS C2 stacked, 44 px — stacked true; row bottom-anchored true (card bottom − 16 vs row bottom: 2370/2369, 2540/2539, 2710/2709, 2879/2878); rows last true; crew side by side true; heights [44, 44, 44, 44, 44] ≥ 44; widths [332, 332, 332, 332]
+[380x800] PASS C2 buttons live — disabled: false, false, false/false, false; classes one: true
+[380x800] PASS C3 audit PDF via the card — download "plan.audit.pdf"; band objects in flight ["audit PDF"] (band seen true); button live after true
+[380x800] PASS C4 one heading, no ledger — headings inside 0; zone h2 ["Rules, permit & audit"]; section <DIV> "Plan reference"; ledger el false copy false checking false suffix false; cue "" h 15 (min 15px, lh 15px); audit link in tier false; chips Changed this plan=1, Needs attention=2, Checked & passed=13, Pending / not verified=1, Reference=null | 380x800-zone3.png
+[380x800] PASS C7 contrast — tr-section #ffffff/#14202e 16.46 10px/500; tr-prov #93a0b0/#14202e 6.19 10px
+[380x800] PASS C5 axe heading-order — heading-order nodes: none
+[380x800] PASS C5 axe baseline — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS C6 strip rows wrap under the label — 4 row(s): "FIX INPUTS" srcTop 488 lblTop 458 cols "24px 266px" ; "OSM GROUND-TRUTH (SOFT CHECK)" srcTop 686 lblTop 521 cols "24px 266px" ; "CDOT S-630-1" srcTop 772 lblTop 719 cols "24px 266px" ; "MANUAL HANDLING" srcTop 858 lblTop 805 cols "24px 266px" | 380x800-flags.png
+[380x800] PASS C6 longest annotation fits the 200 px gutter — "OSM GROUND-TRUTH (SOFT CHECK)" natural width 197 px (rect 197) at 10px — gutter 200 px, chosen; slack 3
+[380x800] PASS C6 section-03 rows wrap under the label — 4 list(s), 13 row(s); under-label 13/13 | 380x800-s3-rows.png
+[380x800] PASS C8 refresh cue — cues seen in flight ["◌ previous answer — refreshing…"]; band objects ["after an edit to speed"]; settled 20727 ms (22279 ms total); after: cue "" h 15
+RESULT ALL PASS 24/24

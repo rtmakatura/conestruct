@@ -1,0 +1,47 @@
+{
+ "headingsInside": 0,
+ "zoneH2": [
+  "Rules, permit & audit"
+ ],
+ "section": "Plan reference",
+ "sectionTag": "DIV",
+ "prov": "informational · sourced corpus · never blocks generation",
+ "ledger": false,
+ "ledgerCopy": false,
+ "checking": false,
+ "refreshingSuffix": false,
+ "cue": {
+  "text": "",
+  "h": 15,
+  "minH": "15px",
+  "lh": "15px"
+ },
+ "chips": [
+  {
+   "label": "Changed this plan",
+   "n": "1",
+   "open": "true"
+  },
+  {
+   "label": "Needs attention",
+   "n": "2",
+   "open": "true"
+  },
+  {
+   "label": "Checked & passed",
+   "n": "13",
+   "open": "false"
+  },
+  {
+   "label": "Pending / not verified",
+   "n": "1",
+   "open": "false"
+  },
+  {
+   "label": "Reference",
+   "n": null,
+   "open": "false"
+  }
+ ],
+ "auditLink": false
+}
