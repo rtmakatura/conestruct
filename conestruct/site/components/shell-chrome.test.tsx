@@ -25,7 +25,8 @@ import { FieldGroup } from "./GeneratorFormPrimitives";
 import { ProgressRail } from "./ProgressRail";
 import type { Rail } from "@/lib/scenarios/rail";
 
-const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+// Line endings normalised: the checkout may carry CRLF (core.autocrlf).
+const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
 const nav = readFileSync(join(__dirname, "AppNav.tsx"), "utf-8");
 
 /** The declarations of the FIRST rule whose selector line is exactly
@@ -61,6 +62,33 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
     );
     const el = container.querySelector("#rail-step-work");
     expect(el?.className).toContain("jump-anchor");
+  });
+});
+
+// #250 (option f2) — the verdict strip's room is reserved before the
+// answer lands: one token for the strip's pill-state height (52 at
+// 1440, 70 in the ≤480 query — both MEASURED on the dev server at
+// 224feb9: 51.59 / 69.19 with the pill, 46.8 / 67.59 without; the slot
+// takes the taller so nothing below moves at the first verdict), and
+// the live wrapper (``.status-slot``) carries it plus the 24 px gap the
+// strip used to own.  The strip's own margin is zeroed INSIDE the slot
+// (a non-zero min-height stops the child margin collapsing through, so
+// the gap would otherwise double).
+describe("#250 f2 — the verdict strip's reserved slot", () => {
+  it("the workbench defines --status-h: 52px and pins 70px in the ≤480 query", () => {
+    expect(rule(".workbench")).toMatch(/--status-h:\s*52px/);
+    const q = css.indexOf("@media (max-width: 480px) {");
+    expect(q).toBeGreaterThan(-1);
+    const block = css.slice(q, css.indexOf("\n}\n", q));
+    expect(block).toMatch(/\.workbench \{[^}]*--status-h:\s*70px/);
+  });
+  it(".status-slot reserves the strip's height and owns the 24 px gap; the strip's margin is zero inside it", () => {
+    const slot = rule(".workbench .status-slot");
+    expect(slot).toMatch(/min-height:\s*var\(--status-h\)/);
+    expect(slot).toMatch(/margin-bottom:\s*24px/);
+    expect(rule(".workbench .status-slot > .status-bar,\n.workbench .status-slot > .status-details")).toMatch(
+      /margin-bottom:\s*0/,
+    );
   });
 });
 

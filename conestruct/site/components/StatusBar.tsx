@@ -186,9 +186,14 @@ interface Props {
 // screen readers.  The live region is a stable wrapper — the state
 // elements inside it swap wholesale, which is exactly the change a
 // polite region reports.
+// #250 (option f2, P1): the wrapper is also the strip's reserved slot —
+// ``.status-slot`` holds the pill-state height (``--status-h``) and the
+// 24 px gap in EVERY state, including the band-voice null below, so the
+// verdict's re-mount at the pair's settle lands in room already
+// allocated instead of pushing the results zone 76 px (audit F-S2-3).
 export function StatusBar(props: Props) {
   return (
-    <div aria-live="polite">
+    <div className="status-slot" aria-live="polite">
       <StatusBarState {...props} />
     </div>
   );

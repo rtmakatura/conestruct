@@ -155,7 +155,8 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     const pre = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} />);
     expect(pre).toContain("VERIFYING");
     const band = renderToStaticMarkup(<StatusBar inputError={null} audit={loading} bandVoice />);
-    expect(band).toBe('<div aria-live="polite"></div>');
+    // #250 f2: the live wrapper is the reserved slot — empty, room kept.
+    expect(band).toBe('<div class="status-slot" aria-live="polite"></div>');
     const verdict = renderToStaticMarkup(
       <StatusBar inputError={null} audit={ready(makeAudit())} bandVoice />,
     );

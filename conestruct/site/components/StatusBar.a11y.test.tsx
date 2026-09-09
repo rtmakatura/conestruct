@@ -39,6 +39,35 @@ describe("StatusBar aria-live region", () => {
       expect(html).toContain('aria-live="polite"');
     }
   });
+
+  // #250 (option f2): the live wrapper IS the reserved-height slot —
+  // ``.status-slot`` in every state, including the band-voice null
+  // (the strip's re-mount at the pair's settle lands in room already
+  // allocated: no 76 px landing shift, P1).
+  it("#250 f2: the wrapper carries .status-slot in every state, including the band-voice empty one", () => {
+    const states = [
+      renderToStaticMarkup(
+        <StatusBar inputError={null} audit={{ state: "loading", lastReady: null }} bandVoice />,
+      ),
+      renderToStaticMarkup(
+        <StatusBar inputError={null} audit={{ state: "loading", lastReady: null }} />,
+      ),
+      renderToStaticMarkup(
+        <StatusBar inputError={null} locationUnset audit={{ state: "loading", lastReady: null }} />,
+      ),
+      renderToStaticMarkup(
+        <StatusBar inputError="speed out of range" audit={{ state: "loading", lastReady: null }} />,
+      ),
+      renderToStaticMarkup(
+        <StatusBar inputError={null} audit={{ state: "ready", data: noVerdict }} />,
+      ),
+    ];
+    for (const html of states) {
+      expect(html).toMatch(/^<div class="status-slot" aria-live="polite">/);
+    }
+    // The empty state is the slot alone — nothing inside, the room stays.
+    expect(states[0]).toBe('<div class="status-slot" aria-live="polite"></div>');
+  });
 });
 
 describe("verifying / unavail style modifiers", () => {

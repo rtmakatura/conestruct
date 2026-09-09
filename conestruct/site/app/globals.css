@@ -703,6 +703,13 @@ body {
      heading clear of the nav + rail instead of under them. */
   --nav-h: 52px;
   --rail-h: 38px;
+  /* #250 (option f2): the verdict strip's pill-state height — MEASURED
+     on the dev server at 224feb9: 51.59 with the pill / 46.8 without at
+     1440 (69.19 / 67.59 at 380; the ≤480 query pins 70).  The slot
+     (.status-slot) and the strip itself take it as min-height so the
+     strip's re-mount at the pair's settle, and the first verdict's
+     pill, move nothing below them (P1; audit F-S1-4, F-S2-3). */
+  --status-h: 52px;
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -1005,6 +1012,19 @@ body {
 }
 
 /* Status bar */
+/* #250 (option f2): the strip's live wrapper is its reserved slot — the
+   pill-state height and the 24 px gap are allocated in every state,
+   the band-voice empty one included (StatusBar.tsx).  The strip's own
+   margin is zeroed inside the slot: a non-zero min-height stops the
+   child margin collapsing through, so the gap would otherwise double. */
+.workbench .status-slot {
+  min-height: var(--status-h);
+  margin-bottom: 24px;
+}
+.workbench .status-slot > .status-bar,
+.workbench .status-slot > .status-details {
+  margin-bottom: 0;
+}
 .workbench .status-bar {
   background: rgba(0, 0, 0, 0.25);
   border-color: var(--rule);
@@ -2937,6 +2957,14 @@ input[type="number"] {
   .workbench .scan-refusal .dl-btn {
     flex: 1 1 100%;
     min-height: 44px;
+  }
+  .workbench {
+    /* Issue 250, option f2: the strip's pill-state height at 380 — measured 69.19
+       (two text lines + the pill); pinned at the next whole pixel so
+       the min-height governs every state.  Residual: the cold-start
+       VERIFYING copy wraps to three lines (88.39) and exceeds the slot
+       for the seconds it shows. */
+    --status-h: 70px;
   }
 }
 
