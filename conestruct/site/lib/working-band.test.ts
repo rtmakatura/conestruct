@@ -63,6 +63,42 @@ describe("deriveWorkingBand (#252)", () => {
     ).toBe("after a correction to ");
   });
 
+  // #254: Apply folds the staged set into ONE write — more than one
+  // marker differs between the two objects, and the band says the count
+  // (one condition's name would be a half-truth).  One marker: unchanged.
+  it("RE-GENERATING · after N corrections when Apply changed more than one marker; one marker keeps the named branch", () => {
+    const second: SiteConditionOverride = {
+      flag: "pedestrian_facility",
+      action: "dismiss",
+      reason: "fenced",
+      recorded_at: "2026-09-07T12:00:00Z",
+    };
+    const twoAdded = { ...scanned, meta: { ...scanned.meta, siteConditionOverrides: [MARK, second] } };
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: twoAdded })).toEqual({
+      verb: "RE-GENERATING",
+      lead: "after 2 corrections",
+      named: null,
+    });
+    // One added + one removed is two changes too.
+    const swapped = { ...scanned, meta: { ...scanned.meta, siteConditionOverrides: [second] } };
+    expect(deriveWorkingBand({ plan: true, render: null, prev: withMarker(scanned), next: swapped })!.lead).toBe(
+      "after 2 corrections",
+    );
+    // Two removed (Apply of two staged Undos).
+    expect(deriveWorkingBand({ plan: true, render: null, prev: twoAdded, next: scanned })!.lead).toBe(
+      "after 2 corrections",
+    );
+    // Exactly one marker differing keeps the named sentence (#252).
+    expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: withMarker(scanned) })!.lead).toBe(
+      "after a correction to ",
+    );
+    // A replaced marker for ONE flag (dismiss after assert) is one change, not two.
+    const dismissed: SiteConditionOverride = { ...MARK, action: "dismiss", reason: "fenced" };
+    expect(
+      deriveWorkingBand({ plan: true, render: null, prev: withMarker(scanned), next: withMarker(scanned, dismissed) })!.lead,
+    ).toBe("after a correction to ");
+  });
+
   it("RE-GENERATING without the site check when the proceed acknowledgement is what changed", () => {
     expect(deriveWorkingBand({ plan: true, render: null, prev: scanned, next: withSiteScan(pinned, true) })).toEqual({
       verb: "RE-GENERATING",

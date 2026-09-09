@@ -17,8 +17,12 @@ import type {
   ScenarioMeta,
   SiteConditionOverride,
   SiteDismissReason,
+  StagedCorrection,
 } from "./types";
+import type { SiteScanProvenance } from "@/lib/render-types";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
+
+export type { StagedCorrection } from "./types";
 
 /** The dismiss vocabulary (backend enum; ``other`` needs a note). */
 /** #246 — the DOM id of the strip's "Site conditions — scanned" block:
@@ -149,6 +153,89 @@ export function dismissAllowed(
   if (!buckets) return false;
   const bucketName = SCAN_BUCKET_TO_FLAG.find(([, f]) => f === flag)?.[0];
   return bucketName !== undefined && buckets[bucketName]?.detected === true;
+}
+
+// ---------------------------------------------------------------------------
+// #254 (s2-arc26) — staging.  A Dismiss / Assert / Undo click is an intent
+// the shell holds; Apply folds the whole set into ONE scenario write, so
+// one request opens and the band mounts once.  Pure functions; the
+// existing marker helpers above do the folding, so Apply's meta is
+// exactly what N single writes would have produced.
+// ---------------------------------------------------------------------------
+
+/** Stage an intent: one entry per flag — a new intent for a flag
+ *  replaces the old one in place (the backend refuses duplicate flags). */
+export function stage(staged: readonly StagedCorrection[], entry: StagedCorrection): StagedCorrection[] {
+  const i = staged.findIndex((s) => s.flag === entry.flag);
+  if (i === -1) return [...staged, entry];
+  const next = staged.slice();
+  next[i] = entry;
+  return next;
+}
+
+/** Undo on a staged row: the intent leaves the set — no request. */
+export function unstage(staged: readonly StagedCorrection[], flag: ScannedSiteFlag): StagedCorrection[] {
+  return staged.filter((s) => s.flag !== flag);
+}
+
+/** Apply: fold the staged set through withSiteCorrection /
+ *  withoutSiteCorrection in staged order.  Nothing staged ⇒ the same
+ *  meta object back (no spurious write); the key drops when the list
+ *  empties (the #179 shape, byte-identical after correct-then-undo). */
+export function applyStaged(meta: ScenarioMeta, staged: readonly StagedCorrection[]): ScenarioMeta {
+  let next = meta;
+  for (const s of staged) {
+    next = s.marker === null ? withoutSiteCorrection(next, s.flag) : withSiteCorrection(next, s.marker);
+  }
+  return next;
+}
+
+export interface CorrectionsStanding {
+  /** Keyed buckets on the wire (the "of N checked" total; rule 12). */
+  total: number;
+  /** Of those, detected. */
+  detected: number;
+  /** Detected rows with no server correction of any status — the rows
+   *  still open to a Dismiss (B's chip 1). */
+  open: number;
+  /** Server records with status applied (the plan was built to them). */
+  applied: number;
+  /** The staged set's size. */
+  staged: number;
+}
+
+/** One derivation the block's Apply row and the results-head chip share
+ *  (P2).  Counts the SERVED scan + the staged set; without an ok scan
+ *  the buckets contribute nothing (rule 10) and only the records and
+ *  the staged set count. */
+export function deriveCorrectionsStanding(
+  scan: SiteScanProvenance | null,
+  staged: readonly StagedCorrection[],
+): CorrectionsStanding {
+  const out: CorrectionsStanding = { total: 0, detected: 0, open: 0, applied: 0, staged: staged.length };
+  if (!scan) return out;
+  const corrections = (scan.corrections ?? []).filter((c) => isScannedFlag(c.flag));
+  const recorded = new Set(corrections.map((c) => c.flag));
+  out.applied = corrections.filter((c) => c.status === "applied").length;
+  if (scan.status !== "ok") return out;
+  const buckets = (scan.buckets as Record<string, ScanBucketWire> | undefined) ?? {};
+  for (const [bucketName, flag] of SCAN_BUCKET_TO_FLAG) {
+    const b = buckets[bucketName];
+    if (!b) continue;
+    out.total += 1;
+    if (b.detected === true) {
+      out.detected += 1;
+      if (!recorded.has(flag)) out.open += 1;
+    }
+  }
+  return out;
+}
+
+/** The staged count in words — the Apply row's label and the chip's
+ *  suffix share it (one voice). */
+export function stagedSentence(n: number): string {
+  if (n === 0) return "no corrections staged";
+  return `${n} correction${n === 1 ? "" : "s"} staged · not yet applied`;
 }
 
 const MONTHS_LOWER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];

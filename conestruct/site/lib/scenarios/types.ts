@@ -247,6 +247,19 @@ export interface SiteConditionOverride {
   recorded_at: string;
 }
 
+/**
+ * #254 (s2-arc26) — one STAGED correction: the operator's intent for a
+ * flag, held in the shell until Apply folds the whole set into one
+ * scenario write (one request, one band cycle).  ``marker`` is the
+ * SiteConditionOverride Apply will write; ``null`` is a staged Undo of
+ * an applied record (Apply removes that flag's marker).  Never on the
+ * scenario, never on a saved plan: staged is not applied.
+ */
+export interface StagedCorrection {
+  flag: ScannedSiteFlag;
+  marker: SiteConditionOverride | null;
+}
+
 export interface ScenarioMeta {
   project: string;
   address: string;

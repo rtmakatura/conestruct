@@ -14,6 +14,8 @@
 //                  "new plan · {address}" from ``meta.address``; when the
 //                  user typed none, the pin — never a placeholder name.
 //   RE-GENERATING  a scanned plan is being re-made.  Object, in order:
+//                  more than one flag's marker changed (#254 Apply) →
+//                  "after N corrections";
 //                  a correction added → "after a correction to {name}";
 //                  a correction removed → "after undoing the correction
 //                  to {name}"; the proceed acknowledgement → "without the
@@ -94,6 +96,13 @@ export function deriveWorkingBand(args: {
   const verb: WorkingVerb = "RE-GENERATING";
   const prevMarkers = prev.meta.siteConditionOverrides ?? [];
   const nextMarkers = next.meta.siteConditionOverrides ?? [];
+  // #254: Apply folds a staged set into one write.  Counted by FLAG (a
+  // replaced marker for one flag is one change); more than one changed
+  // flag says the count — one condition's name would be a half-truth.
+  const changedFlags = new Set<string>();
+  for (const m of nextMarkers) if (!prevMarkers.some((p) => sameMarker(p, m))) changedFlags.add(m.flag);
+  for (const m of prevMarkers) if (!nextMarkers.some((n) => sameMarker(n, m))) changedFlags.add(m.flag);
+  if (changedFlags.size > 1) return { verb, lead: `after ${changedFlags.size} corrections`, named: null };
   const added = nextMarkers.find((m) => !prevMarkers.some((p) => sameMarker(p, m)));
   if (added) return { verb, lead: "after a correction to ", named: conditionName(added.flag) };
   const removed = prevMarkers.find((m) => !nextMarkers.some((n) => sameMarker(n, m)));
