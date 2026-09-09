@@ -449,6 +449,13 @@ describe("the action row (#261a)", () => {
     expect(rule(".workbench .dl-actions")).toContain("gap: 8px");
     expect(rule(".workbench .dl-actions .dl-btn")).toContain("margin-top: 0");
     expect(rule(".workbench .dl-actions .dl-btn")).toContain("flex: 1 1 0");
+    // Measured (s2-arc26 browser leg, 1440): a shared row is 112 px per
+    // button at the 266 px card; "Download PDF ↓" needs 121 at the card's
+    // 9 px inset and 8 px gap and wrapped to 60 px.  Shared-row buttons
+    // trim to a 4 px inset and gap (107 px) so the row stays 40 px.
+    expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-left: 4px");
+    expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-right: 4px");
+    expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("gap: 4px");
     expect(rule(".workbench .dl-card h3")).toContain("font-size: 14px");
     expect(css).not.toMatch(/\.dl-card h4/);
     const phone = css.slice(css.indexOf(".workbench .dl-actions {"));

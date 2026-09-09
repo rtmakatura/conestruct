@@ -3113,6 +3113,16 @@ input[type="number"] {
   margin-top: 0;
   flex: 1 1 0;
 }
+/* Measured (s2-arc26 browser leg, 1440): a shared row gives each button
+   112 px at the 266 px card; "Download PDF ↓" needs 121 at the 9 px inset
+   and 8 px label gap, and wrapped to 60 px — a 20 px top-edge miss.
+   Shared-row buttons trim to a 4 px inset and gap (107 px) so the row
+   stays one 40 px line.  Layout only; ink, border, size unchanged. */
+.workbench .dl-actions .dl-btn:not(:only-child) {
+  padding-left: 4px;
+  padding-right: 4px;
+  gap: 4px;
+}
 @media (max-width: 480px) {
   .workbench .dl-actions .dl-btn {
     min-height: 44px;
