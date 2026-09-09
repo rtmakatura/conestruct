@@ -547,16 +547,24 @@ body {
     font-weight: 600;
   }
 
-  /* Compliance check list */
+  /* Compliance check list.  #225 (P6/P4): the list fits its container
+     (no cap); the row is three tracks — symbol · message (minmax(0, 1fr),
+     so a long message wraps inside its cell and never widens the
+     annotation) · a fixed annotation gutter every row shares.  The
+     gutter is CHOSEN at 200px from the longest annotation, "OSM
+     GROUND-TRUTH (SOFT CHECK)" (29 ch, StatusBar.tsx), and corrected to
+     the measured scrollWidth in the s2-arc26-cards-rows browser leg.
+     Serves the strip's plan-flags dropdown and section 03 alike (both
+     wear the class; no TSX). */
   .check-list {
     display: flex;
     flex-direction: column;
     margin: 12px 0;
-    max-width: 600px;
+    max-width: none;
   }
   .check-list-item {
     display: grid;
-    grid-template-columns: 24px 1fr auto;
+    grid-template-columns: 24px minmax(0, 1fr) 200px;
     gap: 8px;
     padding: 8px 0;
     border-bottom: 1px dashed var(--line);
@@ -591,6 +599,20 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink-faint);
+    justify-self: end;
+    text-align: right;
+  }
+  /* #225: at phone width the gutter would starve the message — the
+     annotation wraps under the label, in the message track, left-aligned. */
+  @media (max-width: 480px) {
+    .check-list-item {
+      grid-template-columns: 24px minmax(0, 1fr);
+    }
+    .check-list-item .check-list-src {
+      grid-column: 2;
+      justify-self: start;
+      text-align: left;
+    }
   }
 
   /* Device breakdown table */
