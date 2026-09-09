@@ -12,6 +12,7 @@ Authoritative sources:
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from datetime import UTC, datetime
 
 from src.rules.devices import DEVICE_CATALOG, DeviceType
 from src.rules.spacing import (
@@ -261,6 +262,42 @@ ROAD_TYPE_DISPLAY: dict[str, str] = {
     "expressway": "Expressway",
     "freeway": "Freeway",
 }
+
+
+def _utcnow() -> datetime:
+    """The one clock every deliverable stamp reads (#268).
+
+    Zone-aware UTC, so no surface can pick up a server's wall clock by
+    accident (Modal runs UTC; a laptop does not).  Tests monkeypatch this
+    seam to pin one instant across every file.
+    """
+    return datetime.now(UTC)
+
+
+def generated_at(now: datetime | None = None) -> datetime:
+    """The generation instant as a NAIVE UTC datetime, to the second.
+
+    The shape openpyxl writes as a real date cell (an aware datetime is
+    refused by the writer).  A zone-aware ``now`` is converted to UTC; a
+    naive ``now`` is taken as already UTC.  Rule 3: formatting only.
+    """
+    instant = now if now is not None else _utcnow()
+    if instant.tzinfo is not None:
+        instant = instant.astimezone(UTC)
+    return instant.replace(tzinfo=None, microsecond=0)
+
+
+def generated_stamp(now: datetime | None = None) -> str:
+    """The one generated stamp for every deliverable: ``YYYY-MM-DD``, UTC.
+
+    #268 ruling: the plan sheet's format, the UTC date, zone omitted —
+    the XLSX Summary, the quote, the crew narrative (md + PDF) and the
+    plan sheet's DATE all print this string for the same instant.  The
+    time of day is deliberately absent: with it the crew-narrative
+    snapshot proof (``test_replication_snapshot``) would flake once a
+    minute; without it only the midnight-UTC edge remains.
+    """
+    return generated_at(now).strftime("%Y-%m-%d")
 
 
 def road_type_display(params: ScenarioParams) -> str:
