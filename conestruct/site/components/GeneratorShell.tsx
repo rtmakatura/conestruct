@@ -1027,16 +1027,19 @@ export function GeneratorShell({
   // token (tier_ledger.py mirror).  Null while no audit has settled for
   // the input on screen (first load, or a failed audit) — the card
   // prints no number and withholds the download.
-  const auditChecked = useMemo(() => {
-    const settled =
-      showResults || auditState.state === "error" ? settledData(stripAudit) : null;
-    if (!settled) return null;
-    return assignTiers({
-      jurisdiction: jurisdictionLoading ? null : jurisdictionBlock,
-      audit: settled,
-      auditFailed: false,
-    }).ledger.checked;
-  }, [showResults, auditState.state, stripAudit, jurisdictionLoading, jurisdictionBlock]);
+  // Not memoised: ``stripAudit`` is a fresh object on every render, so
+  // a memo would recompute each time anyway (and lint says so);
+  // TieredReference runs the same assignTiers unmemoised.
+  const settledForCard =
+    showResults || auditState.state === "error" ? settledData(stripAudit) : null;
+  const auditChecked =
+    settledForCard === null
+      ? null
+      : assignTiers({
+          jurisdiction: jurisdictionLoading ? null : jurisdictionBlock,
+          audit: settledForCard,
+          auditFailed: false,
+        }).ledger.checked;
   // #258 (#193): "Plan generated — …" at the PAIR's settle, and only
   // when the stamped audit is clean.  Any settle consumes the arming
   // (so a later background settle never announces); a declined pair

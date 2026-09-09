@@ -30,6 +30,7 @@ vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { MIN_AUDIT } from "./test-fixtures";
 
 type BundleBody = { scenario: ShoulderScenario };
 let bundleBody: BundleBody | null = null;
@@ -42,6 +43,11 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       status: 200,
       blob: async () => new Blob(["zip"]),
     } as unknown as Response);
+  }
+  // #261: the audit answer is wire-shaped (the shell reads it for the
+  // audit card's count); everything else stays benign.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({ ok: true, status: 200, json: async () => MIN_AUDIT } as unknown as Response);
   }
   return Promise.resolve({ ok: true, status: 200, json: async () => ({}) } as unknown as Response);
 });
