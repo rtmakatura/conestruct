@@ -40,7 +40,8 @@ import { type DeliveryStatus, type FlaggerSource } from "./QuotePanel";
 import { PricingCard } from "./PricingCard";
 import { ResultsHero } from "./ResultsHero";
 import { TieredReference } from "./TieredReference";
-import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
+import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
+import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { ResultsHead, type ResultsHeadState } from "./ResultsHead";
 import type {
@@ -1019,6 +1020,23 @@ export function GeneratorShell({
   // answer is held, not discarded; downloads return with the verdict.
   const planDeclined = auditDeclined || (!auditSettled && prevSettled400);
   const resultsVisible = showResults && !planDeclined;
+  // #261: the audit card's "N checks" — assignTiers' ledger.checked over
+  // the same inputs TieredReference hands the tier model (the STAMPED
+  // audit, the jurisdiction block once it has loaded), so the card and
+  // the ✓ chip cannot disagree; the audit-PDF cover prints the same
+  // token (tier_ledger.py mirror).  Null while no audit has settled for
+  // the input on screen (first load, or a failed audit) — the card
+  // prints no number and withholds the download.
+  const auditChecked = useMemo(() => {
+    const settled =
+      showResults || auditState.state === "error" ? settledData(stripAudit) : null;
+    if (!settled) return null;
+    return assignTiers({
+      jurisdiction: jurisdictionLoading ? null : jurisdictionBlock,
+      audit: settled,
+      auditFailed: false,
+    }).ledger.checked;
+  }, [showResults, auditState.state, stripAudit, jurisdictionLoading, jurisdictionBlock]);
   // #258 (#193): "Plan generated — …" at the PAIR's settle, and only
   // when the stamped audit is clean.  Any settle consumes the arming
   // (so a later background settle never announces); a declined pair
@@ -1585,6 +1603,7 @@ export function GeneratorShell({
                   // { scenario, settings } body, explicit trigger.
                   onDownloadAll={onDownloadBundle}
                   bundling={bundling}
+                  auditChecked={auditChecked}
                 />
                 {resultsVisible && (
                   <PricingCard

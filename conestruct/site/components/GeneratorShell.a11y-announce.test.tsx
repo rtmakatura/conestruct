@@ -25,7 +25,7 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { PINNED_SHOULDER } from "./test-fixtures";
+import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
 
 const BREAKDOWN = {
   devices: [],
@@ -83,6 +83,15 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
       status: bundleFails ? 500 : 200,
       blob: async () => new Blob(["x"]),
       json: async () => ({}),
+    } as unknown as Response);
+  }
+  // #261: the audit answer is wire-shaped (the shell reads it for the
+  // audit card's count); the suite's own audit branches above still win.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => MIN_AUDIT,
     } as unknown as Response);
   }
   return Promise.resolve({

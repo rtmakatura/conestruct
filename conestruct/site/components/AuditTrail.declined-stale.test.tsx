@@ -21,7 +21,9 @@ vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
-vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
+// #261: OutputCards is REAL here — the audit PDF is its fourth card now,
+// and the disabled-under-a-failed-audit contract this suite pins moved
+// with it (zone 2, `.dl-card` x 4).
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
@@ -155,8 +157,16 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   return user;
 }
 
-const pdfButton = () =>
-  screen.getByRole("button", { name: "↓ Audit PDF" }) as HTMLButtonElement;
+// #261: the audit-PDF control is the fourth card's .dl-btn (zone 2); the
+// tier-body text link is gone.
+const auditCard = () => {
+  const cards = document.querySelectorAll(".dl-card");
+  expect(cards).toHaveLength(4);
+  const card = cards[3] as HTMLElement;
+  expect(card.textContent).toContain("Audit trail");
+  return card;
+};
+const pdfButton = () => auditCard().querySelector(".dl-btn") as HTMLButtonElement;
 
 beforeEach(() => {
   auditCalls = [];
@@ -192,8 +202,12 @@ describe("audit rows never present a prior input's numbers under a declined bann
     // The rows say why they're blank — never "Computing…" (a refused
     // answer is not a pending one).
     expect(screen.queryAllByText(/Computing…/)).toHaveLength(0);
-    expect(pdfButton().disabled).toBe(true);
-    expect(pdfButton().title).toMatch(/declined/i);
+    // #258: under a declined plan the results zone shows no card and no
+    // download at all (the empty state alone) — there is no audit-PDF
+    // control to disable.  #261 keeps that: no "Audit PDF" anywhere.
+    expect(document.querySelectorAll(".dl-card")).toHaveLength(0);
+    expect(document.querySelectorAll(".dl-btn")).toHaveLength(0);
+    expect(screen.queryByText(/Audit PDF/)).toBeNull();
   });
 
   it("a failed (5xx) audit blanks the values too, keeping the retry line", async () => {
@@ -203,6 +217,10 @@ describe("audit rows never present a prior input's numbers under a declined bann
     expect(screen.getByText(/Audit trail failed/)).toBeTruthy();
     expect(screen.getByRole("button", { name: /Retry/ })).toBeTruthy();
     expect(screen.queryAllByText(/183/)).toHaveLength(0);
+    // The cards stand (a 5xx audit is not a declined plan) but the audit
+    // card has no count and no live button: no settled audit, no PDF.
     expect(pdfButton().disabled).toBe(true);
+    expect(auditCard().querySelector(".desc .qty")!.textContent).toBe("");
+    expect(auditCard().textContent).not.toContain("checks");
   });
 });

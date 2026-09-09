@@ -53,6 +53,7 @@ vi.mock("./GeneratorSidebar", () => ({
 // Import after the mocks are registered (vi.mock is hoisted, but keep the
 // real subject below the stubs for readability).
 import { GeneratorShell } from "./GeneratorShell";
+import { MIN_AUDIT } from "./test-fixtures";
 
 type BundleBody = { scenario: unknown; settings: QuoteSettings };
 
@@ -69,6 +70,15 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     } as unknown as Response);
   }
   // device-breakdown + audit fire on mount; keep them benign.
+  // #261: the audit answer is wire-shaped (the shell reads it for the
+  // audit card's count); the suite's own audit branches above still win.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => MIN_AUDIT,
+    } as unknown as Response);
+  }
   return Promise.resolve({
     ok: true,
     status: 200,

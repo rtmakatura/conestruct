@@ -9,7 +9,7 @@ import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
 
-type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf";
+type RenderKind = "pdf" | "xlsx" | "markdown" | "crew-pdf" | "audit-pdf";
 
 interface PublicMode {
   kind: "public";
@@ -46,6 +46,14 @@ interface Props {
   // have no bundle route, and a button that can't work shouldn't render.
   onDownloadAll?: () => void;
   bundling?: boolean;
+  // #261: the audit card's "N checks" — the ✓ tier's count, assignTiers'
+  // ledger.checked computed by the shell from the STAMPED audit (the
+  // same token the audit-PDF cover prints; one mapping, Python mirror).
+  // Null = no settled audit for the input on screen (first load, or the
+  // audit failed): the quantity line prints empty at reserved height
+  // and the audit button is disabled — an audit that has not answered
+  // has no PDF.  Never a placeholder number (P16).
+  auditChecked?: number | null;
 }
 
 const SIGNUP_HREF = "/app";
@@ -67,11 +75,17 @@ interface DlCardDef {
   spec: string;
   format: string;
   qtyLbl: string;
-  qty: number | string;
+  // Null: no quantity to state — the line renders empty (reserved
+  // height, P1) and the label is omitted.
+  qty: number | string | null;
   kind: RenderKind;
   // An optional second download offered on the same card (the crew card
   // offers the PDF as `kind` and the raw `.md` as `secondaryKind`).
   secondaryKind?: RenderKind;
+  // The card's own reason to withhold its download (the audit card with
+  // no settled audit).  Buttons only — a saved plan's row-backed anchors
+  // point at a stored answer.
+  unavailable?: boolean;
 }
 
 const LABELS: Record<RenderKind, string> = {
@@ -79,6 +93,7 @@ const LABELS: Record<RenderKind, string> = {
   xlsx: "Download XLSX",
   markdown: "Download .md",
   "crew-pdf": "Download PDF",
+  "audit-pdf": "Download PDF",
 };
 
 const SIGNUP_LABELS: Record<RenderKind, string> = {
@@ -86,14 +101,18 @@ const SIGNUP_LABELS: Record<RenderKind, string> = {
   xlsx: "Sign up to download XLSX",
   markdown: "Sign up to download .md",
   "crew-pdf": "Sign up to download PDF",
+  "audit-pdf": "Sign up to download PDF",
 };
 
 // #252: what the band says while each file renders (RENDERING · …).
+// "audit PDF" relocated here from TieredReference byte-identical (#261);
+// lib/working-band.ts is untouched — the object string lives in the caller.
 const RENDER_LABELS: Record<RenderKind, string> = {
   pdf: "plan sheet PDF",
   xlsx: "device list XLSX",
   markdown: "crew instructions MD",
   "crew-pdf": "crew instructions PDF",
+  "audit-pdf": "audit PDF",
 };
 
 const EXT: Record<RenderKind, string> = {
@@ -103,6 +122,9 @@ const EXT: Record<RenderKind, string> = {
   // Distinct from the plan-sheet PDF so the browser doesn't dedupe the
   // two downloads to "<plan> (1).pdf".
   "crew-pdf": "crew.pdf",
+  // = AuditTrail.tsx auditFilename's suffix (the retired tier link's
+  // filename), for the same reason.
+  "audit-pdf": "audit.pdf",
 };
 
 function safeFilename(name: string | undefined, ext: string): string {
@@ -145,6 +167,7 @@ export function OutputCards({
   breakdown,
   onDownloadAll,
   bundling,
+  auditChecked = null,
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
   if (!generated) {
@@ -185,6 +208,18 @@ export function OutputCards({
       qty: summary?.step_count ?? "—",
       kind: "crew-pdf",
       secondaryKind: "markdown",
+    },
+    // #261 (P11): the audit PDF wears the same card and button as every
+    // other download — it was a mono text link inside a collapsed tier.
+    // Not in the zip (BUNDLE_PART_KINDS), so the header count is unmoved.
+    {
+      title: "Audit trail",
+      spec: "EVERY CHECK CITED",
+      format: "PDF",
+      qtyLbl: "checks",
+      qty: auditChecked,
+      kind: "audit-pdf",
+      unavailable: auditChecked === null,
     },
   ];
   return (
@@ -305,7 +340,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
             className="dl-btn"
             data-write=""
             onClick={() => onPublicDownload(k)}
-            disabled={busyKind !== null || locked}
+            disabled={busyKind !== null || locked || card.unavailable === true}
           >
             {/* #252: no per-button "Rendering…" — the band is the one
                 working voice; "Try again" is an outcome, kept. */}
@@ -365,8 +400,15 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
         <span className="font-mono text-[10px] uppercase tracking-[0.08em]">
           {card.spec}
         </span>
-        <br />
-        <b>{card.qty}</b> {card.qtyLbl}
+        {/* The quantity line is always present at its own height (P1):
+            a null quantity leaves it empty — never a placeholder. */}
+        <span className="qty">
+          {card.qty !== null && (
+            <>
+              <b>{card.qty}</b> {card.qtyLbl}
+            </>
+          )}
+        </span>
       </div>
       {note}
       <div className="dl-actions">{actions}</div>

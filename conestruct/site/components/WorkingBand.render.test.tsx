@@ -164,13 +164,18 @@ describe("#252 — RENDERING: a file render raises the band and the lock", () =>
     await releaseRender("quote");
     expect(band()).toBeNull();
 
-    // The audit-PDF control sits in the collapsed ✓ CHECKED & PASSED tier.
-    await user.click(screen.getByRole("button", { name: /checked & passed/i }));
-    await user.click(screen.getByRole("button", { name: /Audit PDF/ }));
+    // #261: the audit PDF is the fourth download card; the band object
+    // "audit PDF" relocates with it byte-identical (lib/working-band.ts
+    // untouched — the string lives in the caller).  The tier body no
+    // longer carries a link.
+    expect(screen.queryByRole("button", { name: /Audit PDF/ })).toBeNull();
+    const auditCard = document.querySelectorAll(".dl-card")[3] as HTMLElement;
+    expect(auditCard.textContent).toContain("Audit trail");
+    await user.click(auditCard.querySelector(".dl-btn") as HTMLButtonElement);
     expect(object()).toBe("audit PDF");
     await releaseRender("audit-pdf");
     expect(band()).toBeNull();
-    expect(screen.getByRole("button", { name: /Audit PDF/ })).toBeTruthy();
+    expect((auditCard.querySelector(".dl-btn") as HTMLButtonElement).disabled).toBe(false);
   });
 
   it("a render closing hands the page back; the next plan request speaks in its own voice (precedence over an open render is the unit test's)", async () => {

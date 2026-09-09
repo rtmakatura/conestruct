@@ -43,7 +43,6 @@ import {
   AuditItem,
   CheckRow,
   SITE_ADJUSTMENT_DETAIL,
-  auditFilename,
   approachesItem,
   buildScenarioItems,
   corridorValidationItem,
@@ -71,7 +70,7 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
-import { useRenderRequest, useWriteLock } from "./WriteLock";
+import { useWriteLock } from "./WriteLock";
 
 // #224 phase 3 (ruling e3): panel labels for the scanned buckets that
 // map to no rule — reference rows, uncounted.
@@ -147,41 +146,9 @@ export function TieredReference({
   const locked = useWriteLock(); // #252 (ruling b)
   const r = (n: number | string) => (generated ? String(n) : "—");
 
-  // Audit-PDF export — unchanged from the retired panel: POSTs the live
-  // scenario to the public render route; disabled while the audit for
-  // this input failed or was declined.
-  const [auditDl, setAuditDl] = useState<"idle" | "busy" | "error">("idle");
-  const beginRender = useRenderRequest();
-  const onDownloadAuditPdf = async () => {
-    if (!generated || audit.state === "error" || auditDl === "busy") return;
-    setAuditDl("busy");
-    const endRender = beginRender("audit PDF");
-    try {
-      const res = await fetch("/api/render/audit-pdf", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ scenario }),
-      });
-      if (!res.ok) {
-        setAuditDl("error");
-        return;
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = auditFilename(scenario.meta?.project);
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setAuditDl("idle");
-    } catch {
-      setAuditDl("error");
-    } finally {
-      endRender();
-    }
-  };
+  // #261: the audit-PDF export left this component — it is the fourth
+  // download card (OutputCards, zone 2), same POST body, same band
+  // object "audit PDF", same filename.  The tier keeps its prose.
 
   const jur = jurisdictionLoading ? null : jurisdiction;
   const settled = showAudit ? settledData(audit) : null;
@@ -538,27 +505,9 @@ export function TieredReference({
   if (showAudit) {
     checkedBody.push(
       <div key="chrome">
-        <div className="flex items-baseline justify-between gap-4 mb-3">
-          <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] max-w-[620px]">
-            Every calculation is traced to its MUTCD or CDOT standard-plan
-            source. Verify before stamping.
-          </div>
-          <button
-            type="button"
-            data-write=""
-            onClick={onDownloadAuditPdf}
-            disabled={!generated || audit.state === "error" || auditDl === "busy" || locked}
-            title={
-              declined
-                ? "Unavailable — generation declined for this input"
-                : audit.state === "error"
-                  ? "Unavailable — the audit failed; retry first"
-                  : undefined
-            }
-            className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline disabled:opacity-40 disabled:no-underline disabled:cursor-default cursor-pointer whitespace-nowrap"
-          >
-            {auditDl === "error" ? "Try again" : "↓ Audit PDF"}
-          </button>
+        <div className="font-sans text-[13px] text-[color:var(--ink-on-dark-faint)] max-w-[620px] mb-3">
+          Every calculation is traced to its MUTCD or CDOT standard-plan
+          source. Verify before stamping.
         </div>
         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] opacity-80 mb-4 max-w-[620px] leading-relaxed">
           Scope: federal MUTCD + CDOT standards (S-630-1). Other jurisdictions

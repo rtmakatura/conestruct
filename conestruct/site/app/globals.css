@@ -3016,10 +3016,11 @@ input[type="number"] {
   }
 }
 
-/* Zone 2 downloads — one card per deliverable */
+/* Zone 2 downloads — one card per deliverable (#261: four — the audit
+   trail joined the grid) */
 .workbench .dls {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -3065,6 +3066,12 @@ input[type="number"] {
 .workbench .dl-card .desc b {
   color: var(--dim);
   font-weight: 600;
+}
+/* #261 (P1/P16): the quantity line keeps its height when it has nothing
+   honest to say (no settled count) — an empty line, not a placeholder. */
+.workbench .dl-card .desc .qty {
+  display: block;
+  min-height: 1.45em;
 }
 .workbench .dl-btn {
   margin-top: auto;

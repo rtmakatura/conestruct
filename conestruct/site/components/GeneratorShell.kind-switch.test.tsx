@@ -148,6 +148,7 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { MIN_AUDIT } from "./test-fixtures";
 
 type LooseScenario = Record<string, unknown> & {
   meta: Record<string, unknown>;
@@ -163,6 +164,15 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       ok: true,
       status: 200,
       blob: async () => new Blob(["zip"]),
+    } as unknown as Response);
+  }
+  // #261: the audit answer is wire-shaped (the shell reads it for the
+  // audit card's count); the suite's own audit branches above still win.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => MIN_AUDIT,
     } as unknown as Response);
   }
   return Promise.resolve({

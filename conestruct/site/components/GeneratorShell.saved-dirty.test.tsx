@@ -34,7 +34,7 @@ vi.mock("./AppNav", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
-import { pinned } from "./test-fixtures";
+import { pinned, MIN_AUDIT } from "./test-fixtures";
 import { PlanSaveButton } from "./PlanSaveButton";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 
@@ -57,6 +57,15 @@ const fetchMock = vi.fn((input: RequestInfo | URL) => {
       ok: true,
       status: 200,
       json: async () => BREAKDOWN,
+    } as unknown as Response);
+  }
+  // #261: the audit answer is wire-shaped (the shell reads it for the
+  // audit card's count); the suite's own audit branches above still win.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => MIN_AUDIT,
     } as unknown as Response);
   }
   return Promise.resolve({

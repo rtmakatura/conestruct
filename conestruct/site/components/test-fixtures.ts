@@ -20,6 +20,18 @@ export function pinned<S extends Scenario>(s: S): S {
   return { ...s, meta: { ...s.meta, ...TEST_PIN } };
 }
 
+// #261: the smallest audit answer the shell can hold — `sections` and
+// `pending_verification` present (assignTiers reads both for the audit
+// card's count), everything else absent.  For suites that mock zone 3
+// away and used to answer /api/render/audit with `{}`: the shell now
+// derives the audit card's "N checks" from the settled audit itself, so
+// the answer must be wire-shaped (Pydantic never omits these).
+export const MIN_AUDIT = {
+  summary: {},
+  sections: {},
+  pending_verification: { count: 0, note: "", tracking_issue: null },
+};
+
 export const PINNED_SHOULDER: ShoulderScenario = pinned(DEFAULT_SHOULDER);
 // #179: the confirm-undo loop mounts a located flagger.
 export const PINNED_FLAGGER: FlaggerLaneClosureScenario =

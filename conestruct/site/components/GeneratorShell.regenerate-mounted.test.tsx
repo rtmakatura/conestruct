@@ -74,6 +74,7 @@ const okAudit = () =>
     json: async () => ({
       summary: {},
       sections: {},
+      pending_verification: { count: 0, note: "", tracking_issue: null },
       plan_flags: { validation_warnings: 0, compliance_fails: 0, v1_limitations: 0, is_clean: true },
     }),
   }) as unknown as Response;
