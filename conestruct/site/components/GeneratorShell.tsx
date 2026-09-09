@@ -311,6 +311,28 @@ export function GeneratorShell({
   );
   const fetchScenario = useDebouncedScenario(wireScenario, FETCH_DEBOUNCE_MS);
 
+  // The STAMPED audit view — the rationale sits with the strip's
+  // derivations below ("Decision 2 (frontend-engine-removal)…"); the
+  // declarations live here because the #152 E landing effect reads the
+  // verdict (#258 ruling c2).
+  const auditSettled =
+    (auditState.state === "ready" || auditState.state === "error") &&
+    stampMatches([auditState.forScenario], [wireScenario]);
+  const stripAudit: AuditState = auditSettled
+    ? auditState
+    : {
+        state: "loading",
+        lastReady:
+          auditState.state === "ready"
+            ? auditState.data
+            : auditState.lastReady,
+      };
+  // #187 — declined, from the STAMPED view: true only when the 400 is
+  // the settled answer for the scenario on screen (a stale 400 downgrades
+  // to checking above and must not blank the trail for the new input).
+  const auditDeclined =
+    stripAudit.state === "error" && stripAudit.httpStatus === 400;
+
   useEffect(() => {
     const controller = new AbortController();
     // #192: carry the previous breakdown through the refetch so the
@@ -791,12 +813,30 @@ export function GeneratorShell({
       // #258: the announcement left this branch — it waits for the
       // pair's verdict (the effect after ``planDeclined`` below).
     } else if (genState === "error") {
+      // #258 (ruling c2, #152 E re-read): the no-yank rule stands for
+      // an error that carries no action — a broken breakdown; a DECLINED
+      // pair is a settled answer with two actions and lands exactly as
+      // ``post`` does (audit F-S5-3: the refusal whose breakdown also
+      // 400s scrolled nowhere and settled under the nav).  The verdict
+      // is the stamped audit's, so the arming waits for it: a breakdown
+      // error that lands before the audit answers neither scrolls nor
+      // disarms until the pair has settled.
+      if (!auditSettled) return;
       scrollPendingRef.current = false;
+      if (auditDeclined) {
+        const reduceMotion =
+          typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        resultsRef.current?.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+      }
       resultsRef.current?.focus({ preventScroll: true });
       // No status text on failure: the error ribbon is role="alert"
       // and announces itself (assertively, as an error should).
     }
-  }, [genState, deviceBreakdown]);
+  }, [genState, deviceBreakdown, auditSettled, auditDeclined]);
 
   // #193: the Reopen half — focus the Setup zone once the sidebar is
   // back.  Armed by onReopen only; ordinary re-renders in "pre" never
@@ -823,23 +863,9 @@ export function GeneratorShell({
   // audit ERROR the trail blanks its values instead: a prior input's
   // numbers never render under a declined or failed banner.  The strip's
   // verdict itself is governed here as before.
-  const auditSettled =
-    (auditState.state === "ready" || auditState.state === "error") &&
-    stampMatches([auditState.forScenario], [wireScenario]);
-  const stripAudit: AuditState = auditSettled
-    ? auditState
-    : {
-        state: "loading",
-        lastReady:
-          auditState.state === "ready"
-            ? auditState.data
-            : auditState.lastReady,
-      };
-  // #187 — declined, from the STAMPED view: true only when the 400 is
-  // the settled answer for the scenario on screen (a stale 400 downgrades
-  // to checking above and must not blank the trail for the new input).
-  const auditDeclined =
-    stripAudit.state === "error" && stripAudit.httpStatus === 400;
+  // (#258: ``auditSettled`` / ``stripAudit`` / ``auditDeclined`` are
+  // declared just after ``fetchScenario`` above — the #152 E landing
+  // effect reads the verdict and must not reach past its own line.)
   // #196 — the confirm-tick window.  ``refusal`` derives from the
   // stamped view, so it nulls for the whole re-fetch (up to ~5.5 s on a
   // Modal cold start, measured — see SLOW_VERIFY_MS above) and the CTA

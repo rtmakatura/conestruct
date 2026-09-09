@@ -39,9 +39,44 @@ const BREAKDOWN = {
 type Deferred = { resolve: (r: Response) => void };
 
 let breakdownCalls: Deferred[] = [];
+// #258 (ruling c2): the audit refuses the scan — the prod-captured 400
+// shape.  A declined pair is a settled answer with two actions and
+// lands like ``post``; a broken breakdown under a clean audit still
+// does not (the #152 E no-yank rule, unchanged).
+let auditRefuses = false;
+const REFUSAL = {
+  detail: {
+    error: "site_scan_unavailable",
+    message:
+      "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+    site_scan: {
+      status: "unavailable",
+      error: "scan budget exceeded (20 s)",
+      mode: "corridor",
+      measured_at: "2026-09-03T15:29:51+00:00",
+      budget_s: 20.0,
+      proceeded_anyway: false,
+    },
+    recovery: { retry: true, proceed_field: "site_scan.proceed_if_unavailable" },
+  },
+};
+function refusedBreakdown(): Response {
+  return {
+    ok: false,
+    status: 400,
+    json: async () => REFUSAL,
+  } as unknown as Response;
+}
 
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
   const url = String(input);
+  if (url.includes("/api/render/audit") && auditRefuses) {
+    return Promise.resolve({
+      ok: false,
+      status: 400,
+      json: async () => REFUSAL,
+    } as unknown as Response);
+  }
   if (url.includes("/api/render/device-breakdown")) {
     return new Promise<Response>((resolve) => {
       breakdownCalls.push({ resolve });
@@ -92,6 +127,7 @@ let reducedMotion = false;
 
 beforeEach(() => {
   breakdownCalls = [];
+  auditRefuses = false;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
   scrollSpy = vi.fn();
@@ -201,5 +237,43 @@ describe("post-generate scroll (#152 E)", () => {
     await flushDebounce();
     await release(breakdownCalls.length - 1, errBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
+  });
+
+  it("#258 (ruling c2): a declined pair — the audit refused and the breakdown 400s too — lands the results zone once, on the refusal container", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await release(0, okBreakdown());
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(1, okBreakdown());
+    scrollSpy.mockClear();
+
+    // The same shape as the "failed generation" case above — Reopen,
+    // Generate with the pre-generate refire pending, so the landing
+    // waits for the generated answer — except the pair is DECLINED: the
+    // audit refuses and the breakdown 400s too.  Before c2 this path
+    // scrolled nowhere (audit F-S5-3); a first Generate with a ready
+    // pre-generate breakdown scrolls at the click regardless (case 1).
+    await user.click(screen.getByText(/Edit full setup/));
+    await flushDebounce(); // the pre-generate refire dispatches and stays pending
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    auditRefuses = true; // the generated wire's audit (dispatched on the debounce) refuses
+    await flushDebounce();
+    expect(scrollSpy).not.toHaveBeenCalled();
+    await release(breakdownCalls.length - 1, refusedBreakdown());
+    await flushDebounce();
+
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy.mock.calls[0][0]).toMatchObject({
+      behavior: "smooth",
+      block: "start",
+    });
+    const target = scrollSpy.mock.instances[0] as unknown as HTMLElement;
+    expect(target.querySelector(".scan-refusal")).not.toBeNull();
+    expect(target.querySelector(".hero")).toBeNull();
+    // Focus lands there too (#193), and only once: the arming is spent.
+    expect(document.activeElement).toBe(target);
+    await flushDebounce();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
 });
