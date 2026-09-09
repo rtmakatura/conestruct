@@ -103,6 +103,11 @@ async function generate(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("Generate plan"));
   await user.click(screen.getByText("ALL_ZIP"));
   await waitFor(() => expect(bundleBody).not.toBeNull());
+  // #269: the bundle answering is not the write lock releasing — the plan
+  // pair is still inside its 350 ms debounce and the ZIP render still open,
+  // so the root stays .ws-locked and "Edit full setup" (aria-disabled) would
+  // drop the click that the next step depends on. Wait for the lock itself.
+  await waitFor(() => expect(document.querySelector(".workbench.ws-locked")).toBeNull());
   return bundleBody!.scenario;
 }
 
