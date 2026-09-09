@@ -8,10 +8,12 @@
 // explicit operator action); nothing else writes it.  The stamped view:
 // null provenance renders nothing.
 
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
+import type { StagedCorrection } from "@/lib/scenarios/types";
 import type { SiteScanProvenance } from "@/lib/render-types";
 import { SetupStrip } from "./SetupStrip";
 
@@ -36,24 +38,39 @@ function ok(over: Partial<SiteScanProvenance> = {}): SiteScanProvenance {
   };
 }
 
+// #254: the staged set lives in the SHELL (one owner); this host stands
+// in for it so the block's staging round-trips through real state.
+function Host(props: {
+  siteScan: SiteScanProvenance | null;
+  scenario: Scenario;
+  held: { inFlight: boolean; scan: SiteScanProvenance | null };
+  setScenario: (next: Scenario) => void;
+}) {
+  const [staged, setStaged] = useState<StagedCorrection[]>([]);
+  return (
+    <SetupStrip
+      scenario={props.scenario}
+      setScenario={props.setScenario}
+      onReopen={vi.fn()}
+      siteScan={props.siteScan}
+      siteScanInFlight={props.held.inFlight}
+      siteScanHeld={props.held.scan}
+      staged={staged}
+      setStaged={setStaged}
+    />
+  );
+}
 function mount(
   siteScan: SiteScanProvenance | null,
   scenario: Scenario = DEFAULT_SCENARIO,
   held: { inFlight: boolean; scan: SiteScanProvenance | null } = { inFlight: false, scan: null },
 ) {
   const setScenario = vi.fn();
-  render(
-    <SetupStrip
-      scenario={scenario}
-      setScenario={setScenario}
-      onReopen={vi.fn()}
-      siteScan={siteScan}
-      siteScanInFlight={held.inFlight}
-      siteScanHeld={held.scan}
-    />,
-  );
+  render(<Host siteScan={siteScan} scenario={scenario} held={held} setScenario={setScenario} />);
   return setScenario;
 }
+const applyBtn = (name: string | RegExp = /^Apply \d+ corrections?$/) =>
+  within(block()!).getByRole("button", { name }) as HTMLButtonElement;
 
 const block = () => document.querySelector(".site-corrections") as HTMLElement | null;
 // #255: the backend's advisory (src/api/site_scan.py _VERIFY.strip()) —
@@ -83,28 +100,38 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     // #251 (ruling d): no duration on the wire → no duration segment,
     // memo_hit absent → no "memoised".
     const foot = b!.querySelector(".sc-foot") as HTMLElement;
-    expect(foot.textContent).toContain("corridor scan · 4 sep · 12:00 utc · a correction re-generates the plan");
+    expect(foot.textContent).toContain("corridor scan · 4 sep · 12:00 utc · apply re-generates the plan");
     expect(foot.textContent).not.toMatch(/ s ·|memoised/);
     const time = foot.querySelector("time") as HTMLTimeElement;
     expect(time.getAttribute("title")).toBe("2026-09-04T12:00:00+00:00");
     expect(time.getAttribute("datetime")).toBe("2026-09-04T12:00:00+00:00");
     expect(time.textContent).toBe("4 sep · 12:00 utc");
     expect(b!.textContent).not.toMatch(/within \d+ ft|in scan|ft corridor/);
+    // #254 (P1): the Apply row is ALWAYS present post-scan — at zero it
+    // says so and the button is disabled with the reason on its title.
+    const applyRow = b!.querySelector(".sc-row.sc-apply") as HTMLElement;
+    expect(applyRow).not.toBeNull();
+    expect(within(applyRow).getByText("no corrections staged")).toBeTruthy();
+    const apply = within(applyRow).getByRole("button", { name: "Apply 0 corrections" }) as HTMLButtonElement;
+    expect(apply.disabled).toBe(true);
+    expect(apply.getAttribute("title")).toBe("stage a correction first");
+    expect(apply.getAttribute("data-write")).toBe("");
+    expect(apply.classList.contains("confirm")).toBe(true);
   });
 
   it("#251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire", () => {
     mount(ok({ duration_ms: 2739, memo_hit: true }));
     const foot = block()!.querySelector(".sc-foot") as HTMLElement;
     expect(foot.textContent).toContain(
-      "corridor scan · 4 sep · 12:00 utc · 2.7 s · memoised · a correction re-generates the plan",
+      "corridor scan · 4 sep · 12:00 utc · 2.7 s · memoised · apply re-generates the plan",
     );
     cleanup();
     // A fresh fetch: the duration, no "memoised".  A null duration: neither.
     mount(ok({ duration_ms: 20299, memo_hit: false }));
-    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · 20.3 s · a correction");
+    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · 20.3 s · apply");
     cleanup();
     mount(ok({ duration_ms: null, memo_hit: true }));
-    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · memoised · a correction");
+    expect(block()!.querySelector(".sc-foot")!.textContent).toContain("12:00 utc · memoised · apply");
   });
 
   it("#249: a measured_at that is not a UTC ISO stamp prints verbatim — never converted (rule 10)", () => {
@@ -116,7 +143,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     mount(ok({ measured_at: null, mode: null }));
     const foot = block()!.querySelector(".sc-foot") as HTMLElement;
     expect(foot.querySelector("time")).toBeNull();
-    expect(foot.textContent).toContain("site scan · a correction re-generates the plan");
+    expect(foot.textContent).toContain("site scan · apply re-generates the plan");
   });
 
   it("a bucket missing from the wire renders no row (absence of signal is not absence of a feature)", () => {
@@ -141,10 +168,26 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const setScenario = mount(ok());
     const school = within(block()!).getByText("School zone").closest(".site-correction-row")!;
     await user.click(within(school as HTMLElement).getByRole("button", { name: "Assert" }));
+    // #254: STAGED, not written — the row becomes the staged row (◌ +
+    // the word + the intent + Undo) and nothing is requested.
+    expect(setScenario).not.toHaveBeenCalled();
+    const stagedRow = within(block()!).getByText("School zone").closest(".sc-row") as HTMLElement;
+    expect(stagedRow.classList.contains("sc-staged")).toBe(true);
+    expect(stagedRow.querySelector(".sc-glyph")?.textContent).toBe("◌");
+    expect(within(stagedRow).getByText("staged — not yet applied")).toBeTruthy();
+    expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("assert");
+    expect(within(stagedRow).getByRole("button", { name: "Undo" })).toBeTruthy();
+    expect(within(block()!).getByText("1 correction staged · not yet applied")).toBeTruthy();
+    const apply = applyBtn("Apply 1 correction");
+    expect(apply.disabled).toBe(false);
+    expect(apply.getAttribute("title")).toBeNull();
+    // Apply: ONE write carrying the staged set; the set empties.
+    await user.click(apply);
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(next.meta.siteConditionOverrides).toHaveLength(1);
     expect(next.meta.siteConditionOverrides![0]).toMatchObject({ flag: "school_zone", action: "assert" });
+    expect(within(block()!).getByText("no corrections staged")).toBeTruthy();
     expect(next.meta.siteConditionOverrides![0]).not.toHaveProperty("reason");
     // Nothing else on the scenario moved (the corrections never become manual flags).
     expect({ ...next.meta, siteConditionOverrides: undefined }).toEqual({
@@ -184,6 +227,14 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(noteEl.getAttribute("aria-invalid")).toBeNull();
     expect(noteEl.placeholder).toBe("say what");
     await user.click(within(picker).getByRole("button", { name: "Confirm dismiss" }));
+    // #254: Confirm stages (the picker closes, the row is the staged row
+    // naming the intent); Apply writes.
+    expect(setScenario).not.toHaveBeenCalled();
+    expect(block()!.querySelector(".site-correction-picker")).toBeNull();
+    const stagedRow = within(block()!).getByText("Pedestrian sidewalks").closest(".sc-row") as HTMLElement;
+    expect(stagedRow.classList.contains("sc-staged")).toBe(true);
+    expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("dismiss · other — construction fence");
+    await user.click(applyBtn("Apply 1 correction"));
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(next.meta.siteConditionOverrides).toEqual([
@@ -295,8 +346,21 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     }
     // The three uncorrected rows keep their actions.
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(3);
-    // Undo the dismiss: the marker for that flag goes, the other stays.
+    // Undo the dismiss: STAGED as an undo intent (the record row becomes
+    // the staged row, "undo"); Apply removes that flag's marker, the
+    // other stays.
     await user.click(within(dRec).getByRole("button", { name: "Undo" }));
+    expect(setScenario).not.toHaveBeenCalled();
+    const stagedRow = within(b).getByText("Pedestrian sidewalks").closest(".sc-row") as HTMLElement;
+    expect(stagedRow.classList.contains("sc-staged")).toBe(true);
+    expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("undo");
+    expect(within(b).queryByText(dismissed.record_clause)).toBeNull();
+    // Undo on the staged row un-stages it: the record is back, still no write.
+    await user.click(within(stagedRow).getByRole("button", { name: "Undo" }));
+    expect(setScenario).not.toHaveBeenCalled();
+    expect(within(b).getByText(dismissed.record_clause)).toBeTruthy();
+    await user.click(within(within(b).getByText(dismissed.record_clause).closest(".sys-event") as HTMLElement).getByRole("button", { name: "Undo" }));
+    await user.click(applyBtn("Apply 1 correction"));
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(next.meta.siteConditionOverrides).toEqual([scenario.meta.siteConditionOverrides![1]]);
@@ -331,6 +395,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(block()!.textContent).not.toContain(ADVISORY);
     expect(rec.querySelector(".sys-glyph")?.textContent).toBe("⚠");
     await user.click(within(rec).getByRole("button", { name: "Undo" }));
+    await user.click(applyBtn("Apply 1 correction"));
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(JSON.stringify(next.meta)).toBe(JSON.stringify(DEFAULT_SCENARIO.meta));
   });
@@ -341,7 +406,14 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
   // action cell; exactly one button per row, in the action cell.
   it("#249: every row is a ledger line plus one action cell holding exactly one button", () => {
     mount(ok());
-    const rows = block()!.querySelectorAll(".sc-row");
+    // #254: the Apply row is the grid's last row, spanning both tracks
+    // (its button shares the action edge by justify-content); the
+    // ledger invariants below are the condition rows'.
+    const all = Array.from(block()!.querySelectorAll(".sc-row"));
+    expect(all).toHaveLength(6);
+    expect(all[5].classList.contains("sc-apply")).toBe(true);
+    expect(all[5].querySelectorAll("button")).toHaveLength(1);
+    const rows = block()!.querySelectorAll(".sc-row:not(.sc-apply)");
     expect(rows).toHaveLength(5);
     for (const row of Array.from(rows)) {
       expect(row.querySelectorAll(":scope > .sc-lead")).toHaveLength(1);
@@ -382,6 +454,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const user = userEvent.setup();
     mount(ok());
     const before = block()!.querySelectorAll(".sc-row").length;
+    expect(before).toBe(6); // five conditions + the Apply row (#254)
     const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row") as HTMLElement;
     await user.click(within(sidewalk).getByRole("button", { name: "Dismiss" }));
     const rows = block()!.querySelectorAll(".sc-row");
@@ -441,6 +514,8 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const b = block()!;
     expect(within(b).getByText(asserted.record_clause)).toBeTruthy();
     expect(b.querySelectorAll(".sc-foot-advisory")).toHaveLength(1);
+    // #254: the Apply row is present on a records-only block too.
+    expect(applyBtn("Apply 0 corrections").disabled).toBe(true);
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(0);
     expect(document.querySelector(".site-not-checked")).not.toBeNull();
   });
@@ -463,7 +538,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(b!.getAttribute("aria-busy")).toBe("true");
     expect(b!.classList.contains("sc-inflight")).toBe(true);
     const buttons = Array.from(b!.querySelectorAll("button")) as HTMLButtonElement[];
-    expect(buttons.map((x) => x.textContent)).toEqual(["Dismiss", "Assert", "Dismiss", "Assert", "Undo"]);
+    expect(buttons.map((x) => x.textContent)).toEqual(["Dismiss", "Assert", "Dismiss", "Assert", "Undo", "Apply 0 corrections"]);
     expect(buttons.every((x) => x.disabled)).toBe(true);
     await user.click(within(b!).getAllByRole("button", { name: "Assert" })[0]);
     await user.click(within(b!).getByRole("button", { name: "Undo" }));

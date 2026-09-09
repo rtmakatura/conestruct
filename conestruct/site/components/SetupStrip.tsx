@@ -29,13 +29,15 @@ import {
   dismissAllowed,
   dismissIsComplete,
   dismissMarker,
+  applyStaged,
   fmtScanDuration,
   fmtScanStamp,
   isScannedFlag,
-  withSiteCorrection,
-  withoutSiteCorrection,
+  stage,
+  stagedSentence,
+  unstage,
 } from "@/lib/scenarios/site-corrections";
-import type { ScannedSiteFlag, SiteDismissReason } from "@/lib/scenarios/types";
+import type { ScannedSiteFlag, SiteDismissReason, StagedCorrection } from "@/lib/scenarios/types";
 import {
   hhmm,
   JURISDICTION_OPTIONS,
@@ -195,9 +197,14 @@ interface SiteCorrectionsProps {
    *  screen — every button in the block is disabled (any correction
    *  re-generates the whole plan), the block stays mounted. */
   inFlight: boolean;
+  /** #254: the SHELL-held staged set (one owner — it survives the
+   *  spec-34 held-scan swap and Reopen clears it).  Dismiss / Assert /
+   *  Undo stage; only Apply writes the scenario. */
+  staged: StagedCorrection[];
+  setStaged: (next: StagedCorrection[]) => void;
 }
 
-function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorrectionsProps) {
+function SiteCorrections({ scenario, setScenario, siteScan, inFlight, staged, setStaged }: SiteCorrectionsProps) {
   // Which flag's dismiss reason picker is open, and its draft.
   const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
   const [reason, setReason] = useState<SiteDismissReason | null>(null);
@@ -214,16 +221,23 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
       : null;
   const corrections = (siteScan.corrections ?? []).filter((c) => isScannedFlag(c.flag));
   const byFlag = new Map<string, SiteScanCorrection>(corrections.map((c) => [c.flag, c]));
+  const stagedFor = new Map<string, StagedCorrection>(staged.map((s) => [s.flag, s]));
   if (buckets === null && corrections.length === 0) return null;
 
-  const write = (meta: Scenario["meta"]) => {
+  // #254: every click on a row is an INTENT held in the shell; the one
+  // scenario write is Apply (one request, one band cycle).  Undo on an
+  // applied record stages a null marker; Undo on a staged row un-stages.
+  const closePicker = () => {
     setDismissing(null);
     setReason(null);
     setNote("");
     setNoteInvalid(false);
-    setScenario({ ...scenario, meta } as Scenario);
   };
-  const undo = (flag: ScannedSiteFlag) => write(withoutSiteCorrection(scenario.meta, flag));
+  const stageIntent = (entry: StagedCorrection) => {
+    closePicker();
+    setStaged(stage(staged, entry));
+  };
+  const undo = (flag: ScannedSiteFlag) => stageIntent({ flag, marker: null });
   const confirmDismiss = (flag: ScannedSiteFlag) => {
     if (reason === null) return;
     if (!dismissIsComplete(reason, note)) {
@@ -232,10 +246,23 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
       noteRef.current?.focus();
       return;
     }
-    write(withSiteCorrection(scenario.meta, dismissMarker(flag, reason, note)));
+    stageIntent({ flag, marker: dismissMarker(flag, reason, note) });
   };
-  const assertFlag = (flag: ScannedSiteFlag) =>
-    write(withSiteCorrection(scenario.meta, assertMarker(flag)));
+  const assertFlag = (flag: ScannedSiteFlag) => stageIntent({ flag, marker: assertMarker(flag) });
+  const applyAll = () => {
+    if (staged.length === 0) return;
+    closePicker();
+    setScenario({ ...scenario, meta: applyStaged(scenario.meta, staged) } as Scenario);
+    setStaged([]);
+  };
+  // The staged row's evidence cell: the intent in the vocabulary's words.
+  const intentText = (s: StagedCorrection): string => {
+    if (s.marker === null) return "undo";
+    if (s.marker.action === "assert") return "assert";
+    if (s.marker.reason === "other") return `dismiss · other — ${s.marker.note ?? ""}`;
+    const r = DISMISS_REASONS.find((x) => x.v === s.marker!.reason);
+    return `dismiss · ${(r?.l ?? s.marker.reason ?? "").toLowerCase()}`;
+  };
 
   // #249 (s2-arc21) — the variation-4 ledger.  One grid, two tracks
   // (ledger · action).  Column 1 is a flex line — the state symbol, the
@@ -293,12 +320,25 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
     );
   };
 
-  const closePicker = () => {
-    setDismissing(null);
-    setReason(null);
-    setNote("");
-    setNoteInvalid(false);
-  };
+  // #254: a STAGED row — ◌ (--none) + the condition + "staged — not yet
+  // applied" + the intent, Undo un-stages (no request).  Same ledger
+  // line, same tracks, --sc-row-h.
+  const stagedRow = (s: StagedCorrection) => (
+    <div key={`staged-${s.flag}`} className="sc-row sc-staged site-correction-staged">
+      {lead("◌", "sc-staged", SCANNED_FLAG_LABELS[s.flag], "staged — not yet applied", intentText(s))}
+      <span className="sc-action">
+        <button
+          type="button"
+          className="ghost sc-text-btn"
+          data-write=""
+          disabled={inFlight}
+          onClick={() => setStaged(unstage(staged, s.flag))}
+        >
+          Undo
+        </button>
+      </span>
+    </div>
+  );
   // Spec 46: only a detected row may enter the reason state.  Guarded
   // at the state transition (dismissAllowed reads the served bucket),
   // not by which button the view happened to draw.
@@ -317,6 +357,11 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
       // A bucket missing from the wire renders nothing (rule 10).
       if (!b || !isScannedFlag(flagName)) continue;
       const flag: ScannedSiteFlag = flagName;
+      const st = stagedFor.get(flag);
+      if (st) {
+        rows.push(stagedRow(st));
+        continue;
+      }
       const c = byFlag.get(flag);
       if (c) {
         rows.push(record(c));
@@ -438,9 +483,32 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
     }
   } else {
     // No ok scan (a proceeded outage): only the records, with undo.
-    for (const c of corrections) rows.push(record(c));
+    for (const c of corrections) {
+      const st = stagedFor.get(c.flag);
+      rows.push(st ? stagedRow(st) : record(c));
+    }
   }
   if (rows.length === 0) return null;
+  // #254 (P1): the Apply row is ALWAYS present post-scan — the standing
+  // ("no corrections staged" / "N corrections staged · not yet applied")
+  // and the block's one write, disabled at zero with the reason on its
+  // title, disabled under the lock like every write control.
+  const n = staged.length;
+  rows.push(
+    <div key="apply" className="sc-row sc-apply">
+      <span className="sc-apply-text tr-prov">{stagedSentence(n)}</span>
+      <button
+        type="button"
+        className="confirm"
+        data-write=""
+        disabled={inFlight || n === 0}
+        title={n === 0 ? "stage a correction first" : undefined}
+        onClick={applyAll}
+      >
+        Apply {n} correction{n === 1 ? "" : "s"}
+      </button>
+    </div>,
+  );
   // Footer (spec 61–65, GO ruling e / a′): the label, an elastic leader
   // (the footer reads as the ledger's last line), then the sentence —
   // the scan mode from the wire, the stamp as day · hh:mm utc by pure
@@ -480,7 +548,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight }: SiteCorr
           ) : null}
           {duration ? ` · ${duration}` : ""}
           {siteScan.memo_hit === true ? " · memoised" : ""}
-          {" · a correction re-generates the plan"}
+          {" · apply re-generates the plan"}
         </span>
         {/* #255: the backend's verify advisory ONCE per plan (the
             footer's second line) — the record rows print their clause
@@ -518,6 +586,11 @@ interface Props {
    */
   siteScanInFlight?: boolean;
   siteScanHeld?: SiteScanProvenance | null;
+  /** #254: the shell-held staged corrections and their setter (one
+   *  owner; Reopen and Apply clear it).  Required: a strip without them
+   *  would stage into nowhere. */
+  staged: StagedCorrection[];
+  setStaged: (next: StagedCorrection[]) => void;
   // Surface B (#152): a late jurisdiction / street-class change is a
   // real estimator move, so the post-generate strip edits them inline —
   // the Speed-edit treatment.  The evaluated block (when loaded) names
@@ -535,6 +608,8 @@ export function SetupStrip({
   siteScan = null,
   siteScanInFlight = false,
   siteScanHeld = null,
+  staged,
+  setStaged,
   jurisdiction = null,
   setJurisdictionKey,
   setStreetClass,
@@ -673,6 +748,8 @@ export function SetupStrip({
               setScenario={setScenario}
               siteScan={blockScan}
               inFlight={siteScanInFlight}
+              staged={staged}
+              setStaged={setStaged}
             />
           )
         );
@@ -715,7 +792,7 @@ export function SetupStrip({
             }}
             onBlur={done}
           >
-            <option value="">None — baseline</option>
+            <option value="">Not set</option>
             {JURISDICTION_OPTIONS.map((o) => (
               <option key={o.key} value={o.key}>
                 {o.label}

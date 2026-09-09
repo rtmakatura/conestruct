@@ -203,7 +203,7 @@ describe("#252 — the working band is present iff a request for the generated s
     expect(document.body.textContent).not.toMatch(/unnamed|untitled/i);
   });
 
-  it("RE-GENERATING · after a correction to {condition} on Assert; after undoing the correction on Undo", async () => {
+  it("RE-GENERATING · after a correction to {condition} on Apply of a staged Assert; after undoing the correction on Apply of a staged Undo (#254)", async () => {
     const user = await generate();
     expect(band()).toBeNull();
     const block = () => document.getElementById("site-corrections")!;
@@ -219,6 +219,10 @@ describe("#252 — the working band is present iff a request for the generated s
     const school = within(block()).getByText("School zone").closest(".site-correction-row") as HTMLElement;
     await user.click(within(school).getByRole("button", { name: "Assert" }));
     await settle();
+    // #254: staged — no request, no band, until Apply.
+    expect(band()).toBeNull();
+    await user.click(within(block()).getByRole("button", { name: "Apply 1 correction" }));
+    await settle();
     expect(verb()).toBe("RE-GENERATING");
     expect(object()).toBe("after a correction to School zone");
     expect(named()).toBe("School zone");
@@ -231,6 +235,9 @@ describe("#252 — the working band is present iff a request for the generated s
     served = audit();
     held = holdAudit();
     await user.click(within(block()).getByRole("button", { name: "Undo" }));
+    await settle();
+    expect(band()).toBeNull();
+    await user.click(within(block()).getByRole("button", { name: "Apply 1 correction" }));
     await settle();
     expect(object()).toBe("after undoing the correction to School zone");
     await act(async () => {

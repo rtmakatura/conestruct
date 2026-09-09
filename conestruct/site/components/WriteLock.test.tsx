@@ -152,6 +152,10 @@ async function generateHeld() {
   const school = within(block).getByText("School zone").closest(".site-correction-row") as HTMLElement;
   await user.click(within(school).getByRole("button", { name: "Assert" }));
   await settle();
+  // #254: a correction is staged — no request opens until Apply.
+  expect(document.querySelector(".working-band"), "staged: nothing requested").toBeNull();
+  await user.click(within(block).getByRole("button", { name: "Apply 1 correction" }));
+  await settle();
   expect(document.querySelector(".working-band"), "the request is held open").not.toBeNull();
   expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(true);
   return { user, held };
@@ -197,8 +201,10 @@ describe("#252 — the write lock's enumeration is honest", () => {
     const stillOff = controls()
       .filter((e) => e.hasAttribute("data-write") && isOff(e))
       .map(describe_);
-    // Own reasons only: none on a settled, scanned sandbox plan.
-    expect(stillOff).toEqual([]);
+    // Own reasons only: on a settled, scanned sandbox plan exactly one —
+    // #254's Apply at zero staged (its title says "stage a correction
+    // first"); the block re-enables everything else.
+    expect(stillOff).toEqual(['button.confirm "Apply 0 corrections"']);
   });
 
   it("the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier)", () => {

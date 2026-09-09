@@ -25,6 +25,8 @@ function mount(siteScan: SiteScanProvenance | null) {
       scenario={DEFAULT_SCENARIO}
       setScenario={vi.fn()}
       onReopen={vi.fn()}
+      staged={[]}
+      setStaged={vi.fn()}
       siteScan={siteScan}
     />,
   );

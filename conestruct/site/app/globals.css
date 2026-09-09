@@ -2208,6 +2208,44 @@ input[type="number"] {
 .workbench .jbar-suggest .sc-grid .sc-record button.sc-text-btn {
   padding: 0;
 }
+/* #254: a STAGED row — ◌ + "staged — not yet applied" in --none (6.60:1;
+   rule 13: the word rides the glyph) on the same ledger line, the intent
+   in the evidence cell, Undo in the action cell.  No new sizes. */
+.workbench .jbar-suggest .sc-grid .sc-glyph.sc-staged {
+  color: var(--none);
+}
+.workbench .jbar-suggest .sc-grid .sc-result.sc-staged {
+  color: var(--none);
+}
+/* #254: the Apply row — always present post-scan (P1), the grid's last
+   row spanning both tracks: the standing (tr-prov) on the start edge,
+   the block's one write on the action edge (space-between shares the
+   action column's right edge); --sc-row-h like every row. */
+.workbench .jbar-suggest .sc-grid .sc-row.sc-apply {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: var(--sc-row-h);
+}
+.workbench .jbar-suggest .sc-apply .sc-apply-text {
+  text-decoration: none;
+}
+/* Apply takes Confirm's pair (the block's filled control: the wash +
+   --act-bright, 6.15:1 measured on the picker's Confirm). */
+.workbench .jbar-suggest .sc-apply button.confirm {
+  letter-spacing: 0.14em;
+  padding: 6px 11px;
+  background: var(--sc-act-wash);
+  color: var(--act-bright);
+  transition: background-color 120ms, color 120ms;
+}
+.workbench .jbar-suggest .sc-apply button.confirm:hover,
+.workbench .jbar-suggest .sc-apply button.confirm:focus-visible {
+  background: var(--act);
+  color: var(--on-act);
+}
 /* Picker-open: exactly one extra row spanning both tracks (spec 37/38):
    legend, chips (+ the note), Confirm last in the same flex line.
    Cancel moved to the condition row's action slot (spec 44). */
@@ -2374,6 +2412,11 @@ input[type="number"] {
      rides the top line again. */
   .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
     align-items: start;
+  }
+  /* #254: the Apply row may wrap its two items at the block's <=420. */
+  .workbench .jbar-suggest .sc-grid .sc-row.sc-apply {
+    flex-wrap: wrap;
+    row-gap: 6px;
   }
   .workbench .jbar-suggest .sc-picker .reason-chip {
     padding: 4px 7px;

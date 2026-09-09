@@ -17,7 +17,7 @@ function mountStrip(over: Partial<Scenario> = {}) {
   const scenario = { ...DEFAULT_SCENARIO, ...over } as Scenario;
   const setScenario = vi.fn();
   render(
-    <SetupStrip scenario={scenario} setScenario={setScenario} onReopen={vi.fn()} />,
+    <SetupStrip scenario={scenario} setScenario={setScenario} onReopen={vi.fn()} staged={[]} setStaged={vi.fn()} />,
   );
   return setScenario;
 }

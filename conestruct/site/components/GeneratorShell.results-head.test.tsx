@@ -389,11 +389,16 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const school = within(block()!).getByText("School zone").closest(".site-correction-row") as HTMLElement;
     await user.click(within(school).getByRole("button", { name: "Assert" }));
     await settle();
+    // #254: staged, nothing in flight yet; Apply opens the request.
+    expect(band()).toBeNull();
+    expect(block()!.getAttribute("aria-busy")).toBeNull();
+    await user.click(within(block()!).getByRole("button", { name: "Apply 1 correction" }));
+    await settle();
     // In flight: block mounted on the held scan, aria-busy, every button disabled; band up, no lockup.
     expect(block(), "block stays mounted mid re-generation").not.toBeNull();
     expect(block()!.getAttribute("aria-busy")).toBe("true");
     const buttons = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
-    expect(buttons.length).toBe(5);
+    expect(buttons.length).toBe(6); // five condition rows + the Apply row
     expect(buttons.every((b) => b.disabled)).toBe(true);
     expect(band()).not.toBeNull();
     expect(band()!.querySelector(".wb-verb")!.textContent).toBe("RE-GENERATING");
@@ -408,8 +413,10 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     await settle();
     expect(block()!.getAttribute("aria-busy")).toBeNull();
     expect(within(block()!).getByText(asserted.disclosure)).toBeTruthy();
-    const after = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
+    // (Apply stays disabled at zero staged — by its title, not the flight.)
+    const after = Array.from(block()!.querySelectorAll("button:not(.confirm)")) as HTMLButtonElement[];
     expect(after.some((b) => b.disabled)).toBe(false);
+    expect((within(block()!).getByRole("button", { name: "Apply 0 corrections" }) as HTMLButtonElement).disabled).toBe(true);
     expect(within(block()!).getByRole("button", { name: "Undo" })).toBeTruthy();
     expect(band()).toBeNull();
     expectLockup(2, 5);

@@ -117,6 +117,18 @@ describe("#249 — the scanned block as a ledger", () => {
     // The arc-20 viewport query is gone with the four-track grid.
     expect(ledger).not.toContain("@media");
   });
+  it("#254: the staged row's tone is --none (◌ + the word, rule 13); the Apply row spans both tracks at --sc-row-h, its button the Confirm pair", () => {
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-glyph.sc-staged")).toMatch(/color:\s*var\(--none\)/);
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-result.sc-staged")).toMatch(/color:\s*var\(--none\)/);
+    const apply = rule(".workbench .jbar-suggest .sc-grid .sc-row.sc-apply");
+    expect(apply).toMatch(/grid-column:\s*1 \/ -1/);
+    expect(apply).toMatch(/display:\s*flex/);
+    expect(apply).toMatch(/justify-content:\s*space-between/);
+    expect(apply).toMatch(/min-height:\s*var\(--sc-row-h\)/);
+    const btn = rule(".workbench .jbar-suggest .sc-apply button.confirm");
+    expect(btn).toMatch(/background:\s*var\(--sc-act-wash\)/);
+    expect(btn).toMatch(/color:\s*var\(--act-bright\)/);
+  });
   it("the band's shared rules are byte-identical to their arc-18 text", () => {
     expect(rule(".workbench .jbar-suggest .sugg-row")).toBe(
       "\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  font-size: 11.5px;\n  color: var(--ink-on-dark);\n",

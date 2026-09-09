@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_SCENARIO, hasLocation, type Scenario } from "@/lib/scenarios";
+import type { StagedCorrection } from "@/lib/scenarios/types";
 import {
   SITE_SCAN_UNAVAILABLE_CODE,
   withSiteScan,
@@ -405,6 +406,12 @@ export function GeneratorShell({
   // state only — never on the scenario the forms edit or a saved plan
   // carries, never a default (suggest-never-set).
   const [proceedFor, setProceedFor] = useState<Scenario | null>(null);
+  // #254: the operator's STAGED corrections — intents held here (one
+  // owner: the strip's block and the results ribbon read one state, and
+  // it survives the spec-34 held-scan swap).  Never on the scenario, so
+  // staging opens no request; Apply folds the set into one setScenario.
+  // Reopen clears it (the block unmounts; the intents' subject is gone).
+  const [staged, setStaged] = useState<StagedCorrection[]>([]);
   const wireScenario = useMemo(
     () =>
       generated ? withSiteScan(scenario, proceedFor === scenario) : scenario,
@@ -817,6 +824,7 @@ export function GeneratorShell({
   // Reopen the full setup panel from the strip (structural edits).
   const onReopen = () => {
     reopenPendingRef.current = true;
+    setStaged([]);
     setGenerated(false);
   };
 
@@ -1135,6 +1143,12 @@ export function GeneratorShell({
   // while the breakdown is still open; the strip's PLAN DECLINED verdict
   // is unchanged and still never masked, #192).  The recovery actions it
   // carries are write controls, locked under the band anyway.
+  // #254 — disclose, don't lock: with corrections staged and the pair
+  // settled, the results are the previous answer (dimmed, the ribbon
+  // says so); downloads, quote and save stay live — the lock means "a
+  // request is open" (#252) and locking here would make staging
+  // non-abandonable (P7).  Under the flight the flight's ribbon speaks.
+  const stagedDisclose = staged.length > 0 && !planInFlight && genState === "post";
   const scanRefusal: { message: string; scan: SiteScanProvenance | null } | null =
     !planInFlight &&
     stripAudit.state === "error" &&
@@ -1343,6 +1357,8 @@ export function GeneratorShell({
                 }
                 siteScanInFlight={scanInFlight}
                 siteScanHeld={scanHeld}
+                staged={staged}
+                setStaged={setStaged}
                 jurisdiction={jurisdictionBlock}
                 setJurisdictionKey={(k) =>
                   setScenario({ ...scenario, jurisdiction_key: k })
@@ -1513,7 +1529,7 @@ export function GeneratorShell({
             {
               <div
                 className={
-                  genState === "error" || regenerating ? "results-stale" : ""
+                  genState === "error" || regenerating || stagedDisclose ? "results-stale" : ""
                 }
               >
                 {/* role=alert (#193): a failed generation reaches the
@@ -1537,6 +1553,15 @@ export function GeneratorShell({
                 {regenerating && !planDeclined && (
                   <div className="stale-ribbon">
                     Previous answer — values below predate the request in flight.
+                  </div>
+                )}
+                {/* #254: the text channel of the staged dim (rule 13) —
+                    the count in words; the block's Apply row is the
+                    action.  Never alongside the flight's ribbon. */}
+                {stagedDisclose && !planDeclined && (
+                  <div className="stale-ribbon">
+                    Previous answer — {staged.length} correction{staged.length === 1 ? "" : "s"} staged, not yet
+                    applied.
                   </div>
                 )}
                 {resultsVisible && (
