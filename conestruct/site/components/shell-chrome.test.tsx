@@ -61,7 +61,9 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
     expect(rule(".workbench")).toMatch(/--pin-h:\s*var\(--rail-h\)/);
     expect(rule('.workbench:not([data-stage="pre"])')).toMatch(/--pin-h:\s*0px/);
   });
-  // Ruling 1 (GO 2026-09-09): "Post-generate landing target = 136 ±1
+  // s2-batch-1 GO.md, cross-bucket ruling 1 (Ryan, 2026-09-09; the brief is
+  // committed with bucket B's evidence, s2-arc26-landing): "Post-generate
+  // landing target = 136 ±1
   // (calc(var(--nav-h) + 8px + var(--status-h) + 24px)), not 98.
   // Reason: 98 puts the verdict strip at 22..74, under the nav."  The
   // strip sits ABOVE the results zone in the DOM, so the zone's own
