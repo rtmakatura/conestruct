@@ -171,6 +171,11 @@ def test_dismiss_of_a_detected_key_applies_and_its_record_no_longer_fires(
     assert c["disclosure"].startswith(
         "Operator dismissed the scan's pedestrian sidewalks: fenced off."
     )
+    # #255: the record's own clause is the sentence minus the advisory, and
+    # the advisory is the provenance's, once; ``disclosure`` is untouched.
+    assert c["record_clause"] == "Operator dismissed the scan's pedestrian sidewalks: fenced off."
+    assert c["record_clause"] + ss._VERIFY == c["disclosure"]
+    assert scan["corrections_advisory"] == ss._VERIFY.strip()
     # ONE pending item, its label the disclosure verbatim (the #177 shape).
     items = [
         i
@@ -198,6 +203,10 @@ def test_assert_of_an_absent_key_applies_and_its_record_fires(
     assert c["disclosure"].startswith(
         "Operator asserted school zone — the scan found none along the corridor."
     )
+    clause = "Operator asserted school zone — the scan found none along the corridor."
+    assert c["record_clause"] == clause
+    assert c["record_clause"] + ss._VERIFY == c["disclosure"]
+    assert scan["corrections_advisory"] == ss._VERIFY.strip()
     assert _pending_kinds(audit).count("site_condition_overridden") == 1
 
 
@@ -231,6 +240,53 @@ def test_moot_corrections_are_disclosed_and_change_nothing(
     texts = [c["disclosure"] for c in scan["corrections"]]
     assert any("dismissal of school zone is moot" in t for t in texts)
     assert any("assertion of pedestrian sidewalks is moot" in t for t in texts)
+
+
+# --------------------------------------------------------------------------- #
+# #255 — the record clause and the advisory, split at the source (additive)
+# --------------------------------------------------------------------------- #
+
+
+def test_advisory_is_none_without_an_applied_record_and_moot_clauses_equal_their_sentence(
+    client: TestClient, auth: dict[str, str], overpass: None
+) -> None:
+    # No corrections: the advisory is absent as absence (rule 10), never "".
+    scan = _audit(client, auth, scenario(None))["sections"]["site_scan"]
+    assert scan["corrections_advisory"] is None
+    # Moot only: nothing was built to a correction — still no advisory; a
+    # moot record carries no advisory sentence, so its clause IS its sentence.
+    moot = [
+        {"flag": "school_zone", "action": "dismiss", "reason": "removed", "recorded_at": AT},
+        {"flag": "pedestrian_facility", "action": "assert", "recorded_at": AT},
+    ]
+    scan = _audit(client, auth, scenario(moot))["sections"]["site_scan"]
+    assert scan["corrections_advisory"] is None
+    for c in scan["corrections"]:
+        assert c["status"] == "moot"
+        assert c["record_clause"] == c["disclosure"]
+        assert ss._VERIFY.strip() not in c["record_clause"]
+
+
+def test_advisory_is_one_string_however_many_records_apply_and_disclosure_is_byte_identical(
+    client: TestClient, auth: dict[str, str], overpass: None
+) -> None:
+    audit = _audit(client, auth, scenario([DISMISS_SIDEWALK, ASSERT_SCHOOL]))
+    scan = audit["sections"]["site_scan"]
+    assert [c["status"] for c in scan["corrections"]] == ["applied", "applied"]
+    # One advisory on the provenance, not one per record.
+    assert scan["corrections_advisory"] == ss._VERIFY.strip()
+    assert isinstance(scan["corrections_advisory"], str)
+    for c in scan["corrections"]:
+        # The clause never carries the advisory; the sentence still does —
+        # #198's consumers (the pending item, PDF, narrative) are untouched.
+        assert ss._VERIFY.strip() not in c["record_clause"]
+        assert c["disclosure"] == c["record_clause"] + ss._VERIFY
+    labels = [
+        i["label"]
+        for i in audit["pending_verification"]["items"]
+        if i["kind"] == "site_condition_overridden"
+    ]
+    assert labels == [c["disclosure"] for c in scan["corrections"]]
 
 
 # --------------------------------------------------------------------------- #

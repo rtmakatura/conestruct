@@ -221,6 +221,10 @@ export interface SiteScanProvenance {
   /** #224 phase 4 — the operator's corrections as the backend applied
    *  them (src/api/site_scan.py SiteScanCorrection), wire order. */
   corrections?: SiteScanCorrection[];
+  /** #255 — the verify-in-the-field advisory, ONCE per plan when any
+   *  record applied, else null.  The strip's block prints it once in its
+   *  footer; every record's ``disclosure`` still carries it (#198). */
+  corrections_advisory?: string | null;
   [key: string]: unknown;
 }
 
@@ -236,6 +240,9 @@ export interface SiteScanCorrection {
   status: "applied" | "moot";
   scan_detected?: boolean | null;
   disclosure: string;
+  /** #255 — ``disclosure`` minus the advisory (equal to it on a moot
+   *  record).  The strip's record row prints this. */
+  record_clause?: string;
 }
 
 /**

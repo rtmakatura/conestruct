@@ -460,9 +460,11 @@
             "recorded_at": "2026-09-04T12:00:00+00:00",
             "status": "applied",
             "scan_detected": false,
-            "disclosure": "Operator asserted school zone — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying."
+            "disclosure": "Operator asserted school zone — the scan found none along the corridor. The plan is built to the correction — verify it in the field or on imagery before deploying.",
+            "record_clause": "Operator asserted school zone — the scan found none along the corridor."
           }
-        ]
+        ],
+        "corrections_advisory": "The plan is built to the correction — verify it in the field or on imagery before deploying."
       }
     },
     "pending_verification": {

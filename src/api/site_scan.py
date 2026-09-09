@@ -265,9 +265,27 @@ def _apply_corrections(
                 status=status,
                 scan_detected=detected,
                 disclosure=text,
+                # #255: the clause alone; ``disclosure`` stays the whole
+                # sentence (#198's consumers).  Byte-derived: a moot record
+                # carries no advisory, so its clause IS its sentence.
+                record_clause=text.removesuffix(_VERIFY),
             )
         )
     return out, records
+
+
+def corrections_advisory(records: list[SiteScanCorrection]) -> str | None:
+    """#255 — the verify-in-the-field advisory, ONCE per plan, or None.
+
+    ``_VERIFY`` rides every applied record's ``disclosure`` (the pending
+    item, the PDF and the narrative print that sentence verbatim, #198).
+    The strip's block prints ``record_clause`` per row and this string
+    once in its footer.  None when nothing was built to a correction —
+    absence, never "" (rule 10).
+    """
+    if any(r.status == "applied" for r in records):
+        return _VERIFY.strip()
+    return None
 
 
 # The honest 400's user-facing sentence (#224 ruling 2: refuse by default).
@@ -359,6 +377,10 @@ class SiteScanCorrection(BaseModel):
     scan_detected: bool | None = None
     # The one backend-composed sentence every surface prints.
     disclosure: str
+    # #255: ``disclosure`` minus the verify advisory (equal to it on a
+    # moot record).  The strip's record row prints this; the advisory
+    # prints once on the provenance (``corrections_advisory``).
+    record_clause: str
 
 
 class SiteScanProvenance(BaseModel):
@@ -395,6 +417,8 @@ class SiteScanProvenance(BaseModel):
     # #224 phase 4 — the operator's corrections, applied or moot, in wire
     # order.  Empty when the scenario carries none.
     corrections: list[SiteScanCorrection] = Field(default_factory=list)
+    # #255: ``_VERIFY.strip()`` once when any record applied, else None.
+    corrections_advisory: str | None = None
 
 
 @dataclass(frozen=True)
@@ -579,6 +603,7 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         # are moot — and every correction is still disclosed (phase 4).
         flags, corrections = _apply_corrections(manual, None, overrides)
         prov.corrections = corrections
+        prov.corrections_advisory = corrections_advisory(corrections)
         return SiteScanResult(prov, flags)
 
     if request is None:
@@ -697,6 +722,7 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         flags=effective,
         manual_flags_discarded=discarded,
         corrections=corrections,
+        corrections_advisory=corrections_advisory(corrections),
         **_fetch_fields(buckets),
     )
     return SiteScanResult(prov, effective)

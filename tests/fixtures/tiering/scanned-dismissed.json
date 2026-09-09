@@ -438,9 +438,11 @@
             "recorded_at": "2026-09-04T12:00:00+00:00",
             "status": "applied",
             "scan_detected": true,
-            "disclosure": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction — verify it in the field or on imagery before deploying."
+            "disclosure": "Operator dismissed the scan's pedestrian sidewalks: fenced off. The plan is built to the correction — verify it in the field or on imagery before deploying.",
+            "record_clause": "Operator dismissed the scan's pedestrian sidewalks: fenced off."
           }
-        ]
+        ],
+        "corrections_advisory": "The plan is built to the correction — verify it in the field or on imagery before deploying."
       }
     },
     "pending_verification": {
