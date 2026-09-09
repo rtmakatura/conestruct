@@ -100,20 +100,84 @@ describe("OutputCards download cards", () => {
     expect(screen.queryByText(/3 (FILES|SHEETS)/)).toBeNull();
   });
 
-  it("shows the loading ellipsis and error dash fallbacks for breakdown stats", () => {
+  // #261 (P16 / Rule 10): no "…" and no "—" — a quantity the system has
+  // not computed is an EMPTY line of reserved height while it is on its
+  // way, and the honest word "not generated" with every download
+  // withheld when the breakdown failed (the package cannot be built
+  // without it; F-S5-1's "— devices" with live buttons).
+  it("loading: the quantity lines are present and empty; the buttons stand", () => {
     const { container: loading } = renderPublic({
       breakdown: { state: "loading" },
+      summary: null,
     });
-    expect(cards(loading)[0].textContent).toContain("…");
+    for (const card of cards(loading)) {
+      expect(card.querySelector(".desc .qty")).not.toBeNull();
+    }
+    expect(cards(loading)[0].querySelector(".desc .qty")!.textContent).toBe(""); // devices
+    expect(cards(loading)[1].querySelector(".desc .qty")!.textContent).toBe(""); // types
+    expect(cards(loading)[2].querySelector(".desc .qty")!.textContent).toBe(""); // steps (null summary)
+    expect(cards(loading)[3].querySelector(".desc .qty")!.textContent).toBe("13 checks");
+    expect(cards(loading)[0].textContent).not.toContain("…");
+    expect((cards(loading)[0].querySelector(".dl-btn") as HTMLButtonElement).disabled).toBe(false);
+  });
 
-    cleanup();
-
+  it("breakdown failed: every card says \"not generated\" and every button is disabled", () => {
     const { container: errored } = renderPublic({
       breakdown: { state: "error", message: "boom" },
       summary: null,
     });
-    expect(cards(errored)[0].textContent).toContain("—"); // devices
-    expect(cards(errored)[2].textContent).toContain("—"); // steps (null summary)
+    for (const card of cards(errored)) {
+      expect(card.querySelector(".desc .qty")!.textContent).toBe("not generated");
+      for (const b of Array.from(card.querySelectorAll(".dl-btn"))) {
+        expect((b as HTMLButtonElement).disabled).toBe(true);
+      }
+    }
+    expect(document.body.textContent).not.toContain("—");
+  });
+
+  it("breakdown failed, saved mode: the row-backed anchors are inert too", () => {
+    const { container } = render(
+      <OutputCards
+        summary={SUMMARY}
+        generated={true}
+        mode={{ kind: "saved", planId: "plan-1" }}
+        breakdown={{ state: "error", message: "boom" }}
+        auditChecked={13}
+      />,
+    );
+    const anchors = Array.from(container.querySelectorAll(".dl-card a.dl-btn"));
+    expect(anchors).toHaveLength(5);
+    for (const a of anchors) {
+      expect(a.getAttribute("aria-disabled")).toBe("true");
+    }
+  });
+
+  it("no \"—\" and no \"done\" in any .dl-card .desc text node, in any state", () => {
+    const states: Array<Partial<Parameters<typeof OutputCards>[0]>> = [
+      {},
+      { breakdown: { state: "loading" } },
+      { breakdown: { state: "loading" }, summary: null },
+      { breakdown: { state: "error", message: "boom" } },
+      { breakdown: { state: "error", message: "boom" }, summary: null },
+      { auditChecked: null },
+      { mode: { kind: "saved", planId: "plan-1" } },
+      { mode: { kind: "saved", planId: "plan-1", dirty: true } },
+      { mode: { kind: "saved", planId: null } },
+    ];
+    for (const overrides of states) {
+      cleanup();
+      const { container } = renderPublic(overrides);
+      expect(cards(container)).toHaveLength(4);
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+      let n: Node | null;
+      while ((n = walker.nextNode())) {
+        if (!(n.parentElement as HTMLElement).closest(".dl-card .desc")) continue;
+        const text = n.textContent ?? "";
+        expect(text, JSON.stringify(overrides)).not.toContain("—");
+        expect(text, JSON.stringify(overrides)).not.toMatch(/\bdone\b/i);
+        expect(text, JSON.stringify(overrides)).not.toContain("…");
+      }
+    }
   });
 
   it("public mode: the crew card offers PDF plus a secondary .md download, and clicking posts the scenario", async () => {

@@ -58,16 +58,16 @@ interface Props {
 
 const SIGNUP_HREF = "/app";
 
-// Map a backend-pulled stat into a display value. While the breakdown
-// is loading, show an ellipsis; on error, fall back to "—" so the card
-// doesn't surface a stale number — no TS-derived silent fallback.
+// Map a backend-pulled stat into a display value: the number once the
+// breakdown is ready, otherwise null — the quantity line renders EMPTY
+// (reserved height), never "…" or "—" (#261, P16 / Rule 10).  The error
+// state is the card set's, not one stat's: `failed` below prints the
+// honest word and withholds every download.  No TS-derived fallback.
 function statFromBreakdown(
   breakdown: DeviceBreakdownState,
   pick: (data: { total_devices: number; unique_types: number }) => number,
-): number | string {
-  if (breakdown.state === "ready") return pick(breakdown.data);
-  if (breakdown.state === "loading") return "…";
-  return "—";
+): number | null {
+  return breakdown.state === "ready" ? pick(breakdown.data) : null;
 }
 
 interface DlCardDef {
@@ -77,7 +77,7 @@ interface DlCardDef {
   qtyLbl: string;
   // Null: no quantity to state — the line renders empty (reserved
   // height, P1) and the label is omitted.
-  qty: number | string | null;
+  qty: number | null;
   kind: RenderKind;
   // An optional second download offered on the same card (the crew card
   // offers the PDF as `kind` and the raw `.md` as `secondaryKind`).
@@ -205,7 +205,7 @@ export function OutputCards({
       spec: "SETUP + TAKEDOWN",
       format: "PDF + MD",
       qtyLbl: "steps",
-      qty: summary?.step_count ?? "—",
+      qty: summary?.step_count ?? null,
       kind: "crew-pdf",
       secondaryKind: "markdown",
     },
@@ -249,14 +249,30 @@ export function OutputCards({
       </div>
       <div className="dls">
         {cards.map((card) => (
-          <DlCard key={card.kind} card={card} mode={mode} />
+          <DlCard
+            key={card.kind}
+            card={card}
+            mode={mode}
+            // #261 (P16): the breakdown failed — the package cannot be
+            // built from it.  Every card prints "not generated" and
+            // withholds its download; the zone's ⚠ ribbon says why.
+            failed={breakdown.state === "error"}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
+function DlCard({
+  card,
+  mode,
+  failed,
+}: {
+  card: DlCardDef;
+  mode: Mode;
+  failed: boolean;
+}) {
   const locked = useWriteLock(); // #252 (ruling b)
   const [busyKind, setBusyKind] = useState<RenderKind | null>(null);
   // #197: the error is an answer — stamped with the scenario the failed
@@ -340,7 +356,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
             className="dl-btn"
             data-write=""
             onClick={() => onPublicDownload(k)}
-            disabled={busyKind !== null || locked || card.unavailable === true}
+            disabled={busyKind !== null || locked || failed || card.unavailable === true}
           >
             {/* #252: no per-button "Rendering…" — the band is the one
                 working voice; "Try again" is an outcome, kept. */}
@@ -363,7 +379,7 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
                 download
                 className="dl-btn"
                 data-write=""
-                {...lockedAnchorProps(locked)}
+                {...lockedAnchorProps(locked || failed)}
               >
                 {labelFor(k)}
                 <span className="font-mono">↓</span>
@@ -401,13 +417,16 @@ function DlCard({ card, mode }: { card: DlCardDef; mode: Mode }) {
           {card.spec}
         </span>
         {/* The quantity line is always present at its own height (P1):
-            a null quantity leaves it empty — never a placeholder. */}
+            a null quantity leaves it empty — never a placeholder; a
+            failed breakdown prints the honest word (P16, Rule 10). */}
         <span className="qty">
-          {card.qty !== null && (
+          {failed ? (
+            "not generated"
+          ) : card.qty !== null ? (
             <>
               <b>{card.qty}</b> {card.qtyLbl}
             </>
-          )}
+          ) : null}
         </span>
       </div>
       {note}
