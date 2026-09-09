@@ -42,9 +42,36 @@ const BREAKDOWN = {
 type Deferred = { resolve: (r: Response) => void };
 let breakdownCalls: Deferred[] = [];
 let bundleFails = false;
+// #258: the audit refuses the scan (the prod-captured 400 shape) while
+// the breakdown may still answer — the declined pair must never
+// announce "Plan generated".
+let auditRefuses = false;
+const REFUSAL = {
+  detail: {
+    error: "site_scan_unavailable",
+    message:
+      "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.",
+    site_scan: {
+      status: "unavailable",
+      error: "scan budget exceeded (20 s)",
+      mode: "corridor",
+      measured_at: "2026-09-03T15:29:51+00:00",
+      budget_s: 20.0,
+      proceeded_anyway: false,
+    },
+    recovery: { retry: true, proceed_field: "site_scan.proceed_if_unavailable" },
+  },
+};
 
 const fetchMock = vi.fn((input: RequestInfo | URL) => {
   const url = String(input);
+  if (url.includes("/api/render/audit") && auditRefuses) {
+    return Promise.resolve({
+      ok: false,
+      status: 400,
+      json: async () => REFUSAL,
+    } as unknown as Response);
+  }
   if (url.includes("/api/render/device-breakdown")) {
     return new Promise<Response>((resolve) => {
       breakdownCalls.push({ resolve });
@@ -109,6 +136,7 @@ function statusRegion(): HTMLElement {
 beforeEach(() => {
   breakdownCalls = [];
   bundleFails = false;
+  auditRefuses = false;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
   Element.prototype.scrollIntoView = vi.fn() as never;
@@ -136,6 +164,13 @@ describe("generation announcements (#193)", () => {
     expect(statusRegion().textContent).toBe("");
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // #258: nothing at the click — the announcement waits for the PAIR
+    // (the generated wire's breakdown AND its audit verdict), never
+    // for the breakdown alone.
+    expect(statusRegion().textContent).toBe("");
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
+    await flushDebounce();
     expect(statusRegion().textContent).toBe(
       "Plan generated — 42 devices, 6 types.",
     );
@@ -206,6 +241,45 @@ describe("generation announcements (#193)", () => {
       ),
     ).toBe(true);
     expect(statusRegion().textContent).toBe("");
+  });
+
+  it("#258: a refused pair never writes the status region — even when the breakdown answered; the role=alert container speaks", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await release(0, okBreakdown());
+    // The generated wire's audit refuses; the breakdown succeeds (the
+    // two race the scan budget independently — audit F-S5-1 #1).
+    auditRefuses = true;
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
+    await flushDebounce();
+
+    expect(document.querySelector(".scan-refusal")?.getAttribute("role")).toBe("alert");
+    expect(statusRegion().textContent).toBe("");
+    expect(document.querySelector(".hero")).toBeNull();
+  });
+
+  it("#258: a Retry that settles clean announces the recovered plan, once", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await release(0, okBreakdown());
+    auditRefuses = true;
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
+    await flushDebounce();
+    expect(statusRegion().textContent).toBe("");
+
+    auditRefuses = false;
+    await user.click(screen.getByRole("button", { name: /Retry scan/ }));
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
+    await flushDebounce();
+    expect(statusRegion().textContent).toBe(
+      "Plan generated — 42 devices, 6 types.",
+    );
+    expect(document.querySelector(".hero")).not.toBeNull();
   });
 
   it("a bundle failure announces via role=alert", async () => {

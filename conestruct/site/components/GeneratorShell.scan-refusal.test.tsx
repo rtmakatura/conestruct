@@ -18,6 +18,12 @@
 //     request carries proceed_if_unavailable: true; any edit drops it;
 //     a fresh Generate click resets it — never a default, never
 //     remembered (suggest-never-set).
+//   - #258 (s2-arc25): a declined plan shows NO plan (rule 10) — no
+//     hero, no download button, the sr-only status region empty, the
+//     empty state's headline alone — whether or not the breakdown
+//     request happened to succeed (the two race the scan budget
+//     independently; audit F-S5-1).  OutputCards renders for real here
+//     so the buttons are counted, not assumed.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
@@ -30,7 +36,6 @@ vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
 vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
-vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
@@ -66,9 +71,11 @@ vi.mock("./SetupStrip", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 
-// The prod-captured refusal shape (s2-arc15 after-table, 2026-09-03).
+// The prod-captured refusal shape (s2-arc15 after-table, 2026-09-03);
+// the sentence as of #258 commit 1 (67bf9a0): it names the input, not
+// an outcome the server may not produce.
 const MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.";
+  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
 const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",
@@ -134,6 +141,10 @@ type Call = { url: string; scenario: Record<string, unknown> };
 let calls: Call[] = [];
 // Scan outcome for the NEXT scanned requests: "refuse" | "ok".
 let scanMode: "refuse" | "ok" = "refuse";
+// #258: the breakdown-ready refusal path (audit F-S5-1, refusal #1) —
+// the two requests race the scan budget independently, so "ok" lets
+// the breakdown succeed while the audit refuses.
+let breakdownScan: "follow" | "ok" = "follow";
 
 function ok(data: unknown): Response {
   return { ok: true, status: 200, json: async () => data } as unknown as Response;
@@ -153,6 +164,7 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
   if (!isAudit && !isBreakdown) return Promise.resolve(ok({}));
   if (!scan) return Promise.resolve(ok(isAudit ? AUDIT_OK : BREAKDOWN));
   if (scanMode === "refuse" && !scan.proceed_if_unavailable) {
+    if (isBreakdown && breakdownScan === "ok") return Promise.resolve(ok(BREAKDOWN));
     return Promise.resolve(refused());
   }
   if (scan.proceed_if_unavailable && scanMode === "refuse") {
@@ -164,6 +176,7 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
 beforeEach(() => {
   calls = [];
   scanMode = "refuse";
+  breakdownScan = "follow";
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
 });
@@ -189,6 +202,28 @@ function container(): HTMLElement {
   const el = document.querySelector(".sys-event.scan-refusal");
   if (!el) throw new Error("refusal container not rendered");
   return el as HTMLElement;
+}
+// #193's package announcement region (the band's row is a different
+// role=status speaker and is never up once the pair has settled).
+function srStatus(): string {
+  return document.querySelector('[role="status"].sr-only')?.textContent ?? "";
+}
+// #258: what a declined Results zone must NOT hold, counted on the real
+// OutputCards / ResultsHero.
+function expectNoPlan() {
+  expect(document.querySelector(".hero")).toBeNull();
+  expect(document.querySelectorAll(".dl-btn").length).toBe(0);
+  expect(document.querySelector(".dl-card")).toBeNull();
+  expect(document.querySelector(".zone-note")).toBeNull();
+  expect(document.querySelector(".zone.dominant")).toBeNull();
+  expect(srStatus()).toBe("");
+  expect(document.body.textContent).not.toContain("Plan generated");
+  expect(document.body.textContent).not.toContain("Device breakdown failed");
+  expect(document.body.textContent).not.toContain("Previous answer");
+  // The empty state: the headline alone — the container is the instruction.
+  const empty = document.querySelector(".empty-state");
+  expect(empty).not.toBeNull();
+  expect(empty!.textContent).toBe("No package yet");
 }
 async function generateRefused() {
   const user = userEvent.setup();
@@ -288,5 +323,42 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     await settle();
     expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
     expect(strip()).toContain("READY FOR TCS REVIEW");
+  });
+});
+
+describe("#258 — a declined plan shows no plan (rule 10)", () => {
+  it("both requests refused: no hero, zero download buttons, the status region empty, the empty state's headline alone", async () => {
+    await generateRefused();
+    expect(container()).toBeTruthy();
+    expect(strip()).toContain("PLAN DECLINED");
+    expectNoPlan();
+  });
+
+  it("the breakdown succeeded while the audit refused: the answer is held, never shown — no counts, no downloads, no announcement", async () => {
+    breakdownScan = "ok";
+    await generateRefused();
+    expect(container()).toBeTruthy();
+    expect(strip()).toContain("PLAN DECLINED");
+    // The breakdown DID answer (the held answer)…
+    expect(scanned("/api/render/device-breakdown").length).toBeGreaterThan(0);
+    // …and nothing of it renders under the verdict.
+    expectNoPlan();
+  });
+
+  it("downloads return with the verdict: proceed-anyway renders the cards, the hero, and announces the plan once", async () => {
+    const user = await generateRefused();
+    expectNoPlan();
+    await user.click(
+      within(container()).getByRole("button", { name: /Generate without site check/ }),
+    );
+    await settle();
+    expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
+    expect(document.querySelector(".empty-state")).toBeNull();
+    expect(document.querySelector(".hero")).not.toBeNull();
+    expect(document.querySelectorAll(".dl-btn").length).toBeGreaterThan(0);
+    expect(srStatus()).toBe("Plan generated — 4 devices, 2 types.");
+    // Once: a further settle for the same input writes nothing new.
+    await settle();
+    expect(srStatus()).toBe("Plan generated — 4 devices, 2 types.");
   });
 });

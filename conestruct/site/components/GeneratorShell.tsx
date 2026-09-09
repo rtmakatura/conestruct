@@ -453,11 +453,21 @@ export function GeneratorShell({
     };
   }, [fetchScenario, retryNonce]);
 
+  // #258 (#193): the package announcement's own arming — set by the
+  // operator's actions (Generate, Retry, proceed-anyway), never by an
+  // edit; consumed at the PAIR's settle below.  Separate from the
+  // landing's ``scrollPendingRef``: a Retry re-announces a recovered
+  // plan but never re-lands the viewport (P1).
+  const announcePendingRef = useRef(false);
+
   // Shared retry: a single click refires BOTH fetches unconditionally.
   // No smart-retry that targets only the failed call — a network
   // failure usually affects both, and a coordinated retry keeps the two
   // panels' "last refresh" timestamps aligned.
-  const onRetry = () => setRetryNonce((n) => n + 1);
+  const onRetry = () => {
+    announcePendingRef.current = true;
+    setRetryNonce((n) => n + 1);
+  };
 
   // Derive the current "best known" audit summary for components that
   // need scalar fields (AppNav, AppSheetMeta, OutputCards).  Reads from
@@ -653,6 +663,7 @@ export function GeneratorShell({
 
   const onGenerate = () => {
     scrollPendingRef.current = true;
+    announcePendingRef.current = true;
     setGenAnnouncement("");
     // #224 phase 2: a proceed-anyway acknowledgement is never remembered
     // across a fresh Generate (suggest-never-set).
@@ -662,7 +673,10 @@ export function GeneratorShell({
   // #224 phase 2 — the explicit proceed-anyway: acknowledge THIS input.
   // The wire scenario's identity changes, so both fetches refire with
   // ``proceed_if_unavailable: true`` (the debounce's leading edge).
-  const onProceedWithoutScan = () => setProceedFor(scenario);
+  const onProceedWithoutScan = () => {
+    announcePendingRef.current = true;
+    setProceedFor(scenario);
+  };
 
   // #193: reopening swaps the strip out from under the keyboard — the
   // control that was clicked unmounts, so focus is moved deliberately
@@ -773,13 +787,8 @@ export function GeneratorShell({
         block: "start",
       });
       resultsRef.current?.focus({ preventScroll: true });
-      const d =
-        deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
-      setGenAnnouncement(
-        d && d.total_devices != null && d.unique_types != null
-          ? `Plan generated — ${d.total_devices} devices, ${d.unique_types} types.`
-          : "Plan generated — MHT package ready.",
-      );
+      // #258: the announcement left this branch — it waits for the
+      // pair's verdict (the effect after ``planDeclined`` below).
     } else if (genState === "error") {
       scrollPendingRef.current = false;
       resultsRef.current?.focus({ preventScroll: true });
@@ -852,6 +861,35 @@ export function GeneratorShell({
   const refusalPending =
     !auditSettled &&
     (prevSettled400 || matchRefusalAffordance(scenario) !== null);
+  // #258 (rule 10): a declined plan shows no plan artifacts.  The
+  // audit's verdict gates the results, never the breakdown's arrival:
+  // the two answer independently and the breakdown can succeed (memo)
+  // while the audit refuses — the declined page used to show hero
+  // counts, four live download buttons and "Plan generated" (audit
+  // F-S5-1).  ``auditDeclined`` is the STAMPED 400 (#187); while the
+  // Retry / proceed re-fetch is open after a declined settle the #192
+  // carry stays hidden too (``prevSettled400``, the #196 window) — a
+  // plan never presented is not a "previous answer".  The breakdown's
+  // answer is held, not discarded; downloads return with the verdict.
+  const planDeclined = auditDeclined || (!auditSettled && prevSettled400);
+  const resultsVisible = showResults && !planDeclined;
+  // #258 (#193): "Plan generated — …" at the PAIR's settle, and only
+  // when the stamped audit is clean.  Any settle consumes the arming
+  // (so a later background settle never announces); a declined pair
+  // consumes it silently — the refusal container is role=alert and
+  // speaks for itself.
+  useEffect(() => {
+    if (!announcePendingRef.current) return;
+    if (genState === "generating" || !auditSettled) return;
+    announcePendingRef.current = false;
+    if (genState !== "post" || auditDeclined) return;
+    const d = deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
+    setGenAnnouncement(
+      d && d.total_devices != null && d.unique_types != null
+        ? `Plan generated — ${d.total_devices} devices, ${d.unique_types} types.`
+        : "Plan generated — MHT package ready.",
+    );
+  }, [genState, auditSettled, auditDeclined, deviceBreakdown]);
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
   // The client checks cover the schema-bound mirrors only — workLen
@@ -1234,14 +1272,16 @@ export function GeneratorShell({
           <section
             ref={resultsRef}
             tabIndex={-1}
-            className={`zone outline-none${genState === "post" ? " dominant" : ""}`}
+            className={`zone outline-none${genState === "post" && resultsVisible ? " dominant" : ""}`}
           >
             <div className="zone-head">
               <span className="zone-tag">
                 <span className="n">02</span>Results
               </span>
               <h2 className="zone-title">MHT package</h2>
-              {genState === "post" && (
+              {/* #258: the stage direction and the note read the verdict
+                  too — a declined zone is not the dominant one. */}
+              {genState === "post" && resultsVisible && (
                 <span className="zone-note">
                   device &amp; type counts drive your estimate
                 </span>
@@ -1325,7 +1365,10 @@ export function GeneratorShell({
                 {/* role=alert (#193): a failed generation reaches the
                     strip's live region never (the breakdown pipeline is
                     separate from audit) — the ribbon announces itself. */}
-                {genState === "error" && !scanRefusal && (
+                {/* #258: neither ribbon renders under a declined plan —
+                    "values below" would point at content the verdict
+                    hides; the refusal container is the voice. */}
+                {genState === "error" && !planDeclined && (
                   <div role="alert" className="stale-ribbon">
                     ⚠ Device breakdown failed — values below may be stale. Fix
                     the input or retry from the plan details panel.
@@ -1337,12 +1380,12 @@ export function GeneratorShell({
                     the text channel of the results-stale dim (rule 13)
                     and says only that — what the system is DOING is the
                     band's sentence, spoken once. */}
-                {regenerating && (
+                {regenerating && !planDeclined && (
                   <div className="stale-ribbon">
                     Previous answer — values below predate the request in flight.
                   </div>
                 )}
-                {showResults && (
+                {resultsVisible && (
                   <ResultsHero
                     breakdown={deviceBreakdown}
                     jurisdiction={jurisdictionBlock}
@@ -1350,7 +1393,8 @@ export function GeneratorShell({
                 )}
                 <OutputCards
                   summary={summary}
-                  generated={showResults}
+                  generated={resultsVisible}
+                  declined={planDeclined}
                   mode={
                     mode === "sandbox"
                       ? { kind: "public", scenario: wireScenario }
@@ -1363,7 +1407,7 @@ export function GeneratorShell({
                   onDownloadAll={onDownloadBundle}
                   bundling={bundling}
                 />
-                {showResults && (
+                {resultsVisible && (
                   <PricingCard
                     mode={
                       mode === "sandbox"

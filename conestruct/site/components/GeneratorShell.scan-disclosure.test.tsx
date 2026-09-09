@@ -32,7 +32,7 @@ import { PINNED_SHOULDER } from "./test-fixtures";
 
 const DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation.";
 const MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.";
+  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
 const SCAN_UNAVAILABLE = {
   status: "unavailable",
   reason: null,

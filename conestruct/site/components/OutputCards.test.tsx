@@ -198,6 +198,25 @@ describe("OutputCards download cards", () => {
     expect(screen.getByText("No package yet")).toBeTruthy();
     expect(document.querySelector(".dl-card")).toBeNull();
   });
+
+  // #258 (P2/P3/P16): under a declined plan the empty state is the
+  // headline alone — the refusal container above it holds the actions,
+  // so "press generate" is not repeated; no card, no button, no "—".
+  it("renders the declined empty state: headline only, no instruction, no placeholders", () => {
+    render(
+      <OutputCards
+        summary={null}
+        generated={false}
+        declined
+        mode={{ kind: "public", scenario: SCENARIO }}
+        breakdown={{ state: "error", message: "declined" }}
+      />,
+    );
+    expect(document.querySelector(".empty-state")!.textContent).toBe("No package yet");
+    expect(document.querySelector(".dl-card")).toBeNull();
+    expect(document.querySelector(".dl-btn")).toBeNull();
+    expect(document.body.textContent).not.toContain("—");
+  });
 });
 
 // #197 (umbrella instance, no standalone issue): a download error is an

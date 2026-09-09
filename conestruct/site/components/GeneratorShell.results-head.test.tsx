@@ -109,7 +109,7 @@ const SCAN_UNAVAILABLE = {
   corrections: [],
 };
 const REFUSAL_MESSAGE =
-  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway and the plan will carry a NOT-CHECKED disclosure.";
+  "Site scan unavailable — the plan can't verify school zones, sidewalks, or signals right now. Retry, or generate anyway — the plan says whether the scan ran.";
 const REFUSAL = {
   detail: {
     error: "site_scan_unavailable",

@@ -33,6 +33,12 @@ interface Props {
   // the last-known summary even during refetches.
   summary: AuditSummary | null;
   generated: boolean;
+  // #258 (P2/P3): true while the generated plan is DECLINED (the shell's
+  // stamped-400 predicate).  The empty state then carries the headline
+  // alone — the refusal container above it is the single instruction,
+  // so "press generate" is not repeated at a plan the operator already
+  // generated.  Never true pre-generate.
+  declined?: boolean;
   mode: Mode;
   breakdown: DeviceBreakdownState;
   // The full MHT-package zip — the former Generate side effect, now an
@@ -134,6 +140,7 @@ async function extractValidationMessage(res: Response): Promise<string> {
 export function OutputCards({
   summary,
   generated,
+  declined = false,
   mode,
   breakdown,
   onDownloadAll,
@@ -144,8 +151,12 @@ export function OutputCards({
     return (
       <div className="empty-state">
         <span className="big">No package yet</span>
-        Describe the work zone <span className="arrow">→</span> press generate
-        <span className="arrow">→</span> download the package
+        {!declined && (
+          <>
+            Describe the work zone <span className="arrow">→</span> press
+            generate <span className="arrow">→</span> download the package
+          </>
+        )}
       </div>
     );
   }
