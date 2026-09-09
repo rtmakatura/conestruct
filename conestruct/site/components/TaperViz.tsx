@@ -1,3 +1,9 @@
+// DECORATIVE — landing illustration (#263 P11).  The taper picture on
+// the landing page's MathSection, drawn on the landing paper palette;
+// its 18 hex literals are declared decorative in
+// lib/design/ink-exceptions.ts and pinned by ink-literals.test.ts.  It
+// is not a workbench surface and not the print sheet (that is
+// src/rendering/plan_sheet.py) — no state is carried by these colours.
 type Props = {
   W: number;
   S: number;

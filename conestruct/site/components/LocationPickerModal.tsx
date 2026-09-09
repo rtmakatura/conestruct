@@ -152,9 +152,12 @@ const PIN_ZOOM = 16;
 // Zoom for an area-level geocode match (whole town): close enough to
 // see the street grid, far enough to show the whole area.
 const COARSE_ZOOM = 12;
+// #263 P11: a mapbox-gl marker is styled from JS, so this is a literal —
+// it MUST equal --dim-deep (pinned by value in ink-literals.test.ts).
 const PIN_COLOR = "#E8710A";
 // Cross-street (second) pin — teal, matching the work-zone corridor
 // segment colour so the two pins read as different jobs on the map.
+// #263 P11: MUST equal ZONE_COLOR.work_zone (pinned by value).
 const CROSS_PIN_COLOR = "#1EC8A5";
 
 const CORRIDOR_SOURCE_ID = "corridor-source";
@@ -1296,6 +1299,9 @@ export function LocationPickerModal({
               "text-letter-spacing": 0.05,
               "text-padding": 4,
             },
+            // #263 P11: DECORATIVE — zone-label paint inside a Mapbox style
+            // expression, where a CSS var() is impossible; declared in
+            // lib/design/ink-exceptions.ts.
             paint: {
               "text-color": "#ffffff",
               "text-halo-color": "#000000",

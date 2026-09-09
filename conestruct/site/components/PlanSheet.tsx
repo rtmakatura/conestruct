@@ -1,3 +1,8 @@
+// DECORATIVE — landing illustration (#263 P11).  The animated plan-sheet
+// picture in the landing Hero, drawn on the landing paper palette; its
+// 36 hex literals are declared decorative in lib/design/ink-exceptions.ts
+// and pinned by ink-literals.test.ts.  Not the print sheet (that is
+// src/rendering/plan_sheet.py) — no state is carried by these colours.
 type Stage = 0 | 1 | 2 | 3 | 4;
 
 type FadeProps = {

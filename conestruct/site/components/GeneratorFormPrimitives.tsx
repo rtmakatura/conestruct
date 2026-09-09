@@ -213,6 +213,9 @@ export function GenerateButton({
       >
         {generating ? (
           <>
+            {/* #263 P11: Tailwind's /40 alpha needs literal channels, so the
+                spinner ring carries #06222F — it MUST equal --on-act (pinned
+                by value in ink-literals.test.ts). */}
             <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[#06222F]/40 border-t-[#06222F] animate-spin" />
             Generating plan…
           </>
