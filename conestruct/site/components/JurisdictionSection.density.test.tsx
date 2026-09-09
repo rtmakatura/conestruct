@@ -18,7 +18,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { mountTiered } from "./tiered-test-utils";
+import { chipNumeral, expectChipLedger, mountTiered } from "./tiered-test-utils";
+import { assignTiers } from "@/lib/tiering";
 import type { HoursEval, JurisdictionBlock } from "@/lib/jurisdiction";
 import demo from "./__fixtures__/jurisdiction-demo.json";
 
@@ -37,14 +38,49 @@ const SCHEDULE = {
 afterEach(cleanup);
 
 describe("Zone 3 density contract — tiers", () => {
-  it("the ledger renders all four counted tokens, zeros included", () => {
+  // #235-C (P2): the ledger line that restated every chip's count is
+  // gone — the chips are the one voice; their numerals equal assignTiers'
+  // ledger (the same mapping, the lib/tiering pin).
+  it("no ledger line: the chips are the one voice, each numeral equal to assignTiers' ledger", () => {
     mountTiered(jur("greeley"), SCHEDULE);
-    const ledger = screen.getByTestId("tier-ledger");
-    expect(ledger.textContent).toMatch(/\d+ changes?/);
-    expect(ledger.textContent).toMatch(/\d+ needs attention/);
-    expect(ledger.textContent).toMatch(/\d+ checked/);
-    expect(ledger.textContent).toMatch(/\d+ pending/);
-    expect(ledger.textContent).toMatch(/reference/);
+    const model = assignTiers({ jurisdiction: jur("greeley"), audit: null });
+    expectChipLedger(model.ledger);
+    expect(model.ledger.changed).toBeGreaterThan(0); // the ▲ chip carries a real numeral here
+    expect(chipNumeral("Changed this plan")).toBe(model.ledger.changed);
+  });
+
+  // #235-C (P5): one heading per zone — the zone's h2 is the shell's; the
+  // inner "<name> — jurisdiction rules" is the tr-section role, not a
+  // heading (F-S3-2: it was a 20px h2, larger than the 17px zone title).
+  it("the section label is a tr-section div, not a heading; the informational line is tr-prov", () => {
+    const { container } = mountTiered(jur("greeley"), SCHEDULE);
+    expect(container.querySelectorAll("h1, h2, h3, h4, h5, h6")).toHaveLength(0);
+    const section = container.querySelector(".tr-section")!;
+    expect(section.tagName).toBe("DIV");
+    expect(section.textContent).toBe("Greeley — jurisdiction rules");
+    const prov = container.querySelector("p.tr-prov")!;
+    expect(prov.textContent).toBe("informational · sourced corpus · never blocks generation");
+  });
+
+  // #187 survives the ledger's deletion as ONE tr-prov cue in a slot of
+  // reserved height (P1): "◌ previous answer — refreshing…" while a
+  // same-jurisdiction refetch is open; the slot stays, empty, when not.
+  it("while revalidating, one tr-prov cue in the reserved slot; settled, the slot is empty", () => {
+    const { container, rerender } = mountTiered(jur("greeley"), SCHEDULE, "arterial", { revalidating: true });
+    const slot = container.querySelector(".tier-cue")!;
+    expect(slot).not.toBeNull();
+    expect(slot.querySelector(".tr-prov")!.textContent).toBe("◌ previous answer — refreshing…");
+    expect(screen.getAllByText("◌ previous answer — refreshing…")).toHaveLength(1);
+    expect(document.body.textContent).not.toContain("checking against");
+    rerender(
+      <div />,
+    );
+    cleanup();
+    const settled = mountTiered(jur("greeley"), SCHEDULE);
+    const slot2 = settled.container.querySelector(".tier-cue")!;
+    expect(slot2).not.toBeNull();
+    expect(slot2.textContent).toBe("");
+    expect(document.body.textContent).not.toContain("refreshing");
   });
 
   it("▲ auto-opens when a delta fires — the fired rule reads without a click", () => {

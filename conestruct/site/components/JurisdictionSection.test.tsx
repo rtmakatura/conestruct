@@ -28,10 +28,14 @@ const noop = () => {};
 afterEach(cleanup);
 
 describe("Zone 3 tiers — real-data rendering (#219-migrated)", () => {
-  it("renders no tier containers when no jurisdiction is selected (ledger zeros only)", () => {
+  it("renders no tier containers when no jurisdiction is selected (no ledger line, no heading)", () => {
     const { container } = mountTiered(null, null, null);
     expect(container.querySelectorAll(".refchip")).toHaveLength(0);
-    expect(screen.getByTestId("tier-ledger").textContent).toMatch(/0 changes/);
+    // #235-C: the zero ledger is not restated anywhere — no line, no "0 changes".
+    expect(container.querySelector("[data-testid=tier-ledger]")).toBeNull();
+    expect(document.body.textContent).not.toContain("0 changes");
+    expect(container.querySelectorAll("h1, h2, h3, h4, h5, h6")).toHaveLength(0);
+    expect(container.querySelector(".tr-section")!.textContent).toBe("Plan reference");
   });
 
   it("Greeley delta panel: the fired Type C arrow-board delta reads in ▲, auto-open", () => {

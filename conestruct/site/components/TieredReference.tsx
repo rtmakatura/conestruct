@@ -58,7 +58,6 @@ import {
   SCAN_BUCKET_TO_FLAG,
   SCAN_KEYED_BUCKETS,
   assignTiers,
-  ledgerLine,
   scanEvidence,
   type ScanCorrectionWire,
   type ScanWire,
@@ -84,8 +83,9 @@ interface Props {
   jurisdiction: JurisdictionBlock | null;
   jurisdictionLoading: boolean;
   /** #152 D: same-jurisdiction refetch in flight — content stays
-   *  mounted; verdict surfaces (and the ledger, which is derived from
-   *  verdicts) present as checking, never as current. */
+   *  mounted; verdict surfaces present as checking, never as current,
+   *  and the #187 cue names the previous answer (#235-C: the one
+   *  tr-prov line in the reserved slot — the ledger line is gone). */
   revalidating?: boolean;
   streetClass: StreetClass | null;
   schedule: WorkScheduleInput | null;
@@ -362,21 +362,16 @@ export function TieredReference({
 
   const hoursStatus = jur ? jur.hours_eval.status : null;
 
-  // ── ledger ──
-  const ledger = revalidating ? (
-    <>
-      ◌ checking against the updated inputs…
-    </>
-  ) : isFirstLoad ? (
-    <>computing…</>
-  ) : (
-    <>
-      <b>{ledgerLine(model.ledger)}</b>
-      {isRefreshing && (
-        <span className="normal-case tracking-normal"> (refreshing…)</span>
-      )}
-    </>
-  );
+  // #235-C (P2): the ledger line is gone — it restated every chip's
+  // count, and while refreshing it said "◌ checking…" beside chips that
+  // held their numbers (two voices for one fact, F-S3-1).  The chips
+  // are the one voice; `ledgerLine` stays in lib/tiering.ts for the
+  // audit-PDF cover (tier_ledger.py mirror).  The #187 previous-answer
+  // label survives as ONE tr-prov cue in a slot of reserved height
+  // (P1), shown only while a refetch holds the last answer on screen.
+  // The first-load "computing…" went with the ledger: the band is the
+  // working voice (#252, P8).
+  const refreshing = revalidating || isRefreshing;
 
   // ── tier bodies ──
   const changedBody: ReactNode[] = [];
@@ -645,13 +640,16 @@ export function TieredReference({
 
   return (
     <div aria-label="Plan reference tiers">
+      {/* #235-C (P5): one heading per zone — the shell's h2 "Rules,
+          permit & audit" is it.  This label takes the tr-section role
+          (F-S3-2: it was a 20px h2, larger than the 17px zone title). */}
       <div className="flex items-baseline justify-between mb-1 pb-3 border-b border-[color:var(--rule)]">
-        <h2 className="text-[20px] font-bold tracking-[-0.005em] text-white m-0">
+        <div className="tr-section">
           {jur ? `${jur.name} — jurisdiction rules` : "Plan reference"}
-        </h2>
+        </div>
         {jur?.provisional && <ProvisionalBadge label="Contains provisional facts" />}
       </div>
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--ink-on-dark-faint)] mt-0 mb-2">
+      <p className="tr-prov mt-0 mb-2">
         informational · sourced corpus · never blocks generation
       </p>
       {jurisdictionLoading && (
@@ -659,11 +657,14 @@ export function TieredReference({
           Loading jurisdiction rules…
         </div>
       )}
-      {/* The always-on ledger: all four counted tokens render, zeros
-          included (ruled flag k); reference stays unnumbered. */}
-      <p className="tier-ledger" data-testid="tier-ledger">
-        {ledger}
-      </p>
+      {/* The #187 cue slot — always in the flow at its reserved height
+          (P1); the line inside it only while a refetch holds the
+          previous answer on screen. */}
+      <div className="tier-cue">
+        {refreshing && (
+          <span className="tr-prov">◌ previous answer — refreshing…</span>
+        )}
+      </div>
 
       <div className="ref-stack">
         {changedBody.length > 0 && (

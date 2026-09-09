@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TieredReference } from "./TieredReference";
-import { ledgerLine } from "@/lib/tiering";
+import { expectChipLedger } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { AuditResponse } from "../lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
@@ -79,24 +79,22 @@ describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
     expect(document.body.textContent).toContain("scan budget exceeded (20 s)");
     // Phase 3: the count moves by exactly one, in attention, nowhere else.
     const l = expectations["control-lakewood"].ledger;
-    expect(screen.getByTestId("tier-ledger").textContent).toContain(
-      ledgerLine({
-        changed: l.changed,
-        attention: l.attention + 1,
-        checked: l.checked,
-        pending: l.pending,
-      }),
-    );
+    expectChipLedger({
+      changed: l.changed,
+      attention: l.attention + 1,
+      checked: l.checked,
+      pending: l.pending,
+    });
   });
 
   it("an ok scan without buckets and a not_run scan render no item; the ledger is the same line (a missing bucket is no fact — rule 10)", () => {
     const l = expectations["control-lakewood"].ledger;
-    const expected = ledgerLine({
+    const expected = {
       changed: l.changed,
       attention: l.attention,
       checked: l.checked,
       pending: l.pending,
-    });
+    };
     for (const scan of [
       { status: "ok", flags: { school_zone: true } },
       { status: "not_run", reason: "not_requested" },
@@ -105,7 +103,7 @@ describe("section 03 NOT-CHECKED item (#224 phase 2)", () => {
       mount(withScan(control.audit, scan));
       expect(screen.queryByText("▲ NOT CHECKED")).toBeNull();
       expect(document.body.textContent).not.toContain(DISCLOSURE);
-      expect(screen.getByTestId("tier-ledger").textContent).toContain(expected);
+      expectChipLedger(expected);
     }
   });
 });

@@ -3328,17 +3328,14 @@ input[type="number"] {
 .workbench .refchip.auto-expand.sev-changed {
   border-left-color: var(--dim);
 }
-/* #219 — the always-on ledger line above the tier stack. */
-.workbench .tier-ledger {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark);
+/* #235-C — the #187 cue slot above the tier stack, where the #219
+   ledger line stood.  Reserved height whether or not the cue is in it
+   (P1): the tr-prov line (10px) on a 15px line box. */
+.workbench .tier-cue {
+  display: block;
+  min-height: 15px;
+  line-height: 15px;
   margin: 0 0 10px;
-}
-.workbench .tier-ledger b {
-  color: var(--ink);
 }
 .workbench .refchip .chip-sum .verdict-ok {
   color: var(--pass);

@@ -13,7 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TieredReference } from "./TieredReference";
-import { ledgerLine } from "@/lib/tiering";
+import { expectChipLedger } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { AuditResponse, SiteScanCorrection } from "../lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
@@ -79,9 +79,7 @@ describe("section 03 — scanned-dismissed (#224 phase 4)", () => {
     const user = userEvent.setup();
     mount(fx);
     const l = expectations["scanned-dismissed"].ledger;
-    expect(screen.getByTestId("tier-ledger").textContent).toContain(
-      ledgerLine({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending }),
-    );
+    expectChipLedger({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending });
     await user.click(screen.getByText("Pending / not verified"));
     const pending = chipOf("Pending / not verified");
     expect(pending.textContent).toContain(c.disclosure);
@@ -108,9 +106,7 @@ describe("section 03 — scanned-asserted (#224 phase 4)", () => {
     const checked = chipOf("Checked & passed");
     expect(within(checked).queryByText("School zone nearby")).toBeNull();
     const l = expectations["scanned-asserted"].ledger;
-    expect(screen.getByTestId("tier-ledger").textContent).toContain(
-      ledgerLine({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending }),
-    );
+    expectChipLedger({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending });
   });
 });
 

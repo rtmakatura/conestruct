@@ -14,7 +14,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TieredReference } from "./TieredReference";
-import { ledgerLine } from "@/lib/tiering";
+import { expectChipLedger } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { AuditResponse } from "../lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
@@ -119,9 +119,7 @@ describe("section 03 scan rows (#224 phase 3) — scanned-lakewood", () => {
   it("the rendered ledger equals the shared expectation", () => {
     mount(fx);
     const l = expectations["scanned-lakewood"].ledger;
-    expect(screen.getByTestId("tier-ledger").textContent).toContain(
-      ledgerLine({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending }),
-    );
+    expectChipLedger({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending });
   });
 });
 
@@ -132,9 +130,7 @@ describe("section 03 scan rows (#224 phase 3) — scanned-not-checked", () => {
     const user = userEvent.setup();
     mount(fx);
     const l = expectations["scanned-not-checked"].ledger;
-    expect(screen.getByTestId("tier-ledger").textContent).toContain(
-      ledgerLine({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending }),
-    );
+    expectChipLedger({ changed: l.changed, attention: l.attention, checked: l.checked, pending: l.pending });
     const warn = chipOf("Needs attention");
     expect(warn.classList.contains("open")).toBe(true);
     expect(within(warn).getByText("▲ NOT CHECKED")).toBeTruthy();

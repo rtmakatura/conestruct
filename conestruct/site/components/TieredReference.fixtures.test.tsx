@@ -12,7 +12,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { TieredReference } from "./TieredReference";
-import { ledgerLine } from "@/lib/tiering";
+import { expectChipLedger } from "./tiered-test-utils";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { AuditResponse } from "../lib/render-types";
 import type { Scenario } from "@/lib/scenarios";
@@ -64,14 +64,12 @@ describe("the rendered ledger equals the shared expectation", () => {
     it(name, () => {
       mountFixture(load(name));
       const l = expectations[name].ledger;
-      expect(screen.getByTestId("tier-ledger").textContent).toContain(
-        ledgerLine({
-          changed: l.changed,
-          attention: l.attention,
-          checked: l.checked,
-          pending: l.pending,
-        }),
-      );
+      expectChipLedger({
+        changed: l.changed,
+        attention: l.attention,
+        checked: l.checked,
+        pending: l.pending,
+      });
     });
   }
 });

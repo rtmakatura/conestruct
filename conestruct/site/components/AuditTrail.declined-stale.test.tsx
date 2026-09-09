@@ -184,9 +184,11 @@ describe("audit rows never present a prior input's numbers under a declined bann
     await generateThenEdit();
     // Zone 3 stays mounted through the regenerate since #192, so the
     // chip is still expanded.  Audit re-fetch in flight: prior values +
-    // "(refreshing…)".
+    // the one #187 cue (#235-C: a tr-prov line in the reserved slot; the
+    // ledger's "(refreshing…)" suffix is gone with the ledger).
     expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0);
-    expect(screen.getByText(/refreshing…/)).toBeTruthy();
+    expect(screen.getAllByText("◌ previous answer — refreshing…")).toHaveLength(1);
+    expect(document.body.textContent).not.toContain("(refreshing…)");
   });
 
   it("a declined (400) audit blanks the cited values and disables the Audit PDF", async () => {
