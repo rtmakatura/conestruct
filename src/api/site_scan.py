@@ -271,10 +271,16 @@ def _apply_corrections(
 
 
 # The honest 400's user-facing sentence (#224 ruling 2: refuse by default).
+# #258 (s2-arc25, ruling f): the second sentence states the INPUT, never
+# the outcome — ``proceed_if_unavailable`` re-runs the scan (memo or
+# Overpass, below) and only tolerates a failure, so a warm memo produces
+# a scanned plan with no NOT-CHECKED disclosure (audit F-S5-7).  The old
+# clause "the plan will carry a NOT-CHECKED disclosure" promised what
+# the server may not do; the plan's own provenance says what happened.
 SITE_SCAN_UNAVAILABLE_MESSAGE = (
     "Site scan unavailable — the plan can't verify school zones, sidewalks, "
-    "or signals right now. Retry, or generate anyway and the plan will carry "
-    "a NOT-CHECKED disclosure."
+    "or signals right now. Retry, or generate anyway — the plan says whether "
+    "the scan ran."
 )
 
 SITE_SCAN_UNAVAILABLE_ERROR = "site_scan_unavailable"
