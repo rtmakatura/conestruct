@@ -1,0 +1,7 @@
+healthz http://127.0.0.1:8001/healthz sha 2c85613e9633bc9e5377f5b21c839f9886ba69cc expect 2c85613e9633bc9e5377f5b21c839f9886ba69cc
+B1 healthz 2c85613e9633bc9e5377f5b21c839f9886ba69cc == 2c85613e9633bc9e5377f5b21c839f9886ba69cc: PASS · base http://localhost:3001
+[1440x1000] info G — natural refusal on the live Overpass (#256) — retrying once
+[1440x1000] FAIL G generate — refused twice on the live Overpass — block legs skipped (recorded, not faked); strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[380x800] info G — natural refusal on the live Overpass (#256) — retrying once
+[380x800] FAIL G generate — refused twice on the live Overpass — block legs skipped (recorded, not faked); strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+RESULT FAIL 0/2 — [1440x1000] G generate, [380x800] G generate
