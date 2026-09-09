@@ -245,7 +245,13 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     expect((document.body.textContent ?? "").split(MESSAGE).length - 1).toBe(1);
     // Provenance line 2 carries the scan's own facts.
     expect(c.textContent).toContain("scan budget exceeded (20 s)");
-    expect(c.textContent).toContain("2026-09-03T15:29:51+00:00");
+    // #258: the stamp sliced (fmtScanStamp), the ISO on <time> only.
+    expect(c.textContent).toContain("attempted 3 sep · 15:29 utc");
+    expect(c.textContent).not.toMatch(/\d{4}-\d\d-\d\dT/);
+    expect(c.querySelector("time")?.getAttribute("title")).toBe("2026-09-03T15:29:51+00:00");
+    // The strip: verdict + pointer only — the reason is the container's.
+    expect(strip()).toContain("see the notice in the Results zone.");
+    expect(strip()).not.toContain("could not complete");
     // Glyph + words (rule 13).
     expect(within(c).getByText("⚠")).toBeTruthy();
     expect(within(c).getByRole("button", { name: /Retry scan/ })).toBeTruthy();

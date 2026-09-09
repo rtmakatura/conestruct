@@ -50,7 +50,13 @@ describe("SetupStrip NOT-CHECKED disclosure (#224 phase 2)", () => {
     expect(container!.classList.contains("warn")).toBe(true);
     expect(container!.querySelector(".sys-glyph")?.textContent).toBe("⚠");
     expect(container!.textContent).toContain("scan budget exceeded (20 s)");
-    expect(container!.textContent).toContain("attempted 2026-09-03T15:29:51+00:00");
+    // #258: the stamp sliced by the block footer's formatter; the ISO
+    // rides on <time> only (P12: never raw on the surface).
+    expect(container!.textContent).toContain("attempted 3 sep · 15:29 utc");
+    expect(container!.textContent).not.toMatch(/\d{4}-\d\d-\d\dT/);
+    const time = container!.querySelector("time");
+    expect(time?.getAttribute("dateTime")).toBe("2026-09-03T15:29:51+00:00");
+    expect(time?.getAttribute("title")).toBe("2026-09-03T15:29:51+00:00");
     expect(container!.textContent).toContain("re-generate to retry");
     // Once, verbatim, on the surface.
     expect((document.body.textContent ?? "").split(DISCLOSURE).length - 1).toBe(1);

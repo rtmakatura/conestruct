@@ -604,15 +604,20 @@ export function SetupStrip({
             </span>
             <span>{notChecked.disclosure}</span>
           </div>
+          {/* #258 (P11/P12): the same sliced stamp as the block footer
+              and the refusal container — one formatter; ISO on <time>. */}
           <div className="tr-prov mt-1.5">
-            {[
-              "site scan",
-              notChecked.error ?? null,
-              notChecked.measured_at ? `attempted ${notChecked.measured_at}` : null,
-              "re-generate to retry",
-            ]
-              .filter((p): p is string => p !== null)
-              .join(" · ")}
+            site scan
+            {notChecked.error ? ` · ${notChecked.error}` : ""}
+            {notChecked.measured_at ? (
+              <>
+                {" · attempted "}
+                <time dateTime={notChecked.measured_at} title={notChecked.measured_at}>
+                  {fmtScanStamp(notChecked.measured_at)}
+                </time>
+              </>
+            ) : null}
+            {" · re-generate to retry"}
           </div>
         </div>
       )}

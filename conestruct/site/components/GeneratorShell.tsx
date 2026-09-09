@@ -40,6 +40,7 @@ import { PricingCard } from "./PricingCard";
 import { ResultsHero } from "./ResultsHero";
 import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
+import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { ResultsHead, type ResultsHeadState } from "./ResultsHead";
 import type {
   DeviceBreakdownData,
@@ -1313,21 +1314,29 @@ export function GeneratorShell({
                   </span>
                   <span>{scanRefusal.message}</span>
                 </div>
+                {/* #258 (P11/P12): the stamp as day · hh:mm utc by the
+                    block footer's own formatter (fmtScanStamp: pure
+                    slicing, no clock), the full ISO on the <time> for
+                    copy and audit — never raw on the surface. */}
                 <div className="tr-prov mt-1.5">
-                  {[
-                    scanRefusal.scan?.mode
-                      ? `${scanRefusal.scan.mode} scan`
-                      : "site scan",
-                    scanRefusal.scan?.error ?? null,
-                    scanRefusal.scan?.measured_at
-                      ? `attempted ${scanRefusal.scan.measured_at}`
-                      : null,
-                    scanRefusal.scan?.budget_s != null
-                      ? `budget ${scanRefusal.scan.budget_s} s`
-                      : null,
-                  ]
-                    .filter((p): p is string => p !== null)
-                    .join(" · ")}
+                  {scanRefusal.scan?.mode
+                    ? `${scanRefusal.scan.mode} scan`
+                    : "site scan"}
+                  {scanRefusal.scan?.error ? ` · ${scanRefusal.scan.error}` : ""}
+                  {scanRefusal.scan?.measured_at ? (
+                    <>
+                      {" · attempted "}
+                      <time
+                        dateTime={scanRefusal.scan.measured_at}
+                        title={scanRefusal.scan.measured_at}
+                      >
+                        {fmtScanStamp(scanRefusal.scan.measured_at)}
+                      </time>
+                    </>
+                  ) : null}
+                  {scanRefusal.scan?.budget_s != null
+                    ? ` · budget ${scanRefusal.scan.budget_s} s`
+                    : ""}
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
                   <button

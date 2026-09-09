@@ -127,15 +127,17 @@ export interface RefusalAffordance {
 // ``matchRefusalAffordance`` above is untouched (this refusal exists only
 // post-generate; deriveRail never sees it).  The remedy lives in the
 // Results zone's PLAN DECLINED container (Retry / proceed-anyway), which
-// the pointer names.
+// the pointer names.  #258 (P2, one voice): the pointer is a pointer
+// only — the strip states the verdict (PLAN DECLINED + the pill), the
+// container states the reason (the wire sentence, once) and carries
+// the actions; the strip no longer restates either.
 export function matchRefusalCode(
   code: string | null | undefined,
 ): RefusalAffordance | null {
   if (code === "site_scan_unavailable") {
     return {
       code: "site_scan_unavailable",
-      pointer:
-        "the site scan could not complete — retry it, or generate without the site check, from the notice in the Results zone.",
+      pointer: "see the notice in the Results zone.",
     };
   }
   return null;
