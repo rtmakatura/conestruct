@@ -2228,6 +2228,10 @@ input[type="number"] {
   justify-content: space-between;
   gap: 10px;
   min-height: var(--sc-row-h);
+  /* Apply's filled control measures 30 (Confirm's pair); 46 − 30 = 16,
+     so this row's inset is 8/8 where its peers' 26-28 px ghosts take
+     9/9 (local run 1 measured 48 at 9/9). */
+  padding: 8px 0;
 }
 .workbench .jbar-suggest .sc-apply .sc-apply-text {
   text-decoration: none;
@@ -2413,10 +2417,15 @@ input[type="number"] {
   .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
     align-items: start;
   }
-  /* #254: the Apply row may wrap its two items at the block's <=420. */
+  /* #254: the Apply row may wrap its two items at the block's <=420;
+     the button keeps the action edge on its own line (P4 — local run 1
+     measured it on the start edge, 207 vs 338). */
   .workbench .jbar-suggest .sc-grid .sc-row.sc-apply {
     flex-wrap: wrap;
     row-gap: 6px;
+  }
+  .workbench .jbar-suggest .sc-apply button.confirm {
+    margin-left: auto;
   }
   .workbench .jbar-suggest .sc-picker .reason-chip {
     padding: 4px 7px;

@@ -125,6 +125,9 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(apply).toMatch(/display:\s*flex/);
     expect(apply).toMatch(/justify-content:\s*space-between/);
     expect(apply).toMatch(/min-height:\s*var\(--sc-row-h\)/);
+    expect(apply).toMatch(/padding:\s*8px 0/); // 46 − the 30 px filled control
+    const cq = css.indexOf("@container (max-width: 420px)");
+    expect(rule(".workbench .jbar-suggest .sc-apply button.confirm", cq)).toMatch(/margin-left:\s*auto/);
     const btn = rule(".workbench .jbar-suggest .sc-apply button.confirm");
     expect(btn).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(btn).toMatch(/color:\s*var\(--act-bright\)/);
