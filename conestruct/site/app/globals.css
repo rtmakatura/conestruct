@@ -716,6 +716,12 @@ body {
      sidebar, and a margin that kept budgeting it left the landing to
      Chrome's scroll anchoring (which the swap's frame suppresses). */
   --pin-h: var(--rail-h);
+  /* #240: the results head's height — the lockup, MEASURED on the dev
+     server at 224feb9: 37.19 (24 px figure, two stacked labels) → 38.
+     The slot (.results-head-slot) reserves it from the Generate click so
+     the lockup lands into allocated room; #253's step strip takes the
+     token over when it lands. */
+  --strip-h: 38px;
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -1424,6 +1430,15 @@ input[type="number"] {
    the field / step roles (12.5 and 9.5 snapped, spec 56); the link is
    the signpost role (spec 57's 9.5 / 0.14em snapped).  --dim when ≥1
    detected (the tier set's mark), chromeless --none at 0 (spec 59). */
+/* #240 (P1): the results-head slot — mounted empty from the Generate
+   click (ResultsHead.tsx ``reserve``), it holds the lockup's height and
+   the 14 px gap the lockup used to carry (mb-3.5), so its height is the
+   same with or without the lockup and the plan below never moves at
+   the settle. */
+.workbench .results-head-slot {
+  min-height: var(--strip-h);
+  margin-bottom: 14px;
+}
 .workbench .results-head-lockup {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr) max-content;

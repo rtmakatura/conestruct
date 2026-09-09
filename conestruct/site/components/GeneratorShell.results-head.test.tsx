@@ -323,6 +323,46 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     expect(slotStates()).toHaveLength(1);
   });
 
+  // #240 (P1): the slot's room is reserved from the moment the lifecycle
+  // leaves "pre" — the lockup lands at the settle into height already
+  // allocated (`.results-head-slot`, min-height --strip-h), so the plan
+  // below it does not move at the settle.  Released only under a
+  // declined plan (the refusal container is the voice; no lockup will
+  // come).  Pre-generate: nothing, not even the empty slot.
+  it("#240: the results-head slot is reserved from Generate, holds the lockup at the settle, and is absent pre-generate and under a declined plan", async () => {
+    served = auditWithScan({ status: "not_run", reason: "not_requested" });
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await settle();
+    const slot = () => document.querySelector(".results-head-slot");
+    expect(slot()).toBeNull();
+    served = audit(BUCKETS_DETECTED);
+    const held = gate(served);
+    auditGate = held;
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Generate package" }));
+    await settle();
+    // In flight: the slot is mounted and empty (the band is the voice).
+    expect(slot(), "slot reserved while the audit is pending").not.toBeNull();
+    expect(slot()!.children).toHaveLength(0);
+    expect(band()).not.toBeNull();
+    await act(async () => {
+      held.release();
+    });
+    await settle();
+    // Settled: the lockup sits INSIDE the slot — one element, same room.
+    expect(slot()).not.toBeNull();
+    expect(lockup()!.parentElement).toBe(slot());
+    expect(document.querySelectorAll(".results-head-slot")).toHaveLength(1);
+    cleanup();
+    // Declined: no slot — the refusal container owns the zone's head.
+    auditGate = null; // the released gate would otherwise keep answering ok
+    auditRefuses = true;
+    await generate();
+    expect(document.querySelector(".scan-refusal")).not.toBeNull();
+    expect(slot()).toBeNull();
+    expect(lockup()).toBeNull();
+  });
+
   // Spec 34 (#249): a correction re-generates the plan; while that
   // re-generation is in flight the block stays MOUNTED (arc-20
   // unmounted it: the stamped view nulls mid-refetch) with every button

@@ -1450,7 +1450,12 @@ export function GeneratorShell({
                 lockup once the scan settles and RAN, nothing otherwise
                 (the #247 wait line retired: the band is the voice).
                 Slot order: this slot → the refusal container → the plan. */}
-            <ResultsHead head={resultsHead} />
+            {/* #240: the slot's room is reserved from the Generate click
+                (P1) and released only under a declined plan. */}
+            <ResultsHead
+              head={resultsHead}
+              reserve={genState !== "pre" && !planDeclined}
+            />
             {scanRefusal && (
               <div role="alert" className="sys-event warn scan-refusal">
                 <div className="tr-section mb-1.5">Site scan</div>

@@ -109,6 +109,20 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
   });
 });
 
+// #240 — the second reserved slot: the results head.  --strip-h is the
+// lockup's MEASURED height (37.19 on the dev server at 224feb9 → 38;
+// #253's strip takes the token over when it lands) and the slot owns
+// the 14 px gap the lockup used to carry (mb-3.5), so the slot's height
+// is the same whether the lockup is in it or not.
+describe("#240 — the results-head slot", () => {
+  it("the workbench defines --strip-h: 38px; .results-head-slot reserves it and owns the gap", () => {
+    expect(rule(".workbench")).toMatch(/--strip-h:\s*38px/);
+    const slot = rule(".workbench .results-head-slot");
+    expect(slot).toMatch(/min-height:\s*var\(--strip-h\)/);
+    expect(slot).toMatch(/margin-bottom:\s*14px/);
+  });
+});
+
 describe("#232 — three-sided frame, rail under the nav", () => {
   it("the rail sticks at --nav-h", () => {
     expect(rule(".workbench .setup-panel .progress-rail")).toMatch(/top:\s*var\(--nav-h\)/);

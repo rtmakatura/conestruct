@@ -33,15 +33,35 @@ import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
 
 export type ResultsHeadState = { kind: "scanned"; count: number; total: number };
 
-export function ResultsHead({ head }: { head: ResultsHeadState | null }) {
-  if (head === null) return null;
+// #240 (P1): ``reserve`` — the shell passes ``genState !== "pre" &&
+// !planDeclined``: from the Generate click the slot (`.results-head-slot`,
+// min-height --strip-h + the 14 px gap) is mounted, empty, so the lockup
+// lands at the settle into room already allocated and nothing below it
+// moves; released under a declined plan (the refusal container is the
+// voice and no lockup will come).  Pre-generate: nothing, not even the
+// slot.  The lockup itself is unchanged (P16: the empty slot is room,
+// not a skeleton — no placeholder content).
+export function ResultsHead({
+  head,
+  reserve = false,
+}: {
+  head: ResultsHeadState | null;
+  reserve?: boolean;
+}) {
+  if (head === null && !reserve) return null;
+  return <div className="results-head-slot">{head && <Lockup head={head} />}</div>;
+}
+
+function Lockup({ head }: { head: ResultsHeadState }) {
   const detected = head.count > 0;
   return (
     // Spec 54–58: figure · stacked labels · link; no fill, no border, no
     // icon — the 24px figure alone is the weight.  Figure --dim when
     // ≥1 detected (the tier set's mark, GO ruling a), chromeless --none
     // at 0 (spec 59).  Digits, not words, for both numbers (rule 12).
-    <div className="results-head-lockup mb-3.5">
+    // #240: the 14 px gap moved to the slot (a margin inside a min-height
+    // box does not collapse through, so the slot would grow with it).
+    <div className="results-head-lockup">
       <span className={`rh-figure ${detected ? "rh-detected" : "rh-none"}`}>{head.count}</span>
       <span className="rh-labels">
         <span className="rh-line1 tr-field">
