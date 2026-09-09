@@ -88,3 +88,68 @@ describe("pre-pin quiet band meets the AA floor (arc16 coda)", () => {
     );
   });
 });
+
+// #263 P9 (F-S1-7): the `.honesty` caveat — "Boundary data is
+// approximate … confirm jurisdiction with the permitting authority" —
+// measured 4.47:1 on prod: --ink-on-dark-faint (#93a0b0) through the
+// rule's 0.85 opacity over the .jbar's --canvas-tint (#1b2838).  It is
+// the one sentence that tells the operator to verify.  Same two halves
+// as above: the static half composites the ACTUAL rule over the ACTUAL
+// surface (the issue's "6.19 on canvas" named the wrong surface — the
+// caveat sits on the tinted bar), the mounted half proves `.honesty`
+// still binds to that sentence.
+describe("the .honesty caveat meets the AA floor on --canvas-tint (#263)", () => {
+  it("computed contrast of .honesty ink over --canvas-tint, through the rule's own opacity, is ≥ 4.5:1", () => {
+    const rule = css.match(/\.workbench \.jbar-suggest \.honesty \{[^}]*\}/);
+    expect(rule).not.toBeNull();
+    expect(rule![0]).toContain("color: var(--ink-on-dark-faint)");
+    const ink = channels(token("--ink-on-dark-faint"));
+    // The surface: .jbar paints --canvas-tint (globals.css ".workbench
+    // .jbar { background: var(--canvas-tint) }"), and .jbar-suggest sits
+    // inside it — pin that, so a re-surfaced bar fails on the number.
+    expect(css).toMatch(/\.workbench \.jbar \{[^}]*background: var\(--canvas-tint\)/);
+    const surface = channels(token("--canvas-tint"));
+
+    const op = rule![0].match(/opacity:\s*([\d.]+)/);
+    const alpha = op ? parseFloat(op[1]) : 1;
+    const effective = ink.map((v, i) =>
+      Math.round(alpha * v + (1 - alpha) * surface[i]),
+    );
+
+    // #93a0b0 on #1b2838 = 5.61:1 at alpha 1; the 0.85 dimmer measured
+    // 4.47:1 (the audit finding this fixture pins closed).
+    const ratio = contrast(effective, surface);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(ratio).toBeCloseTo(5.61, 1);
+  });
+
+  it("`.honesty` binds to the boundary caveat in the mounted suggestion slot", () => {
+    const { container } = render(
+      <JurisdictionControls
+        jurisdiction={null}
+        jurisdictionKey={null}
+        setJurisdictionKey={() => {}}
+        streetClass={null}
+        setStreetClass={() => {}}
+        suggest={{
+          suggestion: "denver",
+          reason:
+            "Pin is inside Denver municipal limits (US Census TIGER/Line Place boundaries, 2025 vintage).",
+          confidence: "inside",
+          distance_to_boundary_ft: 17288.2,
+          warnings: [],
+          boundary_source: {
+            source: "US Census TIGER/Line Place boundaries",
+            vintage: "2025",
+          },
+        }}
+      />,
+    );
+    const caveat = container.querySelector(".jbar-suggest .honesty");
+    expect(caveat).not.toBeNull();
+    expect(caveat!.textContent).toContain("Boundary data is approximate");
+    expect(caveat!.textContent).toContain(
+      "confirm jurisdiction with the permitting authority",
+    );
+  });
+});

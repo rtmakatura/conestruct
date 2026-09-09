@@ -1816,10 +1816,12 @@ input[type="number"] {
   color: var(--warn);
   letter-spacing: 0.02em;
 }
+/* #263 P9: no dimmer — the token's #93a0b0 on --canvas-tint is 5.61:1;
+   the former opacity: 0.85 composited to 4.47:1 (F-S1-7).  Measured in
+   quiet-band-contrast.test.tsx, not asserted. */
 .workbench .jbar-suggest .honesty {
   font-size: 9.5px;
   color: var(--ink-on-dark-faint);
-  opacity: 0.85;
 }
 /* #245 — the dismiss reason picker.  A native <select> under the
    Tailwind preflight inherits the row's light ink onto the UA's white
