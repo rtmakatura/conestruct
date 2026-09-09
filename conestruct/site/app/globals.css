@@ -2907,6 +2907,28 @@ input[type="number"] {
 .workbench .dl-btn:disabled:hover {
   background: var(--canvas);
 }
+/* #258 (P11/P10/P4): the refusal container's two recovery actions are
+   .dl-btn — one class, one treatment; a row on the section label's
+   left edge, 40 px at desk (the card button's own height); at phone
+   width they stack full-width at the 44 px target (WCAG 2.5.5).
+   Layout rules only: no new colour, no new state treatment. */
+.workbench .scan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.workbench .scan-refusal .dl-btn {
+  margin-top: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .workbench .scan-refusal .dl-btn {
+    flex: 1 1 100%;
+    min-height: 44px;
+  }
+}
 
 /* Zone 2 pricing — secondary collapsed card; the full quote panel
    (inputs, breakdown preview, XLSX download) lives in the body */

@@ -294,7 +294,7 @@ describe("#252 — the working band is present iff a request for the generated s
     expect(refusalContainer()).not.toBeNull();
     auditRefuses = false;
     const held = holdAudit();
-    await user.click(screen.getByRole("button", { name: /Generate without site check/ }));
+    await user.click(screen.getByRole("button", { name: /Generate anyway/ }));
     await settle();
     expect(band()).not.toBeNull();
     expect(verb()).toBe("RE-GENERATING");

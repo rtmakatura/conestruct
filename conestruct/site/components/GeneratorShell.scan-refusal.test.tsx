@@ -68,6 +68,8 @@ vi.mock("./SetupStrip", () => ({
   ),
 }));
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 
@@ -210,9 +212,16 @@ function srStatus(): string {
 }
 // #258: what a declined Results zone must NOT hold, counted on the real
 // OutputCards / ResultsHero.
+// The two recovery actions inside the container are .dl-btn too (P11)
+// — the count that must be zero is the DOWNLOAD buttons, outside it.
+function downloadButtons(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>(".dl-btn")).filter(
+    (b) => b.closest(".scan-refusal") === null,
+  );
+}
 function expectNoPlan() {
   expect(document.querySelector(".hero")).toBeNull();
-  expect(document.querySelectorAll(".dl-btn").length).toBe(0);
+  expect(downloadButtons().length).toBe(0);
   expect(document.querySelector(".dl-card")).toBeNull();
   expect(document.querySelector(".zone-note")).toBeNull();
   expect(document.querySelector(".zone.dominant")).toBeNull();
@@ -254,9 +263,19 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     expect(strip()).not.toContain("could not complete");
     // Glyph + words (rule 13).
     expect(within(c).getByText("⚠")).toBeTruthy();
-    expect(within(c).getByRole("button", { name: /Retry scan/ })).toBeTruthy();
-    const proceed = within(c).getByRole("button", { name: /Generate without site check/ });
-    expect(proceed.textContent).toContain("SITE CONDITIONS NOT CHECKED");
+    const retry = within(c).getByRole("button", { name: /Retry scan/ });
+    // #258 (P11/P10/P4): both actions are the package's .dl-btn, in one
+    // row, Retry first; the proceed label states the input only — no
+    // promised NOT-CHECKED (audit F-S5-7); the consequence sits beneath.
+    const proceed = within(c).getByRole("button", { name: "Generate anyway" });
+    expect(proceed.textContent).not.toContain("NOT CHECKED");
+    const row = c.querySelector(".scan-actions")!;
+    expect(Array.from(row.querySelectorAll("button"))).toEqual([retry, proceed]);
+    for (const b of [retry, proceed]) {
+      expect(b.classList.contains("dl-btn")).toBe(true);
+      expect(b.hasAttribute("data-write")).toBe(true);
+    }
+    expect(c.textContent).toContain("tries the scan once more · the plan says whether it ran");
     // The generic breakdown-failed ribbon does not also render.
     expect(document.body.textContent).not.toContain("Device breakdown failed");
     // The strip: declined, service pill, never "needs input".
@@ -283,7 +302,7 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     const user = await generateRefused();
     calls = [];
     await user.click(
-      within(container()).getByRole("button", { name: /Generate without site check/ }),
+      within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: true }]);
@@ -297,7 +316,7 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
   it("an edit drops the acknowledgement: the next scan must succeed or be re-acknowledged", async () => {
     const user = await generateRefused();
     await user.click(
-      within(container()).getByRole("button", { name: /Generate without site check/ }),
+      within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
     calls = [];
@@ -311,7 +330,7 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
   it("a fresh Generate click resets the acknowledgement (never remembered)", async () => {
     const user = await generateRefused();
     await user.click(
-      within(container()).getByRole("button", { name: /Generate without site check/ }),
+      within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
     await user.click(screen.getByText("Edit full setup"));
@@ -329,6 +348,30 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     await settle();
     expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
     expect(strip()).toContain("READY FOR TCS REVIEW");
+  });
+});
+
+// #258 (P11/P10): the CSS half of the actions row — pinned in globals.css
+// so the mounted assertions above cannot rot into classes nothing styles.
+describe("#258 — the refusal actions' CSS rules", () => {
+  const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+  it("globals.css scopes .dl-btn inside .scan-refusal to one row (nowrap) and 44 px targets at phone width", () => {
+    const row = css.match(/\.workbench \.scan-actions \{[^}]*\}/);
+    expect(row).not.toBeNull();
+    expect(row![0]).toContain("display: flex");
+    const btn = css.match(/\.workbench \.scan-refusal \.dl-btn \{[^}]*\}/);
+    expect(btn).not.toBeNull();
+    expect(btn![0]).toContain("white-space: nowrap");
+    expect(btn![0]).toContain("margin-top: 0");
+    const phone = css.match(
+      /@media \(max-width: 480px\) \{\s*\.workbench \.scan-refusal \.dl-btn \{[^}]*\}/,
+    );
+    expect(phone).not.toBeNull();
+    expect(phone![0]).toContain("min-height: 44px");
+    expect(phone![0]).toContain("flex: 1 1 100%");
+    // No new hex anywhere in the block (P11: tokens only).
+    const start = css.indexOf(".workbench .scan-actions {");
+    expect(css.slice(start, start + 700)).not.toMatch(/#[0-9a-f]{3,6}\b/i);
   });
 });
 
@@ -355,13 +398,13 @@ describe("#258 — a declined plan shows no plan (rule 10)", () => {
     const user = await generateRefused();
     expectNoPlan();
     await user.click(
-      within(container()).getByRole("button", { name: /Generate without site check/ }),
+      within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
     expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
     expect(document.querySelector(".empty-state")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
-    expect(document.querySelectorAll(".dl-btn").length).toBeGreaterThan(0);
+    expect(downloadButtons().length).toBeGreaterThan(0);
     expect(srStatus()).toBe("Plan generated — 4 devices, 2 types.");
     // Once: a further settle for the same input writes nothing new.
     await settle();

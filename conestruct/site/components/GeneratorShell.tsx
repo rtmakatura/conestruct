@@ -1338,26 +1338,41 @@ export function GeneratorShell({
                     ? ` · budget ${scanRefusal.scan.budget_s} s`
                     : ""}
                 </div>
-                <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+                {/* #258 (P11/P10/P4): the two recovery actions are the
+                    package's own button class — one treatment, one
+                    edge, 40 px at desk / 44 at phone (globals.css
+                    .scan-actions); Retry first — primary by position,
+                    never by weight.  The proceed label states the INPUT
+                    ("Generate anyway" = proceed_if_unavailable) and its
+                    consequence sits beneath in the provenance role: the
+                    scan is tried once more and the plan reports the
+                    outcome — never a promised NOT-CHECKED (audit
+                    F-S5-7).  Both are write controls under the lock
+                    (``inFlight`` = the plan pair or an open render;
+                    the container never mounts while the pair is open,
+                    so the render half is uniformity, not behaviour). */}
+                <div className="scan-actions">
                   <button
                     type="button"
+                    className="dl-btn"
                     data-write=""
-                    disabled={planInFlight}
+                    disabled={inFlight}
                     onClick={onRetry}
-                    className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--act)] hover:underline cursor-pointer"
                   >
                     ↻ Retry scan
                   </button>
                   <button
                     type="button"
+                    className="dl-btn"
                     data-write=""
-                    disabled={planInFlight}
+                    disabled={inFlight}
                     onClick={onProceedWithoutScan}
-                    className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] border border-[color:var(--rule)] px-2 py-1 hover:border-[color:var(--warn)] hover:text-[color:var(--ink-on-dark)] cursor-pointer transition-colors"
                   >
-                    Generate without site check — the plan will say SITE
-                    CONDITIONS NOT CHECKED
+                    Generate anyway
                   </button>
+                </div>
+                <div className="tr-prov mt-1.5">
+                  tries the scan once more · the plan says whether it ran
                 </div>
               </div>
             )}

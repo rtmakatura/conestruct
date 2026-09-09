@@ -140,7 +140,7 @@ describe("the NOT-CHECKED disclosure through the shell (#224 phase 2)", () => {
     expect(refusal).not.toBeNull();
     expect(document.body.textContent).not.toContain(DISCLOSURE);
     await user.click(
-      within(refusal).getByRole("button", { name: /Generate without site check/ }),
+      within(refusal).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
     // The panel: the #227 system event with the backend sentence.
