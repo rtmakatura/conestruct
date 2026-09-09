@@ -1,0 +1,205 @@
+healthz sha 67bf9a05714ad09d8b334f62e90bbbce6af2bb62 expect 67bf9a05714ad09d8b334f62e90bbbce6af2bb62
+B1 healthz 67bf9a05714ad09d8b334f62e90bbbce6af2bb62 == 67bf9a05714ad09d8b334f62e90bbbce6af2bb62: PASS · base http://localhost:3000 · 3 run(s) per replay branch
+[1440x1000] PASS D0 clean plan (no natural refusal) — hero true; downloads 4/4; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; sr writes "Plan generated — 39 devices, 12 types."; settled 7970 ms
+[1440x1000] info 1440x1000-A1 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 439 ms
+[1440x1000] PASS 1440x1000-A1 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A1-declined.png
+[1440x1000] PASS 1440x1000-A1 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-A1 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-A1 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 439 ms
+[1440x1000] PASS 1440x1000-A1 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-A1 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-A1 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-A1 D8 co-frame — 0 samples with band + refusal of 19; band seen true (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-A1 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-A1 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-A1 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-A1 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-A1 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-A1-recovered.png
+[1440x1000] PASS 1440x1000-A1 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-A1 R3 co-frame — 0 samples with band + refusal
+[1440x1000] info 1440x1000-A2 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 9847 ms
+[1440x1000] PASS 1440x1000-A2 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A2-declined.png
+[1440x1000] PASS 1440x1000-A2 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-A2 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-A2 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 9847 ms
+[1440x1000] PASS 1440x1000-A2 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-A2 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-A2 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-A2 D8 co-frame — 0 samples with band + refusal of 105; band seen true (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-A2 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-A2 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-A2 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-A2 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-A2 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-A2-recovered.png
+[1440x1000] PASS 1440x1000-A2 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-A2 R3 co-frame — 0 samples with band + refusal
+[1440x1000] info 1440x1000-A3 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 330 ms
+[1440x1000] PASS 1440x1000-A3 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A3-declined.png
+[1440x1000] PASS 1440x1000-A3 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-A3 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-A3 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 330 ms
+[1440x1000] PASS 1440x1000-A3 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-A3 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-A3 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-A3 D8 co-frame — 0 samples with band + refusal of 18; band seen true (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-A3 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-A3 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-A3 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-A3 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-A3 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-A3-recovered.png
+[1440x1000] PASS 1440x1000-A3 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-A3 R3 co-frame — 0 samples with band + refusal
+[1440x1000] info 1440x1000-B1 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 118 ms
+[1440x1000] PASS 1440x1000-B1 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B1-declined.png
+[1440x1000] PASS 1440x1000-B1 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-B1 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-B1 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 118 ms
+[1440x1000] PASS 1440x1000-B1 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-B1 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-B1 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-B1 D8 co-frame — 0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-B1 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-B1 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-B1 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-B1 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-B1 R0 band — "RE-GENERATING" · "without the site check"
+[1440x1000] PASS 1440x1000-B1 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-B1-recovered.png
+[1440x1000] PASS 1440x1000-B1 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-B1 R3 co-frame — 0 samples with band + refusal
+[1440x1000] info 1440x1000-B1 NOT-CHECKED container — absent — the re-run scan succeeded (F-S5-7's honest outcome; the label promised nothing)
+[1440x1000] info 1440x1000-B2 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 12 ms
+[1440x1000] PASS 1440x1000-B2 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B2-declined.png
+[1440x1000] PASS 1440x1000-B2 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-B2 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-B2 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 12 ms
+[1440x1000] PASS 1440x1000-B2 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-B2 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-B2 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-B2 D8 co-frame — 0 samples with band + refusal of 15; band seen false (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-B2 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-B2 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-B2 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-B2 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-B2 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-B2-recovered.png
+[1440x1000] PASS 1440x1000-B2 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-B2 R3 co-frame — 0 samples with band + refusal
+[1440x1000] info 1440x1000-B3 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 117 ms
+[1440x1000] PASS 1440x1000-B3 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B3-declined.png
+[1440x1000] PASS 1440x1000-B3 D2 empty state — empty state "No package yet"
+[1440x1000] PASS 1440x1000-B3 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[1440x1000] PASS 1440x1000-B3 D4 landing — container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 117 ms
+[1440x1000] PASS 1440x1000-B3 D5 actions — "↻ Retry scan" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32
+[1440x1000] PASS 1440x1000-B3 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[1440x1000] PASS 1440x1000-B3 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[1440x1000] PASS 1440x1000-B3 D8 co-frame — 0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)
+[1440x1000] PASS 1440x1000-B3 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[1440x1000] PASS 1440x1000-B3 D10 targets — "↻ Retry scan" 99×40 ; "Generate anyway" 125×40
+[1440x1000] PASS 1440x1000-B3 D11 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-B3 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[1440x1000] PASS 1440x1000-B3 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 1440x1000-B3-recovered.png
+[1440x1000] PASS 1440x1000-B3 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-B3 R3 co-frame — 0 samples with band + refusal
+[380x800] PASS D0 clean plan (no natural refusal) — hero true; downloads 4/4; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; sr writes "Plan generated — 39 devices, 12 types."; settled 676 ms
+[380x800] info 380x800-A1 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 644 ms
+[380x800] PASS 380x800-A1 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A1-declined.png
+[380x800] PASS 380x800-A1 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-A1 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-A1 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 644 ms
+[380x800] PASS 380x800-A1 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-A1 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-A1 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-A1 D8 co-frame — 0 samples with band + refusal of 21; band seen true (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-A1 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-A1 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-A1 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-A1 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-A1 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-A1-recovered.png
+[380x800] PASS 380x800-A1 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-A1 R3 co-frame — 0 samples with band + refusal
+[380x800] info 380x800-A2 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 445 ms
+[380x800] PASS 380x800-A2 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A2-declined.png
+[380x800] PASS 380x800-A2 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-A2 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-A2 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 445 ms
+[380x800] PASS 380x800-A2 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-A2 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-A2 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-A2 D8 co-frame — 0 samples with band + refusal of 19; band seen true (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-A2 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-A2 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-A2 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-A2 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-A2 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-A2-recovered.png
+[380x800] PASS 380x800-A2 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-A2 R3 co-frame — 0 samples with band + refusal
+[380x800] info 380x800-A3 replay — audit fulfilled true; breakdown fulfilled false; breakdown answered or refused — the settle sample carries no hero either way; settled 326 ms
+[380x800] PASS 380x800-A3 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A3-declined.png
+[380x800] PASS 380x800-A3 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-A3 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-A3 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 326 ms
+[380x800] PASS 380x800-A3 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-A3 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-A3 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-A3 D8 co-frame — 0 samples with band + refusal of 18; band seen true (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-A3 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-A3 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-A3 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-A3 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-A3 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-A3-recovered.png
+[380x800] PASS 380x800-A3 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-A3 R3 co-frame — 0 samples with band + refusal
+[380x800] info 380x800-B1 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 127 ms
+[380x800] PASS 380x800-B1 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B1-declined.png
+[380x800] PASS 380x800-B1 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-B1 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-B1 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 127 ms
+[380x800] PASS 380x800-B1 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-B1 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-B1 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-B1 D8 co-frame — 0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-B1 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-B1 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-B1 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-B1 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-B1 R0 band — "RE-GENERATING" · "without the site check"
+[380x800] PASS 380x800-B1 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-B1-recovered.png
+[380x800] PASS 380x800-B1 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-B1 R3 co-frame — 0 samples with band + refusal
+[380x800] info 380x800-B1 NOT-CHECKED container — absent — the re-run scan succeeded (F-S5-7's honest outcome; the label promised nothing)
+[380x800] info 380x800-B2 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 121 ms
+[380x800] PASS 380x800-B2 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B2-declined.png
+[380x800] PASS 380x800-B2 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-B2 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-B2 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 121 ms
+[380x800] PASS 380x800-B2 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-B2 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-B2 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-B2 D8 co-frame — 0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-B2 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-B2 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-B2 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-B2 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-B2 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-B2-recovered.png
+[380x800] PASS 380x800-B2 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-B2 R3 co-frame — 0 samples with band + refusal
+[380x800] info 380x800-B3 replay — audit fulfilled true; breakdown fulfilled true; breakdown replayed; settled 12 ms
+[380x800] PASS 380x800-B3 D1 no plan — hero false; download .dl-btn 0 (0 on); cards 0; sr ""; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B3-declined.png
+[380x800] PASS 380x800-B3 D2 empty state — empty state "No package yet"
+[380x800] PASS 380x800-B3 D3 one voice — sentence ×1; PLAN DECLINED ×1; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"; pill "SERVICE UNAVAILABLE"
+[380x800] PASS 380x800-B3 D4 landing — container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 12 ms
+[380x800] PASS 380x800-B3 D5 actions — "↻ Retry scan" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; "Generate anyway" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44
+[380x800] PASS 380x800-B3 D6 consequence — prov lines: "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s" / "tries the scan once more · the plan says whether it ran"
+[380x800] PASS 380x800-B3 D7 stamp — ISO on the surface false; prov "corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s"; <time title> "2026-09-08T16:14:59+00:00"
+[380x800] PASS 380x800-B3 D8 co-frame — 0 samples with band + refusal of 15; band seen false (a replayed pair can settle inside one 100 ms interval)
+[380x800] PASS 380x800-B3 D9 contrast — 8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74
+[380x800] PASS 380x800-B3 D10 targets — "↻ Retry scan" 304×44 ; "Generate anyway" 304×44
+[380x800] PASS 380x800-B3 D11 axe — 4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label="Edit Lane W"]] ; target-size[button[aria-label="Edit Work zone"]] ; target-size[.strip-edit-all]
+[380x800] info 380x800-B3 live regions — div. role=null live=polite "PLAN DECLINED · see the notice in the Results zone.SERVICE U" | div.sr-only role=status live=null "" | div.sys-event.warn role=alert live=null "Site scan⚠Site scan unavailable — the plan can't verify scho"
+[380x800] PASS 380x800-B3 R1 recovered — container false; hero true; downloads 4/4 on; empty "null"; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; 1 click(s) | 380x800-B3-recovered.png
+[380x800] PASS 380x800-B3 R2 announced once — sr writes during the settle: "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-B3 R3 co-frame — 0 samples with band + refusal
+[1440x1000] landing 1440x1000-A: container inside [nav-h, innerH] on 3 of 3
+[1440x1000] landing 1440x1000-B: container inside [nav-h, innerH] on 3 of 3
+[380x800] landing 380x800-A: container inside [nav-h, innerH] on 3 of 3
+[380x800] landing 380x800-B: container inside [nav-h, innerH] on 3 of 3
+RESULT ALL PASS 172/172

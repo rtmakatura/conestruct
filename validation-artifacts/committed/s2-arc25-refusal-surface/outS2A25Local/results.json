@@ -1,0 +1,1034 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "D0 clean plan (no natural refusal)",
+  "ok": true,
+  "detail": "hero true; downloads 4/4; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; sr writes \"Plan generated — 39 devices, 12 types.\"; settled 7970 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A1-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 439 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 19; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-A1-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A1 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A2-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 9847 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 105; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-A2-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A2 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-A3-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 330 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 18; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-A3-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-A3 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B1-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 118 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 R0 band",
+  "ok": true,
+  "detail": "\"RE-GENERATING\" · \"without the site check\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-B1-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B1 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B2-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 12 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 15; band seen false (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-B2-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B2 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 1440x1000-B3-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D4 landing",
+  "ok": true,
+  "detail": "container 213..404 (h 191) vs nav-h 52, innerH 1000; results top 174; scrollY 583; settled 117 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 at 185..284,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 125×40 at 296..421,331 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 185; min 32"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 99×40 ; \"Generate anyway\" 125×40"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 D11 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 1440x1000-B3-recovered.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-B3 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "D0 clean plan (no natural refusal)",
+  "ok": true,
+  "detail": "hero true; downloads 4/4; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; sr writes \"Plan generated — 39 devices, 12 types.\"; settled 676 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A1-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 644 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 21; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-A1-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A1 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A2-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 445 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 19; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-A2-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A2 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-A3-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 326 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 18; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-A3-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-A3 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B1-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 127 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 R0 band",
+  "ok": true,
+  "detail": "\"RE-GENERATING\" · \"without the site check\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-B1-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B1 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B2-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 121 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 16; band seen true (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-B2-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B2 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D1 no plan",
+  "ok": true,
+  "detail": "hero false; download .dl-btn 0 (0 on); cards 0; sr \"\"; zone-note false; dominant false; ribbons failed 0 / previous 0 | 380x800-B3-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D2 empty state",
+  "ok": true,
+  "detail": "empty state \"No package yet\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D3 one voice",
+  "ok": true,
+  "detail": "sentence ×1; PLAN DECLINED ×1; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\"; pill \"SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D4 landing",
+  "ok": true,
+  "detail": "container 230..590 (h 360) vs nav-h 52, innerH 800; results top 191; scrollY 989; settled 12 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D5 actions",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 at 39..343,441 border 1px solid rgb(31, 123, 176) lines 1 dl-btn ; \"Generate anyway\" 304×44 at 39..343,497 border 1px solid rgb(31, 123, 176) lines 1 dl-btn; label left 39; min 44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D6 consequence",
+  "ok": true,
+  "detail": "prov lines: \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\" / \"tries the scan once more · the plan says whether it ran\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D7 stamp",
+  "ok": true,
+  "detail": "ISO on the surface false; prov \"corridor scan · scan budget exceeded (20 s) · attempted 8 sep · 16:14 utc · budget 20 s\"; <time title> \"2026-09-08T16:14:59+00:00\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D8 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal of 15; band seen false (a replayed pair can settle inside one 100 ms interval)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D9 contrast",
+  "ok": true,
+  "detail": "8 pairs; lowest 5.61; buttons #56bcf2/#14202e 7.74, #56bcf2/#14202e 7.74"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D10 targets",
+  "ok": true,
+  "detail": "\"↻ Retry scan\" 304×44 ; \"Generate anyway\" 304×44"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 D11 axe",
+  "ok": true,
+  "detail": "4 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[button[aria-label=\"Edit Lane W\"]] ; target-size[button[aria-label=\"Edit Work zone\"]] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 R1 recovered",
+  "ok": true,
+  "detail": "container false; hero true; downloads 4/4 on; empty \"null\"; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; 1 click(s) | 380x800-B3-recovered.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 R2 announced once",
+  "ok": true,
+  "detail": "sr writes during the settle: \"Plan generated — 39 devices, 12 types.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-B3 R3 co-frame",
+  "ok": true,
+  "detail": "0 samples with band + refusal"
+ }
+]

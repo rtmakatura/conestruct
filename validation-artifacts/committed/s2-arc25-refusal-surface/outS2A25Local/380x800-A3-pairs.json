@@ -1,0 +1,90 @@
+[
+ {
+  "sel": "div.tr-section.mb-1.5",
+  "text": "Site scan",
+  "fg": "#ffffff",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 14.92,
+  "size": 10,
+  "weight": "500",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "span.sys-glyph",
+  "text": "⚠",
+  "fg": "#f4c020",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 8.82,
+  "size": 13,
+  "weight": "400",
+  "family": "__Inter_8b3a0b"
+ },
+ {
+  "sel": "span",
+  "text": "Site scan unavailable — the plan can't v",
+  "fg": "#c8d1dd",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 9.68,
+  "size": 16,
+  "weight": "400",
+  "family": "__Inter_8b3a0b"
+ },
+ {
+  "sel": "div.tr-prov.mt-1.5",
+  "text": "corridor scan",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 10,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "time",
+  "text": "8 sep · 16:14 utc",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 10,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ },
+ {
+  "sel": "button.dl-btn",
+  "text": "↻ Retry scan",
+  "fg": "#56bcf2",
+  "bg": "#14202e",
+  "opacity": 1,
+  "ratio": 7.74,
+  "size": 12.5,
+  "weight": "600",
+  "family": "__Inter_8b3a0b"
+ },
+ {
+  "sel": "button.dl-btn",
+  "text": "Generate anyway",
+  "fg": "#56bcf2",
+  "bg": "#14202e",
+  "opacity": 1,
+  "ratio": 7.74,
+  "size": 12.5,
+  "weight": "600",
+  "family": "__Inter_8b3a0b"
+ },
+ {
+  "sel": "div.tr-prov.mt-1.5",
+  "text": "tries the scan once more · the plan says",
+  "fg": "#93a0b0",
+  "bg": "#1b2838",
+  "opacity": 1,
+  "ratio": 5.61,
+  "size": 10,
+  "weight": "400",
+  "family": "__JetBrains_Mono_e896d9"
+ }
+]
