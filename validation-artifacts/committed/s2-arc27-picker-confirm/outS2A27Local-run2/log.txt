@@ -1,0 +1,51 @@
+healthz https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz sha 3fa7d18c66c0dcc67d3a31ea84a2e28ad39559a9 expect 3fa7d18c66c0dcc67d3a31ea84a2e28ad39559a9
+B1 healthz 3fa7d18c66c0dcc67d3a31ea84a2e28ad39559a9 == 3fa7d18c66c0dcc67d3a31ea84a2e28ad39559a9: PASS · base http://localhost:3001
+[1440x1000] PASS G generate — settled 4367 ms; band mounts 1; GENERATING · new plan · pin 39.7269, -104.9873; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+[1440x1000] PASS R1 scan rows — block 1100px; Adjacent at-grade intersection 46 · Adjacent interchange (highway ramps) 46 · Pedestrian sidewalks 46 · Bike lane / cycleway 46 · School zone 46 | 1440x1000-R1-settled.png
+[1440x1000] PASS R1 apply row at zero — h 46; "no corrections staged"; button "Apply 0 corrections" disabled true title "stage a correction first"; button right 1252 vs scan action right 1252
+[1440x1000] PASS R1 one edge — Apply right 1252; row action right 1252
+[1440x1000] PASS R1 footer — "scancorridor scan · 10 sep · 03:16 utc · 1.6 s · apply re-generates the plan"; advisory ×0
+[1440x1000] info R1 detected — Adjacent at-grade intersection, Adjacent interchange (highway ramps), Pedestrian sidewalks, Bike lane / cycleway
+[1440x1000] PASS C1 chip centre — "Fenced off" box 188..298 text 213..273 Δ 0 ; "Removed" box 304..396 text 329..371 Δ 0 ; "Not in the work zone" box 402..572 text 427..547 Δ 0 ; "Other (say what)" box 578..724 text 603..699 Δ 0 | 1440x1000-C1-picker.png
+[1440x1000] PASS C1 note slot — void true; visibility hidden; display block; 184×27 at 730,371; disabled true; aria-hidden true; tabIndex -1
+[1440x1000] PASS C2 confirm until a reason — disabled true; title "choose a reason"
+[1440x1000] PASS C2 confirm still — before 135×30 at 1117,358; after 135×30 at 1117,358; disabled false; title null; note visible visible | 1440x1000-C2-other.png
+[1440x1000] PASS C2 empty note answers at the note — focused true; aria-invalid true; placeholder "say what — required"
+[1440x1000] PASS C3 confirm edge — "Adjacent at-grade intersection" Confirm right 1252 vs action 1252 ; "Adjacent interchange (highway ramps)" Confirm right 1252 vs action 1252 ; "Pedestrian sidewalks" Confirm right 1252 vs action 1252 ; "Bike lane / cycleway" Confirm right 1252 vs action 1252 | longest "Adjacent interchange (highway ramps)" shortest "Pedestrian sidewalks"
+[1440x1000] PASS C3 picker heights — equal x4: "Adjacent at-grade intersection" row 71 (line 71) ; "Adjacent interchange (highway ramps)" row 71 (line 71) ; "Pedestrian sidewalks" row 71 (line 71) ; "Bike lane / cycleway" row 71 (line 71) | 1440x1000-C3-last.png
+[1440x1000] PASS S1 staged rows — Adjacent at-grade intersection h 46 ◌ "staged — not yet applied" [dismiss · fenced off] Undo ; School zone h 46 ◌ "staged — not yet applied" [assert] Undo | 1440x1000-S1-staged.png
+[1440x1000] PASS S1 apply row — h 46; "2 corrections staged · not yet applied"; "Apply 2 corrections" disabled false
+[1440x1000] PASS S1 disclose, don't lock — band false; locked false; stale true; ribbons "Previous answer — 2 corrections staged, not yet applied."; downloads 5/5 live; audits 5, breakdowns 5 (unchanged by staging: see A1)
+[1440x1000] PASS A1 band once — band mounts 1; objects RE-GENERATING · after 2 corrections; settled 1088 ms
+[1440x1000] PASS A1 one request each — audit 5 → 6; device-breakdown 5 → 6
+[1440x1000] PASS A2 record rows — "Operator dismissed the scan's adjacent a…" h 46 × ; "Operator asserted school zone — the scan…" h 46 ✓; block 1100px | 1440x1000-A2-records.png
+[1440x1000] PASS A2 advisory once + reset — advisory ×1; apply "no corrections staged" disabled true; stale false; ribbons 0; foot "scancorridor scan · 10 sep · 03:16 utc · 1.6 s · memoised · apply re-generates the planThe plan is built to the correction — verify it in the field or on imagery before deploying."
+[1440x1000] PASS A2 verify sentence not per row — "Operator dismissed the scan's adjacent a" ; "Operator asserted school zone — the scan"
+[1440x1000] PASS U1 undo stages — "Adjacent at-grade intersection" [undo] h 46; records 1; ribbons "Previous answer — 1 correction staged, not yet applied."
+[1440x1000] PASS U1 unstage — records 2; staged 0; audits 6 → 6; stale false
+[1440x1000] PASS X axe — 0 wcag node(s) (baseline 0): none; in the block 0
+[380x800] PASS G generate — settled 870 ms; band mounts 1; GENERATING · new plan · pin 39.7269, -104.9873; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+[380x800] PASS R1 scan rows — block 332px; Adjacent at-grade intersection 84.6 · Adjacent interchange (highway ramps) 118.8 · Pedestrian sidewalks 84.6 · Bike lane / cycleway 84.6 · School zone 57.8 | 380x800-R1-settled.png
+[380x800] PASS R1 apply row at zero — h 68; "no corrections staged"; button "Apply 0 corrections" disabled true title "stage a correction first"; button right 338 vs scan action right 338
+[380x800] PASS R1 one edge — Apply right 338; row action right 338
+[380x800] PASS R1 footer — "scancorridor scan · 10 sep · 03:16 utc · 1.6 s · memoised · apply re-generates the plan"; advisory ×0
+[380x800] info R1 detected — Adjacent at-grade intersection, Adjacent interchange (highway ramps), Pedestrian sidewalks, Bike lane / cycleway
+[380x800] PASS C1 chip centre — "Fenced off" box 42..148 text 65..125 Δ 0 ; "Removed" box 154..242 text 177..219 Δ 0 ; "Not in the work zone" box 42..208 text 65..185 Δ 0 ; "Other (say what)" box 42..184 text 65..161 Δ 0 | 380x800-C1-picker.png
+[380x800] PASS C1 note slot — void true; visibility hidden; display block; 184×27 at 42,544; disabled true; aria-hidden true; tabIndex -1
+[380x800] PASS C2 confirm until a reason — disabled true; title "choose a reason"
+[380x800] PASS C2 confirm still — before 135×30 at 203,571; after 135×30 at 203,571; disabled false; title null; note visible visible | 380x800-C2-other.png
+[380x800] PASS C2 empty note answers at the note — focused true; aria-invalid true; placeholder "say what — required"
+[380x800] PASS C3 confirm edge — "Adjacent at-grade intersection" Confirm right 338 vs action 338 ; "Adjacent interchange (highway ramps)" Confirm right 338 vs action 338 ; "Pedestrian sidewalks" Confirm right 338 vs action 338 ; "Bike lane / cycleway" Confirm right 338 vs action 338 | longest "Adjacent interchange (highway ramps)" shortest "Pedestrian sidewalks"
+[380x800] PASS C3 picker heights — recorded (not required equal at 380): "Adjacent at-grade intersection" row 212.2 (line 212) ; "Adjacent interchange (highway ramps)" row 212.2 (line 212) ; "Pedestrian sidewalks" row 212.2 (line 212) ; "Bike lane / cycleway" row 212.2 (line 212) | 380x800-C3-last.png
+[380x800] PASS S1 staged rows — Adjacent at-grade intersection h 84.6 ◌ "staged — not yet applied" [dismiss · fenced off] Undo ; School zone h 84.6 ◌ "staged — not yet applied" [assert] Undo | 380x800-S1-staged.png
+[380x800] PASS S1 apply row — h 68; "2 corrections staged · not yet applied"; "Apply 2 corrections" disabled false
+[380x800] PASS S1 disclose, don't lock — band false; locked false; stale true; ribbons "Previous answer — 2 corrections staged, not yet applied."; downloads 5/5 live; audits 5, breakdowns 5 (unchanged by staging: see A1)
+[380x800] PASS A1 band once — band mounts 1; objects RE-GENERATING · after 2 corrections; settled 1100 ms
+[380x800] PASS A1 one request each — audit 5 → 6; device-breakdown 5 → 6
+[380x800] PASS A2 record rows — "Operator dismissed the scan's adjacent a…" h 76.4 × ; "Operator asserted school zone — the scan…" h 76.4 ✓; block 332px | 380x800-A2-records.png
+[380x800] PASS A2 advisory once + reset — advisory ×1; apply "no corrections staged" disabled true; stale false; ribbons 0; foot "scancorridor scan · 10 sep · 03:16 utc · 1.6 s · memoised · apply re-generates the planThe plan is built to the correction — verify it in the field or on imagery before deploying."
+[380x800] PASS A2 verify sentence not per row — "Operator dismissed the scan's adjacent a" ; "Operator asserted school zone — the scan"
+[380x800] PASS U1 undo stages — "Adjacent at-grade intersection" [undo] h 84.6; records 1; ribbons "Previous answer — 1 correction staged, not yet applied."
+[380x800] PASS U1 unstage — records 2; staged 0; audits 6 → 6; stale false
+[380x800] PASS X axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]; in the block 0
+RESULT ALL PASS 46/46

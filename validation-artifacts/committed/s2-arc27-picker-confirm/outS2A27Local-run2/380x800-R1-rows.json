@@ -1,0 +1,127 @@
+{
+ "blockW": 332,
+ "rows": [
+  {
+   "kind": "scan",
+   "name": "Adjacent at-grade intersection",
+   "word": "detected",
+   "evidence": "46 found · nearest 95.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -771.9,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Adjacent interchange (highway ramps)",
+   "word": "detected",
+   "evidence": "10 found · nearest 10.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -687.3,
+   "h": 118.8,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Pedestrian sidewalks",
+   "word": "detected",
+   "evidence": "103 found · nearest 100.1 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -568.6,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Bike lane / cycleway",
+   "word": "detected",
+   "evidence": "11 found · nearest 109.6 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -484,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "School zone",
+   "word": "none along the corridor",
+   "evidence": "",
+   "glyph": "✓",
+   "button": {
+    "name": "Assert",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -399.4,
+   "h": 57.8,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "apply",
+   "name": "no corrections staged",
+   "word": null,
+   "evidence": null,
+   "glyph": null,
+   "button": {
+    "name": "Apply 0 corrections",
+    "disabled": true,
+    "title": "stage a correction first",
+    "right": 338,
+    "h": 30
+   },
+   "top": -341.6,
+   "h": 68,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  }
+ ],
+ "advisory": 0,
+ "footText": "scancorridor scan · 10 sep · 03:16 utc · 1.6 s · memoised · apply re-generates the plan",
+ "stale": false,
+ "ribbons": [],
+ "dlAll": 5,
+ "dlOn": 5,
+ "band": false,
+ "locked": false
+}

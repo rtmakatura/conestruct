@@ -1,0 +1,42 @@
+[
+ {
+  "name": "Adjacent at-grade intersection",
+  "nameLen": 30,
+  "pickerH": 82,
+  "rowH": 82.2,
+  "confirmRight": 1252,
+  "actionRight": 1252,
+  "confirmTop": 367,
+  "lines": 4
+ },
+ {
+  "name": "Adjacent interchange (highway ramps)",
+  "nameLen": 36,
+  "pickerH": 116,
+  "rowH": 116.2,
+  "confirmRight": 1252,
+  "actionRight": 1252,
+  "confirmTop": 430,
+  "lines": 4
+ },
+ {
+  "name": "Pedestrian sidewalks",
+  "nameLen": 20,
+  "pickerH": 82,
+  "rowH": 82.2,
+  "confirmRight": 1252,
+  "actionRight": 1252,
+  "confirmTop": 459,
+  "lines": 4
+ },
+ {
+  "name": "Bike lane / cycleway",
+  "nameLen": 20,
+  "pickerH": 82,
+  "rowH": 82.2,
+  "confirmRight": 1252,
+  "actionRight": 1252,
+  "confirmTop": 505,
+  "lines": 4
+ }
+]
