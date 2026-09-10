@@ -187,21 +187,28 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   const post = s.settledAt === null ? [] : js.visible.filter((j) => j.t > s.settledAt);
   const preVisible = s.settledAt === null ? js.visible : js.visible.filter((j) => j.t <= s.settledAt);
   const preScroll = s.settledAt === null ? js.scroll : js.scroll.filter((j) => j.t <= s.settledAt);
-  // The census timestamps are click-relative on both sides (the sampler
-  // starts within a few ms of the click), so a move is attributed to the
-  // last re-issue at or before it, with that margin allowed.
-  const ATTRIB_SLACK_MS = 60;
+  // Attribution runs on ONE clock.  The census is click-relative (the
+  // page's ``Date.now()`` minus ``clickAt``); the samples are relative to
+  // the sampler's own start, which is some tens of ms AFTER the click —
+  // so a sample timestamp reads earlier than the same instant in the
+  // census by exactly that gap.  Shift the samples into the census clock
+  // before attributing, or a correction gets credited to the re-issue
+  // before the one that caused it (it did, on 3 of 8 runs at 59f6fed,
+  // reading "by re-issue 1" for a move the instant re-issue 2 made).
+  const clockShift = s.t0 - clickAt;
+  const ATTRIB_SLACK_MS = 20; // rounding only, now that the clocks agree
   const verdicts = post.map((j, i) => {
+    const mt = j.t + clockShift;
     let idx = 0;
-    zone.forEach((z, zi) => { if (zi > 0 && z.at <= j.t + ATTRIB_SLACK_MS) idx = zi; });
+    zone.forEach((z, zi) => { if (zi > 0 && z.at <= mt + ATTRIB_SLACK_MS) idx = zi; });
     const reduces = Math.abs(j.to - target) < Math.abs(j.from - target);
     const attributed = idx >= 1 && idx <= 2;
     const onTarget = Math.abs(j.to - target) <= 1;
     const last = i === post.length - 1;
-    return { j, idx, reduces, attributed, onTarget, last, ok: reduces && attributed && onTarget && last };
+    return { j, mt, idx, reduces, attributed, onTarget, last, ok: reduces && attributed && onTarget && last };
   });
   const postCensus = verdicts.length === 0 ? "none" : verdicts.map((v) =>
-    `${v.j.from}→${v.j.to} @${v.j.t}ms by re-issue ${v.idx || "?"} [${v.reduces ? "reduces" : "DOES NOT REDUCE"} · ${v.attributed ? "attributed" : "UNATTRIBUTED"} · ${v.onTarget ? "ends at target" : "ENDS OFF TARGET"} · ${v.last ? "last" : "FOLLOWED BY ANOTHER MOVE"}] ${v.ok ? "PASS" : "FAIL"}`
+    `${v.j.from}→${v.j.to} @${v.mt}ms by re-issue ${v.idx || "?"} [${v.reduces ? "reduces" : "DOES NOT REDUCE"} · ${v.attributed ? "attributed" : "UNATTRIBUTED"} · ${v.onTarget ? "ends at target" : "ENDS OFF TARGET"} · ${v.last ? "last" : "FOLLOWED BY ANOTHER MOVE"}] ${v.ok ? "PASS" : "FAIL"}`
   ).join(" ; ");
   const census = zone.map((z, i) => `${i === 0 ? "landing" : "re-issue " + i}@${z.at}ms ${z.behavior} (zone ${z.off} px off)`).join(" ; ") || "none";
   const endCensus = ends.map((e) => `@${e.at}ms y=${e.y}`).join(" ; ") || "none";
