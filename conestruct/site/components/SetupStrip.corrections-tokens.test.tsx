@@ -46,7 +46,7 @@ describe("#245 — the reason picker's tokens", () => {
   it("the other-note input is the field-input workbench pair, never the UA field", () => {
     const note = rule(".workbench .jbar-suggest .site-correction-note");
     expect(note).toMatch(/background:\s*var\(--canvas\)/);
-    expect(note).toMatch(/color:\s*#fff/);
+    expect(note).toMatch(/color:\s*var\(--ink-bright\)/); // #263: the token, not the literal
     expect(rule(".workbench .jbar-suggest .site-correction-note::placeholder")).toMatch(
       /var\(--ink-on-dark-faint\)/,
     );

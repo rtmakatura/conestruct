@@ -2080,7 +2080,7 @@ input[type="number"] {
 .workbench .jbar-suggest .site-correction-note {
   background: var(--canvas);
   border: 1px solid var(--rule);
-  color: #fff;
+  color: var(--ink-bright);
   font-family: var(--font-sans);
   font-size: 12px;
   padding: 3px 8px;
@@ -2940,7 +2940,7 @@ input[type="number"] {
   white-space: nowrap;
 }
 .workbench .setup-strip .sv.structural .val {
-  color: #fff;
+  color: var(--ink-bright);
 }
 .workbench .setup-strip .sv .edit-ic {
   position: absolute;
@@ -2977,7 +2977,7 @@ input[type="number"] {
 .workbench .setup-strip .sv-editor select {
   background: var(--canvas-tint);
   border: 1px solid var(--act);
-  color: #fff;
+  color: var(--ink-bright);
   font-size: 13px;
   padding: 4px 6px;
   outline: none;

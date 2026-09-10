@@ -70,22 +70,7 @@ export const CSS_DECORATIVE: readonly CssLiteral[] = [
  *  to edit; each owner swaps to var(--ink-bright) and deletes its row. */
 export const CSS_OWNER_SWAPS: readonly OwnerSwap[] = [
   // B's `.workbench .zone-title` row: swapped to var(--ink-bright) in #253 commit 7.
-  {
-    selector: ".workbench .jbar-suggest .site-correction-note",
-    hex: "#fff",
-    owner: "A (#255)",
-  },
-  {
-    selector: ".workbench .setup-strip .sv.structural .val",
-    hex: "#fff",
-    owner: "A (#254)",
-  },
-  {
-    selector:
-      ".workbench .setup-strip .sv-editor input, .workbench .setup-strip .sv-editor select",
-    hex: "#fff",
-    owner: "A (#254)",
-  },
+  // A's three (#254/#255) swapped to var(--ink-bright) in s2-arc27 (Refs #263): the list is empty.
 ];
 
 /** Code literals per file (comments stripped, tests excluded). */
