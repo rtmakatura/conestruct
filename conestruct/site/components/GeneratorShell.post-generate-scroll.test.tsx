@@ -311,7 +311,7 @@ describe("post-generate scroll (#152 E)", () => {
 // compared with its scroll-margin-top and the scroll is re-issued ONCE
 // if off by more than 1 px; a wheel/touch/key from the user disarms it;
 // the pair's settle gets one more check, still under the one-re-issue cap.
-describe("#250 (a) — armLandingCheck re-issues the landing once, never twice", () => {
+describe("#250 (a) / #271 (a) — armLandingCheck re-issues the landing at most twice, never a third time", () => {
   let el: HTMLElement;
   let top: number;
   let frames: FrameRequestCallback[];
@@ -337,7 +337,7 @@ describe("#250 (a) — armLandingCheck re-issues the landing once, never twice",
     }
   };
 
-  it("lands off by more than 1 px → one re-issue with the same behaviour; a second scrollend and the settle add nothing", () => {
+  it("lands off by more than 1 px → one re-issue with the same behaviour; the scrollend that lands ON target spends the check, and the settle adds nothing", () => {
     top = 140; // under-nav race: the swap landed the zone 4 px low
     const check = armLandingCheck(el, "smooth");
     expect(scrollSpy).not.toHaveBeenCalled();
@@ -345,6 +345,7 @@ describe("#250 (a) — armLandingCheck re-issues the landing once, never twice",
     expect(scrollSpy).toHaveBeenCalledTimes(1);
     expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "smooth", block: "start" });
     expect(scrollSpy.mock.instances[0]).toBe(el);
+    top = 136; // #271 (a): the re-issue landed — THIS scrollend is the landing
     settledScroll();
     flushFrames(100);
     check.settle();
@@ -389,8 +390,10 @@ describe("#250 (a) — armLandingCheck re-issues the landing once, never twice",
     armLandingCheck(el, "smooth");
     flushFrames(2);
     expect(scrollSpy).not.toHaveBeenCalled();
-    flushFrames(30);
+    // Six stable frames: the fallback's first window, and its re-issue.
+    flushFrames(4);
     expect(scrollSpy).toHaveBeenCalledTimes(1);
+    top = 136; // #271 (a): the re-issue landed; the next stable window spends the check
     flushFrames(200);
     expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
@@ -423,6 +426,60 @@ describe("#250 (a) — armLandingCheck re-issues the landing once, never twice",
 
     // No round three, and the ``done`` flag holds a late settle off.
     top = 900;
+    settledScroll();
+    flushFrames(200);
+    check.settle();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+  });
+
+  // #271 (a) — Ryan's ruling of 2026-09-10, after the arc-28 evidence run
+  // showed the settle-granted round unreachable: "A ``scrollend`` that
+  // arrives with the results zone still beyond tolerance is a cancelled
+  // scroll, not a landing — re-issue and keep waiting rather than
+  // spending the check.  Do not treat it as the terminal signal."
+  // The recorded prod sequence (arc 26 L10 / arc 28 380x800-L12): the
+  // landing scroll is issued, the stage swap's relayout cancels it and
+  // Chrome reports ``scrollend`` ~30 ms later with the zone still 1939 px
+  // off; the re-issue's animation is the one that runs, and it finishes
+  // to its pre-settle destination (793) after the pair has settled.  Two
+  // cancelled scrollends, two re-issues, and the third scrollend is the
+  // real landing.
+  it("#271 (a): a scrollend with the zone still off tolerance is a cancelled scroll, not a landing — the check re-issues and keeps waiting; only a scrollend within tolerance spends it", () => {
+    top = 2085; // the zone 1949 px off: the cancelled scroll's scrollend
+    const check = armLandingCheck(el, "smooth");
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "smooth", block: "start" });
+    expect(scrollSpy.mock.instances[0]).toBe(el);
+
+    // The stale animation completes to its pre-settle destination.
+    top = 793;
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "smooth", block: "start" });
+
+    // THIS one is the landing: within tolerance, so it spends the check.
+    top = 136;
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+
+    // Spent: a later drift is not chased, and a late settle is held off.
+    top = 900;
+    settledScroll();
+    flushFrames(200);
+    check.settle();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("#271 (a): the cap holds — a zone that never reaches tolerance gets two re-issues and no more, and the check stops waiting", () => {
+    top = 500;
+    const check = armLandingCheck(el, "auto");
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+    settledScroll(); // capped: the check spends itself instead of a third
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
     settledScroll();
     flushFrames(200);
     check.settle();

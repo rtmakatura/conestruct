@@ -101,6 +101,28 @@ type Mode = "sandbox" | "workbench";
 // re-issues per Generate, never re-granted (no round three); the
 // good-path "never twice" cap is unchanged, and a user scroll disarms
 // round two exactly as it disarms round one.
+//
+// #271 (a) — and the arc-28 evidence run said that was not enough.  On
+// a live page ``checked`` is spent at ~70 ms, long before the settle:
+// Chrome fires a ``scrollend`` about 30 ms after the landing scroll is
+// issued, with the zone still ~1939 px from its margin, because the
+// stage swap's relayout CANCELS the smooth scroll and the browser
+// reports the sequence as ended.  The check took that for the landing,
+// spent itself and its one re-issue there, and it was the RE-ISSUE's
+// animation that ran on to ~810 ms — so the pair's settle always
+// arrived with ``checked === true`` and the settle-granted round above
+// was unreachable.  Ryan's ruling of 2026-09-10, verbatim: "A
+// ``scrollend`` that arrives with the results zone still beyond
+// tolerance is a cancelled scroll, not a landing — re-issue and keep
+// waiting rather than spending the check.  Do not treat it as the
+// terminal signal."  So the terminal signal is no longer "a settle
+// happened" but "a settle happened AND the zone is within tolerance".
+// The cap is unchanged and now counted, not latched: at most
+// LANDING_MAX_REISSUES ``scrollIntoView`` re-issues per Generate, after
+// which the next signal ends the check wherever the zone is.  Two hard
+// bounds keep it from waiting forever — LANDING_MAX_FRAMES per round,
+// and LANDING_DEADLINE_MS across the whole check — and the user-scroll
+// disarm still wins at every point.
 export interface LandingCheck {
   /** The pair's settle: one more check, still capped at one re-issue. */
   settle: () => void;
@@ -110,13 +132,22 @@ export interface LandingCheck {
 const LANDING_TOLERANCE_PX = 1;
 const LANDING_STABLE_FRAMES = 6;
 const LANDING_MAX_FRAMES = 90;
+// #271 (a): the ruled cap, counted across the whole check — the landing
+// scroll itself is the shell's, these are the check's corrections.
+const LANDING_MAX_REISSUES = 2;
+// The wall clock the whole check lives under.  A landing scroll measures
+// ~810 ms at 380 and two corrections fit inside ~2.5 s; past this the
+// check ends wherever the zone is rather than holding its listeners.
+const LANDING_DEADLINE_MS = 4000;
 const USER_SCROLL_EVENTS = ["wheel", "touchmove", "keydown"] as const;
 const NAV_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " ", "Space"]);
 export function armLandingCheck(
   el: HTMLElement,
   behavior: ScrollBehavior,
 ): LandingCheck {
-  let reissued = false;
+  // #271 (a): a count, not a latch — the cap is total, across every
+  // round, so no path can reach a third re-issue.
+  let reissues = 0;
   let userScrolled = false;
   let checked = false;
   let settleWanted = false;
@@ -124,6 +155,8 @@ export function armLandingCheck(
   // round two, never re-granted.
   let grantExtra = false;
   let done = false;
+  const armedAt = Date.now();
+  const expired = () => Date.now() - armedAt > LANDING_DEADLINE_MS;
   let raf = 0;
   let onScrollEnd: (() => void) | null = null;
   const offBy = () => {
@@ -131,9 +164,9 @@ export function armLandingCheck(
     return Math.abs(el.getBoundingClientRect().top - margin);
   };
   const reissueIfOff = () => {
-    if (reissued || userScrolled) return;
+    if (userScrolled || reissues >= LANDING_MAX_REISSUES) return;
     if (offBy() > LANDING_TOLERANCE_PX) {
-      reissued = true;
+      reissues += 1;
       el.scrollIntoView({ behavior, block: "start" });
     }
   };
@@ -187,7 +220,23 @@ export function armLandingCheck(
     finish();
   };
   const landingCheck = () => {
-    if (checked) return;
+    if (checked || done) return;
+    // #271 (a): this signal is only the landing if the zone is actually
+    // AT its margin.  A ``scrollend`` (or a stable-frame window) with the
+    // zone still beyond tolerance is a cancelled scroll — correct it and
+    // keep waiting, without spending the check.  Bounded by the re-issue
+    // cap and by the wall clock: when either is reached, the next signal
+    // ends the check wherever the zone is.
+    if (
+      !userScrolled &&
+      reissues < LANDING_MAX_REISSUES &&
+      !expired() &&
+      offBy() > LANDING_TOLERANCE_PX
+    ) {
+      reissueIfOff();
+      waitForSettle(landingCheck);
+      return;
+    }
     checked = true;
     reissueIfOff();
     if (settleWanted && grantExtra && !userScrolled) {
@@ -197,7 +246,6 @@ export function armLandingCheck(
       // know about.  Wait for that scroll's own settle, then re-check
       // with a fresh budget.  Once.
       grantExtra = false;
-      reissued = false;
       waitForSettle(round2);
       return;
     }
