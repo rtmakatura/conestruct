@@ -1,0 +1,64 @@
+{
+ "clickAt": 1789061221165,
+ "settledAt": 677,
+ "smoothEnd": 737,
+ "zone": [
+  {
+   "at": 40,
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 77,
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 867,
+   "behavior": "auto",
+   "off": 793
+  }
+ ],
+ "ends": [
+  {
+   "at": -9931,
+   "y": 92
+  },
+  {
+   "at": -9864,
+   "y": 565
+  },
+  {
+   "at": 77,
+   "y": 2540
+  },
+  {
+   "at": 867,
+   "y": 447
+  },
+  {
+   "at": 867,
+   "y": 1086
+  }
+ ],
+ "all": [
+  {
+   "at": 40,
+   "cls": "zone results outline-none dominant",
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 77,
+   "cls": "zone results outline-none dominant",
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 867,
+   "cls": "zone results outline-none dominant",
+   "behavior": "auto",
+   "off": 793
+  }
+ ]
+}

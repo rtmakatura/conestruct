@@ -157,7 +157,7 @@ scrollend: @-1956ms ; @-1900ms ; @67ms y=2540 ; @853ms y=447 ; @1302ms y=1086
 **2 — the correction is instant, verbatim:**
 > "Make the post-settle correction instant, not smooth (`behavior: \"auto\"` on a re-issue that fires after a settle; the initial landing scroll keeps its smooth behaviour). A 450 ms wander after the answer has landed reads as cheap — P12 — and one reposition is easier to understand than four steps. Declare it as a behaviour change; reduced-motion is unaffected since it was already a no-op re-check."
 
-Both are implemented in commit `<C5>`. In `s2a28-lr.js` the L3 leg now splits its census at `settledAt`: **pre-settle** keeps arc 26's rule unchanged (at most one instant scrollY step, zero visible zone moves), and **post-settle** applies the four conditions above to every move of the zone's viewport top > 40 px, printing `from→to @t by re-issue N` with each condition's verdict spelled out (`reduces` / `attributed` / `ends at target` / `last`) and a per-move PASS or FAIL. A move is a change of the **zone's** position; a scrollY step that holds the zone still — Chrome's anchoring compensation at the settle — is not a move and is reported separately, as it always was. Attribution allows 60 ms of slack between the sampler's clock and the click's, and an index outside 1–2 reads `UNATTRIBUTED` and fails.
+Both are implemented in commit `59f6fed`. In `s2a28-lr.js` the L3 leg now splits its census at `settledAt`: **pre-settle** keeps arc 26's rule unchanged (at most one instant scrollY step, zero visible zone moves), and **post-settle** applies the four conditions above to every move of the zone's viewport top > 40 px, printing `from→to @t by re-issue N` with each condition's verdict spelled out (`reduces` / `attributed` / `ends at target` / `last`) and a per-move PASS or FAIL. A move is a change of the **zone's** position; a scrollY step that holds the zone still — Chrome's anchoring compensation at the settle — is not a move and is reported separately, as it always was. Attribution allows 60 ms of slack between the sampler's clock and the click's, and an index outside 1–2 reads `UNATTRIBUTED` and fails.
 
 In `GeneratorShell.tsx` the predicate for "after a settle" is a `settled` flag set as the **first statement of `settle()`**, before every early return; `reissueIfOff()` then issues `behavior: settled ? "auto" : behavior`. A re-issue that fires **before** any settle keeps the arming behaviour, so the ordinary landing is still smooth end to end; the shell's own initial `scrollIntoView` is untouched. Reduced motion is unaffected — that arming is already `"auto"` on both sides of the settle, and there is a test pinning it.
 
@@ -187,3 +187,69 @@ Backend 0 · CSS 0 · snapshots 0 · no new hex or font-size · arc 26's artifac
 | **P4** edges · **P10** targets | honoured | honoured — chips one edge 24..356, 332x44, 25/25 at 380 |
 | **P9** symbol + word · **P12** polish | n/a / hand-check | unchanged; P12 is Ryan's hand-check, and the 793 was its worst case |
 | P2 · P5 · P6 · P7 · P8 · P11 · P13 · P14 · P15 · P16 | n/a | n/a — no copy, type, grid, request, lock, token, disclosure, empty state or undo changed |
+
+
+---
+
+# The instant correction + the restated jump leg — commit `3b27477`, run `outLocal-3b27477/`
+
+*Local live check, 2026-09-10, third run. Frontend under test: worktree `issue-271-landing-recheck` at **`3b27477`** (commits 5-6: the instant post-settle correction, the restated jump leg, and its attribution fix) served by `next dev` on :3005; backend: the deployed Modal at healthz **`49273e47ae42c4dabfb75d8bafd244d38c83c837`**, sha-gated on the first log line. `outLocal-1f7b060/` and `outLocal-4c4dce0/` are untouched.*
+
+> ## `RESULT FAIL 259/260` — **one** FAIL in the whole run, and it is #259's dim, not a landing.
+> **39 of 39 counted landings at target** (15 x 136.47, 24 x 154.11). 1440x1000 natural **10 of 10**, forced **5 of 5**; 380x800 natural **19 of 19 counted**, forced **5 of 5** — every one of the ten forced runs entered the window on its first or second attempt. Re-issues per run: **29 used 1, 10 used 2, none used 3.** Every post-settle move — all ten of them — passes all four ruled conditions, attributed to **re-issue 2** in every case.
+> **The wander is gone: one step, not four.** Each two-re-issue run now records exactly **one** post-settle move — 639 px at 380 (793 -> 154), 379-381 px at 1440 (515/516/517 -> 136) — where `4c4dce0` recorded four steps at 380 and three at 1440 over ~450 ms.
+
+## What the restated leg prints
+A forced run at 380 (`380x800-F1`, landing PASS 154.11) — the whole mechanism in one line:
+```
+scrollIntoView on the zone: 3 (landing@45ms smooth (zone -1939 px off) ;
+                               re-issue 1@81ms smooth (zone -1939 px off) ;
+                               re-issue 2@857ms auto (zone 793 px off)) -> 2 re-issue(s), cap 2;
+scrollend: @-1940ms ; @-1874ms ; @81ms y=2540 ; @857ms y=447 ; @857ms y=1086;
+PRE-settle: instant scrollY steps > 40 px 0 (none), visible zone moves 0;
+POST-settle moves (ruling of 2026-09-10, four conditions): 1 —
+   793->154 @897ms by re-issue 2 [reduces · attributed · ends at target · last] PASS;
+post-settle scrollY steps that held the zone still: none;
+scrollY 2583 -> ... -> 452 -> 447 -> 1086
+```
+`re-issue 2@857ms **auto**` is the instant reposition, and `scrollend @857ms y=1086` fires in the same millisecond — the zone goes 793 -> 154 in a single sample (`447 -> 1086` in the scrollY trace), against four steps at `4c4dce0`. The move's line spells out each of the four conditions and names the re-issue that caused it.
+
+A natural warm run at 380 (`380x800-L3`, PASS) is unchanged from `4c4dce0`: one cancelled `scrollend @78ms` rejected, one smooth correction, the real landing at `@884ms`, **0 post-settle moves**, and the anchoring compensation (`639@21042ms, zone moved 0`) reported as what it is — a scrollY step that held the zone still, not a move.
+
+## Acceptance (frontend `3b27477`, backend `49273e4`)
+| leg | 1440x1000 | 380x800 |
+|---|---|---|
+| **natural, zone top (target +-1)** | **136.47 — 10 of 10** (L1 hit a #256 refusal, retried once, then produced a plan and landed at target) | **154.11 — 19 of 19 counted.** Twenty pages were run; **L5's scan refused twice** (#256) so it never produced a plan and is not counted — a backend refusal, not a landing miss. `4c4dce0` measured 20 of 20 at this viewport |
+| **leg F, runs that entered the window** | **5 of 5 at 136.47** (held 350 ms) | **5 of 5 at 154.11** (held 700 ms) — ten entries, five missed attempts re-run, per ruling 4 |
+| **re-issues per run vs the cap of 2** | L1-L10: 1 each; F1-F5: **2 each** | L1-L20: 1 each; F1-F5: **2 each** — **29 x 1, 10 x 2, 0 x 3** |
+| **post-settle moves, four conditions** | 5 moves, all PASS, all by re-issue 2: 517->136, 517->136, 515->136, 516->136, 516->136 | 5 moves, all PASS, all by re-issue 2: 793->154 x5 |
+| L2 strip in view · L4 band · N6 chips 44 | 15/15 · 10/10 · — | 24/24 · 19/19 · 332x44 at 24..356, 24/24 |
+| N5 pin | sticky at 52 = nav-h, 15/15 | static, un-pinned, 24/24 |
+| N10 axe | 0 nodes (baseline 0), 15/15 | the named 2 (baseline 4), 23 of 24 — **L11 is the one FAIL** |
+| natural refusals (#256) | 1 of 10 (retry produced a plan) | 2 of 20 (L5 refused twice, L11 once) |
+
+## Findings from this run
+- **The one FAIL — `380x800-L11 N10 axe`, and it is #259.** That page carried `.stale-ribbon` — the dimmed "previous answer" state — and **kept carrying it past the harness's 15 s wait** (`waited 14798 ms`, logged immediately above the FAIL), so axe measured the dim and read 19 `color-contrast` nodes. The wait fixed 3 of the 4 occurrences seen at `4c4dce0`; this one outlasted it. Recorded against #259, which is filed; the contrast itself is untouched here. The run's other 23 pages at that viewport read the named 2 nodes.
+- **An attribution defect in the restated leg, found and fixed before this run was kept** (commit `3b27477`; the earlier `59f6fed` run is discarded, not committed). The leg prints the attributing re-issue index so a reader can tell a correction from a drift — and it was printing the wrong one: the census is click-relative while the samples are relative to the sampler's start, some tens of ms later, so on 3 of 8 two-re-issue runs a move made by the instant re-issue 2 was credited to re-issue 1 (`F1r2`: move recorded at 796 ms, re-issue 2 issued at 864 ms). The four conditions' verdicts were unaffected — index 1 is inside the cap too — but a misleading print is the one thing that leg exists not to be. Samples are now shifted onto the census clock before attributing; **all ten moves in this run attribute to re-issue 2**, which is the truth.
+- Finding 2 (the #256 retry landing 30 px low, seen once at `1f7b060`) did not recur: `1440x1000-L1` refused, retried, and landed at 136.47.
+
+## Churn — actual, commits 5-7
+| file | actual |
+|---|---|
+| `GeneratorShell.tsx` | `settled` flag set as the first statement of `settle()`; `reissueIfOff` issues `behavior: settled ? "auto" : behavior`; `#271 (finding 4)` doc paragraph. Call sites still byte-identical |
+| `GeneratorShell.post-generate-scroll.test.tsx` | +2 cases (the instant post-settle re-issue; reduced motion unchanged) -> **17 in the file** |
+| *declared* | **one existing case edited** — the settle-inside-flight case added at `1f7b060`, whose second re-issue now fires after its `settle()` and so is the instant reposition; its assertion moves `"smooth"` -> `"auto"` with the reason in a comment. **None of the 11 cases that predate this arc is touched** |
+| `s2a28-lr.js` | the restated L3 leg (four conditions, per-move attribution and PASS/FAIL), `jumps()` carrying the absolute zone position either side of each move, the #259 dim wait before N5/N6/axe, and the attribution clock fix |
+| `README.md` | the ruling section beside ruling 8's, and this section |
+| out dirs | `outLocal-3b27477/` added; `outLocal-1f7b060/` and `outLocal-4c4dce0/` untouched |
+
+Backend 0 · CSS 0 · snapshots 0 · no new hex or font-size · arc 26's artifacts untouched.
+
+## Principles, re-stated against the instant-correction run
+| | at `4c4dce0` | now (`3b27477`) |
+|---|---|---|
+| **P1** nothing moves that the user did not ask to move | honoured for the landing, but **partially deviating**: the correction animated the zone 639 px over ~450 ms in **four steps** (380) / three (1440) after the answer had settled | **honoured, with one ruled reposition.** 39 of 39 counted runs end at the computed coordinate. 29 runs move nothing after the settle at all (0 post-settle moves). The 10 two-re-issue runs each make **exactly one** move — **639 px at 380, 379-381 px at 1440, one step, instant** — and every one satisfies the four ruled conditions: strictly reduces the offset, attributable to re-issue 2 inside the cap, ends within 1 px of target, nothing follows it. Measured, not asserted: `GeneratorShell.tsx` `reissueIfOff`, printed per run in `outLocal-3b27477/log.txt` |
+| **P12** polish | the 450 ms wander was the complaint | one reposition; Ryan's hand-check is its test |
+| **P3** next thing visible | honoured | honoured — verdict strip 60.47..112.47 / 60.11..130.11 on every counted run |
+| **P4** edges · **P10** targets | honoured | honoured — chips one edge 24..356, 332x44, 24/24 at 380 |
+| **P9** · P2 · P5 · P6 · P7 · P8 · P11 · P13-P16 | n/a | n/a — no copy, type, grid, request, lock, token, glyph, disclosure, empty state or undo changed |

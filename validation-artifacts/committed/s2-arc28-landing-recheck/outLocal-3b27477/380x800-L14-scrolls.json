@@ -1,0 +1,49 @@
+{
+ "clickAt": 1789060991715,
+ "settledAt": 5766,
+ "smoothEnd": 858,
+ "zone": [
+  {
+   "at": 46,
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 88,
+   "behavior": "smooth",
+   "off": -1939
+  }
+ ],
+ "ends": [
+  {
+   "at": -3496,
+   "y": 92
+  },
+  {
+   "at": -3403,
+   "y": 565
+  },
+  {
+   "at": 88,
+   "y": 2540
+  },
+  {
+   "at": 876,
+   "y": 447
+  }
+ ],
+ "all": [
+  {
+   "at": 46,
+   "cls": "zone results outline-none dominant",
+   "behavior": "smooth",
+   "off": -1939
+  },
+  {
+   "at": 88,
+   "cls": "zone results outline-none dominant",
+   "behavior": "smooth",
+   "off": -1939
+  }
+ ]
+}
