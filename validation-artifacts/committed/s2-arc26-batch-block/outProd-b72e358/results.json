@@ -1,0 +1,254 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "G generate",
+  "ok": true,
+  "detail": "settled 1195 ms; band mounts 1; GENERATING · new plan · pin 39.7269, -104.9873; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 scan rows",
+  "ok": true,
+  "detail": "block 1100px; Adjacent at-grade intersection 46 · Adjacent interchange (highway ramps) 46 · Pedestrian sidewalks 46 · Bike lane / cycleway 46 · School zone 46 | 1440x1000-R1-settled.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 apply row at zero",
+  "ok": true,
+  "detail": "h 46; \"no corrections staged\"; button \"Apply 0 corrections\" disabled true title \"stage a correction first\"; button right 1252 vs scan action right 1252"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 one edge",
+  "ok": true,
+  "detail": "Apply right 1252; row action right 1252"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "R1 footer",
+  "ok": true,
+  "detail": "\"scancorridor scan · 10 sep · 01:13 utc · 3.5 s · memoised · apply re-generates the plan\"; advisory ×0"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C1 chip centre",
+  "ok": true,
+  "detail": "\"Fenced off\" box 580.8..690.8 text 605.8..665.8 Δ 0 ; \"Removed\" box 696.8..788.8 text 721.8..763.8 Δ 0 ; \"Not in the work zone\" box 794.8..964.8 text 819.8..939.8 Δ 0 ; \"Other (say what)\" box 970.8..1116.8 text 995.8..1091.8 Δ 0 | 1440x1000-C1-picker.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C1 note slot",
+  "ok": true,
+  "detail": "void true; visibility hidden; display block; 184×27 at 188,384; disabled true; aria-hidden true; tabIndex -1"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C2 confirm until a reason",
+  "ok": true,
+  "detail": "disabled true; title \"choose a reason\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C2 confirm still",
+  "ok": true,
+  "detail": "before 135×30 at 380,382; after 135×30 at 380,382; disabled false; title null; note visible visible | 1440x1000-C2-other.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C2 empty note answers at the note",
+  "ok": true,
+  "detail": "focused true; aria-invalid true; placeholder \"say what — required\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "S1 staged rows",
+  "ok": true,
+  "detail": "Adjacent at-grade intersection h 46 ◌ \"staged — not yet applied\" [dismiss · fenced off] Undo ; School zone h 46 ◌ \"staged — not yet applied\" [assert] Undo | 1440x1000-S1-staged.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "S1 apply row",
+  "ok": true,
+  "detail": "h 46; \"2 corrections staged · not yet applied\"; \"Apply 2 corrections\" disabled false"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "S1 disclose, don't lock",
+  "ok": true,
+  "detail": "band false; locked false; stale true; ribbons \"Previous answer — 2 corrections staged, not yet applied.\"; downloads 4/4 live; audits 4, breakdowns 4 (unchanged by staging: see A1)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A1 band once",
+  "ok": true,
+  "detail": "band mounts 1; objects RE-GENERATING · after 2 corrections; settled 1758 ms"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A1 one request each",
+  "ok": true,
+  "detail": "audit 4 → 5; device-breakdown 4 → 5"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A2 record rows",
+  "ok": true,
+  "detail": "\"Operator dismissed the scan's adjacent a…\" h 46 × ; \"Operator asserted school zone — the scan…\" h 46 ✓; block 1100px | 1440x1000-A2-records.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A2 advisory once + reset",
+  "ok": true,
+  "detail": "advisory ×1; apply \"no corrections staged\" disabled true; stale false; ribbons 0; foot \"scancorridor scan · 10 sep · 01:13 utc · 3.5 s · memoised · apply re-generates the planThe plan is built to the correction — verify it in the field or on imagery before deploying.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A2 verify sentence not per row",
+  "ok": true,
+  "detail": "\"Operator dismissed the scan's adjacent a\" ; \"Operator asserted school zone — the scan\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "U1 undo stages",
+  "ok": true,
+  "detail": "\"Adjacent at-grade intersection\" [undo] h 46; records 1; ribbons \"Previous answer — 1 correction staged, not yet applied.\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "U1 unstage",
+  "ok": true,
+  "detail": "records 2; staged 0; audits 5 → 5; stale false"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "X axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none; in the block 0"
+ },
+ {
+  "tag": "380x800",
+  "id": "G generate",
+  "ok": true,
+  "detail": "settled 1315 ms; band mounts 1; GENERATING · new plan · pin 39.7269, -104.9873; strip \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\""
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 scan rows",
+  "ok": true,
+  "detail": "block 332px; Adjacent at-grade intersection 84.6 · Adjacent interchange (highway ramps) 118.8 · Pedestrian sidewalks 84.6 · Bike lane / cycleway 84.6 · School zone 57.8 | 380x800-R1-settled.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 apply row at zero",
+  "ok": true,
+  "detail": "h 68; \"no corrections staged\"; button \"Apply 0 corrections\" disabled true title \"stage a correction first\"; button right 338 vs scan action right 338"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 one edge",
+  "ok": true,
+  "detail": "Apply right 338; row action right 338"
+ },
+ {
+  "tag": "380x800",
+  "id": "R1 footer",
+  "ok": true,
+  "detail": "\"scancorridor scan · 10 sep · 01:13 utc · 2.2 s · memoised · apply re-generates the plan\"; advisory ×0"
+ },
+ {
+  "tag": "380x800",
+  "id": "C1 chip centre",
+  "ok": true,
+  "detail": "\"Fenced off\" box 42..148 text 65..125 Δ 0 ; \"Removed\" box 154..242 text 177..219 Δ 0 ; \"Not in the work zone\" box 42..208 text 65..185 Δ 0 ; \"Other (say what)\" box 42..184 text 65..161 Δ 0 | 380x800-C1-picker.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C1 note slot",
+  "ok": true,
+  "detail": "void true; visibility hidden; display block; 184×27 at 42,544; disabled true; aria-hidden true; tabIndex -1"
+ },
+ {
+  "tag": "380x800",
+  "id": "C2 confirm until a reason",
+  "ok": true,
+  "detail": "disabled true; title \"choose a reason\""
+ },
+ {
+  "tag": "380x800",
+  "id": "C2 confirm still",
+  "ok": true,
+  "detail": "before 135×30 at 44,577; after 135×30 at 44,577; disabled false; title null; note visible visible | 380x800-C2-other.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C2 empty note answers at the note",
+  "ok": true,
+  "detail": "focused true; aria-invalid true; placeholder \"say what — required\""
+ },
+ {
+  "tag": "380x800",
+  "id": "S1 staged rows",
+  "ok": true,
+  "detail": "Adjacent at-grade intersection h 84.6 ◌ \"staged — not yet applied\" [dismiss · fenced off] Undo ; School zone h 84.6 ◌ \"staged — not yet applied\" [assert] Undo | 380x800-S1-staged.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "S1 apply row",
+  "ok": true,
+  "detail": "h 68; \"2 corrections staged · not yet applied\"; \"Apply 2 corrections\" disabled false"
+ },
+ {
+  "tag": "380x800",
+  "id": "S1 disclose, don't lock",
+  "ok": true,
+  "detail": "band false; locked false; stale true; ribbons \"Previous answer — 2 corrections staged, not yet applied.\"; downloads 4/4 live; audits 4, breakdowns 4 (unchanged by staging: see A1)"
+ },
+ {
+  "tag": "380x800",
+  "id": "A1 band once",
+  "ok": true,
+  "detail": "band mounts 1; objects RE-GENERATING · after 2 corrections; settled 1200 ms"
+ },
+ {
+  "tag": "380x800",
+  "id": "A1 one request each",
+  "ok": true,
+  "detail": "audit 4 → 5; device-breakdown 4 → 5"
+ },
+ {
+  "tag": "380x800",
+  "id": "A2 record rows",
+  "ok": true,
+  "detail": "\"Operator dismissed the scan's adjacent a…\" h 76.4 × ; \"Operator asserted school zone — the scan…\" h 76.4 ✓; block 332px | 380x800-A2-records.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "A2 advisory once + reset",
+  "ok": true,
+  "detail": "advisory ×1; apply \"no corrections staged\" disabled true; stale false; ribbons 0; foot \"scancorridor scan · 10 sep · 01:13 utc · 2.2 s · memoised · apply re-generates the planThe plan is built to the correction — verify it in the field or on imagery before deploying.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "A2 verify sentence not per row",
+  "ok": true,
+  "detail": "\"Operator dismissed the scan's adjacent a\" ; \"Operator asserted school zone — the scan\""
+ },
+ {
+  "tag": "380x800",
+  "id": "U1 undo stages",
+  "ok": true,
+  "detail": "\"Adjacent at-grade intersection\" [undo] h 84.6; records 1; ribbons \"Previous answer — 1 correction staged, not yet applied.\""
+ },
+ {
+  "tag": "380x800",
+  "id": "U1 unstage",
+  "ok": true,
+  "detail": "records 2; staged 0; audits 5 → 5; stale false"
+ },
+ {
+  "tag": "380x800",
+  "id": "X axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]; in the block 0"
+ }
+]

@@ -147,6 +147,37 @@ RESULT FAIL 39/42 — [1440x1000] R1 apply row at zero, [1440x1000] S1 apply row
 
 `node s2a26-lc.js outS2A26Prod <sha> https://www.conestruct.com https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz` — every figure above re-taken; specifically the Apply row at 46 (1440) and its button on the action edge at 380 after 2c85613. Hand-check (GO): stage two corrections, Apply once, one band cycle, rows 46 px, chips centred, Other keeps Confirm still.
 
+## Prod run at b72e358 (`outProd-b72e358/`)
+
+First line of the run: `healthz … sha b72e358580aac0246804352cf0cb754df31b4dbd expect b72e358580aac0246804352cf0cb754df31b4dbd` — Modal == `git rev-parse HEAD` of `s2-arc26-batch-block-prod` (cut from `origin/main` b72e358). Base `https://www.conestruct.com`, live Overpass, Denver pin (no refusal — Lakewood not needed; the harness gained optional `[lat] [lng]` args for that case).
+
+**Finding first — run 1 (`outProd-b72e358-run1-oldfrontend/`, 01:13 UTC):** Modal already answered b72e358 but www.conestruct.com still served the previous frontend (CSS `1933233096b42b58.css`, no `.sc-apply`; the footer read "a correction re-generates the plan"): `R1 apply row` / `one edge` / `footer` FAIL, then the harness stopped on the old DOM. Not a product defect — the Vercel build lagged the Modal deploy (CLAUDE.md: "Vercel ~2 min behind"). A sha-gate on Modal alone does not prove the frontend; the run polled prod's CSS for `sc-apply` (present at 01:14:07 UTC, `814f266c046586ad.css`) and re-ran. Recorded as the gap it is.
+
+**Run 2 — ALL PASS 42/42**, both viewports:
+
+| leg | 1440×1000 | 380×800 |
+|---|---|---|
+| G generate | band mounts 1, settled 1195 ms | band mounts 1, 1315 ms |
+| R1 scan rows | 46 ×5 | 84.6 / 118.8 / 84.6 / 84.6 / 57.8 (≤420 growth, #153) |
+| R1 Apply row at zero (**was pending**: 48 locally at 111beec) | **h 46**; "Apply 0 corrections" disabled, title "stage a correction first"; right 1252 = action right 1252 | **h 68** (wrapped); **right 338 = action right 338** (was 207 locally) |
+| R1 footer | "… · apply re-generates the plan", advisory ×0 | same |
+| C1 chip centre | Δ 0 ×4 | Δ 0 ×4 |
+| C1 note slot | 184×27, void / hidden / disabled / aria-hidden / tabIndex −1 | same |
+| C2 Confirm until a reason | disabled, title "choose a reason" | same |
+| C2 Confirm still after Other | 135×30 at 380,382 → 135×30 at 380,382 | 135×30 at 44,577 → same |
+| C2 empty note | focused, aria-invalid, "say what — required" | same |
+| S1 staged rows | 46 ×2 (◌, "staged — not yet applied", [dismiss · fenced off] / [assert], Undo) | 84.6 ×2 |
+| S1 Apply row at two | h 46, "2 corrections staged · not yet applied", enabled | h 68 |
+| S1 disclose, don't lock | no band, not locked, stale + ribbon, downloads 4/4 live, audits 4 / breakdowns 4 | same |
+| A1 band once | 1 mount, "RE-GENERATING · after 2 corrections", settled 1758 ms | 1 mount, 1200 ms |
+| A1 one request each | audit 4→5, breakdown 4→5 | same |
+| A2 record rows | 46 ×2 | 76.4 ×2 |
+| A2 advisory once + reset | ×1; "no corrections staged"; stale gone | same |
+| U1 undo stages / unstage | [undo] h 46; audits 5→5 | [undo] h 84.6; 5→5 |
+| X axe | 0 | 2 of the named four (`.gap-8`, `.strip-edit-all`), none in the block |
+
+Every figure equals the local run 1 at 111beec except the two the fix 2c85613 targeted (Apply row 48 → 46; 380 button edge 207 → 338). Screenshots and per-leg JSON in `outProd-b72e358/`.
+
 ## Principles (DESIGN-PRINCIPLES.md P1–P16)
 
 | P | verdict | where |
@@ -154,9 +185,9 @@ RESULT FAIL 39/42 — [1440x1000] R1 apply row at zero, [1440x1000] S1 apply row
 | P1 reserve, never reflow | honoured — Apply row always present; the note slot 184 px laid out while void; `min-height` rows. Residual: the footer grows one line on the first applied record (`SetupStrip.tsx` footer, `.sc-foot-advisory`). | `SetupStrip.tsx` Apply row; `globals.css` `.site-correction-note` |
 | P2 one derivation | honoured — `deriveCorrectionsStanding` / `stagedSentence` (shell state read by the block and the ribbon; handed to B's chip) | `lib/scenarios/site-corrections.ts` |
 | P3 name the step | honoured — "Apply N corrections", "staged — not yet applied", "apply re-generates the plan" | |
-| P4 one action edge | browser leg — Apply right 1252 = action right 1252 (1440, run 1); 380 fixed in 2c85613, pending prod. Chip label Δ 0. | `globals.css` `.sc-row.sc-apply` |
+| P4 one action edge | prod b72e358: Apply right = action right at both viewports (1252 / 338); chip label Δ 0. | `globals.css` `.sc-row.sc-apply` |
 | P5 | honoured | |
-| P6 one row height | browser leg — 46 at 1440 for scan / staged / record; Apply 48 → 46 (2c85613, pending prod); 380 grows under ≤420 (#153, ruled) | `globals.css` `--sc-row-h` |
+| P6 one row height | prod b72e358: 46 at 1440 for scan / staged / record / Apply; 380 grows under ≤420 (#153, ruled) | `globals.css` `--sc-row-h` |
 | P7 abandonable | honoured — disclose, don't lock: downloads 4/4 live while staged; Undo on a staged row un-stages without a request; band once per Apply | `GeneratorShell.tsx` `stagedDisclose` |
 | P8 | honoured | |
 | P9 the disable says why | honoured — Confirm `title="choose a reason"`, Apply `title="stage a correction first"`; the empty Other note answers at the note (`aria-invalid`, placeholder) | `SetupStrip.tsx` Confirm / Apply buttons |

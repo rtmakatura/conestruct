@@ -1,7 +1,7 @@
 // s2-arc26 live check — #254 + #255 the site-conditions block, at
 // 1440×1000 and 380×800, against a LOCAL stack (next dev on 3001 → the
 // local FastAPI on 8001, whose /healthz carries GIT_SHA = the checkout).
-//   node s2a26-lc.js <outDir> <expectSha> [base] [healthz]
+//   node s2a26-lc.js <outDir> <expectSha> [base] [healthz] [lat] [lng]
 // Legs, per viewport (one page, one plan):
 //   G   pin → Generate on the live Overpass (Denver; a refusal is retried
 //       once, then recorded and the block legs skipped — no figures faked).
@@ -31,6 +31,8 @@ const { fs, path } = L;
 const OUT = process.argv[2]; const EXPECT = process.argv[3];
 const BASE = process.argv[4] || "http://localhost:3001";
 const HEALTHZ = process.argv[5] || "http://127.0.0.1:8001/healthz";
+// Optional pin (prod run: Lakewood 39.7113,-105.0815 when Denver refuses twice, #256).
+const PIN = { lat: process.argv[6] || "39.726900", lng: process.argv[7] || "-104.987300" };
 const { log } = L.mkLog(OUT);
 const results = [];
 const check = (tag, id, ok, detail) => { results.push({ tag, id, ok, detail }); log(`[${tag}] ${ok ? "PASS" : "FAIL"} ${id} — ${detail}`); };
@@ -91,8 +93,8 @@ async function pin(page) {
   await page.goto(BASE + "/sandbox", { waitUntil: "networkidle", timeout: 120000 }); await page.waitForTimeout(600);
   await page.getByRole("button", { name: "Enter manually", exact: true }).click();
   const fill = async (l, v) => { await page.locator(`label:text-is("${l}")`).locator("xpath=following-sibling::input[1]").fill(v); };
-  await fill("Latitude", "39.726900"); await page.getByRole("button", { name: "Edit manually", exact: true }).click();
-  await fill("Longitude", "-104.987300"); await fill("Bearing (° from N)", "180"); await fill("Work zone (ft)", "1000");
+  await fill("Latitude", PIN.lat); await page.getByRole("button", { name: "Edit manually", exact: true }).click();
+  await fill("Longitude", PIN.lng); await fill("Bearing (° from N)", "180"); await fill("Work zone (ft)", "1000");
   const t0 = Date.now(); while (Date.now() - t0 < 40000) { const s = await page.evaluate(SAMPLE); if (s.strip && !/VERIFYING/.test(s.strip)) break; await page.waitForTimeout(300); }
 }
 // Sample until the band has been seen and gone and the strip is settled

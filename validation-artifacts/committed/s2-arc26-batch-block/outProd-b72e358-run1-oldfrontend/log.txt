@@ -1,0 +1,13 @@
+healthz https://rtmakatura--conestruct-render-fastapi-app.modal.run/healthz sha b72e358580aac0246804352cf0cb754df31b4dbd expect b72e358580aac0246804352cf0cb754df31b4dbd
+B1 healthz b72e358580aac0246804352cf0cb754df31b4dbd == b72e358580aac0246804352cf0cb754df31b4dbd: PASS · base https://www.conestruct.com
+[1440x1000] PASS G generate — settled 4750 ms; band mounts 1; GENERATING · new plan · pin 39.7269, -104.9873; strip "VERIFIED · 3 plan flags ▸REVIEW FLAGS"
+[1440x1000] PASS R1 scan rows — block 1100px; Adjacent at-grade intersection 46 · Adjacent interchange (highway ramps) 46 · Pedestrian sidewalks 46 · Bike lane / cycleway 46 · School zone 46 | 1440x1000-R1-settled.png
+[1440x1000] FAIL R1 apply row at zero — no apply row
+[1440x1000] FAIL R1 one edge — no apply row
+[1440x1000] FAIL R1 footer — "scancorridor scan · 10 sep · 01:13 utc · 2.2 s · a correction re-generates the plan"; advisory ×0
+[1440x1000] info R1 detected — Adjacent at-grade intersection, Adjacent interchange (highway ramps), Pedestrian sidewalks, Bike lane / cycleway
+ERR page.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
+    at eval (eval at evaluate (:302:30), <anonymous>:7:74)
+    at UtilityScript.evaluate (<anonymous>:304:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at C:\Users\rtmak\Documents\traffic-control-tool\.claude\worktrees\batch-a-block\validation-artifacts\committed\s2-arc26-batch-block\s2a26-lc.js:155:24

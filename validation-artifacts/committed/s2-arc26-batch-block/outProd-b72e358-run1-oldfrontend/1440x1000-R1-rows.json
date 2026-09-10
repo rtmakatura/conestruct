@@ -1,0 +1,108 @@
+{
+ "blockW": 1100,
+ "rows": [
+  {
+   "kind": "scan",
+   "name": "Adjacent at-grade intersection",
+   "word": "detected",
+   "evidence": "46 found · nearest 95.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 1252,
+    "h": 28
+   },
+   "top": -321.7,
+   "h": 46,
+   "left": 188,
+   "right": 1252,
+   "w": 1064
+  },
+  {
+   "kind": "scan",
+   "name": "Adjacent interchange (highway ramps)",
+   "word": "detected",
+   "evidence": "10 found · nearest 10.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 1252,
+    "h": 28
+   },
+   "top": -275.7,
+   "h": 46,
+   "left": 188,
+   "right": 1252,
+   "w": 1064
+  },
+  {
+   "kind": "scan",
+   "name": "Pedestrian sidewalks",
+   "word": "detected",
+   "evidence": "103 found · nearest 100.1 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 1252,
+    "h": 28
+   },
+   "top": -229.7,
+   "h": 46,
+   "left": 188,
+   "right": 1252,
+   "w": 1064
+  },
+  {
+   "kind": "scan",
+   "name": "Bike lane / cycleway",
+   "word": "detected",
+   "evidence": "11 found · nearest 109.6 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 1252,
+    "h": 28
+   },
+   "top": -183.7,
+   "h": 46,
+   "left": 188,
+   "right": 1252,
+   "w": 1064
+  },
+  {
+   "kind": "scan",
+   "name": "School zone",
+   "word": "none along the corridor",
+   "evidence": "",
+   "glyph": "✓",
+   "button": {
+    "name": "Assert",
+    "disabled": false,
+    "title": null,
+    "right": 1252,
+    "h": 28
+   },
+   "top": -137.7,
+   "h": 46,
+   "left": 188,
+   "right": 1252,
+   "w": 1064
+  }
+ ],
+ "advisory": 0,
+ "footText": "scancorridor scan · 10 sep · 01:13 utc · 2.2 s · a correction re-generates the plan",
+ "stale": false,
+ "ribbons": [],
+ "dlAll": 4,
+ "dlOn": 4,
+ "band": false,
+ "locked": false
+}
