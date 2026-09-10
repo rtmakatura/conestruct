@@ -1,0 +1,90 @@
+{
+ "scrollY": 629,
+ "innerH": 1000,
+ "docH": 2727,
+ "navH": 52,
+ "stage": "post",
+ "stripH": "82px",
+ "statusH": "52px",
+ "pinH": "0px",
+ "resultsTop": 166.47,
+ "resultsMargin": "136px",
+ "strip": {
+  "vtop": 90.47,
+  "vbottom": 142.47,
+  "h": 52,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "stripText": "VERIFIED · 3 plan flags ▸REVIEW FLAGS",
+ "statusSlot": {
+  "vtop": 90.47,
+  "vbottom": 142.47,
+  "h": 52,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "ns": {
+  "vtop": 210.47,
+  "vbottom": 291.66,
+  "h": 81.19,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "nsSlot": {
+  "vtop": 210.47,
+  "vbottom": 292.47,
+  "h": 82,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "slotPos": "sticky",
+ "label": "NEXT — 3 STEPS",
+ "chips": [
+  {
+   "vtop": 244.47,
+   "vbottom": 281.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 170,
+   "right": 531,
+   "href": "#site-corrections",
+   "read": true,
+   "count": "4 OPEN/5",
+   "glyph": "▲",
+   "name": "Site conditions"
+  },
+  {
+   "vtop": 244.47,
+   "vbottom": 281.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 539,
+   "right": 901,
+   "href": "#reference",
+   "read": true,
+   "count": "2 OPEN",
+   "glyph": "▲",
+   "name": "Pending items"
+  },
+  {
+   "vtop": 244.47,
+   "vbottom": 281.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 909,
+   "right": 1270,
+   "href": "#downloads",
+   "read": true,
+   "count": "4 FILES READY",
+   "glyph": "✓",
+   "name": "Download"
+  }
+ ],
+ "refusal": null,
+ "hero": true
+}

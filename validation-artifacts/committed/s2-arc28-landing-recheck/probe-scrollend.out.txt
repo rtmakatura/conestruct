@@ -1,0 +1,6 @@
+0 ms  CLICK  
+83 ms  scrollIntoView  smooth zone results outline-none domi top=-1998
+85 ms  scrollend  scrollY=2599
+85 ms  scrollIntoView  smooth zone results outline-none domi top=-1998
+880 ms  scrollend  scrollY=447
+930 ms  rAF-6stable  frame 1426 y=447
