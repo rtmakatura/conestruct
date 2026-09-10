@@ -19,3 +19,7 @@ Transcribed verbatim from the s2-batch-1 build brief `GO.md` (Ryan's ruling, 202
 6. **The `.zone-title` hand-off:** `#fff` → `var(--ink-bright)` and B's row deleted from `CSS_OWNER_SWAPS` in `lib/design/ink-exceptions.ts` (red/green on `ink-literals.test.ts`).
 7. **D's type census:** the `.ns-strip` sizes (spec 16-17: label 9.5, index 10, glyph 11, name 12, count 10.5) map to the `.tr-*` roles where they exist — label `tr-section`, index and count `tr-step`, name `tr-field`; the glyph's 11 is the one chosen size, declared as a `type-exceptions.ts` row in the same commit.
 
+## Rulings on the prod run at 3fa7d18 (Ryan, via the coordinator, 2026-09-10)
+8. **Anchor landings clamp at the document end.** "accept the clamp; the harness expectation for anchor landings becomes 'target, or maxScroll if smaller' (i.e. expected = min(target, docH − innerH))." — `s2a26-lc.js` N8; the prod run's 1440 `#reference` rows (67.45) are PASS by this ruling.
+9. **The settle-inside-the-smooth-scroll landing (380, 1 of 10 at 793).** "filed as its own issue (number pending; fix per your proposal as the next small branch after the docs ships)."
+

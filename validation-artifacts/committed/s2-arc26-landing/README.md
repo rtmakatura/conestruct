@@ -90,3 +90,7 @@ P1 honoured — `StatusBar.tsx:191` slot (52/70), `ResultsHead.tsx` slot (82/192
 
 **Finding 3 — none new otherwise:** every other probe equals the local run at `f8c1744`, figure for figure (S0, L1–L2 at 1440, N1–N7, N9–N10, C1–C3).
 
+### Rulings on the prod findings (Ryan, via the coordinator, 2026-09-10; recorded in `GO-rulings.md` 8–9)
+- **Ruling 8 (finding 1), verbatim:** "accept the clamp; the harness expectation for anchor landings becomes 'target, or maxScroll if smaller' (i.e. expected = min(target, docH − innerH))." Applied to `s2a26-lc.js`'s N8 leg (the probe's rationale in its comment). **Re-statement of the recorded rows, the log itself untouched:** the ten `1440x1000-L* N8 jumps land` rows and `380x800-L4 N8` are **PASS by ruling** — `#reference` 67.45 is the document-end clamp (`scrollY 1727 == maxScroll 1727`; `probe-reference.out.txt`), the other two anchors landed at their margins (60.28 / 142.22) and all three took focus. The prod tally reads 291/294 by ruling; the remaining three FAILs are finding 2's single run (`380x800-L10 L1 / L3 / N5`).
+- **Ruling 9 (finding 2), verbatim:** "filed as its own issue (number pending; fix per your proposal as the next small branch after the docs ships)." The proposal: on `settle()` while the landing scroll is still running, wait for its `scrollend` and check with a fresh re-issue budget.
+

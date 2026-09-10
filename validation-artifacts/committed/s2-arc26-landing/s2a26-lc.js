@@ -176,13 +176,27 @@ async function landedLegs(page, tag, label, s) {
   }
   check(tag, `${label} N7 slot = strip`, p.nsSlot !== null && p.ns !== null && Math.abs(p.nsSlot.h - p.ns.h) <= 1 && Math.abs(p.nsSlot.h - parseFloat(p.stripH)) <= 1, `slot ${p.nsSlot?.h} strip ${p.ns?.h} token ${p.stripH}`);
   // Anchor jumps: each chip lands its target at the target's scroll-margin (±1).
+  // Anchor jumps: each chip lands its target at the target's scroll-margin
+  // (±1) — or, Ryan's ruling of 2026-09-10 on the prod run's finding 1, at
+  // the document's end when that is smaller: a zone shorter than the
+  // viewport below the margin cannot reach it (probe-reference.js: at 1440
+  // #reference ends at scrollY 1727 == maxScroll 1727, docH 2727, innerH
+  // 1000, the zone at 67.45).  expected = min(target, docH − innerH) in
+  // document coordinates; the check reports which bound it landed on.
   const jump = async (i, id) => {
     await page.evaluate((i) => document.querySelectorAll(".ns-strip .ns-chip")[i].click(), i);
     await page.waitForTimeout(900);
-    return page.evaluate((id) => { const el = document.getElementById(id); const b = el.getBoundingClientRect(); return { top: Math.round(b.top * 100) / 100, margin: parseFloat(getComputedStyle(el).scrollMarginTop), focused: document.activeElement === el, pinH: getComputedStyle(el).getPropertyValue("--pin-h").trim() }; }, id);
+    return page.evaluate((id) => {
+      const el = document.getElementById(id); const b = el.getBoundingClientRect();
+      const margin = parseFloat(getComputedStyle(el).scrollMarginTop);
+      const docTop = b.top + scrollY; const maxScroll = document.documentElement.scrollHeight - innerHeight;
+      const expectedScroll = Math.min(docTop - margin, maxScroll);
+      return { top: Math.round(b.top * 100) / 100, margin, focused: document.activeElement === el, pinH: getComputedStyle(el).getPropertyValue("--pin-h").trim(), scrollY: Math.round(scrollY), maxScroll: Math.round(maxScroll), clamped: docTop - margin > maxScroll, off: Math.round((scrollY - expectedScroll) * 100) / 100 };
+    }, id);
   };
   const j3 = await jump(2, "downloads"); const j1 = await jump(0, "site-corrections"); const j2 = await jump(1, "reference");
-  check(tag, `${label} N8 jumps land`, [j1, j2, j3].every((j) => Math.abs(j.top - j.margin) <= 1 && j.focused), `#site-corrections ${j1.top} vs margin ${j1.margin} (--pin-h ${j1.pinH}) focus ${j1.focused}; #reference ${j2.top} vs ${j2.margin} focus ${j2.focused}; #downloads ${j3.top} vs ${j3.margin} (--pin-h ${j3.pinH}) focus ${j3.focused}`);
+  const at = (j) => (j.clamped ? `clamped at the document end (scrollY ${j.scrollY} == maxScroll ${j.maxScroll})` : `vs margin ${j.margin}`);
+  check(tag, `${label} N8 jumps land`, [j1, j2, j3].every((j) => Math.abs(j.off) <= 1 && j.focused), `#site-corrections ${j1.top} ${at(j1)} (--pin-h ${j1.pinH}) focus ${j1.focused}; #reference ${j2.top} ${at(j2)} focus ${j2.focused}; #downloads ${j3.top} ${at(j3)} (--pin-h ${j3.pinH}) focus ${j3.focused}`);
   await page.evaluate(() => window.scrollTo(0, 0)); await page.waitForTimeout(300);
   const pairs = await page.evaluate(L.PAIRS, ".ns-strip"); fs.writeFileSync(path.join(OUT, `${label}-pairs.json`), JSON.stringify(pairs, null, 1));
   const low = pairs.filter((x) => x.ratio < 4.5);
