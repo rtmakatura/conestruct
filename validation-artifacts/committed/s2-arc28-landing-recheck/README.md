@@ -2,6 +2,8 @@
 
 *Local live check, 2026-09-10. Frontend under test: worktree `issue-271-landing-recheck` at **`1f7b060`** (commit 1 of this branch, on `49273e4` = origin/main) served by `next dev` on :3005; backend: the deployed Modal at healthz sha **`49273e47ae42c4dabfb75d8bafd244d38c83c837`** (= `49273e4`, gated by the harness's first log line). Harness `s2a28-lr.js`; output `outLocal-1f7b060/` (log, results.json, per-run samples / measure / **scrolls** / axe JSON, screenshots).*
 
+> *(Superseded by the (a) fix — see **The (a) fix** at the end of this file. This section is the record of the first attempt and the finding that produced ruling (a); it stands as written.)*
+>
 > ## RESULT: FAIL 233/251 — and the FAIL is the finding. **The fix as ruled does not repair #271.**
 > A natural warm run (`380x800-L12`) and every counted forced run landed the results zone at **793.11** — arc 26's prod figure to the pixel — with commit `1f7b060` in place. The acceptance ("20 consecutive Generates at 380 land at 154 ±1") is **NOT met: 19 of 20.** No harness leg was tuned to make this pass. Ryan's ruling is needed before anything else is built; see **The finding** below.
 
@@ -93,3 +95,80 @@ node validation-artifacts/committed/s2-arc28-landing-recheck/s2a28-lr.js \
      <outDir> <expected backend sha> http://localhost:3005
 ```
 Optional `[runs] [forcedRuns]` override the 10/20 natural and 5 forced runs for a smoke run. A prod run is Ryan's, after ship, sha-gated.
+
+
+---
+
+# The (a) fix — commit `4c4dce0`, run `outLocal-4c4dce0/`
+
+*Local live check, 2026-09-10, second run. Frontend under test: worktree `issue-271-landing-recheck` at **`4c4dce0`** (commit 3) served by `next dev` on :3005; backend: the deployed Modal at healthz **`49273e47ae42c4dabfb75d8bafd244d38c83c837`**, sha-gated on the first log line. Same harness `s2a28-lr.js`, same legs, same per-viewport forced hold. `outLocal-1f7b060/` is untouched.*
+
+> ## The 793 is gone. **38 of 38 counted runs landed at target**, and no run ever needed a third re-issue.
+> 380x800 natural **20 of 20 at 154.11**; 1440x1000 natural **10 of 10 at 136.47**; leg F **5 of 5** at 380 and **3 of 3** at 1440, every one measured inside the window. Re-issues per run: **30 runs used 1, 8 used 2, none used 3.** **(a) is not leaky** — the fallback to (b) is NOT taken.
+> The run still reads `RESULT FAIL 242/257`, and none of the 15 remaining FAILs is a landing: 8 are the L3 jump leg objecting to the recovery *being* a movement (finding 4 — needs a ruling), 4 are the dimmed-"previous answer" axe/pin artifact already recorded as finding 3, 2 are forced runs that never entered the window, 1 is a pin measured in that same dimmed state. Detail below; nothing was tuned.
+
+## The ruling this section answers (verbatim, Ryan, 2026-09-10)
+> "A `scrollend` that arrives with the results zone still beyond tolerance is a cancelled scroll, not a landing — re-issue and keep waiting rather than spending the check. Do not treat it as the terminal signal. (b) stays the fallback only if (a) proves leaky in the forced leg; say so explicitly if you fall back rather than switching silently."
+
+Built exactly as ruled. The terminal signal is now "a settle arrived **and** `offBy() <= LANDING_TOLERANCE_PX`". The cap is unchanged but **counted, not latched** — `reissues` against `LANDING_MAX_REISSUES = 2`, total across every round, so no path reaches a third `scrollIntoView`. Hard bounds on the wait, both stated as asked: the existing **`LANDING_MAX_FRAMES = 90`** per round, and a new whole-check wall clock **`LANDING_DEADLINE_MS = 4000`**; when either bound or the cap is reached, the next signal ends the check wherever the zone is. The user-scroll disarm wins at every point (`onUser` -> `finish()`, `reissueIfOff` guards on `userScrolled`); `done` stays; both the `scrollend` path and the rAF fallback stay; both call sites byte-identical.
+
+**Commit 1's settle-granted round is kept, not deleted.** It still has a job: under (a) the check no longer completes until the zone is on target, so a settle can grow the document a frame or two *after* the on-target `scrollend`; the granted round re-checks once for exactly that, and cannot produce a third scroll because the cap is now a total count.
+
+## Where the cancelled scrollends were rejected — the census
+A natural warm run at 380 (`380x800-L3`, PASS). One cancelled `scrollend`, one correction, then the real landing:
+```
+scrollIntoView on the zone: 2 (landing@37ms smooth (zone -1939 px off) ;
+                               re-issue 1@70ms smooth (zone -1939 px off)) -> 1 re-issue(s), cap 2;
+scrollend: @-1955ms ; @-1897ms ; @70ms y=2540 ; @854ms y=447;
+instant scrollY steps > 40 px: 1 (639@1316ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0
+```
+`scrollend @70ms` with the zone 1939 px off is the cancelled scroll — **rejected**, corrected, and the wait re-armed. `scrollend @854ms` is the real landing, within tolerance, and it spends the check. Under `1f7b060` the first of those two ended the check.
+
+A forced run at 380 (`380x800-F1`, landing PASS at 154.11) — the recorded prod window, recovered:
+```
+scrollIntoView on the zone: 3 (landing@36ms smooth (zone -1939 px off) ;
+                               re-issue 1@67ms smooth (zone -1939 px off) ;
+                               re-issue 2@853ms smooth (zone 793 px off)) -> 2 re-issue(s), cap 2;
+scrollend: @-1956ms ; @-1900ms ; @67ms y=2540 ; @853ms y=447 ; @1302ms y=1086
+```
+`re-issue 2@853ms smooth (zone 793 px off)` is **the recovering re-issue, printed explicitly** (ruling 4): the stale animation completed to its pre-settle destination and left the zone at 793 — the exact failure of arc 26 — and the check, still armed because 793 is not a landing, corrected it. `scrollend @1302ms y=1086` is the zone at 154. Same shape at 1440 (`F4r3`: `re-issue 2@555ms (zone 517 px off)` -> `scrollend @906ms y=659`, zone 136.47).
+
+## Acceptance (frontend `4c4dce0`, backend `49273e4`)
+| leg | 1440x1000 | 380x800 |
+|---|---|---|
+| **natural, zone top (target +-1)** | **136.47 — 10 of 10** | **154.11 — 20 of 20** (fresh page each, warm memo) |
+| **leg F, runs that entered the window** | **3 of 3 at 136.47**; F1 and F3 never entered in 3 attempts (the hot 1440 run is ~250 ms vs the 350 ms hold) — printed, not counted | **5 of 5 at 154.11** (held 700 ms; settled 683-689 ms vs smooth end 747-752 ms) |
+| **re-issues per run vs the cap of 2** | L1-L10: **1 each**; F2r3/F4r3/F5r2: **2 each** | L1-L20: **1 each**; F1/F2/F3r2/F4/F5r2: **2 each** |
+| L2 verdict strip inside [nav-h, innerH] | 60.47..112.47, 13/13 | 60.11..130.11, 25/25 |
+| L4 band seen every flight | 10/10 | 20/20 |
+| N5 pin | sticky at 52 = nav-h, slot 82 = strip 81.19 — 12 of 13 (L8 is finding 3) | static, un-pinned — 25/25 |
+| N6 chips 44 px, one edge | — | 332x44 at 24..356, 25/25 |
+| N10 axe | 0 nodes (baseline 0) — 12 of 13 (L8 is finding 3) | the named 2 (baseline 4) — 22 of 25 (L15/L16/L17 are finding 3) |
+| natural refusals (#256) | 0 of 10 | 0 of 20 |
+
+**Max re-issues observed anywhere: 2.** No run needed a third, so by the coordinator's own test (a) is not leaky, and **(b) is not taken.**
+
+## Findings from this run
+- **Finding 4 (new, needs a ruling) — the recovery is itself visible movement, and the L3 jump leg says so.** All 8 two-re-issue runs FAIL `L3` — not on the landing (all 8 landed at target) but on arc 26's jump expectations: `380x800-F1` records 4 instant scrollY steps > 40 px (215, 218, 113, 52) with the zone moving the same amounts, and 8 events after settle+100 ms; `1440x1000-F4r3` records 3 (152, 152, 46). That is the correcting scroll animating the zone from 793 back to 154 over ~450 ms, *after* the answer settled — real motion the operator did not ask for (P1), and the price of not leaving the zone at 793. The L3 leg's expectation ("<= 1 instant step, 0 visible zone jumps, none after settle + 100 ms") was written before a post-settle correction could exist, so it flags the fix as a defect. **Left as a FAIL by rule, for a ruling** — the same shape as arc 26's finding 1 / ruling 8. Options as I see them: accept a post-settle correction as legitimate movement when it *reduces* `offBy` (the leg would assert the zone ends at target rather than never moving), or rule that the correction should be instant (`behavior: "auto"`) once the answer has settled, so the recovery is a single step rather than a 450 ms travel. The 30 one-re-issue runs — every natural run at both viewports — pass L3 unchanged: 0 visible jumps, 0 after settle.
+- **Finding 3, again and more often (4 runs vs 1).** `1440x1000-L8` (N5 + axe) and `380x800-L15/L16/L17` (axe) were measured while the page carried `.stale-ribbon` — its dimmed "previous answer" state, a background refetch still in flight — where the reduced-opacity download/price text fails contrast (17 / 19 nodes, all `color-contrast`) and the sticky slot reads -91.83 instead of 52. Unrelated to the landing check (all four landed at target with 1 re-issue). The axe and pin legs should exclude that state; recorded, not asserted as an a11y regression.
+- **Leg F entry at 1440:** F1 and F3 never entered the window in 3 attempts each. With a warm memo the 1440 landing run collapses to ~250 ms, under the 350 ms hold. Printed per attempt and not counted as acceptance evidence, per ruling 4.
+- Finding 2 (the #256 retry landing at 166.47) did not recur — 0 natural refusals this run.
+
+## Churn — actual vs predicted, commits 3-4
+| file | predicted | actual |
+|---|---|---|
+| `GeneratorShell.tsx` | the (a) predicate in `landingCheck`, counted cap, deadline, doc comment | as predicted (+63/-7); call sites byte-identical; `reissued` latch -> `reissues` count; `LANDING_MAX_REISSUES` 2, `LANDING_DEADLINE_MS` 4000 |
+| `GeneratorShell.post-generate-scroll.test.tsx` | +2 cases (the (a) sequence, the cap) | as predicted — 15 in the file |
+| *declared, ruled not accidental* | — | **two existing cases edited**, because (a) is exactly the change their premise denied: "lands off by more than 1 px ..." said "a second scrollend and the settle add nothing" and now lands the zone on target before the second scrollend; the rAF-fallback case likewise (and flushes 4 frames, not 30, so the first window's re-issue is observed before the second is reached). The describe is renamed "re-issues the landing once, never twice" -> "at most twice, never a third time". The other 11 cases untouched |
+| `s2-arc28-landing-recheck/` | new out dir + this section | `outLocal-4c4dce0/`; `outLocal-1f7b060/` untouched |
+
+Backend 0 · CSS 0 · snapshots 0 · no new hex or font-size · arc 26's artifacts untouched.
+
+## Principles, re-stated against the fixed run
+| | first run (`1f7b060`) | now (`4c4dce0`) |
+|---|---|---|
+| **P1** nothing moves that the user did not ask to move | **deviated** — the zone ended 639 px low and stayed | **honoured for the landing**: 38 of 38 counted runs end at the computed coordinate (136.47 / 154.11), 0 visible zone jumps on all 30 one-re-issue runs. **Partially deviates on the 8 two-re-issue runs**: the correction moves the zone 639 px (380) / 381 px (1440) over ~450 ms after the settle. That motion is the fix, and it is finding 4, open for a ruling — `GeneratorShell.tsx` `landingCheck` / `reissueIfOff` |
+| **P3** the next thing to do is visible without being told | partial — on the failing run the results head sat off-screen, only the verdict strip in view at the bottom edge | **honoured**: the verdict strip lands 60.47..112.47 / 60.11..130.11 on every counted run, the results head at the top of the zone, the three next-step chips below it |
+| **P4** edges · **P10** targets | honoured | honoured — chips one edge 24..356, 332x44, 25/25 at 380 |
+| **P9** symbol + word · **P12** polish | n/a / hand-check | unchanged; P12 is Ryan's hand-check, and the 793 was its worst case |
+| P2 · P5 · P6 · P7 · P8 · P11 · P13 · P14 · P15 · P16 | n/a | n/a — no copy, type, grid, request, lock, token, disclosure, empty state or undo changed |

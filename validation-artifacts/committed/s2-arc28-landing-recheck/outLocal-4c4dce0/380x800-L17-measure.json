@@ -1,0 +1,90 @@
+{
+ "scrollY": 1086,
+ "innerH": 800,
+ "docH": 4849,
+ "navH": 52,
+ "stage": "error",
+ "stripH": "192px",
+ "statusH": "70px",
+ "pinH": "0px",
+ "resultsTop": 154.11,
+ "resultsMargin": "154px",
+ "strip": {
+  "vtop": 60.11,
+  "vbottom": 130.11,
+  "h": 70,
+  "w": 332,
+  "left": 24,
+  "right": 356
+ },
+ "stripText": "VERIFIED · 3 plan flags ▸REVIEW FLAGS",
+ "statusSlot": {
+  "vtop": 60.11,
+  "vbottom": 130.11,
+  "h": 70,
+  "w": 332,
+  "left": 24,
+  "right": 356
+ },
+ "ns": {
+  "vtop": 193.3,
+  "vbottom": 385.3,
+  "h": 192,
+  "w": 332,
+  "left": 24,
+  "right": 356
+ },
+ "nsSlot": {
+  "vtop": 193.3,
+  "vbottom": 385.3,
+  "h": 192,
+  "w": 332,
+  "left": 24,
+  "right": 356
+ },
+ "slotPos": "static",
+ "label": "NEXT — 3 STEPS",
+ "chips": [
+  {
+   "vtop": 227.3,
+   "vbottom": 271.3,
+   "h": 44,
+   "w": 332,
+   "left": 24,
+   "right": 356,
+   "href": "#site-corrections",
+   "read": true,
+   "count": "4 OPEN/5",
+   "glyph": "▲",
+   "name": "Site conditions"
+  },
+  {
+   "vtop": 279.3,
+   "vbottom": 323.3,
+   "h": 44,
+   "w": 332,
+   "left": 24,
+   "right": 356,
+   "href": "#reference",
+   "read": true,
+   "count": "2 OPEN",
+   "glyph": "▲",
+   "name": "Pending items"
+  },
+  {
+   "vtop": 331.3,
+   "vbottom": 375.3,
+   "h": 44,
+   "w": 332,
+   "left": 24,
+   "right": 356,
+   "href": "#downloads",
+   "read": true,
+   "count": "◌ NOT PRODUCED",
+   "glyph": "◌",
+   "name": "Download"
+  }
+ ],
+ "refusal": null,
+ "hero": false
+}

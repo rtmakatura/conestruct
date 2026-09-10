@@ -1,0 +1,249 @@
+[
+ {
+  "id": "color-contrast",
+  "impact": "serious",
+  "tags": [
+   "wcag2aa",
+   "wcag143"
+  ],
+  "nodes": [
+   {
+    "target": ".stale-ribbon",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.3 (foreground color: #8a4d54, background color: #2a2632, font size: 9.4pt (12.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#8a4d54",
+     "bgColor": "#2a2632",
+     "contrastRatio": 2.3,
+     "fontSize": "9.4pt (12.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".tracking-\\[0\\.14em\\]",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.57 (foreground color: #54606f, background color: #14202e, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#14202e",
+     "contrastRatio": 2.57,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(1) > .top > .fmt",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.1pt (9.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.1pt (9.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(1) > .desc > .tracking-\\[0\\.08em\\].text-\\[10px\\].uppercase",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(1) > .desc > .qty",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 8.6pt (11.5px), font weight: normal). Expected contrast ra",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "8.6pt (11.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(2) > .top > .fmt",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.1pt (9.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.1pt (9.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(2) > .desc > .tracking-\\[0\\.08em\\].text-\\[10px\\].uppercase",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(2) > .desc > .qty",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 8.6pt (11.5px), font weight: normal). Expected contrast ra",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "8.6pt (11.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(3) > .top > .fmt",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.1pt (9.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.1pt (9.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(3) > .desc > .tracking-\\[0\\.08em\\].text-\\[10px\\].uppercase",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(3) > .desc > .qty",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 8.6pt (11.5px), font weight: normal). Expected contrast ra",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "8.6pt (11.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(4) > .top > .fmt",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.1pt (9.5px), font weight: normal). Expected contrast rat",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.1pt (9.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(4) > .desc > .tracking-\\[0\\.08em\\].text-\\[10px\\].uppercase",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".dl-card:nth-child(4) > .desc > .qty",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 8.6pt (11.5px), font weight: normal). Expected contrast ra",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "8.6pt (11.5px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".price-head > .k",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 7.5pt (10px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "7.5pt (10px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".fyi",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "6.8pt (9px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   },
+   {
+    "target": ".total",
+    "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.44 (foreground color: #54606f, background color: #182433, font size: 9.8pt (13px), font weight: normal). Expected contrast rati",
+    "data": {
+     "fgColor": "#54606f",
+     "bgColor": "#182433",
+     "contrastRatio": 2.44,
+     "fontSize": "9.8pt (13px)",
+     "fontWeight": "normal",
+     "messageKey": null,
+     "expectedContrastRatio": "4.5:1"
+    }
+   }
+  ]
+ },
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ }
+]

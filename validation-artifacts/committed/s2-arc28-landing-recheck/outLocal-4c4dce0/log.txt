@@ -1,0 +1,287 @@
+healthz sha 49273e47ae42c4dabfb75d8bafd244d38c83c837 expect 49273e47ae42c4dabfb75d8bafd244d38c83c837
+B1 healthz 49273e47ae42c4dabfb75d8bafd244d38c83c837 == 49273e47ae42c4dabfb75d8bafd244d38c83c837: PASS · base http://localhost:3005 · {"1440x1000":10,"380x800":20} natural + 5 forced run(s) per viewport · forced settle held to {"1440x1000":350,"380x800":700} ms
+[1440x1000] PASS 1440x1000-L1 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 12452 ms | 1440x1000-L1-landed.png
+[1440x1000] PASS 1440x1000-L1 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L1 L3 jumps + re-issue census — smooth run to 559 ms; scrollIntoView on the zone: 2 (landing@35ms smooth (zone -610 px off) ; re-issue 1@80ms smooth (zone -610 px off)) → 1 re-issue(s), cap 2; scrollend: @-20933ms y=169 ; @80ms y=1024 ; @566ms y=278; instant scrollY steps > 40 px: 1 (381@11942ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1081 → 966 → 610 → 422 → 356 → 308 → 285 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L1 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L1 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L1 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L2 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 16672 ms | 1440x1000-L2-landed.png
+[1440x1000] PASS 1440x1000-L2 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L2 L3 jumps + re-issue census — smooth run to 485 ms; scrollIntoView on the zone: 2 (landing@62ms smooth (zone -552 px off) ; re-issue 1@110ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-4059ms y=169 ; @110ms y=966 ; @588ms y=278; instant scrollY steps > 40 px: 1 (381@16672ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 341 → 300 → 285 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L2 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L2 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L2 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L3 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 8379 ms | 1440x1000-L3-landed.png
+[1440x1000] PASS 1440x1000-L3 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L3 L3 jumps + re-issue census — smooth run to 502 ms; scrollIntoView on the zone: 2 (landing@43ms smooth (zone -552 px off) ; re-issue 1@75ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-8108ms y=169 ; @75ms y=966 ; @542ms y=278; instant scrollY steps > 40 px: 1 (381@8379ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 328 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L3 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L3 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L3 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L4 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 1063 ms | 1440x1000-L4-landed.png
+[1440x1000] PASS 1440x1000-L4 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L4 L3 jumps + re-issue census — smooth run to 505 ms; scrollIntoView on the zone: 2 (landing@29ms smooth (zone -552 px off) ; re-issue 1@60ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-1883ms y=169 ; @60ms y=966 ; @530ms y=278; instant scrollY steps > 40 px: 1 (381@1063ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1021 → 846 → 504 → 399 → 328 → 294 → 280 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L4 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L4 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L4 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L5 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 4139 ms | 1440x1000-L5-landed.png
+[1440x1000] PASS 1440x1000-L5 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L5 L3 jumps + re-issue census — smooth run to 503 ms; scrollIntoView on the zone: 2 (landing@40ms smooth (zone -552 px off) ; re-issue 1@82ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-4050ms y=169 ; @81ms y=966 ; @550ms y=278; instant scrollY steps > 40 px: 1 (381@4139ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 341 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L5 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L5 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L5 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L6 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 1120 ms | 1440x1000-L6-landed.png
+[1440x1000] PASS 1440x1000-L6 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L6 L3 jumps + re-issue census — smooth run to 496 ms; scrollIntoView on the zone: 2 (landing@34ms smooth (zone -552 px off) ; re-issue 1@66ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-9350ms y=169 ; @66ms y=966 ; @532ms y=278; instant scrollY steps > 40 px: 1 (381@1120ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 426 → 341 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L6 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L6 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L6 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L7 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2776; settled 20756 ms | 1440x1000-L7-landed.png
+[1440x1000] PASS 1440x1000-L7 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L7 L3 jumps + re-issue census — smooth run to 496 ms; scrollIntoView on the zone: 2 (landing@24ms smooth (zone -552 px off) ; re-issue 1@54ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-1558ms y=169 ; @54ms y=966 ; @524ms y=278; instant scrollY steps > 40 px: 1 (381@20756ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1021 → 906 → 562 → 399 → 328 → 294 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L7 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L7 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L7 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L8 — natural refusal on the live backend (#256) — "Site scan⚠Site scan unavailable — the plan can't verify school zones, sidewalks,"; retrying once
+[1440x1000] PASS 1440x1000-L8 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2890; settled 20709 ms | 1440x1000-L8-landed.png
+[1440x1000] PASS 1440x1000-L8 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L8 L3 jumps + re-issue census — smooth run to 7471 ms; scrollIntoView on the zone: 2 (landing@49ms smooth (zone -552 px off) ; re-issue 1@79ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-5302ms y=169 ; @79ms y=966 ; @548ms y=278; instant scrollY steps > 40 px: 0 (none); visible zone jumps: 0; after settle+100 ms: 0; scrollY 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L8 L4 band — band seen during the flight true
+[1440x1000] FAIL 1440x1000-L8 N5 pinned — slot sticky at -91.83 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] FAIL 1440x1000-L8 N10 axe — 17 wcag node(s) (baseline 0): color-contrast[.stale-ribbon] ; color-contrast[.tracking-\[0\.14em\]] ; color-contrast[.dl-card:nth-child(1) > .top > .fmt] ; color-contrast[.dl-card:nth-child(1) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(1) > .desc > .qty] ; color-contrast[.dl-card:nth-child(2) > .top > .fmt] ; color-contrast[.dl-card:nth-child(2) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(2) > .desc > .qty] ; color-contrast[.dl-card:nth-child(3) > .top > .fmt] ; color-contrast[.dl-card:nth-child(3) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(3) > .desc > .qty] ; color-contrast[.dl-card:nth-child(4) > .top > .fmt] ; color-contrast[.dl-card:nth-child(4) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(4) > .desc > .qty] ; color-contrast[.price-head > .k] ; color-contrast[.fyi] ; color-contrast[.total]
+[1440x1000] PASS 1440x1000-L9 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2776; settled 27244 ms | 1440x1000-L9-landed.png
+[1440x1000] PASS 1440x1000-L9 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L9 L3 jumps + re-issue census — smooth run to 505 ms; scrollIntoView on the zone: 2 (landing@31ms smooth (zone -552 px off) ; re-issue 1@62ms smooth (zone -552 px off)) → 1 re-issue(s), cap 2; scrollend: @-1869ms y=169 ; @62ms y=966 ; @532ms y=278; instant scrollY steps > 40 px: 1 (381@27244ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1021 → 846 → 504 → 399 → 328 → 294 → 280 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L9 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L9 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L9 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS 1440x1000-L10 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 1396 ms | 1440x1000-L10-landed.png
+[1440x1000] PASS 1440x1000-L10 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L10 L3 jumps + re-issue census — smooth run to 569 ms; scrollIntoView on the zone: 2 (landing@24ms smooth (zone -610 px off) ; re-issue 1@57ms smooth (zone -610 px off)) → 1 re-issue(s), cap 2; scrollend: @-21256ms y=169 ; @57ms y=1024 ; @542ms y=278; instant scrollY steps > 40 px: 1 (381@1396ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1081 → 966 → 610 → 422 → 341 → 308 → 285 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L10 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L10 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L10 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] PASS F0 capture — audit 200 13788 B; breakdown 200 1123 B
+[1440x1000] info 1440x1000-F1 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 318 ms vs smooth run end 244 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F1r2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 316 ms vs smooth run end 245 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F1r3 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 321 ms vs smooth run end 249 ms → missed the window — re-run
+[1440x1000] FAIL 1440x1000-F1 window — never entered the window in 3 attempts — not counted as acceptance evidence
+[1440x1000] info 1440x1000-F2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 322 ms vs smooth run end 253 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F2r2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 332 ms vs smooth run end 257 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F2r3 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 319 ms vs smooth run end 444 ms → INSIDE the window
+[1440x1000] PASS 1440x1000-F2r3 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 319 ms | 1440x1000-F2r3-landed.png
+[1440x1000] PASS 1440x1000-F2r3 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] FAIL 1440x1000-F2r3 L3 jumps + re-issue census — smooth run to 444 ms; scrollIntoView on the zone: 3 (landing@40ms smooth (zone -552 px off) ; re-issue 1@70ms smooth (zone -552 px off) ; re-issue 2@540ms smooth (zone 517 px off)) → 2 re-issue(s), cap 2; scrollend: @-11209ms y=169 ; @69ms y=966 ; @540ms y=278 ; @891ms y=659; instant scrollY steps > 40 px: 2 (192@568ms, zone moved -192; 106@632ms, zone moved -106); visible zone jumps: 2; after settle+100 ms: 4; scrollY 1023 → 906 → 562 → 399 → 328 → 300 → 282 → 278 → 312 → 504 → 610 → 647 → 659 → 659…
+[1440x1000] PASS 1440x1000-F2r3 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-F2r3 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-F2r3 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-F3 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 312 ms vs smooth run end 243 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F3r2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 316 ms vs smooth run end 251 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F3r3 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 314 ms vs smooth run end 251 ms → missed the window — re-run
+[1440x1000] FAIL 1440x1000-F3 window — never entered the window in 3 attempts — not counted as acceptance evidence
+[1440x1000] info 1440x1000-F4 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 323 ms vs smooth run end 252 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F4r2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 315 ms vs smooth run end 249 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F4r3 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 318 ms vs smooth run end 442 ms → INSIDE the window
+[1440x1000] PASS 1440x1000-F4r3 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 318 ms | 1440x1000-F4r3-landed.png
+[1440x1000] PASS 1440x1000-F4r3 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] FAIL 1440x1000-F4r3 L3 jumps + re-issue census — smooth run to 442 ms; scrollIntoView on the zone: 3 (landing@40ms smooth (zone -610 px off) ; re-issue 1@69ms smooth (zone -610 px off) ; re-issue 2@555ms smooth (zone 517 px off)) → 2 re-issue(s), cap 2; scrollend: @-21192ms y=169 ; @69ms y=1024 ; @555ms y=278 ; @906ms y=659; instant scrollY steps > 40 px: 3 (152@565ms, zone moved -152; 152@627ms, zone moved -152; 46@688ms, zone moved -46); visible zone jumps: 3; after settle+100 ms: 6; scrollY 1081 → 966 → 610 → 422 → 341 → 308 → 285 → 279 → 290 → 442 → 594 → 640 → 655 → 659…
+[1440x1000] PASS 1440x1000-F4r3 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-F4r3 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-F4r3 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-F5 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 312 ms vs smooth run end 249 ms → missed the window — re-run
+[1440x1000] info 1440x1000-F5r2 window — replayed audit ×1 breakdown ×1 held to 350 ms; settled 322 ms vs smooth run end 448 ms → INSIDE the window
+[1440x1000] PASS 1440x1000-F5r2 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; docH 2727; settled 322 ms | 1440x1000-F5r2-landed.png
+[1440x1000] PASS 1440x1000-F5r2 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] FAIL 1440x1000-F5r2 L3 jumps + re-issue census — smooth run to 448 ms; scrollIntoView on the zone: 3 (landing@42ms smooth (zone -610 px off) ; re-issue 1@72ms smooth (zone -610 px off) ; re-issue 2@558ms smooth (zone 517 px off)) → 2 re-issue(s), cap 2; scrollend: @-21207ms y=169 ; @72ms y=1024 ; @557ms y=278 ; @908ms y=659; instant scrollY steps > 40 px: 3 (214@570ms, zone moved -214; 90@633ms, zone moved -90; 46@696ms, zone moved -46); visible zone jumps: 3; after settle+100 ms: 6; scrollY 1079 → 966 → 610 → 422 → 341 → 301 → 282 → 279 → 290 → 504 → 594 → 640 → 657 → 659…
+[1440x1000] PASS 1440x1000-F5r2 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-F5r2 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-F5r2 N10 axe — 0 wcag node(s) (baseline 0): none
+[380x800] PASS 380x800-L1 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 17136 ms | 380x800-L1-landed.png
+[380x800] PASS 380x800-L1 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L1 L3 jumps + re-issue census — smooth run to 813 ms; scrollIntoView on the zone: 2 (landing@24ms smooth (zone -1939 px off) ; re-issue 1@54ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-1636ms y=92 ; @-1580ms y=565 ; @54ms y=2540 ; @840ms y=447; instant scrollY steps > 40 px: 1 (639@17136ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 470 → 455 → 447 → 447…
+[380x800] PASS 380x800-L1 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L1 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L1 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L1 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L2 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 20644 ms | 380x800-L2-landed.png
+[380x800] PASS 380x800-L2 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L2 L3 jumps + re-issue census — smooth run to 818 ms; scrollIntoView on the zone: 2 (landing@25ms smooth (zone -1939 px off) ; re-issue 1@56ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-9751ms y=92 ; @-9693ms y=565 ; @56ms y=2540 ; @841ms y=447; instant scrollY steps > 40 px: 1 (639@20644ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1587 → 1109 → 907 → 732 → 680 → 543 → 504 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L2 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L2 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L2 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L2 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L3 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 1316 ms | 380x800-L3-landed.png
+[380x800] PASS 380x800-L3 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L3 L3 jumps + re-issue census — smooth run to 819 ms; scrollIntoView on the zone: 2 (landing@37ms smooth (zone -1939 px off) ; re-issue 1@70ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-1955ms y=92 ; @-1897ms y=565 ; @70ms y=2540 ; @854ms y=447; instant scrollY steps > 40 px: 1 (639@1316ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2464 → 2263 → 1587 → 1109 → 856 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L3 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L3 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L3 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L3 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L4 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 20846 ms | 380x800-L4-landed.png
+[380x800] PASS 380x800-L4 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L4 L3 jumps + re-issue census — smooth run to 809 ms; scrollIntoView on the zone: 2 (landing@37ms smooth (zone -1939 px off) ; re-issue 1@67ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-1639ms y=92 ; @-1581ms y=565 ; @67ms y=2540 ; @853ms y=447; instant scrollY steps > 40 px: 1 (639@20846ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 477 → 455 → 447 → 447…
+[380x800] PASS 380x800-L4 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L4 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L4 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L4 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L5 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 20655 ms | 380x800-L5-landed.png
+[380x800] PASS 380x800-L5 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L5 L3 jumps + re-issue census — smooth run to 816 ms; scrollIntoView on the zone: 2 (landing@23ms smooth (zone -1939 px off) ; re-issue 1@55ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-3502ms y=92 ; @-3445ms y=565 ; @55ms y=2540 ; @841ms y=447; instant scrollY steps > 40 px: 1 (639@20655ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2583 → 2496 → 2263 → 1587 → 1109 → 856 → 732 → 618 → 543 → 494 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L5 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L5 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L5 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L5 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L6 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 24351 ms | 380x800-L6-landed.png
+[380x800] PASS 380x800-L6 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L6 L3 jumps + re-issue census — smooth run to 800 ms; scrollIntoView on the zone: 2 (landing@43ms smooth (zone -1939 px off) ; re-issue 1@73ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-3482ms y=92 ; @-3425ms y=565 ; @73ms y=2540 ; @859ms y=447; instant scrollY steps > 40 px: 1 (639@24351ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1771 → 1198 → 907 → 732 → 643 → 559 → 504 → 477 → 455 → 447 → 447…
+[380x800] PASS 380x800-L6 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L6 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L6 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L6 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L7 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 15819 ms | 380x800-L7-landed.png
+[380x800] PASS 380x800-L7 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L7 L3 jumps + re-issue census — smooth run to 817 ms; scrollIntoView on the zone: 2 (landing@24ms smooth (zone -1939 px off) ; re-issue 1@59ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-7236ms y=92 ; @-7178ms y=565 ; @59ms y=2540 ; @841ms y=447; instant scrollY steps > 40 px: 1 (639@15819ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2464 → 2263 → 1587 → 1109 → 856 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L7 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L7 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L7 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L7 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L8 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 2864 ms | 380x800-L8-landed.png
+[380x800] PASS 380x800-L8 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L8 L3 jumps + re-issue census — smooth run to 812 ms; scrollIntoView on the zone: 2 (landing@46ms smooth (zone -1939 px off) ; re-issue 1@78ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-2881ms y=92 ; @-2824ms y=565 ; @78ms y=2540 ; @863ms y=447; instant scrollY steps > 40 px: 1 (639@2864ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 643 → 559 → 504 → 470 → 455 → 447 → 447…
+[380x800] PASS 380x800-L8 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L8 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L8 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L8 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L9 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 20675 ms | 380x800-L9-landed.png
+[380x800] PASS 380x800-L9 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L9 L3 jumps + re-issue census — smooth run to 821 ms; scrollIntoView on the zone: 2 (landing@43ms smooth (zone -1998 px off) ; re-issue 1@74ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21283ms y=92 ; @-21226ms y=565 ; @74ms y=2599 ; @876ms y=447; instant scrollY steps > 40 px: 1 (639@20675ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2644 → 2555 → 2327 → 1649 → 1147 → 881 → 752 → 632 → 552 → 511 → 474 → 454 → 447 → 447…
+[380x800] PASS 380x800-L9 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L9 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L9 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L9 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L10 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 8936 ms | 380x800-L10-landed.png
+[380x800] PASS 380x800-L10 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L10 L3 jumps + re-issue census — smooth run to 816 ms; scrollIntoView on the zone: 2 (landing@28ms smooth (zone -1939 px off) ; re-issue 1@61ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-10070ms y=92 ; @-10007ms y=565 ; @61ms y=2540 ; @846ms y=447; instant scrollY steps > 40 px: 1 (639@3377ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L10 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L10 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L10 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L10 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L11 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 1127 ms | 380x800-L11-landed.png
+[380x800] PASS 380x800-L11 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L11 L3 jumps + re-issue census — smooth run to 813 ms; scrollIntoView on the zone: 2 (landing@45ms smooth (zone -1998 px off) ; re-issue 1@78ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21295ms y=92 ; @-21238ms y=565 ; @78ms y=2599 ; @879ms y=447; instant scrollY steps > 40 px: 1 (639@1127ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2644 → 2555 → 2327 → 1649 → 1241 → 935 → 752 → 632 → 569 → 511 → 474 → 454 → 447 → 447…
+[380x800] PASS 380x800-L11 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L11 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L11 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L11 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L12 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 3725 ms | 380x800-L12-landed.png
+[380x800] PASS 380x800-L12 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L12 L3 jumps + re-issue census — smooth run to 813 ms; scrollIntoView on the zone: 2 (landing@50ms smooth (zone -1998 px off) ; re-issue 1@85ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21293ms y=92 ; @-21235ms y=565 ; @85ms y=2599 ; @881ms y=447; instant scrollY steps > 40 px: 1 (639@3725ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2643 → 2523 → 2202 → 1486 → 1147 → 881 → 717 → 669 → 552 → 500 → 467 → 454 → 447 → 447…
+[380x800] PASS 380x800-L12 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L12 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L12 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L12 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L13 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 1743 ms | 380x800-L13-landed.png
+[380x800] PASS 380x800-L13 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L13 L3 jumps + re-issue census — smooth run to 807 ms; scrollIntoView on the zone: 2 (landing@34ms smooth (zone -1998 px off) ; re-issue 1@65ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21224ms y=92 ; @-21167ms y=565 ; @65ms y=2599 ; @865ms y=447; instant scrollY steps > 40 px: 1 (639@1743ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2644 → 2555 → 2327 → 1839 → 1241 → 935 → 752 → 658 → 569 → 511 → 481 → 457 → 447 → 447…
+[380x800] PASS 380x800-L13 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L13 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L13 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L13 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L14 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 3750 ms | 380x800-L14-landed.png
+[380x800] PASS 380x800-L14 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L14 L3 jumps + re-issue census — smooth run to 805 ms; scrollIntoView on the zone: 2 (landing@45ms smooth (zone -1939 px off) ; re-issue 1@77ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-2886ms y=92 ; @-2824ms y=565 ; @77ms y=2540 ; @863ms y=447; instant scrollY steps > 40 px: 1 (639@3750ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 643 → 559 → 504 → 470 → 455 → 447 → 447…
+[380x800] PASS 380x800-L14 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L14 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L14 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L14 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L15 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4926; settled 25352 ms | 380x800-L15-landed.png
+[380x800] PASS 380x800-L15 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L15 L3 jumps + re-issue census — smooth run to 819 ms; scrollIntoView on the zone: 2 (landing@27ms smooth (zone -1998 px off) ; re-issue 1@58ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21565ms y=92 ; @-21508ms y=565 ; @58ms y=2599 ; @860ms y=447; instant scrollY steps > 40 px: 1 (639@25352ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2644 → 2555 → 2327 → 1649 → 1147 → 935 → 752 → 632 → 552 → 500 → 474 → 454 → 447 → 447…
+[380x800] PASS 380x800-L15 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L15 N5 static — slot static at -406.7 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L15 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] FAIL 380x800-L15 N10 axe — 19 wcag node(s) (baseline 4): color-contrast[.stale-ribbon] ; color-contrast[.tracking-\[0\.14em\]] ; color-contrast[.dl-card:nth-child(1) > .top > .fmt] ; color-contrast[.dl-card:nth-child(1) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(1) > .desc > .qty] ; color-contrast[.dl-card:nth-child(2) > .top > .fmt] ; color-contrast[.dl-card:nth-child(2) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(2) > .desc > .qty] ; color-contrast[.dl-card:nth-child(3) > .top > .fmt] ; color-contrast[.dl-card:nth-child(3) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(3) > .desc > .qty] ; color-contrast[.dl-card:nth-child(4) > .top > .fmt] ; color-contrast[.dl-card:nth-child(4) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(4) > .desc > .qty] ; color-contrast[.price-head > .k] ; color-contrast[.fyi] ; color-contrast[.total] ; scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L16 — natural refusal on the live backend (#256) — "Site scan⚠Site scan unavailable — the plan can't verify school zones, sidewalks,"; retrying once
+[380x800] PASS 380x800-L16 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4945; settled 20760 ms | 380x800-L16-landed.png
+[380x800] PASS 380x800-L16 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L16 L3 jumps + re-issue census — smooth run to 20633 ms; scrollIntoView on the zone: 2 (landing@43ms smooth (zone -1998 px off) ; re-issue 1@74ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21314ms y=92 ; @-21258ms y=565 ; @74ms y=2599 ; @876ms y=447; instant scrollY steps > 40 px: 0 (none); visible zone jumps: 0; after settle+100 ms: 0; scrollY 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447 → 447…
+[380x800] PASS 380x800-L16 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L16 N5 static — slot static at -406.7 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L16 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] FAIL 380x800-L16 N10 axe — 19 wcag node(s) (baseline 4): color-contrast[.stale-ribbon] ; color-contrast[.tracking-\[0\.14em\]] ; color-contrast[.dl-card:nth-child(1) > .top > .fmt] ; color-contrast[.dl-card:nth-child(1) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(1) > .desc > .qty] ; color-contrast[.dl-card:nth-child(2) > .top > .fmt] ; color-contrast[.dl-card:nth-child(2) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(2) > .desc > .qty] ; color-contrast[.dl-card:nth-child(3) > .top > .fmt] ; color-contrast[.dl-card:nth-child(3) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(3) > .desc > .qty] ; color-contrast[.dl-card:nth-child(4) > .top > .fmt] ; color-contrast[.dl-card:nth-child(4) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(4) > .desc > .qty] ; color-contrast[.price-head > .k] ; color-contrast[.fyi] ; color-contrast[.total] ; scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L17 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4849; settled 20822 ms | 380x800-L17-landed.png
+[380x800] PASS 380x800-L17 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L17 L3 jumps + re-issue census — smooth run to 808 ms; scrollIntoView on the zone: 2 (landing@34ms smooth (zone -1998 px off) ; re-issue 1@67ms smooth (zone -1998 px off)) → 1 re-issue(s), cap 2; scrollend: @-21324ms y=92 ; @-21267ms y=565 ; @67ms y=2599 ; @867ms y=447; instant scrollY steps > 40 px: 1 (639@18316ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2644 → 2555 → 2327 → 1839 → 1241 → 935 → 790 → 658 → 569 → 511 → 474 → 457 → 447 → 447…
+[380x800] PASS 380x800-L17 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L17 N5 static — slot static at -406.7 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L17 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] FAIL 380x800-L17 N10 axe — 19 wcag node(s) (baseline 4): color-contrast[.stale-ribbon] ; color-contrast[.tracking-\[0\.14em\]] ; color-contrast[.dl-card:nth-child(1) > .top > .fmt] ; color-contrast[.dl-card:nth-child(1) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(1) > .desc > .qty] ; color-contrast[.dl-card:nth-child(2) > .top > .fmt] ; color-contrast[.dl-card:nth-child(2) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(2) > .desc > .qty] ; color-contrast[.dl-card:nth-child(3) > .top > .fmt] ; color-contrast[.dl-card:nth-child(3) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(3) > .desc > .qty] ; color-contrast[.dl-card:nth-child(4) > .top > .fmt] ; color-contrast[.dl-card:nth-child(4) > .desc > .tracking-\[0\.08em\].text-\[10px\].uppercase] ; color-contrast[.dl-card:nth-child(4) > .desc > .qty] ; color-contrast[.price-head > .k] ; color-contrast[.fyi] ; color-contrast[.total] ; scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L18 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 5092 ms | 380x800-L18-landed.png
+[380x800] PASS 380x800-L18 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L18 L3 jumps + re-issue census — smooth run to 806 ms; scrollIntoView on the zone: 2 (landing@39ms smooth (zone -1939 px off) ; re-issue 1@69ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-1937ms y=92 ; @-1881ms y=565 ; @68ms y=2540 ; @856ms y=447; instant scrollY steps > 40 px: 1 (639@5092ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 477 → 455 → 447 → 447…
+[380x800] PASS 380x800-L18 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L18 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L18 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L18 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L19 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 3068 ms | 380x800-L19-landed.png
+[380x800] PASS 380x800-L19 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L19 L3 jumps + re-issue census — smooth run to 816 ms; scrollIntoView on the zone: 2 (landing@23ms smooth (zone -1939 px off) ; re-issue 1@54ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-4768ms y=92 ; @-4712ms y=565 ; @54ms y=2540 ; @841ms y=447; instant scrollY steps > 40 px: 1 (639@3068ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1587 → 1109 → 907 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 447…
+[380x800] PASS 380x800-L19 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L19 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L19 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L19 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS 380x800-L20 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4732; settled 20659 ms | 380x800-L20-landed.png
+[380x800] PASS 380x800-L20 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L20 L3 jumps + re-issue census — smooth run to 808 ms; scrollIntoView on the zone: 2 (landing@37ms smooth (zone -1939 px off) ; re-issue 1@67ms smooth (zone -1939 px off)) → 1 re-issue(s), cap 2; scrollend: @-9754ms y=92 ; @-9696ms y=565 ; @67ms y=2540 ; @853ms y=447; instant scrollY steps > 40 px: 1 (639@20659ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 470 → 455 → 447 → 447…
+[380x800] PASS 380x800-L20 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L20 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L20 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L20 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] PASS F0 capture — audit 200 13788 B; breakdown 200 1123 B
+[380x800] info 380x800-F1 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 688 ms vs smooth run end 750 ms → INSIDE the window
+[380x800] PASS 380x800-F1 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 688 ms | 380x800-F1-landed.png
+[380x800] PASS 380x800-F1 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] FAIL 380x800-F1 L3 jumps + re-issue census — smooth run to 750 ms; scrollIntoView on the zone: 3 (landing@36ms smooth (zone -1939 px off) ; re-issue 1@67ms smooth (zone -1939 px off) ; re-issue 2@853ms smooth (zone 793 px off)) → 2 re-issue(s), cap 2; scrollend: @-1956ms y=92 ; @-1900ms y=565 ; @67ms y=2540 ; @853ms y=447 ; @1302ms y=1086; instant scrollY steps > 40 px: 4 (215@873ms, zone moved -215; 218@935ms, zone moved -218; 113@996ms, zone moved -113; 52@1060ms, zone moved -52); visible zone jumps: 4; after settle+100 ms: 8; scrollY 2585 → 2496 → 2263 → 1587 → 1109 → 907 → 732 → 618 → 559 → 504 → 470 → 452 → 447 → 458…
+[380x800] PASS 380x800-F1 L4 band — band seen during the flight true
+[380x800] PASS 380x800-F1 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-F1 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-F1 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-F2 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 688 ms vs smooth run end 752 ms → INSIDE the window
+[380x800] PASS 380x800-F2 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 688 ms | 380x800-F2-landed.png
+[380x800] PASS 380x800-F2 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] FAIL 380x800-F2 L3 jumps + re-issue census — smooth run to 752 ms; scrollIntoView on the zone: 3 (landing@36ms smooth (zone -1998 px off) ; re-issue 1@70ms smooth (zone -1998 px off) ; re-issue 2@870ms smooth (zone 793 px off)) → 2 re-issue(s), cap 2; scrollend: @-21221ms y=92 ; @-21159ms y=565 ; @70ms y=2599 ; @870ms y=447 ; @1319ms y=1086; instant scrollY steps > 40 px: 4 (124@874ms, zone moved -124; 318@937ms, zone moved -318; 93@998ms, zone moved -93; 62@1061ms, zone moved -62); visible zone jumps: 4; after settle+100 ms: 8; scrollY 2643 → 2555 → 2327 → 1649 → 1147 → 935 → 752 → 632 → 569 → 511 → 474 → 454 → 447 → 449…
+[380x800] PASS 380x800-F2 L4 band — band seen during the flight true
+[380x800] PASS 380x800-F2 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-F2 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-F2 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-F3 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 687 ms vs smooth run end 618 ms → missed the window — re-run
+[380x800] info 380x800-F3r2 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 689 ms vs smooth run end 751 ms → INSIDE the window
+[380x800] PASS 380x800-F3r2 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 689 ms | 380x800-F3r2-landed.png
+[380x800] PASS 380x800-F3r2 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] FAIL 380x800-F3r2 L3 jumps + re-issue census — smooth run to 751 ms; scrollIntoView on the zone: 3 (landing@26ms smooth (zone -1939 px off) ; re-issue 1@56ms smooth (zone -1939 px off) ; re-issue 2@843ms smooth (zone 793 px off)) → 2 re-issue(s), cap 2; scrollend: @-6283ms y=92 ; @-6227ms y=565 ; @56ms y=2540 ; @843ms y=447 ; @1293ms y=1086; instant scrollY steps > 40 px: 4 (215@876ms, zone moved -215; 218@938ms, zone moved -218; 113@999ms, zone moved -113; 52@1061ms, zone moved -52); visible zone jumps: 4; after settle+100 ms: 8; scrollY 2585 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 618 → 559 → 504 → 470 → 452 → 447 → 458…
+[380x800] PASS 380x800-F3r2 L4 band — band seen during the flight true
+[380x800] PASS 380x800-F3r2 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-F3r2 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-F3r2 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-F4 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 686 ms vs smooth run end 749 ms → INSIDE the window
+[380x800] PASS 380x800-F4 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 686 ms | 380x800-F4-landed.png
+[380x800] PASS 380x800-F4 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] FAIL 380x800-F4 L3 jumps + re-issue census — smooth run to 749 ms; scrollIntoView on the zone: 3 (landing@42ms smooth (zone -1939 px off) ; re-issue 1@72ms smooth (zone -1939 px off) ; re-issue 2@859ms smooth (zone 793 px off)) → 2 re-issue(s), cap 2; scrollend: @-5666ms y=92 ; @-5608ms y=565 ; @72ms y=2540 ; @859ms y=447 ; @1309ms y=1086; instant scrollY steps > 40 px: 4 (215@875ms, zone moved -215; 218@936ms, zone moved -218; 113@997ms, zone moved -113; 52@1059ms, zone moved -52); visible zone jumps: 4; after settle+100 ms: 8; scrollY 2585 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 618 → 559 → 504 → 470 → 455 → 447 → 458…
+[380x800] PASS 380x800-F4 L4 band — band seen during the flight true
+[380x800] PASS 380x800-F4 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-F4 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-F4 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-F5 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 683 ms vs smooth run end 615 ms → missed the window — re-run
+[380x800] info 380x800-F5r2 window — replayed audit ×1 breakdown ×1 held to 700 ms; settled 685 ms vs smooth run end 747 ms → INSIDE the window
+[380x800] PASS 380x800-F5r2 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; docH 4636; settled 685 ms | 380x800-F5r2-landed.png
+[380x800] PASS 380x800-F5r2 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] FAIL 380x800-F5r2 L3 jumps + re-issue census — smooth run to 747 ms; scrollIntoView on the zone: 3 (landing@33ms smooth (zone -1939 px off) ; re-issue 1@66ms smooth (zone -1939 px off) ; re-issue 2@851ms smooth (zone 793 px off)) → 2 re-issue(s), cap 2; scrollend: @-6292ms y=92 ; @-6235ms y=565 ; @66ms y=2540 ; @850ms y=447 ; @1300ms y=1086; instant scrollY steps > 40 px: 4 (115@870ms, zone moved -115; 318@931ms, zone moved -318; 113@993ms, zone moved -113; 42@1055ms, zone moved -42); visible zone jumps: 4; after settle+100 ms: 8; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 470 → 455 → 447 → 458…
+[380x800] PASS 380x800-F5r2 L4 band — band seen during the flight true
+[380x800] PASS 380x800-F5r2 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-F5r2 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-F5r2 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[1440x1000] natural: at target ±1 on 10 of 10
+[1440x1000] forced: at target ±1 on 3 of 3
+[380x800] natural: at target ±1 on 20 of 20
+[380x800] forced: at target ±1 on 5 of 5
+RESULT FAIL 242/257 — [1440x1000] 1440x1000-L8 N5 pinned, [1440x1000] 1440x1000-L8 N10 axe, [1440x1000] 1440x1000-F1 window, [1440x1000] 1440x1000-F2r3 L3 jumps + re-issue census, [1440x1000] 1440x1000-F3 window, [1440x1000] 1440x1000-F4r3 L3 jumps + re-issue census, [1440x1000] 1440x1000-F5r2 L3 jumps + re-issue census, [380x800] 380x800-L15 N10 axe, [380x800] 380x800-L16 N10 axe, [380x800] 380x800-L17 N10 axe, [380x800] 380x800-F1 L3 jumps + re-issue census, [380x800] 380x800-F2 L3 jumps + re-issue census, [380x800] 380x800-F3r2 L3 jumps + re-issue census, [380x800] 380x800-F4 L3 jumps + re-issue census, [380x800] 380x800-F5r2 L3 jumps + re-issue census
