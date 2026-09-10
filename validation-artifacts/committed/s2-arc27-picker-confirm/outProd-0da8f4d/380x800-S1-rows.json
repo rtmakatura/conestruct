@@ -1,0 +1,129 @@
+{
+ "blockW": 332,
+ "rows": [
+  {
+   "kind": "staged",
+   "name": "Adjacent at-grade intersection",
+   "word": "staged — not yet applied",
+   "evidence": "dismiss · fenced off",
+   "glyph": "◌",
+   "button": {
+    "name": "Undo",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 26
+   },
+   "top": 314.1,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Adjacent interchange (highway ramps)",
+   "word": "detected",
+   "evidence": "10 found · nearest 10.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": 398.7,
+   "h": 118.8,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Pedestrian sidewalks",
+   "word": "detected",
+   "evidence": "103 found · nearest 100.1 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": 517.4,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Bike lane / cycleway",
+   "word": "detected",
+   "evidence": "11 found · nearest 109.6 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": 602,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "staged",
+   "name": "School zone",
+   "word": "staged — not yet applied",
+   "evidence": "assert",
+   "glyph": "◌",
+   "button": {
+    "name": "Undo",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 26
+   },
+   "top": 686.6,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "apply",
+   "name": "2 corrections staged · not yet applied",
+   "word": null,
+   "evidence": null,
+   "glyph": null,
+   "button": {
+    "name": "Apply 2 corrections",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 30
+   },
+   "top": 771.2,
+   "h": 68,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  }
+ ],
+ "advisory": 0,
+ "footText": "scancorridor scan · 10 sep · 04:20 utc · 1.9 s · apply re-generates the plan",
+ "stale": true,
+ "ribbons": [
+  "Previous answer — 2 corrections staged, not yet applied."
+ ],
+ "dlAll": 5,
+ "dlOn": 5,
+ "band": false,
+ "locked": false
+}

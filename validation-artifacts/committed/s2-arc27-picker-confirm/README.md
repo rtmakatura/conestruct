@@ -39,6 +39,24 @@ Stack: `next dev -p 3001` in the worktree, proxying to the **prod Modal** backen
 
 Every arc-26 figure is unchanged by #270 except the picker row (82.2/116.2 → 71) and Confirm's origin (now the action cell). Prod run: Ryan's, sha-gated on the merged tip — `node s2a27-lc.js outProd-<sha> <sha> https://www.conestruct.com <modal healthz>`; hand-check per ruling 4.
 
+## Prod run at 0da8f4d (`outProd-0da8f4d/`)
+
+First line of the run: Modal healthz `0da8f4d42aef36bd3621f17bedab49ba0289af6c` == `git rev-parse HEAD` of `s2-arc27-picker-confirm-prod` (cut from `origin/main` 0da8f4d). Before running, www.conestruct.com's served CSS was polled for the new build: at **04:19:50Z** `/_next/static/css/25eb0e8a17d1496d.css` carried the `.sc-sub .sc-action` rule on the first probe — no Vercel lag this time (arc-26's finding). Base `https://www.conestruct.com`, live Overpass, Denver pin — no refusal, no retry, Lakewood not needed. **ALL PASS 46/46**, first run:
+
+| leg | 1440×1000 | 380×800 |
+|---|---|---|
+| G generate | band mounts 1, settled 4364 ms | 1, 2729 ms |
+| C3 confirm edge (the #270 acceptance) | 1252 = 1252 on all four names (longest "Adjacent interchange (highway ramps)", shortest "Pedestrian sidewalks") | 338 = 338 ×4 |
+| C3 picker heights | **71 ×4 (equal)** | 212.2 ×4 (recorded; equal) |
+| C2 Confirm still (before/after Other) | 135×30 at 1117,358 → same | 135×30 at 203,571 → same |
+| R1 scan rows · Apply row at zero | 46 ×5 · 46 (right 1252 = 1252) | 84.6/118.8/84.6/84.6/57.8 · 68 (right 338 = 338) |
+| S1 Apply row at two | 46 | 68 |
+| A1 band once | 1 mount, "after 2 corrections", settled 25180 ms (Overpass slow on this re-generation; one request each) | 1 mount, 1309 ms |
+| A2 record rows | 46 ×2 | 76.4 ×2 |
+| X axe | 0 | 2 of the named four, none in the block |
+
+Every figure equals local run 2. Screenshots and per-leg JSON in `outProd-0da8f4d/`. Hand-check (ruling 4) is Ryan's.
+
 ## Rule-5 churn (predicted → actual)
 
 | test | predicted | actual |

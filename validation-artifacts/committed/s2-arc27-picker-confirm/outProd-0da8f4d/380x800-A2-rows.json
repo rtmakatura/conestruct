@@ -1,0 +1,127 @@
+{
+ "blockW": 332,
+ "rows": [
+  {
+   "kind": "record",
+   "name": "Operator dismissed the scan's adjacent a",
+   "word": null,
+   "evidence": null,
+   "glyph": "×",
+   "button": {
+    "name": "Undo",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 16
+   },
+   "top": -92.9,
+   "h": 76.4,
+   "left": 30,
+   "right": 350,
+   "w": 320
+  },
+  {
+   "kind": "scan",
+   "name": "Adjacent interchange (highway ramps)",
+   "word": "detected",
+   "evidence": "10 found · nearest 10.8 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": -16.5,
+   "h": 118.8,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Pedestrian sidewalks",
+   "word": "detected",
+   "evidence": "103 found · nearest 100.1 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": 102.2,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "scan",
+   "name": "Bike lane / cycleway",
+   "word": "detected",
+   "evidence": "11 found · nearest 109.6 ft",
+   "glyph": "▲",
+   "button": {
+    "name": "Dismiss",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 28
+   },
+   "top": 186.8,
+   "h": 84.6,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  },
+  {
+   "kind": "record",
+   "name": "Operator asserted school zone — the scan",
+   "word": null,
+   "evidence": null,
+   "glyph": "✓",
+   "button": {
+    "name": "Undo",
+    "disabled": false,
+    "title": null,
+    "right": 338,
+    "h": 16
+   },
+   "top": 271.4,
+   "h": 76.4,
+   "left": 30,
+   "right": 350,
+   "w": 320
+  },
+  {
+   "kind": "apply",
+   "name": "no corrections staged",
+   "word": null,
+   "evidence": null,
+   "glyph": null,
+   "button": {
+    "name": "Apply 0 corrections",
+    "disabled": true,
+    "title": "stage a correction first",
+    "right": 338,
+    "h": 30
+   },
+   "top": 347.8,
+   "h": 68,
+   "left": 42,
+   "right": 338,
+   "w": 296
+  }
+ ],
+ "advisory": 1,
+ "footText": "scancorridor scan · 10 sep · 04:19 utc · 2.6 s · memoised · apply re-generates the planThe plan is built to the correction — verify it in the field or on imagery before deploying.",
+ "stale": false,
+ "ribbons": [],
+ "dlAll": 5,
+ "dlOn": 5,
+ "band": false,
+ "locked": false
+}

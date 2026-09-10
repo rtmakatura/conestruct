@@ -1,0 +1,84 @@
+{
+ "chips": [
+  {
+   "label": "Fenced off",
+   "box": [
+    42,
+    148
+   ],
+   "text": [
+    65,
+    125
+   ],
+   "boxC": 95,
+   "textC": 95,
+   "h": 26
+  },
+  {
+   "label": "Removed",
+   "box": [
+    154,
+    242
+   ],
+   "text": [
+    177,
+    219
+   ],
+   "boxC": 198,
+   "textC": 198,
+   "h": 26
+  },
+  {
+   "label": "Not in the work zone",
+   "box": [
+    42,
+    208
+   ],
+   "text": [
+    65,
+    185
+   ],
+   "boxC": 125,
+   "textC": 125,
+   "h": 26
+  },
+  {
+   "label": "Other (say what)",
+   "box": [
+    42,
+    184
+   ],
+   "text": [
+    65,
+    161
+   ],
+   "boxC": 113,
+   "textC": 113,
+   "h": 26
+  }
+ ],
+ "note": {
+  "w": 184,
+  "h": 27,
+  "left": 42,
+  "top": 544,
+  "visibility": "hidden",
+  "display": "block",
+  "isVoid": true,
+  "disabled": true,
+  "ariaHidden": "true",
+  "tabIndex": -1,
+  "ariaInvalid": null,
+  "placeholder": "say what",
+  "focused": false
+ },
+ "confirm": {
+  "left": 203,
+  "top": 571,
+  "w": 135,
+  "h": 30,
+  "disabled": true,
+  "title": "choose a reason"
+ },
+ "pickerH": 212
+}
