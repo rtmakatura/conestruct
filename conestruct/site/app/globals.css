@@ -551,9 +551,10 @@ body {
      (no cap); the row is three tracks — symbol · message (minmax(0, 1fr),
      so a long message wraps inside its cell and never widens the
      annotation) · a fixed annotation gutter every row shares.  The
-     gutter is CHOSEN at 200px from the longest annotation, "OSM
-     GROUND-TRUTH (SOFT CHECK)" (29 ch, StatusBar.tsx), and corrected to
-     the measured scrollWidth in the s2-arc26-cards-rows browser leg.
+     gutter is the MEASURED width of the longest annotation, "OSM
+     GROUND-TRUTH (SOFT CHECK)" (29 ch, StatusBar.tsx): 197 px at 10 px
+     mono (s2-arc26-cards-rows/outLocal at e363d98) — chosen at 200,
+     pinned at 197 by ruling (2026-09-09).
      Serves the strip's plan-flags dropdown and section 03 alike (both
      wear the class; no TSX). */
   .check-list {
@@ -564,7 +565,7 @@ body {
   }
   .check-list-item {
     display: grid;
-    grid-template-columns: 24px minmax(0, 1fr) 200px;
+    grid-template-columns: 24px minmax(0, 1fr) 197px;
     gap: 8px;
     padding: 8px 0;
     border-bottom: 1px dashed var(--line);
@@ -3043,12 +3044,11 @@ input[type="number"] {
   justify-content: space-between;
 }
 /* #261: the card title is an h3 under the zone's h2 (axe heading-order).
-   The `#fff` here is D's hand-off (#263) — it becomes var(--ink-bright)
-   once that token lands; not swapped in this arc. */
+   Ink is D's token (#263 ruling 3, folded at C's rebase). */
 .workbench .dl-card h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: var(--ink-bright);
   margin: 0;
 }
 .workbench .dl-card .fmt {

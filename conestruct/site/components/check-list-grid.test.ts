@@ -13,9 +13,11 @@
 // instead of sharing one right edge (P4).  The fix: the message track is
 // `minmax(0, 1fr)` (P6's technical form), the annotation track a fixed
 // gutter, right-aligned; at phone width the annotation wraps under the
-// label.  The gutter width is CHOSEN (200 px from the longest annotation,
-// "OSM GROUND-TRUTH (SOFT CHECK)", 29 ch) and corrected to the measured
-// scrollWidth in the browser leg (s2-arc26-cards-rows).
+// label.  The gutter width was CHOSEN at 200 px from the longest
+// annotation ("OSM GROUND-TRUTH (SOFT CHECK)", 29 ch) and is PINNED at the
+// measured scrollWidth, 197 px at 10 px mono — s2-arc26-cards-rows/outLocal
+// at e363d98, C6 "longest annotation", both viewports — by ruling
+// (2026-09-09, the rebase fold).
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -27,7 +29,8 @@ import { CheckRow } from "./AuditTrail";
 import { StatusBar } from "./StatusBar";
 import type { AuditResponse, AuditState } from "@/lib/render-types";
 
-const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+// CRLF-normalised: a Windows checkout (autocrlf) must read like CI's.
+const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
 
 // The @layer components block holds the audit-row rules; the phone
 // query for the wrap lives right after them, inside the same layer.
@@ -44,9 +47,9 @@ describe("#225 — the audit-row grid (static half)", () => {
     expect(block(".check-list")).not.toContain("600px");
   });
 
-  it("three tracks: 24px symbol · minmax(0, 1fr) message · a fixed 200px annotation gutter", () => {
+  it("three tracks: 24px symbol · minmax(0, 1fr) message · the measured 197px annotation gutter", () => {
     expect(block(".check-list-item")).toContain(
-      "grid-template-columns: 24px minmax(0, 1fr) 200px",
+      "grid-template-columns: 24px minmax(0, 1fr) 197px",
     );
   });
 

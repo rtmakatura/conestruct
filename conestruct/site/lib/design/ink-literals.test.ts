@@ -152,7 +152,8 @@ describe("#263 ink literals — globals.css outside :root / .workbench", () => {
   it("the decorative set is exactly the two ruled sites and the owner swaps are #fff only", () => {
     expect(CSS_DECORATIVE.map((r) => r.hex)).toEqual(["#1a1200", "#4a6280"]);
     for (const s of CSS_OWNER_SWAPS) expect(s.hex).toBe("#fff");
-    expect(CSS_OWNER_SWAPS).toHaveLength(5);
+    // 5 at D's slice; 4 once C folded `.dl-card h3` (#261, ruling 3) — each owner's fold drops one.
+    expect(CSS_OWNER_SWAPS).toHaveLength(4);
   });
 });
 

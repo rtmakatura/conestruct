@@ -86,7 +86,6 @@ export const CSS_OWNER_SWAPS: readonly OwnerSwap[] = [
     hex: "#fff",
     owner: "A (#254)",
   },
-  { selector: ".workbench .dl-card h4", hex: "#fff", owner: "C (#261)" },
 ];
 
 /** Code literals per file (comments stripped, tests excluded). */

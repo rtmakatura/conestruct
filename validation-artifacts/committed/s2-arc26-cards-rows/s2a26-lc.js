@@ -248,7 +248,7 @@ async function generate(page, tag) {
           `${stripRows.length} row(s): ${stripRows.map((r) => `"${r.text}" srcTop ${r.srcTop} lblTop ${r.lblTop} cols "${r.cols}"`).join(" ; ")} | ${shot6}`);
       }
       const longest = await page.evaluate(LONGEST_W, LONGEST);
-      check(tag, "C6 longest annotation fits the 200 px gutter", longest.scrollW <= 200, `"${LONGEST}" natural width ${longest.scrollW} px (rect ${longest.w}) at ${longest.font} — gutter 200 px, chosen; slack ${200 - longest.scrollW}`);
+      check(tag, "C6 longest annotation equals the 197 px gutter", longest.scrollW <= 197, `"${LONGEST}" natural width ${longest.scrollW} px (rect ${longest.w}) at ${longest.font} — gutter 197 px, pinned at the measurement by ruling`);
       // section 03: open every chip, measure every list
       const sums = page.locator('[aria-label="Plan reference tiers"] .refchip > .chip-sum[aria-expanded="false"]');
       const n = await sums.count();

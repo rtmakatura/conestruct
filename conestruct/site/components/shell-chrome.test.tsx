@@ -96,10 +96,14 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
 describe("#250 f2 — the verdict strip's reserved slot", () => {
   it("the workbench defines --status-h: 52px and pins 70px in the ≤480 query", () => {
     expect(rule(".workbench")).toMatch(/--status-h:\s*52px/);
-    const q = css.indexOf("@media (max-width: 480px) {");
-    expect(q).toBeGreaterThan(-1);
-    const block = css.slice(q, css.indexOf("\n}\n", q));
-    expect(block).toMatch(/\.workbench \{[^}]*--status-h:\s*70px/);
+    // The sheet carries several ≤480 queries (bucket C added two, #225 /
+    // #261); the pin is that ONE of them re-declares --status-h on .workbench.
+    const blocks = css
+      .split("@media (max-width: 480px) {")
+      .slice(1)
+      .map((b) => b.slice(0, b.indexOf("\n}\n")));
+    expect(blocks.length).toBeGreaterThan(0);
+    expect(blocks.some((b) => /\.workbench \{[^}]*--status-h:\s*70px/.test(b))).toBe(true);
   });
   // #260 (3): the strip itself takes the token too — one height across
   // AWAITING → VERIFYING → INVALID → VERIFIED (47 → 52 at 1440 before;

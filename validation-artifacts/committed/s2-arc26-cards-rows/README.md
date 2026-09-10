@@ -71,7 +71,7 @@ per-leg JSON and PNGs are in `outLocal/`. Every figure below is from the run at
 | C4 one heading, no ledger (P5/P2) | headings inside the tiers 0; the zone's h2 ["Rules, permit & audit"] alone; section label `<DIV class="tr-section">` "Plan reference" (no jurisdiction key at this pin); ledger element false, ledger copy false, "checking against" false, "(refreshing…)" false; cue slot "" h 15 (min 15, lh 15); no audit link in the tier; chips Changed 1 · Needs attention 2 · Checked 13 · Pending 1 | same (Needs attention 2) |
 | C5 axe | **heading-order 0**; full wcag set 0 (baseline 0) | **heading-order 0**; 2 nodes (baseline 4): `scrollable-region-focusable[.gap-8]`, `target-size[.strip-edit-all]` — both named; none new |
 | C6 strip dropdown (P4/P6) | 4 rows: FIX INPUTS right 1253 (w 68), **OSM GROUND-TRUTH (SOFT CHECK) right 1253 (w 197, 2 label lines)**, CDOT S-630-1 right 1253 (w 82), MANUAL HANDLING right 1253 (w 102) — **one right edge, spread 0**; list 1066 px; tracks "24px 826px 200px" | 4 rows, every annotation under its label (srcTop > lblTop: 488/458, 686/521, 772/719, 858/805); tracks "24px 266px" |
-| C6 longest annotation | "OSM GROUND-TRUTH (SOFT CHECK)" natural width **197 px** at 10 px mono (offscreen row, real style) — the 200 px gutter holds it with 3 px slack; **200 stays** | 197 |
+| C6 longest annotation | "OSM GROUND-TRUTH (SOFT CHECK)" natural width **197 px** at 10 px mono (offscreen row, real style); the run was at the chosen 200 — **the gutter is pinned at the measured 197 by ruling** (rebase fold, below) | 197 |
 | C6 section 03 | 4 lists, 13 rows; per list spread 0, right 1253 = list right ×4; max annotation scrollWidth 200 | 4 lists, 13 rows; under-label 13/13 |
 | C7 contrast | tr-section #ffffff/#14202e **16.46** (10 px/500); tr-prov #93a0b0/#14202e **6.19** | same |
 | C8 the #187 cue | an Edit Speed → 35: cues seen in flight **["◌ previous answer — refreshing…"]**, band "after an edit to speed"; after the settle the slot is "" at 15 px; never "(refreshing…)" / "checking against" | same |
@@ -153,6 +153,16 @@ plan and is left for a ruling.
 ## The #235 re-scope comment (for Ryan to post on #235)
 
 > Re-scoping after s2-audit-1. Landed without a design round (bucket C, Refs #261/#225): surface C's heading hierarchy (one h2 per zone; "— jurisdiction rules" takes the `tr-section` role), the ledger line deleted with the "◌ checking…"/"(refreshing…)" copy (chips are the one voice; a `tr-prov` previous-answer cue keeps #187), audit rows' shared edges cited from F-S3-9, `.check-list-item` grid (#225), and the audit PDF as a `.dl-btn` card (#261). Remaining here for the design round: surface A (road-section table alignment, note ties), surface B (footnote relocation, #214 survives), surface D density (honesty defects → #257), and surface C's type census (F-S3-12, with #263). Nothing in this issue is demo-blocking.
+
+## Rebase folds (2026-09-09, onto `b72e358` — D's census + `--ink-bright`, B's landing slice, A's block)
+
+Rulings taken at the rebase, one commit on top:
+- **Gutter = the measurement.** `.check-list-item` `200px` → **`197px`**, the scrollWidth of "OSM GROUND-TRUTH (SOFT CHECK)" at 10 px mono measured above (both viewports); `check-list-grid.test.ts` pins 197 with the measurement named. The harness's C6 check asserts against 197 for the prod run. The section-03 S-630-1 cites still wrap inside the gutter (P6); no widening.
+- **The zip stays four files — no new issue.** "MHT PACKAGE · 4 FILES" is true (`BUNDLE_PART_KINDS`); the audit PDF is a standalone download.
+- **The caption stays** until B's #253 commit 7 drops the numeral (ruling 2).
+- **Ruling 3 done:** `.workbench .dl-card h3` `color: #fff` → `var(--ink-bright)`; C's row deleted from `CSS_OWNER_SWAPS` (`ink-literals.test.ts` red → green).
+- **D's type census:** `type-exceptions.ts` — `.dl-card h4` row → `.dl-card h3`; the `.tier-ledger` 11 px row deleted; TieredReference's `text-[10px]` ×1 and `text-[20px]` ×1 rows deleted, `text-[11px]` 4 → 3; `CENSUS_PINS` 103 → 102 CSS declarations, 109 → 107 Tailwind sites, 325 → 322 uses (`type-census.test.ts` red by name → green).
+- The two CSS-rule tests this arc wrote read `globals.css` CRLF-normalised (a Windows checkout must read like CI's).
 
 ## Running it
 

@@ -377,7 +377,7 @@ describe("download errors carry their input identity (#197)", () => {
 // never moves (P1, declared).  The card title is an h3 under the zone's
 // h2 (axe heading-order, F-S3-19).
 describe("the action row (#261a)", () => {
-  const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+  const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n"); // CRLF-normalised
   const rule = (selector: string) => {
     const m = css.match(
       new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + " \\{[^}]*\\}"),
@@ -521,7 +521,7 @@ describe("the audit card (#261b)", () => {
   });
 
   it("globals.css: four columns at desk, one at <= 980px", () => {
-    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
     const dls = css.match(/\.workbench \.dls \{[^}]*\}/)![0].replace(/\s+/g, " ");
     expect(dls).toContain("grid-template-columns: repeat(4, 1fr)");
     const fromDls = css.slice(css.indexOf(".workbench .dls {"));

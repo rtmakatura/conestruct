@@ -116,7 +116,7 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".audit-body", size: "14px" },
       { selector: ".check-list-item .check-list-lbl", size: "14px" },
       { selector: ".empty-state .arrow", size: "14px" },
-      { selector: ".workbench .dl-card h4", size: "14px" },
+      { selector: ".workbench .dl-card h3", size: "14px" },
     ],
     tsx: [
       { file: "app/onboarding/page.tsx", cls: "text-[14px]", count: 1 },
@@ -178,7 +178,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .refchip .chip-sum .gl", size: "13px" },
       { selector: ".workbench .refchip .chip-sum .label", size: "13px" },
       { selector: ".workbench .refchip .chip-sum .detail", size: "12.5px" },
-      { selector: ".workbench .tier-ledger", size: "11px" },
     ],
     tsx: [],
   },
@@ -354,11 +353,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/QuotePanel.tsx", cls: "text-[28px]", count: 1 },
       { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 5 },
       { file: "components/SheetMeta.tsx", cls: "text-[10px]", count: 1 },
-      { file: "components/TieredReference.tsx", cls: "text-[10px]", count: 1 },
-      { file: "components/TieredReference.tsx", cls: "text-[11px]", count: 4 },
+      { file: "components/TieredReference.tsx", cls: "text-[11px]", count: 3 },
       { file: "components/TieredReference.tsx", cls: "text-[12px]", count: 4 },
       { file: "components/TieredReference.tsx", cls: "text-[13px]", count: 1 },
-      { file: "components/TieredReference.tsx", cls: "text-[20px]", count: 1 },
       { file: "components/WorkBeyondShoulderForm.tsx", cls: "text-[10px]", count: 2 },
     ],
   },
@@ -394,9 +391,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
  *  by the test and asserted equal to these, so the report cannot drift
  *  from the code. `.tr-*` role blocks are counted in cssDeclarations. */
 export const CENSUS_PINS = {
-  cssDeclarations: 103,
+  cssDeclarations: 102,
   cssSizes: 20,
-  tsxSites: 109,
-  tsxUses: 325,
+  tsxSites: 107,
+  tsxUses: 322,
   tsxFiles: 37,
 } as const;
