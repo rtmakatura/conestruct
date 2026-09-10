@@ -85,7 +85,8 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(chosen).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(chosen).toMatch(/color:\s*var\(--act-bright\)/);
     // Confirm on the wash takes the same bright ink (6.15:1 measured; --act on the wash was 4.97).
-    const confirm = rule(".workbench .jbar-suggest .sc-picker button.confirm");
+    // #270: Confirm lives in the sub-row's action cell, outside .sc-picker.
+    const confirm = rule(".workbench .jbar-suggest .sc-sub button.confirm");
     expect(confirm).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(confirm).toMatch(/color:\s*var\(--act-bright\)/);
     // The footer stretches to the block like the grid (its leader spans the slack).
@@ -139,6 +140,14 @@ describe("#249 — the scanned block as a ledger", () => {
     const line = rule(".workbench .jbar-suggest .sc-grid .sc-sub .sc-picker");
     expect(line).not.toMatch(/grid-column/);
     expect(line).toMatch(/flex-wrap:\s*wrap/);
+    // The legend is its own full-width line, so the chips + note line is
+    // the same width for every condition name and the row one height at
+    // 1440 (local run 1: 82.2 x3 vs 116.2 for the longest legend); the
+    // note rides the chips line (flex-end).
+    expect(line).toMatch(/align-items:\s*flex-end/);
+    const legend = rule(".workbench .jbar-suggest .sc-picker .site-correction-reasons legend");
+    expect(legend).toMatch(/width:\s*100%/);
+    expect(legend).toMatch(/float:\s*none/);
     const cq = css.indexOf("@container (max-width: 420px)");
     const act = rule(".workbench .jbar-suggest .sc-grid .sc-sub .sc-action", cq);
     expect(act).toMatch(/grid-column:\s*1 \/ -1/);

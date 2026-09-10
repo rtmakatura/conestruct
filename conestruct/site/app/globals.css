@@ -2377,7 +2377,8 @@ input[type="number"] {
 .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  /* The note rides the chips line (the legend above is its own line). */
+  align-items: flex-end;
   gap: 6px;
   min-width: 0;
 }
@@ -2393,7 +2394,14 @@ input[type="number"] {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-on-dark-faint);
-  margin-right: 2px;
+  /* #270 (P1/P6): the legend is its own full-width line, so the chips +
+     note line is the same width for every condition name and the row is
+     one height at 1440 (local run 1: 82.2 x3 vs 116.2 for the longest
+     legend).  6px = the picker's gap. */
+  float: none;
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
 }
 .workbench .jbar-suggest .sc-picker .site-correction-reasons legend .sugg-name {
   color: var(--ink-on-dark);
@@ -2423,16 +2431,17 @@ input[type="number"] {
    --act-bright on the wash (6.15:1 measured) — --act on the wash
    measured 4.97:1 in the local run, above the floor but thin; the same
    pair the chosen chip uses. */
-.workbench .jbar-suggest .sc-picker button.confirm {
+/* #270: Confirm is the sub-row's action cell (outside .sc-picker) — the
+   selector follows it, the pair is unchanged. */
+.workbench .jbar-suggest .sc-sub button.confirm {
   letter-spacing: 0.14em;
   padding: 6px 11px;
-  margin-left: 2px;
   background: var(--sc-act-wash);
   color: var(--act-bright);
   transition: background-color 120ms, color 120ms;
 }
-.workbench .jbar-suggest .sc-picker button.confirm:hover,
-.workbench .jbar-suggest .sc-picker button.confirm:focus-visible {
+.workbench .jbar-suggest .sc-sub button.confirm:hover,
+.workbench .jbar-suggest .sc-sub button.confirm:focus-visible {
   background: var(--act);
   color: var(--on-act);
 }
