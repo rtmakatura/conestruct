@@ -89,15 +89,14 @@ describe("OutputCards download cards", () => {
     expect(audit.textContent).toContain("checks");
   });
 
-  it("derives the header file count from the actual bundle contents, not the card count", () => {
+  it("#253 (GO ruling 2): the caption is MHT PACKAGE — the file count is the next-steps strip's chip 3 (one voice); the zip still carries 4 parts", () => {
     renderPublic();
-    // The zip carries quote.xlsx in addition to the three cards — the
-    // label must describe the package (4 files), never the grid.
+    // The zip carries quote.xlsx in addition to the three cards; the
+    // count is stated ONCE, by chip 3 ("4 FILES READY", from
+    // BUNDLE_PART_KINDS) — the caption no longer repeats it.
     expect(BUNDLE_PART_KINDS.length).toBe(4);
-    expect(
-      screen.getByText(`MHT PACKAGE · ${BUNDLE_PART_KINDS.length} FILES`),
-    ).toBeTruthy();
-    expect(screen.queryByText(/3 (FILES|SHEETS)/)).toBeNull();
+    expect(screen.getByText("MHT PACKAGE")).toBeTruthy();
+    expect(screen.queryByText(/\d (FILES|SHEETS)/)).toBeNull();
   });
 
   // #261 (P16 / Rule 10): no "…" and no "—" — a quantity the system has

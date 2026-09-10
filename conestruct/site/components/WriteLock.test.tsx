@@ -217,12 +217,15 @@ describe("#252 — the write lock's enumeration is honest", () => {
       /\.workbench\.ws-locked \[data-write\]:disabled,\s*\.workbench\.ws-locked \[data-write\]\[aria-disabled="true"\] \{\s*opacity: 0\.45;\s*pointer-events: none;\s*cursor: default;\s*\}/,
     );
     // No other selector reaches for the lock class: the block's
-    // step-aside and the one dim rule (the band's room is a spacer
-    // sibling, .ws-spacer, not root padding — a suppression trigger).
+    // step-aside, the one dim rule (the band's room is a spacer
+    // sibling, .ws-spacer, not root padding — a suppression trigger),
+    // and #253's read-dim on the next-steps chips (opacity only, no
+    // pointer-events: a read control stays live under the lock).
     const selectors = css
       .split(/\r?\n/)
       .filter((l) => /^\.workbench(\.|:not\(\.)ws-locked/.test(l));
     expect(selectors).toEqual([
+      ".workbench.ws-locked .ns-chip {",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled:hover,",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled,",

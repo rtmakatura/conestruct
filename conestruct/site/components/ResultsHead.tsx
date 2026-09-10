@@ -1,85 +1,94 @@
 "use client";
 
-// #249 (s2-arc21) + #247 + #246 — the results-head slot, one component
-// rendered VERBATIM from the shell's derived ``ResultsHead`` (the
-// deriveRail idiom, #228: the component decides nothing).
+// #253 (s2-arc26; was #249 + #247 + #246) — the results-head slot and
+// the next-steps strip, one component rendered VERBATIM from the shell's
+// derived ``NextSteps`` (lib/next-steps.ts — the deriveRail idiom, #228:
+// the component decides nothing).
 //
-//   (wait)   retired by #252: the in-flight state used to render a wait
-//            line here because the strip's VERIFYING sat under the nav
-//            after the landing (#247).  The working band — fixed to the
-//            viewport's bottom edge, in view from anywhere — is now the
-//            page's one working voice; in flight this slot is empty.
-//   scanned  the settled scan RAN (status ok): the three-part lockup
-//            (spec H, 54–59) — the count figure, two stacked labels,
-//            the jump to the strip's correction block.  The figure is
-//            the detected count over the keyed buckets ON THE WIRE
-//            (``total``, rule 12: never a literal five); 0 renders as
-//            "0 · No site conditions detected · of N checked" — a
-//            stated change from arc-19/20's "0 ⇒ nothing" (GO ruling d).
-//   null     nothing to say: pre-generate, a refused scan (the refusal
-//            container is the voice), a proceeded outage (the strip's
-//            NOT CHECKED container is the voice), not_run (nothing was
-//            checked — no block exists to correct), an audit error, and
-//            any fetch for the generated scenario in flight.  Only true
-//            statements render (rule 10).
+//   strip    a plan LANDED: three chips, in order — 01 Site conditions
+//            (open of total, "· k STAGED" appended), 02 Pending items,
+//            03 Download (the zip's parts) — each ONE <a>, a data-read
+//            in-page link (never a write; live under the band, spec 26)
+//            that jumps with scroll + focus (#193, jumpToAnchor — kept
+//            over spec 10's plain anchor navigation).  Symbol + word per
+//            state (P9): ▲ open work · ✓ a confirmed zero / a produced
+//            artifact · ◌ nothing evaluated.  Never "done", never a
+//            filled chip (spec 9).  The strip REPLACES the #249 lockup
+//            (GO conflict 1: one field, one surface).
+//   slot     ``reserve`` (#240, P1): from the Generate click the slot
+//            (`.results-head-slot`, min-height --strip-h + the 14 px gap)
+//            is mounted, empty, so the strip lands at the settle into
+//            room already allocated; released under a declined plan.
+//            The slot is also the pin: sticky within the results zone at
+//            --nav-h / --z-strip (ruled deviation from spec 3's page-wide
+//            pin), static below 520 px of the zone's width (spec 34).
+//   null     pre-generate: nothing, not even the slot.
 //
-// Visual only (no live region).  Not a rail entry (#228): the rail is
-// unmounted post-generate and this is results content, not navigation.
-// The lockup sits BELOW the zone head (spec 60 deviation, ruled): the
-// head is the #152 E landing target.
+// Visual only (no live region — the strip never says what the system is
+// doing, spec 23; the band is that voice).  Not a rail entry (#228).
 
 import { jumpToAnchor } from "./GeneratorFormPrimitives";
-import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
+import { nextStepChips, type ChipView, type NextSteps } from "@/lib/next-steps";
 
-export type ResultsHeadState = { kind: "scanned"; count: number; total: number };
-
-// #240 (P1): ``reserve`` — the shell passes ``genState !== "pre" &&
-// !planDeclined``: from the Generate click the slot (`.results-head-slot`,
-// min-height --strip-h + the 14 px gap) is mounted, empty, so the lockup
-// lands at the settle into room already allocated and nothing below it
-// moves; released under a declined plan (the refusal container is the
-// voice and no lockup will come).  Pre-generate: nothing, not even the
-// slot.  The lockup itself is unchanged (P16: the empty slot is room,
-// not a skeleton — no placeholder content).
 export function ResultsHead({
-  head,
+  steps,
   reserve = false,
 }: {
-  head: ResultsHeadState | null;
+  steps: NextSteps | null;
   reserve?: boolean;
 }) {
-  if (head === null && !reserve) return null;
-  return <div className="results-head-slot">{head && <Lockup head={head} />}</div>;
+  if (steps === null && !reserve) return null;
+  return <div className="results-head-slot">{steps && <Strip steps={steps} />}</div>;
 }
 
-function Lockup({ head }: { head: ResultsHeadState }) {
-  const detected = head.count > 0;
+function Strip({ steps }: { steps: NextSteps }) {
+  const chips = nextStepChips(steps);
   return (
-    // Spec 54–58: figure · stacked labels · link; no fill, no border, no
-    // icon — the 24px figure alone is the weight.  Figure --dim when
-    // ≥1 detected (the tier set's mark, GO ruling a), chromeless --none
-    // at 0 (spec 59).  Digits, not words, for both numbers (rule 12).
-    // #240: the 14 px gap moved to the slot (a margin inside a min-height
-    // box does not collapse through, so the slot would grow with it).
-    <div className="results-head-lockup">
-      <span className={`rh-figure ${detected ? "rh-detected" : "rh-none"}`}>{head.count}</span>
-      <span className="rh-labels">
-        <span className="rh-line1 tr-field">
-          {detected ? "Site conditions detected" : "No site conditions detected"}
-        </span>
-        <span className="rh-line2 tr-step">{`of ${head.total} checked`}</span>
+    <nav className="ns-strip" aria-label="Next steps">
+      {/* Spec 16: the header voice ("01 SETUP") — the section role. */}
+      <div className="ns-label tr-section">NEXT — 3 STEPS</div>
+      <div className="ns-chips">
+        {chips.map((c) => (
+          <Chip key={c.index} chip={c} />
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function Chip({ chip }: { chip: ChipView }) {
+  // Spec 17, in order: index · glyph · name · count.  The index and the
+  // count ride the step role, the name the field role; the glyph cell
+  // is the one chosen size (11px, lib/design/type-exceptions.ts).
+  return (
+    <a
+      className={`ns-chip is-${chip.state}`}
+      data-read=""
+      href={`#${chip.anchor}`}
+      aria-disabled={chip.inert ? "true" : undefined}
+      tabIndex={chip.inert ? -1 : undefined}
+      onClick={(e) => {
+        e.preventDefault();
+        if (chip.inert) return;
+        jumpToAnchor(chip.anchor);
+      }}
+    >
+      <span className="ns-index tr-step">{chip.index}</span>
+      <span className="ns-glyph" aria-hidden="true">
+        {chip.glyph}
       </span>
-      <a
-        className="tr-signpost rh-link"
-        data-read=""
-        href={`#${SITE_CORRECTIONS_ANCHOR}`}
-        onClick={(e) => {
-          e.preventDefault();
-          jumpToAnchor(SITE_CORRECTIONS_ANCHOR);
-        }}
-      >
-        correct in setup ↑
-      </a>
-    </div>
+      <span className="ns-name tr-field">{chip.name}</span>
+      <span className="ns-count tr-step">
+        {chip.numeral !== null ? (
+          <>
+            <b className="ns-num">{chip.numeral}</b> {chip.rest}
+          </>
+        ) : chip.state === "none" ? (
+          `◌ ${chip.rest}`
+        ) : (
+          chip.rest
+        )}
+      </span>
+    </a>
   );
 }

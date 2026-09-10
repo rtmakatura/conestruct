@@ -1,15 +1,18 @@
 // @vitest-environment happy-dom
 //
-// #249 + #247 + #246 (+ #252) — the results-head slot, one derived state
-// rendered by one component.  While a fetch for the generated scenario
-// is in flight the slot is EMPTY and the working band is the voice
-// (#252 retired the #247 wait line that rendered here).  Once the scan
-// settles and RAN: the count lockup — figure, "Site conditions detected / No site
-// conditions detected", "of N checked" over the keyed buckets on the
-// wire, and the jump to the strip's correction block (#246).  Every
-// other scan state renders nothing here: that state's own container is
-// the voice (rule 10).  The states never co-render.  Mounted through the
-// real shell and the real SetupStrip.
+// #253 (was #249 + #247 + #246, + #252 + #240) — the results-head slot,
+// one derived state rendered by one component.  While the FIRST answer
+// for the generated scenario is in flight the slot is reserved and EMPTY
+// and the working band is the voice (#252 retired the #247 wait line).
+// Once a plan LANDS: the next-steps strip — three chips with server
+// counts (chip 1 over the keyed buckets on the wire, chip 2 the pending
+// count, chip 3 the zip's parts) and their anchors — REPLACING the #249
+// lockup (GO conflict 1: one field, one surface).  A scan that did not
+// run renders chip 1 as ◌ NOT SCANNED (a declared change from the
+// lockup's null); a declined plan renders no strip (spec 31: the refusal
+// container is the voice).  Under the band the strip stays mounted with
+// its last confirmed counts.  Mounted through the real shell and the
+// real SetupStrip.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -186,96 +189,126 @@ async function generate() {
 // #252: the in-flight voice is the band; the slot itself has one state.
 const band = () => document.querySelector(".working-band");
 const waitLine = () => document.querySelector(".results-head-wait");
-const lockup = () => document.querySelector(".results-head-lockup") as HTMLElement | null;
-const slotStates = () => document.querySelectorAll(".results-head-wait, .results-head-lockup");
-function expectLockup(count: number, total: number) {
-  const l = lockup();
-  expect(l, "lockup present").not.toBeNull();
-  const figure = l!.querySelector(".rh-figure")!;
-  expect(figure.textContent).toBe(String(count));
-  expect(figure.classList.contains(count > 0 ? "rh-detected" : "rh-none")).toBe(true);
-  expect(within(l!).getByText(count > 0 ? "Site conditions detected" : "No site conditions detected")).toBeTruthy();
-  expect(within(l!).getByText(`of ${total} checked`)).toBeTruthy();
-  expect(within(l!).getByRole("link", { name: "correct in setup ↑" })).toBeTruthy();
-  // Rule 12: no number word, no literal five outside the counted total.
-  expect(l!.textContent).not.toMatch(/five/i);
-  return l!;
+const lockup = () => document.querySelector(".results-head-lockup");
+const strip = () => document.querySelector(".ns-strip") as HTMLElement | null;
+const slot = () => document.querySelector(".results-head-slot");
+const chips = () => Array.from(document.querySelectorAll(".ns-strip .ns-chip")) as HTMLAnchorElement[];
+const count = (a: Element) => a.querySelector(".ns-count")!.textContent!.replace(/\s+/g, " ").trim();
+/** The strip with its three counts, in order, and the invariants every
+ *  render carries: three chips, the names, the anchors, no "five", no
+ *  "done" (rule 12 / spec 9). */
+function expectStrip(site: string, pending: string, files: string) {
+  const s = strip();
+  expect(s, "strip present").not.toBeNull();
+  expect(lockup(), "the #249 lockup is deleted").toBeNull();
+  const c = chips();
+  expect(c).toHaveLength(3);
+  expect(c.map(count)).toEqual([site, pending, files]);
+  expect(c.map((a) => a.querySelector(".ns-name")!.textContent)).toEqual(["Site conditions", "Pending items", "Download"]);
+  expect(c.map((a) => a.querySelector(".ns-index")!.textContent)).toEqual(["01", "02", "03"]);
+  expect(c.map((a) => a.getAttribute("href"))).toEqual(["#site-corrections", "#reference", "#downloads"]);
+  expect(c.every((a) => a.hasAttribute("data-read"))).toBe(true);
+  expect(within(s!).getByText("NEXT — 3 STEPS")).toBeTruthy();
+  expect(s!.textContent).not.toMatch(/five|\bdone\b|\bcomplete\b|NOT YET EVALUATED/i);
+  return s!;
 }
+const glyphs = () => chips().map((a) => a.querySelector(".ns-glyph")!.textContent);
 
-describe("#249 + #247 + #246 — the results-head slot", () => {
-  it("#246/#249: the lockup names the settled scan's detected count over the keyed buckets served and jumps to the strip's block (scroll + focus by id)", async () => {
+describe("#253 — the results-head slot: the next-steps strip", () => {
+  it("#253: the strip names the settled scan's open count over the keyed buckets served, the pending count and the zip's parts; the chips jump to the block, the Reference zone and the downloads anchor (scroll + focus by id)", async () => {
     served = audit(BUCKETS_DETECTED);
     const user = await generate();
-    // Two of the five keyed buckets detected; the keyless hospital is neither counted nor totalled.
-    const l = expectLockup(2, 5);
+    // Two of the five keyed buckets detected and uncorrected; the keyless hospital is neither counted nor totalled.
+    const s = expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
+    expect(glyphs()).toEqual(["▲", "✓", "✓"]);
+    expect(chips().map((a) => a.className)).toEqual(["ns-chip is-open", "ns-chip is-clear", "ns-chip is-ready"]);
+    // The numeral is the count register's orange only where a number is generated.
+    expect(chips().map((a) => a.querySelector(".ns-num")?.textContent ?? null)).toEqual(["2", null, "4"]);
     expect(waitLine()).toBeNull();
     const block = document.getElementById("site-corrections");
     expect(block, "the strip block is mounted with the anchor id").not.toBeNull();
     expect(block!.textContent).toContain("Site conditions — scanned");
-    // Lockup order: figure → labels (line 1 then line 2) → link (spec 54).
-    expect(Array.from(l.children).map((k) => k.className.split(" ")[0])).toEqual(["rh-figure", "rh-labels", "tr-signpost"]);
+    // Chip order inside: index → glyph → name → count (spec 17).
+    expect(Array.from(chips()[0].children).map((k) => k.className.split(" ")[0])).toEqual(["ns-index", "ns-glyph", "ns-name", "ns-count"]);
+    expect(s.getAttribute("aria-label")).toBe("Next steps");
     scrolled.length = 0; // drop the #152 E post-generate scroll to the results zone
-    await user.click(screen.getByRole("link", { name: "correct in setup ↑" }));
+    await user.click(chips()[0]);
     expect(scrolled).toEqual([block]);
     expect(document.activeElement).toBe(block);
+    // Chip 2 → the Reference zone; chip 3 → the shell-level downloads anchor.
+    scrolled.length = 0;
+    await user.click(chips()[1]);
+    const reference = document.getElementById("reference")!;
+    expect(reference.classList.contains("zone")).toBe(true);
+    expect(scrolled).toEqual([reference]);
+    expect(document.activeElement).toBe(reference);
+    scrolled.length = 0;
+    await user.click(chips()[2]);
+    const downloads = document.getElementById("downloads")!;
+    expect(downloads.classList.contains("jump-anchor")).toBe(true);
+    expect(downloads.classList.contains("ns-below")).toBe(true);
+    expect(scrolled).toEqual([downloads]);
   });
 
-  it("#249 (GO ruling d, a stated change from arc-19/20): zero detected still renders — 0 · No site conditions detected · of 5 checked", async () => {
+  it("#253 spec 28: zero detected renders ✓ 0 OPEN/5 — the chip stays, no chip is dropped", async () => {
     served = audit(BUCKETS_NONE);
     await generate();
     expect(document.getElementById("site-corrections")).not.toBeNull();
-    expectLockup(0, 5);
+    expectStrip("0 OPEN/5", "0 OPEN", "4 FILES READY");
+    expect(glyphs()).toEqual(["✓", "✓", "✓"]);
     expect(waitLine()).toBeNull();
-    expect(slotStates()).toHaveLength(1);
   });
 
-  it("#249 rule 12: the total is the keyed buckets ON THE WIRE — three served ⇒ of 3 checked", async () => {
+  it("#253 rule 12: the total is the keyed buckets ON THE WIRE — three served ⇒ 1 OPEN/3", async () => {
     served = audit(BUCKETS_THREE);
     await generate();
-    expectLockup(1, 3);
+    expectStrip("1 OPEN/3", "0 OPEN", "4 FILES READY");
     // The block shows the same three rows (a bucket missing from the wire renders no row).
     expect(document.querySelectorAll("#site-corrections .site-correction-row")).toHaveLength(3);
   });
 
-  it("#249 rule 10: not_run, a proceeded outage, and a refused scan render NO lockup — each state's own container is the voice", async () => {
-    // not_run: nothing was checked; no block exists to correct.
+  it("#253: the pending count is pending_verification.count — 3 renders ▲ 3 OPEN", async () => {
+    served = { ...audit(BUCKETS_DETECTED), pending_verification: { count: 3, note: "x", tracking_issue: null } };
+    await generate();
+    expectStrip("2 OPEN/5", "3 OPEN", "4 FILES READY");
+    expect(glyphs()[1]).toBe("▲");
+  });
+
+  it("#253 rule 10 (declared change from the lockup's null): not_run and a proceeded outage render ◌ NOT SCANNED with the link live; a refused scan renders NO strip — the refusal container is the voice", async () => {
+    // not_run: nothing was checked; the chip says so and its link leads to the block that explains why.
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
     await generate();
-    expect(lockup()).toBeNull();
+    expectStrip("◌ NOT SCANNED", "0 OPEN", "4 FILES READY");
+    expect(glyphs()[0]).toBe("◌");
+    expect(chips()[0].getAttribute("aria-disabled")).toBeNull();
     expect(waitLine()).toBeNull();
-    expect(document.getElementById("site-corrections")).toBeNull();
     cleanup();
-    // unavailable + proceeded: the strip's NOT CHECKED container speaks.
+    // unavailable + proceeded: the strip's NOT CHECKED container speaks for the outage; the chip states the same fact.
     served = auditWithScan({ ...SCAN_UNAVAILABLE, proceeded_anyway: true, disclosure: DISCLOSURE });
     await generate();
-    expect(lockup()).toBeNull();
-    expect(waitLine()).toBeNull();
+    expectStrip("◌ NOT SCANNED", "0 OPEN", "4 FILES READY");
     expect(document.querySelector(".site-not-checked")).not.toBeNull();
     expect(screen.getByText(DISCLOSURE)).toBeTruthy();
     cleanup();
-    // refused (400 site_scan_unavailable): the refusal container speaks.
+    // refused (400 site_scan_unavailable): no plan landed — no strip, no slot.
     auditRefuses = true;
     await generate();
-    expect(lockup()).toBeNull();
-    expect(waitLine()).toBeNull();
+    expect(strip()).toBeNull();
+    expect(slot()).toBeNull();
     expect(document.querySelector(".scan-refusal")).not.toBeNull();
     expect(screen.getByText(REFUSAL_MESSAGE)).toBeTruthy();
   });
 
-  it("#252 (was #247): while the generated scenario's audit is in flight the slot is empty and the band is up; the lockup lands on settle", async () => {
+  it("#252 (was #247): while the generated scenario's audit is in flight the slot is reserved and empty and the band is up; the strip lands on settle, inside the slot", async () => {
     // Pre-generate the audit runs WITHOUT the scan (withSiteScan applies
     // only once generated): its provenance is not_run.
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
-    // Before Generate nothing is in the slot and no band, even with
-    // fetches in flight (pre-generate is exempt: it would lock typing).
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     expect(waitLine()).toBeNull();
-    expect(lockup()).toBeNull();
+    expect(strip()).toBeNull();
+    expect(slot()).toBeNull();
     expect(band()).toBeNull();
-    // Generate with the audit held pending: the breakdown settles (the
-    // landing fires), the scan has not answered — the band is up, the
-    // slot holds nothing, no wait line anywhere.
     served = audit(BUCKETS_DETECTED);
     const held = gate(served);
     auditGate = held;
@@ -284,23 +317,24 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     await settle();
     expect(band(), "band present while the audit is pending").not.toBeNull();
     expect(waitLine()).toBeNull();
-    expect(slotStates()).toHaveLength(0);
-    expect(lockup()).toBeNull();
-    // First generate: the only held scan is the pre-generate not_run —
-    // nothing to hold, the block is absent (spec 34 holds a scan that
-    // RAN; see the Assert case below).
+    // No answer has landed for the generated scenario: the pre-generate
+    // not_run answer is NOT shown as this plan's (rule 10) — the slot is
+    // reserved, empty.
+    expect(strip()).toBeNull();
+    expect(slot()).not.toBeNull();
+    expect(slot()!.children).toHaveLength(0);
     expect(document.getElementById("site-corrections")).toBeNull();
-    // Release the audit: the band goes, the lockup arrives.
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    expectLockup(2, 5);
+    const s = expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
+    expect(s.parentElement).toBe(slot());
     expect(document.getElementById("site-corrections")).not.toBeNull();
   });
 
-  it("#252 (was #247): a pending breakdown also keeps the band up and the slot empty — the lockup never renders alongside an open request", async () => {
+  it("#252 (was #247): a pending breakdown also keeps the band up and the slot empty — the strip never renders before the pair has settled", async () => {
     served = audit(BUCKETS_DETECTED);
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -312,28 +346,24 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     // The audit answered (the block is up) but generation is still computing.
     expect(document.getElementById("site-corrections")).not.toBeNull();
     expect(band()).not.toBeNull();
-    expect(lockup()).toBeNull();
-    expect(slotStates()).toHaveLength(0);
+    expect(strip()).toBeNull();
+    expect(slot()!.children).toHaveLength(0);
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    expect(lockup()).not.toBeNull();
-    expect(slotStates()).toHaveLength(1);
+    expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
   });
 
   // #240 (P1): the slot's room is reserved from the moment the lifecycle
-  // leaves "pre" — the lockup lands at the settle into height already
-  // allocated (`.results-head-slot`, min-height --strip-h), so the plan
-  // below it does not move at the settle.  Released only under a
-  // declined plan (the refusal container is the voice; no lockup will
-  // come).  Pre-generate: nothing, not even the empty slot.
-  it("#240: the results-head slot is reserved from Generate, holds the lockup at the settle, and is absent pre-generate and under a declined plan", async () => {
+  // leaves "pre" — the strip lands at the settle into height already
+  // allocated (`.results-head-slot`, min-height --strip-h).  Released
+  // only under a declined plan.  Pre-generate: nothing, not even the slot.
+  it("#240: the results-head slot is reserved from Generate, holds the strip at the settle, and is absent pre-generate and under a declined plan", async () => {
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
-    const slot = () => document.querySelector(".results-head-slot");
     expect(slot()).toBeNull();
     served = audit(BUCKETS_DETECTED);
     const held = gate(served);
@@ -341,7 +371,6 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
-    // In flight: the slot is mounted and empty (the band is the voice).
     expect(slot(), "slot reserved while the audit is pending").not.toBeNull();
     expect(slot()!.children).toHaveLength(0);
     expect(band()).not.toBeNull();
@@ -349,32 +378,30 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
       held.release();
     });
     await settle();
-    // Settled: the lockup sits INSIDE the slot — one element, same room.
     expect(slot()).not.toBeNull();
-    expect(lockup()!.parentElement).toBe(slot());
+    expect(strip()!.parentElement).toBe(slot());
     expect(document.querySelectorAll(".results-head-slot")).toHaveLength(1);
     cleanup();
-    // Declined: no slot — the refusal container owns the zone's head.
     auditGate = null; // the released gate would otherwise keep answering ok
     auditRefuses = true;
     await generate();
     expect(document.querySelector(".scan-refusal")).not.toBeNull();
     expect(slot()).toBeNull();
-    expect(lockup()).toBeNull();
+    expect(strip()).toBeNull();
   });
 
   // Spec 34 (#249): a correction re-generates the plan; while that
-  // re-generation is in flight the block stays MOUNTED (arc-20
-  // unmounted it: the stamped view nulls mid-refetch) with every button
-  // disabled, and the band is up naming the correction (#252) — one
-  // derivation, two surfaces.
-  it("#249 spec 34 + #252: after Assert the block stays mounted and fully disabled while the re-generation is in flight, the band names the correction; it re-enables on settle", async () => {
+  // re-generation is in flight the block stays MOUNTED with every button
+  // disabled, the band is up naming the correction (#252) and the strip
+  // stays mounted with its last confirmed counts (#253 spec 21-22: the
+  // chips dim under the lock, the counts never tick).
+  it("#249 spec 34 + #252 + #253: after Assert → Apply the block stays mounted and disabled, the band names the correction, the strip holds its counts under the lock; on settle the record lands and the counts are the server's", async () => {
     served = audit(BUCKETS_DETECTED);
     const user = await generate();
     const block = () => document.getElementById("site-corrections");
     expect(block()).not.toBeNull();
     expect(block()!.getAttribute("aria-busy")).toBeNull();
-    // Hold the NEXT audit; the served answer after release carries the record.
+    expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
     const asserted = {
       flag: "school_zone",
       action: "assert",
@@ -389,12 +416,13 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     const school = within(block()!).getByText("School zone").closest(".site-correction-row") as HTMLElement;
     await user.click(within(school).getByRole("button", { name: "Assert" }));
     await settle();
-    // #254: staged, nothing in flight yet; Apply opens the request.
+    // #254: staged, nothing in flight yet — the chip APPENDS the staged count, never subtracts (open stays the server's 2).
     expect(band()).toBeNull();
     expect(block()!.getAttribute("aria-busy")).toBeNull();
+    expectStrip("2 OPEN/5 · 1 STAGED", "0 OPEN", "4 FILES READY");
     await user.click(within(block()!).getByRole("button", { name: "Apply 1 correction" }));
     await settle();
-    // In flight: block mounted on the held scan, aria-busy, every button disabled; band up, no lockup.
+    // In flight: block mounted on the held scan, aria-busy, every button disabled; band up.
     expect(block(), "block stays mounted mid re-generation").not.toBeNull();
     expect(block()!.getAttribute("aria-busy")).toBe("true");
     const buttons = Array.from(block()!.querySelectorAll("button")) as HTMLButtonElement[];
@@ -405,20 +433,22 @@ describe("#249 + #247 + #246 — the results-head slot", () => {
     expect(band()!.querySelector(".wb-object")!.textContent).toBe("after a correction to School zone");
     expect(band()!.querySelector(".wb-named")!.textContent).toBe("School zone");
     expect(waitLine()).toBeNull();
-    expect(lockup()).toBeNull();
-    // Release: the record replaces the row, buttons re-enable, the lockup returns.
+    // #253 spec 21-22: the strip stays mounted under the lock with the last confirmed counts — never a placeholder, never a tick.
+    expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(true);
+    expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
+    expect(chips().every((a) => a.hasAttribute("data-read") && a.getAttribute("aria-disabled") === null)).toBe(true);
+    // Release: the record replaces the row, buttons re-enable, the counts are the served answer's.
     await act(async () => {
       held.release();
     });
     await settle();
     expect(block()!.getAttribute("aria-busy")).toBeNull();
     expect(within(block()!).getByText(asserted.disclosure)).toBeTruthy();
-    // (Apply stays disabled at zero staged — by its title, not the flight.)
     const after = Array.from(block()!.querySelectorAll("button:not(.confirm)")) as HTMLButtonElement[];
     expect(after.some((b) => b.disabled)).toBe(false);
     expect((within(block()!).getByRole("button", { name: "Apply 0 corrections" }) as HTMLButtonElement).disabled).toBe(true);
     expect(within(block()!).getByRole("button", { name: "Undo" })).toBeTruthy();
     expect(band()).toBeNull();
-    expectLockup(2, 5);
+    expectStrip("2 OPEN/5", "0 OPEN", "4 FILES READY");
   });
 });

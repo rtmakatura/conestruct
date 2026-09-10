@@ -69,7 +69,7 @@ export const CSS_DECORATIVE: readonly CssLiteral[] = [
 /** `#fff` literals inside other buckets' globals.css ranges.  Not D's
  *  to edit; each owner swaps to var(--ink-bright) and deletes its row. */
 export const CSS_OWNER_SWAPS: readonly OwnerSwap[] = [
-  { selector: ".workbench .zone-title", hex: "#fff", owner: "B (#260)" },
+  // B's `.workbench .zone-title` row: swapped to var(--ink-bright) in #253 commit 7.
   {
     selector: ".workbench .jbar-suggest .site-correction-note",
     hex: "#fff",

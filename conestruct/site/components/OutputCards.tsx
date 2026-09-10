@@ -5,7 +5,6 @@ import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
 import type { AuditSummary } from "@/lib/render-types";
 import { stampMatches } from "@/lib/answer-stamp";
-import { BUNDLE_PART_KINDS } from "@/lib/render-types";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
 
@@ -226,13 +225,13 @@ export function OutputCards({
     <div className="mb-4">
       <div className="flex items-center justify-between gap-4 px-1 pb-3">
         <div>
-          {/* File count derives from the actual zip contents
-              (BUNDLE_PART_KINDS), not the visible card count: the bundle
-              also carries quote.xlsx, which lives in the pricing card
-              below rather than in this grid.  "3 FILES" beside a button
-              that downloads 4 would be a false label. */}
+          {/* #253 (GO 2026-09-09 ruling 2, one voice): the file count is
+              stated ONCE, by the next-steps strip's chip 3 ("4 FILES
+              READY", from BUNDLE_PART_KINDS — the zip's parts, which
+              include quote.xlsx from the pricing card below).  The
+              caption no longer repeats the numeral. */}
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-            MHT PACKAGE · {BUNDLE_PART_KINDS.length} FILES
+            MHT PACKAGE
           </div>
         </div>
         {mode.kind === "public" && onDownloadAll && (

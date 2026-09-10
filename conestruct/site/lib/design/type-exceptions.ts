@@ -74,16 +74,8 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { file: "components/GeneratorShell.tsx", cls: "text-[28px]", count: 1 },
     ],
   },
-  {
-    name: "results-head figure",
-    sizes: ["24px"],
-    reason:
-      "the detected-count figure in the results-head lockup (CHOSEN, arc 20)",
-    css: [
-      { selector: ".workbench .results-head-lockup .rh-figure", size: "24px" },
-    ],
-    tsx: [],
-  },
+  // "results-head figure" (24px) left with the #249 lockup — #253 conflict
+  // 1 ruled the next-steps strip REPLACES it (one field, one surface).
   {
     name: "zone h2",
     sizes: ["20px", "17px"],
@@ -224,6 +216,12 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .hero-meta .caseid", size: "12px" },
       { selector: ".workbench .hero-meta .row", size: "11.5px" },
     ],
+    tsx: [],
+  },
+  {
+    owner:
+      "B — the next-steps strip (#253): the glyph cell's 11px is the one size CHOSEN per spec 17 (a glyph, not text; the label, index, name and count ride .tr-section / .tr-step / .tr-field)",
+    css: [{ selector: ".workbench .ns-glyph", size: "11px" }],
     tsx: [],
   },
   {
@@ -391,8 +389,11 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
  *  by the test and asserted equal to these, so the report cannot drift
  *  from the code. `.tr-*` role blocks are counted in cssDeclarations. */
 export const CENSUS_PINS = {
+  // #253 on top of C's fold: the lockup's 24px declaration left (−1), the
+  // strip's glyph 11px arrived (+1, a size already in the sheet) → 102
+  // declarations, 19 sizes; C's Tailwind figures unchanged.
   cssDeclarations: 102,
-  cssSizes: 20,
+  cssSizes: 19,
   tsxSites: 107,
   tsxUses: 322,
   tsxFiles: 37,

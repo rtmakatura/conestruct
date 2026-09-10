@@ -43,7 +43,8 @@ import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
-import { ResultsHead, type ResultsHeadState } from "./ResultsHead";
+import { ResultsHead } from "./ResultsHead";
+import { deriveNextSteps } from "@/lib/next-steps";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -66,41 +67,6 @@ import type {
 } from "@/lib/jurisdiction";
 
 type Mode = "sandbox" | "workbench";
-
-// #249 + #247 + #246 — the results-head slot's state, DERIVED here and
-// rendered verbatim by <ResultsHead> (the deriveRail idiom: one
-// derivation, one voice).  Null while any fetch for the GENERATED
-// scenario is in flight — the breakdown (genState "generating") or the
-// audit (the stamped view still loading): #252 retired the wait line
-// that rendered here (#247); the working band is the one working voice
-// and this slot says nothing until the answer lands.  ``scanned``
-// from the SETTLED scan (the stamped view, same section the strip block
-// and section 03 read) when it RAN (status ok): the detected count over
-// the keyed buckets present on the wire — ``total`` is counted, never
-// the mirror's length (rule 12; a bucket missing from the wire renders
-// no row, rule 10).  0 detected now renders (GO ruling d: "0 · No site
-// conditions detected · of N checked" — a stated change from arc-19/20's
-// "0 ⇒ null").  Every other scan state is null: a refused scan (the
-// refusal container owns it), a proceeded outage (the strip's NOT
-// CHECKED container owns it), not_run (nothing was checked; no block to
-// correct), an audit error.  Pre-generate: null.
-export function deriveResultsHead(args: {
-  generated: boolean;
-  genState: "pre" | "generating" | "post" | "error";
-  stripAudit: AuditState;
-}): ResultsHeadState | null {
-  const { generated, genState, stripAudit } = args;
-  if (!generated) return null;
-  if (genState === "generating" || stripAudit.state !== "ready") return null;
-  const scan = stripAudit.data.sections?.site_scan as SiteScanProvenance | undefined;
-  if (!scan || scan.status !== "ok") return null;
-  const buckets = (scan.buckets as Record<string, ScanBucketWire> | undefined) ?? {};
-  const keyed = SCAN_BUCKET_TO_FLAG.filter(([b]) => Boolean(buckets[b]));
-  // Nothing keyed on the wire: nothing to count, nothing to say.
-  if (keyed.length === 0) return null;
-  const count = keyed.filter(([b]) => buckets[b].detected === true).length;
-  return { kind: "scanned", count, total: keyed.length };
-}
 
 // #250 (a) — the landing check.  The post-generate ``scrollIntoView``
 // lands the results zone at its scroll-margin-top only if nothing moves
@@ -413,6 +379,11 @@ export function GeneratorShell({
   // staging opens no request; Apply folds the set into one setScenario.
   // Reopen clears it (the block unmounts; the intents' subject is gone).
   const [staged, setStaged] = useState<StagedCorrection[]>([]);
+  // #253: an answer for the GENERATED scenario has settled since the
+  // Generate click — the next-steps strip renders only after it (rule
+  // 10: the pre-generate answer is never shown as this plan's).  Cleared
+  // at the click, set at the pair's settle (the announcement effect).
+  const [landed, setLanded] = useState(false);
   const wireScenario = useMemo(
     () =>
       generated ? withSiteScan(scenario, proceedFor === scenario) : scenario,
@@ -801,6 +772,7 @@ export function GeneratorShell({
     scrollPendingRef.current = true;
     announcePendingRef.current = true;
     setGenAnnouncement("");
+    setLanded(false);
     // #224 phase 2: a proceed-anyway acknowledgement is never remembered
     // across a fresh Generate (suggest-never-set).
     setProceedFor(null);
@@ -1049,6 +1021,8 @@ export function GeneratorShell({
     if (!announcePendingRef.current) return;
     if (genState === "generating" || !auditSettled) return;
     announcePendingRef.current = false;
+    // #253: the pair has settled since the click — the strip may render.
+    setLanded(true);
     // #250 (a): the pair's settle — the verdict re-mounts into its slot;
     // one more landing check, still under the one-re-issue cap.
     landingRef.current?.settle();
@@ -1119,11 +1093,17 @@ export function GeneratorShell({
       : null;
   // The refused scan's provenance, from the STAMPED audit view (so a
   // stale refusal for an edited input never renders as current).
-  // #247 + #246 — the results-head slot (wait line / detected count /
-  // nothing), derived once; see deriveResultsHead above.  The strip
-  // block still offers Assert on every absent row, reached from the
-  // section 03 signposts.
-  const resultsHead = deriveResultsHead({ generated, genState, stripAudit });
+  // #253 — the results-head slot's next-steps strip, derived once
+  // (lib/next-steps.ts): null until a plan lands, under the band the
+  // last confirmed answer; chip 3 reads the breakdown's error state.
+  const nextSteps = deriveNextSteps({
+    generated,
+    landed,
+    planDeclined,
+    stripAudit,
+    breakdownError: genState === "error",
+    staged,
+  });
   // #252 — ONE in-flight derivation for the generated scenario: a
   // request for it is open while the breakdown is loading or the
   // stamped audit view is (the deferred debounce window included, as
@@ -1469,7 +1449,7 @@ export function GeneratorShell({
             {/* #240: the slot's room is reserved from the Generate click
                 (P1) and released only under a declined plan. */}
             <ResultsHead
-              head={resultsHead}
+              steps={nextSteps}
               reserve={genState !== "pre" && !planDeclined}
             />
             {scanRefusal && (
@@ -1591,23 +1571,33 @@ export function GeneratorShell({
                     jurisdiction={jurisdictionBlock}
                   />
                 )}
-                <OutputCards
-                  summary={summary}
-                  generated={resultsVisible}
-                  declined={planDeclined}
-                  mode={
-                    mode === "sandbox"
-                      ? { kind: "public", scenario: wireScenario }
-                      : { kind: "saved", planId, dirty: planDirty }
-                  }
-                  breakdown={deviceBreakdown}
-                  // Zone 2's "All (.zip)" is the bundle download — the
-                  // former Generate side effect, same endpoint and
-                  // { scenario, settings } body, explicit trigger.
-                  onDownloadAll={onDownloadBundle}
-                  bundling={bundling}
-                  auditChecked={auditChecked}
-                />
+                {/* #253: chip 3's target — a shell-level anchor around the
+                    cards; ``ns-below`` budgets the pinned strip in its
+                    scroll margin (--pin-h: --strip-h).  tabIndex -1: the
+                    jump focuses it (#193), never in the Tab order. */}
+                <div
+                  id="downloads"
+                  className="jump-anchor ns-below outline-none"
+                  tabIndex={-1}
+                >
+                  <OutputCards
+                    summary={summary}
+                    generated={resultsVisible}
+                    declined={planDeclined}
+                    mode={
+                      mode === "sandbox"
+                        ? { kind: "public", scenario: wireScenario }
+                        : { kind: "saved", planId, dirty: planDirty }
+                    }
+                    breakdown={deviceBreakdown}
+                    // Zone 2's "All (.zip)" is the bundle download — the
+                    // former Generate side effect, same endpoint and
+                    // { scenario, settings } body, explicit trigger.
+                    onDownloadAll={onDownloadBundle}
+                    bundling={bundling}
+                    auditChecked={auditChecked}
+                  />
+                </div>
                 {resultsVisible && (
                   <PricingCard
                     mode={
@@ -1661,7 +1651,13 @@ export function GeneratorShell({
             Boolean(scenario.jurisdiction_key) ||
             showResults ||
             auditState.state === "error") && (
-            <section className="zone">
+            // #253: chip 2's target (C may add a finer #pending-items
+            // inside).  tabIndex -1: the jump focuses it (#193).
+            <section
+              id="reference"
+              tabIndex={-1}
+              className="zone jump-anchor outline-none"
+            >
               <div className="zone-head">
                 <span className="zone-tag">
                   <span className="n">03</span>Reference
