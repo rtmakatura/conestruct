@@ -1,0 +1,74 @@
+[
+ {
+  "tag": "380x800",
+  "id": "C1 four cards",
+  "ok": true,
+  "detail": "4 cards [Plan sheet, Device list, Crew instructions, Audit trail]; header \"MHT PACKAGE · 4 FILES\"; h3 4, h4 0; qty [\"37 devices\", \"11 types\", \"11 steps\", \"13 checks\"] | 380x800-cards.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C2 stacked, 44 px",
+  "ok": true,
+  "detail": "stacked true; row bottom-anchored true (card bottom − 16 vs row bottom: 1878/1877, 2047/2046, 2217/2216, 2387/2386); rows last true; crew side by side true; heights [44, 44, 44, 44, 44] ≥ 44; widths [332, 332, 332, 332]"
+ },
+ {
+  "tag": "380x800",
+  "id": "C2 buttons live",
+  "ok": true,
+  "detail": "disabled: false, false, false/false, false; classes one: true"
+ },
+ {
+  "tag": "380x800",
+  "id": "C3 audit PDF via the card",
+  "ok": true,
+  "detail": "download \"plan.audit.pdf\"; band objects in flight [\"audit PDF\"] (band seen true); button live after true"
+ },
+ {
+  "tag": "380x800",
+  "id": "C4 one heading, no ledger",
+  "ok": true,
+  "detail": "headings inside 0; zone h2 [\"Rules, permit & audit\"]; section <DIV> \"Plan reference\"; ledger el false copy false checking false suffix false; cue \"\" h 15 (min 15px, lh 15px); audit link in tier false; chips Changed this plan=1, Needs attention=2, Checked & passed=13, Pending / not verified=1, Reference=null | 380x800-zone3.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C7 contrast",
+  "ok": true,
+  "detail": "tr-section #ffffff/#14202e 16.46 10px/500; tr-prov #93a0b0/#14202e 6.19 10px"
+ },
+ {
+  "tag": "380x800",
+  "id": "C5 axe heading-order",
+  "ok": true,
+  "detail": "heading-order nodes: none"
+ },
+ {
+  "tag": "380x800",
+  "id": "C5 axe baseline",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "C6 strip rows wrap under the label",
+  "ok": true,
+  "detail": "4 row(s): \"FIX INPUTS\" srcTop 497 lblTop 467 cols \"24px 266px\" ; \"OSM GROUND-TRUTH (SOFT CHECK)\" srcTop 695 lblTop 530 cols \"24px 266px\" ; \"CDOT S-630-1\" srcTop 780 lblTop 728 cols \"24px 266px\" ; \"MANUAL HANDLING\" srcTop 866 lblTop 813 cols \"24px 266px\" | 380x800-flags.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C6 longest annotation equals the 197 px gutter",
+  "ok": true,
+  "detail": "\"OSM GROUND-TRUTH (SOFT CHECK)\" natural width 197 px (rect 197) at 10px — gutter 197 px, pinned at the measurement by ruling"
+ },
+ {
+  "tag": "380x800",
+  "id": "C6 section-03 rows wrap under the label",
+  "ok": true,
+  "detail": "4 list(s), 13 row(s); under-label 13/13 | 380x800-s3-rows.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "C8 refresh cue",
+  "ok": true,
+  "detail": "cues seen in flight [\"◌ previous answer — refreshing…\"]; band objects [\"after an edit to speed\"]; settled 4725 ms (6267 ms total); after: cue \"\" h 15"
+ }
+]

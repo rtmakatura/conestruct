@@ -164,6 +164,30 @@ Rulings taken at the rebase, one commit on top:
 - **D's type census:** `type-exceptions.ts` — `.dl-card h4` row → `.dl-card h3`; the `.tier-ledger` 11 px row deleted; TieredReference's `text-[10px]` ×1 and `text-[20px]` ×1 rows deleted, `text-[11px]` 4 → 3; `CENSUS_PINS` 103 → 102 CSS declarations, 109 → 107 Tailwind sites, 325 → 322 uses (`type-census.test.ts` red by name → green).
 - The two CSS-rule tests this arc wrote read `globals.css` CRLF-normalised (a Windows checkout must read like CI's).
 
+## Prod run at e6982cd (`outProd-e6982cd/`, `outProd-e6982cd-380-run2/`)
+
+Ship: healthz **`e6982cd860eb7de6e5d0e3765a89b32a96b2021a` == `git rev-parse HEAD` == origin/main** (B1 PASS, first line of both logs). Frontend live before the run: `.dl-actions` present in the served stylesheet `/_next/static/css/5256d71fcb0e0898.css` at **02:52:36Z, poll 1** (A's run had hit a stale Vercel bundle behind Modal; this one did not). Base `https://www.conestruct.com`, Denver pin 39.74507, −104.96347, gutter asserted at the pinned 197. Docs-only branch `s2-arc26-cards-rows-prod` cut from `origin/main` after the ship.
+
+**Run 1 (`outProd-e6982cd/`): 1440 ALL PASS 12/12; 380 C0 FAIL — a finding, not a harness gap.** At 380 the audit settled clean ("VERIFIED · 3 plan flags") but the device-breakdown request failed on the live backend: the ⚠ "Device breakdown failed — values below may be stale…" ribbon stood, and the four cards printed **"not generated"** with every `.dl-btn` disabled (`380x800-declined.png`, `380x800-gen-samples.json`: band seen, 388 samples, no hero). That is #261c's 502 case observed in the wild on the shipped sha, rendering exactly as ruled — the honest word, no "—", the downloads withheld, the ribbon the one voice. The harness's retry covers a scan refusal only; the C0 line now prints the ribbon, the card quantities and the disabled states when it fails, and `VP=` / `PIN=` overrides were added for a one-viewport re-run (Lakewood fallback wired, not needed).
+
+**Run 2 (`outProd-e6982cd-380-run2/`, `VP=380`, Denver again): ALL PASS 12/12.**
+
+| leg | 1440×1000 (run 1) | 380×800 (run 2) |
+|---|---|---|
+| C1 four cards | 4 [Plan sheet, Device list, Crew instructions, Audit trail]; "MHT PACKAGE · 4 FILES"; h3 ×4, h4 0; ["37 devices", "11 types", "11 steps", "13 checks"] | same |
+| C2 one edge | tops **[1241 ×4] spread 0**, bottoms [1281 ×4] spread 0, row bottoms 0, rows last, crew pair 743..855 / 863..975 @ 1241, heights [40 ×5], cards 266 ×4 | stacked; row bottom-anchored (1878/1877, 2047/2046, 2217/2216, 2387/2386); pair side by side; **heights [44 ×5]**; widths 332 ×4 |
+| C2 buttons live | 5/5, one class | same |
+| C3 audit PDF via the card | "plan.audit.pdf" received; band objects **["audit PDF"]**; button live after | same |
+| C4 one heading, no ledger | headings inside 0; zone h2 ["Rules, permit & audit"]; `<DIV class="tr-section">` "Plan reference"; ledger el/copy/checking/suffix all false; cue "" h 15; no tier link; chips 1 · 2 · 13 · 1 | same |
+| C5 axe | heading-order 0; wcag 0 (baseline 0) | heading-order 0; 2 named (baseline 4): `.gap-8`, `.strip-edit-all` |
+| C6 strip dropdown | 4 rows, right **1253 ×4** (spread 0); tracks "24px 829px **197px**"; OSM soft check w 197 | 4 rows, annotation under its label ×4; tracks "24px 266px" |
+| C6 longest annotation | 197 px = the 197 gutter | 197 |
+| C6 section 03 | 4 lists / 13 rows, spread 0, right 1253; max annotation scrollWidth 197 | 13/13 under-label |
+| C7 contrast | tr-section 16.46; tr-prov 6.19 | same |
+| C8 refresh cue | ["◌ previous answer — refreshing…"] in flight; slot "" h 15 after (settle 40.6 s — the live Denver re-scan) | same (settle 4.7 s) |
+
+Local (e363d98, gutter 200) → prod (e6982cd, gutter 197): every figure equal except the gutter track (200 → 197, the ruling) and the card tops (1537 → 1241: B's landing slice moved the context block below Results, so the cards sit 296 px higher on the page — the spread is what the leg pins, and it is 0 both times).
+
 ## Running it
 
 ```

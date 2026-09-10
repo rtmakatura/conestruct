@@ -1,0 +1,182 @@
+[
+ {
+  "list": 1064,
+  "listRight": 1253,
+  "rows": [
+   {
+    "text": "MUTCD § 6C.02",
+    "right": 1253,
+    "left": 1165,
+    "w": 88,
+    "scrollW": 88,
+    "srcTop": -981,
+    "lblTop": -1019,
+    "lblRight": 1048,
+    "cols": "24px 827px 197px",
+    "lines": 4
+   }
+  ]
+ },
+ {
+  "list": 1064,
+  "listRight": 1253,
+  "rows": [
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+    "right": 1253,
+    "left": 1056,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": -803,
+    "lblTop": -798,
+    "lblRight": 1048,
+    "cols": "24px 827px 197px",
+    "lines": 1
+   }
+  ]
+ },
+ {
+  "list": 1066,
+  "listRight": 1253,
+  "rows": [
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+    "right": 1253,
+    "left": 1056,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": -264,
+    "lblTop": -259,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+    "right": 1253,
+    "left": 1056,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": -209,
+    "lblTop": -215,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 2
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+    "right": 1253,
+    "left": 1056,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": -153,
+    "lblTop": -149,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+    "right": 1253,
+    "left": 1056,
+    "w": 197,
+    "scrollW": 197,
+    "srcTop": -104,
+    "lblTop": -100,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   },
+   {
+    "text": "MUTCD § 6N.12 p. 848",
+    "right": 1253,
+    "left": 1117,
+    "w": 136,
+    "scrollW": 136,
+    "srcTop": -18,
+    "lblTop": -55,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 4
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "right": 1253,
+    "left": 1165,
+    "w": 88,
+    "scrollW": 88,
+    "srcTop": 79,
+    "lblTop": 53,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 3
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "right": 1253,
+    "left": 1165,
+    "w": 88,
+    "scrollW": 88,
+    "srcTop": 165,
+    "lblTop": 139,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 3
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "right": 1253,
+    "left": 1165,
+    "w": 88,
+    "scrollW": 88,
+    "srcTop": 251,
+    "lblTop": 224,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 3
+   }
+  ]
+ },
+ {
+  "list": 1066,
+  "listRight": 1253,
+  "rows": [
+   {
+    "text": "REFERENCE",
+    "right": 1253,
+    "left": 1192,
+    "w": 61,
+    "scrollW": 61,
+    "srcTop": 648,
+    "lblTop": 644,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   },
+   {
+    "text": "REFERENCE",
+    "right": 1253,
+    "left": 1192,
+    "w": 61,
+    "scrollW": 61,
+    "srcTop": 687,
+    "lblTop": 684,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   },
+   {
+    "text": "REFERENCE",
+    "right": 1253,
+    "left": 1192,
+    "w": 61,
+    "scrollW": 61,
+    "srcTop": 726,
+    "lblTop": 723,
+    "lblRight": 1048,
+    "cols": "24px 829px 197px",
+    "lines": 1
+   }
+  ]
+ }
+]

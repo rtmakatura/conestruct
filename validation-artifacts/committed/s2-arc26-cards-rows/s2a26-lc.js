@@ -35,6 +35,11 @@ const AXE_NAMED = { "1440x1000": [], "380x800": ["scrollable-region-focusable", 
 const AXE_TARGETS = { "1440x1000": [], "380x800": [".gap-8", 'button[aria-label="Edit Lane W"]', 'button[aria-label="Edit Work zone"]', ".strip-edit-all"] };
 const AXE_BASELINE = { "1440x1000": 0, "380x800": 4 };
 const LONGEST = "OSM GROUND-TRUTH (SOFT CHECK)";
+// Prod-run overrides (2026-09-10): VP=380 runs one viewport; PIN=lat,lng
+// swaps the Denver pin (Lakewood 39.7113,-105.0815 when Denver refuses
+// twice — the run says so in its log).
+const VPS = [{ width: 1440, height: 1000 }, { width: 380, height: 800 }].filter((v) => !process.env.VP || String(v.width) === process.env.VP);
+const PIN = (process.env.PIN || "39.745070,-104.963470").split(",");
 
 // ── in-page probes ──
 const SAMPLE = () => {
@@ -149,15 +154,17 @@ async function generate(page, tag) {
   const sha = await L.shaGate(log, EXPECT);
   log(`B1 healthz ${sha} == ${EXPECT}: PASS · base ${BASE} · frontend ${FRONT}`);
   const browser = await L.chromium.launch();
-  for (const vp of [{ width: 1440, height: 1000 }, { width: 380, height: 800 }]) {
+  log(`pin ${PIN.join(", ")} · viewports ${VPS.map((v) => v.width).join("/")}`);
+  for (const vp of VPS) {
     const tag = `${vp.width}x${vp.height}`;
     const page = await browser.newPage({ viewport: vp, acceptDownloads: true });
     // the #225 reproduction pin: ~50 m off a classified road → the OSM soft check
-    await pin(page, "39.745070", "-104.963470");
+    await pin(page, PIN[0], PIN[1]);
     const gen = await generate(page, tag);
     const settled = await page.evaluate(SAMPLE);
     if (settled.refusal || !settled.hero) {
-      check(tag, "C0 plan", false, `no plan after Generate (+1 retry): refusal ${settled.refusal}, hero ${settled.hero}, strip "${settled.strip}" — the legs below need a plan`);
+      const bd = await page.evaluate(() => ({ ribbon: document.querySelector(".stale-ribbon")?.textContent.trim() ?? null, qty: Array.from(document.querySelectorAll(".dl-card .desc .qty")).map((q) => q.textContent), disabled: Array.from(document.querySelectorAll(".dl-card .dl-btn")).map((b) => b.disabled) }));
+      check(tag, "C0 plan", false, `no plan after Generate (+1 retry): refusal ${settled.refusal}, hero ${settled.hero}, strip "${settled.strip}"; ribbon "${bd.ribbon}"; card qty ${JSON.stringify(bd.qty)}; buttons disabled ${JSON.stringify(bd.disabled)} — the legs below need a plan`);
       await L.shot(page, OUT, `${tag}-declined`); await page.close(); continue;
     }
     info(tag, "C0 plan", `strip "${settled.strip}"; settled ${gen.settledAt} ms; band objects ${JSON.stringify(gen.objects)}`);
