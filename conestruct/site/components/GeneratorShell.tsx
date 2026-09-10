@@ -83,6 +83,24 @@ type Mode = "sandbox" | "workbench";
 // re-mounting into its f2 slot) gets one more check under the same
 // one-re-issue cap: never twice.  Idempotent on the good path — a
 // landing within tolerance issues nothing.
+//
+// #271 — the settle INSIDE the landing scroll.  Arc 26's prod run at
+// ``3fa7d18`` (380x800, 1 of 10) caught the case the one-shot cap was
+// never written for: the memoised pair settled at 705 ms while the
+// smooth landing scroll was still animating.  The settle mounted the
+// corrections block ABOVE the zone (+1296 px of document), Chrome's
+// scroll anchoring held the zone by moving scrollY — and the running
+// smooth scroll then finished to the destination it had computed
+// BEFORE the settle, dropping the zone to 793 instead of 154.  Chrome
+// does not re-target a running smooth scroll after an anchoring
+// adjustment, and the one re-issue had already been spent inside the
+// animation window, so nothing could recover it.  So: a settle that
+// arrives in flight (``checked === false``) grants ONE extra round —
+// the check waits for that stale animation's own settle and re-checks
+// with a fresh re-issue budget.  The cap is two ``scrollIntoView``
+// re-issues per Generate, never re-granted (no round three); the
+// good-path "never twice" cap is unchanged, and a user scroll disarms
+// round two exactly as it disarms round one.
 export interface LandingCheck {
   /** The pair's settle: one more check, still capped at one re-issue. */
   settle: () => void;
@@ -102,7 +120,12 @@ export function armLandingCheck(
   let userScrolled = false;
   let checked = false;
   let settleWanted = false;
+  // #271: granted only by a settle that arrives in flight, spent by
+  // round two, never re-granted.
+  let grantExtra = false;
+  let done = false;
   let raf = 0;
+  let onScrollEnd: (() => void) | null = null;
   const offBy = () => {
     const margin = parseFloat(window.getComputedStyle(el).scrollMarginTop ?? "") || 0;
     return Math.abs(el.getBoundingClientRect().top - margin);
@@ -120,46 +143,76 @@ export function armLandingCheck(
     finish();
   };
   const stopWaiting = () => {
-    window.removeEventListener("scrollend", onScrollEnd);
+    if (onScrollEnd) window.removeEventListener("scrollend", onScrollEnd);
+    onScrollEnd = null;
     if (raf) window.cancelAnimationFrame(raf);
     raf = 0;
   };
   const finish = () => {
+    done = true;
     stopWaiting();
     for (const t of USER_SCROLL_EVENTS) window.removeEventListener(t, onUser);
+  };
+  // One wait for one scroll to settle: its ``scrollend``, or — where it
+  // never fires (nothing to move, or no support) — scrollY unchanged
+  // across consecutive frames, bounded.  Each round gets its own
+  // frame/stable counters, so round two measures the stale animation
+  // from where it starts, not from the arming.
+  const waitForSettle = (onSettled: () => void) => {
+    onScrollEnd = () => {
+      stopWaiting();
+      onSettled();
+    };
+    window.addEventListener("scrollend", onScrollEnd);
+    let last = window.scrollY;
+    let stable = 0;
+    let frames = 0;
+    const tick = () => {
+      frames += 1;
+      const y = window.scrollY;
+      stable = y === last ? stable + 1 : 0;
+      last = y;
+      if (stable >= LANDING_STABLE_FRAMES || frames >= LANDING_MAX_FRAMES) {
+        raf = 0;
+        stopWaiting();
+        onSettled();
+        return;
+      }
+      raf = window.requestAnimationFrame(tick);
+    };
+    raf = window.requestAnimationFrame(tick);
+  };
+  const round2 = () => {
+    reissueIfOff();
+    finish();
   };
   const landingCheck = () => {
     if (checked) return;
     checked = true;
-    stopWaiting();
     reissueIfOff();
-    if (settleWanted) finish();
-  };
-  const onScrollEnd = () => landingCheck();
-  window.addEventListener("scrollend", onScrollEnd);
-  for (const t of USER_SCROLL_EVENTS) window.addEventListener(t, onUser, { passive: true });
-  // The fallback: scrollY unchanged across consecutive frames, bounded.
-  let last = window.scrollY;
-  let stable = 0;
-  let frames = 0;
-  const tick = () => {
-    frames += 1;
-    const y = window.scrollY;
-    stable = y === last ? stable + 1 : 0;
-    last = y;
-    if (stable >= LANDING_STABLE_FRAMES || frames >= LANDING_MAX_FRAMES) {
-      raf = 0;
-      landingCheck();
+    if (settleWanted && grantExtra && !userScrolled) {
+      // #271: the settle landed inside this scroll's animation window —
+      // whatever this check just issued (or declined to issue) was
+      // measured against a document the still-running scroll does not
+      // know about.  Wait for that scroll's own settle, then re-check
+      // with a fresh budget.  Once.
+      grantExtra = false;
+      reissued = false;
+      waitForSettle(round2);
       return;
     }
-    raf = window.requestAnimationFrame(tick);
+    if (settleWanted) finish();
   };
-  raf = window.requestAnimationFrame(tick);
+  for (const t of USER_SCROLL_EVENTS) window.addEventListener(t, onUser, { passive: true });
+  waitForSettle(landingCheck);
   return {
     settle() {
+      if (done) return;
       if (!checked) {
-        // The landing has not settled yet: the one check covers both.
+        // The landing has not settled yet: the one check covers both —
+        // and, because the scroll is still in flight, earns round two.
         settleWanted = true;
+        grantExtra = true;
         return;
       }
       reissueIfOff();

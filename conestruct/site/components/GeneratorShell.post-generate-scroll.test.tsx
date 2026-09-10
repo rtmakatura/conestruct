@@ -394,4 +394,38 @@ describe("#250 (a) — armLandingCheck re-issues the landing once, never twice",
     flushFrames(200);
     expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
+
+  // #271 — the prod case the one-shot cap could not recover (arc-26
+  // prod run at ``3fa7d18``, 380x800 L10): the memoised pair settled at
+  // 705 ms while the landing's smooth scroll was still animating; the
+  // corrections block mounted ABOVE the zone, Chrome's anchoring held
+  // the zone by moving scrollY, and the still-running animation then
+  // finished to the destination it had computed BEFORE the settle —
+  // the zone ended at 793 instead of 154.  A settle that arrives in
+  // flight (``checked === false``) now grants ONE extra round: the
+  // check waits for the stale animation's own settle and re-issues with
+  // a fresh budget.  Two re-issues per Generate is the cap — never a
+  // third, and a settle after the helper has finished adds nothing.
+  it("a settle inside the landing scroll: the check that lands mid-animation is followed by one more with a fresh budget — the stale animation's completion is recovered", () => {
+    top = 145; // the anchoring-adjusted position at the settle
+    const check = armLandingCheck(el, "smooth");
+    // The pair settles BEFORE any scrollend — the scroll is in flight.
+    check.settle();
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+
+    // The stale animation finishes to its pre-settle destination.
+    top = 793;
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "smooth", block: "start" });
+    expect(scrollSpy.mock.instances[1]).toBe(el);
+
+    // No round three, and the ``done`` flag holds a late settle off.
+    top = 900;
+    settledScroll();
+    flushFrames(200);
+    check.settle();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+  });
 });
