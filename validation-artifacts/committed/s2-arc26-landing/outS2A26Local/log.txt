@@ -1,0 +1,327 @@
+healthz sha b72e358580aac0246804352cf0cb754df31b4dbd expect b72e358580aac0246804352cf0cb754df31b4dbd
+B1 healthz b72e358580aac0246804352cf0cb754df31b4dbd == b72e358580aac0246804352cf0cb754df31b4dbd: PASS · base http://localhost:3002 · 10 natural + 3 declined run(s) per viewport
+[1440x1000] PASS S0 one voice — gate speakers ["cta-reason"]; live regions 3; blocker aria-hidden true; quiet band live null
+[1440x1000] PASS S0 CTA in view — CTA bottom 661 vs innerH 1000
+[1440x1000] PASS S0 strip voice — strip "AWAITING LOCATION · no site chosen" h 52; "None — baseline" ×0
+[1440x1000] PASS 1440x1000-L1 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 20825 ms | 1440x1000-L1-landed.png
+[1440x1000] PASS 1440x1000-L1 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L1 L3 jumps — smooth run to 571 ms; instant scrollY jumps > 40 px: 1 (381@20825ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 976 → 619 → 427 → 344 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L1 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L1 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L1 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L1 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L1 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L1 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L1 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L1 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L1 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L1 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L1 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L2 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 3454 ms | 1440x1000-L2-landed.png
+[1440x1000] PASS 1440x1000-L2 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L2 L3 jumps — smooth run to 568 ms; instant scrollY jumps > 40 px: 1 (381@3454ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 921 → 619 → 427 → 344 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L2 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L2 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L2 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L2 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L2 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L2 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L2 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L2 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L2 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L2 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L2 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L3 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 4025 ms | 1440x1000-L3-landed.png
+[1440x1000] PASS 1440x1000-L3 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L3 L3 jumps — smooth run to 512 ms; instant scrollY jumps > 40 px: 1 (381@4025ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 921 → 550 → 400 → 330 → 302 → 283 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L3 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L3 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L3 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L3 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L3 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L3 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L3 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L3 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L3 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L3 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L3 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L4 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 3527 ms | 1440x1000-L4-landed.png
+[1440x1000] PASS 1440x1000-L4 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L4 L3 jumps — smooth run to 560 ms; instant scrollY jumps > 40 px: 1 (381@3527ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 976 → 619 → 427 → 344 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L4 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L4 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L4 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L4 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L4 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L4 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L4 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L4 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L4 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L4 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L4 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L5 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 5828 ms | 1440x1000-L5-landed.png
+[1440x1000] PASS 1440x1000-L5 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L5 L3 jumps — smooth run to 567 ms; instant scrollY jumps > 40 px: 1 (381@5828ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 921 → 619 → 427 → 344 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L5 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L5 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L5 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L5 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L5 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L5 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L5 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L5 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L5 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L5 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L5 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L6 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 1239 ms | 1440x1000-L6-landed.png
+[1440x1000] PASS 1440x1000-L6 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L6 L3 jumps — smooth run to 556 ms; instant scrollY jumps > 40 px: 1 (381@1239ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 976 → 619 → 427 → 359 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L6 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L6 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L6 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L6 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L6 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L6 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L6 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L6 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L6 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L6 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L6 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L7 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 4565 ms | 1440x1000-L7-landed.png
+[1440x1000] PASS 1440x1000-L7 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L7 L3 jumps — smooth run to 575 ms; instant scrollY jumps > 40 px: 1 (381@3695ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1091 → 976 → 619 → 427 → 344 → 310 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L7 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L7 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L7 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L7 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L7 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L7 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L7 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L7 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L7 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L7 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L7 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L8 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 1257 ms | 1440x1000-L8-landed.png
+[1440x1000] PASS 1440x1000-L8 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L8 L3 jumps — smooth run to 504 ms; instant scrollY jumps > 40 px: 1 (381@1257ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 921 → 550 → 400 → 344 → 302 → 283 → 278 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L8 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L8 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L8 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L8 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L8 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L8 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L8 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L8 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L8 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L8 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L8 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L9 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 1192 ms | 1440x1000-L9-landed.png
+[1440x1000] PASS 1440x1000-L9 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L9 L3 jumps — smooth run to 564 ms; instant scrollY jumps > 40 px: 1 (381@1192ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1089 → 921 → 550 → 427 → 344 → 302 → 286 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L9 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L9 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L9 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L9 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L9 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L9 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L9 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L9 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L9 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L9 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L9 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] PASS 1440x1000-L10 L1 landing — results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 1620 ms | 1440x1000-L10-landed.png
+[1440x1000] PASS 1440x1000-L10 L2 strip in view — verdict strip 60.47..112.47 vs [52, 1000] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 52 (--status-h 52px)
+[1440x1000] PASS 1440x1000-L10 L3 jumps — smooth run to 556 ms; instant scrollY jumps > 40 px: 1 (381@1620ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1091 → 976 → 712 → 459 → 359 → 310 → 290 → 279 → 278 → 278 → 278 → 278 → 278 → 278…
+[1440x1000] PASS 1440x1000-L10 L4 band — band seen during the flight true
+[1440x1000] PASS 1440x1000-L10 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[1440x1000] PASS 1440x1000-L10 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[1440x1000] PASS 1440x1000-L10 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[1440x1000] PASS 1440x1000-L10 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[1440x1000] PASS 1440x1000-L10 N5 pinned — slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px
+[1440x1000] PASS 1440x1000-L10 N7 slot = strip — slot 82 strip 81.19 token 82px
+[1440x1000] PASS 1440x1000-L10 N8 jumps land — #site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 60.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true
+[1440x1000] PASS 1440x1000-L10 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[1440x1000] PASS 1440x1000-L10 N10 axe — 0 wcag node(s) (baseline 0): none
+[1440x1000] info 1440x1000-L10 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[1440x1000] info 1440x1000-C1 replay — audit fulfilled true; breakdown fulfilled true; settled 68 ms
+[1440x1000] PASS 1440x1000-C1 C1 landing — results zone top 136.47 vs 136 ±1; scrollY 278; settled 68 ms | 1440x1000-C1-declined.png
+[1440x1000] PASS 1440x1000-C1 C2 container in view — container 175.66..366.84 vs [52, 1000]
+[1440x1000] PASS 1440x1000-C1 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[1440x1000] info 1440x1000-C2 replay — audit fulfilled true; breakdown fulfilled true; settled 56 ms
+[1440x1000] PASS 1440x1000-C2 C1 landing — results zone top 136.47 vs 136 ±1; scrollY 278; settled 56 ms | 1440x1000-C2-declined.png
+[1440x1000] PASS 1440x1000-C2 C2 container in view — container 175.66..366.84 vs [52, 1000]
+[1440x1000] PASS 1440x1000-C2 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[1440x1000] info 1440x1000-C3 replay — audit fulfilled true; breakdown fulfilled true; settled 67 ms
+[1440x1000] PASS 1440x1000-C3 C1 landing — results zone top 136.47 vs 136 ±1; scrollY 278; settled 67 ms | 1440x1000-C3-declined.png
+[1440x1000] PASS 1440x1000-C3 C2 container in view — container 175.66..366.84 vs [52, 1000]
+[1440x1000] PASS 1440x1000-C3 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[380x800] PASS S0 one voice — gate speakers ["cta-reason"]; live regions 3; blocker aria-hidden true; quiet band live null
+[380x800] PASS S0 CTA in view — CTA bottom 728 vs innerH 800
+[380x800] PASS S0 strip voice — strip "AWAITING LOCATION · no site chosen" h 70; "None — baseline" ×0
+[380x800] PASS 380x800-L1 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 1863 ms | 380x800-L1-landed.png
+[380x800] PASS 380x800-L1 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L1 L3 jumps — smooth run to 812 ms; instant scrollY jumps > 40 px: 1 (639@1863ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2488 → 2400 → 2161 → 1663 → 1132 → 864 → 702 → 597 → 543 → 493 → 464 → 449 → 447 → 447…
+[380x800] PASS 380x800-L1 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L1 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L1 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L1 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L1 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L1 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L1 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L1 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L1 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L1 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L1 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L1 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L2 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 3007 ms | 380x800-L2-landed.png
+[380x800] PASS 380x800-L2 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L2 L3 jumps — smooth run to 812 ms; instant scrollY jumps > 40 px: 1 (639@3007ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2488 → 2368 → 2028 → 1491 → 1050 → 816 → 672 → 597 → 528 → 484 → 464 → 449 → 447 → 447…
+[380x800] PASS 380x800-L2 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L2 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L2 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L2 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L2 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L2 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L2 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L2 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L2 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L2 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L2 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L2 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L3 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 1177 ms | 380x800-L3-landed.png
+[380x800] PASS 380x800-L3 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L3 L3 jumps — smooth run to 807 ms; instant scrollY jumps > 40 px: 1 (639@1177ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2490 → 2400 → 2161 → 1663 → 1132 → 819 → 736 → 619 → 543 → 493 → 469 → 452 → 447 → 447…
+[380x800] PASS 380x800-L3 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L3 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L3 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L3 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L3 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L3 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L3 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L3 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L3 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L3 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L3 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L3 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L4 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 3727 ms | 380x800-L4-landed.png
+[380x800] PASS 380x800-L4 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L4 L3 jumps — smooth run to 812 ms; instant scrollY jumps > 40 px: 1 (639@3727ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2488 → 2400 → 2161 → 1491 → 1050 → 864 → 702 → 597 → 543 → 493 → 464 → 449 → 447 → 447…
+[380x800] PASS 380x800-L4 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L4 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L4 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L4 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L4 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L4 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L4 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L4 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L4 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L4 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L4 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L4 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L5 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 1847 ms | 380x800-L5-landed.png
+[380x800] PASS 380x800-L5 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L5 L3 jumps — smooth run to 810 ms; instant scrollY jumps > 40 px: 1 (639@1847ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2490 → 2400 → 2161 → 1663 → 1132 → 864 → 702 → 619 → 543 → 493 → 464 → 452 → 447 → 447…
+[380x800] PASS 380x800-L5 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L5 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L5 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L5 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L5 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L5 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L5 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L5 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L5 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L5 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L5 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L5 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L6 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 6717 ms | 380x800-L6-landed.png
+[380x800] PASS 380x800-L6 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L6 L3 jumps — smooth run to 813 ms; instant scrollY jumps > 40 px: 1 (639@6717ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2490 → 2400 → 2161 → 1491 → 1050 → 864 → 702 → 597 → 543 → 493 → 464 → 449 → 447 → 447…
+[380x800] PASS 380x800-L6 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L6 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L6 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L6 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L6 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L6 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L6 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L6 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L6 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L6 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L6 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L6 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L7 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 1173 ms | 380x800-L7-landed.png
+[380x800] PASS 380x800-L7 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L7 L3 jumps — smooth run to 813 ms; instant scrollY jumps > 40 px: 1 (639@1173ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2488 → 2368 → 2028 → 1348 → 1050 → 816 → 672 → 597 → 528 → 484 → 459 → 449 → 447 → 447…
+[380x800] PASS 380x800-L7 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L7 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L7 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L7 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L7 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L7 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L7 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L7 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L7 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L7 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L7 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L7 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L8 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 6139 ms | 380x800-L8-landed.png
+[380x800] PASS 380x800-L8 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L8 L3 jumps — smooth run to 799 ms; instant scrollY jumps > 40 px: 1 (639@6139ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2490 → 2400 → 2161 → 1663 → 1132 → 864 → 702 → 619 → 543 → 493 → 469 → 452 → 447 → 447…
+[380x800] PASS 380x800-L8 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L8 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L8 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L8 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L8 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L8 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L8 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L8 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L8 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L8 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L8 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L8 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L9 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 3659 ms | 380x800-L9-landed.png
+[380x800] PASS 380x800-L9 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L9 L3 jumps — smooth run to 815 ms; instant scrollY jumps > 40 px: 1 (639@3659ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2488 → 2368 → 2161 → 1491 → 1050 → 816 → 702 → 597 → 528 → 484 → 464 → 449 → 447 → 447…
+[380x800] PASS 380x800-L9 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L9 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L9 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L9 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L9 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L9 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L9 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L9 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L9 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L9 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L9 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L9 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] PASS 380x800-L10 L1 landing — results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 10810 ms | 380x800-L10-landed.png
+[380x800] PASS 380x800-L10 L2 strip in view — verdict strip 60.11..130.11 vs [52, 800] "VERIFIED · 3 plan flags ▸REVIEW FLAGS"; status slot h 70 (--status-h 70px)
+[380x800] PASS 380x800-L10 L3 jumps — smooth run to 810 ms; instant scrollY jumps > 40 px: 1 (639@10810ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2490 → 2400 → 2161 → 1663 → 1132 → 819 → 736 → 619 → 543 → 493 → 464 → 452 → 447 → 447…
+[380x800] PASS 380x800-L10 L4 band — band seen during the flight true
+[380x800] PASS 380x800-L10 N1 strip — ns-strip true chips 3 label "NEXT — 3 STEPS" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]
+[380x800] PASS 380x800-L10 N2 counts — chip 1 "4 OPEN/5" vs wire 4 OPEN/5; chip 2 "2 OPEN" vs wire 2 OPEN; chip 3 "4 FILES READY"
+[380x800] PASS 380x800-L10 N3 vocabulary — counts "4 OPEN/5 | 2 OPEN | 4 FILES READY"; caption "MHT PACKAGE"
+[380x800] PASS 380x800-L10 N4 anchors — {"site":true,"reference":true,"downloads":true}
+[380x800] PASS 380x800-L10 N5 static — slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px
+[380x800] PASS 380x800-L10 N6 chips 44 one edge — 332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356
+[380x800] PASS 380x800-L10 N7 slot = strip — slot 192 strip 192 token 192px
+[380x800] PASS 380x800-L10 N8 jumps land — #site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.95 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true
+[380x800] PASS 380x800-L10 N9 contrast — 16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)
+[380x800] PASS 380x800-L10 N10 axe — 2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]
+[380x800] info 380x800-L10 live regions — div.status-slot role=null live=polite "VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance" | div.sr-only role=status live=null "Plan generated — 39 devices, 12 types."
+[380x800] info 380x800-C1 replay — audit fulfilled true; breakdown fulfilled true; settled 14 ms
+[380x800] PASS 380x800-C1 C1 landing — results zone top 153.83 vs 154 ±1; scrollY 447; settled 14 ms | 380x800-C1-declined.png
+[380x800] PASS 380x800-C1 C2 container in view — container 193.02..552.98 vs [52, 800]
+[380x800] PASS 380x800-C1 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[380x800] info 380x800-C2 replay — audit fulfilled true; breakdown fulfilled true; settled 12 ms
+[380x800] PASS 380x800-C2 C1 landing — results zone top 153.83 vs 154 ±1; scrollY 447; settled 12 ms | 380x800-C2-declined.png
+[380x800] PASS 380x800-C2 C2 container in view — container 193.02..552.98 vs [52, 800]
+[380x800] PASS 380x800-C2 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[380x800] info 380x800-C3 replay — audit fulfilled true; breakdown fulfilled true; settled 70 ms
+[380x800] PASS 380x800-C3 C1 landing — results zone top 153.83 vs 154 ±1; scrollY 447; settled 70 ms | 380x800-C3-declined.png
+[380x800] PASS 380x800-C3 C2 container in view — container 193.02..552.98 vs [52, 800]
+[380x800] PASS 380x800-C3 C3 no strip — ns-strip false; slot false; hero false; strip "PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE"
+[1440x1000] landing: at target ±1 on 10 of 10
+[1440x1000] declined: at target ±1 on 3 of 3
+[380x800] landing: at target ±1 on 10 of 10
+[380x800] declined: at target ±1 on 3 of 3
+RESULT ALL PASS 294/294

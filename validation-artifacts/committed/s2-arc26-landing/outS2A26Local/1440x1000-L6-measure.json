@@ -1,0 +1,104 @@
+{
+ "scrollY": 659,
+ "innerH": 1000,
+ "navH": 52,
+ "stage": "post",
+ "locked": false,
+ "stripH": "82px",
+ "statusH": "52px",
+ "pinH": "0px",
+ "resultsTop": 136.47,
+ "resultsMargin": "136px",
+ "strip": {
+  "vtop": 60.47,
+  "vbottom": 112.47,
+  "h": 52,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "stripText": "VERIFIED · 3 plan flags ▸REVIEW FLAGS",
+ "statusSlot": {
+  "vtop": 60.47,
+  "vbottom": 112.47,
+  "h": 52,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "ns": {
+  "vtop": 180.47,
+  "vbottom": 261.66,
+  "h": 81.19,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "nsSlot": {
+  "vtop": 180.47,
+  "vbottom": 262.47,
+  "h": 82,
+  "w": 1100,
+  "left": 170,
+  "right": 1270
+ },
+ "slotPos": "sticky",
+ "label": "NEXT — 3 STEPS",
+ "chips": [
+  {
+   "vtop": 214.47,
+   "vbottom": 251.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 170,
+   "right": 531,
+   "href": "#site-corrections",
+   "cls": "ns-chip is-open",
+   "read": true,
+   "inert": null,
+   "count": "4 OPEN/5",
+   "glyph": "▲",
+   "name": "Site conditions"
+  },
+  {
+   "vtop": 214.47,
+   "vbottom": 251.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 539,
+   "right": 901,
+   "href": "#reference",
+   "cls": "ns-chip is-open",
+   "read": true,
+   "inert": null,
+   "count": "2 OPEN",
+   "glyph": "▲",
+   "name": "Pending items"
+  },
+  {
+   "vtop": 214.47,
+   "vbottom": 251.66,
+   "h": 37.19,
+   "w": 361,
+   "left": 909,
+   "right": 1270,
+   "href": "#downloads",
+   "cls": "ns-chip is-ready",
+   "read": true,
+   "inert": null,
+   "count": "4 FILES READY",
+   "glyph": "✓",
+   "name": "Download"
+  }
+ ],
+ "lockup": false,
+ "refusal": null,
+ "hero": true,
+ "caption": "MHT PACKAGE",
+ "anchors": {
+  "site": true,
+  "reference": true,
+  "downloads": true
+ },
+ "body": "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOTMHT:S-630-1PROJECT:UNTITLEDISSUED:2026-09-10LOCATION:—SCALE:AS NOTED02 · GENERATORMethod of Handling Traffic — plan generator01SetupScenarioSite conditions — scanned▲Adjacent at-grade intersectiondetected46 found · nearest 95.8 ftDismiss▲Adjacent interchange (highway ramps)detected10 found · nearest 10.8 ftDismiss▲Pedestrian sidewalksdetected103 found · nearest 100.1 ftDismiss▲Bike lane / cyclewaydetected11 found · nearest 109.6 ftDismiss✓School zonenone along the corridorAssertno corrections stagedApply 0 correctionsscancorridor scan · 10 sep · 01:35 utc · 3.2 s · memoised · apply re-generates the planScenarioShoulder work⤢RoadRural — divided⤢JurisdictionNot set✎ClassNot set✎Speed65 mph✎Lane W12 ft✎Work zone1,000 ft✎DateTBD✎Hours—✎Edit full setup ⤢VERIFIED · 3 plan flags ▸REVIEW FLAGS✕1 compliance check failed — see the audit trail below for detailsCDOT S-630-1ℹ2 V1 limitations — known capability gap; see the audit trail belowMANUAL HANDLINGPlan generated — 39 devices, 12 types.02ResultsMHT packagedevice & type counts drive your estimateNEXT — 3 STEPS01▲Site conditions4 OPEN/502▲Pending items2 OPEN03✓Download4 FILES READYTotal devices39on the plan sheetUnique types12distinct device types to sourceBaseline · MHTTaper L217 ftBuffer B645 ftDevice spacing65 ft o.c.Work zone1,000 ftMHT PACKAGE↓ All (.zip)Plan sheetPDF11×17 · TA-3 · S-630-139 devicesDownload PDF↓Device listXLSXCDOT BID-READY12 typesDownload XLSX↓Crew instructionsPDF + MDSETUP + TAKEDOWN11 stepsDownload PDF↓Download .md↓›Pricing quoteFYI · contractor estimate — not a permit feeexpand to configure & previewDuration (days)FlaggersAuto · 0 from layoutDelivery (mi)Auto · 5 mi from HQOverhead (%)Profit (%)Flagger ($/hr)TCS ($/hr)Crew ($/hr)Preview breakdownDownload Quote (XLSX)↓Generate a CDOT-compliant MHT package: PDF plan sheet, device list, and crew instructions. Every dimension cited to MUTCD or CDOT standards.Draft — not a sealed planOutput is engineering reference. Requires review and seal by a licensed Professional Engineer prior to field use.JurisdictionNot set · MUTCD + Colorado Supplement only.Street classification◌ Not set — choose it in SetupGoverning spec chainMUTCD 11th + CO Suppl.›CDOT Specs §63003ReferenceRules, permit & auditPlan referenceinformational · sourced corpus · never blocks generation2 changes · 1 needs attention · 13 checked · 2 pending · reference▲Changed this plan2›Site adjustments — devices added or moved✓Pedestrian sidewalks present — 4 Type III barricades and 2 R9-9 SIDEWALK CLOSED signs added at the upstream and downstream ends.103 found · nearest 100.1 ft from anchor · unnamed at 39.7269, -104.9869 [lateral 123 ft off centerline]Correct in setup ↑MUTCD § 6C.02✓Bike lane / cycleway present — 2 M4-9a BIKE DETOUR signs added at the upstream and downstream ends.11 found · nearest 109.6 ft from anchor · unnamed at 39.7267, -104.9868 [lateral 133 ft off centerline]Correct in setup ↑MUTCD § 9C.101⚠Needs attention1›✕Signs on both sides of divided highway — Required: True. Signs placed: 7 left, 11 right.CDOT S-630-1 (July 2026) Sheet 2, General Note 8✓Checked & passed13 · each cited›◌Pending / not verified2›iReferencepermit · hours windows · device schedule›© 2026 Conestruct · Built in ColoradoTermsPrivacyOutput requires TCS review · Not a substitute for licensed judgment(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([2,null])self.__next_f.push([1,\"1:HL[\\\"/_next/static/css/app/layout.css?v=1789004219727\\\",\\\"style\\\"]\\n2:HL[\\\"/_next/static/css/app/sandbox/page.css?v=1789004219727\\\",\\\"style\\\"]\\n0:D{\\\"name\\\":\\\"r5\\\",\\\"env\\\":\\\"Server\\\"}\\n\"])self.__next_f.push([1,\"3:I[\\\"(app-pages-browser)/../../../../../conestruct/site/node_modules/next/dist/client/components/app-router.js\\\",[\\\"app-pages-internals\\\",\\\"static/chunks/app-pages-internals.js\\\"],\\\"\\\"]\\n6:I[\\\"(app-pages-browser)/./components/GeneratorShell.tsx\\\",[\\\"app/sandbox/page\\\",\\\"static/chunks/app/sandbox/page.js\\\"],\\\"GeneratorShell\\\"]\\n7:I[\\\"(app-pages-browser)/../../../../../conestruct/site/node_modules/next/dist/client/components/layout-router.js\\\",[\\\"app-pages-internals\\\",\\\"static/chunks/app-pages-internals.js\\\"],\\\"\\\"]\\n8:I[\\\"(app-pages-browser)/../../../../../conestruct/site/node_modules/next/dist/client/components/render-from-template-context.js\\\",[\\\"app-pages-internals\\\",\\\"static/chunks/app-pages-internals.js\\\"],\\\"\\\"]\\nc:I[\\\"(app-pages-browser)/./app/global-error.tsx\\\",[\\\"app/global-error\\\",\\\"static/chunks/app/global-error.js\\\"],\\\"default\\\"]\\n4:D{\\\"name\\\":\\\"\\\",\\\"env\\\":\\\"Server\\\"}\\n5:D{\\\"name\\\":\\\"SandboxPage\\\",\\\"env\\\":\\\"Server\\\"}\\n5:[\\\"$\\\",\\\"$L6\\\",null,{\\\"mode\\\":\\\"sandbox\\\"}]\\n9:D{\\\"name\\\":\\\"RootLayout\\\",\\\"env\\\":\\\"Server\\\"}\\n9:D{\\\"name\\\":\\\"ClerkProvider\\\",\\\"env\\\":\\\"Server\\\"}\\na:D{\\\"name\\\":\\\"r6\\\",\\\"env\\\":\\\"Server\\\"}\\na:null\\nb:D{\\\"name\\\":\\\"\\\",\\\"env\\\":\\\"Server\\\"}\\nd:[]\\n0:[\\\"$\\\",\\\"$L3\\\",null,{\\\"buildId\\\":\\\"development\\\",\\\"assetPrefix\\\":\\\"\\\",\\\"urlParts\\\":[\\\"\\\",\\\"sandbox\\\"],\\\"initialTree\\\":[\\\"\\\",{\\\"children\\\":[\\\"sandbox\\\",{\\\"children\\\":[\\\"__PAGE__\\\",{}]}]},\\\"$undefined\\\",\\\"$undefined\\\",true],\\\"initialSeedData\\\":[\\\"\\\",{\\\"children\\\":[\\\"sandbox\\\",{\\\"children\\\":[\\\"__PAGE__\\\",{},[[\\\"$L4\\\",\\\"$5\\\",[[\\\"$\\\",\\\"link\\\",\\\"0\\\",{\\\"rel\\\":\\\"stylesheet\\\",\\\"href\\\":\\\"/_next/static/css/app/sandbox/page.css?v=1789004219727\\\",\\\"precedence\\\":\\\"next_static/css/app/sandbox/page.css\\\",\\\"crossOrigin\\\":\\\"$undefined\\\"}]]],null],null]},[null,[\\\"$\\\",\\\"$L7\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"segmentPath\\\":[\\\"children\\\",\\\"sandbox\\\",\\\"children\\\"],\\\"error\\\":\\\"$undefined\\\",\\\"errorStyles\\\":\\\"$undefined\\\",\\\"errorScripts\\\":\\\"$undefined\\\",\\\"template\\\":[\\\"$\\\",\\\"$L8\\\",null,{}],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":\\\"$undefined\\\",\\\"notFoundStyles\\\":\\\"$undefined\\\"}]],null]},[[[[\\\"$\\\",\\\"link\\\",\\\"0\\\",{\\\"rel\\\":\\\"stylesheet\\\",\\\"href\\\":\\\"/_next/static/css/app/layout.css?v=1789004219727\\\",\\\"precedence\\\":\\\"next_static/css/app/layout.css\\\",\\\"crossOrigin\\\":\\\"$undefined\"])self.__next_f.push([1,\"\\\"}]],\\\"$L9\\\"],null],null],\\\"couldBeIntercepted\\\":false,\\\"initialHead\\\":[\\\"$a\\\",\\\"$Lb\\\"],\\\"globalErrorComponent\\\":\\\"$c\\\",\\\"missingSlots\\\":\\\"$Wd\\\"}]\\n\"])self.__next_f.push([1,\"e:I[\\\"(app-pages-browser)/../../../../../conestruct/site/node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js\\\",[\\\"app/layout\\\",\\\"static/chunks/app/layout.js\\\"],\\\"ClientClerkProvider\\\"]\\nf:D{\\\"name\\\":\\\"NotFound\\\",\\\"env\\\":\\\"Server\\\"}\\nf:[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"}],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"fontFamily\\\":\\\"system-ui,\\\\\\\"Segoe UI\\\\\\\",Roboto,Helvetica,Arial,sans-serif,\\\\\\\"Apple Color Emoji\\\\\\\",\\\\\\\"Segoe UI Emoji\\\\\\\"\\\",\\\"height\\\":\\\"100vh\\\",\\\"textAlign\\\":\\\"center\\\",\\\"display\\\":\\\"flex\\\",\\\"flexDirection\\\":\\\"column\\\",\\\"alignItems\\\":\\\"center\\\",\\\"justifyContent\\\":\\\"center\\\"},\\\"children\\\":[\\\"$\\\",\\\"div\\\",null,{\\\"children\\\":[[\\\"$\\\",\\\"style\\\",null,{\\\"dangerouslySetInnerHTML\\\":{\\\"__html\\\":\\\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\\\"}}],[\\\"$\\\",\\\"h1\\\",null,{\\\"className\\\":\\\"next-error-h1\\\",\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\",\\\"margin\\\":\\\"0 20px 0 0\\\",\\\"padding\\\":\\\"0 23px 0 0\\\",\\\"fontSize\\\":24,\\\"fontWeight\\\":500,\\\"verticalAlign\\\":\\\"top\\\",\\\"lineHeight\\\":\\\"49px\\\"},\\\"children\\\":\\\"404\\\"}],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\"},\\\"children\\\":[\\\"$\\\",\\\"h2\\\",null,{\\\"style\\\":{\\\"fontSize\\\":14,\\\"fontWeight\\\":400,\\\"lineHeight\\\":\\\"49px\\\",\\\"margin\\\":0},\\\"children\\\":\\\"This page could not be found.\\\"}]}]]}]}]]\\n9:[\\\"$\\\",\\\"$Le\\\",null,{\\\"appearance\\\":{\\\"baseTheme\\\":{\\\"name\\\":\\\"dark\\\",\\\"variables\\\":{\\\"colorBackground\\\":\\\"#212126\\\",\\\"colorNeutral\\\":\\\"white\\\",\\\"colorPrimary\\\":\\\"#ffffff\\\",\\\"colorPrimaryForeground\\\":\\\"black\\\",\\\"colorForeground\\\":\\\"white\\\",\\\"colorInputForeground\\\":\\\"white\\\",\\\"colorInput\\\":\\\"#26262B\\\"},\\\"elements\\\":{\\\"providerIcon__apple\\\":{\\\"filter\\\":\\\"invert(1)\\\"},\\\"providerIcon__github\\\":{\\\"filter\\\":\\\"invert(1)\\\"},\\\"providerIcon__okx_wallet\\\":{\\\"filter\\\":\\\"invert(1)\\\"},\\\"providerIcon__vercel\\\":{\\\"filter\\\":\\\"invert(1)\\\"},\\\"activeDeviceIcon\\\":{\\\"--cl-chassis-bottom\\\":\\\"#d2d2d2\\\",\\\"--cl-chassis-back\\\":\\\"#e6e6e6\\\",\\\"--cl-chassis-screen\\\":\\\"#e6e6e6\\\",\\\"--cl-screen\\\":\\\"#111111\\\"}},\\\"__type\\\":\\\"prebuilt_appearance\\\"},\\\"variables\\\":{\\\"colorPrimary\\\":\\\"#2D9CDB\\\",\\\"colorBackground\\\":\\\"#0F1620\\\",\\\"colorText\\\":\\\"#E6EDF5\\\"}},\\\"publish\"])self.__next_f.push([1,\"ableKey\\\":\\\"pk_test_Y2F1c2FsLXBvbGxpd29nLTkxLmNsZXJrLmFjY291bnRzLmRldiQ\\\",\\\"clerkJSUrl\\\":\\\"$undefined\\\",\\\"clerkJSVersion\\\":\\\"$undefined\\\",\\\"proxyUrl\\\":\\\"\\\",\\\"domain\\\":\\\"\\\",\\\"isSatellite\\\":false,\\\"signInUrl\\\":\\\"/sign-in\\\",\\\"signUpUrl\\\":\\\"/sign-up\\\",\\\"signInForceRedirectUrl\\\":\\\"\\\",\\\"signUpForceRedirectUrl\\\":\\\"\\\",\\\"signInFallbackRedirectUrl\\\":\\\"/app\\\",\\\"signUpFallbackRedirectUrl\\\":\\\"/app\\\",\\\"afterSignInUrl\\\":\\\"\\\",\\\"afterSignUpUrl\\\":\\\"\\\",\\\"newSubscriptionRedirectUrl\\\":\\\"\\\",\\\"telemetry\\\":{\\\"disabled\\\":false,\\\"debug\\\":false},\\\"sdkMetadata\\\":{\\\"name\\\":\\\"@clerk/nextjs\\\",\\\"version\\\":\\\"6.39.3\\\",\\\"environment\\\":\\\"development\\\"},\\\"nonce\\\":\\\"\\\",\\\"initialState\\\":null,\\\"children\\\":[\\\"$\\\",\\\"html\\\",null,{\\\"lang\\\":\\\"en\\\",\\\"className\\\":\\\"__variable_8b3a0b __variable_e896d9\\\",\\\"children\\\":[\\\"$\\\",\\\"body\\\",null,{\\\"className\\\":\\\"font-sans bg-beige text-ink antialiased blueprint-grid\\\",\\\"children\\\":[\\\"$\\\",\\\"$L7\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"segmentPath\\\":[\\\"children\\\"],\\\"error\\\":\\\"$undefined\\\",\\\"errorStyles\\\":\\\"$undefined\\\",\\\"errorScripts\\\":\\\"$undefined\\\",\\\"template\\\":[\\\"$\\\",\\\"$L8\\\",null,{}],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":\\\"$f\\\",\\\"notFoundStyles\\\":[]}]}]}]}]\\nb:[[\\\"$\\\",\\\"meta\\\",\\\"0\\\",{\\\"name\\\":\\\"viewport\\\",\\\"content\\\":\\\"width=device-width, initial-scale=1\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"1\\\",{\\\"charSet\\\":\\\"utf-8\\\"}],[\\\"$\\\",\\\"title\\\",\\\"2\\\",{\\\"children\\\":\\\"Sandbox · Conestruct\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"3\\\",{\\\"name\\\":\\\"description\\\",\\\"content\\\":\\\"Public sandbox for the Conestruct MHT generator. Configure a Colorado work zone and watch every MUTCD calculation cite back to its source. Sign up to save plans and download real PDF, XLSX, and crew narrative outputs.\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"4\\\",{\\\"property\\\":\\\"og:title\\\",\\\"content\\\":\\\"Conestruct — MUTCD plans in seconds\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"5\\\",{\\\"property\\\":\\\"og:description\\\",\\\"content\\\":\\\"MUTCD-compliant traffic control plans in under two minutes. Built in Colorado.\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"6\\\",{\\\"property\\\":\\\"og:url\\\",\\\"content\\\":\\\"https://conestruct.com\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"7\\\",{\\\"property\\\":\\\"og:site_name\\\",\\\"content\\\":\\\"Conestruct\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"8\\\",{\\\"property\\\":\\\"og:type\\\",\\\"content\\\":\\\"website\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"9\\\",{\\\"name\\\":\\\"twitter:card\\\",\\\"content\\\":\\\"summary\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"10\\\",{\\\"name\\\":\\\"twitter:title\\\"\"])self.__next_f.push([1,\",\\\"content\\\":\\\"Conestruct — MUTCD plans in seconds\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"11\\\",{\\\"name\\\":\\\"twitter:description\\\",\\\"content\\\":\\\"MUTCD-compliant traffic control plans in under two minutes. Built in Colorado.\\\"}]]\\n4:null\\n\"])"
+}
