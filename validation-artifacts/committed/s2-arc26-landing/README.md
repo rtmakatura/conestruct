@@ -64,3 +64,29 @@ P1 honoured — `StatusBar.tsx:191` slot (52/70), `ResultsHead.tsx` slot (82/192
 - 380: the cold-start VERIFYING copy wraps to three lines (88.39) and exceeds the 70 px strip while it shows (declared at commit 1).
 - The one instant scrollY step at the pair's settle is Chrome's anchoring compensating the corrections block mounting **above** the results zone (+381 / +639); the zone itself moves 0 — recorded, not a P1 shift. The block's own room is bucket A's surface.
 - No natural Denver refusal in 20 generates this run (#256 unchanged; the retry-once path is in the harness, unexercised).
+
+## Prod run at 3fa7d18 (2026-09-10, `outProd-3fa7d18/`)
+*Sha gate: healthz `3fa7d18c66c0dcc67d3a31ea84a2e28ad39559a9` == `git rev-parse HEAD` (first log line, B1). Frontend confirmed live first: `.ns-strip` served in `/_next/static/css/9280ba3164178e47.css` at 03:09:06Z (`prod-live-note.txt`). Same harness, same leg set: 10 natural + 3 declined per viewport against `https://www.conestruct.com`.* **RESULT FAIL 280/294 — 14 fails, three findings, none of them harness tuning:**
+
+| id | 1440×1000 | 380×800 |
+|---|---|---|
+| S0 one voice / CTA / strip voice | `cta-reason` only, 3 live regions; CTA 661 ≤ 1000; "AWAITING LOCATION · no site chosen" h 52 | same; CTA 728 ≤ 800; h 70 |
+| L1 landing | **136.47, 10/10** | **154.11, 9/10** — L10 at **793.11** (finding 2) |
+| L2 verdict strip in view | 60.47..112.47, 10/10 | 60.11..130.11, 10/10 |
+| L3 jumps | 1 instant scrollY step at the settle (+381, zone moved 0), 0 visible, 0 after, 10/10 | 9/10 as local; L10: 2 steps (+618 at 705 ms, zone moved 21; **−648 at 764 ms, zone moved 648**) — finding 2 |
+| L4 band | 10/10 | 10/10 |
+| N1–N4 strip, counts vs wire, vocabulary, anchors | 10/10 ("4 OPEN/5 · 2 OPEN · 4 FILES READY" = wire; caption "MHT PACKAGE") | 10/10 |
+| N5 pin | sticky at 52, slot 82 = strip 81.19, 10/10 | static, 9/10 (L10's page sat at scrollY 447 — consequence of finding 2) |
+| N6 chips 44, one edge | — | 332×44 at 24..356, 10/10 |
+| N8 anchor jumps | `#site-corrections` 60.28, `#downloads` 142.22 (10/10); **`#reference` 67.45 vs 60, 10/10** (finding 1) | 60.08 / 60.42; `#reference` 59.95–**61.69** (L4 only, finding 1) |
+| N9 contrast (.97 surface) | 16 pairs, lowest 6.6, 10/10 | same |
+| N10 axe | 0, 10/10 | 2 (the named `.gap-8` + `.strip-edit-all`; baseline 4), 10/10 |
+| C1–C3 declined pair | 136.47; container 175.66..366.84; no strip, 3/3 | 153.83; 193.02..552.98, 3/3 |
+| natural refusals (#256) | 0 of 10 (settles 0.7–6.4 s) | 0 of 10 (0.7–7.1 s) |
+
+**Finding 1 — `#reference` lands at 67.45 at 1440 (10/10): a scroll clamp, not a jump defect.** `probe-reference.js` (one Generate per viewport, `probe-reference.out.txt`): at 1440 the jump ends at `scrollY 1727 == maxScroll 1727` (docH 2727, innerH 1000) — the Reference zone (763) + footer (65) are shorter than the viewport below the margin, so the document cannot place the zone at 60; it sits at 67.45, the document's end. At 380 the probe lands 59.69 (docH 4636, not clamped); L4's 61.69 is a one-off 1.7 px overshoot at the 900 ms sample. The local run did not show it because the merged tip carries C's shorter cards/audit rows. Not a P1 shift (nothing moved); the harness's ±1 expectation does not know about the clamp — left as a FAIL by rule, for a ruling (accept the clamp as the landing when `scrollY == maxScroll`, or pad the page end).
+
+**Finding 2 — 380 L10: the pair settled mid-smooth-scroll and the landing ended at 793 (1 of 10).** Samples (`380x800-L10-samples.json`): the memoised scan settled at 705 ms, while the smooth landing scroll (which ran to 752–812 ms in the other runs) was still animating; the DOM grew above the zone by 1296 (docH 3340 → 4636 — the corrections block mounting in Setup) and anchoring moved scrollY 477 → 1095 (zone at 145); at 764 ms scrollY was 447 — the running animation's pre-settle destination — and the zone sat at 793 for the rest of the run; the check's single re-issue did not restore it. Chrome does not re-target a running smooth scroll after an anchoring adjustment; `armLandingCheck` merges the settle into the landing check (`settleWanted`) and caps re-issues at one, so a settle that lands inside the animation window can spend the one re-issue before the stale animation finishes. Candidate fix for a ruling: on `settle()` while the landing scroll is still running, wait for its `scrollend` and then check with a fresh re-issue budget (the "never twice" cap was written for the good-path race, not for a settle inside the animation). Operator cost: the results head at the bottom edge of an 800 px viewport once in ten memoised generates; the verdict strip (699..769) is still in view. #250-class, P1/P3; the local run's 10/10 at 380 did not hit the window (settles 0.79–1.86 s).
+
+**Finding 3 — none new otherwise:** every other probe equals the local run at `f8c1744`, figure for figure (S0, L1–L2 at 1440, N1–N7, N9–N10, C1–C3).
+

@@ -1,0 +1,1766 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "S0 one voice",
+  "ok": true,
+  "detail": "gate speakers [\"cta-reason\"]; live regions 3; blocker aria-hidden true; quiet band live null"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "S0 CTA in view",
+  "ok": true,
+  "detail": "CTA bottom 661 vs innerH 1000"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "S0 strip voice",
+  "ok": true,
+  "detail": "strip \"AWAITING LOCATION · no site chosen\" h 52; \"None — baseline\" ×0"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 4109 ms | 1440x1000-L1-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 2711 ms; instant scrollY jumps > 40 px: 1 (381@4109ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023 → 1023…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L1 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 2301 ms | 1440x1000-L2-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 497 ms; instant scrollY jumps > 40 px: 1 (381@856ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 938 → 641 → 426 → 341 → 308 → 285 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L2 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 747 ms | 1440x1000-L3-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 546 ms; instant scrollY jumps > 40 px: 1 (381@747ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 426 → 341 → 300 → 285 → 279 → 278 → 278 → 278 → 278 → 659 → 659…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L3 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 2035 ms | 1440x1000-L4-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 502 ms; instant scrollY jumps > 40 px: 1 (381@2035ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 341 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L4 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 955 ms | 1440x1000-L5-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 505 ms; instant scrollY jumps > 40 px: 1 (381@955ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 846 → 562 → 399 → 328 → 294 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L5 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 818 ms | 1440x1000-L6-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 489 ms; instant scrollY jumps > 40 px: 1 (381@818ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 426 → 341 → 308 → 285 → 278 → 278 → 278 → 278 → 278 → 278 → 659…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L6 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 6427 ms | 1440x1000-L7-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 498 ms; instant scrollY jumps > 40 px: 1 (381@6427ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 641 → 426 → 341 → 300 → 285 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L7 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 997 ms | 1440x1000-L8-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 494 ms; instant scrollY jumps > 40 px: 1 (381@997ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 426 → 341 → 300 → 285 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L8 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 769 ms | 1440x1000-L9-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 508 ms; instant scrollY jumps > 40 px: 1 (381@769ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 341 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 659 → 659…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L9 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 L1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1 (scroll-margin 136px, --pin-h 0px); scrollY 659; settled 958 ms | 1440x1000-L10-landed.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.47..112.47 vs [52, 1000] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 52 (--status-h 52px)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 491 ms; instant scrollY jumps > 40 px: 1 (381@958ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 1023 → 906 → 562 → 399 → 341 → 300 → 282 → 278 → 278 → 278 → 278 → 278 → 278 → 278…"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N5 pinned",
+  "ok": true,
+  "detail": "slot sticky at 52 vs nav-h 52 after +600 (results zone top -463.53); slot h 82 strip h 81.19 --strip-h 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 82 strip 81.19 token 82px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.28 vs margin 60 (--pin-h 0px) focus true; #reference 67.45 vs 60 focus true; #downloads 142.22 vs 142 (--pin-h 82px) focus true"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-L10 N10 axe",
+  "ok": true,
+  "detail": "0 wcag node(s) (baseline 0): none"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C1 C1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1; scrollY 278; settled 62 ms | 1440x1000-C1-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C1 C2 container in view",
+  "ok": true,
+  "detail": "container 175.66..366.84 vs [52, 1000]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C1 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C2 C1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1; scrollY 278; settled 19 ms | 1440x1000-C2-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C2 C2 container in view",
+  "ok": true,
+  "detail": "container 175.66..366.84 vs [52, 1000]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C2 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C3 C1 landing",
+  "ok": true,
+  "detail": "results zone top 136.47 vs 136 ±1; scrollY 278; settled 21 ms | 1440x1000-C3-declined.png"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C3 C2 container in view",
+  "ok": true,
+  "detail": "container 175.66..366.84 vs [52, 1000]"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "1440x1000-C3 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "S0 one voice",
+  "ok": true,
+  "detail": "gate speakers [\"cta-reason\"]; live regions 3; blocker aria-hidden true; quiet band live null"
+ },
+ {
+  "tag": "380x800",
+  "id": "S0 CTA in view",
+  "ok": true,
+  "detail": "CTA bottom 728 vs innerH 800"
+ },
+ {
+  "tag": "380x800",
+  "id": "S0 strip voice",
+  "ok": true,
+  "detail": "strip \"AWAITING LOCATION · no site chosen\" h 70; \"None — baseline\" ×0"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 3404 ms | 380x800-L1-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 811 ms; instant scrollY jumps > 40 px: 1 (639@3404ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2464 → 2263 → 1587 → 1109 → 856 → 732 → 643 → 559 → 504 → 470 → 455 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L1 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 3136 ms | 380x800-L2-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 837 ms; instant scrollY jumps > 40 px: 1 (639@3136ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1771 → 1198 → 907 → 732 → 643 → 559 → 504 → 470 → 452 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L2 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 790 ms | 380x800-L3-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 728 ms; instant scrollY jumps > 40 px: 1 (639@790ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2583 → 2496 → 2263 → 1587 → 1198 → 907 → 732 → 680 → 577 → 515 → 477 → 455 → 447 → 1086…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 60.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L3 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 886 ms | 380x800-L4-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 811 ms; instant scrollY jumps > 40 px: 1 (639@886ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1771 → 1198 → 907 → 732 → 643 → 559 → 504 → 477 → 455 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N8 jumps land",
+  "ok": false,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 61.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L4 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 885 ms | 380x800-L5-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 809 ms; instant scrollY jumps > 40 px: 1 (639@885ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 732 → 643 → 559 → 504 → 477 → 455 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L5 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 7054 ms | 380x800-L6-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 812 ms; instant scrollY jumps > 40 px: 1 (639@7054ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2583 → 2496 → 2263 → 1587 → 1109 → 907 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 60.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L6 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 2252 ms | 380x800-L7-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 812 ms; instant scrollY jumps > 40 px: 1 (639@2252ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2585 → 2496 → 2354 → 1771 → 1198 → 907 → 769 → 643 → 559 → 515 → 477 → 455 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 60.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L7 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 808 ms | 380x800-L8-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 746 ms; instant scrollY jumps > 40 px: 1 (639@808ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2583 → 2496 → 2263 → 1587 → 1109 → 862 → 732 → 618 → 543 → 504 → 470 → 452 → 447 → 1086…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L8 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 L1 landing",
+  "ok": true,
+  "detail": "results zone top 154.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 1086; settled 878 ms | 380x800-L9-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 60.11..130.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 L3 jumps",
+  "ok": true,
+  "detail": "smooth run to 814 ms; instant scrollY jumps > 40 px: 1 (639@878ms, zone moved 0); visible zone jumps: 0; after settle+100 ms: 0; scrollY 2583 → 2464 → 2263 → 1587 → 1109 → 856 → 732 → 618 → 543 → 494 → 470 → 452 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N5 static",
+  "ok": true,
+  "detail": "slot static at -369.89 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L9 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 L1 landing",
+  "ok": false,
+  "detail": "results zone top 793.11 vs 154 ±1 (scroll-margin 154px, --pin-h 0px); scrollY 447; settled 705 ms | 380x800-L10-landed.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 L2 strip in view",
+  "ok": true,
+  "detail": "verdict strip 699.11..769.11 vs [52, 800] \"VERIFIED · 3 plan flags ▸REVIEW FLAGS\"; status slot h 70 (--status-h 70px)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 L3 jumps",
+  "ok": false,
+  "detail": "smooth run to 622 ms; instant scrollY jumps > 40 px: 2 (618@705ms, zone moved 21; -648@764ms, zone moved 648); visible zone jumps: 1; after settle+100 ms: 0; scrollY 2585 → 2496 → 2263 → 1771 → 1198 → 907 → 769 → 643 → 559 → 504 → 477 → 1095 → 447 → 447…"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 L4 band",
+  "ok": true,
+  "detail": "band seen during the flight true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N1 strip",
+  "ok": true,
+  "detail": "ns-strip true chips 3 label \"NEXT — 3 STEPS\" lockup false; [▲ Site conditions · 4 OPEN/5] [▲ Pending items · 2 OPEN] [✓ Download · 4 FILES READY]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N2 counts",
+  "ok": true,
+  "detail": "chip 1 \"4 OPEN/5\" vs wire 4 OPEN/5; chip 2 \"2 OPEN\" vs wire 2 OPEN; chip 3 \"4 FILES READY\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N3 vocabulary",
+  "ok": true,
+  "detail": "counts \"4 OPEN/5 | 2 OPEN | 4 FILES READY\"; caption \"MHT PACKAGE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N4 anchors",
+  "ok": true,
+  "detail": "{\"site\":true,\"reference\":true,\"downloads\":true}"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N5 static",
+  "ok": false,
+  "detail": "slot static at 269.11 after +600 (un-pinned below 520 of the zone's width); slot h 192 strip h 192 --strip-h 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N6 chips 44 one edge",
+  "ok": true,
+  "detail": "332×44 at 24..356 ; 332×44 at 24..356 ; 332×44 at 24..356"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N7 slot = strip",
+  "ok": true,
+  "detail": "slot 192 strip 192 token 192px"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N8 jumps land",
+  "ok": true,
+  "detail": "#site-corrections 60.08 vs margin 60 (--pin-h 0px) focus true; #reference 59.69 vs 60 focus true; #downloads 60.42 vs 60 (--pin-h 0px) focus true"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N9 contrast",
+  "ok": true,
+  "detail": "16 pairs on the .97 surface; lowest 6.6 (span.ns-count.tr-step)"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-L10 N10 axe",
+  "ok": true,
+  "detail": "2 wcag node(s) (baseline 4): scrollable-region-focusable[.gap-8] ; target-size[.strip-edit-all]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C1 C1 landing",
+  "ok": true,
+  "detail": "results zone top 153.83 vs 154 ±1; scrollY 447; settled 73 ms | 380x800-C1-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C1 C2 container in view",
+  "ok": true,
+  "detail": "container 193.02..552.98 vs [52, 800]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C1 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C2 C1 landing",
+  "ok": true,
+  "detail": "results zone top 153.83 vs 154 ±1; scrollY 447; settled 69 ms | 380x800-C2-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C2 C2 container in view",
+  "ok": true,
+  "detail": "container 193.02..552.98 vs [52, 800]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C2 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C3 C1 landing",
+  "ok": true,
+  "detail": "results zone top 153.83 vs 154 ±1; scrollY 447; settled 12 ms | 380x800-C3-declined.png"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C3 C2 container in view",
+  "ok": true,
+  "detail": "container 193.02..552.98 vs [52, 800]"
+ },
+ {
+  "tag": "380x800",
+  "id": "380x800-C3 C3 no strip",
+  "ok": true,
+  "detail": "ns-strip false; slot false; hero false; strip \"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\""
+ }
+]

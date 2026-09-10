@@ -1,0 +1,2 @@
+{"vp":"1440x1000","top":67.45,"docTop":1794.45,"margin":60,"scrollY":1727,"docH":2727,"innerH":1000,"maxScroll":1727,"zoneH":763,"footerH":65,"clamped":true}
+{"vp":"380x800","top":59.69,"docTop":3336.69,"margin":60,"scrollY":3277,"docH":4636,"innerH":800,"maxScroll":3836,"zoneH":1070,"footerH":125,"clamped":false}
