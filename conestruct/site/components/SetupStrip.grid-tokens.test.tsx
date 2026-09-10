@@ -132,6 +132,19 @@ describe("#249 — the scanned block as a ledger", () => {
     expect(btn).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(btn).toMatch(/color:\s*var\(--act-bright\)/);
   });
+  it("#270: the picker sub-row is a subgrid row — the lead cell wraps, Confirm's action cell keeps the shared edge; <=420 Confirm spans both tracks, right-aligned", () => {
+    const sub = rule(".workbench .jbar-suggest .sc-grid .sc-sub");
+    expect(sub).toMatch(/border-top:\s*1px dashed var\(--rule\)/);
+    expect(sub).toMatch(/align-items:\s*center/);
+    const line = rule(".workbench .jbar-suggest .sc-grid .sc-sub .sc-picker");
+    expect(line).not.toMatch(/grid-column/);
+    expect(line).toMatch(/flex-wrap:\s*wrap/);
+    const cq = css.indexOf("@container (max-width: 420px)");
+    const act = rule(".workbench .jbar-suggest .sc-grid .sc-sub .sc-action", cq);
+    expect(act).toMatch(/grid-column:\s*1 \/ -1/);
+    expect(act).toMatch(/justify-self:\s*end/);
+    expect(rule(".workbench .jbar-suggest .sc-grid .sc-sub .sc-picker", cq)).toMatch(/grid-column:\s*1 \/ -1/);
+  });
   it("the band's shared rules are byte-identical to their arc-18 text", () => {
     expect(rule(".workbench .jbar-suggest .sugg-row")).toBe(
       "\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  font-size: 11.5px;\n  color: var(--ink-on-dark);\n",

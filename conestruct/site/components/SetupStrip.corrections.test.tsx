@@ -450,7 +450,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(school.querySelector(".sc-glyph")?.classList.contains("sc-absent")).toBe(true);
   });
 
-  it("#249: the open picker is exactly one extra row — Confirm last in its flex line, Cancel in the condition row's action cell", async () => {
+  it("#249 + #270: the open picker is exactly one extra row — Confirm in the row's ACTION cell, the reasons + note in the lead; Cancel in the condition row's action cell", async () => {
     const user = userEvent.setup();
     mount(ok());
     const before = block()!.querySelectorAll(".sc-row").length;
@@ -462,14 +462,21 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const picker = sidewalk.nextElementSibling as HTMLElement;
     expect(picker.classList.contains("site-correction-picker")).toBe(true);
     expect(picker.classList.contains("sc-sub")).toBe(true);
-    // Spec 38/42: legend + chips, (note), Confirm — one flex line, no
-    // action cell on the sub-row (supersedes arc-20 ruling f).
-    expect(picker.querySelector(".sc-action")).toBeNull();
+    // #270 (supersedes arc-21 ruling f / spec 42): Confirm sits in the
+    // sub-row's ACTION cell — col 2, the right edge every Dismiss /
+    // Assert / Undo / Apply shares — never in the wrapping flex line, so
+    // its position and the row's height no longer depend on the
+    // legend's length (P4 / P11 / P1).  Legend + chips + the note slot
+    // wrap among themselves in the lead cell.
     expect(picker.querySelectorAll("button")).toHaveLength(1);
-    const line = picker.querySelector(".sc-picker") as HTMLElement;
-    expect(line.lastElementChild?.tagName).toBe("BUTTON");
-    expect(line.lastElementChild?.textContent).toBe("Confirm dismiss");
+    const action = picker.querySelector(":scope > .sc-action") as HTMLElement;
+    expect(action).not.toBeNull();
+    expect(action.querySelector("button")?.textContent).toBe("Confirm dismiss");
+    const line = picker.querySelector(":scope > .sc-picker") as HTMLElement;
+    expect(line.querySelector("button")).toBeNull();
     expect(line.firstElementChild?.classList.contains("site-correction-reasons")).toBe(true);
+    expect(line.lastElementChild?.classList.contains("site-correction-note")).toBe(true);
+    expect(Array.from(picker.children).map((k) => k.className.split(" ")[0])).toEqual(["sc-picker", "sc-action"]);
     expect(within(sidewalk).getByRole("button", { name: "Cancel" })).toBeTruthy();
     expect(within(sidewalk).queryByRole("button", { name: "Dismiss" })).toBeNull();
     expect(sidewalk.querySelector(".sc-action button")?.textContent).toBe("Cancel");

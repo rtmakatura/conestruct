@@ -2363,19 +2363,23 @@ input[type="number"] {
 /* Picker-open: exactly one extra row spanning both tracks (spec 37/38):
    legend, chips (+ the note), Confirm last in the same flex line.
    Cancel moved to the condition row's action slot (spec 44). */
+/* #270: the sub-row is a subgrid row like every other — the dashed rule
+   and the inset moved from the flex line to the ROW so both tracks share
+   them; Confirm is the row's action cell (the shared right edge), the
+   lead cell wraps legend · chips · the note slot among themselves.
+   Centred so Confirm rides the middle of a wrapped lead. */
 .workbench .jbar-suggest .sc-grid .sc-sub {
-  padding: 0;
+  border-top: 1px dashed var(--rule);
+  margin-top: 1px;
+  padding: 9px 0 11px;
+  align-items: center;
 }
 .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
-  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   min-width: 0;
-  border-top: 1px dashed var(--rule);
-  margin-top: 1px;
-  padding: 9px 0 11px;
 }
 .workbench .jbar-suggest .sc-picker .site-correction-reasons {
   flex: 0 1 auto;
@@ -2536,6 +2540,15 @@ input[type="number"] {
   }
   .workbench .jbar-suggest .sc-apply button.confirm {
     margin-left: auto;
+  }
+  /* #270 <=420: the reasons take the full width, Confirm its own line
+     under them on the right edge (the row grows one line, #153). */
+  .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
+    grid-column: 1 / -1;
+  }
+  .workbench .jbar-suggest .sc-grid .sc-sub .sc-action {
+    grid-column: 1 / -1;
+    justify-self: end;
   }
   .workbench .jbar-suggest .sc-picker .reason-chip {
     padding: 4px 7px;

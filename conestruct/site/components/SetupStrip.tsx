@@ -409,10 +409,11 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight, staged, se
                 :checked state (rule 13, never hue alone); no aria-pressed
                 (a radio carries its own checked semantics).  The legend
                 keeps the accessible name.
-                #249: exactly one extra grid row spanning both tracks —
-                legend, chips (+ the note), then Confirm last in the same
-                flex line (spec 38/42); Cancel took the condition row's
-                action slot (spec 44).  Supersedes arc-20 ruling f. */}
+                #249: exactly one extra grid row (spec 38); Cancel took
+                the condition row's action slot (spec 44).  #270: the
+                row is a subgrid row like every other — legend, chips
+                and the note slot wrap in the lead cell; Confirm is the
+                action cell (supersedes arc-21 ruling f / spec 42). */}
             <div className="sc-picker">
               <fieldset className="site-correction-reasons" role="radiogroup">
                 <legend>
@@ -466,6 +467,15 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight, staged, se
                 }}
                 placeholder={noteInvalid ? "say what — required" : "say what"}
               />
+            </div>
+            {/* #270 (supersedes arc-21 ruling f / spec 42): Confirm is the
+                sub-row's ACTION cell — col 2, the right edge every
+                Dismiss / Assert / Undo / Apply shares — never an item of
+                the wrapping line above, so its place and the row's
+                height do not depend on the legend's length (P4 / P11 /
+                P1).  <=420 it spans both tracks under the chips,
+                right-aligned (the row grows one line, #153). */}
+            <span className="sc-action">
               <button
                 type="button"
                 className="confirm"
@@ -476,7 +486,7 @@ function SiteCorrections({ scenario, setScenario, siteScan, inFlight, staged, se
               >
                 Confirm dismiss
               </button>
-            </div>
+            </span>
           </div>,
         );
       }

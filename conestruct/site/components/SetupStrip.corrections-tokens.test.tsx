@@ -36,7 +36,7 @@ describe("#245 — the reason picker's tokens", () => {
     expect(rule(".workbench .jbar-suggest .reason-chip::after")).toMatch(/width:\s*10px/);
     expect(rule(".workbench .jbar-suggest .reason-chip::after")).toMatch(/content:\s*""/);
   });
-  it("#255: the note slot is a fixed 184px reserved in the flex line; void = hidden, still laid out (P1)", () => {
+  it("#255: the note slot is a fixed 184px reserved in the lead cell's flex line; void = hidden, still laid out (P1)", () => {
     expect(rule(".workbench .jbar-suggest .site-correction-note")).toMatch(/flex:\s*0 0 184px/);
     expect(rule(".workbench .jbar-suggest .site-correction-note")).not.toMatch(/min-width/);
     const voided = rule(".workbench .jbar-suggest .site-correction-note.is-void");
