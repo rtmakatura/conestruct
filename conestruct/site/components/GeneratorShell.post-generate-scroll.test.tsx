@@ -421,7 +421,10 @@ describe("#250 (a) / #271 (a) — armLandingCheck re-issues the landing at most 
     top = 793;
     settledScroll();
     expect(scrollSpy).toHaveBeenCalledTimes(2);
-    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "smooth", block: "start" });
+    // #271 (finding 4, ruled 2026-09-10): this re-issue fires after the
+    // settle above, so it is the INSTANT reposition, not a second smooth
+    // travel.  (Written as "smooth" at 1f7b060, before that ruling.)
+    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "auto", block: "start" });
     expect(scrollSpy.mock.instances[1]).toBe(el);
 
     // No round three, and the ``done`` flag holds a late settle off.
@@ -484,5 +487,49 @@ describe("#250 (a) / #271 (a) — armLandingCheck re-issues the landing at most 
     flushFrames(200);
     check.settle();
     expect(scrollSpy).toHaveBeenCalledTimes(2);
+  });
+
+  // #271 (ruling on finding 4, 2026-09-10) — the post-settle correction
+  // is INSTANT.  The recovery works, but it recovered by animating: the
+  // arc-28 run at ``4c4dce0`` measured the zone travelling 793 -> 154
+  // over ~450 ms in four steps, AFTER the answer had landed.  A wander
+  // that long once the answer is on screen reads as cheap (P12), and one
+  // reposition is easier to understand than four steps.  So a re-issue
+  // that fires after the pair has settled carries ``behavior: "auto"``;
+  // the initial landing scroll, and any re-issue before the settle, keep
+  // the arming behaviour.
+  it("#271: a re-issue that fires AFTER the pair's settle is instant; the landing and a pre-settle re-issue keep the arming behaviour", () => {
+    top = 2085; // the cancelled scroll's scrollend, before any settle
+    const check = armLandingCheck(el, "smooth");
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "smooth", block: "start" });
+
+    // The pair settles; the stale animation then completes to its
+    // pre-settle destination and the correction fires after it.
+    check.settle();
+    top = 793;
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "auto", block: "start" });
+    expect(scrollSpy.mock.instances[1]).toBe(el);
+
+    // Still capped, and still spent by a landing within tolerance.
+    top = 136;
+    settledScroll();
+    flushFrames(200);
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("#271: reduced motion is unchanged — an 'auto' arming stays instant on both sides of the settle", () => {
+    top = 2085;
+    const check = armLandingCheck(el, "auto");
+    settledScroll();
+    expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "auto", block: "start" });
+    check.settle();
+    top = 793;
+    settledScroll();
+    expect(scrollSpy).toHaveBeenCalledTimes(2);
+    expect(scrollSpy.mock.calls[1][0]).toMatchObject({ behavior: "auto", block: "start" });
   });
 });

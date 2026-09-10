@@ -123,6 +123,19 @@ type Mode = "sandbox" | "workbench";
 // bounds keep it from waiting forever — LANDING_MAX_FRAMES per round,
 // and LANDING_DEADLINE_MS across the whole check — and the user-scroll
 // disarm still wins at every point.
+//
+// #271 (finding 4, ruled 2026-09-10) — and the correction is INSTANT.
+// (a) works, but at ``4c4dce0`` it worked by animating: the arc-28 run
+// measured the zone travelling 793 -> 154 in four steps over ~450 ms,
+// AFTER the answer had landed.  Ryan: "A 450 ms wander after the answer
+// has landed reads as cheap — P12 — and one reposition is easier to
+// understand than four steps."  So a re-issue that fires once the pair
+// has SETTLED uses ``behavior: "auto"``: ``settle()`` sets ``settled``,
+// and ``reissueIfOff`` reads it.  The initial landing scroll is the
+// shell's and is untouched; a re-issue BEFORE any settle keeps the
+// arming behaviour, so the ordinary landing is still smooth.  Declared
+// behaviour change; reduced motion is unaffected — that arming is
+// already ``"auto"`` on both sides of the settle.
 export interface LandingCheck {
   /** The pair's settle: one more check, still capped at one re-issue. */
   settle: () => void;
@@ -155,6 +168,9 @@ export function armLandingCheck(
   // round two, never re-granted.
   let grantExtra = false;
   let done = false;
+  // #271 (finding 4): set by ``settle()`` — the pair has answered, so a
+  // correction from here is a reposition, not part of the landing.
+  let settled = false;
   const armedAt = Date.now();
   const expired = () => Date.now() - armedAt > LANDING_DEADLINE_MS;
   let raf = 0;
@@ -167,7 +183,10 @@ export function armLandingCheck(
     if (userScrolled || reissues >= LANDING_MAX_REISSUES) return;
     if (offBy() > LANDING_TOLERANCE_PX) {
       reissues += 1;
-      el.scrollIntoView({ behavior, block: "start" });
+      el.scrollIntoView({
+        behavior: settled ? "auto" : behavior,
+        block: "start",
+      });
     }
   };
   const onUser = (e: Event) => {
@@ -255,6 +274,9 @@ export function armLandingCheck(
   waitForSettle(landingCheck);
   return {
     settle() {
+      // Set before every early return: from this moment any correction
+      // is a reposition of an answer already on screen.
+      settled = true;
       if (done) return;
       if (!checked) {
         // The landing has not settled yet: the one check covers both —

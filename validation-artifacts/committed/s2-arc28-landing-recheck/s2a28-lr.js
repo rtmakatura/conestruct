@@ -24,7 +24,9 @@
 //        re-issue census read off an instrumented scrollIntoView — every
 //        re-issue is PRINTED, never swallowed by a tolerance); L4 the
 //        band seen every flight; N5 the pin (sticky at 1440 / static at
-//        380); N6 chips 44 px on one edge at 380; N10 axe.
+//        380); N6 chips 44 px on one edge at 380; N10 axe.  L3's
+//        post-settle rule is the restatement of 2026-09-10 (see the
+//        README beside ruling 8); N5/N6/axe wait out the #259 dim.
 //   F×K  forced: the audit + device-breakdown responses captured live on
 //        a first natural Generate, then replayed on a fresh page HELD
 //        until 700 ms after the click — the prod window, on demand.  A
@@ -121,9 +123,11 @@ function jumps(samples) {
   const scroll = [], visible = [];
   for (let i = smoothUntil + 1; i < samples.length; i++) {
     const d = samples[i].scrollY - samples[i - 1].scrollY;
-    const v = (samples[i].results?.vtop ?? 0) - (samples[i - 1].results?.vtop ?? 0);
-    if (Math.abs(d) > 40) scroll.push({ t: samples[i].t, d, v: Math.round(v) });
-    if (Math.abs(v) > 40) visible.push({ t: samples[i].t, d, v: Math.round(v) });
+    const from = samples[i - 1].results?.vtop ?? 0;
+    const to = samples[i].results?.vtop ?? 0;
+    const v = to - from;
+    if (Math.abs(d) > 40) scroll.push({ t: samples[i].t, d, v: Math.round(v), from, to });
+    if (Math.abs(v) > 40) visible.push({ t: samples[i].t, d, v: Math.round(v), from, to });
   }
   return { smoothUntil, smoothEnd: samples[smoothUntil]?.t ?? 0, scroll, visible };
 }
@@ -163,7 +167,6 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   check(tag, `${label} L1 landing`, landed, `results zone top ${m.resultsTop} vs ${target} ±1 (scroll-margin ${m.resultsMargin}, --pin-h ${m.pinH}); scrollY ${m.scrollY}; docH ${m.docH}; settled ${s.settledAt} ms | ${sh}`);
   check(tag, `${label} L2 strip in view`, !!m.strip && m.strip.vtop >= m.navH && m.strip.vbottom <= m.innerH, `verdict strip ${m.strip?.vtop}..${m.strip?.vbottom} vs [${m.navH}, ${m.innerH}] "${m.stripText}"; status slot h ${m.statusSlot?.h} (--status-h ${m.statusH})`);
   const js = jumps(s.samples);
-  const after = [...js.scroll, ...js.visible].filter((j) => s.settledAt !== null && j.t > s.settledAt + 100);
   const raw = await page.evaluate(SCROLLS);
   const zone = raw.scrolls.filter((r) => /\bresults\b/.test(r.cls)).map((r) => ({ at: r.t - clickAt, behavior: r.behavior, off: r.off }));
   const ends = raw.ends.map((e) => ({ at: e.t - clickAt, y: e.y }));
@@ -171,11 +174,62 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   // The census is PRINTED, and the cap is the assertion: the landing
   // scroll plus at most two re-issues (#271's ruled cap), never three.
   const reissues = zone.length - 1;
+  // #271 finding 4, ruling of 2026-09-10 — the jump leg RESTATED, the way
+  // ruling 8 restated the anchor leg.  A post-settle move passes only
+  // when all four hold: (i) it strictly reduces the offset, (ii) it is
+  // attributable to a counted re-issue inside the cap of two, (iii) it
+  // ends within 1 px of target, (iv) there are no further moves after
+  // it.  Anything else fails.  The attributing re-issue index is printed
+  // per counted move, so a future reader can tell a correction from a
+  // drift.  A move is a change of the ZONE's viewport top > 40 px; a
+  // scrollY step that holds the zone still (Chrome's anchoring
+  // compensation at the settle) is not a move and is reported apart.
+  const post = s.settledAt === null ? [] : js.visible.filter((j) => j.t > s.settledAt);
+  const preVisible = s.settledAt === null ? js.visible : js.visible.filter((j) => j.t <= s.settledAt);
+  const preScroll = s.settledAt === null ? js.scroll : js.scroll.filter((j) => j.t <= s.settledAt);
+  // The census timestamps are click-relative on both sides (the sampler
+  // starts within a few ms of the click), so a move is attributed to the
+  // last re-issue at or before it, with that margin allowed.
+  const ATTRIB_SLACK_MS = 60;
+  const verdicts = post.map((j, i) => {
+    let idx = 0;
+    zone.forEach((z, zi) => { if (zi > 0 && z.at <= j.t + ATTRIB_SLACK_MS) idx = zi; });
+    const reduces = Math.abs(j.to - target) < Math.abs(j.from - target);
+    const attributed = idx >= 1 && idx <= 2;
+    const onTarget = Math.abs(j.to - target) <= 1;
+    const last = i === post.length - 1;
+    return { j, idx, reduces, attributed, onTarget, last, ok: reduces && attributed && onTarget && last };
+  });
+  const postCensus = verdicts.length === 0 ? "none" : verdicts.map((v) =>
+    `${v.j.from}→${v.j.to} @${v.j.t}ms by re-issue ${v.idx || "?"} [${v.reduces ? "reduces" : "DOES NOT REDUCE"} · ${v.attributed ? "attributed" : "UNATTRIBUTED"} · ${v.onTarget ? "ends at target" : "ENDS OFF TARGET"} · ${v.last ? "last" : "FOLLOWED BY ANOTHER MOVE"}] ${v.ok ? "PASS" : "FAIL"}`
+  ).join(" ; ");
   const census = zone.map((z, i) => `${i === 0 ? "landing" : "re-issue " + i}@${z.at}ms ${z.behavior} (zone ${z.off} px off)`).join(" ; ") || "none";
   const endCensus = ends.map((e) => `@${e.at}ms y=${e.y}`).join(" ; ") || "none";
-  check(tag, `${label} L3 jumps + re-issue census`, js.scroll.length <= 1 && js.visible.length === 0 && after.length === 0 && zone.length >= 1 && reissues <= 2,
-    `smooth run to ${js.smoothEnd} ms; scrollIntoView on the zone: ${zone.length} (${census}) → ${reissues} re-issue(s), cap 2; scrollend: ${endCensus}; instant scrollY steps > 40 px: ${js.scroll.length} (${js.scroll.map((j) => `${j.d}@${j.t}ms, zone moved ${j.v}`).join("; ") || "none"}); visible zone jumps: ${js.visible.length}; after settle+100 ms: ${after.length}; scrollY ${s.samples.slice(0, 14).map((x) => x.scrollY).join(" → ")}…`);
+  check(tag, `${label} L3 jumps + re-issue census`,
+    preScroll.length <= 1 && preVisible.length === 0 && zone.length >= 1 && reissues <= 2 && verdicts.every((v) => v.ok),
+    `smooth run to ${js.smoothEnd} ms; scrollIntoView on the zone: ${zone.length} (${census}) → ${reissues} re-issue(s), cap 2; scrollend: ${endCensus}; ` +
+    `PRE-settle: instant scrollY steps > 40 px ${preScroll.length} (${preScroll.map((j) => `${j.d}@${j.t}ms, zone moved ${j.v}`).join("; ") || "none"}), visible zone moves ${preVisible.length}; ` +
+    `POST-settle moves (ruling of 2026-09-10, four conditions): ${post.length} — ${postCensus}; ` +
+    `post-settle scrollY steps that held the zone still: ${(s.settledAt === null ? [] : js.scroll.filter((j) => j.t > s.settledAt && Math.abs(j.v) <= 40)).map((j) => `${j.d}@${j.t}ms`).join("; ") || "none"}; ` +
+    `scrollY ${s.samples.slice(0, 14).map((x) => x.scrollY).join(" → ")}…`);
   check(tag, `${label} L4 band`, s.seen, `band seen during the flight ${s.seen}`);
+  // #259 (finding 3): the pin and axe legs were reading the page in its
+  // dimmed "previous answer" state — a background refetch still in
+  // flight — where reduced-opacity text fails contrast and the sticky
+  // slot has not taken its place.  Of the two ways out, this harness
+  // RUNS THE LEGS AFTER THE SETTLE rather than excluding those selectors
+  // from axe's scope: excluding them would blind the leg to a real
+  // contrast defect on exactly those nodes, while waiting simply
+  // measures the state the operator is actually looking at.  The
+  // contrast itself is #259's, untouched here.
+  const dimT0 = Date.now(); let dimWaited = 0;
+  while (Date.now() - dimT0 < 15000) {
+    const dim = await page.evaluate(() => !!document.querySelector(".stale-ribbon"));
+    if (!dim) break;
+    dimWaited = Date.now() - dimT0;
+    await page.waitForTimeout(200);
+  }
+  if (dimWaited) info(tag, `${label} #259 dim`, `page carried .stale-ribbon (previous-answer dim); waited ${dimWaited} ms for the current answer before N5/N6/axe`);
   // N5/N6 — the arc-26 pin and target-size regression legs.
   await page.evaluate(() => window.scrollBy(0, 600)); await page.waitForTimeout(400);
   const p = await page.evaluate(MEASURE);
