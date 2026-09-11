@@ -113,12 +113,11 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
         {rows.map((r) => (
           <div key={r.label} className="contents">
             <span className="tr-field">{r.label}</span>
-            <span className="font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] tabular-nums text-right">
-              {r.detected}
-            </span>
-            <span className="font-mono text-[11px] text-white tabular-nums text-right">
-              {r.applied}
-            </span>
+            {/* #273: one declared value register for both columns; the ink
+                is the only axis between them, so the emphasis says "this is
+                what the plan used" and nothing else. */}
+            <span className="dva-val is-detected">{r.detected}</span>
+            <span className="dva-val is-applied">{r.applied}</span>
           </div>
         ))}
       </div>

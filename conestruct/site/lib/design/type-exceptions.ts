@@ -133,6 +133,19 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
   {
+    // #273 retired this block's two `text-[11px]` utilities onto one
+    // declared value register.  The register still needs a size, and 11px
+    // is neither a `tr-*` role size nor a ruled exception size, so the
+    // residual is declared here rather than mislabelled an exception.
+    // Clearing it needs a ruling, not a patch: either the #226 table gains
+    // a value role (it is four LABEL roles today, and type-roles.test.ts
+    // enumerates its pairs), or the #263 exception set gains 11px.  Until
+    // then this is one owned row instead of two anonymous Tailwind uses.
+    owner: "ruling needed — the detected-vs-applied value register (#273)",
+    css: [{ selector: ".workbench .dva .dva-val", size: "11px" }],
+    tsx: [],
+  },
+  {
     owner: "later round — legacy @layer components rules (pre-workbench)",
     css: [
       { selector: ".eyebrow", size: "11px" },
@@ -317,7 +330,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     tsx: [
       { file: "components/AuditTrail.tsx", cls: "text-[12px]", count: 6 },
       { file: "components/DebugSnapshotButton.tsx", cls: "text-[10px]", count: 2 },
-      { file: "components/DetectedVsApplied.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/DeviceBreakdown.tsx", cls: "text-[11px]", count: 1 },
       { file: "components/DeviceBreakdown.tsx", cls: "text-[12px]", count: 4 },
       { file: "components/DimStrip.tsx", cls: "text-[11px]", count: 1 },
@@ -392,9 +404,16 @@ export const CENSUS_PINS = {
   // #253 on top of C's fold: the lockup's 24px declaration left (−1), the
   // strip's glyph 11px arrived (+1, a size already in the sheet) → 102
   // declarations, 19 sizes; C's Tailwind figures unchanged.
-  cssDeclarations: 102,
+  //
+  // #273 retires the DetectedVsApplied Tailwind debt row: the block's two
+  // value spans dropped `text-[11px]` for one declared register, so two
+  // uses, their site and the file leave the Tailwind census (−2 uses,
+  // −1 site, −1 file) and the register's single declaration arrives on the
+  // CSS side (+1 → 103).  Sizes stay 19: 11px was already in the sheet.
+  // Net: two anonymous utilities become one owned row.
+  cssDeclarations: 103,
   cssSizes: 19,
-  tsxSites: 107,
-  tsxUses: 322,
-  tsxFiles: 37,
+  tsxSites: 106,
+  tsxUses: 320,
+  tsxFiles: 36,
 } as const;

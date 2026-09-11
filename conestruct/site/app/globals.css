@@ -2677,6 +2677,33 @@ input[type="number"] {
 .workbench .dva .tr-step {
   text-align: right;
 }
+/* The block's value register (#273): ONE register for both columns, so the
+   only axis between detected and applied is ink and the emphasis says
+   "this is what the plan used" and nothing more.
+   On the size — 11px is carried here deliberately and is still declared
+   DEBT, not an exception.  It is neither a `tr-*` role size nor one of the
+   #263 ruling's exception sizes (76/60, 28, 20/17, 16, 14, 9), which is
+   precisely why this block's two `text-[11px]` utilities were debt in the
+   first place; calling it an exception here would relabel the debt rather
+   than pay it.  Dropping the declaration entirely is worse: the register
+   then inherits the 16px body default — measured — which is larger than
+   its own 12px labels and wide enough to break the track fit.  So the
+   utilities are retired onto one declared register at the size they
+   already rendered (no visual change), and the residual sits in
+   TYPE_DEBT under an owner that names the ruling it needs. */
+.workbench .dva .dva-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.workbench .dva .dva-val.is-detected {
+  color: var(--ink-on-dark-faint);
+}
+.workbench .dva .dva-val.is-applied {
+  color: var(--ink-bright);
+}
 /* #273 ruling (b): below the measured threshold the label takes its own row
    above a two-cell value row — stack, never shrink, never truncate (Rule 10).
    The threshold is measured, not guessed: in the narrow regime the block's

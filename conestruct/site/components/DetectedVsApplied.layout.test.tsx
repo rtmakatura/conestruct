@@ -168,6 +168,50 @@ describe("#273 the block's layout contract", () => {
     expect(wrappers[0]).toBe(head);
   });
 
+  it("no value cell declares its own size: the block's value register is one named class", () => {
+    const tsx = readFileSync(
+      join(process.cwd(), "components", "DetectedVsApplied.tsx"),
+      "utf-8",
+    );
+    // the two ad-hoc Tailwind sizes were the #263 declared debt row
+    expect(tsx).not.toMatch(/text-\[11px\]/);
+    // and the raw Tailwind white is off the token system (P11)
+    expect(tsx).not.toMatch(/text-white/);
+    const body = ruleBody(".workbench .dva .dva-val");
+    expect(body, "one declared value register").not.toBe("");
+    // The size stays 11px — the size it already rendered, so no visual
+    // change — but it is now stated once, in one place, instead of twice
+    // as an inline utility.  11px is neither a `tr-*` role size nor a
+    // ruled #263 exception size, so the residual is DECLARED DEBT with an
+    // owner; the census asserts that row exists.
+    expect(body).toMatch(/font-size:\s*11px/);
+    const debt = readFileSync(
+      join(process.cwd(), "lib", "design", "type-exceptions.ts"),
+      "utf-8",
+    );
+    expect(debt).toMatch(/\.workbench \.dva \.dva-val/);
+    expect(debt, "the residual names the ruling it needs").toMatch(
+      /ruling needed — the detected-vs-applied value register/,
+    );
+  });
+
+  it("one register per column — same size and weight, ink is the only axis", () => {
+    render(<DetectedVsApplied scenario={pinnedShoulder()} />);
+    const det = document.querySelectorAll(".dva-val.is-detected");
+    const app = document.querySelectorAll(".dva-val.is-applied");
+    expect(det.length).toBeGreaterThan(0);
+    expect(det.length).toBe(app.length);
+    // the two registers are declared once each, and differ only in colour
+    const d = ruleBody(".workbench .dva .dva-val.is-detected");
+    const a = ruleBody(".workbench .dva .dva-val.is-applied");
+    expect(d).toMatch(/color:\s*var\(--ink-on-dark-faint\)/);
+    expect(a).toMatch(/color:\s*var\(--ink-bright\)/);
+    for (const decl of [/font-size/, /font-weight/, /font-family/]) {
+      expect(d, "size/weight/family belong to the shared register").not.toMatch(decl);
+      expect(a, "size/weight/family belong to the shared register").not.toMatch(decl);
+    }
+  });
+
   it("every value cell carries the same alignment token as its header", () => {
     render(<DetectedVsApplied scenario={pinnedShoulder()} />);
     const grid = document.querySelector(".dva-grid")!;
@@ -180,12 +224,17 @@ describe("#273 the block's layout contract", () => {
       expect(cells.length).toBe(3);
       // cells[0] is the label; 1 and 2 are the value columns
       for (const c of cells.slice(1)) {
+        // alignment and numerals now ride the declared register, not
+        // per-span utilities — the register is asserted against the
+        // stylesheet above.
         expect(
           c.className,
-          `value cell "${c.textContent}" must be right-aligned like its header`,
-        ).toMatch(/text-right/);
-        expect(c.className).toMatch(/tabular-nums/);
+          `value cell "${c.textContent}" must carry the value register`,
+        ).toMatch(/\bdva-val\b/);
       }
+      const regBody = ruleBody(".workbench .dva .dva-val");
+      expect(regBody).toMatch(/text-align:\s*right/);
+      expect(regBody).toMatch(/font-variant-numeric:\s*tabular-nums/);
     }
   });
 });
