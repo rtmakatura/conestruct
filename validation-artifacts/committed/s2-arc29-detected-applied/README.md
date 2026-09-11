@@ -512,3 +512,119 @@ and reported the whole cell as "ink" — which is not what the alignment
 acceptance is about. Both probes now measure the cell's **own text nodes**
 only. Without this the leg would have kept printing PASS against a number
 that had quietly stopped meaning what it says.
+
+---
+
+# Prod run — `b2a325a`, www.conestruct.com
+
+Ryan shipped round 2; `/healthz` = `b2a325a` and `origin/main` = `b2a325a`,
+confirmed and printed as the first line of every `outProd-b2a325a/*/log.txt`.
+
+## The bundle gate ran first
+
+`/healthz` proves the BACKEND sha and nothing else — the bundle the browser
+downloads is a separate question, and that lag bit arc 26. So
+`prod-build-gate-29.js` polls the served assets before any leg:
+
+```
+2026-09-11T12:51:48Z  gate: polling https://www.conestruct.com …
+2026-09-11T12:51:51Z  chunks 11 · sheets 3 · dva-slot PRESENT in
+                      /_next/static/chunks/829-3b51de0610ad9e78.js ·
+                      css /_next/static/css/fa71ddc0fc3aed1b.css ·
+                      reserved-line true · header-rule true
+2026-09-11T12:51:51Z  GATE PASS after 3 s
+```
+
+The signature is `dva-slot`, chosen because it is NEW in round 2:
+`operator-set` would prove nothing (the picker has carried that exact token
+since #198) and `OSM · ` shipped in round 1. The JS signature and the two
+CSS marks — the reserved line's `min-height:16px` and the header's
+`border-bottom … var(--rule)` — are read from DIFFERENT files, so a
+half-deployed build cannot read as PASS. Vercel was already ahead this
+time: 3 s, not the arc-27 ten-minute lag.
+
+## Which legs ran natural, and which set a fixture value
+
+| leg | phase | natural or set |
+|---|---|---|
+| walk (`s2a29-lc.js`) | pin → detect → pick way 39508704 → Save | **natural** — live Overpass, 5 candidates, fixture way picked at both viewports |
+| walk | the #275 leg | **sets** lanes 2 → 3 on the form |
+| geometry (`s2a29-short.js`) | A "as-found" | **natural** — OSM's own values in both columns |
+| geometry | B "short-values" | **sets** the applied road type to `Urban arterial` |
+| ink (`s2a29-ink.js`) | A "identical-values" | **natural** |
+| ink | B "divergent-values" | **sets** the applied road type to `Freeway / interstate` |
+
+Nothing else was touched. The detection itself is live every time.
+
+## Against the restated acceptance
+
+`outProd-b2a325a/geometry` **42 pass · 0 fail** · `outProd-b2a325a/ink`
+**16 pass · 0 fail** · `outProd-b2a325a/walk` **14 pass · 0 fail · 0 page
+errors**.
+
+**Row heights — all four rows, both fixtures, both viewports:**
+
+| fixture | 1440×1000 | 380×800 |
+|---|---|---|
+| as-found (2 rows marked) | 34.6 / 34.6 / 34.6 / 34.6 — **1 distinct** | 34.6 ×4 — **1 distinct** |
+| overridden (applied ≠ detected) | 34.6 ×4 — **1 distinct** | 34.6 ×4 — **1 distinct** |
+
+Every value cell reserves exactly one slot, both fixtures, both viewports.
+
+**Per-column provenance, both directions:**
+
+| fixture | row | detected token | applied token |
+|---|---|---|---|
+| as-found | Road type | `OSM · inferred` | **`OSM · inferred`** |
+| as-found | Divided | `OSM · inferred` | **`OSM · inferred`** |
+| overridden | Road type | `OSM · inferred` | **`operator-set`** |
+| overridden | Divided | `OSM · inferred` | `OSM · inferred` |
+| both | Bearing, Lanes | silent | silent |
+
+`Divided` staying inherited while `Road type` flips to `operator-set` on the
+same fixture is the proof the two columns are independent.
+
+**Header box vs track, with the hairline:**
+
+| | 1440 | 380 |
+|---|---|---|
+| DETECTED header box == its track, every row | 406–538 ✓ | 60–183 ✓ |
+| APPLIED header box == its track, every row | 552–684 ✓ | 197–320 ✓ |
+| hairline, both headers | `1px solid rgb(44, 62, 83)` = `--rule` | same |
+
+**Value ink right vs header ink right — 0 px on every row, both columns, on
+BOTH the long-value and the short-value fixture**, at both viewports.
+
+**The two value tracks:** `132 / 132` at 1440 and `123 / 123` at 380, equal
+on both fixtures.
+
+**The 520 stack:** three tracks at 1440 (`186px 132px 132px`), one column at
+380 (`260px`), on both fixtures.
+
+**#275 in the shared slot:** the live lanes edit reads
+`2` + `overridden` in the detected cell and `3` + `operator-set` in the
+applied cell, at both viewports. The edit takes the DISPUTED path, as it
+must on this fixture — way 39508704 is tagged `lanes=2` with
+`lanes:forward=2` AND `lanes:backward=2`, an arithmetic mismatch — so the
+**withdrawn** case is still covered by the mounted suite only, for the
+reason recorded in round 1.
+
+**#214:** the disclosure sentence rendered byte-identical at both viewports.
+
+**axe:** no violation inside the block at either viewport. Page-wide,
+1 violation at 1440 (`region`) and 2 at 380 (`region`,
+`scrollable-region-focusable`) — all outside `.dva`, and stated rather than
+rolled into a baseline.
+
+**Block type census: 6 distinct tuples**, one more than round 1's five. The
+new tuple is `10px/400/mono/rgb(244,192,32)` ×4 — the `--warn` tone on the
+four inferred tokens, now that both columns carry one. Expected, and a tone
+on an existing size, not a new size.
+
+## The figures come from the CORRECTED probes
+
+Both ink probes read a cell's **own text nodes** only. Round 1's version
+used `selectNodeContents(el)`, which after the reserved slot landed would
+span the value AND the slot beneath it and report the whole cell as "ink".
+Every prod figure above was taken with the corrected probes; none of them
+is comparable to a round-1 ink number taken before that fix.

@@ -1,0 +1,3 @@
+2026-09-11T12:51:48.439Z  gate: polling https://www.conestruct.com for the s2-arc29 round-2 signature, up to 20 min
+2026-09-11T12:51:51.044Z  chunks 11 · sheets 3 · dva-slot PRESENT in /_next/static/chunks/829-3b51de0610ad9e78.js · css /_next/static/css/fa71ddc0fc3aed1b.css · reserved-line true · header-rule true
+2026-09-11T12:51:51.044Z  GATE PASS after 3 s — the served bundle AND stylesheet carry round 2; legs may run

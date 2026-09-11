@@ -1,0 +1,54 @@
+healthz sha b2a325aa2218949796ce6784a8bc248dca7c3283 expect b2a325aa2218949796ce6784a8bc248dca7c3283
+base https://www.conestruct.com · fixture 39.71466,-104.94071 way 39508704
+[1440x1000] info P kind — scenario kind on load: 
+[1440x1000] info P candidates — 5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270
+[1440x1000] info P save-state — Save & Close disabled=false after picking "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704"
+[1440x1000] PASS P confirmed-road — picked "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704" (fixture way 39508704: true)
+[1440x1000] PASS D1 mounted — .dva 500×276.4 at 195,1100.2
+[1440x1000] info D1 tracks — grid-template-columns resolved "186px 132px 132px" · column-gap 14px · row-gap 3px · align-items baseline
+[1440x1000] info D1 heads — [0] "(spacer)" 186×0 L206 R392 align=start ; [1] "Detected" 132×20 L406 R538 align=right ; [2] "Applied" 132×20 L552 R684 align=right
+[1440x1000] info D1 row "Bearing" — label L206 R392 align=start | detected "85°" L406 R538 align=right | applied "85°" L552 R684 align=right
+[1440x1000] info D1 row "Lanes per direction" — label L206 R392 align=start | detected "2" L406 R538 align=right | applied "2" L552 R684 align=right
+[1440x1000] info D1 row "Road type" — label L206 R392 align=start | detected "Rural — undividedOSM · inferred" L406 R538 align=right | applied "Rural — undividedOSM · inferred" L552 R684 align=right
+[1440x1000] info D1 row "Divided" — label L206 R392 align=start | detected "UndividedOSM · inferred" L406 R538 align=right | applied "UndividedOSM · inferred" L552 R684 align=right
+[1440x1000] PASS D1 header-right == value-right (DETECTED) — per-row delta 0, 0, 0, 0 (header R538)
+[1440x1000] PASS D1 header-right == value-right (APPLIED) — per-row delta 0, 0, 0, 0 (header R684)
+[1440x1000] info D1 value-track widths — detected col widths 132 · applied col widths 132
+[1440x1000] PASS D1 labels share one left edge — lefts 206
+[1440x1000] info D2 type tuples — 6 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4 ; 10px/400/__JetBrains_Mono_e896d9/rgb(244, 192, 32)×4
+[1440x1000] info D2 nodes off the tr-* roles — 8: "85°"[dva-val is-detected] 11px/400 ; "85°"[dva-val is-applied] 11px/400 ; "2"[dva-val is-detected] 11px/400 ; "2"[dva-val is-applied] 11px/400 ; "Rural — undividedOSM · infer"[dva-val is-detected] 11px/400 ; "Rural — undividedOSM · infer"[dva-val is-applied] 11px/400 ; "UndividedOSM · inferred"[dva-val is-detected] 11px/400 ; "UndividedOSM · inferred"[dva-val is-applied] 11px/400
+[1440x1000] info D2 register — detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected="tabular-nums" applied="tabular-nums"
+[1440x1000] info D3 rows rendered — 4: Bearing="85°"→"85°" ; Lanes per direction="2"→"2" ; Road type="Rural — undividedOSM · inferred"→"Rural — undividedOSM · inferred" ; Divided="UndividedOSM · inferred"→"UndividedOSM · inferred"
+[1440x1000] PASS D4 #214 sentence byte-identical — "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
+[1440x1000] info D4 provenance line — top "OSM detection · East Bayaud Avenue · way 39508704 · operator pick"
+[1440x1000] info L before — Detected lanes "2" · Applied "2"
+[1440x1000] info L after — clicked lanes=3 — Detected lanes now "2overridden" · Applied "3operator-set"
+[1440x1000] PASS L #275 detected cell after the relay clear — before "2" → after "2overridden" (PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked, which is the #275 defect)
+[1440x1000] info pageerrors — 0
+[380x800] info P kind — scenario kind on load: 
+[380x800] info P candidates — 5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270
+[380x800] info P save-state — Save & Close disabled=false after picking "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704"
+[380x800] PASS P confirmed-road — picked "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704" (fixture way 39508704: true)
+[380x800] PASS D1 mounted — .dva 282×405.1 at 49,1539.8
+[380x800] info D1 tracks — grid-template-columns resolved "260px" · column-gap 14px · row-gap 8px · align-items baseline
+[380x800] info D1 heads — [0] "(spacer)" 0×0 L0 R0 align=start ; [1] "Detected" 123×20 L60 R183 align=right ; [2] "Applied" 123×20 L197 R320 align=right
+[380x800] info D1 row "Bearing" — label L60 R320 align=start | detected "85°" L60 R183 align=right | applied "85°" L197 R320 align=right
+[380x800] info D1 row "Lanes per direction" — label L60 R320 align=start | detected "2" L60 R183 align=right | applied "2" L197 R320 align=right
+[380x800] info D1 row "Road type" — label L60 R320 align=start | detected "Rural — undividedOSM · inferred" L60 R183 align=right | applied "Rural — undividedOSM · inferred" L197 R320 align=right
+[380x800] info D1 row "Divided" — label L60 R320 align=start | detected "UndividedOSM · inferred" L60 R183 align=right | applied "UndividedOSM · inferred" L197 R320 align=right
+[380x800] PASS D1 header-right == value-right (DETECTED) — per-row delta 0, 0, 0, 0 (header R183)
+[380x800] PASS D1 header-right == value-right (APPLIED) — per-row delta 0, 0, 0, 0 (header R320)
+[380x800] info D1 value-track widths — detected col widths 123 · applied col widths 123
+[380x800] PASS D1 labels share one left edge — lefts 60
+[380x800] info D2 type tuples — 6 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4 ; 10px/400/__JetBrains_Mono_e896d9/rgb(244, 192, 32)×4
+[380x800] info D2 nodes off the tr-* roles — 8: "85°"[dva-val is-detected] 11px/400 ; "85°"[dva-val is-applied] 11px/400 ; "2"[dva-val is-detected] 11px/400 ; "2"[dva-val is-applied] 11px/400 ; "Rural — undividedOSM · infer"[dva-val is-detected] 11px/400 ; "Rural — undividedOSM · infer"[dva-val is-applied] 11px/400 ; "UndividedOSM · inferred"[dva-val is-detected] 11px/400 ; "UndividedOSM · inferred"[dva-val is-applied] 11px/400
+[380x800] info D2 register — detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected="tabular-nums" applied="tabular-nums"
+[380x800] info D3 rows rendered — 4: Bearing="85°"→"85°" ; Lanes per direction="2"→"2" ; Road type="Rural — undividedOSM · inferred"→"Rural — undividedOSM · inferred" ; Divided="UndividedOSM · inferred"→"UndividedOSM · inferred"
+[380x800] PASS D4 #214 sentence byte-identical — "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
+[380x800] info D4 provenance line — top "OSM detection · East Bayaud Avenue · way 39508704 · operator pick"
+[380x800] info L before — Detected lanes "2" · Applied "2"
+[380x800] info L after — clicked lanes=3 — Detected lanes now "2overridden" · Applied "3operator-set"
+[380x800] PASS L #275 detected cell after the relay clear — before "2" → after "2overridden" (PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked, which is the #275 defect)
+[380x800] info pageerrors — 0
+
+=== 14 pass · 0 fail · 36 info ===
