@@ -1,0 +1,56 @@
+healthz sha a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25 expect a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25
+base http://localhost:3005 · fixture 39.71466,-104.94071 way 39508704
+[1440x1000] info P kind — scenario kind on load: 
+[1440x1000] info P candidates — 5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270
+[1440x1000] info P save-state — Save & Close disabled=false after picking "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704"
+[1440x1000] PASS P confirmed-road — picked "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704" (fixture way 39508704: true)
+[1440x1000] PASS D1 mounted — .dva 500×204.4 at 195,1100.2
+[1440x1000] info D1 tracks — grid-template-columns resolved "225.594px 112.203px 112.203px" · column-gap 14px · row-gap 3px · align-items baseline
+[1440x1000] info D1 heads — [0] "(spacer)" 225.6×0 L206 R431.6 align=start ; [1] "Detected" 112.2×16 L445.6 R557.8 align=start ; [2] "Applied" 112.2×16 L571.8 R684 align=start
+[1440x1000] info D1 row "Bearing" — label L206 R431.6 align=start | detected "85°" L445.6 R557.8 align=right | applied "85°" L571.8 R684 align=right
+[1440x1000] info D1 row "Lanes per direction" — label L206 R431.6 align=start | detected "2" L445.6 R557.8 align=right | applied "2" L571.8 R684 align=right
+[1440x1000] info D1 row "Road type" — label L206 R431.6 align=start | detected "Rural — undivided" L445.6 R557.8 align=right | applied "Rural — undivided" L571.8 R684 align=right
+[1440x1000] info D1 row "Divided" — label L206 R431.6 align=start | detected "Undivided" L445.6 R557.8 align=right | applied "Undivided" L571.8 R684 align=right
+[1440x1000] PASS D1 header-right == value-right (DETECTED) — per-row delta 0, 0, 0, 0 (header R557.8)
+[1440x1000] PASS D1 header-right == value-right (APPLIED) — per-row delta 0, 0, 0, 0 (header R684)
+[1440x1000] info D1 value-track widths — detected col widths 112.2 · applied col widths 112.2
+[1440x1000] PASS D1 labels share one left edge — lefts 206
+[1440x1000] info D2 type tuples — 5 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4
+[1440x1000] info D2 nodes off the tr-* roles — 8: "85°"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "85°"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "2"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "2"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "Rural — undivided"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "Rural — undivided"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "Undivided"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "Undivided"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400
+[1440x1000] info D2 register — detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected="tabular-nums" applied="tabular-nums"
+[1440x1000] info D3 rows rendered — 4: Bearing="85°"→"85°" ; Lanes per direction="2"→"2" ; Road type="Rural — undivided"→"Rural — undivided" ; Divided="Undivided"→"Undivided"
+[1440x1000] PASS D4 #214 sentence byte-identical — "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
+[1440x1000] info D4 provenance line — top "OSM detection · East Bayaud Avenue · way 39508704 · operator pick"
+[1440x1000] info L before — Detected lanes "2" · Applied "2"
+[1440x1000] info L after — clicked lanes=3 — Detected lanes now "2" · Applied "3"
+[1440x1000] FAIL L #275 detected cell after the relay clear — before "2" → after "2" (unchanged + unmarked = the #275 defect)
+[1440x1000] info pageerrors — 0
+[380x800] info P kind — scenario kind on load: 
+[380x800] info P candidates — 5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270
+[380x800] info P save-state — Save & Close disabled=false after picking "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704"
+[380x800] PASS P confirmed-road — picked "East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704" (fixture way 39508704: true)
+[380x800] PASS D1 mounted — .dva 282×293.1 at 49,1539.8
+[380x800] info D1 tracks — grid-template-columns resolved "50.4062px 90.7969px 90.7969px" · column-gap 14px · row-gap 3px · align-items baseline
+[380x800] info D1 heads — [0] "(spacer)" 50.4×0 L60 R110.4 align=start ; [1] "Detected" 90.8×16 L124.4 R215.2 align=start ; [2] "Applied" 90.8×16 L229.2 R320 align=start
+[380x800] info D1 row "Bearing" — label L60 R110.4 align=start | detected "85°" L124.4 R215.2 align=right | applied "85°" L229.2 R320 align=right
+[380x800] info D1 row "Lanes per direction" — label L60 R110.4 align=start | detected "2" L124.4 R215.2 align=right | applied "2" L229.2 R320 align=right
+[380x800] info D1 row "Road type" — label L60 R110.4 align=start | detected "Rural — undivided" L124.4 R215.2 align=right | applied "Rural — undivided" L229.2 R320 align=right
+[380x800] info D1 row "Divided" — label L60 R110.4 align=start | detected "Undivided" L124.4 R215.2 align=right | applied "Undivided" L229.2 R320 align=right
+[380x800] PASS D1 header-right == value-right (DETECTED) — per-row delta 0, 0, 0, 0 (header R215.2)
+[380x800] PASS D1 header-right == value-right (APPLIED) — per-row delta 0, 0, 0, 0 (header R320)
+[380x800] info D1 value-track widths — detected col widths 90.8 · applied col widths 90.8
+[380x800] PASS D1 labels share one left edge — lefts 60
+[380x800] info D2 type tuples — 5 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4
+[380x800] info D2 nodes off the tr-* roles — 8: "85°"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "85°"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "2"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "2"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "Rural — undivided"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "Rural — undivided"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400 ; "Undivided"[font-mono text-[11px] text-[color:var(--ink-on-dark-faint)] ] 11px/400 ; "Undivided"[font-mono text-[11px] text-white tabular-nums text-right] 11px/400
+[380x800] info D2 register — detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected="tabular-nums" applied="tabular-nums"
+[380x800] info D3 rows rendered — 4: Bearing="85°"→"85°" ; Lanes per direction="2"→"2" ; Road type="Rural — undivided"→"Rural — undivided" ; Divided="Undivided"→"Undivided"
+[380x800] PASS D4 #214 sentence byte-identical — "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
+[380x800] info D4 provenance line — top "OSM detection · East Bayaud Avenue · way 39508704 · operator pick"
+[380x800] info L before — Detected lanes "2" · Applied "2"
+[380x800] info L after — clicked lanes=3 — Detected lanes now "2" · Applied "3"
+[380x800] FAIL L #275 detected cell after the relay clear — before "2" → after "2" (unchanged + unmarked = the #275 defect)
+[380x800] info pageerrors — 0
+
+=== 12 pass · 2 fail · 36 info ===
+FAIL [1440x1000] L #275 detected cell after the relay clear — before "2" → after "2" (unchanged + unmarked = the #275 defect)
+FAIL [380x800] L #275 detected cell after the relay clear — before "2" → after "2" (unchanged + unmarked = the #275 defect)

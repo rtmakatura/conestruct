@@ -1,0 +1,254 @@
+[
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values tracks",
+    "ok": null,
+    "detail": "\"225.594px 112.203px 112.203px\" · block w 500"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values head \"Detected\"",
+    "ok": null,
+    "detail": "box 445.6–557.8 (w 112.2) · INK 445.6–504.8 (w 59.2)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values head \"Applied\"",
+    "ok": null,
+    "detail": "box 571.8–684 (w 112.2) · INK 571.8–623.6 (w 51.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values row \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" box 445.6–557.8 INK 538–557.8 | applied \"85°\" box 571.8–684 INK 664.2–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" box 445.6–557.8 INK 551.2–557.8 | applied \"2\" box 571.8–684 INK 677.4–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values row \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" box 445.6–557.8 INK 445.6–557.8 | applied \"Rural — undivided\" box 571.8–684 INK 571.8–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values row \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" box 445.6–557.8 INK 498.4–557.8 | applied \"Undivided\" box 571.8–684 INK 624.6–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values INK header-right == value-right (DETECTED)",
+    "ok": false,
+    "detail": "per-row ink delta 53, 53, 53, 53 px (header ink right 504.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values INK header-right == value-right (APPLIED)",
+    "ok": false,
+    "detail": "per-row ink delta 60.4, 60.4, 60.4, 60.4 px (header ink right 623.6)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A identical-values the two value tracks share one width",
+    "ok": true,
+    "detail": "detected track 112.2 · applied track 112.2"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B applied road type changed",
+    "ok": null,
+    "detail": "rural_undivided → freeway (\"Freeway / interstate\")"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values tracks",
+    "ok": null,
+    "detail": "\"205.797px 112.203px 132px\" · block w 500"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values head \"Detected\"",
+    "ok": null,
+    "detail": "box 425.8–538 (w 112.2) · INK 425.8–485 (w 59.2)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values head \"Applied\"",
+    "ok": null,
+    "detail": "box 552–684 (w 132) · INK 552–603.8 (w 51.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values row \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" box 425.8–538 INK 518.2–538 | applied \"85°\" box 552–684 INK 664.2–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" box 425.8–538 INK 531.4–538 | applied \"2\" box 552–684 INK 677.4–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values row \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" box 425.8–538 INK 425.8–538 | applied \"Freeway / interstate\" box 552–684 INK 552–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values row \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" box 425.8–538 INK 478.6–538 | applied \"Divided\" box 552–684 INK 637.8–684"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values INK header-right == value-right (DETECTED)",
+    "ok": false,
+    "detail": "per-row ink delta 53, 53, 53, 53 px (header ink right 485)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values INK header-right == value-right (APPLIED)",
+    "ok": false,
+    "detail": "per-row ink delta 80.2, 80.2, 80.2, 80.2 px (header ink right 603.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B divergent-values the two value tracks share one width",
+    "ok": false,
+    "detail": "detected track 112.2 · applied track 132"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values tracks",
+    "ok": null,
+    "detail": "\"50.4062px 90.7969px 90.7969px\" · block w 282"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values head \"Detected\"",
+    "ok": null,
+    "detail": "box 124.4–215.2 (w 90.8) · INK 124.4–183.6 (w 59.2)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values head \"Applied\"",
+    "ok": null,
+    "detail": "box 229.2–320 (w 90.8) · INK 229.2–281 (w 51.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values row \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" box 124.4–215.2 INK 195.4–215.2 | applied \"85°\" box 229.2–320 INK 300.2–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" box 124.4–215.2 INK 208.6–215.2 | applied \"2\" box 229.2–320 INK 313.4–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values row \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" box 124.4–215.2 INK 155.8–215.2 | applied \"Rural — undivided\" box 229.2–320 INK 260.6–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values row \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" box 124.4–215.2 INK 155.8–215.2 | applied \"Undivided\" box 229.2–320 INK 260.6–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values INK header-right == value-right (DETECTED)",
+    "ok": false,
+    "detail": "per-row ink delta 31.6, 31.6, 31.6, 31.6 px (header ink right 183.6)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values INK header-right == value-right (APPLIED)",
+    "ok": false,
+    "detail": "per-row ink delta 39, 39, 39, 39 px (header ink right 281)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A identical-values the two value tracks share one width",
+    "ok": true,
+    "detail": "detected track 90.8 · applied track 90.8"
+  },
+  {
+    "tag": "380x800",
+    "id": "B applied road type changed",
+    "ok": null,
+    "detail": "rural_undivided → freeway (\"Freeway / interstate\")"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values tracks",
+    "ok": null,
+    "detail": "\"50.4062px 87.5px 94.0938px\" · block w 282"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values head \"Detected\"",
+    "ok": null,
+    "detail": "box 124.4–211.9 (w 87.5) · INK 124.4–183.6 (w 59.2)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values head \"Applied\"",
+    "ok": null,
+    "detail": "box 225.9–320 (w 94.1) · INK 225.9–277.7 (w 51.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values row \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" box 124.4–211.9 INK 192.1–211.9 | applied \"85°\" box 225.9–320 INK 300.2–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" box 124.4–211.9 INK 205.3–211.9 | applied \"2\" box 225.9–320 INK 313.4–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values row \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" box 124.4–211.9 INK 152.5–211.9 | applied \"Freeway / interstate\" box 225.9–320 INK 254–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values row \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" box 124.4–211.9 INK 152.5–211.9 | applied \"Divided\" box 225.9–320 INK 273.8–320"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values INK header-right == value-right (DETECTED)",
+    "ok": false,
+    "detail": "per-row ink delta 28.3, 28.3, 28.3, 28.3 px (header ink right 183.6)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values INK header-right == value-right (APPLIED)",
+    "ok": false,
+    "detail": "per-row ink delta 42.3, 42.3, 42.3, 42.3 px (header ink right 277.7)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B divergent-values the two value tracks share one width",
+    "ok": false,
+    "detail": "detected track 87.5 · applied track 94.1"
+  }
+]

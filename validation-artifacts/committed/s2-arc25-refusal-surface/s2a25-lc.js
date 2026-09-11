@@ -24,7 +24,7 @@
 //   axe against the arc-23 baseline (1440: 0; 380: the two named).
 //   Recovery: Retry (or proceed) → clean settle → the container gone,
 //   downloads back, hero back, "Plan generated — …" written exactly once.
-const L = require("C:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/issue-258-refusal-surface/validation-artifacts/committed/s2-audit-1/audit-lib.js");
+const L = require("../s2-audit-1/audit-lib.js");
 const { fs, path } = L;
 const OUT = process.argv[2]; const EXPECT = process.argv[3];
 const BASE = process.argv[4] || "https://www.conestruct.com";

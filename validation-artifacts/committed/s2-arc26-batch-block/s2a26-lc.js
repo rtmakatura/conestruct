@@ -26,7 +26,7 @@
 //       record back, no request.
 //   X   axe on the settled block state (1440: 0; 380: the audit's named
 //       four, none in the block).
-const L = require("C:/Users/rtmak/Documents/traffic-control-tool/.claude/worktrees/batch-a-block/validation-artifacts/committed/s2-audit-1/audit-lib.js");
+const L = require("../s2-audit-1/audit-lib.js");
 const { fs, path } = L;
 const OUT = process.argv[2]; const EXPECT = process.argv[3];
 const BASE = process.argv[4] || "http://localhost:3001";
