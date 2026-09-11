@@ -1,0 +1,878 @@
+[
+  {
+    "tag": "1440x1000",
+    "id": "A as-found tracks",
+    "ok": null,
+    "detail": "\"186px 132px 132px\" · row-gap 3px · block h 276.4"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found both headers found",
+    "ok": true,
+    "detail": "\"\", \"Detected\", \"Applied\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found head DETECTED",
+    "ok": null,
+    "detail": "box 406–538 (w 132) · INK 478.8–538 (w 59.2)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found head APPLIED",
+    "ok": null,
+    "detail": "box 552–684 (w 132) · INK 632.2–684 (w 51.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found INK \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" ink 518.2–538 (w 19.8) | applied \"85°\" ink 664.2–684 (w 19.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 detected \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 applied \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 32 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found INK \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" ink 531.4–538 (w 6.6) | applied \"2\" ink 677.4–684 (w 6.6)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 detected \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 applied \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found INK \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" ink 425.8–538 (w 112.2) | applied \"Rural — undivided\" ink 571.8–684 (w 112.2)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 detected \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -53 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 applied \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -60.4 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found INK \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" ink 478.6–538 (w 59.4) | applied \"Undivided\" ink 624.6–684 (w 59.4)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 detected \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 applied \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 DETECTED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 406–538; all rows match"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 DETECTED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 APPLIED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 552–684; all rows match"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 APPLIED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D3 the two value tracks are equal",
+    "ok": true,
+    "detail": "detected 132 · applied 132"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1 every value cell reserves exactly one slot",
+    "ok": true,
+    "detail": "all cells reserve one"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 tokens \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" → [(silent)] | applied \"85°\" → [(silent)]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 tokens \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" → [(silent)] | applied \"2\" → [(silent)]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 tokens \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" → [OSM · inferred] | applied \"Rural — undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 tokens \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" → [OSM · inferred] | applied \"Undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1 all rows share one height",
+    "ok": true,
+    "detail": "\"Bearing\"=34.6 · \"Lanes per direction\"=34.6 · \"Road type\"=34.6 · \"Divided\"=34.6 → 1 distinct"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1b marker \"Bearing\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 406–538 top 1194.8 (cell top 1176.2) → OWN LINE; left edge vs value left -112.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1b marker \"Lanes per direction\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 406–538 top 1234.3 (cell top 1215.8) → OWN LINE; left edge vs value left -125.4 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1b marker \"Road type\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 406–538 top 1273.9 (cell top 1255.3) → OWN LINE; left edge vs value left -19.8 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D1b marker \"Divided\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 406–538 top 1313.5 (cell top 1294.9) → OWN LINE; left edge vs value left -72.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" marker=\"\" | applied \"85°\" marker=\"\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" marker=\"\" | applied \"2\" marker=\"\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" marker=\"OSM · inferred\" | applied \"Rural — undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" marker=\"OSM · inferred\" | applied \"Undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "A as-found D2 no row marks one column while the other shows the SAME value unmarked",
+    "ok": true,
+    "detail": "none"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B applied road type",
+    "ok": null,
+    "detail": "set to \"Urban arterial\" (shortest of \"Rural — undivided\", \"Rural — divided hwy\", \"Urban arterial\", \"Freeway / interstate\")"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values tracks",
+    "ok": null,
+    "detail": "\"186px 132px 132px\" · row-gap 3px · block h 276.4"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values both headers found",
+    "ok": true,
+    "detail": "\"\", \"Detected\", \"Applied\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values head DETECTED",
+    "ok": null,
+    "detail": "box 406–538 (w 132) · INK 478.8–538 (w 59.2)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values head APPLIED",
+    "ok": null,
+    "detail": "box 552–684 (w 132) · INK 632.2–684 (w 51.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values INK \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" ink 518.2–538 (w 19.8) | applied \"85°\" ink 664.2–684 (w 19.8)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 detected \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 applied \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 32 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values INK \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" ink 531.4–538 (w 6.6) | applied \"2\" ink 677.4–684 (w 6.6)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 detected \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 applied \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values INK \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" ink 425.8–538 (w 112.2) | applied \"Urban arterial\" ink 591.6–684 (w 92.4)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 detected \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -53 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 applied \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -40.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values INK \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" ink 478.6–538 (w 59.4) | applied \"Undivided\" ink 624.6–684 (w 59.4)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 detected \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 applied \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 DETECTED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 406–538; all rows match"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 DETECTED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 APPLIED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 552–684; all rows match"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 APPLIED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D3 the two value tracks are equal",
+    "ok": true,
+    "detail": "detected 132 · applied 132"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1 every value cell reserves exactly one slot",
+    "ok": true,
+    "detail": "all cells reserve one"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 tokens \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" → [(silent)] | applied \"85°\" → [(silent)]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 tokens \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" → [(silent)] | applied \"2\" → [(silent)]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 tokens \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" → [OSM · inferred] | applied \"Urban arterial\" → [operator-set]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 tokens \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" → [OSM · inferred] | applied \"Undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1 all rows share one height",
+    "ok": true,
+    "detail": "\"Bearing\"=34.6 · \"Lanes per direction\"=34.6 · \"Road type\"=34.6 · \"Divided\"=34.6 → 1 distinct"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1b marker \"Bearing\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 406–538 top 1155.8 (cell top 1137.2) → OWN LINE; left edge vs value left -112.2 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1b marker \"Lanes per direction\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 406–538 top 1195.3 (cell top 1176.8) → OWN LINE; left edge vs value left -125.4 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1b marker \"Road type\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 406–538 top 1234.9 (cell top 1216.3) → OWN LINE; left edge vs value left -19.8 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D1b marker \"Divided\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 406–538 top 1274.5 (cell top 1255.9) → OWN LINE; left edge vs value left -72.6 px"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" marker=\"\" | applied \"85°\" marker=\"\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" marker=\"\" | applied \"2\" marker=\"\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" marker=\"OSM · inferred\" | applied \"Urban arterial\" marker=\"operator-set\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" marker=\"OSM · inferred\" | applied \"Undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "B short-values D2 no row marks one column while the other shows the SAME value unmarked",
+    "ok": true,
+    "detail": "none"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found tracks",
+    "ok": null,
+    "detail": "\"260px\" · row-gap 8px · block h 405.1"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found both headers found",
+    "ok": true,
+    "detail": "\"\", \"Detected\", \"Applied\""
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found head DETECTED",
+    "ok": null,
+    "detail": "box 60–183 (w 123) · INK 123.8–183 (w 59.2)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found head APPLIED",
+    "ok": null,
+    "detail": "box 197–320 (w 123) · INK 268.2–320 (w 51.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found INK \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" ink 163.2–183 (w 19.8) | applied \"85°\" ink 300.2–320 (w 19.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 detected \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 applied \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 32 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found INK \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" ink 176.4–183 (w 6.6) | applied \"2\" ink 313.4–320 (w 6.6)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 detected \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 applied \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found INK \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" ink 70.8–183 (w 112.2) | applied \"Rural — undivided\" ink 207.8–320 (w 112.2)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 detected \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -53 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 applied \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -60.4 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found INK \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" ink 123.6–183 (w 59.4) | applied \"Undivided\" ink 260.6–320 (w 59.4)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 detected \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 applied \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 DETECTED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 60–183; all rows match"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 DETECTED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 APPLIED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 197–320; all rows match"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 APPLIED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D3 the two value tracks are equal",
+    "ok": true,
+    "detail": "detected 123 · applied 123"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1 every value cell reserves exactly one slot",
+    "ok": true,
+    "detail": "all cells reserve one"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 tokens \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" → [(silent)] | applied \"85°\" → [(silent)]"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 tokens \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" → [(silent)] | applied \"2\" → [(silent)]"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 tokens \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" → [OSM · inferred] | applied \"Rural — undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 tokens \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" → [OSM · inferred] | applied \"Undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1 all rows share one height",
+    "ok": true,
+    "detail": "\"Bearing\"=34.6 · \"Lanes per direction\"=34.6 · \"Road type\"=34.6 · \"Divided\"=34.6 → 1 distinct"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1b marker \"Bearing\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 60–183 top 1674.6 (cell top 1656) → OWN LINE; left edge vs value left -103.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1b marker \"Lanes per direction\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 60–183 top 1738.4 (cell top 1719.8) → OWN LINE; left edge vs value left -116.4 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1b marker \"Road type\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 60–183 top 1802.1 (cell top 1783.5) → OWN LINE; left edge vs value left -10.8 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D1b marker \"Divided\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 60–183 top 1865.9 (cell top 1847.3) → OWN LINE; left edge vs value left -63.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" marker=\"\" | applied \"85°\" marker=\"\""
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" marker=\"\" | applied \"2\" marker=\"\""
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" marker=\"OSM · inferred\" | applied \"Rural — undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" marker=\"OSM · inferred\" | applied \"Undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "380x800",
+    "id": "A as-found D2 no row marks one column while the other shows the SAME value unmarked",
+    "ok": true,
+    "detail": "none"
+  },
+  {
+    "tag": "380x800",
+    "id": "B applied road type",
+    "ok": null,
+    "detail": "set to \"Urban arterial\" (shortest of \"Rural — undivided\", \"Rural — divided hwy\", \"Urban arterial\", \"Freeway / interstate\")"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values tracks",
+    "ok": null,
+    "detail": "\"260px\" · row-gap 8px · block h 405.1"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values both headers found",
+    "ok": true,
+    "detail": "\"\", \"Detected\", \"Applied\""
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values head DETECTED",
+    "ok": null,
+    "detail": "box 60–183 (w 123) · INK 123.8–183 (w 59.2)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values head APPLIED",
+    "ok": null,
+    "detail": "box 197–320 (w 123) · INK 268.2–320 (w 51.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values INK \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" ink 163.2–183 (w 19.8) | applied \"85°\" ink 300.2–320 (w 19.8)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 detected \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 applied \"Bearing\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 32 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values INK \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" ink 176.4–183 (w 6.6) | applied \"2\" ink 313.4–320 (w 6.6)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 detected \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 applied \"Lanes per direction\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values INK \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" ink 70.8–183 (w 112.2) | applied \"Urban arterial\" ink 227.6–320 (w 92.4)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 detected \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -53 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 applied \"Road type\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -40.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values INK \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" ink 123.6–183 (w 59.4) | applied \"Undivided\" ink 260.6–320 (w 59.4)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 detected \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 applied \"Divided\"",
+    "ok": null,
+    "detail": "ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 DETECTED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 60–183; all rows match"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 DETECTED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 APPLIED header box == its track (every row)",
+    "ok": true,
+    "detail": "header box 197–320; all rows match"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 APPLIED header carries the hairline",
+    "ok": true,
+    "detail": "border-bottom: 1px solid rgb(44, 62, 83)"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D3 the two value tracks are equal",
+    "ok": true,
+    "detail": "detected 123 · applied 123"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1 every value cell reserves exactly one slot",
+    "ok": true,
+    "detail": "all cells reserve one"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 tokens \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" → [(silent)] | applied \"85°\" → [(silent)]"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 tokens \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" → [(silent)] | applied \"2\" → [(silent)]"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 tokens \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" → [OSM · inferred] | applied \"Urban arterial\" → [operator-set]"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 tokens \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" → [OSM · inferred] | applied \"Undivided\" → [OSM · inferred]"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1 all rows share one height",
+    "ok": true,
+    "detail": "\"Bearing\"=34.6 · \"Lanes per direction\"=34.6 · \"Road type\"=34.6 · \"Divided\"=34.6 → 1 distinct"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1b marker \"Bearing\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 60–183 top 1619.1 (cell top 1600.5) → OWN LINE; left edge vs value left -103.2 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1b marker \"Lanes per direction\"",
+    "ok": null,
+    "detail": "\"\" display=block ink 60–183 top 1682.9 (cell top 1664.3) → OWN LINE; left edge vs value left -116.4 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1b marker \"Road type\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 60–183 top 1746.6 (cell top 1728) → OWN LINE; left edge vs value left -10.8 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D1b marker \"Divided\"",
+    "ok": null,
+    "detail": "\"OSM · inferred\" display=block ink 60–183 top 1810.4 (cell top 1791.8) → OWN LINE; left edge vs value left -63.6 px"
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 \"Bearing\"",
+    "ok": null,
+    "detail": "detected \"85°\" marker=\"\" | applied \"85°\" marker=\"\""
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 \"Lanes per direction\"",
+    "ok": null,
+    "detail": "detected \"2\" marker=\"\" | applied \"2\" marker=\"\""
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 \"Road type\"",
+    "ok": null,
+    "detail": "detected \"Rural — undivided\" marker=\"OSM · inferred\" | applied \"Urban arterial\" marker=\"operator-set\""
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 \"Divided\"",
+    "ok": null,
+    "detail": "detected \"Undivided\" marker=\"OSM · inferred\" | applied \"Undivided\" marker=\"OSM · inferred\""
+  },
+  {
+    "tag": "380x800",
+    "id": "B short-values D2 no row marks one column while the other shows the SAME value unmarked",
+    "ok": true,
+    "detail": "none"
+  }
+]

@@ -397,3 +397,118 @@ Both probes now resolve either markup shape, scope the block's own
 provenance lines with `:scope >`, and **fail loudly** when a header is
 missing rather than skipping. A green run with a silently-skipped assertion
 is worse than a red one.
+
+---
+
+# Round 2 — the three prod defects found by hand-check on `7d3eef3`
+
+The first round shipped, and a hand-check on the live sha found three
+defects in it. Ruled 2026-09-11; all four rulings landed in one commit
+because they are one mechanism. Measurements below are on the screenshot
+fixture (E Bayaud, way `39508704`, shoulder, all four rows) and on a
+**short-value** variant, at 1440×1000 and 380×800.
+
+## What was wrong, measured on the live sha
+
+`outLocal-defects-7d3eef3/`
+
+| | measured |
+|---|---|
+| **D1** rows no longer shared a height | marked rows **34.6 px**, unmarked **19.2 px**, delta **15.4 px**, both viewports |
+| | the token was `display: block` on its own line; its left edge sat −19.8 px from the Road type value and −72.6 px from the Divided value — matching nothing |
+| **D2** only the detected column was marked | Road type and Divided read the SAME value in both columns with only the left one marked |
+| **D3** the header looked unaligned | ink-RIGHT delta was **0 px on every row, both columns, on the long AND the short fixture** — the acceptance was not trivially satisfied. What is visible is the LEFT edge |
+
+**D3's real geometry.** Header ink overhang against the value, per row:
+
+| row | detected | applied |
+|---|---|---|
+| Bearing `85°` | +39.4 px | +32.0 px |
+| Lanes `2` | +52.6 px | +45.2 px |
+| Road type (long) | −53.0 px | −60.4 px |
+| Divided | −0.2 px | −7.6 px |
+
+And the asymmetry that reads as "DETECTED sits left while APPLIED lines
+up" is a **constant 7.4 px on every row at both viewports** — the rendered
+header ink is `Detected` 59.2 px against `Applied` 51.8 px. Two words of
+different length, nothing else.
+
+## Why inline did not happen, with the arithmetic
+
+Ruling (a) as first written put the token INLINE after the value in a
+reserved slot. It does not fit, and the numbers are recorded rather than
+the attempt dropped quietly:
+
+- the value track is **132 px** because that is exactly the domain's widest
+  value (`Freeway / interstate` = 132.0 px);
+- the token `OSM · inferred` is 84 px at 10 px mono, **~89 px rendered**;
+- value + gap + token = **227 px per column** → **482 px** for the pair,
+  against **478 px** of block content at 1440. Over before the label gets a
+  pixel.
+- even a short token (`inferred`, ~51 px rendered) leaves **72 px** for a
+  label needing ~118 px — which wraps, regrowing the row the fix exists to
+  pin.
+
+So the second line is **reserved in every value cell** instead. Its
+`line-height` and `min-height` are both pinned to 16 px on purpose, so the
+spoken and silent slots are equal *by construction* rather than by a
+measured guess a fallback font could break.
+
+## After — `6ab5d87`, both fixtures, both viewports
+
+`outLocal-after-6ab5d87/` (36 pass, 0 fail) and
+`outLocal-ink-after-6ab5d87/` (16 pass, 0 fail).
+
+**D1 — all rows one height, marked or not.**
+
+| fixture | 1440 | 380 |
+|---|---|---|
+| as-found (2 rows marked) | 34.6 / 34.6 / 34.6 / 34.6 — **1 distinct** | 34.6 ×4 — **1 distinct** |
+| short-value (1 row overridden) | 34.6 ×4 — **1 distinct** | 34.6 ×4 — **1 distinct** |
+
+Every value cell reserves exactly one slot, asserted in the browser and in
+the mounted suite.
+
+**D2 — both columns state their own provenance**, in both directions:
+
+| fixture | Road type detected | Road type applied |
+|---|---|---|
+| screenshot (applied == detected) | `OSM · inferred` | **`OSM · inferred`** |
+| overridden (applied ≠ detected) | `OSM · inferred` | **`operator-set`** |
+
+`Divided` stays `OSM · inferred` in both columns on both fixtures, so the
+two columns are demonstrably independent. `Bearing` and `Lanes` stay silent
+in both — they carry no method, being measured by construction.
+
+**D3 — the column's extent is declared, not inferred:**
+
+| | 1440 | 380 |
+|---|---|---|
+| DETECTED header box == its track, every row | 406–538 ✓ | 60–183 ✓ |
+| APPLIED header box == its track, every row | 552–684 ✓ | 197–320 ✓ |
+| hairline on both headers | `1px solid rgb(44, 62, 83)` (`--rule`) | same |
+| value ink right == header ink right | **0 px** on long AND short fixtures | **0 px** |
+| the two value tracks equal | 132 / 132 | 123 / 123 |
+
+**Declared behaviour change (Rule 5):** the block is **38.0 px taller** at
+1440 (238.4 → 276.4) — 30.8 for the two reserved lines, the remainder the
+header rule and its padding. Accepted in ruling (a).
+
+## No cell can carry two tokens — and that is structural
+
+Asked at the checkpoint, answered here. The method token exists only on
+`Road type` and `Divided`; #275's `overridden` belongs to the lanes row,
+which has no method because `lanesPerDirection` is measured by
+construction; and `operator-set` is applied-only. So the three never meet
+in one cell. The **withdrawn** case puts its word in the VALUE and leaves
+the slot silent, because the applied cell's `operator-set` already says who
+set the count.
+
+## A harness correction this round forced
+
+`s2a29-ink.js` measured a cell's ink with `selectNodeContents(el)`. Once
+the reserved slot landed, that spanned the value *and* the slot beneath it
+and reported the whole cell as "ink" — which is not what the alignment
+acceptance is about. Both probes now measure the cell's **own text nodes**
+only. Without this the leg would have kept printing PASS against a number
+that had quietly stopped meaning what it says.

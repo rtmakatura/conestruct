@@ -39,11 +39,25 @@ const INK = () => {
   const ink = (el) => {
     if (!el) return null;
     const r = document.createRange();
-    r.selectNodeContents(el);
+    // The cell's OWN text only.  Since the reserved provenance slot landed
+    // (2026-09-11), selectNodeContents(el) would span the value AND the
+    // slot beneath it and report the whole cell as "ink" — which is not
+    // what the alignment acceptance is about.
+    const own = Array.from(el.childNodes).filter((n) => n.nodeType === 3);
+    if (!own.length) {
+      const b0 = el.getBoundingClientRect();
+      return {
+        text: "",
+        boxL: Math.round(b0.left * 10) / 10, boxR: Math.round(b0.right * 10) / 10, boxW: Math.round(b0.width * 10) / 10,
+        inkL: null, inkR: null, inkW: 0,
+      };
+    }
+    r.setStartBefore(own[0]);
+    r.setEndAfter(own[own.length - 1]);
     const t = r.getBoundingClientRect();
     const b = el.getBoundingClientRect();
     return {
-      text: (el.textContent || "").trim(),
+      text: own.map((n) => n.textContent.trim()).join("").trim(),
       boxL: Math.round(b.left * 10) / 10, boxR: Math.round(b.right * 10) / 10, boxW: Math.round(b.width * 10) / 10,
       inkL: Math.round(t.left * 10) / 10, inkR: Math.round(t.right * 10) / 10, inkW: Math.round(t.width * 10) / 10,
     };

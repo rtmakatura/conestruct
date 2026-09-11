@@ -1,0 +1,114 @@
+healthz sha 7d3eef3765869772cff8a9573349ceb32f2dc523 expect 7d3eef3765869772cff8a9573349ceb32f2dc523
+base http://localhost:3005 · fixture 39.71466,-104.94071 way 39508704
+[1440x1000] info A as-found tracks — "186px 132px 132px" · row-gap 3px · block h 238.4
+[1440x1000] PASS A as-found both headers found — "", "Detected", "Applied"
+[1440x1000] info A as-found head DETECTED — box 406–538 (w 132) · INK 478.8–538 (w 59.2)
+[1440x1000] info A as-found head APPLIED — box 552–684 (w 132) · INK 632.2–684 (w 51.8)
+[1440x1000] info A as-found INK "Bearing" — detected "85°" ink 518.2–538 (w 19.8) | applied "85°" ink 664.2–684 (w 19.8)
+[1440x1000] info A as-found D3 detected "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px
+[1440x1000] info A as-found D3 applied "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 32 px
+[1440x1000] info A as-found INK "Lanes per direction" — detected "2" ink 531.4–538 (w 6.6) | applied "2" ink 677.4–684 (w 6.6)
+[1440x1000] info A as-found D3 detected "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px
+[1440x1000] info A as-found D3 applied "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px
+[1440x1000] info A as-found INK "Road type" — detected "Rural — undivided" ink 425.8–538 (w 112.2) | applied "Rural — undivided" ink 571.8–684 (w 112.2)
+[1440x1000] info A as-found D3 detected "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -53 px
+[1440x1000] info A as-found D3 applied "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -60.4 px
+[1440x1000] info A as-found INK "Divided" — detected "Undivided" ink 478.6–538 (w 59.4) | applied "Undivided" ink 624.6–684 (w 59.4)
+[1440x1000] info A as-found D3 detected "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px
+[1440x1000] info A as-found D3 applied "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px
+[1440x1000] FAIL A as-found D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+[1440x1000] info A as-found D1 marked vs unmarked row height — marked 34.6 px · unmarked 19.2 px · delta 15.4 px
+[1440x1000] info A as-found D1b marker "Road type" — "OSM · inferred" display=block ink 406–538 top 1235.9 (cell top 1217.3) → OWN LINE; left edge vs value left -19.8 px
+[1440x1000] info A as-found D1b marker "Divided" — "OSM · inferred" display=block ink 406–538 top 1275.5 (cell top 1256.9) → OWN LINE; left edge vs value left -72.6 px
+[1440x1000] info A as-found D2 "Bearing" — detected "85°" marker=none | applied "85°" marker=none
+[1440x1000] info A as-found D2 "Lanes per direction" — detected "2" marker=none | applied "2" marker=none
+[1440x1000] info A as-found D2 "Road type" — detected "Rural — undivided" marker="OSM · inferred" | applied "Rural — undivided" marker=none
+[1440x1000] info A as-found D2 "Divided" — detected "Undivided" marker="OSM · inferred" | applied "Undivided" marker=none
+[1440x1000] FAIL A as-found D2 no row marks one column while the other shows the SAME value unmarked — "Road type": both read "Rural — undivided", only detected marked ; "Divided": both read "Undivided", only detected marked
+[1440x1000] info B applied road type — set to "Urban arterial" (shortest of "Rural — undivided", "Rural — divided hwy", "Urban arterial", "Freeway / interstate")
+[1440x1000] info B short-values tracks — "186px 132px 132px" · row-gap 3px · block h 238.4
+[1440x1000] PASS B short-values both headers found — "", "Detected", "Applied"
+[1440x1000] info B short-values head DETECTED — box 406–538 (w 132) · INK 478.8–538 (w 59.2)
+[1440x1000] info B short-values head APPLIED — box 552–684 (w 132) · INK 632.2–684 (w 51.8)
+[1440x1000] info B short-values INK "Bearing" — detected "85°" ink 518.2–538 (w 19.8) | applied "85°" ink 664.2–684 (w 19.8)
+[1440x1000] info B short-values D3 detected "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px
+[1440x1000] info B short-values D3 applied "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 32 px
+[1440x1000] info B short-values INK "Lanes per direction" — detected "2" ink 531.4–538 (w 6.6) | applied "2" ink 677.4–684 (w 6.6)
+[1440x1000] info B short-values D3 detected "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px
+[1440x1000] info B short-values D3 applied "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px
+[1440x1000] info B short-values INK "Road type" — detected "Rural — undivided" ink 425.8–538 (w 112.2) | applied "Urban arterial" ink 591.6–684 (w 92.4)
+[1440x1000] info B short-values D3 detected "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -53 px
+[1440x1000] info B short-values D3 applied "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -40.6 px
+[1440x1000] info B short-values INK "Divided" — detected "Undivided" ink 478.6–538 (w 59.4) | applied "Undivided" ink 624.6–684 (w 59.4)
+[1440x1000] info B short-values D3 detected "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px
+[1440x1000] info B short-values D3 applied "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px
+[1440x1000] FAIL B short-values D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+[1440x1000] info B short-values D1 marked vs unmarked row height — marked 34.6 px · unmarked 19.2 px · delta 15.4 px
+[1440x1000] info B short-values D1b marker "Road type" — "OSM · inferred" display=block ink 406–538 top 1196.9 (cell top 1178.3) → OWN LINE; left edge vs value left -19.8 px
+[1440x1000] info B short-values D1b marker "Divided" — "OSM · inferred" display=block ink 406–538 top 1236.5 (cell top 1217.9) → OWN LINE; left edge vs value left -72.6 px
+[1440x1000] info B short-values D2 "Bearing" — detected "85°" marker=none | applied "85°" marker=none
+[1440x1000] info B short-values D2 "Lanes per direction" — detected "2" marker=none | applied "2" marker=none
+[1440x1000] info B short-values D2 "Road type" — detected "Rural — undivided" marker="OSM · inferred" | applied "Urban arterial" marker=none
+[1440x1000] info B short-values D2 "Divided" — detected "Undivided" marker="OSM · inferred" | applied "Undivided" marker=none
+[1440x1000] FAIL B short-values D2 no row marks one column while the other shows the SAME value unmarked — "Divided": both read "Undivided", only detected marked
+[380x800] info A as-found tracks — "260px" · row-gap 8px · block h 367.1
+[380x800] PASS A as-found both headers found — "", "Detected", "Applied"
+[380x800] info A as-found head DETECTED — box 60–183 (w 123) · INK 123.8–183 (w 59.2)
+[380x800] info A as-found head APPLIED — box 197–320 (w 123) · INK 268.2–320 (w 51.8)
+[380x800] info A as-found INK "Bearing" — detected "85°" ink 163.2–183 (w 19.8) | applied "85°" ink 300.2–320 (w 19.8)
+[380x800] info A as-found D3 detected "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px
+[380x800] info A as-found D3 applied "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 32 px
+[380x800] info A as-found INK "Lanes per direction" — detected "2" ink 176.4–183 (w 6.6) | applied "2" ink 313.4–320 (w 6.6)
+[380x800] info A as-found D3 detected "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px
+[380x800] info A as-found D3 applied "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px
+[380x800] info A as-found INK "Road type" — detected "Rural — undivided" ink 70.8–183 (w 112.2) | applied "Rural — undivided" ink 207.8–320 (w 112.2)
+[380x800] info A as-found D3 detected "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -53 px
+[380x800] info A as-found D3 applied "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -60.4 px
+[380x800] info A as-found INK "Divided" — detected "Undivided" ink 123.6–183 (w 59.4) | applied "Undivided" ink 260.6–320 (w 59.4)
+[380x800] info A as-found D3 detected "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px
+[380x800] info A as-found D3 applied "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px
+[380x800] FAIL A as-found D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+[380x800] info A as-found D1 marked vs unmarked row height — marked 34.6 px · unmarked 19.2 px · delta 15.4 px
+[380x800] info A as-found D1b marker "Road type" — "OSM · inferred" display=block ink 60–183 top 1607.6 (cell top 1589) → OWN LINE; left edge vs value left -10.8 px
+[380x800] info A as-found D1b marker "Divided" — "OSM · inferred" display=block ink 60–183 top 1671.4 (cell top 1652.8) → OWN LINE; left edge vs value left -63.6 px
+[380x800] info A as-found D2 "Bearing" — detected "85°" marker=none | applied "85°" marker=none
+[380x800] info A as-found D2 "Lanes per direction" — detected "2" marker=none | applied "2" marker=none
+[380x800] info A as-found D2 "Road type" — detected "Rural — undivided" marker="OSM · inferred" | applied "Rural — undivided" marker=none
+[380x800] info A as-found D2 "Divided" — detected "Undivided" marker="OSM · inferred" | applied "Undivided" marker=none
+[380x800] FAIL A as-found D2 no row marks one column while the other shows the SAME value unmarked — "Road type": both read "Rural — undivided", only detected marked ; "Divided": both read "Undivided", only detected marked
+[380x800] info B applied road type — set to "Urban arterial" (shortest of "Rural — undivided", "Rural — divided hwy", "Urban arterial", "Freeway / interstate")
+[380x800] info B short-values tracks — "260px" · row-gap 8px · block h 367.1
+[380x800] PASS B short-values both headers found — "", "Detected", "Applied"
+[380x800] info B short-values head DETECTED — box 60–183 (w 123) · INK 123.8–183 (w 59.2)
+[380x800] info B short-values head APPLIED — box 197–320 (w 123) · INK 268.2–320 (w 51.8)
+[380x800] info B short-values INK "Bearing" — detected "85°" ink 163.2–183 (w 19.8) | applied "85°" ink 300.2–320 (w 19.8)
+[380x800] info B short-values D3 detected "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 39.4 px
+[380x800] info B short-values D3 applied "Bearing" — ink-right delta 0 px · header ink LEFT overhangs the value by 32 px
+[380x800] info B short-values INK "Lanes per direction" — detected "2" ink 176.4–183 (w 6.6) | applied "2" ink 313.4–320 (w 6.6)
+[380x800] info B short-values D3 detected "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 52.6 px
+[380x800] info B short-values D3 applied "Lanes per direction" — ink-right delta 0 px · header ink LEFT overhangs the value by 45.2 px
+[380x800] info B short-values INK "Road type" — detected "Rural — undivided" ink 70.8–183 (w 112.2) | applied "Urban arterial" ink 227.6–320 (w 92.4)
+[380x800] info B short-values D3 detected "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -53 px
+[380x800] info B short-values D3 applied "Road type" — ink-right delta 0 px · header ink LEFT overhangs the value by -40.6 px
+[380x800] info B short-values INK "Divided" — detected "Undivided" ink 123.6–183 (w 59.4) | applied "Undivided" ink 260.6–320 (w 59.4)
+[380x800] info B short-values D3 detected "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -0.2 px
+[380x800] info B short-values D3 applied "Divided" — ink-right delta 0 px · header ink LEFT overhangs the value by -7.6 px
+[380x800] FAIL B short-values D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+[380x800] info B short-values D1 marked vs unmarked row height — marked 34.6 px · unmarked 19.2 px · delta 15.4 px
+[380x800] info B short-values D1b marker "Road type" — "OSM · inferred" display=block ink 60–183 top 1708.6 (cell top 1690) → OWN LINE; left edge vs value left -10.8 px
+[380x800] info B short-values D1b marker "Divided" — "OSM · inferred" display=block ink 60–183 top 1772.4 (cell top 1753.8) → OWN LINE; left edge vs value left -63.6 px
+[380x800] info B short-values D2 "Bearing" — detected "85°" marker=none | applied "85°" marker=none
+[380x800] info B short-values D2 "Lanes per direction" — detected "2" marker=none | applied "2" marker=none
+[380x800] info B short-values D2 "Road type" — detected "Rural — undivided" marker="OSM · inferred" | applied "Urban arterial" marker=none
+[380x800] info B short-values D2 "Divided" — detected "Undivided" marker="OSM · inferred" | applied "Undivided" marker=none
+[380x800] FAIL B short-values D2 no row marks one column while the other shows the SAME value unmarked — "Divided": both read "Undivided", only detected marked
+
+=== 4 pass · 8 fail ===
+FAIL [1440x1000] A as-found D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+FAIL [1440x1000] A as-found D2 no row marks one column while the other shows the SAME value unmarked — "Road type": both read "Rural — undivided", only detected marked ; "Divided": both read "Undivided", only detected marked
+FAIL [1440x1000] B short-values D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+FAIL [1440x1000] B short-values D2 no row marks one column while the other shows the SAME value unmarked — "Divided": both read "Undivided", only detected marked
+FAIL [380x800] A as-found D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+FAIL [380x800] A as-found D2 no row marks one column while the other shows the SAME value unmarked — "Road type": both read "Rural — undivided", only detected marked ; "Divided": both read "Undivided", only detected marked
+FAIL [380x800] B short-values D1 all rows share one height — "Bearing"=19.2 · "Lanes per direction"=19.2 · "Road type"=34.6 · "Divided"=34.6 → 2 distinct
+FAIL [380x800] B short-values D2 no row marks one column while the other shows the SAME value unmarked — "Divided": both read "Undivided", only detected marked
