@@ -38,27 +38,44 @@ interface Row {
   detected: string;
   applied: string;
   /**
-   * #274 — how detection came by the DETECTED value, for the only rows
-   * that can present a guess as a fact.  `classify.ts` hands back plain
-   * applied scalars at the top level plus a parallel `fields.*` bag that
-   * carries this discriminant; top-level `speedLimitMph` and
-   * `lanesPerDirection` are measured BY CONSTRUCTION (the class fallback
-   * never reaches the top level — it lives only in `fields.speed.value` /
-   * `fields.lanes.value`), so when those rows render they rendered from a
-   * real OSM tag and want no marker.  `roadType` and `divided` always
-   * have a value and may be pure inference, so they carry theirs in both
-   * states.  Bearing comes off the candidate geometry, not the
-   * classifier, and has no method at all.
+   * The DETECTED cell's provenance token.  Either #274's method (`OSM ·
+   * measured` / `OSM · inferred`) or #275's `overridden` — never both,
+   * and that is structural rather than lucky: only `roadType` and
+   * `divided` carry a method, because `classify.ts` hands back plain
+   * applied scalars at the top level plus a parallel `fields.*` bag, and
+   * top-level `speedLimitMph` / `lanesPerDirection` are measured BY
+   * CONSTRUCTION (the class fallback lives only in `fields.speed.value` /
+   * `fields.lanes.value` and never reaches the top level).  #275's note
+   * belongs to the lanes row, which therefore has no method; bearing
+   * comes off the candidate geometry, not the classifier, and has
+   * neither.  Undefined means the slot is reserved but silent.
    */
-  method?: "measured" | "inferred";
+  detectedNote?: string;
   /**
-   * #275 — a provenance word for the DETECTED cell that is not a method:
-   * "overridden" when the operator superseded a disputed detection (the
-   * marker rides the wire and the audit reprints the numbers), or the
-   * reason the cell has withdrawn its value.  Rendered in the same
-   * provenance role as `method`; the two never both apply to one row.
+   * The APPLIED cell's own provenance.  Filled centrally below: the
+   * applied value inherits the detected token for as long as it IS the
+   * detected value, and says `operator-set` the moment it differs.  The
+   * comparison is the signal — no new state, and `operator-set` is the
+   * picker's existing third token (LocationPickerModal.tsx:2547).
    */
-  note?: string;
+  appliedNote?: string;
+}
+
+/**
+ * One reserved provenance line, under a value.  It is rendered for EVERY
+ * value cell whether or not it has something to say, so a row's height
+ * never depends on its content (P1/P6): the token used to appear only when
+ * it existed, which made Road type and Divided 34.6 px tall against
+ * Bearing and Lanes at 19.2 px.  The slot IS the provenance role, so it
+ * declares no size of its own.
+ */
+function Slot({ note }: { note?: string }) {
+  const inferred = note === "OSM · inferred";
+  return (
+    <span className={`dva-slot tr-prov${inferred ? " is-inferred" : ""}`}>
+      {note ?? ""}
+    </span>
+  );
 }
 
 export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
@@ -126,11 +143,9 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
       label: "Lanes per direction",
       detected: withdrawn ? "withdrawn" : String(cls.lanesPerDirection),
       applied: String((scenario as { lanes: number }).lanes),
-      note: withdrawn
-        ? "operator set the count"
-        : relayCleared
-          ? "overridden"
-          : undefined,
+      // Withdrawn puts the word in the VALUE, so the slot stays silent —
+      // the applied cell's `operator-set` already says who set the count.
+      detectedNote: !withdrawn && relayCleared ? "overridden" : undefined,
     });
   }
   if ("roadType" in scenario) {
@@ -138,7 +153,9 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
       label: "Road type",
       detected: ROAD_TYPE_LABELS[cls.roadType],
       applied: ROAD_TYPE_LABELS[(scenario as { roadType: RoadType }).roadType],
-      method: cls.fields?.roadType.method,
+      detectedNote: cls.fields?.roadType.method
+        ? `OSM · ${cls.fields.roadType.method}`
+        : undefined,
     });
   }
   if ("divided" in scenario) {
@@ -148,8 +165,22 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
       applied: (scenario as { divided: boolean }).divided
         ? "Divided"
         : "Undivided",
-      method: cls.fields?.divided.method,
+      detectedNote: cls.fields?.divided.method
+        ? `OSM · ${cls.fields.divided.method}`
+        : undefined,
     });
+  }
+
+  // The applied cell states where ITS OWN value came from.  While it still
+  // shows the detected value it IS the detection's value, so it inherits
+  // the detection's provenance — an inferred road type auto-applied to the
+  // plan is just as inferred in the column that matters.  The moment it
+  // differs, the operator (or a clamp) set it, and it says so with the
+  // picker's own third token.  The comparison is the whole signal: no new
+  // state, and a value equal to detection is detection's value however it
+  // got there.
+  for (const r of rows) {
+    r.appliedNote = r.detected === r.applied ? r.detectedNote : "operator-set";
   }
 
   const roadName = cand.name ?? cand.ref ?? `way ${cand.way_id}`;
@@ -178,40 +209,17 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
             {/* #273: one declared value register for both columns; the ink
                 is the only axis between them, so the emphasis says "this is
                 what the plan used" and nothing else. */}
+            {/* One reserved slot per value cell — #274's method, #275's
+                `overridden`, and the applied cell's `operator-set` are one
+                mechanism and wear one treatment. */}
             <span className="dva-val is-detected">
               {r.detected}
-              {/* #274: the picker's own producer and words, so one string
-                  describes this fact on both surfaces.  The WORD is the
-                  channel (Rule 13 / P9); the amber tone only reinforces
-                  it, and it is the picker's existing --warn. */}
-              {r.method && (
-                <span
-                  className={`tr-prov${r.method === "inferred" ? " is-inferred" : ""}`}
-                  title={
-                    r.method === "inferred"
-                      ? "Derived from the road class — OSM did not record this attribute"
-                      : "Read from a real OSM tag for this attribute"
-                  }
-                >
-                  OSM · {r.method}
-                </span>
-              )}
-              {/* #275: the same provenance role carries why this cell is
-                  marked or has withdrawn its value. */}
-              {r.note && (
-                <span
-                  className="tr-prov"
-                  title={
-                    r.note === "overridden"
-                      ? "Detection reported this and the operator superseded it — the audit reprints both"
-                      : "The operator took ownership of this count; detection no longer informs any decision"
-                  }
-                >
-                  {r.note}
-                </span>
-              )}
+              <Slot note={r.detectedNote} />
             </span>
-            <span className="dva-val is-applied">{r.applied}</span>
+            <span className="dva-val is-applied">
+              {r.applied}
+              <Slot note={r.appliedNote} />
+            </span>
           </div>
         ))}
       </div>

@@ -2705,9 +2705,37 @@ input[type="number"] {
    nothing to the census.  Inferred takes the picker's amber (--warn), the
    same tone the same fact wears at LocationPickerModal.tsx:2543-2546; the
    distinguishing channel is the word, never the colour (Rule 13, P9). */
-.workbench .dva .dva-val .tr-prov {
+/* The provenance line is RESERVED in every value cell, spoken or not, so a
+   row's height never depends on its content (P1/P6).  Before this, the
+   token appeared only where it existed and Road type / Divided stood
+   34.6 px against Bearing / Lanes at 19.2 px — a 15.4 px difference, both
+   viewports.  min-height holds the empty line open; the slot IS the
+   provenance role (it carries .tr-prov too), so it declares no size of its
+   own.  Inline was measured and does not fit: the widest value is 132 px
+   (= the track) and the token is 89 px rendered, so a value + gap + token
+   needs 227 px per column and 482 px for the pair, against 478 px of block
+   content at 1440. */
+.workbench .dva .dva-slot {
   display: block;
   margin-top: 1px;
+  /* line-height AND min-height are both declared, and both are the same
+     number on purpose: the spoken slot's line box is pinned to 16px rather
+     than left to the font's metrics, and the silent slot reserves exactly
+     that.  Equal by construction, so the rows cannot drift apart if the
+     mono face falls back. */
+  line-height: 16px;
+  min-height: 16px;
+}
+/* #273 defect 3: a fixed track and variable-width text can share ONE edge,
+   and right is the correct one for a comparison read down a column — so the
+   header word cannot also line up on the left (measured overhang ranges
+   -60.4 px to +52.6 px, and "Detected" is a constant 7.4 px wider than
+   "Applied").  The column's extent is therefore declared by a rule rather
+   than inferred from the ink: the header cell's box already spans its whole
+   track, so the hairline needs no new geometry and reuses --rule. */
+.workbench .dva .dva-head .tr-step {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 3px;
 }
 .workbench .dva .dva-val .tr-prov.is-inferred {
   color: var(--warn);
