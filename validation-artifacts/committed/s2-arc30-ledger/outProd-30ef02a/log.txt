@@ -1,0 +1,52 @@
+healthz sha 30ef02ad4e9d2979ab4688694b291653b2d6a4c3 expect 30ef02ad4e9d2979ab4688694b291653b2d6a4c3
+base https://www.conestruct.com
+[1440x1000] PASS P-detect — way 39508704 offered by detection
+[1440x1000] PASS P-mount — block 500x292.8 px, 4 rows, padding 8px 10px 8px 10px
+[1440x1000] info A-geom — content 478 · gutter 16 · row body 456 · prov role 10px/16px w400 track 0.4px
+[1440x1000] info A-row-Bearing — applied "85°" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · 85° · no source tag" 456px 1ln rgb(147, 160, 176) · line1 20.2 · slot 16 (min 16px) · row 44.2
+[1440x1000] info A-row-Lanes per direction — applied "2" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · 2 · no source tag" 456px 1ln rgb(147, 160, 176) · line1 20.2 · slot 16 (min 16px) · row 44.2
+[1440x1000] info A-row-Road type — applied "Rural — undivided" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · Rural — undivided · inferred" 456px 1ln rgb(244, 192, 32) · line1 20.2 · slot 16 (min 16px) · row 44.2
+[1440x1000] info A-row-Divided — applied "Undivided" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · Undivided · inferred" 456px 1ln rgb(244, 192, 32) · line1 20.2 · slot 16 (min 16px) · row 43.2
+[1440x1000] PASS A-pairing — every row renders one glyph AND one clause
+[1440x1000] PASS B-right-axis — applied-value ink right spread across 4 rows = 0 px (the old fixed tracks are gone; the axis comes from the row body's full width)
+[1440x1000] PASS C-equal-rows — bordered row heights 44.2, 44.2, 44.2 — distinct: 44.2
+[1440x1000] PASS C-last-row-hairline — last row 43.2 px against 44.2 px — the difference is its dropped hairline (ruling 7), and nothing else
+[1440x1000] info C-reserve — clause slot min-height 16px (ruled: 16px at/above 520, 32px below)
+[1440x1000] PASS D-caveat — caveat === contract ("road geometry governs the drawing — the typed bearing sets the travel-direction sign only")
+[1440x1000] info E-worst — worst MATCH 236.8 px, worst DIFFER 332.8 px against a 456 px row body — MATCH fits, DIFFER fits
+[1440x1000] PASS E-reserve-sufficient — worst DIFFER needs 1 line(s); the reserve here is 1
+[1440x1000] info F-line1-wrap — no row's line 1 wrapped on this fixture
+[1440x1000] PASS F-no-hscroll — document 1440 px vs viewport 1440 px
+[1440x1000] PASS G-axe — 1 violation(s), 0 outside the recorded baseline [region] — see axe-1440x1000.json
+[1440x1000] PASS G-axe-block — no axe violation names a node inside .dva
+[1440x1000] info L-before — lanes 2 → clicking 3
+[1440x1000] PASS L-row-height-invariant — no row changed height when the lanes relay cleared and a token appeared
+[1440x1000] info L-lanes-clause — "OSM · 2 · overridden · operator-set" · applied "3" · glyph "⚠"
+[1440x1000] PASS L-no-stale-number — a withdrawn detection does not print the cleared relay's number
+[1440x1000] PASS Z-page-errors — no page errors
+[380x900] PASS P-detect — way 39508704 offered by detection
+[380x900] PASS P-mount — block 282x388.8 px, 4 rows, padding 8px 10px 8px 10px
+[380x900] info A-geom — content 260 · gutter 16 · row body 238 · prov role 10px/16px w400 track 0.4px
+[380x900] info A-row-Bearing — applied "85°" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · 85° · no source tag" 238px 1ln rgb(147, 160, 176) · line1 20.2 · slot 32 (min 32px) · row 60.2
+[380x900] info A-row-Lanes per direction — applied "2" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · 2 · no source tag" 238px 1ln rgb(147, 160, 176) · line1 20.2 · slot 32 (min 32px) · row 60.2
+[380x900] info A-row-Road type — applied "Rural — undivided" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · Rural — undivided · inferred" 238px 1ln rgb(244, 192, 32) · line1 20.2 · slot 32 (min 32px) · row 60.2
+[380x900] info A-row-Divided — applied "Undivided" (__JetBrains_Mono_e896d9 14px/400) · glyph "✓" rgb(79, 215, 135) [dva-glyph is-match] · clause "OSM · Undivided · inferred" 238px 1ln rgb(244, 192, 32) · line1 20.2 · slot 32 (min 32px) · row 59.2
+[380x900] PASS A-pairing — every row renders one glyph AND one clause
+[380x900] PASS B-right-axis — applied-value ink right spread across 4 rows = 0 px (the old fixed tracks are gone; the axis comes from the row body's full width)
+[380x900] PASS C-equal-rows — bordered row heights 60.2, 60.2, 60.2 — distinct: 60.2
+[380x900] PASS C-last-row-hairline — last row 59.2 px against 60.2 px — the difference is its dropped hairline (ruling 7), and nothing else
+[380x900] info C-reserve — clause slot min-height 32px (ruled: 16px at/above 520, 32px below)
+[380x900] PASS D-caveat — caveat === contract ("road geometry governs the drawing — the typed bearing sets the travel-direction sign only")
+[380x900] info E-worst — worst MATCH 236.8 px, worst DIFFER 332.8 px against a 238 px row body — MATCH fits, DIFFER wraps
+[380x900] PASS E-reserve-sufficient — worst DIFFER needs 2 line(s); the reserve here is 2
+[380x900] info F-line1-wrap — no row's line 1 wrapped on this fixture
+[380x900] PASS F-no-hscroll — document 380 px vs viewport 380 px
+[380x900] PASS G-axe — 2 violation(s), 0 outside the recorded baseline [region, scrollable-region-focusable] — see axe-380x900.json
+[380x900] PASS G-axe-block — no axe violation names a node inside .dva
+[380x900] info L-before — lanes 2 → clicking 3
+[380x900] PASS L-row-height-invariant — no row changed height when the lanes relay cleared and a token appeared
+[380x900] info L-lanes-clause — "OSM · 2 · overridden · operator-set" · applied "3" · glyph "⚠"
+[380x900] PASS L-no-stale-number — a withdrawn detection does not print the cleared relay's number
+[380x900] PASS Z-page-errors — no page errors
+
+28 pass, 0 fail, 20 info

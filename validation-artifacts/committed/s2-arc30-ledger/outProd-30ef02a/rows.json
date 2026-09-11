@@ -1,0 +1,290 @@
+[
+ {
+  "tag": "1440x1000",
+  "id": "P-detect",
+  "ok": true,
+  "detail": "way 39508704 offered by detection"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "P-mount",
+  "ok": true,
+  "detail": "block 500x292.8 px, 4 rows, padding 8px 10px 8px 10px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-geom",
+  "ok": null,
+  "detail": "content 478 · gutter 16 · row body 456 · prov role 10px/16px w400 track 0.4px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-row-Bearing",
+  "ok": null,
+  "detail": "applied \"85°\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · 85° · no source tag\" 456px 1ln rgb(147, 160, 176) · line1 20.2 · slot 16 (min 16px) · row 44.2"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-row-Lanes per direction",
+  "ok": null,
+  "detail": "applied \"2\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · 2 · no source tag\" 456px 1ln rgb(147, 160, 176) · line1 20.2 · slot 16 (min 16px) · row 44.2"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-row-Road type",
+  "ok": null,
+  "detail": "applied \"Rural — undivided\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · Rural — undivided · inferred\" 456px 1ln rgb(244, 192, 32) · line1 20.2 · slot 16 (min 16px) · row 44.2"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-row-Divided",
+  "ok": null,
+  "detail": "applied \"Undivided\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · Undivided · inferred\" 456px 1ln rgb(244, 192, 32) · line1 20.2 · slot 16 (min 16px) · row 43.2"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "A-pairing",
+  "ok": true,
+  "detail": "every row renders one glyph AND one clause"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "B-right-axis",
+  "ok": true,
+  "detail": "applied-value ink right spread across 4 rows = 0 px (the old fixed tracks are gone; the axis comes from the row body's full width)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C-equal-rows",
+  "ok": true,
+  "detail": "bordered row heights 44.2, 44.2, 44.2 — distinct: 44.2"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C-last-row-hairline",
+  "ok": true,
+  "detail": "last row 43.2 px against 44.2 px — the difference is its dropped hairline (ruling 7), and nothing else"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "C-reserve",
+  "ok": null,
+  "detail": "clause slot min-height 16px (ruled: 16px at/above 520, 32px below)"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "D-caveat",
+  "ok": true,
+  "detail": "caveat === contract (\"road geometry governs the drawing — the typed bearing sets the travel-direction sign only\")"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "E-worst",
+  "ok": null,
+  "detail": "worst MATCH 236.8 px, worst DIFFER 332.8 px against a 456 px row body — MATCH fits, DIFFER fits"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "E-reserve-sufficient",
+  "ok": true,
+  "detail": "worst DIFFER needs 1 line(s); the reserve here is 1"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "F-line1-wrap",
+  "ok": null,
+  "detail": "no row's line 1 wrapped on this fixture"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "F-no-hscroll",
+  "ok": true,
+  "detail": "document 1440 px vs viewport 1440 px"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "G-axe",
+  "ok": true,
+  "detail": "1 violation(s), 0 outside the recorded baseline [region] — see axe-1440x1000.json"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "G-axe-block",
+  "ok": true,
+  "detail": "no axe violation names a node inside .dva"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "L-before",
+  "ok": null,
+  "detail": "lanes 2 → clicking 3"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "L-row-height-invariant",
+  "ok": true,
+  "detail": "no row changed height when the lanes relay cleared and a token appeared"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "L-lanes-clause",
+  "ok": null,
+  "detail": "\"OSM · 2 · overridden · operator-set\" · applied \"3\" · glyph \"⚠\""
+ },
+ {
+  "tag": "1440x1000",
+  "id": "L-no-stale-number",
+  "ok": true,
+  "detail": "a withdrawn detection does not print the cleared relay's number"
+ },
+ {
+  "tag": "1440x1000",
+  "id": "Z-page-errors",
+  "ok": true,
+  "detail": "no page errors"
+ },
+ {
+  "tag": "380x900",
+  "id": "P-detect",
+  "ok": true,
+  "detail": "way 39508704 offered by detection"
+ },
+ {
+  "tag": "380x900",
+  "id": "P-mount",
+  "ok": true,
+  "detail": "block 282x388.8 px, 4 rows, padding 8px 10px 8px 10px"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-geom",
+  "ok": null,
+  "detail": "content 260 · gutter 16 · row body 238 · prov role 10px/16px w400 track 0.4px"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-row-Bearing",
+  "ok": null,
+  "detail": "applied \"85°\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · 85° · no source tag\" 238px 1ln rgb(147, 160, 176) · line1 20.2 · slot 32 (min 32px) · row 60.2"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-row-Lanes per direction",
+  "ok": null,
+  "detail": "applied \"2\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · 2 · no source tag\" 238px 1ln rgb(147, 160, 176) · line1 20.2 · slot 32 (min 32px) · row 60.2"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-row-Road type",
+  "ok": null,
+  "detail": "applied \"Rural — undivided\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · Rural — undivided · inferred\" 238px 1ln rgb(244, 192, 32) · line1 20.2 · slot 32 (min 32px) · row 60.2"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-row-Divided",
+  "ok": null,
+  "detail": "applied \"Undivided\" (__JetBrains_Mono_e896d9 14px/400) · glyph \"✓\" rgb(79, 215, 135) [dva-glyph is-match] · clause \"OSM · Undivided · inferred\" 238px 1ln rgb(244, 192, 32) · line1 20.2 · slot 32 (min 32px) · row 59.2"
+ },
+ {
+  "tag": "380x900",
+  "id": "A-pairing",
+  "ok": true,
+  "detail": "every row renders one glyph AND one clause"
+ },
+ {
+  "tag": "380x900",
+  "id": "B-right-axis",
+  "ok": true,
+  "detail": "applied-value ink right spread across 4 rows = 0 px (the old fixed tracks are gone; the axis comes from the row body's full width)"
+ },
+ {
+  "tag": "380x900",
+  "id": "C-equal-rows",
+  "ok": true,
+  "detail": "bordered row heights 60.2, 60.2, 60.2 — distinct: 60.2"
+ },
+ {
+  "tag": "380x900",
+  "id": "C-last-row-hairline",
+  "ok": true,
+  "detail": "last row 59.2 px against 60.2 px — the difference is its dropped hairline (ruling 7), and nothing else"
+ },
+ {
+  "tag": "380x900",
+  "id": "C-reserve",
+  "ok": null,
+  "detail": "clause slot min-height 32px (ruled: 16px at/above 520, 32px below)"
+ },
+ {
+  "tag": "380x900",
+  "id": "D-caveat",
+  "ok": true,
+  "detail": "caveat === contract (\"road geometry governs the drawing — the typed bearing sets the travel-direction sign only\")"
+ },
+ {
+  "tag": "380x900",
+  "id": "E-worst",
+  "ok": null,
+  "detail": "worst MATCH 236.8 px, worst DIFFER 332.8 px against a 238 px row body — MATCH fits, DIFFER wraps"
+ },
+ {
+  "tag": "380x900",
+  "id": "E-reserve-sufficient",
+  "ok": true,
+  "detail": "worst DIFFER needs 2 line(s); the reserve here is 2"
+ },
+ {
+  "tag": "380x900",
+  "id": "F-line1-wrap",
+  "ok": null,
+  "detail": "no row's line 1 wrapped on this fixture"
+ },
+ {
+  "tag": "380x900",
+  "id": "F-no-hscroll",
+  "ok": true,
+  "detail": "document 380 px vs viewport 380 px"
+ },
+ {
+  "tag": "380x900",
+  "id": "G-axe",
+  "ok": true,
+  "detail": "2 violation(s), 0 outside the recorded baseline [region, scrollable-region-focusable] — see axe-380x900.json"
+ },
+ {
+  "tag": "380x900",
+  "id": "G-axe-block",
+  "ok": true,
+  "detail": "no axe violation names a node inside .dva"
+ },
+ {
+  "tag": "380x900",
+  "id": "L-before",
+  "ok": null,
+  "detail": "lanes 2 → clicking 3"
+ },
+ {
+  "tag": "380x900",
+  "id": "L-row-height-invariant",
+  "ok": true,
+  "detail": "no row changed height when the lanes relay cleared and a token appeared"
+ },
+ {
+  "tag": "380x900",
+  "id": "L-lanes-clause",
+  "ok": null,
+  "detail": "\"OSM · 2 · overridden · operator-set\" · applied \"3\" · glyph \"⚠\""
+ },
+ {
+  "tag": "380x900",
+  "id": "L-no-stale-number",
+  "ok": true,
+  "detail": "a withdrawn detection does not print the cleared relay's number"
+ },
+ {
+  "tag": "380x900",
+  "id": "Z-page-errors",
+  "ok": true,
+  "detail": "no page errors"
+ }
+]

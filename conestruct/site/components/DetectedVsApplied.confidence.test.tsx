@@ -3,7 +3,7 @@
 // #274 — a classification the tool INFERRED must not render identically to
 // one it MEASURED.
 //
-// Exactly two of the five rows can present a guess as a fact, and that is
+// Exactly two of the five rows can present a GUESS as a fact, and that is
 // structural rather than a scoping choice: `classify.ts` returns plain
 // applied scalars at the top level and a parallel `fields.*` bag carrying
 // `method: "measured" | "inferred"`.  Top-level `speedLimitMph` and
@@ -15,6 +15,18 @@
 // classify.ts:166-171 answers for any unlisted class, `residential`
 // included).  Bearing comes off the candidate geometry, not the
 // classifier, and carries no method at all.
+//
+// s2-arc30 — RETIRED: "the rows measured by construction carry NO
+// marker".  That acceptance described the two-column shape, where a
+// token appeared only when it existed and there was nowhere honest to
+// put one for a row carrying no guess.  Under the clause the token
+// position exists on EVERY row, so it must be filled truthfully, and
+// `no source tag` is false about a value read from a posted `maxspeed`.
+// Speed and Lanes now state the method the classifier already held
+// (`fields.speed.method` / `fields.lanes.method`).  Ruled 2026-09-11.
+// What #274 actually protects is unchanged and still asserted below: an
+// inferred value never renders identically to a measured one.  Bearing
+// still says `no source tag`, because it genuinely has no method.
 //
 // The marker reuses the picker's producer and vocabulary verbatim —
 // `OSM · measured` / `OSM · inferred` (LocationPickerModal.tsx:2543-2546)
@@ -157,15 +169,34 @@ describe("#274 inferred must not look like measured", () => {
     expect(clause("Divided")).toMatch(/· inferred/);
   });
 
-  it("the rows measured by construction carry no method — and SAY the absence", () => {
+  it("a row read from a real tag states its method — it does not say `no source tag`", () => {
+    // s2-arc30 ruling: the clause's token position must be true.  The
+    // classifier holds a method for speed and lanes (classify.ts:237-294);
+    // #274 declined to render it because the two-column shape had nowhere
+    // honest to put it.  The clause has somewhere.
     render(<DetectedVsApplied scenario={scenario("inferred", "inferred")} />);
-    for (const label of ["Bearing", "Speed limit", "Lanes per direction"]) {
-      const c = clause(label);
-      expect(c, `${label} must carry no method`).not.toMatch(/measured|inferred/);
-      // Rule 10: the absence is stated, never left as a gap the reader
-      // has to interpret.
-      expect(c, `${label} must say the absence`).toMatch(/no source tag/);
-    }
+    expect(clause("Speed limit")).toMatch(/· measured$/);
+    expect(clause("Lanes per direction")).toMatch(/· measured$/);
+    expect(clause("Speed limit")).not.toMatch(/no source tag/);
+    expect(clause("Lanes per direction")).not.toMatch(/no source tag/);
+  });
+
+  it("a row with genuinely no method still SAYS the absence (Rule 10)", () => {
+    // Bearing comes off the candidate geometry, not the classifier, so
+    // there is no method to state — and the absence is stated rather
+    // than left as a gap the reader has to interpret.
+    render(<DetectedVsApplied scenario={scenario("inferred", "inferred")} />);
+    expect(clause("Bearing")).toMatch(/no source tag/);
+    expect(clause("Bearing")).not.toMatch(/measured|inferred/);
+  });
+
+  it("stating the method does not make a measured row look inferred", () => {
+    // what #274 actually protects, and the reason its retirement is safe
+    render(<DetectedVsApplied scenario={scenario("inferred", "measured")} />);
+    const speed = ledgerRow("Speed limit").querySelector(".dva-clause .tr-prov")!;
+    const roadType = ledgerRow("Road type").querySelector(".dva-clause .tr-prov")!;
+    expect(speed.className).not.toMatch(/is-amber/);
+    expect(roadType.className).toMatch(/is-amber/);
   });
 
   it("the marker is a word, not a colour (Rule 13 / P9)", () => {

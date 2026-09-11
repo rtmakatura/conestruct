@@ -33,6 +33,18 @@ layout they do not describe:
 - **"row labels share one left edge"** — still true, and now trivially so:
   every label starts the row body.
 
+#274's acceptance **"the rows measured by construction carry NO marker"**
+retires here too, ruled 2026-09-11. It described the two-column shape, where a
+token appeared only where one existed and there was nowhere honest to put one
+for a row carrying no guess. The clause has a token position on *every* row, so
+it must be filled truthfully — and `no source tag` is false about a value read
+from a posted `maxspeed`. Speed limit and Lanes per direction now state the
+method the classifier already held (`fields.speed.method` /
+`fields.lanes.method`, set at `classify.ts:237-294`). Bearing still says
+`no source tag`, because it comes off the candidate geometry and genuinely has
+none. What #274 actually protects is untouched and still asserted: an inferred
+value never renders identically to a measured one.
+
 **The outcome those acceptances existed for survives, and is measured.** The
 applied values still share one right edge — measured ink spread across rows
 **0.0 px at both viewports** — obtained now because every row body spans the
@@ -211,22 +223,66 @@ commented with both facts. Nothing in the arc-29 archive was touched; when
 `s2-arc29-prod` ships, the originals become reachable and these copies become
 redundant rather than wrong.
 
-## Open, for a ruling — neither load-bearing
+## The prod leg (`outProd-30ef02a/`)
 
-1. **The clause renders as one text node.** Spec 3.6 asked for emphasised
-   fragments inside it (the detected value and the applied token in
-   `--ink-on-dark`). That would split the string across spans and break both
-   the direct-text-node test idiom and any grep for the sentence. The fact is
-   carried by the words; the emphasis is available later if wanted.
+Shipped 2026-09-11. `/healthz` sha
+`30ef02ad4e9d2979ab4688694b291653b2d6a4c3`, gated at the start of the run.
+
+The healthz gate proves the BACKEND sha and nothing else, so the served
+frontend got its own gate first (`prod-build-gate-30.js`, output in
+`outProd-30ef02a/prod-build-gate.out.txt`): **PASS after 4 s**, the JS chunk
+carrying `dva-glyph` and the stylesheet carrying `.dva-row{column-gap:6px}`
+and `.dva-clause{min-height:16px}` — *and* no longer carrying `--dva-val`.
+The signature is chosen so an older build cannot satisfy it: the two-column
+table had no glyph at all, and the absence check proves the old fixed track is
+gone rather than merely unused. JS and CSS are read from different files, so a
+half-deployed build cannot read as PASS.
+
+**28 pass, 0 fail, 20 info**, both viewports, and every figure identical to the
+local run:
+
+| | 1440×1000 | 380×900 |
+|---|---|---|
+| block | 500 × 292.8 px | 282 × 388.8 px |
+| row height (last) | 44.2 (43.2) | 60.2 (59.2) |
+| applied-value ink right spread | **0.0 px** | **0.0 px** |
+| clause reserve · worst DIFFER | 16 px · 1 line | 32 px · 2 lines |
+| #214 caveat | byte-exact | byte-exact |
+| axe | baseline only, none inside `.dva` | baseline only, none inside `.dva` |
+
+The lanes leg on prod, both viewports: no row changed height when the relay
+cleared, and the clause read `OSM · 2 · overridden · operator-set` beside a ⚠
+glyph and an applied value of 3.
+
+**What this run does NOT show.** It measured the shipped tip `30ef02a`, which
+predates the item-3 fix in this commit — so the prod clauses still read
+`OSM · 30 mph · no source tag` on the rows that are read from real tags. That
+is the defect the fix addresses, visible in `outProd-30ef02a/log.txt` as the
+record of what shipped. The next ship changes those two clauses to
+`· measured` and nothing else; the geometry above is unaffected, because the
+clause's length is not what sets the row.
+
+## The three open items, ruled 2026-09-11
+
+1. **The clause renders as ONE text node — a ruled deviation from spec 3.6.**
+   The spec asked for emphasised fragments inside the clause (the detected
+   value and the applied token in `--ink-on-dark`). Rendering them would split
+   the string across spans, which breaks the direct-text-node test idiom this
+   repo reads clauses with and makes the sentence ungreppable. Ruled: not worth
+   it. The fact is carried by the words, and the emphasis remains available
+   later if the reading ever needs it. Recorded here as a deviation so nobody
+   later reads the spec and files the difference as a defect.
 2. **A road-type difference that is auto-apply's kind-narrowing still reads
-   `operator-set`.** `auto-apply.ts:515,:524` keep the scenario's own type when
-   the detected one is not in the kind's set — a narrowing, not an edit — but
-   expose no predicate to ask that with, so the `changed in plan` treatment
-   could not be extended to it honestly. Declared rather than guessed at.
-3. **`no source tag` appears on rows measured by construction.** Bearing,
-   Speed limit and Lanes carry no method at the level the block reads, so the
-   clause fills that position with spec 4.4's replacement words. For Speed and
-   Lanes the classifier *does* hold a method in `fields.speed.method` /
-   `fields.lanes.method`, which #274 deliberately did not render. Saying "no
-   source tag" about a value read from a `maxspeed` tag is arguably false; the
-   fix is one line, but it would retire a #274 acceptance, which is a ruling.
+   `operator-set`** — ruled to stay declared rather than guessed at.
+   `auto-apply.ts:515,:524` keep the scenario's own type when the detected one
+   is not in the kind's set, which is a narrowing and not an edit, but they
+   expose no predicate to ask that with. Extending the `changed in plan`
+   treatment would mean inferring the narrowing from outside, and a guess
+   dressed as provenance is worse than a declared gap.
+3. **`no source tag` on rows read from a real tag — FIXED.** Ruled: a row whose
+   value came from a real tag must not say the tag is missing. Speed limit and
+   Lanes per direction now render `fields.speed.method` / `fields.lanes.method`.
+   `overridden` still outranks the method on the lanes row — once the operator
+   has disputed the count, how detection arrived at it is no longer the fact
+   the row is about — and a withdrawn detection states no method, because it
+   has no value to have a method for. See the #274 retirement above.

@@ -1,0 +1,3 @@
+2026-09-11T17:44:10.127Z  gate: polling https://www.conestruct.com for the s2-arc30 ledger signature, up to 25 min
+2026-09-11T17:44:13.822Z  chunks 11 · sheets 3 · dva-glyph PRESENT in /_next/static/chunks/829-74a79b026027841b.js · css /_next/static/css/8579bbde1e517bbf.css · row-gap-6 true · clause-reserve-and-old-track-gone true
+2026-09-11T17:44:13.822Z  GATE PASS after 4 s — the served bundle AND stylesheet carry the ledger; legs may run

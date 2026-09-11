@@ -248,6 +248,16 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
         appliedDisplay: `${applied} mph`,
         detectedValue: detected,
         detectedDisplay: `${detected} mph`,
+        // The classifier DOES hold this row's method
+        // (classify.ts:237-294, `fields.speed.method`); #274 chose not
+        // to render it, because in the two-column shape there was
+        // nowhere honest to put a token for a row that carries no
+        // guess.  Under the clause the token position exists on every
+        // row and must be filled truthfully: printing `no source tag`
+        // about a value read from a posted `maxspeed` is false.  Ruled
+        // 2026-09-11; #274's "measured by construction carries no
+        // marker" retires with the shape that needed it.
+        detectedToken: cls.fields?.speed.method,
         // auto-apply runs the detected speed through the kind's domain
         // (auto-apply.ts:381) before the plan ever sees it, so a plan
         // can differ from detection with nobody having touched
@@ -304,7 +314,17 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
         // by construction.
         detectedValue: withdrawn ? undefined : detected,
         detectedDisplay: withdrawn ? null : String(detected),
-        detectedToken: !withdrawn && relayCleared ? "overridden" : undefined,
+        // `overridden` outranks the method: once the operator has
+        // disputed the count, HOW detection arrived at it is no longer
+        // the fact the row is about.  Otherwise the classifier's own
+        // method stands (fields.lanes.method), for the same reason the
+        // speed row now states its own.  A withdrawn detection has no
+        // method to state, because it has no value.
+        detectedToken: withdrawn
+          ? undefined
+          : relayCleared
+            ? "overridden"
+            : cls.fields?.lanes.method,
         isDomainSnap: !withdrawn && clampLanesToDomain(detected) === applied,
       }),
     );
