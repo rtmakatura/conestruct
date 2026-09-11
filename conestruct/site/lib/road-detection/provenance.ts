@@ -50,6 +50,14 @@ export type DetectedToken = (typeof DETECTED_TOKENS)[number];
 export const APPLIED_TOKENS = ["operator-set", "changed in plan"] as const;
 export type AppliedToken = (typeof APPLIED_TOKENS)[number];
 
+/**
+ * The picker's third token, named so both surfaces spell it once.  The
+ * picker says it about a field the operator edited; the ledger says it
+ * about an applied value that no longer equals the detected one.  Same
+ * fact, same word, one definition.
+ */
+export const OPERATOR_SET: AppliedToken = "operator-set";
+
 /** The source every clause opens with.  One word, not a sentence. */
 export const SOURCE = "OSM";
 

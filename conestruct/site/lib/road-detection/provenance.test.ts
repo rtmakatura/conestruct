@@ -13,6 +13,8 @@
 // MATCH, 332.8 px worst DIFFER, measured on prod b2a325a).  A stray
 // fragment is a layout regression, not just a wording one.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -143,6 +145,25 @@ describe("agreement is a comparison of model values, not of display strings", ()
     // "30" vs "30 mph" is what a display comparison would have done;
     // the model gives 30 and 30.
     expect(valuesAgree(30, 30)).toBe(true);
+  });
+});
+
+// The point of a single producer is that no surface keeps a second
+// copy, and that is a property of the SOURCE, not of any render.  So it
+// is asserted by reading the source — the same idiom the #263 census
+// uses (type-census.test.ts): a test that only checks rendered output
+// would pass happily while a second mint sat in the file waiting to
+// drift.
+const SITE_ROOT = join(__dirname, "..", "..");
+const readSource = (rel: string) => readFileSync(join(SITE_ROOT, rel), "utf-8");
+
+describe("no surface mints this vocabulary a second time", () => {
+  it("the picker composes from the producer instead of templating its own", () => {
+    const src = readSource("components/LocationPickerModal.tsx");
+    expect(src).toContain('from "@/lib/road-detection/provenance"');
+    expect(src).toContain("sourceToken(field.method)");
+    // the literal it replaced
+    expect(src).not.toContain("`OSM · ${field.method}`");
   });
 });
 

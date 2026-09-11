@@ -21,6 +21,7 @@ import type {
 } from "@/lib/road-detection/types";
 import { isPreciseGeocode } from "@/lib/geocode-precision";
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
+import { OPERATOR_SET, sourceToken } from "@/lib/road-detection/provenance";
 import {
   deriveCrossStreet,
   type CrossStreetCandidate,
@@ -2544,7 +2545,13 @@ function RoadFieldRow<T>({
   const confTone = inferred
     ? "text-[color:var(--warn)]"
     : "text-[color:var(--ink-on-dark-faint)]";
-  const provenanceText = modified ? "operator-set" : `OSM · ${field.method}`;
+  // The words come from the one vocabulary (#273, lib/road-detection/
+  // provenance.ts).  They used to be minted here and again in the
+  // detected-vs-applied ledger, which string-compared its own copy to
+  // pick a colour — two mints of one vocabulary, drifting apart on the
+  // first rename.  Rendering is unchanged: the uppercase is CSS
+  // (:2568), so this still reads "OSM · MEASURED" / "OPERATOR-SET".
+  const provenanceText = modified ? OPERATOR_SET : sourceToken(field.method);
   const provenanceTitle = modified
     ? `Operator-set — overrides the detected ${field.source}`
     : [field.source, `${field.confidence} confidence`, field.rawData]
