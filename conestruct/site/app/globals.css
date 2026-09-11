@@ -2701,6 +2701,19 @@ input[type="number"] {
 .workbench .dva .dva-val.is-detected {
   color: var(--ink-on-dark-faint);
 }
+/* #274: how detection came by this value, on its own line under it.  It IS
+   the provenance role (`.tr-prov`) — where a value came from is exactly
+   what that role is for — so it declares no size of its own and adds
+   nothing to the census.  Inferred takes the picker's amber (--warn), the
+   same tone the same fact wears at LocationPickerModal.tsx:2543-2546; the
+   distinguishing channel is the word, never the colour (Rule 13, P9). */
+.workbench .dva .dva-val .tr-prov {
+  display: block;
+  margin-top: 1px;
+}
+.workbench .dva .dva-val .tr-prov.is-inferred {
+  color: var(--warn);
+}
 .workbench .dva .dva-val.is-applied {
   color: var(--ink-bright);
 }

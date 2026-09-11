@@ -37,6 +37,20 @@ interface Row {
   label: string;
   detected: string;
   applied: string;
+  /**
+   * #274 — how detection came by the DETECTED value, for the only rows
+   * that can present a guess as a fact.  `classify.ts` hands back plain
+   * applied scalars at the top level plus a parallel `fields.*` bag that
+   * carries this discriminant; top-level `speedLimitMph` and
+   * `lanesPerDirection` are measured BY CONSTRUCTION (the class fallback
+   * never reaches the top level — it lives only in `fields.speed.value` /
+   * `fields.lanes.value`), so when those rows render they rendered from a
+   * real OSM tag and want no marker.  `roadType` and `divided` always
+   * have a value and may be pure inference, so they carry theirs in both
+   * states.  Bearing comes off the candidate geometry, not the
+   * classifier, and has no method at all.
+   */
+  method?: "measured" | "inferred";
 }
 
 export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
@@ -78,6 +92,7 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
       label: "Road type",
       detected: ROAD_TYPE_LABELS[cls.roadType],
       applied: ROAD_TYPE_LABELS[(scenario as { roadType: RoadType }).roadType],
+      method: cls.fields?.roadType.method,
     });
   }
   if ("divided" in scenario) {
@@ -87,6 +102,7 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
       applied: (scenario as { divided: boolean }).divided
         ? "Divided"
         : "Undivided",
+      method: cls.fields?.divided.method,
     });
   }
 
@@ -116,7 +132,25 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
             {/* #273: one declared value register for both columns; the ink
                 is the only axis between them, so the emphasis says "this is
                 what the plan used" and nothing else. */}
-            <span className="dva-val is-detected">{r.detected}</span>
+            <span className="dva-val is-detected">
+              {r.detected}
+              {/* #274: the picker's own producer and words, so one string
+                  describes this fact on both surfaces.  The WORD is the
+                  channel (Rule 13 / P9); the amber tone only reinforces
+                  it, and it is the picker's existing --warn. */}
+              {r.method && (
+                <span
+                  className={`tr-prov${r.method === "inferred" ? " is-inferred" : ""}`}
+                  title={
+                    r.method === "inferred"
+                      ? "Derived from the road class — OSM did not record this attribute"
+                      : "Read from a real OSM tag for this attribute"
+                  }
+                >
+                  OSM · {r.method}
+                </span>
+              )}
+            </span>
             <span className="dva-val is-applied">{r.applied}</span>
           </div>
         ))}
