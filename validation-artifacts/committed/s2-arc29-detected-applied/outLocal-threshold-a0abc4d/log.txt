@@ -1,0 +1,20 @@
+healthz sha a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25 expect a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25
+w=1440  block 500  content 478  label would get 186  tracks "225.594px 112.203px 112.203px"
+w=1280  block 500  content 478  label would get 186  tracks "225.594px 112.203px 112.203px"
+w=1100  block 460  content 438  label would get 146  tracks "185.594px 112.203px 112.203px"
+w=1000  block 410  content 388  label would get 96  tracks "135.594px 112.203px 112.203px"
+w=980  block 850  content 828  label would get 536  tracks "575.594px 112.203px 112.203px"
+w=960  block 862  content 840  label would get 548  tracks "587.594px 112.203px 112.203px"
+w=900  block 802  content 780  label would get 488  tracks "527.594px 112.203px 112.203px"
+w=820  block 722  content 700  label would get 408  tracks "447.594px 112.203px 112.203px"
+w=768  block 670  content 648  label would get 356  tracks "395.594px 112.203px 112.203px"
+w=640  block 542  content 520  label would get 228  tracks "267.594px 112.203px 112.203px"
+w=560  block 462  content 440  label would get 148  tracks "187.594px 112.203px 112.203px"
+w=481  block 383  content 361  label would get 69  tracks "108.594px 112.203px 112.203px"
+w=480  block 382  content 360  label would get 68  tracks "107.594px 112.203px 112.203px"
+w=430  block 332  content 310  label would get 18  tracks "57.5938px 112.203px 112.203px"
+w=380  block 282  content 260  label would get -32  tracks "50.4062px 90.7969px 90.7969px"
+w=360  block 262  content 240  label would get -52  tracks "50.4062px 80.7969px 80.7969px"
+
+widths where a 90 px label floor still fits two 132 px tracks: 1440, 1280, 1100, 1000, 980, 960, 900, 820, 768, 640, 560
+widths that must stack: 481, 480, 430, 380, 360

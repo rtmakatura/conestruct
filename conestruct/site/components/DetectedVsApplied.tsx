@@ -102,9 +102,14 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
           : "operator pick"}
       </div>
       <div className="dva-grid">
-        <span />
-        <span className="tr-step">Detected</span>
-        <span className="tr-step">Applied</span>
+        {/* #273: the headers live in a row wrapper like every value row, so
+            they re-flow with them when the block stacks (the corner cell is
+            addressable because it is hidden in the stacked layout). */}
+        <div className="contents dva-head">
+          <span className="dva-corner" />
+          <span className="tr-step">Detected</span>
+          <span className="tr-step">Applied</span>
+        </div>
         {rows.map((r) => (
           <div key={r.label} className="contents">
             <span className="tr-field">{r.label}</span>

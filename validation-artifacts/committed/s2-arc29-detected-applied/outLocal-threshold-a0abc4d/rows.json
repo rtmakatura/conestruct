@@ -1,0 +1,114 @@
+[
+  {
+    "w": 1440,
+    "border": 500,
+    "content": 478,
+    "tracks": "225.594px 112.203px 112.203px",
+    "labelLeft": 186
+  },
+  {
+    "w": 1280,
+    "border": 500,
+    "content": 478,
+    "tracks": "225.594px 112.203px 112.203px",
+    "labelLeft": 186
+  },
+  {
+    "w": 1100,
+    "border": 460,
+    "content": 438,
+    "tracks": "185.594px 112.203px 112.203px",
+    "labelLeft": 146
+  },
+  {
+    "w": 1000,
+    "border": 410,
+    "content": 388,
+    "tracks": "135.594px 112.203px 112.203px",
+    "labelLeft": 96
+  },
+  {
+    "w": 980,
+    "border": 850,
+    "content": 828,
+    "tracks": "575.594px 112.203px 112.203px",
+    "labelLeft": 536
+  },
+  {
+    "w": 960,
+    "border": 862,
+    "content": 840,
+    "tracks": "587.594px 112.203px 112.203px",
+    "labelLeft": 548
+  },
+  {
+    "w": 900,
+    "border": 802,
+    "content": 780,
+    "tracks": "527.594px 112.203px 112.203px",
+    "labelLeft": 488
+  },
+  {
+    "w": 820,
+    "border": 722,
+    "content": 700,
+    "tracks": "447.594px 112.203px 112.203px",
+    "labelLeft": 408
+  },
+  {
+    "w": 768,
+    "border": 670,
+    "content": 648,
+    "tracks": "395.594px 112.203px 112.203px",
+    "labelLeft": 356
+  },
+  {
+    "w": 640,
+    "border": 542,
+    "content": 520,
+    "tracks": "267.594px 112.203px 112.203px",
+    "labelLeft": 228
+  },
+  {
+    "w": 560,
+    "border": 462,
+    "content": 440,
+    "tracks": "187.594px 112.203px 112.203px",
+    "labelLeft": 148
+  },
+  {
+    "w": 481,
+    "border": 383,
+    "content": 361,
+    "tracks": "108.594px 112.203px 112.203px",
+    "labelLeft": 69
+  },
+  {
+    "w": 480,
+    "border": 382,
+    "content": 360,
+    "tracks": "107.594px 112.203px 112.203px",
+    "labelLeft": 68
+  },
+  {
+    "w": 430,
+    "border": 332,
+    "content": 310,
+    "tracks": "57.5938px 112.203px 112.203px",
+    "labelLeft": 18
+  },
+  {
+    "w": 380,
+    "border": 282,
+    "content": 260,
+    "tracks": "50.4062px 90.7969px 90.7969px",
+    "labelLeft": -32
+  },
+  {
+    "w": 360,
+    "border": 262,
+    "content": 240,
+    "tracks": "50.4062px 80.7969px 80.7969px",
+    "labelLeft": -52
+  }
+]

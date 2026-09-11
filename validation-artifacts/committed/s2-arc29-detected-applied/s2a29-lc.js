@@ -90,9 +90,17 @@ const BLOCK = () => {
     };
   };
   // Header cells: the three direct children before the row wrappers.
+  // Headers live in .dva-head since #273; before that they were bare
+  // children of .dva-grid.  Handle both so the committed record re-runs
+  // against either shape — and never silently produce an empty head list.
   const direct = Array.from(grid.children);
-  const wrappers = direct.filter((e) => e.classList.contains("contents"));
-  const heads = direct.filter((e) => !e.classList.contains("contents"));
+  const headWrap = grid.querySelector(".dva-head");
+  const heads = headWrap
+    ? Array.from(headWrap.children)
+    : direct.filter((e) => !e.classList.contains("contents"));
+  const wrappers = direct.filter(
+    (e) => e.classList.contains("contents") && !e.classList.contains("dva-head"),
+  );
   const gridRows = wrappers.map((w) => {
     const spans = Array.from(w.children);
     return { label: r(spans[0]), detected: r(spans[1]), applied: r(spans[2]) };

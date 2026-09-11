@@ -2651,13 +2651,59 @@ input[type="number"] {
   background: var(--canvas-tint);
   padding: 8px 10px;
   margin-bottom: 14px;
+  /* Both value columns are ONE declared width, sized to the widest value in
+     the DOMAIN — "Freeway / interstate", the longest ROAD_TYPE_LABELS entry,
+     measured 132 px at this block's 11 px mono — not to whatever the current
+     values happen to be.  With `auto` tracks the two columns split apart the
+     moment detected != applied (112.2 vs 132.0 at 1440, 87.5 vs 94.1 at 380)
+     and the widening column stole width from the label track, moving every
+     row label 19.8 px on a value edit: content dictating layout (P6) and
+     movement with no user action on that element (P1).  s2-arc29, #273. */
+  --dva-val: 132px;
 }
 .workbench .dva .dva-grid {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) var(--dva-val) var(--dva-val);
   column-gap: 14px;
   row-gap: 3px;
   align-items: baseline;
+}
+/* The header reads down its own column: same edge and same alignment as the
+   values beneath it.  A grid item stretches to its track, so the BOXES
+   always shared an edge — what misregistered was the ink, laid out at the
+   start of a 112 px track while the value sat at its end (53.0 px and
+   60.4 px at 1440; 31.6 and 39.0 at 380).  Scoped to .dva: `.tr-step`
+   everywhere else is unchanged. */
+.workbench .dva .tr-step {
+  text-align: right;
+}
+/* #273 ruling (b): below the measured threshold the label takes its own row
+   above a two-cell value row — stack, never shrink, never truncate (Rule 10).
+   The threshold is measured, not guessed: in the narrow regime the block's
+   content width is (viewport - 120) px, so a 90 px label floor plus two
+   132 px value tracks and two 14 px gaps needs >= 502 px.  Pinned at 520 for
+   margin; the existing 480 breakpoint is too low (the label would get 68 px).
+   Figures in s2a29-threshold.js / outLocal-threshold-a0abc4d/rows.json. */
+@media (max-width: 520px) {
+  .workbench .dva .dva-grid {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+  /* the row wrapper stops being display:contents so it can pair its own
+     cells; the two value cells stay equal and keep their shared edges */
+  .workbench .dva .dva-grid > .contents {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 14px;
+    row-gap: 2px;
+    align-items: baseline;
+  }
+  .workbench .dva .dva-grid > .contents > .tr-field {
+    grid-column: 1 / -1;
+  }
+  .workbench .dva .dva-corner {
+    display: none;
+  }
 }
 
 /* ─── #227 schedule window reference block ───

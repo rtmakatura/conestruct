@@ -48,10 +48,18 @@ const INK = () => {
       inkL: Math.round(t.left * 10) / 10, inkR: Math.round(t.right * 10) / 10, inkW: Math.round(t.width * 10) / 10,
     };
   };
+  // See s2a29-lc.js: #273 moved the headers into .dva-head.  Support both
+  // shapes explicitly rather than letting the filter return nothing.
   const direct = Array.from(grid.children);
-  const heads = direct.filter((e) => !e.classList.contains("contents")).map(ink);
+  const headWrap = grid.querySelector(".dva-head");
+  const heads = (headWrap
+    ? Array.from(headWrap.children)
+    : direct.filter((e) => !e.classList.contains("contents"))
+  ).map(ink);
   const gridRows = direct
-    .filter((e) => e.classList.contains("contents"))
+    .filter(
+      (e) => e.classList.contains("contents") && !e.classList.contains("dva-head"),
+    )
     .map((w) => {
       const s = Array.from(w.children);
       return { label: ink(s[0]), detected: ink(s[1]), applied: ink(s[2]) };
@@ -92,6 +100,10 @@ const report = async (page, tag, phase) => {
   }
   const det = m.heads.find((h) => h && /detected/i.test(h.text));
   const app = m.heads.find((h) => h && /applied/i.test(h.text));
+  // Fail loudly rather than skipping: an earlier revision of this probe
+  // silently produced no heads after the markup moved, which quietly
+  // dropped the one assertion the leg exists for.
+  check(tag, `${phase} both headers were found`, !!(det && app), `heads: ${m.heads.map((h) => (h ? `"${h.text}"` : "null")).join(", ") || "(none)"}`);
   if (det && app) {
     const dd = m.rows.map((r) => Math.round((r.detected.inkR - det.inkR) * 10) / 10);
     const ad = m.rows.map((r) => Math.round((r.applied.inkR - app.inkR) * 10) / 10);
