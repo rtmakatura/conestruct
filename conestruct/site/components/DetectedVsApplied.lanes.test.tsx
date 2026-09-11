@@ -1,5 +1,13 @@
 // @vitest-environment happy-dom
 //
+// s2-arc30: #275's two words are CLAUSE words now, not cell words.  The
+// contract is unchanged and the wording of the withdrawn case is
+// sharpened: the word takes the detected VALUE's position
+// (`OSM · withdrawn · operator-set`), never the token's, so the cleared
+// relay's number is not printed beside it.  Spec 4.5's own example did
+// print it; ruled against, 2026-09-11.
+
+//
 // #275 — the Detected lanes cell after the operator edits lanes.
 //
 // TWO mechanism corrections underpin these cases, both established from
@@ -119,37 +127,40 @@ const DISPUTED: DetectionOverride = {
   asserted: "3 lanes per direction",
 };
 
-function lanesCell(): HTMLElement {
-  const rows = Array.from(document.querySelectorAll(".dva-grid > .contents")).filter(
-    (e) => !e.classList.contains("dva-head"),
-  );
+function ledgerRow(label: string): HTMLElement {
+  const rows = Array.from(document.querySelectorAll(".dva-row"));
   const row = rows.find(
-    (r) => r.children[0]?.textContent?.trim() === "Lanes per direction",
+    (r) => r.querySelector(".tr-field")?.textContent?.trim() === label,
   );
-  if (!row) throw new Error("no lanes row");
-  return row.children[1] as HTMLElement;
+  if (!row) throw new Error(`no row labelled "${label}"`);
+  return row as HTMLElement;
 }
 
-/** The cell's OWN text — its value, without the provenance line beneath it.
- *  textContent would run the two together ("2overridden"). */
-function lanesValue(): string {
-  return Array.from(lanesCell().childNodes)
-    .filter((n) => n.nodeType === 3)
-    .map((n) => n.textContent!.trim())
-    .join("")
-    .trim();
+/** The lanes row's provenance clause — where #275's two words now live. */
+function lanesClause(): string {
+  return ledgerRow("Lanes per direction")
+    .querySelector(".dva-clause .tr-prov")!
+    .textContent!.trim();
 }
 
-describe("#275 the Detected lanes cell after a lanes edit", () => {
-  it("detection standing: the cell reports the per-direction figure", () => {
+/** The lanes row's APPLIED value — line 1, what the plan used. */
+function lanesApplied(): string {
+  return ledgerRow("Lanes per direction")
+    .querySelector(".dva-val")!
+    .textContent!.trim();
+}
+
+describe("#275 the detected lanes fact after a lanes edit", () => {
+  it("detection standing: the clause reports the per-direction figure", () => {
     render(<DetectedVsApplied scenario={scenario()} />);
-    expect(lanesValue()).toBe("2");
+    expect(lanesClause()).toMatch(/OSM · 2 ·/);
+    expect(lanesApplied()).toBe("2");
   });
 
-  it("the cell reads the classification, not the relay (different numbers)", () => {
+  it("the clause reads the classification, not the relay (different numbers)", () => {
     // the relay says 4 (raw `lanes`); the block must say 2 (per direction)
     render(<DetectedVsApplied scenario={scenario()} />);
-    expect(lanesValue()).not.toMatch(/4/);
+    expect(lanesClause()).not.toMatch(/4/);
   });
 
   it("UNDISPUTED edit — relays cleared, nothing recorded: the detection is withdrawn", () => {
@@ -158,11 +169,26 @@ describe("#275 the Detected lanes cell after a lanes edit", () => {
         scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
       />,
     );
-    const cell = lanesCell();
-    // never a blank (Rule 10), and never the cleared relay's value as current
-    expect(cell.textContent!.trim()).not.toBe("");
-    expect(lanesValue()).toMatch(/withdrawn/i);
-    expect(lanesValue()).not.toMatch(/2/);
+    // never a blank (Rule 10) — the clause always speaks
+    expect(lanesClause()).not.toBe("");
+    expect(lanesClause()).toMatch(/withdrawn/i);
+    // and never the cleared relay's value as current.  Ruled 2026-09-11
+    // against spec 4.5's own example (`OSM · 2 · withdrawn`), which
+    // printed exactly the number #275 refused: the word takes the
+    // VALUE's position, so there is no number to misread.
+    expect(lanesClause()).not.toMatch(/OSM · 2/);
+    // the plan's own value still stands on line 1
+    expect(lanesApplied()).toBe("3");
+  });
+
+  it("a withdrawn detection never reads as agreement", () => {
+    render(
+      <DetectedVsApplied
+        scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
+      />,
+    );
+    const glyph = ledgerRow("Lanes per direction").querySelector(".dva-glyph")!;
+    expect(glyph.className).not.toMatch(/is-match/);
   });
 
   it("DISPUTED edit — the marker rides the wire and the audit reprints it: show both, marked", () => {
@@ -175,12 +201,12 @@ describe("#275 the Detected lanes cell after a lanes edit", () => {
         })}
       />,
     );
-    const cell = lanesCell();
-    // both sides still readable: the detected figure stands...
-    expect(lanesValue()).toBe("2");
+    // both sides still readable: the detected figure stands in the clause...
+    expect(lanesClause()).toMatch(/OSM · 2 ·/);
+    expect(lanesApplied()).toBe("3");
     // ...and it is marked as an override rather than presented as current
-    expect(cell.textContent).toMatch(/overridden/i);
-    expect(cell.textContent).not.toMatch(/withdrawn/i);
+    expect(lanesClause()).toMatch(/overridden/i);
+    expect(lanesClause()).not.toMatch(/withdrawn/i);
   });
 
   it("a marker from another surface does not make a lanes edit look disputed", () => {
@@ -196,10 +222,10 @@ describe("#275 the Detected lanes cell after a lanes edit", () => {
       />,
     );
     // that marker carries no lane relay, so the lanes erasure was undisputed
-    expect(lanesCell().textContent).toMatch(/withdrawn/i);
+    expect(lanesClause()).toMatch(/withdrawn/i);
   });
 
-  it("the override marking is a word, and it rides the provenance role", () => {
+  it("both #275 words are clause words now, and they wear the provenance role", () => {
     render(
       <DetectedVsApplied
         scenario={scenario({
@@ -209,9 +235,12 @@ describe("#275 the Detected lanes cell after a lanes edit", () => {
         })}
       />,
     );
-    const marker = lanesCell().querySelector(".tr-prov");
-    expect(marker).not.toBeNull();
-    expect(marker!.textContent!.trim()).toMatch(/overridden/i);
+    const el = ledgerRow("Lanes per direction").querySelector(".dva-clause .tr-prov")!;
+    expect(el).not.toBeNull();
+    expect(el.textContent!.trim()).toMatch(/overridden/i);
+    // a disputed or withdrawn detection is a guess-grade fact, so the
+    // clause is ambered on the same rule as `inferred` (spec 5.4)
+    expect(el.className).toMatch(/is-amber/);
   });
 
   it("the other rows are untouched by a lanes edit", () => {
@@ -220,11 +249,8 @@ describe("#275 the Detected lanes cell after a lanes edit", () => {
         scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
       />,
     );
-    const rows = Array.from(document.querySelectorAll(".dva-grid > .contents")).filter(
-      (e) => !e.classList.contains("dva-head"),
-    );
-    const road = rows.find((r) => r.children[0]?.textContent?.trim() === "Road type");
-    expect(road!.children[1].textContent).toMatch(/Urban arterial/);
-    expect(road!.children[1].textContent).not.toMatch(/withdrawn|overridden/i);
+    const road = ledgerRow("Road type");
+    expect(road.textContent).toMatch(/Urban arterial/);
+    expect(road.textContent).not.toMatch(/withdrawn|overridden/i);
   });
 });

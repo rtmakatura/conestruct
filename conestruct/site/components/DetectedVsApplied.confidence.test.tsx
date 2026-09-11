@@ -122,65 +122,88 @@ function scenario(rt: Method, dv: Method): Scenario {
   } as Scenario;
 }
 
-/** The detected cell of a named row. */
-function detectedCell(label: string): HTMLElement {
-  const rows = Array.from(document.querySelectorAll(".dva-grid > .contents")).filter(
-    (e) => !e.classList.contains("dva-head"),
+/** One ledger row, by its label. */
+function ledgerRow(label: string): HTMLElement {
+  const rows = Array.from(document.querySelectorAll(".dva-row"));
+  const row = rows.find(
+    (r) => r.querySelector(".tr-field")?.textContent?.trim() === label,
   );
-  const row = rows.find((r) => r.children[0]?.textContent?.trim() === label);
   if (!row) throw new Error(`no row labelled "${label}"`);
-  return row.children[1] as HTMLElement;
+  return row as HTMLElement;
+}
+
+/** That row's provenance clause — line 2, one text node. */
+function clause(label: string): string {
+  return ledgerRow(label)
+    .querySelector(".dva-clause .tr-prov")!
+    .textContent!.trim();
 }
 
 describe("#274 inferred must not look like measured", () => {
   it("an inferred road type says so, in the picker's own words", () => {
     render(<DetectedVsApplied scenario={scenario("inferred", "measured")} />);
-    expect(detectedCell("Road type").textContent).toMatch(/OSM · inferred/);
+    expect(clause("Road type")).toMatch(/· inferred/);
   });
 
   it("a measured road type says that instead — the row is marked in BOTH states", () => {
     render(<DetectedVsApplied scenario={scenario("measured", "measured")} />);
-    const cell = detectedCell("Road type");
-    expect(cell.textContent).toMatch(/OSM · measured/);
-    expect(cell.textContent).not.toMatch(/inferred/);
+    expect(clause("Road type")).toMatch(/· measured/);
+    expect(clause("Road type")).not.toMatch(/inferred/);
   });
 
   it("Divided carries its own method, independently of Road type", () => {
     render(<DetectedVsApplied scenario={scenario("measured", "inferred")} />);
-    expect(detectedCell("Road type").textContent).toMatch(/OSM · measured/);
-    expect(detectedCell("Divided").textContent).toMatch(/OSM · inferred/);
+    expect(clause("Road type")).toMatch(/· measured/);
+    expect(clause("Divided")).toMatch(/· inferred/);
   });
 
-  it("the rows that are measured by construction carry NO marker", () => {
+  it("the rows measured by construction carry no method — and SAY the absence", () => {
     render(<DetectedVsApplied scenario={scenario("inferred", "inferred")} />);
     for (const label of ["Bearing", "Speed limit", "Lanes per direction"]) {
-      const cell = detectedCell(label);
-      // no METHOD marker; #275's note is a different provenance line and
-      // is asserted by its own suite.
-      expect(cell.textContent, `${label} must carry no method marker`).not.toMatch(
-        /OSM ·/,
-      );
+      const c = clause(label);
+      expect(c, `${label} must carry no method`).not.toMatch(/measured|inferred/);
+      // Rule 10: the absence is stated, never left as a gap the reader
+      // has to interpret.
+      expect(c, `${label} must say the absence`).toMatch(/no source tag/);
     }
   });
 
   it("the marker is a word, not a colour (Rule 13 / P9)", () => {
     render(<DetectedVsApplied scenario={scenario("inferred", "measured")} />);
-    const marker = detectedCell("Road type").querySelector(".tr-prov")!;
     // the distinguishing channel is the text itself
-    expect(marker.textContent!.trim()).toBe("OSM · inferred");
+    expect(clause("Road type")).toMatch(/inferred/);
     // the tone is reinforcement, and it is the picker's existing warn token
     const css = readFileSync(join(process.cwd(), "app", "globals.css"), "utf-8");
-    const at = css.indexOf(".workbench .dva .dva-val .tr-prov.is-inferred");
-    expect(at, "the inferred tone is declared").toBeGreaterThan(-1);
+    const at = css.indexOf(".workbench .dva .dva-clause .tr-prov.is-amber");
+    expect(at, "the amber clause tone is declared").toBeGreaterThan(-1);
     const body = css.slice(css.indexOf("{", at), css.indexOf("}", at));
     expect(body).toMatch(/color:\s*var\(--warn\)/);
     // and it declares no size of its own — it is the provenance ROLE
     expect(body).not.toMatch(/font-size/);
   });
 
-  it("the marker rides the provenance role, not a new one", () => {
+  it("the clause rides the provenance role, not a new one", () => {
     render(<DetectedVsApplied scenario={scenario("inferred", "inferred")} />);
-    const marker = detectedCell("Divided").querySelector(".tr-prov");
-    expect(marker, "the method marker IS the provenance role").not.toBeNull();
+    expect(
+      ledgerRow("Divided").querySelector(".dva-clause .tr-prov"),
+      "the clause IS the provenance role",
+    ).not.toBeNull();
+  });
+
+  it("spec 5.4: a MATCHING row whose detection was inferred is green glyph, amber clause", () => {
+    // Two facts, honestly separated: the plan used what was detected
+    // (green), and what was detected was a guess (amber).  Green never
+    // means measured.  Contrast measured on the block's own background:
+    // --pass 8.1:1, --warn 8.82:1.
+    render(<DetectedVsApplied scenario={scenario("inferred", "measured")} />);
+    const row = ledgerRow("Road type");
+    expect(row.querySelector(".dva-glyph")!.className).toMatch(/is-match/);
+    expect(row.querySelector(".dva-clause .tr-prov")!.className).toMatch(/is-amber/);
+    // and a measured, matching row is NOT ambered
+    cleanup();
+    render(<DetectedVsApplied scenario={scenario("measured", "measured")} />);
+    expect(
+      ledgerRow("Road type").querySelector(".dva-clause .tr-prov")!.className,
+    ).not.toMatch(/is-amber/);
   });
 });

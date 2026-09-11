@@ -113,8 +113,21 @@ describe("#227 detected-vs-applied block (closes #214)", () => {
 
   it("#214 repro: typed 90 over detected 85 — both values render, and the role sentence stands before any typing", () => {
     render(<DetectedVsApplied scenario={pinnedShoulder()} />);
-    expect(screen.getByText("85°")).toBeTruthy();
+    // The plan's value leads line 1 — the ledger is applied-forward, so
+    // 90 is the number the operator reads first...
     expect(screen.getByText("90°")).toBeTruthy();
+    // ...and detection's 85 is named in the same row's clause, on every
+    // row, matching or not (ruled against "same as detected").  It is no
+    // longer a standalone cell, which is why this reads the row rather
+    // than the document.
+    const bearing = Array.from(document.querySelectorAll(".dva-row")).find(
+      (r) => r.querySelector(".tr-field")?.textContent?.trim() === "Bearing",
+    )!;
+    expect(bearing.querySelector(".dva-clause")!.textContent).toMatch(
+      /OSM · 85° ·/,
+    );
+    // and the disagreement is stated, not left to the reader
+    expect(bearing.querySelector(".dva-glyph")!.className).toMatch(/is-differ/);
     expect(
       screen.getByText(
         /road geometry governs the drawing — the typed bearing sets the travel-direction sign only/,

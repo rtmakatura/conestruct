@@ -55,10 +55,10 @@ export const ROLE_CLASSES = ["tr-section", "tr-step", "tr-field", "tr-prov"] as 
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   {
     name: "detected-vs-applied value register",
-    sizes: ["11px"],
+    sizes: ["14px"],
     reason:
-      "the block's two value columns (#273) — a VALUE register, not a label. Ruled 2026-09-11: this goes in the exception set rather than becoming a fifth `tr-*` role, because #226's four roles are a LABEL vocabulary and widening that table would weaken what the four roles mean. One declared register for both columns, so ink is the only axis between detected and applied. Retires this file's former `components/DetectedVsApplied.tsx text-[11px] ×2` debt row",
-    css: [{ selector: ".workbench .dva .dva-val", size: "11px" }],
+      "the ledger's applied-value register (#273, s2-arc30) — a VALUE register, not a label. Ruled 2026-09-11: an exception rather than a fifth `tr-*` role, because #226's four roles are a LABEL vocabulary and a value is not a label, so widening that table would weaken what the four roles mean. It was 11px while the block had two value columns; the arc-30 ledger prints ONE value per row, on line 1, at the size the design sets for it. Every other text node in the block snaps to an existing role — label to `tr-field`, clause and source line and caveat to `tr-prov`, header to `tr-section` — so no new size enters the sheet and no fifth role is needed",
+    css: [{ selector: ".workbench .dva .dva-val", size: "14px" }],
     tsx: [],
   },
   {
@@ -128,12 +128,13 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   },
   {
     name: "control glyphs",
-    sizes: ["9px"],
+    sizes: ["9px", "11px"],
     reason:
-      "single-glyph controls (the strip's edit pencil, the citation ✓) — a glyph cell, not text",
+      "single-glyph controls (the strip's edit pencil, the citation ✓, the ledger's verdict mark) — a glyph cell, not text. The ledger's ✓ / ⚠ / ◌ sits in the 16px --glyph-cell gutter at the same 11px the next-steps strip chose for the same reason (#253 spec 17)",
     css: [
       { selector: ".audit-body .citation .check", size: "9px" },
       { selector: ".workbench .setup-strip .sv .edit-ic", size: "9px" },
+      { selector: ".workbench .dva .dva-glyph", size: "11px" },
     ],
     tsx: [],
   },
@@ -407,7 +408,14 @@ export const CENSUS_PINS = {
   // CSS side (+1 → 103).  Sizes stay 19: 11px was already in the sheet.
   // Net: two anonymous utilities become one named EXCEPTION (ruled
   // 2026-09-11), and this block carries no declared debt.
-  cssDeclarations: 103,
+  //
+  // s2-arc30: the ledger adds ONE declaration — the verdict glyph's
+  // cell (.dva-glyph, 11px, into the control-glyph exception) — while
+  // the value register keeps its single declaration and changes size
+  // (11 → 14) rather than count.  103 → 104.  Sizes stay 19 again: 14px
+  // was already in the sheet as sans body copy, and 11px remains on
+  // .eyebrow, .chip, .ns-glyph and the rest.
+  cssDeclarations: 104,
   cssSizes: 19,
   tsxSites: 106,
   tsxUses: 320,

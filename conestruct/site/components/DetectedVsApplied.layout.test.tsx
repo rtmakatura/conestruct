@@ -112,134 +112,138 @@ function ruleBody(selector: string, from = 0): string {
   return css.slice(open + 1, close);
 }
 
-describe("#273 the block's layout contract", () => {
-  it("both value tracks are one fixed width, so no value can resize a track or move the label edge", () => {
-    const body = ruleBody(".workbench .dva .dva-grid");
+describe("s2-arc30 — the ledger's layout contract", () => {
+  // RETIRED with the two-column table, and recorded rather than deleted
+  // in silence: "both value tracks are one fixed width", "--dva-val is
+  // declared once", "headers take their column's alignment", "the header
+  // row is a row wrapper", "one register per column", "every value cell
+  // carries the same alignment token as its header", and the 520 STACK.
+  // They described a grid that no longer exists.  #273's OUTCOME — the
+  // applied values share one right edge — is asserted below, obtained
+  // now from the row body's full width rather than from a pinned track.
+
+  it("the old two-column geometry is gone, not merely unused", () => {
+    expect(css).not.toMatch(/--dva-val/);
+    expect(css).not.toMatch(/\.dva-grid/);
+    expect(css).not.toMatch(/\.dva-head/);
+    expect(css).not.toMatch(/\.dva-slot/);
+    render(<DetectedVsApplied scenario={pinnedShoulder()} />);
+    expect(document.querySelector(".dva-grid")).toBeNull();
+    expect(document.querySelector(".dva-head")).toBeNull();
+  });
+
+  it("a row is a 16 px glyph gutter plus a body, and the gutter is the shared token", () => {
+    const body = ruleBody(".workbench .dva .dva-row");
     const tracks = /grid-template-columns:\s*([^;]+);/.exec(body)?.[1].trim();
-    expect(tracks, "the .dva-grid track model").toBeTruthy();
-    // minmax(0,1fr) label + the SAME custom property twice: one declared
-    // width for both value columns, sized to the domain's widest value.
+    expect(tracks).toBeTruthy();
+    // --glyph-cell is #227's declared 16 px, not a local number
+    expect(tracks).toMatch(/var\(--glyph-cell\)/);
     expect(tracks).toMatch(/minmax\(\s*0\s*,\s*1fr\s*\)/);
-    const vals = tracks!.match(/var\(--dva-val\)/g) ?? [];
-    expect(vals.length, `both value tracks read var(--dva-val) — got "${tracks}"`).toBe(2);
-    // and nothing content-sized survives
-    expect(tracks).not.toMatch(/\bauto\b/);
-    expect(tracks).not.toMatch(/max-content|min-content|fit-content/);
   });
 
-  it("--dva-val is declared once, in px, as a stated width", () => {
-    expect(css).toMatch(/--dva-val:\s*\d+px/);
+  it("the gutter gap is PINNED at 6 px — the measured fit, not a taste", () => {
+    // At gap 8 the worst MATCH clause (236.8 px) exceeds the 236 px left
+    // to it and wraps by 0.8 px — on every row of the dominant flow.
+    // At 6 it clears by 1.2 px.  Measured prod b2a325a at 380.
+    const body = ruleBody(".workbench .dva .dva-row");
+    expect(body).toMatch(/column-gap:\s*6px/);
   });
 
-  it("headers take their column's alignment (right), scoped to the block", () => {
-    const body = ruleBody(".workbench .dva .tr-step");
-    expect(body, "a .dva-scoped .tr-step rule must exist").not.toBe("");
-    expect(body).toMatch(/text-align:\s*right/);
+  it("the block keeps 10 px sides: spec 8.6's 14 would undo the gap's fit", () => {
+    // content 260 → 252 at 14 px, which takes the clause from 238 px to
+    // 230 against a 236.8 px worst MATCH.  Measured; ruled 2026-09-11.
+    const body = ruleBody(".workbench .dva {");
+    expect(body).toMatch(/padding:\s*8px\s+10px/);
   });
 
-  it("below the measured threshold the block stacks: label on its own row, two equal value cells", () => {
-    // 520px: measured content width is viewport-120 in the narrow regime, so
-    // a 90px label floor plus two 132px tracks and two 14px gaps needs
-    // >= 502px.  Pinned at 520 with margin (s2a29-threshold.js).
-    const at = css.indexOf("@media (max-width: 520px)");
-    expect(at, "a 520px stack breakpoint must exist").toBeGreaterThan(-1);
-    const region = css.slice(at, at + 1400);
-    expect(region).toMatch(/\.dva/);
-    // the row wrapper stops being display:contents so it can pair its cells
-    expect(region).toMatch(/grid-template-columns:\s*1fr\s+1fr/);
-    // and the label spans the full width above them
-    expect(region).toMatch(/grid-column:\s*1\s*\/\s*-1/);
+  it("the clause slot is RESERVED, so a row's height is the viewport's property", () => {
+    // one line at/above 520 px, two below.  min-height rather than
+    // height: inside the measured domain nothing exceeds the reserve at
+    // any width >= 380, and if it ever did it must WRAP, never be
+    // clipped (spec 8.2 — nothing truncated at any width).
+    const body = ruleBody(".workbench .dva .dva-clause");
+    expect(body).toMatch(/min-height:\s*16px/);
+    expect(body).not.toMatch(/(^|[^-])height:\s*\d/);
+    const at = css.indexOf("@media (max-width: 519.98px)");
+    expect(at, "the 520 switch is declared").toBeGreaterThan(-1);
+    const narrow = css.slice(at, at + 400);
+    expect(narrow).toMatch(/\.dva-clause/);
+    expect(narrow).toMatch(/min-height:\s*32px/);
   });
 
-  it("the header row is a row wrapper, so it re-flows with the value rows", () => {
+  it("the applied value holds the right axis even when line 1 wraps", () => {
+    // Under `justify-content: space-between` a wrapped value is the only
+    // item on its line and lands at flex-START — measured 72.8 to
+    // 122.4 px off the axis on the six label x value pairs that wrap at
+    // 380 (of 66 in the domain).  `margin-left: auto` returns every one
+    // of them to 0.0 px.
+    const line = ruleBody(".workbench .dva .dva-line1");
+    expect(line).not.toMatch(/justify-content:\s*space-between/);
+    const val = ruleBody(".workbench .dva .dva-val");
+    expect(val).toMatch(/margin-left:\s*auto/);
+    expect(val).toMatch(/text-align:\s*right/);
+  });
+
+  it("the row padding is the measured 4/3, not the spec's 9/8", () => {
+    // 9/8 put the block at 386 px at 1440 (+109.6 on today's 276.4);
+    // 4/3 puts it at 336 (+59.6), with 7 px / 6 px ink gaps — exactly
+    // .fact-strip .fact-cell's measured rhythm on this same panel.
+    expect(ruleBody(".workbench .dva .dva-row")).toMatch(/padding:\s*4px\s+0\s+3px/);
+  });
+
+  it("one hairline above the caveat, not two (spec 7.4)", () => {
+    expect(ruleBody(".workbench .dva .dva-row:last-child")).toMatch(
+      /border-bottom:\s*0/,
+    );
+    expect(ruleBody(".workbench .dva .dva-caveat")).toMatch(/border-top:\s*1px solid/);
+  });
+
+  it("every row renders one glyph and one clause — neither without the other (spec 4.6)", () => {
     render(<DetectedVsApplied scenario={pinnedShoulder()} />);
-    const grid = document.querySelector(".dva-grid")!;
-    const head = grid.querySelector(".dva-head");
-    expect(head, "the three header cells sit in their own wrapper").not.toBeNull();
-    // the spacer is addressable (it must be hidden when stacked)
-    expect(head!.querySelector(".dva-corner")).not.toBeNull();
-    const heads = Array.from(head!.querySelectorAll(".tr-step")).map((e) => e.textContent);
-    expect(heads).toEqual(["Detected", "Applied"]);
-    // every row wrapper is a sibling of the header wrapper, same grid
-    const wrappers = Array.from(grid.children).filter((e) =>
-      e.classList.contains("contents"),
-    );
-    expect(wrappers.length).toBeGreaterThanOrEqual(2);
-    expect(wrappers[0]).toBe(head);
-  });
-
-  it("no value cell declares its own size: the block's value register is one named class", () => {
-    const tsx = readFileSync(
-      join(process.cwd(), "components", "DetectedVsApplied.tsx"),
-      "utf-8",
-    );
-    // the two ad-hoc Tailwind sizes were the #263 declared debt row
-    expect(tsx).not.toMatch(/text-\[11px\]/);
-    // and the raw Tailwind white is off the token system (P11)
-    expect(tsx).not.toMatch(/text-white/);
-    const body = ruleBody(".workbench .dva .dva-val");
-    expect(body, "one declared value register").not.toBe("");
-    // The size stays 11px — the size it already rendered, so no visual
-    // change — but it is stated once, in one place, instead of twice as an
-    // inline utility.  Ruled 2026-09-11: 11px is a declared #263
-    // EXCEPTION, not debt and not a fifth `tr-*` role (the #226 table is a
-    // LABEL vocabulary; a value register is not a label).
-    expect(body).toMatch(/font-size:\s*11px/);
-    const decl = readFileSync(
-      join(process.cwd(), "lib", "design", "type-exceptions.ts"),
-      "utf-8",
-    );
-    expect(decl).toMatch(/\.workbench \.dva \.dva-val/);
-    expect(decl, "the register is a named exception").toMatch(
-      /name: "detected-vs-applied value register"/,
-    );
-    // and the debt row it replaced is gone, in both of its forms
-    expect(decl, "no Tailwind debt row survives").not.toMatch(
-      /file: "components\/DetectedVsApplied\.tsx"/,
-    );
-    expect(decl, "no interim debt owner survives").not.toMatch(/ruling needed —/);
-  });
-
-  it("one register per column — same size and weight, ink is the only axis", () => {
-    render(<DetectedVsApplied scenario={pinnedShoulder()} />);
-    const det = document.querySelectorAll(".dva-val.is-detected");
-    const app = document.querySelectorAll(".dva-val.is-applied");
-    expect(det.length).toBeGreaterThan(0);
-    expect(det.length).toBe(app.length);
-    // the two registers are declared once each, and differ only in colour
-    const d = ruleBody(".workbench .dva .dva-val.is-detected");
-    const a = ruleBody(".workbench .dva .dva-val.is-applied");
-    expect(d).toMatch(/color:\s*var\(--ink-on-dark-faint\)/);
-    expect(a).toMatch(/color:\s*var\(--ink-bright\)/);
-    for (const decl of [/font-size/, /font-weight/, /font-family/]) {
-      expect(d, "size/weight/family belong to the shared register").not.toMatch(decl);
-      expect(a, "size/weight/family belong to the shared register").not.toMatch(decl);
-    }
-  });
-
-  it("every value cell carries the same alignment token as its header", () => {
-    render(<DetectedVsApplied scenario={pinnedShoulder()} />);
-    const grid = document.querySelector(".dva-grid")!;
-    const rows = Array.from(grid.children).filter(
-      (e) => e.classList.contains("contents") && !e.classList.contains("dva-head"),
-    );
+    const rows = Array.from(document.querySelectorAll(".dva-row"));
     expect(rows.length).toBeGreaterThan(0);
     for (const r of rows) {
-      const cells = Array.from(r.children);
-      expect(cells.length).toBe(3);
-      // cells[0] is the label; 1 and 2 are the value columns
-      for (const c of cells.slice(1)) {
-        // alignment and numerals now ride the declared register, not
-        // per-span utilities — the register is asserted against the
-        // stylesheet above.
-        expect(
-          c.className,
-          `value cell "${c.textContent}" must carry the value register`,
-        ).toMatch(/\bdva-val\b/);
-      }
-      const regBody = ruleBody(".workbench .dva .dva-val");
-      expect(regBody).toMatch(/text-align:\s*right/);
-      expect(regBody).toMatch(/font-variant-numeric:\s*tabular-nums/);
+      expect(r.querySelectorAll(".dva-glyph").length).toBe(1);
+      expect(r.querySelectorAll(".dva-clause .tr-prov").length).toBe(1);
+      expect(r.querySelector(".dva-clause")!.textContent!.trim().length).toBeGreaterThan(0);
     }
+  });
+
+  it("the verdict glyphs are the house vocabulary, each on its own token", () => {
+    // ✓ --pass "confirmed", ⚠ --warn "changed / needs attention",
+    // ◌ --none "not set — never a verdict".  The design asked for ▲ in
+    // #f4c020; ▲ is the delta glyph in --dim (#ff8a2e, orange) here and
+    // the design's own rule 0.12 bars orange from this block, so the
+    // spec's constraint ruled out the spec's glyph.  No vocabulary
+    // change was needed.
+    expect(ruleBody(".workbench .dva .dva-glyph.is-match")).toMatch(
+      /color:\s*var\(--pass\)/,
+    );
+    expect(ruleBody(".workbench .dva .dva-glyph.is-differ")).toMatch(
+      /color:\s*var\(--warn\)/,
+    );
+    expect(ruleBody(".workbench .dva .dva-glyph.is-unset")).toMatch(
+      /color:\s*var\(--none\)/,
+    );
+    // never ▲ here, and never the orange it would carry
+    expect(css.slice(css.indexOf(".workbench .dva {"), css.indexOf(".workbench .sched-windows"))).not.toMatch(
+      /var\(--dim\)/,
+    );
+  });
+
+  it("no value carries its own size: the register is one named class", () => {
+    render(<DetectedVsApplied scenario={pinnedShoulder()} />);
+    for (const v of Array.from(document.querySelectorAll(".dva-val"))) {
+      expect(v.className).not.toMatch(/text-\[/);
+    }
+    expect(ruleBody(".workbench .dva .dva-val")).toMatch(/font-size:\s*14px/);
+  });
+
+  it("operator-set switches FAMILY only — weight is not an axis", () => {
+    const body = ruleBody(".workbench .dva .dva-val.is-operator");
+    expect(body).toMatch(/font-family:\s*var\(--font-sans\)/);
+    expect(body).not.toMatch(/font-weight/);
+    expect(body).not.toMatch(/font-size/);
+    expect(body).not.toMatch(/color/);
   });
 });

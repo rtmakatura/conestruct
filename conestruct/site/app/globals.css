@@ -2644,131 +2644,152 @@ input[type="number"] {
 }
 
 /* ─── #227 detected-vs-applied block (closes #214) ───
-   Three facts of one kind in one place: source, detected, applied.
-   Read-only reference mass at the top of the Road column. */
+   s2-arc30: the applied-forward ledger.  A vertical list of rows, each
+   one a verdict glyph in a 16 px gutter plus a two-line body — the
+   APPLIED value on line 1, one generated provenance clause on line 2.
+   The two-column table it replaces is gone, and with it the fixed value
+   tracks, the header hairline and the ink-right acceptance those existed
+   to satisfy.  #273's outcome survives: see .dva-val. */
 .workbench .dva {
   border: 1px solid var(--rule);
   background: var(--canvas-tint);
+  /* 10 px sides, NOT spec 8.6's 14 px.  Measured on prod b2a325a at
+     380: the block's content is 260 px at 10 px padding and 252 at 14,
+     which takes the clause's width from 238 to 230 — and the worst
+     MATCH clause is 236.8 px.  14 px padding therefore wraps the clause
+     on every row of the dominant flow (shoulder, fresh confirm, all
+     rows matching), which is precisely what the 6 px gutter gap below
+     was pinned to prevent.  Ruled 2026-09-11: keep 10. */
   padding: 8px 10px;
   margin-bottom: 14px;
-  /* Both value columns are ONE declared width, sized to the widest value in
-     the DOMAIN — "Freeway / interstate", the longest ROAD_TYPE_LABELS entry,
-     measured 132 px at this block's 11 px mono — not to whatever the current
-     values happen to be.  With `auto` tracks the two columns split apart the
-     moment detected != applied (112.2 vs 132.0 at 1440, 87.5 vs 94.1 at 380)
-     and the widening column stole width from the label track, moving every
-     row label 19.8 px on a value edit: content dictating layout (P6) and
-     movement with no user action on that element (P1).  s2-arc29, #273. */
-  --dva-val: 132px;
 }
-.workbench .dva .dva-grid {
+.workbench .dva .dva-list {
+  border-top: 1px solid var(--rule-soft);
+}
+.workbench .dva .dva-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--dva-val) var(--dva-val);
-  column-gap: 14px;
-  row-gap: 3px;
-  align-items: baseline;
+  grid-template-columns: var(--glyph-cell) minmax(0, 1fr);
+  /* PINNED, not incidental.  The fit holds only at gap <= 7.2 px: at
+     gap 8 the worst MATCH clause (236.8 px) exceeds the 236 px left to
+     it and wraps by 0.8 px, on every row of the dominant flow.  At 6 it
+     clears by 1.2 px.  Measured prod b2a325a, tr-prov role, 380 px. */
+  column-gap: 6px;
+  /* 4/3, not spec 2.3's 9/8.  The ledger's information costs height
+     (two lines where there was one), so the padding was measured rather
+     than inherited: at 9/8 the block was 386 px at 1440 against today's
+     276.4 (+109.6); at 4/3 it is 336 px (+59.6).  It is not crowding —
+     the ink gaps are 7 px top and 6 px bottom, which is exactly the
+     rhythm of .fact-strip .fact-cell (measured 7/6) on this same panel.
+     3/3 was measured too (+54.6) and declined: 5 px is not worth
+     leaving the panel's rhythm.  Sweep in the arc evidence. */
+  padding: 4px 0 3px;
+  border-bottom: 1px solid var(--rule-soft);
 }
-/* The header reads down its own column: same edge and same alignment as the
-   values beneath it.  A grid item stretches to its track, so the BOXES
-   always shared an edge — what misregistered was the ink, laid out at the
-   start of a 112 px track while the value sat at its end (53.0 px and
-   60.4 px at 1440; 31.6 and 39.0 at 380).  Scoped to .dva: `.tr-step`
-   everywhere else is unchanged. */
-.workbench .dva .tr-step {
-  text-align: right;
+/* Spec 7.4 offered two hairlines 23 px apart above the caveat, or its
+   own escape.  Ruled: the last row drops its rule, the caveat keeps
+   its own. */
+.workbench .dva .dva-row:last-child {
+  border-bottom: 0;
 }
-/* The block's value register (#273): ONE register for both columns, so the
-   only axis between detected and applied is ink and the emphasis says
-   "this is what the plan used" and nothing more.
-   On the size — 11px is a declared #263 EXCEPTION (ruled 2026-09-11), not
-   debt and not a fifth `tr-*` role: #226's four roles are a LABEL
-   vocabulary and a value register is not a label, so widening that table
-   would weaken what the four roles mean.  The two `text-[11px]` utilities
-   this block used to carry are retired onto this one register at the size
-   they already rendered (no visual change).  Dropping the declaration
-   instead is not an option: the register would inherit the 16px body
-   default — measured — larger than its own 12px labels and wide enough to
-   break the track fit. */
-.workbench .dva .dva-val {
+/* One glyph vocabulary, unchanged (DESIGN-SPACING): ✓ --pass
+   "confirmed", ⚠ --warn "changed / needs attention", ◌ --none "not set
+   — never a verdict".  The design asked for ▲ in #f4c020; ▲ is the
+   delta glyph in --dim here, which is #ff8a2e — orange — and the
+   design's own rule 0.12 bars orange from this block.  ⚠ already means
+   what the design wanted and already owns the colour it asked for, so
+   nothing in the vocabulary had to change.  Contrast on this block's
+   background, measured: --pass 8.1:1, --warn 8.82:1, --none 5.61:1.
+   The size is a glyph cell, not text — declared with the other control
+   glyphs in the #263 census. */
+.workbench .dva .dva-glyph {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  text-align: right;
+  line-height: 20px;
+  text-align: center;
 }
-.workbench .dva .dva-val.is-detected {
-  color: var(--ink-on-dark-faint);
+.workbench .dva .dva-glyph.is-match {
+  color: var(--pass);
 }
-/* #274: how detection came by this value, on its own line under it.  It IS
-   the provenance role (`.tr-prov`) — where a value came from is exactly
-   what that role is for — so it declares no size of its own and adds
-   nothing to the census.  Inferred takes the picker's amber (--warn), the
-   same tone the same fact wears at LocationPickerModal.tsx:2543-2546; the
-   distinguishing channel is the word, never the colour (Rule 13, P9). */
-/* The provenance line is RESERVED in every value cell, spoken or not, so a
-   row's height never depends on its content (P1/P6).  Before this, the
-   token appeared only where it existed and Road type / Divided stood
-   34.6 px against Bearing / Lanes at 19.2 px — a 15.4 px difference, both
-   viewports.  min-height holds the empty line open; the slot IS the
-   provenance role (it carries .tr-prov too), so it declares no size of its
-   own.  Inline was measured and does not fit: the widest value is 132 px
-   (= the track) and the token is 89 px rendered, so a value + gap + token
-   needs 227 px per column and 482 px for the pair, against 478 px of block
-   content at 1440. */
-.workbench .dva .dva-slot {
-  display: block;
-  margin-top: 1px;
-  /* line-height AND min-height are both declared, and both are the same
-     number on purpose: the spoken slot's line box is pinned to 16px rather
-     than left to the font's metrics, and the silent slot reserves exactly
-     that.  Equal by construction, so the rows cannot drift apart if the
-     mono face falls back. */
-  line-height: 16px;
-  min-height: 16px;
-}
-/* #273 defect 3: a fixed track and variable-width text can share ONE edge,
-   and right is the correct one for a comparison read down a column — so the
-   header word cannot also line up on the left (measured overhang ranges
-   -60.4 px to +52.6 px, and "Detected" is a constant 7.4 px wider than
-   "Applied").  The column's extent is therefore declared by a rule rather
-   than inferred from the ink: the header cell's box already spans its whole
-   track, so the hairline needs no new geometry and reuses --rule. */
-.workbench .dva .dva-head .tr-step {
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 3px;
-}
-.workbench .dva .dva-val .tr-prov.is-inferred {
+.workbench .dva .dva-glyph.is-differ {
   color: var(--warn);
 }
-.workbench .dva .dva-val.is-applied {
+.workbench .dva .dva-glyph.is-unset {
+  color: var(--none);
+}
+.workbench .dva .dva-line1 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  min-height: 20px;
+}
+/* The block's value register (#273): ONE register, now carrying the
+   APPLIED value only — the detected value moved into the clause.
+   14 px is a declared #263 exception, not a fifth `tr-*` role: #226's
+   four roles are a LABEL vocabulary and a value is not a label.
+
+   `margin-left: auto` rather than `justify-content: space-between` on
+   the line, and that is load-bearing: under space-between a value that
+   wraps to its own line is the only item on that line and lands at
+   flex-START.  Measured at 380 on the six label × value pairs that wrap
+   (of 66 in the domain), the value sat 72.8 to 122.4 px left of the
+   axis.  With the auto margin every one of them returns to 0.0 px, at
+   no height cost.  That axis IS #273's fix, obtained without a shared
+   grid: measured right-edge spread across rows is 0.0 px at both
+   viewports, because every row body spans the full width. */
+.workbench .dva .dva-val {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 20px;
+  text-align: right;
   color: var(--ink-bright);
 }
-/* #273 ruling (b): below the measured threshold the label takes its own row
-   above a two-cell value row — stack, never shrink, never truncate (Rule 10).
-   The threshold is measured, not guessed: in the narrow regime the block's
-   content width is (viewport - 120) px, so a 90 px label floor plus two
-   132 px value tracks and two 14 px gaps needs >= 502 px.  Pinned at 520 for
-   margin; the existing 480 breakpoint is too low (the label would get 68 px).
-   Figures in s2a29-threshold.js / outLocal-threshold-a0abc4d/rows.json. */
-@media (max-width: 520px) {
-  .workbench .dva .dva-grid {
-    grid-template-columns: 1fr;
-    row-gap: 8px;
-  }
-  /* the row wrapper stops being display:contents so it can pair its own
-     cells; the two value cells stay equal and keep their shared edges */
-  .workbench .dva .dva-grid > .contents {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 14px;
-    row-gap: 2px;
-    align-items: baseline;
-  }
-  .workbench .dva .dva-grid > .contents > .tr-field {
-    grid-column: 1 / -1;
-  }
-  .workbench .dva .dva-corner {
-    display: none;
+/* Operator-set switches FAMILY only.  The design asked for sans 600;
+   `weight is not an axis` for the type roles, and the family switch
+   already carries it — with the ⚠ glyph and the clause's own
+   `operator-set` saying it twice more.  Size and colour are identical
+   to the system-sourced register, so it never reads as an alert. */
+.workbench .dva .dva-val.is-operator {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+/* The clause's slot is RESERVED, so a row's height is a property of the
+   VIEWPORT and never of its own content: one line at and above 520 px,
+   two below.  Measured (prod b2a325a, tr-prov role): the worst DIFFER
+   clause is 332.8 px and sets the row at every width — one line at 1440
+   (456 px available), two at 380 (238 px).  The switch is 520 rather
+   than the 480 where one line last suffices, because the headroom at
+   480 is 3.2 px — half a character — and one longer road-type label
+   anywhere in the domain would break it silently; 520 also reuses the
+   breakpoint the block already had.
+
+   min-height, not height: within the measured domain no clause exceeds
+   its reserve at any width >= 380, and if one ever did it must WRAP,
+   never be clipped (spec 8.2 — nothing truncated at any width). */
+.workbench .dva .dva-clause {
+  min-height: 16px;
+}
+/* Spec 5.4's honesty rule, widened to every verdict: "the plan used
+   what was detected" and "what was detected was a guess" are two
+   different facts, so a MATCHING row whose detection was inferred,
+   overridden or withdrawn renders a green ✓ above an amber clause.
+   The distinguishing channel is the word; the colour is the second
+   channel, never the only one (Rule 13, P9). */
+.workbench .dva .dva-clause .tr-prov.is-amber {
+  color: var(--warn);
+}
+.workbench .dva .dva-caveat {
+  margin-top: 13px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule-soft);
+}
+@media (max-width: 519.98px) {
+  .workbench .dva .dva-clause {
+    min-height: 32px;
   }
 }
 

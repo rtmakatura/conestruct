@@ -1,25 +1,29 @@
 // @vitest-environment happy-dom
 //
-// The prod hand-check on 7d3eef3 found three defects; these are the two
-// that are testable without a layout engine.
+// The ledger's CLAUSE CONTENT (s2-arc30).  This file was the reserved-slot
+// suite; the slot it asserted is gone with the two-column table, and what
+// survives of it is here in the shape the clause gives it.
 //
-// D1 (P1/P6) — the provenance token rendered on its own line only when it
-// existed, so Road type and Divided stood 34.6 px tall while Bearing and
-// Lanes stood 19.2 px: a row grew because of its content.  Ruled: the
-// second line is RESERVED in every value cell, so a row's height never
-// depends on whether it carries a token.  The reserved slot is the DOM
-// contract asserted here; the equal-height measurement is the browser leg.
+// RETIRED, and recorded rather than dropped in silence:
+//   D1  "the provenance slot is reserved in every value cell" — there are
+//       no value cells now.  Its CONTENT survives as the reserved clause
+//       line, asserted in the layout suite (min-height 16/32 px), and its
+//       purpose survives whole: a row's height still never depends on
+//       whether it carries a token.
+//   D3  "the header declares its column's extent" — there is no header
+//       row and no column to declare.
 //
-// D2 (P2) — the token sat on the detected value only, while the applied
-// value inherited the same inference and read as measured.  Ruled: the
-// applied cell states where ITS OWN value came from — it inherits the
-// detected token while it still shows the detected value, and says
-// `operator-set` once it differs.  The comparison is the signal; no new
-// state, and `operator-set` is the picker's existing third token
-// (LocationPickerModal.tsx:2547).
+// D2 survives and is the heart of the file: the applied value states
+// where IT came from.  Under the clause it no longer needs a second
+// token slot — a matching row simply carries no applied fragment,
+// because `OSM · <value> · <token>` already says the plan used what was
+// detected.  The moment the plan's value differs, the clause says who
+// changed it, and s2-arc30 splits that in two: `operator-set` for an
+// edit, `changed in plan` for auto-apply's own domain snap, which is
+// nobody's edit at all.
 //
-// D4 — #275's `overridden` / `withdrawn` notes move into the same slot:
-// same mechanism, one treatment.
+// D4 survives as the grammar: one clause per row, at most one token per
+// side, and no empty fragment in the join.
 
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
@@ -107,177 +111,160 @@ function matched(over: Partial<Scenario> = {}): Scenario {
   } as Scenario;
 }
 
-function rowsOf() {
-  return Array.from(document.querySelectorAll(".dva-grid > .contents")).filter(
-    (e) => !e.classList.contains("dva-head"),
+function ledgerRow(label: string): HTMLElement {
+  const rows = Array.from(document.querySelectorAll(".dva-row"));
+  const row = rows.find(
+    (r) => r.querySelector(".tr-field")?.textContent?.trim() === label,
   );
+  if (!row) throw new Error(`no row "${label}"`);
+  return row as HTMLElement;
 }
-function cellOf(label: string, which: 1 | 2): HTMLElement {
-  const r = rowsOf().find((x) => x.children[0]?.textContent?.trim() === label);
-  if (!r) throw new Error(`no row "${label}"`);
-  return r.children[which] as HTMLElement;
+const clauseOf = (label: string) =>
+  ledgerRow(label).querySelector(".dva-clause .tr-prov")!.textContent!.trim();
+const glyphOf = (label: string) =>
+  ledgerRow(label).querySelector(".dva-glyph")!;
+
+/** A scenario whose DETECTED speed differs from the fixture's. */
+function withSpeeds(detected: number, applied: number): Scenario {
+  const r = road();
+  return matched({
+    speed: applied,
+    meta: {
+      ...DEFAULT_SHOULDER.meta,
+      lat: 39.71466,
+      lng: -104.94071,
+      bearingDeg: 85,
+      confirmedRoad: {
+        ...r,
+        classification: { ...r.classification, speedLimitMph: detected },
+      },
+    },
+  } as unknown as Partial<Scenario>);
 }
-const slotText = (label: string, which: 1 | 2) =>
-  (cellOf(label, which).querySelector(".dva-slot")?.textContent ?? "").trim();
 
-const css = readFileSync(join(process.cwd(), "app", "globals.css"), "utf-8");
-function ruleBody(selector: string): string {
-  const at = css.indexOf(selector);
-  if (at === -1) return "";
-  return css.slice(css.indexOf("{", at) + 1, css.indexOf("}", at));
-}
-
-describe("D1 — the provenance slot is reserved in every value cell", () => {
-  it("every value cell carries exactly one slot, token or not", () => {
+describe("D2 — the clause states where the APPLIED value came from", () => {
+  it("while the plan shows the detected value, the clause carries no applied token", () => {
+    // The row is agreement, and the clause says so by saying nothing
+    // extra: `OSM · <value> · <token>` already means the plan used what
+    // was detected.
     render(<DetectedVsApplied scenario={matched()} />);
-    const rows = rowsOf();
-    expect(rows.length).toBeGreaterThan(0);
-    for (const r of rows) {
-      for (const which of [1, 2] as const) {
-        const slots = (r.children[which] as HTMLElement).querySelectorAll(".dva-slot");
-        expect(
-          slots.length,
-          `"${r.children[0].textContent}" cell ${which} must reserve exactly one slot`,
-        ).toBe(1);
-      }
-    }
+    expect(clauseOf("Road type")).toBe("OSM · Rural — undivided · inferred");
+    expect(clauseOf("Road type")).not.toMatch(/operator-set/);
+    expect(glyphOf("Road type").className).toMatch(/is-match/);
   });
 
-  it("the unmarked rows reserve an EMPTY slot — the row does not shrink", () => {
-    render(<DetectedVsApplied scenario={matched()} />);
-    // Bearing and Lanes carry no method: measured by construction
-    expect(cellOf("Bearing", 1).querySelector(".dva-slot")).not.toBeNull();
-    expect(slotText("Bearing", 1)).toBe("");
-    expect(cellOf("Lanes per direction", 1).querySelector(".dva-slot")).not.toBeNull();
-    expect(slotText("Lanes per direction", 1)).toBe("");
+  it("the clause says operator-set the moment the plan's value differs", () => {
+    render(<DetectedVsApplied scenario={matched({ roadType: "urban_arterial" })} />);
+    expect(clauseOf("Road type")).toMatch(/· operator-set$/);
+    // the detected value is still named — the ruling against
+    // "same as detected" cuts both ways: the clause always says what
+    // detection found
+    expect(clauseOf("Road type")).toMatch(/Rural — undivided/);
+    expect(glyphOf("Road type").className).toMatch(/is-differ/);
   });
 
-  it("the slot reserves its line in CSS and declares no size of its own", () => {
-    const body = ruleBody(".workbench .dva .dva-slot");
-    expect(body, "the slot rule exists").not.toBe("");
-    expect(body).toMatch(/display:\s*block/);
-    expect(body, "the line is reserved whether or not it speaks").toMatch(/min-height/);
-    expect(body, "the slot rides the provenance role's size").not.toMatch(/font-size/);
-  });
-});
-
-describe("D2 — the applied cell states where its own value came from", () => {
-  it("applied inherits the detected token while it shows the detected value", () => {
-    render(<DetectedVsApplied scenario={matched()} />);
-    expect(slotText("Road type", 1)).toBe("OSM · inferred");
-    expect(slotText("Road type", 2)).toBe("OSM · inferred");
-    expect(slotText("Divided", 1)).toBe("OSM · inferred");
-    expect(slotText("Divided", 2)).toBe("OSM · inferred");
+  it("a domain snap says `changed in plan`, not `operator-set`", () => {
+    // auto-apply rounds the detected speed into the kind's domain
+    // (snapSpeedToDomain, auto-apply.ts:381) before the plan sees it, so
+    // a plan can differ from detection with nobody having touched
+    // anything.  Reporting an operator action that did not happen is a
+    // Rule 10 defect.  32 snaps to 30.
+    render(<DetectedVsApplied scenario={withSpeeds(32, 30)} />);
+    expect(clauseOf("Speed limit")).toMatch(/32 mph/);
+    expect(clauseOf("Speed limit")).toMatch(/· changed in plan$/);
+    expect(clauseOf("Speed limit")).not.toMatch(/operator-set/);
   });
 
-  it("a measured detection is inherited as measured, not as a blank", () => {
-    const s = matched();
-    (s.meta.confirmedRoad as ConfirmedRoad) = road("measured", "measured");
-    render(<DetectedVsApplied scenario={s} />);
-    expect(slotText("Road type", 1)).toBe("OSM · measured");
-    expect(slotText("Road type", 2)).toBe("OSM · measured");
+  it("a difference the snap does NOT explain is still the operator's", () => {
+    // 45 is already in the domain and on the 5 mph grid, so a plan
+    // reading 30 against it is an edit, not a rounding.
+    render(<DetectedVsApplied scenario={withSpeeds(45, 30)} />);
+    expect(clauseOf("Speed limit")).toMatch(/· operator-set$/);
   });
 
-  it("applied says operator-set once it differs from the detected value", () => {
-    render(<DetectedVsApplied scenario={matched({ roadType: "freeway" })} />);
-    expect(slotText("Road type", 1)).toBe("OSM · inferred");
-    expect(slotText("Road type", 2)).toBe("operator-set");
+  it("the operator-set value switches family, and nothing else", () => {
+    render(<DetectedVsApplied scenario={matched({ roadType: "urban_arterial" })} />);
+    expect(
+      ledgerRow("Road type").querySelector(".dva-val")!.className,
+    ).toMatch(/is-operator/);
+    // an untouched row does not
+    expect(ledgerRow("Divided").querySelector(".dva-val")!.className).not.toMatch(
+      /is-operator/,
+    );
   });
 
-  it("the two columns are independent — one row overridden, another inherited", () => {
-    render(<DetectedVsApplied scenario={matched({ roadType: "freeway" })} />);
-    expect(slotText("Road type", 2)).toBe("operator-set");
-    expect(slotText("Divided", 2)).toBe("OSM · inferred");
-  });
-
-  it("a row with no detected method inherits nothing, and still says operator-set when changed", () => {
-    render(<DetectedVsApplied scenario={matched({ speed: 45 })} />);
-    expect(slotText("Speed limit", 1)).toBe("");
-    expect(slotText("Speed limit", 2)).toBe("operator-set");
-  });
-
-  it("the inferred tone follows the token onto the applied cell", () => {
-    render(<DetectedVsApplied scenario={matched()} />);
-    for (const which of [1, 2] as const) {
-      const slot = cellOf("Road type", which).querySelector(".dva-slot")!;
-      expect(slot.className).toMatch(/is-inferred/);
-    }
-  });
-
-  it("operator-set never wears the inferred tone", () => {
-    render(<DetectedVsApplied scenario={matched({ roadType: "freeway" })} />);
-    const slot = cellOf("Road type", 2).querySelector(".dva-slot")!;
-    expect(slot.className).not.toMatch(/is-inferred/);
-  });
-});
-
-describe("D4 — #275's notes share the slot, and no cell carries two", () => {
-  const DISPUTED: DetectionOverride = {
-    via: "shoulder_lane_edit",
-    detectedLanesTotal: 1,
-    asserted: "3 lanes per direction",
-  };
-
-  it("a disputed lanes edit puts `overridden` in the detected slot", () => {
+  it("the two sides are independent: one row inferred-and-agreed, another overridden-and-changed", () => {
     render(
       <DetectedVsApplied
         scenario={matched({
           lanes: 3,
           detectedLanesTotal: undefined,
-          detectionOverrides: [DISPUTED],
+          detectionOverrides: [
+            {
+              via: "shoulder_lane_edit",
+              detectedLanesTotal: 4,
+              asserted: "3 lanes per direction",
+            } as DetectionOverride,
+          ],
         })}
       />,
     );
-    expect(slotText("Lanes per direction", 1)).toBe("overridden");
-    expect(slotText("Lanes per direction", 2)).toBe("operator-set");
-  });
-
-  it("an undisputed lanes edit withdraws the value, and applied says operator-set", () => {
-    render(
-      <DetectedVsApplied
-        scenario={matched({ lanes: 3, detectedLanesTotal: undefined })}
-      />,
-    );
-    const own = Array.from(cellOf("Lanes per direction", 1).childNodes)
-      .filter((n) => n.nodeType === 3)
-      .map((n) => n.textContent!.trim())
-      .join("");
-    expect(own).toMatch(/withdrawn/i);
-    expect(slotText("Lanes per direction", 2)).toBe("operator-set");
-  });
-
-  it("no cell ever carries two tokens", () => {
-    // the method token is detected-only and exists only where a method
-    // exists; #275's notes are lanes-only, where there is no method; and
-    // operator-set is applied-only.  So one slot, one token, always.
-    for (const s of [
-      matched(),
-      matched({ roadType: "freeway" }),
-      matched({ lanes: 3, detectedLanesTotal: undefined }),
-      matched({ lanes: 3, detectedLanesTotal: undefined, detectionOverrides: [DISPUTED] }),
-    ]) {
-      cleanup();
-      render(<DetectedVsApplied scenario={s} />);
-      for (const r of rowsOf()) {
-        for (const which of [1, 2] as const) {
-          const slot = (r.children[which] as HTMLElement).querySelector(".dva-slot")!;
-          // a slot's text is one token or empty — never two joined
-          expect(slot.querySelectorAll(".dva-slot").length).toBe(0);
-          const t = (slot.textContent ?? "").trim();
-          expect(
-            t === "" || /^(OSM · (measured|inferred)|operator-set|overridden)$/.test(t),
-            `unexpected slot text "${t}"`,
-          ).toBe(true);
-        }
-      }
-    }
+    expect(clauseOf("Road type")).toBe("OSM · Rural — undivided · inferred");
+    expect(clauseOf("Lanes per direction")).toBe("OSM · 2 · overridden · operator-set");
   });
 });
 
-describe("D3 — the header declares its column's extent", () => {
-  it("each header cell carries a hairline spanning it, on the shared rule token", () => {
-    const body = ruleBody(".workbench .dva .dva-head .tr-step");
-    expect(body, "a rule under the header cells must exist").not.toBe("");
-    expect(body).toMatch(/border-bottom:\s*1px solid var\(--rule\)/);
+describe("D4 — one clause per row, and its grammar holds", () => {
+  it("no row carries two applied tokens, or two detected ones", () => {
+    render(
+      <DetectedVsApplied
+        scenario={matched({
+          roadType: "urban_arterial",
+          lanes: 3,
+          detectedLanesTotal: undefined,
+        })}
+      />,
+    );
+    for (const row of Array.from(document.querySelectorAll(".dva-row"))) {
+      const text = row.querySelector(".dva-clause")!.textContent!.trim();
+      const applied = (text.match(/operator-set|changed in plan/g) ?? []).length;
+      const detected = (text.match(/measured|inferred|overridden|withdrawn/g) ?? []).length;
+      expect(applied, text).toBeLessThanOrEqual(1);
+      expect(detected, text).toBeLessThanOrEqual(1);
+      // and no empty fragment anywhere in the join
+      expect(text).not.toMatch(/·\s*·/);
+    }
+  });
+
+  it("Rule 10: a plan that has taken no value is `not set`, not a verdict", () => {
+    // ◌ is the house glyph for exactly this, and DESIGN-SPACING says it
+    // is never a verdict — so the row reads neither agreement nor
+    // disagreement, which is the truth.
+    render(
+      <DetectedVsApplied
+        scenario={matched({
+          meta: {
+            ...DEFAULT_SHOULDER.meta,
+            lat: 39.71466,
+            lng: -104.94071,
+            bearingDeg: undefined,
+            confirmedRoad: road(),
+          },
+        } as unknown as Partial<Scenario>)}
+      />,
+    );
+    expect(glyphOf("Bearing").className).toMatch(/is-unset/);
+    expect(glyphOf("Bearing").textContent).toBe("◌");
+    // the clause still names what detection found
+    expect(clauseOf("Bearing")).toMatch(/OSM · 85°/);
+    // and it claims no applied provenance, because nothing was applied
+    expect(clauseOf("Bearing")).not.toMatch(/operator-set|changed in plan/);
+  });
+
+  it("the #214 caveat sentence is byte-identical across the rebuild", () => {
+    render(<DetectedVsApplied scenario={matched()} />);
+    expect(document.querySelector(".dva-caveat")!.textContent).toBe(
+      "road geometry governs the drawing — the typed bearing sets the travel-direction sign only",
+    );
   });
 });
