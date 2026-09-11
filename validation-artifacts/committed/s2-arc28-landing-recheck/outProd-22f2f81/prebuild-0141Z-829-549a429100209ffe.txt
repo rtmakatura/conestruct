@@ -1,0 +1,51 @@
+s2-arc28 prod build gate — the PRE-DEPLOY observation, kept as evidence
+=====================================================================
+
+Why this file exists.  The README's build-gate table states that at
+2026-09-11T01:41:32Z www.conestruct.com was still serving a bundle with
+none of #271, ten minutes after healthz already read 22f2f81.  The
+gate's own log (prod-build-gate.out.txt) only records the PASS at
+01:51:44Z, because the first invocation's output was overwritten when
+the gate was corrected and re-run.  A measurement cited in a README has
+to be traceable to a committed artifact (#160, ruled 2026-07-30), so the
+chunk that was actually fetched at 01:41 is recorded here verbatim.
+
+Provenance
+----------
+  fetched      2026-09-11T01:41:32Z (curl, from the harness host)
+  page         https://www.conestruct.com/sandbox
+  chunk        https://www.conestruct.com/_next/static/chunks/829-549a429100209ffe.js
+  bytes        313551
+  sha256       152f54c60e9be2074feb6339dcac562bfea75c21aaa22aa099d9dd779ffcb754
+  backend      healthz already read 22f2f81dea4d3507f18ee4f160a5368b37f35897
+  gate verdict signature ABSENT  ->  no leg was run against this build
+
+Every scrollIntoView({behavior:...}) shape in that chunk
+---------------------------------------------------------
+  scrollIntoView({behavior:a,block:"start"}
+  scrollIntoView({behavior:e,block:"start"}
+  scrollIntoView({behavior:n?"auto":"smooth",block:"start"}
+  scrollIntoView({behavior:t,block:"start"}
+
+The gate's signature is a ternary whose right arm is an IDENTIFIER
+(``behavior:<ident>?"auto":<ident>``) — the instant post-settle
+correction.  The only ternary above is ``n?"auto":"smooth"``, which is
+the shell's prefers-reduced-motion call site and has read that way since
+#152.  So the signature is absent: this is the pre-#271 build.
+
+The landing helper as served at 01:41 (minified, verbatim)
+----------------------------------------------------------
+aH=["wheel","touchmove","keydown"],aZ=new Set(["ArrowUp","ArrowDown","PageUp","PageDown","Home","End"," ","Space"]);function aJ(e,t){let n=!1,a=!1,r=!1,s=!1,l=0,i=()=>{var t;let n=parseFloat(null!==(t=window.getComputedStyle(e).scrollMarginTop)&&void 0!==t?t:"")||0;return Math.abs(e.getBoundingClientRect().top-n)},o=()=>{!n&&!a&&i()>1&&(n=!0,e.scrollIntoView({behavior:t,block:"start"}))},d=e=>{("keydown"!==e.type||aZ.has(e.key))&&(a=!0,u())},c=()=>{window.removeEventListener("scrollend",h),l&&window.cancelAnimationFrame(l),l=0},u=()=>{for(let e of(c(),aH))window.removeEventListener(e,d)},p=()=>{!r&&(r=!0,c(),o(),s&&u())},h=()=>p();for(let e of(window.addEventListener("scrollend",h),aH))window.addEventListener(e,d,{passive:!0});let m=window.scrollY,x=0,v=0,f=()=>{v+=1;let e=window.scrollY;if(x=e===m?x+1:0,m=e,x>=6||v>=90){l=0,p();return}l=window.requestAnimationFrame(f)};return l=window.requestAnimationFrame(f),{settle(){if(!r){s=!0;return}o(),u()},cancel:u}}
+
+Read it against the post-#271 build served at 01:51
+(829-607df19834eb6284.js, signature PRESENT):
+  * ``o=()=>{!n&&!a&&i()>1&&(n=!0,e.scrollIntoView({behavior:t,block:"start"}))}``
+    — the re-issue is a BOOLEAN LATCH (``n``) and takes the arming
+    behaviour unconditionally: no counted cap, no ``?"auto":``.
+  * ``p=()=>{!r&&(r=!0,c(),o(),s&&u())}``
+    — the check spends itself on the FIRST settle signal whatever the
+    zone's offset: this is the one-shot #271 replaced, with no
+    cancelled-scroll predicate, no second round, no deadline.
+  * ``settle(){if(!r){s=!0;return}o(),u()}``
+    — no ``settled`` flag and no ``done`` guard.
+  * no ``4e3`` anywhere: LANDING_DEADLINE_MS is not in this build.
