@@ -384,3 +384,7 @@ One step each — 639 px at 380, 381 px at 1440 — instant, and nothing follows
 | FAILs | 1 (the #259 dim) | 7 — six `window`, one finding 5 |
 
 Nothing in the product behaved differently. Every difference above is the environment (a faster server, a cold first container, no dim, no refusal) or the harness's fixed forced hold.
+
+## To measure on the next live run
+
+**The forced leg's window gate, under the amended anchor.** The gate asks `settledAt < smoothEnd`, and `smoothEnd` now comes from a run anchored at the landing `scrollIntoView` rather than at the first movement after the click (the amendment of 2026-09-10). Hypothesis, unasserted: under the old anchor the run could close on an anchoring compensation that fired *before* the landing — exactly what `1440x1000-L1` shows, where the +381 px compensation at 3891 ms moved the zone 0 px and ended the run at 3953 ms, before the landing existed — and a run closed that early would make the gate read false for a run that was in fact inside the window. That would bear on the six forced runs recorded as never entering (four at 1440, two at 380, `outProd-22f2f81/`). **The archive cannot settle it:** those six returned before `landingLegs()` ran, so they committed no scroll census and their anchored `smoothEnd` is unrecoverable. Whoever next runs the forced leg measures it on live data. Nothing is claimed here.
