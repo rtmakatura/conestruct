@@ -1,0 +1,3 @@
+2026-09-11T01:51:43.186Z  gate: polling https://www.conestruct.com for the #271 landing-check signature, up to 30 min
+2026-09-11T01:51:43.956Z  chunk /_next/static/chunks/829-607df19834eb6284.js · signature PRESENT · counted-cap true · 4e3 deadline true · scrollIntoView shapes: scrollIntoView({behavior:n?"auto":"smooth",block:"start"} | scrollIntoView({behavior:o?"auto":t,block:"start"} | scrollIntoView({behavior:a,block:"start"} | scrollIntoView({behavior:e,block:"start"}
+2026-09-11T01:51:43.957Z  GATE PASS after 1 s — the served bundle carries #271; legs may run

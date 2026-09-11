@@ -1,0 +1,34 @@
+{
+ "clickAt": 1789091520706,
+ "settledAt": 4139,
+ "smoothEnd": 3953,
+ "zone": [
+  {
+   "at": 4187,
+   "behavior": "smooth",
+   "off": -552
+  }
+ ],
+ "ends": [
+  {
+   "at": -1568,
+   "y": 169
+  },
+  {
+   "at": 72,
+   "y": 1023
+  },
+  {
+   "at": 4664,
+   "y": 659
+  }
+ ],
+ "all": [
+  {
+   "at": 4187,
+   "cls": "zone results outline-none dominant",
+   "behavior": "smooth",
+   "off": -552
+  }
+ ]
+}

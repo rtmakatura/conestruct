@@ -253,3 +253,71 @@ Backend 0 · CSS 0 · snapshots 0 · no new hex or font-size · arc 26's artifac
 | **P3** next thing visible | honoured | honoured — verdict strip 60.47..112.47 / 60.11..130.11 on every counted run |
 | **P4** edges · **P10** targets | honoured | honoured — chips one edge 24..356, 332x44, 24/24 at 380 |
 | **P9** · P2 · P5 · P6 · P7 · P8 · P11 · P13-P16 | n/a | n/a — no copy, type, grid, request, lock, token, glyph, disclosure, empty state or undo changed |
+
+
+---
+
+# Prod run at 22f2f81 (2026-09-11, `outProd-22f2f81/`)
+
+*Sha gate: healthz `22f2f81dea4d3507f18ee4f160a5368b37f35897` == `git rev-parse HEAD` == `origin/main`, printed as the first log line (B1). Base `https://www.conestruct.com`. Same harness `s2a28-lr.js`, same legs, same per-viewport holds as the local run at `3b27477`. The three local out dirs are untouched.*
+
+> ## `RESULT FAIL 228/235` — **no landing failed.** 34 of 34 counted landings at target.
+> 1440x1000 natural **10 of 10 at 136.47**, forced **1 of 1**; 380x800 natural **20 of 20 at 154.11**, forced **3 of 3**. Re-issues per run: **29 used 1, 4 used 2, one used 0, none used 3.** All four post-settle corrections are `auto`, attributed to re-issue 2, and pass all four ruled conditions. The 793 does not appear anywhere in this run.
+> The seven FAILs are **six forced runs that never entered the window** (printed, uncounted, per ruling 4) and **one L3 classification gap on the cold first run** (finding 5 — a ruling question, not a product defect; that run landed at 136.47).
+
+## The build gate — it caught the Vercel lag it was written for
+Modal deploys in seconds and Vercel is minutes behind; healthz proves the **backend** sha and says nothing about the bundle the browser downloads. `prod-build-gate.js` polls the served chunks for a signature that exists only after #271 — `scrollIntoView({behavior:<ident>?"auto":<ident>,block:"start"})`, the instant post-settle correction — with the counted cap and the `4e3` deadline as corroborating marks. The right arm must be an **identifier**: the shell's two call sites have read `n?"auto":"smooth"` since #152, so a literal right arm proves nothing.
+
+| time (UTC) | served chunk | signature |
+|---|---|---|
+| **2026-09-11T01:41:32Z** | `829-549a429100209ffe.js` | **absent** — `scrollIntoView({behavior:t,block:"start"})` with a boolean latch and `settle(){if(!r){s=!0;return}o(),u()}`: the **pre-#271** helper, on a healthz that already read `22f2f81` |
+| **2026-09-11T01:51:44Z** | `829-607df19834eb6284.js` | **PRESENT** — `scrollIntoView({behavior:o?"auto":t,block:"start"})`, counted cap, `4e3` deadline. `GATE PASS`; the legs started after this |
+
+Had the legs run at 01:41 they would have measured a frontend with none of #271 against a backend sha that said otherwise — arc 26's failure mode exactly. The gate's log is `outProd-22f2f81/prod-build-gate.out.txt`.
+
+## Landings, re-issues, and every post-settle move
+| leg | 1440x1000 | 380x800 |
+|---|---|---|
+| **natural, zone top (target +-1)** | **136.47 — 10 of 10** | **154.11 — 20 of 20** (fresh page each, memo warm) |
+| **leg F, runs that entered the window** | **1 of 1 at 136.47** (F3, settled 317 ms vs smooth end 442 ms); F1/F2/F4/F5 never entered in 3 attempts each | **3 of 3 at 154.11** (settled 681-689 ms vs smooth end 742-751 ms); F3/F5 never entered |
+| **re-issues per run vs the cap of 2** | L1 **0**; L2-L10 **1 each**; F3 **2** | L1-L20 **1 each**; F1/F2/F4 **2 each** — overall **1 x 0, 29 x 1, 4 x 2, 0 x 3** |
+| L2 verdict strip inside [nav-h, innerH] | 60.47..112.47, 11/11 | 60.11..130.11, 23/23 |
+| L4 band seen every flight | 10/10 | 20/20 |
+| N5 pin | sticky at 52 = nav-h, slot 82 = strip 81.19, 11/11 | static, un-pinned, 23/23 |
+| N6 chips 44 px, one edge | — | 332x44 at 24..356, 23/23 |
+| N10 axe | **0** nodes (baseline 0), 11/11 | the named **2** (baseline 4), 23/23 |
+| natural refusals (#256) | **0 of 10** | **0 of 20** |
+
+**Every post-settle move in the run, with its attributing re-issue and its behaviour** — four of them, one per two-re-issue run, all `auto`:
+
+| run | move | attributed | four conditions | behaviour |
+|---|---|---|---|---|
+| `1440x1000-F3` | 517 -> 136 @591 ms | **re-issue 2** | reduces · attributed · ends at target · last — **PASS** | `re-issue 2@547ms auto` |
+| `380x800-F1` | 793 -> 154 @877 ms | **re-issue 2** | reduces · attributed · ends at target · last — **PASS** | `re-issue 2@833ms auto` |
+| `380x800-F2` | 793 -> 154 @886 ms | **re-issue 2** | reduces · attributed · ends at target · last — **PASS** | `re-issue 2@833ms auto` |
+| `380x800-F4` | 793 -> 154 @880 ms | **re-issue 2** | reduces · attributed · ends at target · last — **PASS** | `re-issue 2@838ms auto` |
+
+One step each — 639 px at 380, 381 px at 1440 — instant, and nothing follows. The other 30 counted runs record **zero** post-settle moves. (The fifth L3 row with post-settle moves is finding 5 below, and it is not a correction.)
+
+**Dim wait (#259):** the harness waits for `.stale-ribbon` to clear before N5/N6/axe. In this run it **never had to wait — 0 occurrences at either viewport**, so no leg measured the dimmed previous-answer state and axe read its baselines throughout. (The local run at `3b27477` waited 14798 ms on one page and still FAILed there; prod did not reproduce it.) Contrast untouched; #259 stays as filed.
+
+**#256:** no scan refused on either viewport, so nothing was recorded uncounted on that account.
+
+## Findings
+- **Finding 5 (new, a ruling question about the leg — not a product defect): `1440x1000-L1` FAILs L3 because on a cold start the landing scroll happens AFTER the settle.** That run is the first of the session, against a cold Modal container: the pair settled at **4139 ms** and the shell's own landing `scrollIntoView` fired at **4187 ms** — 48 ms later. The leg partitions moves at `settledAt`, so the landing animation itself (`-550 -> -432 -> -148 -> 15 -> 86`, four samples) is judged by the post-settle rule and fails it: `UNATTRIBUTED` (there is no re-issue — the run used **0**), `ENDS OFF TARGET` (intermediate frames of an animation in progress), `FOLLOWED BY ANOTHER MOVE`. Nothing is wrong on screen: the zone finished at **136.47**, L1/L2/N5/N10 all PASS. The restatement of 2026-09-10 carries an unstated assumption — that the landing scroll precedes the settle — which holds whenever the answer is warm and breaks on a cold start. **Left as a FAIL by rule; recorded for a ruling, not tuned away.** The obvious shape of a fix, for Ryan to rule on: partition at `max(settledAt, the landing scrollIntoView)` rather than at `settledAt`, so the landing's own animation is always judged as a landing.
+- **Leg F entered the window only 4 times in 10 at prod (20 missed attempts), against 10 of 10 locally.** Prod's warm landing run is much shorter than the local dev server's — at 1440 the monotone run measured **129-244 ms** against a 350 ms hold, so four of the five 1440 forced runs could not be forced inside it and are printed and uncounted per ruling 4. The one that entered (442 ms run) behaved exactly as locally. At 380 three of five entered (742-751 ms runs vs the 700 ms hold). This is a property of the forced leg's fixed hold against a faster server, not of the landing check.
+- No landing FAIL, anywhere, at either viewport, natural or forced.
+
+## What differs from the local run at `3b27477`
+| | local `3b27477` | prod `22f2f81` |
+|---|---|---|
+| counted landings at target | 39 of 39 | **34 of 34** |
+| 380 natural | 19 of 19 counted (L5 refused twice, #256) | **20 of 20**, no refusals |
+| 1440 natural | 10 of 10 | 10 of 10 |
+| forced entering the window | 10 of 10 | **4 of 10** (prod's warm run is shorter than the fixed hold) |
+| re-issue histogram | 29 x 1, 10 x 2 | 1 x 0, 29 x 1, 4 x 2 — the 0 is the cold first run, which landed accurately on the first scroll |
+| post-settle moves | 10, all `auto`, all PASS | 4, all `auto`, all PASS, + finding 5's four landing-animation samples |
+| #259 dim | 1 page waited 14798 ms and still FAILed axe | **0 occurrences** |
+| FAILs | 1 (the #259 dim) | 7 — six `window`, one finding 5 |
+
+Nothing in the product behaved differently. Every difference above is the environment (a faster server, a cold first container, no dim, no refusal) or the harness's fixed forced hold.
