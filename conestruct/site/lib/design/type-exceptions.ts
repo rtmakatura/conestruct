@@ -54,6 +54,14 @@ export const ROLE_CLASSES = ["tr-section", "tr-step", "tr-field", "tr-prov"] as 
 
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   {
+    name: "detected-vs-applied value register",
+    sizes: ["11px"],
+    reason:
+      "the block's two value columns (#273) — a VALUE register, not a label. Ruled 2026-09-11: this goes in the exception set rather than becoming a fifth `tr-*` role, because #226's four roles are a LABEL vocabulary and widening that table would weaken what the four roles mean. One declared register for both columns, so ink is the only axis between detected and applied. Retires this file's former `components/DetectedVsApplied.tsx text-[11px] ×2` debt row",
+    css: [{ selector: ".workbench .dva .dva-val", size: "11px" }],
+    tsx: [],
+  },
+  {
     name: "hero numerals",
     sizes: ["76px", "60px"],
     reason:
@@ -132,19 +140,6 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
-  {
-    // #273 retired this block's two `text-[11px]` utilities onto one
-    // declared value register.  The register still needs a size, and 11px
-    // is neither a `tr-*` role size nor a ruled exception size, so the
-    // residual is declared here rather than mislabelled an exception.
-    // Clearing it needs a ruling, not a patch: either the #226 table gains
-    // a value role (it is four LABEL roles today, and type-roles.test.ts
-    // enumerates its pairs), or the #263 exception set gains 11px.  Until
-    // then this is one owned row instead of two anonymous Tailwind uses.
-    owner: "ruling needed — the detected-vs-applied value register (#273)",
-    css: [{ selector: ".workbench .dva .dva-val", size: "11px" }],
-    tsx: [],
-  },
   {
     owner: "later round — legacy @layer components rules (pre-workbench)",
     css: [
@@ -405,12 +400,13 @@ export const CENSUS_PINS = {
   // strip's glyph 11px arrived (+1, a size already in the sheet) → 102
   // declarations, 19 sizes; C's Tailwind figures unchanged.
   //
-  // #273 retires the DetectedVsApplied Tailwind debt row: the block's two
+  // #273 retires the DetectedVsApplied debt row outright: the block's two
   // value spans dropped `text-[11px]` for one declared register, so two
   // uses, their site and the file leave the Tailwind census (−2 uses,
   // −1 site, −1 file) and the register's single declaration arrives on the
   // CSS side (+1 → 103).  Sizes stay 19: 11px was already in the sheet.
-  // Net: two anonymous utilities become one owned row.
+  // Net: two anonymous utilities become one named EXCEPTION (ruled
+  // 2026-09-11), and this block carries no declared debt.
   cssDeclarations: 103,
   cssSizes: 19,
   tsxSites: 106,

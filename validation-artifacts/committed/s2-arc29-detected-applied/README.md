@@ -271,7 +271,8 @@ identical-value fixture *and* on the divergent one — the label column no
 longer moves when a value changes. Before: `225.594px 112.203px 112.203px`
 → `205.797px 112.203px 132px`, a 19.8 px shift of every row label.
 
-**The 520 px stack, pinned.** `s2a29-threshold.js` walked sixteen widths.
+**The 520 px stack, pinned — measured, and the measurement beats the GO's
+480 (ruled 2026-09-11).** `s2a29-threshold.js` walked sixteen widths.
 The block's content width is `(viewport − 120)` px in the narrow regime, so
 two 132 px tracks plus two 14 px gaps plus a 90 px label floor needs
 ≥ 502 px. Pinned at 520 with margin; the existing 480 breakpoint would
@@ -292,28 +293,28 @@ they did. Only the class names moved: two inline utilities became one
 declared register, and `text-white` became the `--ink-bright` token that
 resolves to the same white.
 
-**The #263 debt did not clear the way the ruling expected, and that is
-stated rather than forced.** The Tailwind row is genuinely gone —
-`tsxUses 322 → 320`, `tsxSites 107 → 106`, `tsxFiles 37 → 36`. But the
-register still has to state a size, and 11px is neither a `tr-*` role size
-nor one of the ruled exception sizes (76/60, 28, 20/17, 16, 14, 9) — which
-is exactly why this block was *debt* and not an *exception*. Three roads,
-two of them dead ends:
+**The #263 debt is retired outright — ruled 2026-09-11.** The Tailwind row
+is gone (`tsxUses 322 → 320`, `tsxSites 107 → 106`, `tsxFiles 37 → 36`) and
+the register's one remaining declaration is a **named exception**, not debt
+and not a fifth `tr-*` role.
 
-- **a named exception** — the census refuses it (the exception-size set is
-  closed) and it would relabel the debt anyway;
-- **declare no size and inherit** — measured: the register then renders at
-  the **16px body default**, larger than its own 12px labels and wide enough
-  to break the track fit. A worse defect than the one being fixed;
-- **a fifth `tr-*` role** — not available and not taken here: the #226 table
-  is four LABEL roles, these are values, and ruling (c) kept the table at
-  four.
+The ruling's reason, recorded because it governs the next surface that asks
+the same question: #226's four `tr-*` roles are a **label** vocabulary. A
+value register is not a label, and widening that table would weaken what the
+four roles mean. So the exception set gains `11px` with its owner and
+reason, and this block carries no declared debt.
 
-So the residual is one **owned** `TYPE_DEBT` row naming the ruling it needs
-(a value role in #226, or 11px added to the #263 exception set) in place of
-two anonymous inline utilities. `cssDeclarations 102 → 103`; `cssSizes`
-stays 19 because 11px was already in the sheet. **Ryan's call; nothing here
-presumes it.**
+Two alternatives were measured and rejected on the way there. Dropping the
+declaration entirely so the register inherits: it then renders at the
+**16px body default**, larger than its own 12px labels and wide enough to
+break the track fit — a worse defect than the one being fixed. Adding a
+fifth role: rejected by the ruling above.
+
+`cssDeclarations 102 → 103`; `cssSizes` stays 19 because 11px was already in
+the sheet. The census asserts in both directions, so it fails if the debt
+row lingers *or* the exception is missing — `type-census.test.ts` carries
+the widened ruled set (`76/60, 28, 20/17, 16, 14, 11, 9`) with the date and
+the reason in its name.
 
 ### #274 — measured on the audit's own fixture
 
@@ -331,12 +332,24 @@ guess. `classify.ts`'s predicate is untouched.
 Before: applied `2 → 3`, Detected stayed `2`, unmarked. After: Detected
 reads **`2` + `overridden`** at both viewports.
 
-The live leg exercises the **disputed** path, and the tags say why: way
-`39508704` is tagged `lanes=2` with `lanes:forward=2` **and**
-`lanes:backward=2` — 2 + 2 ≠ 2, an arithmetic mismatch, so the erasure is
-disputed and a marker is recorded. The **undisputed** path (detected cell
-withdraws its figure) is covered by the mounted suite, not by this fixture.
-Said plainly rather than implied.
+**Which path each layer covers, stated plainly (ruled 2026-09-11).**
+
+- **The live leg exercises the DISPUTED path only.** The fixture's tags say
+  why: way `39508704` is tagged `lanes=2` with `lanes:forward=2` **and**
+  `lanes:backward=2` — 2 + 2 ≠ 2, an arithmetic mismatch, so the erasure is
+  disputed by construction and a `DetectionOverride` marker is recorded.
+- **The UNDISPUTED path — the detected cell withdrawing its figure — is
+  covered by the mounted suite only** (`DetectedVsApplied.lanes.test.tsx`,
+  "UNDISPUTED edit — relays cleared, nothing recorded: the detection is
+  withdrawn", plus the case proving a marker from another surface does not
+  make a lanes edit look disputed).
+- **Why it is not in the live leg:** way `39508704` *cannot* produce an
+  undisputed erasure — its own tags are self-inconsistent, so every lanes
+  edit on it is disputed. Inventing a second fixture to force the path
+  would be weaker evidence than saying so: it would prove the harness can
+  construct a state, not that the product reaches it. Whoever next needs
+  the undisputed path measured should pick a road whose `lanes`,
+  `lanes:forward` and `lanes:backward` agree.
 
 ### Contracts, proved
 

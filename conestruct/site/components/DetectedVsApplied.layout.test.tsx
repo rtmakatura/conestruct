@@ -180,19 +180,24 @@ describe("#273 the block's layout contract", () => {
     const body = ruleBody(".workbench .dva .dva-val");
     expect(body, "one declared value register").not.toBe("");
     // The size stays 11px — the size it already rendered, so no visual
-    // change — but it is now stated once, in one place, instead of twice
-    // as an inline utility.  11px is neither a `tr-*` role size nor a
-    // ruled #263 exception size, so the residual is DECLARED DEBT with an
-    // owner; the census asserts that row exists.
+    // change — but it is stated once, in one place, instead of twice as an
+    // inline utility.  Ruled 2026-09-11: 11px is a declared #263
+    // EXCEPTION, not debt and not a fifth `tr-*` role (the #226 table is a
+    // LABEL vocabulary; a value register is not a label).
     expect(body).toMatch(/font-size:\s*11px/);
-    const debt = readFileSync(
+    const decl = readFileSync(
       join(process.cwd(), "lib", "design", "type-exceptions.ts"),
       "utf-8",
     );
-    expect(debt).toMatch(/\.workbench \.dva \.dva-val/);
-    expect(debt, "the residual names the ruling it needs").toMatch(
-      /ruling needed — the detected-vs-applied value register/,
+    expect(decl).toMatch(/\.workbench \.dva \.dva-val/);
+    expect(decl, "the register is a named exception").toMatch(
+      /name: "detected-vs-applied value register"/,
     );
+    // and the debt row it replaced is gone, in both of its forms
+    expect(decl, "no Tailwind debt row survives").not.toMatch(
+      /file: "components\/DetectedVsApplied\.tsx"/,
+    );
+    expect(decl, "no interim debt owner survives").not.toMatch(/ruling needed —/);
   });
 
   it("one register per column — same size and weight, ink is the only axis", () => {

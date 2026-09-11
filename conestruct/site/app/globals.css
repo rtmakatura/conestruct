@@ -2680,17 +2680,15 @@ input[type="number"] {
 /* The block's value register (#273): ONE register for both columns, so the
    only axis between detected and applied is ink and the emphasis says
    "this is what the plan used" and nothing more.
-   On the size — 11px is carried here deliberately and is still declared
-   DEBT, not an exception.  It is neither a `tr-*` role size nor one of the
-   #263 ruling's exception sizes (76/60, 28, 20/17, 16, 14, 9), which is
-   precisely why this block's two `text-[11px]` utilities were debt in the
-   first place; calling it an exception here would relabel the debt rather
-   than pay it.  Dropping the declaration entirely is worse: the register
-   then inherits the 16px body default — measured — which is larger than
-   its own 12px labels and wide enough to break the track fit.  So the
-   utilities are retired onto one declared register at the size they
-   already rendered (no visual change), and the residual sits in
-   TYPE_DEBT under an owner that names the ruling it needs. */
+   On the size — 11px is a declared #263 EXCEPTION (ruled 2026-09-11), not
+   debt and not a fifth `tr-*` role: #226's four roles are a LABEL
+   vocabulary and a value register is not a label, so widening that table
+   would weaken what the four roles mean.  The two `text-[11px]` utilities
+   this block used to carry are retired onto this one register at the size
+   they already rendered (no visual change).  Dropping the declaration
+   instead is not an option: the register would inherit the 16px body
+   default — measured — larger than its own 12px labels and wide enough to
+   break the track fit. */
 .workbench .dva .dva-val {
   font-family: var(--font-mono);
   font-size: 11px;

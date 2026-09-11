@@ -218,10 +218,10 @@ describe("#263 type census — Tailwind size classes in components/ and app/", (
 });
 
 describe("#263 type census — the exceptions are the ruled set and the pins are the sources' figures", () => {
-  it("exception sizes are exactly the ruling's: 76/60, 28, 20/17, 16, 14, 9 (24 left with the #249 lockup — #253 conflict 1)", () => {
+  it("exception sizes are exactly the ruling's: 76/60, 28, 20/17, 16, 14, 11, 9 (24 left with the #249 lockup — #253 conflict 1; 11 added 2026-09-11 for the #273 value register)", () => {
     const sizes = TYPE_EXCEPTIONS.flatMap((e) => e.sizes).sort();
     expect(sizes).toEqual(
-      ["76px", "60px", "28px", "20px", "17px", "16px", "14px", "9px"].sort(),
+      ["76px", "60px", "28px", "20px", "17px", "16px", "14px", "11px", "9px"].sort(),
     );
     // Each exception's rows carry only its own sizes.
     for (const e of TYPE_EXCEPTIONS) {
