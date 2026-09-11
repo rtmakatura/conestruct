@@ -2772,6 +2772,26 @@ input[type="number"] {
    never be clipped (spec 8.2 — nothing truncated at any width). */
 .workbench .dva .dva-clause {
   min-height: 16px;
+  /* The line-height belongs on the SLOT, not only on the role inside it.
+     The clause is a span (one text node, greppable); a span's own
+     line-height does not set its parent's line BOX, which inherits the
+     panel's 1.6.  Measured in the real build before this line existed:
+     the slot stood 25.6 px against its 16 px reserve and every row was
+     53.8 px instead of 44 — 9.6 px per row of inherited leading that no
+     prototype could show, because the prototype styled the block
+     directly.  The build won; this is the correction. */
+  line-height: 16px;
+}
+/* The clause is a block, so the slot's height is the clause's own line
+   box and nothing else.  As an inline span it was baseline-aligned
+   against the slot's strut, whose ascent comes from the inherited body
+   font rather than the clause's 10px — measured 19 px against a 16 px
+   line-height, 3 px of invisible leading per row.  Block-level removes
+   the strut from the question.  It stays ONE element and one text node:
+   the clause is greppable, and every test reads it as a direct text
+   node. */
+.workbench .dva .dva-clause .tr-prov {
+  display: block;
 }
 /* Spec 5.4's honesty rule, widened to every verdict: "the plan used
    what was detected" and "what was detected was a guess" are two
