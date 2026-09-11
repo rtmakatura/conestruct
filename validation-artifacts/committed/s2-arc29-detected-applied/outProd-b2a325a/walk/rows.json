@@ -1,0 +1,302 @@
+[
+  {
+    "tag": "1440x1000",
+    "id": "P kind",
+    "ok": null,
+    "detail": "scenario kind on load: "
+  },
+  {
+    "tag": "1440x1000",
+    "id": "P candidates",
+    "ok": null,
+    "detail": "5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "P save-state",
+    "ok": null,
+    "detail": "Save & Close disabled=false after picking \"East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "P confirmed-road",
+    "ok": true,
+    "detail": "picked \"East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704\" (fixture way 39508704: true)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 mounted",
+    "ok": true,
+    "detail": ".dva 500×276.4 at 195,1100.2"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 tracks",
+    "ok": null,
+    "detail": "grid-template-columns resolved \"186px 132px 132px\" · column-gap 14px · row-gap 3px · align-items baseline"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 heads",
+    "ok": null,
+    "detail": "[0] \"(spacer)\" 186×0 L206 R392 align=start ; [1] \"Detected\" 132×20 L406 R538 align=right ; [2] \"Applied\" 132×20 L552 R684 align=right"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 row \"Bearing\"",
+    "ok": null,
+    "detail": "label L206 R392 align=start | detected \"85°\" L406 R538 align=right | applied \"85°\" L552 R684 align=right"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "label L206 R392 align=start | detected \"2\" L406 R538 align=right | applied \"2\" L552 R684 align=right"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 row \"Road type\"",
+    "ok": null,
+    "detail": "label L206 R392 align=start | detected \"Rural — undividedOSM · inferred\" L406 R538 align=right | applied \"Rural — undividedOSM · inferred\" L552 R684 align=right"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 row \"Divided\"",
+    "ok": null,
+    "detail": "label L206 R392 align=start | detected \"UndividedOSM · inferred\" L406 R538 align=right | applied \"UndividedOSM · inferred\" L552 R684 align=right"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 header-right == value-right (DETECTED)",
+    "ok": true,
+    "detail": "per-row delta 0, 0, 0, 0 (header R538)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 header-right == value-right (APPLIED)",
+    "ok": true,
+    "detail": "per-row delta 0, 0, 0, 0 (header R684)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 value-track widths",
+    "ok": null,
+    "detail": "detected col widths 132 · applied col widths 132"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D1 labels share one left edge",
+    "ok": true,
+    "detail": "lefts 206"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D2 type tuples",
+    "ok": null,
+    "detail": "6 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4 ; 10px/400/__JetBrains_Mono_e896d9/rgb(244, 192, 32)×4"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D2 nodes off the tr-* roles",
+    "ok": null,
+    "detail": "8: \"85°\"[dva-val is-detected] 11px/400 ; \"85°\"[dva-val is-applied] 11px/400 ; \"2\"[dva-val is-detected] 11px/400 ; \"2\"[dva-val is-applied] 11px/400 ; \"Rural — undividedOSM · infer\"[dva-val is-detected] 11px/400 ; \"Rural — undividedOSM · infer\"[dva-val is-applied] 11px/400 ; \"UndividedOSM · inferred\"[dva-val is-detected] 11px/400 ; \"UndividedOSM · inferred\"[dva-val is-applied] 11px/400"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D2 register",
+    "ok": null,
+    "detail": "detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected=\"tabular-nums\" applied=\"tabular-nums\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D3 rows rendered",
+    "ok": null,
+    "detail": "4: Bearing=\"85°\"→\"85°\" ; Lanes per direction=\"2\"→\"2\" ; Road type=\"Rural — undividedOSM · inferred\"→\"Rural — undividedOSM · inferred\" ; Divided=\"UndividedOSM · inferred\"→\"UndividedOSM · inferred\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D4 #214 sentence byte-identical",
+    "ok": true,
+    "detail": "\"road geometry governs the drawing — the typed bearing sets the travel-direction sign only\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "D4 provenance line",
+    "ok": null,
+    "detail": "top \"OSM detection · East Bayaud Avenue · way 39508704 · operator pick\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "L before",
+    "ok": null,
+    "detail": "Detected lanes \"2\" · Applied \"2\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "L after",
+    "ok": null,
+    "detail": "clicked lanes=3 — Detected lanes now \"2overridden\" · Applied \"3operator-set\""
+  },
+  {
+    "tag": "1440x1000",
+    "id": "L #275 detected cell after the relay clear",
+    "ok": true,
+    "detail": "before \"2\" → after \"2overridden\" (PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked, which is the #275 defect)"
+  },
+  {
+    "tag": "1440x1000",
+    "id": "pageerrors",
+    "ok": null,
+    "detail": "0"
+  },
+  {
+    "tag": "380x800",
+    "id": "P kind",
+    "ok": null,
+    "detail": "scenario kind on load: "
+  },
+  {
+    "tag": "380x800",
+    "id": "P candidates",
+    "ok": null,
+    "detail": "5: East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704 | South Colorado Boulevard northbound (primary, 2°)6 m from pin · way 42241864 | South Leetsdale Drive eastbound (primary, 86°)6 m from pin · way 106308406 | South Colorado Boulevard southbound (primary, 180°)6 m from pin · way 685568072 | East Bayaud Avenue eastbound (tertiary, 89°)6 m from pin · way 1102941270"
+  },
+  {
+    "tag": "380x800",
+    "id": "P save-state",
+    "ok": null,
+    "detail": "Save & Close disabled=false after picking \"East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704\""
+  },
+  {
+    "tag": "380x800",
+    "id": "P confirmed-road",
+    "ok": true,
+    "detail": "picked \"East Bayaud Avenue eastbound (primary, 85°)0 m from pin · way 39508704\" (fixture way 39508704: true)"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 mounted",
+    "ok": true,
+    "detail": ".dva 282×405.1 at 49,1539.8"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 tracks",
+    "ok": null,
+    "detail": "grid-template-columns resolved \"260px\" · column-gap 14px · row-gap 8px · align-items baseline"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 heads",
+    "ok": null,
+    "detail": "[0] \"(spacer)\" 0×0 L0 R0 align=start ; [1] \"Detected\" 123×20 L60 R183 align=right ; [2] \"Applied\" 123×20 L197 R320 align=right"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 row \"Bearing\"",
+    "ok": null,
+    "detail": "label L60 R320 align=start | detected \"85°\" L60 R183 align=right | applied \"85°\" L197 R320 align=right"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 row \"Lanes per direction\"",
+    "ok": null,
+    "detail": "label L60 R320 align=start | detected \"2\" L60 R183 align=right | applied \"2\" L197 R320 align=right"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 row \"Road type\"",
+    "ok": null,
+    "detail": "label L60 R320 align=start | detected \"Rural — undividedOSM · inferred\" L60 R183 align=right | applied \"Rural — undividedOSM · inferred\" L197 R320 align=right"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 row \"Divided\"",
+    "ok": null,
+    "detail": "label L60 R320 align=start | detected \"UndividedOSM · inferred\" L60 R183 align=right | applied \"UndividedOSM · inferred\" L197 R320 align=right"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 header-right == value-right (DETECTED)",
+    "ok": true,
+    "detail": "per-row delta 0, 0, 0, 0 (header R183)"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 header-right == value-right (APPLIED)",
+    "ok": true,
+    "detail": "per-row delta 0, 0, 0, 0 (header R320)"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 value-track widths",
+    "ok": null,
+    "detail": "detected col widths 123 · applied col widths 123"
+  },
+  {
+    "tag": "380x800",
+    "id": "D1 labels share one left edge",
+    "ok": true,
+    "detail": "lefts 60"
+  },
+  {
+    "tag": "380x800",
+    "id": "D2 type tuples",
+    "ok": null,
+    "detail": "6 distinct (size/weight/family/colour): 10px/500/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×1 ; 10px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 12px/500/__Inter_8b3a0b/rgb(200, 209, 221)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(147, 160, 176)×4 ; 11px/400/__JetBrains_Mono_e896d9/rgb(255, 255, 255)×4 ; 10px/400/__JetBrains_Mono_e896d9/rgb(244, 192, 32)×4"
+  },
+  {
+    "tag": "380x800",
+    "id": "D2 nodes off the tr-* roles",
+    "ok": null,
+    "detail": "8: \"85°\"[dva-val is-detected] 11px/400 ; \"85°\"[dva-val is-applied] 11px/400 ; \"2\"[dva-val is-detected] 11px/400 ; \"2\"[dva-val is-applied] 11px/400 ; \"Rural — undividedOSM · infer\"[dva-val is-detected] 11px/400 ; \"Rural — undividedOSM · infer\"[dva-val is-applied] 11px/400 ; \"UndividedOSM · inferred\"[dva-val is-detected] 11px/400 ; \"UndividedOSM · inferred\"[dva-val is-applied] 11px/400"
+  },
+  {
+    "tag": "380x800",
+    "id": "D2 register",
+    "ok": null,
+    "detail": "detected colour rgb(147, 160, 176) weight 400 · applied colour rgb(255, 255, 255) weight 400 · numerals detected=\"tabular-nums\" applied=\"tabular-nums\""
+  },
+  {
+    "tag": "380x800",
+    "id": "D3 rows rendered",
+    "ok": null,
+    "detail": "4: Bearing=\"85°\"→\"85°\" ; Lanes per direction=\"2\"→\"2\" ; Road type=\"Rural — undividedOSM · inferred\"→\"Rural — undividedOSM · inferred\" ; Divided=\"UndividedOSM · inferred\"→\"UndividedOSM · inferred\""
+  },
+  {
+    "tag": "380x800",
+    "id": "D4 #214 sentence byte-identical",
+    "ok": true,
+    "detail": "\"road geometry governs the drawing — the typed bearing sets the travel-direction sign only\""
+  },
+  {
+    "tag": "380x800",
+    "id": "D4 provenance line",
+    "ok": null,
+    "detail": "top \"OSM detection · East Bayaud Avenue · way 39508704 · operator pick\""
+  },
+  {
+    "tag": "380x800",
+    "id": "L before",
+    "ok": null,
+    "detail": "Detected lanes \"2\" · Applied \"2\""
+  },
+  {
+    "tag": "380x800",
+    "id": "L after",
+    "ok": null,
+    "detail": "clicked lanes=3 — Detected lanes now \"2overridden\" · Applied \"3operator-set\""
+  },
+  {
+    "tag": "380x800",
+    "id": "L #275 detected cell after the relay clear",
+    "ok": true,
+    "detail": "before \"2\" → after \"2overridden\" (PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked, which is the #275 defect)"
+  },
+  {
+    "tag": "380x800",
+    "id": "pageerrors",
+    "ok": null,
+    "detail": "0"
+  }
+]
