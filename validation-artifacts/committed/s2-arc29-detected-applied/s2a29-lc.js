@@ -109,8 +109,14 @@ const BLOCK = () => {
   return {
     block: r(blk),
     section: r(blk.querySelector(".tr-section")),
-    provTop: r(blk.querySelector(".tr-prov")),
-    provBottom: r(blk.querySelectorAll(".tr-prov")[1]),
+    // The block's OWN provenance lines are its DIRECT children: the source
+    // line at the top and the #214 disclosure at the bottom.  Since #274/#275
+    // the value cells carry .tr-prov markers too, so an index into a
+    // descendant query picks up a marker instead of the sentence.
+    provTop: r(blk.querySelector(":scope > .tr-prov")),
+    provBottom: r(
+      Array.from(blk.querySelectorAll(":scope > .tr-prov")).slice(-1)[0],
+    ),
     heads: heads.map(r),
     rows: gridRows,
     tracks: gc.gridTemplateColumns,

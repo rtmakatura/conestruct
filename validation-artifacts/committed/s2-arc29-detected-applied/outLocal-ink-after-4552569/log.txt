@@ -1,0 +1,50 @@
+healthz sha a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25 expect a0abc4d88fd77f3a2e4e7e1d450a9cf21ff78a25
+base http://localhost:3005 · fixture 39.71466,-104.94071 way 39508704
+[1440x1000] info A identical-values tracks — "186px 132px 132px" · block w 500
+[1440x1000] info A identical-values head "Detected" — box 406–538 (w 132) · INK 478.8–538 (w 59.2)
+[1440x1000] info A identical-values head "Applied" — box 552–684 (w 132) · INK 632.2–684 (w 51.8)
+[1440x1000] info A identical-values row "Bearing" — detected "85°" box 406–538 INK 518.2–538 | applied "85°" box 552–684 INK 664.2–684
+[1440x1000] info A identical-values row "Lanes per direction" — detected "2" box 406–538 INK 531.4–538 | applied "2" box 552–684 INK 677.4–684
+[1440x1000] info A identical-values row "Road type" — detected "Rural — undividedOSM · inferred" box 406–538 INK 406–538 | applied "Rural — undivided" box 552–684 INK 571.8–684
+[1440x1000] info A identical-values row "Divided" — detected "UndividedOSM · inferred" box 406–538 INK 406–538 | applied "Undivided" box 552–684 INK 624.6–684
+[1440x1000] PASS A identical-values both headers were found — heads: "", "Detected", "Applied"
+[1440x1000] PASS A identical-values INK header-right == value-right (DETECTED) — per-row ink delta 0, 0, 0, 0 px (header ink right 538)
+[1440x1000] PASS A identical-values INK header-right == value-right (APPLIED) — per-row ink delta 0, 0, 0, 0 px (header ink right 684)
+[1440x1000] PASS A identical-values the two value tracks share one width — detected track 132 · applied track 132
+[1440x1000] info B applied road type changed — rural_undivided → freeway ("Freeway / interstate")
+[1440x1000] info B divergent-values tracks — "186px 132px 132px" · block w 500
+[1440x1000] info B divergent-values head "Detected" — box 406–538 (w 132) · INK 478.8–538 (w 59.2)
+[1440x1000] info B divergent-values head "Applied" — box 552–684 (w 132) · INK 632.2–684 (w 51.8)
+[1440x1000] info B divergent-values row "Bearing" — detected "85°" box 406–538 INK 518.2–538 | applied "85°" box 552–684 INK 664.2–684
+[1440x1000] info B divergent-values row "Lanes per direction" — detected "2" box 406–538 INK 531.4–538 | applied "2" box 552–684 INK 677.4–684
+[1440x1000] info B divergent-values row "Road type" — detected "Rural — undividedOSM · inferred" box 406–538 INK 406–538 | applied "Freeway / interstate" box 552–684 INK 552–684
+[1440x1000] info B divergent-values row "Divided" — detected "UndividedOSM · inferred" box 406–538 INK 406–538 | applied "Divided" box 552–684 INK 637.8–684
+[1440x1000] PASS B divergent-values both headers were found — heads: "", "Detected", "Applied"
+[1440x1000] PASS B divergent-values INK header-right == value-right (DETECTED) — per-row ink delta 0, 0, 0, 0 px (header ink right 538)
+[1440x1000] PASS B divergent-values INK header-right == value-right (APPLIED) — per-row ink delta 0, 0, 0, 0 px (header ink right 684)
+[1440x1000] PASS B divergent-values the two value tracks share one width — detected track 132 · applied track 132
+[380x800] info A identical-values tracks — "260px" · block w 282
+[380x800] info A identical-values head "Detected" — box 60–183 (w 123) · INK 123.8–183 (w 59.2)
+[380x800] info A identical-values head "Applied" — box 197–320 (w 123) · INK 268.2–320 (w 51.8)
+[380x800] info A identical-values row "Bearing" — detected "85°" box 60–183 INK 163.2–183 | applied "85°" box 197–320 INK 300.2–320
+[380x800] info A identical-values row "Lanes per direction" — detected "2" box 60–183 INK 176.4–183 | applied "2" box 197–320 INK 313.4–320
+[380x800] info A identical-values row "Road type" — detected "Rural — undividedOSM · inferred" box 60–183 INK 60–183 | applied "Rural — undivided" box 197–320 INK 207.8–320
+[380x800] info A identical-values row "Divided" — detected "UndividedOSM · inferred" box 60–183 INK 60–183 | applied "Undivided" box 197–320 INK 260.6–320
+[380x800] PASS A identical-values both headers were found — heads: "", "Detected", "Applied"
+[380x800] PASS A identical-values INK header-right == value-right (DETECTED) — per-row ink delta 0, 0, 0, 0 px (header ink right 183)
+[380x800] PASS A identical-values INK header-right == value-right (APPLIED) — per-row ink delta 0, 0, 0, 0 px (header ink right 320)
+[380x800] PASS A identical-values the two value tracks share one width — detected track 123 · applied track 123
+[380x800] info B applied road type changed — rural_undivided → freeway ("Freeway / interstate")
+[380x800] info B divergent-values tracks — "260px" · block w 282
+[380x800] info B divergent-values head "Detected" — box 60–183 (w 123) · INK 123.8–183 (w 59.2)
+[380x800] info B divergent-values head "Applied" — box 197–320 (w 123) · INK 268.2–320 (w 51.8)
+[380x800] info B divergent-values row "Bearing" — detected "85°" box 60–183 INK 163.2–183 | applied "85°" box 197–320 INK 300.2–320
+[380x800] info B divergent-values row "Lanes per direction" — detected "2" box 60–183 INK 176.4–183 | applied "2" box 197–320 INK 313.4–320
+[380x800] info B divergent-values row "Road type" — detected "Rural — undividedOSM · inferred" box 60–183 INK 60–183 | applied "Freeway / interstate" box 197–320 INK 254–320
+[380x800] info B divergent-values row "Divided" — detected "UndividedOSM · inferred" box 60–183 INK 60–183 | applied "Divided" box 197–320 INK 273.8–320
+[380x800] PASS B divergent-values both headers were found — heads: "", "Detected", "Applied"
+[380x800] PASS B divergent-values INK header-right == value-right (DETECTED) — per-row ink delta 0, 0, 0, 0 px (header ink right 183)
+[380x800] PASS B divergent-values INK header-right == value-right (APPLIED) — per-row ink delta 0, 0, 0, 0 px (header ink right 320)
+[380x800] PASS B divergent-values the two value tracks share one width — detected track 123 · applied track 123
+
+=== 16 pass · 0 fail ===

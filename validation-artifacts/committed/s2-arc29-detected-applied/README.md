@@ -243,3 +243,126 @@ survives janitorial; changing it is outside this arc's ruling.
   `DetectedVsApplied.tsx:55-91` and collides with commits 4 and 5.
 - **#276** (strip jurisdiction fallback, `SetupStrip.tsx:692-700`) is disjoint.
 - **#279** is `classify.ts`'s `isUrban` predicate, not this block.
+
+---
+
+## After — the same leg, at `4552569`
+
+Frontend tip `4552569`; the backend is unchanged at `a0abc4d` and every run
+is gated on it (this arc is frontend-only, so a moving backend sha would
+mean something went wrong, not right).
+
+### #273 geometry — the acceptance, measured against ink
+
+`outLocal-ink-after-4552569/` — **16 of 16, 0 fail**, on BOTH the
+identical-value and the divergent-value fixture:
+
+| | 1440×1000 | 380×800 |
+|---|---|---|
+| DETECTED header ink right vs each value | **0, 0, 0, 0 px** | **0, 0, 0, 0 px** |
+| APPLIED header ink right vs each value | **0, 0, 0, 0 px** | **0, 0, 0, 0 px** |
+| value tracks | 132 / 132 | 123 / 123 (stacked halves) |
+
+Before, the same measurement read 53.0 / 60.4 px at 1440 and 31.6 / 39.0 at
+380, and the divergent fixture split the tracks 112.2 vs 132.0.
+
+**Label-edge stability.** The resolved tracks are `186px 132px 132px` on the
+identical-value fixture *and* on the divergent one — the label column no
+longer moves when a value changes. Before: `225.594px 112.203px 112.203px`
+→ `205.797px 112.203px 132px`, a 19.8 px shift of every row label.
+
+**The 520 px stack, pinned.** `s2a29-threshold.js` walked sixteen widths.
+The block's content width is `(viewport − 120)` px in the narrow regime, so
+two 132 px tracks plus two 14 px gaps plus a 90 px label floor needs
+≥ 502 px. Pinned at 520 with margin; the existing 480 breakpoint would
+leave the label 68 px. At 380 the grid becomes one column (`260px`), each
+row wrapper pairs its own two equal cells, and the label takes the row
+above them. Nothing truncates.
+
+Note the block width is NOT monotonic in viewport width — at 980 px the
+sidebar goes full-width and the block jumps 410 → 850 px — so the stack
+threshold only governs the narrow regime, which is why it is measured
+rather than derived.
+
+### #273 register
+
+5 type tuples in the block, unchanged from before; the two value columns
+render 11px/400 mono at `rgb(147,160,176)` and `rgb(255,255,255)` exactly as
+they did. Only the class names moved: two inline utilities became one
+declared register, and `text-white` became the `--ink-bright` token that
+resolves to the same white.
+
+**The #263 debt did not clear the way the ruling expected, and that is
+stated rather than forced.** The Tailwind row is genuinely gone —
+`tsxUses 322 → 320`, `tsxSites 107 → 106`, `tsxFiles 37 → 36`. But the
+register still has to state a size, and 11px is neither a `tr-*` role size
+nor one of the ruled exception sizes (76/60, 28, 20/17, 16, 14, 9) — which
+is exactly why this block was *debt* and not an *exception*. Three roads,
+two of them dead ends:
+
+- **a named exception** — the census refuses it (the exception-size set is
+  closed) and it would relabel the debt anyway;
+- **declare no size and inherit** — measured: the register then renders at
+  the **16px body default**, larger than its own 12px labels and wide enough
+  to break the track fit. A worse defect than the one being fixed;
+- **a fifth `tr-*` role** — not available and not taken here: the #226 table
+  is four LABEL roles, these are values, and ruling (c) kept the table at
+  four.
+
+So the residual is one **owned** `TYPE_DEBT` row naming the ruling it needs
+(a value role in #226, or 11px added to the #263 exception set) in place of
+two anonymous inline utilities. `cssDeclarations 102 → 103`; `cssSizes`
+stays 19 because 11px was already in the sheet. **Ryan's call; nothing here
+presumes it.**
+
+### #274 — measured on the audit's own fixture
+
+Way `39508704` is a `primary` in central Denver and the block called it
+**"Rural — undivided"**. It now renders that value with **`OSM · inferred`**
+beneath it, and `Divided` likewise. `Bearing` and `Lanes per direction`
+carry no marker, because they cannot guess (see "Why only two rows" above).
+
+Why the classifier answers *rural* on a Denver arterial is **#279**, filed
+and out of scope: this arc makes the guess legible, it does not change the
+guess. `classify.ts`'s predicate is untouched.
+
+### #275 — measured, and which path the fixture exercises
+
+Before: applied `2 → 3`, Detected stayed `2`, unmarked. After: Detected
+reads **`2` + `overridden`** at both viewports.
+
+The live leg exercises the **disputed** path, and the tags say why: way
+`39508704` is tagged `lanes=2` with `lanes:forward=2` **and**
+`lanes:backward=2` — 2 + 2 ≠ 2, an arithmetic mismatch, so the erasure is
+disputed and a marker is recorded. The **undisputed** path (detected cell
+withdraws its figure) is covered by the mounted suite, not by this fixture.
+Said plainly rather than implied.
+
+### Contracts, proved
+
+| contract | evidence |
+|---|---|
+| #214 sentence byte-identical | live leg, both viewports: `road geometry governs the drawing — the typed bearing sets the travel-direction sign only`; plus `DetectedVsApplied.test.tsx` unmodified |
+| #198 / #177 / #179 machinery | read-only; no writer touched. `lib/scenarios/**` diff is empty |
+| #226 four roles | `type-roles.test.ts` 13/13 unmodified; no fifth role added |
+| #263 census + ink | green, with the Tailwind row deleted and the residual owned |
+| rail (#228) | `lib/scenarios/rail.ts` diff empty |
+| payload senders | **0** — the diff touches no wire field; all three issues are frontend-only |
+| snapshots / expectation-JSON / containment | 0 |
+| three mount points | one component, one props shape; they differ only in which rows the kind carries (flagger has no lanes/divided row) |
+| full frontend suite | **1109/1109**, 144 files |
+| page errors | 0 in every run |
+
+### A harness defect this arc caused and caught
+
+Moving the headers into `.dva-head` made the probes' old head/row filter
+return an **empty head list**, which silently skipped the ink assertion —
+the one measurement the leg exists for — and the run still reported "4
+pass". Separately, the `.tr-prov` markers added by #274/#275 made an
+index-based selector pick a marker instead of the #214 sentence, failing a
+contract check that was in fact intact.
+
+Both probes now resolve either markup shape, scope the block's own
+provenance lines with `:scope >`, and **fail loudly** when a header is
+missing rather than skipping. A green run with a silently-skipped assertion
+is worse than a red one.
