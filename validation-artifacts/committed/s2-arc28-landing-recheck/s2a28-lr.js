@@ -175,7 +175,8 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   // scroll plus at most two re-issues (#271's ruled cap), never three.
   const reissues = zone.length - 1;
   // #271 finding 4, ruling of 2026-09-10 — the jump leg RESTATED, the way
-  // ruling 8 restated the anchor leg.  A post-settle move passes only
+  // ruling 8 restated the anchor leg, and AMENDED the same day by the
+  // ruling on finding 5 (the partition below).  A post-partition move passes only
   // when all four hold: (i) it strictly reduces the offset, (ii) it is
   // attributable to a counted re-issue inside the cap of two, (iii) it
   // ends within 1 px of target, (iv) there are no further moves after
@@ -184,9 +185,23 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   // drift.  A move is a change of the ZONE's viewport top > 40 px; a
   // scrollY step that holds the zone still (Chrome's anchoring
   // compensation at the settle) is not a move and is reported apart.
-  const post = s.settledAt === null ? [] : js.visible.filter((j) => j.t > s.settledAt);
-  const preVisible = s.settledAt === null ? js.visible : js.visible.filter((j) => j.t <= s.settledAt);
-  const preScroll = s.settledAt === null ? js.scroll : js.scroll.filter((j) => j.t <= s.settledAt);
+  // #271 finding 5, ruled 2026-09-10: "partition at whichever comes
+  // later, the settle or the landing scroll.  The post-settle rule was
+  // written assuming the landing precedes the settle — true warm, false
+  // on a cold scan."  Both sides of that max() must be read on ONE
+  // clock: the sampler's ``t`` starts tens of ms after the click, the
+  // scroll census's ``at`` is click-relative, so the landing scroll is
+  // converted into sample time before the comparison (the same shift
+  // that attribution uses).
+  const clockShift = s.t0 - clickAt;
+  const landingAt = zone.length ? zone[0].at - clockShift : null;
+  const partitionAt =
+    s.settledAt === null ? null
+    : landingAt === null ? s.settledAt
+    : Math.max(s.settledAt, landingAt);
+  const post = partitionAt === null ? [] : js.visible.filter((j) => j.t > partitionAt);
+  const preVisible = partitionAt === null ? js.visible : js.visible.filter((j) => j.t <= partitionAt);
+  const preScroll = partitionAt === null ? js.scroll : js.scroll.filter((j) => j.t <= partitionAt);
   // Attribution runs on ONE clock.  The census is click-relative (the
   // page's ``Date.now()`` minus ``clickAt``); the samples are relative to
   // the sampler's own start, which is some tens of ms AFTER the click —
@@ -195,7 +210,6 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   // before attributing, or a correction gets credited to the re-issue
   // before the one that caused it (it did, on 3 of 8 runs at 59f6fed,
   // reading "by re-issue 1" for a move the instant re-issue 2 made).
-  const clockShift = s.t0 - clickAt;
   const ATTRIB_SLACK_MS = 20; // rounding only, now that the clocks agree
   const verdicts = post.map((j, i) => {
     const mt = j.t + clockShift;
@@ -215,9 +229,10 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   check(tag, `${label} L3 jumps + re-issue census`,
     preScroll.length <= 1 && preVisible.length === 0 && zone.length >= 1 && reissues <= 2 && verdicts.every((v) => v.ok),
     `smooth run to ${js.smoothEnd} ms; scrollIntoView on the zone: ${zone.length} (${census}) → ${reissues} re-issue(s), cap 2; scrollend: ${endCensus}; ` +
-    `PRE-settle: instant scrollY steps > 40 px ${preScroll.length} (${preScroll.map((j) => `${j.d}@${j.t}ms, zone moved ${j.v}`).join("; ") || "none"}), visible zone moves ${preVisible.length}; ` +
-    `POST-settle moves (ruling of 2026-09-10, four conditions): ${post.length} — ${postCensus}; ` +
-    `post-settle scrollY steps that held the zone still: ${(s.settledAt === null ? [] : js.scroll.filter((j) => j.t > s.settledAt && Math.abs(j.v) <= 40)).map((j) => `${j.d}@${j.t}ms`).join("; ") || "none"}; ` +
+    `partition at ${partitionAt} ms (${landingAt !== null && partitionAt === landingAt ? "the landing scroll" : "the settle"}; settle ${s.settledAt}, landing ${landingAt}, both in sample time — ruling of 2026-09-10); ` +
+    `PRE-partition: instant scrollY steps > 40 px ${preScroll.length} (${preScroll.map((j) => `${j.d}@${j.t}ms, zone moved ${j.v}`).join("; ") || "none"}), visible zone moves ${preVisible.length}; ` +
+    `POST-partition moves (four conditions): ${post.length} — ${postCensus}; ` +
+    `post-partition scrollY steps that held the zone still: ${(partitionAt === null ? [] : js.scroll.filter((j) => j.t > partitionAt && Math.abs(j.v) <= 40)).map((j) => `${j.d}@${j.t}ms`).join("; ") || "none"}; ` +
     `scrollY ${s.samples.slice(0, 14).map((x) => x.scrollY).join(" → ")}…`);
   check(tag, `${label} L4 band`, s.seen, `band seen during the flight ${s.seen}`);
   // #259 (finding 3): the pin and axe legs were reading the page in its
