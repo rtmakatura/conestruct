@@ -283,7 +283,7 @@ async function run(vp) {
         const laneRowAfter = after && after.rows.find((r) => /lanes/i.test(r.label.text));
         if (laneRowAfter) {
           info(tag, "L after", `clicked lanes=${want} — Detected lanes now "${laneRowAfter.detected.text}" · Applied "${laneRowAfter.applied.text}"`);
-          check(tag, "L #275 detected cell after the relay clear", laneRowAfter.detected.text !== laneRowBefore.detected.text || /overr|was|—/i.test(laneRowAfter.detected.text), `before "${laneRowBefore.detected.text}" → after "${laneRowAfter.detected.text}" (unchanged + unmarked = the #275 defect)`);
+          check(tag, "L #275 detected cell after the relay clear", laneRowAfter.detected.text !== laneRowBefore.detected.text || /overr|was|—/i.test(laneRowAfter.detected.text), `before "${laneRowBefore.detected.text}" → after "${laneRowAfter.detected.text}" (PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked, which is the #275 defect)`);
           await L.shot(page, OUT, T("after-lane-edit"), true);
         }
       } else info(tag, "L", `no lanes chip for ${want}`);

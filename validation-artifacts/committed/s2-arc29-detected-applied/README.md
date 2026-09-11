@@ -366,6 +366,24 @@ reads **`2` + `overridden`** at both viewports.
 | full frontend suite | **1109/1109**, 144 files |
 | page errors | 0 in every run |
 
+### A record fix, and what it deliberately does NOT touch
+
+The `L` check's printed detail was phrased for the failure case, so on a
+PASS it read `(unchanged + unmarked = the #275 defect)` — backwards, and
+exactly the kind of string a later reader would take at face value. Ruled
+2026-09-11 as a record fix: `s2a29-lc.js:286` now prints
+`(PASS = the cell changed or carries a mark; FAIL = unchanged and unmarked,
+which is the #275 defect)`. The check's logic is unchanged — only what it
+says about itself.
+
+**The already-recorded logs keep the old wording, on purpose.** Rewriting a
+committed `out-*` directory would amend a historical archive, which this
+project does not do: those files are what the run actually printed on the
+sha they name. So `outLocal-a0abc4d/log.txt` and
+`outLocal-after-4552569/log.txt` still carry the backwards phrasing beside
+their (correct) PASS/FAIL verdicts. Read them with this note. Every run
+from here prints the corrected wording.
+
 ### A harness defect this arc caused and caught
 
 Moving the headers into `.dva-head` made the probes' old head/row filter
