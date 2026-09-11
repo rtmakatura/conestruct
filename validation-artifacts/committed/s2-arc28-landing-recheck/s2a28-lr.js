@@ -106,14 +106,39 @@ const INSTRUMENT = () => {
 };
 const SCROLLS = () => ({ scrolls: window.__s2a28_scrolls || [], ends: window.__s2a28_ends || [] });
 
-// Jumps (#240 / F-S2-2), arc 26 verbatim: the smooth landing is the one
-// monotone run of same-sign scrollY deltas from the click; anything
+// Jumps (#240 / F-S2-2), arc 26 verbatim in behaviour: the smooth
+// landing is the one monotone run of same-sign scrollY deltas; anything
 // outside it — an instant step (the swap's clamp, an anchoring
 // compensation) — is a scrollY jump when > 40 px, and a VISIBLE jump when
 // the results zone's viewport top moved > 40 px with it.
-function jumps(samples) {
-  let dir = 0, smoothUntil = 0;
-  for (let i = 1; i < samples.length; i++) {
+//
+// #271 finding 5, ruled 2026-09-10 — the run's START ANCHOR moves, and
+// only that: "Anchor the jump leg's smooth run at the landing
+// ``scrollIntoView``, not at the first movement after the click.  An
+// anchoring compensation that moves the zone zero pixels is not the
+// landing starting; on a cold scan it closed the run before the landing
+// existed and the landing's own animation was then counted as
+// unattributed post-settle moves."  ``anchorT`` is that landing scroll
+// in SAMPLE time — the caller converts it with the same ``clockShift``
+// the partition and attribution use, so the anchor, the settle and the
+// partition are all read on one clock.  The run begins at the first
+// sample at or after the anchor; what happened before it is pre-anchor
+// and outside the census, as the pre-click page always was.  With no
+// landing scroll in the census ``anchorT`` is null and the leg falls
+// back to arc 26's first-movement anchor, unchanged.
+function firstMoveAt(samples) {
+  for (let i = 1; i < samples.length; i++) if (samples[i].scrollY !== samples[i - 1].scrollY) return samples[i].t;
+  return null;
+}
+function jumps(samples, anchorT) {
+  const anchored = anchorT !== null && anchorT !== undefined;
+  let i0 = 0;
+  if (anchored) {
+    const k = samples.findIndex((x) => x.t >= anchorT);
+    i0 = k < 0 ? Math.max(0, samples.length - 1) : k;
+  }
+  let dir = 0, smoothUntil = i0;
+  for (let i = i0 + 1; i < samples.length; i++) {
     const d = samples[i].scrollY - samples[i - 1].scrollY;
     if (d === 0) { if (dir !== 0) { smoothUntil = i; break; } continue; }
     if (dir === 0) { dir = Math.sign(d); smoothUntil = i; continue; }
@@ -129,7 +154,7 @@ function jumps(samples) {
     if (Math.abs(d) > 40) scroll.push({ t: samples[i].t, d, v: Math.round(v), from, to });
     if (Math.abs(v) > 40) visible.push({ t: samples[i].t, d, v: Math.round(v), from, to });
   }
-  return { smoothUntil, smoothEnd: samples[smoothUntil]?.t ?? 0, scroll, visible };
+  return { anchored, anchorKind: anchored ? "the landing scroll" : "the first movement after the click", anchorAt: samples[i0]?.t ?? 0, firstMoveAt: firstMoveAt(samples), smoothUntil, smoothEnd: samples[smoothUntil]?.t ?? 0, scroll, visible };
 }
 
 async function pin(page) {
@@ -166,10 +191,16 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   tally(tag, opts.key, landed);
   check(tag, `${label} L1 landing`, landed, `results zone top ${m.resultsTop} vs ${target} ±1 (scroll-margin ${m.resultsMargin}, --pin-h ${m.pinH}); scrollY ${m.scrollY}; docH ${m.docH}; settled ${s.settledAt} ms | ${sh}`);
   check(tag, `${label} L2 strip in view`, !!m.strip && m.strip.vtop >= m.navH && m.strip.vbottom <= m.innerH, `verdict strip ${m.strip?.vtop}..${m.strip?.vbottom} vs [${m.navH}, ${m.innerH}] "${m.stripText}"; status slot h ${m.statusSlot?.h} (--status-h ${m.statusH})`);
-  const js = jumps(s.samples);
   const raw = await page.evaluate(SCROLLS);
   const zone = raw.scrolls.filter((r) => /\bresults\b/.test(r.cls)).map((r) => ({ at: r.t - clickAt, behavior: r.behavior, off: r.off }));
   const ends = raw.ends.map((e) => ({ at: e.t - clickAt, y: e.y }));
+  // ONE clock, computed once.  The sampler's ``t`` starts tens of ms
+  // after the click and the census's ``at`` is click-relative, so the
+  // landing scroll is shifted into sample time here, and the run's
+  // anchor (below), the partition and the attribution all use it.
+  const clockShift = s.t0 - clickAt;
+  const landingAt = zone.length ? zone[0].at - clockShift : null;
+  const js = jumps(s.samples, landingAt);
   fs.writeFileSync(path.join(OUT, `${label}-scrolls.json`), JSON.stringify({ clickAt, settledAt: s.settledAt, smoothEnd: js.smoothEnd, zone, ends, all: raw.scrolls.map((r) => ({ at: r.t - clickAt, cls: r.cls, behavior: r.behavior, off: r.off })) }, null, 1));
   // The census is PRINTED, and the cap is the assertion: the landing
   // scroll plus at most two re-issues (#271's ruled cap), never three.
@@ -192,9 +223,7 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   // clock: the sampler's ``t`` starts tens of ms after the click, the
   // scroll census's ``at`` is click-relative, so the landing scroll is
   // converted into sample time before the comparison (the same shift
-  // that attribution uses).
-  const clockShift = s.t0 - clickAt;
-  const landingAt = zone.length ? zone[0].at - clockShift : null;
+  // that attribution and the run's anchor use, computed above).
   const partitionAt =
     s.settledAt === null ? null
     : landingAt === null ? s.settledAt
@@ -228,7 +257,9 @@ async function landingLegs(page, tag, label, s, clickAt, opts) {
   const endCensus = ends.map((e) => `@${e.at}ms y=${e.y}`).join(" ; ") || "none";
   check(tag, `${label} L3 jumps + re-issue census`,
     preScroll.length <= 1 && preVisible.length === 0 && zone.length >= 1 && reissues <= 2 && verdicts.every((v) => v.ok),
-    `smooth run to ${js.smoothEnd} ms; scrollIntoView on the zone: ${zone.length} (${census}) → ${reissues} re-issue(s), cap 2; scrollend: ${endCensus}; ` +
+    `smooth run anchored at ${js.anchorKind} — first sample at or after it ${js.anchorAt} ms, run ends ${js.smoothEnd} ms ` +
+    `(landing scroll ${landingAt}, first movement after the click ${js.firstMoveAt}, all in sample time — ruling of 2026-09-10); ` +
+    `scrollIntoView on the zone: ${zone.length} (${census}) → ${reissues} re-issue(s), cap 2; scrollend: ${endCensus}; ` +
     `partition at ${partitionAt} ms (${landingAt !== null && partitionAt === landingAt ? "the landing scroll" : "the settle"}; settle ${s.settledAt}, landing ${landingAt}, both in sample time — ruling of 2026-09-10); ` +
     `PRE-partition: instant scrollY steps > 40 px ${preScroll.length} (${preScroll.map((j) => `${j.d}@${j.t}ms, zone moved ${j.v}`).join("; ") || "none"}), visible zone moves ${preVisible.length}; ` +
     `POST-partition moves (four conditions): ${post.length} — ${postCensus}; ` +
@@ -342,7 +373,11 @@ async function forcedRun(browser, vp, tag, label, cap) {
   clickAt = Date.now();
   await page.getByRole("button", { name: /Generate plan/ }).click();
   const s = await sampleUntilSettled(page, label, 120000);
-  const js = jumps(s.samples);
+  // The window gate reads the SAME smooth run the L3 leg does, anchored
+  // at the landing scroll (ruling of 2026-09-10) — one definition, or
+  // the gate and the leg disagree about when the landing ended.
+  const fz = (await page.evaluate(SCROLLS)).scrolls.filter((r) => /\bresults\b/.test(r.cls)).map((r) => r.t - clickAt);
+  const js = jumps(s.samples, fz.length ? fz[0] - (s.t0 - clickAt) : null);
   const entered = s.settledAt !== null && js.smoothEnd > 0 && s.settledAt < js.smoothEnd;
   info(tag, `${label} window`, `replayed audit ×${held.audit} breakdown ×${held.breakdown} held to ${holdMs} ms; settled ${s.settledAt} ms vs smooth run end ${js.smoothEnd} ms → ${entered ? "INSIDE the window" : "missed the window — re-run"}`);
   if (!entered) { await page.close(); return { entered: false }; }

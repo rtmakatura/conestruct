@@ -1,0 +1,56 @@
+The L3 leg replayed over the archive: arc 26's click anchor (must reproduce the log) vs the landing anchor ruled 2026-09-10.
+
+label                  shift  settle  landing   smoothEnd click→landing   pre/vis/post click→landing    log  click  landing
+1440x1000-F3              86     317       42                442 → 442   0/0/1 → 0/0/1                PASS   PASS     PASS 
+1440x1000-L1              82    4139     4187              3953 → 4636   1/1/4 → 0/0/0                FAIL   FAIL     PASS   CHANGED
+1440x1000-L10           band     818       26                508 → 508   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L2            band    2473       35                498 → 498   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L3            band    1033       41                536 → 536   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L4            band    4070       34                481 → 481   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L5            band    1972       20                497 → 497   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L6            band    1191       26                508 → 508   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L7            band    1737       24                494 → 494   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L8            band    1609       22                502 → 502   1/0/0 → 1/0/0                PASS   PASS     PASS 
+1440x1000-L9            band    1427       33                497 → 497   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-F1r2              71     683       28                744 → 744   0/0/1 → 0/0/1                PASS   PASS     PASS 
+380x800-F2r2              71     689       27                751 → 751   0/0/1 → 0/0/1                PASS   PASS     PASS 
+380x800-F4                77     681       34                742 → 742   0/0/1 → 0/0/1                PASS   PASS     PASS 
+380x800-L1              band    4177       22                805 → 805   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L10             band    1137       34                807 → 807   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L11             band    1741       43                808 → 808   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L12             band    1907       42                848 → 848   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L13             band    2058       31                813 → 813   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L14             band     873       34                805 → 805   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L15             band    3152       39                852 → 852   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L16             band     750       21                679 → 679   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L17             band    3206       21                843 → 843   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L18             band    1184       22                803 → 803   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L19             band    1187       33                815 → 815   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L2              band    1680       28                810 → 810   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L20             band    1251       31                815 → 815   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L3              band    2615       40                863 → 863   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L4              band    1986       21                810 → 810   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L5              band     993       23                804 → 804   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L6              band    1288       20                854 → 854   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L7              band    1547       24                804 → 804   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L8              band    1532       43                848 → 848   1/0/0 → 1/0/0                PASS   PASS     PASS 
+380x800-L9              band    2057       28                815 → 815   1/0/0 → 1/0/0                PASS   PASS     PASS 
+
+Self-check: the click-anchored replay reproduces the archived L3 verdict on 34 of 34 runs.
+Recount: 1 of 34 runs change under the landing anchor: 1440x1000-L1 FAIL→PASS
+
+Per-leg totals across the archived prod run (outProd-22f2f81):
+leg      as logged      recounted (landing anchor)
+L1      34/34          34/34
+L2      34/34          34/34
+L3      33/34          34/34   <- changed
+L4      34/34          34/34
+N5      34/34          34/34
+N6      23/23          23/23
+N10     34/34          34/34
+F0      2/2            2/2
+window  0/6            0/6
+TOTAL   228/235        229/235
+
+RESULT line as archived : RESULT FAIL 228/235 — [1440x1000] 1440x1000-L1 L3 jumps + re-issue census, [1440x1000] 1440x1000-F1 window, [1440x1000] 1440x1000-F2 window, [1440x1000] 1440x1000-F4 window, [1440x1000] 1440x1000-F5 window, [380x800] 380x800-F3 window, [380x800] 380x800-F5 window
+RESULT line recounted   : RESULT FAIL 229/235 — [1440x1000] 1440x1000-F1 window, [1440x1000] 1440x1000-F2 window, [1440x1000] 1440x1000-F4 window, [1440x1000] 1440x1000-F5 window, [380x800] 380x800-F3 window, [380x800] 380x800-F5 window

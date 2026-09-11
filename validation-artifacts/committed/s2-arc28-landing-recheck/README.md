@@ -173,7 +173,55 @@ The four conditions above are unchanged; only where the post side *begins* moves
 >
 > **Why, and it is my error in finding 5, not the ruling's.** The "48 ms later" in finding 5 compared two different clocks — the sampler's `t` against the page's click-relative census — the same clock-mixing that had already been fixed once for attribution, which I then reproduced in prose. Read on one clock, L1's shift is **82 ms** (recovered from its four printed moves, all four agreeing exactly), so the settle lands at **4221 census** against the landing scroll at **4187 census**: **the landing scroll came 34 ms BEFORE the settle, not 48 ms after.** `max()` therefore selects the settle, the boundary does not move, and the run recounts exactly as recorded. The amendment is still right for the case it names — it just is not the case L1 was.
 >
-> **What actually made L1 fail, measured.** `jumps()` anchors its "smooth run" at the first movement after the *click*, not at the landing scroll. In L1 that first movement was the **+381 px anchoring compensation at 3891 ms** (the corrections block mounting; the zone itself moved 0), and the next zero-delta sample closed the run at **3953 ms** — before the landing scroll had even been issued. So the landing's own animation (4201–4451 ms, zone −550 → 136) fell outside the smooth run and was counted as jumps: one on the pre side (−59 px at 4139) and four on the post side, where they read `UNATTRIBUTED` / `ENDS OFF TARGET` because they are a landing, not a correction. **Candidate for a ruling, not implemented here:** anchor the monotone-run detection at the landing `scrollIntoView` rather than at the click, so the landing animation is excluded as the smooth run in a cold scan exactly as it is in a warm one. Until that is ruled, `1440x1000-L1` stays a recorded FAIL whose landing was correct.
+> **What actually made L1 fail, measured.** `jumps()` anchors its "smooth run" at the first movement after the *click*, not at the landing scroll. In L1 that first movement was the **+381 px anchoring compensation at 3891 ms** (the corrections block mounting; the zone itself moved 0), and the next zero-delta sample closed the run at **3953 ms** — before the landing scroll had even been issued. So the landing's own animation (4201–4451 ms, zone −550 → 136) fell outside the smooth run and was counted as jumps: one on the pre side (−59 px at 4139) and four on the post side, where they read `UNATTRIBUTED` / `ENDS OFF TARGET` because they are a landing, not a correction. **Candidate for a ruling, as written here on the day:** anchor the monotone-run detection at the landing `scrollIntoView` rather than at the click, so the landing animation is excluded as the smooth run in a cold scan exactly as it is in a warm one. **Ryan ruled exactly that, the same day — see 4 below**, and under the amended anchor `1440x1000-L1` recounts as a PASS.
+
+**4 — the anchor, amended the same day (ruling on finding 5's *measured* cause, Ryan, 2026-09-10), verbatim:**
+> "Anchor the jump leg's smooth run at the landing `scrollIntoView`, not at the first movement after the click. An anchoring compensation that moves the zone zero pixels is not the landing starting; on a cold scan it closed the run before the landing existed and the landing's own animation was then counted as unattributed post-settle moves. Harness-only, no product change.
+>
+> Implement it as one commit on a branch cut from main, recompute the recount from the archive the same way — do not assert it — and report the recounted totals per leg. If the 1440 cold run still fails after the amended anchor, say so and say why rather than adjusting the rule again; a third premise correction on the same leg means the leg's model of the landing is wrong and I'd rather see that stated than patched.
+>
+> Record the amendment in the arc-28 README beside the partition amendment and the four conditions, dated, with the cold-scan case named and finding 5's clock-mixing correction stated plainly (the '48 ms later' compared the sampler's clock against the page's click-relative census; on one clock the landing preceded the settle by 34 ms, so the partition maximum selects the settle and the boundary does not move).
+>
+> Also note for the record: no product behaviour is in question in any of this — the 34 prod landings all hit target and the 793 appears nowhere."
+
+The four conditions are unchanged, arc 26's pre-side rule is unchanged, the cap of two re-issues is unchanged, and `partitionAt = max(settledAt, landingAt)` is unchanged. **Only where the run *starts* moves.** `jumps(samples, anchorT)` now begins its monotone run at the first sample at or after the landing `scrollIntoView` — `anchorT` being that scroll converted into sample time by the same `clockShift` the partition and the attribution use, so the anchor, the settle and the partition are read on **one** clock. With no landing scroll in the census `anchorT` is `null` and the leg falls back to arc 26's first-movement anchor, unchanged. The printed line names the anchor it used and both candidates in that one clock, the way the partition line already does:
+
+```
+smooth run anchored at the landing scroll — first sample at or after it 4139 ms, run ends 4636 ms
+(landing scroll 4105, first movement after the click 3891, all in sample time — ruling of 2026-09-10);
+```
+
+**The cold-scan case, named: `1440x1000-L1` of the prod run at `22f2f81`** — the first Generate of the session, against a cold Modal container. Its first movement after the click was the **+381 px anchoring compensation at 3891 ms** (the corrections block mounting; the zone itself moved **0 px**), and the next zero-delta sample closed the smooth run at **3953 ms** — before the landing `scrollIntoView` at **4105 ms (sample time)** had been issued at all. The landing's own animation (`−550 → −432 → −148 → 15 → 86`, 4139–4387 ms) therefore fell *outside* the run and was counted as jumps: one on the pre side and four on the post side, reading `UNATTRIBUTED` / `ENDS OFF TARGET` because they are a landing, not a correction. Anchored at the landing, that animation **is** the smooth run — it ends at 4636 ms, the census is empty either side, and the run recounts as a PASS. Its zone finished at **136.47** with **0 re-issues** throughout; nothing about the page changed.
+
+**Finding 5's clock-mixing correction, stated plainly (Ryan's words):** *the "48 ms later" compared the sampler's clock against the page's click-relative census; on one clock the landing preceded the settle by 34 ms, so the partition maximum selects the settle and the boundary does not move.* L1's recovered shift is **82 ms** — settle **4139 sample = 4221 census**, landing scroll **4187 census = 4105 sample** — and `max()` therefore picks the settle at 4139 in both readings. The partition amendment (3, above) is right for the case it names; it simply was not L1's case, and it is the **anchor**, not the partition, that L1 needed.
+
+> ### The recount, measured against the archive — `1440x1000-L1` becomes a PASS
+> `recount-anchor.js` replays the **whole** L3 leg over every committed run of `outProd-22f2f81/` — the archived log is not edited and the run is not re-run — twice: once with arc 26's click anchor and once with the amended landing anchor. Output committed at `outProd-22f2f81/recount-anchor.out.txt`.
+>
+> **Self-check first:** the click-anchored replay reproduces the archive's own L3 verdict on **34 of 34** runs, so the replay is measuring the same leg the run measured.
+>
+> **Recount: 1 of 34 runs changes — `1440x1000-L1`, FAIL → PASS.** Its smooth run moves from 3953 ms to 4636 ms and its census goes `1/1/4` (pre-scroll / pre-visible / post-partition) to `0/0/0`. The other 33 runs are byte-identical either side: every warm run's landing scroll is at 20–43 ms census, i.e. at or before the sampler's first sample, so the anchored run and the first-movement run are the same run.
+>
+> | leg | as logged | recounted (landing anchor) |
+> | --- | --- | --- |
+> | L1 landing | 34/34 | 34/34 |
+> | L2 strip in view | 34/34 | 34/34 |
+> | **L3 jumps + re-issue census** | **33/34** | **34/34** ← the only change |
+> | L4 band | 34/34 | 34/34 |
+> | N5 pin | 34/34 | 34/34 |
+> | N6 chips (380 only) | 23/23 | 23/23 |
+> | N10 axe | 34/34 | 34/34 |
+> | F0 capture | 2/2 | 2/2 |
+> | window (forced entry) | 0/6 | 0/6 |
+> | **TOTAL** | **228/235** | **229/235** |
+>
+> **The prod RESULT line becomes** `RESULT FAIL 229/235 — [1440x1000] 1440x1000-F1 window, [1440x1000] 1440x1000-F2 window, [1440x1000] 1440x1000-F4 window, [1440x1000] 1440x1000-F5 window, [380x800] 380x800-F3 window, [380x800] 380x800-F5 window`. The six remaining FAILs are the forced runs that never entered the window — printed and uncounted as acceptance evidence per ruling 4, unchanged by this amendment.
+>
+> **Where the recount cannot speak, and says so.** The shift is recovered exactly (from the logged post-settle moves) on the 4 runs that had one; the other 30 have no logged move, so the replay runs them across the whole plausible shift band 0–120 ms and reports a verdict only where it is constant over the band. It is constant on all 30. No run came out AMBIGUOUS.
+
+**Note for the record (Ryan, 2026-09-10):** *no product behaviour is in question in any of this.* The measured support: **34 of 34 counted prod landings finished at target ±1** — 11 at `136.47` (1440, target 136) and 23 at `154.11` (380, target 154) — and **no run landed at 793**. The only three occurrences of `793` anywhere in the prod log are the pre-correction offset printed inside the three forced runs (`re-issue 2@833ms auto (zone 793 px off)`), each of which then lands at 154. Every commit in this amendment is under `validation-artifacts/committed/`; no file under `conestruct/site/components/` or `src/` is touched.
+
+**The one thing the archive cannot recount: the forced `window` gate.** That gate (`settledAt < smoothEnd`) reads the same smooth run, so it is anchored too — one definition, or the gate and the leg would disagree about when the landing ended. The six runs that missed the window returned before `landingLegs()` and therefore committed no scroll census, so their anchored `smoothEnd` **cannot** be recomputed from the archive and is not asserted here. The direction is nonetheless worth recording as a question for the next live run: at 1440 the old anchor could close the run on an anchoring compensation *before* the landing (exactly what L1 shows), which would make `settledAt < smoothEnd` read false for a run that was in fact inside the window. Whether that is why 4 of 5 forced runs missed at 1440 is **measured on the next run, not claimed here.**
 
 **#259 (finding 3) — which of the two I chose.** The pin and axe legs now **run after the dim clears** rather than excluding those selectors from axe's scope: the harness waits (up to 15 s, and logs how long it waited) for `.stale-ribbon` to leave before N5/N6/axe. Excluding the selectors would blind the leg to a real contrast defect on exactly those nodes; waiting simply measures the state the operator is actually looking at. The contrast itself is #259's and is untouched here.
 
