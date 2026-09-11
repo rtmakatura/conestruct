@@ -51,6 +51,14 @@ interface Row {
    * classifier, and has no method at all.
    */
   method?: "measured" | "inferred";
+  /**
+   * #275 — a provenance word for the DETECTED cell that is not a method:
+   * "overridden" when the operator superseded a disputed detection (the
+   * marker rides the wire and the audit reprints the numbers), or the
+   * reason the cell has withdrawn its value.  Rendered in the same
+   * provenance role as `method`; the two never both apply to one row.
+   */
+  note?: string;
 }
 
 export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
@@ -81,10 +89,48 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
     });
   }
   if (cls.lanesPerDirection !== undefined && "lanes" in scenario) {
+    // #275.  Note this cell reads `cls.lanesPerDirection` — the halved,
+    // floored per-direction figure — while the backend gates read the
+    // `detectedLanesTotal` RELAY, the raw `lanes` tag.  Two numbers, two
+    // derivations (classify.ts:78-90): on a `lanes=4` two-way road the
+    // relay is 4 and this cell is 2.
+    //
+    // The relay is cleared when the operator takes ownership of the count.
+    // Detect that POSITIVELY — detection reported a total and the
+    // scenario's copy is gone — never from the scenario's absence alone: a
+    // way tagged `lanes:forward` with no `lanes` has no relay and no edit,
+    // and must not read as withdrawn.
+    const relayCleared =
+      cls.detectedLanesTotal !== undefined &&
+      (scenario as { detectedLanesTotal?: number }).detectedLanesTotal ===
+        undefined;
+    // Disputed erasures record a marker carrying the lane relays (#177);
+    // ordinary ones record nothing (#112).  Only a marker that actually
+    // carries a LANE relay speaks for this row — a one-way confirm's
+    // marker is about a different fact.
+    const laneOverride = (scenario.detectionOverrides ?? []).some(
+      (o) =>
+        o.detectedLanesTotal !== undefined ||
+        o.detectedLanesForward !== undefined ||
+        o.detectedLanesBackward !== undefined ||
+        o.detectedLanesBothWays !== undefined,
+    );
+    // Disputed → the marker rides the wire and the audit reprints the
+    // numbers, so the detection is a fact the operator OVERRODE: show it,
+    // marked.  Undisputed → no relay, no marker, no audit item, nothing
+    // anywhere: the detection is WITHDRAWN and the cell says so rather
+    // than presenting a cleared relay's value as current (Rule 10).  Never
+    // a blank either way.
+    const withdrawn = relayCleared && !laneOverride;
     rows.push({
       label: "Lanes per direction",
-      detected: String(cls.lanesPerDirection),
+      detected: withdrawn ? "withdrawn" : String(cls.lanesPerDirection),
       applied: String((scenario as { lanes: number }).lanes),
+      note: withdrawn
+        ? "operator set the count"
+        : relayCleared
+          ? "overridden"
+          : undefined,
     });
   }
   if ("roadType" in scenario) {
@@ -148,6 +194,20 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
                   }
                 >
                   OSM · {r.method}
+                </span>
+              )}
+              {/* #275: the same provenance role carries why this cell is
+                  marked or has withdrawn its value. */}
+              {r.note && (
+                <span
+                  className="tr-prov"
+                  title={
+                    r.note === "overridden"
+                      ? "Detection reported this and the operator superseded it — the audit reprints both"
+                      : "The operator took ownership of this count; detection no longer informs any decision"
+                  }
+                >
+                  {r.note}
                 </span>
               )}
             </span>

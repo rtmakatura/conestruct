@@ -109,6 +109,9 @@ function scenario(rt: Method, dv: Method): Scenario {
     lanes: 2,
     roadType: "rural_undivided",
     divided: false,
+    // detection's relay as it left it — so the lanes row is in its normal
+    // state here and not in #275's cleared-relay state
+    detectedLanesTotal: 2,
     meta: {
       ...DEFAULT_SHOULDER.meta,
       lat: 39.71466,
@@ -152,8 +155,11 @@ describe("#274 inferred must not look like measured", () => {
     render(<DetectedVsApplied scenario={scenario("inferred", "inferred")} />);
     for (const label of ["Bearing", "Speed limit", "Lanes per direction"]) {
       const cell = detectedCell(label);
-      expect(cell.querySelector(".tr-prov"), `${label} must carry no method marker`).toBeNull();
-      expect(cell.textContent).not.toMatch(/OSM ·/);
+      // no METHOD marker; #275's note is a different provenance line and
+      // is asserted by its own suite.
+      expect(cell.textContent, `${label} must carry no method marker`).not.toMatch(
+        /OSM ·/,
+      );
     }
   });
 
