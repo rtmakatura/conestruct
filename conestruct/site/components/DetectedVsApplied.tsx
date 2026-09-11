@@ -49,6 +49,7 @@
 import type { Scenario } from "@/lib/scenarios";
 import type { RoadType } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
+import { ONEWAY_BLOCKING } from "@/lib/scenarios/auto-apply";
 import { clampLanesToDomain } from "@/lib/scenarios/validation";
 import {
   type AppliedToken,
@@ -342,6 +343,48 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
         detectedToken: cls.fields?.divided.method,
       }),
     );
+  }
+
+  // #278 — the one-way fact, which the old table had nowhere to put.
+  //
+  // It exists on the flagger kind ONLY, and that is the data's shape
+  // rather than a scoping choice: every other kind folds one-way into
+  // `divided`/`roadType` and carries no field for it (auto-apply.ts:492
+  // relays the raw tag for the flagger directionality gate alone).  On
+  // those kinds there is a detected fact and no applied counterpart, so
+  // Rule 10 says render no row rather than invent a side to compare.
+  //
+  // The detected side reads the CANDIDATE's tag, not the relay: the
+  // relay is cleared when the operator confirms two-way traffic, while
+  // `candidate.tags.oneway` survives the confirm and is the same
+  // evidence the backend gate read.  A way OSM never tagged renders no
+  // row at all.
+  if (scenario.kind === "flagger_lane_closure") {
+    const tag = cand.tags.oneway;
+    if (tag !== null && tag !== undefined) {
+      const relay = (scenario as { oneway?: string }).oneway;
+      // Same three-state story as the lanes row, with the marker that
+      // belongs to THIS fact: a lanes dispute says nothing about
+      // direction, so only a marker carrying `detectedOneway` speaks
+      // here (the mirror of the lanes row's own predicate).
+      const onewayMarker = (scenario.detectionOverrides ?? []).some(
+        (o) => o.detectedOneway !== undefined,
+      );
+      const relayCleared = cls.detectedOneway !== undefined && relay === undefined;
+      const withdrawn = relayCleared && !onewayMarker;
+      const detectedOneWay = ONEWAY_BLOCKING.has(tag);
+      const appliedOneWay = relay !== undefined && ONEWAY_BLOCKING.has(relay);
+      rows.push(
+        mkRow({
+          label: "One-way",
+          appliedValue: appliedOneWay,
+          appliedDisplay: appliedOneWay ? "Yes" : "No",
+          detectedValue: withdrawn ? undefined : detectedOneWay,
+          detectedDisplay: withdrawn ? null : detectedOneWay ? "Yes" : "No",
+          detectedToken: !withdrawn && relayCleared ? "overridden" : undefined,
+        }),
+      );
+    }
   }
 
   // Spec 6.6: zero rows renders NOTHING — not the header, not the
