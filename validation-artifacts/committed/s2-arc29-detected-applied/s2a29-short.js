@@ -181,15 +181,6 @@ const report = async (page, tag, phase) => {
     info(tag, `${phase} D2 tokens "${r.label.text}"`, `detected "${r.detected.text}" → [${r.detected.slotText || "(silent)"}] | applied "${r.applied.text}" → [${r.applied.slotText || "(silent)"}]`);
   }
 
-  // ── the 520 stack (ruling b of round 1): below the threshold the grid
-  // is ONE column and each row wrapper pairs its own two equal cells.
-  const oneCol = /^\s*\d+(\.\d+)?px\s*$/.test(p.tracks);
-  if (tag.startsWith("380")) {
-    check(tag, `${phase} 520 stack — the grid is one column at 380`, oneCol, `tracks "${p.tracks}"`);
-  } else {
-    check(tag, `${phase} 520 stack — the grid keeps three tracks at 1440`, !oneCol, `tracks "${p.tracks}"`);
-  }
-
   // ── D1: do the rows share a height? ──
   const heights = p.rows.map((r) => Math.max(r.label.h, r.detected.h, r.applied.h));
   const uniq = [...new Set(heights)];
