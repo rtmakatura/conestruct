@@ -70,19 +70,21 @@ and on two counts the build disagreed:
    clause's 10 px. Fixed by making the clause a block, which removes the strut
    from the question and keeps it one element and one text node.
 
-With both corrections the row measures **44.2 px at 1440** and **60.2 px at
-380**, which is what the padding sweep predicted (44 / 60). Neither defect was
+With both corrections the row measured **44.2 px at 1440** and **60.2 px at
+380**, which is what the padding sweep predicted (44 / 60). The 0.2 was the
+baseline offset of a 14 px value beside a 12 px label; since the 2026-09-14
+value ruling (below) the row measures exactly **44 / 60**. Neither defect was
 visible in any test; both were found by driving the real build.
 
-## The measured figures (real build, `outLocal-a0d4781/`)
+## The measured figures (real build, `outLocal-a0d4781/` at 14 px → `outLocal-after-2a67d2f/` at 12 px)
 
 | | 1440×1000 | 380×900 |
 |---|---|---|
-| block | 500 × **292.8** px | 282 × **388.8** px |
+| block | 500 × **292** px (292.8 at 14 px) | 282 × **388** px (388.8 at 14 px) |
 | the block today, same fixture [^today] | 276.4 px | 405.1 px |
-| delta | **+16.4** | **−16.3** |
+| delta | **+15.6** (+16.4 at 14 px) | **−17.1** (−16.3 at 14 px) |
 | content / row body | 478 / 456 | 260 / 238 |
-| row height (last row) | **44.2** (43.2) | **60.2** (59.2) |
+| row height (last row) | **44** (43) — 44.2 (43.2) at 14 px | **60** (59) — 60.2 (59.2) at 14 px |
 | clause reserve | 16 px, one line | 32 px, two lines |
 | applied-value ink right spread | **0.0 px** | **0.0 px** |
 | worst MATCH clause | 236.8 px — fits | 236.8 px — fits by **1.2 px** |
@@ -161,10 +163,12 @@ measured. Both ratios are recorded above so nobody "fixes" the pairing later.
 
 No new size enters the sheet and no fifth `tr-*` role is created, so no #226
 ruling was needed. 9.5 → `tr-section`, 12.5 → `tr-field`, 11.5 and 10 →
-`tr-prov`. The arc-29 value-register exception moves **11px → 14px** (one value
-per row now, not two columns) and the verdict glyph joins the control-glyph
-exception at 11px on its own rationale — a glyph cell, not text.
-`CENSUS_PINS.cssDeclarations` 103 → 104; `cssSizes` stays 19.
+`tr-prov`. The verdict glyph joins the control-glyph exception at 11px on its
+own rationale — a glyph cell, not text. The arc-29 value-register exception
+first moved **11px → 14px** (one value per row now, not two columns) and was
+then **deleted** by the 2026-09-14 ruling below: the applied value takes
+`tr-field`, so no text node in the block is outside the role table.
+`CENSUS_PINS.cssDeclarations` 103 → 104 → 103; `cssSizes` stays 19.
 
 ## #198 does not bind the clause strings, and that is stated rather than assumed
 
@@ -205,8 +209,12 @@ is this harness's base.
 node s2a30-ledger.js <outDir> <expectSha> [base]      # base defaults to localhost:3005
 ```
 
-`outLocal-a0d4781/` is the local run against this branch's build: **28 pass, 0
-fail, 20 info**, both viewports. The axe gate compares against the baseline
+`outLocal-a0d4781/` is the local run against this branch's build at 14 px:
+**28 pass, 0 fail, 20 info**, both viewports. `outLocal-after-2a67d2f/` is the
+same run against the 12 px build (28 / 0 / 20), and `outProd-before-2a67d2f/`
+is prod at the shipped 14 px tip on 2026-09-14, the "before" of that ruling
+(26 / 2 / 20 — both FAILs are the page-load hydration defect recorded below,
+not the block). The axe gate compares against the baseline
 recorded at prod `b2a325a` by the arc-29 evidence run: `region` at 1440,
 `region` + `scrollable-region-focusable` at 380, both naming `.gap-8`, a
 page-level container. Zero violations outside that baseline, and none naming a
@@ -286,3 +294,54 @@ clause's length is not what sets the row.
    has disputed the count, how detection arrived at it is no longer the fact
    the row is about — and a withdrawn detection states no method, because it
    has no value to have a method for. See the #274 retirement above.
+
+## The applied value at 12 px, ruled 2026-09-14
+
+Ryan's hand-check on prod `2a67d2f`: the applied values read too large. At
+14 px against 12 px labels and a 10 px clause the value was the biggest text
+in the block — right in the two-column form, where two value columns were read
+down, and shouting in a ledger where each value sits beside its own label.
+
+**Ruled:** the value drops to 12 px and takes `tr-field`, the label's own
+role. Emphasis is the mono/sans family switch and the right axis, never size.
+`.dva-val` now overrides only what a value must differ in from a label —
+family, tabular figures, tracking, line, axis, ink — and declares neither size
+nor weight (`globals.css`, `.workbench .dva .dva-val`). The arc-29
+value-register census exception is **deleted**, not re-pointed: one fewer
+entry outside the role table. The mono face loads 400/500/600
+(`app/layout.tsx:16`), so the role's 500 is a real cut.
+
+Measured before (`outProd-before-2a67d2f/`, prod at 14 px) and after
+(`outLocal-after-2a67d2f/`, the 12 px build), both viewports:
+
+| | before 1440 | after 1440 | before 380 | after 380 |
+|---|---|---|---|---|
+| value | mono 14px/400 | mono **12px/500** | 14px/400 | **12px/500** |
+| line 1 | 20.2 | **20** | 20.2 | **20** |
+| row (last) | 44.2 (43.2) | **44** (43) | 60.2 (59.2) | **60** (59) |
+| block | 500 × 292.8 | 500 × **292** | 282 × 388.8 | 282 × **388** |
+| ink right spread | 0.0 | **0.0** | 0.0 | **0.0** |
+| worst MATCH / DIFFER clause | 236.8 / 332.8 | 236.8 / 332.8 | 236.8 / 332.8 | 236.8 / 332.8 |
+
+The row is **0.2 px shorter** at both viewports: line 1 was 20.2 because a
+14 px value baseline-aligned beside a 12 px label overhung the 20 px reserve,
+and at 12 px the two share a baseline inside it. The block gives back 0.8 px
+(four rows). Per the ruling the saving is not spent — padding stays 4/3. The
+clause figures are the clause's own role and did not move; the worst MATCH
+still fits the 238 px row body at 380 by 1.2 px at gap 6.
+
+**The prod leg for this ruling** is gated by `prod-build-gate-30b.js`, not the
+ledger's gate: `dva-glyph` is already on prod and would pass against the 14 px
+build. Its signature is the class string `dva-val tr-field` in a chunk and a
+`.dva-val{` rule that carries `font-family:var(--font-mono)` and **no**
+`font-size` — the absence is the proof. Dry-run against prod at `2a67d2f` it
+refused correctly, printing the served rule with `font-size:14px` in it.
+
+**A defect found on the way, not fixed here.** The "before" run's two FAILs are
+`Z-page-errors`: React #425/#418/#423 at `/sandbox` load, before the ledger
+mounts, in every client timezone. The served HTML was a Vercel cache hit aged
+over a day carrying `ISSUED: 2026-09-11` — `AppSheetMeta.tsx:21` computes the
+date at render, so the build-day prerender and the client's today disagree on
+every day after a deploy. The deploy-day runs (`outProd-30ef02a/`, and any run
+on the day this ships) cannot see it. Issue to be filed by Ryan; out of this
+ruling's scope.

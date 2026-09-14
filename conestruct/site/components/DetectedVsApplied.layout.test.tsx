@@ -231,12 +231,32 @@ describe("s2-arc30 — the ledger's layout contract", () => {
     );
   });
 
-  it("no value carries its own size: the register is one named class", () => {
+  it("the applied value takes `tr-field` — the label's own role — and no size of its own", () => {
+    // Ruled 2026-09-14 on a prod hand-check of 2a67d2f: at 14 px the
+    // value was the biggest text in the block, and in a one-value-per-
+    // row ledger it shouted beside its own 12 px label.  The value now
+    // carries the label's role; emphasis is the mono/sans family switch
+    // and the right axis, never size.  This DELETES the arc-29 value-
+    // register census exception rather than re-pointing it — the role
+    // table covers the value, so nothing is outside it.
     render(<DetectedVsApplied scenario={pinnedShoulder()} />);
-    for (const v of Array.from(document.querySelectorAll(".dva-val"))) {
+    const vals = Array.from(document.querySelectorAll(".dva-val"));
+    expect(vals.length).toBeGreaterThan(0);
+    for (const v of vals) {
+      expect(v.className).toMatch(/\btr-field\b/);
       expect(v.className).not.toMatch(/text-\[/);
+      // the label beside it carries the same role
+      const label = v.parentElement!.querySelector(":scope > .tr-field:first-child")!;
+      expect(label).not.toBe(v);
+      expect(label.className).toMatch(/\btr-field\b/);
     }
-    expect(ruleBody(".workbench .dva .dva-val")).toMatch(/font-size:\s*14px/);
+    // the value rule overrides what a VALUE must differ in — family,
+    // figures, axis, ink, line — and neither size nor weight.
+    const val = ruleBody(".workbench .dva .dva-val");
+    expect(val).not.toMatch(/font-size/);
+    expect(val).not.toMatch(/font-weight/);
+    expect(val).toMatch(/font-family:\s*var\(--font-mono\)/);
+    expect(val).toMatch(/tabular-nums/);
   });
 
   it("operator-set switches FAMILY only — weight is not an axis", () => {

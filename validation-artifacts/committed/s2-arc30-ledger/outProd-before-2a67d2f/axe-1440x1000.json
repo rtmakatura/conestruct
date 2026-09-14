@@ -1,0 +1,18 @@
+[
+ {
+  "id": "region",
+  "impact": "moderate",
+  "tags": [
+   "best-practice"
+  ],
+  "nodes": [
+   {
+    "target": ".gap-8",
+    "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+    "data": {
+     "isIframe": false
+    }
+   }
+  ]
+ }
+]

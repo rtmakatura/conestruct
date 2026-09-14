@@ -54,14 +54,6 @@ export const ROLE_CLASSES = ["tr-section", "tr-step", "tr-field", "tr-prov"] as 
 
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   {
-    name: "detected-vs-applied value register",
-    sizes: ["14px"],
-    reason:
-      "the ledger's applied-value register (#273, s2-arc30) — a VALUE register, not a label. Ruled 2026-09-11: an exception rather than a fifth `tr-*` role, because #226's four roles are a LABEL vocabulary and a value is not a label, so widening that table would weaken what the four roles mean. It was 11px while the block had two value columns; the arc-30 ledger prints ONE value per row, on line 1, at the size the design sets for it. Every other text node in the block snaps to an existing role — label to `tr-field`, clause and source line and caveat to `tr-prov`, header to `tr-section` — so no new size enters the sheet and no fifth role is needed",
-    css: [{ selector: ".workbench .dva .dva-val", size: "14px" }],
-    tsx: [],
-  },
-  {
     name: "hero numerals",
     sizes: ["76px", "60px"],
     reason:
@@ -415,7 +407,13 @@ export const CENSUS_PINS = {
   // (11 → 14) rather than count.  103 → 104.  Sizes stay 19 again: 14px
   // was already in the sheet as sans body copy, and 11px remains on
   // .eyebrow, .chip, .ns-glyph and the rest.
-  cssDeclarations: 104,
+  //
+  // s2-arc30 ruling 2026-09-14: the value register is GONE.  The applied
+  // value takes `tr-field` (12px, the label's role), so `.dva-val` no
+  // longer declares a size and the "detected-vs-applied value register"
+  // exception is deleted outright — one fewer entry outside the role
+  // table.  104 → 103.  Sizes stay 19: 14px is still sans body copy.
+  cssDeclarations: 103,
   cssSizes: 19,
   tsxSites: 106,
   tsxUses: 320,

@@ -149,7 +149,7 @@ function LedgerRow({ row }: { row: Row }) {
               — measured 72.8 to 122.4 px off the axis on the six
               label × value pairs that wrap at 380.  The auto margin puts
               every one of them back at 0.0 px. */}
-          <span className={`dva-val${operatorSet ? " is-operator" : ""}`}>
+          <span className={`dva-val tr-field${operatorSet ? " is-operator" : ""}`}>
             {row.applied ?? "—"}
           </span>
         </div>

@@ -2723,10 +2723,17 @@ input[type="number"] {
   gap: 4px 14px;
   min-height: 20px;
 }
-/* The block's value register (#273): ONE register, now carrying the
-   APPLIED value only — the detected value moved into the clause.
-   14 px is a declared #263 exception, not a fifth `tr-*` role: #226's
-   four roles are a LABEL vocabulary and a value is not a label.
+/* The block's applied value (#273): ONE per row, and it takes
+   `tr-field` — the SAME role as the label beside it.  Ruled 2026-09-14
+   on a prod hand-check of 2a67d2f: at 14 px the value was the biggest
+   text in the block (14 against 12 px labels and a 10 px clause), which
+   was right when there were two value columns to read down and shouts
+   in a ledger where each value sits beside its own label.  Emphasis is
+   the mono/sans family switch and the right axis, never size — so this
+   rule overrides only what a VALUE must differ in from a label: family,
+   tabular figures, tracking, line, axis, ink.  Size and weight come from
+   the role, and the arc-29 value-register census exception is DELETED
+   rather than re-pointed: the role table now covers the value.
 
    `margin-left: auto` rather than `justify-content: space-between` on
    the line, and that is load-bearing: under space-between a value that
@@ -2740,8 +2747,6 @@ input[type="number"] {
 .workbench .dva .dva-val {
   margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 400;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
   line-height: 20px;
