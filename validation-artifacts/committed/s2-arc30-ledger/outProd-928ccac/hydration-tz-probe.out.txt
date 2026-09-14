@@ -1,0 +1,7 @@
+probe https://www.conestruct.com/sandbox at 2026-09-14T14:36:23.209Z
+served HTML — x-vercel-cache HIT · age 261 · cache-control public, max-age=0, must-revalidate · date Mon, 14 Sep 2026 14:36:23 GMT
+baked ISSUED 2026-09-14 · client today (UTC) 2026-09-14 · MISMATCH false
+NOTE: the baked date equals today, so this run is on the deploy's own UTC day and CANNOT observe the defect.  Zero errors below proves nothing.
+tz (runner default) · local Mon Sep 14 2026 08:36:27 · utc-date 2026-09-14 · 0 pageerror(s)
+tz UTC · local Mon Sep 14 2026 14:36:31 · utc-date 2026-09-14 · 0 pageerror(s)
+tz America/Denver · local Mon Sep 14 2026 08:36:35 · utc-date 2026-09-14 · 0 pageerror(s)

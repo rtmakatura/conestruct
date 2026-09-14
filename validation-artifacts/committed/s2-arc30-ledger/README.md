@@ -388,5 +388,22 @@ a comment rather than a new issue:
 
 Watched in real time: after `928ccac` deployed, the same URL went from
 `ISSUED: 2026-09-11` / `Age: 102941` to `ISSUED: 2026-09-14` / `Age: 10` and
-the errors were gone. Nothing was fixed; the clock was reset. Out of this
-ruling's scope.
+the errors were gone. Nothing was fixed; the clock was reset.
+
+**On the citations in points 1 and 2 (#160).** The three `Z-page-errors`
+citations in point 3 are committed logs and resolve by line number. The header
+readings and the timezone sweep in points 1 and 2 were a **live hand-check on
+2026-09-14 that was not captured to a file at the time**, and by the time this
+was written the stale state was gone — prod had shipped `928ccac`, so the
+condition cannot be re-measured until the next UTC day after a deploy. Rather
+than leave those sentences as bare assertion, the probe itself is committed as
+`hydration-tz-probe.js`: it reads the cache headers and the baked `ISSUED`
+from the same response the browsers load, sweeps the three timezones, and
+**refuses to let a clean result be mistaken for a fix** — it prints the baked
+date against the client's today and says so when they match. Its run on this
+arc's deploy day is `outProd-928ccac/hydration-tz-probe.out.txt`: `age 261`,
+`ISSUED 2026-09-14`, `MISMATCH false`, zero errors in all three timezones,
+above the line *"this run is on the deploy's own UTC day and CANNOT observe
+the defect. Zero errors below proves nothing."* That is a fourth demonstration
+of the mask and the reproduction recipe for the numbers in points 1 and 2 —
+run it on any day after a ship. Out of this ruling's scope to fix.
