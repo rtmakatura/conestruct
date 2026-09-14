@@ -312,7 +312,9 @@ entry outside the role table. The mono face loads 400/500/600
 (`app/layout.tsx:16`), so the role's 500 is a real cut.
 
 Measured before (`outProd-before-2a67d2f/`, prod at 14 px) and after
-(`outLocal-after-2a67d2f/`, the 12 px build), both viewports:
+(`outLocal-after-2a67d2f/`, the 12 px build; `outProd-928ccac/`, the same on
+prod), both viewports. **Prod is byte-for-byte the local figures**, so the
+after column is both:
 
 | | before 1440 | after 1440 | before 380 | after 380 |
 |---|---|---|---|---|
@@ -330,18 +332,61 @@ and at 12 px the two share a baseline inside it. The block gives back 0.8 px
 clause figures are the clause's own role and did not move; the worst MATCH
 still fits the 238 px row body at 380 by 1.2 px at gap 6.
 
-**The prod leg for this ruling** is gated by `prod-build-gate-30b.js`, not the
-ledger's gate: `dva-glyph` is already on prod and would pass against the 14 px
-build. Its signature is the class string `dva-val tr-field` in a chunk and a
-`.dva-val{` rule that carries `font-family:var(--font-mono)` and **no**
-`font-size` — the absence is the proof. Dry-run against prod at `2a67d2f` it
-refused correctly, printing the served rule with `font-size:14px` in it.
+### The prod leg (`outProd-928ccac/`) — 28 pass, 0 fail, 20 info
 
-**A defect found on the way, not fixed here.** The "before" run's two FAILs are
-`Z-page-errors`: React #425/#418/#423 at `/sandbox` load, before the ledger
-mounts, in every client timezone. The served HTML was a Vercel cache hit aged
-over a day carrying `ISSUED: 2026-09-11` — `AppSheetMeta.tsx:21` computes the
-date at render, so the build-day prerender and the client's today disagree on
-every day after a deploy. The deploy-day runs (`outProd-30ef02a/`, and any run
-on the day this ships) cannot see it. Issue to be filed by Ryan; out of this
+Gated by `prod-build-gate-30b.js`, not the ledger's gate: `dva-glyph` is
+already on prod and would have passed against the 14 px build this leg must
+not measure. Its signature is the class string `dva-val tr-field` in a chunk
+and a `.dva-val{` rule carrying `font-family:var(--font-mono)` and **no**
+`font-size` — the absence is the proof, because a 14 px sheet still carries
+`font-size:14px` inside that rule. Dry-run against prod at `2a67d2f` it
+refused correctly and printed the served rule with `font-size:14px` in it
+(the run is not recorded; the refusal is reproducible by pointing the gate at
+any pre-`928ccac` deployment). Against `928ccac`: **GATE PASS after 2 s**,
+`dva-val tr-field` in `chunks/829-fe5e1054f1f74071.js`, the rule in
+`css/00a17324b9a53b2c.css` — different files, so a half-deployed build cannot
+read as PASS. Then the healthz gate: `928ccac332740ff9edb2811afdd537f5f95a33d4`.
+
+Every figure equals the local run, both viewports — value `12px/500`, line 1
+20, rows 44/43 and 60/59, blocks 292 and 388, ink right spread **0.0 px**,
+worst MATCH/DIFFER 236.8/332.8 inside the reserve at both widths, the #214
+caveat byte-exact, axe clean against the recorded baseline with nothing naming
+a node inside `.dva`, no horizontal scroll. The lanes leg: no row changed
+height when the relay cleared, and the clause read
+`OSM · 2 · overridden · operator-set` beside a ⚠ glyph and an applied value
+of 3.
+
+This is also the **first prod evidence of commit 6's method fix**, which
+shipped without a leg that could show it: the Lanes row now reads
+`OSM · 2 · measured` on prod where `outProd-30ef02a/log.txt:7` recorded
+`OSM · 2 · no source tag`. Bearing still says `no source tag`, correctly —
+it comes off the candidate geometry and has no method.
+
+**A defect found on the way, not fixed here — #212, already open.** The
+"before" run's two FAILs are `Z-page-errors`: React #425 ×5, #418, #423 at
+`/sandbox` load, before the ledger mounts. `AppSheetMeta.tsx:21` computes the
+ISSUED date at render, so the build-day prerender and the client's today
+disagree on every day after a deploy. Three measurements were added to #212 as
+a comment rather than a new issue:
+
+1. The client's **timezone does not move the boundary** — default, `UTC` and
+   `America/Denver` each produced the identical trio against the same HTML,
+   because `toISOString()` compares UTC date strings on both sides. Every
+   visitor flips at one global instant, not at their own local midnight.
+2. The staleness is bounded by the **deploy, not the CDN cache**: the served
+   HTML was `X-Vercel-Cache: HIT` with `Age: 102941` (28.6 h) carrying
+   `ISSUED: 2026-09-11`, three days stale — *longer than the cache entry was
+   old*. A prerender is immutable per deployment, so the bad window has no TTL
+   ceiling and grows until the next ship.
+3. **Deploy-day runs structurally cannot see it**, now measured three ways with
+   the same harness: `outProd-30ef02a/log.txt:26`,`:50` PASS (run on its
+   deploy day), `outProd-before-2a67d2f/log.txt:26`,`:50` FAIL (run three days
+   after its build's deploy), and `outProd-928ccac/log.txt:26`,`:50` PASS
+   (this leg, run minutes after its own ship). That is why every prod leg from
+   arc 26 to here was clean, and why #212's acceptance criterion — "a page
+   built the previous UTC day" — cannot be satisfied by a normal ship-day run.
+
+Watched in real time: after `928ccac` deployed, the same URL went from
+`ISSUED: 2026-09-11` / `Age: 102941` to `ISSUED: 2026-09-14` / `Age: 10` and
+the errors were gone. Nothing was fixed; the clock was reset. Out of this
 ruling's scope.

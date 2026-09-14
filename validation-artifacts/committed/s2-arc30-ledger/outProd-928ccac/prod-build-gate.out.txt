@@ -1,0 +1,3 @@
+2026-09-14T14:32:01.193Z  gate: polling https://www.conestruct.com for the 12 px applied value's signature, up to 25 min
+2026-09-14T14:32:03.671Z  chunks 11 · sheets 3 · "dva-val tr-field" PRESENT in /_next/static/chunks/829-fe5e1054f1f74071.js · css /_next/static/css/00a17324b9a53b2c.css · .dva-val rule found · mono true · no font-size true · rule: .dva-val{margin-left:auto;font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:20px;text-align:right;color:var(--ink-bright)}
+2026-09-14T14:32:03.671Z  GATE PASS after 2 s — the served bundle carries the role on the value AND the served sheet's value rule declares no size; legs may run
