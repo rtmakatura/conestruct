@@ -1,0 +1,70 @@
+healthz sha 025aa13d11617e252af8f9c8225b73258b22e76e expect 025aa13d11617e252af8f9c8225b73258b22e76e
+base https://www.conestruct.com
+──────── viewport 1440x1000 ────────
+
+!!  #212 CANNOT BE OBSERVED BY THIS RUN  !!
+!!  baked ISSUED=2026-09-14 equals the client's today=2026-09-14: this is the
+!!  deploy's own UTC day.  Zero page errors below PROVES NOTHING about #212.
+!!  Only a run on a page built a previous UTC day can see it (arc 30, #212 comment).
+
+[1440x1000] #212 not-measurable-today — baked ISSUED vs client today :: ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0
+[1440x1000] #256 ok-this-run — first scan of session, Denver demo pin :: settled=true wall=26880ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)
+[1440x1000] #277 absent — detected-vs-applied ledger on the shoulder kind :: .dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)
+[1440x1000] #276 happy-path-only — jurisdiction cell text (loaded state) :: "null" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call
+[1440x1000] #272 not-measured — next-steps strip :: strip absent on this run
+[1440x1000] #264 still-present — enabled controls under the P10 32 px desk floor :: 2 under 32: "Terms" 35×16 ; "Privacy" 49×16
+[1440x1000] #262 no-shift-here — setup-strip height with the Speed editor open; Escape closes? :: closed=65.2 open=65.2 delta=0 escapeClosedEditor=false
+[1440x1000] #259 not-measured — the Previous-answer ribbon is inside the .results-stale dim :: ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)
+[1440x1000] #212b note — page errors across the whole run :: 0: none  << deploy-day run: this number is not evidence about #212
+──────── viewport 380x800 ────────
+
+!!  #212 CANNOT BE OBSERVED BY THIS RUN  !!
+!!  baked ISSUED=2026-09-14 equals the client's today=2026-09-14: this is the
+!!  deploy's own UTC day.  Zero page errors below PROVES NOTHING about #212.
+!!  Only a run on a page built a previous UTC day can see it (arc 30, #212 comment).
+
+[380x800] #212 not-measurable-today — baked ISSUED vs client today :: ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0
+[380x800] #256 ok-this-run — first scan of session, Denver demo pin :: settled=true wall=29622ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)
+[380x800] #277 absent — detected-vs-applied ledger on the shoulder kind :: .dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)
+[380x800] #276 happy-path-only — jurisdiction cell text (loaded state) :: "null" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call
+[380x800] #272 box-criterion-PASSES — ns-label vs ns-chips left edge :: BOX label.left=24 chips.left=24 delta=0 | INK label=24 firstChipIndex=35 delta=-11
+[380x800] #264 still-present — enabled controls under the P10 32 px desk floor :: 10 under 32: "Correct in setup ↑" 119×13 ; "Correct in setup ↑" 119×13 ; "Terms" 35×16 ; "Privacy" 49×16 ; "Edit full setup ⤢" 130×19 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Assert" 64×28
+[380x800] #262 still-present — setup-strip height with the Speed editor open; Escape closes? :: closed=210.8 open=254.8 delta=44 escapeClosedEditor=false
+[380x800] #259 not-measured — the Previous-answer ribbon is inside the .results-stale dim :: ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)
+[380x800] #212b note — page errors across the whole run :: 0: none  << deploy-day run: this number is not evidence about #212
+wrote 18 rows
+healthz sha 025aa13d11617e252af8f9c8225b73258b22e76e expect 025aa13d11617e252af8f9c8225b73258b22e76e
+base https://www.conestruct.com
+──────── viewport 1440x1000 ────────
+
+!!  #212 CANNOT BE OBSERVED BY THIS RUN  !!
+!!  baked ISSUED=2026-09-14 equals the client's today=2026-09-14: this is the
+!!  deploy's own UTC day.  Zero page errors below PROVES NOTHING about #212.
+!!  Only a run on a page built a previous UTC day can see it (arc 30, #212 comment).
+
+[1440x1000] #212 not-measurable-today — baked ISSUED vs client today :: ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0
+[1440x1000] #256 ok-this-run — first scan of session, Denver demo pin :: settled=true wall=5908ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)
+[1440x1000] #277 absent — detected-vs-applied ledger on the shoulder kind :: .dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)
+[1440x1000] #276 happy-path-only — jurisdiction cell text (loaded state) :: "Not set" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call
+[1440x1000] #272 box-criterion-PASSES — ns-label vs ns-chips left edge :: BOX label.left=170 chips.left=170 delta=0 | INK label=170 firstChipIndex=181 delta=-11
+[1440x1000] #264 still-present — enabled controls under the P10 32 px desk floor :: 9 under 32: "Correct in setup ↑" 119×13 ; "Correct in setup ↑" 119×13 ; "Terms" 35×16 ; "Privacy" 49×16 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Dismiss" 72×28 ; "Assert" 64×28
+[1440x1000] #262 no-shift-here — setup-strip height with the Speed editor open; Escape closes? :: closed=65.2 open=65.2 delta=0 escapeClosedEditor=false
+[1440x1000] #259 not-measured — the Previous-answer ribbon is inside the .results-stale dim :: ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)
+[1440x1000] #212b note — page errors across the whole run :: 0: none  << deploy-day run: this number is not evidence about #212
+──────── viewport 380x800 ────────
+
+!!  #212 CANNOT BE OBSERVED BY THIS RUN  !!
+!!  baked ISSUED=2026-09-14 equals the client's today=2026-09-14: this is the
+!!  deploy's own UTC day.  Zero page errors below PROVES NOTHING about #212.
+!!  Only a run on a page built a previous UTC day can see it (arc 30, #212 comment).
+
+[380x800] #212 not-measurable-today — baked ISSUED vs client today :: ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0
+[380x800] #256 ok-this-run — first scan of session, Denver demo pin :: settled=false wall=65153ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)
+[380x800] #277 absent — detected-vs-applied ledger on the shoulder kind :: .dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)
+[380x800] #276 happy-path-only — jurisdiction cell text (loaded state) :: "Not set" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call
+[380x800] #272 not-measured — next-steps strip :: strip absent on this run
+[380x800] #264 still-present — enabled controls under the P10 32 px desk floor :: 3 under 32: "Terms" 35×16 ; "Privacy" 49×16 ; "Edit full setup ⤢" 130×19
+[380x800] #262 still-present — setup-strip height with the Speed editor open; Escape closes? :: closed=210.8 open=254.8 delta=44 escapeClosedEditor=false
+[380x800] #259 not-measured — the Previous-answer ribbon is inside the .results-stale dim :: ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)
+[380x800] #212b note — page errors across the whole run :: 0: none  << deploy-day run: this number is not evidence about #212
+wrote 18 rows

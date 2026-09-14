@@ -1,0 +1,211 @@
+[
+ {
+  "tag": "a",
+  "name": "conestruct.v0.4",
+  "cls": "flex items-center gap-3 px-5 border-r bo",
+  "w": 169,
+  "h": 51,
+  "top": 447,
+  "left": 0,
+  "right": 169,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Scenario — reopen full setup to change",
+  "cls": "sv structural",
+  "w": 123,
+  "h": 63,
+  "top": 273,
+  "left": 25,
+  "right": 148,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Road — reopen full setup to change",
+  "cls": "sv structural",
+  "w": 131,
+  "h": 63,
+  "top": 273,
+  "left": 148,
+  "right": 279,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Jurisdiction",
+  "cls": "sv",
+  "w": 111,
+  "h": 63,
+  "top": 336,
+  "left": 25,
+  "right": 136,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Class",
+  "cls": "sv",
+  "w": 78,
+  "h": 63,
+  "top": 336,
+  "left": 136,
+  "right": 213,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Speed",
+  "cls": "sv",
+  "w": 80,
+  "h": 63,
+  "top": 336,
+  "left": 213,
+  "right": 293,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Lane W",
+  "cls": "sv",
+  "w": 72,
+  "h": 63,
+  "top": 399,
+  "left": 25,
+  "right": 97,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Work zone",
+  "cls": "sv",
+  "w": 91,
+  "h": 63,
+  "top": 399,
+  "left": 97,
+  "right": 188,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Date",
+  "cls": "sv",
+  "w": 59,
+  "h": 63,
+  "top": 399,
+  "left": 188,
+  "right": 248,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit Hours",
+  "cls": "sv",
+  "w": 65,
+  "h": 63,
+  "top": 399,
+  "left": 248,
+  "right": 313,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Edit full setup ⤢",
+  "cls": "strip-edit-all",
+  "w": 130,
+  "h": 19,
+  "top": 463,
+  "left": 225,
+  "right": 355,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "↻ Retry scan",
+  "cls": "dl-btn",
+  "w": 304,
+  "h": 44,
+  "top": 851,
+  "left": 39,
+  "right": 343,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "Generate anyway",
+  "cls": "dl-btn",
+  "w": 304,
+  "h": 44,
+  "top": 907,
+  "left": 39,
+  "right": 343,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "⚠Needs attention1›",
+  "cls": "chip-sum",
+  "w": 328,
+  "h": 50,
+  "top": 1875,
+  "left": 27,
+  "right": 355,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "✓Checked & passed0 · each cited›",
+  "cls": "chip-sum",
+  "w": 330,
+  "h": 50,
+  "top": 2056,
+  "left": 25,
+  "right": 355,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "iReferencepermit · hours windows · devic",
+  "cls": "chip-sum",
+  "w": 328,
+  "h": 64,
+  "top": 2114,
+  "left": 27,
+  "right": 355,
+  "disabled": false
+ },
+ {
+  "tag": "button",
+  "name": "▤Plan details — device scheduleunavailab",
+  "cls": "chip-sum",
+  "w": 292,
+  "h": 104,
+  "top": 2192,
+  "left": 46,
+  "right": 338,
+  "disabled": false
+ },
+ {
+  "tag": "a",
+  "name": "Terms",
+  "cls": "hover:text-white",
+  "w": 35,
+  "h": 16,
+  "top": 2598,
+  "left": 40,
+  "right": 75,
+  "disabled": false
+ },
+ {
+  "tag": "a",
+  "name": "Privacy",
+  "cls": "hover:text-white",
+  "w": 49,
+  "h": 16,
+  "top": 2598,
+  "left": 95,
+  "right": 144,
+  "disabled": false
+ }
+]

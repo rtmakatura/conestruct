@@ -1,0 +1,15 @@
+healthz sha 025aa13d11617e252af8f9c8225b73258b22e76e expect 025aa13d11617e252af8f9c8225b73258b22e76e
+base https://www.conestruct.com
+──────── viewport 1440x1000 ────────
+[1440x1000] #259 not-measured — plan never settled :: no staged dim reachable on this run
+──────── viewport 380x800 ────────
+[380x800] #259 not-measured — plan never settled :: no staged dim reachable on this run
+wrote 2 rows
+healthz sha 025aa13d11617e252af8f9c8225b73258b22e76e expect 025aa13d11617e252af8f9c8225b73258b22e76e
+base https://www.conestruct.com
+──────── viewport 1440x1000 ────────
+[1440x1000] #259 not-measured — plan never reached a downloadable state in 80 s :: final: band=false "" dl=2 ns=false strip="PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE" refusalWord=PLAN DECLINED — a refusal and a slow scan both land here; see #256
+──────── viewport 380x800 ────────
+[380x800] #259 not-measured — staged-correction ribbon: is it inside the dim, and what does it measure :: no .results-stale .stale-ribbon after staging a Dismiss
+[380x800] #259b note — nodes inside the staged dim :: 0 (state = staged, not in-flight; not comparable to the audit's mid-flight 56/59)
+wrote 3 rows

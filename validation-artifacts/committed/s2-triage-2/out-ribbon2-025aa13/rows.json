@@ -1,0 +1,23 @@
+[
+ {
+  "vp": "1440x1000",
+  "issue": "#259",
+  "verdict": "not-measured",
+  "what": "plan never reached a downloadable state in 80 s",
+  "measure": "final: band=false \"\" dl=2 ns=false strip=\"PLAN DECLINED · see the notice in the Results zone.SERVICE UNAVAILABLE\" refusalWord=PLAN DECLINED — a refusal and a slow scan both land here; see #256"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#259",
+  "verdict": "not-measured",
+  "what": "staged-correction ribbon: is it inside the dim, and what does it measure",
+  "measure": "no .results-stale .stale-ribbon after staging a Dismiss"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#259b",
+  "verdict": "note",
+  "what": "nodes inside the staged dim",
+  "measure": "0 (state = staged, not in-flight; not comparable to the audit's mid-flight 56/59)"
+ }
+]

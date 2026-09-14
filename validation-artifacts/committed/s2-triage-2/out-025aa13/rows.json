@@ -1,0 +1,128 @@
+[
+ {
+  "vp": "1440x1000",
+  "issue": "#212",
+  "verdict": "not-measurable-today",
+  "what": "baked ISSUED vs client today",
+  "measure": "ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#256",
+  "verdict": "ok-this-run",
+  "what": "first scan of session, Denver demo pin",
+  "measure": "settled=true wall=5908ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#277",
+  "verdict": "absent",
+  "what": "detected-vs-applied ledger on the shoulder kind",
+  "measure": ".dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#276",
+  "verdict": "happy-path-only",
+  "what": "jurisdiction cell text (loaded state)",
+  "measure": "\"Not set\" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#272",
+  "verdict": "box-criterion-PASSES",
+  "what": "ns-label vs ns-chips left edge",
+  "measure": "BOX label.left=170 chips.left=170 delta=0 | INK label=170 firstChipIndex=181 delta=-11"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#264",
+  "verdict": "still-present",
+  "what": "enabled controls under the P10 32 px desk floor",
+  "measure": "9 under 32: \"Correct in setup ↑\" 119×13 ; \"Correct in setup ↑\" 119×13 ; \"Terms\" 35×16 ; \"Privacy\" 49×16 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Dismiss\" 72×28 ; \"Assert\" 64×28"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#262",
+  "verdict": "no-shift-here",
+  "what": "setup-strip height with the Speed editor open; Escape closes?",
+  "measure": "closed=65.2 open=65.2 delta=0 escapeClosedEditor=false"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#259",
+  "verdict": "not-measured",
+  "what": "the Previous-answer ribbon is inside the .results-stale dim",
+  "measure": "ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)"
+ },
+ {
+  "vp": "1440x1000",
+  "issue": "#212b",
+  "verdict": "note",
+  "what": "page errors across the whole run",
+  "measure": "0: none  << deploy-day run: this number is not evidence about #212"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#212",
+  "verdict": "not-measurable-today",
+  "what": "baked ISSUED vs client today",
+  "measure": "ISSUED=2026-09-14 clientToday=2026-09-14 canObserve=false pageErrors=0"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#256",
+  "verdict": "ok-this-run",
+  "what": "first scan of session, Denver demo pin",
+  "measure": "settled=false wall=65153ms refusalContainer=0 (one sample; #256's claim is a RATE — 3 of 8 — and one run cannot confirm or refute it)"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#277",
+  "verdict": "absent",
+  "what": "detected-vs-applied ledger on the shoulder kind",
+  "measure": ".dva count=0 (manual-pin flow carries no confirmed road, so absence here is the audit-walk limitation, not #277)"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#276",
+  "verdict": "happy-path-only",
+  "what": "jurisdiction cell text (loaded state)",
+  "measure": "\"Not set\" — the defect is the ERRORED/absent fallback, which this run cannot force without intercepting the evaluate call"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#272",
+  "verdict": "not-measured",
+  "what": "next-steps strip",
+  "measure": "strip absent on this run"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#264",
+  "verdict": "still-present",
+  "what": "enabled controls under the P10 32 px desk floor",
+  "measure": "3 under 32: \"Terms\" 35×16 ; \"Privacy\" 49×16 ; \"Edit full setup ⤢\" 130×19"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#262",
+  "verdict": "still-present",
+  "what": "setup-strip height with the Speed editor open; Escape closes?",
+  "measure": "closed=210.8 open=254.8 delta=44 escapeClosedEditor=false"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#259",
+  "verdict": "not-measured",
+  "what": "the Previous-answer ribbon is inside the .results-stale dim",
+  "measure": "ribbon not caught mid-flight (the re-generate settled faster than the sampler, or the dim did not mount)"
+ },
+ {
+  "vp": "380x800",
+  "issue": "#212b",
+  "verdict": "note",
+  "what": "page errors across the whole run",
+  "measure": "0: none  << deploy-day run: this number is not evidence about #212"
+ }
+]
