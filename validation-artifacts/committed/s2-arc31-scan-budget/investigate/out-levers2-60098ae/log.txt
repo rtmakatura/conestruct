@@ -1,0 +1,41 @@
+=== s2-arc31 levers, spaced 60s — started 2026-09-14T17:34:43+00:00 ===
+!!  SAME CAVEAT AS THE FIRST PASS  !!
+!!  Developer machine, developer egress IP.  Overpass queues and
+!!  rate-limits per IP, so the WAIT terms here are not Modal's waits.
+!!  Element counts, byte sizes and the recall comparison ARE properties
+!!  of the query and do carry over.  Timing here is corroborating, not
+!!  probative; s2a31-prod.js owns the prod timing claim.
+!!
+!!  A 429 or 504 row below is NOT a lever result.  If a leg reports one,
+!!  that leg measured nothing and is labelled INVALID in its own line.
+
+corridor from wire-denver.json: {'lat': 39.7269, 'lng': -104.9873, 'bearing_deg': 180.0, 'speed_mph': 65, 'work_zone_ft': 1000.0, 'closure_type': 'shoulder', 'road_type': 'rural', 'lane_width_ft': 12.0}
+
+-- L3 (re-run): the use_max bbox vs the tight bbox, cost and recall --
+  L3-wide                    status=504 total=5689.1ms ttfb=5688.7 transfer=0.4 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L3-tight                   status=504 total=6365.3ms ttfb=6364.9 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L3 INVALID this run — one or both legs did not return a payload.
+
+-- L5 (re-run): two trips vs ONE folded query --
+  the product's shape: site scan, then the bearing check, budgeted separately
+  L5-trip1-scan              status=504 total=5756.1ms ttfb=5755.8 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L5-trip2-bearing           status=504 total=6074.9ms ttfb=6074.6 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  the folded shape: both result sets from ONE request
+  L5-folded-1trip            status=200 total=6825.9ms ttfb=6812.4 transfer=9.2 parse=4.3 bytes=91028 elements=408 remark=None
+  folded payload: 408 elements, 12 carry geometry (the bearing set),
+  396 do not (the scan set).  Separable on the wire: yes.
+  folded buckets (scan set, geometry-free): {'bike_facilities': 18, 'interchanges': 13, 'intersections': 136, 'sidewalks': 229}
+  the two-vs-one TIMING comparison is INVALID this run (a leg 429'd or 504'd);
+  the separability result above stands on its own if the folded leg was 200.
+
+-- L6: the shipped scan query, spaced, x5 — the clean-answer rate from one IP --
+  L6-run1                    status=504 total=6060.5ms ttfb=6060.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run2                    status=200 total=4200.0ms ttfb=4198.9 transfer=0.4 parse=0.6 bytes=79284 elements=396 remark=None
+  L6-run3                    status=504 total=5799.1ms ttfb=5798.7 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run4                    status=504 total=10118.8ms ttfb=10118.5 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run5                    status=504 total=5043.8ms ttfb=5043.4 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  1/5 clean answers, spaced 60s, one IP, one mirror.
+  This is NOT the prod refusal rate — prod retries two more mirrors inside a
+  20 s budget and runs from Modal's IP.  It is the base rate for ONE try.
+
+wrote 10 rows  finished 2026-09-14T17:45:45+00:00

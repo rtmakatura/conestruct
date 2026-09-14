@@ -1,0 +1,106 @@
+healthz sha 60098ae542149b9e9de106d56718d057c9c551cf expect 60098ae542149b9e9de106d56718d057c9c551cf
+base https://www.conestruct.com cycles=20 coldGap=130s started 2026-09-14T17:19:33.517Z
+[denver] wire: kind=shoulder roadType=rural_divided divided=true speed=65 lanes=2 bearing=180 centerline=none
+[lakewood] wire: kind=shoulder roadType=rural_divided divided=true speed=65 lanes=2 bearing=180 centerline=none
+[c1 denver cold] http=200 wall=31117ms scan=4283 residual=26834 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c1 denver warm] http=200 wall=24626ms scan=4079 residual=20547 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c1 lakewood cold] http=400 wall=20601ms scan=20209 residual=392 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c1 lakewood warm] http=400 wall=20678ms scan=20210 residual=468 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+-- cycle 1 done, sleeping 130s to expire the memo --
+[c2 denver cold] http=400 wall=20711ms scan=20227 residual=484 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c2 denver warm] http=400 wall=20592ms scan=20207 residual=385 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c2 lakewood cold] http=200 wall=5870ms scan=1879 residual=3991 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c2 lakewood warm] http=200 wall=7792ms scan=1879 residual=5913 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 2 done, sleeping 130s to expire the memo --
+[c3 denver cold] http=400 wall=20774ms scan=20228 residual=546 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c3 denver warm] http=400 wall=20826ms scan=20215 residual=611 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c3 lakewood cold] http=200 wall=25467ms scan=4754 residual=20713 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c3 lakewood warm] http=200 wall=20488ms scan=4754 residual=15734 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 3 done, sleeping 130s to expire the memo --
+[c4 denver cold] http=400 wall=20681ms scan=20220 residual=461 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c4 denver warm] http=400 wall=20690ms scan=20218 residual=472 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c4 lakewood cold] http=400 wall=20684ms scan=20221 residual=463 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c4 lakewood warm] http=400 wall=20685ms scan=20223 residual=462 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+-- cycle 4 done, sleeping 130s to expire the memo --
+[c5 denver cold] http=200 wall=22668ms scan=1843 residual=20825 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c5 denver warm] http=200 wall=1286ms scan=1843 residual=-557 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c5 lakewood cold] http=400 wall=20487ms scan=20212 residual=275 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c5 lakewood warm] http=200 wall=24626ms scan=4025 residual=20601 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 5 done, sleeping 130s to expire the memo --
+[c6 denver cold] http=200 wall=25195ms scan=4480 residual=20715 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c6 denver warm] http=200 wall=8064ms scan=4480 residual=3584 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c6 lakewood cold] http=400 wall=20531ms scan=20219 residual=312 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c6 lakewood warm] http=400 wall=20709ms scan=20209 residual=500 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+-- cycle 6 done, sleeping 130s to expire the memo --
+[c7 denver cold] http=200 wall=26704ms scan=5055 residual=21649 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c7 denver warm] http=200 wall=5119ms scan=5055 residual=64 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c7 lakewood cold] http=200 wall=7434ms scan=2262 residual=5172 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c7 lakewood warm] http=200 wall=1319ms scan=2262 residual=-943 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 7 done, sleeping 130s to expire the memo --
+[c8 denver cold] http=400 wall=20782ms scan=20217 residual=565 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c8 denver warm] http=200 wall=23348ms scan=2749 residual=20599 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c8 lakewood cold] http=200 wall=8997ms scan=5363 residual=3634 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c8 lakewood warm] http=200 wall=9708ms scan=5363 residual=4345 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 8 done, sleeping 130s to expire the memo --
+[c9 denver cold] http=400 wall=20761ms scan=20209 residual=552 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c9 denver warm] http=200 wall=8935ms scan=6713 residual=2222 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c9 lakewood cold] http=200 wall=9429ms scan=8246 residual=1183 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c9 lakewood warm] http=200 wall=10854ms scan=8246 residual=2608 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 9 done, sleeping 130s to expire the memo --
+[c10 denver cold] http=400 wall=20631ms scan=20210 residual=421 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c10 denver warm] http=200 wall=23120ms scan=2510 residual=20610 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c10 lakewood cold] http=200 wall=6340ms scan=2120 residual=4220 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c10 lakewood warm] http=200 wall=16591ms scan=2120 residual=14471 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 10 done, sleeping 130s to expire the memo --
+[c11 denver cold] http=200 wall=4796ms scan=3425 residual=1371 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c11 denver warm] http=200 wall=2152ms scan=3425 residual=-1273 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c11 lakewood cold] http=200 wall=7506ms scan=2092 residual=5414 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c11 lakewood warm] http=200 wall=12374ms scan=2092 residual=10282 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 11 done, sleeping 130s to expire the memo --
+[c12 denver cold] http=200 wall=15727ms scan=14356 residual=1371 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c12 denver warm] http=200 wall=11138ms scan=2384 residual=8754 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c12 lakewood cold] http=200 wall=6337ms scan=4333 residual=2004 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c12 lakewood warm] http=200 wall=23997ms scan=3500 residual=20497 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 12 done, sleeping 130s to expire the memo --
+[c13 denver cold] http=200 wall=4800ms scan=2107 residual=2693 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c13 denver warm] http=200 wall=14874ms scan=14012 residual=862 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c13 lakewood cold] http=400 wall=20485ms scan=20217 residual=268 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c13 lakewood warm] http=200 wall=22846ms scan=2296 residual=20550 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 13 done, sleeping 130s to expire the memo --
+[c14 denver cold] http=200 wall=16696ms scan=11641 residual=5055 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c14 denver warm] http=200 wall=4566ms scan=11641 residual=-7075 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c14 lakewood cold] http=400 wall=20577ms scan=20055 residual=522 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c14 lakewood warm] http=400 wall=20678ms scan=20218 residual=460 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+-- cycle 14 done, sleeping 130s to expire the memo --
+[c15 denver cold] http=200 wall=12179ms scan=2876 residual=9303 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c15 denver warm] http=200 wall=20511ms scan=2876 residual=17635 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c15 lakewood cold] http=400 wall=20583ms scan=20219 residual=364 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c15 lakewood warm] http=400 wall=20694ms scan=20210 residual=484 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+-- cycle 15 done, sleeping 130s to expire the memo --
+[c16 denver cold] http=200 wall=23768ms scan=3143 residual=20625 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c16 denver warm] http=200 wall=1521ms scan=3143 residual=-1622 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c16 lakewood cold] http=400 wall=20498ms scan=20206 residual=292 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c16 lakewood warm] http=400 wall=9725ms scan=9300 residual=425 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=703 error=site_scan_unavailable | https://overpass-api.de/api/interpreter: 429 Too Many Requests
+-- cycle 16 done, sleeping 130s to expire the memo --
+[c17 denver cold] http=200 wall=24933ms scan=4250 residual=20683 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c17 denver warm] http=200 wall=20499ms scan=4250 residual=16249 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c17 lakewood cold] http=400 wall=20560ms scan=20210 residual=350 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c17 lakewood warm] http=200 wall=23416ms scan=2774 residual=20642 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 17 done, sleeping 130s to expire the memo --
+[c18 denver cold] http=200 wall=12345ms scan=10354 residual=1991 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c18 denver warm] http=200 wall=1271ms scan=10354 residual=-9083 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c18 lakewood cold] http=200 wall=12008ms scan=2594 residual=9414 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c18 lakewood warm] http=200 wall=8990ms scan=2594 residual=6396 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 18 done, sleeping 130s to expire the memo --
+[c19 denver cold] http=400 wall=20730ms scan=20228 residual=502 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c19 denver warm] http=200 wall=25852ms scan=5235 residual=20617 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c19 lakewood cold] http=200 wall=5163ms scan=3890 residual=1273 status=ok memo=false corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+[c19 lakewood warm] http=200 wall=9241ms scan=3890 residual=5351 status=ok memo=true corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=160 bytes=46404
+-- cycle 19 done, sleeping 130s to expire the memo --
+[c20 denver cold] http=200 wall=38779ms scan=18089 residual=20690 status=ok memo=false corridor=not-checked/check_unavailable mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c20 denver warm] http=200 wall=969ms scan=18089 residual=-17120 status=ok memo=true corridor=checked mirror=https://overpass-api.de/api/interpreter remark=null elem=396 bytes=79284
+[c20 lakewood cold] http=400 wall=20536ms scan=20218 residual=318 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=695 error=site_scan_unavailable | scan budget exceeded (20 s)
+[c20 lakewood warm] http=400 wall=8830ms scan=8362 residual=468 status=HTTP 400 memo=false corridor=n/a mirror=https://overpass-api.de/api/interpreter remark=null elem=null bytes=703 error=site_scan_unavailable | https://overpass-api.de/api/interpreter: 429 Too Many Requests
+DONE 80 rows 2026-09-14T18:22:21.246Z
+
+[exited with code 0]

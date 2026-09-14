@@ -1,0 +1,38 @@
+=== s2-arc31 levers, spaced 45s — started 2026-09-14T17:25:40+00:00 ===
+!!  SAME CAVEAT AS THE FIRST PASS  !!
+!!  Developer machine, developer egress IP.  Overpass queues and
+!!  rate-limits per IP, so the WAIT terms here are not Modal's waits.
+!!  Element counts, byte sizes and the recall comparison ARE properties
+!!  of the query and do carry over.  Timing here is corroborating, not
+!!  probative; s2a31-prod.js owns the prod timing claim.
+!!
+!!  A 429 or 504 row below is NOT a lever result.  If a leg reports one,
+!!  that leg measured nothing and is labelled INVALID in its own line.
+
+corridor from wire-denver.json: {'lat': 39.7269, 'lng': -104.9873, 'bearing_deg': 180.0, 'speed_mph': 65, 'work_zone_ft': 1000.0, 'closure_type': 'shoulder', 'road_type': 'rural', 'lane_width_ft': 12.0}
+
+-- L3 (re-run): the use_max bbox vs the tight bbox, cost and recall --
+  L3-wide                    status=200 total=7696.2ms ttfb=7694.9 transfer=0.5 parse=0.8 bytes=79284 elements=396 remark=None
+  L3-tight                   status=504 total=6848.6ms ttfb=6848.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L3 INVALID this run — one or both legs did not return a payload.
+
+-- L5 (re-run): two trips vs ONE folded query --
+  the product's shape: site scan, then the bearing check, budgeted separately
+  L5-trip1-scan              status=200 total=7213.2ms ttfb=7210.3 transfer=1.7 parse=1.1 bytes=79284 elements=396 remark=None
+  L5-trip2-bearing           status=504 total=11710.6ms ttfb=11710.2 transfer=0.4 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  the folded shape: both result sets from ONE request
+  L5-folded-1trip            status=504 total=12678.4ms ttfb=12678.0 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  the two-vs-one TIMING comparison is INVALID this run (a leg 429'd or 504'd);
+  the separability result above stands on its own if the folded leg was 200.
+
+-- L6: the shipped scan query, spaced, x5 — the clean-answer rate from one IP --
+  L6-run1                    status=504 total=7191.7ms ttfb=7191.3 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run2                    status=504 total=10070.4ms ttfb=10070.0 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run3                    status=504 total=5930.4ms ttfb=5930.0 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run4                    status=504 total=5862.6ms ttfb=5862.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  L6-run5                    status=504 total=6046.2ms ttfb=6045.9 transfer=0.2 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)   <-- INVALID: this leg measured nothing (see the 429/504 caveat)
+  0/5 clean answers, spaced 45s, one IP, one mirror.
+  This is NOT the prod refusal rate — prod retries two more mirrors inside a
+  20 s budget and runs from Modal's IP.  It is the base rate for ONE try.
+
+wrote 10 rows  finished 2026-09-14T17:34:31+00:00

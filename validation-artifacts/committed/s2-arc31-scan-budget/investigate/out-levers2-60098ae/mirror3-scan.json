@@ -1,0 +1,41 @@
+[
+ {
+  "url": "https://overpass.openstreetmap.fr/api/interpreter",
+  "chars": 1170,
+  "status": 200,
+  "ttfb_ms": 3651.2,
+  "transfer_ms": 331.6,
+  "bytes": 79283,
+  "parse_ms": 1.2,
+  "elements": 396,
+  "remark": null,
+  "total_ms": 3984.2,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "url": "https://overpass.openstreetmap.fr/api/interpreter",
+  "chars": 1170,
+  "status": 200,
+  "ttfb_ms": 2541.5,
+  "transfer_ms": 245.7,
+  "bytes": 79283,
+  "parse_ms": 0.7,
+  "elements": 396,
+  "remark": null,
+  "total_ms": 2788.0,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ },
+ {
+  "url": "https://overpass.openstreetmap.fr/api/interpreter",
+  "chars": 1170,
+  "status": 200,
+  "ttfb_ms": 2352.5,
+  "transfer_ms": 2070.5,
+  "bytes": 79283,
+  "parse_ms": 0.5,
+  "elements": 396,
+  "remark": null,
+  "total_ms": 4423.7,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ }
+]

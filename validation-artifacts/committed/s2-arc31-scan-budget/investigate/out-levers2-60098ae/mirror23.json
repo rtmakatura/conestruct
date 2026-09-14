@@ -1,0 +1,23 @@
+[
+ {
+  "url": "https://overpass.kumi.systems/api/interpreter",
+  "chars": 231,
+  "status": null,
+  "error": "ReadTimeout: The read operation timed out",
+  "total_ms": 27162.7,
+  "mirror": "https://overpass.kumi.systems/api/interpreter"
+ },
+ {
+  "url": "https://overpass.openstreetmap.fr/api/interpreter",
+  "chars": 231,
+  "status": 200,
+  "ttfb_ms": 1476.3,
+  "transfer_ms": 26.7,
+  "bytes": 12028,
+  "parse_ms": 0.1,
+  "elements": 12,
+  "remark": null,
+  "total_ms": 1503.6,
+  "mirror": "https://overpass.openstreetmap.fr/api/interpreter"
+ }
+]

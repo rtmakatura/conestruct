@@ -1,0 +1,134 @@
+=== s2-arc31 Overpass decomposition — started 2026-09-14T17:20:11+00:00 ===
+!!  READ THIS BEFORE BELIEVING A NUMBER BELOW  !!
+!!
+!!  This runs from the DEVELOPER'S machine and egress IP.  Production
+!!  runs from Modal's.  Overpass rate-limits and queues PER IP
+!!  (see the /api/status block this probe prints first: it names the
+!!  rate limit and how many slots this IP has free RIGHT NOW).
+!!  Therefore:
+!!    * The TRANSFER and PARSE terms here are the query's intrinsic
+!!      cost and DO carry over to prod.
+!!    * The QUEUE/TTFB term does NOT.  A fast TTFB here is not evidence
+!!      prod will see a fast TTFB; it is evidence this IP was not
+!!      queued at this minute.  Only s2a31-prod.js measures what Modal
+!!      experiences.
+!!  Any conclusion drawn from this file that depends on TTFB must be
+!!  stated as a hypothesis, never as a prod measurement.
+!!
+!!  Second caveat: Overpass load is a property of the hour.  Every
+!!  table below is stamped with the UTC time it was taken and is
+!!  comparable only to another table taken the same way.
+
+corridor params READ FROM THE CAPTURED WIRE wire-denver.json: {'lat': 39.7269, 'lng': -104.9873, 'bearing_deg': 180.0, 'speed_mph': 65, 'work_zone_ft': 1000.0, 'closure_type': 'shoulder', 'road_type': 'rural_divided', 'lane_width_ft': 12.0}
+=== s2-arc31 Overpass decomposition — started 2026-09-14T17:20:29+00:00 ===
+!!  READ THIS BEFORE BELIEVING A NUMBER BELOW  !!
+!!
+!!  This runs from the DEVELOPER'S machine and egress IP.  Production
+!!  runs from Modal's.  Overpass rate-limits and queues PER IP
+!!  (see the /api/status block this probe prints first: it names the
+!!  rate limit and how many slots this IP has free RIGHT NOW).
+!!  Therefore:
+!!    * The TRANSFER and PARSE terms here are the query's intrinsic
+!!      cost and DO carry over to prod.
+!!    * The QUEUE/TTFB term does NOT.  A fast TTFB here is not evidence
+!!      prod will see a fast TTFB; it is evidence this IP was not
+!!      queued at this minute.  Only s2a31-prod.js measures what Modal
+!!      experiences.
+!!  Any conclusion drawn from this file that depends on TTFB must be
+!!  stated as a hypothesis, never as a prod measurement.
+!!
+!!  Second caveat: Overpass load is a property of the hour.  Every
+!!  table below is stamped with the UTC time it was taken and is
+!!  comparable only to another table taken the same way.
+
+=== s2-arc31 Overpass decomposition — started 2026-09-14T17:20:40+00:00 ===
+!!  READ THIS BEFORE BELIEVING A NUMBER BELOW  !!
+!!
+!!  This runs from the DEVELOPER'S machine and egress IP.  Production
+!!  runs from Modal's.  Overpass rate-limits and queues PER IP
+!!  (see the /api/status block this probe prints first: it names the
+!!  rate limit and how many slots this IP has free RIGHT NOW).
+!!  Therefore:
+!!    * The TRANSFER and PARSE terms here are the query's intrinsic
+!!      cost and DO carry over to prod.
+!!    * The QUEUE/TTFB term does NOT.  A fast TTFB here is not evidence
+!!      prod will see a fast TTFB; it is evidence this IP was not
+!!      queued at this minute.  Only s2a31-prod.js measures what Modal
+!!      experiences.
+!!  Any conclusion drawn from this file that depends on TTFB must be
+!!  stated as a hypothesis, never as a prod measurement.
+!!
+!!  Second caveat: Overpass load is a property of the hour.  Every
+!!  table below is stamped with the UTC time it was taken and is
+!!  comparable only to another table taken the same way.
+
+corridor params from the CAPTURED WIRE wire-denver.json:
+  wire roadType='rural_divided' divided=True speed=65  -> backend road_type='rural' (via _map_road_type)
+  {'lat': 39.7269, 'lng': -104.9873, 'bearing_deg': 180.0, 'speed_mph': 65, 'work_zone_ft': 1000.0, 'closure_type': 'shoulder', 'road_type': 'rural', 'lane_width_ft': 12.0}
+
+-- bbox geometry (the scan's search frame) --
+downstream_taper_use_max=True  (what the scan sends, site_scan.py:641): (39.71604054185414, -104.98846934076596, 39.72827056612742, -104.98613065923405) ~1361.4 m N-S x 200.5 m E-W  corridor_len=3462 ft
+downstream_taper_use_max=False (the plan's own corridor):              (39.71617759846686, -104.98846934076596, 39.72827056612742, -104.98613065923405) ~1346.2 m N-S x 200.5 m E-W  corridor_len=3412 ft
+
+-- mirror /api/status (per-IP rate limit and free slots) and dial phases --
+  https://overpass-api.de/api/interpreter
+    status: Connected as: 2669307401 | Current time: 2026-09-14T17:20:42Z | Announced endpoint: gall.openstreetmap.de/ | Rate limit: 2 | 2 slots available now. | Currently running queries (pid, space limit, time limit, start time):
+    dial:   {'host': 'overpass-api.de', 'dns_ms': 0.5, 'connect_ms': 20.6, 'tls_ms': 323.0}
+  https://overpass.kumi.systems/api/interpreter
+    status: unavailable: ReadTimeout: The read operation timed out
+    dial:   {'host': 'overpass.kumi.systems', 'dns_ms': 4.6, 'connect_ms': 18.7, 'tls_ms': 303.4}
+  https://overpass.openstreetmap.fr/api/interpreter
+    status: 403 Forbidden
+    dial:   {'host': 'overpass.openstreetmap.fr', 'dns_ms': 0.5, 'connect_ms': 18.3, 'tls_ms': 252.5}
+
+-- L1: the shipped union query [timeout:10] on the use_max bbox, x3 per mirror --
+  [overpass-api.de #1] status=200 total=4381.5ms ttfb=4377.6 transfer=0.5 parse=3.4 bytes=79284 elements=396 remark=None
+    buckets: {'bike_facilities': 18, 'interchanges': 13, 'intersections': 136, 'sidewalks': 229}
+  [overpass-api.de #2] status=504 total=5482.6ms ttfb=5482.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  [overpass-api.de #3] status=504 total=5986.4ms ttfb=5986.1 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  [overpass.kumi.systems #1] status=None total=25600.6ms ttfb=None transfer=None parse=None bytes=None elements=None remark=None error=ReadTimeout: The read operation timed out
+  [overpass.kumi.systems #2] status=None total=25628.7ms ttfb=None transfer=None parse=None bytes=None elements=None remark=None error=ReadTimeout: The read operation timed out
+  [overpass.kumi.systems #3] status=None total=25600.8ms ttfb=None transfer=None parse=None bytes=None elements=None remark=None error=ReadTimeout: The read operation timed out
+  [overpass.openstreetmap.fr #1] status=200 total=3914.3ms ttfb=3682.8 transfer=230.8 parse=0.6 bytes=79283 elements=396 remark=None
+  [overpass.openstreetmap.fr #2] status=200 total=2716.4ms ttfb=2404.2 transfer=302.8 parse=9.3 bytes=79283 elements=396 remark=None
+  [overpass.openstreetmap.fr #3] status=200 total=2583.9ms ttfb=2344.3 transfer=238.9 parse=0.5 bytes=79283 elements=396 remark=None
+
+-- L2: [timeout:10] (shipped) vs [timeout:20] vs [timeout:25] on mirror 1 --
+   [timeout:N] bounds Overpass EXECUTION, not the wait for a slot.
+  [timeout:10] status=200 total=7078.0ms ttfb=7077.1 transfer=0.4 parse=0.5 bytes=79284 elements=396 remark=None
+  [timeout:20] status=504 total=10178.3ms ttfb=10177.9 transfer=0.4 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  [timeout:25] status=200 total=3423.5ms ttfb=3422.5 transfer=0.4 parse=0.5 bytes=79284 elements=396 remark=None
+
+-- L3: the use_max bbox vs the tight bbox — cost AND recall --
+  wide  status=429 total=6050.6ms ttfb=6050.3 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  tight status=429 total=7325.6ms ttfb=7325.2 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+
+-- L4: one union query vs one query per clause (15 trips) --
+  clause  1/15 status=429 total=6695.2ms ttfb=6694.8 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  2/15 status=429 total=6107.4ms ttfb=6107.1 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  3/15 status=429 total=6130.6ms ttfb=6130.3 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  4/15 status=429 total=6747.5ms ttfb=6747.2 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  5/15 status=429 total=6127.5ms ttfb=6127.2 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  6/15 status=504 total=11793.9ms ttfb=11793.5 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  7/15 status=200 total=1090.5ms ttfb=1090.2 transfer=0.3 parse=0.0 bytes=287 elements=0 remark=None
+  clause  8/15 status=504 total=6151.6ms ttfb=6151.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause  9/15 status=504 total=6532.3ms ttfb=6532.0 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause 10/15 status=200 total=2527.8ms ttfb=2527.5 transfer=0.3 parse=0.0 bytes=287 elements=0 remark=None
+  clause 11/15 status=429 total=5797.6ms ttfb=5797.2 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause 12/15 status=504 total=6009.6ms ttfb=6009.2 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause 13/15 status=200 total=4952.8ms ttfb=4952.5 transfer=0.2 parse=0.0 bytes=287 elements=0 remark=None
+  clause 14/15 status=429 total=6119.8ms ttfb=6119.5 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  clause 15/15 status=429 total=5958.6ms ttfb=5958.3 transfer=0.3 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  SPLIT TOTAL: 88750.3ms serial over 15 trips, 9265 B, 0 elements, slowest single clause 11793.9ms
+  (serial is the fair comparison: the product's mirror chain is serial and the
+   budget is wall-clock.  A parallel split would need a different budget shape.)
+
+-- L5: the corridor bearing check's own query, and the two-trip sequence --
+  bearing alone (radius 50 m, out geom tags) status=504 total=6172.3ms ttfb=6172.0 transfer=0.3 parse=None bytes=695 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  now the product's real sequence: site scan, then bearing check immediately after,
+  from one client to one mirror — the second trip is where a per-IP slot limit bites.
+  trip 1 (scan)    status=200 total=13899.0ms ttfb=13877.9 transfer=0.4 parse=20.7 bytes=79284 elements=396 remark=None
+  trip 2 (bearing) status=429 total=5897.8ms ttfb=5897.3 transfer=0.4 parse=None bytes=703 elements=None remark=None error=invalid JSON: Expecting value: line 1 column 1 (char 0)
+  SEQUENCE TOTAL 19797.9ms  (prod budgets these separately: 20 s + 20 s, site_scan.py:69 + site_detection.py:44)
+
+wrote 32 rows  finished 2026-09-14T17:25:11+00:00
