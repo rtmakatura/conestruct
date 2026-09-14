@@ -220,16 +220,24 @@ recorded at prod `b2a325a` by the arc-29 evidence run: `region` at 1440,
 page-level container. Zero violations outside that baseline, and none naming a
 node inside `.dva`.
 
-**On that citation.** The baseline was recorded in commit `3504ba6`
-(`s2-arc29-detected-applied/outProd-b2a325a/geometry/axe-*-axe.json`), which
-lives on the unmerged `s2-arc29-prod` branch and is **not reachable from this
-branch or from main** — so citing it alone would be a citation nobody can
-follow from here (#160). The two files are therefore copied verbatim into this
-arc's own directory as `baseline-axe-1440-b2a325a.json` and
-`baseline-axe-380-b2a325a.json`, and the harness's own baseline list is
-commented with both facts. Nothing in the arc-29 archive was touched; when
-`s2-arc29-prod` ships, the originals become reachable and these copies become
-redundant rather than wrong.
+**On that citation.** The baseline was recorded by the arc-29 prod evidence
+run, which at the time lived on the unmerged `s2-arc29-prod` branch and was
+**not reachable from this branch or from main** — so citing it alone would
+have been a citation nobody could follow from here (#160). The two files were
+therefore copied verbatim into this arc's own directory as
+`baseline-axe-1440-b2a325a.json` and `baseline-axe-380-b2a325a.json`, and the
+harness's own baseline list is commented with both facts. Nothing in the
+arc-29 archive was touched.
+
+**Resolved 2026-09-14, and the duplicates stay by ruling.** `s2-arc29-prod`
+shipped, so the originals are now reachable on main at
+`s2-arc29-detected-applied/outProd-b2a325a/geometry/axe-*-axe.json`, carried
+by commit `8eccb4d`. (The run was written as `3504ba6`; shipping it needed a
+rebase onto main, which renumbered it, so the old sha is orphaned and this
+citation was repointed.) The copies here are **not** deleted: the content is
+identical, git resolves both paths to the same blob for each file, and
+removing them would amend a committed evidence archive to recover a few
+kilobytes. They are redundant, not wrong, and they stay.
 
 ## The prod leg (`outProd-30ef02a/`)
 

@@ -303,14 +303,16 @@ const drive = async (page, vp) => {
     // axe-1440x1000-axe.json).  The gate is therefore "no violation
     // this block introduced", which is the honest form of it — zero
     // would fail on main too.
-    // Recorded at prod b2a325a by the arc-29 evidence run (commit
-    // 3504ba6, which sits on the UNMERGED s2-arc29-prod branch and is
-    // not reachable from here) — so the two files are copied verbatim
+    // Recorded at prod b2a325a by the arc-29 evidence run.  That run
+    // was UNMERGED when this harness was written (commit 3504ba6, not
+    // reachable from here), so the two files were copied verbatim
     // into this arc's own directory, where the citation can be
     // followed: baseline-axe-1440-b2a325a.json = [region];
     // baseline-axe-380-b2a325a.json = [region,
-    // scrollable-region-focusable].  Both name `.gap-8`, a page-level
-    // container, not this block.
+    // scrollable-region-focusable].  It shipped 2026-09-14 and now
+    // sits on main at 8eccb4d, so the originals are reachable as well;
+    // the copies stay by ruling (see this arc's README).  Both name
+    // `.gap-8`, a page-level container, not this block.
     const BASELINE = vp.width < 520 ? ["region", "scrollable-region-focusable"] : ["region"];
     const violations = await L.runAxe(page, OUT, tag);
     const introduced = violations.filter((v) => !BASELINE.includes(v.id));
