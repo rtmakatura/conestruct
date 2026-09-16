@@ -18,15 +18,16 @@ import {
 const ROLE_NAMES = Object.keys(TYPE_ROLES) as TypeRoleName[];
 
 describe("two-axis rule — any two label roles differ on ≥2 of the six axes (PDF p. 3)", () => {
-  // Six pairs from four roles; enumerated explicitly so a failure names
-  // the pair.
+  // Ten pairs from five roles (#283: role 5, the step question, joins the
+  // four-role label table — #281 ruling 180); enumerated explicitly so a
+  // failure names the pair.
   const pairs: Array<[TypeRoleName, TypeRoleName]> = [];
   for (let i = 0; i < ROLE_NAMES.length; i++)
     for (let j = i + 1; j < ROLE_NAMES.length; j++)
       pairs.push([ROLE_NAMES[i], ROLE_NAMES[j]]);
 
-  it("enumerates exactly the six role pairs", () => {
-    expect(pairs).toHaveLength(6);
+  it("enumerates exactly the ten role pairs", () => {
+    expect(pairs).toHaveLength(10);
   });
 
   it.each(pairs)("%s ↔ %s differ on at least two axes", (a, b) => {

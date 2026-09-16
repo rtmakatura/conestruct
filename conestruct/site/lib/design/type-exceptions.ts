@@ -50,7 +50,16 @@ export interface TypeDebt {
 
 /** The `.tr-*` classes that ARE the table (type-roles.ts). `.tr-signpost`
  *  is not one of them — it is a debt row below. */
-export const ROLE_CLASSES = ["tr-section", "tr-step", "tr-field", "tr-prov"] as const;
+export const ROLE_CLASSES = [
+  "tr-section",
+  "tr-step",
+  "tr-field",
+  "tr-prov",
+  // #283 — role 5, the step question (#281 ruling 180).  Two declarations,
+  // not one: the base and its ≤519px container variant, both reading
+  // :root tokens rather than literals (GO ruling d).
+  "tr-question",
+] as const;
 
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   {
@@ -413,8 +422,18 @@ export const CENSUS_PINS = {
   // longer declares a size and the "detected-vs-applied value register"
   // exception is deleted outright — one fewer entry outside the role
   // table.  104 → 103.  Sizes stay 19: 14px is still sans body copy.
-  cssDeclarations: 103,
-  cssSizes: 19,
+  //
+  // #283 (Direction A Phase 0, GO 2026-09-16): role 5 arrives with two
+  // declarations — `.workbench .tr-question` and its ≤519px container
+  // variant — so 103 → 105.  Both read a `:root` token, so the values the
+  // census records are `var(--fs-step-question)` and
+  // `var(--fs-step-question-520)`, not pixel strings: 19 → 21 sizes.  The
+  // other eight ruled sizes are `:root` custom properties, which the
+  // parser excludes by design — that is how they are declared before any
+  // surface uses them without the declaration going stale.  Tailwind
+  // figures are unchanged: this commit adds no class to any component.
+  cssDeclarations: 105,
+  cssSizes: 21,
   tsxSites: 106,
   tsxUses: 320,
   tsxFiles: 36,

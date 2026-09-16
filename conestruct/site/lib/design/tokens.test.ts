@@ -13,7 +13,7 @@ const css = fs.readFileSync(
   "utf-8",
 );
 
-describe("SIZE_TOKENS mirror .workbench custom properties (#227)", () => {
+describe("SIZE_TOKENS mirror their custom-property definitions (#227 on .workbench, #283 on :root)", () => {
   for (const [name, value] of Object.entries(SIZE_TOKENS)) {
     it(`${name} is defined as ${value}`, () => {
       const re = new RegExp(`${name}:\\s*${value};`);
@@ -21,9 +21,32 @@ describe("SIZE_TOKENS mirror .workbench custom properties (#227)", () => {
     });
   }
 
-  it("the table stays exactly the two ruled tokens", () => {
+  // #283 — the nine type sizes live on :root deliberately: the type
+  // census parses font-size declarations OUTSIDE :root, which is what
+  // lets a ruled size be declared before any surface consumes it.  If one
+  // drifts into .workbench it re-enters the census and the "declare
+  // before use" property is silently lost, so pin the home.
+  it("the nine type sizes are defined on :root, not .workbench (#283)", () => {
+    const root = css.slice(css.indexOf(":root {"), css.indexOf("\n}", css.indexOf(":root {")));
+    const typeSizes = Object.entries(SIZE_TOKENS).filter(([n]) => n.startsWith("--fs-"));
+    expect(typeSizes).toHaveLength(9);
+    for (const [name, value] of typeSizes) {
+      expect(root, name).toContain(`${name}: ${value};`);
+    }
+  });
+
+  it("the table stays exactly the ruled tokens — two sizing (#227) plus the nine type sizes (#283)", () => {
     expect(Object.keys(SIZE_TOKENS).sort()).toEqual([
       "--bar-seg-min",
+      "--fs-body-value",
+      "--fs-field-label",
+      "--fs-hero-numeral",
+      "--fs-hero-numeral-380",
+      "--fs-primary",
+      "--fs-primary-xl",
+      "--fs-refusal",
+      "--fs-step-question",
+      "--fs-step-question-520",
       "--glyph-cell",
     ]);
   });

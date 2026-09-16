@@ -23,7 +23,7 @@ import {
   type CssSite,
   type TsxSite,
 } from "./type-exceptions";
-import { TYPE_ROLES } from "./type-roles";
+import { TYPE_ROLES, type TypeRole } from "./type-roles";
 
 const SITE_ROOT = join(__dirname, "..", "..");
 
@@ -158,13 +158,29 @@ describe("#263 type census — globals.css font-sizes", () => {
 
   it("every .tr-* block carries its role's size (type-roles.ts)", () => {
     const roleBlocks = observedCss.filter((d) => isRoleBlock(d.selector));
-    expect(roleBlocks).toHaveLength(ROLE_CLASSES.length);
+    // One declaration per role, plus one more for each role that declares
+    // a ≤520 variant (#283 / #281 ruling 180 — the hero numeral's 76/60
+    // idiom: one selector, two sizes, both ruled).
+    const roles: readonly TypeRole[] = Object.values(TYPE_ROLES);
+    const variants = roles.filter((r) => r.sizeBelow520 !== undefined).length;
+    expect(roleBlocks).toHaveLength(ROLE_CLASSES.length + variants);
     for (const block of roleBlocks) {
-      const role = Object.values(TYPE_ROLES).find((r) =>
-        block.selector.endsWith(`.${r.cssClass}`),
-      );
+      const role = roles.find((r) => block.selector.endsWith(`.${r.cssClass}`));
       expect(role, block.selector).toBeDefined();
-      expect(block.size, block.selector).toBe(role!.size);
+      const allowed = [role!.size, role!.sizeBelow520].filter(
+        (s): s is string => s !== undefined,
+      );
+      expect(allowed, block.selector).toContain(block.size);
+    }
+    // A declared variant that never lands is a stale row: every role with
+    // a sizeBelow520 must actually carry both declarations.
+    for (const role of roles) {
+      if (role.sizeBelow520 === undefined) continue;
+      const sizes = roleBlocks
+        .filter((b) => b.selector.endsWith(`.${role.cssClass}`))
+        .map((b) => b.size);
+      expect(sizes, role.cssClass).toContain(role.size);
+      expect(sizes, role.cssClass).toContain(role.sizeBelow520);
     }
   });
 

@@ -235,15 +235,52 @@ asserts the observed set equals the declaration in both directions.
 
 | Disposition | What it covers | This round |
 |---|---|---|
-| **role** | the four `.tr-*` blocks, checked against `type-roles.ts` | 4 |
+| **role** | the five `.tr-*` blocks, checked against `type-roles.ts` | 5 (6 declarations — `.tr-question` carries its ≤520 variant) |
 | **exception** (named, ruled) | 76/60 hero numerals · 28 page h1 · 24 results-head figure (CHOSEN, arc 20) · 20/17 zone h2 · 16 audit formula line · 14 body copy · 9 control glyphs | 14 CSS rows + 6 Tailwind rows |
 | **debt** (owned) | every other size — 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 15, 18, 26 in CSS; the Tailwind literals per file | 85 CSS rows + 103 Tailwind rows |
 
-Figures pinned by the test (`CENSUS_PINS`): 103 `font-size`
-declarations on 20 values; 325 Tailwind size-class uses at 109
-(file, class) sites in 37 files. Rendered tuples on `/sandbox`: **63 →
+Figures pinned by the test (`CENSUS_PINS`): **105** `font-size`
+declarations on **21** values; **320** Tailwind size-class uses at **106**
+(file, class) sites in **36** files. Rendered tuples on `/sandbox`: **63 →
 63, zero folds** (Rule 5: declare first; the Playwright census in the
 arc's evidence dir is the rendered leg, this table the static one).
+
+*(Correction, #283: this paragraph read "103 on 20 values; 325 uses at 109
+sites in 37 files" — stale against `CENSUS_PINS` since #273 retired the
+DetectedVsApplied debt row. The pre-#283 truth was 103 / 19 / 320 / 106 /
+36; #283's role 5 takes the CSS figures to 105 / 21 and leaves the
+Tailwind figures alone.)*
+
+### The nine ruled type sizes (#283, Direction A Phase 0)
+
+`#281` ruling: the nine sizes land as **one commit, with owners, before
+any surface uses them — never as debt**. The census asserts observed ==
+declared in both directions, so a size declared with no site would be a
+stale row. The resolution (GO 2026-09-16, ruling d): the sizes are
+**`:root` custom properties**, which the parser excludes by design, and
+`lib/design/tokens.ts` mirrors them for the tests. One source, two
+readers; `tokens.test.ts` asserts they agree and pins the `:root` home.
+
+| size | token | owner (the Part 2 rule that consumes it) |
+|---|---|---|
+| 22px | `--fs-step-question` | rule 7 — type role 5, the step question |
+| 19px | `--fs-step-question-520` | rules 7 + 162 — the question below 520 |
+| 17.5px | `--fs-primary-xl` | rule 131 — `.pri.xl`, GENERATE PLAN only |
+| 15.5px | `--fs-primary` | rule 130 — `.pri` |
+| 15px | `--fs-refusal` | rule 9 — the refusal sentence |
+| 13.5px | `--fs-body-value` | rules 8 + 9 — body value, item body |
+| 12.5px | `--fs-field-label` | rules 5 + 17 — field label, text symbols |
+| 62px | `--fs-hero-numeral` | rules 10 + 81 — the counts hero |
+| 42px | `--fs-hero-numeral-380` | rule 169 — the counts hero at 380 |
+
+Only `--fs-step-question` has a consumer in this commit (`.tr-question`,
+role 5). The other eight are declared and unconsumed by design; each
+moves into a role or exception row in the commit whose surface first
+reads it. **Three of the nine values already existed in the sheet** as
+debt rows — 12.5px on four `.workbench` selectors, 15px on three, and
+22px as `Nav.tsx`'s `text-[22px]` wordmark. Those rows are untouched:
+they share a pixel value with a ruled size, not its owner, and folding
+them would claim a role they do not play.
 
 Rules:
 

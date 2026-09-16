@@ -52,10 +52,17 @@ export interface TypeRole {
   /** CSS class carrying the role in app/globals.css (workbench scope). */
   cssClass: string;
   family: "mono" | "sans";
-  /** Not an axis — see the header comment. */
-  weight: 400 | 500;
+  /** Not an axis — see the header comment.  600 arrives with role 5
+   *  (#283): the step question is the column's one heavy register. */
+  weight: 400 | 500 | 600;
   casing: "uppercase" | "sentence" | "lowercase-voice";
   size: string;
+  /** #283 — a role that switches size below 520 px declares the variant
+   *  here, so the census can tell a ruled second declaration on the same
+   *  selector from an undeclared one.  Same idiom as the hero numeral's
+   *  76/60 exception (DESIGN-SPACING: "one selector, two sizes").  Only
+   *  role 5 has one (#281 ruling 180: "19 px below 520"). */
+  sizeBelow520?: string;
   tracking: string;
   color: string;
   decoration: "none" | "dotted-underline";
@@ -110,6 +117,25 @@ export const TYPE_ROLES = {
     tracking: "0.04em",
     color: "var(--ink-on-dark-faint)", // CHOSEN — "dim" (GO ruling 2)
     decoration: "dotted-underline",
+  },
+  /** #283 / #281 ruling 180 — role 5, THE STEP QUESTION.  The four roles
+   *  above are a LABEL vocabulary; this one is a question the operator
+   *  answers, and the column's one-thing-at-a-time weight rests on it.
+   *  Part 2 rule 7: Inter 22 px / 1.25 / 600 / `--ink`, sentence case,
+   *  ends in a question mark; 19 px below 520 (ruling 180 — the switch
+   *  is 520, not rule 162's 380 phone example).  The size reads the
+   *  token rather than a literal so `:root` stays the one source
+   *  (GO ruling d); tokens.test.ts asserts the two agree. */
+  question: {
+    cssClass: "tr-question",
+    family: "sans",
+    weight: 600,
+    casing: "sentence",
+    size: "var(--fs-step-question)",
+    sizeBelow520: "var(--fs-step-question-520)",
+    tracking: "0",
+    color: "var(--ink)", // TRACED — Part 2 rule 7 names `--ink` (#eaf0f7 in workbench scope)
+    decoration: "none",
   },
 } as const satisfies Record<string, TypeRole>;
 
