@@ -33,6 +33,27 @@ if TYPE_CHECKING:
 # the corridor bbox instead.
 DEFAULT_RADIUS_M = 500.0
 HTTP_TIMEOUT_S = 25.0
+# Per-mirror cap for a BUDGETED chain (#256 ruling a, revised 2026-09-16).
+# Before this, a budgeted mirror got ``min(HTTP_TIMEOUT_S, remaining)`` —
+# with SCAN_BUDGET_S = 20 that is ``min(25, 20)`` = the whole budget, so a
+# stalled mirror 1 consumed it and mirror 3 was never tried.  s2-arc31
+# measured mirror 3 answering the full Denver scan 3/3 clean in 2.8-4.4 s
+# while mirror reads ``overpass-api.de`` on 80 of 80 prod rows.  Capping
+# per mirror reaches it inside the budget that already exists; no budget
+# is raised.
+#
+# READ 7 s — TRACED, two ways: it clears the folded query's one clean
+# measurement (6.83 s, ``out-levers2-60098ae/log.txt`` L5-folded-1trip), so
+# the #256 fold lands without the cap cutting it off; and it is the arc-31
+# README's own lever-table recommendation ("a 7 s cap on mirror 2 leaves
+# 7+ s for mirror 3, which needs 1.5-4.4 s").  Two stalls cost 14 s and
+# still leave 6 s for a mirror that needs 1.5-4.4.
+#
+# CONNECT 3 s — CHOSEN, not traced.  No connect timeout existed before
+# this commit (``timeout=`` was a scalar httpx applied to every phase), so
+# there is no prior value it was derived from.
+PER_MIRROR_READ_S = 7.0
+PER_MIRROR_CONNECT_S = 3.0
 # #241 (s2-arc16 rider): wall-clock budget for the corridor-validation
 # trip (``validate_corridor_against_osm`` → ``detect_road_bearing``).
 # CHOSEN, not traced: the audit's worst case is this check plus the
@@ -140,15 +161,20 @@ def _overpass_request_with_fallback(
 ) -> tuple[dict[str, Any] | None, str | None]:
     """POST the Overpass query to each mirror until one returns a valid payload.
 
-    Retries on 5xx, connection errors, and a 200 whose body carries a
-    ``remark`` (#251: the query did not complete — mirror is overloaded).
-    Stops on 4xx (the query itself is malformed; trying another mirror
-    will produce the same error).  Returns ``(payload, None)`` on
-    success or ``(None, error_message)`` after exhausting mirrors.
+    Retries on 5xx, connection errors, **429** (#256 ruling j: a rate limit
+    is that mirror's answer, not the chain's — mirrors are independently
+    rate-limited) and a 200 whose body carries a ``remark`` (#251: the
+    query did not complete — mirror is overloaded).  Stops on any OTHER
+    4xx (the query itself is malformed; trying another mirror will produce
+    the same error).  Returns ``(payload, None)`` on success or
+    ``(None, error_message)`` after exhausting mirrors.
 
     ``budget_s`` (#224 phase 1, ruling 4) is a wall-clock deadline for the
-    whole fallback chain: each mirror's timeout is ``min(HTTP_TIMEOUT_S,
-    remaining)`` and once the budget is spent no further mirror is tried —
+    whole fallback chain.  Each budgeted mirror is capped at
+    ``PER_MIRROR_READ_S`` / ``PER_MIRROR_CONNECT_S``, still bounded by
+    ``remaining`` (#256 ruling a) — so one stalled mirror can no longer
+    consume the chain — and once the budget is spent no further mirror is
+    tried —
     the caller gets ``(None, "scan budget exceeded (N s)")``, an honest
     ``unavailable``.  ``None`` (every pre-phase-1 caller) keeps the
     unbounded three-mirror chain exactly as before.
@@ -165,12 +191,19 @@ def _overpass_request_with_fallback(
         meta.update(mirror=None, response_bytes=None, remark=None)
     deadline = time.monotonic() + budget_s if budget_s is not None else None
     for url in OVERPASS_MIRRORS:
-        timeout = HTTP_TIMEOUT_S
+        timeout: float | httpx.Timeout = HTTP_TIMEOUT_S
         if deadline is not None:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
                 return None, f"scan budget exceeded ({budget_s:g} s)"
-            timeout = min(HTTP_TIMEOUT_S, remaining)
+            # #256 ruling a: cap each mirror so a stall cannot eat the chain.
+            # Still bounded by ``remaining`` — the budget, not the cap count,
+            # ends the chain.  Unbudgeted callers keep the scalar
+            # HTTP_TIMEOUT_S exactly as before (ruling: fast path unchanged).
+            timeout = httpx.Timeout(
+                min(PER_MIRROR_READ_S, remaining),
+                connect=min(PER_MIRROR_CONNECT_S, remaining),
+            )
         try:
             resp = httpx.post(
                 url,
@@ -183,7 +216,21 @@ def _overpass_request_with_fallback(
             continue
         if meta is not None:
             meta.update(mirror=url, response_bytes=len(resp.content), remark=None)
+        if resp.status_code == 429:
+            # #256 ruling j (2026-09-16): a 429 is THAT MIRROR's answer, not
+            # the chain's.  Each mirror is independently rate-limited (see
+            # OVERPASS_MIRRORS above), so being throttled by one says nothing
+            # about the next — it is a mirror failure like a 5xx, and the
+            # chain continues inside the budget.  Before this, a single 429
+            # ended the chain, which made "reach mirror 3" unachievable:
+            # s2-arc31's first decomposition run rate-limited itself and
+            # invalidated its own L3/L4/L5 legs.  CHOSEN behaviour.
+            last_error = f"{url}: {resp.status_code} {resp.reason_phrase}"
+            continue
         if 400 <= resp.status_code < 500:
+            # A genuine 4xx means the QUERY is malformed; the next mirror will
+            # say the same thing.  Still a hard stop (ruling j narrows this to
+            # everything except 429, it does not remove it).
             return None, f"{url}: {resp.status_code} {resp.reason_phrase}"
         if resp.status_code >= 500:
             last_error = f"{url}: {resp.status_code} {resp.reason_phrase}"

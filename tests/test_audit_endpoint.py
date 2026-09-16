@@ -2726,4 +2726,9 @@ def test_audit_completes_with_check_unavailable_when_overpass_stalls(
     assert corridor["checked"] is False
     assert corridor["reason"] == "check_unavailable"
     assert corridor["error"] == "scan budget exceeded (20 s)"
-    assert budgets == [20.0]  # the audit caller passed CORRIDOR_CHECK_BUDGET_S
+    # #256 ruling a (revised): the audit caller still passes
+    # CORRIDOR_CHECK_BUDGET_S, but the per-mirror cap — not the whole budget —
+    # is what reaches httpx.  Before: budgets == [20.0].
+    assert len(budgets) == 1
+    assert budgets[0].read == sd.PER_MIRROR_READ_S
+    assert budgets[0].connect == sd.PER_MIRROR_CONNECT_S

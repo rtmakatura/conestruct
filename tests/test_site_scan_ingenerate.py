@@ -400,7 +400,12 @@ def test_budget_exceeded_is_unavailable_and_stops_trying_mirrors(
     assert payload is None
     assert error == "scan budget exceeded (20 s)"
     assert len(posts) == 1  # the second and third mirrors were never tried
-    assert posts[0] == 20.0  # per-mirror timeout = min(25, remaining)
+    # #256 ruling a (revised): the per-mirror cap, not the whole budget.
+    # Before: posts[0] == 20.0, i.e. min(HTTP_TIMEOUT_S, remaining) — which is
+    # exactly why mirror 1 could consume the budget and mirror 3 was never
+    # reached.  The stub here burns 21 s, so one mirror is still all that fits.
+    assert posts[0].read == sd.PER_MIRROR_READ_S
+    assert posts[0].connect == sd.PER_MIRROR_CONNECT_S
 
 
 def test_budget_constants_are_the_ruled_values() -> None:

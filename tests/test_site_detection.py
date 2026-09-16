@@ -530,11 +530,114 @@ def test_point_scan_4xx_hard_stops_the_mirror_list(
     stub_overpass_4xx: list[Any],
 ) -> None:
     """A 4xx means the query is malformed — retrying another mirror would
-    repeat it, so exactly one request fires and the error names the status."""
+    repeat it, so exactly one request fires and the error names the status.
+
+    #256 ruling j narrows this to a genuine 400: a 429 is the MIRROR's
+    answer, not the query's, and is handled by the test below."""
     result = site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
     assert "error" in result
     assert "400" in result["error"]
     assert len(stub_overpass_4xx) == 1
+
+
+@pytest.fixture
+def stub_overpass_429() -> Iterator[list[Any]]:
+    """Every mirror rate-limits us — 429, not a malformed query."""
+    calls: list[Any] = []
+
+    def fake_post(url: str, **_kwargs: Any) -> _FakeResponse:
+        calls.append(url)
+        return _FakeResponse({}, status_code=429)
+
+    with patch.object(site_detection.httpx, "post", side_effect=fake_post):
+        yield calls
+
+
+def test_point_scan_429_tries_every_mirror(
+    stub_overpass_429: list[Any],
+) -> None:
+    """#256 ruling j: a 429 is that mirror's answer, not the chain's.
+
+    Each mirror is independently rate-limited (this module's own comment on
+    OVERPASS_MIRRORS), so a 429 from one says nothing about the next.  Before
+    this ruling a single 429 ended the chain, which is why "mirror 3 reached
+    in production" was unachievable: arc 31's first decomposition run
+    rate-limited itself and invalidated its own L3/L4/L5 legs."""
+    result = site_detection.detect_site_conditions(39.71466, -104.94071, radius_m=500.0)
+    assert len(stub_overpass_429) == len(site_detection.OVERPASS_MIRRORS)
+    # Still an honest refusal once every mirror has said no (Rule 10).
+    assert "error" in result
+    assert "429" in result["error"]
+    for key in _STANDARD_BUCKET_KEYS:
+        assert result[key]["detected"] is False, key
+        assert result[key]["count"] == 0, key
+
+
+def test_429_on_the_first_mirror_still_reaches_a_later_clean_one(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The point of ruling j, stated as the behaviour that pays for it: a
+    rate-limited first mirror must not cost the answer a later mirror has."""
+    calls: list[str] = []
+
+    def fake_post(url: str, **_kw: Any) -> _FakeResponse:
+        calls.append(url)
+        if len(calls) == 1:
+            return _FakeResponse({}, status_code=429)
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];")
+    assert error is None
+    assert payload == {"elements": []}
+    assert len(calls) == 2  # mirror 1 rate-limited, mirror 2 answered
+
+
+def test_per_mirror_cap_constants_are_the_ruled_values() -> None:
+    """#256 ruling a (revised 2026-09-16): 7 s read, 3 s connect.
+
+    7 s is traced — it clears the folded query's one clean measurement
+    (6.83 s, s2-arc31 out-levers2 L5-folded-1trip) and is the arc-31 README's
+    own lever-table recommendation.  3 s connect is CHOSEN outright.  Both
+    are separate from HTTP_TIMEOUT_S, which still governs unbudgeted
+    callers."""
+    assert site_detection.PER_MIRROR_READ_S == 7.0
+    assert site_detection.PER_MIRROR_CONNECT_S == 3.0
+    assert site_detection.HTTP_TIMEOUT_S == 25.0
+
+
+def test_budgeted_chain_reaches_the_third_mirror(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The defect this arc exists to fix, as a test.
+
+    Before the cap, mirror 1 received min(HTTP_TIMEOUT_S, remaining) = the
+    whole 20 s budget, so a stall consumed it and mirror 3 — measured clean at
+    2.8-4.4 s — was never tried.  With the cap each stalled mirror costs 7 s,
+    so the third is still reachable inside the same budget.  No budget is
+    raised."""
+    clock = {"t": 4000.0}
+    calls: list[str] = []
+
+    def fake_post(url: str, **kw: Any) -> _FakeResponse:
+        calls.append(url)
+        if len(calls) < 3:
+            # A stalled mirror burns exactly the timeout it was handed — which
+            # is the whole point.  Advancing by a FIXED amount here would make
+            # this test pass before the fix too, and prove nothing.
+            given = kw["timeout"]
+            clock["t"] += given.read if hasattr(given, "read") else given
+            raise site_detection.httpx.ReadTimeout(
+                "stalled", request=site_detection.httpx.Request("POST", url)
+            )
+        return _FakeResponse({"elements": []})
+
+    monkeypatch.setattr(site_detection.time, "monotonic", lambda: clock["t"])
+    monkeypatch.setattr(site_detection.httpx, "post", fake_post)
+    payload, error = site_detection._overpass_request_with_fallback("[out:json];", budget_s=20.0)
+    assert error is None
+    assert payload == {"elements": []}
+    assert len(calls) == 3  # the mirror that was never reached, reached
 
 
 def test_corridor_scan_failure_is_error_plus_empty(
@@ -633,7 +736,13 @@ def test_validate_budget_exceeded_reports_check_unavailable(
     assert out["checked"] is False
     assert out["reason"] == "check_unavailable"
     assert out["error"] == "scan budget exceeded (20 s)"
-    assert posts == [20.0]  # one mirror tried at min(25, remaining); no second
+    # #256 ruling a (revised): the per-mirror cap, not the whole budget.  The
+    # outcome is unchanged — one mirror tried, then the budget is spent — but
+    # the first mirror no longer gets all 20 s, which is the defect this arc
+    # fixes.  Before: [20.0].
+    assert len(posts) == 1  # no second mirror: the stub burns 21 s
+    assert posts[0].read == site_detection.PER_MIRROR_READ_S
+    assert posts[0].connect == site_detection.PER_MIRROR_CONNECT_S
 
 
 def test_validate_fast_path_passes_budget_through_positionally_when_none(
