@@ -1,11 +1,11 @@
 # DESIGN-PRINCIPLES.md — house rules for the interface
-*Adopted 2026-09-08 (P1–P12); P13–P16 added the same day, P14 moved here from memory.md — memory.md holds engineering facts, this file holds design principles. Each rule below is drawn from a complaint Ryan raised on a shipped surface between 2026-09-05 and 09-08, generalised, and traced to a published source. These sit alongside Rules 3/10/13 in CLAUDE.md and are checked at every UI checkpoint under a "principles" heading, the way contracts are. Claude Design starter prompts include them verbatim under "Constraints".*
+*Adopted 2026-09-08 (P1–P12); P13–P16 added the same day; **P17–P22 added 2026-09-14 after the James/Zac demo** — the flow-level principles, sourced from FLOW.md, which names the users and the session these serve. P1–P16 say how a screen must behave; P17–P22 say what a screen is for. An arc honours both sets or records which it deviates from. Each rule below is drawn from a complaint Ryan raised on a shipped surface between 2026-09-05 and 09-08, generalised, and traced to a published source. These sit alongside Rules 3/10/13 in CLAUDE.md and are checked at every UI checkpoint under a "principles" heading, the way contracts are. Claude Design starter prompts include them verbatim under "Constraints".*
 
 ## How to use this file
-- **At investigate:** for any arc that touches a screen, list which of P1–P16 the change could break, with the file:line where it would happen.
+- **At investigate:** for any arc that touches a screen, list which of P1–P22 the change could break, with the file:line where it would happen.
 - **At checkpoint:** a "Principles" section states, per rule, how the plan honours it or why it deviates (deviations are rulings, like Rule 5 churn).
 - **At evidence:** the browser leg measures what can be measured (layout shift, target size, one-edge alignment, contrast, response latency). Asserted is not measured.
-- **In Claude Design prompts:** paste P1–P16 under Constraints. A spec that violates one must say so in its conflicts section.
+- **In Claude Design prompts:** paste P1–P22 under Constraints, and FLOW.md §1–§4 under Context. A spec that violates one must say so in its conflicts section.
 
 ---
 
@@ -100,12 +100,59 @@ An action that changes the plan has an Undo that restores the exact prior state 
 - **Measure:** the undo → byte-identity tests; a resolved record renders for every applied correction.
 
 ## P16 — Don't: loading skeletons, placeholder numbers, fake progress
-No grey bars pretending to be rows, no "—" standing in for a value the system has not computed, no percent that means nothing. While waiting, the surface shows its last honest state (dimmed and labelled "previous answer") or its empty state (P14) — and the wait itself is said once (P8).
+No grey bars pretending to be rows, no "—" standing in for a value the system has not computed, no percent that means nothing. While waiting, the surface shows its last honest state (dimmed and labelled "previous answer") or its empty state (P14) — and the wait itself is said once (P8). **One busy signal per fact** (ruled 2026-09-16): the working band says "the system is producing the plan"; a preview panel's status row says "this panel is behind the field". Different facts may each have one voice; the same fact never has two.
 - **Source:** house Rule 10; Doherty threshold read correctly (feedback, not fabricated structure); Laws of UX on the goal-gradient caveat.
 - **Origin here:** the "STEP n OF total" stage line with no server stages (ruled out, #252); the stale ribbon keeping "previous answer" (#252 ruling f).
 - **Measure:** no skeleton component exists in `components/`; the stale wrapper carries its text channel; fake-timer test on the band.
 
 ---
+
+## Flow principles — P17 to P22
+*Added 2026-09-14. P1–P16 are craft rules and every one still holds; the demo showed a page can honour all sixteen and still leave a user unable to say what is happening or what to do next. These six are about the shape of the product, not the finish of a surface. Their source document is FLOW.md — the users, the session, and what each zone owes them. A screen that cannot say which FLOW.md step it serves does not belong on the screen.*
+
+## P17 — Every screen is for a named person doing a named job
+The rep winning a bid today, or the estimator building a draft. Not "the user." Every element on a screen answers "what does this person need to decide right now?" — and if the answer is "nothing", the element moves to a deliverable or behind a disclosure. The TCS and the crew are served by the PDFs, not the screen.
+- **Source:** Cooper, *About Face* (goal-directed design; personas as design targets, not marketing); Christensen, jobs-to-be-done ("hire the product to do a job").
+- **Origin here:** the demo — a screen that serves the rep, the estimator, the TCS and the crew at once serves none of them (FLOW.md §1).
+- **Measure:** every zone and every block names its FLOW.md step and its user in a comment or its issue; anything that names neither is a finding.
+
+## P18 — One question per step, one primary action per screen
+A step asks the user one thing. At any moment there is one thing the product most wants done, and it is visibly the biggest thing. Everything else is secondary by weight, position or disclosure — never equal.
+- **Source:** Hick's law; Nielsen H8 (minimalist design); the "one primary action" convention across HIG / Material / Fluent; Krug ("don't make me think" is a rule about choices, not words).
+- **Origin here:** the results zone after Generate — the verdict, the counts, four downloads, the strip, the tiers and the quote all compete at equal weight (FLOW.md §3 step 4).
+- **Measure:** per step, one element carries the primary treatment; a screen with two primaries or none is a finding.
+
+## P19 — The default view is the 80% case; everything else is opt-in
+What most users need most of the time is what renders. Detail, provenance, every check that passed, the citation for each — all real, all one deliberate click away, all labelled with a count so nothing is hidden. Progressive disclosure at the level of the product, not only inside a component.
+- **Source:** Nielsen Norman Group on progressive disclosure; Pareto as applied in Cooper (design for the frequent, accommodate the rare); P13 is this rule at component scale.
+- **Origin here:** the reference section — every check the system ran, tiered, as walls of text, when the user's question is "what needs me?" and the answer is two or three items (FLOW.md §3 step 4, §4).
+- **Measure:** the post-generate default viewport contains the verdict, the items needing the user, the counts and the downloads, and nothing that passed; the passed set is a labelled count.
+
+## P20 — Zones are defined by the user's question, not the system's output
+Setup, results, reference — each exists because a user asks something there, and its contents are the answer to that question. A zone organised around how the code produces things ("here is everything the audit returned") is a log, not a screen.
+- **Source:** Rosenfeld & Morville, *Information Architecture* (organise by task, not by structure); Cooper on "implementation model vs mental model".
+- **Origin here:** the three zones mirror the code's three outputs; FLOW.md §4 assigns each a question instead.
+- **Measure:** each zone's heading or lead line can be read as the answer to a question a rep or estimator would ask; a zone whose contents are "what the system has" is a finding.
+
+## P21 — The model matches the mental model
+What the user points at is what the user means. A pin on the work means the work is there; the system lays out what surrounds it. Where the product's model disagrees with how the job is described in the field, the product's model changes, deliberately, on the backend (Rule 3) — the label is never the fix.
+- **Source:** Norman, *The Design of Everyday Things* (the designer's model, the user's model, the system image); Cooper on implementation vs mental models.
+- **Origin here:** the pin marks where the first sign goes; the rep knows where the excavation is (FLOW.md §5a).
+- **Measure:** the first-pass flow can be described in the user's words with no translation ("I put the pin on the work and it drew the plan"); every place a translation is needed is a finding.
+
+## P22 — Revision is a mode, not a reload
+Coming back to change one thing is a different activity from building the plan. It is non-linear, deliberate, and shows its consequence before it commits: pick the field, change it, see what it did to the plan, apply or discard. Reopening the whole setup to change one value is a violation; a change that silently regenerates is a violation.
+- **Source:** Nielsen H3 (user control and freedom) and H1 (visibility of system status) applied to editing; Shneiderman's direct manipulation ("rapid, incremental, reversible actions with immediate feedback"); P7 and P15 at flow scale.
+- **Origin here:** the estimator who submits a draft and wants to change one thing (FLOW.md §5b); the staged-corrections pattern (#254) is the template.
+- **Measure:** any post-generate edit shows a before/after (device count, verdict) before it applies; the band mounts once per apply, never per edit.
+
+---
+
+## Rulings that extend the vocabulary (Direction A, 2026-09-16)
+- **Type role 5 — step question.** Inter 22 px / 1.25 / 600 / `--ink`, sentence case, ends in a question mark; 19 px below 520. The four-role table (#226) was a label vocabulary; a step question is a new kind of thing and the column's one-thing-at-a-time weight rests on it. Recorded in `lib/design/type-roles.ts` with this ruling.
+- **Two off-palette hexes, decorative and word-labelled:** the corridor overlay's work-zone channel `#3fd3a8` and buffer channel `#e0a63c`. Every channel has a word in the legend; no meaning by hue alone. Nowhere else.
+- **New type sizes land as one ruled exception commit** with owners before any surface uses them (22, 19, 17.5, 15.5, 15, 13.5, 12.5, 62, 42 — from Direction A's Part 2). Never as debt.
+- **A preview is a read.** It mounts no band, locks nothing, is never memoised and never written; its panel carries its own reserved status row (P16 above).
 
 ## Recommended reading, in order of usefulness to this project
 1. Wathan & Schoger, *Refactoring UI* (2018) — short, visual; P4/P5/P6 come from here.
@@ -115,6 +162,10 @@ No grey bars pretending to be rows, no "—" standing in for a value the system 
 5. Krug, *Don't Make Me Think* (3rd ed. 2014) — the argument for P3.
 6. Apple Human Interface Guidelines; Material Design 3 — reference for targets, motion, states (P10/P11).
 7. Dieter Rams, *Ten Principles for Good Design* — the one-page manifesto version.
+8. Alan Cooper et al., *About Face* (4th ed.) — goal-directed design; P17/P20/P21 come from here.
+9. Don Norman, *The Design of Everyday Things* — mental models and the system image; P21.
+10. Rosenfeld, Morville & Arango, *Information Architecture* — organise by task; P20.
+11. Christensen, *Competing Against Luck* — jobs-to-be-done; P17's "named job".
 
 ## Standing check for CC (paste into investigate templates)
-> **Principles (DESIGN-PRINCIPLES.md):** for each of P1–P16, state honoured / not applicable / deviates-with-ruling, with file:line for anything that could violate P1, P4, P6, or P9. Measurable rules get a browser leg.
+> **Principles (DESIGN-PRINCIPLES.md):** for each of P1–P22, state honoured / not applicable / deviates-with-ruling, with file:line for anything that could violate P1, P4, P6, or P9. Measurable rules get a browser leg. **For P17–P22, name the FLOW.md step and user the surface serves; if it serves none, say so — that is a finding, not a pass.**
