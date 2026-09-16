@@ -151,3 +151,49 @@ export const CODE_LITERALS: readonly FileLiterals[] = [
       "Clerk <ClerkProvider appearance.variables> — a JS theme object for the auth widgets (landing palette), not a workbench surface",
   },
 ];
+
+/** #283 / #281 ruling 181 — hexes RULED ADMISSIBLE but not yet written.
+ *
+ *  The buckets above declare literals that EXIST; the test asserts observed
+ *  == declared in both directions, so a row for a hex nobody has written is
+ *  a stale row and fails.  Direction A rules two off-palette hexes in
+ *  (#281 ruling 181: "approved as decorative-and-labelled ... Nowhere
+ *  else"), and the surface that paints them — the corridor overlay's zone
+ *  channels — is a later phase.  Declaring them here as RESERVED records
+ *  the ruling in the one place the ink gate reads, without claiming a site
+ *  that does not exist.
+ *
+ *  A reserved row asserts ABSENCE: ink-literals.test.ts fails if one of
+ *  these appears in any scanned source while it is still listed here.  So
+ *  the row cannot go stale, and the day a surface paints one, the gate
+ *  forces it out of RESERVED and into a real bucket with its site — the
+ *  same ratchet the debt rows use.
+ *
+ *  These are NOT a licence to use the hex: they are the record that when it
+ *  is used, it is ruled, decorative, and word-labelled.  Rule 13 still
+ *  applies — no meaning by hue alone. */
+export interface InkReserved {
+  readonly hex: string;
+  readonly name: string;
+  readonly ruling: string;
+  readonly owner: string;
+}
+
+export const INK_RESERVED: readonly InkReserved[] = [
+  {
+    hex: "#3fd3a8",
+    name: "corridor overlay — work-zone channel",
+    ruling:
+      "#281 ruling 181 — approved as decorative-and-labelled; Part 2 rule 12 names it with rule 74's overlay. Nowhere else.",
+    owner:
+      "the phase that draws the corridor overlay; today ZONE_COLOR (lib/corridor-zones.ts) paints the work zone #1EC8A5 and MUST NOT change here — #283 renders nothing differently",
+  },
+  {
+    hex: "#e0a63c",
+    name: "corridor overlay — buffer channel",
+    ruling:
+      "#281 ruling 181 — approved as decorative-and-labelled; Part 2 rule 12 names it with rule 74's overlay. Nowhere else.",
+    owner:
+      "the phase that draws the corridor overlay; SetupStrip.tsx:276 currently records in a comment that this hex is off-palette, and the grid-tokens test asserts it is NOT used — both stay true while it is reserved",
+  },
+];

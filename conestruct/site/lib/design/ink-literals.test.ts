@@ -17,6 +17,7 @@ import {
   CODE_LITERALS,
   CSS_DECORATIVE,
   CSS_OWNER_SWAPS,
+  INK_RESERVED,
 } from "./ink-exceptions";
 
 const SITE_ROOT = join(__dirname, "..", "..");
@@ -229,5 +230,70 @@ describe("#263 ink literals — the token mirrors equal their tokens", () => {
     expect(paint).not.toBeNull();
     expect((code.match(/#ffffff/g) ?? []).length).toBe(1);
     expect((code.match(/#000000/g) ?? []).length).toBe(1);
+  });
+});
+
+// ---------------------------------------------------------------------
+// #283 / #281 ruling 181 — hexes ruled admissible but not yet written.
+//
+// A reserved row asserts ABSENCE, which is why it can sit in the
+// declaration without being a stale row: the other buckets declare
+// literals that exist; this one declares two that are ruled in and not
+// yet painted.  The day a surface paints one, these assertions fail and
+// force it out of RESERVED into a real bucket with its site.
+// ---------------------------------------------------------------------
+
+describe("#283 reserved ink — ruled in, not yet written (#281 ruling 181)", () => {
+  it("declares exactly the two off-palette hexes Direction A ruled", () => {
+    expect(INK_RESERVED.map((r) => r.hex).sort()).toEqual([
+      "#3fd3a8",
+      "#e0a63c",
+    ]);
+    for (const row of INK_RESERVED) {
+      expect(row.ruling, row.hex).toContain("181");
+      expect(row.owner.length, row.hex).toBeGreaterThan(0);
+    }
+  });
+
+  it("no reserved hex appears in globals.css yet", () => {
+    for (const row of INK_RESERVED) {
+      const hits = observedCss.filter(
+        (r) => r.hex.toLowerCase() === row.hex.toLowerCase(),
+      );
+      expect(hits, `${row.hex} is reserved but painted in globals.css`).toEqual([]);
+    }
+  });
+
+  it("no reserved hex appears in any scanned source file yet", () => {
+    for (const row of INK_RESERVED) {
+      const sites: string[] = [];
+      for (const [file, hexes] of observedCode)
+        if (hexes.some((h) => h.toLowerCase() === row.hex.toLowerCase()))
+          sites.push(file);
+      expect(sites, `${row.hex} is reserved but used in code`).toEqual([]);
+    }
+  });
+
+  it("a reserved hex is not also declared in another bucket", () => {
+    const declared = new Set<string>([
+      ...[...CSS_DECORATIVE, ...CSS_OWNER_SWAPS].map((r) => r.hex.toLowerCase()),
+      ...CODE_LITERALS.flatMap((f) => f.hexes.map((h) => h.toLowerCase())),
+    ]);
+    for (const row of INK_RESERVED)
+      expect(
+        declared.has(row.hex.toLowerCase()),
+        `${row.hex} is both reserved and declared`,
+      ).toBe(false);
+  });
+
+  it("ZONE_COLOR is unchanged — #283 renders nothing differently", () => {
+    // The corridor overlay's channels are Direction A's; today's zones keep
+    // their shipped colours until the phase that redraws the overlay.
+    const values = Object.values(ZONE_COLOR).map((v) => v.toLowerCase());
+    for (const row of INK_RESERVED)
+      expect(
+        values,
+        `${row.hex} must not have entered ZONE_COLOR`,
+      ).not.toContain(row.hex.toLowerCase());
   });
 });
