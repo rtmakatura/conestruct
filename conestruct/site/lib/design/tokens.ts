@@ -13,7 +13,11 @@
 //
 // Every size below is TRACED, not CHOSEN: its owner is the Part 2 build
 // rule that consumes it, named in the doc comment so the census fails by
-// name if a size outlives its owner (GO ruling a).  They are defined on
+// name if a size outlives its owner (GO ruling a).  Part 2 is comment 1 on
+// issue #281 and is NOT in this tree, so each rule is quoted verbatim in
+// validation-artifacts/committed/s2-arc32-type-sizes/part2-owners.md —
+// read that to check an owner by subject rather than trusting the number.
+// They are defined on
 // `:root` rather than `.workbench` because the type-census parser
 // excludes `:root` — that is what lets them be declared BEFORE any
 // surface uses them (#281: "never as debt") without the declaration

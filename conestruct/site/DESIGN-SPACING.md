@@ -261,6 +261,12 @@ stale row. The resolution (GO 2026-09-16, ruling d): the sizes are
 `lib/design/tokens.ts` mirrors them for the tests. One source, two
 readers; `tokens.test.ts` asserts they agree and pins the `:root` home.
 
+Owners below cite Part 2 by rule number. **Part 2 is comment 1 on issue
+#281 and is not in this tree**, so each rule is quoted verbatim in
+`validation-artifacts/committed/s2-arc32-type-sizes/part2-owners.md`
+— check an owner by reading the quoted rule, not by trusting the number
+(a citation is a claim; #160).
+
 | size | token | owner (the Part 2 rule that consumes it) |
 |---|---|---|
 | 22px | `--fs-step-question` | rule 7 — type role 5, the step question |
