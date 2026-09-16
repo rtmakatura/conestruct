@@ -1,25 +1,27 @@
 # s2-triage-3 — every open issue against Direction A (#281)
 
-Triaged 2026-09-16 against `34e27aa` (main tip). No code changed; this file and the
-drafts below are the whole deliverable.
+Triaged 2026-09-16 against `34e27aa` (main tip). **Re-verified the same day against the
+completed #281**, once Part 1 landed in the body and Part 2 (rev. 2026-09-16) landed as
+comment 1. No code changed; this file and the drafts below are the whole deliverable.
 
-## Provenance — what was read, and what could not be
+## Provenance — what was read, and what changed on re-verification
+
+**Read in full:** #281's body (55,473 chars, including Part 1 §1–§8 verbatim) and #281
+comment 1 (43,813 chars, Part 2's numbered build rules). Part 2 rules are cited below as
+**"#281, comment 1, rule N"**.
 
 **Verified in source** (this worktree, at `34e27aa`):
 
-- `FLOW.md` §8 and §9 — present on main, committed by `34e27aa`.
-- `DESIGN-PRINCIPLES.md` P17–P22 — present on main, same commit, at `DESIGN-PRINCIPLES.md:110-143`.
+- `FLOW.md` §8–§9 and `DESIGN-PRINCIPLES.md` P17–P22 — present on main, committed by `34e27aa`.
 - `conestruct/site/lib/design/type-roles.ts:66,79,91,104` — exactly **four** roles
-  (`section`, `step`, `field`, `provenance`). Ruling 180's "fifth type role" is
-  accurate against the tree.
+  (`section`, `step`, `field`, `provenance`). Ruling 180's "fifth type role" is accurate.
 - `conestruct/site/lib/tiering.ts:160` — `assignTiers` exists.
-- `src/rendering/tier_ledger.py` — exists. **#281 and FLOW.md §9 both cite it
-  unqualified as `tier_ledger.py`; the real path is `src/rendering/`, not `src/rules/`.**
-  Phase 1's issue carries the corrected path.
+- `src/rendering/tier_ledger.py` — exists. **#281 now cites this path correctly** (the
+  earlier unqualified `tier_ledger.py` was repointed before re-verification).
 - `conestruct/site/lib/render-proxy.ts:291-295` — `CorridorSpecRequestBody` carries
   `kind`, `speed`, `roadType?` and nothing else. #267's mechanism confirmed.
-- `conestruct/site/components/AppFooter.tsx:8-13` — Terms / Privacy links, no
-  `min-height`. #264's footer row is real and is **not** inside any Direction A phase.
+- `conestruct/site/components/AppFooter.tsx:8-13` — Terms / Privacy links, **no
+  `min-height`**. This is the #264 residual, and §8.14 keeps the footer unchanged.
 - Component files named by the issues all still exist: `ResultsHead.tsx` (94 lines),
   `SetupStrip.tsx` (1054), `ProgressRail.tsx` (127), `AppSheetMeta.tsx` (39),
   `TieredReference.tsx` (744), `lib/next-steps.ts` (131), `LocationPickerModal.tsx` (3293),
@@ -27,45 +29,75 @@ drafts below are the whole deliverable.
 - **`TRACE` does not exist in the tree.** No match in `conestruct/site/app`,
   `components`, `lib`, or `src/api/audit.py`. It is a Direction A construct only.
 
-**Read from the issue, not verified in source:** every classification's account of what
-a defect *is* comes from the issue body as filed. Where an issue self-labels
-"⚠ agent-quoted, spot-check before working" (#194, #195) that caveat still stands and
-is not discharged here.
+**Read from the issue, not verified in source:** every classification's account of what a
+defect *is* comes from the issue body as filed. Where an issue self-labels "⚠ agent-quoted,
+spot-check before working" (#194, #195) that caveat stands and is not discharged here.
 
-### The gap that bounds this triage
+### Two classifications changed on re-verification
 
-**#281's body does not contain Part 1 or Part 2.** Both are literal unfilled
-placeholders in the issue text:
+The first pass ran before Part 1 and Part 2 were pasted into #281, and cited #281's ruling
+numbers throughout because §8 could not be read. With §8 readable, **two issues move out of
+CLOSED BY CONSTRUCTION into RE-AIMED.** Both moved for the same reason: the ruling that
+"fixes" them is a *build rule on a surface Direction A keeps*, not a consequence of deleting
+a surface — and §8.39 lists both under "Still open and inherited".
 
-> `## Part 1 — The Direction, for audit`
-> `[paste "Direction A — Part 1 The Direction.md" verbatim here]`
+| Issue | Was | Now | The line that decides it |
+|---|---|---|---|
+| **#259** | CLOSED BY CONSTRUCTION (ruling 197) | **RE-AIMED**, Phase 1 | §8.8 keeps stale ribbons in KEPT, UNCHANGED, and says *"Note #259 ... is **NOT fixed by this direction**; Part 2 raises the ribbon label out of the dim."* §8.39 lists it still open. The fix is comment 1, rule **102** |
+| **#276** | CLOSED BY CONSTRUCTION (ruling 196) | **RE-AIMED**, Phase 2 | §8.27: *"#276 ... **must be re-decided in the WHAT band's jurisdiction field**."* §8.39 lists it still open. Comment 1, rule **196**: *"a change in behaviour, **not a port**"* |
 
-> `## Part 2 — The Build Spec (rev. 2026-09-16)`
-> `[paste "Direction A — Part 2 Build Spec.md" verbatim here, the revised version with rules 90–95.15 and departures 200–204]`
+The corrected set is now **exactly §8.38's own list**:
 
-Neither source file is in the repo (searched the full tree, excluding `node_modules`
-and `.venv`). Consequences, stated rather than worked around:
+> **8.38 Closed by construction:** #272 (label/chip left edge), #264 (rail hit targets),
+> #262 (inline editors with no close) — all by deleting the surface, not by fixing it.
 
-1. **No classification below cites a Part 1 §8 line number**, because §8 could not be
-   read. Every classification instead cites a **#281 ruling number** (180–204, or one of
-   the five named audit rulings) or a **FLOW.md §9 phase line** — both permitted by the
-   triage brief. The single exception is #212, where §8.32 was supplied in the task
-   prompt; it is cited as **unverified** and flagged below.
-2. **Part 2's component numbering is unavailable**, so re-aim comments name the new home
-   by its #281 ruling and its FLOW.md §9 phase, not by a Part 2 rule number. Each re-aim
-   comment says so in its own text, so the boundary is visible on the issue.
-3. **Two new-issue phase assignments are inferences** (TRACE, and #280's aim at Phase 4).
-   Both are marked as such in their drafts.
+Three issues, and the triage independently arrives at the same three. Nothing else moved.
 
-**Before any of these drafts are posted, paste Part 1 and Part 2 into #281.** Everything
-here is re-checkable against them; nothing here depends on a claim about their content
-that is not already in #281's own body.
+### What §8 confirmed that had been inferred
+
+- **#212 / §8.32 — confirmed, and it gains an acceptance.** The sheet meta is dropped, and
+  §8.32 goes further than the first pass assumed: *"The hydration defect noted against it
+  ... **must not follow it there**: Part 2 specifies the nav citation as static text with
+  no date."* §8.1 gives the nav that citation, so there is a new surface that could carry
+  the defect, and §8.32 forecloses it. That assertion is now a Phase 1 acceptance.
+- **#264's footer residual — confirmed, and sharpened into a rule collision.** §8.14 and
+  comment 1 rule **30** both keep the footer unchanged; comment 1 rule **15** says *"Every
+  interactive element ≥ 32 px in its smaller dimension at 1440 px, ≥ 44 px at 380 px"* with
+  no exemption. Rule 15 is the wider statement and should win.
+- **#235 — the first pass read "A/B/D" as a typo for A/B/C, and that is what it was.**
+  #281's Reference line now reads A/B/C. The remainder is **surface D**, the plan PDF, which
+  no phase covers. §8.39 lists #235 still open, consistent with a live remainder.
+- **N5 / TRACE's phase — confirmed as Phase 1.** It had been flagged as an inference. Part 1
+  §6.4 and §2 put TRACE *inside the reference disclosure*, and §8.9 renames section 03 to
+  "reference disclosure" — a Phase 1 surface. The inference held.
+- **#272 — §8.29 adds a second thing to preserve.** Not only "the file count stated exactly
+  once", but *"the reserved slot that stops the strip pushing the results down at the settle
+  (kept, as the results stack's own reserved first row)"*.
+
+### One conflict inside #281 worth knowing about
+
+**§8.20 drops the picker modal; ruling 189 retains it.** §8.20 reads *"Location picker modal
+— DROPPED as a modal ... **Decision needed** on whether the band can carry all of it, or
+whether a subset stays behind a modal at 1440"*, and §8.40 flags it as one of two places the
+direction could quietly drop work.
+
+**Ruling 189 is the answer to that decision**, and it sits in the rulings section, which is
+where #281 says every ruling on the spec's departures lives:
+
+> **189 the modal migration — phased.** Phase 2: the Where band owns the aerial and the
+> outcome; the picker modal stays for the decision work ... It migrates piece by piece in
+> Phase 3 and after. Nothing in the column's structure depends on the modal being gone.
+
+So §8.20 poses the question and 189 rules it. **#209, #234 and #267 are aimed at Phase 2 on
+ruling 189's authority**, with §8.20's migration as their Phase 3+ tail. If 189 is ever
+revisited, those three re-aim with it — they are the issues riding on the modal surviving
+Phase 2.
 
 ### Prod tip at triage time
 
 `healthz` sha `c598ac2`; `git rev-parse HEAD` `34e27aa`. **They do not match.** The
-one-commit delta is `34e27aa`, docs-only (`FLOW.md`, `DESIGN-PRINCIPLES.md`, 2 files,
-155 insertions). No product code differs, and Modal does not deploy on a docs merge.
+one-commit delta is `34e27aa`, docs-only (`FLOW.md`, `DESIGN-PRINCIPLES.md`, 2 files, 155
+insertions). No product code differs, and Modal does not deploy on a docs merge.
 
 ---
 
@@ -75,252 +107,242 @@ one-commit delta is `34e27aa`, docs-only (`FLOW.md`, `DESIGN-PRINCIPLES.md`, 2 f
 
 | # | Bucket | Reason | Phase |
 |---|---|---|---|
-| #28 | UNAFFECTED | `AuditResponse.sections` typing; no Direction A surface. Note only: the TRACE-as-wire-fields ruling and the preview flag both add to the shape this issue is about. | — |
-| #128 | UNAFFECTED | Backend schema + generator for corner-quadrant work; MUTCD domain, no screen. | — |
-| #146 | UNAFFECTED | Unbuilt PDF-ingestion feature; no surface exists to redraw. | — |
-| #153 | RE-AIMED | #281's acceptance names 1440×1000 and 380×800 as the measured pair, and FLOW.md §9 makes 380 its own phase — the matrix ruling this issue was blocked on is substantially taken. | 4 |
-| #194 | UNAFFECTED | `QuotePanel` saved mode, behind `NEXT_PUBLIC_AUTH_UI`. Direction A is `/sandbox`. | — |
-| #195 | UNAFFECTED | `/app/plans/new`, auth surface. Not `/sandbox`. | — |
-| #202 | UNAFFECTED | Quote-settings persistence; backend + saved mode. | — |
-| #203 | UNAFFECTED | Saved-mode download anchors; auth surface. | — |
-| #204 | UNAFFECTED | Flag record + flip checklist. No Direction A phase touches the flag. | — |
-| #205 | UNAFFECTED | Jurisdiction-record reachability; data decision. | — |
-| #208 | UNAFFECTED | mypy ratchet baseline; tooling. | — |
-| #209 | RE-AIMED | Picker modal is **retained** (ruling 189); the lanes/divided editors survive it, and the fields land in the What grid (ruling 198) when they migrate. | 2 |
-| #212 | RE-AIMED | Sheet meta is dropped (Part 1 §8.32 — **unverified**, see below), which kills the `AppSheetMeta` instance; the `app/app/page.tsx:15` instance and the `pageerror` live-check acceptance survive. Narrow, don't close. | 1 (harness) |
-| #215 | RE-AIMED | Work dates become a field in the What band (rulings 198, 199); the timeline is redrawn there and unlabeled boundaries survive any redraw. | 2 |
-| #234 | RE-AIMED | Picker rehydration defect; modal retained (ruling 189) and the Where band takes the outcome it fails to restore. | 2 |
-| #235 | RE-AIMED | #281 Reference supersedes its surfaces A/B/D; the remainder is a **print** surface no Direction A phase covers. See the special-case ruling — the Reference line and FLOW.md §9 disagree about surface C. | 2 (remainder unphased) |
-| #236 | UNAFFECTED | `verdict_hook.py` file count; tooling. | — |
-| #237 | RE-AIMED | The named collision is with the progress rail's Generate entry; the rail is replaced (#281 Contracts, `#228` line). The suite must be re-pointed regardless, and the exact-name/`data-testid` action survives and grows. | 2 |
-| #239 | UNAFFECTED | `/landing` copy; archived page, outside `/sandbox`. | — |
-| #242 | UNAFFECTED | Deploy-skew mechanism, not a drawn surface. Worth noting it gets four more chances to bite across four phases. | — |
-| #243 | UNAFFECTED | Note 8 checker; backend-owned (Rule 3). | — |
-| #244 | UNAFFECTED | `DebugSnapshotButton` sender; #281's "payload senders enumerated on any wire change" contract absorbs its acceptance rather than moving it. | — |
-| #256 | UNAFFECTED | Phase 0 dependency. See the special-case ruling for what depends on it. | 0 |
-| #259 | CLOSED BY CONSTRUCTION | Ruling 197 — "#259 fixed inside — approved, declared (the ribbon is raised out of the dim)". | 1 |
-| #262 | CLOSED BY CONSTRUCTION | Ruling 190 — "#262 closes by deletion, recorded as such". | 2 |
-| #264 | CLOSED BY CONSTRUCTION | #281 Reference names it closed by construction; rail, sidebar, strip, results head and section 03 all go. **Residual: the footer.** | 1 + 2 |
-| #265 | UNAFFECTED | Edition string, two literals, plus a Rule 9 ruling. Backend + PDF. | — |
-| #266 | UNAFFECTED | Audit PDF heading hard-codes `S-630-1`. Backend + PDF. | — |
-| #267 | RE-AIMED | Picker preview's taper; modal retained (ruling 189), and the preview-as-read ruling creates a **second** preview with the same failure available. | 2 |
-| #272 | CLOSED BY CONSTRUCTION | Ruling 193 — "next-steps strip dropped — confirmed; ... #272 moot". | 1 |
-| #276 | CLOSED BY CONSTRUCTION | Ruling 196 rules the three states directly, on a surface that replaces the strip cell. **Its own proposed solution is now wrong** — see below. | 2 |
-| #277 | RE-AIMED | The block becomes the What grid (ruling 198); FLOW.md §9 lists #277 under "Held until these land". | 2 |
-| #279 | UNAFFECTED | Phase 0 dependency. See the special-case ruling. | 0 |
-| #280 | RE-AIMED | The 332.8 px measurement is against a layout Phase 2 replaces; the `ROAD_TYPE_LABELS` consumer question survives untouched. | 4 (inferred) |
+| #28 | UNAFFECTED | `AuditResponse.sections` typing. §8.39 lists it "still open and inherited". N1 and N5 both enlarge the shape it is about | — |
+| #128 | UNAFFECTED | Corner-quadrant schema + generator; MUTCD domain, no screen | — |
+| #146 | UNAFFECTED | Unbuilt PDF ingestion; no surface exists to redraw | — |
+| #153 | RE-AIMED | #281's acceptance names 1440×1000 and 380×800; comment 1 rule 15 sets both floors; FLOW §9 makes 380 its own phase | 4 |
+| #194 | UNAFFECTED | `QuotePanel` saved mode, behind `NEXT_PUBLIC_AUTH_UI`. §8.11 keeps the sandbox quote panel as a disclosure; saved mode is untouched | — |
+| #195 | UNAFFECTED | `/app/plans/new`, auth surface. Not `/sandbox` | — |
+| #202 | UNAFFECTED | Quote-settings persistence; backend + saved mode | — |
+| #203 | UNAFFECTED | Saved-mode download anchors; auth surface | — |
+| #204 | UNAFFECTED | Flag record + flip checklist. No phase touches the flag | — |
+| #205 | UNAFFECTED | Jurisdiction-record reachability; data decision | — |
+| #208 | UNAFFECTED | mypy ratchet baseline; tooling | — |
+| #209 | RE-AIMED | Picker retained for Phase 2 (ruling 189); the form grid survives inside the WHAT band (§8.16, §8.22) | 2 |
+| #212 | RE-AIMED | §8.32 drops the sheet meta **and** forbids the defect following to the nav. The `app/app/page.tsx` half and the `pageerror` listener survive | 1 (harness) |
+| #215 | RE-AIMED | §8.24 moves the schedule section into the WHAT band as the work-dates field; rulings 198/199 | 2 |
+| #234 | RE-AIMED | Picker retained for Phase 2 (ruling 189); §8.20's migration is its Phase 3+ tail | 2 |
+| #235 | RE-AIMED | Reference line reads A/B/C; §8.9 renames and keeps section 03. Remainder is surface D, a **print** surface no phase covers. §8.39 still open | 2 + unphased |
+| #236 | UNAFFECTED | `verdict_hook.py` file count; tooling | — |
+| #237 | RE-AIMED | §8.17 replaces the rail, killing the named collision; the suite must be re-pointed regardless | 2 |
+| #239 | UNAFFECTED | `/landing` copy; archived page, outside `/sandbox` | — |
+| #242 | UNAFFECTED | Deploy-skew mechanism, not a drawn surface. Four phases is four more chances for it to bite | — |
+| #243 | UNAFFECTED | Note 8 checker; backend-owned (Rule 3). §8.39 "still open and inherited" | — |
+| #244 | UNAFFECTED | `DebugSnapshotButton`; §8.15 keeps it unchanged. #281's payload-sender contract absorbs its acceptance | — |
+| #256 | UNAFFECTED | Phase 0 dependency. §8.39: *"this direction's refusal frame is still the surface that defect is seen through"* | 0 |
+| #259 | **RE-AIMED** *(changed)* | §8.8 keeps the stale ribbons and says #259 is **not** fixed by the direction; §8.39 still open. Comment 1 rule **102** is the fix | 1 |
+| #262 | CLOSED BY CONSTRUCTION | §8.38 and §8.27 — *"closes #262 by deletion, not by fix"* | 2 |
+| #264 | CLOSED BY CONSTRUCTION | §8.38, §8.17 — *"#264 ... is moot"*. **Residual: the footer** (§8.14 vs comment 1 rule 15) | 1 + 2 |
+| #265 | UNAFFECTED | Edition string, two literals, plus a Rule 9 ruling. Backend + PDF | — |
+| #266 | UNAFFECTED | Audit PDF heading hard-codes `S-630-1`. §8.39 "still open and inherited" | — |
+| #267 | RE-AIMED | Picker retained for Phase 2 (ruling 189); preview-as-read creates a **second** instance of the same defect | 2 |
+| #272 | CLOSED BY CONSTRUCTION | §8.38, §8.29 — *"#272 becomes moot"* | 1 |
+| #276 | **RE-AIMED** *(changed)* | §8.27 — *"must be re-decided in the WHAT band's jurisdiction field"*; §8.39 still open; comment 1 rule 196 *"not a port"* | 2 |
+| #277 | RE-AIMED | §8.23 folds the block into the WHAT band's per-field provenance lines — *"nothing it said is gone"* | 2 |
+| #279 | UNAFFECTED | Phase 0 dependency | 0 |
+| #280 | RE-AIMED | §8.23 deletes the block its 332.8 px measurement was taken against; the `ROAD_TYPE_LABELS` question survives untouched | 4 |
 
 ### Counts
 
-- **CLOSED BY CONSTRUCTION — 5**: #259, #262, #264, #272, #276
-- **RE-AIMED — 10**: #153, #209, #212, #215, #234, #235, #237, #267, #277, #280
+- **CLOSED BY CONSTRUCTION — 3**: #262, #264, #272 — **exactly §8.38's list**
+- **RE-AIMED — 12**: #153, #209, #212, #215, #234, #235, #237, #259, #267, #276, #277, #280
 - **UNAFFECTED — 19**: #28, #128, #146, #194, #195, #202, #203, #204, #205, #208, #236, #239, #242, #243, #244, #256, #265, #266, #279
 - **Unclassified — 0**
 
-Of the 19 unaffected, **9 are the saved-mode / auth / launch-prep cluster**
-(#194, #195, #202, #203, #204, #239, plus #205, #208, #236 as tooling and data). Direction
-A does not touch any of them, and they do not touch Direction A — the cleanest
-concurrency in the board.
+§8.39's "still open and inherited" list is **#276, #256, #259, #243, #266, #235, #28** —
+seven issues, and the triage classifies all seven as open (two re-aimed, five unaffected).
+No disagreement.
+
+Of the 19 unaffected, **9 are the saved-mode / auth / launch-prep cluster** (#194, #195,
+#202, #203, #204, #239, plus #205, #208, #236 as tooling and data). Direction A does not
+touch any of them, and they do not touch it — the cleanest concurrency in the board.
 
 ---
 
 ## Special cases, ruled explicitly
 
-### #235 — supersession, with a discrepancy worth Ryan's eye
+### #235 — supersession confirmed, remainder is a print surface
 
-#281's Reference line reads **"#235 (surfaces A/B/D superseded by this)"**. Read
-literally that leaves **surface C — the reference section** as the remainder. That
-contradicts two other statements in the same pair of documents:
+#281's Reference line reads **"#235 (surfaces A/B/C superseded by this)"**. The first pass
+reached A/B/C by argument before the line was corrected; the argument and the line now agree.
 
-- #281, Phase 1: "Replaces the results head, the next-steps strip, **section 03's
-  presentation**."
-- FLOW.md §9, Phase 1: "Replaces the results head, the hero's presentation, the cards'
-  header, **section 03's presentation**."
-
-Surface C *is* section 03 (`TieredReference.tsx`). Surface D is the **plan PDF** below
-"Reference: CDOT S-630-1" — a print surface, and **no Direction A phase covers print**;
-Phases 0–4 are foundations, results stack, band stack, work segment, 380 px.
-
-**Ruling taken here, stated as an assumption:** the Reference line is a typo for
-**A/B/C**, and the remainder is **surface D**. Under the literal reading the remainder
-would be C, which Phase 1 demonstrably replaces, and D — the one surface Direction A
-cannot reach — would be silently marked superseded. That reading fails; the typo reading
-holds. **Ryan confirms or corrects the Reference line when Part 1 and Part 2 are pasted in.**
-
-Either way the deliverable is the same shape: #235 is re-scoped, not closed, and its
-remainder is a print-layout pass that runs on its own schedule.
+- **A — road section.** Superseded by the WHAT band's per-field provenance (§8.23, ruling
+  198). The floating-annotation complaint is answered structurally: the annotation becomes
+  the field's own provenance clause instead of a note the reader must associate by reading.
+- **B — disclosure footnotes.** Superseded by the counted disclosures (§8.9, Phase 1).
+  **#214's constraint survives verbatim** and must be restated in Phase 1's acceptance: the
+  information survives somewhere standing and inspectable; restyling and relocating are in
+  scope, deleting is not.
+- **C — reference section.** §8.9 renames section 03 to "reference disclosure", keeps all
+  five tiers, lifts ▲/⚠ into NEEDS YOU, and keeps the disclose-never-writes contract and the
+  read-only signposts. The consistency pass happens against a larger type system than this
+  issue assumed — ruling 180's fifth role plus the nine sizes.
+- **D — plan PDF density. Remains open. Unphased.** Print-layout pass with the containment
+  harness re-run (zero overflow is not negotiable). Disjoint from every Direction A file.
 
 ### #253, #249, #273 — closed, with acceptances that die
 
-These three are closed and **are not ranked**. What retires, so the next arc does not
-inherit a dead acceptance:
+Closed and **not ranked**. What retires, so the next arc does not inherit a dead acceptance:
 
-- **#253** (next-steps strip). The entire shipped artifact — `lib/next-steps.ts` and
-  `.ns-strip` — is dropped by ruling 193. Its ruling 1 ("the strip **replaces** the
-  lockup; one field, one surface") is spent: both the strip and the lockup are gone, and
-  the field they fought over lands in NEEDS YOU and the download row. **What survives is
-  its rulings 3 and 4** — chip 3 is "N FILES READY from the served bundle or
-  absent-with-reason, never an invented wire state", and "cleared" must be a
-  server-confirmed state. Those are Rule 10 statements about wire honesty, not about a
-  strip, and Phase 1's download row and NEEDS YOU block inherit both. Ruling 2's
-  "digits from the wire, no hard-coded five" is likewise live, and ruling 185 restates it
-  as "the sum is the count; the decomposition is its provenance".
-- **#249** (site conditions leader-dot ledger). The lead-in lockup is gone twice over —
-  once to #253's strip, again to the column. **Its ruling 4 survives and hardens**: the
-  lockup may not print "0 · No site conditions detected" when the scan is `not_run` or
-  `unavailable`. That is now a fact line's problem, in Phase 2. **Dead:** every
-  `.sc-*` geometry acceptance, the leader-dot treatment, the footer ISO stamp, and the
-  `aria-pressed` vs native-radio question (ruling 5) — the chips it describes do not
-  survive the band stack.
-- **#273** (detected vs applied, applied-forward ledger). #273's own close comment
-  already retired the ink-equality and equal-track acceptances from the earlier form.
-  **Now the ledger form itself retires**: ruling 198's What grid with per-field
-  provenance replaces the vertical row list, so the 16 px verdict gutter, the two-line
-  clause, and the 380 two-line reserve all go with it (which is why #280 re-aims). **What
-  survives is the ruled product question** — on matching rows the detected value *is*
-  printed, "same as detected" was ruled against on evidence. The What grid inherits that
-  ruling; it is the same modal case (shoulder, fresh confirm, five agreeing rows).
-  Ruling 188's "#c8d1dd, every row stays" is the same decision restated for the new
-  surface, and its second channel (the tally in words) is new.
+- **#253** (next-steps strip). `lib/next-steps.ts` and `.ns-strip` are dropped (§8.29). Its
+  ruling 1 — *"the strip **replaces** the lockup; one field, one surface"* — is spent: both
+  are gone. **Surviving: its rulings 3 and 4** — chip 3 is "N FILES READY from the served
+  bundle or absent-with-reason, never an invented wire state", and "cleared" must be a
+  server-confirmed state. Rule 10 statements about wire honesty, not about a strip. Ruling
+  2's "digits from the wire, no hard-coded five" is live, and ruling 185 restates it.
+  **§8.29 adds one more survivor the first pass missed:** the reserved slot that stops the
+  strip pushing results down at the settle, kept as the results stack's reserved first row.
+- **#249** (site conditions leader-dot ledger). The lockup is gone twice over. **Ruling 4
+  survives and hardens**: the lockup may not print "0 · No site conditions detected" when
+  the scan is `not_run` or `unavailable` — now a fact line's problem, Phase 2. **Dead:**
+  every `.sc-*` geometry acceptance, the leader-dot treatment, the footer ISO stamp, and the
+  `aria-pressed` vs native-radio question. But note §8.5 keeps the corrections block
+  **whole** inside NEEDS YOU — *"the staging contract, the Apply row's standing sentence,
+  the disabled-at-zero button with its reason, the dismiss picker's always-mounted note
+  field, and the 'results disclose rather than lock' rule all survive verbatim"* — so more
+  of #249's content survives than its form suggests. The five condition rows keep wire order.
+- **#273** (detected vs applied). Its close comment already retired the ink-equality and
+  equal-track acceptances. **Now the ledger form itself retires**: §8.23 folds the block into
+  per-field provenance lines, so the 16 px verdict gutter, the two-line clause and the 380
+  two-line reserve go with it (which is why #280 re-aims). **Surviving: the ruled product
+  question** — on matching rows the detected value *is* printed; "same as detected" was ruled
+  against on evidence. §8.23 says it plainly: *"The separate block is gone; nothing it said
+  is gone."* Ruling 188 restates it for the new surface and adds a second channel (the tally
+  in words).
 
 ### #256, #279 — Phase 0, and what leans on them
 
 Both **UNAFFECTED**. What in #281 does not work until they land:
 
-**#256** carries three dependents, one of them hard:
+**#256** carries three dependents, one hard:
 
-1. **The nearest-intersection tag.** #281's audit ruling: *"'210 ft N of W 38th Ave'
-   needs the nearest intersection at pin time — the scan's intersection bucket, which
-   runs at Generate today. #256's pre-scan-on-confirm lever is a **hard dependency**;
-   until then the tag prints the road name, lat/lng in provenance."* The tag is Phase 3.
-2. **Phase 3 entire** — #281's phase list: "Backend-first; opens with the scenario
-   version field; **gated on #256**."
-3. **Phase 1's ordering.** FLOW.md §9: "Goes first while **#256 clears the runway for 2**."
-   Phase 1 does not *need* #256; #256 needs to be running during Phase 1 so Phase 2 is
-   not waiting on it.
+1. **The nearest-intersection tag.** *"#256's pre-scan-on-confirm lever is a **hard
+   dependency**; until then the tag prints the road name, lat/lng in provenance."* Phase 3.
+2. **Phase 3 entire** — *"Backend-first; opens with the scenario version field; **gated on
+   #256**."*
+3. **Phase 1's ordering.** FLOW §9: *"Goes first while **#256 clears the runway for 2**."*
+   Phase 1 does not need #256; #256 needs to be running during Phase 1 so Phase 2 is not
+   waiting on it.
 
-The arc-31 investigate result changes what #256's fix is, not what depends on it: the
-root cause is a mirror chain that hands every mirror the whole remaining budget
-(`src/rules/site_detection.py:168-173`), not a slow query. A per-mirror cap fixes it
-inside the existing budget. **The pre-scan-on-confirm lever that Phase 3 depends on is
-still unbuilt** — it was lever 2 in #256's proposed solution, and the investigate arc did
-not reach it. Phase 3's gate is on that lever specifically, not on the refusal rate.
+§8.39 adds the framing: *"this direction's refusal frame is still the surface that defect is
+seen through"* — §8.4 keeps the refusal container unchanged in content and behaviour and
+moves it up the column, so a #256 refusal renders in a **kept** surface. The redesign
+neither fixes nor hides it.
+
+The arc-31 investigate result changes what #256's fix is, not what depends on it: the root
+cause is a mirror chain that hands every mirror the whole remaining budget
+(`src/rules/site_detection.py:168-173`), not a slow query. A per-mirror cap fixes it inside
+the existing budget. **The pre-scan-on-confirm lever that Phase 3 depends on is still
+unbuilt** — lever 2 in #256's proposed solution, which the investigate arc did not reach.
+Phase 3's gate is on that lever specifically, not on the refusal rate.
 
 **#279** carries two:
 
-1. **The proposed kind.** #281's audit ruling: *"'Your tap looks like a right-shoulder
-   closure' has no producer today. The proposed-kind derivation is Phase 3's."* Any
-   derivation that proposes a kind reads the classification; `isUrban` resolving false on
-   an OSM `primary` in central Denver would propose from a wrong road type. Phase 3.
-2. **The What grid's per-field provenance** (ruling 198). Road type is one of the facts
-   the grid prints with its provenance clause; #279 is the value being wrong, and
-   #281's inherited contract list carries "suggest-never-set" — a wrong suggestion the
-   operator accepts is the failure mode.
+1. **The proposed kind.** *"'Your tap looks like a right-shoulder closure' has no producer
+   today. The proposed-kind derivation is Phase 3's."* A derivation that proposes a kind
+   reads the classification; `isUrban` resolving false on an OSM `primary` in central Denver
+   would propose from a wrong road type.
+2. **The WHAT band's per-field provenance** (§8.21, §8.23). Road type is one of the two
+   fields §8.21 names explicitly, printed *with* its provenance line — §8.23's example is
+   *"OSM · 30 mph · measured"*, amber and "inferred, not measured" where it is a guess. #279
+   is the value being wrong behind exactly that clause, and suggest-never-set is in #281's
+   inherited contracts.
 
-The **scan bbox on a two-approach job** — Phase 3's "aerial growing the approaches" —
-sits across both: the bbox is #256's cost driver (the arc-31 decomposition measured the
-wide-vs-tight bbox directly), and what counts as an approach depends on the
-classification #279 breaks.
+The **scan bbox on a two-approach job** — Phase 3's "aerial growing the approaches" — sits
+across both: the bbox is #256's cost driver (arc-31 measured wide-vs-tight directly), and
+what counts as an approach depends on the classification #279 breaks.
 
 ### The backend-honesty group, and what happens to #212
 
-**#212 is the only one of the group that moves.** #244, #243, #265, #266 print on
-backend surfaces (replication snapshot, audit section 03 data, plan PDF, audit PDF) that
-no Direction A phase redraws; #212 prints on the sheet meta.
+**#212 is the only one of the group that moves.** #244, #243, #265, #266 print on surfaces no
+phase redraws — and §8.15 keeps the debug snapshot button explicitly unchanged. #212 printed
+on the sheet meta, which §8.32 drops.
 
-Per the task prompt, **Part 1 §8.32 drops the sheet meta**. That line could not be read —
-Part 1 is not in #281 and not in the repo — so it is **cited unverified**. Under it:
-
-- The **`AppSheetMeta.tsx:21` instance dies with the surface.** No sheet meta, no baked
-  `ISSUED` date, no hydration mismatch from it.
-- **Two of #212's three acceptance bullets do not depend on the sheet meta.** The
-  `app/app/page.tsx:15` instance (`Date.now()` relative timestamps, dormant behind the
-  unset auth flag) is untouched by Direction A, and "live checks fail on any page-level
-  thrown error going forward" is a harness change — the `pageerror` listener, which is
-  the only reason this class was ever caught.
+- The **`AppSheetMeta.tsx:21` instance dies with the surface.**
+- **§8.32 creates a new obligation**: the nav citation that inherits the TA/sheet string is
+  *"static text with no date"*. That is an assertion Phase 1 must make, not assume — this
+  defect arrived the first time because `a9201f8` replaced a stale hardcoded date with a
+  computed one.
+- **Two of three acceptance bullets survive**: the `app/app/page.tsx:15` instance (dormant
+  behind the unset auth flag, untouched by any phase) and the `pageerror` listener.
 
 So #212 is **RE-AIMED, narrowed — not closed.** Closing it would retire the `pageerror`
-listener along with the surface, and that listener is the detector for the whole class
-across four phases of new rendering. It is the single most valuable line in the issue and
-it has nothing to do with the sheet meta.
+listener along with the surface, and that listener is the detector for this class across four
+phases of new rendering. It is the most valuable line in the issue and has nothing to do with
+the sheet meta.
 
-**If §8.32 does not say what the prompt says it says, #212 reverts to UNAFFECTED
-outright.** Check this one first when Part 1 lands.
+### #264's residual, now a rule collision
 
-### #264's residual
+§8.38 names #264 closed by construction and §8.17 says the rail entries are moot. Nine of ten
+measured rows go with their surfaces. **The tenth does not:** §8.14 keeps the footer in the
+UNCHANGED list and comment 1 rule **30** repeats it, while comment 1 rule **15** states the
+floor with no exemption — *"Every interactive element ≥ 32 px in its smaller dimension at
+1440 px, ≥ 44 px at 380 px."*
 
-#281's Reference names #264 closed by construction, and nine of its ten measured rows go
-with their surfaces: rail entries (rail replaced), "Enter manually" and "Project details"
-(sidebar, Phase 2), the speed slider (form → What grid, Phase 2), "↻ Retry scan" and the
-signposts (results head, Phase 1 — ruling 192 moves focus targets), "↓ Audit PDF"
-(section 03 → download row, Phase 1), record "Undo" and "Edit full setup ⤢" (setup strip,
-Phase 2, ruling 190).
+`AppFooter.tsx:8-13` has no `min-height` (verified in source). **Rule 15 is the wider
+statement and should win**; "footer unchanged" means unchanged in content and layout, not
+exempt from the floor, and honouring it costs nothing visible (padding, not size — P1).
 
-**The tenth does not.** `AppFooter.tsx:8-13` — Terms 35 px × 16, Privacy 49 px × 16 —
-is verified in source as having no `min-height`, and the footer appears in no phase. The
-close comment therefore does not just close: it hands the ≥ 32 px desk floor to Phase 1's
-acceptance as a **page-wide** measure ("every enabled control on the settled page"), which
-is how #264 already phrased it, so the footer is caught by the probe rather than by a
-surviving issue.
+The close hands this issue's own page-wide phrasing to Phase 1's acceptance, so the footer is
+caught by the probe rather than by a surviving issue.
 
 ---
 
 ## Part 2 — the issues Direction A creates
 
-Nine new issues: the five things the spec did not know, plus four phase umbrellas.
-Full bodies are in the drafts section. Phase 4's umbrella is deliberately not drafted
-(#281: "Phase 4 can wait").
+Nine new issues: the five things the spec did not know, plus four phase umbrellas. Phase 4's
+umbrella is deliberately not drafted (#281: "Phase 4 can wait").
 
 | Draft | What | Phase | Note |
 |---|---|---|---|
 | N1 | Preview-as-read backend flag | 0 | Backend-first; Pydantic drops unknown fields |
-| N2 | Nine type sizes as one ruled exception commit | 0 | Owners named, before any surface uses them |
+| N2 | Nine type sizes + role 5 + the two hexes | 0 | Owners named, before any surface uses them |
 | N3 | The proposed-kind producer | 3 | No producer today; chips render unselected until it exists |
 | N4 | The nearest-intersection tag | 3 | Hard-gated on #256's pre-scan lever |
-| N5 | TRACE's formulas as wire fields | 1 | **Phase inferred** — `TRACE` is absent from the tree |
+| N5 | TRACE's formulas as wire fields | 1 | **Phase now confirmed** — §6.4 puts TRACE inside the reference disclosure (§8.9, Phase 1) |
 | P0 | Phase 0 umbrella — foundations | 0 | Absorbs N1, N2, #256, #279 |
-| P1 | Phase 1 umbrella — the results stack | 1 | Absorbs #259, #272, N5, half of #264, #212's harness half |
-| P2 | Phase 2 umbrella — band stack and revision | 2 | Absorbs #262, #276, #209, #215, #234, #237, #267, #277, #235 A–C, half of #264 |
+| P1 | Phase 1 umbrella — the results stack | 1 | Absorbs #272, N5, #259, #264's results half, #212's harness half |
+| P2 | Phase 2 umbrella — band stack and revision | 2 | Absorbs #262, #276, #209, #215, #234, #237, #267, #277, #235 A–C, #264's setup half |
 | P3 | Phase 3 umbrella — the work segment | 3 | Absorbs N3, N4; gated on #256 |
 
 ---
 
 ## Part 3 — the ranked board
 
-Everything open after Parts 1–2, in build order. Closed issues are not ranked. The five
-CLOSED BY CONSTRUCTION issues are not ranked — they are absorbed by their phase umbrella
-and close when it is posted.
+Everything open after Parts 1–2, in build order. Closed issues are not ranked. The three
+CLOSED BY CONSTRUCTION issues are not ranked — they are absorbed by their phase umbrella and
+close when it is posted.
 
 ### Track A — Phase 0, blocks everything
 
 | Rank | Item | Why here | Concurrency |
 |---|---|---|---|
-| 1 | **#256** scan budget | Phase 3 is gated on it; Phase 1 wants it running alongside. Investigate is **done** (`s2-arc31-scan-budget`, `67d95c7`); next step is the 📋 plan checkpoint on a per-mirror cap + the fold, then the **pre-scan lever** Phase 3 actually needs. | `src/rules/site_detection.py`, `src/api/site_scan.py` — disjoint from all of 2–4 |
-| 2 | **#279** classifier `isUrban` | Phase 3's proposed kind and Phase 2's What-grid provenance both read it. Still at investigate. | `lib/road-detection/classify.ts`, `road-bearing/route.ts` — disjoint from 1 |
-| 3 | **N1** preview-as-read flag | Backend-first: **the flag must ship before any Phase 2 surface sends it**, because Pydantic silently drops unknown fields. | Backend request schema + `render-proxy.ts` — disjoint from 1 and 2 |
-| 4 | **N2** nine type sizes | One ruled exception commit with owners, **before any surface uses them**. Cheap, and it unblocks every visual phase. | `lib/design/type-roles.ts`, `globals.css` — disjoint from 1–3 |
-| — | **P0** umbrella | Posted first; 1–4 are its content. | — |
+| 1 | **#256** scan budget | Phase 3 is gated on it; Phase 1 wants it running alongside. Investigate **done** (`s2-arc31-scan-budget`, `67d95c7`); next is the 📋 plan checkpoint on a per-mirror cap + the fold, then the **pre-scan lever** Phase 3 needs | `src/rules/site_detection.py`, `src/api/site_scan.py` |
+| 2 | **#279** classifier `isUrban` | Phase 3's proposed kind and the WHAT band's provenance line both read it | `lib/road-detection/classify.ts`, `road-bearing/route.ts` |
+| 3 | **N1** preview-as-read flag | Backend-first: **must ship before any Phase 2 surface sends it** — Pydantic silently drops unknown fields | Backend request schema + `render-proxy.ts` |
+| 4 | **N2** nine type sizes + role 5 | One ruled exception commit with owners, **before any surface uses them**. Cheap; unblocks every visual phase | `lib/design/type-roles.ts`, `globals.css` |
 
-**1, 2, 3 and 4 all run concurrently.** Four disjoint file sets, four different layers.
-This is the widest parallelism in the board and it is at the front.
+**1, 2, 3 and 4 all run concurrently.** Four disjoint file sets, four different layers. The
+widest parallelism in the board, and it is at the front.
 
 ### Track B — Phase 1, the results stack
 
 | Rank | Item | Why here | Concurrency |
 |---|---|---|---|
-| 5 | **N5** TRACE formulas as wire fields | Backend-first, same Pydantic reason as N1. Must land before the row that prints it. | `src/api/audit.py` — **sequences after nothing**, but see note |
-| 6 | **P1** Phase 1 umbrella | Frontend-only, no fixture re-baseline. Absorbs #259 (ruling 197), #272 (ruling 193), #264's results half, and the `ISSUED`-bearing surfaces. | `ResultsHead.tsx`, `TieredReference.tsx`, `lib/next-steps.ts`, `GeneratorShell.tsx` |
-| 7 | **#212** (narrowed) `pageerror` listener + `app/app/page.tsx` | The listener is the detector for four phases of new rendering — **land it before Phase 1's surfaces, not after.** | Live-check runner — disjoint from everything |
+| 5 | **N5** TRACE formulas as wire fields | Backend-first, same Pydantic reason as N1. Must land before the row that prints it | `src/api/audit.py` |
+| 6 | **P1** Phase 1 umbrella | Frontend-only, no fixture re-baseline. Absorbs #272, #259, #264's results half | `ResultsHead.tsx`, `TieredReference.tsx`, `lib/next-steps.ts`, `GeneratorShell.tsx` |
+| 7 | **#212** (narrowed) `pageerror` listener | The detector for four phases of new rendering — **land it before Phase 1's surfaces**, not after | Live-check runner — disjoint from everything |
 
-**5 and 7 run alongside Track A.** 6 sequences after 5 (the row cannot print a field the
-wire does not carry) and wants 4 (the type sizes) in place. **7 should be pulled forward
-to rank 2-and-a-half** — it is a harness change, disjoint from every file in the board,
-and its value is highest before the redesign starts rendering.
+**5 and 7 run alongside Track A.** 6 sequences after 5 (the row cannot print a field the wire
+does not carry) and wants 4 in place. **Pull 7 forward to ~rank 2.5** — a harness change,
+disjoint from every file in the board, highest value before rendering starts.
+
+**#259 lands inside 6**, not as its own rank: comment 1 rule 102 is a build rule of the
+stale-ribbon block, not a separate fix.
 
 ### Track C — backend honesty, runs alongside everything
 
-These five are UNAFFECTED, touch no Direction A file, and can run at any time by whoever
-is not on the column.
+Five UNAFFECTED issues that touch no Direction A file and can run at any time.
 
 | Rank | Item | Files |
 |---|---|---|
@@ -330,51 +352,54 @@ is not on the column.
 | 11 | **#244** snapshot posts `scenario` | `DebugSnapshotButton.tsx:284` |
 | 12 | **#28** type `AuditResponse.sections` | `render-types.ts` — **grows** as N1 and N5 add fields |
 
-**8, 9, 10 are mutually disjoint and all disjoint from Tracks A and B.** 9 and 10 are
-both edition/standard-sheet honesty and share a reviewer's context even though they share
-no file — worth batching. 11 is a one-line frontend fix that belongs with whichever arc
-next touches the sender list. **12 sequences after 3 and 5**, or it re-baselines twice.
+**8, 9, 10 are mutually disjoint** and disjoint from Tracks A and B. 9 and 10 share a
+reviewer's context (edition / standard-sheet honesty) though no file — worth batching. 11 is a
+one-line fix that belongs with whichever arc next touches the sender list. **12 sequences
+after 3 and 5**, or it re-baselines twice.
 
 ### Track D — Phase 2, the band stack
 
 | Rank | Item | Why here |
 |---|---|---|
-| 13 | **P2** Phase 2 umbrella | The largest absorber: #262, #276, #209, #215, #234, #267, #277, #264's setup half, #235 A–C, #237's re-point |
-| 14 | **#237** live-check selectors | Not optional — the suite breaks the moment the rail dies. Do it **inside** Phase 2, not after |
+| 13 | **P2** umbrella | The largest absorber: #262, #276, #209, #215, #234, #267, #277, #264's setup half, #235 A–C, #237's re-point |
+| 14 | **#237** live-check selectors | Not optional — the suite breaks the moment the rail dies (§8.17). Do it **inside** Phase 2 |
 
-**Sequences after Track A complete** (needs N1's flag and N2's sizes) **and after Phase 1**
-(FLOW.md §9 orders the results stack first, and #256 clears the runway for 2). Within
-Phase 2 the absorbed issues are one design pass, not fourteen fixes — that is why they are
-absorbed rather than ranked.
+**Sequences after Track A** (needs N1's flag and N2's sizes) **and after Phase 1** (FLOW §9
+orders the results stack first; #256 clears the runway for 2). Within Phase 2 the absorbed
+issues are one design pass, not fourteen fixes — which is why they are absorbed, not ranked.
+
+**Watch §8.20/§8.40.** The modal-to-band migration is flagged in #281 itself as one of two
+places the direction could quietly drop work. #209, #234 and #267 are the issues riding on
+ruling 189's phased retention; if 189 is revisited they all move.
 
 ### Track E — Phase 3, the work segment
 
 | Rank | Item | Why here |
 |---|---|---|
-| 15 | **P3** Phase 3 umbrella | Backend-first; opens with the scenario version field |
-| 16 | **N4** nearest-intersection tag | **Hard-gated on #256's pre-scan lever** — not on #256's refusal rate |
+| 15 | **P3** umbrella | Backend-first; opens with the scenario version field |
+| 16 | **N4** nearest-intersection tag | **Hard-gated on #256's pre-scan lever** — not on its refusal rate |
 | 17 | **N3** proposed-kind producer | Reads the classification; wants #279 landed |
 
-**Sequences after Track A and Track D.** 16 and 17 are disjoint from each other once the
-scenario version field exists, so they run concurrently inside the phase.
+**Sequences after Track A and Track D.** 16 and 17 are disjoint once the scenario version
+field exists, so they run concurrently inside the phase.
 
 ### Track F — deferred, no phase
 
 | Item | Status |
 |---|---|
-| **#235 remainder (surface D)** | Print-layout pass. No Direction A phase covers print. Runs whenever, disjoint from all |
-| **#153** | Folds into Phase 4 |
-| **#280** | Folds into Phase 4; its measurement retires first |
+| **#235 remainder (surface D)** | Print-layout pass. No phase covers print. Disjoint from all |
+| **#153** | Folds into Phase 4; comment 1 rule 15 already sets both floors |
+| **#280** | Folds into Phase 4; its measurement retires first (§8.23) |
 | **#128, #146, #205, #208, #236, #242** | Unaffected, unscheduled, unchanged by this triage |
-| **#194, #195, #202, #203, #204, #239** | The saved-mode / launch-prep cluster. Unaffected. Batch as one arc at flag-flip |
+| **#194, #195, #202, #203, #204, #239** | Saved-mode / launch-prep cluster. Batch as one arc at flag-flip |
 
 ### What must sequence, in one list
 
-- **N1 and N5 before any surface that sends or prints their fields** — Pydantic silently
-  drops unknown fields. This is the only hard correctness ordering in the board.
+- **N1 and N5 before any surface that sends or prints their fields** — Pydantic silently drops
+  unknown fields. The only hard correctness ordering in the board.
 - **N2 before any surface uses the nine sizes** — #281's own words: "never as debt".
-- **#256's pre-scan lever before N4.** Named a hard dependency in #281.
-- **Phase 1 before Phase 2** — FLOW.md §9.
+- **#256's pre-scan lever before N4.** Named a hard dependency.
+- **Phase 1 before Phase 2** — FLOW §9.
 - **Phase 2 before Phase 3** — the band stack is what the work segment sits in.
 - **#237 inside Phase 2**, not after it.
 - **#28 after N1 and N5**, or it re-baselines twice.
@@ -391,76 +416,73 @@ Read-only against `gh`. Nothing is posted by this arc. To ship the file:
 .\scripts\ship.ps1 -Branch worktree-s2-triage-3
 ```
 
-Docs-only — no Modal redeploy is required and `/healthz` will not move. The drafts below
-are posted by Ryan through the web UI, after Part 1 and Part 2 are pasted into #281.
+Docs-only — no Modal redeploy is required and `/healthz` will not move. The drafts below are
+posted by Ryan through the web UI.
 
 ---
 
 # The drafts
 
-Nothing below was posted. `gh` is read-only in this session. The same files live under
-`%TEMP%\s2-triage-3\` for Ryan to run; the commands are in the final section.
+Nothing below was posted. The same files live under `%TEMP%\s2-triage-3\`; the commands
+are in the final section.
 
-## Close comments (5)
-
-### `gh issue comment 259` — then close
-
-Closed by construction — Direction A (#281), ruling 197.
-
-The `.results-stale` wrapper this issue measures is dropped with the results head and the hero's presentation in **Phase 1** (#281, "The phases", 1; FLOW.md §9 Phase 1). Ruling 197 fixes the defect inside the redesign rather than against the shipped surface: *"#259 fixed inside — approved, declared (the ribbon is raised out of the dim)."* The 2.39:1 measurement and the 56-of-59 failing pairs are against a DOM that Phase 1 replaces, so there is nothing left here to repair in place.
-
-**The cause can recur**, and Phase 1's acceptance must catch it. The defect was never "the ribbon is dark"; it was **a label rendered inside the state it explains**. The results stack keeps a mid-flight treatment and keeps an explanatory word for it, so the same nesting is available again. Phase 1 therefore carries forward:
-
-- The mid-flight explanatory text measures **≥ 4.5:1 on the composited surface** (the arc-23 pairs probe run under the band), not on the token values — measured, not asserted (Rule 13, P9).
-- Whatever dims the answer dims **only** the answer; the explanatory text is the one undimmed string in the zone.
-- P16 holds: the wait state is honest text, never a skeleton. Ruling 196 says the same thing for the jurisdiction cell — no skeleton, an honest word.
-
-`GeneratorShell.tsx:1320-1344` and `globals.css:3134-3147` are the sites that go. Closing per #281; the acceptance above moves to the Phase 1 issue.
-
-Refs #281
+## Close comments (3)
 
 ### `gh issue comment 262` — then close
 
-Closed by construction — Direction A (#281), ruling 190.
+Closed by construction — Direction A (#281), Part 1 §8.38: *"#272 (label/chip left edge), #264 (rail hit targets), **#262 (inline editors with no close)** — all by deleting the surface, not by fixing it."*
 
-The setup strip and its `.sv-editor` inline editors are dropped in **Phase 2** (#281, "The phases", 2). Ruling 190 names this issue directly: *"loss of inline strip edits — confirmed. CHANGE ONE THING re-opens one field, in place, with its consequence shown. **#262 closes by deletion, recorded as such.**"* This comment is that record.
+§8.27 is the surface's entry and it is unusually explicit about what is being traded away:
 
-What replaces the surface: a band re-opens in place with a before/after panel fed by a **preview**, and the change is staged rather than committed on blur.
+> **Setup strip — DROPPED as a strip**; its job is done by the collapsed fact lines. The ⤢ / ✎ edit split is replaced by one link per fact line, and every edit — simple or structural — now re-opens a band. Consequences: **the inline editors that commit on blur are gone (which closes #262 by deletion, not by fix)**, the work-zone length draft-and-commit exception is gone with them, and jurisdiction / street class / speed / lane width / date / hours no longer edit in place. **DECISION NEEDED: this trades six one-click inline edits for six band re-openings.**
+
+Ruling **190** takes that decision — *"loss of inline strip edits — confirmed"* — and #281 records the close as by deletion. This comment is that record. §8.40 flags this as one of the two places the direction could quietly drop work that exists today, so the trade is on the record, not assumed.
 
 **Every one of this issue's four defects has a live analogue in revision mode**, so Phase 2's acceptance must check all of them:
 
-- **No way shown to close (P3).** Revision mode has an explicit exit — the band collapses back to its fact line. The acceptance is that the exit is *visible*, not merely available.
-- **Escape does nothing (P3).** Escape must cancel the staged change and open **zero requests**. This issue's own fake-timer test ("Escape closes the editor without a request: 0 fetches") transfers unchanged and should be written against the band.
-- **Commit-on-blur with no Apply (P7).** Resolved in principle by #281's preview ruling — *"commit-on-blur/Enter, never per keystroke"* — plus ruling 202's Apply semantics. The acceptance: **a preview opens no band and takes no lock**; only Apply re-generates. Ruling 191's staged sentence ("1 field · 2 corrections") must enumerate what a single Apply carries.
-- **At 380 the open editor grows the strip 211 → 255 and moves everything below 44 px (P1).** This is the one that needs the most care, because ruling 184 **rejected** reserved band heights. The replacement guarantee is the arc-28 landing machinery — `armLandingCheck`, settle-plus-tolerance, counted cap — which ruling 184 extends to *every* collapse, not only Generate. So the Phase 2 acceptance is not "the band height is fixed"; it is **"every collapse and every re-open lands the next band at a computed spot, counted."**
+- **No way shown to close (P3).** A re-opened band collapses back to its fact line. The acceptance is that the exit is *visible*, not merely available.
+- **Escape does nothing (P3).** Escape must cancel the staged change and open **zero requests**. This issue's fake-timer test ("0 fetches") transfers unchanged, written against the band.
+- **Commit-on-blur with no Apply (P7).** Resolved by #281's preview-as-read ruling — *"no band, no lock, never memoised, never written; commit-on-blur/Enter, never per keystroke"* — plus ruling **202**'s Apply semantics. The acceptance: **a preview opens no band and takes no lock**; only APPLY writes. §1.1 states it as the structural rule: *"nothing is written until APPLY."* Ruling **191**'s staged sentence ("1 field · 2 corrections") must enumerate what one Apply carries.
+- **At 380 the open editor grows the strip 211 → 255 and moves everything below 44 px (P1).** This needs the most care, because ruling **184 rejected** reserved band heights. The replacement guarantee is the arc-28 landing machinery — `armLandingCheck`, settle-plus-tolerance, counted cap — which ruling 184 extends to *every* collapse, not only Generate. So the acceptance is not "the band height is fixed"; it is **"every collapse and every re-open lands the next band at a computed spot, counted."**
 
-`SetupStrip.tsx:78-124, 797-812` is the code that goes. #252's lock declarations (`data-write`, `aria-disabled` openers) are named in #281's inherited contracts and survive.
+One thing this issue's deletion takes with it that is worth naming: **the work-zone length draft-and-commit exception** (#252's draft pattern) goes too, per §8.27. That pattern was the model this issue proposed extending to every editor. It is superseded by the preview, which is a stronger version of the same idea — a read that writes nothing until Apply.
+
+`SetupStrip.tsx:78-124, 797-812` is the code that goes. #252's lock declarations (`data-write`, `aria-disabled` openers) are in #281's inherited contracts and survive.
 
 Refs #281
 
 ### `gh issue comment 264` — then close
 
-Closed by construction — Direction A (#281), which names this issue in its Reference line as closed by construction. **With one residual, recorded below.**
+Closed by construction — Direction A (#281), Part 1 §8.38, which names this issue in its closed-by-construction list: *"#272 (label/chip left edge), **#264 (rail hit targets)**, #262 (inline editors with no close) — all by deleting the surface, not by fixing it."*
+
+§8.17 is the specific line: *"the rail's jump-to-section buttons are gone, because there are no off-screen sections to jump to. **#264 (rail entries under 32 px) is moot;** the fact-line CHANGE links are specified at 32 px minimum in Part 2."*
 
 Nine of the ten measured rows go with their surfaces:
 
 | control | where it goes | authority |
 |---|---|---|
-| rail entries ×5 | the rail is replaced | #281 Contracts, the `#228` line |
-| "Enter manually" / "Project details" | setup sidebar → the band stack | Phase 2 |
-| speed slider `input.range-orange` | per-kind form → the What grid | Phase 2, ruling 198 |
-| "↻ Retry scan", signposts | results head → the results stack | Phase 1; ruling 192 moves focus targets |
-| "↓ Audit PDF" | section 03 → the download row | Phase 1 |
-| record "Undo", "Edit full setup ⤢" | setup strip → CHANGE links | Phase 2, ruling 190 |
+| rail entries ×5 | the rail is replaced by the move ledger and pending fact lines | §8.17 |
+| "Enter manually" / "Project details" | setup panel dissolved into the band stack | §8.16 |
+| speed slider `input.range-orange` | per-kind form → the WHAT band's field grid | §8.22 |
+| "↻ Retry scan" | refusal container, moved up the column | §8.4 |
+| signposts "correct in setup ↑" | kept as read-only signposts in the reference disclosure | §8.9, §6.5 |
+| "↓ Audit PDF" | section 03 → reference disclosure / download row | §8.9, §8.6 |
+| record "Undo", "Edit full setup ⤢" | setup strip dropped; one CHANGE link per fact line | §8.27 |
 
-**The residual: the footer.** `AppFooter.tsx:8-13` — Terms at 35 px × 16, Privacy at 49 px × 16 — is **not inside any Direction A phase**. Phases 0–4 are foundations, results stack, band stack, work segment, and the 380 px arc; none of them touches the footer, and the component has no `min-height` today (verified in source at `34e27aa`).
+**The residual: the footer.** §8.14 puts it in the KEPT, UNCHANGED list — *"Footer — kept, unchanged, below the draft notice"* — and #281 comment 1, rule **30** repeats it: *"Footer — unchanged."* So `AppFooter.tsx:8-13` keeps Terms at 35 px × 16 and Privacy at 49 px × 16 (verified in source at `34e27aa`: no `min-height` on the component).
 
-So the close does not simply retire the measurement. This issue's acceptance was already phrased page-wide — *"every enabled control on the settled page ≥ 32 px tall at 1440"* — and **that phrasing is what moves**, not the ten-row table. Phase 1's acceptance carries:
+**That collides with comment 1, rule 15**, which is page-wide and has no exemption:
 
-- The walk's TARGETS probe runs over the **settled page**, footer included, and reports **0 controls under 32 px** at 1440.
-- **≥ 44 px at 380** for the controls a crew taps (the download row, the NEEDS YOU actions, Retry).
+> **15. Hit targets.** Every interactive element ≥ 32 px in its smaller dimension at 1440 px, ≥ 44 px at 380 px. The fact-line link (rule 56) is the one that this fixes relative to today.
+
+Rule 15 says *every* interactive element; rule 30 and §8.14 say the footer does not change. **Rule 15 is the wider statement and should win** — which means "footer unchanged" means unchanged in content and layout, not exempt from the floor. Padding, not visible size (P1), so honouring rule 15 costs the footer nothing visible.
+
+This issue's acceptance was already phrased page-wide — *"every enabled control on the settled page ≥ 32 px tall at 1440"* — and **that phrasing is what moves**, not the ten-row table. Phase 1 carries:
+
+- The walk's TARGETS probe runs over the **settled page, footer included**, and reports **0 controls under 32 px** at 1440 (rule 15).
+- **≥ 44 px at 380** for every interactive element (rule 15 again — note it is stated unconditionally at 380, not only for controls a crew taps).
 - axe `target-size` 0 at 380, which retires the two pre-existing findings this issue named.
-- Padding, not visible size (P1): the rect table shows no visible box changes.
+- Rect table before/after: no visible box changes (P1).
 
 Phrased that way the footer is caught by the probe rather than by a surviving issue, which is the right outcome — a floor that only holds on surfaces someone remembered to list is not a floor.
 
@@ -470,40 +492,29 @@ Refs #281
 
 ### `gh issue comment 272` — then close
 
-Closed by construction — Direction A (#281), ruling 193.
+Closed by construction — Direction A (#281), Part 1 §8.38, which names this issue first in its closed-by-construction list: *"**#272 (label/chip left edge)**, #264 (rail hit targets), #262 (inline editors with no close) — all by deleting the surface, not by fixing it."*
 
-*"193 next-steps strip dropped — confirmed; the 'file count stated exactly once' rule passes to the download row; **#272 moot.**"* The strip is dropped in **Phase 1** (#281, "The phases", 1, which replaces "the results head, the next-steps strip, section 03's presentation"). `lib/next-steps.ts` and the `.ns-strip` rules go with it, and with them the label/chip-row edge this issue measures.
+§8.29 is the surface's own entry:
 
-**The cause can recur.** The defect was a label and the row it heads binding to different insets — one element inside the padded box, one inheriting the zone's. The results stack has at least two places with exactly that shape: the **NEEDS YOU** block (a heading over a list of items) and the **download row** (a label over the four files). P4 is the rule, and it is measurable, so Phase 1's acceptance carries:
+> **Results head and next-steps strip ("NEXT — 3 STEPS") — DROPPED.** Its three chips pointed at site conditions, pending items and downloads; in this column all three are visible in the same viewport, so the strip restates what is already on screen. ... **#272 becomes moot.**
 
-- For every heading-over-row pair in the stack, `label.getBoundingClientRect().left === row.left` (±1), measured in the live check at **1440×1000 and 380×800** — the pair #281's own acceptance names.
+Ruling **193** says the same thing and names where the surviving rule goes. `lib/next-steps.ts` and the `.ns-strip` rules go with the strip, and with them the label/chip-row edge this issue measures.
+
+**Two things must be preserved from the strip, and §8.29 names both:**
+
+1. **The reserved slot.** *"the reserved slot that stops the strip pushing the results down at the settle (kept, as the results stack's own reserved first row)."* This is the P1 no-movement guarantee, re-homed — the results stack owes it now, and it is the half of this surface that was working correctly.
+2. **The file count stated exactly once** on the page (ruling 193 passes it to the download row). A Rule 10 statement about the served bundle, not about a strip, and it outlives its host.
+
+**The cause can recur.** The defect was a label and the row it heads binding to different insets — one element inside the padded box, one inheriting the zone's. The results stack has at least two places with that shape: the **NEEDS YOU** block (a heading over item rows) and the **download row** (a label over four cards, §8.6). P4 is the rule and it is measurable, so Phase 1's acceptance carries:
+
+- For every heading-over-row pair in the stack, `label.getBoundingClientRect().left === row.left` (±1), measured in the live check at **1440×1000 and 380×800** — the pair #281's umbrella acceptance names.
 - No glyph clipped at a container's left boundary (`scrollWidth` fits its box).
-- P12: the element the operator is meant to read first does not read as clipped.
-
-One thing this issue was carrying that must not be lost with it: **#253's ruling that the file count is stated exactly once**. Ruling 193 explicitly passes that to the download row — it is a Rule 10 statement about the served bundle, not about a strip, and it survives the strip's deletion.
-
-Refs #281
-
-### `gh issue comment 276` — then close
-
-Closed by construction — Direction A (#281), ruling 196, which rules this issue's question directly rather than leaving it to the implementer.
-
-The setup strip's jurisdiction cell (`SetupStrip.tsx:692-700`) is dropped in **Phase 2** with the rest of the strip (#281, "The phases", 2; ruling 190). The jurisdiction fact becomes a **fact line** on a collapsed band, and the three states are ruled:
-
-> **196 #276 — approved:** "Not set" when unset, an honest word when the evaluation errored, **no skeleton**.
-
-**Read the third clause before building against this issue's body.** This issue proposed *"loading → the pending treatment ... Loading state matches the bar's"*, mirroring `JurisdictionContextBar`'s `pendingName` skeleton. **Ruling 196 rules against that.** P16 forbids loading skeletons, and #281 amends P16 only to permit "one busy signal *per fact*" (ruling 200) — not to permit a skeleton. So the acceptance that transfers is:
-
-- Unset renders **"Not set"** — a word, not an em dash and not the static option label.
-- A failed or errored evaluation renders **an honest word** — never a confident jurisdiction name (this issue's first acceptance bullet, which stands unchanged).
-- **No skeleton in any of the three states.** This issue's second acceptance bullet ("Loading state matches the bar's") is **retired**; do not inherit it.
-- Mounted tests for loaded / unset / errored (the third state replaces "loading" as this issue framed it).
-
-The underlying rule is unchanged and is why this closes rather than evaporates: **absence renders as absence** (Rule 10), and #257's one-producer-per-printed-fact contract is in #281's inherited list. If `JurisdictionContextBar` survives Phase 2 with a skeleton, that is then *its* defect, and ruling 196 is the authority to file it.
+- The reserved first row holds at the settle: **no results movement**, measured by the arc-28 landing machinery, which ruling 184 extends to every collapse.
+- P12: the element the operator is meant to read first does not read as cheap.
 
 Refs #281
 
-## Re-aim comments (10)
+## Re-aim comments (12)
 
 ### `gh issue comment 153` — stays open
 
@@ -556,22 +567,27 @@ Refs #281
 
 Re-aimed and **narrowed** by Direction A (#281). Not closed — read the second half before retiring anything.
 
-**What dies.** The sheet meta is dropped by Direction A (Part 1 §8.32), so `AppSheetMeta.tsx:21` and the baked `ISSUED` date go with it, and with them the `#425 → #418 → #423` trio on `/sandbox`. The `new Date().toISOString().slice(0, 10)` call and its wrong comment (*"UTC keeps the value identical across SSR and hydration"* — true only same-day) are deleted rather than fixed.
+**What dies, now verifiable.** Part 1 §8.32:
 
-⚠ **This citation is unverified.** #281's body carries Part 1 and Part 2 as unfilled paste placeholders, and neither source document is in the repo, so §8.32 could not be read at triage. **If §8.32 does not drop the sheet meta, this issue reverts to unaffected in full.** Check this before acting on the paragraph above.
+> **Sheet meta — DROPPED from the screen;** the TA/sheet citation it carried moves to the nav's right edge post-generate. **The hydration defect noted against it (a UTC-midnight date computed at render) must not follow it there: Part 2 specifies the nav citation as static text with no date.**
 
-**What survives, and why this issue stays open.** Two of the three acceptance bullets do not depend on the sheet meta at all:
+So `AppSheetMeta.tsx:21` and the baked `ISSUED` date go with the surface, and with them the `#425 → #418 → #423` trio on `/sandbox`. The `new Date().toISOString().slice(0, 10)` call and its wrong comment (*"UTC keeps the value identical across SSR and hydration"* — true only same-day) are deleted rather than fixed.
 
-1. **`app/app/page.tsx:15`** — the same class (`Date.now()` relative timestamps), dormant behind the unset `NEXT_PUBLIC_AUTH_UI`. No Direction A phase touches `/app`; every phase is `/sandbox`. Untouched by the redesign, and it is a live hydration hazard the day the flag flips (see #204's flip checklist).
-2. **"Live checks fail on any page-level thrown error going forward."** This is a **harness** change — the `pageerror` listener — and it is the single most valuable line in this issue. This defect class surfaced *only* via `pageerror`; console listeners miss thrown recoverable errors. Direction A ships **four phases of new rendering**, which is four new chances to introduce exactly this class on surfaces nobody has measured yet.
+**§8.32's second sentence is a new acceptance, and it belongs to Phase 1.** §8.1 gives the nav the citation — *"App nav — kept. Gains the TA/sheet citation on the right after a plan lands"* — which is a new surface that could carry the same defect. §8.32 forecloses it: **static text, no date.** That must be asserted, not assumed, because this is precisely how the defect arrived the first time: `a9201f8` replaced a stale hardcoded date with a computed one, and the fix for one lie created the next.
+
+**What survives, and why this issue stays open.** Two of the three acceptance bullets never depended on the sheet meta:
+
+1. **`app/app/page.tsx:15`** — the same class (`Date.now()` relative timestamps), dormant behind the unset `NEXT_PUBLIC_AUTH_UI`. No Direction A phase touches `/app`; every phase is `/sandbox`. It is a live hydration hazard the day the flag flips (see #204's flip checklist).
+2. **"Live checks fail on any page-level thrown error going forward."** A **harness** change — the `pageerror` listener — and the most valuable line in this issue. This class surfaced *only* via `pageerror`; console listeners miss thrown recoverable errors. Direction A ships **four phases of new rendering**, four new chances to introduce it on surfaces nobody has measured.
 
 **Acceptance changes:**
 
-- The bullet *"`ISSUED` renders an honest value (never a stale baked date presented as today)"* is **retired with the surface** — there is no `ISSUED` to render. If any Direction A surface reintroduces an issue date, Rule 10 applies to it fresh and it is that phase's problem.
-- The bullet *"zero hydration errors on a page built the previous UTC day (test may stub the clock)"* **survives and widens**: it should be asserted against the column, not against the sheet meta, in every phase's prod leg.
-- The `pageerror` listener bullet survives unchanged and **should be pulled forward**. It is disjoint from every file in the redesign, it costs a line in the runner, and its value is highest **before** Phase 1 starts rendering rather than after.
+- *"`ISSUED` renders an honest value"* — **retired with the surface.** There is no `ISSUED` to render.
+- **Added, from §8.32:** the nav's TA/sheet citation is **static text with no date**, asserted in Phase 1. If it ever needs a real issue date, Rule 10 applies fresh and §8.32 is the authority to re-open the question deliberately.
+- *"Zero hydration errors on a page built the previous UTC day"* — **survives and widens** to the column, asserted in every phase's prod leg.
+- The `pageerror` listener bullet survives unchanged and **should be pulled forward**. It is disjoint from every file in the redesign, costs a line in the runner, and its value is highest **before** Phase 1 starts rendering.
 
-**Scope this issue down to the two survivors**, and land the listener first.
+**Scope this issue down to the two survivors plus §8.32's nav assertion**, and land the listener first.
 
 Refs #281
 
@@ -664,6 +680,34 @@ The specific collision named here is **closed by construction**: the `/Generate/
 
 Refs #281
 
+### `gh issue comment 259` — stays open
+
+Re-aimed at Direction A (#281) — **Phase 1. Stays open; this is not closed by construction.**
+
+**Correcting an earlier read of this issue.** Direction A does **not** drop the surface. Part 1 §8.8 keeps the stale ribbons in the KEPT, UNCHANGED IN BEHAVIOUR list — *"Stale ribbons — all three kept, mutually exclusive, at the top of the results stack, with the dim they explain"* — and then says so explicitly:
+
+> **Note #259 (the ribbon's own label sitting inside the dim at 2.39:1) is NOT fixed by this direction;** Part 2 raises the ribbon label out of the dim.
+
+§8.39 lists this issue under **"Still open and inherited"**, alongside #276, #256, #243, #266, #235 and #28. So the defect survives on a kept surface and the fix arrives as a specified build rule, not as a side-effect of deleting anything.
+
+**The fix, specified.** #281 comment 1, rule **102**:
+
+> CHANGE against today: the ribbon itself is NOT dimmed — the dim starts below it. Today the ribbon's own label sits inside the dim it explains and measures 2.39:1 (#259). **Ribbon text renders at full opacity, `#c8d1dd` on `#101c29`.**
+
+That is this issue's own proposed solution — move the ribbon out of the `.results-stale` wrapper, sibling above it, same slot — with the values named. Ruling **197** approves it as declared scope: *"I raised the ribbon out of the dim. That is a fix shipped inside a redesign."*
+
+**New home:** the Phase 1 issue (the results stack), which owns rules 100–102.
+
+**Acceptance changes:**
+
+- The first bullet stands and gains a target: ribbon text ≥ 4.5:1 mid-flight **measured on the composited surface** (the arc-23 pairs probe run under the band). #281 comment 1, rule **13** sets the floor page-wide and says the thing that matters here — *"Any text inside a dimmed region must clear the floor AFTER the dim"*. Measured, not asserted (Rule 13, P9).
+- The second bullet stands: `.results-stale` still dims every result node; the ribbon is the only undimmed text in the zone. Rule 102 words it as "the dim starts below it".
+- The third bullet stands: the arc-23 B7 baseline (0 nodes outside the dim at 1440) changes, and the "30 inside" figure may fall — **record the new count rather than asserting the old one held.**
+- The optional half of the proposed solution — *"raise the dim to opacity .6 so the largest figures clear 3:1 as large text"* — is **not** what Part 2 chose. Rule 102 fixes the ribbon and leaves the dim alone. If the 56-of-59 failing pairs inside the dim are to be addressed, that is a separate decision and rule 13's "after the dim" clause is the authority to raise it.
+- No change to band rules or `regenerating` semantics — unchanged, and §8.3 keeps the working band as-is.
+
+Refs #281
+
 ### `gh issue comment 267` — stays open
 
 Re-aimed at Direction A (#281) — **Phase 2**, and Direction A creates a **second** instance of this exact defect.
@@ -686,6 +730,32 @@ That preview feeds the **before/after panel** in revision mode (ruling 190) and 
 - Enumerate the senders when the payload changes — #281 carries "payload senders enumerated on any wire change" in its inherited contracts, and backend-first is mandatory because Pydantic silently drops unknown fields.
 
 This is #198's family — preview ≠ applied — and it is the family the revision mode is built out of.
+
+Refs #281
+
+### `gh issue comment 276` — stays open
+
+Re-aimed at Direction A (#281) — **Phase 2, the WHAT band's jurisdiction field. Stays open.**
+
+**Correcting an earlier read of this issue.** The setup strip is dropped (Part 1 §8.27), but the defect is not dropped with it — §8.27 says so in the same breath:
+
+> **#276 (the jurisdiction cell's silent static fallback) must be re-decided in the WHAT band's jurisdiction field.**
+
+§8.39 lists this issue under **"Still open and inherited"**. And #281 comment 1, rule **196** is explicit that this is not a free ride:
+
+> The cell that silently falls back to a static label moves into the WHAT band's jurisdiction field. It needs a decided behaviour there — I have specified "Not set" wording and no skeleton (rule 14), which is **a change in behaviour, not a port.**
+
+**New home:** the WHAT band's jurisdiction field, Phase 2. §8.21 is the move — *"Jurisdiction & classification band — moved into the WHAT band as two fields (jurisdiction, road type) with their provenance lines."*
+
+**Acceptance changes — read these before building against this issue's body.**
+
+- **This issue's second acceptance bullet is retired.** It proposed *"loading → the pending treatment ... Loading state matches the bar's"*, mirroring `JurisdictionContextBar`'s `pendingName` skeleton. That is dead **twice over**: rule **14** forbids it globally — *"No skeletons, no placeholder bars, no indeterminate progress, anywhere. A value that is not known renders as a word: 'Not set', 'pending', 'No package yet', 'Zone geometry unavailable'"* — and §8.31 **drops `JurisdictionContextBar` itself** ("Jurisdiction context bar — DROPPED as a bar"). There is no bar left to match.
+- **The first acceptance bullet stands unchanged and is the core**: a failed evaluation never renders as a confident jurisdiction name. Rule 10 — absence renders as absence.
+- **Replace the state list with the ruled one:** unset → the word **"Not set"**; errored → an honest word; loaded → the evaluated name. Three states, no skeleton in any of them. Mounted tests for all three (Rule 11).
+- **Add, from §8.31:** *"Its reserved-height rule (the bar must not resize on selection) transfers to those fields."* So the jurisdiction field must not change height across its three states — which is the same P1 no-movement guarantee the bar carried, now owed by the field.
+- **Add:** ruling **200** amends P16 to permit one busy signal **per fact**. That is the ceiling for an in-flight jurisdiction evaluation — one signal on that fact, and it is a word, not a bar.
+
+#257's one-producer-per-printed-fact contract is in #281's inherited list and still governs: the fact line and the field must not derive the jurisdiction name two ways.
 
 Refs #281
 
@@ -1186,42 +1256,38 @@ The s2-arc31 investigation (branch `s2-arc31-scan-budget`, `67d95c7`, unmerged) 
 
 ## The commands
 
-Claude Code's `gh` is read-only; nothing below was executed. Bodies live beside this
-file in `%TEMP%\s2-triage-3\`.
+Claude Code's `gh` is read-only; nothing below was executed. Bodies live beside this file in
+`%TEMP%\s2-triage-3\`.
 
-**Before running any of these: paste Part 1 and Part 2 into #281.** Both are unfilled
-paste placeholders in the issue body, and three drafts depend on their content — the
-#212 close (Part 1 §8.32, unverified), the #235 A/B/D-vs-A/B/C discrepancy, and N5's
-inferred phase.
+Re-verified against the completed #281 (Part 1 in the body, Part 2 as comment 1). **#259 and
+#276 moved from close to re-aim** — §8.8 and §8.27 keep or move their surfaces rather than
+dropping them, and §8.39 lists both under "Still open and inherited". The closed set is now
+exactly §8.38's three.
 
-Per the standing convention, reformat each body in chat before posting rather than
-pasting these files to `gh` directly.
+Per the standing convention, reformat each body in chat before posting rather than pasting
+these files to `gh` directly.
 
 ---
 
-## 1. Close comments — post the comment, then close
+## 1. Close comments — post the comment, then close. Three issues.
 
-**Do not close anything before the comment is posted.** The comment is the record that
-the close was by construction rather than by neglect.
+**Do not close anything before the comment is posted.** The comment is the record that the
+close was by construction rather than by neglect.
 
 ```
 cd C:\Users\rtmak\Documents\traffic-control-tool
 $T = "$env:TEMP\s2-triage-3"
 
-gh issue comment 259 --body-file "$T\close-259.md"
 gh issue comment 262 --body-file "$T\close-262.md"
 gh issue comment 264 --body-file "$T\close-264.md"
 gh issue comment 272 --body-file "$T\close-272.md"
-gh issue comment 276 --body-file "$T\close-276.md"
 
-gh issue close 259 --reason "not planned"
 gh issue close 262 --reason "not planned"
 gh issue close 264 --reason "not planned"
 gh issue close 272 --reason "not planned"
-gh issue close 276 --reason "not planned"
 ```
 
-## 2. Re-aim comments — comment only, issues stay open
+## 2. Re-aim comments — comment only, issues stay open. Twelve issues.
 
 ```
 gh issue comment 153 --body-file "$T\reaim-153.md"
@@ -1231,7 +1297,9 @@ gh issue comment 215 --body-file "$T\reaim-215.md"
 gh issue comment 234 --body-file "$T\reaim-234.md"
 gh issue comment 235 --body-file "$T\reaim-235.md"
 gh issue comment 237 --body-file "$T\reaim-237.md"
+gh issue comment 259 --body-file "$T\reaim-259.md"
 gh issue comment 267 --body-file "$T\reaim-267.md"
+gh issue comment 276 --body-file "$T\reaim-276.md"
 gh issue comment 277 --body-file "$T\reaim-277.md"
 gh issue comment 280 --body-file "$T\reaim-280.md"
 ```
@@ -1250,7 +1318,7 @@ gh issue create `
   --body-file "$T\new-N2-type-sizes.md"
 
 gh issue create `
-  --title "The proposed scenario kind has no producer — the Where band's suggestion cannot be stated" `
+  --title "The proposed scenario kind has no producer — the WHERE band's suggestion cannot be stated" `
   --label "enhancement" --label "priority-medium" --label "backend" --label "frontend" --label "p2" `
   --body-file "$T\new-N3-proposed-kind.md"
 
@@ -1294,6 +1362,6 @@ Phase 4's umbrella is deliberately not drafted — #281: "Phase 4 can wait."
 ## Label caveat
 
 The repo's principle labels run `p1`–`p16` per the house style, and #281 itself carries
-`p17`–`p22`, so those exist too. The label sets above are a proposal; **confirm each
-against the repo's taxonomy before creating**, since `gh issue create` fails on an
-unknown label rather than creating it.
+`p17`–`p22`, so those exist too. The label sets above are a proposal; **confirm each against
+the repo's taxonomy before creating**, since `gh issue create` fails on an unknown label
+rather than creating it.
