@@ -57,7 +57,10 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.rules.corridor import build_corridor
-from src.rules.site_detection import detect_along_corridor
+from src.rules.site_detection import (
+    _VALIDATION_SEARCH_RADIUS_M,
+    detect_along_corridor,
+)
 
 # CHOSEN (ruling 4, s2-arc15): wall-clock budget for one scan.  The
 # Overpass query itself declares [timeout:10]; each mirror gets
@@ -90,7 +93,12 @@ DETECTION_TO_FLAG: dict[str, str] = {
 
 # Keys ``detect_along_corridor`` returns beside the buckets (#251): never
 # a SiteScanBucket, excluded from ``provenance.buckets`` BY NAME.
-_NON_BUCKET_KEYS: frozenset[str] = frozenset({"error", "overpass"})
+# ``road_bearing`` joins them with #256 ruling c's fold: the corridor
+# bearing check now rides the scan's own round trip, so the detector
+# returns its result beside the buckets.  Excluded BY NAME, like the
+# others — it is a measurement about the road at the anchor, not a
+# detection bucket, and must never appear in ``provenance.buckets``.
+_NON_BUCKET_KEYS: frozenset[str] = frozenset({"error", "overpass", "road_bearing"})
 
 
 def _fetch_fields(buckets: Mapping[str, Any]) -> dict[str, Any]:
@@ -426,6 +434,13 @@ class SiteScanResult:
     provenance: SiteScanProvenance
     # The flags ``apply_site_adjustments`` and the plan sheet consume.
     effective_flags: dict[str, bool]
+    # #256 ruling c: the road-at-anchor measurement the SAME round trip
+    # brought back, handed to validate_corridor_against_osm as
+    # ``road_result`` so the corridor check needs no trip and no budget of
+    # its own.  ``None`` when the scan did not run or did not fold (every
+    # pre-#256 path, and every stub), in which case the check falls back to
+    # its own fetch exactly as before.
+    road_bearing: dict[str, Any] | None = None
 
     @property
     def refused(self) -> bool:
@@ -679,7 +694,16 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
     else:
         t0 = time.monotonic()
         measured_at = datetime.now(UTC).isoformat(timespec="seconds")
-        buckets = detect_along_corridor(corridor, budget_s=SCAN_BUDGET_S)
+        # #256 ruling c: one round trip serves the scan AND the corridor
+        # bearing check.  The anchor and radius are the same ones
+        # validate_corridor_against_osm would have sent on its own trip
+        # (_VALIDATION_SEARCH_RADIUS_M), so the bearing's candidate pool is
+        # unchanged — only the number of round trips is.
+        buckets = detect_along_corridor(
+            corridor,
+            budget_s=SCAN_BUDGET_S,
+            bearing_anchor=(inputs.lat, inputs.lng, _VALIDATION_SEARCH_RADIUS_M),
+        )
         duration_ms = int(round((time.monotonic() - t0) * 1000))
 
     error = buckets.get("error")
@@ -725,4 +749,5 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         corrections_advisory=corrections_advisory(corrections),
         **_fetch_fields(buckets),
     )
-    return SiteScanResult(prov, effective)
+    road_bearing = buckets.get("road_bearing")
+    return SiteScanResult(prov, effective, road_bearing if isinstance(road_bearing, dict) else None)

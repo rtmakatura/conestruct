@@ -1302,6 +1302,10 @@ def _audit_projection_and_params_for(
         params,
         site_lat=scenario.meta.lat or None,
         site_lng=scenario.meta.lng or None,
+        # #256 ruling c: the road set the scan's own round trip fetched.
+        # None whenever the scan did not fold, and the check then makes its
+        # own trip exactly as before.
+        road_bearing=site_scan.road_bearing,
         # Approaches section (near_intersection) — same ApproachParams
         # the generator got; the builder raises rather than emit a
         # partial audit without them (#117).

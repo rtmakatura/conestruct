@@ -181,6 +181,7 @@ def build_audit_trail(
     site_lat: float | None = None,
     site_lng: float | None = None,
     approaches: list[ApproachParams] | None = None,
+    road_bearing: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Recompute every audit-trail intermediate the verification UI needs.
 
@@ -1351,10 +1352,22 @@ def build_audit_trail(
             validate_corridor_against_osm,
         )
 
-        # #241: budgeted — a stalled Overpass yields check_unavailable
-        # inside the proxy's 60 s, never a 504.
+        # #256 ruling c: when the site scan folded the road set into its own
+        # round trip, the check derives from what it brought back — no
+        # transport, no second budget.  ``check_unavailable`` therefore now
+        # means the WHOLE scan failed, not that a second trip did.
+        #
+        # ``road_bearing is None`` is every path that did not fold (a
+        # scenario with no site_scan, a stubbed transport, the manual
+        # endpoint), and it keeps the pre-#256 behaviour exactly: its own
+        # budgeted trip, #241's guarantee that a stalled Overpass yields
+        # check_unavailable inside the proxy's 60 s rather than a 504.
         corridor_validation = validate_corridor_against_osm(
-            site_lat, site_lng, params.bearing_deg, budget_s=CORRIDOR_CHECK_BUDGET_S
+            site_lat,
+            site_lng,
+            params.bearing_deg,
+            budget_s=CORRIDOR_CHECK_BUDGET_S,
+            road_result=road_bearing,
         )
     else:
         # #213 V4: the reason names the cause — this branch really is

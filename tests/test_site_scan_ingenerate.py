@@ -88,12 +88,24 @@ def payload() -> dict[str, Any]:
 class Overpass:
     """A stub for ``_overpass_request_with_fallback`` that counts SCAN calls.
 
-    The audit already makes one Overpass round trip per request today
-    (``validate_corridor_against_osm`` → ``detect_road_bearing``, an
-    ``around:`` query).  That pre-existing traffic is not the scan; only
-    the corridor bbox query (``_build_bbox_query``, no ``around:``) counts
-    toward ``scan_calls``.  ``calls`` is every call, for reference.
+    BEFORE #256 ruling c, the audit made a SECOND Overpass round trip per
+    request (``validate_corridor_against_osm`` → ``detect_road_bearing``,
+    an ``around:`` query) and this stub told the two apart by that
+    ``around:``.  The fold retired that second trip: the scan's own query
+    now carries the road set, so it contains a bbox AND an ``around:``
+    clause and the old discriminator counted it as zero scans.
+
+    The discriminator is now the scan SELECTOR — ``railway=level_crossing``
+    appears in the bbox set (folded or not) and never in the road-only
+    query — so it identifies a scan call in both worlds.  ``calls`` is
+    every call, and after the fold ``calls == scan_calls`` is itself the
+    ruling's claim: one round trip, not two.
     """
+
+    #: A selector only the scan set carries, in both the folded and the
+    #: unfolded query.  Matching on this rather than on the absence of
+    #: ``around:`` is what survives the fold.
+    SCAN_MARKER = '["railway"="level_crossing"]'
 
     def __init__(self, payload: dict[str, Any] | None, error: str | None = None) -> None:
         self.payload = payload
@@ -103,7 +115,7 @@ class Overpass:
 
     def __call__(self, *args: Any, **_kwargs: Any) -> tuple[dict[str, Any] | None, str | None]:
         self.calls += 1
-        if args and "around:" not in str(args[0]):
+        if args and self.SCAN_MARKER in str(args[0]):
             self.scan_calls += 1
         if self.payload is None:
             return None, self.error or "stub outage"

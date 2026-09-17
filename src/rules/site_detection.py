@@ -62,6 +62,19 @@ PER_MIRROR_CONNECT_S = 3.0
 # unbudgeted 25 s × 3-mirror chain measured three 504s on prod
 # (2026-09-03, s2-arc15 after-table).  Past the budget the check reports
 # its existing honest ``check_unavailable`` reason (#213 V4).
+#
+# RETIRED by #256 ruling c (2026-09-16), Rule 5 declaration.  The corridor
+# check no longer has a round trip of its own to budget: it derives from
+# the elements the site scan already fetched (``bearing_anchor`` on
+# detect_along_corridor), so there is one trip, one budget —
+# SCAN_BUDGET_S — and one thing that can fail.  Kept as a named constant
+# ONLY so a caller still passing it is not a TypeError; it no longer
+# governs any transport and nothing in the folded path reads it.  The
+# behaviour it used to produce — a second 20 s wait that could report
+# check_unavailable while the scan itself succeeded — is GONE, which is
+# the change: arc-31 measured that second trip reporting
+# check_unavailable on 43 % (denver) and 65 % (lakewood) of otherwise-ok
+# audits.  Delete the constant when the last caller stops naming it.
 CORRIDOR_CHECK_BUDGET_S = 20.0
 # Overpass returns 406 to clients without an identifying User-Agent.
 USER_AGENT = "conestruct-traffic-control-tool/0.2 (+https://conestruct.com; hello@conestruct.com)"
@@ -525,6 +538,75 @@ out center tags;
 """
 
 
+def _build_folded_query(
+    bbox: tuple[float, float, float, float],
+    anchor_lat: float,
+    anchor_lng: float,
+    road_radius_m: float,
+) -> str:
+    """The site scan and the corridor bearing check in ONE round trip (#256 ruling c).
+
+    Two named sets with two ``out`` statements, which is what makes the
+    fold possible: the scan set keeps ``out center tags`` (no geometry —
+    it only needs positions and tags) and the road set takes
+    ``out geom tags`` (geometry is the bearing).  **Separable on the
+    wire by exactly that**: a road element carries ``geometry``, a scan
+    element does not.
+
+    The scan set's selectors, bbox and output mode are BYTE-IDENTICAL to
+    :func:`_build_bbox_query` — deliberately, so folding cannot move a
+    bucket.  The road set is ``around:road_radius_m`` of the anchor, the
+    same clause :func:`_build_road_at_query` already sends, so the
+    bearing's candidate pool does not change either.  Measured by
+    s2-arc31 (``out-levers2-60098ae``, L5-folded-1trip): 408 elements —
+    396 scan, 12 road — for +14.8 % bytes and +9 ms over the tight scan
+    alone, in one request instead of two budgets.
+    """
+    south, west, north, east = bbox
+    box = f"{south:.6f},{west:.6f},{north:.6f},{east:.6f}"
+    road = f"around:{road_radius_m:.0f},{anchor_lat},{anchor_lng}"
+    return f"""[out:json][timeout:10];
+(
+  node({box})["highway"="traffic_signals"];
+  node({box})["highway"="crossing"];
+  way({box})["highway"="footway"];
+  way({box})["footway"="sidewalk"];
+  way({box})["highway"="cycleway"];
+  way({box})["cycleway"];
+  node({box})["amenity"="school"];
+  way({box})["amenity"="school"];
+  node({box})["railway"="level_crossing"];
+  node({box})["amenity"="hospital"];
+  way({box})["amenity"="hospital"];
+  node({box})["highway"="motorway_junction"];
+  way({box})["highway"="motorway_link"];
+  way({box})["highway"="trunk_link"];
+  way({box})["bridge"="yes"];
+)->.scan;
+.scan out center tags;
+(
+  way({road})["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"];
+)->.road;
+.road out geom tags;
+"""
+
+
+def split_folded_elements(
+    elements: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Split a folded payload into ``(scan_elements, road_elements)``.
+
+    The road set is emitted with ``out geom tags`` and the scan set with
+    ``out center tags``, so carrying ``geometry`` is the discriminator —
+    the one s2-arc31 measured as clean ("12 carry geometry, 396 do not.
+    Separable on the wire: yes").  A scan element never carries it,
+    because nothing in the scan set asks for it.
+    """
+    road = [el for el in elements if el.get("geometry")]
+    scan = [el for el in elements if not el.get("geometry")]
+    return scan, road
+
+
 def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
     out: dict[str, Any] = {"detected": False, "count": 0, "details": [], "features": []}
     if detail_msg:
@@ -536,6 +618,7 @@ def detect_along_corridor(
     corridor: WorkCorridor,
     lateral_buffer_m: float = _CORRIDOR_LATERAL_BUFFER_M,
     budget_s: float | None = None,
+    bearing_anchor: tuple[float, float, float] | None = None,
 ) -> dict[str, Any]:
     """Query Overpass over the corridor's bounding box and bucket detections.
 
@@ -563,6 +646,14 @@ def detect_along_corridor(
     NOT a bucket — with ``mirror``, ``response_bytes``, ``remark`` and
     ``element_count`` (``None`` each when the transport was stubbed), so
     two scans of one corridor can be told apart on the wire.
+
+    #256 ruling c: pass ``bearing_anchor`` as ``(lat, lng, radius_m)`` to
+    fold the corridor bearing check into this same round trip.  The result
+    arrives as a ``road_bearing`` key — NOT a bucket — carrying exactly
+    what :func:`detect_road_bearing` returns plus its ``element_count``,
+    so :func:`validate_corridor_against_osm` can derive the check without
+    a second trip and without a second budget.  Omit it and this function
+    behaves exactly as before: same query, same buckets, one set.
     """
     buckets: dict[str, Any] = {
         "intersections": _empty_corridor_bucket(),
@@ -584,7 +675,21 @@ def detect_along_corridor(
         lateral_buffer_m=lateral_buffer_m,
         longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
     )
-    query = _build_bbox_query(bbox)
+    # #256 ruling c: when the caller names a bearing anchor, ONE round trip
+    # serves the scan and the corridor bearing check.  The scan set inside
+    # the folded query is byte-identical to _build_bbox_query's, so folding
+    # cannot move a bucket; what changes is that the payload also carries
+    # the road set, which MUST be split off before categorising (a
+    # motorway_link or trunk_link way in the road set would otherwise land
+    # in `interchanges` and invent a detection — the one way this fold
+    # could corrupt the scan).
+    folded = bearing_anchor is not None
+    if folded:
+        assert bearing_anchor is not None  # narrowed for mypy
+        anchor_lat, anchor_lng, road_radius_m = bearing_anchor
+        query = _build_folded_query(bbox, anchor_lat, anchor_lng, road_radius_m)
+    else:
+        query = _build_bbox_query(bbox)
     # Positional call when unbudgeted so the pre-phase-1 stubs
     # (``lambda q: ...``) keep working unchanged.
     if budget_s is None:
@@ -603,7 +708,17 @@ def detect_along_corridor(
         return buckets
 
     elements = payload.get("elements", []) or []
+    if folded:
+        # Split BEFORE anything reads the list (#256 ruling c).  The road
+        # set is the geometry-carrying half; the scan half is what the
+        # buckets are built from, exactly as before the fold.
+        elements, road_elements = split_folded_elements(elements)
+        buckets["road_bearing"] = _bearing_from_elements(road_elements, anchor_lat, anchor_lng)
+        buckets["road_bearing"]["element_count"] = len(road_elements)
     if "overpass" in buckets:
+        # The scan half's count, so this figure keeps meaning what it meant
+        # before the fold — the number of elements the BUCKETS were built
+        # from, not the round trip's total.
         buckets["overpass"]["element_count"] = len(elements)
 
     for el in elements:
@@ -746,7 +861,26 @@ def detect_road_bearing(
         out["error"] = error or "Overpass request failed"
         return out
 
-    ways = [el for el in payload.get("elements", []) if el.get("type") == "way"]
+    return _bearing_from_elements(payload.get("elements", []), lat, lng, out)
+
+
+def _bearing_from_elements(
+    elements: list[dict[str, Any]],
+    lat: float,
+    lng: float,
+    out: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The bearing derivation, with no transport of its own (#256 ruling c).
+
+    Split out of :func:`detect_road_bearing` so the folded round trip and
+    the legacy separate trip share ONE predicate rather than growing a
+    second copy (Rule 3).  ``elements`` is whatever carries way geometry —
+    from the folded query's ``.road`` set or from the standalone query;
+    the derivation cannot tell the difference and must not need to.
+    """
+    if out is None:
+        out = {"bearing_deg": None, "oneway": None, "way_id": None, "highway": None}
+    ways = [el for el in elements if el.get("type") == "way"]
     if not ways:
         return out
 
@@ -834,6 +968,7 @@ def validate_corridor_against_osm(
     search_radius_m: float = _VALIDATION_SEARCH_RADIUS_M,
     bearing_threshold_deg: float = _BEARING_CONFLICT_THRESHOLD_DEG,
     budget_s: float | None = None,
+    road_result: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Best-effort sanity check: corridor inputs vs. OSM ground truth.
 
@@ -876,16 +1011,25 @@ def validate_corridor_against_osm(
         out["reason"] = "not_run_no_coords"
         return out
 
-    try:
-        result = detect_road_bearing(
-            anchor_lat, anchor_lng, radius_m=search_radius_m, budget_s=budget_s
-        )
-    except Exception as exc:  # noqa: BLE001
-        # Best-effort: any Overpass / network failure leaves
-        # ``checked = False`` — but named, never mistaken for not-run.
-        out["reason"] = "check_unavailable"
-        out["error"] = f"{type(exc).__name__}: {exc}"
-        return out
+    if road_result is not None:
+        # #256 ruling c: the folded round trip already fetched the road set
+        # and derived the bearing.  No transport here, no second budget —
+        # the check is a pure function of what the scan brought back.  A
+        # scan that failed altogether never reaches this call, which is why
+        # ``check_unavailable`` now means "the whole scan failed" and not
+        # "the second trip failed".
+        result = road_result
+    else:
+        try:
+            result = detect_road_bearing(
+                anchor_lat, anchor_lng, radius_m=search_radius_m, budget_s=budget_s
+            )
+        except Exception as exc:  # noqa: BLE001
+            # Best-effort: any Overpass / network failure leaves
+            # ``checked = False`` — but named, never mistaken for not-run.
+            out["reason"] = "check_unavailable"
+            out["error"] = f"{type(exc).__name__}: {exc}"
+            return out
 
     if "error" in result and result.get("bearing_deg") is None:
         out["reason"] = "check_unavailable"

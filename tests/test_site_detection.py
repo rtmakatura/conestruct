@@ -14,6 +14,7 @@ they run offline and deterministically.
 
 from __future__ import annotations
 
+import copy
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import patch
@@ -591,6 +592,168 @@ def test_429_on_the_first_mirror_still_reaches_a_later_clean_one(
     assert error is None
     assert payload == {"elements": []}
     assert len(calls) == 2  # mirror 1 rate-limited, mirror 2 answered
+
+
+def _folded_payload() -> dict[str, Any]:
+    """A folded response: scan elements (no geometry) + road (geometry).
+
+    The road way is a ``motorway_link`` ON PURPOSE — that is the class
+    ``_categorize`` buckets into ``interchanges``, so if the fold ever
+    stopped splitting before categorising, this payload would invent an
+    interchange out of the bearing set.
+    """
+    return {
+        "elements": [
+            # scan set — out center tags, no geometry
+            {
+                "type": "node",
+                "id": 1,
+                "lat": 39.7269,
+                "lon": -104.9873,
+                "tags": {"highway": "traffic_signals"},
+            },
+            # road set — out geom tags
+            {
+                "type": "way",
+                "id": 99,
+                "tags": {"highway": "motorway_link", "oneway": "yes"},
+                "geometry": [
+                    {"lat": 39.7269, "lon": -104.9873},
+                    {"lat": 39.7279, "lon": -104.9873},
+                ],
+            },
+        ]
+    }
+
+
+def test_split_folded_elements_splits_on_geometry() -> None:
+    """#256 ruling c: geometry is the discriminator, as s2-arc31 measured."""
+    scan, road = site_detection.split_folded_elements(_folded_payload()["elements"])
+    assert [el["id"] for el in scan] == [1]
+    assert [el["id"] for el in road] == [99]
+
+
+def test_folded_scan_buckets_are_identical_to_unfolded(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """RULING g's INVARIANT, as a test: folding must not move a bucket.
+
+    The scan set's selectors, bbox and output mode are byte-identical
+    between _build_bbox_query and _build_folded_query, so the only way a
+    bucket could move is the road set leaking into categorisation.  This
+    runs the same corridor both ways against payloads whose scan halves
+    are the same, and requires every bucket to match — including
+    ``interchanges``, which is where a leaked motorway_link would land.
+    """
+    corridor = _test_corridor()
+    scan_only = {"elements": [e for e in _folded_payload()["elements"] if not e.get("geometry")]}
+
+    monkeypatch.setattr(
+        site_detection,
+        "_overpass_request_with_fallback",
+        lambda *a, **k: (copy.deepcopy(scan_only), None),
+    )
+    unfolded = site_detection.detect_along_corridor(corridor)
+
+    monkeypatch.setattr(
+        site_detection,
+        "_overpass_request_with_fallback",
+        lambda *a, **k: (copy.deepcopy(_folded_payload()), None),
+    )
+    folded = site_detection.detect_along_corridor(
+        corridor, bearing_anchor=(39.7269, -104.9873, 50.0)
+    )
+
+    bucket_names = [k for k in unfolded if k not in {"error", "overpass", "road_bearing"}]
+    for name in bucket_names:
+        assert folded[name] == unfolded[name], name
+    # The leak this guards against, named explicitly.
+    assert folded["interchanges"]["count"] == unfolded["interchanges"]["count"] == 0
+
+
+def test_folded_call_returns_the_bearing_and_makes_one_round_trip(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#256 ruling c: ONE trip serves both.  The count is the claim."""
+    calls: list[str] = []
+
+    def stub(query: str, **_kw: Any) -> tuple[dict[str, Any], None]:
+        calls.append(query)
+        return copy.deepcopy(_folded_payload()), None
+
+    monkeypatch.setattr(site_detection, "_overpass_request_with_fallback", stub)
+    buckets = site_detection.detect_along_corridor(
+        _test_corridor(), bearing_anchor=(39.7269, -104.9873, 50.0)
+    )
+    assert len(calls) == 1
+    # Both sets are in the one query, with their own out statements.
+    assert ")->.scan;" in calls[0] and ".scan out center tags;" in calls[0]
+    assert ")->.road;" in calls[0] and ".road out geom tags;" in calls[0]
+    assert "around:50" in calls[0]
+    assert buckets["road_bearing"]["bearing_deg"] is not None
+    assert buckets["road_bearing"]["highway"] == "motorway_link"
+
+
+def test_unfolded_call_query_is_unchanged(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No bearing_anchor ⇒ byte-identical to the pre-fold query."""
+    seen: list[str] = []
+
+    def stub(query: str, **_kw: Any) -> tuple[dict[str, Any], None]:
+        seen.append(query)
+        return {"elements": []}, None
+
+    monkeypatch.setattr(site_detection, "_overpass_request_with_fallback", stub)
+    corridor = _test_corridor()
+    site_detection.detect_along_corridor(corridor)
+    bbox = corridor.corridor_bbox(
+        lateral_buffer_m=site_detection._CORRIDOR_LATERAL_BUFFER_M,
+        longitudinal_buffer_m=site_detection._CORRIDOR_LONGITUDINAL_BUFFER_M,
+    )
+    assert seen == [site_detection._build_bbox_query(bbox)]
+
+
+def test_derived_check_agrees_with_the_separate_query(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """RULING 2: a disagreement between the derived check and the retired
+    separate query is a FINDING, not a re-baseline.  This pins agreement on
+    the same road elements, so a future divergence fails loudly here."""
+    road = [e for e in _folded_payload()["elements"] if e.get("geometry")]
+
+    # The retired shape: its own trip, returning the road set.
+    monkeypatch.setattr(
+        site_detection,
+        "_overpass_request_with_fallback",
+        lambda *a, **k: ({"elements": copy.deepcopy(road)}, None),
+    )
+    separate = site_detection.validate_corridor_against_osm(39.7269, -104.9873, 10.0)
+
+    # The folded shape: no transport at all, derived from what the scan got.
+    derived_result = site_detection._bearing_from_elements(road, 39.7269, -104.9873)
+
+    def explode(*_a: Any, **_k: Any) -> tuple[None, str]:
+        raise AssertionError("the derived check must make NO round trip")
+
+    monkeypatch.setattr(site_detection, "_overpass_request_with_fallback", explode)
+    derived = site_detection.validate_corridor_against_osm(
+        39.7269, -104.9873, 10.0, road_result=derived_result
+    )
+    assert derived == separate
+
+
+def test_check_unavailable_string_is_byte_identical(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#256 ruling c: the fold narrows WHEN check_unavailable fires; it does
+    not change the word.  Refusal honesty is untouched (Rule 10)."""
+    monkeypatch.setattr(
+        site_detection,
+        "_overpass_request_with_fallback",
+        lambda *a, **k: (None, "every mirror failed"),
+    )
+    out = site_detection.validate_corridor_against_osm(39.7269, -104.9873, 10.0)
+    assert out["checked"] is False
+    assert out["reason"] == "check_unavailable"
 
 
 def test_per_mirror_cap_constants_are_the_ruled_values() -> None:
