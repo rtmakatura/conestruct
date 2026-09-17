@@ -202,3 +202,65 @@ Per-pin verdicts for **each** candidate across the **whole** sample, not a summa
 
 A candidate that flips a genuinely rural pin urban fails, however well it does on the urban
 ones — which is why the sample needs the four-plus rural controls.
+
+---
+
+## ⚠ THE (c) RULING WAS WITHDRAWN — 2026-09-17
+
+The second correction this arc has made to its own record. Both are kept.
+
+Ruling (c) originally adopted **candidate C** — the road's own tags as the primary signal —
+on the stated grounds that it "is the only candidate on the table that classifies every
+urban reference pin urban AND keeps every rural control rural; widening the radius fits a
+constant to one pin, and admitting place=locality flips rural pins urban — both measured,
+both rejected."
+
+**Those measurements did not exist when that was written.** The checkpoint had not been
+run. When it was run (`candidates/`, 2026-09-17, 12 pins, one fetch each serving every
+candidate), it inverted the claim:
+
+| candidate | urban 7 | rural 5 | rural controls flipped |
+|---|---|---|---|
+| current (3 km) | 6/7 | 4/5 | lookout-mountain |
+| **A — 5 km** | **7/7** | **4/5** | lookout-mountain |
+| A — 8 km | 7/7 | 3/5 | sr71-limon, lookout-mountain |
+| **B — +`locality`** | **7/7** | **4/5** | lookout-mountain |
+| **C — road tags** | **5/7** | **1/5** | us385-cheyenne, us287-kim, lookout-mountain |
+
+C is the **worst** candidate on this sample, and disqualifying by the ruling's own
+criterion — it flips three of five rural controls.
+
+**Ryan withdrew the ruling on being shown the table**, and recorded why it was wrong to
+state a result before measuring it. That withdrawal is the ruling now.
+
+### Why C fails, structurally rather than as sample noise
+
+- **`highway=residential` is not an urban signal in a rural county.** US-385 near Cheyenne
+  Wells and US-287 near Kim each have a residential way within 50 m — a farm access road —
+  and C calls both urban on that alone.
+- **A switchback carries an urban speed limit.** Lookout Mountain Rd is `maxspeed=20 mph`,
+  slow because of its geometry, not because it is in a city.
+- **The signals are absent exactly where they matter.** At E Bayaud the road is
+  `highway=primary` with no `sidewalk`, `lit` or `maxspeed`, so C falls through to the
+  place tie-break and inherits the failure it was meant to replace. C fell back on 3 of 12
+  pins.
+- **No road within 50 m on 2 of 12 pins** (thornton, sr71-limon), where C returns no
+  verdict at all.
+
+### The new rulings (Ryan, 2026-09-17)
+
+1. **C is not primary.** The failure modes above are structural.
+2. **A tiebreaker pass between A-5 km and B before either is built.** First re-pin the two
+   rural controls whose coordinates landed on residential side roads, on the named
+   highway's centreline, stating how it was verified. Then widen the rural set to **at
+   least ten** controls spanning plains, mountain and small-town contexts, verified the
+   same way. Measure A-5 km and B per-pin on the whole sample. **Fewer rural flips wins;
+   on a tie, A-5 km** — it moves one constant with a measured basis rather than admitting
+   a tag class OSM also uses for uninhabited places. Whichever wins, the new value is
+   **traced to this sample**, and the old 3,000 m is recorded as CHOSEN-by-inheritance.
+3. **Lookout Mountain is its own issue** — a live misclassification on shipped code, urban
+   under every candidate including the current one, because "what is near the road" is the
+   wrong question for a switchback with nine place nodes in range. The road-tag signal
+   (the `maxspeed` misread aside) is named there as the direction the fix probably needs:
+   the thing C got wrong in practice but right in principle. Not this arc.
+4. **The masking fix rides along as its own honest commit**, claiming nothing about #279.

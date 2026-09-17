@@ -1,0 +1,112 @@
+#279 checkpoint (c) — three candidates, one fetch per pin
+started 2026-09-17T16:36:11.203Z
+
+[e-bayaud] expect=urban  roads=11 places=47
+    current(3km)  rural MISS
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   rural MISS   road tags silent (highway=primary) -> place tie-break within 3 km = false
+
+[e-colfax] expect=urban  roads=4 places=58
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   URBAN ok   lit=yes + maxspeed=30 mph (30 mph)
+
+    https://overpass-api.de/api/interpreter -> HTTP 429
+    https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[lakewood] expect=urban  roads=16 places=19
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   URBAN ok   maxspeed=40 mph (40 mph)
+
+    https://overpass-api.de/api/interpreter -> HTTP 504
+    https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[northglenn] expect=urban  roads=2 places=31
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   URBAN ok   maxspeed=25 mph (25 mph) + highway=residential
+
+[thornton] expect=urban  roads=0 places=38
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags     ?   ?   no road within 50 m
+
+[greeley] expect=urban  roads=2 places=13
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   URBAN ok   road tags silent (highway=secondary) -> place tie-break within 3 km = true
+
+    https://overpass-api.de/api/interpreter -> HTTP 429
+    https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[denver-demo] expect=urban  roads=12 places=56
+    current(3km)  URBAN ok
+    A widen 5km   URBAN ok     A widen 8km URBAN ok
+    B +locality   URBAN ok
+    C road tags   URBAN ok   maxspeed=35 mph (35 mph)
+
+[rural-us40-kitcarson] expect=rural  roads=2 places=1
+    current(3km)  rural ok
+    A widen 5km   rural ok     A widen 8km rural ok
+    B +locality   rural ok
+    C road tags   rural ok   road tags silent (highway=trunk) -> place tie-break within 3 km = false
+
+[rural-us385-cheyenne] expect=rural  roads=3 places=1
+    current(3km)  rural ok
+    A widen 5km   rural ok     A widen 8km rural ok
+    B +locality   rural ok
+    C road tags   URBAN MISS   highway=residential
+
+    https://overpass-api.de/api/interpreter -> HTTP 429
+    https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[rural-sr71-limon] expect=rural  roads=0 places=1
+    current(3km)  rural ok
+    A widen 5km   rural ok     A widen 8km URBAN MISS
+    B +locality   rural ok
+    C road tags     ?   ?   no road within 50 m
+
+[rural-us287-kim] expect=rural  roads=2 places=1
+    current(3km)  rural ok
+    A widen 5km   rural ok     A widen 8km rural ok
+    B +locality   rural ok
+    C road tags   URBAN MISS   highway=residential
+
+[lookout-mountain] expect=rural  roads=1 places=9
+    current(3km)  URBAN MISS
+    A widen 5km   URBAN MISS     A widen 8km URBAN MISS
+    B +locality   URBAN MISS
+    C road tags   URBAN MISS   maxspeed=20 mph (20 mph)
+
+=====================================================================
+PER-CANDIDATE SCORE on the whole sample
+=====================================================================
+current (3 km, urban classes)
+   urban pins urban: 6/7   rural pins rural: 4/5
+   urban MISSED: e-bayaud
+   rural FLIPPED (disqualifying): lookout-mountain
+
+A — widen radius to 5 km
+   urban pins urban: 7/7   rural pins rural: 4/5
+   rural FLIPPED (disqualifying): lookout-mountain
+
+A — widen radius to 8 km
+   urban pins urban: 7/7   rural pins rural: 3/5
+   rural FLIPPED (disqualifying): rural-sr71-limon, lookout-mountain
+
+B — admit place=locality (3 km)
+   urban pins urban: 7/7   rural pins rural: 4/5
+   rural FLIPPED (disqualifying): lookout-mountain
+
+C — road tags, place tie-break
+   urban pins urban: 5/7   rural pins rural: 1/5
+   urban MISSED: e-bayaud, thornton
+   rural FLIPPED (disqualifying): rural-us385-cheyenne, rural-us287-kim, lookout-mountain
+
+C fell back to the place tie-break on: e-bayaud, greeley, rural-us40-kitcarson
+(those are the pins where C's answer would be marked inferred)
+=====================================================================
+DONE 2026-09-17T16:39:44.047Z
