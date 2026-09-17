@@ -114,14 +114,53 @@ What it *does* settle: **mirror 3 is reached in production** — 6 of 10 cold ro
 0 of 80 before fix 1. That is the claim fix 1 had to make good, and it is independent of
 the refusal count.
 
-**Run 2 — in flight**, same build (`5d569d7`, so the fold is not in it and the numbers
-stay comparable to arc-31's), same cycle shape, sha-gated at both ends so a deploy
-mid-run is caught rather than silently mixing builds.
+**Run 2 — COMPLETE.** `acceptance/run2-5d569d7/`, with `REPORT.txt`, `rows.json` and the
+80 served audits. Same build as run 1 (`5d569d7` — fix 1 only, the fold NOT in it, so the
+numbers stay comparable to arc-31's), same cycle shape, sha-gated at both ends:
+
+```
+started 2026-09-17T02:34:14Z   finished 2026-09-17T03:33:39Z
+healthz at start 5d569d7a568f…   at end 5d569d7a568f…   (no deploy mid-run)
+```
 
 ### The number that closes #256's original complaint
 
-*Pending run 2.* It goes here when 20 cold runs per pin exist, with its start time, and
-not before.
+**Denver 1 refusal in 20 cold runs. Lakewood 0 in 20.** Ruling f's bar is ≤ 1 in 20 per
+pin; both pins pass, Denver at the bar rather than under it.
+
+| pin | cold n | refusals | bar ≤1/20 | `check_unavailable` on ok | mirror index reached |
+|---|---|---|---|---|---|
+| denver | 20 | **1** | PASS | **0 / 19** | `#1 ×10, #2 ×1, #3 ×8, none ×1` |
+| lakewood | 20 | **0** | PASS | **0 / 20** | `#1 ×14, #3 ×6` |
+
+Scan duration on ok rows — denver median 7034 ms, p90 18335, max 18419; lakewood median
+2840 ms, p90 17227, max 18899.
+
+**This is the number, and it is not a clean sweep.** Denver sits *at* the bar, not under
+it. One more refusal in those twenty and Denver would have failed. #256's original
+complaint — "the first scan of a session refuses 3 of 8 times on the Denver demo pin",
+and arc-31's measured 7/20 Denver and 10/20 Lakewood — is answered; the demo corridor no
+longer fails a third of the time. It is answered *at the bar*, and the honest reading is
+that the margin on Denver is one run wide.
+
+**What fix 1 had to make good, and did:** 15 of 40 cold rows reached mirror 2 or 3.
+Before fix 1, arc-31 measured **0 of 80** — every prod row read mirror 1. The chain now
+reaches past a stalled first mirror, which is the whole mechanism.
+
+**The corridor check did not fail once**: 0 `check_unavailable` across all 39 ok rows.
+arc-31 measured that second trip failing on 43 % (Denver) and 65 % (Lakewood) before. Note
+this is fix 1's doing alone — the fold is not in this build. The per-mirror cap fixed the
+corridor check's trip for the same reason it fixed the scan's, because both ran through the
+same chain.
+
+**The warm rows** report memo_hit=false 1/20 (denver) and 2/20 (lakewood). That is
+container fan-out over `max_containers=8`, not a memo defect, and is reported as such.
+
+**What this run cannot prove**, stated because the probe states it: Overpass load is a
+property of the hour, not of the sha. A clean run does not close #256 on its own and a bad
+run would not have reopened it. The comparable figure is the rate across the run, stamped
+with its start time, against an arc-31 run of the same shape — which is why the cycle
+structure was kept identical.
 
 ## What is still ahead
 
