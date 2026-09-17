@@ -43,6 +43,7 @@ from src.api.schemas import (
 )
 from src.api.site_scan import (
     SiteScanResult,
+    not_run_provenance,
     override_detail,
     override_violation,
     refusal_detail,
@@ -169,13 +170,18 @@ async def _validation_error_handler(request: Request, exc: RequestValidationErro
     )
 
 
-def _ensure_scenario_enabled(scenario: Scenario) -> None:
+def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False) -> None:
     """Reject scenario kinds we have temporarily gated off in v1.
 
     Raised as 400 so the Next.js proxy can surface a clean message rather
     than the bare 422 a Pydantic narrowing would produce if we removed
     the kinds from the discriminated union outright.
     """
+    # #282: one chokepoint, because every endpoint already funnels through
+    # here.  ``allow_preview`` is opt-IN, so a new endpoint added later
+    # refuses the flag by default rather than silently honouring it.
+    if not allow_preview:
+        _ensure_preview_allowed(scenario)
     if scenario.kind not in ENABLED_SCENARIOS:
         enabled = ", ".join(sorted(ENABLED_SCENARIOS))
         # Grammar rider (Arc 11 flip): the old string appended a bare
@@ -184,6 +190,31 @@ def _ensure_scenario_enabled(scenario: Scenario) -> None:
         raise HTTPException(
             status_code=400,
             detail=(f"This scenario type is not yet available. Currently supported: {enabled}."),
+        )
+
+
+def _ensure_preview_allowed(scenario: Scenario) -> None:
+    """Refuse ``preview: true`` on every path but the breakdown (#282).
+
+    #281 rules the preview as "the fast request only (breakdown), never the
+    audit, scan or PDFs."  Silently IGNORING the flag on those paths would
+    be the Rule 10 failure this arc exists to prevent: a caller asks for a
+    read, the field is quietly dropped, and it receives a full generate —
+    a write — believing otherwise.  Better to refuse in the caller's own
+    words than to answer a question it did not ask.
+
+    Honest 400, naming the flag, so the recovery is obvious: drop it, or
+    call the breakdown.
+    """
+    if getattr(scenario, "preview", False):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "preview is a read: it is accepted only on /render/device-breakdown. "
+                "This path produces a full generate (audit, documents, or a scan), "
+                "which a preview must never do. Drop `preview` to generate here, or "
+                "POST to /render/device-breakdown for the preview numbers."
+            ),
         )
 
 
@@ -618,9 +649,25 @@ def _placements_for(
     violation = override_violation(list(scenario.meta.siteConditionOverrides or []))
     if violation is not None:
         raise HTTPException(status_code=400, detail=override_detail(violation))
-    site_scan = run_site_scan(scenario, params)
-    if site_scan.refused:
-        raise HTTPException(status_code=400, detail=refusal_detail(site_scan.provenance))
+    if getattr(scenario, "preview", False):
+        # #282 / #281: "a preview is a read ... never memoised, never
+        # written ... never the audit, scan or PDFs."  Skipping the call is
+        # the whole flag: run_site_scan is what fetches, what writes the
+        # memo, and what raises the honest 400 on an outage.  A preview
+        # therefore cannot fetch, cannot cache and cannot refuse.
+        #
+        # The consequence, stated where it happens: the plan below is built
+        # WITHOUT the site adjustments an Apply would add, because there are
+        # no scanned flags to apply.  That is preview != applied (#198's
+        # family); the `preview: true` echo on the response is what stops a
+        # consumer reading it as a generate.  Only /render/device-breakdown
+        # may take this path — every other endpoint refuses the flag before
+        # reaching here (_ensure_preview_allowed).
+        site_scan = SiteScanResult(not_run_provenance("not_requested"), {})
+    else:
+        site_scan = run_site_scan(scenario, params)
+        if site_scan.refused:
+            raise HTTPException(status_code=400, detail=refusal_detail(site_scan.provenance))
     placements, site_records = apply_site_adjustments(placements, params, site_scan.effective_flags)
     placements, night_records = apply_night_adjustments(placements, params)
     return placements, params, site_records, night_records, approaches, site_scan
@@ -1250,7 +1297,9 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     from the pre-extension shape only by the additive ``zone_geometry``
     key (spec §5.3 regression contract).
     """
-    _ensure_scenario_enabled(scenario)
+    # #282: the ONE path a preview may take (#281: "the fast request
+    # only (breakdown)").  Every other endpoint refuses the flag.
+    _ensure_scenario_enabled(scenario, allow_preview=True)
     try:
         placements, params, _site, _night, _approaches, _scan = _placements_for(scenario)
     except HTTPException:
@@ -1272,6 +1321,14 @@ def render_device_breakdown(scenario: Scenario) -> JSONResponse:
     }
     if jurisdiction is not None:
         payload["jurisdiction"] = jurisdiction
+    if getattr(scenario, "preview", False):
+        # #282: the echo, and it is the mechanism rather than a courtesy.
+        # These numbers were computed WITHOUT the site scan, so they are not
+        # what an Apply would produce; a consumer that cannot tell the two
+        # apart would present a read as a generate.  Emitted ONLY when the
+        # request asked for a preview, so an ordinary response is
+        # byte-identical to before this arc — no new key for every caller.
+        payload["preview"] = True
 
     return JSONResponse(payload)
 

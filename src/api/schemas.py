@@ -195,6 +195,35 @@ class SiteScanScenarioFields(BaseModel):
     site_scan: SiteScanRequest | None = None
 
 
+class PreviewScenarioFields(BaseModel):
+    """Mixin adding #282's preview-as-read flag to every kind.
+
+    #281's ruling: "A preview is a read.  No band, no lock, never
+    memoised, never written; commit-on-blur/Enter, never per keystroke;
+    the fast request only (breakdown), never the audit, scan or PDFs."
+
+    ``preview`` absent or False (the default, and what every sender posts
+    today) ⇒ the request behaves exactly as before.  True ⇒ the
+    device-breakdown path computes the cheap numbers from the scenario as
+    given and does NOT run the site scan, so nothing is fetched, nothing
+    is memoised, and the scan's honest 400 cannot fire.
+
+    BACKEND-FIRST ON PURPOSE.  Pydantic silently drops an unknown field,
+    so a frontend that shipped this first would post ``preview: true``,
+    have it discarded, and receive a full generate believing it had asked
+    for a read.  The field exists here before any sender sets it; at the
+    end of #282 the sender count is deliberately ZERO.
+
+    The consequence the ruling accepts, recorded where the field is
+    defined: a preview skips the scan, so it computes taper/buffer/spacing
+    WITHOUT the site adjustments an Apply would add.  Preview != applied
+    (#198's family).  The ``preview: true`` echo on the response is the
+    mechanism that stops a consumer presenting one as the other.
+    """
+
+    preview: bool = False
+
+
 class JurisdictionScenarioFields(BaseModel):
     """Mixin adding the optional jurisdiction-layer fields to every kind."""
 
@@ -287,7 +316,11 @@ MobileWorkType = Literal[
 ]
 
 
-class ShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class ShoulderScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -387,7 +420,11 @@ class ShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
         return self
 
 
-class FlaggerLaneClosureScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class FlaggerLaneClosureScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["flagger_lane_closure"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -438,7 +475,11 @@ class FlaggerLaneClosureScenario(JurisdictionScenarioFields, SiteScanScenarioFie
     detectionOverrides: list[DetectionOverride] | None = Field(default=None, max_length=8)
 
 
-class LaneClosureDividedScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class LaneClosureDividedScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["lane_closure_divided"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -454,7 +495,11 @@ class LaneClosureDividedScenario(JurisdictionScenarioFields, SiteScanScenarioFie
     truckMountedAttenuator: bool
 
 
-class WorkBeyondShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class WorkBeyondShoulderScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["work_beyond_shoulder"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -468,7 +513,11 @@ class WorkBeyondShoulderScenario(JurisdictionScenarioFields, SiteScanScenarioFie
     night: bool
 
 
-class MobileOp2LaneScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class MobileOp2LaneScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["mobile_op_2lane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -483,7 +532,11 @@ class MobileOp2LaneScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
     arrowBoardOnShadow: bool
 
 
-class MobileOpMultilaneScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class MobileOpMultilaneScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     kind: Literal["mobile_op_multilane"]
     meta: ScenarioMeta = ScenarioMeta()
 
@@ -589,7 +642,11 @@ class IntersectionApproach(BaseModel):
     detectedLanesBothWays: int | None = Field(default=None, ge=1)
 
 
-class NearIntersectionScenario(JurisdictionScenarioFields, SiteScanScenarioFields):
+class NearIntersectionScenario(
+    JurisdictionScenarioFields,
+    SiteScanScenarioFields,
+    PreviewScenarioFields,
+):
     """Work near (not within) an intersection — S-630-1 Cases 18/19.
 
     GATED: absent from ``ENABLED_SCENARIOS`` (render_api.py) and from
