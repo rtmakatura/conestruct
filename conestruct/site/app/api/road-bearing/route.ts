@@ -46,6 +46,22 @@ const PLACE_RADIUS_M = 3000;
 // extraction) so they are unit-testable against recorded pools.
 
 // Treat these OSM `place=*` classes as "urban" for road-type assignment.
+//
+// CHOSEN (#279, 2026-09-17), not traced — no MUTCD or CDOT text defines
+// "urban" in OSM place-tag terms, so this is a judgement recorded as one
+// rather than a number with a source.  The four are the OSM classes that
+// denote a settlement a road runs *inside*: `city` and `town` name the
+// settlement itself; `suburb` and `neighbourhood` name a district within
+// one, so their presence implies a city around them.
+//
+// DELIBERATELY EXCLUDED, and this is the half that caused #279:
+// `village` and `hamlet`.  Both are fetched by the query below — they are
+// legitimate `placeName` sources for display — but neither makes a road
+// urban.  Before this arc the predicate read only the CLOSEST place node
+// of ANY class, so a nearby hamlet masked a city 2 km out and an OSM
+// `primary` in central Denver classified as "Rural — undivided".  The
+// query's six classes and this set's four are different questions:
+// "what place should we NAME?" and "is this road urban?".
 const URBAN_PLACE_CLASSES: ReadonlySet<string> = new Set([
   "city",
   "town",
@@ -231,10 +247,15 @@ function strOrNull(v: unknown): string | null {
   return t.length > 0 ? t : null;
 }
 
-// Pick the closest urban place node from the Overpass response.  The
-// presence of any urban-class place within PLACE_RADIUS_M means
-// `isUrban=true` for classification purposes; we additionally surface
-// the closest place's name for display.
+// Pick the closest place node from the Overpass response, of ANY class —
+// this names the location for display and nothing else.
+//
+// #279: it used to do double duty, and that was the bug.  `isUrban` was
+// derived from whichever node this returned, so a nearby `hamlet` decided
+// the road was rural even with a `place=city` inside the radius.  The
+// predicate now reads every element (buildResponse); this function answers
+// only "what is the nearest place called?", for which closest-of-any-class
+// is right.
 function pickClosestPlace(
   elements: OverpassElement[],
   lat: number,
@@ -287,8 +308,23 @@ function buildResponse(
   // Resolve pin-level place context once for the whole response.
   // isUrban is the gate that flips trunk/primary/secondary/tertiary
   // toward urban_arterial vs rural_* in classifyFromOsmTags.
+  // #279: two questions, two answers, and conflating them was the defect.
+  //
+  // isUrban asks "is there ANY urban-class place within PLACE_RADIUS_M?" —
+  // which is what this function's own comment has always said, and what
+  // the code did not do.  It read the closest place of any class and
+  // tested only that one, so a nearer `village`/`hamlet` masked a
+  // `place=city` further out and an OSM `primary` in central Denver came
+  // back "Rural — undivided" (#279's E Bayaud report).
+  //
+  // placeName asks "what should we call this location?" — for which the
+  // CLOSEST place is still the right answer, urban or not.  Unchanged.
+  const isUrban = elements.some(
+    (el) =>
+      el.type === "node" &&
+      URBAN_PLACE_CLASSES.has((el as OverpassPlace).tags?.place ?? ""),
+  );
   const place = pickClosestPlace(elements, lat, lng);
-  const isUrban = place !== null && URBAN_PLACE_CLASSES.has(place.tags?.place ?? "");
   const placeName = place ? strOrNull(place.tags?.name) : null;
 
   // Signal nodes (highway=traffic_signals) from the same round trip.

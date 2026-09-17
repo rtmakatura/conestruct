@@ -210,3 +210,81 @@ describe("extension-failure fallback (the Colfax transient, pinned)", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// #279 — isUrban: any urban place within the radius, not the closest place
+// ---------------------------------------------------------------------------
+//
+// The reported symptom was an OSM `primary` in central Denver classifying
+// as "Rural — undivided".  Two defects produced it, and these tests pin
+// both.  The masking case is the one that mattered: the query fetches six
+// place classes while the predicate accepts four, and the predicate tested
+// only the CLOSEST node — so a nearer `village`/`hamlet` hid a `place=city`
+// further out.  The route's own comment already said the rule was "the
+// presence of ANY urban-class place within PLACE_RADIUS_M".
+
+function placeNode(
+  id: number,
+  place: string,
+  dLat: number,
+  name = `p${id}`,
+): Record<string, unknown> {
+  return {
+    type: "node",
+    id,
+    lat: PIN.lat + dLat,
+    lon: PIN.lng,
+    tags: { place, name },
+  };
+}
+
+describe("#279 isUrban", () => {
+  it("a nearer non-urban place does NOT mask a city further out", async () => {
+    queue = [
+      {
+        kind: "ok",
+        elements: [
+          way(21, { highway: "primary" }),
+          placeNode(901, "hamlet", 0.001, "Nearer Hamlet"),
+          placeNode(902, "city", 0.018, "Denver"),
+        ],
+      },
+    ];
+    const body = await (await POST(request(PIN))).json();
+    expect(body.scan_status).toBe("ok");
+    expect(body.isUrban).toBe(true);
+  });
+
+  it("stays rural when no urban-class place is in range", async () => {
+    queue = [
+      {
+        kind: "ok",
+        elements: [
+          way(22, { highway: "primary" }),
+          placeNode(903, "hamlet", 0.001, "Hamlet"),
+          placeNode(904, "village", 0.004, "Village"),
+        ],
+      },
+    ];
+    const body = await (await POST(request(PIN))).json();
+    expect(body.scan_status).toBe("ok");
+    expect(body.isUrban).toBe(false);
+  });
+
+  it("placeName stays the CLOSEST place, urban or not", async () => {
+    queue = [
+      {
+        kind: "ok",
+        elements: [
+          way(23, { highway: "primary" }),
+          placeNode(905, "hamlet", 0.001, "Nearer Hamlet"),
+          placeNode(906, "city", 0.018, "Denver"),
+        ],
+      },
+    ];
+    const body = await (await POST(request(PIN))).json();
+    expect(body.isUrban).toBe(true);
+    expect(body.placeName).toBe("Nearer Hamlet");
+  });
+
+});
