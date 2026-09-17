@@ -1,0 +1,28 @@
+healthz sha 5d569d7a568f14abc4f2515a56af03f7269791f6 expect 5d569d7a568f14abc4f2515a56af03f7269791f6
+base https://www.conestruct.com cycles=20 coldGap=130s started 2026-09-17T02:16:42.600Z
+[c1 denver cold] http=200 wall=20787ms scan=2885 status=ok memo=false corridor=checked mirror#1 elem=396
+[c1 denver warm] http=200 wall=1174ms scan=18049 status=ok memo=true corridor=checked mirror#3 elem=396
+[c1 lakewood cold] http=200 wall=32837ms scan=17085 status=ok memo=false corridor=checked mirror#3 elem=160
+[c1 lakewood warm] http=200 wall=18699ms scan=2684 status=ok memo=false corridor=checked mirror#1 elem=160
+-- cycle 1 done, sleeping 130s to expire the memo --
+[c2 denver cold] http=200 wall=33430ms scan=16819 status=ok memo=false corridor=checked mirror#3 elem=396
+[c2 denver warm] http=200 wall=2935ms scan=16819 status=ok memo=true corridor=checked mirror#3 elem=396
+[c2 lakewood cold] http=200 wall=33003ms scan=17248 status=ok memo=false corridor=checked mirror#3 elem=160
+[c2 lakewood warm] http=200 wall=4840ms scan=17248 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 2 done, sleeping 130s to expire the memo --
+[c3 denver cold] http=200 wall=21259ms scan=17691 status=ok memo=false corridor=checked mirror#3 elem=396
+[c3 denver warm] http=200 wall=1259ms scan=17691 status=ok memo=true corridor=checked mirror#3 elem=396
+[c3 lakewood cold] http=200 wall=18169ms scan=2661 status=ok memo=false corridor=checked mirror#1 elem=160
+[c3 lakewood warm] http=200 wall=15771ms scan=2661 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 3 done, sleeping 130s to expire the memo --
+[c4 denver cold] http=200 wall=18634ms scan=17217 status=ok memo=false corridor=checked mirror#3 elem=396
+[c4 denver warm] http=200 wall=6438ms scan=17217 status=ok memo=true corridor=checked mirror#3 elem=396
+[c4 lakewood cold] http=200 wall=17502ms scan=1651 status=ok memo=false corridor=checked mirror#1 elem=160
+[c4 lakewood warm] http=200 wall=973ms scan=1651 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 4 done, sleeping 130s to expire the memo --
+[c5 denver cold] http=200 wall=33325ms scan=17091 status=ok memo=false corridor=checked mirror#3 elem=396
+[c5 denver warm] http=200 wall=2917ms scan=17091 status=ok memo=true corridor=checked mirror#3 elem=396
+[c5 lakewood cold] http=200 wall=23270ms scan=16986 status=ok memo=false corridor=checked mirror#3 elem=160
+[c5 lakewood warm] http=200 wall=2018ms scan=16986 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 5 done, sleeping 130s to expire the memo --
+[c6 denver cold] http=200 wall=10483ms scan=7051 status=ok memo=false corridor=checked mirror#1 elem=396
