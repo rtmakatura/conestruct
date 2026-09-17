@@ -426,6 +426,100 @@ def test_budget_constants_are_the_ruled_values() -> None:
 
 
 # ---------------------------------------------------------------------------
+# #256 ruling d (narrowed 2026-09-16) — the memo key's version boundary
+# ---------------------------------------------------------------------------
+
+
+def test_memo_key_carries_a_version_and_the_fold_bumped_it() -> None:
+    """The version is the BOUNDARY, not the TTL.
+
+    A pre-fold entry cannot reach a post-fold request today — ``_MEMO`` is a
+    per-container in-process dict and a deploy replaces containers — but that
+    is an argument about lifetimes, not a mechanism.  The version makes it
+    one, and makes a persistent cache safe in advance.
+    """
+    assert ss.MEMO_KEY_VERSION >= 2, "the fold bumped this; 1 is the pre-fold shape"
+
+
+def test_memo_key_changes_when_the_version_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A version bump must MISS, not collide — that is the whole point."""
+    inputs = ss.SiteScanInputs(
+        lat=LAT,
+        lng=LNG,
+        bearing_deg=BEARING,
+        speed_mph=45,
+        work_zone_ft=1000.0,
+        closure_type="shoulder",
+        road_type="urban_high",
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        centerline_vertices=0,
+        bbox=(1.0, 2.0, 3.0, 4.0),
+    )
+    before = ss._memo_key(inputs, None)
+    monkeypatch.setattr(ss, "MEMO_KEY_VERSION", ss.MEMO_KEY_VERSION + 1)
+    assert ss._memo_key(inputs, None) != before
+
+
+def test_bearing_tolerance_is_not_in_the_memo_key() -> None:
+    """Ruling d, narrowed: the tolerance stays in the DERIVATION.
+
+    The memo stores the raw bearing measurement, never the verdict, so the
+    threshold is re-applied on every read.  Keying on it would invalidate
+    entries whose cached content it cannot affect — a wrong key, not a
+    conservative one.
+    """
+    inputs = ss.SiteScanInputs(
+        lat=LAT,
+        lng=LNG,
+        bearing_deg=BEARING,
+        speed_mph=45,
+        work_zone_ft=1000.0,
+        closure_type="shoulder",
+        road_type="urban_high",
+        lane_width_ft=12.0,
+        shoulder_width_ft=10.0,
+        centerline_vertices=0,
+        bbox=(1.0, 2.0, 3.0, 4.0),
+    )
+    key = ss._memo_key(inputs, None)
+    # The threshold moving must NOT move the key.
+    original = sd._BEARING_CONFLICT_THRESHOLD_DEG
+    try:
+        sd._BEARING_CONFLICT_THRESHOLD_DEG = original + 5.0
+        assert ss._memo_key(inputs, None) == key
+    finally:
+        sd._BEARING_CONFLICT_THRESHOLD_DEG = original
+
+
+def test_the_fold_has_exactly_one_caller_and_it_folds() -> None:
+    """The invariant the safety argument rests on, made checkable.
+
+    Ruling d's narrowing is sound *because* every memo entry in a container
+    comes from one call site that always folds.  A second, non-folding caller
+    would reintroduce mixed entries silently — and nothing else guards that.
+    """
+    import re
+    from pathlib import Path
+
+    src = Path(__file__).resolve().parents[1] / "src"
+    callers: list[str] = []
+    for path in src.rglob("*.py"):
+        text = path.read_text(encoding="utf-8")
+        for m in re.finditer(r"detect_along_corridor\(", text):
+            line_start = text.rfind("\n", 0, m.start()) + 1
+            if text[line_start : m.start()].rstrip().endswith("def"):
+                continue  # the definition itself
+            callers.append(f"{path.name}:{text.count(chr(10), 0, m.start()) + 1}")
+    assert len(callers) == 1, f"a second caller appeared: {callers}"
+    caller_src = (src / "api" / "site_scan.py").read_text(encoding="utf-8")
+    call = caller_src[caller_src.index("detect_along_corridor(") :]
+    assert "bearing_anchor=" in call[: call.index(")\n")] + ")", "the one caller must fold"
+
+
+# ---------------------------------------------------------------------------
 # #251 (s2-arc22) — a 200 with ``remark`` is not an answer
 # ---------------------------------------------------------------------------
 #

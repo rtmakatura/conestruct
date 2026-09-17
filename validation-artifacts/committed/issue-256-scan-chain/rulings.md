@@ -149,6 +149,48 @@ This is the ruling with the widest blast radius — see g.
 **d — the memo key.** Bearing tolerance and bbox radius join the key so one hit serves
 both consumers. Folds in, not beside: there is one cache, not two.
 
+> **Ruling d NARROWED on evidence (Ryan, 2026-09-16), at commit 3's checkpoint.**
+>
+> > Memo key (#256 commit 3): the smallest honest change — a key version constant bumped
+> > with the fold, so any pre-fold entry misses rather than serving a bucket set the fold
+> > changed; the bearing tolerance stays in the derivation and out of the key, since it
+> > never touched the fetch. Don't rely on the 120 s TTL to age out stale entries — a
+> > version bump is one line and makes the boundary explicit.
+>
+> **What the checkpoint found, and why the ruling shrank:**
+>
+> - **The anchor is already in the key.** `SiteScanInputs` (`site_scan.py:322-337`)
+>   carries `lat`, `lng`, `bearing_deg` among its eleven fields, all hashed by
+>   `_memo_key`. Those are exactly what `site_scan.py` passes as `bearing_anchor`, so two
+>   requests with different anchors already miss each other. Ruling d's stated purpose —
+>   "so a hit serves both" — was already satisfied for the anchor with no change at all.
+> - **The bbox radius is not a request input.** `_VALIDATION_SEARCH_RADIUS_M = 50.0` is a
+>   module constant and cannot vary between two entries in one cache.
+> - **The bearing tolerance must stay OUT of the key**, and not merely as an economy.
+>   The memo stores the RAW measurement (`bearing_deg`, `highway`, `way_id`, `oneway`),
+>   never the verdict; `_BEARING_CONFLICT_THRESHOLD_DEG` is applied afterwards, every
+>   time, in the derivation. Keying on it would invalidate entries whose cached content it
+>   cannot affect — a wrong key, not a conservative one. No caller passes it, either
+>   (zero hits for `bearing_threshold_deg=` outside the definition).
+> - **A pre-fold entry cannot reach a post-fold request today.** `_MEMO`
+>   (`site_scan.py:553`) is a module-level in-process dict, per container, dying with the
+>   process; a deploy replaces containers, so entries never cross a code change. And
+>   there is exactly ONE caller of `detect_along_corridor` in `src/`, which now always
+>   folds — so entries within a container cannot be mixed. Even if one were served, it
+>   degrades safely: `road_bearing` absent ⇒ `None` ⇒ the audit makes its own budgeted
+>   trip, the pre-fold behaviour. Slower, never wrong.
+>
+> **So the version constant is not needed for correctness today.** It is taken anyway,
+> and the ruling says why: the safety above rests on an *argument* about container
+> lifetimes and a single call site, not on a mechanism. The version bump converts it into
+> one. It is also what makes a persistent cache (Redis, a disk spill) safe in advance
+> rather than by memory. The ruling's own phrasing is the point — "makes the boundary
+> explicit".
+>
+> **Not relying on the TTL** is the other half. 120 s would age a stale entry out
+> eventually, but "eventually" is not a boundary, and the container lifetime already
+> bounds it far more tightly than the TTL does. Neither is a mechanism.
+
 **e — commit order.** fix 1 → fold → memo key, each shippable, healthz between, a verdict
 and a ship line after each. **This arc's first code commit is fix 1 only.**
 

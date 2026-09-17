@@ -78,6 +78,28 @@ SCAN_BUDGET_S = 20.0
 # after an outage must really retry.
 MEMO_TTL_S = 120.0
 
+# #256 ruling d, narrowed 2026-09-16.  The memo key's SHAPE version: bump it
+# whenever what a cached entry CONTAINS changes, so an entry written by the
+# old shape misses instead of being served to code expecting the new one.
+#
+# 1 → 2 with the fold (ruling c): entries now carry ``road_bearing`` beside
+# the buckets.
+#
+# This is a boundary, not a fix for a live bug.  A pre-fold entry cannot
+# reach a post-fold request today: ``_MEMO`` is a module-level in-process
+# dict, per container, and a deploy replaces containers, so entries never
+# cross a code change.  But that is an ARGUMENT about container lifetimes
+# and a single call site — not a mechanism, and not something a future
+# persistent cache (Redis, a disk spill) would inherit.  The version is the
+# mechanism.  Do not lean on MEMO_TTL_S for this: 120 s ages an entry out
+# eventually, and "eventually" is not a boundary.
+#
+# NOT in the key, deliberately: ``_BEARING_CONFLICT_THRESHOLD_DEG``.  The
+# memo stores the RAW bearing measurement, never the verdict, so the
+# threshold is re-applied on every read.  Keying on it would invalidate
+# entries whose cached content it cannot affect.
+MEMO_KEY_VERSION = 2
+
 # Detection buckets → site-condition flags (the button's DETECTION_TO_FLAG,
 # SiteConditionsField.tsx, now owned here — Rule 3).  Buckets with no
 # rule-engine action (railroad_crossings, hospitals, road_curvature) are
@@ -559,7 +581,13 @@ def clear_memo() -> None:
 
 def _memo_key(inputs: SiteScanInputs, centerline: tuple[tuple[float, float], ...] | None) -> str:
     raw = json.dumps(
-        {"inputs": inputs.model_dump(mode="json"), "centerline": centerline},
+        {
+            # #256 ruling d: the shape version, so an entry written by an
+            # older cache shape misses rather than being served.
+            "v": MEMO_KEY_VERSION,
+            "inputs": inputs.model_dump(mode="json"),
+            "centerline": centerline,
+        },
         sort_keys=True,
         separators=(",", ":"),
     )
