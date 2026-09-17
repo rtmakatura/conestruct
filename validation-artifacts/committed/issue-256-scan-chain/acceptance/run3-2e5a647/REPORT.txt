@@ -1,0 +1,27 @@
+
+=====================================================================
+#256 ACCEPTANCE LEG — ruling f
+=====================================================================
+started 2026-09-17T12:08:03.998Z  finished 2026-09-17T12:57:59.042Z
+healthz at start 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e   at end 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e   (no deploy mid-run)
+
+-- denver / cold, n=20 --
+   refusals: 1/20   (ruling f bar: <= 1 in 20)  PASS
+   mirror index reached: {"1":14,"3":5,"null":1}
+   corridor check_unavailable on ok rows: 0/19  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=19 min=2093 median=4438 p90=17583 max=18069
+   residual_ms (ok, = layout + any second trip): n=19 min=615 median=683 p90=917 max=2370
+   warm rows with memo_hit=false: 1/20  — container fan-out, NOT a memo defect
+
+-- lakewood / cold, n=20 --
+   refusals: 2/20   (ruling f bar: <= 1 in 20)  FAIL
+   mirror index reached: {"1":7,"3":11,"null":2}
+   corridor check_unavailable on ok rows: 0/18  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=18 min=2304 median=17223 p90=17524 max=17715
+   residual_ms (ok, = layout + any second trip): n=18 min=-3336 median=375 p90=587 max=615
+   warm rows with memo_hit=false: 1/18  — container fan-out, NOT a memo defect
+
+-- the claim fix 1 has to make good --
+   cold rows reaching mirror 2 or 3: 16/40
+   (arc-31, before fix 1: 0 of 80 prod rows — every one read mirror 1)
+=====================================================================

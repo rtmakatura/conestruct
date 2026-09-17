@@ -1,0 +1,27 @@
+
+=====================================================================
+#256 ACCEPTANCE LEG — ruling f
+=====================================================================
+started 2026-09-17T13:17:59.955Z  finished 2026-09-17T14:07:16.817Z
+healthz at start cc820bf44ca4949ef2384515df782fc7305ad729   at end cc820bf44ca4949ef2384515df782fc7305ad729   (no deploy mid-run)
+
+-- denver / cold, n=20 --
+   refusals: 1/20   (ruling f bar: <= 1 in 20)  PASS
+   mirror index reached: {"1":11,"3":8,"null":1}
+   corridor check_unavailable on ok rows: 0/19  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=19 min=2000 median=3785 p90=16809 max=16958
+   residual_ms (ok, = layout + any second trip): n=19 min=430 median=848 p90=958 max=968
+   warm rows with memo_hit=false: 0/19  — container fan-out, NOT a memo defect
+
+-- lakewood / cold, n=20 --
+   refusals: 0/20   (ruling f bar: <= 1 in 20)  PASS
+   mirror index reached: {"1":7,"3":13}
+   corridor check_unavailable on ok rows: 0/20  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=20 min=1931 median=15923 p90=16461 max=16528
+   residual_ms (ok, = layout + any second trip): n=20 min=-15574 median=419 p90=575 max=593
+   warm rows with memo_hit=false: 1/20  — container fan-out, NOT a memo defect
+
+-- the claim fix 1 has to make good --
+   cold rows reaching mirror 2 or 3: 21/40
+   (arc-31, before fix 1: 0 of 80 prod rows — every one read mirror 1)
+=====================================================================

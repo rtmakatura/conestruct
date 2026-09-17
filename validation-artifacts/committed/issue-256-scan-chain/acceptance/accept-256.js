@@ -162,6 +162,19 @@ function report(rows, startedAt, hzStart, hzEnd) {
       p("   scan duration_ms (ok): n=" + durs.length + " min=" + durs[0] + " median=" + q(0.5) +
         " p90=" + q(0.9) + " max=" + durs[durs.length - 1]);
     }
+    // #256 ruling c — the fold's own signal, and the only one this probe
+    // can see.  `residual = wall - scan duration` is everything the request
+    // did EXCEPT the site scan: layout, plus — before the fold — the
+    // corridor bearing check's SEPARATE round trip on its own 20 s budget.
+    // Two trips put that second wait in here; one trip cannot.  So a
+    // residual that collapses between an unfolded build and a folded one is
+    // the fold, measured rather than asserted.
+    const res = ok.map((r) => r.residual_ms).filter((v) => typeof v === "number").sort((a, b) => a - b);
+    if (res.length) {
+      const q = (f) => res[Math.min(res.length - 1, Math.floor(f * res.length))];
+      p("   residual_ms (ok, = layout + any second trip): n=" + res.length +
+        " min=" + res[0] + " median=" + q(0.5) + " p90=" + q(0.9) + " max=" + res[res.length - 1]);
+    }
     const warm = rows.filter((r) => r.pin === pin.name && r.leg === "warm" && r.http === 200);
     const warmMiss = warm.filter((r) => r.memo_hit === false);
     p("   warm rows with memo_hit=false: " + warmMiss.length + "/" + warm.length +

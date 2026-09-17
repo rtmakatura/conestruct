@@ -123,44 +123,67 @@ started 2026-09-17T02:34:14Z   finished 2026-09-17T03:33:39Z
 healthz at start 5d569d7a568f…   at end 5d569d7a568f…   (no deploy mid-run)
 ```
 
-### The number that closes #256's original complaint
+### The numbers that close #256 — the SET of three, not any one run
 
-**Denver 1 refusal in 20 cold runs. Lakewood 0 in 20.** Ruling f's bar is ≤ 1 in 20 per
-pin; both pins pass, Denver at the bar rather than under it.
+#256 closes on **three acceptance legs**, not on the best of them. One run cannot tell a
+fix from a lucky hour; three across three hours can, and the spread is part of the answer
+rather than something to average away.
 
-| pin | cold n | refusals | bar ≤1/20 | `check_unavailable` on ok | mirror index reached |
+| run | sha | denver cold | lakewood cold | `check_unavailable` | mirror 2-or-3 |
 |---|---|---|---|---|---|
-| denver | 20 | **1** | PASS | **0 / 19** | `#1 ×10, #2 ×1, #3 ×8, none ×1` |
-| lakewood | 20 | **0** | PASS | **0 / 20** | `#1 ×14, #3 ×6` |
+| run 2 | `5d569d7` (fix 1 only) | **1 / 20** | **0 / 20** | 0 / 39 | 15 / 40 |
+| run 3 | `2e5a647` (+ fold, memo key) | **1 / 20** | **2 / 20** ← over bar | 0 / 37 | 16 / 40 |
+| run 4 | `cc820bf` (+ preview flag) | **1 / 20** | **0 / 20** | 0 / 39 | 21 / 40 |
 
-Scan duration on ok rows — denver median 7034 ms, p90 18335, max 18419; lakewood median
-2840 ms, p90 17227, max 18899.
+Ruling f's bar is ≤ 1 refusal in 20 cold runs per pin, and ≤ 1 in 20 `check_unavailable`
+on ok audits.
 
-**This is the number, and it is not a clean sweep.** Denver sits *at* the bar, not under
-it. One more refusal in those twenty and Denver would have failed. #256's original
-complaint — "the first scan of a session refuses 3 of 8 times on the Denver demo pin",
-and arc-31's measured 7/20 Denver and 10/20 Lakewood — is answered; the demo corridor no
-longer fails a third of the time. It is answered *at the bar*, and the honest reading is
-that the margin on Denver is one run wide.
+- **Denver: 1, 1, 1.** Held the bar in three different hours. That is the fix-versus-window
+  test and it is answered as firmly as this method answers anything.
+- **Lakewood: 0, 2, 0.** Met the bar twice and **missed it once**. Recorded as a miss, not
+  smoothed: run 3's evidence is committed at `run3-2e5a647/` with its FAIL intact.
+- **`check_unavailable`: 0 of 115 ok rows across all three runs**, against arc-31's 43 %
+  (denver) and 65 % (lakewood) before the arc. Three consecutive clean sweeps.
+- **Mirror 2-or-3 reached on 15, 16 and 21 of 40 cold rows** — against **0 of 80** before
+  fix 1. The chain now gets past a stalled first mirror, which is the entire mechanism the
+  arc exists for.
 
-**What fix 1 had to make good, and did:** 15 of 40 cold rows reached mirror 2 or 3.
-Before fix 1, arc-31 measured **0 of 80** — every prod row read mirror 1. The chain now
-reaches past a stalled first mirror, which is the whole mechanism.
+**What the original complaint said**, for comparison: "the first scan of a session refuses
+3 of 8 times on the Denver demo pin", and arc-31 measured 7/20 denver and 10/20 lakewood.
+The demo corridor no longer fails a third of the time. That is closed.
 
-**The corridor check did not fail once**: 0 `check_unavailable` across all 39 ok rows.
-arc-31 measured that second trip failing on 43 % (Denver) and 65 % (Lakewood) before. Note
-this is fix 1's doing alone — the fold is not in this build. The per-mirror cap fixed the
-corridor check's trip for the same reason it fixed the scan's, because both ran through the
-same chain.
+**What is honestly not settled.** Lakewood's 0/2/0 is real variance, and all three of that
+run's refusals were the same shape — `ReadTimeout` on mirror 3 at the full 20.3 s budget,
+i.e. the last mirror in the chain getting the remainder after mirrors 1 and 2 spent their
+7 s caps. The cap works; being third on a bad draw still costs the answer. **That is the
+mirror-ordering finding, and it is now its own issue rather than a footnote here.**
 
-**The warm rows** report memo_hit=false 1/20 (denver) and 2/20 (lakewood). That is
-container fan-out over `max_containers=8`, not a memo defect, and is reported as such.
+**The fold, measured.** `residual_ms` is everything the request did except the site scan —
+layout, plus (before the fold) the corridor check's separate 20 s-budget round trip:
 
-**What this run cannot prove**, stated because the probe states it: Overpass load is a
-property of the hour, not of the sha. A clean run does not close #256 on its own and a bad
-run would not have reopened it. The comparable figure is the rate across the run, stamped
-with its start time, against an arc-31 run of the same shape — which is why the cycle
-structure was kept identical.
+| | run 2 — two trips | run 3 — one trip | run 4 — one trip |
+|---|---|---|---|
+| denver median | 4,584 ms | 683 ms | **848 ms** |
+| denver p90 | 16,312 ms | 906 ms | **958 ms** |
+| lakewood median | 10,127 ms | 373 ms | **419 ms** |
+| lakewood p90 | 15,836 ms | 465 ms | **575 ms** |
+
+Denver's p90 fell from 16.3 s to under 1 s and stayed there across two independent runs.
+That is ruling c's "one round trip serves both", measured rather than asserted — and run 2
+could not measure it, because the fold was not in that build.
+
+**An open data defect in this evidence, recorded not hidden.** `run3` and `run4` both
+report a large negative `residual_ms` minimum on a Lakewood cold row (−3,336 ms and
+−15,574 ms). A negative residual means `wall < duration_ms`, which the probe's own header
+documents as meaningless on a memo HIT — but these rows report `memo_hit: false`. The
+likely cause is `duration_ms` arriving from another container's stored value under
+fan-out; **that is unproven.** It does not affect the refusal counts, the medians or the
+percentiles above, all of which are computed over `ok` rows independently of the residual.
+It has its own issue.
+
+**What none of this proves.** Overpass load is a property of the hour, not of the sha. A
+clean run does not close #256 by itself, which is exactly why the closure rests on three
+runs of the same shape and reports the one that missed.
 
 ## What is still ahead
 

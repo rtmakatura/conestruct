@@ -1,0 +1,129 @@
+healthz sha 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e expect 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e
+base https://www.conestruct.com cycles=20 coldGap=130s started 2026-09-17T12:08:03.998Z
+[c1 denver cold] http=200 wall=5491ms scan=3121 status=ok memo=false corridor=checked mirror#1 elem=396
+[c1 denver warm] http=200 wall=474ms scan=3121 status=ok memo=true corridor=checked mirror#1 elem=396
+[c1 lakewood cold] http=200 wall=284ms scan=3620 status=ok memo=true corridor=checked mirror#1 elem=160
+[c1 lakewood warm] http=200 wall=4123ms scan=3714 status=ok memo=false corridor=checked mirror#1 elem=160
+-- cycle 1 done, sleeping 130s to expire the memo --
+[c2 denver cold] http=200 wall=18409ms scan=17492 status=ok memo=false corridor=checked mirror#3 elem=396
+[c2 denver warm] http=200 wall=518ms scan=17492 status=ok memo=true corridor=checked mirror#3 elem=396
+[c2 lakewood cold] http=400 wall=20671ms scan=20303 status=HTTP 400 memo=false corridor=n/a mirror#null elem=null error=site_scan_unavailable | https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out
+[c2 lakewood warm] http=400 wall=20828ms scan=20305 status=HTTP 400 memo=false corridor=n/a mirror#null elem=null error=site_scan_unavailable | https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out
+-- cycle 2 done, sleeping 130s to expire the memo --
+[c3 denver cold] http=400 wall=21052ms scan=20308 status=HTTP 400 memo=false corridor=n/a mirror#null elem=null error=site_scan_unavailable | https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out
+[c3 denver warm] http=200 wall=4699ms scan=4070 status=ok memo=false corridor=checked mirror#1 elem=396
+[c3 lakewood cold] http=400 wall=20808ms scan=20302 status=HTTP 400 memo=false corridor=n/a mirror#null elem=null error=site_scan_unavailable | https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out
+[c3 lakewood warm] http=400 wall=20805ms scan=20303 status=HTTP 400 memo=false corridor=n/a mirror#null elem=null error=site_scan_unavailable | https://overpass.openstreetmap.fr/api/interpreter: ReadTimeout: The read operation timed out
+-- cycle 3 done, sleeping 130s to expire the memo --
+[c4 denver cold] http=200 wall=18135ms scan=17469 status=ok memo=false corridor=checked mirror#3 elem=396
+[c4 denver warm] http=200 wall=372ms scan=17469 status=ok memo=true corridor=checked mirror#3 elem=396
+[c4 lakewood cold] http=200 wall=4227ms scan=3863 status=ok memo=false corridor=checked mirror#1 elem=160
+[c4 lakewood warm] http=200 wall=367ms scan=3863 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 4 done, sleeping 130s to expire the memo --
+[c5 denver cold] http=200 wall=3566ms scan=2875 status=ok memo=false corridor=checked mirror#1 elem=396
+[c5 denver warm] http=200 wall=365ms scan=2875 status=ok memo=true corridor=checked mirror#1 elem=396
+[c5 lakewood cold] http=200 wall=17730ms scan=17370 status=ok memo=false corridor=checked mirror#3 elem=160
+[c5 lakewood warm] http=200 wall=378ms scan=17370 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 5 done, sleeping 130s to expire the memo --
+[c6 denver cold] http=200 wall=2999ms scan=2093 status=ok memo=false corridor=checked mirror#1 elem=396
+[c6 denver warm] http=200 wall=367ms scan=2093 status=ok memo=true corridor=checked mirror#1 elem=396
+[c6 lakewood cold] http=200 wall=17634ms scan=17258 status=ok memo=false corridor=checked mirror#3 elem=160
+[c6 lakewood warm] http=200 wall=387ms scan=17258 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 6 done, sleeping 130s to expire the memo --
+[c7 denver cold] http=200 wall=4104ms scan=3364 status=ok memo=false corridor=checked mirror#1 elem=396
+[c7 denver warm] http=200 wall=376ms scan=3364 status=ok memo=true corridor=checked mirror#1 elem=396
+[c7 lakewood cold] http=200 wall=17041ms scan=16698 status=ok memo=false corridor=checked mirror#3 elem=160
+[c7 lakewood warm] http=200 wall=402ms scan=16698 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 7 done, sleeping 130s to expire the memo --
+[c8 denver cold] http=200 wall=18262ms scan=17583 status=ok memo=false corridor=checked mirror#3 elem=396
+[c8 denver warm] http=200 wall=420ms scan=17583 status=ok memo=true corridor=checked mirror#3 elem=396
+[c8 lakewood cold] http=200 wall=7467ms scan=6852 status=ok memo=false corridor=checked mirror#1 elem=160
+[c8 lakewood warm] http=200 wall=373ms scan=6852 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 8 done, sleeping 130s to expire the memo --
+[c9 denver cold] http=200 wall=3028ms scan=2402 status=ok memo=false corridor=checked mirror#1 elem=396
+[c9 denver warm] http=200 wall=360ms scan=2402 status=ok memo=true corridor=checked mirror#1 elem=396
+[c9 lakewood cold] http=200 wall=6429ms scan=6064 status=ok memo=false corridor=checked mirror#1 elem=160
+[c9 lakewood warm] http=200 wall=451ms scan=6064 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 9 done, sleeping 130s to expire the memo --
+[c10 denver cold] http=200 wall=5523ms scan=4838 status=ok memo=false corridor=checked mirror#1 elem=396
+[c10 denver warm] http=200 wall=391ms scan=4838 status=ok memo=true corridor=checked mirror#1 elem=396
+[c10 lakewood cold] http=200 wall=18096ms scan=17715 status=ok memo=false corridor=checked mirror#3 elem=160
+[c10 lakewood warm] http=200 wall=394ms scan=17715 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 10 done, sleeping 130s to expire the memo --
+[c11 denver cold] http=200 wall=4898ms scan=4283 status=ok memo=false corridor=checked mirror#1 elem=396
+[c11 denver warm] http=200 wall=360ms scan=4283 status=ok memo=true corridor=checked mirror#1 elem=396
+[c11 lakewood cold] http=200 wall=3976ms scan=3511 status=ok memo=false corridor=checked mirror#1 elem=160
+[c11 lakewood warm] http=200 wall=372ms scan=3511 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 11 done, sleeping 130s to expire the memo --
+[c12 denver cold] http=200 wall=3748ms scan=3084 status=ok memo=false corridor=checked mirror#1 elem=396
+[c12 denver warm] http=200 wall=372ms scan=3084 status=ok memo=true corridor=checked mirror#1 elem=396
+[c12 lakewood cold] http=200 wall=17761ms scan=17375 status=ok memo=false corridor=checked mirror#3 elem=160
+[c12 lakewood warm] http=200 wall=441ms scan=17375 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 12 done, sleeping 130s to expire the memo --
+[c13 denver cold] http=200 wall=18688ms scan=18069 status=ok memo=false corridor=checked mirror#3 elem=396
+[c13 denver warm] http=200 wall=367ms scan=18069 status=ok memo=true corridor=checked mirror#3 elem=396
+[c13 lakewood cold] http=200 wall=17598ms scan=17223 status=ok memo=false corridor=checked mirror#3 elem=160
+[c13 lakewood warm] http=200 wall=376ms scan=17223 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 13 done, sleeping 130s to expire the memo --
+[c14 denver cold] http=200 wall=3859ms scan=3199 status=ok memo=false corridor=checked mirror#1 elem=396
+[c14 denver warm] http=200 wall=373ms scan=3199 status=ok memo=true corridor=checked mirror#1 elem=396
+[c14 lakewood cold] http=200 wall=17875ms scan=17524 status=ok memo=false corridor=checked mirror#3 elem=160
+[c14 lakewood warm] http=200 wall=497ms scan=17524 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 14 done, sleeping 130s to expire the memo --
+[c15 denver cold] http=200 wall=6957ms scan=6274 status=ok memo=false corridor=checked mirror#1 elem=396
+[c15 denver warm] http=200 wall=408ms scan=6274 status=ok memo=true corridor=checked mirror#1 elem=396
+[c15 lakewood cold] http=200 wall=2700ms scan=2304 status=ok memo=false corridor=checked mirror#1 elem=160
+[c15 lakewood warm] http=200 wall=371ms scan=2304 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 15 done, sleeping 130s to expire the memo --
+[c16 denver cold] http=200 wall=5773ms scan=5053 status=ok memo=false corridor=checked mirror#1 elem=396
+[c16 denver warm] http=200 wall=371ms scan=5053 status=ok memo=true corridor=checked mirror#1 elem=396
+[c16 lakewood cold] http=200 wall=18050ms scan=17463 status=ok memo=false corridor=checked mirror#3 elem=160
+[c16 lakewood warm] http=200 wall=542ms scan=17463 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 16 done, sleeping 130s to expire the memo --
+[c17 denver cold] http=200 wall=18235ms scan=17581 status=ok memo=false corridor=checked mirror#3 elem=396
+[c17 denver warm] http=200 wall=380ms scan=17581 status=ok memo=true corridor=checked mirror#3 elem=396
+[c17 lakewood cold] http=200 wall=17129ms scan=16739 status=ok memo=false corridor=checked mirror#3 elem=160
+[c17 lakewood warm] http=200 wall=400ms scan=16739 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 17 done, sleeping 130s to expire the memo --
+[c18 denver cold] http=200 wall=3635ms scan=2980 status=ok memo=false corridor=checked mirror#1 elem=396
+[c18 denver warm] http=200 wall=382ms scan=2980 status=ok memo=true corridor=checked mirror#1 elem=396
+[c18 lakewood cold] http=200 wall=2742ms scan=2379 status=ok memo=false corridor=checked mirror#1 elem=160
+[c18 lakewood warm] http=200 wall=358ms scan=2379 status=ok memo=true corridor=checked mirror#1 elem=160
+-- cycle 18 done, sleeping 130s to expire the memo --
+[c19 denver cold] http=200 wall=5127ms scan=4438 status=ok memo=false corridor=checked mirror#1 elem=396
+[c19 denver warm] http=200 wall=395ms scan=4438 status=ok memo=true corridor=checked mirror#1 elem=396
+[c19 lakewood cold] http=200 wall=17584ms scan=17234 status=ok memo=false corridor=checked mirror#3 elem=160
+[c19 lakewood warm] http=200 wall=381ms scan=17234 status=ok memo=true corridor=checked mirror#3 elem=160
+-- cycle 19 done, sleeping 130s to expire the memo --
+[c20 denver cold] http=200 wall=5455ms scan=4760 status=ok memo=false corridor=checked mirror#1 elem=396
+[c20 denver warm] http=200 wall=445ms scan=4760 status=ok memo=true corridor=checked mirror#1 elem=396
+[c20 lakewood cold] http=200 wall=17843ms scan=17472 status=ok memo=false corridor=checked mirror#3 elem=160
+[c20 lakewood warm] http=200 wall=395ms scan=17472 status=ok memo=true corridor=checked mirror#3 elem=160
+
+=====================================================================
+#256 ACCEPTANCE LEG — ruling f
+=====================================================================
+started 2026-09-17T12:08:03.998Z  finished 2026-09-17T12:57:59.042Z
+healthz at start 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e   at end 2e5a647a0e3ac6a23bf5c5ff76d0cde975e34e1e   (no deploy mid-run)
+
+-- denver / cold, n=20 --
+   refusals: 1/20   (ruling f bar: <= 1 in 20)  PASS
+   mirror index reached: {"1":14,"3":5,"null":1}
+   corridor check_unavailable on ok rows: 0/19  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=19 min=2093 median=4438 p90=17583 max=18069
+   residual_ms (ok, = layout + any second trip): n=19 min=615 median=683 p90=917 max=2370
+   warm rows with memo_hit=false: 1/20  — container fan-out, NOT a memo defect
+
+-- lakewood / cold, n=20 --
+   refusals: 2/20   (ruling f bar: <= 1 in 20)  FAIL
+   mirror index reached: {"1":7,"3":11,"null":2}
+   corridor check_unavailable on ok rows: 0/18  (0 %)   (ruling f bar: <= 1 in 20)  PASS
+   scan duration_ms (ok): n=18 min=2304 median=17223 p90=17524 max=17715
+   residual_ms (ok, = layout + any second trip): n=18 min=-3336 median=375 p90=587 max=615
+   warm rows with memo_hit=false: 1/18  — container fan-out, NOT a memo defect
+
+-- the claim fix 1 has to make good --
+   cold rows reaching mirror 2 or 3: 16/40
+   (arc-31, before fix 1: 0 of 80 prod rows — every one read mirror 1)
+=====================================================================
+DONE 80 rows 2026-09-17T12:57:59.051Z
