@@ -156,7 +156,7 @@ The demo corridor no longer fails a third of the time. That is closed.
 run's refusals were the same shape — `ReadTimeout` on mirror 3 at the full 20.3 s budget,
 i.e. the last mirror in the chain getting the remainder after mirrors 1 and 2 spent their
 7 s caps. The cap works; being third on a bad draw still costs the answer. **That is the
-mirror-ordering finding, and it is now its own issue rather than a footnote here.**
+mirror-ordering finding, and it is now its own issue — #292 — rather than a footnote here.**
 
 **The fold, measured.** `residual_ms` is everything the request did except the site scan —
 layout, plus (before the fold) the corridor check's separate 20 s-budget round trip:
@@ -179,7 +179,7 @@ documents as meaningless on a memo HIT — but these rows report `memo_hit: fals
 likely cause is `duration_ms` arriving from another container's stored value under
 fan-out; **that is unproven.** It does not affect the refusal counts, the medians or the
 percentiles above, all of which are computed over `ok` rows independently of the residual.
-It has its own issue.
+It has its own issue — **#293**.
 
 **What none of this proves.** Overpass load is a property of the hour, not of the sha. A
 clean run does not close #256 by itself, which is exactly why the closure rests on three
@@ -195,3 +195,17 @@ runs of the same shape and reports the one that missed.
 - **The final acceptance leg** on the last sha — the same 20 × 2, plus corridor-check
   `check_unavailable` ≤ 1 in 20 on ok audits. #256 closes on that.
 - **Held by ruling i:** the corridor bbox / `use_max` question is Phase 3's, not this arc's.
+
+## The two findings this arc handed on
+
+Both were surfaced by the acceptance legs and are recorded here so the closure is not
+mistaken for "nothing left":
+
+- **#292 — Overpass mirror ordering.** Mirror 1 stalls most and is asked first. Every
+  refusal in run 3 was the same shape: `ReadTimeout` on mirror 3 at the full 20.3 s
+  budget, i.e. the fastest mirror reached last and given the remainder. The per-mirror cap
+  got the chain *to* mirror 3 (0/80 → 15, 16, 21 of 40); ordering is what would get it
+  there sooner. The known remaining lever on the refusal rate.
+- **#293 — the negative `residual_ms`.** An unexplained value in this arc's own committed
+  evidence. Filed rather than left, because an unexplained number in an artifact that
+  closed a priority-high issue is worse than a known one.
