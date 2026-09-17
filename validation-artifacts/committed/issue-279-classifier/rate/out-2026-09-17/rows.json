@@ -1,0 +1,61 @@
+[
+ {
+  "name": "e-bayaud",
+  "lat": 39.71466,
+  "lng": -104.94071,
+  "expect": "urban",
+  "source": "#279's own report; the #213 pin; way 39508704, an OSM primary in central Denver",
+  "fetched": true,
+  "before": false,
+  "after": false,
+  "place_classes": {
+   "village": 1
+  },
+  "closest_place": "village \"Glendale\" @ 1256 m",
+  "elements": 1
+ },
+ {
+  "name": "denver-demo",
+  "lat": 39.7269,
+  "lng": -104.9873,
+  "expect": "urban",
+  "source": "#256 / s2-arc31's Denver demo pin",
+  "fetched": true,
+  "before": true,
+  "after": true,
+  "place_classes": {
+   "neighbourhood": 19,
+   "city": 1
+  },
+  "closest_place": "neighbourhood \"Sherman Street Historic District\" @ 708 m",
+  "elements": 20
+ },
+ {
+  "name": "lakewood",
+  "lat": 39.7113,
+  "lng": -105.0815,
+  "expect": "urban",
+  "source": "#224's Lakewood control pin; tests/fixtures/site_scan/",
+  "fetched": true,
+  "before": true,
+  "after": true,
+  "place_classes": {
+   "city": 1
+  },
+  "closest_place": "city \"Lakewood\" @ 407 m",
+  "elements": 1
+ },
+ {
+  "name": "rural-control-us40-east",
+  "lat": 39.3722,
+  "lng": -102.6019,
+  "expect": "rural",
+  "source": "US-40 east of Kit Carson, eastern Colorado plains — the control",
+  "fetched": true,
+  "before": false,
+  "after": false,
+  "place_classes": {},
+  "closest_place": null,
+  "elements": 0
+ }
+]

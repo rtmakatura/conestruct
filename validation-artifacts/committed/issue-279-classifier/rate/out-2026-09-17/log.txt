@@ -1,0 +1,31 @@
+#279 isUrban rate — one fetch per pin, both predicates over it
+started 2026-09-17T13:14:10.937Z
+
+    mirror https://overpass-api.de/api/interpreter -> timeout 8s
+    mirror https://overpass.kumi.systems/api/interpreter -> timeout 8s
+[e-bayaud] expect=urban  before=false  after=false
+    closest place: village "Glendale" @ 1256 m
+    classes in range: {"village":1}
+
+[denver-demo] expect=urban  before=true  after=true
+    closest place: neighbourhood "Sherman Street Historic District" @ 708 m
+    classes in range: {"neighbourhood":19,"city":1}
+
+[lakewood] expect=urban  before=true  after=true
+    closest place: city "Lakewood" @ 407 m
+    classes in range: {"city":1}
+
+    mirror https://overpass-api.de/api/interpreter -> timeout 8s
+    mirror https://overpass.kumi.systems/api/interpreter -> timeout 8s
+[rural-control-us40-east] expect=rural  before=false  after=false
+    closest place: none
+    classes in range: {}
+
+=====================================================================
+RATE, on the named sample
+=====================================================================
+urban pins classified urban — BEFORE: 2/3   AFTER: 2/3
+rural pins classified rural — BEFORE: 1/1   AFTER: 1/1
+pins whose verdict changed: none
+=====================================================================
+DONE 2026-09-17T13:15:02.367Z

@@ -22,7 +22,62 @@ central Denver — isUrban resolves false on a way that is plainly urban". **Pha
 > backend — say whether this arc moves it there or leaves it in classify.ts with the
 > reason. rulings.md first commit. Build, verify, stop with the ship line.
 
-## The cause, as the checkpoint found it
+---
+
+# ⚠ THE DIAGNOSIS BELOW WAS FALSIFIED — 2026-09-17
+
+**Read this before the next section.** The cause recorded below is **wrong**, and the
+measurement the ruling itself demanded is what proved it wrong. It is kept verbatim,
+because an authority file that quietly deletes its mistakes is not an authority.
+
+The ruling asked for "the rate ... measured before and after on the same named sample of
+reference pins". Measured 2026-09-17 (`rate/`, one fetch per pin with both predicates
+evaluated over that single payload):
+
+| pin | expect | before | after | place classes within 3 km |
+|---|---|---|---|---|
+| **e-bayaud** | urban | **false** | **false** | `{village: 1}` |
+| denver-demo | urban | true | true | `{neighbourhood: 19, city: 1}` |
+| lakewood | urban | true | true | `{city: 1}` |
+| rural-control-us40-east | rural | false | false | `{}` |
+
+**Pins whose verdict changed: none.** #279's own pin still classifies rural after the fix.
+
+A direct query at E Bayaud says why:
+
+```
+=== radius 3000 m: 3 place nodes ===
+   1256 m  place=village    Glendale
+   2200 m  place=locality   Hale
+   2218 m  place=locality   Congress Park
+  nearest city/town: NONE in range
+
+=== radius 8000 m ===
+   3056 m  place=neighbourhood  Alamo Placita     <- 56 m outside the radius
+   4661 m  place=city           Denver
+```
+
+**There was never an urban-class node inside the radius for a nearer one to mask.**
+`before=false` and `after=false` are both *correct* given those inputs.
+
+**The real cause is `PLACE_RADIUS_M = 3000`** — the nearest neighbourhood misses the
+boundary by 56 m and Denver's city node sits at 4,661 m — **plus Denver tagging real
+neighbourhoods as `place=locality`** (Hale, Congress Park, Montclair, East Colfax), a
+class the predicate does not accept at all.
+
+**What the masking finding still is:** a genuine code defect. The predicate did not do what
+its own comment said, and closest-wins masks an urban node behind a nearer non-urban one
+wherever both are in range. The unit tests prove that mechanism fires. **It is not the
+cause of #279's symptom and does not close #279.** It ships on its own merits, under its
+own issue, never claiming this one.
+
+**What happens next:** the real fix is its own checkpoint, with a sample larger than four
+and three candidates measured before any recommendation — see "The real fix" at the end of
+this file.
+
+---
+
+## The cause, as the checkpoint found it — FALSIFIED, see above
 
 `isUrban` is not computed in `classify.ts` at all — it is a **parameter**. Its producer is
 `conestruct/site/app/api/road-bearing/route.ts`, and it has **two independent defects**,
@@ -100,3 +155,50 @@ prevent. This arc fixes the predicate where it lives and marks the destination.
 - The classification **marks itself `inferred` wherever it guessed** (#274's producer).
 - **A genuinely rural fixture stays rural.**
 - **The rate is measured before and after on the same named sample of reference pins.**
+
+---
+
+## The real fix — its own checkpoint (ruled 2026-09-17)
+
+> (c) The real fix is its own checkpoint. Measure before recommending, against a sample
+> larger than four: add every reference pin in memory.md plus at least four genuinely rural
+> controls, so a change that flips a rural pin urban is caught. Three candidates to
+> measure: widen the radius (state what it would trace to — "far enough for one pin" is not
+> a trace); admit place=locality (measure the rural false-positive rate it introduces); and
+> the one worth taking seriously — whether the road's own tags (highway class, lanes,
+> sidewalk, maxspeed, lit) decide urbanity better than nearby place nodes. Report the
+> per-pin verdicts for each candidate on the whole sample.
+
+### The 3,000 m constant is CHOSEN-by-inheritance, not traced
+
+> One note on the 3,000 m trace: it traces to a retired system (the Mapbox tilequery
+> radius). That is a trace to a decision someone made for a different tool, so it is
+> CHOSEN-by-inheritance, not traced. Say so in the checkpoint; it lowers the bar for moving
+> it, but only to a measured value.
+
+`PLACE_RADIUS_M = 3000`'s comment reads "matches the Mapbox-tilequery `place_label` radius
+that the previous /api/road-classify used (3000 m)". That endpoint is retired. So the
+value's provenance is *another tool's* choice, inherited when this route replaced it —
+which is a lineage, not a justification. Nothing measured it against this predicate, on
+these pins, for this question.
+
+**Consequence for the checkpoint:** moving it does not require overturning a traced value,
+because there is no trace to overturn. It requires a **measured** one. "Far enough to catch
+Denver from Bayaud" is fitting a constant to a single pin — the way the next wrong number
+gets made — and is not acceptable as a justification.
+
+### What the checkpoint must report
+
+Per-pin verdicts for **each** candidate across the **whole** sample, not a summary rate:
+
+- **A — widen the radius.** State what any proposed value traces to, or mark it CHOSEN with
+  its reasoning. Report which rural controls it flips.
+- **B — admit `place=locality`.** Denver uses it for real neighbourhoods (Hale, Congress
+  Park, Montclair, East Colfax). OSM also uses it for uninhabited named places, so the
+  rural false-positive rate it introduces is the number that decides it.
+- **C — read the road's own tags** (highway class, lanes, sidewalk, maxspeed, lit) instead
+  of nearby place nodes. The one worth taking seriously: it asks what the road *is* rather
+  than what is near it, and the tags already arrive on the candidate the operator picks.
+
+A candidate that flips a genuinely rural pin urban fails, however well it does on the urban
+ones — which is why the sample needs the four-plus rural controls.
