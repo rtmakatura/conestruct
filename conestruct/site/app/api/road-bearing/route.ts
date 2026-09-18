@@ -38,9 +38,43 @@ const SEARCH_RADIUS_M = 50;
 // imprecision on undivided roads.
 const SNAP_MAX_DISTANCE_M = 30;
 // Place-node search radius.  Used to decide isUrban for road-type
-// classification — matches the Mapbox-tilequery `place_label` radius
-// that the previous /api/road-classify used (3000 m).
-const PLACE_RADIUS_M = 3000;
+// classification.
+//
+// CHOSEN (#279, 2026-09-17) from a measured sample, replacing 3000 m —
+// which was CHOSEN-by-inheritance: it matched the Mapbox-tilequery
+// `place_label` radius the retired /api/road-classify used, and no one
+// ever measured whether it was right for this predicate.  It was not.
+// #279's own pin (E Bayaud, 39.71466/-104.94071) sits 3,056 m from the
+// nearest `neighbourhood` node (Alamo Placita) — 56 m outside the old
+// radius — while Denver's `city` node is 4,661 m out.  Inside the old
+// 3,000 m there were exactly three place nodes: `village` Glendale at
+// 1,256 m, and Hale and Congress Park — real Denver neighbourhoods tagged
+// `place=locality`, a class this predicate does not accept.  So an OSM
+// `primary` in central Denver classified rural, with no acceptable node
+// in range for the predicate to find.  Measured per node in
+// validation-artifacts/committed/issue-279-classifier/bayaud/.
+//
+// Measured, in validation-artifacts/committed/issue-279-classifier/:
+//
+//   3,000 m   urban 6/7  rural 11/11   misses e-bayaud   } tiebreak/,
+//   5,000 m   urban 7/7  rural 11/11   <- this value     } derived pins
+//   8,000 m   flips a rural control urban (rural-sr71-limon)  candidates/
+//
+// The 3,000/5,000 rows are the tiebreaker sample: 7 urban reference pins
+// and 11 rural controls derived from their own highway geometry, way ids
+// recorded.  The 8,000 row is from the earlier five-candidate run over an
+// eyeballed pin set, so it is weaker evidence — but it is the only
+// evidence either way that more radius can cost a rural control.
+//
+// More radius is therefore NOT known to be monotonically better, and
+// 5,000 sits with ~2 km of margin over the nearest urban node caught and
+// well under the known failure at 8,000.  That margin is the reason for
+// the value; it is deliberately not fitted to e-bayaud's 3,056 m.
+//
+// Known limit: Lookout Mountain Rd classifies urban at every radius
+// measured (#291) — "what is near this road" is the wrong question for a
+// switchback, and no constant here fixes it.
+const PLACE_RADIUS_M = 5000;
 // Centerline capture (#140): the geometry radius, node cap, and the
 // stitch/trim machinery live in lib/road-detection/stitch.ts (#210
 // extraction) so they are unit-testable against recorded pools.

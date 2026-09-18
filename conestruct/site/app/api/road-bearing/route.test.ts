@@ -79,9 +79,17 @@ type Scripted =
 
 let queue: Scripted[];
 let fetchMock: ReturnType<typeof vi.fn>;
+// Every Overpass query body the route actually sent, decoded from the
+// `data=` form encoding.  The radius constants are observable ONLY here:
+// `around:` filtering happens on the Overpass side, so a stubbed response
+// cannot show whether the route asked for the right radius.
+let sentQueries: string[];
 
 function stubOverpass() {
-  fetchMock = vi.fn(async () => {
+  fetchMock = vi.fn(async (_url: unknown, init?: { body?: string }) => {
+    if (typeof init?.body === "string" && init.body.startsWith("data=")) {
+      sentQueries.push(decodeURIComponent(init.body.slice("data=".length)));
+    }
     const next = queue.shift() ?? { kind: "reject" as const };
     if (next.kind === "reject") throw new TypeError("fetch failed");
     if (next.kind === "status") {
@@ -98,6 +106,7 @@ function stubOverpass() {
 
 beforeEach(() => {
   queue = [];
+  sentQueries = [];
   stubOverpass();
 });
 
@@ -285,6 +294,26 @@ describe("#279 isUrban", () => {
     const body = await (await POST(request(PIN))).json();
     expect(body.isUrban).toBe(true);
     expect(body.placeName).toBe("Nearer Hamlet");
+  });
+
+  // The radius itself, pinned.  #279's reported pin (E Bayaud) sits
+  // 3,056 m from the nearest `neighbourhood` node — 56 m outside the old
+  // 3,000 m radius — so the wrong classification turned on the constant,
+  // not on the predicate above.  5,000 m is CHOSEN from the 2026-09-17
+  // tiebreaker sample (validation-artifacts/committed/issue-279-classifier/):
+  // 3,000 misses e-bayaud, 5,000 classifies 7/7 urban with 0/11 rural
+  // flips, and 8,000 flipped a rural control urban in the earlier
+  // candidates run.  Nothing else in this file can
+  // observe the value — the stub returns whatever elements it is handed,
+  // whatever their distance — so without this test the constant is
+  // untested and an edit back to 3,000 stays green.
+  it("asks Overpass for place nodes within 5,000 m (#279)", async () => {
+    queue = [{ kind: "ok", elements: [way(24, { highway: "primary" })] }];
+    await POST(request(PIN));
+    expect(sentQueries.length).toBeGreaterThan(0);
+    expect(sentQueries[0]).toContain(
+      `node(around:5000,${PIN.lat},${PIN.lng})["place"~`,
+    );
   });
 
 });
