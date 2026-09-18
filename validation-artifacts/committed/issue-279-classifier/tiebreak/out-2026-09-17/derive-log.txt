@@ -1,0 +1,114 @@
+#279 tiebreaker step 1 — deriving rural control pins FROM the roads
+started 2026-09-17T17:23:38.422Z
+a control must sit >= 4000 m from any place node
+
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us385-cheyenne] OK  38.95646, -102.35246
+    on way 815792143  ref=US 385  name=(none)  highway=trunk
+    nearest place: hamlet "Old Wells" @ 6673 m
+
+[plains-us287-kim] no way with ref="US 287" in bbox — REJECTED
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us40-kitcarson] OK  38.81001, -102.43448
+    on way 253107467  ref=US 40  name=United States Highway 40  highway=trunk
+    nearest place: village "Cheyenne Wells" @ 7151 m
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-sr71-limon] OK  39.12975, -103.69882
+    on way 1526182998  ref=CO 71  name=(none)  highway=primary
+    nearest place: none within 8 km
+
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us36-joes] OK  39.65797, -102.51775
+    on way 132309245  ref=US 36  name=County Road 6  highway=primary
+    nearest place: none within 8 km
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us50-lamar] OK  38.11590, -102.72176
+    on way 17125171  ref=US 50  name=(none)  highway=trunk
+    nearest place: village "Wiley" @ 4260 m
+
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-us550-ouray] REJECTED  37.84587, -107.72462
+    on way 17141860  ref=US 550  name=Million Dollar Highway  highway=trunk
+    nearest place: locality "Ophir Pass Trailhead (Easternmost)" @ 197 m
+    -> inside 4000 m of a place node; not a clean rural control
+
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-co14-poudre] REJECTED  40.69916, -105.67359
+    on way 8092307  ref=CO 14  name=West Highway 14  highway=primary
+    nearest place: hamlet "Idylwilde" @ 1601 m
+    -> inside 4000 m of a place node; not a clean rural control
+
+[mtn-us160-wolfcreek] OK  37.48745, -106.82593
+    on way 520172972  ref=US 160  name=(none)  highway=trunk
+    nearest place: none within 8 km
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-co133-mcclure] OK  39.25978, -107.23226
+    on way 223373968  ref=CO 133  name=(none)  highway=primary
+    nearest place: none within 8 km
+
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us287-springfield] no way with ref="US 287" in bbox — REJECTED
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us160-walsh] REJECTED  37.43222, -102.15182
+    on way 17013005  ref=US 160  name=(none)  highway=primary
+    nearest place: hamlet "Bartlett" @ 696 m
+    -> inside 4000 m of a place node; not a clean rural control
+
+[plains-co59-seibert] no way with ref="CO 59" in bbox — REJECTED
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us34-otis] REJECTED  40.15468, -103.08642
+    on way 253132403  ref=US 34  name=(none)  highway=primary
+    nearest place: hamlet "Platner" @ 1615 m
+    -> inside 4000 m of a place node; not a clean rural control
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-us50-monarch] OK  38.45549, -106.34319
+    on way 308321130  ref=US 50  name=(none)  highway=trunk
+    nearest place: none within 8 km
+
+[mtn-co149-creede] OK  37.89685, -107.15278
+    on way 17096156  ref=CO 149  name=Silver Thread Scenic Byway  highway=secondary
+    nearest place: locality "Jarosa Mesa" @ 6955 m
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-us285-antonito] no way with ref="US 285" in bbox — REJECTED
+[mtn-co139-douglaspass] OK  39.61209, -108.79701
+    on way 1245267865  ref=CO 139  name=Douglas Pass Road  highway=primary
+    nearest place: none within 8 km
+
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[smalltown-us85-fortlupton] REJECTED  40.08710, -104.81885
+    on way 111870192  ref=US 85  name=Highway 85  highway=trunk
+    nearest place: town "Fort Lupton" @ 562 m
+    -> inside 4000 m of a place node; not a clean rural control
+
+[smalltown-us24-limon] OK  39.23463, -103.79142
+    on way 808995928  ref=US 24  name=(none)  highway=trunk
+    nearest place: none within 8 km
+
+=====================================================================
+ACCEPTED 11 of 20 rural controls
+by context: {"plains":5,"mountain":5,"small-town adjacent":1}
+=====================================================================
+DONE 2026-09-17T17:35:04.388Z

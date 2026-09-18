@@ -1,0 +1,323 @@
+{
+ "3000": [
+  {
+   "place": "village",
+   "name": "Glendale",
+   "dist_m": 1256
+  },
+  {
+   "place": "locality",
+   "name": "Hale",
+   "dist_m": 2200
+  },
+  {
+   "place": "locality",
+   "name": "Congress Park",
+   "dist_m": 2218
+  }
+ ],
+ "5000": [
+  {
+   "place": "village",
+   "name": "Glendale",
+   "dist_m": 1256
+  },
+  {
+   "place": "locality",
+   "name": "Hale",
+   "dist_m": 2200
+  },
+  {
+   "place": "locality",
+   "name": "Congress Park",
+   "dist_m": 2218
+  },
+  {
+   "place": "locality",
+   "name": "Montclair",
+   "dist_m": 3040
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Alamo Placita",
+   "dist_m": 3056
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Quality Hill Historic District",
+   "dist_m": 3862
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Capitol Hill",
+   "dist_m": 4100
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Swallow Hill Historic District",
+   "dist_m": 4255
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Sherman Street Historic District",
+   "dist_m": 4290
+  },
+  {
+   "place": "city",
+   "name": "Denver",
+   "dist_m": 4661
+  },
+  {
+   "place": "locality",
+   "name": "East Colfax",
+   "dist_m": 4673
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Uptown",
+   "dist_m": 4680
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Civic Center",
+   "dist_m": 4798
+  }
+ ],
+ "8000": [
+  {
+   "place": "village",
+   "name": "Glendale",
+   "dist_m": 1256
+  },
+  {
+   "place": "locality",
+   "name": "Hale",
+   "dist_m": 2200
+  },
+  {
+   "place": "locality",
+   "name": "Congress Park",
+   "dist_m": 2218
+  },
+  {
+   "place": "locality",
+   "name": "Montclair",
+   "dist_m": 3040
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Alamo Placita",
+   "dist_m": 3056
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Quality Hill Historic District",
+   "dist_m": 3862
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Capitol Hill",
+   "dist_m": 4100
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Swallow Hill Historic District",
+   "dist_m": 4255
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Sherman Street Historic District",
+   "dist_m": 4290
+  },
+  {
+   "place": "city",
+   "name": "Denver",
+   "dist_m": 4661
+  },
+  {
+   "place": "locality",
+   "name": "East Colfax",
+   "dist_m": 4673
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Uptown",
+   "dist_m": 4680
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Civic Center",
+   "dist_m": 4798
+  },
+  {
+   "place": "neighbourhood",
+   "name": "San Rafael Historic District",
+   "dist_m": 5119
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Enterprise Hill Historic District",
+   "dist_m": 5313
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Glenarm Place Historic District",
+   "dist_m": 5334
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Clement",
+   "dist_m": 5384
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Five Points",
+   "dist_m": 5472
+  },
+  {
+   "place": "village",
+   "name": "Holly Hills",
+   "dist_m": 5537
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Upper Downtown",
+   "dist_m": 5697
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Mariposa District",
+   "dist_m": 5762
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Theatre District",
+   "dist_m": 5814
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Curtis-Champa Streets Historic District",
+   "dist_m": 5832
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Arapahoe Square",
+   "dist_m": 5858
+  },
+  {
+   "place": "neighbourhood",
+   "name": "La Alma–Lincoln Park",
+   "dist_m": 5883
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Curtis Park",
+   "dist_m": 5941
+  },
+  {
+   "place": "hamlet",
+   "name": "Sullivan",
+   "dist_m": 6060
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Central Business District",
+   "dist_m": 6117
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Ballpark",
+   "dist_m": 6263
+  },
+  {
+   "place": "city",
+   "name": "Aurora",
+   "dist_m": 6421
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Lower Downtown",
+   "dist_m": 6460
+  },
+  {
+   "place": "neighbourhood",
+   "name": "River North RiNo Art District",
+   "dist_m": 6505
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Auraria",
+   "dist_m": 6664
+  },
+  {
+   "place": "locality",
+   "name": "South Side Rail Yard",
+   "dist_m": 6840
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Union Station",
+   "dist_m": 6848
+  },
+  {
+   "place": "neighbourhood",
+   "name": "RiNo West",
+   "dist_m": 6867
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Union Station North",
+   "dist_m": 6933
+  },
+  {
+   "place": "locality",
+   "name": "Pullman Junction",
+   "dist_m": 7157
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Riverfront",
+   "dist_m": 7211
+  },
+  {
+   "place": "locality",
+   "name": "Union Pacific Denver Yard",
+   "dist_m": 7244
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Sandown",
+   "dist_m": 7254
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Sun Valley",
+   "dist_m": 7279
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Belmont Heights",
+   "dist_m": 7360
+  },
+  {
+   "place": "locality",
+   "name": "Prospect Junction",
+   "dist_m": 7428
+  },
+  {
+   "place": "locality",
+   "name": "Foster-Buell Estate",
+   "dist_m": 7538
+  },
+  {
+   "place": "locality",
+   "name": "Maitland Estate",
+   "dist_m": 7603
+  },
+  {
+   "place": "neighbourhood",
+   "name": "Lower Highland",
+   "dist_m": 7802
+  }
+ ]
+}

@@ -1,0 +1,54 @@
+#279 — place nodes around E Bayaud (39.71466, -104.94071)
+started 2026-09-18T14:57:19.089Z
+predicate accepts: city, town, suburb, neighbourhood
+
+=== radius 3000 m — 3 place nodes ===
+   1256 m  place=village        Glendale
+   2200 m  place=locality       Hale
+   2218 m  place=locality       Congress Park
+  nearest node the predicate accepts: NONE in range
+  nearest place=city: none in range
+  isUrban at this radius: false
+
+=== radius 5000 m — 13 place nodes ===
+   1256 m  place=village        Glendale
+   2200 m  place=locality       Hale
+   2218 m  place=locality       Congress Park
+   3040 m  place=locality       Montclair
+   3056 m  place=neighbourhood  Alamo Placita   <- predicate ACCEPTS
+   3862 m  place=neighbourhood  Quality Hill Historic District   <- predicate ACCEPTS
+   4100 m  place=neighbourhood  Capitol Hill   <- predicate ACCEPTS
+   4255 m  place=neighbourhood  Swallow Hill Historic District   <- predicate ACCEPTS
+   4290 m  place=neighbourhood  Sherman Street Historic District   <- predicate ACCEPTS
+   4661 m  place=city           Denver   <- predicate ACCEPTS
+   4673 m  place=locality       East Colfax
+   4680 m  place=neighbourhood  Uptown   <- predicate ACCEPTS
+   4798 m  place=neighbourhood  Civic Center   <- predicate ACCEPTS
+  nearest node the predicate accepts: Alamo Placita @ 3056 m (place=neighbourhood)
+  nearest place=city: Denver @ 4661 m
+  isUrban at this radius: TRUE
+
+    https://overpass-api.de/api/interpreter -> HTTP 429
+    https://overpass.kumi.systems/api/interpreter -> timeout 20s
+=== radius 8000 m — 47 place nodes ===
+   1256 m  place=village        Glendale
+   2200 m  place=locality       Hale
+   2218 m  place=locality       Congress Park
+   3040 m  place=locality       Montclair
+   3056 m  place=neighbourhood  Alamo Placita   <- predicate ACCEPTS
+   3862 m  place=neighbourhood  Quality Hill Historic District   <- predicate ACCEPTS
+   4100 m  place=neighbourhood  Capitol Hill   <- predicate ACCEPTS
+   4255 m  place=neighbourhood  Swallow Hill Historic District   <- predicate ACCEPTS
+   4290 m  place=neighbourhood  Sherman Street Historic District   <- predicate ACCEPTS
+   4661 m  place=city           Denver   <- predicate ACCEPTS
+   4673 m  place=locality       East Colfax
+   4680 m  place=neighbourhood  Uptown   <- predicate ACCEPTS
+   4798 m  place=neighbourhood  Civic Center   <- predicate ACCEPTS
+   5119 m  place=neighbourhood  San Rafael Historic District   <- predicate ACCEPTS
+   5313 m  place=neighbourhood  Enterprise Hill Historic District   <- predicate ACCEPTS
+  … 32 more
+  nearest node the predicate accepts: Alamo Placita @ 3056 m (place=neighbourhood)
+  nearest place=city: Denver @ 4661 m
+  isUrban at this radius: TRUE
+
+DONE 2026-09-18T14:58:07.991Z

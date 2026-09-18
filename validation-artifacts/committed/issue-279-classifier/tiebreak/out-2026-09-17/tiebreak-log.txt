@@ -1,0 +1,91 @@
+#279 tiebreaker — A-5 km vs B(+locality), per pin
+started 2026-09-17T17:35:28.641Z
+scored: 18 pins (7 urban, 11 rural)
+unscored (ambiguous, near a place node): 5
+
+[e-bayaud] urban  ctx=urban  places=47
+    current(3km) rural MISS    A-5km URBAN ok    B(+loc) URBAN ok
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[e-colfax] urban  ctx=urban  places=58
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+[lakewood] urban  ctx=urban  places=19
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[northglenn] urban  ctx=urban  places=31
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+[thornton] urban  ctx=urban  places=38
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[greeley] urban  ctx=urban  places=13
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+[denver-demo] urban  ctx=urban  places=56
+    current(3km) URBAN ok    A-5km URBAN ok    B(+loc) URBAN ok
+[plains-us385-cheyenne] rural  ctx=plains  places=1  way=815792143
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[plains-us40-kitcarson] rural  ctx=plains  places=1  way=253107467
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-sr71-limon] rural  ctx=plains  places=0  way=1526182998
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[plains-us36-joes] rural  ctx=plains  places=0  way=132309245
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[plains-us50-lamar] rural  ctx=plains  places=6  way=17125171
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-us160-wolfcreek] rural  ctx=mountain  places=0  way=520172972
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-co133-mcclure] rural  ctx=mountain  places=0  way=223373968
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[mtn-us50-monarch] rural  ctx=mountain  places=0  way=308321130
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[mtn-co149-creede] rural  ctx=mountain  places=1  way=17096156
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+      https://overpass-api.de/api/interpreter -> HTTP 429
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-co139-douglaspass] rural  ctx=mountain  places=0  way=1245267865
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+[smalltown-us24-limon] rural  ctx=small-town adjacent  places=0  way=808995928
+    current(3km) rural ok    A-5km rural ok    B(+loc) rural ok
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-us550-ouray] (unscored)  ctx=mountain  places=5  way=17141860
+    current(3km) rural       A-5km rural       B(+loc) URBAN   
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[mtn-co14-poudre] (unscored)  ctx=mountain  places=4  way=8092307
+    current(3km) rural       A-5km rural       B(+loc) rural   
+      https://overpass-api.de/api/interpreter -> HTTP 504
+      https://overpass.kumi.systems/api/interpreter -> timeout 25s
+[plains-us160-walsh] (unscored)  ctx=plains  places=1  way=17013005
+    current(3km) rural       A-5km rural       B(+loc) rural   
+[plains-us34-otis] (unscored)  ctx=plains  places=1  way=253132403
+    current(3km) rural       A-5km rural       B(+loc) rural   
+[smalltown-us85-fortlupton] (unscored)  ctx=small-town adjacent  places=5  way=111870192
+    current(3km) URBAN       A-5km URBAN       B(+loc) URBAN   
+
+=====================================================================
+SCORED RESULT — plains and mountain controls only
+=====================================================================
+current (3 km):  urban 6/7   rural 11/11
+    urban MISSED: e-bayaud
+A — 5 km:  urban 7/7   rural 11/11
+B — +locality:  urban 7/7   rural 11/11
+
+RURAL FLIPS — A-5km: 0   B: 0
+  -> TIE on rural flips; the ruling breaks it toward A-5 km
+
+UNSCORED (ambiguous, near a place node) — reported, not scored:
+  mtn-us550-ouray: current=rural A-5km=rural B=urban   <-- candidates DISAGREE
+  mtn-co14-poudre: current=rural A-5km=rural B=rural
+  plains-us160-walsh: current=rural A-5km=rural B=rural
+  plains-us34-otis: current=rural A-5km=rural B=rural
+  smalltown-us85-fortlupton: current=urban A-5km=urban B=urban
+=====================================================================
+DONE 2026-09-17T17:43:05.008Z

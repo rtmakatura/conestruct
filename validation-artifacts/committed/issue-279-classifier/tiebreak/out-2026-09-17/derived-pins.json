@@ -1,0 +1,314 @@
+[
+ {
+  "name": "plains-us385-cheyenne",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": true,
+  "lat": 38.95646,
+  "lng": -102.35246,
+  "way_id": 815792143,
+  "ref": "US 385",
+  "road_name": null,
+  "highway": "trunk",
+  "nearest_place": {
+   "place": "hamlet",
+   "name": "Old Wells",
+   "dist_m": 6673
+  },
+  "why": null
+ },
+ {
+  "name": "plains-us287-kim",
+  "ref": "US 287",
+  "bbox": [
+   37.1,
+   -103.45,
+   37.4,
+   -103.2
+  ],
+  "ctx": "plains",
+  "ok": false,
+  "why": "no such ref in bbox"
+ },
+ {
+  "name": "plains-us40-kitcarson",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": true,
+  "lat": 38.81001,
+  "lng": -102.43448,
+  "way_id": 253107467,
+  "ref": "US 40",
+  "road_name": "United States Highway 40",
+  "highway": "trunk",
+  "nearest_place": {
+   "place": "village",
+   "name": "Cheyenne Wells",
+   "dist_m": 7151
+  },
+  "why": null
+ },
+ {
+  "name": "plains-sr71-limon",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": true,
+  "lat": 39.12975,
+  "lng": -103.69882,
+  "way_id": 1526182998,
+  "ref": "CO 71",
+  "road_name": null,
+  "highway": "primary",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "plains-us36-joes",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": true,
+  "lat": 39.65797,
+  "lng": -102.51775,
+  "way_id": 132309245,
+  "ref": "US 36",
+  "road_name": "County Road 6",
+  "highway": "primary",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "plains-us50-lamar",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": true,
+  "lat": 38.1159,
+  "lng": -102.72176,
+  "way_id": 17125171,
+  "ref": "US 50",
+  "road_name": null,
+  "highway": "trunk",
+  "nearest_place": {
+   "place": "village",
+   "name": "Wiley",
+   "dist_m": 4260
+  },
+  "why": null
+ },
+ {
+  "name": "mtn-us550-ouray",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": false,
+  "lat": 37.84587,
+  "lng": -107.72462,
+  "way_id": 17141860,
+  "ref": "US 550",
+  "road_name": "Million Dollar Highway",
+  "highway": "trunk",
+  "nearest_place": {
+   "place": "locality",
+   "name": "Ophir Pass Trailhead (Easternmost)",
+   "dist_m": 197
+  },
+  "why": "nearest place 197 m < 4000 m"
+ },
+ {
+  "name": "mtn-co14-poudre",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": false,
+  "lat": 40.69916,
+  "lng": -105.67359,
+  "way_id": 8092307,
+  "ref": "CO 14",
+  "road_name": "West Highway 14",
+  "highway": "primary",
+  "nearest_place": {
+   "place": "hamlet",
+   "name": "Idylwilde",
+   "dist_m": 1601
+  },
+  "why": "nearest place 1601 m < 4000 m"
+ },
+ {
+  "name": "mtn-us160-wolfcreek",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": true,
+  "lat": 37.48745,
+  "lng": -106.82593,
+  "way_id": 520172972,
+  "ref": "US 160",
+  "road_name": null,
+  "highway": "trunk",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "mtn-co133-mcclure",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": true,
+  "lat": 39.25978,
+  "lng": -107.23226,
+  "way_id": 223373968,
+  "ref": "CO 133",
+  "road_name": null,
+  "highway": "primary",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "plains-us287-springfield",
+  "ref": "US 287",
+  "bbox": [
+   37.3,
+   -102.65,
+   37.55,
+   -102.5
+  ],
+  "ctx": "plains",
+  "ok": false,
+  "why": "no such ref in bbox"
+ },
+ {
+  "name": "plains-us160-walsh",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": false,
+  "lat": 37.43222,
+  "lng": -102.15182,
+  "way_id": 17013005,
+  "ref": "US 160",
+  "road_name": null,
+  "highway": "primary",
+  "nearest_place": {
+   "place": "hamlet",
+   "name": "Bartlett",
+   "dist_m": 696
+  },
+  "why": "nearest place 696 m < 4000 m"
+ },
+ {
+  "name": "plains-co59-seibert",
+  "ref": "CO 59",
+  "bbox": [
+   39.3,
+   -102.65,
+   39.55,
+   -102.55
+  ],
+  "ctx": "plains",
+  "ok": false,
+  "why": "no such ref in bbox"
+ },
+ {
+  "name": "plains-us34-otis",
+  "ctx": "plains",
+  "expect": "rural",
+  "ok": false,
+  "lat": 40.15468,
+  "lng": -103.08642,
+  "way_id": 253132403,
+  "ref": "US 34",
+  "road_name": null,
+  "highway": "primary",
+  "nearest_place": {
+   "place": "hamlet",
+   "name": "Platner",
+   "dist_m": 1615
+  },
+  "why": "nearest place 1615 m < 4000 m"
+ },
+ {
+  "name": "mtn-us50-monarch",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": true,
+  "lat": 38.45549,
+  "lng": -106.34319,
+  "way_id": 308321130,
+  "ref": "US 50",
+  "road_name": null,
+  "highway": "trunk",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "mtn-co149-creede",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": true,
+  "lat": 37.89685,
+  "lng": -107.15278,
+  "way_id": 17096156,
+  "ref": "CO 149",
+  "road_name": "Silver Thread Scenic Byway",
+  "highway": "secondary",
+  "nearest_place": {
+   "place": "locality",
+   "name": "Jarosa Mesa",
+   "dist_m": 6955
+  },
+  "why": null
+ },
+ {
+  "name": "mtn-us285-antonito",
+  "ref": "US 285",
+  "bbox": [
+   37.1,
+   -106.2,
+   37.3,
+   -106
+  ],
+  "ctx": "mountain",
+  "ok": false,
+  "why": "no such ref in bbox"
+ },
+ {
+  "name": "mtn-co139-douglaspass",
+  "ctx": "mountain",
+  "expect": "rural",
+  "ok": true,
+  "lat": 39.61209,
+  "lng": -108.79701,
+  "way_id": 1245267865,
+  "ref": "CO 139",
+  "road_name": "Douglas Pass Road",
+  "highway": "primary",
+  "nearest_place": null,
+  "why": null
+ },
+ {
+  "name": "smalltown-us85-fortlupton",
+  "ctx": "small-town adjacent",
+  "expect": "rural",
+  "ok": false,
+  "lat": 40.0871,
+  "lng": -104.81885,
+  "way_id": 111870192,
+  "ref": "US 85",
+  "road_name": "Highway 85",
+  "highway": "trunk",
+  "nearest_place": {
+   "place": "town",
+   "name": "Fort Lupton",
+   "dist_m": 562
+  },
+  "why": "nearest place 562 m < 4000 m"
+ },
+ {
+  "name": "smalltown-us24-limon",
+  "ctx": "small-town adjacent",
+  "expect": "rural",
+  "ok": true,
+  "lat": 39.23463,
+  "lng": -103.79142,
+  "way_id": 808995928,
+  "ref": "US 24",
+  "road_name": null,
+  "highway": "trunk",
+  "nearest_place": null,
+  "why": null
+ }
+]
