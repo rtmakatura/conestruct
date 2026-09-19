@@ -185,16 +185,25 @@ It has its own issue — **#293**.
 clean run does not close #256 by itself, which is exactly why the closure rests on three
 runs of the same shape and reports the one that missed.
 
-## What is still ahead
+## What was still ahead when this section was written — all of it landed
 
-- **Commit 3 — the memo key** (ruling d). Early reading: smaller than the ruling assumes.
-  `SiteScanInputs` already carries `lat`, `lng` and `bearing_deg`, so the key already
-  covers the anchor and a memo hit already serves the right `road_bearing`; the bearing
-  *tolerance* is applied in the derivation rather than the fetch, so it need not be in the
-  key at all. To be settled at that commit's checkpoint, not assumed here.
-- **The final acceptance leg** on the last sha — the same 20 × 2, plus corridor-check
-  `check_unavailable` ≤ 1 in 20 on ok audits. #256 closes on that.
+Kept as a record of what the arc expected of itself, with the outcome beside each line.
+
+- **Commit 3 — the memo key** (ruling d). **Done**, and the early reading held: the change
+  was smaller than the ruling assumed. `SiteScanInputs` already carried `lat`, `lng` and
+  `bearing_deg`, so the key already covered the anchor and a memo hit already served the
+  right `road_bearing`; the bearing *tolerance* is applied in the derivation rather than the
+  fetch, so it never needed to be in the key. What shipped is a key **version** constant,
+  `MEMO_KEY_VERSION = 2`, bumped with the fold — the smallest honest change, ruled at that
+  commit's checkpoint rather than assumed here.
+- **The final acceptance leg.** **Done**, and it is run 4 above (`cc820bf`). An earlier
+  attempt gated on `2e5a647` was invalidated by a deploy landing mid-leg and was killed
+  rather than reported.
 - **Held by ruling i:** the corridor bbox / `use_max` question is Phase 3's, not this arc's.
+  Still held.
+
+**#256 is closed** (2026-09-18), on the set of three legs above. The arc belongs to Phase 0,
+whose completion record is `validation-artifacts/committed/phase-0-287/README.md`.
 
 ## The two findings this arc handed on
 
