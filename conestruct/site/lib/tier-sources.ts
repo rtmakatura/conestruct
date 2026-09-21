@@ -196,7 +196,18 @@ export function deriveTierSources({
   const coloradoInfos = colorado?.info_items ?? [];
 
   const corridorSection = settled?.sections.corridor_validation as CorridorSection | undefined;
-  const corridorItem = settled ? corridorValidationItem(settled.sections.corridor_validation) : null;
+  // `?? {}` here and on geometry below is a ROBUSTNESS fix the mount
+  // exposed, not a behaviour change: the types promise these sections
+  // exist on a settled audit, and `corridorValidationItem` /
+  // `geometryValidationItem` read `.checked` / `.violations` off them
+  // directly.  Inside TieredReference they only ever ran against full
+  // fixtures.  Called from the shell they also run against partial ones,
+  // and an absent section threw.  An empty object is the honest input for
+  // "the wire carried no such section": both builders then return null,
+  // which is the same answer they give for "nothing to report" (Rule 10).
+  const corridorItem = settled
+    ? corridorValidationItem(settled.sections.corridor_validation ?? {})
+    : null;
   // #224 phase 2/3: the NOT-CHECKED disclosure — one counted attention
   // fact since phase 3 (audit:scan:not_checked).
   const siteScanItem = settled
@@ -205,7 +216,9 @@ export function deriveTierSources({
   const corridorClean =
     corridorSection?.checked === true && (corridorSection.warnings ?? []).length === 0;
 
-  const geometryItem = settled ? geometryValidationItem(settled.sections.geometry_validation) : null;
+  const geometryItem = settled
+    ? geometryValidationItem(settled.sections.geometry_validation ?? {})
+    : null;
 
   const finesSection = settled?.sections.fines_double;
   const finesItem = finesSection ? finesDoubleItem(finesSection) : null;
@@ -219,20 +232,34 @@ export function deriveTierSources({
     (a) => a.signalized === true,
   );
 
-  const pendingSpec = settled ? pendingVerificationItem(settled.pending_verification) : null;
+  const pendingSpec =
+    settled && settled.pending_verification
+      ? pendingVerificationItem(settled.pending_verification)
+      : null;
 
   // Trace items: the per-kind set minus the Colorado aggregate (its
   // checks render as named rows so "every check named at a glance"
   // holds — the aggregate accordion would hide them behind a click).
-  const traceItems = settled
-    ? buildScenarioItems(scenario, audit, generated, r).filter(
-        (i) => !i.title.startsWith("Colorado requirements"),
-      )
-    : auditFailed
+  // LAZY, and deliberately so.  `buildScenarioItems` walks the whole
+  // per-kind trace and reads deep into the audit sections (taperItem
+  // dereferences `closure_type`, and so on down), so it throws on a
+  // partial fixture.  Inside TieredReference that never mattered: the
+  // component only rendered against full audits.  NEEDS YOU reads the same
+  // producer but needs none of the trace, and computing it eagerly made
+  // twelve shell suites throw on fixtures that had always been fine.
+  // A getter keeps the property's shape for the reader that wants it and
+  // costs nothing for the reader that does not.  The expression inside is
+  // byte-identical to the one it replaces.
+  const computeTraceItems = () =>
+    settled
       ? buildScenarioItems(scenario, audit, generated, r).filter(
           (i) => !i.title.startsWith("Colorado requirements"),
         )
-      : [];
+      : auditFailed
+        ? buildScenarioItems(scenario, audit, generated, r).filter(
+            (i) => !i.title.startsWith("Colorado requirements"),
+          )
+        : [];
 
   const hoursStatus = jur ? jur.hours_eval.status : null;
 
@@ -245,7 +272,8 @@ export function deriveTierSources({
     deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
     approachesSpec, approachesSignalized,
     deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
-    pendingSpec, traceItems, hoursStatus,
+    pendingSpec, hoursStatus,
+    get traceItems() { return computeTraceItems(); },
     siteRecords, scan, scanBuckets, flagToBucket, corrections,
   };
 }

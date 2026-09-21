@@ -29,6 +29,10 @@ import {
 } from "@/lib/quote-settings";
 import { AppNav } from "./AppNav";
 import { AppSheetMeta } from "./AppSheetMeta";
+import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
+import { deriveTierSources } from "@/lib/tier-sources";
+import { buildNeedsYouItems } from "@/lib/needs-you-items";
+import { deriveNeedsYou } from "@/lib/needs-you";
 import { GeneratorSidebar } from "./GeneratorSidebar";
 import { SetupStrip } from "./SetupStrip";
 import { StatusBar } from "./StatusBar";
@@ -43,6 +47,7 @@ import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
+import { NeedsYou } from "./NeedsYou";
 import { ResultsHead } from "./ResultsHead";
 import type {
   DeviceBreakdownData,
@@ -1114,6 +1119,25 @@ export function GeneratorShell({
   // answer is held, not discarded; downloads return with the verdict.
   const planDeclined = auditDeclined || (!auditSettled && prevSettled400);
   const resultsVisible = showResults && !planDeclined;
+  // #288 step 3 — NEEDS YOU, mounted.  Reads the SAME producer section 03
+  // reads (lib/tier-sources.ts, step 1) with the SAME inputs the
+  // TieredReference mount below passes, so the two surfaces cannot drift:
+  // one derivation, two readers (P2).  The mapping to rows is step 2's.
+  const needsYouModel = deriveNeedsYou(
+    buildNeedsYouItems({
+      sources: deriveTierSources({
+        jurisdiction: jurisdictionBlock,
+        jurisdictionLoading,
+        revalidating: jurisdictionRevalidating,
+        scenario: wireScenario,
+        audit: stripAudit,
+        generated: showResults && !auditDeclined,
+        showAudit: showResults || auditState.state === "error",
+      }),
+      siteLabel: (flag) =>
+        SITE_ADJUSTMENT_DETAIL[flag as keyof typeof SITE_ADJUSTMENT_DETAIL]?.label ?? flag,
+    }),
+  );
   // #261: the audit card's "N checks" — assignTiers' ledger.checked over
   // the same inputs TieredReference hands the tier model (the STAMPED
   // audit, the jurisdiction block once it has loaded), so the card and
@@ -1637,6 +1661,13 @@ export function GeneratorShell({
                 </div>
               </div>
             )}
+            {/* #288 rule 27 — NEEDS YOU, between the reserved first row and
+                the rest of the plan.  Gated on resultsVisible: a declined
+                plan shows no plan (rule 10), and spec 31 forbids the
+                refusal container and the block co-framing.  The block
+                renders nothing at zero items, so a clean plan does not
+                grow an empty "nothing wants you" panel. */}
+            {resultsVisible && <NeedsYou model={needsYouModel} />}
             {/* #252: the "Generating…" empty state (a first Generate with
                 no prior breakdown to hold) is gone — the band is the one
                 working voice; the zone holds the pre-generate cards
