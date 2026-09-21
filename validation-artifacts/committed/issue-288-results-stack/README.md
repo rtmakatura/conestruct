@@ -326,3 +326,23 @@ Also deleted: `.zone-note`, the CSS rule for the stage direction that sat in the
 heading ("device & type counts drive your estimate"). A rule whose only element is gone is a
 rule that rots. `.zone-head` / `.zone-tag` / `.zone-title` all stay — the setup zone still
 uses them, and that zone is Phase 2's.
+
+### Clause 6 — three phantom token references, caught by writing the comment
+
+`var(--body, var(--ink-on-dark))` is valid CSS and renders correctly, because the fallback
+fires. It is also a lie: this sheet has no `--body`. Part 2 uses that name; the sheet uses
+`--ink-on-dark` for the same #c8d1dd.
+
+I wrote it three times — once in clause 6's ribbon and twice in clause 2's hero — and each
+time the comment beside it said "--body on --da-ground" or "provenance ink", describing a
+token the reader would not find. Nothing failed. The census does not police colour, the ink
+gate only rejects raw hex, and the rendered result is correct.
+
+It surfaced only when writing the ribbon's comment required stating the contrast pair by
+name, and the name did not exist. All three are now the sheet's real tokens, with the Part 2
+alias noted where it helps.
+
+**Why it belongs in the record:** a var() fallback is a silent alias. It makes a
+non-existent token look declared, and the more precise the surrounding comment is, the more
+convincing the fiction. The same shape as the rule-78 quote and the "recorded in the arc
+README" claim — the code was right and the claim about it was not.

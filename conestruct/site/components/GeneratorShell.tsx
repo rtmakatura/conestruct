@@ -1741,44 +1741,53 @@ export function GeneratorShell({
                 no prior breakdown to hold) is gone — the band is the one
                 working voice; the zone holds the pre-generate cards
                 until the answer lands. */}
+            {/* #288 clause 6 / rule 102 — THE RIBBON IS NOT DIMMED.
+                The three ribbon strings are unchanged and still mutually
+                exclusive (rule 101), but they render OUTSIDE the
+                `.results-stale` wrapper now, so the dim starts BELOW
+                them.  #259: the ribbon's own label sat inside the dim it
+                explains and measured 2.39:1 — a line whose job is to say
+                "what follows is stale" cannot be the least legible thing
+                on the page.  The wrapper's predicate is unchanged; only
+                what it encloses is. */}
+            {/* role=alert (#193): a failed generation reaches the
+                strip's live region never (the breakdown pipeline is
+                separate from audit) — the ribbon announces itself. */}
+            {/* #258: neither ribbon renders under a declined plan —
+                "values below" would point at content the verdict
+                hides; the refusal container is the voice. */}
+            {genState === "error" && !planDeclined && (
+              <div role="alert" className="stale-ribbon">
+                ⚠ Device breakdown failed — values below may be stale. Fix
+                the input or retry from the plan details panel.
+              </div>
+            )}
+            {/* Deliberately visual-only (#193): the band's live
+                region announces the flight; a second polite region
+                saying the same thing is noise.  #252: the ribbon is
+                the text channel of the results-stale dim (rule 13)
+                and says only that — what the system is DOING is the
+                band's sentence, spoken once. */}
+            {regenerating && !planDeclined && (
+              <div className="stale-ribbon">
+                Previous answer — values below predate the request in flight.
+              </div>
+            )}
+            {/* #254: the text channel of the staged dim (rule 13) —
+                the count in words; the block's Apply row is the
+                action.  Never alongside the flight's ribbon. */}
+            {stagedDisclose && !planDeclined && !regenerating && (
+              <div className="stale-ribbon">
+                Previous answer — {staged.length} correction{staged.length === 1 ? "" : "s"} staged, not yet
+                applied.
+              </div>
+            )}
             {
               <div
                 className={
                   genState === "error" || regenerating || stagedDisclose ? "results-stale" : ""
                 }
               >
-                {/* role=alert (#193): a failed generation reaches the
-                    strip's live region never (the breakdown pipeline is
-                    separate from audit) — the ribbon announces itself. */}
-                {/* #258: neither ribbon renders under a declined plan —
-                    "values below" would point at content the verdict
-                    hides; the refusal container is the voice. */}
-                {genState === "error" && !planDeclined && (
-                  <div role="alert" className="stale-ribbon">
-                    ⚠ Device breakdown failed — values below may be stale. Fix
-                    the input or retry from the plan details panel.
-                  </div>
-                )}
-                {/* Deliberately visual-only (#193): the band's live
-                    region announces the flight; a second polite region
-                    saying the same thing is noise.  #252: the ribbon is
-                    the text channel of the results-stale dim (rule 13)
-                    and says only that — what the system is DOING is the
-                    band's sentence, spoken once. */}
-                {regenerating && !planDeclined && (
-                  <div className="stale-ribbon">
-                    Previous answer — values below predate the request in flight.
-                  </div>
-                )}
-                {/* #254: the text channel of the staged dim (rule 13) —
-                    the count in words; the block's Apply row is the
-                    action.  Never alongside the flight's ribbon. */}
-                {stagedDisclose && !planDeclined && (
-                  <div className="stale-ribbon">
-                    Previous answer — {staged.length} correction{staged.length === 1 ? "" : "s"} staged, not yet
-                    applied.
-                  </div>
-                )}
                 {resultsVisible && (
                   <ResultsHero
                     breakdown={deviceBreakdown}

@@ -2953,7 +2953,10 @@ input[type="number"] {
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--mut, var(--ink-on-dark-faint));
+  /* Part 2 calls this --mut (#93a0b0); this sheet's name for the same
+     value is --ink-on-dark-faint.  Named directly rather than through a
+     var() fallback on a token that does not exist here. */
+  color: var(--ink-on-dark-faint);
   display: block;
 }
 .workbench .hero-cell .num {
@@ -2999,7 +3002,9 @@ input[type="number"] {
   gap: 7px;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--body, var(--ink-on-dark-faint));
+  /* Rule 82's #c8d1dd is Part 2's --body; this sheet calls it
+     --ink-on-dark.  The geometry rows take it. */
+  color: var(--ink-on-dark);
 }
 .workbench .hero-meta .row .mv {
   color: var(--ink-on-dark);
@@ -3462,19 +3467,42 @@ input[type="number"] {
 }
 
 /* Zone 2 error presentation: last successful results kept visible but
-   visibly stale — dimmed and desaturated behind a red ribbon.  The
-   ribbon carries the words; the wash is never the only signal. */
+   visibly stale — dimmed and desaturated BELOW the ribbon that explains
+   it.  The ribbon carries the words; the wash is never the only signal.
+
+   ─── #288 Phase 1 clause 6 · RULES 100–102 ───
+   Authority: rulings.md, "The Phase 1 finish ruling" clause 6.
+   Rule 102 is a CHANGE against today, stated as one: "the ribbon itself
+   is NOT dimmed — the dim starts below it.  Today the ribbon's own label
+   sits inside the dim it explains and measures 2.39:1 (#259).  Ribbon
+   text renders at full opacity."  The markup half of that is in
+   GeneratorShell (the ribbons moved out of the `.results-stale`
+   wrapper); this is the treatment half.
+   Rule 100 gives the container: 1 px --rule, left border 2 px --act,
+   ground --da-ground, padding 11 14, symbol + body value.  So the
+   ribbon stops wearing failure chrome: it is not a failure, it is the
+   sentence that says what follows is a previous answer.  The ⚠ in the
+   breakdown-failure string carries that state in the text, where rule 13
+   wants it — never by the container's hue alone. */
 .workbench .results-stale {
   opacity: 0.5;
   filter: grayscale(0.4);
 }
 .workbench .stale-ribbon {
-  background: var(--fail-soft);
-  border: 1px solid var(--fail);
-  border-left-width: 3px;
-  color: var(--fail);
+  /* Rule 100. */
+  background: var(--da-ground);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--act);
+  /* Rule 102's #c8d1dd is Part 2's --body; this sheet calls it
+     --ink-on-dark, and the value is identical.  The pair is
+     --ink-on-dark on --da-ground, and because the ribbon now sits
+     OUTSIDE the wrapper that is also what it measures mid-flight.
+     Inside the dim the same pair measured 2.39:1 (#259), which is the
+     whole defect.  The composited figure is the prod leg's to take —
+     acceptance line 6 — not a number this comment may assert. */
+  color: var(--ink-on-dark);
   font-size: 12.5px;
-  padding: 12px 16px;
+  padding: 11px 14px;
   margin-bottom: 16px;
   font-weight: 500;
 }

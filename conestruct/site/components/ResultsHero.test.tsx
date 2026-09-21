@@ -89,7 +89,11 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
     expect(k).toMatch(/letter-spacing:\s*0\.18em/);
     expect(k).toMatch(/text-transform:\s*uppercase/);
     expect(k).toMatch(/font-weight:\s*500/);
-    expect(k).toMatch(/color:\s*var\(--mut/);
+    // Part 2 calls rule 3's quiet ink --mut (#93a0b0); this sheet's name
+    // for that value is --ink-on-dark-faint.  The token is named
+    // directly — a var() fallback on a token that does not exist here
+    // would read as a citation to something the sheet never declared.
+    expect(k).toMatch(/color:\s*var\(--ink-on-dark-faint\)/);
   });
 
   it("rule 82: the geometry rows are space-between, mono 11px, body ink, gap 7px", () => {
@@ -97,7 +101,8 @@ describe("#288 clause 2 — the counts hero's ruled shell (rules 80–83)", () =
     expect(row).toMatch(/justify-content:\s*space-between/);
     expect(row).toMatch(/font-size:\s*11px/);
     expect(row).toMatch(/gap:\s*7px/);
-    expect(row).toMatch(/color:\s*var\(--body/);
+    // Rule 82's #c8d1dd is Part 2's --body; here it is --ink-on-dark.
+    expect(row).toMatch(/color:\s*var\(--ink-on-dark\)/);
     // The case-ID line is provenance AT --ink, the one override rule 82
     // names; its SIZE comes from the .tr-prov role, not from here.
     const caseid = rule(".workbench .hero-meta .caseid");

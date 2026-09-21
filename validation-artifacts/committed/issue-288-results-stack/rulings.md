@@ -484,3 +484,30 @@ The focus targets are re-homed as §8.28 requires. The results section already W
 stack, so the target did not move; what changed is that the section now carries
 `results-stack` as a class, because the heading the a11y suites and the arc-28 landing legs
 used to identify it by is gone. A target nothing can name is a target nothing can verify.
+
+## The rules clause 6 builds against — #281 comment 1, verbatim
+
+> 100. 1 px #2c3e53 border, left border 2 px #34a9e8, ground #101c29, padding 11 px 14 px,
+> symbol + body value.
+> 101. All three ribbon strings kept, mutually exclusive, at the top of the results stack,
+> with the dim they explain.
+> 102. CHANGE against today: the ribbon itself is NOT dimmed — the dim starts below it. Today
+> the ribbon's own label sits inside the dim it explains and measures 2.39:1 (#259). Ribbon
+> text renders at full opacity, #c8d1dd on #101c29.
+
+### A note on the palette names
+
+Part 2 names colours `--mut`, `--body`, `--gen` and so on; this sheet's names for the same
+values are `--ink-on-dark-faint` (#93a0b0), `--ink-on-dark` (#c8d1dd) and `--dim` (#ff8a2e).
+Clause 6's CSS names the SHEET's tokens directly. An earlier draft wrote
+`var(--body, var(--ink-on-dark))` — a fallback that works, but reads as a citation to a token
+this sheet never declares, which is the same defect as an unsourced rule quote. Two more of
+those (`var(--mut, …)` in clause 2's hero) were found and removed at the same time.
+
+### What clause 6 does NOT measure
+
+Acceptance line 6 is "Ribbon ≥ 4.5:1 measured mid-flight on the composited surface". That is
+the prod leg's figure: happy-dom composites nothing and applies no stylesheet, so no test in
+this commit claims a ratio. What the suite pins is the STRUCTURE that makes the measurement
+come out right — the ribbon is not a descendant of the dimmed wrapper in any state that dims.
+Get that wrong and the leg measures 2.39 again.
