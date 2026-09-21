@@ -305,3 +305,24 @@ Replaced with the claim actually worth making: the ✓ row's count and the audit
 "N checks" must be the SAME number, because both read one ledger (`assignTiers`, mirrored by
 `src/rendering/tier_ledger.py`). That is a P2 claim, it needs no fixture arithmetic, and it
 would catch a second producer appearing — which a hard-coded 8 would not.
+
+### Clause 5 — a deletion that took an identifier with it
+
+Small, but it is the third time this arc that removing a surface removed something else's
+grip on the page.
+
+The results section has always been the focus target for the post-Generate settle (#193) and
+the element the arc-28 landing legs measure (ruling 184). Nothing about that changed here.
+What changed is that `GeneratorShell.a11y-focus.test.tsx` identified it as "the SECTION whose
+`.zone-title` says MHT package" — so dropping the heading under §8.28 broke three focus tests
+that were not about headings at all.
+
+Fixed by naming the thing: the section carries `results-stack`, §8.29's own word for it, and
+the suites hold that instead. The lesson matches clause 4's: **what a test uses to FIND an
+element is part of that element's contract**, and a heading is a bad handle precisely because
+it is presentation and presentation is what gets dropped.
+
+Also deleted: `.zone-note`, the CSS rule for the stage direction that sat in the results
+heading ("device & type counts drive your estimate"). A rule whose only element is gone is a
+rule that rots. `.zone-head` / `.zone-tag` / `.zone-title` all stay — the setup zone still
+uses them, and that zone is Phase 2's.

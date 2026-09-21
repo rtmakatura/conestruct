@@ -131,7 +131,10 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [
       { file: "app/onboarding/page.tsx", cls: "text-[14px]", count: 1 },
-      { file: "components/GeneratorShell.tsx", cls: "text-[14px]", count: 1 },
+      // #288 clause 5: the intro paragraph was the shell's one 14px site
+      // and Part 1 §8.30 dropped it, so the row is DELETED.  106 -> 105
+      // sites, 319 -> 318 uses.  14px stays in the register: five other
+      // files carry sans body copy at it.
       { file: "components/GeneratorSidebar.tsx", cls: "text-[14px]", count: 1 },
       { file: "components/PlanRow.tsx", cls: "text-[14px]", count: 3 },
       { file: "components/QuotePanel.tsx", cls: "text-[14px]", count: 1 },
@@ -208,7 +211,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .site-jump", size: "10.5px" },
       { selector: ".workbench .tr-signpost", size: "10px" },
       { selector: ".workbench .zone-tag", size: "10px" },
-      { selector: ".workbench .zone-note", size: "10px" },
+      // #288 clause 5: deleted with the results heading it dressed
+      // (§8.28).  93 -> 92.  10px stays everywhere else.
       // #288 clause 4: the pricing quote became a rule-87 disclosure row
       // (Part 1 §8.11), so its bespoke head retired and these four rows
       // are DELETED rather than moved — the row's own treatment carries
@@ -464,14 +468,16 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 93,
+  cssDeclarations: 92,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
   // it dropped (9, 10, 13) all remain elsewhere.
   cssSizes: 21,
-  tsxSites: 106,
-  // 320 -> 319: the zip control gave up its own text-[12px] for .pri/.act.
-  tsxUses: 319,
+  tsxSites: 105,
+  // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
+  // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
+  // its one text-[14px], dropped under §8.30).
+  tsxUses: 318,
   tsxFiles: 36,
 } as const;

@@ -454,3 +454,33 @@ stack's — the rows sit beside the reference row, not inside it — on three gr
 
 The i tier is NOT rebuilt: it is uncounted, it already had a disclosure (clause b's
 `ReferenceDisclosure`), and clause 4's own text says "Reference stays as built".
+
+## The rules clause 5 builds against — #281 Part 1 §8.28, §8.30, §8.12, verbatim
+
+> 8.28 Zone headings (01 Setup / 02 Results / 03 Reference) — DROPPED as visible headings.
+> The column has one narrative, the bands carry step indices, and "02 · RESULTS" survives
+> only as the placeholder block's label in S4. The programmatic focus targets on Zone 1 and
+> Zone 2 must be re-homed onto the band stack and the results stack.
+
+> 8.30 Context block and draft notice — the intro paragraph is DROPPED (it restates the
+> download cards' captions); the draft notice is kept (8.12).
+
+> 8.12 Draft notice — kept, last line of the column, same two sentences.
+
+### What clause 5 does NOT drop, and why
+
+§8.28 names all three zone headings. Clause 5 drops **two** — Results and Reference — and
+leaves Setup's, because the finish ruling's own last line puts Phase 2's surfaces out of
+scope: "Phase 2's surfaces (setup panel, strip, rail, picker): untouched." The setup zone's
+heading belongs to the setup panel, and §8.16 dissolves that panel into the band stack in a
+later phase. Dropping its heading now would leave a panel with no name at all until that
+phase lands.
+
+§8.28's "02 · RESULTS survives only as the placeholder block's label in S4" is untouched by
+this clause: the S4 placeholder is a pre-generate surface and its label was never the zone
+heading — it is its own string, and it still renders.
+
+The focus targets are re-homed as §8.28 requires. The results section already WAS the results
+stack, so the target did not move; what changed is that the section now carries
+`results-stack` as a class, because the heading the a11y suites and the arc-28 landing legs
+used to identify it by is gone. A target nothing can name is a target nothing can verify.

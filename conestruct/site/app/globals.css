@@ -1559,14 +1559,12 @@ input[type="number"] {
 .workbench .zone.dominant .zone-title {
   font-size: 20px;
 }
-.workbench .zone-note {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
-  margin-left: auto;
-}
+/* #288 clause 5: `.zone-note` is DELETED.  It dressed the results
+   heading's stage direction ("device & type counts drive your estimate"),
+   and Part 1 §8.28 dropped that heading — a rule with no element left is
+   a rule that rots.  `.zone-head` / `.zone-tag` / `.zone-title` STAY:
+   the setup zone still carries its heading, and that zone is Phase 2's
+   surface, which this ruling leaves untouched. */
 
 /* Persistent jurisdiction bar — selection, street class, spec-chain
    breadcrumb, and the reserved Endeavor-B slot.  Single source for

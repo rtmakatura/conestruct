@@ -223,7 +223,13 @@ function expectNoPlan() {
   expect(document.querySelector(".hero")).toBeNull();
   expect(downloadButtons().length).toBe(0);
   expect(document.querySelector(".dl-card")).toBeNull();
-  expect(document.querySelector(".zone-note")).toBeNull();
+  // #288 clause 5 dropped the results heading and its stage-direction
+  // note (§8.28).  The `.zone-note` assertion that used to live here is
+  // DELETED rather than kept: it is now absent in every state, so it
+  // passed without discriminating — a test that cannot fail says
+  // nothing.  These two read the plan's own surfaces instead.
+  expect(document.querySelector(".needs-you")).toBeNull();
+  expect(document.querySelector(".results-disc")).toBeNull();
   expect(document.querySelector(".zone.dominant")).toBeNull();
   expect(srStatus()).toBe("");
   expect(document.body.textContent).not.toContain("Plan generated");

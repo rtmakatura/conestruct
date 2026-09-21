@@ -19,6 +19,14 @@
 //       Reference at every stage, so the first viewport holds a control
 //       (the pick CTA) instead of 550 px of preamble (F-S1-1).  DOM order
 //       pinned here; the CTA's bottom is the browser leg's figure.
+//
+//       #288 clause 5: the INTRO SENTENCE left the block entirely under
+//       Part 1 §8.30 ("it restates the download cards' captions"), so
+//       the block is now the draft notice and the jurisdiction bar.
+//       #260's claim is unchanged for what remains, and this suite now
+//       also asserts the intro is gone from the page rather than moved —
+//       a dropped surface that quietly reappears elsewhere is the thing
+//       these order pins exist to catch.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -140,28 +148,33 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     const all = Array.from(main.querySelectorAll("*"));
     const at = (el: Element | null) => (el ? all.indexOf(el) : -1);
     const h1 = main.querySelector("h1");
-    const intro = screen.getByText(/Generate a CDOT-compliant MHT package/);
+    // #288 clause 5: the intro sentence is DROPPED (Part 1 §8.30 — "it
+    // restates the download cards' captions"), and the zone tags went
+    // with the zone headings (§8.28).  The context block is now the
+    // draft notice and the jurisdiction bar, and the reference section is
+    // found by its id rather than by a tag that no longer renders.
     const draft = screen.getByText("Draft — not a sealed plan");
     const jbar = main.querySelector(".jbar");
     const zones = Array.from(main.querySelectorAll("section.zone"));
     const setup = zones[0];
     const results = main.querySelector("section.zone.results");
-    const reference = zones.find((z) => /Reference/.test(z.querySelector(".zone-tag")?.textContent ?? "")) ?? null;
-    return { h1: at(h1), intro: at(intro), draft: at(draft), jbar: at(jbar), setup: at(setup), results: at(results), reference: at(reference) };
+    const reference = main.querySelector("section#reference");
+    return { h1: at(h1), draft: at(draft), jbar: at(jbar), setup: at(setup), results: at(results), reference: at(reference) };
   };
 
-  it("pre-generate: h1 → Setup → Results → intro · draft · jurisdiction bar (→ Reference when mounted)", async () => {
+  it("pre-generate: h1 → Setup → Results → draft · jurisdiction bar (→ Reference when mounted)", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await settle();
     const o = order();
     expect(o.h1).toBeGreaterThan(-1);
     expect(o.setup).toBeGreaterThan(o.h1);
     expect(o.results).toBeGreaterThan(o.setup);
-    expect(o.intro).toBeGreaterThan(o.results);
-    expect(o.draft).toBeGreaterThan(o.intro);
+    expect(o.draft).toBeGreaterThan(o.results);
     expect(o.jbar).toBeGreaterThan(o.draft);
     // Nothing of the block precedes the setup zone.
-    expect(Math.min(o.intro, o.draft, o.jbar)).toBeGreaterThan(o.setup);
+    expect(Math.min(o.draft, o.jbar)).toBeGreaterThan(o.setup);
+    // §8.30: the intro is gone from the page entirely, not merely moved.
+    expect(screen.queryByText(/Generate a CDOT-compliant MHT package/)).toBeNull();
   });
 
   it("post-generate: the block still sits between Results and Reference", async () => {
@@ -172,8 +185,7 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     await settle();
     const o = order();
     expect(o.reference, "the Reference zone mounts with the results").toBeGreaterThan(-1);
-    expect(o.intro).toBeGreaterThan(o.results);
-    expect(o.draft).toBeGreaterThan(o.intro);
+    expect(o.draft).toBeGreaterThan(o.results);
     expect(o.jbar).toBeGreaterThan(o.draft);
     expect(o.reference).toBeGreaterThan(o.jbar);
   });

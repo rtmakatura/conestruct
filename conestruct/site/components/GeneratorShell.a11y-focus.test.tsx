@@ -98,13 +98,19 @@ async function flushDebounce() {
 // The results zone is the section holding the results content; the
 // setup zone is the section holding the Generate button.  Both carry
 // tabIndex={-1}, so activeElement can BE them.
+//
+// #288 clause 5: the results zone was found by its heading ("MHT
+// package") until Part 1 §8.28 dropped the zone headings.  §8.28 also
+// says the focus targets "must be re-homed onto the band stack and the
+// results stack", so the section now carries `results-stack` — §8.29's
+// own name for it — and that is what identifies it.  The CLAIM is
+// unchanged: focus lands on the section that holds the results.
 function activeIsResultsZone(): boolean {
   const el = document.activeElement;
   return (
     el instanceof HTMLElement &&
     el.tagName === "SECTION" &&
-    el.querySelector(".zone-title") !== null &&
-    el.textContent!.includes("MHT package")
+    el.classList.contains("results-stack")
   );
 }
 

@@ -1593,21 +1593,29 @@ export function GeneratorShell({
           <section
             ref={resultsRef}
             tabIndex={-1}
-            className={`zone results outline-none${genState === "post" && resultsVisible ? " dominant" : ""}`}
+            // #288 clause 5 / Part 1 §8.28: the zone heading is gone, so
+            // the container carries its own name.  `results-stack` is
+            // §8.29's own word for it, and it is what the focus target,
+            // the arc-28 landing legs and the a11y suites hold onto now
+            // that there is no "02 · Results" to find it by.
+            className={`zone results results-stack outline-none${
+              genState === "post" && resultsVisible ? " dominant" : ""
+            }`}
           >
-            <div className="zone-head">
-              <span className="zone-tag">
-                <span className="n">02</span>Results
-              </span>
-              <h2 className="zone-title">MHT package</h2>
-              {/* #258: the stage direction and the note read the verdict
-                  too — a declined zone is not the dominant one. */}
-              {genState === "post" && resultsVisible && (
-                <span className="zone-note">
-                  device &amp; type counts drive your estimate
-                </span>
-              )}
-            </div>
+            {/* #288 clause 5 — Part 1 §8.28: the zone headings are
+                DROPPED as visible headings.  "The column has one
+                narrative, the bands carry step indices", and '02 ·
+                RESULTS' survives only as the S4 placeholder's label.
+                The stage-direction note goes with the heading it sat in:
+                it told the operator which zone was dominant, and a
+                column with one narrative has no competing zones to
+                choose between.
+                What does NOT go: this section's tabIndex -1 and its ref.
+                §8.28 says the programmatic focus targets "must be
+                re-homed onto the band stack and the results stack" — the
+                section IS the results stack, so the target stays exactly
+                where the arc-28 legs already point (ruling 184's landing,
+                measured at nav-h + 8 + status-h + 24). */}
             {/* #224 phase 2 — the PLAN DECLINED container for a refused
                 site scan: the #227 system-event shape (amber rule,
                 ⚠ glyph, the backend ``message`` as ONE text node —
@@ -1866,12 +1874,10 @@ export function GeneratorShell({
             }
           </section>
 
-          {/* ——— Context — below Results, above Reference (#260 (1)) ——— */}
-          <p className="text-[14px] m-0 mb-6 max-w-[620px] text-[color:var(--ink-on-dark-faint)]">
-            Generate a CDOT-compliant MHT package: PDF plan sheet, device
-            list, and crew instructions. Every dimension cited to MUTCD or
-            CDOT standards.
-          </p>
+          {/* #288 clause 5 — Part 1 §8.30: the intro paragraph is
+              DROPPED, because "it restates the download cards' captions".
+              The draft notice below is KEPT (§8.12), unchanged, as the
+              last line of the column. */}
 
           <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
@@ -1907,12 +1913,10 @@ export function GeneratorShell({
               tabIndex={-1}
               className="zone jump-anchor outline-none"
             >
-              <div className="zone-head">
-                <span className="zone-tag">
-                  <span className="n">03</span>Reference
-                </span>
-                <h2 className="zone-title">Rules, permit &amp; audit</h2>
-              </div>
+              {/* §8.28: dropped with the others.  The reference's own
+                  name is now on its disclosure row (rule 88's name
+                  slot), which is where the operator reads it — a zone
+                  heading above a named row said it twice. */}
               {/* #219 — the triage tiers replace the flat family stack.
                   The verification facts join with results OR on an
                   audit error (rule 10: the strip's "retry below" must
