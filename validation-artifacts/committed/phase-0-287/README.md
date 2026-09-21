@@ -1,6 +1,8 @@
 # phase-0-287 — Phase 0 is complete
 
-**Umbrella:** #287 — Phase 0 of Direction A (#281). **Closed:** 2026-09-18.
+**Umbrella:** #287 — Phase 0 of Direction A (#281). **Closed:** 2026-09-21 — the date the
+umbrella closes, not the date its last member did (#279 and #294 closed 2026-09-18; #256
+on 2026-09-17; #282's work shipped in `cc820bf` and its issue closes with this umbrella).
 **Members:** #256, #279, #282 — and #294, which closed with #279.
 **Design authority:** #281 (Part 1 in the body, Part 2 rev. 2026-09-16 in comment 1).
 
