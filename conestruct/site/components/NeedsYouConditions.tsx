@@ -120,6 +120,14 @@ export interface SiteConditionRowsProps {
   /** #254: the SHELL-held staged set (one owner). */
   staged: StagedCorrection[];
   setStaged: (next: StagedCorrection[]) => void;
+  /** #288 clause 3: does NEEDS YOU own the results area's one primary?
+   *  Read from the single derivation, never decided here.  When it does
+   *  not, Apply renders as a plain `.act` — the class itself is withheld
+   *  rather than merely unstyled, so "carries is-on" and "renders as the
+   *  primary" cannot drift apart (they did: the CSS was scoped to the
+   *  owner while the markup emitted the class unconditionally, and a
+   *  page-wide count of filled controls read 2 in a state that shows 1). */
+  ownsPrimary?: boolean;
 }
 
 /** Does this scan give the block anything to render?  The same predicate
@@ -145,6 +153,7 @@ export function SiteConditionRows({
   inFlight,
   staged,
   setStaged,
+  ownsPrimary = true,
 }: SiteConditionRowsProps) {
   // Which flag's dismiss reason picker is open, and its draft.
   const [dismissing, setDismissing] = useState<ScannedSiteFlag | null>(null);
@@ -438,7 +447,7 @@ export function SiteConditionRows({
               <span className="ny-acts">
                 <button
                   type="button"
-                  className="act tr-step is-on"
+                  className={`act tr-step${ownsPrimary ? " is-on" : ""}`}
                   data-write=""
                   disabled={inFlight || reason === null}
                   title={reason === null ? "choose a reason" : undefined}
@@ -510,9 +519,17 @@ export function SiteConditionRows({
       </div>
       <div className="ny-right">
         <span className="ny-acts">
+          {/* Ruling 182 + clause 3: Apply is this block's write, and it
+              wears the filled "recommended action" treatment only while
+              NEEDS YOU OWNS the primary.  The owner is the block's
+              `.owns-primary` class (set from the one derivation), so the
+              filled pair is scoped in CSS rather than decided again
+              here — two surfaces reading one answer, not two deciding
+              it.  At count 0 the zip is the page's primary and this
+              button is a plain .act, so no state shows two. */}
           <button
             type="button"
-            className="act tr-step is-on"
+            className={`act tr-step${ownsPrimary ? " is-on" : ""}`}
             data-write=""
             disabled={inFlight || n === 0}
             title={n === 0 ? "stage a correction first" : undefined}

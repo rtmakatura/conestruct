@@ -120,8 +120,10 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(act).toMatch(/border:\s*1px solid var\(--rule\)/);
     expect(act).toMatch(/background:\s*transparent/);
     // Rule 133 "on" — the row's recommended action, the block's one
-    // filled control (6.15:1 measured on the retired Confirm).
-    const on = rule(".workbench .needs-you .act.is-on");
+    // filled control (6.15:1 measured on the retired Confirm).  #288
+    // clause 3 SCOPED it to the block that owns the results primary, so
+    // no state can show two: the selector carries `.owns-primary`.
+    const on = rule(".workbench .needs-you.owns-primary .act.is-on");
     expect(on).toMatch(/background:\s*var\(--sc-act-wash\)/);
     expect(on).toMatch(/color:\s*var\(--act-bright\)/);
     expect(on).toMatch(/border-color:\s*var\(--act\)/);

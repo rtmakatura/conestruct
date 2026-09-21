@@ -2144,13 +2144,13 @@ input[type="number"] {
 /* Rule 133 "on": the row's recommended action — the block's one filled
    treatment, kept from the retired Confirm (the wash + --act-bright,
    6.15:1 measured). */
-.workbench .needs-you .act.is-on {
+.workbench .needs-you.owns-primary .act.is-on {
   background: var(--sc-act-wash);
   border-color: var(--act);
   color: var(--act-bright);
 }
-.workbench .needs-you .act.is-on:hover,
-.workbench .needs-you .act.is-on:focus-visible {
+.workbench .needs-you.owns-primary .act.is-on:hover,
+.workbench .needs-you.owns-primary .act.is-on:focus-visible {
   background: var(--act);
   color: var(--on-act);
 }
@@ -3020,8 +3020,21 @@ input[type="number"] {
   }
 }
 
-/* Zone 2 downloads — one card per deliverable (#261: four — the audit
-   trail joined the grid) */
+/* ─── #288 Phase 1 clause 3 · DOWNLOAD CARDS (rules 84–86) and the ONE
+   PRIMARY (rule 130, rulings 182/183) ───
+   Authority: rulings.md, "The Phase 1 finish ruling", clause 3, with
+   rules 84–86 and 130 quoted into that file.
+   Rule 84: the row is four equal tracks, gap 12; the card is 1px --rule
+   on --da-ground, padding 14, flex column, gap 7, min-height 142.
+   Rule 85: a title row (field label left, format in provenance right),
+   a provenance caption, then the action row pinned to the bottom by
+   margin-top auto; a two-format card splits it into two equal ghosts
+   with an 8px gap.
+   Rule 86 / ruling 183, as clause 3 settles them: the "↓ All (.zip)"
+   control renders at BOTH widths.  Which treatment it takes is the ONE
+   derivation's answer (lib/results-primary.ts) — rule 130's .pri when it
+   owns the primary, rule 133's .act ghost when NEEDS YOU does.  #261's
+   four cards stay a flat row either way (ruling 182). */
 .workbench .dls {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3034,12 +3047,14 @@ input[type="number"] {
   }
 }
 .workbench .dl-card {
+  /* Rule 84. */
   border: 1px solid var(--rule);
-  background: var(--canvas-tint);
-  padding: 16px;
+  background: var(--da-ground);
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 7px;
+  min-height: 142px;
 }
 .workbench .dl-card .top {
   display: flex;
@@ -3075,6 +3090,95 @@ input[type="number"] {
 .workbench .dl-card .desc .qty {
   display: block;
   min-height: 1.45em;
+}
+/* ─── Rule 130 — PRIMARY (.pri) ───
+   Full width of its container, 56px tall, the action ground with its own
+   ink, Inter 600 at the declared --fs-primary (#283 put that token on
+   :root ahead of this surface, like the hero numeral).  There is exactly
+   one of these in the results area at a time, and which surface carries
+   it is decided once (lib/results-primary.ts). */
+.workbench .pri {
+  width: 100%;
+  min-height: 56px;
+  background: var(--act);
+  color: var(--on-act);
+  border: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.workbench .pri:hover {
+  background: var(--act-bright);
+}
+.workbench .pri:active {
+  background: var(--act-deep);
+}
+.workbench .pri:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .pri:disabled {
+  background: var(--rule);
+  color: var(--ink-on-dark-faint);
+  cursor: not-allowed;
+}
+/* The zip control and the ONE statement of the file count (Part 1 §8.29,
+   which kept that rule when it dropped the strip that carried it). */
+.workbench .dl-all {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 150px;
+}
+.workbench .dl-all .act {
+  /* Rule 133's ghost, matching the NEEDS YOU block's control. */
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-on-dark);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.workbench .dl-all .act:hover {
+  border-color: var(--ink-on-dark-faint);
+  color: var(--ink-bright);
+}
+.workbench .dl-all .act:focus-visible,
+.workbench .dl-all .pri:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+.workbench .dl-all .act:disabled,
+.workbench .dl-all .pri:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.workbench .dl-all.is-primary {
+  /* As the primary it takes the row's width, not the label's. */
+  min-width: 260px;
+  align-items: stretch;
+}
+.workbench .dl-all .dl-all-count {
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  /* Rule 15: at the phone width every control clears 44px, the zip
+     included, in both its treatments. */
+  .workbench .dl-all {
+    width: 100%;
+    min-width: 0;
+    align-items: stretch;
+  }
+  .workbench .dl-all .act {
+    min-height: 44px;
+  }
 }
 .workbench .dl-btn {
   margin-top: auto;

@@ -97,6 +97,16 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     tsx: [],
   },
   {
+    name: "the primary control",
+    sizes: ["var(--fs-primary)"],
+    reason:
+      "rule 130's .pri — the results area's ONE primary action, whose 15.5px #283 declared on :root ahead of this surface (like the hero numeral).  Not a role: a role is a text register, and this is a control's own type.  Which surface WEARS it is decided once (lib/results-primary.ts), so the size has exactly one site",
+    css: [
+      { selector: ".workbench .pri", size: "var(--fs-primary)" },
+    ],
+    tsx: [],
+  },
+  {
     name: "audit formula line",
     sizes: ["16px"],
     reason:
@@ -347,7 +357,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/NearIntersectionForm.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[12px]", count: 2 },
       { file: "components/OutputCards.tsx", cls: "text-[10px]", count: 2 },
-      { file: "components/OutputCards.tsx", cls: "text-[12px]", count: 3 },
+      // #288 clause 3: 3 -> 2.  The "↓ All (.zip)" control stopped
+      // carrying its own Tailwind size — it now takes rule 130's .pri or
+      // rule 133's .act, whose sizes live in the sheet.
+      { file: "components/OutputCards.tsx", cls: "text-[12px]", count: 2 },
       { file: "components/PlanSaveButton.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/PlanSaveButton.tsx", cls: "text-[12px]", count: 3 },
       { file: "components/PlanSaveButton.tsx", cls: "text-[13px]", count: 3 },
@@ -450,9 +463,12 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 96,
-  cssSizes: 21,
+  cssDeclarations: 97,
+  // 21 -> 22: rule 130's var(--fs-primary) is a size the sheet did not
+  // carry before clause 3 drew the primary.
+  cssSizes: 22,
   tsxSites: 106,
-  tsxUses: 320,
+  // 320 -> 319: the zip control gave up its own text-[12px] for .pri/.act.
+  tsxUses: 319,
   tsxFiles: 36,
 } as const;

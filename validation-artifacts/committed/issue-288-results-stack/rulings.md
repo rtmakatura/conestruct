@@ -363,3 +363,66 @@ take rule 169's 42 px and the grid drops to two tracks; the geometry cell still 
 stacked full-width. Dropping it would take four measured values off the phone with no way to
 reach them (Rule 10). Recorded as a finding in this arc's README, under "Findings from the
 Phase 1 finish push" — no rule changes, so the build continued per the finding rule.
+
+## The rules clause 3 builds against, verbatim — #281 comment 1 (Part 2)
+
+Quoted for the same reason as clauses 1 and 2's blocks: the rule numbers are cited by the
+commit, and Part 2 is not in this repo. From `gh issue view 281`, comment 1, sections
+"C8 · DOWNLOAD CARDS", "130–159 CONTROLS" and "160–179 THE 380 px ARC".
+
+> C8 · DOWNLOAD CARDS (rules 84–86 — unchanged except rule 86)
+>
+> 84. Row: grid, 4 equal tracks, gap 12 px. Card: 1 px #2c3e53, ground #101c29, padding
+> 14 px, display flex column, gap 7 px, min-height 142 px.
+> 85. Card content: a title row (field label left, format in provenance right), then a
+> provenance caption, then the button pinned to the bottom by margin-top auto. Two-format
+> cards split the button row into two equal ghosts with an 8 px gap.
+> 86. CHANGE: the "↓ All (.zip)" header button is not rendered at 1440 px; it becomes the
+> primary at 380 px (rule 168). This needs your ruling (rule 183). Empty states unchanged:
+> "No package yet" plus the path pre-generate, headline alone under a decline.
+
+> 130. PRIMARY (.pri). Full width of its container, height 56 px, ground #34a9e8, text
+> #0c1622 Inter 600 15.5 px, no border, display flex centred, gap 10 px.
+>      default  #34a9e8 / #0c1622
+>      hover    #5cbef0
+>      active   #1f7bb0
+>      focus    2 px #34a9e8 outline, 2 px offset (visible against the button's own fill
+>               because of the offset)
+>      disabled ground #1d2c3c, text #6e7c8e, cursor not-allowed, the blocker reason on title
+>               — the SAME string the verdict strip shows
+>      busy     disabled treatment plus the label swapped to the present participle
+>               ("Generating…"); the working band carries the motion,
+
+> 168. The download row collapses to one primary — "↓ ALL FILES (.ZIP)", 48 px — plus a
+> "✓ 4 files ready" disclosure. The four cards do not render.
+
+And the two departures clause 3 settles:
+
+> 182. THE PRIMARY IN S5 (rule 119). NEEDS YOU's item actions are primary and the download
+> row is a flat four-card row. Confirm, or promote downloads and demote NEEDS YOU to a
+> disclosure.
+> 183. THE "ALL (.ZIP)" BUTTON (rules 86, 168). Dropped at 1440, primary at 380. Either add
+> it at 1440 (which gives S5 two primaries) or drop it at 380 (which leaves the phone with
+> four cards or a bare disclosure).
+
+### What clause 3 supersedes, and what it keeps
+
+Ruling 182 is **confirmed as written**: NEEDS YOU's actions are primary in S5 and the
+download row stays a flat four-card row.
+
+Ruling 183 is settled by **neither of its own options**. The zip renders at both widths and
+takes its treatment from the one derivation — rule 130's `.pri` when it owns the primary,
+rule 133's ghost when NEEDS YOU does. So rule 86's "not rendered at 1440 px" and rule 168's
+"the download row collapses to one primary … the four cards do not render" are both
+superseded: the cards render at both widths and the zip never gives S5 a second primary,
+which was the objection 183 raised against adding it at 1440.
+
+Rule 168's "✓ 4 files ready" disclosure is **not** built as a disclosure. Its content — the
+file count — is what Part 1 §8.29 requires stated exactly once, and clause 3 states it once,
+as a provenance line on the zip control at both widths. A disclosure that exists only to
+restate a number already on screen is the thing §8.29 dropped the next-steps strip for.
+
+Rule 130's disabled treatment is adopted with one divergence: the blocker reason on `title`
+is the verdict strip's string, and the zip's disabled state is a *bundling in flight* or the
+write lock, neither of which the verdict strip speaks for. It therefore carries no `title`
+rather than a fabricated one (Rule 10).

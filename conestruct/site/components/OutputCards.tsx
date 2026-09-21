@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Scenario } from "@/lib/scenarios";
-import type { AuditSummary } from "@/lib/render-types";
+import { BUNDLE_PART_KINDS, type AuditSummary } from "@/lib/render-types";
+import type { PrimaryOwner } from "@/lib/results-primary";
 import { stampMatches } from "@/lib/answer-stamp";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import { lockedAnchorProps, useRenderRequest, useWriteLock } from "./WriteLock";
@@ -53,6 +54,12 @@ interface Props {
   // and the audit button is disabled — an audit that has not answered
   // has no PDF.  Never a placeholder number (P16).
   auditChecked?: number | null;
+  /** #288 clause 3 — WHICH SURFACE owns the results area's one primary,
+   *  from the single derivation (lib/results-primary.ts).  This row does
+   *  not decide it: NEEDS YOU's count does, and both surfaces read the
+   *  same answer so acceptance line 2 ("one primary per state") cannot be
+   *  broken by the two disagreeing. */
+  primary?: PrimaryOwner;
 }
 
 const SIGNUP_HREF = "/app";
@@ -167,6 +174,7 @@ export function OutputCards({
   onDownloadAll,
   bundling,
   auditChecked = null,
+  primary = "download-all",
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
   if (!generated) {
@@ -221,36 +229,53 @@ export function OutputCards({
       unavailable: auditChecked === null,
     },
   ];
+  // #288 clause 3 / Part 1 §8.29 — THE FILE COUNT, STATED ONCE.
+  //
+  // §8.29 dropped the next-steps strip and kept its rule: "the file count
+  // is stated exactly once on the page".  Between f81daa6 (the strip's
+  // removal) and this commit the count was stated ZERO times — recorded
+  // as a gap in the arc README, not as a decision.  It lands here,
+  // beside the control it describes, and it is counted from
+  // BUNDLE_PART_KINDS — the zip's own parts (Rule 12: the number traces
+  // to the thing it names, never to a literal).  The audit PDF is NOT in
+  // the bundle, which is why four cards render above a count of four
+  // parts and the two numbers are about different things.
+  const zipLabel = `${BUNDLE_PART_KINDS.length} files`;
+  const zipIsPrimary = primary === "download-all";
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between gap-4 px-1 pb-3">
         <div>
           {/* #253 (GO 2026-09-09 ruling 2, one voice): the file count is
               stated ONCE, and this caption deliberately does not repeat
-              the numeral.  Until issue 288 the one statement was the
-              next-steps strip's chip 3 ("4 FILES READY", from
-              BUNDLE_PART_KINDS — the zip's parts, which include
-              quote.xlsx from the pricing card below).
-              Part 1 8.29 dropped the strip and kept the rule, so the
-              count is stated NOWHERE on the page right now.  That is a
-              gap, recorded in the arc README, not a decision: the stack
-              restates it once when the counts hero and the cards land
-              (rule 86, rulings 182/183).  Rule 10 keeps the caption
-              honest meanwhile — it claims no number it cannot back. */}
+              the numeral — the zip control beside it carries the one
+              statement now (see zipLabel above).  The count's history:
+              the next-steps strip's chip 3 held it until Part 1 §8.29
+              dropped the strip and kept the rule, leaving it stated
+              nowhere from f81daa6 until #288 clause 3. */}
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
             MHT PACKAGE
           </div>
         </div>
+        {/* Ruling 183, settled by clause 3: the zip renders at BOTH
+            widths — rule 86 dropped it at 1440 and rule 168 made it the
+            phone's primary unconditionally; clause 3 supersedes both with
+            one width-blind derivation.  It is the PRIMARY when nothing
+            needs the operator, and a ghost beside NEEDS YOU's actions
+            when something does.  The file count rides it, once. */}
         {mode.kind === "public" && onDownloadAll && (
-          <button
-            type="button"
-            data-write=""
-            onClick={onDownloadAll}
-            disabled={bundling || locked}
-            className="font-sans font-semibold text-[12px] px-3 py-2 cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap bg-transparent text-[color:var(--ink)] border border-[color:var(--rule)] hover:border-[color:var(--act)] hover:text-[color:var(--act)] transition-colors disabled:opacity-60"
-          >
-            <span className="font-mono">↓</span> All (.zip)
-          </button>
+          <div className={`dl-all${zipIsPrimary ? " is-primary" : ""}`}>
+            <button
+              type="button"
+              data-write=""
+              onClick={onDownloadAll}
+              disabled={bundling || locked}
+              className={zipIsPrimary ? "pri" : "act tr-step"}
+            >
+              <span className="font-mono">↓</span> All (.zip)
+            </button>
+            <span className="dl-all-count tr-prov">{zipLabel}</span>
+          </div>
         )}
       </div>
       <div className="dls">

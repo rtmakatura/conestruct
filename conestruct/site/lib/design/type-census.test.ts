@@ -247,6 +247,8 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // ahead of the surface — so the exception carries their names.
         "var(--fs-hero-numeral)",
         "var(--fs-hero-numeral-380)",
+        // #288 clause 3: rule 130's .pri, from the token #283 declared.
+        "var(--fs-primary)",
         "28px",
         "20px",
         "17px",

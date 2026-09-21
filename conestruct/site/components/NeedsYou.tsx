@@ -31,6 +31,7 @@
 import type { ReactNode } from "react";
 
 import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
+import type { PrimaryOwner } from "@/lib/results-primary";
 import {
   countProvenance,
   itemProvenance,
@@ -46,8 +47,16 @@ export function NeedsYou({
   model,
   conditions = null,
   inFlight = false,
+  primary = "needs-you",
 }: {
   model: NeedsYouModel;
+  /** #288 clause 3 — read, never decided here.  The shell derives it
+   *  once (lib/results-primary.ts) and hands the same answer to the
+   *  download row, so the two cannot both claim the primary.  Ruling
+   *  182: when this block owns it, its item ACTIONS are the primary —
+   *  the block is not promoted to a banner and the downloads are not
+   *  demoted; only the action treatment changes. */
+  primary?: PrimaryOwner;
   /** Clause 1's rows — the moved corrections block, rendered as item
    *  rows of this block's list.  `null` when the plan carries no scan
    *  for them to read (Rule 10). */
@@ -73,7 +82,9 @@ export function NeedsYou({
       id={SITE_CORRECTIONS_ANCHOR}
       tabIndex={-1}
       aria-busy={inFlight || undefined}
-      className="needs-you jump-anchor outline-none"
+      className={`needs-you jump-anchor outline-none${
+        primary === "needs-you" ? " owns-primary" : ""
+      }`}
       aria-labelledby="needs-you-h"
     >
       {/* Rule 73: section header → provenance → count, count last and

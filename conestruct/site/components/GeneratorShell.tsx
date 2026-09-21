@@ -47,6 +47,7 @@ import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
+import { derivePrimaryOwner } from "@/lib/results-primary";
 import { NeedsYou } from "./NeedsYou";
 import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
@@ -1265,6 +1266,11 @@ export function GeneratorShell({
   const scanHeld = scanInFlight
     ? ((stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections?.site_scan ?? null)
     : null;
+  // #288 clause 3 — the results area's ONE primary, derived once and read
+  // by both surfaces (lib/results-primary.ts).  Ruling 185's sum is the
+  // input; acceptance line 2 ("one primary per state at both widths") is
+  // what the single owner buys.
+  const primaryOwner = derivePrimaryOwner(needsYouModel.count);
   // Clause 1: the scan NEEDS YOU's condition rows read.  Spec 34's rule,
   // moved with the block from the strip: the stamped view when settled,
   // the held (last ready) scan while a re-generation is in flight.
@@ -1675,6 +1681,7 @@ export function GeneratorShell({
               <NeedsYou
                 model={needsYouModel}
                 inFlight={scanInFlight}
+                primary={primaryOwner}
                 conditions={
                   // Clause 1: the corrections block's rows, as NEEDS YOU's
                   // item rows.  Spec 34's scan choice is unchanged and moved
@@ -1689,6 +1696,7 @@ export function GeneratorShell({
                       inFlight={scanInFlight}
                       staged={staged}
                       setStaged={setStaged}
+                      ownsPrimary={primaryOwner === "needs-you"}
                     />
                   ) : null
                 }
@@ -1768,6 +1776,7 @@ export function GeneratorShell({
                     onDownloadAll={onDownloadBundle}
                     bundling={bundling}
                     auditChecked={auditChecked}
+                    primary={primaryOwner}
                   />
                 </div>
                 {resultsVisible && (

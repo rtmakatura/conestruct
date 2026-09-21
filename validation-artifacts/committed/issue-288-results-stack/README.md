@@ -222,3 +222,42 @@ rather than kept as undeclared decoration. No value moved.
 that draws them, so the cells read the tokens rather than minting the literals a second time,
 and #263's census now records the `var()` names instead of the retired 76/60. This is Phase 0
 paying off exactly as intended, and worth recording because it is the first time it has.
+
+### Clause 3 — the file count was stated ZERO times for three ships
+
+Recorded because the gap had a lifespan, and the lifespan is the finding.
+
+Part 1 §8.29 dropped the next-steps strip and explicitly KEPT one of its rules: "the file
+count is stated exactly once on the page". The strip's chip 3 ("4 FILES READY") was the one
+statement. The strip was deleted at `f81daa6`, and from that commit until clause 3 the count
+was stated **zero** times — the rule was carried in a code comment in `OutputCards.tsx` and
+in acceptance line 4, and nowhere on the screen.
+
+Leg 2 and leg 3 both reported acceptance line 4 as **OPEN — stated ZERO times**, correctly.
+What neither leg could report is that a "kept" rule had no owner: §8.29 said what must
+survive the strip's deletion, the deletion shipped, and the surviving rule landed on nothing.
+
+**The pattern worth naming:** when a ruling drops a surface and keeps one of its rules, the
+rule needs a new owner named in the same commit that does the dropping — or it becomes a
+comment describing a property the page does not have. The strip's removal was verified,
+shipped green, and left a rule pointing at nothing for three ships.
+
+Clause 3 gives it an owner: the zip control's own provenance line, counted from
+`BUNDLE_PART_KINDS` (Rule 12 — it traces to the bundle's parts, not to a literal), asserted
+once per state by `GeneratorShell.primary.test.tsx`.
+
+### Clause 3 — a test that was scoped to its own answer
+
+Worth recording as a testing lesson, not a defect: the first version of the "one primary per
+state" suite queried filled actions with `.needs-you.owns-primary .act.is-on` — the same
+scope the CSS uses. Injecting the regression it existed to catch (un-scoping the CSS rule)
+did not fail it, because the query assumed the scope it was meant to verify.
+
+Two fixes, both kept: the DOM query dropped the scope so an escaping treatment is visible,
+and a separate CSS-contract assertion checks the scoping in the sheet — because happy-dom
+applies no stylesheet and the DOM genuinely cannot answer that question.
+
+The injection also surfaced a real inconsistency it was not looking for: an earlier edit had
+scoped the `:hover` rule but not the base rule, because the script that wrote both failed its
+second assertion after the first replacement and never wrote the file. Base un-scoped, hover
+scoped, suite green. Only the deliberate regression run exposed it.
