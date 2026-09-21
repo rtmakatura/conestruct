@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -83,6 +85,19 @@ describe("DisclosureRow (rules 87–89)", () => {
     const openHead = openContainer.querySelector(".disc-head")!;
     expect(openHead.getAttribute("aria-expanded")).toBe("true");
     expect(openContainer.querySelector(".disc-panel")!.id).toBe(controls);
+  });
+
+  it("rule 88: the name carries its own declared treatment, not an inherited one", () => {
+    // The CSS contract, read from the sheet: the row's structure and
+    // order shipped in 65bc7e8 without rule 88's type, and a name that
+    // inherits is not the name rule 88 specifies.
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+    const i = css.indexOf(".workbench .disc-name {");
+    expect(i, "the name has its own rule").toBeGreaterThan(-1);
+    const block = css.slice(i, css.indexOf("}", i));
+    expect(block).toMatch(/font-size:\s*13px/);
+    expect(block).toMatch(/font-weight:\s*500/);
+    expect(block).toMatch(/color:\s*var\(--ink\)/);
   });
 
   it("nested rows take the lifted ground (rule 87)", () => {

@@ -3839,6 +3839,17 @@ input[type="number"] {
   cursor: pointer;
   color: var(--ink);
 }
+.workbench .disc-name {
+  /* Rule 88: the name is Inter 500 13px on --ink.  13px is not one of
+     #283's nine role sizes and rule 88 is explicit about it, so it is a
+     declared EXCEPTION with an owner in lib/design/type-exceptions.ts
+     rather than a role -- the mechanism #263 exists for.  13px is already
+     in the sheet (12 sites), so no size joins the census. */
+  font-family: var(--font-sans, Inter), sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink);
+}
 .workbench .disc-caret {
   /* Rule 88: the caret is pushed right, and turns on open. */
   margin-left: auto;

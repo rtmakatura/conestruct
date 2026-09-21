@@ -180,6 +180,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .refchip .chip-sum .gl", size: "13px" },
       { selector: ".workbench .refchip .chip-sum .label", size: "13px" },
       { selector: ".workbench .refchip .chip-sum .detail", size: "12.5px" },
+      // #288 rule 88 — the disclosure row's name.  Ruled at 13px, which
+      // is not one of #283's nine role sizes; declared here with its
+      // owner rather than snapped to a role it does not belong to.
+      { selector: ".workbench .disc-name", size: "13px" },
     ],
     tsx: [],
   },
@@ -434,7 +438,10 @@ export const CENSUS_PINS = {
   // size leaves the sheet.  NEEDS YOU (this arc's new block) adds NO
   // declaration: its count rides .tr-step and its glyph .tr-field, whose
   // owner token --fs-field-label already names "field label, symbols".
-  cssDeclarations: 104,
+  // #288 rule 88 (2026-09-21): the disclosure row's name declares Inter
+  // 500 13px -- one declaration, 104 -> 105.  Sizes stay 21: 13px was
+  // already in the sheet at twelve sites, so no size joins the census.
+  cssDeclarations: 105,
   cssSizes: 21,
   tsxSites: 106,
   tsxUses: 320,
