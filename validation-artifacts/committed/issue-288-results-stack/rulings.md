@@ -46,6 +46,56 @@ frontend, ux, p18, p19.
 
 ---
 
+## The second ruling, verbatim — 2026-09-21, after the first stop point was proposed
+
+> Stop point 1 accepted. Continue through NEEDS YOU, the disclosures and S8, then evidence.
+> Two standing rules for the remaining commits:
+>
+> - Anything you find that would change a #281 rule (not just a churn prediction) stops the
+> arc with a checkpoint; I rule before it's built. Anything that's a finding but doesn't
+> change a rule goes in the README and you keep going.
+> - The evidence run is at both widths, S5 with three NEEDS YOU items, S5 with zero (the
+> "↓ All (.zip)" primary), S6 declined, S8 with the reference open. Output outside the repo;
+> bundle poll before every leg; sha-gated both ends. No ship while a leg is running.
+>
+> Stop with the verdict and the ship line.
+
+### The record correction this file makes against its own ruling
+
+"Stop point 1 accepted" was given on a stack that **had not been built**. At the moment of
+that ruling this branch held exactly one commit — `15ca57a`, this file — and the message it
+answered was a 📋 plan checkpoint for the two *small early commits* that precede the stack,
+ending in a request to approve commit 2's scope. The stack, the verdict voice change, NEEDS
+YOU, the disclosures and S8 did not exist and do not exist as of this commit.
+
+Recorded here rather than silently accepted, per the standing caution **"don't read a report
+for the arc you expect — read it for the arc it is"**. The ruling's two standing rules are
+adopted in full and govern every remaining commit; what is not adopted is the premise that
+the arc had reached its first stop point.
+
+### The evidence matrix, as ruled
+
+Five legs, each at **1440×1000 and 380×800**:
+
+| leg | state |
+|---|---|
+| 1 | S5 with **three** NEEDS YOU items |
+| 2 | S5 with **zero** NEEDS YOU items — the `↓ All (.zip)` primary (clause c) |
+| 3 | S6 declined |
+| 4 | S8 with the reference disclosure open |
+| 5 | (the above at the second width) |
+
+Output **outside the repo**. Bundle poll before every leg — healthz proves the backend sha
+only and this arc is frontend-only. Sha-gated both ends. **No ship while a leg is running.**
+
+### The finding rule
+
+- A finding that **would change a #281 rule** → **stop the arc with a checkpoint**; Ryan
+  rules before it is built.
+- A finding that **does not change a rule** → goes in the arc README; the build continues.
+
+---
+
 ## ⚠ THE CHECKPOINT THIS RULING ANSWERS IS NOT IN THE RECORD
 
 **Read this before acting on clauses a, b, e, g and h.**
