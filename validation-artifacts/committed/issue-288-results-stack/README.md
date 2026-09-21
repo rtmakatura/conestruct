@@ -112,6 +112,25 @@ stands — so per the second ruling this is recorded and the build continues. Wo
 on #281 marking both resolved, so the next arc's citation does not have to be traced through
 a prompt file to be believed.
 
+### 5 — the file count is currently stated NOWHERE, and §8.29 says it must be stated once
+
+Found by the diff-verifier as a stale comment in `OutputCards.tsx:229`; it is more than a
+comment. §8.29 lists what must be preserved from the dropped strip: *"the reserved slot … and
+the rule that the file count is stated exactly once on the page"*. The strip's chip 3 was
+that one statement (`4 FILES READY`, from `BUNDLE_PART_KINDS`), and #253's ruling 2 had
+deliberately removed the numeral from the download caption so the page had one voice for it.
+
+`2ef4a8f` dropped the strip. The count is now stated **zero** times.
+
+This is a build gap, not a decision, and not a rule change — §8.29 already requires the
+restatement. It closes when the counts hero and the download cards land (rule 86, rulings
+182/183), which is where acceptance line 4 — "file count stated once, from the served bundle;
+counts are wire digits, no literal totals" — is measured. Until then Rule 10 keeps the
+surface honest: the caption asserts no number it cannot back, rather than a stale one.
+
+The comment at `OutputCards.tsx:229` now says this, so the next reader of that file learns it
+from the file rather than from this README.
+
 ## Evidence plan, as ruled — not yet run
 
 Five states, each at **1440×1000** and **380×800**: S5 with three NEEDS YOU items · S5 with

@@ -226,10 +226,17 @@ export function OutputCards({
       <div className="flex items-center justify-between gap-4 px-1 pb-3">
         <div>
           {/* #253 (GO 2026-09-09 ruling 2, one voice): the file count is
-              stated ONCE, by the next-steps strip's chip 3 ("4 FILES
-              READY", from BUNDLE_PART_KINDS — the zip's parts, which
-              include quote.xlsx from the pricing card below).  The
-              caption no longer repeats the numeral. */}
+              stated ONCE, and this caption deliberately does not repeat
+              the numeral.  Until issue 288 the one statement was the
+              next-steps strip's chip 3 ("4 FILES READY", from
+              BUNDLE_PART_KINDS — the zip's parts, which include
+              quote.xlsx from the pricing card below).
+              Part 1 8.29 dropped the strip and kept the rule, so the
+              count is stated NOWHERE on the page right now.  That is a
+              gap, recorded in the arc README, not a decision: the stack
+              restates it once when the counts hero and the cards land
+              (rule 86, rulings 182/183).  Rule 10 keeps the caption
+              honest meanwhile — it claims no number it cannot back. */}
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
             MHT PACKAGE
           </div>
