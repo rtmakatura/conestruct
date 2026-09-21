@@ -974,13 +974,25 @@ export function referenceItem(
             Trigger: &ldquo;{triggerCondition}&rdquo;
           </p>
         )}
+        {/* #288 clause 7 / rule 15: these three ↗ links are 12px inline
+            text, so their tappable box was the line box — about 16px,
+            against a 32px floor at 1440 and 44px at 380.  inline-flex +
+            a min-height grows the HIT BOX without moving the text (rule
+            134's idiom).
+            All three render only behind a fold, and one of them behind
+            TWO: this case-reference link lives in an ItemAccordion body
+            inside the ✓ disclosure row, so it takes two clicks to reach.
+            GeneratorShell.hit-targets.test.tsx opens every fold until
+            none are left and then ASSERTS all three are present — an
+            earlier version of that fixture rendered one of the three and
+            the comment here claimed it checked all of them. */}
         {url ? (
           <p>
             <a
               href={url}
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
+              className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
             >
               ↗ Open {cdotSheet} PDF on CDOT.gov
             </a>
@@ -1442,7 +1454,7 @@ export function pendingVerificationItem(
                   href={item.tracking_issue}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
+                  className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
                 >
                   ↗ Tracking issue ({item.kind.replace(/_/g, " ")})
                 </a>
@@ -1460,7 +1472,7 @@ export function pendingVerificationItem(
               href={pending.tracking_issue}
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
+              className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] font-mono text-[12px] tracking-[0.04em] uppercase text-[color:var(--act)] hover:underline"
             >
               ↗ Tracking issue
             </a>

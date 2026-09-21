@@ -1521,6 +1521,13 @@ input[type="number"] {
   color: var(--act);
   background: transparent;
   border: 0;
+  /* #288 clause 7 / rule 15: a 10px inline link is a ~13px target.  The
+     hit box is padded to the floor WITHOUT moving the text: inline-flex
+     + a min-height, so the row's baseline is where it was and only the
+     tappable area grows (rule 134's "padding to a 32 px hit box"). */
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   padding: 0;
   cursor: pointer;
   text-decoration: underline dotted;
@@ -2263,6 +2270,30 @@ input[type="number"] {
   }
 }
 
+
+/* ─── #288 Phase 1 clause 7 · RULE 15, PAGE-WIDE ───
+   Authority: rulings.md, "The Phase 1 finish ruling" clause 7.
+   Rule 15: "Every interactive element ≥ 32 px in its smaller dimension
+   at 1440 px, ≥ 44 px at 380 px."  #288 absorbs #264's results half and
+   states the reason the footer is included: "§8.14/rule 30 keep it
+   unchanged, rule 15 admits no exemption" — unchanged in CONTENT is not
+   the same as exempt from a hit-target floor.
+   The 1440 floors are declared on each control beside its own rules
+   (.act, .pri, .disc-head, .dl-btn, .reason-chip, .site-correction-note,
+   .tr-signpost).  This block is the ≤480 sweep: one place, so a control
+   added later and missed here is visible as an omission rather than
+   buried in a component's own block.
+   The TARGETS probe reading 0 at both widths is the prod leg's figure
+   (acceptance line 7) — nothing here claims a measured rect. */
+@media (max-width: 480px) {
+  .workbench .tr-signpost,
+  .workbench .refchip .chip-sum,
+  .workbench .audit-head,
+  .workbench .disc-head,
+  .workbench .dl-btn {
+    min-height: 44px;
+  }
+}
 
 /* ─── #227 system-event container ───
    "A value the user didn't set is a system event, not a field

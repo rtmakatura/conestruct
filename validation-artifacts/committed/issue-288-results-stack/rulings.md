@@ -511,3 +511,42 @@ the prod leg's figure: happy-dom composites nothing and applies no stylesheet, s
 this commit claims a ratio. What the suite pins is the STRUCTURE that makes the measurement
 come out right — the ribbon is not a descendant of the dimmed wrapper in any state that dims.
 Get that wrong and the leg measures 2.39 again.
+
+## The rules clause 7 builds against — #281 comment 1 rules 15 and 134, verbatim
+
+> 15. Hit targets. Every interactive element ≥ 32 px in its smaller dimension at 1440 px,
+> ≥ 44 px at 380 px. The fact-line link (rule 56) is the one that this fixes relative to
+> today.
+
+> 134. FACT LINK (.lk). Mono 9.5 px .14em uppercase #34a9e8, border-bottom 1 px
+> rgba(52,169,232,.45), padding to a 32 px hit box.
+>      hover    #5cbef0, border-bottom colour to match
+>      focus    outline per rule 16
+>      No disabled state: a fact line either offers a link or offers a provenance word
+>      (rule 59).
+
+And #288's own body, on why the footer is in scope:
+
+> #264 results half (closed; carries rule 15 page-wide including the footer — §8.14/rule 30
+> keep it unchanged, rule 15 admits no exemption; `AppFooter.tsx:8-13` verified no
+> `min-height`).
+
+### The idiom clause 7 uses, from rule 134
+
+Rule 134's "padding to a 32 px hit box" is the pattern for every inline link this clause
+fixes: the HIT BOX grows, the text does not move. `inline-flex` + `align-items: center` +
+`min-height` leaves the type, the tracking, the ink and the baseline exactly as they were and
+only enlarges what a pointer can land on. That is what lets §8.14's "footer unchanged" and
+rule 15's "no exemption" both be true at once — unchanged in CONTENT is not a claim about the
+tappable area.
+
+### What clause 7 does NOT measure
+
+Acceptance line 7 is "Heading/row left edges ±1; TARGETS probe 0 under 32 px at 1440 / 44 px
+at 380, footer included; axe `target-size` 0 at 380." Those are the prod leg's figures. No
+test in this commit claims a rect: happy-dom lays nothing out.
+
+What the suite does instead is what the leg cannot — it ENUMERATES the interactive elements
+the mounted page renders, with the disclosures open and the dismiss picker open, and fails on
+any that carries no declared floor. The leg measures the page as it is on one run; the
+enumeration fails a control added later, at commit time.

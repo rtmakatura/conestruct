@@ -346,3 +346,63 @@ alias noted where it helps.
 non-existent token look declared, and the more precise the surrounding comment is, the more
 convincing the fiction. The same shape as the rule-78 quote and the "recorded in the arc
 README" claim — the code was right and the claim about it was not.
+
+### Clause 7 — three rule-15 failures behind folds, and a coverage claim that was false
+
+The enumeration found three inline `↗` links at 12 px with no hit box: "Open {sheet} PDF on
+CDOT.gov", and two "Tracking issue" links. Their tappable area was the line box, about 16 px,
+against rule 15's 32 px floor.
+
+**All three render only behind a fold, and one behind two folds.** The case-reference link
+sits in an `ItemAccordion` body inside the ✓ disclosure row — two clicks deep. The per-item
+tracking link needs `pending_verification.items` populated; the flat one needs only the
+pending tier open.
+
+**The first version of this suite claimed to check all three and checked one.** The fixture
+left `sections.case.url` and `pending_verification.items` unset, so two of the three branches
+never mounted — and the comment beside the fix, and this README section, both said the
+enumeration reached them by opening disclosures. The diff-verifier caught it by reading the
+fixture against the component's guards, which is the only way it could have been caught: the
+suite was green, and green is what a coverage claim looks like when it is false.
+
+Three things changed as a result, and the order matters:
+
+1. the fixture now populates both fields, so all three links actually mount;
+2. the opener walks recursively until no fold is left, because one control was two deep and
+   a single pass reached it;
+3. **the coverage claim is now itself an assertion** — the suite fails if any of the three is
+   missing, instead of a comment promising they are there.
+
+The third is the durable one. A coverage claim that nothing asserts is a comment, and a
+comment cannot fail.
+
+### Clause 7 — a finding NOT fixed here: `.audit-head` announces no expanded state
+
+Writing the recursive opener surfaced it. `.audit-head` (the `ItemAccordion` control) carries
+no `aria-expanded` at all — its open state lives only as a class on the parent
+(`.audit-item.open`). Selecting it by the attribute it does not have is how the opener's
+first version silently opened nothing.
+
+A disclosure control that does not announce whether it is expanded is a real a11y gap, but it
+is rule 16's and WCAG 4.1.2's, not rule 15's, and `AuditTrail.tsx` is not this arc's surface.
+Recorded rather than fixed, and worth its own issue: every other fold in the stack
+(`.disc-head`, `.chip-sum`, `.price-head` before it retired) does carry `aria-expanded`, so
+this is the odd one out, not the convention.
+
+**The general shape, and the reason this is worth a README entry:** folding surfaces behind
+disclosures — which is most of what Phase 1 did — moves controls out of the default view, and
+an audit that measures the default view stops seeing them. Clause 4 hid a recovery action and
+a staleness cue behind folds; clause 7 found three controls that had been hidden behind one
+all along. Any future accessibility pass on this page has to open things first.
+
+### Clause 7 — refining a test's question without relaxing its answer
+
+The same enumeration flagged the dismiss picker's four radio inputs. Those are 1×1 px at
+opacity 0 inside a `.reason-chip` label (#245: the radio keeps the tab order and the native
+`:checked` semantics; the chip is what the operator sees and hits). WCAG 2.5.5 measures the
+target the pointer lands on, so a floored label covers its own hidden input.
+
+The lazy fix was to skip inputs. What is there instead: an input counts as floored **iff its
+wrapping label is floored** — so an input with no floored label still fails, and a label that
+loses its floor fails through the label. Recorded because "make the four failures go away" and
+"ask the right question" produce the same green, and only one of them still works next year.
