@@ -1,0 +1,262 @@
+[
+ {
+  "id": "gate.healthz",
+  "ok": true,
+  "detail": "healthz == 65bc7e87b524fc5241bba232f774454bc6f6cb67"
+ },
+ {
+  "id": "1440.S5.pick",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "1440.S5.cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "1440.S5.settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "1440.S5.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip present: false"
+ },
+ {
+  "id": "1440.S5.reserve-44",
+  "ok": true,
+  "detail": "reserved row height 44px"
+ },
+ {
+  "id": "1440.S5.which",
+  "ok": null,
+  "detail": "S5 WITH ITEMS — count \"3\", 3 row(s): 2 changed, 1 attention"
+ },
+ {
+  "id": "1440.S5.count-is-sum",
+  "ok": true,
+  "detail": "header \"3\" vs 3 rows (ruling 185)"
+ },
+ {
+  "id": "1440.S5.decomposition",
+  "ok": true,
+  "detail": "provenance: changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention"
+ },
+ {
+  "id": "1440.S5.ruling-d-no-buttons",
+  "ok": true,
+  "detail": "0 button(s) in the block"
+ },
+ {
+  "id": "1440.S5.ruling-186-expanded",
+  "ok": true,
+  "detail": "caret in the header: false"
+ },
+ {
+  "id": "1440.S8.row-mounted",
+  "ok": true,
+  "detail": "reference disclosure present: true"
+ },
+ {
+  "id": "1440.S8.closed-in-S5",
+  "ok": true,
+  "detail": "aria-expanded false"
+ },
+ {
+  "id": "1440.S8.panel-absent-when-closed",
+  "ok": true,
+  "detail": ".disc-panel present: false"
+ },
+ {
+  "id": "1440.S8.uncounted",
+  "ok": true,
+  "detail": "a numeral on the uncounted tier: false"
+ },
+ {
+  "id": "1440.S8.rule-129-read",
+  "ok": true,
+  "detail": "data-read true · data-write false"
+ },
+ {
+  "id": "1440.S8.rule-88-name",
+  "ok": null,
+  "detail": ".disc-name font-size \"16px\" — 13px lands with abb8cc0, NOT in this sha"
+ },
+ {
+  "id": "1440.S8.opens",
+  "ok": true,
+  "detail": "aria-expanded true · panel true"
+ },
+ {
+  "id": "1440.S8.nothing-above-moves",
+  "ok": true,
+  "detail": "NEEDS YOU rows 3 -> 3"
+ },
+ {
+  "id": "1440.S6.pick",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "1440.S6.replay-armed",
+  "ok": null,
+  "detail": "the AUDIT call is answered with a real-shaped 400 — the audit is what drives the declined verdict, not the bundle"
+ },
+ {
+  "id": "1440.S6.cta-gated",
+  "ok": true,
+  "detail": "Generate disabled under the declined audit: true (#180)"
+ },
+ {
+  "id": "1440.S6.declined",
+  "ok": true,
+  "detail": "a refusal is on screen: true"
+ },
+ {
+  "id": "1440.S6.no-needs-you",
+  "ok": true,
+  "detail": "NEEDS YOU beside the refusal: false (spec 31, rule 10)"
+ },
+ {
+  "id": "1440.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 14 console error(s)"
+ },
+ {
+  "id": "1440.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "380.S5.pick",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "380.S5.cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "380.S5.settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "380.S5.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip present: false"
+ },
+ {
+  "id": "380.S5.reserve-44",
+  "ok": true,
+  "detail": "reserved row height 44px"
+ },
+ {
+  "id": "380.S5.which",
+  "ok": null,
+  "detail": "S5 WITH ITEMS — count \"3\", 3 row(s): 2 changed, 1 attention"
+ },
+ {
+  "id": "380.S5.count-is-sum",
+  "ok": true,
+  "detail": "header \"3\" vs 3 rows (ruling 185)"
+ },
+ {
+  "id": "380.S5.decomposition",
+  "ok": true,
+  "detail": "provenance: changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention"
+ },
+ {
+  "id": "380.S5.ruling-d-no-buttons",
+  "ok": true,
+  "detail": "0 button(s) in the block"
+ },
+ {
+  "id": "380.S5.ruling-186-expanded",
+  "ok": true,
+  "detail": "caret in the header: false"
+ },
+ {
+  "id": "380.S8.row-mounted",
+  "ok": true,
+  "detail": "reference disclosure present: true"
+ },
+ {
+  "id": "380.S8.closed-in-S5",
+  "ok": true,
+  "detail": "aria-expanded false"
+ },
+ {
+  "id": "380.S8.panel-absent-when-closed",
+  "ok": true,
+  "detail": ".disc-panel present: false"
+ },
+ {
+  "id": "380.S8.uncounted",
+  "ok": true,
+  "detail": "a numeral on the uncounted tier: false"
+ },
+ {
+  "id": "380.S8.rule-129-read",
+  "ok": true,
+  "detail": "data-read true · data-write false"
+ },
+ {
+  "id": "380.S8.rule-88-name",
+  "ok": null,
+  "detail": ".disc-name font-size \"16px\" — 13px lands with abb8cc0, NOT in this sha"
+ },
+ {
+  "id": "380.S8.opens",
+  "ok": true,
+  "detail": "aria-expanded true · panel true"
+ },
+ {
+  "id": "380.S8.nothing-above-moves",
+  "ok": true,
+  "detail": "NEEDS YOU rows 3 -> 3"
+ },
+ {
+  "id": "380.S6.pick",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "380.S6.replay-armed",
+  "ok": null,
+  "detail": "the AUDIT call is answered with a real-shaped 400 — the audit is what drives the declined verdict, not the bundle"
+ },
+ {
+  "id": "380.S6.cta-gated",
+  "ok": true,
+  "detail": "Generate disabled under the declined audit: true (#180)"
+ },
+ {
+  "id": "380.S6.declined",
+  "ok": true,
+  "detail": "a refusal is on screen: true"
+ },
+ {
+  "id": "380.S6.no-needs-you",
+  "ok": true,
+  "detail": "NEEDS YOU beside the refusal: false (spec 31, rule 10)"
+ },
+ {
+  "id": "380.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 15 console error(s)"
+ },
+ {
+  "id": "380.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "gate.healthz-after",
+  "ok": true,
+  "detail": "healthz still 65bc7e87b524fc5241bba232f774454bc6f6cb67"
+ }
+]

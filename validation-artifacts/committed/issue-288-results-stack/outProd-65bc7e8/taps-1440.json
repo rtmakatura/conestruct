@@ -1,0 +1,179 @@
+{
+ "label": "early",
+ "pageerrors": [],
+ "consoleErrors": [
+  {
+   "at": 4612,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 4616,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 5772,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 5773,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 62142,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 62145,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 63134,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 63134,
+   "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 69719,
+   "text": "Failed to load resource: the server responded with a status of 400 ()"
+  },
+  {
+   "at": 69887,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 70143,
+   "text": "Failed to load resource: the server responded with a status of 400 ()"
+  },
+  {
+   "at": 70294,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 70695,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 71080,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  }
+ ],
+ "requestFailures": [
+  {
+   "at": 4611,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 4616,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 5772,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 5773,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 32785,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 32785,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33188,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33188,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33601,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33601,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33982,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 33982,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 34971,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 34971,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 35373,
+   "url": "https://www.conestruct.com/terms",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 58317,
+   "url": "https://o4511428711153664.ingest.us.sentry.io/api/4511428740513792/envelope/",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 62142,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 62145,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 63134,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 63134,
+   "url": "https://events.mapbox.com/events/v2",
+   "failure": "net::ERR_NAME_NOT_RESOLVED"
+  },
+  {
+   "at": 69884,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 70692,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  }
+ ],
+ "counts": {
+  "pageerror": 0,
+  "consoleError": 14,
+  "requestFailed": 22
+ }
+}
