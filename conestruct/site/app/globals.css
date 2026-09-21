@@ -2908,90 +2908,100 @@ input[type="number"] {
   background: var(--act-glow);
 }
 
-/* Zone 2 hero — the two numbers a CBC estimator prices from, plus the
-   backend zone-geometry meta strip.  Numerals are generated output →
-   orange (--dim); the corner ticks carry the same output accent. */
+/* ─── #288 Phase 1 clause 2 · COUNTS HERO (spec #281 comment 1, rules
+   80–83; Part 1 §8.7 "results hero → counts hero", KEPT in behaviour) ───
+   Authority: rulings.md, "The Phase 1 finish ruling", clause 2.
+   Rule 80: three tracks 1fr / 1fr / 300px, each cell padding 20px 22px
+   with a 1px right border, last cell none; shell 1px --rule on
+   --da-ground.  Rule 81: cells 1–2 are a quiet section header, then the
+   numeral (mono 500, 62px/1, --dim = the spec's generated-number
+   orange), then a sub-line in the provenance role.  Rule 82: cell 3 is a
+   case-ID line in provenance at --ink, then the geometry rows —
+   space-between, mono 11px --body, gap 7px, verbatim from zone_geometry.
+   Rule 83: the degradations are unchanged and live in the component.
+   No literals: every colour is a token (#263's ink gate).  The sub-line
+   and the case-ID line carry .tr-prov in the markup rather than
+   declaring a size, so this block drops two census rows instead of
+   moving them.
+   DECLARED (Rule 5): the two corner ticks are gone.  Rule 80 specifies
+   the shell completely — border, ground, tracks — and the ticks are
+   decoration it does not carry; they were the old hero's own flourish.
+   DECLARED: at ≤980 the geometry cell still renders, stacked full-width.
+   Rule 169 drops it at 380 "because its four rows are reachable in the
+   reference disclosure" — they are NOT reachable there today, so
+   dropping the cell would take four measured values off the phone with
+   nowhere to read them (Rule 10).  Recorded as a finding in this arc's
+   README ("Findings from the Phase 1 finish push") and beside rule 169's
+   verbatim text in rulings.md. */
 .workbench .hero {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 300px;
   gap: 0;
   border: 1px solid var(--rule);
-  background: var(--canvas-tint);
-  position: relative;
+  background: var(--da-ground);
   margin-bottom: 16px;
 }
-.workbench .hero .tick {
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid var(--dim);
-}
-.workbench .hero .tick.tl {
-  top: -1px;
-  left: -1px;
-  border-right: none;
-  border-bottom: none;
-}
-.workbench .hero .tick.br {
-  bottom: -1px;
-  right: -1px;
-  border-left: none;
-  border-top: none;
-}
 .workbench .hero-cell {
-  padding: 24px;
-  border-right: 1px solid var(--rule-soft);
+  /* Rule 80. */
+  padding: 20px 22px;
+  border-right: 1px solid var(--da-hair);
 }
 .workbench .hero-cell .k {
+  /* Rule 81 → rule 3's QUIET section header: mono 10px .18em uppercase,
+     provenance ink.  The quiet variant is what the counts hero's cell
+     labels are named for in rule 3 itself. */
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
+  color: var(--mut, var(--ink-on-dark-faint));
   display: block;
-  margin-bottom: 4px;
 }
 .workbench .hero-cell .num {
+  /* Rule 81: mono 500, 62px on a line-height of 1, generated-number
+     orange.  Margin 10px 0 8px, as ruled. */
   font-family: var(--font-mono);
-  font-size: 76px;
-  line-height: 0.92;
-  font-weight: 600;
+  /* #283 declared this size on :root ahead of its surface ("never as
+     debt") — clause 2 is the phase that draws it, so it reads the token
+     rather than minting the literal a second time. */
+  font-size: var(--fs-hero-numeral);
+  line-height: 1;
+  font-weight: 500;
   color: var(--dim);
   letter-spacing: -0.02em;
-}
-.workbench .hero-cell .sub {
-  font-size: 12px;
-  color: var(--ink-on-dark-faint);
-  margin-top: 6px;
+  margin: 10px 0 8px;
 }
 .workbench .hero-cell .sub b {
+  /* The jurisdiction-required tally is generated output too. */
   color: var(--dim);
   font-weight: 600;
 }
 .workbench .hero-meta {
-  padding: 24px;
+  /* Rule 80: the third cell, 300px, no right border. */
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
-  min-width: 210px;
+  gap: 7px;
+  border-right: none;
 }
 .workbench .hero-meta .caseid {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-on-dark);
-  letter-spacing: 0.04em;
+  /* Rule 82: a case-ID line in the provenance role AT --ink (the one
+     override the rule names).  The role class carries the size. */
+  color: var(--ink);
   padding-bottom: 8px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--da-hair);
+  text-decoration: none;
 }
 .workbench .hero-meta .row {
+  /* Rule 82: space-between, mono 11px, body ink, gap 7px. */
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  font-size: 11.5px;
-  color: var(--ink-on-dark-faint);
+  gap: 7px;
   font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--body, var(--ink-on-dark-faint));
 }
 .workbench .hero-meta .row .mv {
   color: var(--ink-on-dark);
@@ -3002,10 +3012,11 @@ input[type="number"] {
   }
   .workbench .hero-meta {
     grid-column: 1 / -1;
-    border-top: 1px solid var(--rule-soft);
+    border-top: 1px solid var(--da-hair);
   }
+  /* Rule 169's 42px at the 380 arc — its token, declared by #283. */
   .workbench .hero-cell .num {
-    font-size: 60px;
+    font-size: var(--fs-hero-numeral-380);
   }
 }
 

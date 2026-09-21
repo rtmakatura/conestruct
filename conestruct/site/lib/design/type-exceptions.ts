@@ -64,12 +64,12 @@ export const ROLE_CLASSES = [
 export const TYPE_EXCEPTIONS: readonly TypeException[] = [
   {
     name: "hero numerals",
-    sizes: ["76px", "60px"],
+    sizes: ["var(--fs-hero-numeral)", "var(--fs-hero-numeral-380)"],
     reason:
-      "the results hero's big figures (76 at desk, 60 in the ≤480 query) — display numerals, not a label register",
+      "the counts hero's big figures — display numerals, not a label register.  #288 Phase 1 clause 2 restyled the hero to Part 2 rules 80–83 and 169, so the chosen 76/60 give way to the RULED 62/42, which #283 had already declared as :root tokens ahead of their surface — the cells now read the tokens and the census records the var() names",
     css: [
-      { selector: ".workbench .hero-cell .num", size: "76px" },
-      { selector: ".workbench .hero-cell .num", size: "60px" },
+      { selector: ".workbench .hero-cell .num", size: "var(--fs-hero-numeral)" },
+      { selector: ".workbench .hero-cell .num", size: "var(--fs-hero-numeral-380)" },
     ],
     tsx: [],
   },
@@ -225,10 +225,12 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .chain", size: "11.5px" },
       { selector: ".workbench .chain .sep", size: "12px" },
       { selector: ".workbench .chain-note", size: "9px" },
+      // #288 clause 2: the sub-line and the case-ID line now carry
+      // .tr-prov (the provenance role rules 81 and 82 name), so their
+      // two rows are DELETED rather than re-declared; the geometry row
+      // takes rule 82's 11px.
       { selector: ".workbench .hero-cell .k", size: "10px" },
-      { selector: ".workbench .hero-cell .sub", size: "12px" },
-      { selector: ".workbench .hero-meta .caseid", size: "12px" },
-      { selector: ".workbench .hero-meta .row", size: "11.5px" },
+      { selector: ".workbench .hero-meta .row", size: "11px" },
     ],
     tsx: [],
   },
@@ -448,7 +450,7 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 98,
+  cssDeclarations: 96,
   cssSizes: 21,
   tsxSites: 106,
   tsxUses: 320,

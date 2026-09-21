@@ -151,7 +151,11 @@ describe("#263 type census — globals.css font-sizes", () => {
       expect.arrayContaining([
         ".workbench .tr-section → 10px",
         ".workbench .tr-field → 12px",
-        ".workbench .hero-cell .num → 76px",
+        // #288 clause 2: the counts hero reads rule 81's ruled 62px from
+        // the :root token #283 declared for it, so the anchor is the
+        // token's name — a literal here would go stale on the next
+        // token change and stop anchoring anything.
+        ".workbench .hero-cell .num → var(--fs-hero-numeral)",
       ]),
     );
   });
@@ -237,7 +241,20 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
   it("exception sizes are exactly the ruling's: 76/60, 28, 20/17, 16, 14, 11, 9 (24 left with the #249 lockup — #253 conflict 1; s2-arc30, 2026-09-14: the #273 value register is DELETED — the applied value takes `tr-field` at the label's 12px, so 14 is carried once again, as sans body copy only — and 11 stays as the ledger's glyph cell)", () => {
     const sizes = TYPE_EXCEPTIONS.flatMap((e) => e.sizes).sort();
     expect(sizes).toEqual(
-      ["76px", "60px", "28px", "20px", "17px", "16px", "14px", "11px", "9px"].sort(),
+      [
+        // #288 clause 2: the hero's chosen 76/60 gave way to rules 81 and
+        // 169's RULED 62/42, read from the :root tokens #283 declared
+        // ahead of the surface — so the exception carries their names.
+        "var(--fs-hero-numeral)",
+        "var(--fs-hero-numeral-380)",
+        "28px",
+        "20px",
+        "17px",
+        "16px",
+        "14px",
+        "11px",
+        "9px",
+      ].sort(),
     );
     // Each exception's rows carry only its own sizes.
     for (const e of TYPE_EXCEPTIONS) {

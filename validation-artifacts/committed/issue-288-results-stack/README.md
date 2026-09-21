@@ -179,3 +179,46 @@ Five states, each at **1440×1000** and **380×800**: S5 with three NEEDS YOU it
 zero, the `↓ All (.zip)` primary (clause c) · S6 declined · S8 with the reference open.
 Output outside the repo. Bundle poll before every leg. Sha-gated both ends. **No ship while a
 leg is running.**
+
+## Findings from the Phase 1 finish push
+
+Under the arc's finding rule: a finding that would change a #281 rule stops the arc with a
+checkpoint; one that does not goes here and the build continues. Both below are the second
+kind.
+
+### Clause 2 — rule 169's geometry cell is NOT dropped at 380
+
+**Rule 169 says:** "The counts hero goes to 2 tracks and the numerals to 42 px; the geometry
+cell is not rendered — its four rows are reachable in the reference disclosure."
+
+**The finding:** the second clause is the justification for the first, and it is not true of
+this codebase. The four geometry rows — taper L, buffer B, device spacing, work-zone length —
+come from `zone_geometry` on the device-breakdown response and render in exactly one place,
+the counts hero's third cell. They are **not** in the reference disclosure, in any tier, at
+any width. `TieredReference`'s reference tier carries the permit FYI, the work-hours card, the
+hazard chips, the administrative deltas and the device schedule; no geometry.
+
+**What was built instead:** the numerals take rule 169's 42 px, the grid drops to two tracks,
+and the geometry cell **still renders**, stacked full-width beneath them. Dropping it would
+take four measured values off the phone with nowhere to read them, which is the Rule 10
+failure — absence of a surface is not absence of the fact, and the operator would have no way
+to reach it.
+
+**Why this is not a checkpoint:** it changes no rule. Rule 169's *intent* — the phone does
+not carry a 300 px side rail — is honoured; only its means are. The rule becomes correct as
+written the moment the geometry rows have a second home, and the natural one is the reference
+disclosure it already names. That is a Phase 2 or #286 job, not this push's.
+
+### Clause 2 — the counts hero's corner ticks are deleted
+
+Rule 80 specifies the hero's shell completely: 1 px border, ground, three tracks. The two
+corner ticks were the old results hero's own flourish and are carried by no rule. Deleted
+rather than kept as undeclared decoration. No value moved.
+
+### Clause 2 — the ruled numeral sizes were already declared
+
+#283 (Phase 0) declared `--fs-hero-numeral: 62px` and `--fs-hero-numeral-380: 42px` on
+`:root` ahead of any surface using them, per #281's "never as debt". Clause 2 is the phase
+that draws them, so the cells read the tokens rather than minting the literals a second time,
+and #263's census now records the `var()` names instead of the retired 76/60. This is Phase 0
+paying off exactly as intended, and worth recording because it is the first time it has.

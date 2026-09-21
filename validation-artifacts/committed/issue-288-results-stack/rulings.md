@@ -323,3 +323,43 @@ caught exactly that on repair cycle 1.
 
 Rule 78's "APPLY 0 CHANGES" label diverges for the same reason and is likewise not adopted:
 the button reads `Apply 0 corrections`, as it did in the strip.
+
+## The rules clause 2 builds against, verbatim — #281 comment 1 (Part 2)
+
+Same reason as clause 1's block above: Part 2 lives on the issue, so a commit citing rule
+numbers has nothing tracked to be checked against. Transcribed from `gh issue view 281`,
+comment 1, sections "C7 · COUNTS HERO" and "160–179 THE 380 px ARC".
+
+> C7 · COUNTS HERO (was: results hero — rules 80–83)
+>
+> 80. Grid, 3 tracks: 1fr / 1fr / 300 px. Each cell padding 20 px 22 px, right border 1 px
+> #223345, last cell none. Shell 1 px #2c3e53, ground #101c29.
+> 81. Cells 1–2: quiet section header (rule 3) → numeral, mono 500 62 px / 1 #ff8a2e, margin
+> 10 px 0 8 px → sub-line in provenance role. Sub-line extensions ("· incl. +N
+> jurisdiction-required", "· N from {jurisdiction}") unchanged.
+> 82. Cell 3: a case-ID line in provenance role at #eaf0f7, then four geometry rows — display
+> flex, justify-content space-between, mono 11 px #c8d1dd, gap 7 px. Verbatim from
+> zone_geometry.
+> 83. Degradations unchanged: absent zone_geometry → one "Zone geometry unavailable" row,
+> nothing recomputed locally; a response missing either count → the hero does not render at
+> all.
+
+And rule 169, which clause 2's narrow width answers to:
+
+> 169. The counts hero goes to 2 tracks and the numerals to 42 px; the geometry cell is not
+> rendered — its four rows are reachable in the reference disclosure.
+
+Rule 3's quiet variant, which rule 81 names for the cell labels:
+
+> 3. Type role 1 — SECTION HEADER. Mono 10 px / 1.2, weight 500, letter-spacing .18em,
+> uppercase, #eaf0f7. Quiet variant #93a0b0 (used for the counts hero's cell labels and the
+> S4 results placeholder).
+
+### Where the build DIVERGES from rule 169, and why
+
+Rule 169's geometry-cell drop rests on "its four rows are reachable in the reference
+disclosure". They are not — they render in the counts hero and nowhere else. The numerals
+take rule 169's 42 px and the grid drops to two tracks; the geometry cell still renders,
+stacked full-width. Dropping it would take four measured values off the phone with no way to
+reach them (Rule 10). Recorded as a finding in this arc's README, under "Findings from the
+Phase 1 finish push" — no rule changes, so the build continued per the finding rule.
