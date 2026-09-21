@@ -87,6 +87,31 @@ clock. `AppSheetMeta.test.tsx` renders at `23:59:59Z` and `00:00:01Z` and assert
 markups are byte-identical — the invariant that was actually broken (Rule 11, at the
 rendered output).
 
+### 4 — rulings 185 and 186 are still OPEN QUESTIONS in the design authority
+
+Found by the diff-verifier while checking `0bb2081`'s citations. `#281` comment 1 — the
+design authority this arc cites as "#281, comment 1, rule N" — carries both as questions,
+not rulings:
+
+> 185. THE SUMMED COUNT (Part 1, 7.3). "Needs you · 3" is ▲ + ⚠. **Keep the sum only, or
+> show both tiers in the default view and drop the sum.**
+>
+> 186. S8's COLLAPSED NEEDS YOU (rule 124 and Part 1, 7.9). A per-state default for a block
+> expanded everywhere else. **Approve, or make it always expanded.**
+
+The answers are recorded in two other places, both of them Ryan's own words: `prompt.md:27`
+(the recovered arc-33 prompt — "Ruling 185: the header count is the sum, the decomposition is
+provenance. Ruling 186: always expanded") and #288's body, which lists them under "Rulings
+carried" in the same terms. `0bb2081` implements the answers, and they are consistent across
+both records.
+
+**What is stale is the authority, not the decision.** #281 comment 1 was never updated when
+185 and 186 were answered, so a reader who follows this arc's own citation convention lands
+on an open question and cannot tell the block was ruled. No #281 rule changes — the decision
+stands — so per the second ruling this is recorded and the build continues. Worth a comment
+on #281 marking both resolved, so the next arc's citation does not have to be traced through
+a prompt file to be believed.
+
 ## Evidence plan, as ruled — not yet run
 
 Five states, each at **1440×1000** and **380×800**: S5 with three NEEDS YOU items · S5 with
