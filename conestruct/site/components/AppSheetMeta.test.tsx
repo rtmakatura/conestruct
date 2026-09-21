@@ -4,9 +4,15 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { AppSheetMeta } from "./AppSheetMeta";
 
 // UX-20: the drafting-table chrome must not assert plan facts it can't
-// back. These lock the three fixes: ISSUED reflects the current date (not
-// a hardcoded stale one), the fictional SHT count is gone, and the BY
+// back. These lock the fixes: the fictional SHT count is gone, and the BY
 // field's false "TCS" authorship is replaced by an honest LOCATION label.
+//
+// #288 / #281 Part 1 s8.32 removed ISSUED. The replacement test is not
+// "the string is absent" but the invariant that was actually broken: the
+// markup must be IDENTICAL either side of a UTC-midnight boundary, because
+// the SSR HTML is baked at deploy and the client renders later (#212). A
+// test that only greps for a date would pass against a differently-shaped
+// render-time clock; comparing two renders catches any of them.
 
 describe("AppSheetMeta (UX-20 honest title-block chrome)", () => {
   beforeEach(() => {
@@ -27,10 +33,20 @@ describe("AppSheetMeta (UX-20 honest title-block chrome)", () => {
       />,
     );
 
-  it("binds ISSUED to today's date, not a hardcoded stale one", () => {
+  it("renders no date at all — no ISSUED field, no stale literal", () => {
     const html = render();
-    expect(html).toContain("2026-06-12");
+    expect(html).not.toContain("ISSUED");
+    expect(html).not.toContain("2026-06-12");
     expect(html).not.toContain("2026-04-27");
+    expect(html).not.toMatch(/\d{4}-\d{2}-\d{2}/);
+  });
+
+  it("renders identically across a UTC-midnight boundary (no hydration drift)", () => {
+    vi.setSystemTime(new Date("2026-06-12T23:59:59Z"));
+    const before = render();
+    vi.setSystemTime(new Date("2026-06-13T00:00:01Z"));
+    const after = render();
+    expect(after).toBe(before);
   });
 
   it("drops the fictional sheet-count field", () => {
