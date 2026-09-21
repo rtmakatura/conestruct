@@ -229,12 +229,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     tsx: [],
   },
   {
-    owner:
-      "B — the next-steps strip (#253): the glyph cell's 11px is the one size CHOSEN per spec 17 (a glyph, not text; the label, index, name and count ride .tr-section / .tr-step / .tr-field)",
-    css: [{ selector: ".workbench .ns-glyph", size: "11px" }],
-    tsx: [],
-  },
-  {
     owner: "A — the corrections block (#254/#255)",
     css: [
       { selector: ".workbench .jbar-suggest", size: "10.5px" },
@@ -432,7 +426,15 @@ export const CENSUS_PINS = {
   // parser excludes by design — that is how they are declared before any
   // surface uses them without the declaration going stale.  Tailwind
   // figures are unchanged: this commit adds no class to any component.
-  cssDeclarations: 105,
+  // #288 Phase 1 (s2-arc33, 2026-09-21): the next-steps strip is DROPPED
+  // (Part 1 8.29), and its whole CSS run goes with it — including the one
+  // declaration outside the role table, `.workbench .ns-glyph` at 11px,
+  // whose debt row above is deleted rather than left to rot.  105 -> 104.
+  // Sizes stay 21: 11px remains on .eyebrow, .chip and the rest, so no
+  // size leaves the sheet.  NEEDS YOU (this arc's new block) adds NO
+  // declaration: its count rides .tr-step and its glyph .tr-field, whose
+  // owner token --fs-field-label already names "field label, symbols".
+  cssDeclarations: 104,
   cssSizes: 21,
   tsxSites: 106,
   tsxUses: 320,

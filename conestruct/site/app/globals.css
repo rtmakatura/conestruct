@@ -759,13 +759,17 @@ body {
      sidebar, and a margin that kept budgeting it left the landing to
      Chrome's scroll anchoring (which the swap's frame suppresses). */
   --pin-h: var(--rail-h);
-  /* #240 / #253: the results head's height — the next-steps strip in
-     its pinned row, MEASURED on the dev server (batch-b-strip at d3c2dcf
-     + this commit's CSS): 81.19 at 1440 (label 16 + 8 + chips 37.19 +
-     padding 18 + rules 2) → 82; the ≤480 query pins the stacked value.
-     The slot (.results-head-slot) reserves it from the Generate click so
-     the strip lands into allocated room. */
-  --strip-h: 82px;
+  /* #288 rule 28 (ruled 2026-09-21) — the results stack's reserved first
+     row.  It reserves the SETUP FACT LINE's height: 44 px at one line,
+     read off Part 2 rule 56.  A RULE, not a measurement — which is the
+     whole reason it replaces --strip-h.  --strip-h was the next-steps
+     strip's measured height (81.19 at 1440 on the dev server at d3c2dcf,
+     rounded to 82), so it died with the strip it measured (§8.29).
+     --fact-h cannot drift, needs no re-measuring, and does not depend on
+     NEEDS YOU's content, so a block that grows with its item count never
+     changes the reserve.  Ruling 184's landing carries everything below
+     it.  One value at both widths: rule 56 does not vary by viewport. */
+  --fact-h: 44px;
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -1488,130 +1492,27 @@ input[type="number"] {
    the field / step roles (12.5 and 9.5 snapped, spec 56); the link is
    the signpost role (spec 57's 9.5 / 0.14em snapped).  --dim when ≥1
    detected (the tier set's mark), chromeless --none at 0 (spec 59). */
-/* #253 — the next-steps strip (spec B "sticky step strip", Claude Design
-   2026-09-07) in the results-head slot, replacing the #249 lockup (GO
-   conflict 1).  Tokens only (P11): the spec's rgba(15,26,38,.97) surface
-   is the shared --ws-surface-rgb at .97 (one surface token with the
-   band); #2c3e53 → --rule, #223244 → --rule-soft, #34a9e8 → --act,
-   #5cbef0 → --act-bright, #ff8a2e → --dim, #f4c020 → --warn, #4fd787 →
-   --pass, #93a0b0 → --none; the open-state border is --warn-soft,
-   DECORATIVE (spec 37: ~1.9:1, exempt — the glyph + count carry the
-   state).  Type rides the four roles (label .tr-section, index and count
-   .tr-step, name .tr-field); the glyph cell is the one chosen size.
-   #240 (P1): the slot is mounted from the Generate click (ResultsHead.tsx
-   ``reserve``) at the strip's measured height plus the 14 px gap, so the
-   strip lands into allocated room.  The slot is also the PIN: sticky at
-   --nav-h under --z-strip within the results zone only (ruled deviation
-   from spec 3's page-wide pin — the zone is its containing block), and
-   static below 520 px of the zone's own width (spec 34, the ruled
-   fallback) where the chips stack full-width at 44 px (P10).  Anchors
-   below the pinned strip (.ns-below) budget it: --pin-h = --strip-h. */
+/* #288 §8.29 + rule 28 — the results stack's reserved first row.
+   The next-steps strip is GONE: its three chips pointed at site
+   conditions, pending items and downloads, and in Direction A's column
+   all three are visible in the same viewport, so the strip restated what
+   was already on screen.  With it go .ns-strip, .ns-label, .ns-chips,
+   .ns-chip, .ns-name, .ns-index, .ns-count, .ns-glyph, .ns-below and the
+   ws-locked dim — the whole run, not a disabled remnant.
+   What survives is the RESERVED ROW: --fact-h tall, mounted from the
+   Generate click (ResultsHead.tsx ``reserve``), released under a decline.
+   It is no longer STICKY — it was pinned because the strip was pinned,
+   an empty reserved row has nothing to pin, and rule 32 allows no sticky
+   element except the nav.  The 14 px bottom margin is rule 27's first
+   gap.  The zone keeps its container-type for the 519 px queries below. */
 .workbench .zone.results {
   container-type: inline-size;
 }
 .workbench .results-head-slot {
-  min-height: var(--strip-h);
+  min-height: var(--fact-h);
   margin-bottom: 14px;
-  position: sticky;
-  top: var(--nav-h);
-  z-index: var(--z-strip);
 }
-.workbench .ns-strip {
-  padding: 9px 0;
-  background: rgb(var(--ws-surface-rgb) / 0.97);
-  backdrop-filter: blur(3px);
-  border-top: 1px solid var(--rule-soft);
-  border-bottom: 1px solid var(--rule-soft);
-}
-.workbench .ns-label {
-  margin-bottom: 8px;
-}
-.workbench .ns-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.workbench .ns-chip {
-  flex: 1 1 150px;
-  min-width: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid var(--rule);
-  background: transparent;
-  color: inherit;
-  text-decoration: none;
-}
-.workbench .ns-chip.is-open {
-  border-color: var(--warn-soft);
-}
-.workbench .ns-chip:hover {
-  border-color: var(--act);
-}
-.workbench .ns-chip:focus-visible {
-  outline: 2px solid var(--act-bright);
-  outline-offset: 2px;
-}
-.workbench .ns-chip[aria-disabled="true"] {
-  cursor: default;
-}
-.workbench .ns-glyph {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1;
-}
-.workbench .ns-chip.is-open .ns-glyph {
-  color: var(--warn);
-}
-.workbench .ns-chip.is-clear .ns-glyph,
-.workbench .ns-chip.is-ready .ns-glyph {
-  color: var(--pass);
-}
-.workbench .ns-chip.is-none .ns-glyph {
-  color: var(--none);
-}
-.workbench .ns-name {
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.workbench .ns-count {
-  white-space: nowrap;
-}
-.workbench .ns-num {
-  color: var(--dim);
-  font-weight: 500;
-}
-/* Under the band (spec 21 vs #252 doctrine, ruled): the chips dim with
-   every locked control but stay clickable — reading is never blocked
-   (spec 26); the counts hold the last confirmed answer (spec 22). */
-.workbench.ws-locked .ns-chip {
-  opacity: 0.45;
-}
-.workbench:not([data-stage="pre"]) .ns-below {
-  --pin-h: var(--strip-h);
-}
-@container (max-width: 519px) {
-  .workbench .results-head-slot {
-    position: static;
-  }
-  .workbench .ns-chip {
-    flex: 1 1 100%;
-    min-height: 44px;
-  }
-  .workbench .ns-name {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-  }
-  .workbench:not([data-stage="pre"]) .ns-below {
-    --pin-h: 0px;
-  }
-}
-/* #253 end */
+/* #288 end */
 .workbench .tr-signpost {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -3468,10 +3369,15 @@ input[type="number"] {
     min-height: 44px;
   }
   .workbench {
-    /* Issue 253: the next-steps strip stacked (three 44 px chips) at 380,
-       measured on the dev server: 192 (label 16 + 8 + 3 × 44 + gaps 16 +
-       padding 18 + rules 2). */
-    --strip-h: 192px;
+    /* Issue 288: the strip's stacked 380 value (--strip-h: 192px, three
+       44 px chips measured on the dev server) retired with the strip.
+       --fact-h is not overridden here: rule 56 fixes the fact line at
+       44 px at one line and does not vary by viewport, so the reserve is
+       the same at both widths.  Written "Issue 288", not the hash form:
+       this block sits inside #258's no-new-hex window, whose guard reads
+       a byte range without stripping comments, and "#288" is valid hex.
+       The neighbouring Issue 253 / Issue 250 comments follow the same
+       convention for the same reason. */
     /* Issue 250, option f2: the strip's pill-state height at 380 — measured 69.19
        (two text lines + the pill); pinned at the next whole pixel so
        the min-height governs every state.  Residual: the cold-start

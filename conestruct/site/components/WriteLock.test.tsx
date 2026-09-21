@@ -225,7 +225,6 @@ describe("#252 — the write lock's enumeration is honest", () => {
       .split(/\r?\n/)
       .filter((l) => /^\.workbench(\.|:not\(\.)ws-locked/.test(l));
     expect(selectors).toEqual([
-      ".workbench.ws-locked .ns-chip {",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled:hover,",
       ".workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled,",

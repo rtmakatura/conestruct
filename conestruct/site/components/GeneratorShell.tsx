@@ -44,7 +44,6 @@ import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tie
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { ResultsHead } from "./ResultsHead";
-import { deriveNextSteps } from "@/lib/next-steps";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -1216,17 +1215,12 @@ export function GeneratorShell({
       : null;
   // The refused scan's provenance, from the STAMPED audit view (so a
   // stale refusal for an edited input never renders as current).
-  // #253 — the results-head slot's next-steps strip, derived once
-  // (lib/next-steps.ts): null until a plan lands, under the band the
-  // last confirmed answer; chip 3 reads the breakdown's error state.
-  const nextSteps = deriveNextSteps({
-    generated,
-    landed,
-    planDeclined,
-    stripAudit,
-    breakdownError: genState === "error",
-    staged,
-  });
+  // #288 §8.29 — the next-steps strip is DROPPED, and with it the
+  // deriveNextSteps call that fed it (lib/next-steps.ts, retired this
+  // commit).  Its three chips pointed at site conditions, pending items
+  // and downloads; in Direction A's column all three are visible in the
+  // same viewport, so the strip restated what was already on screen.
+  // What survives is the reserved first row — rule 28, below.
   // #252 — ONE in-flight derivation for the generated scenario: a
   // request for it is open while the breakdown is loading or the
   // stamped audit view is (the deferred debounce window included, as
@@ -1565,16 +1559,13 @@ export function GeneratorShell({
                 results-stale wrapper: the dimmed stale results are the
                 previous answer, but the refusal is current and must
                 keep its measured contrast (rule 13). */}
-            {/* #249 + #246 (+ #252): the results-head slot — the count
-                lockup once the scan settles and RAN, nothing otherwise
-                (the #247 wait line retired: the band is the voice).
-                Slot order: this slot → the refusal container → the plan. */}
-            {/* #240: the slot's room is reserved from the Generate click
-                (P1) and released only under a declined plan. */}
-            <ResultsHead
-              steps={nextSteps}
-              reserve={genState !== "pre" && !planDeclined}
-            />
+            {/* #288 rule 28 — the results stack's reserved FIRST ROW.
+                Mounted from the Generate click, released under a decline,
+                --fact-h tall (rule 56's 44 px fact line: a rule, not a
+                measurement).  Empty until the stack container places the
+                setup fact line in it.  Slot order is unchanged: this slot
+                → the refusal container → the plan. */}
+            <ResultsHead reserve={genState !== "pre" && !planDeclined} />
             {scanRefusal && (
               <div role="alert" className="sys-event warn scan-refusal">
                 <div className="tr-section mb-1.5">Site scan</div>
@@ -1694,13 +1685,14 @@ export function GeneratorShell({
                     jurisdiction={jurisdictionBlock}
                   />
                 )}
-                {/* #253: chip 3's target — a shell-level anchor around the
-                    cards; ``ns-below`` budgets the pinned strip in its
-                    scroll margin (--pin-h: --strip-h).  tabIndex -1: the
-                    jump focuses it (#193), never in the Tab order. */}
+                {/* A shell-level anchor around the cards.  ``ns-below``
+                    retired with the strip (#288 §8.29): it budgeted the
+                    PINNED strip in this target's scroll margin, and there
+                    is no pinned strip to budget.  tabIndex -1: a jump
+                    focuses it (#193), never in the Tab order. */}
                 <div
                   id="downloads"
-                  className="jump-anchor ns-below outline-none"
+                  className="jump-anchor outline-none"
                   tabIndex={-1}
                 >
                   <OutputCards

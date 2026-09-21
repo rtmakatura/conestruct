@@ -121,22 +121,25 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
   });
 });
 
-// #240 — the second reserved slot: the results head.  --strip-h is the
-// next-steps strip's MEASURED height (#253: 81.19 at 1440 → 82 in its
-// pinned row; 192 stacked, pinned in the ≤480 query — it was the #249
-// lockup's 38 until the strip replaced it) and the slot owns the 14 px
-// gap, so the slot's height is the same whether the strip is in it or not.
-describe("#240 — the results-head slot", () => {
-  it("the workbench defines --strip-h: 82px (192 in the ≤480 query); .results-head-slot reserves it and owns the gap", () => {
-    expect(rule(".workbench")).toMatch(/--strip-h:\s*82px/);
-    // Several ≤480 queries in the sheet (C's idiom above): ONE re-declares --strip-h.
+// #288 rule 28 (was #240) — the second reserved slot.  It reserved
+// --strip-h, the next-steps strip's MEASURED height (#253: 81.19 at 1440
+// -> 82 pinned; 192 stacked in the <=480 query).  Part 1 8.29 dropped the
+// strip, so the measurement died with it and the reserve is now --fact-h:
+// rule 56's 44 px fact line, a RULE not a measurement, the same at both
+// widths.  The slot still owns the 14 px gap, so its height is the same
+// whether its occupant is built yet or not.
+describe("#288 — the results stack's reserved first row", () => {
+  it("the workbench defines --fact-h: 44px with no <=480 override; .results-head-slot reserves it and owns the gap", () => {
+    expect(rule(".workbench")).toMatch(/--fact-h:\s*44px/);
+    // Several <=480 queries in the sheet (C's idiom above): NONE
+    // re-declares --fact-h, because rule 56 does not vary by viewport.
     const blocks = css
       .split("@media (max-width: 480px) {")
       .slice(1)
       .map((b) => b.slice(0, b.indexOf("\n}\n")));
-    expect(blocks.some((b) => /\.workbench \{[^}]*--strip-h:\s*192px/.test(b))).toBe(true);
+    expect(blocks.some((b) => /--fact-h\s*:/.test(b))).toBe(false);
     const slot = rule(".workbench .results-head-slot");
-    expect(slot).toMatch(/min-height:\s*var\(--strip-h\)/);
+    expect(slot).toMatch(/min-height:\s*var\(--fact-h\)/);
     expect(slot).toMatch(/margin-bottom:\s*14px/);
   });
 });

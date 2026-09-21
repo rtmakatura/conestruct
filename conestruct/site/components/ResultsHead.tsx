@@ -1,94 +1,45 @@
 "use client";
 
-// #253 (s2-arc26; was #249 + #247 + #246) — the results-head slot and
-// the next-steps strip, one component rendered VERBATIM from the shell's
-// derived ``NextSteps`` (lib/next-steps.ts — the deriveRail idiom, #228:
-// the component decides nothing).
+// #288 Phase 1 (s2-arc33) — the reserved first row of the results stack.
 //
-//   strip    a plan LANDED: three chips, in order — 01 Site conditions
-//            (open of total, "· k STAGED" appended), 02 Pending items,
-//            03 Download (the zip's parts) — each ONE <a>, a data-read
-//            in-page link (never a write; live under the band, spec 26)
-//            that jumps with scroll + focus (#193, jumpToAnchor — kept
-//            over spec 10's plain anchor navigation).  Symbol + word per
-//            state (P9): ▲ open work · ✓ a confirmed zero / a produced
-//            artifact · ◌ nothing evaluated.  Never "done", never a
-//            filled chip (spec 9).  The strip REPLACES the #249 lockup
-//            (GO conflict 1: one field, one surface).
-//   slot     ``reserve`` (#240, P1): from the Generate click the slot
-//            (`.results-head-slot`, min-height --strip-h + the 14 px gap)
-//            is mounted, empty, so the strip lands at the settle into
-//            room already allocated; released under a declined plan.
-//            The slot is also the pin: sticky within the results zone at
-//            --nav-h / --z-strip (ruled deviation from spec 3's page-wide
-//            pin), static below 520 px of the zone's width (spec 34).
-//   null     pre-generate: nothing, not even the slot.
+// Authority: validation-artifacts/committed/issue-288-results-stack/rulings.md
+// — the rule-28 ruling (Ryan, 2026-09-21) and #281 Part 1 §8.29.
 //
-// Visual only (no live region — the strip never says what the system is
-// doing, spec 23; the band is that voice).  Not a rail entry (#228).
+// WHAT THIS WAS.  Until this commit the component rendered the
+// next-steps strip ("NEXT — 3 STEPS", three chips) inside a reserved,
+// pinned slot (#253, #249, #247, #246).  §8.29 drops the strip: its
+// three chips pointed at site conditions, pending items and downloads,
+// and in Direction A's column all three are visible in the same
+// viewport, so the strip restated what is already on screen.
+//
+// WHAT SURVIVES, and it is the whole reason the component still exists:
+//   · the RESERVED ROW — rule 28.  "The results stack's first row is a
+//     reserved slot of its own height plus its gap, mounted from the
+//     Generate click onward, released under a decline.  This is the
+//     results-head slot's job, kept after the strip itself is dropped."
+//   · the LANDING ANCHOR — the slot is the first thing inside
+//     `.zone.results`, whose scroll-margin-top lands the verdict strip
+//     clear of the nav (globals.css, the #250 ruling).  Ruling 184's
+//     arc-28 landing carries everything below it.
+//
+// The reserve is now --fact-h, NOT --strip-h.  The ruling's reason, kept
+// because it is the part that generalises: --strip-h was a MEASUREMENT
+// (81.19 at 1440 on the dev server at d3c2dcf, rounded to 82), so it
+// died with the thing it measured.  --fact-h is read off rule 56, which
+// fixes the setup fact line's row height at 44 px at one line — a rule,
+// not a measurement, so it cannot drift and needs no re-measuring.  It
+// does not depend on NEEDS YOU's content, so a block that grows with its
+// item count never changes the reserve.
+//
+// The slot is no longer sticky.  It was pinned because the strip was
+// pinned; an empty reserved row has nothing to pin, and rule 32 allows
+// no sticky element except the nav.
+//
+// The row is EMPTY in this commit.  What forms in it at the settle is
+// the setup fact line, which arrives with the stack container; the
+// reserve is a rule and holds whether or not its occupant is built yet.
 
-import { jumpToAnchor } from "./GeneratorFormPrimitives";
-import { nextStepChips, type ChipView, type NextSteps } from "@/lib/next-steps";
-
-export function ResultsHead({
-  steps,
-  reserve = false,
-}: {
-  steps: NextSteps | null;
-  reserve?: boolean;
-}) {
-  if (steps === null && !reserve) return null;
-  return <div className="results-head-slot">{steps && <Strip steps={steps} />}</div>;
-}
-
-function Strip({ steps }: { steps: NextSteps }) {
-  const chips = nextStepChips(steps);
-  return (
-    <nav className="ns-strip" aria-label="Next steps">
-      {/* Spec 16: the header voice ("01 SETUP") — the section role. */}
-      <div className="ns-label tr-section">NEXT — 3 STEPS</div>
-      <div className="ns-chips">
-        {chips.map((c) => (
-          <Chip key={c.index} chip={c} />
-        ))}
-      </div>
-    </nav>
-  );
-}
-
-function Chip({ chip }: { chip: ChipView }) {
-  // Spec 17, in order: index · glyph · name · count.  The index and the
-  // count ride the step role, the name the field role; the glyph cell
-  // is the one chosen size (11px, lib/design/type-exceptions.ts).
-  return (
-    <a
-      className={`ns-chip is-${chip.state}`}
-      data-read=""
-      href={`#${chip.anchor}`}
-      aria-disabled={chip.inert ? "true" : undefined}
-      tabIndex={chip.inert ? -1 : undefined}
-      onClick={(e) => {
-        e.preventDefault();
-        if (chip.inert) return;
-        jumpToAnchor(chip.anchor);
-      }}
-    >
-      <span className="ns-index tr-step">{chip.index}</span>
-      <span className="ns-glyph" aria-hidden="true">
-        {chip.glyph}
-      </span>
-      <span className="ns-name tr-field">{chip.name}</span>
-      <span className="ns-count tr-step">
-        {chip.numeral !== null ? (
-          <>
-            <b className="ns-num">{chip.numeral}</b> {chip.rest}
-          </>
-        ) : chip.state === "none" ? (
-          `◌ ${chip.rest}`
-        ) : (
-          chip.rest
-        )}
-      </span>
-    </a>
-  );
+export function ResultsHead({ reserve = false }: { reserve?: boolean }) {
+  if (!reserve) return null;
+  return <div className="results-head-slot" />;
 }
