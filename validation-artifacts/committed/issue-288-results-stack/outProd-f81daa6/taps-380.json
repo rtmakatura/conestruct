@@ -1,0 +1,188 @@
+{
+ "early": {
+  "label": "early",
+  "pageerrors": [],
+  "consoleErrors": [
+   {
+    "at": 4439,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4444,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4935,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4935,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 33162,
+    "text": "Failed to load resource: the server responded with a status of 400 ()"
+   }
+  ],
+  "requestFailures": [
+   {
+    "at": 4439,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4444,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4935,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 4935,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 32810,
+    "url": "https://www.conestruct.com/api/render/device-breakdown",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 32810,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 33256,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 33708,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 34143,
+    "url": "https://www.conestruct.com/api/render/device-breakdown",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 34143,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 35185,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 35415,
+    "url": "https://www.conestruct.com/privacy?_rsc=1czjg",
+    "failure": "net::ERR_ABORTED"
+   }
+  ],
+  "counts": {
+   "pageerror": 0,
+   "consoleError": 5,
+   "requestFailed": 12
+  }
+ },
+ "late": {
+  "label": "late",
+  "pageerrors": [],
+  "consoleErrors": [
+   {
+    "at": 2981,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 2986,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 3477,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 3477,
+    "text": "Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 31704,
+    "text": "Failed to load resource: the server responded with a status of 400 ()"
+   }
+  ],
+  "requestFailures": [
+   {
+    "at": 2981,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 2986,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 3477,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 3477,
+    "url": "https://events.mapbox.com/events/v2?access_token=[REDACTED]",
+    "failure": "net::ERR_NAME_NOT_RESOLVED"
+   },
+   {
+    "at": 31352,
+    "url": "https://www.conestruct.com/api/render/device-breakdown",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 31352,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 31798,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 32250,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 32685,
+    "url": "https://www.conestruct.com/api/render/device-breakdown",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 32685,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 33727,
+    "url": "https://www.conestruct.com/api/render/audit",
+    "failure": "net::ERR_ABORTED"
+   },
+   {
+    "at": 33957,
+    "url": "https://www.conestruct.com/privacy?_rsc=1czjg",
+    "failure": "net::ERR_ABORTED"
+   }
+  ],
+  "counts": {
+   "pageerror": 0,
+   "consoleError": 5,
+   "requestFailed": 12
+  }
+ }
+}

@@ -49,7 +49,14 @@ function attachErrorTaps(page, label = "early") {
   page.on("requestfailed", (r) => {
     requestFailures.push({
       at: Date.now() - attachedAt,
-      url: r.url().slice(0, 200),
+      // Query string dropped, never truncated.  Leg 2's first push was
+      // refused by GitHub's secret scanning: Mapbox's telemetry endpoint
+      // carries the access token in its query, the tap recorded the whole
+      // URL, and the committed artifact would have published it.  An
+      // evidence file has no use for a credential, so it does not keep
+      // one -- and truncating to N characters would only have hidden it
+      // at some lengths.
+      url: r.url().split("?")[0].slice(0, 200),
       failure: (r.failure() && r.failure().errorText) || "unknown",
     });
   });

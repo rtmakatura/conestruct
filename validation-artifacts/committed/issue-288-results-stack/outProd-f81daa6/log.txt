@@ -1,0 +1,38 @@
+healthz sha f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7 expect f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7
+PASS gate.healthz — healthz == f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7
+PASS 1440.strip-absent — .ns-strip false · .ns-chip 0 · "NEXT — 3 STEPS" false
+PASS 1440.slot-pre-generate — slot pre-generate: false (rule 28: nothing before Generate)
+PASS 1440.pick.candidates — 5 candidate(s)
+PASS 1440.generate.gate — accessible name "Generate plan"
+INFO 1440.generate.name — accessible name "Generate plan"
+PASS 1440.generate.started — working band appeared at 1 ms · slot at 2 ms
+INFO 1440.generate.name-after-click — "(unreadable — the CTA is gone or locked)"
+PASS 1440.reserve.mounts-on-click — the reserved row mounted from the Generate click (rule 28)
+PASS 1440.reserve.min-height — min-height 44px (--fact-h resolves "44px")
+PASS 1440.reserve.height-at-settle — measured height 44px at the settle
+PASS 1440.reserve.gap — margin-bottom 14px (rule 27's first gap)
+PASS 1440.reserve.not-sticky — position static (rule 32: only the nav)
+PASS 1440.reserve.empty — 0 child(ren) — the fact line lands with the container
+PASS 1440.pageerror-zero — 0 pageerror, 7 console error(s)
+PASS 1440.hydration-zero — hydration-shaped: 0
+INFO 1440.tap-order — early 7 vs late 7 classified
+PASS 380.strip-absent — .ns-strip false · .ns-chip 0 · "NEXT — 3 STEPS" false
+PASS 380.slot-pre-generate — slot pre-generate: false (rule 28: nothing before Generate)
+PASS 380.pick.candidates — 5 candidate(s)
+PASS 380.generate.gate — accessible name "Generate plan"
+INFO 380.generate.name — accessible name "Generate plan"
+PASS 380.generate.started — working band appeared at 1 ms · slot at 2 ms
+INFO 380.generate.name-after-click — "(unreadable — the CTA is gone or locked)"
+PASS 380.reserve.mounts-on-click — the reserved row mounted from the Generate click (rule 28)
+PASS 380.reserve.min-height — min-height 44px (--fact-h resolves "44px")
+PASS 380.reserve.height-at-settle — measured height 44px at the settle
+PASS 380.reserve.gap — margin-bottom 14px (rule 27's first gap)
+PASS 380.reserve.not-sticky — position static (rule 32: only the nav)
+PASS 380.reserve.empty — 0 child(ren) — the fact line lands with the container
+PASS 380.pageerror-zero — 0 pageerror, 5 console error(s)
+PASS 380.hydration-zero — hydration-shaped: 0
+INFO 380.tap-order — early 5 vs late 5 classified
+healthz sha f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7 expect f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7
+PASS gate.healthz-after — healthz still f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7
+
+DONE — 34 rows, 0 FAIL

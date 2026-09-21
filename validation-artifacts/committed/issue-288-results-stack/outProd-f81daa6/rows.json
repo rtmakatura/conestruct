@@ -1,0 +1,172 @@
+[
+ {
+  "id": "gate.healthz",
+  "ok": true,
+  "detail": "healthz == f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7"
+ },
+ {
+  "id": "1440.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip false · .ns-chip 0 · \"NEXT — 3 STEPS\" false"
+ },
+ {
+  "id": "1440.slot-pre-generate",
+  "ok": true,
+  "detail": "slot pre-generate: false (rule 28: nothing before Generate)"
+ },
+ {
+  "id": "1440.pick.candidates",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "1440.generate.gate",
+  "ok": true,
+  "detail": "accessible name \"Generate plan\""
+ },
+ {
+  "id": "1440.generate.name",
+  "ok": null,
+  "detail": "accessible name \"Generate plan\""
+ },
+ {
+  "id": "1440.generate.started",
+  "ok": true,
+  "detail": "working band appeared at 1 ms · slot at 2 ms"
+ },
+ {
+  "id": "1440.generate.name-after-click",
+  "ok": null,
+  "detail": "\"(unreadable — the CTA is gone or locked)\""
+ },
+ {
+  "id": "1440.reserve.mounts-on-click",
+  "ok": true,
+  "detail": "the reserved row mounted from the Generate click (rule 28)"
+ },
+ {
+  "id": "1440.reserve.min-height",
+  "ok": true,
+  "detail": "min-height 44px (--fact-h resolves \"44px\")"
+ },
+ {
+  "id": "1440.reserve.height-at-settle",
+  "ok": true,
+  "detail": "measured height 44px at the settle"
+ },
+ {
+  "id": "1440.reserve.gap",
+  "ok": true,
+  "detail": "margin-bottom 14px (rule 27's first gap)"
+ },
+ {
+  "id": "1440.reserve.not-sticky",
+  "ok": true,
+  "detail": "position static (rule 32: only the nav)"
+ },
+ {
+  "id": "1440.reserve.empty",
+  "ok": true,
+  "detail": "0 child(ren) — the fact line lands with the container"
+ },
+ {
+  "id": "1440.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 7 console error(s)"
+ },
+ {
+  "id": "1440.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "1440.tap-order",
+  "ok": null,
+  "detail": "early 7 vs late 7 classified"
+ },
+ {
+  "id": "380.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip false · .ns-chip 0 · \"NEXT — 3 STEPS\" false"
+ },
+ {
+  "id": "380.slot-pre-generate",
+  "ok": true,
+  "detail": "slot pre-generate: false (rule 28: nothing before Generate)"
+ },
+ {
+  "id": "380.pick.candidates",
+  "ok": true,
+  "detail": "5 candidate(s)"
+ },
+ {
+  "id": "380.generate.gate",
+  "ok": true,
+  "detail": "accessible name \"Generate plan\""
+ },
+ {
+  "id": "380.generate.name",
+  "ok": null,
+  "detail": "accessible name \"Generate plan\""
+ },
+ {
+  "id": "380.generate.started",
+  "ok": true,
+  "detail": "working band appeared at 1 ms · slot at 2 ms"
+ },
+ {
+  "id": "380.generate.name-after-click",
+  "ok": null,
+  "detail": "\"(unreadable — the CTA is gone or locked)\""
+ },
+ {
+  "id": "380.reserve.mounts-on-click",
+  "ok": true,
+  "detail": "the reserved row mounted from the Generate click (rule 28)"
+ },
+ {
+  "id": "380.reserve.min-height",
+  "ok": true,
+  "detail": "min-height 44px (--fact-h resolves \"44px\")"
+ },
+ {
+  "id": "380.reserve.height-at-settle",
+  "ok": true,
+  "detail": "measured height 44px at the settle"
+ },
+ {
+  "id": "380.reserve.gap",
+  "ok": true,
+  "detail": "margin-bottom 14px (rule 27's first gap)"
+ },
+ {
+  "id": "380.reserve.not-sticky",
+  "ok": true,
+  "detail": "position static (rule 32: only the nav)"
+ },
+ {
+  "id": "380.reserve.empty",
+  "ok": true,
+  "detail": "0 child(ren) — the fact line lands with the container"
+ },
+ {
+  "id": "380.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 5 console error(s)"
+ },
+ {
+  "id": "380.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "380.tap-order",
+  "ok": null,
+  "detail": "early 5 vs late 5 classified"
+ },
+ {
+  "id": "gate.healthz-after",
+  "ok": true,
+  "detail": "healthz still f81daa6847e8a70a3a4140a5aafa9ab65b78b3f7"
+ }
+]
