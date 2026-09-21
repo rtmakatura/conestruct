@@ -1,0 +1,31 @@
+{
+ "early": {
+  "label": "early",
+  "pageerrors": [],
+  "consoleErrors": [],
+  "requestFailures": [],
+  "counts": {
+   "pageerror": 0,
+   "consoleError": 0,
+   "requestFailed": 0
+  }
+ },
+ "late": {
+  "label": "late",
+  "pageerrors": [],
+  "consoleErrors": [],
+  "requestFailures": [],
+  "counts": {
+   "pageerror": 0,
+   "consoleError": 0,
+   "requestFailed": 0
+  }
+ },
+ "dom": {
+  "nsStrip": false,
+  "resultsHeadSlot": false,
+  "sheetMetaText": false,
+  "isoOnPage": false,
+  "title": "Sandbox · Conestruct"
+ }
+}

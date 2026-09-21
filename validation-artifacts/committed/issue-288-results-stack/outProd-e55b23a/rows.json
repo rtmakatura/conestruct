@@ -1,0 +1,137 @@
+[
+ {
+  "id": "gate.healthz",
+  "ok": true,
+  "detail": "healthz sha == e55b23a351077a66172ce52046250154a4c9cd37"
+ },
+ {
+  "id": "bundle.issued-gone",
+  "ok": true,
+  "detail": "\"ISSUED\" in served /sandbox html: false"
+ },
+ {
+  "id": "bundle.strip-renders",
+  "ok": true,
+  "detail": "LOCATION true · AS NOTED true"
+ },
+ {
+  "id": "bundle.no-iso-date",
+  "ok": true,
+  "detail": "any ISO date in html: false"
+ },
+ {
+  "id": "bundle.next-steps-strip-absent",
+  "ok": false,
+  "detail": "\"ns-strip\" in served bundle: true (expected ABSENT if §8.29 had shipped)"
+ },
+ {
+  "id": "bundle.results-head-absent",
+  "ok": false,
+  "detail": "\"results-head-slot\" in served bundle: true"
+ },
+ {
+  "id": "bundle.next-3-steps-absent",
+  "ok": false,
+  "detail": "\"NEXT — 3 STEPS\" literal in served bundle: true"
+ },
+ {
+  "id": "bundle.stack-class.needs-you",
+  "ok": null,
+  "detail": "\"needs-you\" in served bundle: false"
+ },
+ {
+  "id": "bundle.stack-class.stack-container",
+  "ok": null,
+  "detail": "\"stack-container\" in served bundle: false"
+ },
+ {
+  "id": "bundle.stack-class.verdict-strip",
+  "ok": null,
+  "detail": "\"verdict-strip\" in served bundle: false"
+ },
+ {
+  "id": "bundle.stack-class.counts-hero",
+  "ok": null,
+  "detail": "\"counts-hero\" in served bundle: false"
+ },
+ {
+  "id": "bundle.stack-class.disclosure-row",
+  "ok": null,
+  "detail": "\"disclosure-row\" in served bundle: false"
+ },
+ {
+  "id": "1440.pageerror-zero",
+  "ok": true,
+  "detail": "early tap: 0 pageerror, 0 console error(s)"
+ },
+ {
+  "id": "1440.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "1440.tap-order-evidence",
+  "ok": null,
+  "detail": "early 0 vs late 0 classified message(s) — both zero means the page is clean, early>late would demonstrate the ordering"
+ },
+ {
+  "id": "1440.requests-ok",
+  "ok": true,
+  "detail": "failed requests: 0"
+ },
+ {
+  "id": "1440.dom.issued-absent",
+  "ok": true,
+  "detail": "\"ISSUED\" text on the settled page: false"
+ },
+ {
+  "id": "1440.dom.no-date-rendered",
+  "ok": true,
+  "detail": "ISO date rendered anywhere on the settled page: false"
+ },
+ {
+  "id": "1440.dom.ns-strip",
+  "ok": null,
+  "detail": ".ns-strip mounted: false · .results-head-slot mounted: false (pre-generate)"
+ },
+ {
+  "id": "380.pageerror-zero",
+  "ok": true,
+  "detail": "early tap: 0 pageerror, 0 console error(s)"
+ },
+ {
+  "id": "380.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "380.tap-order-evidence",
+  "ok": null,
+  "detail": "early 0 vs late 0 classified message(s) — both zero means the page is clean, early>late would demonstrate the ordering"
+ },
+ {
+  "id": "380.requests-ok",
+  "ok": true,
+  "detail": "failed requests: 0"
+ },
+ {
+  "id": "380.dom.issued-absent",
+  "ok": true,
+  "detail": "\"ISSUED\" text on the settled page: false"
+ },
+ {
+  "id": "380.dom.no-date-rendered",
+  "ok": true,
+  "detail": "ISO date rendered anywhere on the settled page: false"
+ },
+ {
+  "id": "380.dom.ns-strip",
+  "ok": null,
+  "detail": ".ns-strip mounted: false · .results-head-slot mounted: false (pre-generate)"
+ },
+ {
+  "id": "gate.healthz-after",
+  "ok": true,
+  "detail": "healthz still e55b23a351077a66172ce52046250154a4c9cd37 at leg end"
+ }
+]

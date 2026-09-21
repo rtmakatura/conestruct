@@ -1,0 +1,32 @@
+healthz sha e55b23a351077a66172ce52046250154a4c9cd37 expect e55b23a351077a66172ce52046250154a4c9cd37
+PASS gate.healthz — healthz sha == e55b23a351077a66172ce52046250154a4c9cd37
+served: 28909 B html · 11 chunks (1102760 B) · 3 sheets (142919 B)
+PASS bundle.issued-gone — "ISSUED" in served /sandbox html: false
+PASS bundle.strip-renders — LOCATION true · AS NOTED true
+PASS bundle.no-iso-date — any ISO date in html: false
+FAIL bundle.next-steps-strip-absent — "ns-strip" in served bundle: true (expected ABSENT if §8.29 had shipped)
+FAIL bundle.results-head-absent — "results-head-slot" in served bundle: true
+FAIL bundle.next-3-steps-absent — "NEXT — 3 STEPS" literal in served bundle: true
+INFO bundle.stack-class.needs-you — "needs-you" in served bundle: false
+INFO bundle.stack-class.stack-container — "stack-container" in served bundle: false
+INFO bundle.stack-class.verdict-strip — "verdict-strip" in served bundle: false
+INFO bundle.stack-class.counts-hero — "counts-hero" in served bundle: false
+INFO bundle.stack-class.disclosure-row — "disclosure-row" in served bundle: false
+PASS 1440.pageerror-zero — early tap: 0 pageerror, 0 console error(s)
+PASS 1440.hydration-zero — hydration-shaped: 0
+INFO 1440.tap-order-evidence — early 0 vs late 0 classified message(s) — both zero means the page is clean, early>late would demonstrate the ordering
+PASS 1440.requests-ok — failed requests: 0
+PASS 1440.dom.issued-absent — "ISSUED" text on the settled page: false
+PASS 1440.dom.no-date-rendered — ISO date rendered anywhere on the settled page: false
+INFO 1440.dom.ns-strip — .ns-strip mounted: false · .results-head-slot mounted: false (pre-generate)
+PASS 380.pageerror-zero — early tap: 0 pageerror, 0 console error(s)
+PASS 380.hydration-zero — hydration-shaped: 0
+INFO 380.tap-order-evidence — early 0 vs late 0 classified message(s) — both zero means the page is clean, early>late would demonstrate the ordering
+PASS 380.requests-ok — failed requests: 0
+PASS 380.dom.issued-absent — "ISSUED" text on the settled page: false
+PASS 380.dom.no-date-rendered — ISO date rendered anywhere on the settled page: false
+INFO 380.dom.ns-strip — .ns-strip mounted: false · .results-head-slot mounted: false (pre-generate)
+healthz sha e55b23a351077a66172ce52046250154a4c9cd37 expect e55b23a351077a66172ce52046250154a4c9cd37
+PASS gate.healthz-after — healthz still e55b23a351077a66172ce52046250154a4c9cd37 at leg end
+
+DONE — 27 rows, 3 FAIL
