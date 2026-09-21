@@ -225,6 +225,12 @@ export type ScannedSiteFlag =
   | "school_zone";
 export type SiteDismissReason = "fenced" | "removed" | "not_in_work_zone" | "other";
 
+/** The two keys no scan can see — operator-asserted (Part 1 8.25). */
+export type ManualSiteFlag = Extract<
+  SiteConditionFlag,
+  "limited_sight_distance" | "driveways_present"
+>;
+
 /**
  * An operator correction of one scanned site condition (#224 phase 4).
  * Mirrors ``SiteConditionOverride`` in src/api/schemas.py.  Rides
@@ -255,10 +261,28 @@ export interface SiteConditionOverride {
  * an applied record (Apply removes that flag's marker).  Never on the
  * scenario, never on a saved plan: staged is not applied.
  */
-export interface StagedCorrection {
+export interface StagedScanCorrection {
   flag: ScannedSiteFlag;
   marker: SiteConditionOverride | null;
 }
+
+/**
+ * #288 Phase 1 clause 1 — the two MANUAL keys staged the same way.
+ * Part 1 8.25 moves "Site conditions you assert" into NEEDS YOU
+ * "as rows with an ASSERT action", and rule 78 gives the block ONE
+ * write (Apply).  A manual key that wrote on its own click would
+ * re-generate the plan while a staged set sat unapplied beside it —
+ * two write paths in one block, which is what the staging contract
+ * exists to prevent.  ``on`` is the ``meta.siteConditions`` value Apply
+ * writes; false drops the key, byte-identical to the retired
+ * checkbox's toggle.
+ */
+export interface StagedManualCondition {
+  flag: ManualSiteFlag;
+  on: boolean;
+}
+
+export type StagedCorrection = StagedScanCorrection | StagedManualCondition;
 
 export interface ScenarioMeta {
   project: string;

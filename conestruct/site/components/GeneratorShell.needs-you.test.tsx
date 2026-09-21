@@ -10,7 +10,7 @@
 // reachable states rather than component states.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
@@ -193,6 +193,42 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     const head = document.querySelector(".disc-head")!;
     expect(head.hasAttribute("data-read")).toBe(true);
     expect(head.hasAttribute("data-write")).toBe(false);
+  });
+
+  // ── #288 clause 1 — the corrections block, mounted inside NEEDS YOU ──
+  it("clause 1: the condition rows and the Apply row mount INSIDE the block, and the block is the signposts' anchor", async () => {
+    served = {
+      ...AUDIT_WITH_ITEMS,
+      sections: {
+        ...AUDIT_WITH_ITEMS.sections,
+        site_scan: {
+          status: "ok",
+          mode: "corridor",
+          measured_at: "2026-09-04T12:00:00+00:00",
+          buckets: {
+            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
+            schools: { detected: false, count: 0 },
+          },
+          flags: {},
+          corrections: [],
+        },
+      },
+    };
+    await generate();
+    const b = block()!;
+    expect(b, "the block mounted").not.toBeNull();
+    // Rule 129: the reference's "Correct in setup ↑" signposts jump to
+    // NEEDS YOU — the anchor moved WITH the block, so the pointer lands.
+    expect(b.id).toBe("site-corrections");
+    // The rows are this block's item rows, in its own list.
+    const list = b.querySelector(".ny-items")!;
+    expect(list.querySelectorAll(".site-correction-row").length).toBe(2);
+    expect(list.querySelector(".ny-apply")).not.toBeNull();
+    // Rule 78's one write, and the tier rows still carry no button
+    // (ruling d) — so every button in the block belongs to a condition.
+    expect(within(b as HTMLElement).getByRole("button", { name: "Apply 0 corrections" })).toBeTruthy();
+    // Spec 34's aria-busy rides the section now, not the retired block.
+    expect(b.getAttribute("aria-busy")).toBeNull();
   });
 
   it("ruling 186 on a real mount: always expanded — every item is on screen, no caret in the header", async () => {

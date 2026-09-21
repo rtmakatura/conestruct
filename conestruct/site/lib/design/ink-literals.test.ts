@@ -150,8 +150,11 @@ describe("#263 ink literals — globals.css outside :root / .workbench", () => {
     expect(stale, "rows whose literal is gone — delete them").toEqual([]);
   });
 
-  it("the decorative set is exactly the two ruled sites and the owner swaps are #fff only", () => {
-    expect(CSS_DECORATIVE.map((r) => r.hex)).toEqual(["#1a1200", "#4a6280"]);
+  it("the decorative set is exactly the ruled sites and the owner swaps are #fff only", () => {
+    // #288 clause 1: --sc-leader (#4a6280) retired with the #249 ledger
+    // — the leader it drew has no column to run to inside rule 74's
+    // tracks — so the decorative set is one site, not two.
+    expect(CSS_DECORATIVE.map((r) => r.hex)).toEqual(["#1a1200"]);
     for (const s of CSS_OWNER_SWAPS) expect(s.hex).toBe("#fff");
     // 5 at D's slice; 4 once C folded `.dl-card h3` (#261, ruling 3); 3 once B swapped
     // `.zone-title` (#253); 0 once A's three took --ink-bright (s2-arc27) — every

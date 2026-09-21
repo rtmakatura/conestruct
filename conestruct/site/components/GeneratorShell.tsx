@@ -48,6 +48,7 @@ import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tie
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { NeedsYou } from "./NeedsYou";
+import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
 import type {
@@ -1264,6 +1265,12 @@ export function GeneratorShell({
   const scanHeld = scanInFlight
     ? ((stripAudit.state === "ready" ? stripAudit.data : stripAudit.lastReady)?.sections?.site_scan ?? null)
     : null;
+  // Clause 1: the scan NEEDS YOU's condition rows read.  Spec 34's rule,
+  // moved with the block from the strip: the stamped view when settled,
+  // the held (last ready) scan while a re-generation is in flight.
+  const stampedScan =
+    stripAudit.state === "ready" ? (stripAudit.data.sections?.site_scan ?? null) : null;
+  const needsYouScan = stampedScan ?? (scanInFlight ? scanHeld : null);
   // The band's sentence, from the two wire objects (lib/working-band.ts):
   // ``prev`` is the answer settled BEFORE this flight — the stamped
   // audit's own ``forScenario`` when that answer predates the wire on
@@ -1498,10 +1505,6 @@ export function GeneratorShell({
                     ? (stripAudit.data.sections?.site_scan ?? null)
                     : null
                 }
-                siteScanInFlight={scanInFlight}
-                siteScanHeld={scanHeld}
-                staged={staged}
-                setStaged={setStaged}
                 jurisdiction={jurisdictionBlock}
                 setJurisdictionKey={(k) =>
                   setScenario({ ...scenario, jurisdiction_key: k })
@@ -1668,7 +1671,29 @@ export function GeneratorShell({
                 refusal container and the block co-framing.  The block
                 renders nothing at zero items, so a clean plan does not
                 grow an empty "nothing wants you" panel. */}
-            {resultsVisible && <NeedsYou model={needsYouModel} />}
+            {resultsVisible && (
+              <NeedsYou
+                model={needsYouModel}
+                inFlight={scanInFlight}
+                conditions={
+                  // Clause 1: the corrections block's rows, as NEEDS YOU's
+                  // item rows.  Spec 34's scan choice is unchanged and moved
+                  // with them — the STAMPED view when settled, the held
+                  // (last ready) scan while a re-generation is in flight,
+                  // nothing on a first generate or an error.
+                  needsYouScan && hasConditionRows(needsYouScan) ? (
+                    <SiteConditionRows
+                      scenario={scenario}
+                      setScenario={setScenario}
+                      siteScan={needsYouScan}
+                      inFlight={scanInFlight}
+                      staged={staged}
+                      setStaged={setStaged}
+                    />
+                  ) : null
+                }
+              />
+            )}
             {/* #252: the "Generating…" empty state (a first Generate with
                 no prior breakdown to hold) is gone — the band is the one
                 working voice; the zone holds the pre-generate cards

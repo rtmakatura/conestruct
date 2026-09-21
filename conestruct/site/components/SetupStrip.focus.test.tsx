@@ -28,8 +28,6 @@ function Harness() {
       scenario={scenario}
       setScenario={setScenario}
       onReopen={() => {}}
-      staged={[]}
-      setStaged={() => {}}
       setJurisdictionKey={() => {}}
       setStreetClass={() => {}}
     />

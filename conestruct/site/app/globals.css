@@ -1931,15 +1931,14 @@ input[type="number"] {
   color: var(--ink-on-dark-faint);
 }
 /* #245 — the dismiss reason picker.  A native <select> under the
-   Tailwind preflight inherits the row's light ink onto the UA's white
-   field (measured #c8d1dd on #ffffff = 1.54:1) and its popup renders
-   outside the DOM, so it is an in-DOM radio-chip group on the block's
-   own pairs: ghost (--ink-on-dark-faint on --canvas, 6.19:1) unselected,
-   act (--act on --canvas, 6.26:1) chosen, legend in --ink-on-dark
-   (10.68:1).  Chosen = border + ink + ✓ glyph + the native :checked
-   state (rule 13: never hue alone).  The radio itself stays in the
-   tab order (visually hidden, not display:none). */
-.workbench .jbar-suggest .site-correction-reasons {
+   workbench's inherited light ink measured 1.54:1 and its popup renders
+   outside the DOM where nothing can measure it, so the reason is an
+   in-DOM radio-chip group: border + wash + ink + a ✓ glyph + the native
+   :checked state (rule 13: never hue alone).  The radio itself stays in
+   the tab order (visually hidden, not display:none).
+   #288 clause 1: re-scoped from .jbar-suggest to .needs-you — the block
+   these rules dress MOVED (Part 1 §8.5).  Values unchanged. */
+.workbench .needs-you .site-correction-reasons {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1949,14 +1948,14 @@ input[type="number"] {
   margin: 0;
   min-width: 0;
 }
-.workbench .jbar-suggest .site-correction-reasons legend {
+.workbench .needs-you .site-correction-reasons legend {
   float: left;
   padding: 0;
   margin-right: 4px;
   font-size: 11.5px;
   color: var(--ink-on-dark);
 }
-.workbench .jbar-suggest .reason-chip {
+.workbench .needs-you .reason-chip {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -1966,13 +1965,16 @@ input[type="number"] {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  /* Rule 15: a chip is interactive, so it clears 32 px at 1440 — the
+     picker's chips were 22 px tall before this arc's rule-15 pass. */
+  min-height: 32px;
   padding: 3px 10px;
   border: 1px solid var(--rule);
   color: var(--ink-on-dark-faint);
   background: transparent;
   cursor: pointer;
 }
-.workbench .jbar-suggest .reason-chip input {
+.workbench .needs-you .reason-chip input {
   position: absolute;
   opacity: 0;
   width: 1px;
@@ -1980,39 +1982,41 @@ input[type="number"] {
   margin: 0;
   pointer-events: none;
 }
-.workbench .jbar-suggest .reason-chip .reason-glyph {
+.workbench .needs-you .reason-chip .reason-glyph {
   width: 10px;
   text-align: center;
 }
 /* #255 (F-S4-2): the glyph cell is mirrored on the trailing edge so the
    label sits at the chip's centre in both states — the left-only cell
    measured the label +7.5 px off centre. */
-.workbench .jbar-suggest .reason-chip::after {
+.workbench .needs-you .reason-chip::after {
   content: "";
   width: 10px;
   flex-shrink: 0;
 }
-.workbench .jbar-suggest .reason-chip:hover {
+.workbench .needs-you .reason-chip:hover {
   color: var(--ink-on-dark);
   border-color: var(--ink-on-dark-faint);
 }
-.workbench .jbar-suggest .reason-chip:focus-within {
+.workbench .needs-you .reason-chip:focus-within {
   border-color: var(--act);
   box-shadow: 0 0 0 2px var(--act-glow);
 }
-.workbench .jbar-suggest .reason-chip.chosen {
+.workbench .needs-you .reason-chip.chosen {
   color: var(--act);
   border-color: var(--act);
 }
 /* The "other" note: the .field-input workbench pair (--canvas, white
    ink, faint placeholder) at the row's scale. */
-.workbench .jbar-suggest .site-correction-note {
+.workbench .needs-you .site-correction-note {
   background: var(--canvas);
   border: 1px solid var(--rule);
   color: var(--ink-bright);
   font-family: var(--font-sans);
   font-size: 12px;
   padding: 3px 8px;
+  /* Rule 15: the note is a write control — 32 px at 1440. */
+  min-height: 32px;
   /* #255 (P1): a fixed slot in the picker's flex line — 184 px is the
      measured width of the arc-21 note (F-S4-3) — so choosing Other
      never moves Confirm. */
@@ -2023,370 +2027,210 @@ input[type="number"] {
 }
 /* Void until Other: hidden but laid out (never display:none — the slot
    IS the reservation); disabled + aria-hidden + tabIndex -1 in the DOM. */
-.workbench .jbar-suggest .site-correction-note.is-void {
+.workbench .needs-you .site-correction-note.is-void {
   visibility: hidden;
 }
-.workbench .jbar-suggest .site-correction-note[aria-invalid="true"] {
+.workbench .needs-you .site-correction-note[aria-invalid="true"] {
   border-color: var(--warn);
 }
-.workbench .jbar-suggest .site-correction-note::placeholder {
+.workbench .needs-you .site-correction-note::placeholder {
   color: var(--ink-on-dark-faint);
 }
-.workbench .jbar-suggest .site-correction-note:focus {
+.workbench .needs-you .site-correction-note:focus {
   border-color: var(--act);
   box-shadow: 0 0 0 2px var(--act-glow);
 }
 
-/* ─── #249 the scanned block as a ledger (s2-arc21, variation 4) ───
-   Two tracks — ledger · action — on the block; every row is a SUBGRID
-   row so the action column shares one right edge in every state
-   (detected / absent / picker-open / record).  Column 1 is a flex line:
-   state symbol → condition name → an elastic dotted leader → the right
-   group (result word + evidence).  The leader absorbs the slack on one
-   line, so column widths track content instead of a fixed Evidence
-   track (the #248 defect the issue names).  No rules between rows (spec
-   K75).  Block-scoped: the band's .sugg-row / .sys-event / .sugg-name
-   rules above are byte-identical (the arc-20 pin); every spec rule that
-   would tempt them is absorbed under .sc-grid / .sc-picker / .sc-record
-   / .sc-foot.  Specificity deliberately beats
-   `.workbench .jbar-suggest .sys-event` (the record row reuses that
-   container's classes for its rule color) and the band's button rules.
-   Three scoped values (GO ruling a): --sc-leader is DECORATION, exempt
-   from the 4.5:1 floor (2.63:1 on --canvas, chosen over the spec's
-   #3c5069 at 1.99 for sun-washed tablets, K80); --sc-act-wash is the
-   one wash the spec's three (.12/.14/.16) collapse to, CHOSEN;
-   --sc-disabled is inactive-control ink (WCAG 1.4.3 exempts it; the
-   disabled attribute is the second channel).  The detected hue is
-   --dim (7.00:1), the tier set's mark, not the spec's off-palette
-   amber.  container-type makes the ≤420px query answer to the block's
-   OWN width (spec 66) — the first @container in this stylesheet. */
-.workbench .site-corrections {
-  container-type: inline-size;
-  /* #255: one row height for every row kind — 46 is the measured scan
-     row (9 + line + 9); min-height, so a wrapped record may still grow. */
-  --sc-row-h: 46px;
-  --sc-leader: #4a6280;
+/* ─── #288 Phase 1 clause 1 — the condition rows inside NEEDS YOU ───
+   The #249 ledger (two tracks, an elastic dotted leader, a right-edge
+   verdict group) is RETIRED with the strip block it belonged to: these
+   rows are rule 74 item rows now, and rule 74's three tracks are
+   declared once on `.ny-item` above.  What survives here is everything
+   that was about the CONTENT rather than the ledger's geometry — the
+   tier tones, the record's prose, the staged row's --none, the picker,
+   the Apply row's filled control and the scan's provenance line.
+   Two scoped values carry over (GO ruling a): --sc-act-wash is the one
+   wash the spec's three (.12/.14/.16) collapse to, CHOSEN; --sc-disabled
+   is inactive-control ink (WCAG 1.4.3 exempts it; the disabled attribute
+   is the second channel).  The ledger's row-height and leader values do
+   NOT carry over: one
+   measured the ledger's row height, the other drew its leader, and both
+   died with the thing they measured (the same reasoning that retired
+   --strip-h under the rule-28 ruling).
+   No hex literals (#263's ink gate) and no font-size outside the role
+   classes: every size here rides .tr-field / .tr-step / .tr-prov. */
+.workbench .needs-you {
   --sc-act-wash: rgba(52, 169, 232, 0.14);
   --sc-disabled: rgba(147, 160, 176, 0.35);
 }
-.workbench .jbar-suggest .sc-grid {
-  align-self: stretch;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 92px;
-  column-gap: 14px;
-}
-.workbench .jbar-suggest .sc-grid .sc-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 92px;
-  grid-template-columns: subgrid;
-  align-items: baseline;
-  min-height: var(--sc-row-h);
-  padding: 9px 0;
-  gap: 0;
-}
-.workbench .jbar-suggest .sc-grid .sc-lead {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  white-space: nowrap;
-}
 /* Symbols mirror section 03's tiers: ▲ detected = the "changed this
    plan" delta (--dim, 7.00:1 on --canvas); ✓ none = checked & passed
-   (--pass, 8.94:1).  The symbol leads the row (spec K77). */
-.workbench .jbar-suggest .sc-grid .sc-glyph {
-  width: var(--glyph-cell);
-  flex-shrink: 0;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1;
-}
-.workbench .jbar-suggest .sc-grid .sc-glyph.sc-detected {
+   (--pass, 8.94:1); ◌ staged / unasserted = --none (6.60:1). */
+.workbench .needs-you .ny-cond .ny-glyph.sc-detected {
   color: var(--dim);
 }
-.workbench .jbar-suggest .sc-grid .sc-glyph.sc-absent {
+.workbench .needs-you .ny-cond .ny-glyph.sc-absent {
   color: var(--pass);
 }
-/* Names wrap, never truncate (spec 7b rejected under rule 10). */
-.workbench .jbar-suggest .sc-grid .sc-name {
-  flex: 0 1 auto;
-  min-width: 0;
-  white-space: normal;
+.workbench .needs-you .ny-cond .ny-glyph.sc-staged,
+.workbench .needs-you .ny-cond .ny-glyph.sc-unset {
+  color: var(--none);
 }
-/* The leader (spec 7c/9): an empty flex item whose bottom border sits
-   on the text baseline (an empty box's baseline is its bottom edge),
-   lifted 4px to the optical baseline, clear of descenders. */
-.workbench .jbar-suggest .sc-leader {
-  flex: 1 1 18px;
-  min-width: 14px;
-  height: 0;
-  border-bottom: 1px dotted var(--sc-leader);
-  align-self: baseline;
-  transform: translateY(-4px);
-}
-.workbench .jbar-suggest .sc-grid .sc-right {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.workbench .jbar-suggest .sc-grid .sc-result {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--ink-on-dark);
-}
-.workbench .jbar-suggest .sc-grid .sc-result.sc-detected {
+/* The result word rides the provenance role; only its tone is declared
+   (rule 13: the word rides the glyph, never the hue alone).  The none
+   word stays provenance ink (spec 24 / K78): green lives in the glyph,
+   so five clear rows are not five green claims. */
+.workbench .needs-you .sc-result.sc-detected {
   color: var(--dim);
 }
-/* The none word stays body ink (spec 24 / K78, 10.68:1): green lives in
-   the 12px glyph only, so five clear rows are not five green claims. */
-.workbench .jbar-suggest .sc-grid .sc-evidence {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.02em;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-on-dark-faint);
-  min-width: 0;
+.workbench .needs-you .sc-result.sc-staged,
+.workbench .needs-you .sc-result.sc-unset {
+  color: var(--none);
 }
-.workbench .jbar-suggest .sc-grid .sc-evidence:empty {
+.workbench .needs-you .sc-evidence {
+  font-variant-numeric: tabular-nums;
+}
+.workbench .needs-you .sc-evidence:empty {
   display: none;
 }
-/* Spec 10: the action column is a flex cell aligning every button —
-   action, Cancel, Undo — on one right edge in every row state. */
-.workbench .jbar-suggest .sc-grid .sc-action {
-  justify-self: end;
-  display: flex;
-  justify-content: flex-end;
-  white-space: nowrap;
-}
-/* Row buttons (spec 28–35): one per row, fit-to-content, never wrapping;
-   outlined only — the one filled control in the block is Confirm.  The
-   DISMISS border keeps --rule (K82: the amber trace dropped). */
-.workbench .jbar-suggest .sc-grid button.ghost {
-  letter-spacing: 0.14em;
-  padding: 5px 9px;
-  min-height: 26px;
-  border-color: var(--rule);
-  color: var(--ink-on-dark);
-  transition: border-color 120ms, color 120ms;
-}
-.workbench .jbar-suggest .sc-grid button.ghost:hover {
-  border-color: var(--act);
-  color: var(--act-bright);
-}
-.workbench .jbar-suggest .sc-grid button.ghost:active {
-  background: var(--sc-act-wash);
-}
-.workbench .jbar-suggest .sc-grid button:focus-visible,
-.workbench .jbar-suggest .sc-picker button:focus-visible {
-  outline: 2px solid var(--act);
-  outline-offset: 2px;
-  box-shadow: none;
-}
-/* Cancel and Undo are borderless text buttons in the action column
-   (spec 44 / 51) — the dotted underline is the shared signpost idiom. */
-.workbench .jbar-suggest .sc-grid button.sc-text-btn {
-  border: 0;
-  padding: 5px 0;
-  min-height: 0;
-  color: var(--act);
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-.workbench .jbar-suggest .sc-grid button.sc-text-btn:hover {
-  color: var(--act-bright);
-  text-decoration-style: solid;
-  border: 0;
-}
-/* The record row IS the #227 container (left rule by state via the
-   .sys-event variants above); the sentence is the whole readout, one
-   text node, and wraps freely (spec 49–53).  Overrides that container's
-   flex-column layout inside .jbar-suggest without touching that rule. */
-.workbench .jbar-suggest .sc-grid .sc-row.sc-record {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 92px;
-  grid-template-columns: subgrid;
-  gap: 0;
-  /* #255: centred (was start) so a one-line record sits at --sc-row-h
-     like its peers; vertical inset 9 like the other rows, no vertical
-     margin (the 33 px record + 3 px margins measured F-S4-5). */
-  align-items: center;
-  /* The container's 3px rule + 9px inset on the left and 1px + 11px on
-     the right sit OUTSIDE the grid's tracks (negative margin), so the
-     record's sentence and its Undo share the other rows' edges. */
-  padding: 9px 11px 9px 9px;
-  margin: 0 -12px;
-}
-.workbench .jbar-suggest .sc-grid .sc-record .sc-lead {
-  display: block;
-  white-space: normal;
-}
-.workbench .jbar-suggest .sc-grid .sc-record .sys-glyph {
-  display: inline;
-  width: auto;
-  font-size: 12px;
-  line-height: inherit;
-  margin-right: 6px;
-}
-/* Spec 19: the record sentence is prose — sans, body ink, loose
-   leading, pretty wrapping (12.5px snapped to the 12px sans role). */
-.workbench .jbar-suggest .sc-grid .sc-disclosure {
-  color: var(--ink-on-dark);
-  font-family: var(--font-sans);
-  font-size: 12px;
+/* Spec 19: the record sentence is prose — the body line's own role
+   (.ny-body / .tr-field) with prose wrapping and loose leading. */
+.workbench .needs-you .sc-disclosure {
   font-weight: 400;
   line-height: 1.55;
-  letter-spacing: 0;
   white-space: normal;
   text-wrap: pretty;
 }
-.workbench .jbar-suggest .sc-grid .sc-record button.sc-text-btn {
-  padding: 0;
+/* The record row IS the #227 container (left rule by state via the
+   .sys-event variants); the sentence is the whole readout, one text
+   node, and wraps freely (spec 49–53).  Inside NEEDS YOU it keeps rule
+   74's tracks and takes the container's left rule on the row itself. */
+.workbench .needs-you .ny-item.sc-record {
+  border-left: 3px solid var(--rule);
 }
-/* #254: a STAGED row — ◌ + "staged — not yet applied" in --none (6.60:1;
-   rule 13: the word rides the glyph) on the same ledger line, the intent
-   in the evidence cell, Undo in the action cell.  No new sizes. */
-.workbench .jbar-suggest .sc-grid .sc-glyph.sc-staged {
-  color: var(--none);
+.workbench .needs-you .ny-item.sc-record.dismissed {
+  border-left-color: var(--none);
 }
-.workbench .jbar-suggest .sc-grid .sc-result.sc-staged {
-  color: var(--none);
+.workbench .needs-you .ny-item.sc-record.confirmed {
+  border-left-color: var(--pass);
 }
-/* #254: the Apply row — always present post-scan (P1), the grid's last
-   row spanning both tracks: the standing (tr-prov) on the start edge,
-   the block's one write on the action edge (space-between shares the
-   action column's right edge); --sc-row-h like every row. */
-.workbench .jbar-suggest .sc-grid .sc-row.sc-apply {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: var(--sc-row-h);
-  /* Apply's filled control measures 30 (Confirm's pair); 46 − 30 = 16,
-     so this row's inset is 8/8 where its peers' 26-28 px ghosts take
-     9/9 (local run 1 measured 48 at 9/9). */
-  padding: 8px 0;
+.workbench .needs-you .ny-item.sc-record.warn {
+  border-left-color: var(--warn);
 }
-.workbench .jbar-suggest .sc-apply .sc-apply-text {
-  text-decoration: none;
+.workbench .needs-you .ny-item.sc-record .sys-glyph {
+  line-height: 1;
 }
-/* Apply takes Confirm's pair (the block's filled control: the wash +
-   --act-bright, 6.15:1 measured on the picker's Confirm). */
-.workbench .jbar-suggest .sc-apply button.confirm {
-  letter-spacing: 0.14em;
-  padding: 6px 11px;
+
+/* ─── Rule 133 — LEDGER ACTION (.act) ───
+   One control treatment for every write this block offers: Dismiss,
+   Assert, Undo, Cancel, Confirm dismiss and Apply.  Rule 15's floor is
+   the min-height; rule 77 puts them all on the auto track's one right
+   edge.  The size rides .tr-step (#283's role table snaps rule 133's
+   9.5 px to the 10 px step role), so nothing here declares one. */
+.workbench .needs-you .act {
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-on-dark);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 120ms, color 120ms, background-color 120ms;
+}
+.workbench .needs-you .act:hover {
+  border-color: var(--ink-on-dark-faint);
+  color: var(--ink-bright);
+}
+/* Rule 133 "on": the row's recommended action — the block's one filled
+   treatment, kept from the retired Confirm (the wash + --act-bright,
+   6.15:1 measured). */
+.workbench .needs-you .act.is-on {
   background: var(--sc-act-wash);
+  border-color: var(--act);
   color: var(--act-bright);
-  transition: background-color 120ms, color 120ms;
 }
-.workbench .jbar-suggest .sc-apply button.confirm:hover,
-.workbench .jbar-suggest .sc-apply button.confirm:focus-visible {
+.workbench .needs-you .act.is-on:hover,
+.workbench .needs-you .act.is-on:focus-visible {
   background: var(--act);
   color: var(--on-act);
 }
-/* Picker-open: exactly one extra row spanning both tracks (spec 37/38):
-   legend, chips (+ the note), Confirm last in the same flex line.
-   Cancel moved to the condition row's action slot (spec 44). */
-/* #270: the sub-row is a subgrid row like every other — the dashed rule
-   and the inset moved from the flex line to the ROW so both tracks share
-   them; Confirm is the row's action cell (the shared right edge), the
-   lead cell wraps legend · chips · the note slot among themselves.
-   Centred so Confirm rides the middle of a wrapped lead. */
-.workbench .jbar-suggest .sc-grid .sc-sub {
-  border-top: 1px dashed var(--rule);
-  margin-top: 1px;
-  padding: 9px 0 11px;
-  align-items: center;
-}
-.workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
-  display: flex;
-  flex-wrap: wrap;
-  /* The note rides the chips line (the legend above is its own line). */
-  align-items: flex-end;
-  gap: 6px;
-  min-width: 0;
-}
-.workbench .jbar-suggest .sc-picker .site-correction-reasons {
-  flex: 0 1 auto;
-}
-/* The legend keeps #245's accessible name in full; visually it rides
-   the step-index register (spec 39's bare "REASON" is a deviation,
-   recorded: the name is load-bearing). */
-.workbench .jbar-suggest .sc-picker .site-correction-reasons legend {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
-  /* #270 (P1/P6): the legend is its own full-width line, so the chips +
-     note line is the same width for every condition name and the row is
-     one height at 1440 (local run 1: 82.2 x3 vs 116.2 for the longest
-     legend).  6px = the picker's gap. */
-  float: none;
-  display: block;
-  width: 100%;
-  margin: 0 0 6px;
-}
-.workbench .jbar-suggest .sc-picker .site-correction-reasons legend .sugg-name {
-  color: var(--ink-on-dark);
-}
-/* Chips (spec 40/41): sentence case, outlined; chosen = --act border +
-   the wash + --act-bright ink (6.15:1 on the composited wash) + ✓ +
-   the native :checked state.  No aria-pressed: a radio is a radio. */
-.workbench .jbar-suggest .sc-picker .reason-chip {
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 10px;
-  padding: 5px 9px;
-  border-color: var(--rule);
-  color: var(--ink-on-dark);
-  transition: border-color 120ms, color 120ms;
-}
-.workbench .jbar-suggest .sc-picker .reason-chip:hover {
-  border-color: var(--act);
-  color: var(--ink-on-dark);
-}
-.workbench .jbar-suggest .sc-picker .reason-chip.chosen {
-  border-color: var(--act);
-  background: var(--sc-act-wash);
-  color: var(--act-bright);
-}
-/* Confirm (spec 42/43): the block's one filled control.  Ink is
-   --act-bright on the wash (6.15:1 measured) — --act on the wash
-   measured 4.97:1 in the local run, above the floor but thin; the same
-   pair the chosen chip uses. */
-/* #270: Confirm is the sub-row's action cell (outside .sc-picker) — the
-   selector follows it, the pair is unchanged. */
-.workbench .jbar-suggest .sc-sub button.confirm {
-  letter-spacing: 0.14em;
-  padding: 6px 11px;
-  background: var(--sc-act-wash);
-  color: var(--act-bright);
-  transition: background-color 120ms, color 120ms;
-}
-.workbench .jbar-suggest .sc-sub button.confirm:hover,
-.workbench .jbar-suggest .sc-sub button.confirm:focus-visible {
-  background: var(--act);
-  color: var(--on-act);
+.workbench .needs-you .act:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
 }
 /* Disabled (spec 34/43) — last so it wins every hover above.  #252: only
    OUTSIDE the lock — under it every write control takes the one uniform
    dim below; this ink remains for the incomplete-Confirm state alone. */
-.workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,
-.workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled:hover,
-.workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled,
-.workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled:hover {
+.workbench:not(.ws-locked) .needs-you .act:disabled,
+.workbench:not(.ws-locked) .needs-you .act:disabled:hover {
   color: var(--sc-disabled);
   border-color: var(--sc-disabled);
   background: transparent;
   cursor: default;
-  text-decoration-style: dotted;
 }
+
+/* Rule 78 — the Apply row, the last data line.  Its glyph track is
+   empty (no symbol: it is not a fact), the standing sentence takes the
+   body track and the write takes the action track's right edge, so the
+   row's button shares the edge every Dismiss / Assert / Undo shares. */
+.workbench .needs-you .ny-apply {
+  border-top: 1px solid var(--da-hair);
+}
+.workbench .needs-you .ny-apply .ny-mid,
+.workbench .needs-you .ny-foot .ny-mid {
+  align-self: center;
+}
+.workbench .needs-you .ny-apply .sc-apply-text {
+  text-decoration: none;
+}
+/* The scan's own provenance — the block's last line, no action. */
+.workbench .needs-you .ny-foot {
+  border-top: 1px solid var(--da-hair);
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  column-gap: 14px;
+}
+.workbench .needs-you .ny-foot .sc-foot-text,
+.workbench .needs-you .ny-foot .sc-foot-advisory {
+  text-decoration: none;
+  display: block;
+}
+.workbench .needs-you .ny-foot .sc-time {
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+/* #270: the open picker is exactly one extra row — legend, chips and
+   the always-mounted note wrap among themselves in the body track;
+   Confirm is the row's ACTION cell, the shared right edge, so its place
+   and the row's height never depend on the legend's length. */
+.workbench .needs-you .ny-sub .sc-picker {
+  display: flex;
+  flex-wrap: wrap;
+  /* The legend is its own full-width line, so the chips + note line is
+     the same width for every condition name and the row is one height
+     at 1440 (local run 1: 82.2 x3 vs 116.2 for the longest legend); the
+     note rides the chips line (flex-end). */
+  align-items: flex-end;
+  gap: 8px;
+}
+.workbench .needs-you .ny-sub {
+  border-top: 1px dashed var(--rule);
+  border-bottom-style: solid;
+  align-items: center;
+}
+.workbench .needs-you .sc-picker .site-correction-reasons legend {
+  width: 100%;
+  float: none;
+}
+/* Chosen chip = --act border + the wash + --act-bright ink (6.15:1
+   measured; --act on the wash was 4.97).  The block's one filled pair,
+   shared with rule 133's `.act.is-on`. */
+.workbench .needs-you .sc-picker .reason-chip.chosen {
+  background: var(--sc-act-wash);
+  border-color: var(--act);
+  color: var(--act-bright);
+}
+
 /* ─── #252 — the write lock (spec 25, GO ruling b) ───
    While a request for the generated scenario is open (.ws-locked on the
    root, the same fact the working band mounts on) every write control
@@ -2402,96 +2246,25 @@ input[type="number"] {
   pointer-events: none;
   cursor: default;
 }
-/* Footer (spec 61–65): label · leader · sentence, the ledger's last
-   line; the provenance role's dotted underline moves to the stamp
-   alone — the inspectable value (full ISO on its title). */
-.workbench .jbar-suggest .sc-foot {
-  /* Stretched like the grid: the band root is align-items flex-start,
-     and a shrink-to-fit footer stopped its leader at half the block
-     (local run 1). */
-  align-self: stretch;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 10px;
-  border-top: 1px solid var(--rule-soft);
-  padding-top: 9px;
-  text-decoration: none;
-}
-.workbench .jbar-suggest .sc-foot .sc-foot-label {
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-/* #255: the verify advisory (the backend's corrections_advisory) is the
-   footer's second line, once per plan — not once per record. */
-.workbench .jbar-suggest .sc-foot .sc-foot-advisory {
-  flex: 1 1 100%;
-}
-.workbench .jbar-suggest .sc-foot .sc-time {
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
-}
-/* ≤420px of the block's own width (spec 66–73): the action column
-   narrows to 88px and never stacks; the ledger line wraps — symbol +
-   name on line 1, the right group on line 2 — and the leader (slack
-   absorber) goes; nothing is hidden or abbreviated. */
-@container (max-width: 420px) {
-  .workbench .jbar-suggest .sc-grid,
-  .workbench .jbar-suggest .sc-grid .sc-row,
-  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
-    grid-template-columns: minmax(0, 1fr) 88px;
+
+/* ≤480 (rule 15 / the 380 arc): every control in the block clears 44 px
+   in its smaller dimension, and the picker's chips take a tighter inset
+   without dropping below that floor. */
+@media (max-width: 480px) {
+  .workbench .needs-you .act,
+  .workbench .needs-you .reason-chip,
+  .workbench .needs-you .site-correction-note {
+    min-height: 44px;
   }
-  .workbench .jbar-suggest .sc-grid .sc-row,
-  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
-    grid-template-columns: subgrid;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-lead {
-    flex-wrap: wrap;
-    row-gap: 3px;
-    white-space: normal;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-name {
-    flex: 1 1 auto;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-leader {
-    display: none;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-right {
-    flex: 1 1 100%;
-    flex-wrap: wrap;
-    white-space: normal;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-action {
-    align-self: start;
-  }
-  /* #255 / #153: a wrapped record grows past --sc-row-h here; Undo
-     rides the top line again. */
-  .workbench .jbar-suggest .sc-grid .sc-row.sc-record {
-    align-items: start;
-  }
-  /* #254: the Apply row may wrap its two items at the block's <=420;
-     the button keeps the action edge on its own line (P4 — local run 1
-     measured it on the start edge, 207 vs 338). */
-  .workbench .jbar-suggest .sc-grid .sc-row.sc-apply {
-    flex-wrap: wrap;
-    row-gap: 6px;
-  }
-  .workbench .jbar-suggest .sc-apply button.confirm {
-    margin-left: auto;
-  }
-  /* #270 <=420: the reasons take the full width, Confirm its own line
-     under them on the right edge (the row grows one line, #153). */
-  .workbench .jbar-suggest .sc-grid .sc-sub .sc-picker {
-    grid-column: 1 / -1;
-  }
-  .workbench .jbar-suggest .sc-grid .sc-sub .sc-action {
-    grid-column: 1 / -1;
-    justify-self: end;
-  }
-  .workbench .jbar-suggest .sc-picker .reason-chip {
+  .workbench .needs-you .reason-chip {
     padding: 4px 7px;
   }
+  .workbench .needs-you .site-correction-note {
+    flex: 1 1 100%;
+    width: 100%;
+  }
 }
+
 
 /* ─── #227 system-event container ───
    "A value the user didn't set is a system event, not a field

@@ -7,23 +7,30 @@
 // ACKNOWLEDGE renders no button).  Spec: #281 comment 1, rules 72–79,
 // with rulings 185 and 186.
 //
-// THE SHELL ONLY.  This commit builds the block, its header and its item
-// rows.  What it deliberately does NOT yet carry:
-//   · rule 78's Apply row — it belongs to the corrections block, which
-//     NEEDS YOU absorbs whole (Part 1 §8.5).  That absorb moves the
-//     staging contract, the standing sentence, the disabled-at-zero
-//     button and the dismiss picker verbatim, and it is its own commit.
-//   · the mount.  The block lands in the results stack at rule 27's
-//     position (setup fact line → NEEDS YOU, 16 px); the stack container
-//     is the commit that mounts it.  Rule 28's reserved first row has no
-//     defined height while the next-steps strip still occupies the slot,
-//     which is an open question on the record — see LEG1/README.
+// THE BLOCK, COMPLETE.  The shell landed first; the Phase 1 finish
+// ruling's clause 1 gave it the corrections block's rows and its one
+// write (components/NeedsYouConditions.tsx — the MOVE, verbatim from
+// SetupStrip).  The block now carries, in this order:
+//   · the ▲/⚠ tier rows, with their citations and — per ruling d — no
+//     buttons, because the wire carries nothing for them to write;
+//   · the five scanned site-condition rows and the two manual keys,
+//     with Dismiss / Assert / Undo on one right edge (rules 76–77);
+//   · rule 78's Apply row, the last data line, with its standing
+//     sentence and its disabled-at-zero button;
+//   · the scan's own provenance line.
+//
+// It is also the jump target the reference's read-only signposts point
+// at (rule 129: "Correct in setup ↑", which jumps to NEEDS YOU) — the
+// anchor moved with the block, so the pointer still lands (Rule 10).
 //
 // The component decides nothing (the #228 deriveRail idiom): tiers come
 // from lib/tiering.ts, ordering and counts from lib/needs-you.ts, and
 // every string below is either fixed copy from the spec or a value the
 // wire carried.
 
+import type { ReactNode } from "react";
+
+import { SITE_CORRECTIONS_ANCHOR } from "@/lib/scenarios/site-corrections";
 import {
   countProvenance,
   itemProvenance,
@@ -35,14 +42,40 @@ import {
 /** Rule 18's symbols, as text not icons (rule 17). */
 const TIER_GLYPH = { changed: "▲", attention: "⚠" } as const;
 
-export function NeedsYou({ model }: { model: NeedsYouModel }) {
-  // Rule 10: no items, no block.  An empty NEEDS YOU would assert that
-  // the plan was examined and found to want something, which is exactly
-  // what zero items does not say.
-  if (model.count === 0) return null;
+export function NeedsYou({
+  model,
+  conditions = null,
+  inFlight = false,
+}: {
+  model: NeedsYouModel;
+  /** Clause 1's rows — the moved corrections block, rendered as item
+   *  rows of this block's list.  `null` when the plan carries no scan
+   *  for them to read (Rule 10). */
+  conditions?: ReactNode;
+  /** Spec 34: a re-generation is in flight for the scenario on screen. */
+  inFlight?: boolean;
+}) {
+  // Rule 10: nothing to show, no block.  An empty NEEDS YOU would assert
+  // that the plan was examined and found to want something, which is
+  // exactly what nothing does not say.
+  //
+  // DECLARED BEHAVIOUR CHANGE (Rule 5), from clause 1: the gate is no
+  // longer the tier count alone.  A clean plan with a served scan still
+  // has seven conditions the operator can correct, and rule 78 says the
+  // Apply row is always present post-scan — so the block mounts on its
+  // conditions even when nothing changed the plan.  The count stays
+  // ruling 185's sum of ▲ + ⚠ and is honest at zero: it is a statement
+  // about the two consequence tiers, not about the block's row count.
+  if (model.count === 0 && conditions === null) return null;
   const decomposition = countProvenance(model);
   return (
-    <section className="needs-you" aria-labelledby="needs-you-h">
+    <section
+      id={SITE_CORRECTIONS_ANCHOR}
+      tabIndex={-1}
+      aria-busy={inFlight || undefined}
+      className="needs-you jump-anchor outline-none"
+      aria-labelledby="needs-you-h"
+    >
       {/* Rule 73: section header → provenance → count, count last and
           pushed right.  Ruling 186: always expanded, so the header is
           not a disclosure control and carries no caret. */}
@@ -62,6 +95,7 @@ export function NeedsYou({ model }: { model: NeedsYouModel }) {
         {model.items.map((item) => (
           <Item key={item.id} item={item} />
         ))}
+        {conditions}
       </ul>
     </section>
   );

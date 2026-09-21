@@ -135,11 +135,18 @@ async function generate() {
 }
 const block = () => document.getElementById("site-corrections") as HTMLElement;
 const band = () => document.querySelector(".working-band") as HTMLElement | null;
-const row = (label: string) => within(block()).getByText(label).closest(".sc-row") as HTMLElement;
+// #288 clause 1: the corrections block moved into NEEDS YOU and its rows
+// are rule 74 item rows — `.sc-row` → `.ny-item`.  The id it is found by
+// moved with it, so `block()` is unchanged.
+const row = (label: string) => within(block()).getByText(label).closest(".ny-item") as HTMLElement;
 const apply = (name: string) => within(block()).getByRole("button", { name }) as HTMLButtonElement;
 const ribbon = () =>
   Array.from(document.querySelectorAll(".stale-ribbon")).find((r) => /staged/.test(r.textContent ?? "")) ?? null;
 const stale = () => document.querySelector(".results-stale");
+// Rule 78's standing sentence at zero, in full.  #288 clause 1 appended
+// its second clause, which the strip never printed — so this assertion
+// got LONGER, not looser: still an exact match, on the whole sentence.
+const ZERO_STANDING = "no corrections staged · staging costs nothing, Apply re-generates once";
 const download = () => screen.getByText("DOWNLOAD_STUB") as HTMLButtonElement;
 
 async function stageTwo(user: ReturnType<typeof userEvent.setup>) {
@@ -189,7 +196,7 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     expect(ribbon()!.textContent).toBe("Previous answer — 1 correction staged, not yet applied.");
     await user.click(within(row("Pedestrian sidewalks")).getByRole("button", { name: "Undo" }));
     await settle();
-    expect(within(block()).getByText("no corrections staged")).toBeTruthy();
+    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
     expect(apply("Apply 0 corrections").disabled).toBe(true);
     expect(ribbon()).toBeNull();
     expect(stale()).toBeNull();
@@ -253,7 +260,7 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     expect(within(block()).getByText(asserted.record_clause)).toBeTruthy();
     expect(within(block()).getByText(dismissed.record_clause)).toBeTruthy();
     expect(block().querySelectorAll(".sc-foot-advisory")).toHaveLength(1);
-    expect(within(block()).getByText("no corrections staged")).toBeTruthy();
+    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
     expect(stale()).toBeNull();
     expect(block().querySelectorAll(".sc-staged")).toHaveLength(0);
   });
@@ -266,7 +273,7 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(false);
-    expect(within(block()).getByText("no corrections staged")).toBeTruthy();
+    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
     expect(ribbon()).toBeNull();
   });
 });

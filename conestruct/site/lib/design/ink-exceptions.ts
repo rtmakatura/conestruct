@@ -58,12 +58,6 @@ export const CSS_DECORATIVE: readonly CssLiteral[] = [
     reason:
       "the caution stripe's dark band in a repeating-linear-gradient — chrome, no state meaning (the word CAUTION carries the state)",
   },
-  {
-    selector: ".workbench .site-corrections",
-    hex: "#4a6280",
-    reason:
-      "--sc-leader, the ledger's dotted leader line — DECORATION by GO ruling a (s2-arc21), pinned in SetupStrip.grid-tokens.test.tsx",
-  },
 ];
 
 /** `#fff` literals inside other buckets' globals.css ranges.  Not D's

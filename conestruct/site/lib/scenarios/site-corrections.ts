@@ -13,16 +13,59 @@
 // corridor's scan, no longer exists.
 
 import type {
+  ManualSiteFlag,
   ScannedSiteFlag,
   ScenarioMeta,
   SiteConditionOverride,
+  SiteConditions,
   SiteDismissReason,
   StagedCorrection,
+  StagedManualCondition,
 } from "./types";
 import type { SiteScanProvenance } from "@/lib/render-types";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
 
-export type { StagedCorrection } from "./types";
+export type { StagedCorrection, StagedManualCondition } from "./types";
+
+/** #288 Phase 1 clause 1 — the staged union's discriminator, written
+ *  once so no reader re-invents it.  The scanned variant carries a
+ *  ``marker`` (the wire's SiteConditionOverride); the manual variant
+ *  carries ``on`` (the meta.siteConditions boolean). */
+export function isManualStaged(s: StagedCorrection): s is StagedManualCondition {
+  return "on" in s;
+}
+
+/** Row labels and their standing descriptions for the two manual keys —
+ *  MOVED VERBATIM from SiteConditionsField's FLAG_LABELS (Part 1 8.25).
+ *  The words are the retired checkbox's words; nothing is rewritten. */
+export const MANUAL_FLAG_LABELS: Record<ManualSiteFlag, { label: string; desc: string }> = {
+  limited_sight_distance: {
+    label: "Limited sight distance",
+    desc: "Curve, hill crest — moves advance signs 50% farther upstream.",
+  },
+  driveways_present: {
+    label: "Driveways present",
+    desc: "Advisory: maintain access gaps in channelization.",
+  },
+};
+
+export const MANUAL_FLAGS: readonly ManualSiteFlag[] = [
+  "limited_sight_distance",
+  "driveways_present",
+];
+
+/** Apply's write for ONE manual key.  Byte-identical to the retired
+ *  checkbox's toggle (SiteConditionsField): false drops the key rather
+ *  than storing it, so a set-then-unset meta equals the original. */
+export function withManualCondition(
+  meta: ScenarioMeta,
+  flag: ManualSiteFlag,
+  on: boolean,
+): ScenarioMeta {
+  const next: SiteConditions = { ...(meta.siteConditions ?? {}), [flag]: on };
+  if (!on) delete next[flag];
+  return { ...meta, siteConditions: next };
+}
 
 /** The dismiss vocabulary (backend enum; ``other`` needs a note). */
 /** #246 — the DOM id of the strip's "Site conditions — scanned" block:
@@ -174,7 +217,10 @@ export function stage(staged: readonly StagedCorrection[], entry: StagedCorrecti
 }
 
 /** Undo on a staged row: the intent leaves the set — no request. */
-export function unstage(staged: readonly StagedCorrection[], flag: ScannedSiteFlag): StagedCorrection[] {
+export function unstage(
+  staged: readonly StagedCorrection[],
+  flag: ScannedSiteFlag | ManualSiteFlag,
+): StagedCorrection[] {
   return staged.filter((s) => s.flag !== flag);
 }
 
@@ -185,6 +231,10 @@ export function unstage(staged: readonly StagedCorrection[], flag: ScannedSiteFl
 export function applyStaged(meta: ScenarioMeta, staged: readonly StagedCorrection[]): ScenarioMeta {
   let next = meta;
   for (const s of staged) {
+    if (isManualStaged(s)) {
+      next = withManualCondition(next, s.flag, s.on);
+      continue;
+    }
     next = s.marker === null ? withoutSiteCorrection(next, s.flag) : withSiteCorrection(next, s.marker);
   }
   return next;

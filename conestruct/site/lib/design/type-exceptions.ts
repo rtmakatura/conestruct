@@ -239,16 +239,15 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .jbar-suggest .sugg-row", size: "11.5px" },
       { selector: ".workbench .jbar-suggest button.confirm, .workbench .jbar-suggest button.ghost", size: "10px" },
       { selector: ".workbench .jbar-suggest .honesty", size: "9.5px" },
-      { selector: ".workbench .jbar-suggest .site-correction-reasons legend", size: "11.5px" },
-      { selector: ".workbench .jbar-suggest .reason-chip", size: "10px" },
-      { selector: ".workbench .jbar-suggest .site-correction-note", size: "12px" },
-      { selector: ".workbench .jbar-suggest .sc-grid .sc-glyph", size: "12px" },
-      { selector: ".workbench .jbar-suggest .sc-grid .sc-result", size: "11px" },
-      { selector: ".workbench .jbar-suggest .sc-grid .sc-evidence", size: "10.5px" },
-      { selector: ".workbench .jbar-suggest .sc-grid .sc-record .sys-glyph", size: "12px" },
-      { selector: ".workbench .jbar-suggest .sc-grid .sc-disclosure", size: "12px" },
-      { selector: ".workbench .jbar-suggest .sc-picker .site-correction-reasons legend", size: "10px" },
-      { selector: ".workbench .jbar-suggest .sc-picker .reason-chip", size: "10px" },
+      // #288 clause 1: the block moved into NEEDS YOU, so these three
+      // re-scoped .jbar-suggest → .needs-you (same values).  The other
+      // SEVEN rows here are DELETED, not moved: the ledger's glyph,
+      // result, evidence, record glyph and record sentence now ride the
+      // .tr-* roles, and the picker's two 10px overrides went with the
+      // ledger they were scoped to.
+      { selector: ".workbench .needs-you .site-correction-reasons legend", size: "11.5px" },
+      { selector: ".workbench .needs-you .reason-chip", size: "10px" },
+      { selector: ".workbench .needs-you .site-correction-note", size: "12px" },
       { selector: ".workbench .sys-event .sys-glyph", size: "13px" },
     ],
     tsx: [],
@@ -441,7 +440,15 @@ export const CENSUS_PINS = {
   // #288 rule 88 (2026-09-21): the disclosure row's name declares Inter
   // 500 13px -- one declaration, 104 -> 105.  Sizes stay 21: 13px was
   // already in the sheet at twelve sites, so no size joins the census.
-  cssDeclarations: 105,
+  // #288 Phase 1 clause 1 (2026-09-21): the corrections block MOVED into
+  // NEEDS YOU, and the #249 ledger it was dressed as retired with it.
+  // Three declarations re-scoped (.jbar-suggest -> .needs-you) and SEVEN
+  // deleted -- the ledger's glyph / result / evidence, the record's
+  // glyph and sentence, and the picker's two 10px overrides -- because
+  // those five now ride the .tr-* roles and the two overrode a scope
+  // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
+  // both remain elsewhere in the sheet, so no size left the census.
+  cssDeclarations: 98,
   cssSizes: 21,
   tsxSites: 106,
   tsxUses: 320,

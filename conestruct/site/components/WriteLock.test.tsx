@@ -204,13 +204,19 @@ describe("#252 — the write lock's enumeration is honest", () => {
     // Own reasons only: on a settled, scanned sandbox plan exactly one —
     // #254's Apply at zero staged (its title says "stage a correction
     // first"); the block re-enables everything else.
-    expect(stillOff).toEqual(['button.confirm "Apply 0 corrections"']);
+    // #288 clause 1: the Apply button moved into NEEDS YOU and wears rule
+    // 133's .act (one control treatment for the block's ledger actions);
+    // the claim — that it is the ONE control still off at settle, and
+    // only because of its own reason — is unchanged.
+    expect(stillOff).toEqual(['button.act.tr-step "Apply 0 corrections"']);
   });
 
   it("the one dim rule sits after the block's own disabled ink, which steps aside under the lock (spec 25: one tier)", () => {
     const css = fs.readFileSync(path.resolve(__dirname, "../app/globals.css"), "utf-8");
     const rule = css.indexOf(".workbench.ws-locked [data-write]:disabled,");
-    const sc = css.indexOf(".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,");
+    // #288 clause 1: the block's own disabled ink moved with the block
+    // and now scopes to .needs-you .act; the ORDER claim is unchanged.
+    const sc = css.indexOf(".workbench:not(.ws-locked) .needs-you .act:disabled,");
     expect(rule).toBeGreaterThan(sc);
     expect(sc).toBeGreaterThan(-1);
     expect(css).toMatch(
@@ -225,10 +231,11 @@ describe("#252 — the write lock's enumeration is honest", () => {
       .split(/\r?\n/)
       .filter((l) => /^\.workbench(\.|:not\(\.)ws-locked/.test(l));
     expect(selectors).toEqual([
-      ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled,",
-      ".workbench:not(.ws-locked) .jbar-suggest .sc-grid button:disabled:hover,",
-      ".workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled,",
-      ".workbench:not(.ws-locked) .jbar-suggest .sc-picker button:disabled:hover {",
+      // #288 clause 1: the block's step-aside moved with the block, and
+      // collapsed from four selectors to two — the ledger's `button.ghost`
+      // and the picker's Confirm are one control now (rule 133's .act).
+      ".workbench:not(.ws-locked) .needs-you .act:disabled,",
+      ".workbench:not(.ws-locked) .needs-you .act:disabled:hover {",
       ".workbench.ws-locked [data-write]:disabled,",
       ".workbench.ws-locked [data-write][aria-disabled=\"true\"] {",
     ]);

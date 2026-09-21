@@ -26,8 +26,6 @@ function mountStrip(over: Partial<Scenario> = {}) {
       scenario={scenario}
       setScenario={setScenario}
       onReopen={vi.fn()}
-      staged={[]}
-      setStaged={vi.fn()}
       jurisdiction={null}
       setJurisdictionKey={setJurisdictionKey}
       setStreetClass={setStreetClass}
@@ -90,8 +88,6 @@ describe("strip inline jurisdiction + class edit (#152 B)", () => {
         scenario={DEFAULT_SCENARIO}
         setScenario={vi.fn()}
         onReopen={vi.fn()}
-        staged={[]}
-        setStaged={vi.fn()}
       />,
     );
     expect(screen.queryByLabelText("Edit Jurisdiction")).toBeNull();

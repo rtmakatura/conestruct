@@ -262,3 +262,64 @@ The band, the verdict strip (`StatusBar`), the refusal container, the draft noti
 the setup strip's own fact lines, the progress rail and the location picker — are not
 touched, with the ONE exception this ruling itself orders: clause 1 removes the corrections
 block from the strip, because the block is moving, not changing.
+
+---
+
+## The rules clause 1 builds against, verbatim — #281 comment 1 (Part 2), rev. 2026-09-16
+
+Quoted into the tracked record because the arc's citation convention requires it: a citation
+to an untracked source is correctly rejected by the diff-verifier (#160, ruled 2026-07-30),
+and Part 2 lives on the issue, not in this repo. Clause 1's commit cites these by number, so
+their text has to be here to be checkable. Transcribed from `gh issue view 281`, comment 1,
+section "C6 · NEEDS YOU (was: corrections block — rules 72–79 …)".
+
+> 72. Shell. 1 px #2c3e53 border, ground #101c29, left border 2 px #f4c020.
+> 73. Header. Padding 12 px 16 px, bottom border 1 px #223345: section header "NEEDS YOU" →
+> provenance "changed the plan, or waiting on your word" → count, margin-left auto, mono
+> 11 px weight 500 #eaf0f7.
+> 74. Item row. Grid 20 px / minmax(0,1fr) / auto, column-gap 14 px, padding 14 px 16 px,
+> bottom border 1 px dashed #223345, align-items start; last item no border.
+> 75. Item middle track: the item body (rule 9) then its provenance line, margin-top 5 px.
+> The provenance always names the tier in words — "changed this plan", "needs attention" —
+> plus the evidence the wire carried (count, nearest distance, coordinates) and never invents
+> any.
+> 76. Item right track: grid, gap 8 px, justify-items end — the citation (rule 11) above the
+> action buttons.
+> 77. Action buttons: the .act control (rule 133). One per row unless the row offers a true
+> pair (DISMISS / KEEP). Every button in the block shares one right edge in every state —
+> unchanged, and the reason the action column is a fixed auto track.
+> 78. Apply row. Always present post-scan, as the last data line: display flex, gap 14 px,
+> padding 13 px 16 px, top border 1 px #223345. A standing provenance sentence, then the
+> write button margin-left auto. At zero: "no changes staged · staging costs nothing, Apply
+> re-generates once" and APPLY 0 CHANGES at opacity .45, disabled, reason on its title.
+> 79. The five condition rows keep their wire order: adjacent at-grade intersection, adjacent
+> interchange, pedestrian sidewalks, bike lane / cycleway, school zone. A bucket absent from
+> the wire renders nothing. The dismiss picker — radio chips, always-mounted note field at a
+> fixed reservation, Confirm enabled on a reason, Other answered at the note — unchanged.
+
+And rule 133, which rule 77 names:
+
+> 133. LEDGER ACTION (.act). Min-height 32 px, padding 7 px 11 px, 1 px #2c3e53,
+> transparent, mono 9.5 px .14em uppercase #c8d1dd.
+>      hover    border #3d5570, text #eaf0f7
+>      on       border and text #34a9e8 (the row's recommended action)
+>      disabled opacity .45, reason on title
+>      At 380 px min-height 44 px (rule 15).
+
+### Where the build DIVERGES from rule 78's words, and why
+
+Rule 78's zero-state sentence says **"no changes staged"**. This codebase says
+**"no corrections staged"** — `stagedSentence(0)` in `lib/scenarios/site-corrections.ts`,
+shipped by #254, and the noun the whole block, the backend's `corrections` wire field and the
+`corrections_advisory` string all use. Clause 1 keeps the codebase's noun and takes rule 78's
+second clause verbatim, so the built sentence is:
+
+> no corrections staged · staging costs nothing, Apply re-generates once
+
+The alternative — renaming the noun to match the spec — would rename a wire field's vocabulary
+on the screen only, which is the kind of divergence P2 exists to prevent. Recorded here rather
+than left as a comment that quotes one string above code that prints another; the diff-verifier
+caught exactly that on repair cycle 1.
+
+Rule 78's "APPLY 0 CHANGES" label diverges for the same reason and is likewise not adopted:
+the button reads `Apply 0 corrections`, as it did in the strip.

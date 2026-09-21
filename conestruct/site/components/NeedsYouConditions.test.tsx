@@ -1,12 +1,40 @@
 // @vitest-environment happy-dom
 //
-// #224 phase 4 (s2-arc18, ruling a) — the strip's "Site conditions —
-// scanned" block: five read-only rows from the SERVED scan, Dismiss (with
-// a reason) on a detected row, Assert on an absent row, the #227 resolved
-// record with Undo once the backend has applied the correction.  Every
-// click writes meta.siteConditionOverrides through setScenario (an
-// explicit operator action); nothing else writes it.  The stamped view:
-// null provenance renders nothing.
+// #288 Phase 1 clause 1 — the corrections block's suite, MOVED with the
+// block.  This file is SetupStrip.corrections.test.tsx transferred: same
+// `it` titles, same fixtures, same behavioural claims, so the transfer is
+// traceable line by line and nothing quietly stopped being asserted.
+//
+// WHAT IS BYTE-IDENTICAL: every claim about BEHAVIOUR — the staging
+// round-trip, Apply's single write, the dismiss picker's reason/note
+// rules, the #227 record and its Undo, the byte-identical-meta undo, the
+// bucket-missing rule, the footer's sliced stamp / duration / memoised /
+// advisory, details[0] staying out, the spec-46 guard, the in-flight
+// disable.  Those assertions are copied character for character.
+//
+// WHAT CHANGED, and why (Rule 5 — the churn predicted, not explained
+// after):
+//   · the block is `.needs-you`, not `.site-corrections`, and its header
+//     is NEEDS YOU's — so the "Site conditions — scanned" header
+//     assertion is gone with the header it read;
+//   · rows are rule 74 item rows (`.ny-item`: 20 px glyph / body / auto
+//     action), so `.sc-row` → `.ny-item`, `.sc-glyph` → `.ny-glyph`,
+//     `.sc-lead`/`.sc-leader`/`.sc-right` are gone and the structural
+//     assertions that named them are rewritten against the new tracks.
+//     `.sc-name`, `.sc-result`, `.sc-evidence`, `.sc-disclosure`,
+//     `.sc-apply`, `.sc-foot`, `.sc-foot-advisory`, `.sys-event` and
+//     `.site-correction*` are kept deliberately, so the assertions that
+//     read them did not have to move;
+//   · Apply and Confirm wear rule 133's `.act`, not `.confirm`;
+//   · the Apply row's zero-state sentence gained rule 78's second clause
+//     ("staging costs nothing, Apply re-generates once"), which the strip
+//     never printed — so the assertions that read it are LONGER, not
+//     looser: still exact matches, on the whole sentence;
+//   · `aria-busy` / `.sc-inflight` moved to the NEEDS YOU section itself,
+//     so their assertions live in GeneratorShell.needs-you.test.tsx where
+//     that section is mounted.
+//
+// NEW HERE: Part 1 §8.25's two manual keys, which the strip never had.
 
 import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -15,7 +43,7 @@ import userEvent from "@testing-library/user-event";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import type { StagedCorrection } from "@/lib/scenarios/types";
 import type { SiteScanProvenance } from "@/lib/render-types";
-import { SetupStrip } from "./SetupStrip";
+import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 
 afterEach(cleanup);
 
@@ -39,50 +67,65 @@ function ok(over: Partial<SiteScanProvenance> = {}): SiteScanProvenance {
 }
 
 // #254: the staged set lives in the SHELL (one owner); this host stands
-// in for it so the block's staging round-trips through real state.
+// in for it so the block's staging round-trips through real state.  The
+// <ul> is NEEDS YOU's list — the rows are its item rows now.
 function Host(props: {
   siteScan: SiteScanProvenance | null;
   scenario: Scenario;
-  held: { inFlight: boolean; scan: SiteScanProvenance | null };
+  inFlight: boolean;
   setScenario: (next: Scenario) => void;
 }) {
   const [staged, setStaged] = useState<StagedCorrection[]>([]);
   return (
-    <SetupStrip
-      scenario={props.scenario}
-      setScenario={props.setScenario}
-      onReopen={vi.fn()}
-      siteScan={props.siteScan}
-      siteScanInFlight={props.held.inFlight}
-      siteScanHeld={props.held.scan}
-      staged={staged}
-      setStaged={setStaged}
-    />
+    <ul className="needs-you">
+      {props.siteScan && (
+        <SiteConditionRows
+          scenario={props.scenario}
+          setScenario={props.setScenario}
+          siteScan={props.siteScan}
+          inFlight={props.inFlight}
+          staged={staged}
+          setStaged={setStaged}
+        />
+      )}
+    </ul>
   );
 }
 function mount(
   siteScan: SiteScanProvenance | null,
   scenario: Scenario = DEFAULT_SCENARIO,
-  held: { inFlight: boolean; scan: SiteScanProvenance | null } = { inFlight: false, scan: null },
+  inFlight = false,
 ) {
   const setScenario = vi.fn();
-  render(<Host siteScan={siteScan} scenario={scenario} held={held} setScenario={setScenario} />);
+  render(
+    <Host siteScan={siteScan} scenario={scenario} inFlight={inFlight} setScenario={setScenario} />,
+  );
   return setScenario;
 }
 const applyBtn = (name: string | RegExp = /^Apply \d+ corrections?$/) =>
   within(block()!).getByRole("button", { name }) as HTMLButtonElement;
 
-const block = () => document.querySelector(".site-corrections") as HTMLElement | null;
+/** The block's body: null when the rows rendered nothing at all. */
+const block = () => {
+  const ul = document.querySelector(".needs-you") as HTMLElement | null;
+  return ul && ul.querySelector(".ny-item") ? ul : null;
+};
 // #255: the backend's advisory (src/api/site_scan.py _VERIFY.strip()) —
 // on the provenance once, never per record.
 const ADVISORY = "The plan is built to the correction — verify it in the field or on imagery before deploying.";
+// Rule 78's standing sentence at zero, in FULL.  #288 clause 1 appended
+// the second clause the strip never printed, so these assertions read a
+// longer string — by exact match, as they always did.
+const ZERO_STANDING = "no corrections staged · staging costs nothing, Apply re-generates once";
+/** Condition rows only — not the Apply row, the footer or the picker. */
+const condRows = () =>
+  block()!.querySelectorAll(".ny-item:not(.ny-apply):not(.ny-foot):not(.ny-sub)");
 
-describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
+describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)", () => {
   it("an ok scan renders one row per bucket on the wire with the wire's words and one action each", () => {
     mount(ok());
     const b = block();
     expect(b).not.toBeNull();
-    expect(within(b!).getByText("Site conditions — scanned")).toBeTruthy();
     const rows = b!.querySelectorAll(".site-correction-row");
     expect(rows).toHaveLength(5); // hospitals is keyless — no row
     // #248: Result = glyph + word, Evidence = count + nearest (the wire's
@@ -107,16 +150,18 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(time.getAttribute("datetime")).toBe("2026-09-04T12:00:00+00:00");
     expect(time.textContent).toBe("4 sep · 12:00 utc");
     expect(b!.textContent).not.toMatch(/within \d+ ft|in scan|ft corridor/);
-    // #254 (P1): the Apply row is ALWAYS present post-scan — at zero it
-    // says so and the button is disabled with the reason on its title.
-    const applyRow = b!.querySelector(".sc-row.sc-apply") as HTMLElement;
+    // Rule 78 / #254 (P1): the Apply row is ALWAYS present post-scan — at
+    // zero it says so, with the standing sentence, and the button is
+    // disabled with the reason on its title.
+    const applyRow = b!.querySelector(".ny-item.ny-apply") as HTMLElement;
     expect(applyRow).not.toBeNull();
-    expect(within(applyRow).getByText("no corrections staged")).toBeTruthy();
+    expect(within(applyRow).getByText(ZERO_STANDING)).toBeTruthy();
     const apply = within(applyRow).getByRole("button", { name: "Apply 0 corrections" }) as HTMLButtonElement;
     expect(apply.disabled).toBe(true);
     expect(apply.getAttribute("title")).toBe("stage a correction first");
     expect(apply.getAttribute("data-write")).toBe("");
-    expect(apply.classList.contains("confirm")).toBe(true);
+    // Rule 133: the block's controls are .act, one treatment.
+    expect(apply.classList.contains("act")).toBe(true);
   });
 
   it("#251: the footer prints the scan's duration (ms → s, one decimal) and 'memoised' from the wire", () => {
@@ -160,6 +205,9 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       cleanup();
       mount(scan);
       expect(block()).toBeNull();
+      // The same predicate, exported so NEEDS YOU can ask before it
+      // renders a header over nothing.
+      expect(hasConditionRows(scan)).toBe(false);
     }
   });
 
@@ -171,9 +219,9 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     // #254: STAGED, not written — the row becomes the staged row (◌ +
     // the word + the intent + Undo) and nothing is requested.
     expect(setScenario).not.toHaveBeenCalled();
-    const stagedRow = within(block()!).getByText("School zone").closest(".sc-row") as HTMLElement;
+    const stagedRow = within(block()!).getByText("School zone").closest(".ny-item") as HTMLElement;
     expect(stagedRow.classList.contains("sc-staged")).toBe(true);
-    expect(stagedRow.querySelector(".sc-glyph")?.textContent).toBe("◌");
+    expect(stagedRow.querySelector(".ny-glyph")?.textContent).toBe("◌");
     expect(within(stagedRow).getByText("staged — not yet applied")).toBeTruthy();
     expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("assert");
     expect(within(stagedRow).getByRole("button", { name: "Undo" })).toBeTruthy();
@@ -187,7 +235,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const next = setScenario.mock.calls[0][0] as Scenario;
     expect(next.meta.siteConditionOverrides).toHaveLength(1);
     expect(next.meta.siteConditionOverrides![0]).toMatchObject({ flag: "school_zone", action: "assert" });
-    expect(within(block()!).getByText("no corrections staged")).toBeTruthy();
+    expect(within(block()!).getByText(ZERO_STANDING)).toBeTruthy();
     expect(next.meta.siteConditionOverrides![0]).not.toHaveProperty("reason");
     // Nothing else on the scenario moved (the corrections never become manual flags).
     expect({ ...next.meta, siteConditionOverrides: undefined }).toEqual({
@@ -231,7 +279,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     // naming the intent); Apply writes.
     expect(setScenario).not.toHaveBeenCalled();
     expect(block()!.querySelector(".site-correction-picker")).toBeNull();
-    const stagedRow = within(block()!).getByText("Pedestrian sidewalks").closest(".sc-row") as HTMLElement;
+    const stagedRow = within(block()!).getByText("Pedestrian sidewalks").closest(".ny-item") as HTMLElement;
     expect(stagedRow.classList.contains("sc-staged")).toBe(true);
     expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("dismiss · other — construction fence");
     await user.click(applyBtn("Apply 1 correction"));
@@ -337,11 +385,10 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const aRec = within(b).getByText(asserted.record_clause).closest(".sys-event") as HTMLElement;
     expect(aRec.classList.contains("confirmed")).toBe(true);
     expect(aRec.querySelector(".sys-glyph")?.textContent).toBe("✓");
-    // #249 spec 25/50: a record row carries no result word, leader, or
-    // evidence — the sentence is the whole readout.
+    // #249 spec 25/50: a record row carries no result word or evidence —
+    // the sentence is the whole readout.
     for (const rec of [dRec, aRec]) {
       expect(rec.querySelector(".sc-result")).toBeNull();
-      expect(rec.querySelector(".sc-leader")).toBeNull();
       expect(rec.querySelector(".sc-evidence")).toBeNull();
     }
     // The three uncorrected rows keep their actions.
@@ -351,7 +398,7 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     // other stays.
     await user.click(within(dRec).getByRole("button", { name: "Undo" }));
     expect(setScenario).not.toHaveBeenCalled();
-    const stagedRow = within(b).getByText("Pedestrian sidewalks").closest(".sc-row") as HTMLElement;
+    const stagedRow = within(b).getByText("Pedestrian sidewalks").closest(".ny-item") as HTMLElement;
     expect(stagedRow.classList.contains("sc-staged")).toBe(true);
     expect(stagedRow.querySelector(".sc-evidence")?.textContent).toBe("undo");
     expect(within(b).queryByText(dismissed.record_clause)).toBeNull();
@@ -359,7 +406,12 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     await user.click(within(stagedRow).getByRole("button", { name: "Undo" }));
     expect(setScenario).not.toHaveBeenCalled();
     expect(within(b).getByText(dismissed.record_clause)).toBeTruthy();
-    await user.click(within(within(b).getByText(dismissed.record_clause).closest(".sys-event") as HTMLElement).getByRole("button", { name: "Undo" }));
+    await user.click(
+      within(within(b).getByText(dismissed.record_clause).closest(".sys-event") as HTMLElement).getByRole(
+        "button",
+        { name: "Undo" },
+      ),
+    );
     await user.click(applyBtn("Apply 1 correction"));
     expect(setScenario).toHaveBeenCalledTimes(1);
     const next = setScenario.mock.calls[0][0] as Scenario;
@@ -400,39 +452,42 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     expect(JSON.stringify(next.meta)).toBe(JSON.stringify(DEFAULT_SCENARIO.meta));
   });
 
-  // #249 — structure the ledger must keep (happy-dom has no stylesheet,
-  // so these pin the DOM the CSS grid lays out; rects are the browser
-  // leg).  Row = ledger line (symbol · name · leader · right group) +
-  // action cell; exactly one button per row, in the action cell.
-  it("#249: every row is a ledger line plus one action cell holding exactly one button", () => {
+  // Rules 74–77 — the structure the item row must keep (happy-dom has no
+  // stylesheet, so these pin the DOM the CSS grid lays out; rects are the
+  // browser leg).  This is the assertion set the move REWROTE: the #249
+  // ledger line (symbol · name · leader · right group) became rule 74's
+  // three tracks, so the claim is now about the tracks.
+  it("rules 74–77: every row is glyph / body+provenance / citation+action, one button in the action track", () => {
     mount(ok());
-    // #254: the Apply row is the grid's last row, spanning both tracks
-    // (its button shares the action edge by justify-content); the
-    // ledger invariants below are the condition rows'.
-    const all = Array.from(block()!.querySelectorAll(".sc-row"));
-    expect(all).toHaveLength(6);
-    expect(all[5].classList.contains("sc-apply")).toBe(true);
-    expect(all[5].querySelectorAll("button")).toHaveLength(1);
-    const rows = block()!.querySelectorAll(".sc-row:not(.sc-apply)");
-    expect(rows).toHaveLength(5);
-    for (const row of Array.from(rows)) {
-      expect(row.querySelectorAll(":scope > .sc-lead")).toHaveLength(1);
-      expect(row.querySelectorAll(":scope > .sc-action")).toHaveLength(1);
+    const rows = Array.from(condRows());
+    // Five scanned conditions + Part 1 §8.25's two manual keys.
+    expect(rows).toHaveLength(7);
+    for (const row of rows) {
+      const tracks = Array.from(row.children).map((k) => k.className.split(" ")[0]);
+      expect(tracks).toEqual(["ny-glyph", "ny-mid", "ny-right"]);
       expect(row.querySelectorAll("button")).toHaveLength(1);
-      expect(row.querySelector(".sc-action button")).not.toBeNull();
-      // Ledger order: symbol → name → leader → right group (spec K77).
-      const kids = Array.from(row.querySelector(":scope > .sc-lead")!.children).map((k) => k.className.split(" ")[0]);
-      expect(kids).toEqual(["sc-glyph", "sc-name", "sc-leader", "sc-right"]);
-      // The right group is the result word then the evidence (rule 13:
-      // the symbol always rides beside a word).
-      const right = row.querySelector(".sc-right")!;
-      expect(Array.from(right.children).map((k) => k.className.split(" ")[0])).toEqual(["sc-result", "sc-evidence"]);
-      expect(row.querySelector(".sc-glyph")?.textContent).toMatch(/^[▲✓]$/);
-      expect(row.querySelector(".sc-glyph")?.getAttribute("aria-hidden")).toBe("true");
+      expect(row.querySelector(".ny-right .ny-acts button")).not.toBeNull();
+      // Rule 76: the citation sits above the action, in the same track.
+      const right = Array.from(row.querySelector(".ny-right")!.children).map(
+        (k) => k.className.split(" ")[0],
+      );
+      expect(right).toEqual(["ny-cite", "ny-acts"]);
+      // Rule 75: the body line, then the provenance — the result word
+      // (rule 13: the symbol always rides beside a word) and the
+      // evidence the wire carried.
+      const mid = Array.from(row.querySelector(".ny-mid")!.children).map(
+        (k) => k.className.split(" ")[0],
+      );
+      expect(mid).toEqual(["ny-body", "ny-prov"]);
+      expect(row.querySelector(".ny-glyph")?.textContent).toMatch(/^[▲✓◌]$/);
+      expect(row.querySelector(".ny-glyph")?.getAttribute("aria-hidden")).toBe("true");
       expect(row.querySelector(".sc-result")!.textContent!.trim().length).toBeGreaterThan(0);
     }
-    // No column heads on a ledger (arc-20 ruling e superseded).
-    expect(block()!.querySelector(".sc-head")).toBeNull();
+    // The Apply row is the LAST data line (rule 78), after every
+    // condition row and before the scan's provenance.
+    const all = Array.from(block()!.querySelectorAll(".ny-item"));
+    expect(all[all.length - 2].classList.contains("ny-apply")).toBe(true);
+    expect(all[all.length - 1].classList.contains("ny-foot")).toBe(true);
     // Rule 12: no literal count of conditions in the block's copy.
     expect(block()!.textContent).not.toMatch(/of (five|5) checked/i);
   });
@@ -442,46 +497,41 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const b = block()!;
     expect(b.textContent).not.toContain("W Alameda Ave");
     expect(b.textContent).not.toContain("from anchor");
-    const intersection = within(b).getByText("Adjacent at-grade intersection").closest(".sc-row")!;
-    expect(intersection.querySelector(".sc-glyph")?.textContent).toBe("▲");
-    expect(intersection.querySelector(".sc-glyph")?.classList.contains("sc-detected")).toBe(true);
-    const school = within(b).getByText("School zone").closest(".sc-row")!;
-    expect(school.querySelector(".sc-glyph")?.textContent).toBe("✓");
-    expect(school.querySelector(".sc-glyph")?.classList.contains("sc-absent")).toBe(true);
+    const intersection = within(b).getByText("Adjacent at-grade intersection").closest(".ny-item")!;
+    expect(intersection.querySelector(".ny-glyph")?.textContent).toBe("▲");
+    expect(intersection.querySelector(".ny-glyph")?.classList.contains("sc-detected")).toBe(true);
+    const school = within(b).getByText("School zone").closest(".ny-item")!;
+    expect(school.querySelector(".ny-glyph")?.textContent).toBe("✓");
+    expect(school.querySelector(".ny-glyph")?.classList.contains("sc-absent")).toBe(true);
   });
 
-  it("#249 + #270: the open picker is exactly one extra row — Confirm in the row's ACTION cell, the reasons + note in the lead; Cancel in the condition row's action cell", async () => {
+  it("#249 + #270: the open picker is exactly one extra row — Confirm in the row's ACTION track; Cancel in the condition row's", async () => {
     const user = userEvent.setup();
     mount(ok());
-    const before = block()!.querySelectorAll(".sc-row").length;
-    expect(before).toBe(6); // five conditions + the Apply row (#254)
+    const before = block()!.querySelectorAll(".ny-item").length;
     const sidewalk = within(block()!).getByText("Pedestrian sidewalks").closest(".site-correction-row") as HTMLElement;
     await user.click(within(sidewalk).getByRole("button", { name: "Dismiss" }));
-    const rows = block()!.querySelectorAll(".sc-row");
-    expect(rows).toHaveLength(before + 1);
+    expect(block()!.querySelectorAll(".ny-item")).toHaveLength(before + 1);
     const picker = sidewalk.nextElementSibling as HTMLElement;
     expect(picker.classList.contains("site-correction-picker")).toBe(true);
-    expect(picker.classList.contains("sc-sub")).toBe(true);
-    // #270 (supersedes arc-21 ruling f / spec 42): Confirm sits in the
-    // sub-row's ACTION cell — col 2, the right edge every Dismiss /
-    // Assert / Undo / Apply shares — never in the wrapping flex line, so
-    // its position and the row's height no longer depend on the
-    // legend's length (P4 / P11 / P1).  Legend + chips + the note slot
-    // wrap among themselves in the lead cell.
+    expect(picker.classList.contains("ny-sub")).toBe(true);
+    // #270: Confirm sits in the sub-row's ACTION track — the right edge
+    // every Dismiss / Assert / Undo / Apply shares — never in the
+    // wrapping flex line, so its position and the row's height no longer
+    // depend on the legend's length (P4 / P11 / P1).
     expect(picker.querySelectorAll("button")).toHaveLength(1);
-    const action = picker.querySelector(":scope > .sc-action") as HTMLElement;
+    const action = picker.querySelector(":scope > .ny-right") as HTMLElement;
     expect(action).not.toBeNull();
     expect(action.querySelector("button")?.textContent).toBe("Confirm dismiss");
-    const line = picker.querySelector(":scope > .sc-picker") as HTMLElement;
+    const line = picker.querySelector(".sc-picker") as HTMLElement;
     expect(line.querySelector("button")).toBeNull();
     expect(line.firstElementChild?.classList.contains("site-correction-reasons")).toBe(true);
     expect(line.lastElementChild?.classList.contains("site-correction-note")).toBe(true);
-    expect(Array.from(picker.children).map((k) => k.className.split(" ")[0])).toEqual(["sc-picker", "sc-action"]);
     expect(within(sidewalk).getByRole("button", { name: "Cancel" })).toBeTruthy();
     expect(within(sidewalk).queryByRole("button", { name: "Dismiss" })).toBeNull();
-    expect(sidewalk.querySelector(".sc-action button")?.textContent).toBe("Cancel");
+    expect(sidewalk.querySelector(".ny-acts button")?.textContent).toBe("Cancel");
     // The record row keeps the sentence as ONE text node after the inline
-    // symbol (#198 / spec 48–49); Undo alone in the action cell.
+    // symbol (#198 / spec 48–49); Undo alone in the action track.
     cleanup();
     const disclosure = "Operator asserted school zone — the scan found none along the corridor.";
     mount(
@@ -494,11 +544,8 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     const cell = within(block()!).getByText(disclosure);
     expect(cell.classList.contains("sc-disclosure")).toBe(true);
     expect(cell.childNodes).toHaveLength(1);
-    const lead = cell.parentElement as HTMLElement;
-    expect(lead.classList.contains("sc-lead")).toBe(true);
-    expect(Array.from(lead.children).map((k) => k.className)).toEqual(["sys-glyph", "sc-disclosure"]);
-    expect(cell.closest(".sc-row")!.querySelector(".sc-action button")?.textContent).toBe("Undo");
-    expect(cell.closest(".sc-row")!.querySelector(".sc-result")).toBeNull();
+    expect(cell.closest(".ny-item")!.querySelector(".ny-acts button")?.textContent).toBe("Undo");
+    expect(cell.closest(".ny-item")!.querySelector(".sc-result")).toBeNull();
   });
 
   it("a proceeded outage with an applied assert shows the record (undo-able) and no scan rows", () => {
@@ -524,13 +571,16 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
     // #254: the Apply row is present on a records-only block too.
     expect(applyBtn("Apply 0 corrections").disabled).toBe(true);
     expect(b.querySelectorAll(".site-correction-row")).toHaveLength(0);
-    expect(document.querySelector(".site-not-checked")).not.toBeNull();
+    // §8.25's two keys do NOT depend on the scan — no scan can see them —
+    // so they render here too.  That is the point of the pair: an outage
+    // takes the scanned rows, not the operator's own assertions.
+    expect(b.querySelectorAll(".site-condition-manual")).toHaveLength(2);
   });
 
-  // Spec 34 (#249) — in flight: the block stays mounted on the HELD scan
-  // with every button disabled; nothing writes.  Without a held scan
-  // (first generate) it still renders nothing.
-  it("#249 spec 34: in flight, the held scan renders with every button disabled and aria-busy; a click writes nothing", async () => {
+  // Spec 34 (#249) — in flight: the block stays mounted with every button
+  // disabled; nothing writes.  (The held-scan CHOICE and aria-busy moved
+  // to the shell, which owns both; see GeneratorShell.needs-you.test.tsx.)
+  it("#249 spec 34: in flight, every button is disabled and a click writes nothing", async () => {
     const user = userEvent.setup();
     const asserted = {
       flag: "school_zone",
@@ -539,33 +589,68 @@ describe("SetupStrip — Site conditions — scanned (#224 phase 4)", () => {
       scan_detected: false,
       disclosure: "Operator asserted school zone — the scan found none along the corridor.",
     };
-    const setScenario = mount(null, DEFAULT_SCENARIO, { inFlight: true, scan: ok({ corrections: [asserted] }) });
+    const setScenario = mount(ok({ corrections: [asserted] }), DEFAULT_SCENARIO, true);
     const b = block();
     expect(b, "block mounted on the held scan").not.toBeNull();
-    expect(b!.getAttribute("aria-busy")).toBe("true");
-    expect(b!.classList.contains("sc-inflight")).toBe(true);
     const buttons = Array.from(b!.querySelectorAll("button")) as HTMLButtonElement[];
-    expect(buttons.map((x) => x.textContent)).toEqual(["Dismiss", "Assert", "Dismiss", "Assert", "Undo", "Apply 0 corrections"]);
+    expect(buttons.map((x) => x.textContent)).toEqual([
+      "Dismiss",
+      "Assert",
+      "Dismiss",
+      "Assert",
+      "Undo",
+      "Assert",
+      "Assert",
+      "Apply 0 corrections",
+    ]);
     expect(buttons.every((x) => x.disabled)).toBe(true);
     await user.click(within(b!).getAllByRole("button", { name: "Assert" })[0]);
     await user.click(within(b!).getByRole("button", { name: "Undo" }));
     expect(setScenario).not.toHaveBeenCalled();
-    // The NOT-CHECKED container reads only the stamped view: a held
-    // outage never re-announces as current.
-    cleanup();
-    mount(null, DEFAULT_SCENARIO, {
-      inFlight: true,
-      scan: { status: "unavailable", proceeded_anyway: true, disclosure: "SITE CONDITIONS NOT CHECKED — x", corrections: [asserted] },
-    });
-    expect(document.querySelector(".site-not-checked")).toBeNull();
-    expect(block()).not.toBeNull();
-    cleanup();
-    // No held scan (first generate): nothing.
-    mount(null, DEFAULT_SCENARIO, { inFlight: true, scan: null });
-    expect(block()).toBeNull();
-    // Settled (not in flight): the held scan is ignored, the stamped view rules.
-    cleanup();
-    mount(null, DEFAULT_SCENARIO, { inFlight: false, scan: ok() });
-    expect(block()).toBeNull();
+  });
+
+  // ── Part 1 §8.25 — the two manual keys, NEW in this block ──
+  it("§8.25: the two manual keys render as rows with an ASSERT action, and they stage like every other row", async () => {
+    const user = userEvent.setup();
+    const setScenario = mount(ok());
+    const b = block()!;
+    const manual = b.querySelectorAll(".site-condition-manual");
+    expect(manual).toHaveLength(2);
+    const sight = within(b).getByText("Limited sight distance").closest(".ny-item") as HTMLElement;
+    // Not asserted: ◌ + the word, and the retired checkbox's own
+    // description as the provenance — the words are not rewritten.
+    expect(sight.querySelector(".ny-glyph")?.textContent).toBe("◌");
+    expect(within(sight).getByText("not asserted")).toBeTruthy();
+    expect(sight.querySelector(".sc-evidence")?.textContent).toBe(
+      "Curve, hill crest — moves advance signs 50% farther upstream.",
+    );
+    expect(sight.querySelector(".ny-cite")?.textContent).toBe("OPERATOR");
+    // Rule 78: it stages — nothing writes until Apply.
+    await user.click(within(sight).getByRole("button", { name: "Assert" }));
+    expect(setScenario).not.toHaveBeenCalled();
+    await user.click(applyBtn("Apply 1 correction"));
+    const next = setScenario.mock.calls[0][0] as Scenario;
+    expect(next.meta.siteConditions).toEqual({ limited_sight_distance: true });
+    // No correction marker was invented for a key the scan never saw.
+    expect(next.meta.siteConditionOverrides).toBeUndefined();
+  });
+
+  it("§8.25: an asserted key reads ✓ and its Undo drops the key — meta byte-identical to before", async () => {
+    const user = userEvent.setup();
+    const scenario: Scenario = {
+      ...DEFAULT_SCENARIO,
+      meta: { ...DEFAULT_SCENARIO.meta, siteConditions: { driveways_present: true } },
+    };
+    const setScenario = mount(ok(), scenario);
+    const drive = within(block()!).getByText("Driveways present").closest(".ny-item") as HTMLElement;
+    expect(drive.querySelector(".ny-glyph")?.textContent).toBe("✓");
+    expect(within(drive).getByText("asserted by you")).toBeTruthy();
+    await user.click(within(drive).getByRole("button", { name: "Undo" }));
+    await user.click(applyBtn("Apply 1 correction"));
+    const next = setScenario.mock.calls[0][0] as Scenario;
+    expect(next.meta.siteConditions).toEqual({});
+    expect(JSON.stringify({ ...next.meta, siteConditions: undefined })).toBe(
+      JSON.stringify({ ...DEFAULT_SCENARIO.meta, siteConditions: undefined }),
+    );
   });
 });
