@@ -200,3 +200,65 @@ claim. Rule 5: churn predicted before the diff, not explained after it.
 - `healthz` sha == `git rev-parse HEAD` **and** the served bundle polled — healthz proves the
   backend sha only, and this arc is frontend-only.
 - Nothing ships without Ryan's explicit go.
+
+---
+
+## The Phase 1 finish ruling, verbatim — 2026-09-21
+
+Given after leg 3, on the finding that acceptance stood at five of ten because the counts
+hero, the download cards and the primary derivation were unbuilt. Quoted verbatim; this
+list is the definition of done for the arc, and every commit from here cites a row of it.
+
+> Phase 1 finishes as one push. No stop points until the results area matches Direction A's
+> S5 in every row of this table except the setup fact line (Phase 2's):
+>
+> 1. NEEDS YOU carries its actions: the five site-condition rows and the two manual keys move
+> INTO the block as items (Part 1 §8.5, rules 74–79), with Dismiss / Assert / Undo on one
+> right edge, the always-mounted note field, the Apply row as the last data line with its
+> standing sentence and the disabled-at-zero button. The corrections block stops rendering in
+> the setup strip. The ▲/⚠ tier rows keep their citations; rows with no wire action render no
+> button (ruling d). Staging contract, "disclose rather than lock", and every corrections test
+> transfer — report which suites move and which assertions are byte-identical.
+> 2. Counts hero restyled to rules 80–83 (62 px numerals, the 300 px geometry track, the
+> degradations).
+> 3. Download cards to rules 84–86 plus rulings 182/183: one derivation — NEEDS YOU count > 0
+> → its actions are primary and "↓ All (.zip)" is a ghost; count 0 → "↓ All (.zip)" is the
+> primary; same at 380. File count stated exactly once, from the served bundle.
+> 4. Quote, Checked & passed, Pending / not verified as disclosure rows (rules 87–89):
+> counted tiers show a number, the quote row its "not a permit fee" summary. Reference stays
+> as built.
+> 5. The intro paragraph and the results-area zone headings removed (§8.28, §8.30); the draft
+> notice stays; focus target re-homed to the results stack.
+> 6. Ribbons per rule 102: not dimmed, the dim starts below; ≥ 4.5:1 measured mid-flight
+> (#259).
+> 7. Rule 15 page-wide including the footer; TARGETS probe 0 under 32/44; axe target-size 0
+> at 380 (#264's results half).
+>
+> One branch off main, rulings.md first quoting this list, each item its own verified commit,
+> diff-verifier per commit, red-prove where a test can prove it. Frontend-only — prove it.
+> Stop ONLY when all seven are in verified commits, with: the verdict, the file table, a
+> row-by-row "before → after" of the seven, and the ship line. Then the four-state prod leg
+> after Ryan ships, and #288's acceptance line by line.
+>
+> The band, the verdict strip, the refusal container, the draft notice, the announcement
+> region: unchanged. Phase 2's surfaces (setup panel, strip, rail, picker): untouched.
+
+### What this ruling settles that was open
+
+- **Ruling 183** — settled here and not by 183's own two options. The zip button renders at
+  BOTH widths: a ghost when NEEDS YOU has items, the primary when it has none. Rule 86's
+  "not rendered at 1440" and rule 168's "primary at 380" are both superseded by clause 3's
+  one derivation, which is the same derivation at both widths.
+- **Ruling 182** — confirmed as written: NEEDS YOU's item actions are primary in S5 and the
+  download row stays a flat four-card row. Not promoted, not demoted.
+- **§8.29's file-count rule** — the "stated exactly once" obligation, orphaned since the
+  strip was dropped at `f81daa6`, lands on the download row and is counted from
+  `BUNDLE_PART_KINDS` (the served bundle's parts), not from a literal.
+
+### The untouched set, as ruled
+
+The band, the verdict strip (`StatusBar`), the refusal container, the draft notice and the
+`role="status"` announcement region do not change. Phase 2's surfaces — the setup panel,
+the setup strip's own fact lines, the progress rail and the location picker — are not
+touched, with the ONE exception this ruling itself orders: clause 1 removes the corrections
+block from the strip, because the block is moving, not changing.
