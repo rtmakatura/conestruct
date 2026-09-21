@@ -131,6 +131,48 @@ surface honest: the caption asserts no number it cannot back, rather than a stal
 The comment at `OutputCards.tsx:229` now says this, so the next reader of that file learns it
 from the file rather than from this README.
 
+## The lesson: 3 of 10 across three ships
+
+Three ships landed on `main` — `e55b23a`, `f81daa6`, `6c9fadf` — and #288's acceptance moved
+from 0 of 10 to **3 of 10 and stopped there**: line 5 (the reserved row holds at the settle),
+line 8 (zero `pageerror`, no date in the citation), line 9 (nothing in §8 KEPT changed
+behaviour). Lines 1, 2, 3, 6 and 7 never became *measurable*, and line 4 got worse.
+
+**Why: the shell was built before the thing that mounts it.**
+
+The order the arc actually ran in was:
+
+1. the `§8.32` date removal — a real fix, on a surface that already existed;
+2. the `pageerror` harness — a leg's instrument, no surface at all;
+3. the **NEEDS YOU shell** — a complete component, rules 72–79, nine tests, *imported by
+   nothing*;
+4. the **strip removal** — which deleted a surface and left a 44 px reserved row holding a
+   place for something not yet built.
+
+Every one of those was individually correct, verified, and shipped green. Together they
+produced three deploys after which the results area had **less** on it than before and the
+acceptance list could not move, because seven of its ten lines measure *states of a mounted
+stack* — S5 with items, S5 with none, S6, S8 — and no stack was mounted.
+
+The mechanism is precise and worth naming, because it will recur: **a stop point that names
+a component rather than a surface can be satisfied without anything becoming measurable.**
+"The NEEDS YOU shell is in a verified commit" was true, and bought nothing on prod. "S5 with
+three items renders at both widths" could not have been satisfied by an unmounted component.
+
+Ryan put the responsibility on accepting stop points that named no mounted surface. Half of
+it belongs to the other side of the table: **I proposed those stop points.** Each time I
+reported a blocker I offered the next increment in terms of what I could finish cleanly — a
+component, a harness, a removal — rather than in terms of what would become *observable*. A
+stop point framed as "what is built" is easy to hit and easy to verify; one framed as "what
+can now be measured" is the one that moves an acceptance list.
+
+**The rule this arc adds:** a build order's stop points are named after surfaces the leg can
+reach, not after components the diff contains. A component with no importer is not a stop
+point; it is work in progress that happens to compile.
+
+Applied from step 1 onward: the next stop is "S5-with-items, S5-with-none, S6 and S8 are all
+reachable on the branch" — four surfaces, not four files.
+
 ## Evidence plan, as ruled — not yet run
 
 Five states, each at **1440×1000** and **380×800**: S5 with three NEEDS YOU items · S5 with
