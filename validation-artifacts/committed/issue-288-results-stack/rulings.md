@@ -96,6 +96,27 @@ only and this arc is frontend-only. Sha-gated both ends. **No ship while a leg i
 
 ---
 
+## The rule-28 ruling, verbatim — 2026-09-21
+
+Given in answer to the finding that `--strip-h` measures the strip, so the reserved first row
+had no referent once the strip was dropped.
+
+> Rule 28 ruling: the reserved first row reserves the setup fact line's height — 44 px at one
+> line per rule 56 — as a token `--fact-h`, mounted from the Generate click, released under a
+> decline. It reserves what forms in that slot at the settle, its value is a rule not a
+> measurement, and it does not depend on NEEDS YOU's content. `--strip-h` retires with the
+> strip. Ruling 184's landing carries everything below it.
+
+**The reason, as ruled:** the reserve is for *what forms in that slot at the settle*. Its
+value is **a rule, not a measurement** — this is the distinction that unblocks it. `--strip-h`
+was a measurement (81.19 at 1440, measured on the dev server at `d3c2dcf`, rounded to 82), so
+it died with the thing it measured. `--fact-h` is read off rule 56, which fixes the fact
+line's row height at 44 px at one line, and it therefore needs no re-measurement and cannot
+drift. It is independent of NEEDS YOU's content, so a block that grows with its item count
+never changes the reserve. Everything below the reserved row is ruling 184's landing.
+
+---
+
 ## ⚠ THE CHECKPOINT THIS RULING ANSWERS IS NOT IN THE RECORD
 
 **Read this before acting on clauses a, b, e, g and h.**
