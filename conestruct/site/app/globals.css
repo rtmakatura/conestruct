@@ -3812,3 +3812,46 @@ input[type="number"] {
   display: flex;
   gap: 8px;
 }
+
+/* ── #288 Phase 1 · DISCLOSURE ROW (spec #281 comment 1, rules 87–89) ──
+   Authority: rulings.md clause b — "the disclosure row" is NEW.
+   Tokens only (#263's ink gate); every size rides a .tr-* role, so this
+   block adds no font-size site to the census. */
+.workbench .disc {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+}
+.workbench .disc.is-nested {
+  /* Rule 87: nested inside an open disclosure, the ground lifts. */
+  background: var(--canvas-tint);
+}
+.workbench .disc-head {
+  /* Rule 87 + rule 88's order. */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+.workbench .disc-caret {
+  /* Rule 88: the caret is pushed right, and turns on open. */
+  margin-left: auto;
+  color: var(--none, var(--ink-on-dark-faint));
+  transition: transform 120ms ease;
+}
+.workbench .disc.is-open .disc-caret {
+  transform: rotate(90deg);
+}
+.workbench .disc-panel {
+  /* Rule 89: expands downward, in place.  No independent scroll — rule
+     32 makes the page the only scroll container, so no max-height and
+     no overflow here, deliberately. */
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--da-hair);
+}

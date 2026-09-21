@@ -166,6 +166,35 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(block()!.querySelectorAll("button")).toHaveLength(0);
   });
 
+  it("S8: the reference disclosure is CLOSED in S5 and opens in place — nothing above it moves", async () => {
+    served = AUDIT_WITH_ITEMS;
+    const user = await generate();
+    const head = document.querySelector(".disc-head") as HTMLButtonElement;
+    expect(head, "the reference disclosure row mounted").not.toBeNull();
+    // S5: closed, and the panel is not in the DOM at all.
+    expect(head.getAttribute("aria-expanded")).toBe("false");
+    expect(document.querySelector(".disc-panel")).toBeNull();
+    // Rule 89: the reference tier is UNCOUNTED — it says what is inside.
+    expect(document.querySelector(".disc-count")).toBeNull();
+    expect(head.textContent).toContain("jurisdiction rules");
+    // NEEDS YOU sits ABOVE it and is unaffected by the toggle (rule 89:
+    // nothing above the header moves).
+    const before = document.querySelectorAll(".ny-item").length;
+    await user.click(head);
+    // S8.
+    expect(head.getAttribute("aria-expanded")).toBe("true");
+    expect(document.querySelector(".disc-panel")).not.toBeNull();
+    expect(document.querySelectorAll(".ny-item").length).toBe(before);
+  });
+
+  it("rule 129: the reference discloses, it never writes — the row's control is a read", async () => {
+    served = AUDIT_WITH_ITEMS;
+    await generate();
+    const head = document.querySelector(".disc-head")!;
+    expect(head.hasAttribute("data-read")).toBe(true);
+    expect(head.hasAttribute("data-write")).toBe(false);
+  });
+
   it("ruling 186 on a real mount: always expanded — every item is on screen, no caret in the header", async () => {
     served = AUDIT_WITH_ITEMS;
     await generate();

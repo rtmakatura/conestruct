@@ -48,6 +48,7 @@ import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tie
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { NeedsYou } from "./NeedsYou";
+import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
 import type {
   DeviceBreakdownData,
@@ -1818,6 +1819,9 @@ export function GeneratorShell({
                   so panel and strip cannot disagree on declined; #187:
                   a declined/failed audit renders "—" rows, never a
                   prior input's numbers presented as current. */}
+              {/* #288 §8.35 — the reference DISCLOSURE.  Same content,
+                  folded behind rule 87's row; S8 is this expanded. */}
+              <ReferenceDisclosure defaultOpen={auditState.state === "error"}>
               <TieredReference
                 jurisdiction={jurisdictionBlock}
                 jurisdictionLoading={jurisdictionLoading}
@@ -1831,6 +1835,7 @@ export function GeneratorShell({
                 showAudit={showResults || auditState.state === "error"}
                 breakdown={deviceBreakdown}
               />
+              </ReferenceDisclosure>
             </section>
           )}
         </main>

@@ -137,6 +137,15 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
     await new Promise((r) => setTimeout(r, 360));
   });
   await releaseAudit(1, okAudit());
+  // #288 §8.35: section 03 is now folded behind the reference disclosure,
+  // so the rows under test sit inside a closed panel until it is opened.
+  // The CONTENT contract this suite pins is unchanged — only its default
+  // visibility moved, which is rule 125's S5/S8 split.
+  const refHead = document.querySelector(".disc-head") as HTMLButtonElement | null;
+  if (refHead && refHead.getAttribute("aria-expanded") === "false") {
+    await user.click(refHead);
+  }
+
   // #219: the trace rows live in the collapsed ✓ CHECKED & PASSED tier —
   // expand it so the rows under test are actually rendered.  (The
   // declined/failed banners auto-open in ⚠; the blank-value contract

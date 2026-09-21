@@ -137,6 +137,14 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   await release(1, okBreakdown(true));
   expect(chainSkeleton()).toBeNull();
   expect(chainSegs()).toBeGreaterThan(1);
+  // #288 §8.35: section 03 is now folded behind the reference disclosure,
+  // so the section content this suite holds stable sits inside a closed
+  // panel until it is opened.  The STABILITY contract is unchanged — only
+  // the default visibility moved (rule 125's S5/S8 split).
+  const refHead = document.querySelector(".disc-head") as HTMLButtonElement | null;
+  if (refHead && refHead.getAttribute("aria-expanded") === "false") {
+    await user.click(refHead);
+  }
   return user;
 }
 
