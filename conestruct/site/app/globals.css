@@ -771,6 +771,14 @@ body {
      the topmost chrome so the frame's corner ticks never draw over it
      (ruled; measured on prod 00ecbf0 with the frame at 60 above a
      band at 50).  AppNav reads --z-nav; nothing else sits between. */
+  /* #288 Phase 1 — Direction A's two shared surface inks, declared once
+     rather than repeated as literals at each consumer (#263's ink gate).
+     TRACED to #281 comment 1, not chosen: the ground is the value Part 2
+     gives every stack component's shell (rules 72, 80, 84, 87, 100) and
+     the hairline is the inner rule it gives their headers and item rows
+     (rules 73, 74, 87, 126).  First consumer: NEEDS YOU. */
+  --da-ground: #101c29;
+  --da-hair: #223345;
   --z-strip: 30;
   --z-nav: 40;
   --z-frame: 60;
@@ -3825,4 +3833,76 @@ input[type="number"] {
   text-transform: uppercase;
   color: var(--warn);
   white-space: nowrap;
+}
+
+/* ── #288 Phase 1 · NEEDS YOU (spec #281 comment 1, rules 72–79) ──────
+   Authority: validation-artifacts/committed/issue-288-results-stack/rulings.md
+   (Ryan, 2026-09-21, clause b — the NEEDS YOU shell is NEW).
+   No hex literals and no font-size sites here: colours go through the
+   Direction A tokens declared in .workbench (#263's ink gate), and every
+   size rides a .tr-* role (#263's type census, type-exceptions.ts —
+   "editing a font-size means editing that file in the same commit").
+   Rule 78's Apply row is not here: it arrives with the corrections
+   absorb (Part 1 §8.5), which is its own commit. */
+.workbench .needs-you {
+  /* Rule 72. */
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--warn);
+  background: var(--da-ground);
+}
+.workbench .ny-head {
+  /* Rule 73. */
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .ny-count {
+  /* Rule 73: pushed right.  Mono and its size come from .tr-step. */
+  margin-left: auto;
+  font-weight: 500;
+  color: var(--ink);
+}
+.workbench .ny-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.workbench .ny-item {
+  /* Rule 74: three tracks, last row loses its border. */
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  column-gap: 14px;
+  align-items: start;
+  padding: 14px 16px;
+  border-bottom: 1px dashed var(--da-hair);
+}
+.workbench .ny-item:last-child {
+  border-bottom: none;
+}
+.workbench .ny-glyph {
+  /* Rule 17: symbols are text, not icons.  The size rides .tr-field,
+     whose owner token (--fs-field-label) names "field label, symbols". */
+  font-variant-emoji: text;
+  line-height: 1;
+}
+.workbench .ny-item.is-changed .ny-glyph,
+.workbench .ny-item.is-attention .ny-glyph {
+  color: var(--warn);
+}
+.workbench .ny-prov {
+  /* Rule 75: the provenance line sits under the body. */
+  margin-top: 5px;
+}
+.workbench .ny-right {
+  /* Rule 76: citation above the actions, every button on one right
+     edge — which is why the action column is a fixed auto track. */
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+.workbench .ny-acts {
+  display: flex;
+  gap: 8px;
 }
