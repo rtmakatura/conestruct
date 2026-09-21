@@ -65,21 +65,21 @@ describe("Zone 3 density contract — tiers", () => {
   // #187 survives the ledger's deletion as ONE tr-prov cue in a slot of
   // reserved height (P1): "◌ previous answer — refreshing…" while a
   // same-jurisdiction refetch is open; the slot stays, empty, when not.
-  it("while revalidating, one tr-prov cue in the reserved slot; settled, the slot is empty", () => {
-    const { container, rerender } = mountTiered(jur("greeley"), SCHEDULE, "arterial", { revalidating: true });
-    const slot = container.querySelector(".tier-cue")!;
-    expect(slot).not.toBeNull();
-    expect(slot.querySelector(".tr-prov")!.textContent).toBe("◌ previous answer — refreshing…");
-    expect(screen.getAllByText("◌ previous answer — refreshing…")).toHaveLength(1);
+  //
+  // #288 clause 4 MOVED that slot out of this component and into the
+  // results stack, because ✓ and ◌ were promoted to rows of the stack and
+  // a cue inside a closed disclosure cannot say the counts above it are
+  // stale (Rule 10).  The claim is unchanged and now lives where the
+  // stack owns it — GeneratorShell.disclosures.test.tsx — so this suite
+  // asserts only that the component no longer carries a second copy.
+  it("the #187 cue is NOT duplicated here — the stack owns the one copy", () => {
+    const { container } = mountTiered(jur("greeley"), SCHEDULE, "arterial", { revalidating: true });
+    expect(container.querySelector(".tier-cue")).toBeNull();
+    expect(screen.queryAllByText("◌ previous answer — refreshing…")).toHaveLength(0);
     expect(document.body.textContent).not.toContain("checking against");
-    rerender(
-      <div />,
-    );
     cleanup();
     const settled = mountTiered(jur("greeley"), SCHEDULE);
-    const slot2 = settled.container.querySelector(".tier-cue")!;
-    expect(slot2).not.toBeNull();
-    expect(slot2.textContent).toBe("");
+    expect(settled.container.querySelector(".tier-cue")).toBeNull();
     expect(document.body.textContent).not.toContain("refreshing");
   });
 

@@ -69,6 +69,7 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
+import type { Tier } from "@/lib/tiering";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { useWriteLock } from "./WriteLock";
 
@@ -100,7 +101,35 @@ interface Props {
    *  "retry below" must always land on a panel that exists, rule 10). */
   showAudit: boolean;
   breakdown: DeviceBreakdownState;
+  /** #288 Phase 1 clause 4 — WHICH tiers this instance renders.
+   *
+   *  Part 1 §8.9 splits the five: ▲ and ⚠ lift into NEEDS YOU, and
+   *  "✓, ◌ and the uncounted i tier stay as disclosures".  Clause 4
+   *  promotes ✓ and ◌ from chips INSIDE section 03 to disclosure rows
+   *  BESIDE it in the results stack, so the stack reads verdict → NEEDS
+   *  YOU → counts → downloads → quote → passed → pending → reference.
+   *  The tier bodies do not change; only which container draws them.
+   *
+   *  Every instance reads the SAME producer with the SAME inputs
+   *  (lib/tier-sources.ts), so splitting the render across containers
+   *  cannot split the facts (P2). */
+  tiers?: readonly Tier[];
+  /** Render the listed tiers' BODIES only — no chip wrapper, no header,
+   *  no ledger cue.  A tier promoted to a rule-87 disclosure row is
+   *  already inside a disclosure; wrapping its body in a chip would make
+   *  it a disclosure inside a disclosure, which is the shape §8.9 is
+   *  retiring. */
+  bare?: boolean;
 }
+
+/** The five, in the order the stack reads them. */
+export const ALL_TIERS: readonly Tier[] = [
+  "changed",
+  "attention",
+  "checked",
+  "pending",
+  "reference",
+] as const;
 
 /** Small single-open accordion over ItemSpec lists (the retired
  *  audit-list loop, per tier). */
@@ -143,6 +172,8 @@ export function TieredReference({
   generated,
   showAudit,
   breakdown,
+  tiers = ALL_TIERS,
+  bare = false,
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
 
@@ -157,7 +188,7 @@ export function TieredReference({
   // The JSX helpers that follow stayed, because they render rather than
   // derive.
   const {
-    jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad, refreshing,
+    jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad,
     model, r,
     deltasChanged, siteChanged, finesItem, finesApplicable,
     deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
@@ -551,6 +582,21 @@ export function TieredReference({
   }
 
   const breakdownError = breakdown.state === "error";
+  const shows = (t: Tier) => tiers.includes(t);
+
+  // Clause 4: a tier promoted to a disclosure row renders its BODY here
+  // and takes its header, its count and its open state from the row.
+  if (bare) {
+    return (
+      <>
+        {shows("changed") && changedBody}
+        {shows("attention") && attentionBody}
+        {shows("checked") && checkedBody}
+        {shows("pending") && pendingBody}
+        {shows("reference") && referenceBody}
+      </>
+    );
+  }
 
   return (
     <div aria-label="Plan reference tiers">
@@ -571,17 +617,17 @@ export function TieredReference({
           Loading jurisdiction rules…
         </div>
       )}
-      {/* The #187 cue slot — always in the flow at its reserved height
-          (P1); the line inside it only while a refetch holds the
-          previous answer on screen. */}
-      <div className="tier-cue">
-        {refreshing && (
-          <span className="tr-prov">◌ previous answer — refreshing…</span>
-        )}
-      </div>
+      {/* #288 clause 4: the #187 cue MOVED to the results stack.
+          It says the values on screen are the previous answer, and once
+          ✓ and ◌ were promoted to rows of the stack, a cue inside this
+          component sat behind a CLOSED disclosure — the tier counts would
+          have shown as current with nothing saying they were not, which
+          is the stale-answer half of Rule 10.  One cue, in the stack,
+          where every tier it qualifies can be seen.  (RefreshingCue,
+          rendered by GeneratorShell from the same predicate.) */}
 
       <div className="ref-stack">
-        {changedBody.length > 0 && (
+        {shows("changed") && changedBody.length > 0 && (
           <ReferenceChip
             glyph="▲"
             sev="changed"
@@ -592,7 +638,7 @@ export function TieredReference({
             {changedBody}
           </ReferenceChip>
         )}
-        {attentionBody.length > 0 && (
+        {shows("attention") && attentionBody.length > 0 && (
           <ReferenceChip
             glyph="⚠"
             sev="warn"
@@ -606,7 +652,7 @@ export function TieredReference({
             {attentionBody}
           </ReferenceChip>
         )}
-        {checkedBody.length > 0 && (
+        {shows("checked") && checkedBody.length > 0 && (
           <ReferenceChip
             glyph="✓"
             sev="info"
@@ -626,7 +672,7 @@ export function TieredReference({
             {checkedBody}
           </ReferenceChip>
         )}
-        {pendingBody.length > 0 && (
+        {shows("pending") && pendingBody.length > 0 && (
           <ReferenceChip
             glyph="◌"
             sev="pending"
@@ -636,7 +682,7 @@ export function TieredReference({
             {pendingBody}
           </ReferenceChip>
         )}
-        {referenceBody.length > 0 && (
+        {shows("reference") && referenceBody.length > 0 && (
           <ReferenceChip
             glyph="i"
             sev="info"

@@ -30,12 +30,34 @@ export interface DisclosureRowProps {
    *  reference tier, which says what is inside instead. */
   count: number | null;
   /** The uncounted tier's "what is inside" list, or a counted tier's
-   *  provenance.  Absent renders nothing — never an empty element. */
-  provenance?: string;
+   *  provenance.  Absent renders nothing — never an empty element.
+   *
+   *  ReactNode, not string: the quote row's provenance carries a VALUE
+   *  (the last previewed total) alongside its words, and a value that is
+   *  findable on the page only as a substring of a sentence is not
+   *  really on the page — #185's "the collapsed headline shows the
+   *  number" stopped being measurable the moment it was concatenated. */
+  provenance?: ReactNode;
   open: boolean;
   onToggle: () => void;
   /** Nested inside an already-open disclosure (rule 87's lifted ground). */
   nested?: boolean;
+  /** Keep the panel MOUNTED while closed, hidden rather than absent.
+   *
+   *  Off by default, and the default is the rule: a closed tier's panel
+   *  is not in the DOM at all, because a hidden panel that still occupies
+   *  the DOM is the kind of thing that later grows its own scroll
+   *  container (rule 32).
+   *
+   *  The one opt-in is the pricing quote (#288 clause 4, Part 1 §8.11).
+   *  Its panel holds operator state that has not been written anywhere —
+   *  duration, flagger count, rate edits, the previewed breakdown — and
+   *  unmounting on collapse discards it, which is the #74 clobber class
+   *  the panel was lifted out of the shell to avoid.  A tier body has no
+   *  such state: it is derived from the wire every render, so it loses
+   *  nothing by being absent.  Found by QuotePanel.invalidation.test.tsx
+   *  failing the moment the quote became a row. */
+  keepMounted?: boolean;
   children: ReactNode;
 }
 
@@ -47,6 +69,7 @@ export function DisclosureRow({
   open,
   onToggle,
   nested = false,
+  keepMounted = false,
   children,
 }: DisclosureRowProps) {
   const panelId = `disc-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
@@ -73,13 +96,20 @@ export function DisclosureRow({
           ›
         </span>
       </button>
-      {/* Expands downward in place.  Rendered only when open: a hidden
-          panel that still occupies the DOM is the kind of thing that
-          later grows its own scroll container. */}
-      {open && (
-        <div className="disc-panel" id={panelId}>
+      {/* Expands downward in place.  Rendered only when open by default:
+          a hidden panel that still occupies the DOM is the kind of thing
+          that later grows its own scroll container.  `keepMounted` is the
+          documented exception for a panel holding unwritten state. */}
+      {keepMounted ? (
+        <div className="disc-panel" id={panelId} hidden={!open}>
           {children}
         </div>
+      ) : (
+        open && (
+          <div className="disc-panel" id={panelId}>
+            {children}
+          </div>
+        )
       )}
     </div>
   );

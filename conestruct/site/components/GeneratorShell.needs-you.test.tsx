@@ -117,6 +117,11 @@ async function generate() {
 }
 
 const block = () => document.querySelector(".needs-you");
+/** The i REFERENCE row's control, by name — not by document order. */
+const referenceHead = () =>
+  Array.from(document.querySelectorAll(".disc-head")).find(
+    (h) => h.querySelector(".disc-name")?.textContent === "Reference",
+  ) as HTMLButtonElement;
 const rows = () => Array.from(document.querySelectorAll(".ny-item"));
 const count = () => document.querySelector(".ny-count")?.textContent;
 
@@ -169,13 +174,20 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
   it("S8: the reference disclosure is CLOSED in S5 and opens in place — nothing above it moves", async () => {
     served = AUDIT_WITH_ITEMS;
     const user = await generate();
-    const head = document.querySelector(".disc-head") as HTMLButtonElement;
+    // #288 clause 4 put THREE more rule-87 rows in the stack above this
+    // one (quote, ✓ checked, ◌ pending), so ".disc-head" alone now finds
+    // the quote.  The reference row is named, so name it.
+    const head = referenceHead();
     expect(head, "the reference disclosure row mounted").not.toBeNull();
     // S5: closed, and the panel is not in the DOM at all.
     expect(head.getAttribute("aria-expanded")).toBe("false");
     expect(document.querySelector(".disc-panel")).toBeNull();
     // Rule 89: the reference tier is UNCOUNTED — it says what is inside.
-    expect(document.querySelector(".disc-count")).toBeNull();
+    // Rule 89, scoped to the row it is about: the REFERENCE tier is
+    // uncounted and renders no numeral.  The ✓ and ◌ rows clause 4 added
+    // above it ARE counted and do show one — which is the same rule's
+    // other half, not a violation of it.
+    expect(head.querySelector(".disc-count")).toBeNull();
     expect(head.textContent).toContain("jurisdiction rules");
     // NEEDS YOU sits ABOVE it and is unaffected by the toggle (rule 89:
     // nothing above the header moves).
@@ -190,7 +202,7 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
   it("rule 129: the reference discloses, it never writes — the row's control is a read", async () => {
     served = AUDIT_WITH_ITEMS;
     await generate();
-    const head = document.querySelector(".disc-head")!;
+    const head = referenceHead();
     expect(head.hasAttribute("data-read")).toBe(true);
     expect(head.hasAttribute("data-write")).toBe(false);
   });

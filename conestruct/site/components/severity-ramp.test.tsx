@@ -125,10 +125,18 @@ describe("severity-ramp role assignments", () => {
     );
     // No preview has run: the head must NOT show a mock/estimated
     // number — an explicit unset note instead (no EST constant ships).
+    // #288 clause 4 made the quote a rule-87 disclosure ROW (Part 1
+    // §8.11), so the bespoke `.total` span gave way to the row's
+    // provenance line; the CLAIM is unchanged — no currency before a
+    // preview, and the "not a permit fee" framing always.
     const head = screen.getByRole("button", { name: /Pricing quote/i });
-    const total = head.querySelector(".total")!;
-    expect(total.className).toContain("unset");
-    expect(total.textContent).not.toMatch(/\$/);
+    const prov = head.querySelector(".disc-prov")!;
+    expect(prov.textContent).toContain("expand to configure & preview");
+    expect(prov.querySelector(".quote-total")).toBeNull();
+    expect(prov.textContent).not.toMatch(/\$/);
     expect(head.textContent).toContain("FYI");
+    // Rule 89: the quote is not a counted tier, so it shows no numeral —
+    // not a zero, which would read as a total of nothing.
+    expect(head.querySelector(".disc-count")).toBeNull();
   });
 });

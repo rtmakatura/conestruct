@@ -49,6 +49,7 @@ import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { derivePrimaryOwner } from "@/lib/results-primary";
 import { NeedsYou } from "./NeedsYou";
+import { CheckedDisclosure, PendingDisclosure } from "./ResultsDisclosures";
 import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
@@ -1153,14 +1154,19 @@ export function GeneratorShell({
   // TieredReference runs the same assignTiers unmemoised.
   const settledForCard =
     showResults || auditState.state === "error" ? settledData(stripAudit) : null;
-  const auditChecked =
+  // The ledger, computed once: the audit card's "N checks" and clause 4's
+  // two promoted tier rows all count from it, so a card and a row can
+  // never print different numbers for the same tier (P2).  The audit-PDF
+  // cover prints the same token (src/rendering/tier_ledger.py mirror).
+  const settledLedger =
     settledForCard === null
       ? null
       : assignTiers({
           jurisdiction: jurisdictionLoading ? null : jurisdictionBlock,
           audit: settledForCard,
           auditFailed: false,
-        }).ledger.checked;
+        }).ledger;
+  const auditChecked = settledLedger === null ? null : settledLedger.checked;
   // #258 (#193): "Plan generated — …" at the PAIR's settle, and only
   // when the stamped audit is clean.  Any settle consumes the arming
   // (so a later background settle never announces); a declined pair
@@ -1271,6 +1277,27 @@ export function GeneratorShell({
   // input; acceptance line 2 ("one primary per state at both widths") is
   // what the single owner buys.
   const primaryOwner = derivePrimaryOwner(needsYouModel.count);
+  // #288 clause 4 — the inputs EVERY tier reader takes.  Assembled once so
+  // the reference disclosure and the two promoted tier rows cannot be
+  // handed different facts (P2); each reads the same producer with these.
+  // The same predicate lib/tier-sources.ts derives for the tiers: a
+  // jurisdiction revalidation, or an audit refetch that is holding the
+  // last ready answer on screen.
+  const tiersRefreshing =
+    jurisdictionRevalidating || (stripAudit.state === "loading" && stripAudit.lastReady !== null);
+  const tierProps = {
+    jurisdiction: jurisdictionBlock,
+    jurisdictionLoading,
+    revalidating: jurisdictionRevalidating,
+    streetClass: scenario.street_class ?? null,
+    schedule: scenario.schedule ?? null,
+    scenario: wireScenario,
+    audit: stripAudit,
+    onRetry,
+    generated: showResults && !auditDeclined,
+    showAudit: showResults || auditState.state === "error",
+    breakdown: deviceBreakdown,
+  };
   // Clause 1: the scan NEEDS YOU's condition rows read.  Spec 34's rule,
   // moved with the block from the strip: the stamped view when settled,
   // the held (last ready) scan while a re-generation is in flight.
@@ -1779,20 +1806,61 @@ export function GeneratorShell({
                     primary={primaryOwner}
                   />
                 </div>
+                {/* #288 clause 4 — the quote, then the two counted tiers,
+                    as rule-87 disclosure rows.  Part 1 §8.11 puts the
+                    quote "directly under the downloads"; §8.9 keeps ✓ and
+                    ◌ as disclosures, and clause 4 promotes them out of
+                    section 03's chips into rows of the stack itself.
+                    The i tier stays where it is — uncounted, and already
+                    a disclosure (ReferenceDisclosure, clause b). */}
+                {/* #187's cue, moved here by clause 4 and stated ONCE.
+                    While a refetch holds the previous answer on screen,
+                    the values below it — the tier counts and everything
+                    inside the rows — are that previous answer, and Rule
+                    10 forbids presenting a stale answer as current.  The
+                    slot is always in the flow at its reserved height
+                    (P1); only the line inside it comes and goes. */}
                 {resultsVisible && (
-                  <PricingCard
-                    mode={
-                      mode === "sandbox"
-                        ? { kind: "public", scenario: wireScenario }
-                        : { kind: "saved", planId, dirty: planDirty }
-                    }
-                    settings={settings}
-                    setSettings={setSettings}
-                    flaggerSource={flaggerSource}
-                    setFlaggerSource={setFlaggerSource}
-                    delivery={delivery}
-                    setDelivery={setDelivery}
-                  />
+                  <div className="tier-cue">
+                    {tiersRefreshing && (
+                      <span className="tr-prov">◌ previous answer — refreshing…</span>
+                    )}
+                  </div>
+                )}
+                {resultsVisible && (
+                  <div className="results-disc">
+                    <PricingCard
+                      mode={
+                        mode === "sandbox"
+                          ? { kind: "public", scenario: wireScenario }
+                          : { kind: "saved", planId, dirty: planDirty }
+                      }
+                      settings={settings}
+                      setSettings={setSettings}
+                      flaggerSource={flaggerSource}
+                      setFlaggerSource={setFlaggerSource}
+                      delivery={delivery}
+                      setDelivery={setDelivery}
+                    />
+                    {/* Rule 89: a COUNTED tier shows its number.  Both
+                        count from the one ledger above; neither renders
+                        at all before an audit has settled, because a
+                        count with no settled answer behind it would be a
+                        number the wire never carried (Rule 10). */}
+                    {settledLedger !== null && (
+                      <>
+                        <CheckedDisclosure
+                          count={settledLedger.checked}
+                          cited={auditState.state !== "error"}
+                          tierProps={tierProps}
+                        />
+                        <PendingDisclosure
+                          count={settledLedger.pending}
+                          tierProps={tierProps}
+                        />
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
             }
@@ -1855,19 +1923,18 @@ export function GeneratorShell({
                   prior input's numbers presented as current. */}
               {/* #288 §8.35 — the reference DISCLOSURE.  Same content,
                   folded behind rule 87's row; S8 is this expanded. */}
+              {/* #288 clause 4: ✓ and ◌ were PROMOTED to rows of the
+                  results stack (Part 1 §8.9 keeps them as disclosures —
+                  it does not say which container).  What stays here is
+                  what §8.9 leaves: ▲ and ⚠, whose facts NEEDS YOU lifts
+                  but whose bodies carry the audit-failure banner and the
+                  jurisdiction gates NEEDS YOU does not, and the uncounted
+                  i tier.  Same producer, same inputs — the split is of
+                  containers, never of facts. */}
               <ReferenceDisclosure defaultOpen={auditState.state === "error"}>
               <TieredReference
-                jurisdiction={jurisdictionBlock}
-                jurisdictionLoading={jurisdictionLoading}
-                revalidating={jurisdictionRevalidating}
-                streetClass={scenario.street_class ?? null}
-                schedule={scenario.schedule ?? null}
-                scenario={wireScenario}
-                audit={stripAudit}
-                onRetry={onRetry}
-                generated={showResults && !auditDeclined}
-                showAudit={showResults || auditState.state === "error"}
-                breakdown={deviceBreakdown}
+                {...tierProps}
+                tiers={["changed", "attention", "reference"]}
               />
               </ReferenceDisclosure>
             </section>

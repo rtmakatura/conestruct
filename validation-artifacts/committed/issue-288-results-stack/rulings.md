@@ -426,3 +426,31 @@ Rule 130's disabled treatment is adopted with one divergence: the blocker reason
 is the verdict strip's string, and the zip's disabled state is a *bundling in flight* or the
 write lock, neither of which the verdict strip speaks for. It therefore carries no `title`
 rather than a fabricated one (Rule 10).
+
+## The rules clause 4 builds against — #281 Part 1 §8.9 and §8.11, verbatim
+
+From the issue body, Part 1 section 8 ("EVERY CURRENT SURFACE — KEPT, MOVED, RENAMED, OR
+DROPPED"):
+
+> 8.9  Section 03 — tiered reference → renamed "reference disclosure". All five tiers kept.
+> ▲ and ⚠ are lifted out and merged into NEEDS YOU; ✓, ◌ and the uncounted i tier stay as
+> disclosures. The disclose-never-writes contract and the read-only signposts are kept.
+
+> 8.11 Quote panel — kept as a disclosure directly under the downloads, with the "not a
+> permit fee" framing in its summary line.
+
+### What clause 4 reads into §8.9, and why
+
+§8.9 says ✓ and ◌ "stay as disclosures". It does not say *whose*. Clause 4 reads that as the
+stack's — the rows sit beside the reference row, not inside it — on three grounds:
+
+1. #288's own body gives the stack's order as "verdict → NEEDS YOU → counts hero → download
+   row → quote disclosure → passed / pending / reference disclosures". Four sibling rows.
+2. Rule 89 gives a counted tier a number in the row's own count slot. A tier nested inside
+   another disclosure shows its number only after two clicks, which is not a count on the
+   stack.
+3. §8.9's own verb for ▲/⚠ is "lifted out". Leaving ✓ and ◌ nested while lifting ▲ and ⚠
+   would make section 03 a container for two tiers and a wrapper for two more.
+
+The i tier is NOT rebuilt: it is uncounted, it already had a disclosure (clause b's
+`ReferenceDisclosure`), and clause 4's own text says "Reference stays as built".

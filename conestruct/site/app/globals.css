@@ -3277,61 +3277,32 @@ input[type="number"] {
 
 /* Zone 2 pricing — secondary collapsed card; the full quote panel
    (inputs, breakdown preview, XLSX download) lives in the body */
-.workbench .price {
-  border: 1px solid var(--rule);
-  background: var(--canvas-tint);
-}
-.workbench .price-head {
+/* ─── #288 Phase 1 clause 4 · THE STACK'S DISCLOSURE ROWS ───
+   Authority: rulings.md, "The Phase 1 finish ruling" clause 4, with
+   Part 1 §8.9 and §8.11.
+   The bespoke `.price` head is RETIRED: the pricing quote is a rule-87
+   disclosure row now, the same primitive the tier rows and the reference
+   use, so its nine rules (its own head, its own caret, its own 26px
+   total, its own body) collapse into the one row treatment that was
+   already in the sheet.  Four of those carried a font-size, which is why
+   #263's census drops four sites and one size (26px had a single site).  That is the point of §8.11 calling it "a
+   disclosure": one grammar for every fold in the stack.
+   What stays declared here is only what the row does NOT already say:
+   the rows' vertical rhythm, and the quote's total as generated output. */
+.workbench .results-disc {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  cursor: pointer;
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: inherit;
-  text-align: left;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
 }
-.workbench .price-head .k {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
-}
-.workbench .price-head .fyi {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-on-dark-faint);
-  border: 1px solid var(--rule);
-  padding: 4px 6px;
-}
-.workbench .price-head .total {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 26px;
-  font-weight: 600;
+/* The last previewed backend total — a generated number, so it takes the
+   output accent every generated numeral takes (rule 10's `--gen`).  It is
+   an element of its own rather than text spliced into the provenance
+   sentence, because a value findable only as a substring is not
+   measurable (#185 asserts the collapsed headline shows the number). */
+.workbench .quote-total {
   color: var(--dim);
-}
-.workbench .price-head .total.unset {
-  color: var(--ink-on-dark-faint);
-  font-size: 13px;
-  font-weight: 400;
-}
-.workbench .price-head .caret {
-  font-family: var(--font-mono);
-  color: var(--ink-on-dark-faint);
-  transition: transform 0.15s;
-}
-.workbench .price.open .price-head .caret {
-  transform: rotate(90deg);
-}
-.workbench .price-body {
-  border-top: 1px solid var(--rule-soft);
-  padding: 8px 16px 16px;
+  font-weight: 600;
 }
 
 /* Zone 3 — the density-contract chip grammar.  Every reference family

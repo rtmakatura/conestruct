@@ -209,10 +209,11 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .tr-signpost", size: "10px" },
       { selector: ".workbench .zone-tag", size: "10px" },
       { selector: ".workbench .zone-note", size: "10px" },
-      { selector: ".workbench .price-head .k", size: "10px" },
-      { selector: ".workbench .price-head .fyi", size: "9px" },
-      { selector: ".workbench .price-head .total", size: "26px" },
-      { selector: ".workbench .price-head .total.unset", size: "13px" },
+      // #288 clause 4: the pricing quote became a rule-87 disclosure row
+      // (Part 1 §8.11), so its bespoke head retired and these four rows
+      // are DELETED rather than moved — the row's own treatment carries
+      // the type now.  26px leaves the sheet with them; 9px, 10px and
+      // 13px all remain elsewhere.
       { selector: ".workbench .device-table .jr-tag", size: "8.5px" },
       { selector: ".workbench .stale-ribbon", size: "12.5px" },
       { selector: ".workbench .wb-glyph", size: "13px" },
@@ -463,10 +464,12 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 97,
-  // 21 -> 22: rule 130's var(--fs-primary) is a size the sheet did not
-  // carry before clause 3 drew the primary.
-  cssSizes: 22,
+  cssDeclarations: 93,
+  // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
+  // sheet), then 22 -> 21 at clause 4: the retired pricing head took
+  // 26px with it, and 26px had exactly one site.  The other three sizes
+  // it dropped (9, 10, 13) all remain elsewhere.
+  cssSizes: 21,
   tsxSites: 106,
   // 320 -> 319: the zip control gave up its own text-[12px] for .pri/.act.
   tsxUses: 319,

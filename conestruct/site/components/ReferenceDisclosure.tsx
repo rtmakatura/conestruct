@@ -21,7 +21,7 @@
 // expanded — and it is the point of folding a reference tier behind a
 // disclosure at all.  Nothing inside it changed.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import { DisclosureRow } from "./DisclosureRow";
@@ -45,6 +45,21 @@ export function ReferenceDisclosure({
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  // The flag arrives LATE.  `defaultOpen` is false at mount — the audit
+  // has not answered yet — and becomes true when the answer is a refusal
+  // or a failure, which is exactly when rule 10 needs this panel open so
+  // the verdict strip's "retry below" lands on a Retry that exists.  A
+  // `useState` initialiser reads it once and never again, so the panel
+  // stayed shut through every error that arrived after the first render.
+  // This is the ReferenceChip `autoExpand` idiom, which has handled the
+  // same false→true arrival since #219; a manual collapse is respected
+  // until the flag transitions again.
+  // Found by three #187 honesty suites failing the moment ✓ and ◌ left
+  // this component — not by reading the spec, which says nothing about
+  // when the flag arrives.
+  useEffect(() => {
+    if (defaultOpen) setOpen(true);
+  }, [defaultOpen]);
   return (
     <DisclosureRow
       symbol="i"

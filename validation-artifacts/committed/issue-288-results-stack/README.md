@@ -261,3 +261,47 @@ The injection also surfaced a real inconsistency it was not looking for: an earl
 scoped the `:hover` rule but not the base rule, because the script that wrote both failed its
 second assertion after the first replacement and never wrote the file. Base un-scoped, hover
 scoped, suite green. Only the deliberate regression run exposed it.
+
+### Clause 4 — TWO real defects the promotion exposed
+
+Both were latent before this commit and would have shipped.
+
+**1. `ReferenceDisclosure`'s `defaultOpen` only applied at mount.** The prop exists for Rule
+10: the verdict strip says "retry below", and the Retry lives inside section 03's ⚠ tier, so
+a declined or failed audit must open that panel or the pointer lands on nothing. But
+`useState(defaultOpen)` reads the flag ONCE, and the flag is false at mount — the audit has
+not answered yet — and becomes true only when the answer turns out to be a refusal. So every
+error arriving after the first render left the panel shut.
+
+It did not show before clause 4 because section 03 also held ✓ and ◌, whose contents kept the
+suites busy; the moment those tiers left, three #187 honesty suites failed at once and named
+it. Fixed with the `ReferenceChip` `autoExpand` idiom that has handled the same false→true
+arrival since #219.
+
+**2. The #187 refreshing cue was about to hide behind a closed disclosure.** "◌ previous
+answer — refreshing…" is the line that says the values on screen are stale. It lived in
+section 03's chrome. Once ✓ and ◌ were promoted to rows of the stack, their COUNTS were
+visible while the cue qualifying them was inside a closed panel — a stale answer presented as
+current, which is exactly the half of Rule 10 that is easiest to ship.
+
+Moved to the stack, stated once, in a slot that keeps its reserved height when empty (P1) so
+the stack does not shift when the cue appears. The claim moved with it, by name, from
+`JurisdictionSection.density.test.tsx` to `GeneratorShell.disclosures.test.tsx`.
+
+**The pattern both share:** folding a surface behind a disclosure silently changes what is
+*reachable*, and the things most likely to become unreachable are the ones that exist to keep
+something else honest — a recovery action, a staleness cue. When a fold lands, the question
+is not "does it still render" but "can the operator still get to the thing that stops them
+being misled".
+
+### Clause 4 — a test that asserted a number instead of measuring one
+
+The first version of the rule-89 count assertion said the ✓ tier would show `"2"`, reasoning
+from the two passing Colorado checks in the fixture. The ledger counts 8 — it also counts the
+scan facts, the clean corridor and the geometry pass. The figure was an assumption wearing an
+assertion's clothes.
+
+Replaced with the claim actually worth making: the ✓ row's count and the audit card's
+"N checks" must be the SAME number, because both read one ledger (`assignTiers`, mirrored by
+`src/rendering/tier_ledger.py`). That is a P2 claim, it needs no fixture arithmetic, and it
+would catch a second producer appearing — which a hard-coded 8 would not.
