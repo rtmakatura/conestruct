@@ -69,6 +69,7 @@ import type {
 } from "@/lib/jurisdiction";
 import type { Scenario, SiteConditionFlag } from "@/lib/scenarios";
 import type { AuditState, SiteAdjustmentRecord } from "@/lib/render-types";
+import { deriveTierSources } from "@/lib/tier-sources";
 import { useWriteLock } from "./WriteLock";
 
 // #224 phase 3 (ruling e3): panel labels for the scanned buckets that
@@ -144,53 +145,29 @@ export function TieredReference({
   breakdown,
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
-  const r = (n: number | string) => (generated ? String(n) : "—");
 
   // #261: the audit-PDF export left this component — it is the fourth
   // download card (OutputCards, zone 2), same POST body, same band
   // object "audit PDF", same filename.  The tier keeps its prose.
 
-  const jur = jurisdictionLoading ? null : jurisdiction;
-  const settled = showAudit ? settledData(audit) : null;
-  const auditFailed = showAudit && audit.state === "error";
-  const declined = auditFailed && audit.httpStatus === 400;
-  const throttled = auditFailed && audit.httpStatus === 429;
-  const isRefreshing = audit.state === "loading" && audit.lastReady !== null;
-  const isFirstLoad = showAudit && audit.state === "loading" && audit.lastReady === null;
-
-  const model = assignTiers({ jurisdiction: jur, audit: settled, auditFailed });
-
-  // ── fact groups (same predicates as lib/tiering.ts — single mapping) ──
-  const deltas = jur?.applied_deltas ?? [];
-  const deltasChanged = deltas.filter(
-    (d) => d.status === "fires" && d.severity !== "admin",
-  );
-  const deltasAttention = deltas.filter(
-    (d) => d.status === "conditional" || d.status === "unknown",
-  );
-  const deltasAdmin = deltas.filter(
-    (d) => d.status === "fires" && d.severity === "admin",
-  );
-
-  const siteRecords: SiteAdjustmentRecord[] = settled?.sections.site_adjustments ?? [];
-  const siteChanged = siteRecords.filter(
-    (rec) => rec.devices_added > 0 || (rec.devices_modified ?? 0) > 0,
-  );
-  const siteAdvisory = siteRecords.filter(
-    (rec) => rec.devices_added === 0 && (rec.devices_modified ?? 0) === 0,
-  );
-  // #224 phase 3 (s2-arc17): the scan's own facts, read off the same
-  // wire section the classifier reads (lib/tiering.ts — one mapping).
-  const scan = settled?.sections.site_scan as ScanWire | undefined;
-  const scanBuckets = scan?.status === "ok" ? (scan.buckets ?? {}) : null;
-  const flagToBucket = new Map(SCAN_BUCKET_TO_FLAG.map(([b, f]) => [f, b] as const));
-  // #224 phase 4 (s2-arc18): the operator's corrections, as the backend
-  // applied and disclosed them (one sentence each, printed verbatim —
-  // the strip, the sheet, the narrative and the audit PDF print the same
-  // words).  Section 03 discloses; it never writes (ruling a).
-  const corrections = new Map<string, ScanCorrectionWire>(
-    (scan?.corrections ?? []).map((c) => [c.flag, c] as const),
-  );
+  // #288 step 1 — one producer.  Every pure value below was derived in
+  // this component's body until lib/tier-sources.ts took it, so that
+  // NEEDS YOU can read the SAME facts instead of re-deriving them (P2,
+  // Rule 3).  This is a move: same predicates, same order, same values.
+  // The JSX helpers that follow stayed, because they render rather than
+  // derive.
+  const {
+    jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad, refreshing,
+    model, r,
+    deltasChanged, siteChanged, finesItem, finesApplicable,
+    deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
+    approachesSpec, approachesSignalized,
+    deltasAdmin, siteAdvisory, coloradoPasses, coloradoInfos, corridorClean,
+    pendingSpec, traceItems, hoursStatus,
+    siteRecords, scan, scanBuckets, flagToBucket, corrections,
+  } = deriveTierSources({
+    jurisdiction, jurisdictionLoading, revalidating, scenario, audit, generated, showAudit,
+  });
   // #246 — read-only signposts from a condition row to the strip's
   // correction block (its Dismiss / Assert / Undo live there; ruling a
   // of arc 18: section 03 never writes).  A detected or corrected row
@@ -309,69 +286,6 @@ export function TieredReference({
       );
     }
   }
-  const colorado = settled?.sections.colorado as
-    | {
-        checks?: { pass: boolean; label: string; citation: string; detail: string }[];
-        info_items?: { label: string; citation: string; detail: string }[];
-      }
-    | undefined;
-  const coloradoPasses = (colorado?.checks ?? []).filter((c) => c.pass);
-  const coloradoFails = (colorado?.checks ?? []).filter((c) => !c.pass);
-  const coloradoInfos = colorado?.info_items ?? [];
-
-  const corridorSection = settled?.sections.corridor_validation as
-    | { checked?: boolean; warnings?: unknown[] }
-    | undefined;
-  const corridorItem = settled ? corridorValidationItem(settled.sections.corridor_validation) : null;
-  // #224 phase 2/3: the NOT-CHECKED disclosure — one counted attention
-  // fact since phase 3 (audit:scan:not_checked).
-  const siteScanItem = settled
-    ? siteScanNotCheckedItem(settled.sections.site_scan as Record<string, unknown> | undefined)
-    : null;
-  const corridorClean =
-    corridorSection?.checked === true && (corridorSection.warnings ?? []).length === 0;
-
-  const geometryItem = settled ? geometryValidationItem(settled.sections.geometry_validation) : null;
-
-  const finesSection = settled?.sections.fines_double;
-  const finesItem = finesSection ? finesDoubleItem(finesSection) : null;
-  const finesApplicable = finesSection?.applicable === true;
-
-  const approachesSpec = settled ? approachesItem(settled.sections.approaches) : null;
-  const approachesSection = settled?.sections.approaches as
-    | { approaches?: { signalized?: boolean }[] }
-    | undefined;
-  const approachesSignalized = (approachesSection?.approaches ?? []).some(
-    (a) => a.signalized === true,
-  );
-
-  const pendingSpec = settled ? pendingVerificationItem(settled.pending_verification) : null;
-
-  // Trace items: the per-kind set minus the Colorado aggregate (its
-  // checks render as named rows so "every check named at a glance"
-  // holds — the aggregate accordion would hide them behind a click).
-  const traceItems = settled
-    ? buildScenarioItems(scenario, audit, generated, r).filter(
-        (i) => !i.title.startsWith("Colorado requirements"),
-      )
-    : auditFailed
-      ? buildScenarioItems(scenario, audit, generated, r).filter(
-          (i) => !i.title.startsWith("Colorado requirements"),
-        )
-      : [];
-
-  const hoursStatus = jur ? jur.hours_eval.status : null;
-
-  // #235-C (P2): the ledger line is gone — it restated every chip's
-  // count, and while refreshing it said "◌ checking…" beside chips that
-  // held their numbers (two voices for one fact, F-S3-1).  The chips
-  // are the one voice; `ledgerLine` stays in lib/tiering.ts for the
-  // audit-PDF cover (tier_ledger.py mirror).  The #187 previous-answer
-  // label survives as ONE tr-prov cue in a slot of reserved height
-  // (P1), shown only while a refetch holds the last answer on screen.
-  // The first-load "computing…" went with the ledger: the band is the
-  // working voice (#252, P8).
-  const refreshing = revalidating || isRefreshing;
 
   // ── tier bodies ──
   const changedBody: ReactNode[] = [];
