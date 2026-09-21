@@ -97,6 +97,13 @@ export interface TierSources {
   /** Value renderer: "—" until the bundle is generated. */
   r: (n: number | string) => string;
 
+  /** The FULL applied_deltas array, in wire order.  Exposed because a
+   *  delta's stable id is its index over this array (lib/tiering.ts,
+   *  mirrored by src/rendering/tier_ledger.py) -- indexing over a
+   *  filtered group instead produces a different id for the same
+   *  fact, and collides across groups. */
+  deltas: JurisdictionBlock["applied_deltas"];
+
   // ── ▲ changed ──
   deltasChanged: JurisdictionBlock["applied_deltas"];
   siteChanged: SiteAdjustmentRecord[];
@@ -233,7 +240,7 @@ export function deriveTierSources({
 
   return {
     jur, settled, auditFailed, declined, throttled, isRefreshing, isFirstLoad, refreshing,
-    model, r,
+    model, r, deltas,
     deltasChanged, siteChanged, finesItem, finesApplicable,
     deltasAttention, coloradoFails, corridorItem, siteScanItem, geometryItem,
     approachesSpec, approachesSignalized,
