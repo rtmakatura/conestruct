@@ -1,0 +1,68 @@
+INFO gate.local-build — LOCAL BUILD at http://localhost:3123 — not prod, not sha-gated.  Measures the BRANCH before it ships; a prod leg follows the ship.
+PASS 380.S5items.pick — E Bayaud, Denver: 5 candidate(s)
+PASS 380.S5items.cta — "Generate plan"
+PASS 380.S5items.settle — the pair settled
+PASS 380.L1.S5items — NEEDS YOU present: true
+PASS 380.L5.reserve-retired — fix 1: the reserved row renders nothing (slot height null) — a Phase 1 deviation from rule 28, because Phase 1 never builds its occupant
+PASS 380.strip-absent — .ns-strip: false
+PASS 380.C1.cond-rows — 7 condition row(s) inside the block
+PASS 380.C1.manual-keys — 2 manual key row(s) (§8.25)
+PASS 380.C1.apply-row — Apply row present: true — "Apply 0 corrections", disabled true
+PASS 380.C1.standing — standing sentence: "no corrections staged · staging costs nothing, Apply re-generates once"
+PASS 380.L3.always-expanded — caret in the header: false
+PASS 380.L3.count-is-sum — header "3" vs 3 tier rows (ruling 185)
+PASS 380.L3.decomposition — changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention
+PASS 380.L2.one-primary — rule-130 primaries 0 + filled actions 1; NEEDS YOU owns: true; zip class "act tr-step"
+PASS 380.L2.zip-both-widths — the zip renders: true (ruling 183, settled by clause 3)
+PASS 380.L2.cards-flat — 4 download cards (ruling 182)
+PASS 380.L4.count-once — "N files" appears 1x: ["4 files"]; el: ["4 files"]
+PASS 380.C2.hero-numeral — numeral 42px / weight 500; tracks "165px 165px"
+PASS 380.C2.ticks-gone — 0 corner tick(s)
+PASS 380.C2.geometry-rows — 4 geometry row(s) — rule 169 deviation: the cell RENDERS at both widths
+PASS 380.L?.C5.no-results-heading — "MHT package" heading on the page: false
+PASS 380.C5.no-reference-heading — "Rules, permit & audit" heading: false
+PASS 380.C5.no-intro — the intro paragraph: false
+PASS 380.C5.zone-tags — zone tags: ["01Setup"]
+PASS 380.C5.stack-named — section.results-stack: true
+PASS 380.C5.draft-notice-kept — §8.12 draft notice: true
+PASS 380.C4.row-order — rows: ["Pricing quote","Checked & passed","Pending / not verified","Reference"]
+PASS 380.C4.rule-89-counts — counted: ["Checked & passed=14","Pending / not verified=2"]; uncounted: ["Pricing quote","Reference"]
+PASS 380.C4.rule-129-reads — every row data-read, none data-write
+PASS 380.C4.closed-in-S5 — open states: ["false","false","false","false"]
+PASS 380.C4.rule-88-name — name sizes: ["13px","13px","13px","13px"]
+PASS 380.F1.no-empty-reserve — results-head-slot height: null
+PASS 380.F2.bar-gone — .jbar-readonly present: false
+PASS 380.F2.summary — Reference summary: "Not set · Arterial · MUTCD 11th + CO Suppl. › CDOT Specs §630"
+PASS 380.F3.one-group — group: ["Pricing quote","Checked & passed","Pending / not verified","Reference"]; rows outside it: 0
+PASS 380.F3.anchor-kept — #reference present true, inside the group true
+PASS 380.F3.draft-last — the draft notice follows the group: true
+PASS 380.F4.subheader — SITE CONDITIONS sub-header present: true
+PASS 380.F4.count-agrees — header "3" vs 3 row(s) above the sub-header, all tier rows: true
+PASS 380.L8.nav-present — nav text: "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT"
+PASS 380.L8.nav-no-date — §8.32 — no rendered date in the nav: "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT"
+PASS 380.L1.S8 — Reference aria-expanded true · panel true
+PASS 380.S8.nothing-above-moves — NEEDS YOU tier rows 3 -> 3
+PASS 380.S8.uncounted — a numeral on the uncounted tier: null
+PASS 380.L7.targets — 38 interactive, 0 under 44px: []
+PASS 380.L7.footer — footer: [{"name":"Terms","w":44,"h":44},{"name":"Privacy","w":44,"h":44}]
+PASS 380.L6.not-dimmed — the ribbon is inside .results-stale: false (dim present: true) — "Previous answer — values below predate the request in flight."
+PASS 380.L6.contrast — COMPOSITED 11.16:1 — text rgb(200,209,221) = --ink-on-dark 0.612% on bg rgb(16,28,41) 88.17% (18144 px, border inset out); top: 11.16:1@0.612% 11.11:1@0.121% 11.06:1@0.143% 11.03:1@0.088% 11.02:1@0.066%
+PASS 380.axe.settled — the page is settled before axe runs (.results-stale present: false)
+PASS 380.L7.axe-target-size — axe target-size violations: 0; other violations: region, scrollable-region-focusable
+FAIL 380.S5none[US-40 near Cheyenne We].pick — US-40 near Cheyenne Wells, CO (eastern plains): 0 candidate(s)
+FAIL 380.S5none[CO-71 south of Ordway,].pick — CO-71 south of Ordway, CO: 0 candidate(s)
+PASS 380.S5none[US-40 west of Craig, C].pick — US-40 west of Craig, CO: 1 candidate(s)
+PASS 380.S5none[US-40 west of Craig, C].cta — "Generate plan"
+PASS 380.S5none[US-40 west of Craig, C].settle — the pair settled
+INFO 380.S5none.try — US-40 west of Craig, CO: 2 tier row(s) — not clean, trying the next pin
+INFO 380.L1.S5none — NOT REACHED on prod: none of the 3 candidate corridors produced a clean plan. Covered at the mount by GeneratorShell.needs-you.test.tsx; not faked here.
+PASS 380.S6.pick — E Bayaud, Denver: 5 candidate(s)
+INFO 380.S6.replay-armed — the AUDIT call is answered with a real-shaped 400 — a REPLAY, labelled: this measures the frontend, not the backend
+PASS 380.S6.cta-gated — Generate disabled under the declined audit: true (#180)
+PASS 380.L1.S6 — a refusal is on screen: true
+PASS 380.S6.no-needs-you — NEEDS YOU beside the refusal: false (spec 31, rule 10)
+PASS 380.S6.no-ribbon — 0 ribbon(s) under a decline (#258)
+PASS 380.L8.pageerror-zero — 0 pageerror, 5 console error(s)
+PASS 380.L8.hydration-zero — hydration-shaped: 0
+
+DONE — 66 rows, 2 FAIL

@@ -156,6 +156,36 @@ const READ = () => {
     dlCards: all(".dls .dl-card").length,
     // clause 4 — the rows
     discRows,
+    // fix 3 — the four rows are ONE group, and the draft notice is last
+    groupNames: all(".results-disc .disc-name").map((n) => n.textContent),
+    strayRows: all(".disc-name").length - all(".results-disc .disc-name").length,
+    refAnchor: !!q("#reference"),
+    refInGroup: !!q(".results-disc #reference"),
+    draftAfterGroup: (() => {
+      const m = q("main"); if (!m) return null;
+      const els = Array.from(m.querySelectorAll("*"));
+      const g = q(".results-disc");
+      const d = els.find((e) => (e.textContent || "").trim() === "Draft — not a sealed plan");
+      return g && d ? els.indexOf(d) > els.indexOf(g) : null;
+    })(),
+    // fix 2 — the bar is gone, its facts ride the Reference summary
+    jbar: !!q(".jbar-readonly"),
+    refSummary: (() => {
+      const r = all(".disc").find((d) => d.querySelector(".disc-name") && d.querySelector(".disc-name").textContent === "Reference");
+      return r && r.querySelector(".disc-prov") ? r.querySelector(".disc-prov").textContent : null;
+    })(),
+    // fix 4 — the count describes what is above the sub-header
+    subhead: !!q(".ny-subhead"),
+    rowsAboveSubhead: (() => {
+      const items = all(".needs-you .ny-item");
+      const i = items.findIndex((r) => r.classList.contains("ny-subhead"));
+      return i < 0 ? null : items.slice(0, i).length;
+    })(),
+    tierRowsAboveSubhead: (() => {
+      const items = all(".needs-you .ny-item");
+      const i = items.findIndex((r) => r.classList.contains("ny-subhead"));
+      return i < 0 ? null : items.slice(0, i).filter((r) => /is-(changed|attention)/.test(r.className)).length;
+    })(),
     // clause 2 — the hero
     heroPresent: !!hero,
     heroTracks: hero ? getComputedStyle(hero).gridTemplateColumns : null,
@@ -321,8 +351,19 @@ async function state(page, tag, opts) {
 }
 
 (async () => {
-  await L.shaGate(log, EXPECT);
-  check("gate.healthz", true, `healthz == ${EXPECT}`);
+  // LOCAL BUILD: the sha gate proves the deployed backend's commit, and
+  // this target is a `next start` of the branch on localhost.  Gating on
+  // prod's healthz here would assert something true of a machine this
+  // run never touches — so the gate is replaced by a statement of what
+  // this leg IS, and the leg is labelled a local build everywhere it is
+  // reported.  A prod leg still has to follow the ship.
+  if (BASE.includes("localhost")) {
+    check("gate.local-build", null,
+      `LOCAL BUILD at ${BASE} — not prod, not sha-gated.  Measures the BRANCH before it ships; a prod leg follows the ship.`);
+  } else {
+    await L.shaGate(log, EXPECT);
+    check("gate.healthz", true, `healthz == ${EXPECT}`);
+  }
   const browser = await chromium.launch();
 
   const ONLY = process.argv[5] || "";
@@ -337,7 +378,8 @@ async function state(page, tag, opts) {
     const s5 = await state(page, `${vp}.S5items`, { workLen: 200 });
     if (s5) {
       check(`${vp}.L1.S5items`, s5.needsYou, `NEEDS YOU present: ${s5.needsYou}`);
-      check(`${vp}.L5.reserve-44`, s5.slotH === 44, `reserved row ${s5.slotH}px (rule 28)`);
+      check(`${vp}.L5.reserve-retired`, s5.slotH === null,
+        `fix 1: the reserved row renders nothing (slot height ${s5.slotH}) — a Phase 1 deviation from rule 28, because Phase 1 never builds its occupant`);
       check(`${vp}.strip-absent`, !s5.nsStrip, `.ns-strip: ${s5.nsStrip}`);
       // clause 1
       check(`${vp}.C1.cond-rows`, s5.nyCondRows > 0, `${s5.nyCondRows} condition row(s) inside the block`);
@@ -379,6 +421,20 @@ async function state(page, tag, opts) {
         `every row data-read, none data-write`);
       check(`${vp}.C4.closed-in-S5`, s5.discRows.every((d) => d.open === "false"), `open states: ${JSON.stringify(s5.discRows.map((d) => d.open))}`);
       check(`${vp}.C4.rule-88-name`, s5.discRows.every((d) => d.nameSize === "13px"), `name sizes: ${JSON.stringify(s5.discRows.map((d) => d.nameSize))}`);
+      // ─── the four hand-check fixes ───
+      check(`${vp}.F1.no-empty-reserve`, s5.slotH === null, `results-head-slot height: ${s5.slotH}`);
+      check(`${vp}.F2.bar-gone`, !s5.jbar, `.jbar-readonly present: ${s5.jbar}`);
+      check(`${vp}.F2.summary`, !!s5.refSummary && /·/.test(s5.refSummary),
+        `Reference summary: "${s5.refSummary}"`);
+      check(`${vp}.F3.one-group`,
+        JSON.stringify(s5.groupNames) === JSON.stringify(["Pricing quote", "Checked & passed", "Pending / not verified", "Reference"]) && s5.strayRows === 0,
+        `group: ${JSON.stringify(s5.groupNames)}; rows outside it: ${s5.strayRows}`);
+      check(`${vp}.F3.anchor-kept`, s5.refAnchor && s5.refInGroup, `#reference present ${s5.refAnchor}, inside the group ${s5.refInGroup}`);
+      check(`${vp}.F3.draft-last`, s5.draftAfterGroup === true, `the draft notice follows the group: ${s5.draftAfterGroup}`);
+      check(`${vp}.F4.subheader`, s5.subhead, `SITE CONDITIONS sub-header present: ${s5.subhead}`);
+      check(`${vp}.F4.count-agrees`,
+        s5.rowsAboveSubhead !== null && String(s5.rowsAboveSubhead) === s5.nyCount && s5.rowsAboveSubhead === s5.tierRowsAboveSubhead,
+        `header "${s5.nyCount}" vs ${s5.rowsAboveSubhead} row(s) above the sub-header, all tier rows: ${s5.rowsAboveSubhead === s5.tierRowsAboveSubhead}`);
       // line 8's second half — the nav citation carries no date
       // The citation is a bare <span> in the nav — there is no
       // .nav-right class.  The first version of this check read that
@@ -550,7 +606,9 @@ async function state(page, tag, opts) {
   }
 
   await browser.close();
-  await L.shaGate(log, EXPECT);
-  check("gate.healthz-after", true, `healthz still ${EXPECT}`);
+  if (!BASE.includes("localhost")) {
+    await L.shaGate(log, EXPECT);
+    check("gate.healthz-after", true, `healthz still ${EXPECT}`);
+  }
   log(`\nDONE — ${rows.length} rows, ${rows.filter((r) => r.ok === false).length} FAIL`);
 })().catch((e) => { log("LEG CRASHED " + e.stack); process.exit(3); });
