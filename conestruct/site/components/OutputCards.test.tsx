@@ -261,8 +261,8 @@ describe("OutputCards download cards", () => {
     expect(links[3].textContent).toContain("Sign up to download PDF");
   });
 
-  it("renders the empty state before generation", () => {
-    render(
+  it("#289: renders NOTHING before generation — Part 1 §2.1's 'no download empty-state panel'", () => {
+    const { container } = render(
       <OutputCards
         summary={null}
         generated={false}
@@ -270,7 +270,25 @@ describe("OutputCards download cards", () => {
         breakdown={{ state: "loading" }}
       />,
     );
+    expect(container.innerHTML).toBe("");
+    expect(document.querySelector(".dl-card")).toBeNull();
+  });
+
+  it("#289: under a DECLINE it still says 'No package yet' — rule 120", () => {
+    // The absence is an answer there: a package was asked for and
+    // refused.  Before Generate nobody asked.
+    render(
+      <OutputCards
+        summary={null}
+        generated={false}
+        declined
+        mode={{ kind: "public", scenario: SCENARIO }}
+        breakdown={{ state: "loading" }}
+      />,
+    );
     expect(screen.getByText("No package yet")).toBeTruthy();
+    // And not the flow sentence, which is §8.30's dropped intro.
+    expect(document.body.textContent).not.toContain("press generate");
     expect(document.querySelector(".dl-card")).toBeNull();
   });
 

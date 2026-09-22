@@ -178,15 +178,28 @@ export function OutputCards({
 }: Props) {
   const locked = useWriteLock(); // #252 (ruling b)
   if (!generated) {
+    // #289 hand-check, 2026-09-22, correction 4 — NO RESULTS ZONE BEFORE
+    // GENERATE.  Part 1 §2.1 lists what S1 holds and then says what it
+    // does not: "no results zone, no reference section, no quote, no
+    // download empty-state panel, no intro paragraph.  The column is
+    // three bands and a verdict."  This panel was the download
+    // empty-state, and it rendered from load.
+    //
+    // It survives in exactly one state, and that state is S6: rule 120
+    // puts "No package yet" under a refusal, because there a package was
+    // asked for and refused, and the absence is an ANSWER.  Before
+    // Generate nobody asked, so there is nothing to answer — and a
+    // sentence explaining the flow ("describe the work zone → press
+    // generate → …") is the intro paragraph §8.30 dropped, wearing a
+    // dashed border.
+    //
+    // S4's placeholder (rule 117, "02 · RESULTS" + "No package yet — the
+    // plan is being built.") is a DIFFERENT block with a different
+    // sentence, and it belongs to the S4 commit.
+    if (!declined) return null;
     return (
       <div className="empty-state">
         <span className="big">No package yet</span>
-        {!declined && (
-          <>
-            Describe the work zone <span className="arrow">→</span> press
-            generate <span className="arrow">→</span> download the package
-          </>
-        )}
       </div>
     );
   }

@@ -131,7 +131,10 @@ describe("zone staging lifecycle", () => {
     expect(setup.querySelector(".setup-panel")).toBeNull();
     expect(setup.querySelector(".setup-strip")).toBeNull();
     expect(results.className).not.toContain("dominant");
-    expect(results.textContent).toContain("No package yet");
+    // #289 hand-check, 2026-09-22: Part 1 §2.1 — "no results zone … no
+    // download empty-state panel".  The zone is still MOUNTED (it is the
+    // landing target and the focus target, ruling 192), and it is empty.
+    expect(results.textContent).toBe("");
     expect(document.querySelector(".hero")).toBeNull();
   });
 
@@ -220,7 +223,9 @@ describe("zone staging lifecycle", () => {
     // post-generate surface is the S4/S5 commit's (Ryan's commit order);
     // what they reopen INTO is the column.
     expect(setup.querySelector(".band-stack")).not.toBeNull();
-    expect(results.textContent).toContain("No package yet");
+    // #289: the reopened pre-generate state holds no results zone
+    // content either — same rule, same reason.
+    expect(results.textContent).toBe("");
     expect(document.querySelector(".hero")).toBeNull();
   });
 
