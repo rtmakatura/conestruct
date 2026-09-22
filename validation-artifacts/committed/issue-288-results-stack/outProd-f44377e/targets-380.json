@@ -1,0 +1,28 @@
+{
+ "floor": 44,
+ "total": 38,
+ "under": [
+  {
+   "tag": "button",
+   "name": "Edit full setup ⤢",
+   "cls": "strip-edit-all",
+   "w": 130,
+   "h": 19,
+   "top": 463,
+   "left": 225,
+   "right": 355,
+   "disabled": false
+  },
+  {
+   "tag": "a",
+   "name": "Terms",
+   "cls": "inline-flex items-center min-h-[32px] ma",
+   "w": 35,
+   "h": 44,
+   "top": 4981,
+   "left": 40,
+   "right": 75,
+   "disabled": false
+  }
+ ]
+}

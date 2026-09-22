@@ -2290,7 +2290,16 @@ input[type="number"] {
   .workbench .refchip .chip-sum,
   .workbench .audit-head,
   .workbench .disc-head,
-  .workbench .dl-btn {
+  .workbench .dl-btn,
+  /* MEASURED on prod at f44377e and added here: the setup strip's
+     "Edit full setup" is 130x19 at 380, so its SMALLER dimension is 19
+     against rule 15's 44.  It is Phase 2's surface and the finish ruling
+     leaves those untouched — but this is the footer's case exactly, and
+     the footer's precedent governs: §8.14 said the footer was
+     "unchanged" and #288 answered "rule 15 admits no exemption".
+     Unchanged in CONTENT is not a claim about the tappable area, and a
+     min-height moves no type.  axe flagged the same element. */
+  .workbench .setup-strip .strip-edit-all {
     min-height: 44px;
   }
 }

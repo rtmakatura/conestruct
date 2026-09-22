@@ -272,6 +272,12 @@ describe("#288 clause 7 — §8.14's 'unchanged' footer is not exempt", () => {
     for (const l of links) {
       expect(l.className, l.textContent ?? "").toMatch(/min-h-\[32px\]/);
       expect(l.className, l.textContent ?? "").toMatch(/max-\[480px\]:min-h-\[44px\]/);
+      // BOTH dimensions.  Rule 15 measures "the smaller dimension", and
+      // the prod leg at f44377e measured "Terms" at 35x44 — tall enough,
+      // too narrow.  This suite passed that build, because a class check
+      // that only reads min-h cannot see a width.  It reads both now.
+      expect(l.className, l.textContent ?? "").toMatch(/min-w-\[32px\]/);
+      expect(l.className, l.textContent ?? "").toMatch(/max-\[480px\]:min-w-\[44px\]/);
       // The box grew; the type did not.  §8.14 keeps the footer
       // unchanged in CONTENT, and it is.
       expect(l.className).toMatch(/inline-flex/);
@@ -299,7 +305,7 @@ describe("#288 clause 7 — the ≤480 sweep is declared in one place", () => {
     expect(i, "the clause 7 block exists").toBeGreaterThan(-1);
     const block = css.slice(i, css.indexOf("\n}\n", i));
     expect(block).toMatch(/@media \(max-width: 480px\)/);
-    for (const sel of ["tr-signpost", "chip-sum", "audit-head", "disc-head", "dl-btn"]) {
+    for (const sel of ["tr-signpost", "chip-sum", "audit-head", "disc-head", "dl-btn", "strip-edit-all"]) {
       expect(block, sel).toContain(`.${sel}`);
     }
     expect(block).toMatch(/min-height:\s*44px/);

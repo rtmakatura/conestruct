@@ -10,9 +10,23 @@ import Link from "next/link";
 //
 // The two links were 10 px inline text, so their tappable box was the
 // line box: about 13 px tall, against rule 15's 32 px at 1440 and 44 px
-// at 380.  They are now inline-flex with a min-height, which grows the
-// HIT BOX without moving the text: same words, same size, same row, same
-// place.  Nothing in §8.14's "unchanged" is touched by that.
+// at 380.  They are now inline-flex with a min-height AND a min-width,
+// which grows the HIT BOX without moving the text: same words, same
+// size, same row, same place.  Nothing in §8.14's "unchanged" is touched.
+//
+// NO justify-center.  An earlier draft centred the text in the widened
+// box, which shifts each glyph by (box − text)/2 — about 4.5 px for
+// "Terms" at 380.  That contradicts the claim this comment makes, so the
+// box grows to the RIGHT from flex-start and the words stay exactly where
+// they were.  Caught by the diff-verifier reading the diff against the
+// claim, not by any test: nothing here measures a glyph's x.
+//
+// The min-WIDTH is not decoration.  Rule 15 measures "the smaller
+// dimension", and the prod leg at f44377e measured "Terms" at 35x44 —
+// 44 tall but 35 wide, so its smaller dimension was 35 against a floor
+// of 44.  A min-height alone passes a test that reads height and fails
+// the rule that reads both.  Found by the leg, not by the suite, because
+// happy-dom lays nothing out and the suite could only check the class.
 //
 // The `gap-5` between them is kept deliberately: two 44 px targets 20 px
 // apart clear WCAG 2.5.5's spacing allowance, and closing the gap to fit
@@ -25,13 +39,13 @@ export function AppFooter() {
       <div className="flex gap-5 items-center">
         <Link
           href="/terms"
-          className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] hover:text-white"
+          className="inline-flex items-center min-h-[32px] min-w-[32px] max-[480px]:min-h-[44px] max-[480px]:min-w-[44px] hover:text-white"
         >
           Terms
         </Link>
         <Link
           href="/privacy"
-          className="inline-flex items-center min-h-[32px] max-[480px]:min-h-[44px] hover:text-white"
+          className="inline-flex items-center min-h-[32px] min-w-[32px] max-[480px]:min-h-[44px] max-[480px]:min-w-[44px] hover:text-white"
         >
           Privacy
         </Link>

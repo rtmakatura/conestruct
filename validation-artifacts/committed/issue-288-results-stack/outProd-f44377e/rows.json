@@ -1,0 +1,567 @@
+[
+ {
+  "id": "gate.healthz",
+  "ok": true,
+  "detail": "healthz == f44377e3bd96f18e0413fa52fbeab3069800b7e9"
+ },
+ {
+  "id": "1440.S5items.pick",
+  "ok": true,
+  "detail": "E Bayaud, Denver: 5 candidate(s)"
+ },
+ {
+  "id": "1440.S5items.cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "1440.S5items.settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "1440.L1.S5items",
+  "ok": true,
+  "detail": "NEEDS YOU present: true"
+ },
+ {
+  "id": "1440.L5.reserve-44",
+  "ok": true,
+  "detail": "reserved row 44px (rule 28)"
+ },
+ {
+  "id": "1440.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip: false"
+ },
+ {
+  "id": "1440.C1.cond-rows",
+  "ok": true,
+  "detail": "7 condition row(s) inside the block"
+ },
+ {
+  "id": "1440.C1.manual-keys",
+  "ok": true,
+  "detail": "2 manual key row(s) (§8.25)"
+ },
+ {
+  "id": "1440.C1.apply-row",
+  "ok": true,
+  "detail": "Apply row present: true — \"Apply 0 corrections\", disabled true"
+ },
+ {
+  "id": "1440.C1.standing",
+  "ok": true,
+  "detail": "standing sentence: \"no corrections staged · staging costs nothing, Apply re-generates once\""
+ },
+ {
+  "id": "1440.L3.always-expanded",
+  "ok": true,
+  "detail": "caret in the header: false"
+ },
+ {
+  "id": "1440.L3.count-is-sum",
+  "ok": true,
+  "detail": "header \"3\" vs 3 tier rows (ruling 185)"
+ },
+ {
+  "id": "1440.L3.decomposition",
+  "ok": true,
+  "detail": "changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention"
+ },
+ {
+  "id": "1440.L2.one-primary",
+  "ok": true,
+  "detail": "rule-130 primaries 0 + filled actions 1; NEEDS YOU owns: true; zip class \"act tr-step\""
+ },
+ {
+  "id": "1440.L2.zip-both-widths",
+  "ok": true,
+  "detail": "the zip renders: true (ruling 183, settled by clause 3)"
+ },
+ {
+  "id": "1440.L2.cards-flat",
+  "ok": true,
+  "detail": "4 download cards (ruling 182)"
+ },
+ {
+  "id": "1440.L4.count-once",
+  "ok": true,
+  "detail": "\"N files\" appears 1x: [\"4 files\"]; el: [\"4 files\"]"
+ },
+ {
+  "id": "1440.C2.hero-numeral",
+  "ok": true,
+  "detail": "numeral 62px / weight 500; tracks \"399px 399px 300px\""
+ },
+ {
+  "id": "1440.C2.ticks-gone",
+  "ok": true,
+  "detail": "0 corner tick(s)"
+ },
+ {
+  "id": "1440.C2.geometry-rows",
+  "ok": true,
+  "detail": "4 geometry row(s) — rule 169 deviation: the cell RENDERS at both widths"
+ },
+ {
+  "id": "1440.L?.C5.no-results-heading",
+  "ok": true,
+  "detail": "\"MHT package\" heading on the page: false"
+ },
+ {
+  "id": "1440.C5.no-reference-heading",
+  "ok": true,
+  "detail": "\"Rules, permit & audit\" heading: false"
+ },
+ {
+  "id": "1440.C5.no-intro",
+  "ok": true,
+  "detail": "the intro paragraph: false"
+ },
+ {
+  "id": "1440.C5.zone-tags",
+  "ok": true,
+  "detail": "zone tags: [\"01Setup\"]"
+ },
+ {
+  "id": "1440.C5.stack-named",
+  "ok": true,
+  "detail": "section.results-stack: true"
+ },
+ {
+  "id": "1440.C5.draft-notice-kept",
+  "ok": true,
+  "detail": "§8.12 draft notice: true"
+ },
+ {
+  "id": "1440.C4.row-order",
+  "ok": true,
+  "detail": "rows: [\"Pricing quote\",\"Checked & passed\",\"Pending / not verified\",\"Reference\"]"
+ },
+ {
+  "id": "1440.C4.rule-89-counts",
+  "ok": true,
+  "detail": "counted: [\"Checked & passed=14\",\"Pending / not verified=2\"]; uncounted: [\"Pricing quote\",\"Reference\"]"
+ },
+ {
+  "id": "1440.C4.rule-129-reads",
+  "ok": true,
+  "detail": "every row data-read, none data-write"
+ },
+ {
+  "id": "1440.C4.closed-in-S5",
+  "ok": true,
+  "detail": "open states: [\"false\",\"false\",\"false\",\"false\"]"
+ },
+ {
+  "id": "1440.C4.rule-88-name",
+  "ok": true,
+  "detail": "name sizes: [\"13px\",\"13px\",\"13px\",\"13px\"]"
+ },
+ {
+  "id": "1440.L8.nav-present",
+  "ok": true,
+  "detail": "nav text: \"conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT\""
+ },
+ {
+  "id": "1440.L8.nav-no-date",
+  "ok": true,
+  "detail": "§8.32 — no rendered date in the nav: \"conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT\""
+ },
+ {
+  "id": "1440.L1.S8",
+  "ok": true,
+  "detail": "Reference aria-expanded true · panel true"
+ },
+ {
+  "id": "1440.S8.nothing-above-moves",
+  "ok": true,
+  "detail": "NEEDS YOU tier rows 3 -> 3"
+ },
+ {
+  "id": "1440.S8.uncounted",
+  "ok": true,
+  "detail": "a numeral on the uncounted tier: null"
+ },
+ {
+  "id": "1440.L7.targets",
+  "ok": true,
+  "detail": "38 interactive, 0 under 32px: []"
+ },
+ {
+  "id": "1440.L7.footer",
+  "ok": true,
+  "detail": "footer: [{\"name\":\"Terms\",\"w\":35,\"h\":32},{\"name\":\"Privacy\",\"w\":49,\"h\":32}]"
+ },
+ {
+  "id": "1440.L6.not-dimmed",
+  "ok": true,
+  "detail": "the ribbon is inside .results-stale: false (dim present: true) — \"Previous answer — values below predate the request in flight.\""
+ },
+ {
+  "id": "1440.L6.contrast",
+  "ok": true,
+  "detail": "COMPOSITED 11.16:1 — text rgb(200,209,221) 0.293% on bg rgb(16,28,41) 94.52% (39312 px, border inset out); top: 11.16:1@0.293% 11.06:1@0.056% 10.9:1@0.079% 10.9:1@0.066% 10.8:1@0.142%"
+ },
+ {
+  "id": "1440.S5none[US-40 near Cheyenne We].pick",
+  "ok": false,
+  "detail": "US-40 near Cheyenne Wells, CO (eastern plains): 0 candidate(s)"
+ },
+ {
+  "id": "1440.S5none[CO-71 south of Ordway,].pick",
+  "ok": false,
+  "detail": "CO-71 south of Ordway, CO: 0 candidate(s)"
+ },
+ {
+  "id": "1440.S5none[US-40 west of Craig, C].pick",
+  "ok": true,
+  "detail": "US-40 west of Craig, CO: 1 candidate(s)"
+ },
+ {
+  "id": "1440.S5none[US-40 west of Craig, C].cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "1440.S5none[US-40 west of Craig, C].settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "1440.S5none.try",
+  "ok": null,
+  "detail": "US-40 west of Craig, CO: 2 tier row(s) — not clean, trying the next pin"
+ },
+ {
+  "id": "1440.L1.S5none",
+  "ok": null,
+  "detail": "NOT REACHED on prod: none of the 3 candidate corridors produced a clean plan. Covered at the mount by GeneratorShell.needs-you.test.tsx; not faked here."
+ },
+ {
+  "id": "1440.S6.pick",
+  "ok": true,
+  "detail": "E Bayaud, Denver: 5 candidate(s)"
+ },
+ {
+  "id": "1440.S6.replay-armed",
+  "ok": null,
+  "detail": "the AUDIT call is answered with a real-shaped 400 — a REPLAY, labelled: this measures the frontend, not the backend"
+ },
+ {
+  "id": "1440.S6.cta-gated",
+  "ok": true,
+  "detail": "Generate disabled under the declined audit: true (#180)"
+ },
+ {
+  "id": "1440.L1.S6",
+  "ok": true,
+  "detail": "a refusal is on screen: true"
+ },
+ {
+  "id": "1440.S6.no-needs-you",
+  "ok": true,
+  "detail": "NEEDS YOU beside the refusal: false (spec 31, rule 10)"
+ },
+ {
+  "id": "1440.S6.no-ribbon",
+  "ok": true,
+  "detail": "0 ribbon(s) under a decline (#258)"
+ },
+ {
+  "id": "1440.L8.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 5 console error(s)"
+ },
+ {
+  "id": "1440.L8.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "380.S5items.pick",
+  "ok": true,
+  "detail": "E Bayaud, Denver: 5 candidate(s)"
+ },
+ {
+  "id": "380.S5items.cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "380.S5items.settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "380.L1.S5items",
+  "ok": true,
+  "detail": "NEEDS YOU present: true"
+ },
+ {
+  "id": "380.L5.reserve-44",
+  "ok": true,
+  "detail": "reserved row 44px (rule 28)"
+ },
+ {
+  "id": "380.strip-absent",
+  "ok": true,
+  "detail": ".ns-strip: false"
+ },
+ {
+  "id": "380.C1.cond-rows",
+  "ok": true,
+  "detail": "7 condition row(s) inside the block"
+ },
+ {
+  "id": "380.C1.manual-keys",
+  "ok": true,
+  "detail": "2 manual key row(s) (§8.25)"
+ },
+ {
+  "id": "380.C1.apply-row",
+  "ok": true,
+  "detail": "Apply row present: true — \"Apply 0 corrections\", disabled true"
+ },
+ {
+  "id": "380.C1.standing",
+  "ok": true,
+  "detail": "standing sentence: \"no corrections staged · staging costs nothing, Apply re-generates once\""
+ },
+ {
+  "id": "380.L3.always-expanded",
+  "ok": true,
+  "detail": "caret in the header: false"
+ },
+ {
+  "id": "380.L3.count-is-sum",
+  "ok": true,
+  "detail": "header \"3\" vs 3 tier rows (ruling 185)"
+ },
+ {
+  "id": "380.L3.decomposition",
+  "ok": true,
+  "detail": "changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention"
+ },
+ {
+  "id": "380.L2.one-primary",
+  "ok": true,
+  "detail": "rule-130 primaries 0 + filled actions 1; NEEDS YOU owns: true; zip class \"act tr-step\""
+ },
+ {
+  "id": "380.L2.zip-both-widths",
+  "ok": true,
+  "detail": "the zip renders: true (ruling 183, settled by clause 3)"
+ },
+ {
+  "id": "380.L2.cards-flat",
+  "ok": true,
+  "detail": "4 download cards (ruling 182)"
+ },
+ {
+  "id": "380.L4.count-once",
+  "ok": true,
+  "detail": "\"N files\" appears 1x: [\"4 files\"]; el: [\"4 files\"]"
+ },
+ {
+  "id": "380.C2.hero-numeral",
+  "ok": true,
+  "detail": "numeral 42px / weight 500; tracks \"165px 165px\""
+ },
+ {
+  "id": "380.C2.ticks-gone",
+  "ok": true,
+  "detail": "0 corner tick(s)"
+ },
+ {
+  "id": "380.C2.geometry-rows",
+  "ok": true,
+  "detail": "4 geometry row(s) — rule 169 deviation: the cell RENDERS at both widths"
+ },
+ {
+  "id": "380.L?.C5.no-results-heading",
+  "ok": true,
+  "detail": "\"MHT package\" heading on the page: false"
+ },
+ {
+  "id": "380.C5.no-reference-heading",
+  "ok": true,
+  "detail": "\"Rules, permit & audit\" heading: false"
+ },
+ {
+  "id": "380.C5.no-intro",
+  "ok": true,
+  "detail": "the intro paragraph: false"
+ },
+ {
+  "id": "380.C5.zone-tags",
+  "ok": true,
+  "detail": "zone tags: [\"01Setup\"]"
+ },
+ {
+  "id": "380.C5.stack-named",
+  "ok": true,
+  "detail": "section.results-stack: true"
+ },
+ {
+  "id": "380.C5.draft-notice-kept",
+  "ok": true,
+  "detail": "§8.12 draft notice: true"
+ },
+ {
+  "id": "380.C4.row-order",
+  "ok": true,
+  "detail": "rows: [\"Pricing quote\",\"Checked & passed\",\"Pending / not verified\",\"Reference\"]"
+ },
+ {
+  "id": "380.C4.rule-89-counts",
+  "ok": true,
+  "detail": "counted: [\"Checked & passed=14\",\"Pending / not verified=2\"]; uncounted: [\"Pricing quote\",\"Reference\"]"
+ },
+ {
+  "id": "380.C4.rule-129-reads",
+  "ok": true,
+  "detail": "every row data-read, none data-write"
+ },
+ {
+  "id": "380.C4.closed-in-S5",
+  "ok": true,
+  "detail": "open states: [\"false\",\"false\",\"false\",\"false\"]"
+ },
+ {
+  "id": "380.C4.rule-88-name",
+  "ok": true,
+  "detail": "name sizes: [\"13px\",\"13px\",\"13px\",\"13px\"]"
+ },
+ {
+  "id": "380.L8.nav-present",
+  "ok": true,
+  "detail": "nav text: \"conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT\""
+ },
+ {
+  "id": "380.L8.nav-no-date",
+  "ok": true,
+  "detail": "§8.32 — no rendered date in the nav: \"conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT\""
+ },
+ {
+  "id": "380.L1.S8",
+  "ok": true,
+  "detail": "Reference aria-expanded true · panel true"
+ },
+ {
+  "id": "380.S8.nothing-above-moves",
+  "ok": true,
+  "detail": "NEEDS YOU tier rows 3 -> 3"
+ },
+ {
+  "id": "380.S8.uncounted",
+  "ok": true,
+  "detail": "a numeral on the uncounted tier: null"
+ },
+ {
+  "id": "380.L7.targets",
+  "ok": false,
+  "detail": "38 interactive, 2 under 44px: [\"button.strip-edit-all|Edit full setup ⤢|130x19\",\"a.inline-flex items-center min-h-[32px] ma|Terms|35x44\"]"
+ },
+ {
+  "id": "380.L7.footer",
+  "ok": false,
+  "detail": "footer: [{\"name\":\"Terms\",\"w\":35,\"h\":44},{\"name\":\"Privacy\",\"w\":49,\"h\":44}]"
+ },
+ {
+  "id": "380.L6.not-dimmed",
+  "ok": true,
+  "detail": "the ribbon is inside .results-stale: false (dim present: true) — \"Previous answer — values below predate the request in flight.\""
+ },
+ {
+  "id": "380.L6.contrast",
+  "ok": true,
+  "detail": "COMPOSITED 11.16:1 — text rgb(200,209,221) 0.612% on bg rgb(16,28,41) 88.17% (18144 px, border inset out); top: 11.16:1@0.612% 11.11:1@0.121% 11.06:1@0.143% 11.03:1@0.088% 11.02:1@0.066%"
+ },
+ {
+  "id": "380.L7.axe-target-size",
+  "ok": false,
+  "detail": "axe target-size violations: 1 — [{\"target\":\".strip-edit-all\",\"summary\":\"Fix any of the following:\\n  Target has insufficient size (130.2px by 19.2px, should be at least 24px by 24px)\\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diame\",\"data\":{\"minSize\":24,\"width\":130.2,\"height\":19.2}}]; other violations: region, scrollable-region-focusable"
+ },
+ {
+  "id": "380.S5none[US-40 near Cheyenne We].pick",
+  "ok": false,
+  "detail": "US-40 near Cheyenne Wells, CO (eastern plains): 0 candidate(s)"
+ },
+ {
+  "id": "380.S5none[CO-71 south of Ordway,].pick",
+  "ok": false,
+  "detail": "CO-71 south of Ordway, CO: 0 candidate(s)"
+ },
+ {
+  "id": "380.S5none[US-40 west of Craig, C].pick",
+  "ok": true,
+  "detail": "US-40 west of Craig, CO: 1 candidate(s)"
+ },
+ {
+  "id": "380.S5none[US-40 west of Craig, C].cta",
+  "ok": true,
+  "detail": "\"Generate plan\""
+ },
+ {
+  "id": "380.S5none[US-40 west of Craig, C].settle",
+  "ok": true,
+  "detail": "the pair settled"
+ },
+ {
+  "id": "380.S5none.try",
+  "ok": null,
+  "detail": "US-40 west of Craig, CO: 2 tier row(s) — not clean, trying the next pin"
+ },
+ {
+  "id": "380.L1.S5none",
+  "ok": null,
+  "detail": "NOT REACHED on prod: none of the 3 candidate corridors produced a clean plan. Covered at the mount by GeneratorShell.needs-you.test.tsx; not faked here."
+ },
+ {
+  "id": "380.S6.pick",
+  "ok": true,
+  "detail": "E Bayaud, Denver: 5 candidate(s)"
+ },
+ {
+  "id": "380.S6.replay-armed",
+  "ok": null,
+  "detail": "the AUDIT call is answered with a real-shaped 400 — a REPLAY, labelled: this measures the frontend, not the backend"
+ },
+ {
+  "id": "380.S6.cta-gated",
+  "ok": true,
+  "detail": "Generate disabled under the declined audit: true (#180)"
+ },
+ {
+  "id": "380.L1.S6",
+  "ok": true,
+  "detail": "a refusal is on screen: true"
+ },
+ {
+  "id": "380.S6.no-needs-you",
+  "ok": true,
+  "detail": "NEEDS YOU beside the refusal: false (spec 31, rule 10)"
+ },
+ {
+  "id": "380.S6.no-ribbon",
+  "ok": true,
+  "detail": "0 ribbon(s) under a decline (#258)"
+ },
+ {
+  "id": "380.L8.pageerror-zero",
+  "ok": true,
+  "detail": "0 pageerror, 7 console error(s)"
+ },
+ {
+  "id": "380.L8.hydration-zero",
+  "ok": true,
+  "detail": "hydration-shaped: 0"
+ },
+ {
+  "id": "gate.healthz-after",
+  "ok": true,
+  "detail": "healthz still f44377e3bd96f18e0413fa52fbeab3069800b7e9"
+ }
+]

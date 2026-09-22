@@ -1,0 +1,61 @@
+healthz sha f44377e3bd96f18e0413fa52fbeab3069800b7e9 expect f44377e3bd96f18e0413fa52fbeab3069800b7e9
+PASS gate.healthz — healthz == f44377e3bd96f18e0413fa52fbeab3069800b7e9
+PASS 1440.S5items.pick — E Bayaud, Denver: 5 candidate(s)
+PASS 1440.S5items.cta — "Generate plan"
+PASS 1440.S5items.settle — the pair settled
+PASS 1440.L1.S5items — NEEDS YOU present: true
+PASS 1440.L5.reserve-44 — reserved row 44px (rule 28)
+PASS 1440.strip-absent — .ns-strip: false
+PASS 1440.C1.cond-rows — 7 condition row(s) inside the block
+PASS 1440.C1.manual-keys — 2 manual key row(s) (§8.25)
+PASS 1440.C1.apply-row — Apply row present: true — "Apply 0 corrections", disabled true
+PASS 1440.C1.standing — standing sentence: "no corrections staged · staging costs nothing, Apply re-generates once"
+PASS 1440.L3.always-expanded — caret in the header: false
+PASS 1440.L3.count-is-sum — header "3" vs 3 tier rows (ruling 185)
+PASS 1440.L3.decomposition — changed the plan, or waiting on your word · 2 changed this plan · 1 needs attention
+PASS 1440.L2.one-primary — rule-130 primaries 0 + filled actions 1; NEEDS YOU owns: true; zip class "act tr-step"
+PASS 1440.L2.zip-both-widths — the zip renders: true (ruling 183, settled by clause 3)
+PASS 1440.L2.cards-flat — 4 download cards (ruling 182)
+PASS 1440.L4.count-once — "N files" appears 1x: ["4 files"]; el: ["4 files"]
+PASS 1440.C2.hero-numeral — numeral 62px / weight 500; tracks "399px 399px 300px"
+PASS 1440.C2.ticks-gone — 0 corner tick(s)
+PASS 1440.C2.geometry-rows — 4 geometry row(s) — rule 169 deviation: the cell RENDERS at both widths
+PASS 1440.L?.C5.no-results-heading — "MHT package" heading on the page: false
+PASS 1440.C5.no-reference-heading — "Rules, permit & audit" heading: false
+PASS 1440.C5.no-intro — the intro paragraph: false
+PASS 1440.C5.zone-tags — zone tags: ["01Setup"]
+PASS 1440.C5.stack-named — section.results-stack: true
+PASS 1440.C5.draft-notice-kept — §8.12 draft notice: true
+PASS 1440.C4.row-order — rows: ["Pricing quote","Checked & passed","Pending / not verified","Reference"]
+PASS 1440.C4.rule-89-counts — counted: ["Checked & passed=14","Pending / not verified=2"]; uncounted: ["Pricing quote","Reference"]
+PASS 1440.C4.rule-129-reads — every row data-read, none data-write
+PASS 1440.C4.closed-in-S5 — open states: ["false","false","false","false"]
+PASS 1440.C4.rule-88-name — name sizes: ["13px","13px","13px","13px"]
+PASS 1440.L8.nav-present — nav text: "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT"
+PASS 1440.L8.nav-no-date — §8.32 — no rendered date in the nav: "conestruct.v0.4Demo/MUTCD plan generatorTA-3·S-630-1MUTCD 2023 · CDOT"
+PASS 1440.L1.S8 — Reference aria-expanded true · panel true
+PASS 1440.S8.nothing-above-moves — NEEDS YOU tier rows 3 -> 3
+PASS 1440.S8.uncounted — a numeral on the uncounted tier: null
+PASS 1440.L7.targets — 38 interactive, 0 under 32px: []
+PASS 1440.L7.footer — footer: [{"name":"Terms","w":35,"h":32},{"name":"Privacy","w":49,"h":32}]
+PASS 1440.L6.not-dimmed — the ribbon is inside .results-stale: false (dim present: true) — "Previous answer — values below predate the request in flight."
+PASS 1440.L6.contrast — COMPOSITED 11.16:1 — text rgb(200,209,221) = --ink-on-dark 0.293% on bg rgb(16,28,41) 94.52% (39312 px, border inset out); top: 11.16:1@0.293% 11.06:1@0.056% 10.9:1@0.079% 10.9:1@0.066% 10.8:1@0.142%
+FAIL 1440.S5none[US-40 near Cheyenne We].pick — US-40 near Cheyenne Wells, CO (eastern plains): 0 candidate(s)
+FAIL 1440.S5none[CO-71 south of Ordway,].pick — CO-71 south of Ordway, CO: 0 candidate(s)
+PASS 1440.S5none[US-40 west of Craig, C].pick — US-40 west of Craig, CO: 1 candidate(s)
+PASS 1440.S5none[US-40 west of Craig, C].cta — "Generate plan"
+PASS 1440.S5none[US-40 west of Craig, C].settle — the pair settled
+INFO 1440.S5none.try — US-40 west of Craig, CO: 2 tier row(s) — not clean, trying the next pin
+INFO 1440.L1.S5none — NOT REACHED on prod: none of the 3 candidate corridors produced a clean plan. Covered at the mount by GeneratorShell.needs-you.test.tsx; not faked here.
+PASS 1440.S6.pick — E Bayaud, Denver: 5 candidate(s)
+INFO 1440.S6.replay-armed — the AUDIT call is answered with a real-shaped 400 — a REPLAY, labelled: this measures the frontend, not the backend
+PASS 1440.S6.cta-gated — Generate disabled under the declined audit: true (#180)
+PASS 1440.L1.S6 — a refusal is on screen: true
+PASS 1440.S6.no-needs-you — NEEDS YOU beside the refusal: false (spec 31, rule 10)
+PASS 1440.S6.no-ribbon — 0 ribbon(s) under a decline (#258)
+PASS 1440.L8.pageerror-zero — 0 pageerror, 4 console error(s)
+PASS 1440.L8.hydration-zero — hydration-shaped: 0
+healthz sha f44377e3bd96f18e0413fa52fbeab3069800b7e9 expect f44377e3bd96f18e0413fa52fbeab3069800b7e9
+PASS gate.healthz-after — healthz still f44377e3bd96f18e0413fa52fbeab3069800b7e9
+
+DONE — 57 rows, 2 FAIL

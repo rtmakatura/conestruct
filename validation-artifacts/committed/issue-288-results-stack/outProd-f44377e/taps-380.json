@@ -1,0 +1,176 @@
+{
+ "label": "early",
+ "pageerrors": [],
+ "consoleErrors": [
+  {
+   "at": 23349,
+   "text": "Failed to load resource: the server responded with a status of 400 ()"
+  },
+  {
+   "at": 23728,
+   "text": "Failed to load resource: the server responded with a status of 400 ()"
+  },
+  {
+   "at": 23790,
+   "text": "Failed to load resource: the server responded with a status of 400 ()"
+  },
+  {
+   "at": 252182,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 252587,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 252991,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  },
+  {
+   "at": 253362,
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  }
+ ],
+ "requestFailures": [
+  {
+   "at": 23394,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 24187,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 24561,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 24561,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 25600,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 25600,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 61890,
+   "url": "https://o4511428711153664.ingest.us.sentry.io/api/4511428740513792/envelope/",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 61890,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 110332,
+   "url": "https://o4511428711153664.ingest.us.sentry.io/api/4511428740513792/envelope/",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 159537,
+   "url": "https://o4511428711153664.ingest.us.sentry.io/api/4511428740513792/envelope/",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 187721,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 187721,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188120,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188120,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188521,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188521,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188890,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 188890,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 189925,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 189925,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 190910,
+   "url": "https://www.conestruct.com/terms",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 221419,
+   "url": "https://o4511428711153664.ingest.us.sentry.io/api/4511428740513792/envelope/",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 252181,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 252181,
+   "url": "https://www.conestruct.com/api/render/audit",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 252586,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 252990,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "at": 253361,
+   "url": "https://www.conestruct.com/api/render/device-breakdown",
+   "failure": "net::ERR_ABORTED"
+  }
+ ],
+ "counts": {
+  "pageerror": 0,
+  "consoleError": 7,
+  "requestFailed": 27
+ }
+}
