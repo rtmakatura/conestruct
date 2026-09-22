@@ -129,7 +129,12 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
 // widths.  The slot still owns the 14 px gap, so its height is the same
 // whether its occupant is built yet or not.
 describe("#288 — the results stack's reserved first row", () => {
-  it("the workbench defines --fact-h: 44px with no <=480 override; .results-head-slot reserves it and owns the gap", () => {
+  it("the workbench still defines --fact-h: 44px with no <=480 override, though nothing reserves it yet", () => {
+    // Ryan's hand-check at f44377e made the slot a Phase 1 DEVIATION: it
+    // reserved 44 px for Phase 2's setup fact line, so in Phase 1 it was
+    // an empty box preventing no movement.  The RULE is gone; the TOKEN
+    // stays, declared ahead of its surface in #283's idiom, and Phase 2's
+    // fact line reads it when the slot returns.
     expect(rule(".workbench")).toMatch(/--fact-h:\s*44px/);
     // Several <=480 queries in the sheet (C's idiom above): NONE
     // re-declares --fact-h, because rule 56 does not vary by viewport.
@@ -138,9 +143,7 @@ describe("#288 — the results stack's reserved first row", () => {
       .slice(1)
       .map((b) => b.slice(0, b.indexOf("\n}\n")));
     expect(blocks.some((b) => /--fact-h\s*:/.test(b))).toBe(false);
-    const slot = rule(".workbench .results-head-slot");
-    expect(slot).toMatch(/min-height:\s*var\(--fact-h\)/);
-    expect(slot).toMatch(/margin-bottom:\s*14px/);
+    expect(css.replace(/\/\*[\s\S]*?\*\//g, "")).not.toContain(".results-head-slot");
   });
 });
 

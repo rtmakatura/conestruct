@@ -1508,10 +1508,13 @@ input[type="number"] {
 .workbench .zone.results {
   container-type: inline-size;
 }
-.workbench .results-head-slot {
-  min-height: var(--fact-h);
-  margin-bottom: 14px;
-}
+/* #288 Phase 1 deviation from rule 28 (Ryan's hand-check at f44377e):
+   `.results-head-slot` is DELETED.  The slot reserved 44 px for the setup
+   fact line, which Phase 2 builds — so in Phase 1 it held a place for
+   something that never arrived and rendered as an empty box under the
+   verdict strip.  A reserve that prevents no movement is not a reserve.
+   `--fact-h` stays declared: it is rule 56's 44 px, and Phase 2's fact
+   line reads it when the slot returns (components/ResultsHead.tsx). */
 /* #288 end */
 .workbench .tr-signpost {
   font-family: var(--font-mono);

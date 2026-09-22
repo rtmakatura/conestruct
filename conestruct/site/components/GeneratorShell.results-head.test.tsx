@@ -205,15 +205,25 @@ function expectNoStrip() {
   expect(document.body.textContent).not.toContain("NEXT — 3 STEPS");
 }
 
-describe("#288 rule 28 — the results stack's reserved first row", () => {
-  it("is reserved and EMPTY while the generated scenario's audit is in flight; the band is the voice", async () => {
-    // Pre-generate the audit runs WITHOUT the scan (withSiteScan applies
-    // only once generated): its provenance is not_run.
+describe("#288 Phase 1 deviation from rule 28 — the slot renders NOTHING", () => {
+  // Ryan's hand-check on prod at f44377e: the reserved row read as an
+  // empty box under the verdict strip.  Rule 28 reserves so the stack
+  // does not MOVE when the occupant forms at the settle — and Phase 1
+  // never builds that occupant (the setup fact line is Phase 2's, §8.16
+  // / §8.27).  A reserve that prevents no movement is 44 px of nothing.
+  //
+  // The three tests this replaces asserted the slot mounted at Generate,
+  // stayed empty at the settle and released under a decline.  Two of
+  // those three claims are now about ABSENCE, and the third (the release)
+  // is vacuous when nothing ever mounts — so they are rewritten, not
+  // deleted: what the suite guards is that no empty box returns, and
+  // that the things which DO belong at the top of the stack are there.
+
+  it("no reserved row at any stage — pre-generate, mid-flight, or settled", async () => {
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
-    expect(slot(), "nothing pre-generate, not even the slot").toBeNull();
-    expect(band()).toBeNull();
+    expect(slot(), "nothing pre-generate").toBeNull();
     expectNoStrip();
     served = audit(BUCKETS_DETECTED);
     const held = gate(served);
@@ -221,26 +231,25 @@ describe("#288 rule 28 — the results stack's reserved first row", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
+    // Mid-flight: the band is the voice (#252), and there is no empty box
+    // waiting beneath the verdict strip for an occupant Phase 1 has not
+    // built.
     expect(band(), "band present while the audit is pending").not.toBeNull();
-    // No answer has landed for the generated scenario: the pre-generate
-    // not_run answer is NOT shown as this plan's (rule 10).
-    expect(slot()).not.toBeNull();
-    expect(slot()!.children).toHaveLength(0);
+    expect(slot(), "no reserve mid-flight").toBeNull();
     expect(document.getElementById("site-corrections")).toBeNull();
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    // The settle does not fill the row — the setup fact line arrives with
-    // the stack container.  The reserve is a rule, so it holds anyway.
-    expect(slot(), "the slot stays mounted at the settle").not.toBeNull();
-    expect(slot()!.children).toHaveLength(0);
+    expect(slot(), "no reserve at the settle either").toBeNull();
     expectNoStrip();
+    // What DOES arrive at the settle is the block — the top of the stack
+    // is content, not a placeholder.
     expect(document.getElementById("site-corrections")).not.toBeNull();
   });
 
-  it("a pending breakdown also keeps the band up and the row empty", async () => {
+  it("a pending breakdown keeps the band up and still mounts no empty row", async () => {
     served = audit(BUCKETS_DETECTED);
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -249,43 +258,33 @@ describe("#288 rule 28 — the results stack's reserved first row", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
-    // The audit answered (the block is up) but generation is still computing.
     expect(document.getElementById("site-corrections")).not.toBeNull();
     expect(band()).not.toBeNull();
-    expect(slot()!.children).toHaveLength(0);
+    expect(slot()).toBeNull();
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    expect(slot()).not.toBeNull();
+    expect(slot()).toBeNull();
     expectNoStrip();
   });
 
-  it("is absent pre-generate, mounted exactly once from Generate, and RELEASED under a declined plan", async () => {
-    served = auditWithScan({ status: "not_run", reason: "not_requested" });
-    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await settle();
-    expect(slot()).toBeNull();
+  it("the shell's post-generate predicate is still wired, so Phase 2 has it", async () => {
+    // The deviation is about what RENDERS, not about unpicking the
+    // plumbing.  ResultsHead still takes the shell's "post-generate and
+    // not declined" predicate; Phase 2 mounts the fact line on exactly
+    // that, and re-deriving it later from scratch is how a working
+    // predicate gets quietly replaced by a subtly different one.
     served = audit(BUCKETS_DETECTED);
-    const held = gate(served);
-    auditGate = held;
-    const user = userEvent.setup();
-    await user.click(screen.getByRole("button", { name: "Generate package" }));
-    await settle();
-    expect(slot(), "slot reserved while the audit is pending").not.toBeNull();
-    expect(slot()!.children).toHaveLength(0);
-    expect(band()).not.toBeNull();
-    await act(async () => {
-      held.release();
-    });
-    await settle();
-    expect(document.querySelectorAll(".results-head-slot")).toHaveLength(1);
+    await generate();
+    expect(document.querySelectorAll(".results-head-slot")).toHaveLength(0);
+    // And under a decline the stack is the refusal's, as spec 31 says.
     cleanup();
-    auditGate = null; // the released gate would otherwise keep answering ok
+    auditGate = null;
     auditRefuses = true;
     await generate();
     expect(document.querySelector(".scan-refusal")).not.toBeNull();
-    expect(slot(), "released under a decline").toBeNull();
+    expect(slot()).toBeNull();
   });
 });

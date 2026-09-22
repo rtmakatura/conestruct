@@ -23,19 +23,33 @@ function rule(selector: string): string {
 }
 
 describe("#288 rule 28 — the reserved first row's CSS contract", () => {
-  it("reserves --fact-h, and --fact-h is 44px: rule 56's fact line, a rule not a measurement", () => {
-    expect(rule(".workbench .results-head-slot")).toMatch(/min-height:\s*var\(--fact-h\)/);
+  // Ryan's hand-check at f44377e: the slot is a Phase 1 DEVIATION now.
+  // It reserved 44 px for the setup fact line, which Phase 2 builds, so
+  // in Phase 1 it held a place for something that never arrived.  The
+  // three claims this replaces described that rule's properties; what
+  // the suite guards now is that the rule is GONE and the token it read
+  // is not, because Phase 2 needs the token back.
+
+  it("the slot rule is deleted — no element, no rule", () => {
+    const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(code).not.toContain(".results-head-slot");
+  });
+
+  it("--fact-h SURVIVES at 44px: rule 56's fact line, declared ahead of Phase 2's surface", () => {
+    // The #283 idiom, deliberately: a size is declared before the phase
+    // that draws it, so the declaration is ready and cannot drift.  The
+    // token is not debt — it is the reserve's value, waiting for its
+    // occupant.
     expect(CSS).toMatch(/--fact-h:\s*44px/);
   });
 
-  it("carries rule 27's first gap as the slot's bottom margin", () => {
-    expect(rule(".workbench .results-head-slot")).toMatch(/margin-bottom:\s*14px/);
-  });
-
-  it("is NOT sticky — it was pinned because the strip was pinned, and rule 32 allows only the nav", () => {
-    const slot = rule(".workbench .results-head-slot");
-    expect(slot).not.toMatch(/position:\s*sticky/);
-    expect(slot).not.toMatch(/z-index/);
+  it("nothing else consumed the slot — deleting it left no dangling reference", () => {
+    const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(code).not.toMatch(/results-head-slot/);
+    // And the token has no consumer yet either, which is the honest
+    // state: declared, unused, waiting.  A var() reference to it would
+    // mean something still reserves, and nothing should.
+    expect(code).not.toMatch(/var\(--fact-h\)/);
   });
 
   it("--strip-h is retired: no declaration and no consumer survives", () => {
