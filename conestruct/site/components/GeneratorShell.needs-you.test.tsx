@@ -248,6 +248,46 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     expect(b.getAttribute("aria-busy")).toBeNull();
   });
 
+  it("fix 4: the header count describes everything ABOVE the sub-header, and nothing below it", async () => {
+    // Ryan's hand-check at f44377e: the header read "3" above ten rows.
+    // The count is ruling 185's ▲ + ⚠ sum and was never about the site
+    // conditions clause 1 moved in — so the conditions are grouped under
+    // their own name, and the count is true of exactly what precedes it.
+    served = {
+      ...AUDIT_WITH_ITEMS,
+      sections: {
+        ...AUDIT_WITH_ITEMS.sections,
+        site_scan: {
+          status: "ok",
+          mode: "corridor",
+          measured_at: "2026-09-04T12:00:00+00:00",
+          buckets: {
+            intersections: { detected: true, count: 26, nearest_distance_ft: 34.1 },
+            schools: { detected: false, count: 0 },
+          },
+          flags: {},
+          corrections: [],
+        },
+      },
+    };
+    await generate();
+    const b = block()!;
+    const rows = Array.from(b.querySelectorAll(".ny-item"));
+    const headIdx = rows.findIndex((r) => r.classList.contains("ny-subhead"));
+    expect(headIdx, "the sub-header exists and is not first").toBeGreaterThan(0);
+    // Everything ABOVE the sub-header is a counted tier row, and there
+    // are exactly as many as the header says.
+    const above = rows.slice(0, headIdx);
+    expect(above.every((r) => /is-(changed|attention)/.test(r.className))).toBe(true);
+    expect(String(above.length)).toBe(count());
+    // Everything BELOW is a condition row, the Apply row or the scan's
+    // provenance — none of them counted, none of them claiming to be.
+    const below = rows.slice(headIdx + 1);
+    expect(below.length).toBeGreaterThan(0);
+    expect(below.every((r) => /ny-cond|ny-apply|ny-foot|ny-sub/.test(r.className))).toBe(true);
+    expect(below.some((r) => /is-changed|is-attention/.test(r.className))).toBe(false);
+  });
+
   it("ruling 186 on a real mount: always expanded — every item is on screen, no caret in the header", async () => {
     served = AUDIT_WITH_ITEMS;
     await generate();

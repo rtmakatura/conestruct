@@ -330,6 +330,36 @@ export function SiteConditionRows({
   };
 
   const rows: ReactNode[] = [];
+  // ─── THE SUB-HEADER (Ryan's hand-check at f44377e, fix 4) ───
+  //
+  // The block's header count is ruling 185's SUM of ▲ + ⚠ — three, on the
+  // pin the legs use.  Below it the block showed ten rows, because the
+  // corrections block moved in whole (clause 1) and brought seven
+  // condition rows with it.  A header reading "3" above ten rows is a
+  // count that does not describe what is under it.
+  //
+  // Two ways to reconcile that were on the table.  This is the second,
+  // and the reasoning is in rulings.md: a second numeral in the header
+  // ("3 · 7 site conditions") is exactly what ruling 185 declined — "the
+  // sum is the count, the decomposition is provenance" — and it would
+  // put a number on the header that the header's own numeral does not
+  // include.  A sub-header instead GROUPS the rows the count is not
+  // about, so the count stays true of everything above the sub-header
+  // and the condition rows keep the name they arrived with.
+  //
+  // The name is the corrections block's own, from §8.5 ("Site conditions
+  // — scanned"): clause 1 dropped it when the block moved, and the ported
+  // suite recorded that as churn at the time.  It comes back here, which
+  // is where it belongs — a label for the rows it labels, not a header
+  // for a block it no longer owns.
+  rows.push(
+    <li key="cond-head" className="ny-item ny-subhead">
+      <span className="ny-glyph" aria-hidden />
+      <div className="ny-mid">
+        <span className="tr-section">Site conditions — scanned</span>
+      </div>
+    </li>,
+  );
   if (buckets !== null) {
     for (const [bucketName, flagName] of SCAN_BUCKET_TO_FLAG) {
       const b = buckets[bucketName];

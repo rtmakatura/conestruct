@@ -550,3 +550,49 @@ What the suite does instead is what the leg cannot — it ENUMERATES the interac
 the mounted page renders, with the disclosures open and the dismiss picker open, and fails on
 any that carries no declared floor. The leg measures the page as it is on one run; the
 enumeration fails a control added later, at commit time.
+
+## The hand-check ruling, verbatim — 2026-09-22, on prod at `f44377e`
+
+Ryan, after walking the shipped Phase 1 push in a browser.
+
+> Hand-check on prod f44377e: items 1–6 pass; four fixes before Phase 1 closes, one commit
+> each on a branch off main:
+>
+> 1. The reserved 44 px fact-line slot renders nothing until Phase 2 mounts the fact line —
+> no empty box under the verdict strip. Record it as a Phase 1 deviation from rule 28 with
+> the reason (the reserve stops movement at the settle; an always-empty slot does not).
+> 2. Pull §8.31 forward: the jurisdiction context block is removed now; its "Not set" facts
+> move to the Reference row's summary line. Declare the Rule 5 change.
+> 3. The Reference disclosure row joins the disclosure group under Pricing / Passed /
+> Pending; the draft notice moves to the last line of the column (rule 29).
+> 4. NEEDS YOU's header count and its rows agree: either "3 · 7 site conditions" in the
+> header, or a "SITE CONDITIONS — SCANNED" sub-header above the condition rows inside the
+> block. Recommend one, build it.
+>
+> Verify, four-state leg at both widths, evidence, ship line.
+
+### Fix 4 — the recommendation, and why
+
+**Built: the sub-header.** The header keeps ruling 185's single numeral and the condition
+rows are grouped under §8.5's own name.
+
+The alternative — `"3 · 7 site conditions"` — is the thing ruling 185 declined when it was
+asked the same question about the same header:
+
+> 185. THE SUMMED COUNT (Part 1, 7.3). "Needs you · 3" is ▲ + ⚠. Keep the sum only, or show
+> both tiers in the default view and drop the sum.
+
+185 kept the sum only and made the decomposition provenance. A second numeral in the header
+would re-open that, and it would be a worse instance of it: the two tier counts at least add
+up to the header's number, whereas seven site conditions are not part of the three at all.
+The header would carry one number that includes some rows and a second that includes
+others, with nothing saying which is which.
+
+The sub-header makes the count true of exactly what sits above it and gives the rows below it
+the name they arrived with. That name is the corrections block's own, from §8.5 — clause 1
+dropped it when the block moved, and the ported suite recorded the loss as churn at the time.
+It comes back as a label for the rows it labels, rather than as a header for a block it no
+longer owns.
+
+It also costs nothing the gates have to learn: the section role (rule 3), the row's own
+inset, one hairline. No new size, no new colour.

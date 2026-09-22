@@ -2167,6 +2167,20 @@ input[type="number"] {
   cursor: default;
 }
 
+/* Fix 4 (Ryan's hand-check at f44377e) — the condition rows' sub-header.
+   The block's count is ruling 185's ▲ + ⚠ sum and does not include the
+   site conditions, so the conditions are GROUPED under their own name
+   rather than counted into a header that is not about them.  The name is
+   §8.5's own.  It takes the section role (rule 3) at the row's own
+   inset, with a hairline above to start the group — no new size, no new
+   colour, nothing the census or the ink gate has to learn. */
+.workbench .needs-you .ny-subhead {
+  border-top: 1px solid var(--da-hair);
+  padding-top: 12px;
+  padding-bottom: 4px;
+  border-bottom: none;
+}
+
 /* Rule 78 — the Apply row, the last data line.  Its glyph track is
    empty (no symbol: it is not a fact), the standing sentence takes the
    body track and the write takes the action track's right edge, so the

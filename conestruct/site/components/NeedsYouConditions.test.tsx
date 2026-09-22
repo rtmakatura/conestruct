@@ -119,7 +119,12 @@ const ADVISORY = "The plan is built to the correction — verify it in the field
 const ZERO_STANDING = "no corrections staged · staging costs nothing, Apply re-generates once";
 /** Condition rows only — not the Apply row, the footer or the picker. */
 const condRows = () =>
-  block()!.querySelectorAll(".ny-item:not(.ny-apply):not(.ny-foot):not(.ny-sub)");
+  block()!.querySelectorAll(
+    // `.ny-subhead` joins the exclusions with fix 4: it is a LABEL for
+    // the condition rows, not one of them, so it has no glyph, no
+    // provenance and no action track to assert.
+    ".ny-item:not(.ny-apply):not(.ny-foot):not(.ny-sub):not(.ny-subhead)",
+  );
 
 describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)", () => {
   it("an ok scan renders one row per bucket on the wire with the wire's words and one action each", () => {
@@ -483,6 +488,12 @@ describe("NEEDS YOU — site conditions (#224 phase 4, moved by #288 clause 1)",
       expect(row.querySelector(".ny-glyph")?.getAttribute("aria-hidden")).toBe("true");
       expect(row.querySelector(".sc-result")!.textContent!.trim().length).toBeGreaterThan(0);
     }
+    // Fix 4: the group is introduced by its own sub-header, which names
+    // the rows the block's count is NOT about (§8.5's own words).
+    const head = block()!.querySelector(".ny-subhead");
+    expect(head, "the condition rows are grouped under a name").not.toBeNull();
+    expect(head!.textContent).toContain("Site conditions — scanned");
+    expect(head!.querySelector("button"), "a label is not a control").toBeNull();
     // The Apply row is the LAST data line (rule 78), after every
     // condition row and before the scan's provenance.
     const all = Array.from(block()!.querySelectorAll(".ny-item"));
