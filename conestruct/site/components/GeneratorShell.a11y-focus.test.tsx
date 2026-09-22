@@ -119,7 +119,11 @@ function activeIsSetupZone(): boolean {
   return (
     el instanceof HTMLElement &&
     el.tagName === "SECTION" &&
-    el.querySelector(".setup-panel") !== null
+    // #289 Phase 2: the zone holds the band stack now, not the setup
+    // panel (§8.16).  The focus TARGET is unchanged — ruling 192 re-homed
+    // the Zone 1 target onto the band stack and `setupRef` stays on this
+    // section — so only what it contains has changed.
+    el.querySelector(".band-stack") !== null
   );
 }
 

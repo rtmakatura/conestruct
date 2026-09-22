@@ -1,63 +1,40 @@
-"use client";
+// #289 Phase 2 — the detected-vs-applied derivation, lifted out of the
+// component that used to own it.
+//
+// Authority: validation-artifacts/committed/issue-289-band-stack/rulings.md
+// (d) — "per-field provenance comes from lib/road-detection/provenance.ts
+// — one producer; the #273 ledger's tests retire as layout and transfer as
+// facts" — and #281 Part 1 §8.23: "Detected vs applied block — folded into
+// the per-field provenance lines in the WHAT band … The separate block is
+// gone; nothing it said is gone."
+//
+// WHAT MOVED AND WHAT DID NOT.  Every row predicate below is
+// `DetectedVsApplied.tsx`'s, verbatim, comments included: the speed row's
+// domain snap, the lanes row's withdrawn/overridden three-state story and
+// its positive detection of a cleared relay, the road-type row's declared
+// residue, and #278's flagger-only one-way row with the reason it is
+// flagger-only. None of it is re-reasoned here, because re-reasoning it is
+// how #273's two mints of one vocabulary happened in the first place.
+//
+// What did NOT move is the shape: the glyph gutter, the two-line row, the
+// reserved clause slot, the block header and the list. Those retire with
+// the block (§8.23), and the WHAT grid renders each row's clause under the
+// field it is about.
+//
+// Rule 3: this module judges nothing. It reports what detection said and
+// what the plan used, and `provenance.ts` — still the one producer — turns
+// that into words.
 
-// #227 surface 7 — the detected-vs-applied reference block (closes
-// #214).  Detection source, detected value, and applied value are three
-// facts of the same kind, previously scattered as annotations; here they
-// answer the inspector's question in one place, at the top of the Road
-// step.
-//
-// Data is entirely client-side: ``meta.confirmedRoad`` carries the
-// picked candidate (way, name, bearing, tags) and the classification
-// synthesized at confirm time; applied values are the scenario fields
-// the operator can still edit below.  No wire change.
-//
-// Rule 10 throughout: the block renders ONLY when a confirmed road
-// exists at the CURRENT pin (the pinLat/pinLng staleness key — a stale
-// road never speaks, the #149 failure class); a fact OSM never reported
-// renders no row; the no-road/manual path keeps today's surfaces
-// untouched (#214 acceptance: manual-path behavior byte-identical).
-//
-// The #214 close lives in the caveat line: with road geometry on file
-// the drawing follows the geometry's own bearings and the typed value is
-// consumed sign-only (centerline.ts ±90° test), so the block SAYS so —
-// before the user types anything.
-//
-// ─── s2-arc30: the applied-forward ledger ───
-//
-// The two-column table is gone.  It satisfied every measured acceptance
-// #273 round 2 set — ink-right delta 0 px, equal value tracks, constant
-// row height — and still read as a wall of small text, because the one
-// question the block exists to answer (do detected and applied agree?)
-// had to be worked out by comparing two strings.
-//
-// A row now states the APPLIED value — what the plan used — on line 1,
-// with a verdict glyph in a 16 px gutter and one generated provenance
-// clause on line 2 that always names the detected value and its tokens.
-// The glyph column is what makes agreement scannable: every glyph sits
-// on one vertical axis, so a column of ✓ reads as a column and any ⚠
-// breaks it.
-//
-// What the two columns landed is kept, in clause words rather than in
-// cells: #274's method (measured / inferred), #275's overridden and
-// withdrawn, and the applied cell's own provenance.  What retires with
-// the old shape is its geometry — the fixed 132 px value tracks, the
-// header hairline, the ink-right equality acceptance.  #273's OUTCOME
-// survives: the applied values still share one right edge, obtained now
-// because every row body spans the full width rather than because a
-// track was pinned (measured spread 0.0 px across rows, both viewports).
-
-import type { Scenario } from "@/lib/scenarios";
-import type { RoadType } from "@/lib/scenarios";
-import { snapSpeedToDomain } from "@/lib/scenarios";
-import { ONEWAY_BLOCKING } from "@/lib/scenarios/auto-apply";
-import { clampLanesToDomain } from "@/lib/scenarios/validation";
+import type { RoadType, Scenario } from "../scenarios";
+import { snapSpeedToDomain } from "../scenarios";
+import { ONEWAY_BLOCKING } from "../scenarios/auto-apply";
+import { clampLanesToDomain } from "../scenarios/validation";
 import {
   type AppliedToken,
   type DetectedToken,
   appliedTokenFor,
-  provenanceClause,
   valuesAgree,
-} from "@/lib/road-detection/provenance";
+} from "./provenance";
 
 const ROAD_TYPE_LABELS: Record<RoadType, string> = {
   rural_undivided: "Rural — undivided",
@@ -77,23 +54,37 @@ const ROAD_TYPE_LABELS: Record<RoadType, string> = {
  * the absence is rendered as an absence rather than dressed as one of
  * the two verdicts.
  */
-type Verdict = "match" | "differ" | "unset";
+export type Verdict = "match" | "differ" | "unset";
 
-const GLYPH: Record<Verdict, string> = {
-  match: "✓",
-  differ: "⚠",
-  unset: "◌",
-};
+/** The row labels, as a closed set, so a consumer selects a row by a
+ *  name the compiler checks rather than by a string that can drift. */
+export type DetectedRowLabel =
+  | "Bearing"
+  | "Speed limit"
+  | "Lanes per direction"
+  | "Road type"
+  | "Divided"
+  | "One-way";
 
-interface Row {
-  label: string;
-  /** Line 1 — what the plan used.  `null` when the plan has no value. */
+export interface DetectedRow {
+  label: DetectedRowLabel;
+  /** What the plan used.  `null` when the plan has no value. */
   applied: string | null;
   /** The clause's detected value; `null` means the detection was withdrawn. */
   detected: string | null;
   detectedToken?: DetectedToken;
   appliedToken?: AppliedToken;
   verdict: Verdict;
+}
+
+export interface DetectedModel {
+  rows: DetectedRow[];
+  /** The road the rows are about, named the way the ledger named it. */
+  roadName: string;
+  wayId: string;
+  method: "auto_single" | "operator_pick";
+  /** #214: does road geometry govern the drawing, or the typed bearing? */
+  geomDrives: boolean;
 }
 
 /**
@@ -106,11 +97,11 @@ interface Row {
  * does not know why, which is exactly why it is written down: green
  * means the plan used what was detected.  It never means measured.
  *
- * Contrast measured on this block's own background (prod b2a325a):
+ * Contrast measured on the block's own background (prod b2a325a):
  * --warn 8.82:1, --pass 8.1:1.  Both well over the 4.5 floor, so nobody
  * needs to "fix" the pairing by dimming one of them.
  */
-function clauseIsAmber(r: Row): boolean {
+export function clauseIsAmber(r: DetectedRow): boolean {
   return (
     r.detected === null ||
     r.detectedToken === "inferred" ||
@@ -118,63 +109,15 @@ function clauseIsAmber(r: Row): boolean {
   );
 }
 
-function LedgerRow({ row }: { row: Row }) {
-  const amber = clauseIsAmber(row);
-  // Family, not weight, marks an operator-set value.  `memory.md`
-  // records "weight is not an axis" for the type roles and the PDF's own
-  // axis list excludes it; the design asked for sans 600, and the family
-  // switch alone already carries the fact — with the glyph and the
-  // clause's own word saying it twice more.
-  const operatorSet = row.appliedToken === "operator-set";
-  return (
-    <div className="dva-row">
-      {/* The house glyph vocabulary, unchanged: ✓ --pass "confirmed",
-          ⚠ --warn "changed / needs attention", ◌ --none "not set".  The
-          design asked for ▲ in #f4c020, but ▲ is the delta glyph in
-          --dim (#ff8a2e, orange) here, and the spec's own rule 0.12
-          forbids orange in this block — so the spec's constraint rules
-          out the spec's glyph.  ⚠ carries the meaning the design wanted
-          and already owns the colour it asked for.  aria-hidden because
-          the words beside it say the same thing (the house idiom —
-          ScheduleField.tsx:256). */}
-      <span className={`dva-glyph is-${row.verdict}`} aria-hidden>
-        {GLYPH[row.verdict]}
-      </span>
-      <div className="dva-body">
-        <div className="dva-line1">
-          <span className="tr-field">{row.label}</span>
-          {/* margin-left:auto, not space-between, holds the right edge:
-              with space-between a value that wraps to its own line
-              becomes the only item on that line and lands at flex-START
-              — measured 72.8 to 122.4 px off the axis on the six
-              label × value pairs that wrap at 380.  The auto margin puts
-              every one of them back at 0.0 px. */}
-          <span className={`dva-val tr-field${operatorSet ? " is-operator" : ""}`}>
-            {row.applied ?? "—"}
-          </span>
-        </div>
-        {/* The clause slot is RESERVED — one line at/above 520 px, two
-            below — so a row's height is a property of the viewport and
-            never of its own content.  The clause itself is one text
-            node: the design asked for emphasised fragments inside it,
-            which would split the string across spans and break both the
-            direct-text-node test idiom and any grep for the sentence.
-            Flagged for ruling; the fact is carried by the words. */}
-        <div className="dva-clause">
-          <span className={`tr-prov${amber ? " is-amber" : ""}`}>
-            {provenanceClause({
-              detectedValue: row.detected,
-              detectedToken: row.detectedToken,
-              appliedToken: row.appliedToken,
-            })}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
+/**
+ * The rows, or null when there is nothing honest to say.
+ *
+ * Rule 10 throughout: rows exist ONLY when a confirmed road exists at the
+ * CURRENT pin (the pinLat/pinLng staleness key — a stale road never
+ * speaks, the #149 failure class); a fact OSM never reported produces no
+ * row; the no-road / manual path produces none at all.
+ */
+export function deriveDetectedRows(scenario: Scenario): DetectedModel | null {
   const meta = scenario.meta;
   const road = meta.confirmedRoad ?? null;
   const fresh =
@@ -187,7 +130,7 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
 
   /** One row, with the verdict derived rather than asserted. */
   const mkRow = (o: {
-    label: string;
+    label: DetectedRowLabel;
     appliedValue: number | string | boolean | undefined;
     appliedDisplay: string | null;
     detectedValue: number | string | boolean | undefined;
@@ -196,7 +139,7 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
     /** True when the difference is exactly what auto-apply's domain
      *  snap would produce — the system's rounding, not an operator. */
     isDomainSnap?: boolean;
-  }): Row => {
+  }): DetectedRow => {
     // Rule 10: no applied value is "not set", never a verdict.
     if (o.appliedValue === undefined || o.appliedDisplay === null) {
       return {
@@ -224,15 +167,13 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
     };
   };
 
-  const rows: Row[] = [];
+  const rows: DetectedRow[] = [];
   rows.push(
     mkRow({
       label: "Bearing",
       appliedValue: meta.bearingDeg,
       appliedDisplay:
-        meta.bearingDeg !== undefined
-          ? `${Math.round(meta.bearingDeg)}°`
-          : null,
+        meta.bearingDeg !== undefined ? `${Math.round(meta.bearingDeg)}°` : null,
       detectedValue: cand.bearing,
       detectedDisplay: `${Math.round(cand.bearing)}°`,
     }),
@@ -281,8 +222,7 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
     // and no edit, and must not read as withdrawn.
     const relayCleared =
       cls.detectedLanesTotal !== undefined &&
-      (scenario as { detectedLanesTotal?: number }).detectedLanesTotal ===
-        undefined;
+      (scenario as { detectedLanesTotal?: number }).detectedLanesTotal === undefined;
     // Disputed erasures record a marker carrying the lane relays (#177);
     // ordinary ones record nothing (#112).  Only a marker that actually
     // carries a LANE relay speaks for this row — a one-way confirm's
@@ -407,37 +347,40 @@ export function DetectedVsApplied({ scenario }: { scenario: Scenario }) {
     }
   }
 
-  // Spec 6.6: zero rows renders NOTHING — not the header, not the
-  // caveat.  Unreachable today (Bearing always renders beside a fresh
-  // road), and written anyway so the rule is structural rather than
-  // incidental on the day a kind carries none of these facts.
+  // Spec 6.6: zero rows renders NOTHING.  Unreachable today (Bearing
+  // always renders beside a fresh road), and written anyway so the rule
+  // is structural rather than incidental on the day a kind carries none
+  // of these facts.
   if (rows.length === 0) return null;
 
-  const roadName = cand.name ?? cand.ref ?? `way ${cand.way_id}`;
+  return {
+    rows,
+    roadName: cand.name ?? cand.ref ?? `way ${cand.way_id}`,
+    wayId: cand.way_id,
+    method: fresh.method,
+    geomDrives,
+  };
+}
 
-  return (
-    <div className="dva">
-      <div className="tr-section mb-1">Detected vs applied</div>
-      <div className="tr-prov mb-1.5">
-        OSM detection · {roadName} · way {cand.way_id} ·{" "}
-        {fresh.method === "auto_single"
-          ? "sole match auto-adopted"
-          : "operator pick"}
-      </div>
-      <div className="dva-list">
-        {rows.map((r) => (
-          <LedgerRow key={r.label} row={r} />
-        ))}
-      </div>
-      {/* #214: the bearing field's actual role, disclosed before the
-          user types.  Both sentences are facts of the current state —
-          which input wins is never left unsaid.  Byte-identical across
-          the rebuild. */}
-      <div className="dva-caveat tr-prov">
-        {geomDrives
-          ? "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
-          : "no road geometry on file — the typed bearing drives the drawing"}
-      </div>
-    </div>
-  );
+/** Pick one row by label — the WHAT grid's way of asking "what does
+ *  detection say about the field I am rendering?". */
+export function detectedRow(
+  model: DetectedModel | null,
+  label: DetectedRowLabel,
+): DetectedRow | null {
+  return model?.rows.find((r) => r.label === label) ?? null;
+}
+
+/**
+ * #214's caveat, byte-identical across every rebuild of this surface.
+ *
+ * Both sentences are facts of the current state — which input wins is
+ * never left unsaid.  #289 keeps #214's disclosure "restyled, never
+ * deleted"; this is the string, and the WHAT band renders it under the
+ * grid rather than under a block that no longer exists.
+ */
+export function bearingCaveat(geomDrives: boolean): string {
+  return geomDrives
+    ? "road geometry governs the drawing — the typed bearing sets the travel-direction sign only"
+    : "no road geometry on file — the typed bearing drives the drawing";
 }

@@ -119,6 +119,12 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 type BundleBody = { scenario: NearIntersectionScenario };
 
@@ -212,17 +218,21 @@ describe("near_intersection picker → form → payload", () => {
     await mountSandbox();
 
     // Detected cross street pre-fills the approaches.
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
 
     // The detection-filled lane count needs confirmation; a manual
     // edit IS the confirmation (direction A → 1 through lane).
+    await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "1"));
 
     // Re-apply the same pin: the unchanged candidate must NOT clobber
     // the edit (#112's failure class at the approaches seam).
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_A"));
+    await openWhat();
     expect(chipIn("Cross-street lanes — direction A", "1").className).toContain(
       "on",
     );
@@ -261,6 +271,8 @@ describe("near_intersection picker → form → payload", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
 
@@ -269,6 +281,7 @@ describe("near_intersection picker → form → payload", () => {
     expect(screen.getByText(/turn pockets/i)).toBeTruthy();
     expect(generateButton().hasAttribute("disabled")).toBe(true);
 
+    await openWhat();
     await user.click(screen.getByText("Lane count is right"));
     expect(screen.queryByText("Lane count is right")).toBeNull();
     expect(generateButton().hasAttribute("disabled")).toBe(false);
@@ -284,6 +297,8 @@ describe("near_intersection picker → form → payload", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_NOTAG"));
 
@@ -295,6 +310,7 @@ describe("near_intersection picker → form → payload", () => {
 
     // A manual edit IS the confirmation (existing convention): setting
     // the count clears the hold without ticking the confirm.
+    await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "2"));
     expect(generateButton().hasAttribute("disabled")).toBe(false);
 
@@ -306,15 +322,21 @@ describe("near_intersection picker → form → payload", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
+    await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "1"));
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_B"));
 
     // PIN_B's candidate is different content → it re-fills, and its
     // detection-filled lanes need confirming again.
+    await openWhat();
     await user.click(screen.getByText("Lane count is right"));
     await generate(user);
     expect(bundleBody?.scenario.approaches[0].alongStationFt).toBe(-400);
@@ -344,7 +366,10 @@ describe("near_intersection picker → form → payload", () => {
 
     // No picker interaction: the one-leg cross street is fully
     // form-editable.  Switch to both directions and set lanes.
+    await openWhat();
+    await openWhat();
     await user.click(chipIn("Cross-street directions", "Both"));
+    await openWhat();
     await user.click(chipIn("Cross-street lanes — direction B", "2"));
 
     await generate(user);

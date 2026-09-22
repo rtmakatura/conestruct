@@ -30,6 +30,14 @@ import {
 import { FlaggerForm } from "./FlaggerForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
 import { ShoulderForm } from "./ShoulderForm";
+import { setLanes } from "@/lib/scenarios/what-writes";
+
+// #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
+// and its bookkeeping moved with it, to `lib/scenarios/what-writes.ts`.
+// The #177 disputed-only record and the #112 silent supersede are what
+// these cases are about, so they call the writer directly (rule 11: test
+// where the bug lives).  The flagger's recovery confirms below are
+// unchanged: they never moved out of the form.
 
 afterEach(cleanup);
 
@@ -141,15 +149,7 @@ describe("FlaggerForm confirms record what they erase (#177)", () => {
 
 describe("ShoulderForm lane edit — disputed-only recording (#177)", () => {
   it("a mismatch-disputed edit records the erased relays and the entered value", () => {
-    const setScenario = vi.fn();
-    render(
-      <ShoulderForm
-        scenario={{ ...DEFAULT_SHOULDER, lanes: 1, ...MISMATCH_RELAYS }}
-        setScenario={setScenario}
-      />,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "3" }));
-    const next = setScenario.mock.calls[0][0] as ShoulderScenario;
+    const next = setLanes({ ...DEFAULT_SHOULDER, lanes: 1, ...MISMATCH_RELAYS } as ShoulderScenario, 3) as ShoulderScenario;
     expect(next.detectedLanesTotal).toBeUndefined();
     expect(next.detectionOverrides![0]).toMatchObject({
       via: "shoulder_lane_edit",
@@ -161,15 +161,7 @@ describe("ShoulderForm lane edit — disputed-only recording (#177)", () => {
   });
 
   it("a #136-disputed edit (detected single-lane) records too", () => {
-    const setScenario = vi.fn();
-    render(
-      <ShoulderForm
-        scenario={{ ...DEFAULT_SHOULDER, lanes: 1, detectedLanesTotal: 1 }}
-        setScenario={setScenario}
-      />,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "2" }));
-    const next = setScenario.mock.calls[0][0] as ShoulderScenario;
+    const next = setLanes({ ...DEFAULT_SHOULDER, lanes: 1, detectedLanesTotal: 1 } as ShoulderScenario, 2) as ShoulderScenario;
     expect(next.detectionOverrides![0]).toMatchObject({
       via: "shoulder_lane_edit",
       detectedLanesTotal: 1,
@@ -178,21 +170,13 @@ describe("ShoulderForm lane edit — disputed-only recording (#177)", () => {
   });
 
   it("an undisputed edit clears the relays but records nothing (#112 convention)", () => {
-    const setScenario = vi.fn();
-    render(
-      <ShoulderForm
-        scenario={{
+    const next = setLanes({
           ...DEFAULT_SHOULDER,
           lanes: 2,
           detectedLanesTotal: 4,
           detectedLanesForward: 2,
           detectedLanesBackward: 2,
-        }}
-        setScenario={setScenario}
-      />,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "3" }));
-    const next = setScenario.mock.calls[0][0] as ShoulderScenario;
+        } as ShoulderScenario, 3) as ShoulderScenario;
     expect(next.detectedLanesTotal).toBeUndefined();
     expect(next.detectionOverrides).toBeUndefined();
   });

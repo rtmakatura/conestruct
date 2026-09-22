@@ -66,6 +66,7 @@ import {
 import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionControls,
+  JurisdictionSuggestSlot,
   type SuggestionResolution,
 } from "./JurisdictionSection";
 import type {
@@ -76,229 +77,14 @@ import type {
 
 type Mode = "sandbox" | "workbench";
 
-// #250 (a) — the landing check.  The post-generate ``scrollIntoView``
-// lands the results zone at its scroll-margin-top only if nothing moves
-// in the same frame; when the sidebar's unmount lands in the frame of
-// the programmatic scroll, Chrome suppresses scroll anchoring and the
-// zone settles wherever the swap left it (1 of 2 prod runs in arc 21;
-// the refused generate in audit F-S5-3 at −104).  So the landing is
-// checked once after the scroll settles — one ``scrollend``, or, where
-// it never fires (nothing to move, or no support), scrollY stable
-// across LANDING_STABLE_FRAMES — and re-issued ONCE if the zone's top
-// is more than LANDING_TOLERANCE_PX from its scroll-margin-top.  A
-// wheel / touch / navigation key from the user disarms it (the viewport
-// is theirs from that moment).  The pair's settle (the strip's verdict
-// re-mounting into its f2 slot) gets one more check under the same
-// one-re-issue cap: never twice.  Idempotent on the good path — a
-// landing within tolerance issues nothing.
-//
-// #271 — the settle INSIDE the landing scroll.  Arc 26's prod run at
-// ``3fa7d18`` (380x800, 1 of 10) caught the case the one-shot cap was
-// never written for: the memoised pair settled at 705 ms while the
-// smooth landing scroll was still animating.  The settle mounted the
-// corrections block ABOVE the zone (+1296 px of document), Chrome's
-// scroll anchoring held the zone by moving scrollY — and the running
-// smooth scroll then finished to the destination it had computed
-// BEFORE the settle, dropping the zone to 793 instead of 154.  Chrome
-// does not re-target a running smooth scroll after an anchoring
-// adjustment, and the one re-issue had already been spent inside the
-// animation window, so nothing could recover it.  So: a settle that
-// arrives in flight (``checked === false``) grants ONE extra round —
-// the check waits for that stale animation's own settle and re-checks
-// with a fresh re-issue budget.  The cap is two ``scrollIntoView``
-// re-issues per Generate, never re-granted (no round three); the
-// good-path "never twice" cap is unchanged, and a user scroll disarms
-// round two exactly as it disarms round one.
-//
-// #271 (a) — and the arc-28 evidence run said that was not enough.  On
-// a live page ``checked`` is spent at ~70 ms, long before the settle:
-// Chrome fires a ``scrollend`` about 30 ms after the landing scroll is
-// issued, with the zone still ~1939 px from its margin, because the
-// stage swap's relayout CANCELS the smooth scroll and the browser
-// reports the sequence as ended.  The check took that for the landing,
-// spent itself and its one re-issue there, and it was the RE-ISSUE's
-// animation that ran on to ~810 ms — so the pair's settle always
-// arrived with ``checked === true`` and the settle-granted round above
-// was unreachable.  Ryan's ruling of 2026-09-10, verbatim: "A
-// ``scrollend`` that arrives with the results zone still beyond
-// tolerance is a cancelled scroll, not a landing — re-issue and keep
-// waiting rather than spending the check.  Do not treat it as the
-// terminal signal."  So the terminal signal is no longer "a settle
-// happened" but "a settle happened AND the zone is within tolerance".
-// The cap is unchanged and now counted, not latched: at most
-// LANDING_MAX_REISSUES ``scrollIntoView`` re-issues per Generate, after
-// which the next signal ends the check wherever the zone is.  Two hard
-// bounds keep it from waiting forever — LANDING_MAX_FRAMES per round,
-// and LANDING_DEADLINE_MS across the whole check — and the user-scroll
-// disarm still wins at every point.
-//
-// #271 (finding 4, ruled 2026-09-10) — and the correction is INSTANT.
-// (a) works, but at ``4c4dce0`` it worked by animating: the arc-28 run
-// measured the zone travelling 793 -> 154 in four steps over ~450 ms,
-// AFTER the answer had landed.  Ryan: "A 450 ms wander after the answer
-// has landed reads as cheap — P12 — and one reposition is easier to
-// understand than four steps."  So a re-issue that fires once the pair
-// has SETTLED uses ``behavior: "auto"``: ``settle()`` sets ``settled``,
-// and ``reissueIfOff`` reads it.  The initial landing scroll is the
-// shell's and is untouched; a re-issue BEFORE any settle keeps the
-// arming behaviour, so the ordinary landing is still smooth.  Declared
-// behaviour change; reduced motion is unaffected — that arming is
-// already ``"auto"`` on both sides of the settle.
-export interface LandingCheck {
-  /** The pair's settle: one more check, still capped at one re-issue. */
-  settle: () => void;
-  /** Drop every listener without checking (unmount, a new arming). */
-  cancel: () => void;
-}
-const LANDING_TOLERANCE_PX = 1;
-const LANDING_STABLE_FRAMES = 6;
-const LANDING_MAX_FRAMES = 90;
-// #271 (a): the ruled cap, counted across the whole check — the landing
-// scroll itself is the shell's, these are the check's corrections.
-const LANDING_MAX_REISSUES = 2;
-// The wall clock the whole check lives under.  A landing scroll measures
-// ~810 ms at 380 and two corrections fit inside ~2.5 s; past this the
-// check ends wherever the zone is rather than holding its listeners.
-const LANDING_DEADLINE_MS = 4000;
-const USER_SCROLL_EVENTS = ["wheel", "touchmove", "keydown"] as const;
-const NAV_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " ", "Space"]);
-export function armLandingCheck(
-  el: HTMLElement,
-  behavior: ScrollBehavior,
-): LandingCheck {
-  // #271 (a): a count, not a latch — the cap is total, across every
-  // round, so no path can reach a third re-issue.
-  let reissues = 0;
-  let userScrolled = false;
-  let checked = false;
-  let settleWanted = false;
-  // #271: granted only by a settle that arrives in flight, spent by
-  // round two, never re-granted.
-  let grantExtra = false;
-  let done = false;
-  // #271 (finding 4): set by ``settle()`` — the pair has answered, so a
-  // correction from here is a reposition, not part of the landing.
-  let settled = false;
-  const armedAt = Date.now();
-  const expired = () => Date.now() - armedAt > LANDING_DEADLINE_MS;
-  let raf = 0;
-  let onScrollEnd: (() => void) | null = null;
-  const offBy = () => {
-    const margin = parseFloat(window.getComputedStyle(el).scrollMarginTop ?? "") || 0;
-    return Math.abs(el.getBoundingClientRect().top - margin);
-  };
-  const reissueIfOff = () => {
-    if (userScrolled || reissues >= LANDING_MAX_REISSUES) return;
-    if (offBy() > LANDING_TOLERANCE_PX) {
-      reissues += 1;
-      el.scrollIntoView({
-        behavior: settled ? "auto" : behavior,
-        block: "start",
-      });
-    }
-  };
-  const onUser = (e: Event) => {
-    if (e.type === "keydown" && !NAV_KEYS.has((e as KeyboardEvent).key)) return;
-    userScrolled = true;
-    finish();
-  };
-  const stopWaiting = () => {
-    if (onScrollEnd) window.removeEventListener("scrollend", onScrollEnd);
-    onScrollEnd = null;
-    if (raf) window.cancelAnimationFrame(raf);
-    raf = 0;
-  };
-  const finish = () => {
-    done = true;
-    stopWaiting();
-    for (const t of USER_SCROLL_EVENTS) window.removeEventListener(t, onUser);
-  };
-  // One wait for one scroll to settle: its ``scrollend``, or — where it
-  // never fires (nothing to move, or no support) — scrollY unchanged
-  // across consecutive frames, bounded.  Each round gets its own
-  // frame/stable counters, so round two measures the stale animation
-  // from where it starts, not from the arming.
-  const waitForSettle = (onSettled: () => void) => {
-    onScrollEnd = () => {
-      stopWaiting();
-      onSettled();
-    };
-    window.addEventListener("scrollend", onScrollEnd);
-    let last = window.scrollY;
-    let stable = 0;
-    let frames = 0;
-    const tick = () => {
-      frames += 1;
-      const y = window.scrollY;
-      stable = y === last ? stable + 1 : 0;
-      last = y;
-      if (stable >= LANDING_STABLE_FRAMES || frames >= LANDING_MAX_FRAMES) {
-        raf = 0;
-        stopWaiting();
-        onSettled();
-        return;
-      }
-      raf = window.requestAnimationFrame(tick);
-    };
-    raf = window.requestAnimationFrame(tick);
-  };
-  const round2 = () => {
-    reissueIfOff();
-    finish();
-  };
-  const landingCheck = () => {
-    if (checked || done) return;
-    // #271 (a): this signal is only the landing if the zone is actually
-    // AT its margin.  A ``scrollend`` (or a stable-frame window) with the
-    // zone still beyond tolerance is a cancelled scroll — correct it and
-    // keep waiting, without spending the check.  Bounded by the re-issue
-    // cap and by the wall clock: when either is reached, the next signal
-    // ends the check wherever the zone is.
-    if (
-      !userScrolled &&
-      reissues < LANDING_MAX_REISSUES &&
-      !expired() &&
-      offBy() > LANDING_TOLERANCE_PX
-    ) {
-      reissueIfOff();
-      waitForSettle(landingCheck);
-      return;
-    }
-    checked = true;
-    reissueIfOff();
-    if (settleWanted && grantExtra && !userScrolled) {
-      // #271: the settle landed inside this scroll's animation window —
-      // whatever this check just issued (or declined to issue) was
-      // measured against a document the still-running scroll does not
-      // know about.  Wait for that scroll's own settle, then re-check
-      // with a fresh budget.  Once.
-      grantExtra = false;
-      waitForSettle(round2);
-      return;
-    }
-    if (settleWanted) finish();
-  };
-  for (const t of USER_SCROLL_EVENTS) window.addEventListener(t, onUser, { passive: true });
-  waitForSettle(landingCheck);
-  return {
-    settle() {
-      // Set before every early return: from this moment any correction
-      // is a reposition of an answer already on screen.
-      settled = true;
-      if (done) return;
-      if (!checked) {
-        // The landing has not settled yet: the one check covers both —
-        // and, because the scroll is still in flight, earns round two.
-        settleWanted = true;
-        grantExtra = true;
-        return;
-      }
-      reissueIfOff();
-      finish();
-    },
-    cancel: finish,
-  };
-}
+// #289 Phase 2: the landing check moved to `lib/landing.ts` so the band
+// stack can arm it too (ruling 184) without a circular import.  Re-exported
+// here because arc-28's suites import it from this module by name, and a
+// test that has to be edited to follow a file move is a test that stopped
+// asserting the thing it was written for.
+import { armLandingCheck, type LandingCheck } from "@/lib/landing";
+export { armLandingCheck };
+export type { LandingCheck };
 
 // Cold-start honesty (Refs #122, rule 10): a warm audit round-trip
 // measures 0.5–0.7 s; past 2 s the wait is almost certainly the Modal
@@ -1364,6 +1150,68 @@ export function GeneratorShell({
   // setScenario writer stay owned by the shell) and rendered inside the
   // Location step of the setup flow.  The persistent top strip is now a
   // read-only summary of the same choices.
+  // #289 Phase 2 — the pin suggestion's three handlers, named once.
+  //
+  // The WHAT grid's jurisdiction cell hosts the suggestion now (#201:
+  // proximity is how a user knows which control a confirm applies to), and
+  // the street-class field keeps its own.  Both read these, so there is
+  // still exactly ONE writer of `jurisdiction_key` through this path —
+  // which is the suggest-never-set contract, and it would have been the
+  // first thing to break if the handlers had been re-typed at the new
+  // call site.
+  const onConfirmJurisdictionSuggestion = (k: string) => {
+    // #227: the record carries the value in effect at click (null and
+    // ABSENT distinguished) — exactly what undo restores (#179
+    // semantics: byte-identical after confirm-then-undo).
+    setSuggestResolution({
+      resolution: "confirmed",
+      prior: scenario.jurisdiction_key ?? null,
+      priorPresent: scenario.jurisdiction_key !== undefined,
+      suggested: k,
+    });
+    setScenario({ ...scenario, jurisdiction_key: k });
+  };
+  const onDismissJurisdictionSuggestion = () => {
+    const k = suggestState.data?.suggestion;
+    if (k)
+      setSuggestResolution({
+        resolution: "dismissed",
+        prior: scenario.jurisdiction_key ?? null,
+        priorPresent: scenario.jurisdiction_key !== undefined,
+        suggested: k,
+      });
+  };
+  const onUndoJurisdictionSuggestion = () => {
+    if (suggestResolution?.resolution === "confirmed") {
+      if (suggestResolution.priorPresent) {
+        setScenario({
+          ...scenario,
+          jurisdiction_key: suggestResolution.prior,
+        });
+      } else {
+        // Absence restores as absence (rule 10) — an explicit null
+        // would serialize where no key ever was.
+        const next = { ...scenario } as Record<string, unknown>;
+        delete next.jurisdiction_key;
+        setScenario(next as unknown as Scenario);
+      }
+    }
+    setSuggestResolution(null);
+  };
+
+  // #201 — the slot itself, for the WHAT grid's jurisdiction cell.
+  const jurisdictionSuggestSlot = (
+    <JurisdictionSuggestSlot
+      suggest={suggestState.status !== "ready" ? null : suggestState.data}
+      loading={suggestState.status === "loading"}
+      jurisdictionKey={scenario.jurisdiction_key ?? null}
+      resolution={suggestResolution}
+      onConfirm={onConfirmJurisdictionSuggestion}
+      onDismiss={onDismissJurisdictionSuggestion}
+      onUndo={onUndoJurisdictionSuggestion}
+    />
+  );
+
   const jurisdictionControls = (
     <JurisdictionControls
       jurisdiction={jurisdictionBlock}
@@ -1376,48 +1224,16 @@ export function GeneratorShell({
         setScenario({ ...scenario, street_class: c })
       }
       loading={jurisdictionLoading}
+      // #289 §8.21 — the jurisdiction FIELD is the WHAT grid's cell now,
+      // where ruling 196 gives it three states and rule 14 takes its
+      // skeleton away.  What is left here is the street-class half.
+      omitJurisdictionField
       suggest={suggestState.status !== "ready" ? null : suggestState.data}
       suggestLoading={suggestState.status === "loading"}
       suggestResolution={suggestResolution}
-      onConfirmSuggestion={(k) => {
-        // #227: the record carries the value in effect at click (null
-        // and ABSENT distinguished) — exactly what undo restores
-        // (#179 semantics: byte-identical after confirm-then-undo).
-        setSuggestResolution({
-          resolution: "confirmed",
-          prior: scenario.jurisdiction_key ?? null,
-          priorPresent: scenario.jurisdiction_key !== undefined,
-          suggested: k,
-        });
-        setScenario({ ...scenario, jurisdiction_key: k });
-      }}
-      onDismissSuggestion={() => {
-        const k = suggestState.data?.suggestion;
-        if (k)
-          setSuggestResolution({
-            resolution: "dismissed",
-            prior: scenario.jurisdiction_key ?? null,
-            priorPresent: scenario.jurisdiction_key !== undefined,
-            suggested: k,
-          });
-      }}
-      onUndoSuggestion={() => {
-        if (suggestResolution?.resolution === "confirmed") {
-          if (suggestResolution.priorPresent) {
-            setScenario({
-              ...scenario,
-              jurisdiction_key: suggestResolution.prior,
-            });
-          } else {
-            // Absence restores as absence (rule 10) — an explicit null
-            // would serialize where no key ever was.
-            const next = { ...scenario } as Record<string, unknown>;
-            delete next.jurisdiction_key;
-            setScenario(next as unknown as Scenario);
-          }
-        }
-        setSuggestResolution(null);
-      }}
+      onConfirmSuggestion={onConfirmJurisdictionSuggestion}
+      onDismissSuggestion={onDismissJurisdictionSuggestion}
+      onUndoSuggestion={onUndoJurisdictionSuggestion}
       classSuggest={classSuggestion}
       classSuggestTier={roadForPin?.candidate.highway_class ?? null}
       classResolution={classResolution}
@@ -1504,6 +1320,28 @@ export function GeneratorShell({
                 step. */}
           </div>
 
+          {/* The verification strip stays mounted in every stage — it is
+              the live per-input verdict surface (rule 10), not
+              post-generation chrome; the prototype's hidden-in-pre strip
+              had no live verification behind it.
+
+              #289 Phase 2 — MOVED ABOVE THE BAND STACK.  Part 1 §1.2 puts
+              it second in source order, in every state: "1. App nav …
+              2. Verdict strip (.vd) — always mounted, 4 variants.  3. The
+              band stack".  Rule 35 says the same thing about its mounting
+              and rule 26 gives it 18 px of air before the first band.
+              Below the setup zone it was right for the panel era, where
+              the strip summarised a form; above the column it is what the
+              column is answering to, and the first thing read. */}
+          <StatusBar
+            inputError={inputError}
+            refusal={refusal}
+            locationUnset={!hasLocation(scenario.meta)}
+            audit={stripAudit}
+            verifySlow={verifySlow}
+            bandVoice={generated}
+          />
+
           {/* ——— Zone 1 · Setup ——— */}
           {/* tabIndex -1: programmatic focus target for the Reopen
               swap (#193) — never in the Tab order. */}
@@ -1512,14 +1350,16 @@ export function GeneratorShell({
             tabIndex={-1}
             className={`zone outline-none${genState === "pre" ? " dominant" : ""}`}
           >
-            <div className="zone-head">
-              <span className="zone-tag">
-                <span className="n">01</span>Setup
-              </span>
-              <h2 className="zone-title">
-                {genState === "pre" ? "Describe the work zone" : "Scenario"}
-              </h2>
-            </div>
+            {/* #289 Phase 2 / §8.28 — THE SETUP ZONE HEADING IS DROPPED.
+                Phase 1 dropped the results heading and left this one,
+                because the bands that make "one narrative" true had not
+                been built.  They are built now: "The column has one
+                narrative, the bands carry step indices, and '02 · RESULTS'
+                survives only as the placeholder block's label in S4."
+                Ruling 192 confirmed it and re-homed the focus targets —
+                `setupRef` stays on this section, which is what the band
+                stack now fills, and `BandStack` carries rule 33's own
+                target inside it. */}
             {genState === "pre" ? (
               <GeneratorSidebar
                 scenario={scenario}
@@ -1532,6 +1372,13 @@ export function GeneratorShell({
                 jurisdictionControls={jurisdictionControls}
                 jurisdictionName={jurisdictionBlock?.name ?? null}
                 jurisdictionBlock={jurisdictionBlock}
+                // #289 ruling 196 / #276: only the shell can tell "not yet"
+                // from "did not answer" — it owns the breakdown fetch — so
+                // the WHAT grid's jurisdiction cell is handed both rather
+                // than re-deriving either.
+                jurisdictionLoading={jurisdictionLoading}
+                jurisdictionErrored={deviceBreakdown.state === "error"}
+                jurisdictionSuggest={jurisdictionSuggestSlot}
                 pendingSuggestions={pendingSuggestions}
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
@@ -1559,18 +1406,6 @@ export function GeneratorShell({
             )}
           </section>
 
-          {/* The verification strip stays mounted in every stage — it is
-              the live per-input verdict surface (rule 10), not
-              post-generation chrome; the prototype's hidden-in-pre strip
-              had no live verification behind it. */}
-          <StatusBar
-            inputError={inputError}
-            refusal={refusal}
-            locationUnset={!hasLocation(scenario.meta)}
-            audit={stripAudit}
-            verifySlow={verifySlow}
-            bandVoice={generated}
-          />
           {/* #193 — generation-lifecycle announcements (WCAG 4.1.3).
               Visually hidden, persistently mounted; content set only at
               the armed Generate settle, from the settled breakdown. */}

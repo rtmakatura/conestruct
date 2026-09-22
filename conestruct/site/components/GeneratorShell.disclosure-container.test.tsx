@@ -86,6 +86,12 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 const fetchMock = vi.fn(() =>
   Promise.resolve({
@@ -112,6 +118,7 @@ async function mountWithNote(initial: Scenario) {
   await act(async () => {
     await Promise.resolve();
   });
+  await openWhere();
   await user.click(screen.getByText("Pick Location on Map"));
   await user.click(screen.getByText("APPLY_SNAP"));
 }
@@ -121,6 +128,7 @@ describe("#227 disclosure container — the #198 notes' new clothes", () => {
     await mountWithNote(DEFAULT_SHOULDER);
     // getByText proves single-text-node by construction: the default
     // matcher reads only direct text-node children of one element.
+    await openWhere();
     const note = screen.getByText(
       /Speed 60 mph \(snapped from 62 mph OSM detection to the 5-mph grid\)\./,
     );
@@ -131,6 +139,7 @@ describe("#227 disclosure container — the #198 notes' new clothes", () => {
 
   it("the container carries the ⚠ glyph (aria-hidden) and no bare '!' glyph", async () => {
     await mountWithNote(DEFAULT_SHOULDER);
+    await openWhere();
     const note = screen.getByText(/snapped from 62 mph OSM detection/);
     const container = note.closest(".sys-event")!;
     const glyph = container.querySelector(".sys-glyph");
@@ -147,6 +156,7 @@ describe("#227 disclosure container — the #198 notes' new clothes", () => {
 
   it("provenance rides a second line in the provenance role", async () => {
     await mountWithNote(DEFAULT_SHOULDER);
+    await openWhere();
     const note = screen.getByText(/snapped from 62 mph OSM detection/);
     const container = note.closest(".sys-event")!;
     const prov = container.querySelector(".tr-prov");

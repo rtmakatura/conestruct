@@ -31,7 +31,7 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road">
         <Field>
           <LabelRow htmlFor="mm-road-type">Road type</LabelRow>
           <select id="mm-road-type"
@@ -79,7 +79,7 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Operation" step={4}>
+      <FieldGroup label="Operation">
         <Field>
           <LabelRow htmlFor="mm-work-type">Work type</LabelRow>
           <select id="mm-work-type"
@@ -118,7 +118,7 @@ export function MobileOpMultilaneForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Protection" step={5}>
+      <FieldGroup label="Protection">
         <CheckRow
           on={scenario.secondTMA}
           label="Second TMA upstream"

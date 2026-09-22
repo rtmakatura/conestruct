@@ -249,6 +249,20 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         "var(--fs-hero-numeral-380)",
         // #288 clause 3: rule 130's .pri, from the token #283 declared.
         "var(--fs-primary)",
+        // #289 Phase 2: the band stack's controls take four of #283's
+        // nine tokens — the field label (rules 17/56), the body value
+        // (rules 8/136), the primary (rule 130) and the XL primary
+        // (rule 131).  Declared as token NAMES, not pixel strings, for
+        // the same reason the hero's are: the size is ruled on :root and
+        // the surface reads it.  `--fs-primary` was already carried by
+        // #288's own row, so it appears once.
+        "var(--fs-field-label)",
+        "var(--fs-body-value)",
+        "var(--fs-primary-xl)",
+        // Twice: rule 130's size is one ruled value with two surfaces
+        // (#288's results primary and #289's band primary), and each
+        // exception declares the sizes its own selectors use.
+        "var(--fs-primary)",
         "28px",
         "20px",
         "17px",

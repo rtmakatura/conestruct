@@ -116,15 +116,25 @@ describe("#260 (2) — one live speaker for the location gate", () => {
     expect(strip.textContent).toBe("AWAITING LOCATION · no site chosen");
     expect(strip.textContent).not.toMatch(/pick a location|Set a location/);
 
-    // The rail blocker: the same string, visual only (#228 derivation untouched).
-    const blocker = document.querySelector('[data-testid="rail-blocker"]')!;
-    expect(blocker.textContent).toBe(GATE);
-    expect(blocker.getAttribute("aria-hidden")).toBe("true");
+    // #289 Phase 2: the rail's aria-hidden visual echo of the gate
+    // sentence is GONE with the rail (§8.17).  #260's ruling reads even
+    // more cleanly for it — the CTA reason is now the only surface
+    // carrying the instruction at all, not merely the only one that
+    // speaks it.  Asserted as an absence, because that is the claim.
+    expect(document.querySelector('[data-testid="rail-blocker"]')).toBeNull();
+    expect(
+      ((document.body.textContent ?? "").split(GATE).length - 1),
+      "the gate sentence renders exactly once",
+    ).toBe(1);
 
-    // The quiet jurisdiction band announces nothing.
-    const quiet = document.querySelector(".jbar-suggest.quiet")!;
-    expect(quiet.textContent).toContain("Drop a site pin for a jurisdiction suggestion");
-    expect(quiet.hasAttribute("aria-live")).toBe(false);
+    // The quiet jurisdiction band announces nothing — and #289 Phase 2
+    // makes that true by construction rather than by an attribute.  The
+    // suggestion slot lives in the WHAT band's jurisdiction cell (§8.21,
+    // #201), and pre-pin the column has WHERE open, so the slot is not
+    // mounted at all.  Its quiet copy said "Drop a site pin for a
+    // jurisdiction suggestion"; the column now says the same thing by
+    // being on the step that drops the pin.
+    expect(document.querySelector(".jbar-suggest")).toBeNull();
 
     // The live regions mounted pre-pin: the strip's slot (polite), the
     // CTA reason (alert), the sr-only generation status (empty) — three.

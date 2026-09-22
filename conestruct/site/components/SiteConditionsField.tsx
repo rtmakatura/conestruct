@@ -47,7 +47,13 @@ interface Props {
   // The panel's numbered-step index for this section. Site conditions is
   // the final step, so its number shifts with the active scenario kind —
   // the parent computes it.
-  step: number;
+  // #289 Phase 2: OPTIONAL.  The panel's seven-section numbering retired
+  // with the panel — ruling 198 gives the column four steps and the band
+  // header carries the index (role 4) — so the GENERATE frame mounts this
+  // section without one.  Absent ⇒ `FieldGroup` renders no tag, which is
+  // rule 12's instinct applied to a number: a figure that traces to
+  // nothing does not render.
+  step?: number;
   /** #222: pre-pin, this kind's steps render pending (dim + inert +
    *  focusable summary) until a location exists. */
   stepsPending?: boolean;

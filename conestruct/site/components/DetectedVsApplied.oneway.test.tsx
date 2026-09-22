@@ -21,11 +21,17 @@
 // which is the entire point of the surface.
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
-import { DetectedVsApplied } from "./DetectedVsApplied";
+import {
+  clauseIsAmber,
+  deriveDetectedRows,
+  type DetectedModel,
+  type DetectedRowLabel,
+} from "@/lib/road-detection/detected-rows";
+import { provenanceClause } from "@/lib/road-detection/provenance";
 
 afterEach(cleanup);
 
@@ -95,31 +101,46 @@ function flagger(tag: string | null, over: Partial<Scenario> = {}): Scenario {
   } as Scenario;
 }
 
-function ledgerRow(label: string): HTMLElement | null {
-  const rows = Array.from(document.querySelectorAll(".dva-row"));
-  return (
-    (rows.find(
-      (r) => r.querySelector(".tr-field")?.textContent?.trim() === label,
-    ) as HTMLElement) ?? null
-  );
+// ─── #289 Phase 2: the ledger retired as LAYOUT; its facts are here ───
+//
+// Ruling (d), 2026-09-22: "the #273 ledger's tests retire as layout and
+// transfer as facts."  Every assertion below is unchanged — what changed
+// is where it reads from.  `DetectedVsApplied` is gone (§8.23) and its
+// derivation is `lib/road-detection/detected-rows.ts`, so the helpers
+// that used to walk `.dva-row` walk the model instead.  The clause is
+// still composed by `provenance.ts`, still the one producer, so a
+// renamed token still fails these tests.
+//
+// The rendered half — that the clause reaches the screen, on the right
+// cell, in the provenance role — is asserted in WhatBand.detection.test.tsx.
+let MODEL: DetectedModel | null = null;
+function mount(s: Scenario): void {
+  MODEL = deriveDetectedRows(s);
+}
+function modelRow(label: string) {
+  return MODEL?.rows.find((r) => r.label === label) ?? null;
+}
+function ledgerRow(label: string) {
+  return modelRow(label);
 }
 const clauseOf = (label: string) =>
-  ledgerRow(label)!.querySelector(".dva-clause .tr-prov")!.textContent!.trim();
-const appliedOf = (label: string) =>
-  ledgerRow(label)!.querySelector(".dva-val")!.textContent!.trim();
+  provenanceClause({
+    detectedValue: ledgerRow(label)!.detected,
+    detectedToken: ledgerRow(label)!.detectedToken,
+    appliedToken: ledgerRow(label)!.appliedToken,
+  });
+const appliedOf = (label: string) => ledgerRow(label)!.applied ?? "—";
 
 describe("#278 the one-way row", () => {
   it("a one-way road detected and still one-way in the plan: agreement, stated", () => {
-    render(<DetectedVsApplied scenario={flagger("yes")} />);
+    mount(flagger("yes"));
     expect(appliedOf("One-way")).toBe("Yes");
     expect(clauseOf("One-way")).toMatch(/^OSM · Yes ·/);
-    expect(ledgerRow("One-way")!.querySelector(".dva-glyph")!.className).toMatch(
-      /is-match/,
-    );
+    expect(ledgerRow("One-way")!.verdict).toBe("match");
   });
 
   it("a two-way road says so on both sides", () => {
-    render(<DetectedVsApplied scenario={flagger("no")} />);
+    mount(flagger("no"));
     expect(appliedOf("One-way")).toBe("No");
     expect(clauseOf("One-way")).toMatch(/^OSM · No ·/);
   });
@@ -129,33 +150,14 @@ describe("#278 the one-way row", () => {
     // carrying the original tag (FlaggerForm.tsx:275-277).  The
     // detection is a fact the operator overruled, not one that never
     // happened — so it is named, and marked.
-    render(
-      <DetectedVsApplied
-        scenario={flagger("yes", {
-          oneway: undefined,
-          detectionOverrides: [
-            {
-              via: "flagger_twoway_confirm",
-              detectedOneway: "yes",
-              asserted: "two-way traffic",
-            },
-          ],
-        } as unknown as Partial<Scenario>)}
-      />,
-    );
+    mount(flagger("yes", { oneway: undefined, detectionOverrides: [ { via: "flagger_twoway_confirm", detectedOneway: "yes", asserted: "two-way traffic", }, ], } as unknown as Partial<Scenario>));
     expect(clauseOf("One-way")).toBe("OSM · Yes · overridden · operator-set");
     expect(appliedOf("One-way")).toBe("No");
-    expect(ledgerRow("One-way")!.querySelector(".dva-glyph")!.className).toMatch(
-      /is-differ/,
-    );
+    expect(ledgerRow("One-way")!.verdict).toBe("differ");
   });
 
   it("a relay cleared with nothing recorded is withdrawn, never a printed stale value", () => {
-    render(
-      <DetectedVsApplied
-        scenario={flagger("yes", { oneway: undefined } as unknown as Partial<Scenario>)}
-      />,
-    );
+    mount(flagger("yes", { oneway: undefined } as unknown as Partial<Scenario>));
     expect(clauseOf("One-way")).toMatch(/withdrawn/);
     expect(clauseOf("One-way")).not.toMatch(/OSM · Yes/);
   });
@@ -163,26 +165,13 @@ describe("#278 the one-way row", () => {
   it("a lanes dispute does not make the one-way row look overridden", () => {
     // the mirror of the lanes row's own predicate: a marker about a
     // different fact never speaks for this one
-    render(
-      <DetectedVsApplied
-        scenario={flagger("yes", {
-          oneway: undefined,
-          detectionOverrides: [
-            {
-              via: "flagger_lane_count_confirm",
-              detectedLanesTotal: 1,
-              asserted: "a lane in each direction",
-            },
-          ],
-        } as unknown as Partial<Scenario>)}
-      />,
-    );
+    mount(flagger("yes", { oneway: undefined, detectionOverrides: [ { via: "flagger_lane_count_confirm", detectedLanesTotal: 1, asserted: "a lane in each direction", }, ], } as unknown as Partial<Scenario>));
     expect(clauseOf("One-way")).toMatch(/withdrawn/);
     expect(clauseOf("One-way")).not.toMatch(/overridden/);
   });
 
   it("a way OSM never tagged renders no row at all (Rule 10)", () => {
-    render(<DetectedVsApplied scenario={flagger(null)} />);
+    mount(flagger(null));
     expect(ledgerRow("One-way")).toBeNull();
     // and the rest of the block is unaffected
     expect(ledgerRow("Bearing")).not.toBeNull();
@@ -205,16 +194,14 @@ describe("#278 the one-way row", () => {
         confirmedRoad: road("yes"),
       },
     } as Scenario;
-    render(<DetectedVsApplied scenario={shoulder} />);
+    mount(shoulder);
     expect(ledgerRow("One-way")).toBeNull();
     expect(ledgerRow("Divided")).not.toBeNull();
   });
 
   it("the row sits last, in the spec's order", () => {
-    render(<DetectedVsApplied scenario={flagger("yes")} />);
-    const labels = Array.from(document.querySelectorAll(".dva-row")).map((r) =>
-      r.querySelector(".tr-field")!.textContent!.trim(),
-    );
+    mount(flagger("yes"));
+    const labels = MODEL!.rows.map((r) => r.label);
     expect(labels[labels.length - 1]).toBe("One-way");
   });
 });

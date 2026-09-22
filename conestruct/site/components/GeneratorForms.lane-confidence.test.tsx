@@ -18,6 +18,16 @@ import {
 import type { NearIntersectionScenario } from "@/lib/scenarios/types";
 import { NearIntersectionForm } from "./NearIntersectionForm";
 import { ShoulderForm } from "./ShoulderForm";
+import type { ShoulderScenario } from "@/lib/scenarios/types";
+import { setLanes } from "@/lib/scenarios/what-writes";
+
+// #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
+// and its bookkeeping moved with it, to `lib/scenarios/what-writes.ts`.
+// These cases were always about the bookkeeping — which relays clear, and
+// whether an erasure records a #177 marker — so they call the writer
+// directly.  Rule 11: test where the bug lives.  The rendered half (the
+// cell exists, it is a select, it offers the kind's own domain) is
+// asserted in WhatBand.detection.test.tsx and the a11y suite.
 
 afterEach(cleanup);
 
@@ -98,16 +108,10 @@ describe("NearIntersectionForm — confirm clears the lane relays", () => {
 
 describe("ShoulderForm — lane edit clears the #120 relays with the #136 one", () => {
   it("editing the lanes chip clears all four detection relays", () => {
-    const setScenario = vi.fn();
-    render(
-      <ShoulderForm
-        scenario={{ ...DEFAULT_SHOULDER, lanes: 1, ...RELAYS }}
-        setScenario={setScenario}
-      />,
-    );
-    fireEvent.click(screen.getByRole("button", { name: "2" }));
-    expect(setScenario).toHaveBeenCalledTimes(1);
-    const next = setScenario.mock.calls[0][0];
+    const next = setLanes(
+      { ...DEFAULT_SHOULDER, lanes: 1, ...RELAYS } as ShoulderScenario,
+      2,
+    ) as ShoulderScenario;
     expect(next.lanes).toBe(2);
     expect(next.detectedLanesTotal).toBeUndefined();
     expect(next.detectedLanesForward).toBeUndefined();

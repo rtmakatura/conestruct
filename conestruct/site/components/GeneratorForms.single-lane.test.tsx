@@ -13,22 +13,23 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
+import type { ShoulderScenario } from "@/lib/scenarios/types";
+import { setLanes } from "@/lib/scenarios/what-writes";
+
+// #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
+// and its bookkeeping moved with it, to `lib/scenarios/what-writes.ts`.
+// These cases were always about the bookkeeping — which relays clear, and
+// whether an erasure records a #177 marker — so they call the writer
+// directly.  Rule 11: test where the bug lives.
 
 afterEach(cleanup);
 
 describe("ShoulderForm lane-count edit clears the single-lane signal", () => {
   it("editing the lanes chip sets the count and clears detectedLanesTotal", () => {
-    const setScenario = vi.fn();
-    render(
-      <ShoulderForm
-        scenario={{ ...DEFAULT_SHOULDER, lanes: 1, detectedLanesTotal: 1 }}
-        setScenario={setScenario}
-      />,
-    );
-    // Lane chips are the only numeric buttons on the form.
-    fireEvent.click(screen.getByRole("button", { name: "2" }));
-    expect(setScenario).toHaveBeenCalledTimes(1);
-    const next = setScenario.mock.calls[0][0];
+    const next = setLanes(
+      { ...DEFAULT_SHOULDER, lanes: 1, detectedLanesTotal: 1 } as ShoulderScenario,
+      2,
+    ) as ShoulderScenario;
     expect(next.lanes).toBe(2);
     expect(next.detectedLanesTotal).toBeUndefined();
   });

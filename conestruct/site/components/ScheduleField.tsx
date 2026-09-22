@@ -27,7 +27,9 @@ const HALF_HOURS = Array.from({ length: 48 }, (_, i) => i * 0.5);
 interface Props {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
-  step: number;
+  // #289 Phase 2: OPTIONAL — the panel's numbering retired with the
+  // panel (ruling 198's four steps; the band header carries the index).
+  step?: number;
   /** #222: pre-pin, this kind's steps render pending (dim + inert +
    *  focusable summary) until a location exists. */
   stepsPending?: boolean;

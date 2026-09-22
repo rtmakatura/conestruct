@@ -46,6 +46,12 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 // The backend's own numbers (the input-gating fixture's corridor_spec).
 const AUDIT = {
@@ -104,40 +110,75 @@ async function mountPinned(initial: Scenario) {
   await act(async () => {
     await Promise.resolve();
   });
+  await openWhere();
   await user.click(screen.getByText("Pick Location on Map"));
   await user.click(screen.getByText("APPLY_PIN"));
+  // A pin answers WHERE, so the column moves on to WHAT; the corridor
+  // rows sit under the extent field, so this case goes back.
+  await openWhere();
+  // #289: the bar is gone, so the settle signal is the rows themselves.
   await waitFor(() =>
-    expect(document.querySelector(".corridor-bar")).not.toBeNull(),
+    expect(document.querySelector('[data-testid="zone-work_zone"]')).not.toBeNull(),
   );
 }
 
 describe("#227 corridor bar — proportion of backend lengths only", () => {
-  it("five segments, order matching the rows, widths = backend length / total", async () => {
+  // #289 Phase 2 — THE BAR RETIRES; THE ROWS TRANSFER.
+  //
+  // §8.19 folds the location section into the WHERE band, and this phase
+  // has no aerial to fold the corridor picture into (the deviation is
+  // recorded at the top of components/bands/WhereBand.tsx).  So the two
+  // halves part company on their own merits:
+  //
+  //   the BAR was a proportion — a picture OF these numbers, aria-hidden
+  //     by its own design because "the table is the accessible record".
+  //     A picture with no fact of its own and no aerial to sit in has
+  //     nothing left to be, so it is deleted rather than re-homed.
+  //   the ROWS are backend facts about the extent the operator just
+  //     typed, so they move under the extent field, in the WHERE band,
+  //     and keep rule 3's honest-unavailable note.
+  //
+  // The two cases below asserted the bar's geometry.  What survives of
+  // them — the rows exist, in order, with the backend's lengths and no
+  // verdict glyph — is asserted against the band.
+  it("the rows transfer: five zones, traffic order, backend lengths, no verdict glyph", async () => {
     await mountPinned(DEFAULT_SHOULDER);
-    const segs = Array.from(
-      document.querySelectorAll(".corridor-bar .corridor-bar-seg"),
+    await openWhere();
+    const rows = Array.from(
+      document.querySelectorAll('[data-testid^="zone-"]'),
     ) as HTMLElement[];
-    expect(segs.length).toBe(5);
-    // 1500 / 183 / 495 / 400 / 100, total 2678 — upstream → downstream.
-    const total = 1500 + 183 + 495 + 400 + 100;
-    const expected = [1500, 183, 495, 400, 100].map(
-      (l) => `${(l / total) * 100}%`,
-    );
-    expect(segs.map((s) => s.style.width)).toEqual(expected);
+    expect(rows.map((r) => r.getAttribute("data-testid"))).toEqual([
+      "zone-advance_warning",
+      "zone-transition",
+      "zone-buffer",
+      "zone-work_zone",
+      "zone-downstream",
+    ]);
+    // 1500 / 183 / 495 / 400 / 100 — the four backend lengths and the
+    // operator's own typed extent, unchanged by the move.
+    expect(rows.map((r) => r.textContent)).toEqual([
+      "Advance warning · 1,500 ft",
+      "Taper · 183 ft",
+      "Buffer · 495 ft",
+      "Work zone · 400 ft",
+      "Downstream · 100 ft",
+    ]);
+    // GO ruling 5: rows carry no verdict glyph.
+    for (const r of rows) expect(r.textContent).not.toContain("✓");
   });
 
-  it("the bar is aria-hidden; the table rows are the record — with no ✓ prefix", async () => {
+  it("the bar itself is gone — a proportion with no aerial to sit in", async () => {
     await mountPinned(DEFAULT_SHOULDER);
-    const bar = document.querySelector(".corridor-bar")!;
-    expect(bar.getAttribute("aria-hidden")).not.toBeNull();
-    // GO ruling 5: rows carry no verdict glyph.
-    const rowText = screen.getByText("Advance warning").textContent ?? "";
-    expect(rowText).not.toContain("✓");
-    // The values still read down the column with the unit demoted.
-    expect(screen.getByText("1,500")).toBeTruthy();
+    await openWhere();
+    expect(document.querySelector(".corridor-bar")).toBeNull();
   });
 });
 
+// #289 Phase 2: the bar's CSS floor retires with the bar.  The token
+// --bar-seg-min stays declared (#227's CHOSEN sizing pair, mirrored by
+// lib/design/tokens.ts, which tokens.test.ts pins) — deleting a token
+// whose mirror is asserted elsewhere is its own commit.
+/*
 describe("the bar's CSS floor", () => {
   const css = fs.readFileSync(
     path.resolve(__dirname, "../app/globals.css"),
@@ -153,3 +194,4 @@ describe("the bar's CSS floor", () => {
     expect(css).toMatch(/--bar-seg-min:\s*6px/);
   });
 });
+*/

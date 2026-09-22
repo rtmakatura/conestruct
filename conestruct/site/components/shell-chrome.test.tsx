@@ -22,8 +22,6 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { FieldGroup } from "./GeneratorFormPrimitives";
-import { ProgressRail } from "./ProgressRail";
-import type { Rail } from "@/lib/scenarios/rail";
 
 // Line endings normalised: the checkout may carry CRLF (core.autocrlf).
 const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
@@ -111,10 +109,16 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
   it("#260: .status-bar carries min-height: var(--status-h) — one height across the pre-generate states", () => {
     expect(rule(".workbench .status-bar")).toMatch(/min-height:\s*var\(--status-h\)/);
   });
-  it(".status-slot reserves the strip's height and owns the 24 px gap; the strip's margin is zero inside it", () => {
+  it(".status-slot reserves the strip's height and owns the gap — 18 px since #289 Phase 2; the strip's margin is zero inside it", () => {
     const slot = rule(".workbench .status-slot");
     expect(slot).toMatch(/min-height:\s*var\(--status-h\)/);
-    expect(slot).toMatch(/margin-bottom:\s*24px/);
+    // #289 Phase 2 — 24 -> 18.  The slot still OWNS the gap, which is
+    // what #250 f2 was protecting; the figure is now Part 2 rule 26's
+    // ("18 px between the verdict strip and the first band") instead of
+    // a number that predated Part 2.  The strip moved above the band
+    // stack in the same commit (Part 1 §1.2's source order), so the gap
+    // it owns is the one rule 26 names.
+    expect(slot).toMatch(/margin-bottom:\s*18px/);
     expect(rule(".workbench .status-slot > .status-bar,\n.workbench .status-slot > .status-details")).toMatch(
       /margin-bottom:\s*0/,
     );
@@ -124,82 +128,59 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
 // #288 rule 28 (was #240) — the second reserved slot.  It reserved
 // --strip-h, the next-steps strip's MEASURED height (#253: 81.19 at 1440
 // -> 82 pinned; 192 stacked in the <=480 query).  Part 1 8.29 dropped the
-// strip, so the measurement died with it and the reserve is now --fact-h:
+// strip, so the measurement died with it and the reserve is now
+// --fact-min-h (#289 R9 renamed it to what it is — a row FLOOR):
 // rule 56's 44 px fact line, a RULE not a measurement, the same at both
 // widths.  The slot still owns the 14 px gap, so its height is the same
 // whether its occupant is built yet or not.
 describe("#288 — the results stack's reserved first row", () => {
-  it("the workbench still defines --fact-h: 44px with no <=480 override, though nothing reserves it yet", () => {
+  it("the workbench defines --fact-min-h: 48px with no <=480 override", () => {
     // Ryan's hand-check at f44377e made the slot a Phase 1 DEVIATION: it
     // reserved 44 px for Phase 2's setup fact line, so in Phase 1 it was
     // an empty box preventing no movement.  The RULE is gone; the TOKEN
     // stays, declared ahead of its surface in #283's idiom, and Phase 2's
     // fact line reads it when the slot returns.
-    expect(rule(".workbench")).toMatch(/--fact-h:\s*44px/);
+    // #289 R9 (ruled 2026-09-22): the token is a FLOOR and its name says
+    // so, and 48 px is rule 56's own arithmetic — 13 px padding twice plus
+    // rule 8's 13.5/1.45 line box plus two borders is 47.58, and the
+    // shortest renderable row measures 45.50.  The line it reserves for is
+    // rule 119's setup string, which wraps to 60.00 px at 1440 and 130.63
+    // at 380 with #281's own example, so a fixed height would reserve the
+    // wrong amount and the results would still shift at the settle.
+    // Measured in validation-artifacts/committed/issue-289-band-stack/
+    // prototype/band-stack-landing.md.
+    expect(rule(".workbench")).toMatch(/--fact-min-h:\s*48px/);
     // Several <=480 queries in the sheet (C's idiom above): NONE
-    // re-declares --fact-h, because rule 56 does not vary by viewport.
+    // re-declares the floor, because rule 56 does not vary by viewport.
     const blocks = css
       .split("@media (max-width: 480px) {")
       .slice(1)
       .map((b) => b.slice(0, b.indexOf("\n}\n")));
-    expect(blocks.some((b) => /--fact-h\s*:/.test(b))).toBe(false);
+    expect(blocks.some((b) => /--fact-min-h\s*:/.test(b))).toBe(false);
     expect(css.replace(/\/\*[\s\S]*?\*\//g, "")).not.toContain(".results-head-slot");
   });
 });
 
-describe("#232 — three-sided frame, rail under the nav", () => {
-  it("the rail sticks at --nav-h", () => {
-    expect(rule(".workbench .setup-panel .progress-rail")).toMatch(/top:\s*var\(--nav-h\)/);
-  });
-  it("the frame has no bottom rule and keeps its four ticks", () => {
-    expect(rule(".workbench-frame")).toMatch(/border-bottom:\s*none/);
-    for (const t of ["tl", "tr", "bl", "br"]) {
-      expect(css).toContain(`.workbench-frame .ftick.${t} {`);
-    }
-  });
-});
+// #289 Phase 2 — #232's and #233's rail blocks RETIRE WITH THE RAIL.
+//
+// §8.17: "Progress rail — replaced, per step, by the move ledger inside
+// the open band, and by the pending fact lines for steps not yet
+// reached."  Both describes below asserted geometry of a component that
+// no longer exists:
+//
+//   #232 "the rail sticks at --nav-h" — nothing sticks any more.  Rule 32
+//        allows no sticky element except the nav, and `--pin-h` is what
+//        carried the rail's budget into every scroll target; it stays
+//        declared and is asserted above, because the token is what the
+//        landing reads.
+//   #233 "the rail stays one row; the blocker elides, never re-words" —
+//        the blocker's one-row elision was a property of a 38 px sticky
+//        strip.  The blocker string itself is unchanged and
+//        single-sourced (rule 139): it renders on the verdict strip and
+//        on the disabled primary's `title` + `cta-reason` alert, and
+//        `GeneratorFormPrimitives.GenerateButton` — which the GENERATE
+//        band mounts unchanged — is where that is asserted.
+//
+// Kept rather than deleted silently, because "the rail sticks" going
+// quiet is exactly the kind of absence a suite is supposed to notice.
 
-const RAIL: Rail = {
-  entries: [
-    {
-      id: "location",
-      label: "Location",
-      anchorId: "rail-step-location",
-      state: "pending",
-      issues: [],
-      step: 2,
-      glyph: "◌",
-      word: "pending",
-      info: null,
-      aria: "Location — pending (current blocker)",
-    },
-  ],
-  blocker: {
-    message: "Set a location first — pick on map or enter manually.",
-    entryId: "location",
-  },
-};
-
-describe("#233 — the rail stays one row; the blocker elides, never re-words", () => {
-  it("rail chrome tightened: gap 2px 10px, padding 8px 16px", () => {
-    const r = rule(".workbench .setup-panel .progress-rail");
-    expect(r).toMatch(/gap:\s*2px 10px/);
-    expect(r).toMatch(/padding:\s*8px 16px/);
-  });
-  it("the owning entry grows and shrinks; the blocker elides", () => {
-    expect(rule(".workbench .progress-rail .rail-entry.current")).toMatch(
-      /flex:\s*1 1 0;\s*min-width:\s*0/,
-    );
-    const b = rule(".workbench .progress-rail .rail-blocker");
-    expect(b).toMatch(/white-space:\s*nowrap/);
-    expect(b).toMatch(/overflow:\s*hidden/);
-    expect(b).toMatch(/text-overflow:\s*ellipsis/);
-    expect(b).toMatch(/flex:\s*1 1 auto;[\s\S]*min-width:\s*0/);
-  });
-  it("the blocker span carries the full string as title; textContent unchanged", () => {
-    const { container } = render(<ProgressRail rail={RAIL} generateAnchorId="gen" />);
-    const b = container.querySelector(".rail-blocker");
-    expect(b?.textContent).toBe(RAIL.blocker!.message);
-    expect(b?.getAttribute("title")).toBe(RAIL.blocker!.message);
-  });
-});

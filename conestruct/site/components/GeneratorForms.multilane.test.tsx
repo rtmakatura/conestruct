@@ -11,6 +11,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
+import { WHAT_CELLS } from "@/lib/scenarios/what-cells";
 import { FlaggerForm } from "./FlaggerForm";
 
 afterEach(cleanup);
@@ -85,11 +86,15 @@ describe("FlaggerForm multi-lane confirm affordance", () => {
   });
 });
 
-describe("FlaggerForm helper copy states the geometric truth (issue #86)", () => {
+describe("the helper copy states the geometric truth (issue #86)", () => {
   it("names one through lane each direction, not road class", () => {
-    render(<FlaggerForm scenario={DEFAULT_FLAGGER} setScenario={() => {}} />);
-    expect(
-      screen.getByText("TA-10 applies to roads with one through lane in each direction"),
-    ).not.toBeNull();
+    // #289 Phase 2: the sentence moved with the road-type field it
+    // annotates — into the WHAT grid's road-type cell, as that cell's
+    // per-kind note (lib/scenarios/what-cells.ts).  Asserted against the
+    // table rather than a render, because the table is where the string
+    // lives now and a render would be asserting the cell's plumbing.
+    expect(WHAT_CELLS.flagger_lane_closure.roadTypeNote).toBe(
+      "TA-10 applies to roads with one through lane in each direction",
+    );
   });
 });

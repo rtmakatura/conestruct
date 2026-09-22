@@ -33,6 +33,13 @@ import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
 
+// #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band's grid
+// now, with ruling 196's three states and no skeleton (rule 14).  Its id
+// moved with it: `#jl-jurisdiction` -> `#what-jurisdiction`.  The pin
+// SUGGESTION rides the same cell (#201: a confirm sits beside the control
+// it applies to), and the street-class field keeps its own slot below the
+// grid, so the suggest-never-set contract still has exactly one writer.
+
 const parker = (demo as { jurisdictions: Record<string, unknown> })
   .jurisdictions.parker as JurisdictionBlock;
 
@@ -142,7 +149,7 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
   await release(0, okBreakdown(false));
   const select = document.querySelector(
-    "#jl-jurisdiction",
+    "#what-jurisdiction",
   ) as HTMLSelectElement;
   await user.selectOptions(select, "parker");
   // First load of the key: the summary says so in a WORD rather than a
@@ -216,7 +223,7 @@ describe("class-switch stability (#152 D)", () => {
   it("a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders", async () => {
     const user = await mountWithParker();
     const select = document.querySelector(
-      "#jl-jurisdiction",
+      "#what-jurisdiction",
     ) as HTMLSelectElement;
     await user.selectOptions(select, "denver");
     // No held content from parker.  The bar used to skeleton here; §8.31

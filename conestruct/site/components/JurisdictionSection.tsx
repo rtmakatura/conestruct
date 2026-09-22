@@ -155,6 +155,14 @@ interface ContextBarProps {
   /** #227: the standing confirm/dismiss record for this pin's
    *  suggestion — the slot renders it in place of the proposal row. */
   suggestResolution?: SuggestionResolution<string> | null;
+  /** #289 Phase 2 — the jurisdiction FIELD moved into the WHAT band's
+   *  grid (§8.21), where ruling 196 gives it its three states and rule 14
+   *  takes its skeleton away.  With this set, the controls render the
+   *  street-class field only, and the pin suggestion rides the grid cell
+   *  through `JurisdictionSuggestSlot` so #201's proximity — a confirm
+   *  beside the control it applies to — is preserved rather than broken
+   *  by the move. */
+  omitJurisdictionField?: boolean;
   onConfirmSuggestion?: (key: string) => void;
   onDismissSuggestion?: () => void;
   onUndoSuggestion?: () => void;
@@ -200,6 +208,47 @@ const BASELINE_CHAIN: ChainLink[] = [
 // depend on (pin -> suggestions -> confirm).  The single writers of
 // jurisdiction_key / street_class remain the user's select, pill, and
 // Confirm actions; the top strip is now a read-only summary.
+/**
+ * #289 Phase 2 — the pin-based jurisdiction suggestion, on its own, for
+ * the WHAT grid's jurisdiction cell.
+ *
+ * Same component, same props, same single-writer contract: Confirm is
+ * the only writer of `jurisdiction_key` through this path, a differing
+ * manual pick demotes the suggestion to a passive notice, and the
+ * `.sys-event` resolution records keep their #198 strings.  What changed
+ * is which control it sits beside — and #201's reason for sitting beside
+ * one at all is why it moved rather than staying behind.
+ */
+export function JurisdictionSuggestSlot({
+  suggest = null,
+  loading = false,
+  jurisdictionKey,
+  resolution = null,
+  onConfirm,
+  onDismiss,
+  onUndo,
+}: {
+  suggest?: JurisdictionSuggestion | null;
+  loading?: boolean;
+  jurisdictionKey: string | null;
+  resolution?: SuggestionResolution<string> | null;
+  onConfirm?: (key: string) => void;
+  onDismiss?: () => void;
+  onUndo?: () => void;
+}) {
+  return (
+    <SuggestSlot
+      suggest={suggest}
+      loading={loading}
+      jurisdictionKey={jurisdictionKey}
+      resolution={resolution}
+      onConfirm={onConfirm}
+      onDismiss={onDismiss}
+      onUndo={onUndo}
+    />
+  );
+}
+
 export function JurisdictionControls({
   jurisdiction,
   jurisdictionKey,
@@ -219,9 +268,11 @@ export function JurisdictionControls({
   onConfirmClassSuggestion,
   onDismissClassSuggestion,
   onUndoClassSuggestion,
+  omitJurisdictionField = false,
 }: ContextBarProps) {
   return (
     <div className="jctl">
+      {!omitJurisdictionField && (
       <div className="jctl-field">
         <label htmlFor="jl-jurisdiction" className="k">
           Jurisdiction
@@ -270,6 +321,7 @@ export function JurisdictionControls({
           onUndo={onUndoSuggestion}
         />
       </div>
+      )}
 
       <div className="jctl-field">
         <span className="k">Street classification</span>

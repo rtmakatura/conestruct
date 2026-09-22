@@ -26,13 +26,20 @@ import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 // #186: the 429/refusal mounts assert strip voices past the pin.
 import { PINNED_SHOULDER } from "./test-fixtures";
 import type { ShoulderScenario } from "@/lib/scenarios";
+import { openWhat } from "./__fixtures__/band-helpers";
 
 // The issue's reproduction: each chip value valid alone, the combination
 // beyond the drawable half-road.
+// #289 Phase 2: the lane-width cell lives in the WHAT band, and the WHAT
+// band is the open one once there is a pin.  The fixture takes
+// PINNED_SHOULDER's coordinates for that reason and for no other — the
+// invalid combination it exists to exercise (4 lanes x 14 ft) is
+// unchanged, and so is the strip's verdict for it.
 const FOUR_BY_FOURTEEN: ShoulderScenario = {
   ...DEFAULT_SHOULDER,
   lanes: 4,
   laneWidth: 14,
+  meta: { ...DEFAULT_SHOULDER.meta, lat: 39.71466, lng: -104.94071 },
 };
 
 // What a non-mirrored 422 (workZoneSpeed > posted speed) looks like after
@@ -188,15 +195,18 @@ describe("strip error honesty (#184)", () => {
     await release(bdCalls, 0, okBd());
     expect(document.body.textContent).toContain("INVALID INPUT");
 
-    // Drop lane width back into the drawable domain (10.5 ft fits 4 lanes on the divided default).
-    const widthRange = Array.from(
-      document.querySelectorAll('input[type="range"]'),
-    ).find(
-      (el) => (el as HTMLInputElement).value === "14",
-    ) as HTMLInputElement;
-    expect(widthRange).toBeTruthy();
+    // Drop lane width back into the drawable domain (10.5 ft fits 4 lanes
+    // on the divided default).
+    //
+    // #289 Phase 2: lane width is the WHAT grid's cell — a select at
+    // rule 136's 44 px, not a range slider.  The domain is the same one
+    // the slider enforced (lib/scenarios/what-cells.ts, traced to the
+    // form it came from).
+    await openWhat();
+    const width = document.querySelector("#what-lane-width") as HTMLSelectElement;
+    expect(width).toBeTruthy();
     await act(async () => {
-      fireEvent.change(widthRange, { target: { value: "10.5" } });
+      fireEvent.change(width, { target: { value: "10.5" } });
     });
     expect(document.body.textContent).not.toContain("INVALID INPUT");
   });

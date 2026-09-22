@@ -40,7 +40,7 @@ export function WorkBeyondShoulderForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road">
         <Field>
           <LabelRow htmlFor="wb-road-type">Road type</LabelRow>
           <select id="wb-road-type"
@@ -88,7 +88,7 @@ export function WorkBeyondShoulderForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4}>
+      <FieldGroup label="Work">
         <Field>
           <LabelRow htmlFor="wb-work-type">Work type</LabelRow>
           <select id="wb-work-type"

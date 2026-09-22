@@ -46,6 +46,12 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 const fetchMock = vi.fn(() =>
   Promise.resolve({
@@ -89,35 +95,71 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     expect(screen.getByText("Pick Location on Map")).toBeTruthy();
   });
 
-  it("pinned: five cells carry lat / lng / bearing / speed / jurisdiction", async () => {
+  // #289 Phase 2 — THE STRIP RETIRES; ITS FIVE FACTS TRANSFER.
+  //
+  // §8.19 dissolves the Location section into the WHERE band.  The strip
+  // was that section's pin readout, and every cell it carried has a home
+  // in the column — which is the test, because "nothing it said is gone"
+  // is the claim §8.19 makes and the one worth asserting:
+  //
+  //   Lat / Lng    the band's header provenance (Part 1 §7.15 reserves
+  //                the lat/lng for provenance lines)
+  //   Bearing      the WHAT band's detection footer (§8.23)
+  //   Speed        the WHAT grid's own cell
+  //   Jurisdiction the WHAT grid's own cell, with ruling 196's three
+  //                states — and still "Not set" when nothing is named,
+  //                the one word every surface uses (#257)
+  it("pinned: the five facts survive the strip, each under the question it answers", async () => {
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN"));
 
-    expect(cellValue("Lat")).toBe("39.714660");
-    expect(cellValue("Lng")).toBe("-104.940710");
-    expect(cellValue("Bearing")).toBe("85°");
-    expect(cellValue("Speed")).toBe(`${DEFAULT_SHOULDER.speed} mph`);
-    // No jurisdiction named: the cell answers, it never blanks — with
-    // the one word every surface uses for the unset state (#257).
-    expect(cellValue("Jurisdiction")).toBe("Not set");
-    // A direct text node (the class cell says it too — one word, every
-    // unset state).
-    expect(screen.getAllByText("Not set").length).toBeGreaterThan(0);
+    // Lat / lng, in the band's provenance rather than in cells.
+    await openWhere();
+    const whereProv = document.querySelector(".a-open .a-prov")!.textContent!;
+    expect(whereProv).toContain("39.71466");
+    expect(whereProv).toContain("-104.94071");
+
+    await openWhat();
+    // Speed and jurisdiction: their own cells, each with a provenance
+    // line under it (rule 137).
+    expect(
+      (document.querySelector("#what-speed") as HTMLSelectElement).value,
+    ).toBe(String(DEFAULT_SHOULDER.speed));
+    expect(
+      (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
+    ).toBe("");
+    // The unset word, unchanged and still a direct text node (#257).
+    expect(screen.getAllByText(/Not set/).length).toBeGreaterThan(0);
   });
 
-  it("a named jurisdiction reaches the cell (option label before the block loads)", async () => {
+  it("a named jurisdiction reaches the cell, and says it is not evaluated yet", async () => {
     const user = userEvent.setup();
     await mount({ ...DEFAULT_SHOULDER, jurisdiction_key: "denver" } as Scenario);
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN"));
-    // The stubbed fetch returns {} — no evaluated block, so the strip
-    // falls back to the option label rather than flashing "None".
-    expect(cellValue("Jurisdiction")).toMatch(/Denver/);
+    await openWhat();
+    // The stubbed fetch returns {} — no evaluated block.  #276, ruled
+    // 196: the cell shows the option the operator PICKED, and its
+    // provenance line says which of the two you are looking at rather
+    // than presenting the static label as an evaluation.
+    expect(
+      (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
+    ).toBe("denver");
+    const prov = document.querySelector('[data-testid="prov-jurisdiction"]')!;
+    expect(prov.textContent).not.toContain("evaluated ·");
+    expect(prov.textContent).toMatch(/not evaluated|evaluating/);
   });
 });
 
+// #289 Phase 2: the .fact-strip CSS retires with the strip.  Kept as a
+// recorded deletion rather than dropped in silence — a rule whose only
+// element is gone is a rule that rots (#288's own finding about the
+// jurisdiction bar's orphaned selectors).
+/*
 describe("the .fact-strip CSS block exists on the workbench", () => {
   const css = fs.readFileSync(
     path.resolve(__dirname, "../app/globals.css"),
@@ -129,3 +171,4 @@ describe("the .fact-strip CSS block exists on the workbench", () => {
     expect(css).toMatch(/\.workbench \.fact-strip \.fact-cell \{[^}]*\}/);
   });
 });
+*/

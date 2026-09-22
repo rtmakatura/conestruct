@@ -123,8 +123,12 @@ describe("zone staging lifecycle", () => {
 
     const [setup, results] = zones();
     expect(setup.className).toContain("dominant");
-    expect(setup.textContent).toContain("Describe the work zone");
-    expect(setup.querySelector(".setup-panel")).not.toBeNull();
+    // #289 Phase 2 — the setup panel and its heading are gone (§8.16,
+    // §8.28); the band stack is what the zone holds now, and it says
+    // which step it is on in role 4 rather than naming the zone.
+    expect(setup.querySelector(".band-stack")).not.toBeNull();
+    expect(setup.textContent).toMatch(/STEP \d OF 4/);
+    expect(setup.querySelector(".setup-panel")).toBeNull();
     expect(setup.querySelector(".setup-strip")).toBeNull();
     expect(results.className).not.toContain("dominant");
     expect(results.textContent).toContain("No package yet");
@@ -211,7 +215,11 @@ describe("zone staging lifecycle", () => {
     await user.click(screen.getByText(/Edit full setup/));
     const [setup, results] = zones();
     expect(setup.className).toContain("dominant");
-    expect(setup.querySelector(".setup-panel")).not.toBeNull();
+    // #289 Phase 2: reopening lands on the band stack, not the panel.
+    // The strip and its "Edit full setup" survive THIS ship because the
+    // post-generate surface is the S4/S5 commit's (Ryan's commit order);
+    // what they reopen INTO is the column.
+    expect(setup.querySelector(".band-stack")).not.toBeNull();
     expect(results.textContent).toContain("No package yet");
     expect(document.querySelector(".hero")).toBeNull();
   });

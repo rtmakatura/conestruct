@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   FLAGGER_WORK_TYPES,
   type FlaggerLaneClosureScenario,
@@ -16,20 +15,14 @@ import {
   signalProximityLaneConfidence,
   undoDetectionOverride,
 } from "@/lib/scenarios/auto-apply";
-import { validateWorkZone } from "@/lib/scenarios/validation";
 import {
   CheckRow,
   Field,
-  FieldErrorLine,
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
-import { DetectedVsApplied } from "./DetectedVsApplied";
 
-const ROAD_TYPES: Array<{ v: FlaggerRoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural — 2-lane 2-way" },
-  { v: "urban_arterial", l: "Urban arterial" },
-];
+// #289 Phase 2: ROAD_TYPES moved to lib/scenarios/what-cells.ts.
 
 interface Props {
   scenario: FlaggerLaneClosureScenario;
@@ -50,8 +43,6 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
   // gating lives in GeneratorSidebar).  The MUTCD taper floor is
   // backend-owned (engine-removal PR D): it surfaces via the StatusBar's
   // INVALID INPUT and the Generate gate, not inline here.
-  const [wzTouched, setWzTouched] = useState(false);
-  const wzValidation = validateWorkZone(scenario);
 
   // #179: each confirm row is two-state now — armed (the relay is
   // present and the backend gate refuses) or confirmed (the tick's #177
@@ -103,29 +94,19 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
 
   return (
     <>
-      <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
-        {/* #227: detection's answer vs the plan's answer (closes #214). */}
-        <DetectedVsApplied scenario={scenario} />
-        <Field>
-          <LabelRow htmlFor="fl-road-type">Road type</LabelRow>
-          <select id="fl-road-type"
-            className="field-input field-select"
-            value={scenario.roadType}
-            onChange={(e) =>
-              set("roadType", e.target.value as FlaggerRoadType)
-            }
-          >
-            {ROAD_TYPES.map((r) => (
-              <option key={r.v} value={r.v}>
-                {r.l}
-              </option>
-            ))}
-          </select>
-          <div className="tr-prov mt-1.5">
-            TA-10 applies to roads with one through lane in each direction
-          </div>
-        </Field>
+      <FieldGroup label="Road" anchorId="rail-step-road" pending={stepsPending}>
+        {/* #289 Phase 2 — road type, speed and lane width moved into the
+            WHAT band's grid (§8.22); TA-10's "one through lane in each
+            direction" sentence moved with the road-type cell, as that
+            cell's own note (lib/scenarios/what-cells.ts).
+            DetectedVsApplied went with them, as the cells' provenance
+            lines (§8.23).
 
+            The four recovery confirms below STAY.  Each one is a
+            backend gate's recovery affordance (#136 single lane, #86
+            multi-lane, #158 one-way, #173 lane confidence) with its own
+            #177 disputed-override record and its own #179 untick, and
+            none of them is a field the grid has a cell for. */}
         {/* Single-lane recovery (issue #136): a flagger has no lane-count
             field (TA-10 is definitionally one lane each direction), so
             when detection relays a genuinely single-lane road the backend
@@ -371,7 +352,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4} anchorId="rail-step-work" pending={stepsPending}>
+      <FieldGroup label="Work" anchorId="rail-step-work" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="fl-work-type">Work type</LabelRow>
           <select id="fl-work-type"
@@ -389,25 +370,10 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
           </select>
         </Field>
 
-        <Field>
-          <LabelRow htmlFor="fl-work-len">Work zone length (ft)</LabelRow>
-          <input id="fl-work-len"
-            type="number"
-            className="field-input"
-            value={scenario.workLen}
-            onChange={(e) => set("workLen", +e.target.value || 0)}
-            onBlur={() => setWzTouched(true)}
-          />
-          {wzTouched && !wzValidation.ok && (
-            <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
-          )}
-          {scenario.workLen > 1500 && !scenario.pilotCar && (
-            <div className="font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--warn)] mt-1.5">
-              ⚠ &gt;1500 ft — MUTCD § 6E recommends pilot car
-            </div>
-          )}
-        </Field>
-
+        {/* #289 Phase 2: the work-zone length moved to the WHERE band
+            (FLOW.md §5a move 3).  Its >1500 ft pilot-car note moved with
+            it as the length field's own provenance — the note is about
+            the length, so it belongs beside the length. */}
         <CheckRow
           on={scenario.night}
           label="Night operation"
@@ -416,7 +382,7 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
         />
       </FieldGroup>
 
-      <FieldGroup label="Flagger" step={5} anchorId="rail-step-extra" pending={stepsPending}>
+      <FieldGroup label="Flagger" anchorId="rail-step-extra" pending={stepsPending}>
         <CheckRow
           on={scenario.afad}
           label="Use AFAD"

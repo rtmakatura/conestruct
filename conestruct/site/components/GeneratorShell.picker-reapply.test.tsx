@@ -174,6 +174,12 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 type BundleBody = { scenario: ShoulderScenario };
 
@@ -236,16 +242,32 @@ async function mountSandbox() {
   });
 }
 
-function lanesChip(label: string): HTMLElement {
-  const field = screen
-    .getByText("Lanes per direction")
-    .closest("div")?.parentElement;
-  if (!field) throw new Error("lanes field not found");
-  const chip = within(field as HTMLElement)
-    .getAllByRole("button")
-    .find((b) => b.textContent === label);
-  if (!chip) throw new Error(`no ${label} chip`);
-  return chip;
+// #289 Phase 2 — the lanes control is a SELECT in the WHAT band's grid
+// (§8.22, rule 136), not a chip row of unlabelled buttons.  This suite is
+// about the mounted chip -> payload path, which is the whole reason it
+// exists ("tested pure functions, never the mounted chip -> payload
+// path"), so it keeps going through the real control — the control just
+// changed shape.
+async function selectLanes(
+  user: ReturnType<typeof userEvent.setup>,
+  value: string,
+): Promise<void> {
+  await openWhat();
+  await user.selectOptions(
+    document.querySelector("#what-lanes") as HTMLSelectElement,
+    value,
+  );
+}
+
+/** The lanes cell's value, opening the WHAT band first — the column
+ *  keeps one band open, and the picker round-trips above leave WHERE
+ *  open, so reading the cell is a click away exactly as it is for a
+ *  user. */
+async function expectLanes(value: string): Promise<void> {
+  await openWhat();
+  expect(
+    (document.querySelector("#what-lanes") as HTMLSelectElement).value,
+  ).toBe(value);
 }
 
 async function generate(user: ReturnType<typeof userEvent.setup>) {
@@ -262,17 +284,19 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     await mountSandbox();
 
     // Pin drop + apply, then the user picks 3 lanes in the form.
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
-    await user.click(lanesChip("3"));
-    expect(lanesChip("3").className).toContain("on");
+    await selectLanes(user, "3");
+    await expectLanes("3");
 
     // Re-open the picker (e.g. to double-check the corridor) and Apply
     // without changing anything: the unchanged detection must NOT
     // re-impose its lanes=2 over the user's 3.
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_A"));
-    expect(lanesChip("3").className).toContain("on");
+    await expectLanes("3");
 
     await generate(user);
     expect(bundleBody?.scenario.lanes).toBe(3);
@@ -284,9 +308,11 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
-    await user.click(lanesChip("3"));
+    await selectLanes(user, "3");
 
     await generate(user);
     expect(bundleBody?.scenario.lanes).toBe(3);
@@ -312,7 +338,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
       await Promise.resolve();
     });
 
-    await user.click(lanesChip("3"));
+    await selectLanes(user, "3");
     await generate(user);
     expect(bundleBody?.scenario.lanes).toBe(3);
   });
@@ -326,17 +352,22 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     await mountSandbox();
 
     // Picker sets speed 40 (an override), saved and applied.
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
 
     // The operator refines to 25 in the form.
-    fireEvent.change(
-      document.getElementById("sh-speed") as HTMLInputElement,
-      { target: { value: "25" } },
+    // #289: the speed control is the WHAT grid's cell (`#what-speed`),
+    // a select rather than the form's old `#sh-speed` range slider.
+    await openWhat();
+    await user.selectOptions(
+      document.getElementById("what-speed") as HTMLSelectElement,
+      "25",
     );
 
     // Reopen just to look; Save & Close with nothing changed re-emits
     // the restored {speedMph: 40} — it must NOT reapply.
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
 
@@ -348,12 +379,19 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
-    fireEvent.change(
-      document.getElementById("sh-speed") as HTMLInputElement,
-      { target: { value: "25" } },
+    // #289: the speed control is the WHAT grid's cell (`#what-speed`),
+    // a select rather than the form's old `#sh-speed` range slider.
+    await openWhat();
+    await user.selectOptions(
+      document.getElementById("what-speed") as HTMLSelectElement,
+      "25",
     );
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED45"));
@@ -366,13 +404,16 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
-    await user.click(lanesChip("3"));
+    await selectLanes(user, "3");
 
     // Re-detection with different content (pin B: 1 lane/direction,
     // 65 mph) is new information and must apply — the skip is scoped to
     // UNCHANGED detections only.
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_B"));
 
@@ -404,6 +445,7 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
   it("control: pin A's relays reach the payload while its detection stands", async () => {
     const user = userEvent.setup();
     await mountSandbox();
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
     await generate(user);
@@ -414,8 +456,11 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
   it("REGRESSION: a no-road save at a new pin removes every relay from the wire payload", async () => {
     const user = userEvent.setup();
     await mountSandbox();
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
@@ -439,13 +484,16 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
   it("a fresh detection after the clear re-arms the relays (new information)", async () => {
     const user = userEvent.setup();
     await mountSandbox();
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
 
     // Same road re-detected: after a clear this IS new information and
     // must re-apply (the apply-guard resets with the clear).
+    await openWhere();
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
 
@@ -495,7 +543,10 @@ describe("pin move clears site-condition corrections (#224 phase 4)", () => {
   it("a re-save at the same pin keeps the corrections on the wire", async () => {
     const user = userEvent.setup();
     await mountCorrected();
-    await user.click(screen.getByText(/Edit Location & Corridor|Pick Location on Map/));
+    await openWhere();
+    await user.click(
+      screen.getByText(/Edit Location & Corridor|Pick Location on Map/),
+    );
     await user.click(screen.getByText("APPLY_PIN_A"));
     await generate(user);
     expect(wireScenario().meta.siteConditionOverrides).toEqual(CORRECTIONS);
@@ -504,7 +555,10 @@ describe("pin move clears site-condition corrections (#224 phase 4)", () => {
   it("a save at a NEW pin drops the key entirely — never an empty list", async () => {
     const user = userEvent.setup();
     await mountCorrected();
-    await user.click(screen.getByText(/Edit Location & Corridor|Pick Location on Map/));
+    await openWhere();
+    await user.click(
+      screen.getByText(/Edit Location & Corridor|Pick Location on Map/),
+    );
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
     await generate(user);
     const s = wireScenario();

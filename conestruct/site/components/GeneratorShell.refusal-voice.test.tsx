@@ -30,6 +30,7 @@ import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { FlaggerLaneClosureScenario } from "@/lib/scenarios";
+import { openWhat } from "./__fixtures__/band-helpers";
 
 // The backend's #86 gate message, verbatim (render_api.py
 // _ensure_lane_eligible) — the text that must NOT render when the
@@ -47,9 +48,14 @@ const FLOOR_400 =
   "(L/3) of 184 ft at 55 mph. Increase the work zone to at least 184 ft, " +
   "or reduce the speed limit.";
 
+// #289 Phase 2: the recovery confirms live in the WHAT band's kind row,
+// and the column opens WHAT once there is a pin.  The fixture takes a pin
+// for that reason alone — the refusal it exercises (a multi-lane road on
+// a flagger plan) and its 400 are unchanged.
 const FLAGGER_MULTILANE: FlaggerLaneClosureScenario = {
   ...DEFAULT_FLAGGER,
   detectedLanesTotal: 4,
+  meta: { ...DEFAULT_FLAGGER.meta, lat: 39.71466, lng: -104.94071 },
 };
 
 type Deferred = {
@@ -124,6 +130,11 @@ describe("one refusal, one voice (#180)", () => {
       <GeneratorShell mode="sandbox" initialScenario={FLAGGER_MULTILANE} />,
     );
     await releaseAudit(0, refusal400(MULTILANE_400));
+
+    // #289 Phase 2: the flagger's four recovery confirms stayed in the
+    // form (they are gates' affordances, not grid cells), and the form is
+    // the WHAT band's kind row — one click away, exactly as for a user.
+    await openWhat();
 
     // The affordance row's own note — the primary voice at the point of
     // action (FlaggerForm #86 row).

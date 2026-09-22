@@ -104,11 +104,22 @@ describe("#288 clause 5 — §8.28: the results-area zone headings are gone", ()
     expect(tags.some((t) => /03/.test(t ?? ""))).toBe(false);
   });
 
-  it("the SETUP heading stays — Phase 2 owns that surface and this ruling does not touch it", async () => {
+  it("#289 Phase 2: the SETUP heading is gone too — §8.28 is complete", async () => {
+    // Phase 1 kept this one and said why: "Phase 2 owns that surface and
+    // this ruling does not touch it".  Phase 2 owns it now.  §8.28 drops
+    // all three headings — "The column has one narrative, the bands carry
+    // step indices" — and the bands that make that sentence true are
+    // built, so the last heading goes with them and the assertion
+    // inverts.  Ruling 192 confirmed the drop and re-homed the focus
+    // targets; `setupRef` stays on the section the band stack fills.
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     const tags = Array.from(document.querySelectorAll(".zone-tag")).map((t) => t.textContent);
-    expect(tags.some((t) => /01/.test(t ?? ""))).toBe(true);
+    expect(tags.some((t) => /01/.test(t ?? ""))).toBe(false);
+    // What the column says instead — "STEP n OF 4" in role 4 — is the
+    // band stack's, and this file stubs the sidebar out, so it is
+    // asserted where the stack actually renders
+    // (components/BandStack.single-voice.test.tsx).
   });
 
   it("the stage-direction note is gone with the heading it sat in", async () => {

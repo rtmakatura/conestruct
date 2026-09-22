@@ -38,7 +38,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road">
         <Field>
           <LabelRow htmlFor="lc-road-type">Road type</LabelRow>
           <select id="lc-road-type"
@@ -89,7 +89,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" step={4}>
+      <FieldGroup label="Work">
         <Field>
           <LabelRow htmlFor="lc-work-type">Work type</LabelRow>
           <select id="lc-work-type"
@@ -134,7 +134,7 @@ export function LaneClosureForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Protection" step={5}>
+      <FieldGroup label="Protection">
         <CheckRow
           on={scenario.truckMountedAttenuator}
           label="Truck-mounted attenuator"

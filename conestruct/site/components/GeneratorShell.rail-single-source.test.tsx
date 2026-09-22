@@ -64,25 +64,39 @@ function ctaReason(): string {
   return (el.textContent ?? "").trim();
 }
 
-function railBlocker(): string {
-  const el = document.querySelector('[data-testid="rail-blocker"]');
-  if (!el) throw new Error("no rail blocker string on screen");
-  return (el.textContent ?? "").trim();
+// #289 Phase 2 — THE RAIL'S SLOT IS GONE; THE STRING IS NOT.
+//
+// §8.17 replaces the rail, and its Generate slot with it.  What rule 139
+// asks for survives and is what this suite now asserts: the blocker chain
+// is single-sourced, so its string reaches the surface EXACTLY ONCE and
+// that surface is the disabled primary's `cta-reason` alert (#260's one
+// live speaker, ruled with a browser leg behind it).  The verdict strip
+// keeps carrying the STATE — "AWAITING LOCATION · no site chosen" — and
+// not the instruction, which is the same one-voice split #260 ruled.
+//
+// So "identical on both" becomes "once, and nowhere else": a second
+// surface repeating it would now be the defect, where before the rail was
+// the sanctioned second.  `deriveRail()` is unchanged and still the one
+// derivation — lib/scenarios/rail.test.ts covers it directly.
+function blockerOccurrences(text: string): number {
+  return ((document.body.textContent ?? "").split(text).length - 1);
 }
 
 describe("rail blocker === CTA disabled-reason (one export)", () => {
-  it("pre-pin: the missing-location reason renders identically on both", () => {
+  it("pre-pin: the missing-location reason renders once, on the CTA", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
-    expect(railBlocker()).toBe(ctaReason());
-    expect(railBlocker()).toBe(
-      "Set a location first — pick on map or enter manually.",
-    );
-    // The rail marks Location as the current blocker.
-    const loc = screen.getByRole("button", { name: /Location — needs attention/ });
-    expect(loc.className).toContain("current");
+    const REASON = "Set a location first — pick on map or enter manually.";
+    expect(ctaReason()).toBe(REASON);
+    // Once.  The rail used to be the sanctioned second surface; with the
+    // rail gone, a second occurrence is a second voice.
+    expect(blockerOccurrences(REASON)).toBe(1);
+    // And the strip still says the STATE rather than the instruction
+    // (#260's split, untouched).
+    const strip = document.querySelector(".status-slot .status-bar");
+    expect(strip?.textContent).not.toContain(REASON);
   });
 
-  it("a no-affordance 400: the decline pointer rides the rail's Generate slot and the CTA equally", async () => {
+  it("a no-affordance 400: the decline pointer rides the CTA, once", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await act(async () => {
       auditCalls[0].resolve({
@@ -93,18 +107,18 @@ describe("rail blocker === CTA disabled-reason (one export)", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(railBlocker()).toBe(ctaReason());
-    expect(railBlocker()).toBe("Generation declined — see the notice below.");
-    const gen = screen.getByRole("button", { name: /Generate — blocked:/ });
-    expect(gen.querySelector('[data-testid="rail-blocker"]')).not.toBeNull();
+    expect(ctaReason()).toBe("Generation declined — see the notice below.");
+    expect(
+      blockerOccurrences("Generation declined — see the notice below."),
+    ).toBe(1);
     // #180 one voice intact: the verbatim 400 renders exactly once
-    // (the strip), never on the rail.
+    // (the strip), never beside the button.
     const occurrences =
       (document.body.textContent ?? "").split("Backend floor text.").length - 1;
     expect(occurrences).toBe(1);
   });
 
-  it("all clear: no blocker string anywhere, Generate slot reads ready", async () => {
+  it("all clear: no blocker string anywhere, the primary is enabled", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await act(async () => {
       auditCalls[0].resolve({
@@ -124,9 +138,12 @@ describe("rail blocker === CTA disabled-reason (one export)", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(
-      document.querySelector('[data-testid="rail-blocker"]'),
-    ).toBeNull();
-    screen.getByRole("button", { name: "Generate — ready" });
+    // No reason alert at all — GenerateButton renders it only while
+    // disabled with a reason.
+    expect(document.querySelector('[data-testid="cta-reason"]')).toBeNull();
+    const gen = screen.getByRole("button", {
+      name: /Generate plan/,
+    }) as HTMLButtonElement;
+    expect(gen.disabled).toBe(false);
   });
 });

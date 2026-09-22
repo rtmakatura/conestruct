@@ -210,15 +210,15 @@ describe("no location, no certification (#186)", () => {
       fireEvent.change(coords()[0], { target: { value: "39.73997" } });
     });
     // Lat alone is not a location yet (hasLocation needs both) — the
-    // strip stays honest even though the Location section's own older
-    // ``hasPin`` sentinel (lat OR lng) already flips it to the summary
-    // view here, unmounting the manual inputs.  That pre-existing UI
-    // behavior is untouched this arc; reopen the manual editor and
-    // finish the entry the way a real operator would.
+    // strip stays honest.
+    //
+    // #289 Phase 2: the old Location section's `hasPin` sentinel (lat OR
+    // lng) flipped to a summary view here and unmounted the manual
+    // inputs, so this case used to have to reopen the editor.  The WHERE
+    // band has no such flip — the manual fallback is a disclosure the
+    // operator opened and nothing closes it under them — so the inputs
+    // are still there.  One fewer surprise, and one fewer click.
     expect(document.body.textContent).toContain("AWAITING LOCATION");
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: /edit manually/i }));
-    });
     const lngInput = coords()[1];
     expect(lngInput).toBeTruthy();
     await act(async () => {

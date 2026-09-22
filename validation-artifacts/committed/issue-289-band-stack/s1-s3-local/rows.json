@@ -1,0 +1,154 @@
+[
+ {
+  "vp": "1440",
+  "state": "s1",
+  "open": "where",
+  "step": "STEP 1 OF 4",
+  "question": "Where is the work?",
+  "questionPx": "22px",
+  "facts": [
+   {
+    "id": "fact-what",
+    "state": "pending",
+    "h": 48,
+    "text": "○What's the job?kind of work, extent, side · pending — find the work first"
+   }
+  ],
+  "chips": 3,
+  "gateNote": "4 more kinds are not enabled — each waits on its typical sheet being validated against the generator.",
+  "ctaReason": "Set a location first — pick on map or enter manually.",
+  "zoneTags": []
+ },
+ {
+  "vp": "1440",
+  "state": "s3",
+  "open": "what",
+  "step": "STEP 2 OF 4",
+  "question": "Anything we got wrong?",
+  "facts": [
+   {
+    "id": "fact-where",
+    "state": "done",
+    "h": 60,
+    "text": "✓Where1,000 ft · shoulder workCHANGE"
+   }
+  ],
+  "cells": [
+   {
+    "label": "Speed limit",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Lanes per direction",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Lane width",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Road type",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Jurisdiction",
+    "prov": "MUTCD + Colorado Supplement only"
+   },
+   {
+    "label": "Work dates",
+    "prov": "optional · permit lead times need it"
+   }
+  ],
+  "fieldHeights": [
+   44,
+   44,
+   44,
+   44,
+   44,
+   44
+  ],
+  "under32": 0,
+  "under44": 11
+ },
+ {
+  "vp": "1440",
+  "pageerrors": 0,
+  "errs": []
+ },
+ {
+  "vp": "380",
+  "state": "s1",
+  "open": "where",
+  "step": "STEP 1 OF 4",
+  "question": "Where is the work?",
+  "questionPx": "19px",
+  "facts": [
+   {
+    "id": "fact-what",
+    "state": "pending",
+    "h": 85.19,
+    "text": "○What's the job?kind of work, extent, side · pending — find the work first"
+   }
+  ],
+  "chips": 3,
+  "gateNote": "4 more kinds are not enabled — each waits on its typical sheet being validated against the generator.",
+  "ctaReason": "Set a location first — pick on map or enter manually.",
+  "zoneTags": []
+ },
+ {
+  "vp": "380",
+  "state": "s3",
+  "open": "what",
+  "step": "STEP 2 OF 4",
+  "question": "Anything we got wrong?",
+  "facts": [
+   {
+    "id": "fact-where",
+    "state": "done",
+    "h": 97.56,
+    "text": "✓Where1,000 ft · shoulder workCHANGE"
+   }
+  ],
+  "cells": [
+   {
+    "label": "Speed limit",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Lanes per direction",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Lane width",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Road type",
+    "prov": "your change · operator-set from here on"
+   },
+   {
+    "label": "Jurisdiction",
+    "prov": "MUTCD + Colorado Supplement only"
+   },
+   {
+    "label": "Work dates",
+    "prov": "optional · permit lead times need it"
+   }
+  ],
+  "fieldHeights": [
+   44,
+   44,
+   44,
+   44,
+   44,
+   44
+  ],
+  "under32": 0,
+  "under44": 0
+ },
+ {
+  "vp": "380",
+  "pageerrors": 0,
+  "errs": []
+ }
+]

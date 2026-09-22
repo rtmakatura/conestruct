@@ -39,11 +39,17 @@
 //    as current.
 
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario, DetectionOverride } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
-import { DetectedVsApplied } from "./DetectedVsApplied";
+import {
+  clauseIsAmber,
+  deriveDetectedRows,
+  type DetectedModel,
+  type DetectedRowLabel,
+} from "@/lib/road-detection/detected-rows";
+import { provenanceClause } from "@/lib/road-detection/provenance";
 
 afterEach(cleanup);
 
@@ -127,48 +133,56 @@ const DISPUTED: DetectionOverride = {
   asserted: "3 lanes per direction",
 };
 
-function ledgerRow(label: string): HTMLElement {
-  const rows = Array.from(document.querySelectorAll(".dva-row"));
-  const row = rows.find(
-    (r) => r.querySelector(".tr-field")?.textContent?.trim() === label,
-  );
+// ─── #289 Phase 2: the ledger retired as LAYOUT; its facts are here ───
+//
+// Ruling (d), 2026-09-22: "the #273 ledger's tests retire as layout and
+// transfer as facts."  Every assertion below is unchanged — what changed
+// is where it reads from.  `DetectedVsApplied` is gone (§8.23) and its
+// derivation is `lib/road-detection/detected-rows.ts`, so the helpers
+// that used to walk `.dva-row` walk the model instead.  The clause is
+// still composed by `provenance.ts`, still the one producer, so a
+// renamed token still fails these tests.
+//
+// The rendered half — that the clause reaches the screen, on the right
+// cell, in the provenance role — is asserted in WhatBand.detection.test.tsx.
+let MODEL: DetectedModel | null = null;
+function mount(s: Scenario): void {
+  MODEL = deriveDetectedRows(s);
+}
+function modelRow(label: string) {
+  return MODEL?.rows.find((r) => r.label === label) ?? null;
+}
+function ledgerRow(label: string) {
+  const row = modelRow(label);
   if (!row) throw new Error(`no row labelled "${label}"`);
-  return row as HTMLElement;
+  return row;
 }
-
-/** The lanes row's provenance clause — where #275's two words now live. */
-function lanesClause(): string {
-  return ledgerRow("Lanes per direction")
-    .querySelector(".dva-clause .tr-prov")!
-    .textContent!.trim();
-}
-
-/** The lanes row's APPLIED value — line 1, what the plan used. */
-function lanesApplied(): string {
-  return ledgerRow("Lanes per direction")
-    .querySelector(".dva-val")!
-    .textContent!.trim();
+const lanesClause = () => clause("Lanes per direction");
+const lanesApplied = () => ledgerRow("Lanes per direction").applied ?? "—";
+function clause(label: string): string {
+  const r = ledgerRow(label);
+  return provenanceClause({
+    detectedValue: r.detected,
+    detectedToken: r.detectedToken,
+    appliedToken: r.appliedToken,
+  });
 }
 
 describe("#275 the detected lanes fact after a lanes edit", () => {
   it("detection standing: the clause reports the per-direction figure", () => {
-    render(<DetectedVsApplied scenario={scenario()} />);
+    mount(scenario());
     expect(lanesClause()).toMatch(/OSM · 2 ·/);
     expect(lanesApplied()).toBe("2");
   });
 
   it("the clause reads the classification, not the relay (different numbers)", () => {
     // the relay says 4 (raw `lanes`); the block must say 2 (per direction)
-    render(<DetectedVsApplied scenario={scenario()} />);
+    mount(scenario());
     expect(lanesClause()).not.toMatch(/4/);
   });
 
   it("UNDISPUTED edit — relays cleared, nothing recorded: the detection is withdrawn", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
-      />,
-    );
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined }));
     // never a blank (Rule 10) — the clause always speaks
     expect(lanesClause()).not.toBe("");
     expect(lanesClause()).toMatch(/withdrawn/i);
@@ -182,25 +196,12 @@ describe("#275 the detected lanes fact after a lanes edit", () => {
   });
 
   it("a withdrawn detection never reads as agreement", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
-      />,
-    );
-    const glyph = ledgerRow("Lanes per direction").querySelector(".dva-glyph")!;
-    expect(glyph.className).not.toMatch(/is-match/);
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined }));
+    expect(ledgerRow("Lanes per direction").verdict).not.toBe("match");
   });
 
   it("DISPUTED edit — the marker rides the wire and the audit reprints it: show both, marked", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({
-          lanes: 3,
-          detectedLanesTotal: undefined,
-          detectionOverrides: [DISPUTED],
-        })}
-      />,
-    );
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined, detectionOverrides: [DISPUTED], }));
     // both sides still readable: the detected figure stands in the clause...
     expect(lanesClause()).toMatch(/OSM · 2 ·/);
     expect(lanesApplied()).toBe("3");
@@ -210,47 +211,25 @@ describe("#275 the detected lanes fact after a lanes edit", () => {
   });
 
   it("a marker from another surface does not make a lanes edit look disputed", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({
-          lanes: 3,
-          detectedLanesTotal: undefined,
-          detectionOverrides: [
-            { via: "flagger_twoway_confirm", detectedOneway: "yes", asserted: "two-way" },
-          ],
-        })}
-      />,
-    );
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined, detectionOverrides: [ { via: "flagger_twoway_confirm", detectedOneway: "yes", asserted: "two-way" }, ], }));
     // that marker carries no lane relay, so the lanes erasure was undisputed
     expect(lanesClause()).toMatch(/withdrawn/i);
   });
 
   it("both #275 words are clause words now, and they wear the provenance role", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({
-          lanes: 3,
-          detectedLanesTotal: undefined,
-          detectionOverrides: [DISPUTED],
-        })}
-      />,
-    );
-    const el = ledgerRow("Lanes per direction").querySelector(".dva-clause .tr-prov")!;
-    expect(el).not.toBeNull();
-    expect(el.textContent!.trim()).toMatch(/overridden/i);
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined, detectionOverrides: [DISPUTED], }));
+    // The clause is the producer's output, and the amber is the
+    // producer's predicate — both travelled with the derivation.
+    expect(lanesClause()).toMatch(/overridden/i);
     // a disputed or withdrawn detection is a guess-grade fact, so the
     // clause is ambered on the same rule as `inferred` (spec 5.4)
-    expect(el.className).toMatch(/is-amber/);
+    expect(clauseIsAmber(ledgerRow("Lanes per direction"))).toBe(true);
   });
 
   it("the other rows are untouched by a lanes edit", () => {
-    render(
-      <DetectedVsApplied
-        scenario={scenario({ lanes: 3, detectedLanesTotal: undefined })}
-      />,
-    );
+    mount(scenario({ lanes: 3, detectedLanesTotal: undefined }));
     const road = ledgerRow("Road type");
-    expect(road.textContent).toMatch(/Urban arterial/);
-    expect(road.textContent).not.toMatch(/withdrawn|overridden/i);
+    expect(road.applied).toMatch(/Urban arterial/);
+    expect(clause("Road type")).not.toMatch(/withdrawn|overridden/i);
   });
 });

@@ -45,6 +45,12 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 const fetchMock = vi.fn(() =>
   Promise.resolve({
@@ -79,38 +85,60 @@ function bandSection(): HTMLElement {
 }
 
 describe("#227 jurisdiction band — a full-width sibling of Location", () => {
-  it("the controls no longer render inside the Location step's body", async () => {
-    await mount(DEFAULT_SHOULDER);
-    const locationHeader = document.getElementById("rail-step-location")!;
-    const locationSection = locationHeader.parentElement!;
-    expect(locationSection.querySelector(".jctl")).toBeNull();
-    // The band exists, holds the cards, outside the Location section.
-    const band = bandSection();
-    expect(band.querySelector(".jctl-band .jctl")).not.toBeNull();
-    expect(locationSection.contains(band)).toBe(false);
-  });
-
-  it("pre-pin: the band is pending — inert body, focusable gate summary", async () => {
-    await mount(DEFAULT_SHOULDER);
-    const band = bandSection();
-    const gate = Array.from(band.querySelectorAll("button")).find((b) =>
-      /Pending — set a location first/.test(b.textContent ?? ""),
-    );
-    expect(gate).toBeTruthy();
-    const body = band.querySelector(".step-pending-body");
-    expect(body).not.toBeNull();
-    expect(body!.getAttribute("aria-hidden")).toBe("true");
-  });
-
-  it("pinned: the band goes live and the jurisdiction select is usable", async () => {
+  // #289 Phase 2 — §8.21: "Jurisdiction & classification band — moved
+  // into the WHAT band as two fields (jurisdiction, road type) with their
+  // provenance lines."  The band-as-a-section is gone; both of its fields
+  // are cells, and the suggestion slot rides the jurisdiction cell so a
+  // confirm still sits beside the control it applies to (#201).
+  //
+  // What this suite asserted about PLACEMENT — the controls are outside
+  // the Location step, in their own full-width band below the pin —
+  // retires with the section it described.  What it asserted about
+  // CAUSALITY survives and is what these cases now hold to: the
+  // suggestion is downstream of the pin, and pre-pin there is nothing to
+  // suggest.
+  it("the fields are cells in the WHAT band, not a section of their own", async () => {
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
+    await openWhere();
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN"));
-    const band = bandSection();
-    expect(band.querySelector(".step-pending-body")).toBeNull();
-    expect(
-      screen.getByLabelText<HTMLSelectElement>(/jurisdiction/i),
-    ).toBeTruthy();
+    await openWhat();
+    // The two fields §8.21 names, each in the grid, each with a
+    // provenance line under it (rule 137).
+    expect(document.querySelector("#what-jurisdiction")).not.toBeNull();
+    expect(document.querySelector("#what-road-type")).not.toBeNull();
+    expect(document.querySelector('[data-testid="prov-jurisdiction"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="prov-road-type"]')).not.toBeNull();
+    // The street-class half has no cell in rule 116's six, so it rides
+    // the band below the grid — present, not dropped.
+    expect(document.querySelector(".jctl")).not.toBeNull();
+    // And the section that used to hold them is gone with the panel.
+    expect(document.querySelector(".jctl-band")).toBeNull();
+  });
+
+  it("pre-pin: nothing to suggest, so nothing is mounted", async () => {
+    await mount(DEFAULT_SHOULDER);
+    // #222's pending treatment was how the old band said "set a location
+    // first" while still rendering.  The column says it by being on the
+    // step that sets one: WHERE is open, and the jurisdiction cell — with
+    // its suggestion slot — is not on screen at all.
+    expect(document.querySelector('[data-testid="band-stack"]')!
+      .getAttribute("data-open-band")).toBe("where");
+    expect(document.querySelector("#what-jurisdiction")).toBeNull();
+    expect(document.querySelector(".jbar-suggest")).toBeNull();
+  });
+
+  it("pinned: the cell goes live and the select is usable", async () => {
+    const user = userEvent.setup();
+    await mount(DEFAULT_SHOULDER);
+    await openWhere();
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_PIN"));
+    await openWhat();
+    const select = screen.getByLabelText<HTMLSelectElement>(/^Jurisdiction/);
+    expect(select.disabled).toBe(false);
+    await user.selectOptions(select, "denver");
+    expect(select.value).toBe("denver");
   });
 });

@@ -19,7 +19,6 @@ import {
 import {
   validateApproaches,
   validateLanes,
-  validateWorkZone,
 } from "@/lib/scenarios/validation";
 import {
   appendDetectionOverride,
@@ -29,6 +28,7 @@ import {
   undoDetectionOverride,
 } from "@/lib/scenarios/auto-apply";
 import type { DetectionOverride } from "@/lib/scenarios";
+import { WHAT_CELLS } from "@/lib/scenarios/what-cells";
 import {
   CheckRow,
   ChipRow,
@@ -37,12 +37,13 @@ import {
   FieldGroup,
   LabelRow,
 } from "./GeneratorFormPrimitives";
-import { DetectedVsApplied } from "./DetectedVsApplied";
 
-const ROAD_TYPES: Array<{ v: NearIntersectionRoadType; l: string }> = [
-  { v: "rural_undivided", l: "Rural — undivided" },
-  { v: "urban_arterial", l: "Urban arterial" },
-];
+// #289 Phase 2: the MAINLINE road-type options moved to
+// lib/scenarios/what-cells.ts with the cell that renders them.  The
+// CROSS STREET's options stay here and read that same table — the leg's
+// type and the mainline's are the same domain, and keeping two copies of
+// it is what this arc is removing.
+const CROSS_STREET_TYPES = WHAT_CELLS.near_intersection.roadTypes;
 
 interface Props {
   scenario: NearIntersectionScenario;
@@ -68,9 +69,6 @@ export function NearIntersectionForm({
     value: NearIntersectionScenario[K],
   ) => setScenario({ ...scenario, [key]: value });
 
-  const [wzTouched, setWzTouched] = useState(false);
-  const wzValidation = validateWorkZone(scenario);
-  const lanesValidation = validateLanes(scenario);
   const approachesValidation = validateApproaches(scenario);
 
   const legs = scenario.approaches;
@@ -225,75 +223,18 @@ export function NearIntersectionForm({
 
   return (
     <>
-      <FieldGroup label="Road" step={3} anchorId="rail-step-road" pending={stepsPending}>
-        {/* #227: detection's answer vs the plan's answer (closes #214). */}
-        <DetectedVsApplied scenario={scenario} />
-        <Field>
-          <LabelRow htmlFor="ni-road-type">Road type</LabelRow>
-          <select id="ni-road-type"
-            className="field-input field-select"
-            value={scenario.roadType}
-            onChange={(e) =>
-              set("roadType", e.target.value as NearIntersectionRoadType)
-            }
-          >
-            {ROAD_TYPES.map((r) => (
-              <option key={r.v} value={r.v}>
-                {r.l}
-              </option>
-            ))}
-          </select>
-          <div className="tr-prov mt-1.5">
-            CDOT Cases 18/19 cover undivided and arterial roads
-          </div>
-        </Field>
+      {/* #289 Phase 2 — the whole Road step moved into the WHAT band's
+          grid (§8.22): road type (with its "CDOT Cases 18/19 cover
+          undivided and arterial roads" note), speed, lanes per direction
+          and lane width are cells there, and DetectedVsApplied is their
+          provenance lines (§8.23).  The "needs 2+" lane note is the
+          lanes cell's validation message, which was already
+          validateLanes()'s own string.
 
-        <Field>
-          <LabelRow htmlFor="ni-speed" value={`${scenario.speed} mph`}>Speed limit</LabelRow>
-          <input id="ni-speed"
-            type="range"
-            min="25"
-            max="55"
-            step="5"
-            value={scenario.speed}
-            onChange={(e) => set("speed", +e.target.value)}
-            className="range-orange w-full my-1.5"
-          />
-          <div className="tr-prov mt-1.5">
-            MUTCD: ≥45 mph uses L=W·S
-          </div>
-        </Field>
+          Nothing of this kind's own survives in a Road group, so no Road
+          group renders (rule 10). */}
 
-        <Field>
-          <LabelRow>Lanes per direction</LabelRow>
-          <ChipRow
-            options={[2, 3, 4].map((n) => ({ v: n, l: String(n) }))}
-            value={scenario.lanes}
-            onChange={(v) => set("lanes", v)}
-          />
-          <div className="tr-prov mt-1.5">
-            Needs 2+ — traffic merges into the next lane over
-          </div>
-          {!lanesValidation.ok && (
-            <FieldErrorLine>{lanesValidation.message}</FieldErrorLine>
-          )}
-        </Field>
-
-        <Field>
-          <LabelRow htmlFor="ni-lane-width" value={`${scenario.laneWidth} ft`}>Lane width</LabelRow>
-          <input id="ni-lane-width"
-            type="range"
-            min="9"
-            max="14"
-            step="0.5"
-            value={scenario.laneWidth}
-            onChange={(e) => set("laneWidth", +e.target.value)}
-            className="range-orange w-full my-1.5"
-          />
-        </Field>
-      </FieldGroup>
-
-      <FieldGroup label="Work" step={4} anchorId="rail-step-work" pending={stepsPending}>
+      <FieldGroup label="Work" anchorId="rail-step-work" pending={stepsPending}>
         <Field>
           <LabelRow htmlFor="ni-work-type">Work type</LabelRow>
           <select id="ni-work-type"
@@ -311,20 +252,8 @@ export function NearIntersectionForm({
           </select>
         </Field>
 
-        <Field>
-          <LabelRow htmlFor="ni-work-len">Work zone length (ft)</LabelRow>
-          <input id="ni-work-len"
-            type="number"
-            className="field-input"
-            value={scenario.workLen}
-            onChange={(e) => set("workLen", +e.target.value || 0)}
-            onBlur={() => setWzTouched(true)}
-          />
-          {wzTouched && !wzValidation.ok && (
-            <FieldErrorLine>{wzValidation.message}</FieldErrorLine>
-          )}
-        </Field>
-
+        {/* #289 Phase 2: the work-zone length moved to the WHERE band
+            (FLOW.md §5a move 3). */}
         <CheckRow
           on={scenario.night}
           label="Night operation"
@@ -333,7 +262,7 @@ export function NearIntersectionForm({
         />
       </FieldGroup>
 
-      <FieldGroup label="Cross street" step={5} anchorId="rail-step-extra" pending={stepsPending}>
+      <FieldGroup label="Cross street" anchorId="rail-step-extra" pending={stepsPending}>
         <Field>
           <LabelRow>Cross-street directions</LabelRow>
           <ChipRow
@@ -403,7 +332,7 @@ export function NearIntersectionForm({
               })
             }
           >
-            {ROAD_TYPES.map((r) => (
+            {CROSS_STREET_TYPES.map((r) => (
               <option key={r.v} value={r.v}>
                 {r.l}
               </option>

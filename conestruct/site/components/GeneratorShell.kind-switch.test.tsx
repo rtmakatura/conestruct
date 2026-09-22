@@ -149,6 +149,23 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 rule 135 — the kind is three CHIPS in the WHERE band now (§8.18),
+// not a vertical list of seven.  Selecting by test id rather than by the
+// label keeps these assertions about the SWITCH and not about the chip's
+// wording, which is `SCENARIO_KINDS`' business.
+const KIND_ID: Record<string, string> = {
+  "Shoulder work": "kind-chip-shoulder",
+  "Flagger lane closure": "kind-chip-flagger_lane_closure",
+  "Lane closure near intersection": "kind-chip-near_intersection",
+};
+const kindChip = (label: string) => KIND_ID[label];
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 type LooseScenario = Record<string, unknown> & {
   meta: Record<string, unknown>;
@@ -222,10 +239,14 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
 
-    await user.click(screen.getByText("Flagger lane closure"));
+    await openWhere();
+
+    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
 
     await generate(user);
     const s = bundleBody!.scenario;
@@ -250,13 +271,17 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
-    await user.click(screen.getByText("Flagger lane closure"));
+    await openWhere();
+    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
 
     // Re-armed relays arm their affordances: the #86 multilane confirm
     // and the #158 two-way confirm both render (rule 10's other half —
     // the refusal is honest AND recoverable).
+    await openWhat();
     expect(
       screen.getByText("Road has one through lane in each direction"),
     ).toBeTruthy();
@@ -267,12 +292,18 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
+    await openWhat();
     await user.click(screen.getByText("Night operation"));
 
-    await user.click(screen.getByText("Flagger lane closure"));
-    await user.click(screen.getByText("Shoulder work"));
+    await openWhere();
+
+    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    await openWhere();
+    await user.click(screen.getByTestId(kindChip("Shoulder work")));
 
     await generate(user);
     const s = bundleBody!.scenario;
@@ -292,7 +323,8 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     await mountSandbox();
 
     // No picker, no detection — just a kind switch on a fresh form.
-    await user.click(screen.getByText("Flagger lane closure"));
+    await openWhere();
+    await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
 
     await generate(user);
     const s = bundleBody!.scenario;

@@ -31,6 +31,28 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import { openWhere } from "./__fixtures__/band-helpers";
+
+/** Open the WHERE band's manual fallback, if it is not open already.
+ *
+ *  #289: the fallback auto-expands when there is no Mapbox token (the
+ *  test env), because the picker would degrade to a numeric-only form
+ *  anyway — behaviour carried verbatim from the Location section.  So a
+ *  test that clicks the toggle unconditionally would CLOSE it. */
+async function ensureManualOpen(
+  user: ReturnType<typeof userEvent.setup>,
+): Promise<void> {
+  await openWhere();
+  if (document.querySelector('input[step="0.000001"]')) return;
+  await user.click(screen.getByRole("button", { name: /manual/i }));
+}
+
+// #289 Phase 2 — the column keeps one band open (rule 65), so a control
+// in another band is a click on its fact line, exactly as a user reaches
+// it (components/__fixtures__/band-helpers.ts).  The manual fallback is
+// the WHERE band's disclosure; its label reads "Enter manually" before a
+// pin and "Edit manually" after, unchanged from the Location section it
+// came from.
 
 type BundleBody = { scenario: ShoulderScenario };
 let bundleBody: BundleBody | null = null;
@@ -122,7 +144,7 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     const user = userEvent.setup();
     await mountPinnedWithCorrections();
     // The pinned Location step's manual entry.
-    await user.click(screen.getByRole("button", { name: "Edit manually" }));
+    await ensureManualOpen(user);
     expect(screen.getByText("Hide manual entry")).toBeTruthy();
     // Control first: the same coordinate is not a move.
     fireEvent.change(latInput(), { target: { value: "39.7113" } });
@@ -132,7 +154,7 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     // The move.
     await user.click(screen.getByText(/Edit full setup/));
     // Reopen remounts the Location step with the manual panel closed.
-    await user.click(screen.getByRole("button", { name: "Edit manually" }));
+    await ensureManualOpen(user);
     fireEvent.change(latInput(), { target: { value: "39.7114" } });
     bundleBody = null;
     sent = await generate(user);

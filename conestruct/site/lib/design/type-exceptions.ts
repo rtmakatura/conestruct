@@ -135,7 +135,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // and Part 1 §8.30 dropped it, so the row is DELETED.  106 -> 105
       // sites, 319 -> 318 uses.  14px stays in the register: five other
       // files carry sans body copy at it.
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[14px]", count: 1 },
+      // #289 Phase 2: the sidebar's one 14px site was the setup panel's
+      // "Plan" heading, and §8.16 drops it — "each band now carries its
+      // own header".  Row DELETED with the panel.
       { file: "components/PlanRow.tsx", cls: "text-[14px]", count: 3 },
       { file: "components/QuotePanel.tsx", cls: "text-[14px]", count: 1 },
     ],
@@ -149,6 +151,31 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".audit-body .citation .check", size: "9px" },
       { selector: ".workbench .setup-strip .sv .edit-ic", size: "9px" },
       { selector: ".workbench .dva .dva-glyph", size: "11px" },
+    ],
+    tsx: [],
+  },
+  {
+    name: "the band stack's controls (#289 Phase 2)",
+    sizes: [
+      "var(--fs-field-label)",
+      "var(--fs-body-value)",
+      // Carried twice across the census, by #288's primary and by this
+      // one: rule 130's size is one ruled value with two surfaces, and
+      // each row declares the sizes ITS selectors use.
+      "var(--fs-primary)",
+      "var(--fs-primary-xl)",
+    ],
+    reason:
+      "Part 2's own control sizes, each traced to the rule that states it: the fact line's symbol (rules 17/56, 12.5) and value (rule 8, 13.5), the fact link (rule 134, 9.5), the ledger action (rule 133, 9.5), the field (rule 136, 13.5), the primary (rule 130, 15.5) and the XL primary (rule 131, 17.5) — which the generate frame applies to GenerateButton's own element rather than to a second button, so the control keeps its string, its disabled title and its cta-reason alert.  Every size is already a register in this sheet; what is new is the selector",
+    css: [
+      { selector: ".workbench .a-fact .a-sym", size: "var(--fs-field-label)" },
+      { selector: ".workbench .a-fact .a-val", size: "var(--fs-body-value)" },
+      { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
+      { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
+      { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
+      { selector: ".workbench .a-findrow .a-pri", size: "var(--fs-body-value)" },
+      { selector: ".workbench .a-genframe .generate-btn", size: "var(--fs-primary-xl)" },
+      { selector: ".workbench .a-genframe .generate-btn", size: "var(--fs-primary)" },
     ],
     tsx: [],
   },
@@ -197,6 +224,13 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // is not one of #283's nine role sizes; declared here with its
       // owner rather than snapped to a role it does not belong to.
       { selector: ".workbench .disc-name", size: "13px" },
+      // #289 Phase 2 — the two mono micro controls rules 133 and 134
+      // size at 9.5 px.  DEBT, not an exception: 9.5 is not one of
+      // #283's nine ruled sizes, and it already sits on .dl-card .fmt
+      // and .ref-group-label in this same row.  Declared with its owner
+      // rather than snapped to a role it does not belong to.
+      { selector: ".workbench .a-lk", size: "9.5px" },
+      { selector: ".workbench .act-btn", size: "9.5px" },
     ],
     tsx: [],
   },
@@ -345,18 +379,23 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/DeviceBreakdown.tsx", cls: "text-[11px]", count: 1 },
       { file: "components/DeviceBreakdown.tsx", cls: "text-[12px]", count: 4 },
       { file: "components/DimStrip.tsx", cls: "text-[11px]", count: 1 },
-      { file: "components/FlaggerForm.tsx", cls: "text-[10px]", count: 1 },
+      // #289 Phase 2: FlaggerForm's 10px site was the >1500 ft pilot-car
+      // note, which moved to the WHERE band with the work-zone length it
+      // is about (FLOW.md §5a move 3).  Row DELETED.
       { file: "components/GeneratorFormPrimitives.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/GeneratorShell.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/GeneratorShell.tsx", cls: "text-[11px]", count: 1 },
       { file: "components/GeneratorShell.tsx", cls: "text-[12px]", count: 1 },
       { file: "components/GeneratorShell.tsx", cls: "text-[13px]", count: 1 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[10px]", count: 10 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[11px]", count: 4 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[12px]", count: 3 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[13px]", count: 3 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[15px]", count: 1 },
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[9px]", count: 1 },
+      // #289 Phase 2 — the setup panel's section components are deleted
+      // (§8.16-§8.19) and 21 of the sidebar's 22 utility uses go with
+      // them.  ONE survives: the project-details disclosure's toggle,
+      // which §8.16 demoted rather than dropped.  Two moved rather than
+      // died, and are declared below in the files they moved to, at the
+      // sizes they already had.
+      { file: "components/GeneratorSidebar.tsx", cls: "text-[10px]", count: 1 },
+      { file: "components/bands/HandoffNotes.tsx", cls: "text-[12px]", count: 1 },
+      { file: "components/bands/WhereBand.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/LaneClosureForm.tsx", cls: "text-[10px]", count: 3 },
       { file: "components/MobileOp2LaneForm.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/MobileOpMultilaneForm.tsx", cls: "text-[10px]", count: 3 },
@@ -416,6 +455,24 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
  *  by the test and asserted equal to these, so the report cannot drift
  *  from the code. `.tr-*` role blocks are counted in cssDeclarations. */
 export const CENSUS_PINS = {
+  // #289 Phase 2 (s2-arc34) — the band stack.
+  //
+  // CSS: 91 -> 101 declarations.  Ten arrive with the column's controls —
+  // eight in the new exception (four of #283's tokens, read rather than
+  // re-typed) and two in the debt row's 9.5 px mono micro register.
+  //
+  // Sizes: 21 -> 24.  Three token NAMES are new to the census
+  // (--fs-field-label, --fs-body-value, --fs-primary-xl); --fs-primary
+  // was already carried by #288's primary.  No new pixel value enters
+  // the sheet, which is the point of #283 having declared the nine
+  // ahead of their surfaces.
+  //
+  // Tailwind: 105 -> 100 sites, 318 -> 297 uses, 36 -> 37 files.  The
+  // setup panel's section components are deleted (§8.16-§8.19), taking
+  // 21 of GeneratorSidebar's 22 utility uses and FlaggerForm's one; two
+  // of them MOVED rather than died and are declared in their new files
+  // (bands/HandoffNotes.tsx, bands/WhereBand.tsx), which is why the file
+  // count rises while the use count falls.
   // #253 on top of C's fold: the lockup's 24px declaration left (−1), the
   // strip's glyph 11px arrived (+1, a size already in the sheet) → 102
   // declarations, 19 sizes; C's Tailwind figures unchanged.
@@ -469,16 +526,16 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 91,
+  cssDeclarations: 101,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
   // it dropped (9, 10, 13) all remain elsewhere.
-  cssSizes: 21,
-  tsxSites: 105,
+  cssSizes: 24,
+  tsxSites: 100,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
-  tsxUses: 318,
-  tsxFiles: 36,
+  tsxUses: 297,
+  tsxFiles: 37,
 } as const;

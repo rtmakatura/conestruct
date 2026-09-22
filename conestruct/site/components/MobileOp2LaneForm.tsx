@@ -31,7 +31,7 @@ export function MobileOp2LaneForm({ scenario, setScenario }: Props) {
 
   return (
     <>
-      <FieldGroup label="Road" step={3}>
+      <FieldGroup label="Road">
         <Field>
           <LabelRow htmlFor="m2-road-type">Road type</LabelRow>
           <select id="m2-road-type"
@@ -79,7 +79,7 @@ export function MobileOp2LaneForm({ scenario, setScenario }: Props) {
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Operation" step={4}>
+      <FieldGroup label="Operation">
         <Field>
           <LabelRow htmlFor="m2-work-type">Work type</LabelRow>
           <select id="m2-work-type"
@@ -118,7 +118,7 @@ export function MobileOp2LaneForm({ scenario, setScenario }: Props) {
         />
       </FieldGroup>
 
-      <FieldGroup label="Protection" step={5}>
+      <FieldGroup label="Protection">
         <CheckRow
           on={scenario.arrowBoardOnShadow}
           label="Arrow board on shadow"

@@ -24,15 +24,25 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // jurisdiction controls (dropdown + suggestion rows) into the sidebar's
 // Location step via the ``jurisdictionControls`` slot, so the stub must
 // render that slot for the suggestion UI to appear under test.
+// #289 §8.21 — the sidebar's stub renders BOTH halves of what §8.21
+// split: `jurisdictionControls` is the street-class field and its own
+// suggestion slot, `jurisdictionSuggest` is the pin suggestion, which now
+// rides the WHAT band's jurisdiction cell (#201 — a confirm sits beside
+// the control it applies to).  The stub stands in for the column, so it
+// renders both in one place; the contract these cases assert — suggest
+// never sets, Confirm is the only writer — is unchanged by where they
+// render.
 vi.mock("./GeneratorSidebar", () => ({
   GeneratorSidebar: ({
     scenario,
     setScenario,
     jurisdictionControls,
+    jurisdictionSuggest,
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
     jurisdictionControls?: ReactNode;
+    jurisdictionSuggest?: ReactNode;
   }) => (
     <div>
       <button
@@ -57,12 +67,44 @@ vi.mock("./GeneratorSidebar", () => ({
       >
         stub-drop-pin-parker
       </button>
+      {/* #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band
+          now, and the band is not mounted here: this stub replaces the
+          whole column.  So the field is stubbed too, exactly as the pin
+          drops above are — same id, same single writer, so the cases
+          below still exercise "what reaches the wire" and nothing about
+          where the control sits.  The cell's own three states (ruling
+          196) are asserted in WhatBand.jurisdiction.test.tsx, against
+          the real one. */}
+      <label htmlFor="what-jurisdiction">Jurisdiction</label>
+      <select
+        id="what-jurisdiction"
+        value={scenario.jurisdiction_key ?? ""}
+        onChange={(e) =>
+          setScenario({
+            ...scenario,
+            jurisdiction_key: e.target.value || null,
+          } as Scenario)
+        }
+      >
+        <option value="">Not set — MUTCD + CDOT only</option>
+        <option value="denver">Denver</option>
+        <option value="parker">Parker</option>
+        <option value="aurora">Aurora</option>
+      </select>
       {jurisdictionControls}
+      {jurisdictionSuggest}
     </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+
+// #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band's grid
+// now, with ruling 196's three states and no skeleton (rule 14).  Its id
+// moved with it: `#jl-jurisdiction` -> `#what-jurisdiction`.  The pin
+// SUGGESTION rides the same cell (#201: a confirm sits beside the control
+// it applies to), and the street-class field keeps its own slot below the
+// grid, so the suggest-never-set contract still has exactly one writer.
 
 const SUGGEST_DENVER = {
   suggestion: "denver",
@@ -174,7 +216,7 @@ describe("pin suggestion contract: suggest never sets", () => {
     // The picker reflects the confirmed key; the slot demotes to a
     // passive agreement line.
     const select = document.querySelector(
-      "#jl-jurisdiction",
+      "#what-jurisdiction",
     ) as HTMLSelectElement;
     expect(select.value).toBe("denver");
     await waitFor(() =>
@@ -233,7 +275,7 @@ describe("pin suggestion contract: suggest never sets", () => {
     render(<GeneratorShell mode="sandbox" />);
 
     const select = document.querySelector(
-      "#jl-jurisdiction",
+      "#what-jurisdiction",
     ) as HTMLSelectElement;
     await user.selectOptions(select, "parker");
     await user.click(screen.getByText("stub-drop-pin-denver"));
@@ -270,7 +312,7 @@ describe("pin suggestion contract: suggest never sets", () => {
 
     // Manual picking is untouched.
     const select = document.querySelector(
-      "#jl-jurisdiction",
+      "#what-jurisdiction",
     ) as HTMLSelectElement;
     const before = breakdownBodies.length;
     await user.selectOptions(select, "parker");

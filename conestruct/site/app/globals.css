@@ -765,11 +765,27 @@ body {
      whole reason it replaces --strip-h.  --strip-h was the next-steps
      strip's measured height (81.19 at 1440 on the dev server at d3c2dcf,
      rounded to 82), so it died with the strip it measured (§8.29).
-     --fact-h cannot drift, needs no re-measuring, and does not depend on
-     NEEDS YOU's content, so a block that grows with its item count never
-     changes the reserve.  Ruling 184's landing carries everything below
-     it.  One value at both widths: rule 56 does not vary by viewport. */
-  --fact-h: 44px;
+     --fact-min-h cannot drift, needs no re-measuring, and does not depend
+     on NEEDS YOU's content, so a block that grows with its item count
+     never changes the reserve.  Ruling 184's landing carries everything
+     below it.  One value at both widths: rule 56 does not vary by
+     viewport.
+
+     #289 R9 (ruled 2026-09-22) — RENAMED AND CORRECTED, because Phase 2
+     measured the line the token reserves for.  Two findings:
+       · Rule 56's "44 px at one line" is impossible with its own 13 px
+         padding plus rule 8's 13.5/1.45 body value.  The shortest row
+         renderable measures 45.50 px and a one-line row 47.58.  48 px is
+         that arithmetic.
+       · The line this reserves for is rule 119's setup line, "the whole
+         scenario in one string" — which with #281's own example wraps to
+         60.00 px at 1440 and 130.63 px at 380.  It is never at one line.
+     So the token is a FLOOR (`min-height`), not a height, and its name
+     says so.  Phase 1's reasoning was right and its premise was wrong:
+     rule 56's 44 px is a rule, but not a rule about this line.
+     Measured in validation-artifacts/committed/issue-289-band-stack/
+     prototype/band-stack-landing.md. */
+  --fact-min-h: 48px;
   /* #252: the chrome stack, one place.  Sticky strip chrome (the rail;
      #253's step strip) < nav < frame < the working band — the band is
      the topmost chrome so the frame's corner ticks never draw over it
@@ -859,6 +875,19 @@ body {
   --fail-soft: rgba(235, 87, 87, 0.2);
   --none: #93a0b0;
   --none-soft: rgba(147, 160, 176, 0.14);
+
+  /* #289 Phase 2 — three values Part 2 states as hexes and the palette
+     has no role for.  Declared here, with the rule that owns each, so
+     they are tokens rather than literals scattered through the sheet
+     (#263's ink gate reads everything outside :root / .workbench).
+     Rule 12: all three are TRACED to #281 comment 1, not chosen.
+       --pri-off      rule 130, the disabled primary's ground
+       --pri-off-ink  rule 130, its text — and rule 117's "No package
+                      yet" body value, which is the same grey
+       --fld-invalid  rule 136, the invalid field's border */
+  --pri-off: #1d2c3c;
+  --pri-off-ink: #6e7c8e;
+  --fld-invalid: #6b2a2a;
 
   /* confidence speaks its own achromatic language (P1·04) */
   --conf-fill: #c6d2e0;
@@ -1087,7 +1116,9 @@ body {
    child margin collapsing through, so the gap would otherwise double. */
 .workbench .status-slot {
   min-height: var(--status-h);
-  margin-bottom: 24px;
+  /* Issue 289, Part 2 rule 26: 18 px between the verdict strip and the
+     first band.  Was 24 — a figure that predates Part 2. */
+  margin-bottom: 18px;
 }
 .workbench .status-slot > .status-bar,
 .workbench .status-slot > .status-details {
@@ -1499,7 +1530,7 @@ input[type="number"] {
    was already on screen.  With it go .ns-strip, .ns-label, .ns-chips,
    .ns-chip, .ns-name, .ns-index, .ns-count, .ns-glyph, .ns-below and the
    ws-locked dim — the whole run, not a disabled remnant.
-   What survives is the RESERVED ROW: --fact-h tall, mounted from the
+   What survives is the RESERVED ROW: --fact-min-h tall, mounted from the
    Generate click (ResultsHead.tsx ``reserve``), released under a decline.
    It is no longer STICKY — it was pinned because the strip was pinned,
    an empty reserved row has nothing to pin, and rule 32 allows no sticky
@@ -1513,7 +1544,7 @@ input[type="number"] {
    fact line, which Phase 2 builds — so in Phase 1 it held a place for
    something that never arrived and rendered as an empty box under the
    verdict strip.  A reserve that prevents no movement is not a reserve.
-   `--fact-h` stays declared: it is rule 56's 44 px, and Phase 2's fact
+   `--fact-min-h` stays declared: it is rule 56's row floor, and Phase 2's fact
    line reads it when the slot returns (components/ResultsHead.tsx). */
 /* #288 end */
 .workbench .tr-signpost {
@@ -3308,9 +3339,13 @@ input[type="number"] {
   .workbench {
     /* Issue 288: the strip's stacked 380 value (--strip-h: 192px, three
        44 px chips measured on the dev server) retired with the strip.
-       --fact-h is not overridden here: rule 56 fixes the fact line at
-       44 px at one line and does not vary by viewport, so the reserve is
-       the same at both widths.  Written "Issue 288", not the hash form:
+       --fact-min-h is not overridden here: it is a row FLOOR (Issue 289
+       R9 — the hash form is avoided on purpose: this block sits inside
+       Issue 258's no-new-hex window, whose guard reads a byte range
+       without stripping comments, and "#289" is valid hex),
+       and rule 56 does not vary by viewport, so the floor is the same at
+       both widths.  What varies is how far the setup line grows past it,
+       which is the line's own business and not the token's.  Written "Issue 288", not the hash form:
        this block sits inside #258's no-new-hex window, whose guard reads
        a byte range without stripping comments, and "#288" is valid hex.
        The neighbouring Issue 253 / Issue 250 comments follow the same
@@ -3801,4 +3836,438 @@ input[type="number"] {
      no overflow here, deliberately. */
   padding: 0 16px 16px;
   border-top: 1px solid var(--da-hair);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   #289 Phase 2 — THE BAND STACK (S1–S3)
+   Authority: validation-artifacts/committed/issue-289-band-stack/rulings.md
+   (Ryan, 2026-09-22) · #281 Part 2 rules 24–28, 56–71, 114–116, 130–138,
+   160–174.
+
+   Every number below is a rule number's, not a measurement, except the
+   one the ruling corrected (R9: rule 56's 44 px is arithmetically
+   impossible with its own padding and rule 8's line-height, so the row
+   floor is 48 px).  Token names are the build's own.
+
+   Rule 24's 880 px column is NOT set here: the generator's main already
+   carries max-w-[1180px], and narrowing the page is a separate visible
+   change with its own churn.  The band stack takes the column width it
+   is given.  Recorded so the next reader does not look for rule 24 and
+   conclude it was missed.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Rule 26 — the stack's own rhythm: 12 px between consecutive fact
+   lines and 12 px between a fact line and an open band.  One gap value,
+   because rule 26 gives those two the same number; its third (18 px from
+   the verdict strip) belongs to whatever sits above the stack. */
+.workbench .band-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  outline: none;
+}
+
+/* ─── C4 · the collapsed fact line (rules 56–60) ─── */
+.workbench .a-fact {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  column-gap: 14px;
+  align-items: baseline;
+  padding: 13px 16px;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  /* R9, ruled 2026-09-22: a FLOOR, not a height.  Rule 56's "44 px at
+     one line" cannot be produced by its own 13 px padding plus rule 8's
+     13.5/1.45 body value — the shortest possible row measures 45.50 and
+     a one-line row 47.58 (prototype/band-stack-landing.md section 3).
+     48 px is that arithmetic, rounded up; the row grows past it when the
+     value wraps, which the setup line does at both widths. */
+  min-height: var(--fact-min-h);
+}
+.workbench .a-fact .a-sym {
+  font-family: var(--font-mono);
+  /* Rules 17 + 56: the symbol shares role 3's size, which #283 declared
+     as a token ahead of this surface. */
+  font-size: var(--fs-field-label);
+  line-height: 1;
+  color: var(--pass);
+}
+.workbench .a-fact.is-pending .a-sym {
+  color: var(--none);
+}
+.workbench .a-fact .a-mid {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+/* Rule 57's leader.  flex 1 1 18px with a 14 px floor so it survives a
+   long value without pushing the link off the row; translateY(-4px)
+   drops it onto the baseline the two texts sit on. */
+.workbench .a-fact .a-lead {
+  flex: 1 1 18px;
+  min-width: 14px;
+  border-bottom: 1px dotted var(--rule-soft);
+  transform: translateY(-4px);
+}
+.workbench .a-fact .a-val {
+  font-family: var(--font-sans);
+  /* Rule 8's body value, from #283's token. */
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
+  color: var(--ink-on-dark);
+}
+
+/* Rule 134 — the fact link.  Rule 15 puts its hit box at 32 px at 1440
+   and 44 px at 380; #264 died with the rail, and this is the rule that
+   replaces it.  No disabled state: rule 134 says a fact line either
+   offers a link or offers a provenance word. */
+.workbench .a-lk {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--act);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(52, 169, 232, 0.45);
+  padding: 0;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.workbench .a-lk:hover {
+  color: var(--act-bright);
+  border-bottom-color: var(--act-bright);
+}
+
+/* ─── C3 · the open band (rules 61–66) ───
+   container-type: inline-size makes the band the container the
+   tr-question's 519 px query has been waiting for since #283 declared
+   it.  Ruling 180's "19 px below 520" switches on the BAND's width, not
+   the viewport's, which is what lets the same band read correctly inside
+   a narrow column at any viewport. */
+.workbench .a-open {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  container-type: inline-size;
+}
+.workbench .a-open .a-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--da-hair);
+}
+.workbench .a-open .a-head .a-prov {
+  margin-left: auto;
+  text-align: right;
+}
+.workbench .a-open .a-body {
+  padding: 18px 16px;
+}
+/* Rule 64's body order is a DOM order, not a CSS one; what CSS owns is
+   the 16 px below the question's provenance paragraph. */
+.workbench .a-open .a-body > .a-question-prov {
+  margin: 0 0 16px;
+}
+.workbench .a-open .a-question {
+  margin: 0 0 6px;
+}
+
+/* ─── C5 · the move ledger (rules 67–71) ─── */
+.workbench .a-moves {
+  margin-top: 14px;
+}
+.workbench .a-moves .a-move {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px dotted var(--da-hair);
+}
+.workbench .a-moves .a-move:last-child {
+  border-bottom: 0;
+}
+/* Rule 69: the ONE washed row, bleeding 8 px past the text on both
+   sides so the wash reads as a band rather than as a highlight. */
+.workbench .a-moves .a-move.is-current {
+  background: rgba(52, 169, 232, 0.07);
+  padding: 10px 8px;
+  margin: 0 -8px;
+}
+.workbench .a-moves .a-move .a-sub {
+  grid-column: 2 / 4;
+  margin-top: 3px;
+}
+
+/* Rule 133 — the ledger action.  32 px at 1440, 44 at 380, which rule
+   133's own last line requires. */
+.workbench .act-btn {
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-on-dark);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.workbench .act-btn:hover {
+  border-color: var(--raise-hi);
+  color: var(--ink);
+}
+.workbench .act-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Rule 135 · the kind chips ─── */
+.workbench .a-chips {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.workbench .a-chip {
+  flex: 1;
+  border: 1px solid var(--rule);
+  padding: 12px 13px;
+  min-height: 44px;
+  display: grid;
+  gap: 4px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.workbench .a-chip[aria-pressed="true"] {
+  border-color: var(--act);
+  background: rgba(52, 169, 232, 0.1);
+}
+.workbench .a-chip:hover {
+  border-color: var(--raise-hi);
+}
+
+/* ─── Rule 116 · the WHAT grid, and rules 136–138 · the field ───
+   Three tracks with a 14 px gap, rows 16 px apart, each cell
+   label / 44 px field / provenance at a 6 px gap. */
+.workbench .a-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.workbench .a-cell {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+.workbench .a-fld {
+  height: 44px;
+  width: 100%;
+  border: 1px solid var(--rule);
+  background: var(--canvas-tint);
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  /* Rule 136's field, at rule 8's body value (#283's token). */
+  font-size: var(--fs-body-value);
+  color: var(--ink);
+}
+.workbench .a-fld:focus-visible {
+  border-color: var(--act);
+}
+/* Rule 136's unset state: the WORD, never an empty box (rule 14). */
+.workbench .a-fld.is-unset {
+  color: var(--ink-faint);
+}
+/* Rule 136's read-only-with-reason (#209): a kind that discards a field
+   states the value it will use and why, rather than vanishing. */
+.workbench .a-fld[readonly],
+.workbench .a-fld:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+/* Rule 138: amber marks a GUESS, on the provenance line and never on the
+   field's border — a guess is not an error. */
+.workbench .a-cell .tr-prov.is-amber {
+  color: var(--warn);
+}
+/* Rule 136's invalid: the message goes in the field's own provenance
+   line, never only in the verdict strip. */
+.workbench .a-fld[aria-invalid="true"] {
+  border-color: var(--fld-invalid);
+}
+.workbench .a-cell .tr-prov.is-error {
+  color: var(--fail);
+}
+
+/* The detection facts with no cell of their own (Bearing, Divided,
+   One-way) and #214's caveat — section 8.23's "nothing it said is gone",
+   restyled under the grid rather than deleted with the block. */
+.workbench .a-detect {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dotted var(--da-hair);
+  display: grid;
+  gap: 4px;
+}
+
+/* The kind's own fields (R1): a third grid row, rendered only for kinds
+   that have one, separated from the six standard cells the way the
+   detection facts are. */
+.workbench .a-kindrow {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--da-hair);
+}
+
+/* ─── Rule 116's generate frame, and rules 130–131 · the primary ─── */
+.workbench .a-genframe {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  padding: 18px 16px;
+}
+.workbench .a-genframe .a-gencap {
+  margin-top: 10px;
+  text-align: center;
+}
+.workbench .a-pri {
+  width: 100%;
+  height: 56px;
+  background: var(--act);
+  color: var(--on-act);
+  border: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  /* Rule 130's primary, from #283's token. */
+  font-size: var(--fs-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.workbench .a-pri:hover:not(:disabled) {
+  background: var(--act-bright);
+}
+.workbench .a-pri:active:not(:disabled) {
+  background: var(--act-deep);
+}
+.workbench .a-pri:disabled {
+  background: var(--pri-off);
+  color: var(--pri-off-ink);
+  cursor: not-allowed;
+}
+/* Rule 131 — the XL primary, GENERATE PLAN only. */
+.workbench .a-pri.is-xl {
+  height: 66px;
+  font-size: var(--fs-primary-xl);
+}
+/* Rule 114's FIND row: 1fr / 132 px, gap 12, both 44 px. */
+.workbench .a-findrow {
+  display: grid;
+  grid-template-columns: 1fr 132px;
+  gap: 12px;
+  align-items: start;
+}
+.workbench .a-findrow .a-pri {
+  height: 44px;
+  font-size: var(--fs-body-value);
+}
+
+/* ─── Rules 160–174 · the 380 arc ───
+   Rule 173: nothing restructures into a different component; the same
+   stack, narrower.  Only the switches rules 163, 164 and 166 name. */
+@media (max-width: 480px) {
+  /* Rule 163 — every interactive element to 44 px, primaries to 48. */
+  .workbench .a-lk,
+  .workbench .act-btn {
+    min-height: 44px;
+  }
+  .workbench .a-pri,
+  .workbench .a-pri.is-xl,
+  .workbench .a-findrow .a-pri {
+    height: 48px;
+  }
+  /* Rule 164 — a field and its button stack; no 1fr/auto grid survives. */
+  .workbench .a-findrow {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  /* Rule 166 — fact lines become 2-track; the value drops under the
+     label and the link takes its own row in column 2. */
+  .workbench .a-fact {
+    grid-template-columns: 18px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+  .workbench .a-fact .a-mid {
+    flex-wrap: wrap;
+  }
+  .workbench .a-fact .a-lead {
+    display: none;
+  }
+  .workbench .a-fact .a-lk,
+  .workbench .a-fact .a-fact-prov {
+    grid-column: 2;
+  }
+  /* The grid and the chips stack — rule 173's "same stack, narrower". */
+  .workbench .a-grid {
+    grid-template-columns: 1fr;
+  }
+  .workbench .a-chips {
+    flex-direction: column;
+  }
+}
+
+/* Rule 131 — PRIMARY XL, used only by GENERATE PLAN in the generate
+   frame.  Applied to `GenerateButton`'s own element rather than to a new
+   button: the control, its disabled `title` contract, its busy label and
+   its `cta-reason` alert are unchanged, and only its size is the band's
+   business (#289, rules 116/130/131). */
+.workbench .a-genframe .generate-btn {
+  height: 66px;
+  font-size: var(--fs-primary-xl);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 480px) {
+  .workbench .a-genframe .generate-btn {
+    height: 48px;
+    font-size: var(--fs-primary);
+  }
+}
+
+/* Rule 15's floor for the three carried controls the band stack inherits
+   but did not restyle (Issue 289 Phase 2).  Measured on a local build at
+   1440 and 380: the project-details toggle and the manual-entry toggle
+   render 16 px tall, and Issue 222's pending-gate summary 26 px, against
+   rule 15's 32 px at 1440 and 44 px at 380.
+
+   They are not new — all three came across from the setup panel, and the
+   sub-floor targets came with them.  A ship whose subject is the column's
+   own controls would be a strange place to leave three of its controls
+   under the floor, so they take the floor here rather than in a later
+   sweep.  The band's own controls already clear it by rule: .a-lk 32,
+   .act-btn 32, .a-chip 44, .a-fld 44, .a-pri 56 / 66 / 48. */
+.workbench .band-stack .step-pending-summary,
+.workbench .band-stack .a-open button[class*="font-mono"],
+.workbench .band-stack .jbar-suggest button,
+.workbench .band-stack .classpick button,
+.workbench .band-stack .chip {
+  min-height: 32px;
+}
+@media (max-width: 480px) {
+  .workbench .band-stack .step-pending-summary,
+  .workbench .band-stack .a-open button[class*="font-mono"],
+  .workbench .band-stack .jbar-suggest button,
+  .workbench .band-stack .classpick button,
+  .workbench .band-stack .chip {
+    min-height: 44px;
+  }
 }

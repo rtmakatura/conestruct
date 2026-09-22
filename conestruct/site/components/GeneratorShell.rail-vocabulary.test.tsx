@@ -28,6 +28,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 const SUGGEST_DENVER = {
   suggestion: "denver",
@@ -94,22 +95,26 @@ function locationEntry(): HTMLElement {
 
 describe("#228 mounted — dismiss-honesty on the live count", () => {
   it("a live proposal reads '1 to confirm'; Dismiss removes the line and flips no state", async () => {
+    // #289 Phase 2 — the RAIL is gone (§8.17) and its Location entry with
+    // it, so the `1 to confirm` subline has no row to sit on.  What the
+    // case is about survives whole: a live proposal is offered, dismissing
+    // it writes NOTHING, and no ✓ is manufactured anywhere — which is the
+    // suggest-never-set contract and the part worth keeping.
+    //
+    // `deriveRail()` still emits the subline; `lib/scenarios/rail.test.ts`
+    // covers that directly, which is why the derivation half does not need
+    // a mounted assertion here.
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    // The debounced suggest round-trip lands the ⌁ proposal…
+    await openWhat();
     await waitFor(
       () => {
-        expect(locationEntry().getAttribute("aria-label")).toBe(
-          "Location — done · 1 to confirm",
-        );
+        expect(screen.getByText(/Pin suggests:/)).toBeTruthy();
       },
       { timeout: 3000 },
     );
-    expect(locationEntry().querySelector(".rail-info")?.textContent).toBe(
-      "1 to confirm",
-    );
-    const statesBefore = Array.from(
-      document.querySelectorAll(".progress-rail .rail-entry"),
-    ).map((b) => b.className);
+    const keyBefore = (
+      document.querySelector("#what-jurisdiction") as HTMLSelectElement
+    ).value;
 
     await userEvent.click(screen.getByRole("button", { name: "Dismiss" }));
 
@@ -117,17 +122,16 @@ describe("#228 mounted — dismiss-honesty on the live count", () => {
     // aria byte-identical to the no-suggestion state, every entry's
     // state class unchanged, no ✓ manufactured anywhere (p.4: never a
     // false ✓ — jurisdiction_key is still unset).
+    // …and dismissing without choosing writes nothing: the key is
+    // untouched, no ✓ is manufactured (p.4: never a false ✓ —
+    // jurisdiction_key is still unset), and the slot keeps the ×-record
+    // rather than going blank (#227).
     await waitFor(() => {
-      expect(locationEntry().getAttribute("aria-label")).toBe(
-        "Location — done",
-      );
+      expect(screen.queryByText(/Pin suggests:/)).toBeNull();
     });
-    expect(locationEntry().querySelector(".rail-info")).toBeNull();
     expect(
-      Array.from(document.querySelectorAll(".progress-rail .rail-entry")).map(
-        (b) => b.className,
-      ),
-    ).toEqual(statesBefore);
+      (document.querySelector("#what-jurisdiction") as HTMLSelectElement).value,
+    ).toBe(keyBefore);
   });
 });
 
@@ -185,13 +189,19 @@ describe("#228 mounted — stale end to end", () => {
     };
     suggestBody = { ...SUGGEST_DENVER, suggestion: null };
     render(<GeneratorShell mode="sandbox" initialScenario={scenario} />);
-    const road = screen.getByRole("button", {
-      name: "Road — detection stale",
-    });
-    expect(road.className).toContain("st-stale");
-    expect(road.querySelector(".rail-glyph")?.textContent).toBe("▲");
-    expect(road.querySelector(".rail-note")?.textContent).toBe(
-      "detection stale",
-    );
+    // #289 Phase 2 — the rail's Road entry is gone with the rail, and the
+    // fact it carried moves to the WHERE band, which is where a stale
+    // road is a fact ABOUT: the confirmed road was picked at a different
+    // pin, so the band says so in words beside the glyph (rule 13 — never
+    // hue alone).  `deriveRail()` still owns the predicate and still
+    // reports `stale`; band-facts.roadIsStale reads the same comparison
+    // and rail.test.ts covers the derivation.
+    await openWhere();
+    expect(screen.getByText(/detection stale/)).toBeTruthy();
+    expect(screen.getByText(/picked at a different\s+pin/)).toBeTruthy();
+    // And the WHAT band says nothing at all about the stale road's
+    // values — a stale road never speaks (the #149 failure class).
+    await openWhat();
+    expect(document.querySelector('[data-testid="what-detection"]')).toBeNull();
   });
 });

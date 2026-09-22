@@ -32,6 +32,12 @@ import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import type { RoadCandidate } from "@/lib/road-detection/types";
 import { FlaggerForm } from "./FlaggerForm";
 import { ShoulderForm } from "./ShoulderForm";
+import { setLanes } from "@/lib/scenarios/what-writes";
+
+// #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
+// and its bookkeeping moved with it, to `lib/scenarios/what-writes.ts`.
+// The relay-clearing and the #177 marker are what these cases are about,
+// so they call the writer directly (rule 11: test where the bug lives).
 
 afterEach(cleanup);
 
@@ -134,8 +140,7 @@ describe("#173 shoulder recovery — the lane edit", () => {
       "shoulder_lane_confidence",
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "3" }));
-    const after = JSON.parse(payload()) as ShoulderScenario;
+    const after = setLanes(before, 3) as ShoulderScenario;
     expect(after.lanes).toBe(3);
     expect(after.detectedLanesTotal).toBeUndefined();
     expect(after.detectedLanesForward).toBeUndefined();

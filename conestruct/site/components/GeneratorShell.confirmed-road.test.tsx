@@ -124,6 +124,12 @@ vi.mock("./LocationPickerModal", () => ({
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 const fetchMock = vi.fn(() =>
   Promise.resolve({
@@ -158,10 +164,14 @@ describe("confirmed road persists on scenario.meta across picker close/reopen", 
     const user = userEvent.setup();
     await mountSandbox();
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     expect(capturedInitials[0].confirmedRoad ?? null).toBeNull();
 
     await user.click(screen.getByText("SAVE_WITH_ROAD"));
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     const reopened = capturedInitials[capturedInitials.length - 1];
@@ -187,6 +197,8 @@ describe("confirmed road persists on scenario.meta across picker close/reopen", 
       },
     } as Scenario;
     await mountSandbox(restored);
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     expect(

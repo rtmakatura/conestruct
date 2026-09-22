@@ -149,6 +149,12 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the column renders ONE band open (rule 65), so reaching a
+// control in another band is a click on its fact line, exactly as a user
+// does it.  `openWhere` / `openWhat` are that click, and they are no-ops
+// when the band is already open (components/__fixtures__/band-helpers.ts).
 
 type BundleBody = { scenario: ShoulderScenario };
 
@@ -209,16 +215,19 @@ async function mount(initial: Scenario) {
   });
 }
 
-function lanesChip(label: string): HTMLElement {
-  const field = screen
-    .getByText("Lanes per direction")
-    .closest("div")?.parentElement;
-  if (!field) throw new Error("lanes field not found");
-  const chip = within(field as HTMLElement)
-    .getAllByRole("button")
-    .find((b) => b.textContent === label);
-  if (!chip) throw new Error(`no ${label} chip`);
-  return chip;
+// #289 Phase 2 — the lanes control is a SELECT in the WHAT band's grid
+// (§8.22, rule 136), not a chip row.  The handoff notes it feeds are
+// unchanged, byte for byte (#198) — they moved to
+// components/bands/HandoffNotes.tsx and render in the WHERE band.
+async function selectLanes(
+  user: ReturnType<typeof userEvent.setup>,
+  value: string,
+): Promise<void> {
+  await openWhat();
+  await user.selectOptions(
+    document.querySelector("#what-lanes") as HTMLSelectElement,
+    value,
+  );
 }
 
 describe("#198 handoff provenance — the four families produce visible notes", () => {
@@ -226,12 +235,18 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
-    await user.click(lanesChip("3"));
+    await selectLanes(user, "3");
+
+    await openWhere();
 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_B_ONE_LANE"));
+
+    await openWhere();
 
     expect(
       screen.getByText(/Lanes set to 1\/direction \(OSM detection — was 3\)\./),
@@ -242,8 +257,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     const user = userEvent.setup();
     await mount(DEFAULT_FLAGGER);
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_OVERRIDES_LANES_DIVIDED"));
+
+    await openWhere();
 
     expect(
       screen.getByText(/Lanes setting 2\/direction from the picker not applied — flagger plans don't take a lane count\./),
@@ -257,8 +276,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_FIVE_LANES"));
+
+    await openWhere();
 
     expect(
       screen.getByText(/Lanes 4\/direction \(clamped from 5 OSM detection — plans draw at most 4 lanes per direction\)\./),
@@ -269,8 +292,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     const user = userEvent.setup();
     await mount({ ...DEFAULT_SHOULDER, workZoneSpeed: 55 } as Scenario);
 
+    await openWhere();
+
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_SLOW"));
+
+    await openWhere();
 
     expect(
       screen.getByText(/Work-zone speed reduction removed \(was 55 mph — the posted speed is now 35 mph, at or below it\)\./),

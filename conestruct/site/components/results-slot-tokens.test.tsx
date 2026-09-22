@@ -7,7 +7,8 @@ import { describe, expect, it } from "vitest";
 // Replaces components/ns-strip-tokens.test.tsx, which asserted the
 // next-steps strip's contract (tokens, the pin, the un-pin, the lock).
 // Its subject is gone, so it is deleted rather than skipped.  What this
-// file pins instead is the ruling: the reserve is --fact-h, the strip's
+// file pins instead is the ruling: the reserve is --fact-min-h (#289 R9
+// renamed it to what it is — a row FLOOR, 48 px), the strip's
 // whole CSS run is removed rather than disabled, and the row is no
 // longer sticky.
 //
@@ -35,21 +36,31 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     expect(code).not.toContain(".results-head-slot");
   });
 
-  it("--fact-h SURVIVES at 44px: rule 56's fact line, declared ahead of Phase 2's surface", () => {
+  it("--fact-min-h SURVIVES at 48px: rule 56's row floor, corrected by #289 R9", () => {
     // The #283 idiom, deliberately: a size is declared before the phase
     // that draws it, so the declaration is ready and cannot drift.  The
     // token is not debt — it is the reserve's value, waiting for its
     // occupant.
-    expect(CSS).toMatch(/--fact-h:\s*44px/);
+    expect(CSS).toMatch(/--fact-min-h:\s*48px/);
   });
 
   it("nothing else consumed the slot — deleting it left no dangling reference", () => {
     const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(code).not.toMatch(/results-head-slot/);
-    // And the token has no consumer yet either, which is the honest
-    // state: declared, unused, waiting.  A var() reference to it would
-    // mean something still reserves, and nothing should.
-    expect(code).not.toMatch(/var\(--fact-h\)/);
+    // #289 Phase 2 — THE TOKEN NOW HAS ITS CONSUMER, and it is the fact
+    // line itself rather than the reserve.
+    //
+    // Phase 1 asserted the opposite ("declared, unused, waiting"), which
+    // was the honest state then: the token existed, the surface did not.
+    // The surface exists now — `.a-fact` takes the floor as its
+    // `min-height` — so the assertion inverts, deliberately, and names
+    // the one rule that is allowed to consume it.  The RESERVE is still
+    // unbuilt: `ResultsHead` renders null until the S4/S5 commit mounts
+    // the setup fact line at the settle, which is what Phase 1's
+    // recorded deviation said would happen.
+    const consumers = (code.match(/var\(--fact-min-h\)/g) ?? []).length;
+    expect(consumers, "exactly one consumer: the fact line's own floor").toBe(1);
+    expect(code).toMatch(/\.a-fact \{[^}]*min-height: var\(--fact-min-h\)/);
   });
 
   it("--strip-h is retired: no declaration and no consumer survives", () => {
@@ -77,7 +88,7 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     }
   });
 
-  it("--fact-h is not overridden at 380: rule 56 does not vary by viewport", () => {
-    expect(CSS.match(/--fact-h:\s*44px/g) ?? []).toHaveLength(1);
+  it("--fact-min-h is not overridden at 380: rule 56 does not vary by viewport", () => {
+    expect(CSS.match(/--fact-min-h:\s*48px/g) ?? []).toHaveLength(1);
   });
 });
