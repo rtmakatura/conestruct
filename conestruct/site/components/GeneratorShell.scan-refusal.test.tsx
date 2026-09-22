@@ -229,7 +229,18 @@ function expectNoPlan() {
   // passed without discriminating — a test that cannot fail says
   // nothing.  These two read the plan's own surfaces instead.
   expect(document.querySelector(".needs-you")).toBeNull();
-  expect(document.querySelector(".results-disc")).toBeNull();
+  // #288 fix 3 (Ryan's hand-check at f44377e): the disclosure group now
+  // renders under a decline, because the REFERENCE row lives in it and
+  // rule 10 requires the panel holding the Retry to exist whenever the
+  // verdict strip says "retry below".  So the claim sharpens rather than
+  // relaxes: the group may be there, but it must hold ONLY the
+  // reference — no quote, no counted tiers, nothing plan-derived.
+  const group = document.querySelector(".results-disc");
+  if (group) {
+    const names = Array.from(group.querySelectorAll(".disc-name")).map((n) => n.textContent);
+    expect(names, "only the reference survives a decline").toEqual(["Reference"]);
+    expect(group.querySelector(".price, .quote-total")).toBeNull();
+  }
   expect(document.querySelector(".zone.dominant")).toBeNull();
   expect(srStatus()).toBe("");
   expect(document.body.textContent).not.toContain("Plan generated");

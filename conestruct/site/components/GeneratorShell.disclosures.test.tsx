@@ -107,17 +107,52 @@ const countOf = (name: string) =>
   rowByName(name)?.querySelector(".disc-count")?.textContent ?? null;
 
 describe("#288 clause 4 — the stack's disclosure rows", () => {
-  it("the stack reads quote → checked → pending → reference, in that order", async () => {
+  it("the four rows are ONE group, in rule 27's order, with its 10px gap", async () => {
     await generate();
-    // Part 1 §8.11 puts the quote "directly under the downloads"; §8.9
-    // keeps ✓, ◌ and the uncounted i tier as disclosures, and clause 4
-    // promotes the first two out of section 03's chips into rows here.
-    expect(rowNames()).toEqual([
+    // Ryan's hand-check at f44377e, fix 3: the Reference row was in its
+    // own Zone 3 section below the draft notice.  Rule 27 names a
+    // "disclosure group" with an internal gap, so the four rows are one
+    // run — and the group, not a zone, is what the operator reads down.
+    const group = document.querySelector(".results-disc")!;
+    expect(group, "the group exists").not.toBeNull();
+    const inGroup = Array.from(group.querySelectorAll(".disc-name")).map((n) => n.textContent);
+    expect(inGroup).toEqual([
       "Pricing quote",
       "Checked & passed",
       "Pending / not verified",
       "Reference",
     ]);
+    // Every rule-87 row on the page is in it: none stranded elsewhere.
+    expect(document.querySelectorAll(".disc-name")).toHaveLength(inGroup.length);
+    // Part 1 §8.11 puts the quote "directly under the downloads"; §8.9
+    // keeps ✓, ◌ and the uncounted i tier as disclosures, and clause 4
+    // promotes the first two out of section 03's chips into rows here.
+    expect(rowNames()).toEqual(inGroup);
+  });
+
+  it("the draft notice is the column's LAST line, below the group (§8.12, rule 29)", async () => {
+    await generate();
+    const main = document.querySelector("main")!;
+    const all = Array.from(main.querySelectorAll("*"));
+    const draft = screen.getByText("Draft — not a sealed plan");
+    const group = document.querySelector(".results-disc")!;
+    expect(all.indexOf(draft)).toBeGreaterThan(all.indexOf(group));
+    // Its two sentences are UNCHANGED — the finish ruling lists the
+    // draft notice in its untouched set, so fix 3 moves it and does not
+    // reword it (rule 29 specifies slightly different wording; §8.12
+    // says "same two sentences", and §8.12 is what the ruling names).
+    expect(main.textContent).toContain(
+      "Output is engineering reference. Requires review and seal by a licensed Professional Engineer prior to field use.",
+    );
+  });
+
+  it("the reference row keeps the jump target and the focus target Zone 3 carried", async () => {
+    await generate();
+    const anchor = document.querySelector("#reference")!;
+    expect(anchor, "#253's chip-2 target survives the move").not.toBeNull();
+    expect(anchor.getAttribute("tabindex"), "#193's focus target").toBe("-1");
+    expect(anchor.className).toContain("jump-anchor");
+    expect(anchor.querySelector(".disc-name")?.textContent).toBe("Reference");
   });
 
   it("rule 89: the COUNTED tiers show their number; the quote and the reference show none", async () => {

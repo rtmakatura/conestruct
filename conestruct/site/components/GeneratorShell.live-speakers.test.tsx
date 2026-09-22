@@ -167,7 +167,10 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     const zones = Array.from(main.querySelectorAll("section.zone"));
     const setup = zones[0];
     const results = main.querySelector("section.zone.results");
-    const reference = main.querySelector("section#reference");
+    // #288 fix 3: `#reference` is the disclosure row's wrapper inside the
+    // results stack now, not its own <section> — Zone 3 is gone, and the
+    // jump target moved onto the row with the content it names.
+    const reference = main.querySelector("#reference");
     return { h1: at(h1), draft: at(draft), jbar: at(jbar), setup: at(setup), results: at(results), reference: at(reference) };
   };
 
@@ -186,7 +189,7 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     expect(screen.queryByText(/Generate a CDOT-compliant MHT package/)).toBeNull();
   });
 
-  it("post-generate: the block still sits between Results and Reference", async () => {
+  it("post-generate: the draft notice is the column's last line, after the reference", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     const user = userEvent.setup();
@@ -194,8 +197,15 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     await settle();
     const o = order();
     expect(o.reference, "the Reference zone mounts with the results").toBeGreaterThan(-1);
-    expect(o.draft).toBeGreaterThan(o.results);
+    // #288 fix 3: the Reference row joined the disclosure group INSIDE
+    // the results stack (rule 27), and the draft notice became the last
+    // line of the column (§8.12 / rule 29).  So the reference now
+    // precedes the draft notice rather than following it — the order is
+    // results (reference within) → draft, and #260's claim that the
+    // context block sits below the results still holds for what remains
+    // of that block.
     expect(o.jbar, "the jurisdiction bar is gone (§8.31)").toBe(-1);
     expect(o.reference).toBeGreaterThan(o.results);
+    expect(o.draft, "the draft notice is the LAST line").toBeGreaterThan(o.reference);
   });
 });

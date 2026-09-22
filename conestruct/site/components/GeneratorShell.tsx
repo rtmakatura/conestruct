@@ -1283,6 +1283,16 @@ export function GeneratorShell({
   // The same predicate lib/tier-sources.ts derives for the tiers: a
   // jurisdiction revalidation, or an audit refetch that is holding the
   // last ready answer on screen.
+  // The reference mounts with results OR on an audit error — rule 10's
+  // contract, unchanged from Zone 3: the verdict strip says "retry
+  // below", and the Retry lives inside this panel, so the panel must
+  // exist whenever the strip can say it.  Lifted to a named predicate
+  // because the disclosure group now reads it too.
+  const referenceMounts =
+    Boolean(jurisdictionBlock) ||
+    Boolean(scenario.jurisdiction_key) ||
+    showResults ||
+    auditState.state === "error";
   const tiersRefreshing =
     jurisdictionRevalidating || (stripAudit.state === "loading" && stripAudit.lastReady !== null);
   const tierProps = {
@@ -1844,50 +1854,98 @@ export function GeneratorShell({
                     )}
                   </div>
                 )}
+              </div>
+            }
+            {/* ─── #288 · rule 27's DISCLOSURE GROUP ───
+                Ryan's hand-check at f44377e, fix 3: the Reference row
+                joins the group under Pricing / Passed / Pending.  Rule 27
+                names the group and gives it its own internal gap
+                ("quote → disclosure group 12 px; within the disclosure
+                group 10 px"), so the four rows are one run, not three
+                plus a stray in another zone.
+
+                OUTSIDE the `.results-stale` wrapper, deliberately.  The
+                group carries the reference's Retry — the panel the
+                verdict strip's "retry below" points at (rule 10) — and
+                the quote's write controls.  Dimming a recovery action is
+                the defect rule 102 fixed for the ribbon; the #187 cue
+                above already says the counts are a previous answer.
+
+                The group renders when there are results OR when the
+                reference must mount on its own (an audit error), which is
+                why it is not simply gated on `resultsVisible`. */}
+            {(resultsVisible || referenceMounts) && (
+              <div className="results-disc">
                 {resultsVisible && (
-                  <div className="results-disc">
-                    <PricingCard
-                      mode={
-                        mode === "sandbox"
-                          ? { kind: "public", scenario: wireScenario }
-                          : { kind: "saved", planId, dirty: planDirty }
-                      }
-                      settings={settings}
-                      setSettings={setSettings}
-                      flaggerSource={flaggerSource}
-                      setFlaggerSource={setFlaggerSource}
-                      delivery={delivery}
-                      setDelivery={setDelivery}
+                  <PricingCard
+                    mode={
+                      mode === "sandbox"
+                        ? { kind: "public", scenario: wireScenario }
+                        : { kind: "saved", planId, dirty: planDirty }
+                    }
+                    settings={settings}
+                    setSettings={setSettings}
+                    flaggerSource={flaggerSource}
+                    setFlaggerSource={setFlaggerSource}
+                    delivery={delivery}
+                    setDelivery={setDelivery}
+                  />
+                )}
+                {/* Rule 89: a COUNTED tier shows its number.  Both count
+                    from the one ledger above; neither renders at all
+                    before an audit has settled, because a count with no
+                    settled answer behind it would be a number the wire
+                    never carried (Rule 10). */}
+                {resultsVisible && settledLedger !== null && (
+                  <>
+                    <CheckedDisclosure
+                      count={settledLedger.checked}
+                      cited={auditState.state !== "error"}
+                      tierProps={tierProps}
                     />
-                    {/* Rule 89: a COUNTED tier shows its number.  Both
-                        count from the one ledger above; neither renders
-                        at all before an audit has settled, because a
-                        count with no settled answer behind it would be a
-                        number the wire never carried (Rule 10). */}
-                    {settledLedger !== null && (
-                      <>
-                        <CheckedDisclosure
-                          count={settledLedger.checked}
-                          cited={auditState.state !== "error"}
-                          tierProps={tierProps}
-                        />
-                        <PendingDisclosure
-                          count={settledLedger.pending}
-                          tierProps={tierProps}
-                        />
-                      </>
-                    )}
+                    <PendingDisclosure
+                      count={settledLedger.pending}
+                      tierProps={tierProps}
+                    />
+                  </>
+                )}
+                {/* #253: chip 2's jump target, and #193's focus target —
+                    both moved onto the row with the content they name,
+                    because Zone 3's section is gone. */}
+                {referenceMounts && (
+                  <div id="reference" tabIndex={-1} className="jump-anchor outline-none">
+                    <ReferenceDisclosure
+                      defaultOpen={auditState.state === "error"}
+                      summary={referenceSummary({
+                        jurisdiction: jurisdictionBlock,
+                        streetClass: scenario.street_class ?? null,
+                        loading: jurisdictionLoading,
+                      })}
+                    >
+                      <TieredReference
+                        {...tierProps}
+                        tiers={["changed", "attention", "reference"]}
+                      />
+                    </ReferenceDisclosure>
                   </div>
                 )}
               </div>
-            }
+            )}
           </section>
 
-          {/* #288 clause 5 — Part 1 §8.30: the intro paragraph is
-              DROPPED, because "it restates the download cards' captions".
-              The draft notice below is KEPT (§8.12), unchanged, as the
-              last line of the column. */}
-
+          {/* #288 clause 5 / §8.30: the intro paragraph is DROPPED.
+              §8.12 + rule 29: the draft notice is KEPT and is the LAST
+              line of the column — Ryan's hand-check moved it here, below
+              the disclosure group, where "last line" is literally true.
+              Its two sentences are unchanged: the finish ruling lists the
+              draft notice in its untouched set, so this commit moves it
+              and does not reword it.
+              RECORDED: rule 29 also specifies the provenance role, 18 px
+              above, and a slightly different wording ("...licensed PE..."
+              against §8.12's "same two sentences", which are today's).
+              The wording conflict is left to §8.12, which the ruling
+              names; the role and spacing wait for the phase that owns
+              this block's type. */}
           <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
               Draft — not a sealed plan
@@ -1897,61 +1955,6 @@ export function GeneratorShell({
               licensed Professional Engineer prior to field use.
             </div>
           </div>
-
-          {/* #288 · §8.31 pulled forward (Ryan's hand-check at f44377e):
-              the jurisdiction context bar is DROPPED.  Its three facts
-              now ride the Reference row's summary line (below), derived
-              once by lib/reference-summary.ts. */}
-
-          {/* ——— Zone 3 · Reference ——— */}
-          {(jurisdictionBlock ||
-            Boolean(scenario.jurisdiction_key) ||
-            showResults ||
-            auditState.state === "error") && (
-            // #253: chip 2's target (C may add a finer #pending-items
-            // inside).  tabIndex -1: the jump focuses it (#193).
-            <section
-              id="reference"
-              tabIndex={-1}
-              className="zone jump-anchor outline-none"
-            >
-              {/* §8.28: dropped with the others.  The reference's own
-                  name is now on its disclosure row (rule 88's name
-                  slot), which is where the operator reads it — a zone
-                  heading above a named row said it twice. */}
-              {/* #219 — the triage tiers replace the flat family stack.
-                  The verification facts join with results OR on an
-                  audit error (rule 10: the strip's "retry below" must
-                  always land on a panel that exists); #196: the
-                  STAMPED audit view — the same one the strip reads —
-                  so panel and strip cannot disagree on declined; #187:
-                  a declined/failed audit renders "—" rows, never a
-                  prior input's numbers presented as current. */}
-              {/* #288 §8.35 — the reference DISCLOSURE.  Same content,
-                  folded behind rule 87's row; S8 is this expanded. */}
-              {/* #288 clause 4: ✓ and ◌ were PROMOTED to rows of the
-                  results stack (Part 1 §8.9 keeps them as disclosures —
-                  it does not say which container).  What stays here is
-                  what §8.9 leaves: ▲ and ⚠, whose facts NEEDS YOU lifts
-                  but whose bodies carry the audit-failure banner and the
-                  jurisdiction gates NEEDS YOU does not, and the uncounted
-                  i tier.  Same producer, same inputs — the split is of
-                  containers, never of facts. */}
-              <ReferenceDisclosure
-                defaultOpen={auditState.state === "error"}
-                summary={referenceSummary({
-                  jurisdiction: jurisdictionBlock,
-                  streetClass: scenario.street_class ?? null,
-                  loading: jurisdictionLoading,
-                })}
-              >
-              <TieredReference
-                {...tierProps}
-                tiers={["changed", "attention", "reference"]}
-              />
-              </ReferenceDisclosure>
-            </section>
-          )}
         </main>
       </div>
 

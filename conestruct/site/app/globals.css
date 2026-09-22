@@ -3325,9 +3325,14 @@ input[type="number"] {
    What stays declared here is only what the row does NOT already say:
    the rows' vertical rhythm, and the quote's total as generated output. */
 .workbench .results-disc {
+  /* Rule 27 names this group and gives it its own internal gap:
+     "quote → disclosure group 12 px; within the disclosure group 10 px".
+     Ryan's hand-check at f44377e put the Reference row in it, so the four
+     rows are one run and the 10 px is the gap between all of them. */
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  margin-top: 12px;
   margin-bottom: 16px;
 }
 /* The last previewed backend total — a generated number, so it takes the
