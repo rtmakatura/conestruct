@@ -135,3 +135,80 @@ standing stop condition from #288's second ruling:
 
 > Anything you find that would change a #281 rule (not just a churn prediction) stops the arc
 > with a checkpoint; I rule before it's built.
+
+---
+
+## The ruling, verbatim — Ryan, 2026-09-22, on the Phase 2 checkpoint
+
+> #289 rulings — recommendations adopted as tabled, with these decisions written into
+> rulings.md:
+>
+> a. The writer enumeration is the honesty test: every path that wrote meta through the strip
+> editors, withPin, or the corrections helpers becomes a band re-open, and a mounted test
+> proves "only APPLY writes" by exercising each. Any writer you found that the table did not
+> name is a finding, not a fix.
+> b. Component plan as tabled. tr-question is used on band questions only — nowhere else,
+> asserted.
+> c. WHERE with the modal behind it: the three states as mapped; the #234 rehydration contract
+> holds both directions (fact line ↔ modal agree on the intersection), tested.
+> d. WHAT: per-field provenance comes from lib/road-detection/provenance.ts — one producer;
+> the #273 ledger's tests retire as layout and transfer as facts. Jurisdiction field: three
+> states (Not set / honest error word / name), no skeleton, no height change, tested. The grid
+> switches on kind; every live kind renders it.
+> e. S7: staged field edits live in the shell beside #254's staged corrections — one staging
+> mechanism, never per editor. Preview fires on blur/Enter only, carries #282's flag, hits the
+> breakdown path only; the panel renders its four situations with the reserved status row;
+> APPLY folds staged fields and corrections into one write with the enumerating sentence;
+> DISCARD un-stages; pin move clears all. Ruling 186 wins over rule 124: NEEDS YOU stays
+> expanded and live in S7, dimmed with the rest of the results under the ribbon that explains
+> why — nothing collapses because of state. Record rule 124 as overridden. ACKNOWLEDGE stays a
+> row with no button until a wire action exists; draft the issue for its home.
+> f. Landing targets per transition as measured; armLandingCheck() on every collapse and
+> re-open.
+> g. Churn as tabled.
+> h. Commit order: rulings.md + checkpoint.md → WHERE + WHAT + the generate frame (S1–S3, the
+> first visible ship) → S4 lock states + the fact-line mount at the settle → S7 revision →
+> evidence. STOP after S1–S3 with the verdict, the file table, and a row-by-row before→after
+> of what the setup looks like — that ship changes the screen and I want to see it before
+> revision is built on it.
+> i. Principles table accepted.
+>
+> GO.
+
+---
+
+## What "recommendations adopted as tabled" resolves, R1–R9
+
+The checkpoint tabled a recommendation against each of the nine. Adopted means these, and the
+build cites this section by R-number.
+
+| R | resolved as | the consequence a commit has to carry |
+|---|---|---|
+| **R1** | The kind-specific fields become a **third row of the WHAT grid**, rendered only for kinds that have one. Ruling 198's four bands stand. | `near_intersection`'s approach-confirm hold is a rail blocker, so its row is **never inside a disclosure** — rule 139's chain has to stay visible. |
+| **R2** | **Three chips**, the four gated kinds not rendered, **plus one provenance line** under the chip row naming what is not offered and why. | `DisabledScenarioBanner` retires; #277's second bullet is satisfied by the provenance line rather than by a per-kind bar. Rule 5: this is a stated behaviour change. |
+| **R3** | Rule 91's header note **grows a clause** — the panel says which value AND which computation: "for 35 mph · before site conditions". | True in all four situations, so no predicate decides it. `preview != applied` stays recorded at the backend field and now also on the surface. |
+| **R4** | **OVERRIDDEN BY THE RULING ABOVE.** The checkpoint leaned to (a) "it is a state". Ryan ruled the other way: **ruling 186 wins over rule 124.** | NEEDS YOU **stays expanded and live in S7**, dimmed with the rest of the results under the ribbon that explains why. **Nothing collapses because of state.** Rule 124 is recorded as overridden — see the next section. |
+| **R5** | ACKNOWLEDGE **stays a row with no button** until a wire action exists. | The issue for its home is drafted in this arc and filed by Ryan; Phase 2 does not mint the field. |
+| **R6** | `SiteConditionsField` moves into the **GENERATE band**. | The last question before the button; no grid change; the pre-generate assert path that exists today survives. |
+| **R7** | **Not ruled — proceeding under a stated assumption.** `--nav-h` stays **52 px** and **rule 21's 48 px is the number that is wrong**. | Reason: moving the nav is visible churn outside this phase's surface, and every arc-28 landing leg and every `scroll-margin-top` in `globals.css` is measured against 52. The probe measured against 52 for the same reason. Flagged in the S1–S3 stop report; say the word and it inverts, at the cost of re-measuring every landing leg. |
+| **R8** | The landing's success test becomes **"target at its spot OR the page scrolled to its maximum, whichever comes first"**, and an unreachable spot is **recorded**, not retried. | One predicate in `armLandingCheck`; the existing arc-28 legs keep meaning what they mean; the check stops reporting a product failure for a page that is simply short. |
+| **R9** | `--fact-h` becomes a **floor, not a height** — renamed to say so — and **rule 56's 44 px is corrected to 48 px** so the token and the rule agree arithmetically. | The setup fact line grows past the floor on a long scenario and shifts the stack once, at the settle, by the overflow only. Rule 28's reserve is restored in the S4 commit, which is where its occupant mounts. |
+
+## Rule 124, recorded as overridden
+
+> **124.** In S7 NEEDS YOU renders collapsed as a disclosure reading "▲ Needs you · 3 · for the
+> plan on screen", because its expanded actions belong to the answer on screen, not to the
+> staged change.
+
+**Overridden 2026-09-22 by ruling 186's own reason**, which Part 2 applied to S8 and not to S7:
+"State-dependent defaults drift." S7 is a state; a block that is expanded in every other state
+and collapsed in this one is exactly the default ruling 186 rejected.
+
+What replaces it: **NEEDS YOU stays expanded and live in S7**, inside the dim with the rest of
+the results, under the stale ribbon that says why the answer below is the previous one. Its
+actions stay live for the same reason rule 123 keeps downloads live — staging has to stay
+abandonable, and an action taken against the plan on screen is an action against the plan on
+screen. The ribbon is the voice that says which plan that is; nothing collapses to say it.
+
+Consequence for the build: S7 needs **no** collapse behaviour for NEEDS YOU, which removes a
+component state rather than adding one.
