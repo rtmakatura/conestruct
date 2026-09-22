@@ -56,8 +56,6 @@ export interface BandStackProps {
   scheduleFields?: ReactNode;
   jurisdictionSuggest?: ReactNode;
   classificationFields?: ReactNode;
-  /** R6 — the pre-generate site conditions. */
-  siteConditions?: ReactNode;
 }
 
 export function BandStack(props: BandStackProps) {
@@ -80,7 +78,6 @@ export function BandStack(props: BandStackProps) {
     scheduleFields,
     jurisdictionSuggest,
     classificationFields,
-    siteConditions,
   } = props;
 
   // Rule 65: ONE id.  `null` hands the choice back to the column, which
@@ -193,7 +190,6 @@ export function BandStack(props: BandStackProps) {
             onGenerate={onGenerate}
             generating={generating}
             blockerReason={blockerReason}
-            siteConditions={siteConditions}
           />
         ) : fact.id === model.open ? (
           // The open band carries the stack's landing target and the

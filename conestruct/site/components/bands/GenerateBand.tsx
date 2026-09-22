@@ -22,12 +22,14 @@
 // reason as a prop from `deriveRail().blocker`, the same value the verdict
 // strip reads.  Nothing here derives a reason.
 //
-// R6, ruled 2026-09-22: the site conditions the operator asserts BEFORE a
-// plan exists live here.  §8.25 moved the block into NEEDS YOU, and
-// Phase 1 built that — but NEEDS YOU does not exist before a plan does, so
-// the pre-generate half had no band.  This one is the last question before
-// the button, which is exactly what "anything we already know about the
-// site" is, and it was the emptiest band in the column.
+// R6 WAS RULED HERE AND THEN RULED AWAY.  The checkpoint gave this frame
+// the pre-generate site conditions, because §8.25 had moved the block
+// into NEEDS YOU and NEEDS YOU does not exist before a plan does.  The
+// hand-check of 2026-09-22 closed the gap the other way: NEEDS YOU owns
+// the two manual keys, full stop, and conditions are asserted against a
+// plan.  Before there is a plan there is nothing to assert against.
+//
+// So the frame holds the primary and its caption, and nothing else.
 
 import type { ReactNode } from "react";
 import { GenerateButton } from "../GeneratorFormPrimitives";
@@ -37,15 +39,12 @@ export function GenerateFrame({
   onGenerate,
   generating,
   blockerReason,
-  siteConditions,
 }: {
   onGenerate: () => void;
   generating: boolean;
   /** Rule 139: the blocker chain's string, single-sourced.  Null means
    *  nothing is blocking.  This component never asks why. */
   blockerReason: string | null;
-  /** R6 — "Site conditions you assert", in the shape it already has. */
-  siteConditions?: ReactNode;
 }): ReactNode {
   const locked = useWriteLock();
   // `generating` is GenerateButton's own busy input; the lock and the
@@ -55,10 +54,6 @@ export function GenerateFrame({
   const disabled = blockerReason !== null || locked;
   return (
     <div data-testid="generate-slot">
-      {/* R6 — the site conditions the operator asserts before a plan
-          exists.  The last question before the button, which is what
-          "anything we already know about the site" is. */}
-      {siteConditions}
       {/* Rule 116's generate frame, and §8.26: "the framed primary at
           the foot of the band stack".  Rule 131's XL sizing is CSS on
           `.a-genframe .generate-btn`, not a second button — the button

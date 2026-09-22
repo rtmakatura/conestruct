@@ -31,7 +31,6 @@ import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { SiteConditionsField } from "./SiteConditionsField";
 import { ScheduleField } from "./ScheduleField";
 import {
   LocationPickerModal,
@@ -468,19 +467,6 @@ export function GeneratorSidebar({
             // band header carries the index.
             stepsPending={stepsPending}
             jurisdiction={jurisdictionBlock ?? null}
-          />
-        }
-        siteConditions={
-          <SiteConditionsField
-            scenario={scenario}
-            setMeta={setMeta}
-            // #289 Phase 2: no step number.  `siteStep()` counted the
-            // panel's seven sections; ruling 198 gives the column four
-            // steps and the band header carries the index (role 4).  A
-            // "STEP 6" tag beside a column that counts to four is a
-            // number with nothing behind it (rule 12's instinct: a value
-            // that traces to nothing does not render).
-            stepsPending={stepsPending}
           />
         }
       />
