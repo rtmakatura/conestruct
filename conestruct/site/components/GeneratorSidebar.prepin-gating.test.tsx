@@ -103,12 +103,19 @@ describe("pre-pin gating (#222), as the column does it", () => {
     // which is #222's whole point, reached without an inert body.
     expect(document.querySelector("#what-speed")).toBeNull();
     expect(document.querySelector("#what-road-type")).toBeNull();
-    // The kind chips stay live pre-pin: the kind is UPSTREAM of the pin
-    // (it decides the picker's capture flow) and detection never
-    // overwrites it.  Carried from the panel's own comment.
+    // #289 hand-check, 2026-09-22: the kind chips render only once a
+    // road is confirmed (§2.2 / §4.4).  Pre-pin there is nothing to
+    // propose a kind FROM, so there is no chip row — which is the same
+    // answer #222 gave for every other downstream control, reached the
+    // same way: the work is not on screen, so it cannot be overwritten.
+    //
+    // This INVERTS what the panel did, and the panel's reason went with
+    // it: "the kind is UPSTREAM of the pin (it decides the picker's
+    // capture flow)".  It still is, and the arc README records the one
+    // flow that lengthens because of it.
     expect(
       document.querySelector('[data-testid="kind-chip-shoulder"]'),
-    ).not.toBeNull();
+    ).toBeNull();
   });
 
   it("post-pin: the pending line becomes an answer, and the band opens", async () => {

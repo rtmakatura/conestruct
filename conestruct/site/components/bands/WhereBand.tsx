@@ -257,6 +257,10 @@ export function WhereBand({
   const locked = useWriteLock();
   const located = hasLocation(scenario.meta);
   const stale = roadIsStale(scenario);
+  // §2.2's S2: a road confirmed AT THIS PIN.  A stale road is not a
+  // confirmation of anything here (the #149 failure class), so it does
+  // not arm the chips either.
+  const roadConfirmed = scenario.meta.confirmedRoad !== undefined && !stale;
   const [showManual, setShowManual] = useState(
     // Auto-expand where there is no map to fall back FROM: the picker
     // degrades to a numeric-only form without a token, so showing the
@@ -278,28 +282,6 @@ export function WhereBand({
           : "An address, or a cross-street pair — the way an 811 ticket describes it. You can also drop a pin."
       }
     >
-      {/* Rule 135's kind chips, ABOVE the pin rather than below it.
-          §2.2 draws them under the move ledger, and this build cannot
-          put them there: the kind is UPSTREAM of the pin, because it
-          decides the picker's capture flow (`near_intersection` asks for
-          a second pin for the cross street).  The setup panel's own
-          comment said so — "The Scenario picker stays live: the kind is
-          UPSTREAM of the pin … and detection never overwrites it" — and
-          moving the chips below the pin would have made the kind
-          unreachable until after the capture it governs.
-
-          Rule 5: this is a stated departure from §2.2's order, not a
-          slip.  Phase 3 gets to revisit it, because that is the phase
-          that gives the tap a PROPOSED kind and therefore a reason for
-          the chips to sit under the ledger. */}
-      <div className="mb-4">
-        <KindChips
-          value={scenario.kind}
-          onChange={onKindChange}
-          locked={locked}
-        />
-      </div>
-
       {/* Rule 114's producer row: the field and its 132 px button, both
           44 px, stacking at 380 (rule 164).  The button opens the picker
           rather than geocoding in place: the picker is where the search,
@@ -358,6 +340,37 @@ export function WhereBand({
               and this is the ONE work-zone length field in setup now: the
               three per-kind forms' copies are deleted in this commit, so
               `workLen` has one door here and one in the picker. */}
+          {/* Rule 135's kind chips — BELOW the location, and only once a
+              road is confirmed.
+              #289 hand-check on prod, 2026-09-22: "The kind chips move
+              below the location and render only once a road is confirmed
+              (S2), per Part 1 §2.2 and §4.4 — the WHERE question is
+              answered by a pin, not a kind."
+
+              §4.4 is why the gate is a CONFIRMED ROAD and not a pin: move
+              4 is the system proposing a side from what the tap hit, and
+              a tap that has not resolved to a road has proposed nothing.
+              Until Phase 3 builds that producer the chips render with no
+              "✓ proposed" on any citation — #281's own audit ruling —
+              so what the operator sees is three kinds and no opinion.
+
+              RULE 5, and it is a real consequence: on a fresh session the
+              kind is no longer settable before the picker opens, and the
+              picker's capture flow reads it (`initial.scenarioKind`, and
+              `near_intersection` asks for a second pin).  Reaching that
+              kind is now: open the picker, save a road, pick the chip,
+              reopen the picker.  Recorded in the arc README as the one
+              flow this correction lengthens. */}
+          {roadConfirmed && (
+            <div className="mt-4">
+              <KindChips
+                value={scenario.kind}
+                onChange={onKindChange}
+                locked={locked}
+              />
+            </div>
+          )}
+
           <div className="a-cell mt-4" style={{ maxWidth: 260 }}>
             <label className="tr-field" htmlFor="band-worklen">
               Work zone length (ft)

@@ -141,9 +141,29 @@ const PICKER_RESULT = {
 
 vi.mock("./LocationPickerModal", () => ({
   LocationPickerModal: ({ onSave }: { onSave: (r: unknown) => void }) => (
-    <button type="button" onClick={() => onSave(PICKER_RESULT)}>
-      APPLY_COLFAX
-    </button>
+    <>
+      <button type="button" onClick={() => onSave(PICKER_RESULT)}>
+        APPLY_COLFAX
+      </button>
+      {/* #289: a save with a pin and NO road — the picker's own no-road
+          path (#189-3).  It confirms a location without confirming a
+          road, which is the state "no detection on record" actually
+          looks like on screen. */}
+      <button
+        type="button"
+        onClick={() =>
+          onSave({
+            ...PICKER_RESULT,
+            lat: 39.9,
+            lng: -105.1,
+            classification: null,
+            confirmedRoad: null,
+          })
+        }
+      >
+        APPLY_NO_ROAD
+      </button>
+    </>
   ),
 }));
 
@@ -322,7 +342,17 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     const user = userEvent.setup();
     await mountSandbox();
 
-    // No picker, no detection — just a kind switch on a fresh form.
+    // #289 hand-check, 2026-09-22: the chips render only once a road is
+    // confirmed (§2.2 / §4.4), so "a kind switch on a fresh form" has no
+    // control any more.  The FACT the case is about is unchanged and is
+    // the one worth keeping: a kind switch with no detection ON RECORD
+    // mints no relays.  So the road is confirmed and then CLEARED — a
+    // no-road save at a new pin, which is exactly how an operator
+    // reaches this state (#189-3's own path) — and the switch happens
+    // with the chips armed and nothing behind them.
+    await openWhere();
+    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("APPLY_NO_ROAD"));
     await openWhere();
     await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
 
