@@ -256,7 +256,19 @@ function StatusBarState({
   if (locationUnset) {
     return (
       <div className="status-bar idle unavail">
-        <span className="indicator" />
+        {/* #289 hand-check, 2026-09-22, correction 5: the null-state
+            glyph is ◌, per rule 18.
+            Rule 17: "Symbols are text, not icons: ✓ ▲ ⚠ ◌ × i, mono
+            12.5 px / 1".  Rule 18 fixes ◌ at #93a0b0 — --none, the
+            chromeless no-signal token this state already used for its
+            8 px square.  Part 1 §2.1 prints the strip as "◌ AWAITING
+            LOCATION · NO SITE CHOSEN", and the square was a shape with
+            no name: a reader could not say what it meant, and a screen
+            reader was told nothing at all.  aria-hidden because the
+            words beside it say the same thing (the house idiom). */}
+        <span className="status-glyph" aria-hidden>
+          ◌
+        </span>
         <span>AWAITING LOCATION · no site chosen</span>
       </div>
     );

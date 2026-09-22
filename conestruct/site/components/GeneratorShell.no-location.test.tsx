@@ -149,9 +149,12 @@ describe("no location, no certification (#186)", () => {
     const text = document.body.textContent ?? "";
     expect(text).toContain("AWAITING LOCATION");
     // #260 (P2): the strip's line is the state alone; the instruction
-    // below is the CTA reason's (one speaker).
+    // below is the CTA reason's (one speaker).  #289 hand-check,
+    // 2026-09-22: rule 18's ◌ leads it, as TEXT (rule 17) and
+    // aria-hidden, so the SENTENCE and what the region speaks are both
+    // unchanged.
     expect(document.querySelector(".status-bar")?.textContent).toBe(
-      "AWAITING LOCATION · no site chosen",
+      "◌" + "AWAITING LOCATION · no site chosen",
     );
     expect(text).not.toContain("READY FOR TCS REVIEW");
     expect(text).not.toContain("VERIFIED");

@@ -113,7 +113,14 @@ describe("#260 (2) — one live speaker for the location gate", () => {
 
     // The strip: the state, not the instruction (no second voice).
     const strip = document.querySelector(".status-slot .status-bar")!;
-    expect(strip.textContent).toBe("AWAITING LOCATION · no site chosen");
+    // #289 hand-check, 2026-09-22: the null state carries rule 18's ◌
+    // as TEXT (rule 17) where an 8 px square used to sit.  The SENTENCE
+    // is unchanged, which is what #260 (2) is about; the glyph is
+    // aria-hidden, so what this region SPEAKS is unchanged too.
+    expect(strip.textContent).toBe("◌" + "AWAITING LOCATION · no site chosen");
+    expect(
+      strip.querySelector(".status-glyph")!.getAttribute("aria-hidden"),
+    ).toBe("true");
     expect(strip.textContent).not.toMatch(/pick a location|Set a location/);
 
     // #289 Phase 2: the rail's aria-hidden visual echo of the gate

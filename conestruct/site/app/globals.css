@@ -4271,3 +4271,24 @@ input[type="number"] {
     min-height: 44px;
   }
 }
+
+/* Rule 17 / rule 18 — the verdict strip's text glyph.
+   Issue 289 hand-check, 2026-09-22: the null state is the one variant
+   Part 1 SS2.1 prints with a symbol, and rule 17 makes symbols text.
+   Mono 12.5 px / 1 (rules 17 and 5's size), --none (rule 18's colour for
+   the hollow dot), font-variant-emoji: text so the glyph never renders
+   as a colour emoji.  It takes the .indicator's place in the flex row,
+   so the strip's height and gap are unchanged.
+
+   The strip's OTHER variants still carry the 8 px .indicator square.
+   They are Phase 1's surface -- the verdict strip is SS8.33's "renamed,
+   no behaviour change" and rules 50-55 are its spec -- and changing them
+   is a ruling of its own, not a side effect of this one. */
+.workbench .status-bar .status-glyph {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1;
+  color: var(--none);
+  font-variant-emoji: text;
+  flex: 0 0 auto;
+}
