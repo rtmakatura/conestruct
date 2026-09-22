@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#289 band-stack landing prototype</title>
+<!--
+  s2-arc34 · #289 Phase 2 · CHECKPOINT PROBE, NOT PRODUCT CODE.
+
+  What this is.  Checkpoint question (f) asks for the landing target of every
+  band transition "measured on a prototype at both widths".  Nothing in the
+  build renders a band yet, so there is nothing in the product to measure.
+  This file is the band stack built from #281 Part 2's OWN numbers — rules
+  20-28 (frame, nav, column, gaps), 56-60 (fact line), 61-66 (open band),
+  67-71 (move ledger), 114-117 (S1-S4), 121 (S7), 130-136 (controls), and
+  160-174 (the 380 arc) — so that the displacement each collapse produces is
+  a reading of the SPEC, not of a guess.
+
+  What it is NOT.  It is not a React component, it shares no code with the
+  product, and no product file imports it.  Its results stack is a stand-in
+  sized to rule 27's gaps: Phase 1 already shipped the real one, and what is
+  being measured here is how far the stack below a band moves when that band
+  opens or collapses.  Where a number is the stand-in's rather than the real
+  stack's, band-stack-landing.md says so.
+
+  Landing: --nav-h + 8, which is what globals.css:1454 gives a band-stack
+  target pre-generate.  The nav is 52 px here, not rule 21's 48, because 52 is
+  what --nav-h holds in the build today — the discrepancy is a RULING NEEDED
+  item in checkpoint.md §F, and measuring against the shipped value is what
+  makes the numbers transferable.
+-->
+<style>
+:root{
+  --bg:#14202e; --desk:#0b131d; --panel:#101c29; --panel2:#16232f;
+  --ink:#eaf0f7; --body:#c8d1dd; --mut:#93a0b0; --act:#34a9e8;
+  --gen:#ff8a2e; --am:#f4c020; --pass:#4fd787; --fail:#ff7a7a; --rule:#2c3e53;
+  --nav-h:52px;                 /* the build's value, not rule 21's 48 */
+  --fact-h:44px;                /* rule 56 */
+  --fs-step-question:22px;      /* rule 180 / role 5 */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--body);
+  font:13px/1.5 Inter,system-ui,sans-serif}
+.nav{position:sticky;top:0;z-index:5;height:var(--nav-h);background:var(--panel2);
+  border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:16px;padding:0 20px}
+.wordmark{font-weight:600;font-size:14.5px;color:var(--ink);letter-spacing:-.01em}
+.wordmark i{color:var(--gen);font-style:normal}
+.navright{margin-left:auto;font:10px/1 ui-monospace,monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+.col{width:880px;margin:0 auto;padding:26px 40px 30px}          /* rule 24 */
+
+/* ---- type roles (3,4,5,8 + provenance) ---- */
+.tr-section{font:500 10px/1.2 ui-monospace,monospace;letter-spacing:.20em;
+  text-transform:uppercase;color:#fff}
+.tr-step{font:400 10px/1.2 ui-monospace,monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mut)}
+.tr-field{font:500 12.5px/1.4 Inter,sans-serif;color:var(--ink)}
+.tr-question{font:600 var(--fs-step-question)/1.25 Inter,sans-serif;color:var(--ink);margin:0}
+.tr-prov{font:400 10.5px/1.5 ui-monospace,monospace;color:var(--mut)}
+.val{font:400 13.5px/1.45 Inter,sans-serif;color:var(--body)}
+
+/* ---- C2 verdict strip (rules 50-55) ---- */
+.vd{display:flex;align-items:center;gap:12px;padding:13px 16px;min-height:52px;
+  border:1px solid var(--rule);background:var(--panel2)}
+.vd .w{font:500 11px/1 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.vd .pill{margin-left:auto;font:500 9.5px/1 ui-monospace,monospace;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--act);border:1px solid var(--rule);padding:5px 8px}
+.vd.empty{visibility:hidden}                                     /* rule 117 */
+
+/* ---- the band stack (rule 26) ---- */
+.stack{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.stack:focus{outline:none}
+
+/* ---- C4 collapsed fact line (rules 56-60) ---- */
+.a-fact{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:14px;
+  align-items:baseline;padding:13px 16px;border:1px solid var(--rule);
+  background:var(--panel2);min-height:var(--fact-h)}
+.a-fact .sym{font:12.5px/1 ui-monospace,monospace;color:var(--pass)}
+.a-fact .mid{display:flex;align-items:baseline;gap:8px;min-width:0}
+.a-fact .lead{flex:1 1 18px;min-width:14px;border-bottom:1px dotted #3c5069;transform:translateY(-4px)}
+.lk{font:9.5px/1 ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--act);border-bottom:1px solid rgba(52,169,232,.45);
+  display:inline-flex;align-items:center;min-height:32px;background:none;border-top:0;
+  border-left:0;border-right:0;cursor:pointer;padding:0}
+.a-fact.pending .sym{color:var(--mut)}
+.a-fact.pending .lead{display:none}
+.a-fact.locked{opacity:.5}
+
+/* ---- C3 open band (rules 61-66) ---- */
+.a-open{border:1px solid var(--rule);background:var(--panel)}
+.a-open.rev{border-color:var(--act)}
+.a-open .hd{display:flex;align-items:baseline;gap:14px;padding:14px 16px;
+  border-bottom:1px solid #223345}
+.a-open.rev .hd{border-bottom-color:rgba(52,169,232,.3)}
+.a-open .hd .prov{margin-left:auto}
+.a-open .bd{padding:18px 16px}
+.a-open .bd > .tr-prov{margin:0 0 16px}
+
+/* ---- the aerial (§2.1/2.2/2.3 heights) ---- */
+.map{background:repeating-linear-gradient(135deg,#16232f 0 8px,#182736 8px 16px);
+  border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;
+  color:var(--mut);font:10.5px/1.5 ui-monospace,monospace}
+
+/* ---- C5 move ledger (rules 67-70) ---- */
+.a-moves{margin-top:14px}
+.a-moves .row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;column-gap:12px;
+  align-items:baseline;padding:10px 0;border-bottom:1px dotted #223345}
+.a-moves .row:last-child{border-bottom:0}
+.a-moves .row.cur{background:rgba(52,169,232,.07);padding:10px 8px;margin:0 -8px}
+.a-moves .row .mid{display:flex;align-items:baseline;gap:8px;min-width:0}
+.a-moves .row .lead{flex:1 1 18px;min-width:14px;border-bottom:1px dotted #3c5069;transform:translateY(-4px)}
+.a-moves .row .sub{grid-column:2/4;margin-top:3px}
+
+/* ---- controls (rules 130-136) ---- */
+.pri{width:100%;height:56px;background:var(--act);color:#0c1622;border:0;
+  font:600 15.5px Inter,sans-serif;display:flex;align-items:center;justify-content:center;
+  gap:10px;cursor:pointer;margin-top:14px}
+.pri.xl{height:66px;font-size:17.5px}
+.pri:disabled{background:#1d2c3c;color:#6e7c8e;cursor:not-allowed}
+.ghost{height:44px;padding:0 16px;border:1px solid var(--rule);background:transparent;
+  color:var(--ink);font:500 13px Inter,sans-serif;cursor:pointer}
+.act{min-height:32px;padding:7px 11px;border:1px solid var(--rule);background:transparent;
+  font:9.5px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--body);cursor:pointer}
+.chips{display:flex;gap:10px;margin-top:14px}
+.chip{flex:1;border:1px solid var(--rule);padding:12px 13px;min-height:44px;
+  display:grid;gap:4px;background:transparent;text-align:left;cursor:pointer}
+.chip.on{border-color:var(--act);background:rgba(52,169,232,.1)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid3 + .grid3{margin-top:16px}
+.fldwrap{display:grid;gap:6px}
+.fld{height:44px;border:1px solid var(--rule);background:var(--panel2);padding:0 12px;
+  color:var(--ink);font:13.5px Inter,sans-serif;width:100%}
+.fld.staged{border-color:var(--act)}
+.genframe{border:1px solid var(--rule);background:var(--panel);padding:18px 16px;margin-top:12px}
+.genframe .cap{margin-top:10px;text-align:center}
+.findrow{display:grid;grid-template-columns:1fr 132px;gap:12px}
+.findrow .pri{height:44px;margin-top:0;font-size:13.5px}
+
+/* ---- S4 placeholder (rule 117) ---- */
+.ph{border:1px solid var(--rule);background:var(--panel);padding:22px 16px}
+.ph .no{font:400 13.5px Inter,sans-serif;color:#6e7c8e;margin-top:6px}
+
+/* ---- S7: the 2-track body + diff panel (rules 90-95.4, 121) ---- */
+.s7body{display:grid;grid-template-columns:240px minmax(0,1fr);gap:26px;align-items:start}
+.diff{border:1px solid var(--act);background:#0f1c29}
+.diff .hd{display:flex;align-items:baseline;gap:12px;padding:12px 16px;
+  border-bottom:1px solid rgba(52,169,232,.3)}
+.diff .hd .note{margin-left:auto;font:10.5px ui-monospace,monospace;color:var(--mut)}
+.diff .r{display:grid;grid-template-columns:minmax(0,1fr) 92px 22px 92px;gap:10px;
+  align-items:baseline;padding:10px 16px;border-bottom:1px dotted #223345}
+.diff .r .was{text-align:right;font:12.5px ui-monospace,monospace;color:var(--mut)}
+.diff .r .ar{text-align:center;font:12.5px ui-monospace,monospace;color:var(--mut)}
+.diff .r .now{text-align:right;font:500 12.5px ui-monospace,monospace;color:var(--gen)}
+.diff .r .now.same{font-weight:400;color:var(--body)}
+.diff .r .now.defer{font:10.5px ui-monospace,monospace;color:var(--mut)}
+.diff .r.wide{grid-template-columns:minmax(0,1fr) 92px 22px 130px}
+.diff .status{display:flex;align-items:center;gap:10px;padding:11px 16px;min-height:44px;
+  border-top:1px dotted #223345}
+.diff .ft{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border-top:1px solid rgba(52,169,232,.3)}
+.diff .ft .apply{margin-left:auto;width:200px;height:44px;background:var(--act);color:#0c1622;
+  border:0;font:600 13.5px Inter,sans-serif;cursor:pointer}
+.deriv{margin-top:16px}
+.ribbon{border-left:2px solid var(--act);padding:10px 14px;background:var(--panel2);margin-top:14px}
+
+/* ---- results stand-in (rule 27 gaps) ---- */
+.results{margin-top:14px;display:flex;flex-direction:column;gap:16px}
+.results .blk{border:1px solid var(--rule);background:var(--panel);padding:16px}
+.results .blk.needs{border-left:2px solid var(--am)}
+.results .hero{height:150px}
+.results .dls{height:120px}
+.results.dim{opacity:.5}
+.slot{height:var(--fact-h);margin-bottom:16px}                   /* rule 28 */
+
+.draft{margin-top:18px}
+
+/* ---- 380 (rules 160-174) ---- */
+@media (max-width:520px){
+  :root{--fs-step-question:19px}
+  .col{width:100%;padding:16px 14px 30px}
+  .nav{padding:0 12px;gap:10px}
+  .wordmark{font-size:13px}
+  .findrow{grid-template-columns:1fr;gap:10px}
+  .findrow .pri{height:48px}
+  .pri{height:48px}.pri.xl{height:48px}
+  .a-fact{grid-template-columns:18px 1fr;row-gap:6px}
+  .a-fact .mid{flex-wrap:wrap}
+  .a-fact .lk{grid-column:2}
+  .grid3{grid-template-columns:1fr}
+  .chips{flex-direction:column}
+  .s7body{grid-template-columns:1fr;gap:16px}
+  .diff .r{grid-template-columns:1fr 58px 16px 96px;font-size:11.5px}
+  .diff .r.wide{grid-template-columns:1fr 58px 16px 96px}
+  .diff .ft{flex-direction:column;align-items:stretch}
+  .diff .ft .apply{width:100%;height:48px;margin-left:0;order:2}
+  .diff .ft .ghost{order:3}
+  .act{min-height:44px}
+}
+</style>
+</head>
+<body>
+<div class="nav"><span class="wordmark">conestruct<i>.</i></span>
+  <span class="navright" id="navright">MUTCD 2023 · CDOT</span></div>
+<div class="col">
+  <div id="vd" class="vd"><span class="w">&#9675; AWAITING LOCATION &middot; NO SITE CHOSEN</span></div>
+  <div class="stack" id="stack" tabindex="-1"></div>
+  <div class="tr-prov draft">Draft &mdash; not a sealed plan. Output is engineering reference;
+    requires review and seal by a licensed PE prior to field use.</div>
+</div>
+<script>
+// Every string below is #281's, quoted from Part 1 sections 2.1-2.8 and Part 2's rules.
+var FACT_WHERE = "E Colfax Ave EB · 210 ft N of W 38th Ave · 1,000 ft · right shoulder";
+var FACT_WHAT  = "shoulder work · 30 mph · 2 lanes · 12 ft · urban arterial · Denver";
+var FACT_SETUP = "Shoulder work · E Colfax Ave EB · 1,000 ft · right shoulder · 30 mph · Denver";
+
+function fact(sym, label, value, verb, cls) {
+  return '<div class="a-fact ' + (cls || "") + '" data-fact="' + label + '">'
+    + '<span class="sym">' + sym + '</span>'
+    + '<div class="mid"><span class="tr-field">' + label + '</span><span class="lead"></span>'
+    + '<span class="val">' + value + '</span></div>'
+    + (verb
+        ? '<button class="lk" data-verb="' + verb + '">' + verb + '</button>'
+        : '<span class="tr-prov">' + (cls === "locked" ? "locked" : "pending") + '</span>')
+    + '</div>';
+}
+function band(idx, head, prov, question, qprov, body, extra) {
+  return '<div class="a-open ' + (extra || "") + '" data-band="' + head + '">'
+    + '<div class="hd"><span class="tr-step">' + idx + '</span>'
+    + '<span class="tr-section">' + head + '</span>'
+    + '<span class="tr-prov prov">' + prov + '</span></div>'
+    + '<div class="bd"><p class="tr-question">' + question + '</p>'
+    + '<p class="tr-prov">' + qprov + '</p>' + body + '</div></div>';
+}
+function resultsStandIn(dim) {
+  return '<div class="results ' + (dim ? "dim" : "") + '" id="results">'
+    + '<div class="blk needs" style="height:280px"><span class="tr-section">NEEDS YOU</span></div>'
+    + '<div class="blk hero"><span class="tr-section">COUNTS</span></div>'
+    + '<div class="blk dls"><span class="tr-section">FILES</span></div>'
+    + '<div class="blk" style="height:48px"></div>'
+    + '<div class="blk" style="height:48px"></div></div>';
+}
+
+var MOVES =
+  '<div class="a-moves">'
+  + '<div class="row"><span class="sym">✓</span><div class="mid">'
+  + '<span class="tr-field">Found the spot</span><span class="lead"></span>'
+  + '<span class="val">E Colfax Ave EB, Denver</span></div>'
+  + '<button class="act">CHANGE</button></div>'
+  + '<div class="row"><span class="sym">✓</span><div class="mid">'
+  + '<span class="tr-field">Work starts</span><span class="lead"></span>'
+  + '<span class="val">210 ft N of W 38th Ave</span></div>'
+  + '<button class="act">MOVE</button></div>'
+  + '<div class="row"><span class="sym">✓</span><div class="mid">'
+  + '<span class="tr-field">Extent</span><span class="lead"></span>'
+  + '<span class="val">1,000 ft, typed</span></div>'
+  + '<button class="act">CHANGE</button></div>'
+  + '<div class="row cur"><span class="sym" style="color:var(--am)">⚠</span>'
+  + '<div class="mid"><span class="tr-field">Which side is occupied?</span></div><span></span>'
+  + '<div class="sub tr-prov">Your tap looks like a right-shoulder closure. Confirm it — '
+  + 'Conestruct never sets the kind for you.</div></div>'
+  + '<div class="row"><span class="sym" style="color:var(--mut)">○</span>'
+  + '<div class="mid"><span class="tr-field">See the plan grow</span></div>'
+  + '<span class="tr-prov">approaches lay out after you confirm</span></div>'
+  + '</div>';
+
+var CHIPS =
+  '<div class="chips">'
+  + '<button class="chip on"><span class="tr-field">Shoulder work</span>'
+  + '<span class="tr-prov">TA-3/TA-5 · S-630-1 · ✓ proposed</span></button>'
+  + '<button class="chip"><span class="tr-field">Flagger lane closure</span>'
+  + '<span class="tr-prov">TA-10 · S-630-1</span></button>'
+  + '<button class="chip"><span class="tr-field">Lane closure near intersection</span>'
+  + '<span class="tr-prov">Cases 18/19 · S-630-1</span></button></div>';
+
+function fldC(label, value, prov, amber) {
+  return '<div class="fldwrap"><span class="tr-field">' + label + '</span>'
+    + '<input class="fld" value="' + value + '" readonly>'
+    + '<span class="tr-prov"' + (amber ? ' style="color:var(--am)"' : "") + '>' + prov + '</span></div>';
+}
+
+var WHATGRID =
+  '<div class="grid3">'
+  + fldC("Speed limit", "30 mph", "OSM · 30 mph · measured")
+  + fldC("Lanes", "2", "OSM · 2 · measured")
+  + fldC("Lane width", "12 ft", "your change · operator-set from here on")
+  + '</div><div class="grid3">'
+  + fldC("Road type", "Urban arterial", "⚠ OSM · inferred, not measured", 1)
+  + fldC("Jurisdiction", "Denver", "evaluated · DOTI PT-116.1")
+  + fldC("Work dates", "Not set", "optional · permit lead times need it")
+  + '</div>';
+
+var DIFF =
+  '<div class="diff">'
+  + '<div class="hd"><span class="tr-section">WHAT THIS CHANGES</span>'
+  + '<span class="note">for 35 mph — the staged value</span></div>'
+  + '<div class="r"><span class="tr-field">Taper length L</span><span class="was">50 ft</span>'
+  + '<span class="ar">→</span><span class="now">68 ft</span></div>'
+  + '<div class="r"><span class="tr-field">Buffer space B</span><span class="was">200 ft</span>'
+  + '<span class="ar">→</span><span class="now">250 ft</span></div>'
+  + '<div class="r"><span class="tr-field">Device spacing</span><span class="was">30 ft</span>'
+  + '<span class="ar">→</span><span class="now same">30 ft</span></div>'
+  + '<div class="r"><span class="tr-field">Total devices</span><span class="was">44</span>'
+  + '<span class="ar">→</span><span class="now">46</span></div>'
+  + '<div class="r wide"><span class="tr-field">Verdict</span><span class="was">Ready</span>'
+  + '<span class="ar">→</span><span class="now defer">recomputes on apply</span></div>'
+  + '<div class="r wide"><span class="tr-field">Needs you</span><span class="was">3 items</span>'
+  + '<span class="ar">→</span><span class="now defer">recomputes on apply</span></div>'
+  + '<div class="status"><span class="sym" style="color:var(--pass)">✓</span>'
+  + '<span class="tr-prov">computed for 35 mph · taper, buffer, spacing and counts only — '
+  + "the verdict and the open items need the full audit</span></div>"
+  + '<div class="ft"><span class="tr-prov">1 change staged · nothing has been written</span>'
+  + '<button class="ghost">DISCARD</button>'
+  + '<button class="apply">APPLY — RE-GENERATE</button></div></div>';
+
+var STATES = {
+  s1: function () { return {
+    vd: '<span class="w">○ AWAITING LOCATION · NO SITE CHOSEN</span>',
+    nav: "MUTCD 2023 · CDOT",
+    html: band("STEP 1 OF 4", "WHERE", "the work — not the first sign", "Where is the work?",
+      "An address, or a cross-street pair — the way an 811 ticket describes it. You can also drop a pin.",
+      '<div class="findrow"><input class="fld" placeholder="Address or cross streets">'
+      + '<button class="pri">FIND</button></div>'
+      + '<div class="map" style="height:296px;margin-top:14px">Click the map or search to drop a pin</div>')
+      + fact("○", "What's the job?", "kind of work, extent, side", null, "pending")
+      + fact("○", "Generate", "", null, "pending") }; },
+
+  s2: function () { return {
+    vd: '<span class="w">○ NO PLAN YET · CONFIRM THE KIND OF WORK TO CONTINUE</span>',
+    nav: "MUTCD 2023 · CDOT",
+    html: band("STEP 1 OF 4", "WHERE", "E Colfax Ave eastbound · Denver", "Where is the work?",
+      "The segment below is what the plan is built from.",
+      '<div class="map" style="height:300px">aerial placeholder · mapbox satellite</div>'
+      + MOVES + CHIPS + '<button class="pri">Confirm — right shoulder closure</button>')
+      + fact("○", "What's the job?", "road facts prefill from E Colfax Ave", null, "pending")
+      + fact("○", "Generate", "", null, "pending") }; },
+
+  s3: function () { return {
+    vd: '<span class="w">✓ READY TO GENERATE · NOTHING BLOCKING</span>',
+    nav: "MUTCD 2023 · CDOT",
+    html: fact("✓", "Where", FACT_WHERE, "CHANGE")
+      + '<div class="map" style="height:104px">Advance warning 1,500 ft · Work 1,000 ft</div>'
+      + band("STEP 2 OF 4", "WHAT", "prefilled from the road · guesses marked",
+        "Anything we got wrong?",
+        "Everything here came off the road you confirmed. Change what is wrong; ignore what is right.",
+        WHATGRID)
+      + '<div class="genframe"><button class="pri xl">GENERATE PLAN</button>'
+      + '<div class="tr-prov cap">Output requires TCS review · every dimension cited to MUTCD or CDOT</div></div>' }; },
+
+  s4: function () { return {
+    vd: "", vdEmpty: 1, nav: "MUTCD 2023 · CDOT",
+    html: fact("✓", "Where", "· locked", null, "locked")
+      + fact("✓", "What", FACT_WHAT, null, "locked")
+      + '<div class="map" style="height:150px">aerial placeholder · mapbox satellite</div>'
+      + '<div class="ph"><span class="tr-section">02 · RESULTS</span>'
+      + '<div class="no">No package yet — the plan is being built.</div></div>' }; },
+
+  s5: function () { return {
+    vd: '<span class="w">✓ VERIFIED · 0 VALIDATION WARNINGS</span><span class="pill">READY FOR TCS REVIEW</span>',
+    nav: "TA-3 · S-630-1 · MUTCD 2023 · CDOT",
+    html: '<div class="slot" id="slot"></div>'
+      + fact("✓", "Setup", FACT_SETUP, "CHANGE ONE THING")
+      + resultsStandIn(false) }; },
+
+  s7: function () { return {
+    vd: '<span class="w">✓ VERIFIED · PLAN ON SCREEN</span><span class="pill">FOR THE PLAN ON SCREEN</span>',
+    nav: "TA-3 · S-630-1 · MUTCD 2023 · CDOT",
+    html: '<div class="slot" id="slot"></div>'
+      + band("STEP 2 OF 4", "REVISING · SPEED LIMIT", "was 30 mph · OSM · measured",
+        "Anything we got wrong?", "One field re-opens; its siblings stay collapsed.",
+        '<div class="s7body">'
+        + '<div class="fldwrap"><span class="tr-field">Speed limit</span>'
+        + '<input class="fld staged" value="35 mph" readonly>'
+        + '<span class="tr-prov">was 30 mph · OSM · measured</span></div>'
+        + DIFF + '</div>'
+        + '<div class="tr-prov deriv">MUTCD § 6C.08 · L = W × S² / 60 for speeds under 45 mph → '
+        + "10 × 35² / 60 = 204 ft, L/3 = 68 ft · every figure above is the server's, "
+        + 'for these staged inputs</div>', "rev")
+      + '<div class="ribbon tr-prov">○ Previous answer — 1 change staged, not yet applied. '
+      + 'Downloads below are the plan on screen.</div>'
+      + resultsStandIn(true) }; }
+};
+
+function setState(name) {
+  var s = STATES[name]();
+  var vd = document.getElementById("vd");
+  vd.className = "vd" + (s.vdEmpty ? " empty" : "");
+  vd.innerHTML = s.vd || "&nbsp;";
+  document.getElementById("navright").textContent = s.nav;
+  document.getElementById("stack").innerHTML = s.html;
+  document.body.dataset.state = name;
+}
+// Ruling 184's landing: the next band lands at nav-h + 8 (globals.css:1454).
+function landOn(sel) {
+  var t = document.querySelector(sel);
+  if (!t) return null;
+  var margin = parseFloat(getComputedStyle(document.documentElement)
+    .getPropertyValue("--nav-h")) + 8;
+  t.style.scrollMarginTop = margin + "px";
+  t.scrollIntoView({ behavior: "auto", block: "start" });
+  return Math.round(t.getBoundingClientRect().top - margin);
+}
+window.setState = setState;
+window.landOn = landOn;
+setState("s1");
+</script>
+</body>
+</html>

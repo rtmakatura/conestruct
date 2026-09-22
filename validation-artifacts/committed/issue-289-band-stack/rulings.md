@@ -114,9 +114,22 @@ The arc has one live violation to answer for (`JurisdictionSection.tsx:252`,
 ## What is NOT ruled yet, and therefore not built
 
 Everything in `checkpoint.md` marked **RULING NEEDED**. At the time of this commit that is
-seven items — the fifth-step section's home, the `ScenarioPicker`→chips gating, the preview's
-scan gap against #267, the ruling-186 vs rule-124 question, ACKNOWLEDGE's home, the
-`SiteConditionsField` pre-generate half of §8.25, and the `--nav-h` 48-vs-52 discrepancy.
+nine items, R1–R9 in that file's opening table:
+
+1. **R1** — the fifth-step section (Flagger / Cross street) has no band under ruling 198's four.
+2. **R2** — rule 135's gated kinds "not rendered at all today" against today's seven-kind
+   picker and #277's surviving enablement-bar bullet.
+3. **R3** — the preview skips the site scan, so **preview ≠ applied**, against #267's invariant.
+4. **R4** — rule 124's collapsed NEEDS YOU in S7 against ruling 186's "always expanded".
+5. **R5** — ACKNOWLEDGE's home: revision offers one, the wire still carries nothing to write.
+6. **R6** — §8.25's pre-generate half (`SiteConditionsField`) has no band.
+7. **R7** — `--nav-h` is 52 px; rule 21 says 48, and every landing target derives from it.
+8. **R8** — measured: at 1440 the column in S3/S4 is shorter than the viewport, so ruling
+   184's "computed spot" is unreachable and `armLandingCheck` would report a failure that is
+   arithmetic, not behaviour.
+9. **R9** — measured: the setup fact line is 60 px at 1440 and 131 px at 380, not rule 56's
+   44, so rule 28's `--fact-h` reserve — the thing Phase 1 deferred to Phase 2 — is short.
+
 None of them is a churn prediction; each would change or contradict a #281 rule, which is the
 standing stop condition from #288's second ruling:
 

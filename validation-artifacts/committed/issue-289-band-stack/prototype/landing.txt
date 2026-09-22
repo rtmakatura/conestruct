@@ -1,0 +1,30 @@
+
+=== 1440 (1440x1000) ===
+state s1  docH 1000  band.h 496  facts [48,46]  question 22px
+state s2  docH 1192  band.h 863  facts [48,46]  question 22px
+state s3  docH 1000  band.h 337  facts [60]  question 22px
+state s4  docH 1000  band.h -  facts [48,48]  question null
+state s5  docH 1080  band.h -  facts [60]  question null
+state s7  docH 1670  band.h 588  facts []  question 22px
+s1 -> s2  stackShift 367px  draftShift 367px  land(.a-open) residual 0px  scrollY 88  — WHERE grows: aerial + ledger + chips replace field + hint
+s2 -> s3  stackShift -288px  draftShift -288px  land(.a-open) residual 276px  scrollY 0  — WHERE collapses to a fact line; WHAT opens
+s3 -> s4  stackShift -324px  draftShift -324px  land(.ph) residual 369px  scrollY 0  — both setup bands collapse and lock; the placeholder mounts
+s4 -> s5  stackShift 500px  draftShift 500px  land(.results) residual 166px  scrollY 80  — the settle: the results stack forms
+s5 -> s7  stackShift 590px  draftShift 590px  land(.a-open.rev) residual 0px  scrollY 160  — CHANGE ONE THING re-opens one band in place
+s7 -> s5  stackShift -590px  draftShift -590px  land(.a-fact) residual 80px  scrollY 80  — DISCARD/APPLY re-collapses the band
+pageerrors: 0
+
+=== 380 (380x800) ===
+state s1  docH 960  band.h 566  facts [69,67]  question 19px
+state s2  docH 1531  band.h 1112  facts [95,67]  question 19px
+state s3  docH 1435  band.h 777  facts [131]  question 19px
+state s4  docH 800  band.h -  facts [69,114]  question null
+state s5  docH 1179  band.h -  facts [131]  question null
+state s7  docH 2006  band.h 880  facts []  question 19px
+s1 -> s2  stackShift 571px  draftShift 571px  land(.a-open) residual 0px  scrollY 78  — WHERE grows: aerial + ledger + chips replace field + hint
+s2 -> s3  stackShift -97px  draftShift -97px  land(.a-open) residual 0px  scrollY 337  — WHERE collapses to a fact line; WHAT opens
+s3 -> s4  stackShift -745px  draftShift -745px  land(.ph) residual 448px  scrollY 0  — both setup bands collapse and lock; the placeholder mounts
+s4 -> s5  stackShift 490px  draftShift 490px  land(.results) residual 0px  scrollY 314  — the settle: the results stack forms
+s5 -> s7  stackShift 827px  draftShift 827px  land(.a-open.rev) residual 0px  scrollY 157  — CHANGE ONE THING re-opens one band in place
+s7 -> s5  stackShift -827px  draftShift -827px  land(.a-fact) residual 0px  scrollY 157  — DISCARD/APPLY re-collapses the band
+pageerrors: 0
