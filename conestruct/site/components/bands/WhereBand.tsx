@@ -231,7 +231,6 @@ export function WhereBand({
   handoff,
   stepIndex,
   corridorSpecLengths = null,
-  projectDetails,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -261,12 +260,23 @@ export function WhereBand({
   // confirmation of anything here (the #149 failure class), so it does
   // not arm the chips either.
   const roadConfirmed = scenario.meta.confirmedRoad !== undefined && !stale;
-  const [showManual, setShowManual] = useState(
-    // Auto-expand where there is no map to fall back FROM: the picker
-    // degrades to a numeric-only form without a token, so showing the
-    // inputs up front saves a click.  Carried from `UnsetLocation`.
-    (process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "").length === 0,
-  );
+  // #289 hand-check, 2026-09-22, correction 2: the manual-entry toggle
+  // comes off the WHERE band.
+  //
+  // It is NOT deleted, because it is the degraded-environment path: with
+  // no Mapbox token the picker degrades to a numeric-only form, and this
+  // is then the only way to set a pin at all.  So it renders exactly
+  // where it is the answer — when there is no token — and nowhere else.
+  // Already open when it renders, for the same reason `UnsetLocation`
+  // auto-expanded it: there is no map to fall back FROM.
+  //
+  // RULE 5, STATED, and it is a narrowing: the panel also offered it as
+  // a recovery when the modal failed to LOAD with a token present.  That
+  // second case loses its affordance here.  Recorded rather than traded
+  // silently; if it should survive, it wants its own trigger (an error
+  // boundary on the modal) rather than a permanent row on the band.
+  const mapboxToken = (process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "").length > 0;
+  const [showManual, setShowManual] = useState(!mapboxToken);
   const [wzTouched, setWzTouched] = useState(false);
   const wz = validateWorkZone(scenario);
 
@@ -453,32 +463,33 @@ export function WhereBand({
         </>
       )}
 
-      {projectDetails && <div className="mt-4">{projectDetails}</div>}
-
-      <div className="mt-3 text-center">
-        <button
-          type="button"
-          onClick={() => setShowManual((s) => !s)}
-          className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
-        >
-          {/* The two existing labels, unchanged: "Enter manually" before
-              a pin and "Edit manually" after, which is what the surface
-              said and what the suites know it by. */}
-          {showManual
-            ? "Hide manual entry"
-            : located
-              ? "Edit manually"
-              : "Enter manually"}
-        </button>
-      </div>
-      {showManual && (
-        <div className="mt-3">
-          <ManualFallback
-            scenario={scenario}
-            setMeta={setMeta}
-            setScenario={setScenario}
-          />
-        </div>
+      {!mapboxToken && (
+        <>
+          <div className="mt-3 text-center">
+            <button
+              type="button"
+              onClick={() => setShowManual((s) => !s)}
+              className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
+            >
+              {/* The existing labels, unchanged: "Enter manually" before a
+                  pin and "Edit manually" after. */}
+              {showManual
+                ? "Hide manual entry"
+                : located
+                  ? "Edit manually"
+                  : "Enter manually"}
+            </button>
+          </div>
+          {showManual && (
+            <div className="mt-3">
+              <ManualFallback
+                scenario={scenario}
+                setMeta={setMeta}
+                setScenario={setScenario}
+              />
+            </div>
+          )}
+        </>
       )}
     </OpenBand>
   );

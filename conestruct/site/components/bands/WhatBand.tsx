@@ -33,7 +33,7 @@
 // because detection reports neither.
 
 import type { ReactNode } from "react";
-import type { Scenario, RoadType } from "@/lib/scenarios";
+import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
 import { setLanes, setRoadType, setSpeed } from "@/lib/scenarios/what-writes";
@@ -151,6 +151,7 @@ export function WhatBand({
   scheduleFields,
   jurisdictionSuggest,
   classificationFields,
+  setMeta,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -172,6 +173,8 @@ export function WhatBand({
   /** §8.21's other half — the street-class field and its own suggestion
    *  slot, which the 3 × 2 grid has no cell for. */
   classificationFields?: ReactNode;
+  /** The title-block metadata, as grid cells (see the third row). */
+  setMeta: (m: ScenarioMeta) => void;
 }): ReactNode {
   const locked = useWriteLock();
   const table = WHAT_CELLS[scenario.kind];
@@ -428,6 +431,71 @@ export function WhatBand({
                   work_date: e.target.value,
                 },
               } as Scenario)
+            }
+          />
+        </Cell>
+      </div>
+
+      {/* THE TITLE-BLOCK ROW.
+          #289 hand-check, 2026-09-22, correction 2: "PROJECT DETAILS /
+          ENTER MANUALLY is removed from WHERE; if the project field
+          survives it is a WHAT-grid field with a provenance line,
+          otherwise it goes."
+
+          It survives, because it is not decoration: `meta.project` names
+          the PDF file and fills the title block's project name
+          (render_api.py:485, :754, :1042; schemas.py:916), and
+          `meta.locationDescription` is the title block's LOCATION row
+          (schemas.py:917).  Both ride the wire.  Dropping them would
+          delete two fields operators fill and two lines the deliverables
+          print.
+
+          `meta.address` does NOT get a cell: it is the WHERE band's
+          search field, and a second writer for one value is the thing
+          this arc keeps removing.  The old disclosure held all three. */}
+      <div className="a-grid">
+        <Cell
+          label="Project name"
+          htmlFor="what-project"
+          provenance="operator-set · names the file and the title block"
+          testid="project"
+        >
+          <input
+            id="what-project"
+            className={`a-fld${scenario.meta.project ? "" : " is-unset"}`}
+            data-write=""
+            disabled={locked}
+            placeholder="Not set"
+            value={scenario.meta.project}
+            onChange={(e) =>
+              setMeta({ ...scenario.meta, project: e.target.value })
+            }
+          />
+        </Cell>
+        <Cell
+          label="Location description"
+          htmlFor="what-location-description"
+          provenance={
+            scenario.meta.locationDescription
+              ? "operator-set · the title block's LOCATION row"
+              : // Rule 10: the fallback is real and the surface says so
+                // rather than leaving an empty field to be read as a gap.
+                "optional · the address stands in when this is empty"
+          }
+          testid="location-description"
+        >
+          <input
+            id="what-location-description"
+            className={`a-fld${scenario.meta.locationDescription ? "" : " is-unset"}`}
+            data-write=""
+            disabled={locked}
+            placeholder="Not set"
+            value={scenario.meta.locationDescription ?? ""}
+            onChange={(e) =>
+              setMeta({
+                ...scenario.meta,
+                locationDescription: e.target.value,
+              })
             }
           />
         </Cell>

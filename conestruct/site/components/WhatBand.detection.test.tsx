@@ -36,6 +36,7 @@ function mount(scenario: Scenario) {
     <WhatBand
       scenario={scenario}
       setScenario={() => {}}
+      setMeta={() => {}}
       jurisdictionBlock={null}
       jurisdictionLoading={false}
       jurisdictionErrored={false}

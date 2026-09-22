@@ -388,12 +388,13 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/GeneratorShell.tsx", cls: "text-[12px]", count: 1 },
       { file: "components/GeneratorShell.tsx", cls: "text-[13px]", count: 1 },
       // #289 Phase 2 — the setup panel's section components are deleted
-      // (§8.16-§8.19) and 21 of the sidebar's 22 utility uses go with
-      // them.  ONE survives: the project-details disclosure's toggle,
-      // which §8.16 demoted rather than dropped.  Two moved rather than
-      // died, and are declared below in the files they moved to, at the
-      // sizes they already had.
-      { file: "components/GeneratorSidebar.tsx", cls: "text-[10px]", count: 1 },
+      // (§8.16-§8.19) and ALL 22 of the sidebar's utility uses go with
+      // them: the last one was the project-details disclosure's toggle,
+      // and the hand-check of 2026-09-22 took that disclosure off the
+      // WHERE band too (its two surviving fields are WHAT-grid cells
+      // now).  The file leaves the Tailwind census entirely.  Two uses
+      // MOVED rather than died, and are declared here in their new
+      // files, at the sizes they already had.
       { file: "components/bands/HandoffNotes.tsx", cls: "text-[12px]", count: 1 },
       { file: "components/bands/WhereBand.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/LaneClosureForm.tsx", cls: "text-[10px]", count: 3 },
@@ -467,12 +468,12 @@ export const CENSUS_PINS = {
   // the sheet, which is the point of #283 having declared the nine
   // ahead of their surfaces.
   //
-  // Tailwind: 105 -> 100 sites, 318 -> 297 uses, 36 -> 37 files.  The
+  // Tailwind: 105 -> 99 sites, 318 -> 296 uses, 36 files unchanged.  The
   // setup panel's section components are deleted (§8.16-§8.19), taking
-  // 21 of GeneratorSidebar's 22 utility uses and FlaggerForm's one; two
-  // of them MOVED rather than died and are declared in their new files
-  // (bands/HandoffNotes.tsx, bands/WhereBand.tsx), which is why the file
-  // count rises while the use count falls.
+  // ALL 22 of GeneratorSidebar's utility uses and FlaggerForm's one;
+  // two of them MOVED rather than died and are declared in their new
+  // files (bands/HandoffNotes.tsx, bands/WhereBand.tsx).  One file
+  // leaves the census and two enter it, so the count holds at 36.
   // #253 on top of C's fold: the lockup's 24px declaration left (−1), the
   // strip's glyph 11px arrived (+1, a size already in the sheet) → 102
   // declarations, 19 sizes; C's Tailwind figures unchanged.
@@ -532,10 +533,10 @@ export const CENSUS_PINS = {
   // 26px with it, and 26px had exactly one site.  The other three sizes
   // it dropped (9, 10, 13) all remain elsewhere.
   cssSizes: 24,
-  tsxSites: 100,
+  tsxSites: 99,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
-  tsxUses: 297,
-  tsxFiles: 37,
+  tsxUses: 296,
+  tsxFiles: 36,
 } as const;

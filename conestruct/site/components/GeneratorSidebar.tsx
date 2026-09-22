@@ -483,9 +483,6 @@ export function GeneratorSidebar({
             stepsPending={stepsPending}
           />
         }
-        projectDetails={
-          <ProjectDetailsDisclosure scenario={scenario} setMeta={setMeta} />
-        }
       />
       {/* #193: the picker's close-restore fallback target.  The opener is
           a band control that survives every state, so this is belt and
@@ -518,96 +515,6 @@ export function GeneratorSidebar({
 // Section components
 // ---------------------------------------------------------------------------
 
-// Optional project metadata. Demoted from the top of the panel into a
-// collapsed disclosure inside the Location step — it's title-block
-// metadata, not part of the required path, so it no longer leads. Renders
-// only the fields (no FieldGroup wrapper); the disclosure in
-// LocationCorridorSection supplies the heading.
-function ProjectGroup({
-  scenario,
-  setMeta,
-}: {
-  scenario: Scenario;
-  setMeta: (m: ScenarioMeta) => void;
-}) {
-  const meta = scenario.meta;
-  const set = <K extends keyof ScenarioMeta>(key: K, value: ScenarioMeta[K]) =>
-    setMeta({ ...meta, [key]: value });
-  return (
-    <>
-      <Field>
-        <LabelRow htmlFor="proj-name">Project name</LabelRow>
-        <input id="proj-name"
-          type="text"
-          className="field-input"
-          value={meta.project}
-          placeholder="I-25 NB MP 184 Resurfacing"
-          onChange={(e) => set("project", e.target.value)}
-        />
-      </Field>
-
-      <Field>
-        <LabelRow htmlFor="proj-location">Location description</LabelRow>
-        <input id="proj-location"
-          type="text"
-          className="field-input"
-          value={meta.locationDescription ?? ""}
-          placeholder="I-25 NB, MP 144.5–146, Colorado Springs"
-          onChange={(e) => set("locationDescription", e.target.value)}
-        />
-      </Field>
-
-      <Field>
-        <LabelRow htmlFor="proj-address">Address / intersection</LabelRow>
-        <input id="proj-address"
-          type="text"
-          className="field-input"
-          value={meta.address}
-          placeholder="US-85 & Bromley Ln, Brighton, CO"
-          onChange={(e) => set("address", e.target.value)}
-        />
-        <div className="tr-prov mt-1.5">
-          Title-block metadata — set the work location with the map pin
-          above.
-        </div>
-      </Field>
-    </>
-  );
-}
-
-// Collapsed "Project details" disclosure — holds the optional project
-// metadata inside the Location step. Mirrors the "Enter manually" toggle
-// pattern used elsewhere in this panel; default collapsed.
-function ProjectDetailsDisclosure({
-  scenario,
-  setMeta,
-}: {
-  scenario: Scenario;
-  setMeta: (m: ScenarioMeta) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border-t border-[color:var(--rule)] pt-3 mt-1">
-      <button
-        type="button"
-        onClick={() => setOpen((s) => !s)}
-        className="w-full flex justify-between items-center font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)] hover:text-[color:var(--act)]"
-      >
-        <span>{open ? "Hide project details" : "Project details"}</span>
-        {/* #226: tag = step-index role (dim, not act — ruling 4). */}
-        <span className="tr-step">OPTIONAL</span>
-      </button>
-      {open && (
-        <div className="mt-3">
-          <ProjectGroup scenario={scenario} setMeta={setMeta} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Top-level wrapper: either renders the "Pick on Map" CTA + manual
-// fallback (no location set), or the read-only summary (location set).
 // ---------------------------------------------------------------------------
 // #289 Phase 2 — WHAT WAS DELETED FROM THIS FILE, AND WHERE IT WENT
 //
@@ -635,6 +542,9 @@ function ProjectDetailsDisclosure({
 //       lines (§8.17).  `deriveRail` above is untouched: its
 //       derived-entry contract is what moved, not its derivation.
 //
-// ProjectGroup and ProjectDetailsDisclosure stay: §8.16 demoted the
-// project metadata into a disclosure and the WHERE band still mounts it.
+// ProjectGroup / ProjectDetailsDisclosure
+//   → the WHAT grid's title-block row (#289 hand-check, 2026-09-22,
+//     correction 2).  `meta.project` and `meta.locationDescription` are
+//     cells with provenance lines; `meta.address` gets none, because it
+//     is the WHERE band's search field and one value takes one writer.
 // ---------------------------------------------------------------------------

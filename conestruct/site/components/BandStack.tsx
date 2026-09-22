@@ -58,8 +58,6 @@ export interface BandStackProps {
   classificationFields?: ReactNode;
   /** R6 — the pre-generate site conditions. */
   siteConditions?: ReactNode;
-  /** The optional project metadata (§8.16's demoted disclosure). */
-  projectDetails?: ReactNode;
 }
 
 export function BandStack(props: BandStackProps) {
@@ -83,7 +81,6 @@ export function BandStack(props: BandStackProps) {
     jurisdictionSuggest,
     classificationFields,
     siteConditions,
-    projectDetails,
   } = props;
 
   // Rule 65: ONE id.  `null` hands the choice back to the column, which
@@ -147,7 +144,6 @@ export function BandStack(props: BandStackProps) {
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
           stepIndex={model.stepIndex}
-          projectDetails={projectDetails}
         />
       );
     }
@@ -155,6 +151,7 @@ export function BandStack(props: BandStackProps) {
       <WhatBand
         scenario={scenario}
         setScenario={setScenario}
+        setMeta={setMeta}
         jurisdictionBlock={jurisdictionBlock}
         jurisdictionLoading={jurisdictionLoading}
         jurisdictionErrored={jurisdictionErrored}
