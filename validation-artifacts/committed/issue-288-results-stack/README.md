@@ -5,18 +5,29 @@ of 2026-09-21, verbatim. **Base:** `7885395`. **Design authority:** #281.
 
 ## State of the arc
 
+**Phase 1 is shipped and measured.** `origin/main` = `97faeae`; `healthz` = `97faeae`; leg 6
+is the sha-gated prod leg on that commit, and nine of #288's ten acceptance lines are closed
+there. Line 10 is Ryan's hand-check.
+
 | step, as ruled | state |
 |---|---|
-| 1. `rulings.md` first | **done** — `15ca57a`, amended `4a63032` with the second ruling |
-| 2a. the `pageerror` listener | **done** — this commit (`err-tap.js`, the gate, this README) |
-| 2b. the static nav citation | **done** — `78af565`, the s8.32 date removal |
-| 3. the stack, stop with the verdict | **not started — blocked, see below** |
-| 4. NEEDS YOU | **not started — blocked** |
-| 5. disclosures + S8 | **not started — blocked** |
-| 6. evidence, five legs, both widths | **not started** — nothing to measure yet |
+| 1. `rulings.md` first | **done** — `15ca57a`, amended `4a63032`, then the finish ruling and the hand-check ruling |
+| 2a. the `pageerror` listener | **done** — `err-tap.js`, the gate |
+| 2b. the static nav citation | **done** — `78af565`, the §8.32 date removal |
+| 3. the stack, stop with the verdict | **done** — the seven-item finish push, one verified commit per item |
+| 4. NEEDS YOU | **done** — clause 1 moved the corrections block whole; fix 4 gave its condition rows a sub-header |
+| 5. disclosures + S8 | **done** — clause 4 promoted the three rows; fix 3 joined Reference to the group |
+| 6. evidence, both widths | **done** — six legs. Legs 1–4 on prod, leg 5 on a local build of the hand-check branch, **leg 6 on prod at `97faeae`, sha-gated both ends** |
 
-**Nothing is deployed.** No leg has been run. Every artifact in this directory is a harness,
-not a measurement; when a leg runs, its output goes **outside the repo** per the ruling.
+The hand-check added four fixes after leg 4 (`565b1df`, `831caa3`, `04671db`, `b65fe3b`);
+`97faeae` carries leg 5. Leg outputs live in `outProd-*` / `outLocal-*`; each leg's report is
+`LEGn.md`.
+
+**The block below is answered, not deleted.** The missing checkpoint was never produced. What
+unblocked steps 3–5 was the finish ruling of 2026-09-21, which enumerates the seven items
+directly instead of adopting a table by reference — so `rulings.md` could quote an authority
+that exists. The statement is kept because it is the reason every rule in `rulings.md` is
+quoted verbatim rather than summarised.
 
 ## The block
 
@@ -173,7 +184,7 @@ point; it is work in progress that happens to compile.
 Applied from step 1 onward: the next stop is "S5-with-items, S5-with-none, S6 and S8 are all
 reachable on the branch" — four surfaces, not four files.
 
-## Evidence plan, as ruled — not yet run
+## Evidence plan, as ruled — RUN; see `LEG1.md`–`LEG6.md`
 
 Five states, each at **1440×1000** and **380×800**: S5 with three NEEDS YOU items · S5 with
 zero, the `↓ All (.zip)` primary (clause c) · S6 declined · S8 with the reference open.
