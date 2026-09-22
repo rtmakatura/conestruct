@@ -145,6 +145,15 @@ const FLOORED = [
   "generate-btn",
   "confirm",
   "ghost",
+  // #289 Phase 2 — the column's own controls.  Rule 134 puts the fact
+  // link's hit box at 32 px (44 at 380); rule 133 the ledger action;
+  // rule 135 the kind chip at 44; rule 136 the field at 44.  Each is
+  // declared in globals.css under the band-stack block, which is what
+  // this list is checking for.
+  "a-lk",
+  "act-btn",
+  "a-chip",
+  "a-fld",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;

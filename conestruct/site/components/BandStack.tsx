@@ -44,6 +44,12 @@ export interface BandStackProps {
    *  through; it never derives one. */
   blockerReason: string | null;
   handoff: HandoffEvent[];
+  /** Rule 60 / rule 117 — S4.  In flight, the whole stack collapses:
+   *  every band is a fact line at opacity .5 with the word "locked" in
+   *  place of its link, no band is open, and the generate frame unmounts
+   *  with the rest of the writes.  §2.4: "Disappeared: the What band's
+   *  fields, the generate frame, the CHANGE links." */
+  locked?: boolean;
   /** The backend's corridor zone lengths, for the extent field's rows. */
   corridorSpecLengths?: CorridorSpecLengths | null;
   jurisdictionBlock: JurisdictionBlock | null;
@@ -69,6 +75,7 @@ export function BandStack(props: BandStackProps) {
     generating,
     blockerReason,
     handoff,
+    locked = false,
     corridorSpecLengths,
     jurisdictionBlock,
     jurisdictionLoading,
@@ -112,6 +119,8 @@ export function BandStack(props: BandStackProps) {
       firstRender.current = false;
       return;
     }
+    // Nothing is open under the lock, so there is nothing to land on.
+    if (locked) return;
     const el = openRef.current;
     if (!el) return;
     const reduceMotion =
@@ -124,6 +133,11 @@ export function BandStack(props: BandStackProps) {
     landingRef.current = armLandingCheck(el, behavior);
     // Rule 33: "a CHANGE link focuses the band it re-opens."
     el.focus({ preventScroll: true });
+    // `locked` is READ here, never depended on: the landing belongs to a
+    // band TRANSITION (ruling 184), and re-running it when the lock
+    // released would move the page for a request settling, which is the
+    // movement P1 forbids.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model.open]);
 
   const openBand = useCallback((id: BandId) => setOpenOverride(id), []);
@@ -167,9 +181,17 @@ export function BandStack(props: BandStackProps) {
       tabIndex={-1}
       className="band-stack"
       data-testid="band-stack"
-      data-open-band={model.open}
+      data-open-band={locked ? "none" : model.open}
+      data-locked={locked || undefined}
     >
       {model.facts.map((fact) =>
+        // Rule 60, the in-flight variant: the row at opacity .5 and the
+        // link replaced by the provenance word "locked".  It comes
+        // BEFORE the generate branch, because in flight there is no
+        // frame either (§2.4).
+        locked ? (
+          <FactLine key={fact.id} fact={fact} locked />
+        ) :
         // The GENERATE row is always the frame.
         //
         // §2.1 item 5 draws a pending fact line before there is a pin,

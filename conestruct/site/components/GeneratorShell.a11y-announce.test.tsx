@@ -26,6 +26,17 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BREAKDOWN = {
   devices: [],
@@ -196,16 +207,55 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    // Reopen (settled — #252 locks edits mid-flight); Generate with the
-    // pre-generate refire pending — the region must be visibly cleared
-    // during the window, then repopulate.
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    expect(statusRegion().textContent).toBe("");
-
+    // #289 Phase 2.  The panel era reached a second Generate through
+    // Reopen, which dropped to "pre" and refired the pair, so the clear
+    // and the re-announcement sat either side of a network round trip
+    // and a snapshot between them saw "".  CHANGE ONE THING keeps the
+    // answer on screen and changes nothing by itself (Part 1 §5.4), so
+    // a repeat Generate over an unedited scenario asks for a wire the
+    // backend has already answered: no request flies, and the clear and
+    // the re-announcement land in two successive COMMITS of the same
+    // click.
+    //
+    // aria-live reads DOM WRITES, not snapshots, so that is still two
+    // announcements — and this case has to watch the way a screen
+    // reader does (rule 11: test where the behaviour lives).  The
+    // observer records every write to the region across the click; the
+    // clear has to be one of them, and the text has to be back after.
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     await release(breakdownCalls.length - 1, okBreakdown());
+    expect(statusRegion().textContent).toBe(
+      "Plan generated — 42 devices, 6 types.",
+    );
+
+    const writes: string[] = [];
+    const region = statusRegion();
+    // The region holds exactly one text node, so its writes read off the
+    // records directly: a removal leaves the region empty, an addition
+    // is the new announcement.  `textContent` cannot be sampled between
+    // the two commits — both are flushed inside the same `act` and the
+    // observer's callback runs after them — but the WRITES are what
+    // aria-live is defined on.
+    const obs = new MutationObserver((records) => {
+      for (const r of records) {
+        for (const n of Array.from(r.removedNodes)) {
+          void n;
+          writes.push("");
+        }
+        for (const n of Array.from(r.addedNodes)) {
+          writes.push(n.textContent ?? "");
+        }
+      }
+    });
+    obs.observe(region, { childList: true, subtree: true });
+    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    obs.disconnect();
+
+    // Cleared at the click — the write that makes an identical
+    // announcement announce again — then written back.
+    expect(writes).toEqual(["", "Plan generated — 42 devices, 6 types."]);
     expect(statusRegion().textContent).toBe(
       "Plan generated — 42 devices, 6 types.",
     );
@@ -220,8 +270,7 @@ describe("generation announcements (#193)", () => {
     await release(1, okBreakdown());
     const announced = statusRegion().textContent;
 
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     await release(2, okBreakdown());
     // Unchanged — same text, no re-announcement for an edit settle.
@@ -232,12 +281,14 @@ describe("generation announcements (#193)", () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await flushDebounce();
-    await release(1, okBreakdown());
 
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
+    // #289 Phase 2: the failing generation is the FIRST one.  The panel
+    // era got here through Reopen — generate clean, reopen, generate
+    // again into a failure — but CHANGE ONE THING fires no request of
+    // its own, so a second Generate over an unedited scenario has no
+    // flight to fail.  The behaviour under test is unchanged and so is
+    // the evidence: a generation whose breakdown 5xxs speaks through
+    // role=alert and never through the package region.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     expect(statusRegion().textContent).toBe("");
     await flushDebounce();
@@ -316,8 +367,7 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     const ribbon = screen.getByText(/Previous answer/);
     expect(ribbon.getAttribute("role")).toBeNull();

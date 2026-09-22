@@ -1,18 +1,19 @@
 "use client";
 
-// #288 Phase 1 (s2-arc33) — the reserved first row of the results stack.
+// #288 Phase 1 → #289 Phase 2 — the results stack's reserved first row,
+// and the setup fact line that occupies it.
 //
 // Authority: validation-artifacts/committed/issue-288-results-stack/rulings.md
-// — the rule-28 ruling (Ryan, 2026-09-21) and #281 Part 1 §8.29.
+// (the rule-28 ruling, Ryan, 2026-09-21) and
+// validation-artifacts/committed/issue-289-band-stack/rulings.md.
 //
-// WHAT THIS WAS.  Until this commit the component rendered the
-// next-steps strip ("NEXT — 3 STEPS", three chips) inside a reserved,
-// pinned slot (#253, #249, #247, #246).  §8.29 drops the strip: its
-// three chips pointed at site conditions, pending items and downloads,
-// and in Direction A's column all three are visible in the same
-// viewport, so the strip restated what is already on screen.
+// WHAT THIS WAS.  Until #288 the component rendered the next-steps strip
+// ("NEXT — 3 STEPS", three chips) inside a reserved, pinned slot (#253,
+// #249, #247, #246).  §8.29 dropped the strip: its three chips pointed at
+// site conditions, pending items and downloads, and in Direction A's
+// column all three are visible in the same viewport.
 //
-// WHAT SURVIVES, and it is the whole reason the component still exists:
+// WHAT SURVIVED, and it is the whole reason the component still exists:
 //   · the RESERVED ROW — rule 28.  "The results stack's first row is a
 //     reserved slot of its own height plus its gap, mounted from the
 //     Generate click onward, released under a decline.  This is the
@@ -22,50 +23,110 @@
 //     clear of the nav (globals.css, the #250 ruling).  Ruling 184's
 //     arc-28 landing carries everything below it.
 //
-// The reserve is now --fact-h, NOT --strip-h.  The ruling's reason, kept
-// because it is the part that generalises: --strip-h was a MEASUREMENT
-// (81.19 at 1440 on the dev server at d3c2dcf, rounded to 82), so it
-// died with the thing it measured.  --fact-h is read off rule 56, which
-// fixes the setup fact line's row height at 44 px at one line — a rule,
-// not a measurement, so it cannot drift and needs no re-measuring.  It
-// does not depend on NEEDS YOU's content, so a block that grows with its
-// item count never changes the reserve.
+// ─── PHASE 1'S DEVIATION, NOW CLOSED ───
 //
-// The slot is no longer sticky.  It was pinned because the strip was
-// pinned; an empty reserved row has nothing to pin, and rule 32 allows
-// no sticky element except the nav.
+// Phase 1 rendered null and said why: rule 28 reserves the row so the
+// results do not move when its occupant forms at the settle, and in
+// Phase 1 the occupant — the setup fact line — was not built.  An
+// always-empty reserve prevents no movement, so it reserved nothing and
+// the deviation was recorded against the rule rather than hidden inside
+// it.
 //
-// ─── PHASE 1 DEVIATION FROM RULE 28 (Ryan's hand-check on prod at
-//     f44377e, 2026-09-22) — THE SLOT RENDERS NOTHING FOR NOW ───
+// Phase 2 builds the occupant.  Rule 119: "Setup collapsed to ONE fact
+// line whose value is the whole scenario in one string, ordered: kind ·
+// road and direction · extent · side · speed · jurisdiction."  Part 1
+// §2.5 puts it third in the reading order, between the verdict strip and
+// NEEDS YOU — which is this slot.  `setupValue()` composes the string
+// (lib/scenarios/band-facts.ts), the same module the pre-generate fact
+// lines read, so setup says the same thing on both sides of Generate.
 //
-// Rule 28 reserves the stack's first row so the results do not move when
-// its occupant forms at the settle.  That is a rule about MOVEMENT, and
-// it earns its 44 px by preventing some.  In Phase 1 the occupant — the
-// setup fact line — is not built: it arrives with Phase 2's band stack
-// (§8.16, §8.27).  So the slot reserved space for something that never
-// appears, and on prod it read as an empty box under the verdict strip.
+// THE RESERVE, AND WHY IT IS A FLOOR.  `--fact-min-h` is 48 px: rule 56's
+// own arithmetic, corrected (#289 R9).  The line grows past it whenever
+// the scenario string wraps — measured at 60.00 px at 1440 and 97.56 at
+// 380 on a local build — so the slot reserves the floor and the row takes
+// what it needs.  A fixed height would have reserved the wrong amount and
+// the results would still have shifted at the settle, which is the defect
+// rule 28 exists to prevent.
 //
-// An always-empty reserve prevents no movement.  It is 44 px of nothing,
-// and Rule 10's instinct applies to space as much as to text: absence
-// should render as absence, not as a placeholder holding a place for a
-// thing that is not coming this phase.
-//
-// So the component renders null until Phase 2 mounts the fact line, and
-// rule 28 is honoured THEN — when there is an occupant whose arrival
-// would otherwise shift the stack.  The component and `--fact-h` both
-// stay: the token is rule 56's 44 px, declared ahead of its surface in
-// the idiom #283 established, and this file is where Phase 2 restores
-// the slot.  `.results-head-slot` itself is deleted, because its element
-// is gone and a rule whose only element is gone is a rule that rots.
-//
-// Recorded as a DEVIATION, not a correction of rule 28: the rule is right
-// about the settle, and nothing here disputes it.  What Phase 1 cannot
-// do is reserve for an occupant it did not build.
-export function ResultsHead({ reserve = false }: { reserve?: boolean }) {
-  // `reserve` is kept in the signature deliberately.  It is the shell's
-  // "post-generate and not declined" predicate, already wired and already
-  // tested; Phase 2 needs exactly that predicate, and deleting the prop
-  // would mean re-deriving it later from scratch.
-  void reserve;
-  return null;
+// THE VERB IS "CHANGE ONE THING" (rule 58), not "CHANGE": post-generate
+// the line is one row standing for a whole scenario, and the verb says
+// what pressing it does.
+
+import type { Scenario } from "@/lib/scenarios";
+import { setupValue } from "@/lib/scenarios/band-facts";
+import { useWriteLock } from "./WriteLock";
+
+export function ResultsHead({
+  reserve = false,
+  scenario,
+  jurisdictionName = null,
+  settled = false,
+  declined = false,
+  onReopen,
+}: {
+  /** The shell's "post-generate and not declined" predicate.  It mounts
+   *  the slot from the Generate click onward and releases it under a
+   *  decline — rule 28's own words. */
+  reserve?: boolean;
+  scenario?: Scenario;
+  jurisdictionName?: string | null;
+  /** Has the answer landed?  The slot is reserved from the click; its
+   *  OCCUPANT forms at the settle, which is the movement rule 28 is
+   *  about.  In flight the row is empty and holds its floor. */
+  settled?: boolean;
+  /** Rule 120: "Setup fact line unchanged and still changeable."  A
+   *  decline RELEASES the reserve — rule 28's own word, and there is no
+   *  answer forming below to reserve room for — but the line itself
+   *  stays, because the operator's way back into the input is the only
+   *  recovery a refusal leaves them. */
+  declined?: boolean;
+  /** Rule 58's "CHANGE ONE THING".  Until S7 exists this re-opens the
+   *  band stack — the same thing "Edit full setup" did, under the name
+   *  and the shape the design gives it.  S7 makes it re-open ONE band
+   *  with one field, in place. */
+  onReopen?: () => void;
+}) {
+  // #252 (ruling b) / rule 118: the link is a write control — it leads
+  // to one — so it declares itself and goes quiet under the lock.
+  // `aria-disabled`, not `disabled`, so it stays focusable while the
+  // working band is up.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const locked = useWriteLock();
+  if (!reserve) return null;
+  const occupied = (settled || declined) && scenario !== undefined;
+  return (
+    <div
+      className={`results-head-slot${declined ? " is-released" : ""}`}
+      data-testid="results-head-slot"
+    >
+      {occupied && (
+        <div className="a-fact" data-testid="fact-setup" data-fact-state="done">
+          <span className="a-sym" aria-hidden>
+            {"✓"}
+          </span>
+          <div className="a-mid">
+            <span className="tr-field">Setup</span>
+            <span className="a-lead" aria-hidden />
+            <span className="a-val">
+              {setupValue(scenario, jurisdictionName)}
+            </span>
+          </div>
+          {onReopen && (
+            <button
+              type="button"
+              className="a-lk"
+              data-write=""
+              aria-disabled={locked || undefined}
+              onClick={() => {
+                if (!locked) onReopen();
+              }}
+              data-testid="fact-link-setup"
+            >
+              CHANGE ONE THING
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

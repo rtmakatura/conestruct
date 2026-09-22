@@ -31,7 +31,12 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
-import { openWhere } from "./__fixtures__/band-helpers";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhere,
+  openWhat,
+} from "./__fixtures__/band-helpers";
 
 /** Open the WHERE band's manual fallback, if it is not open already.
  *
@@ -152,7 +157,7 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     expect(sent.meta.lat).toBe(39.7113);
     expect(sent.meta.siteConditionOverrides).toEqual(CORRECTIONS);
     // The move.
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     // Reopen remounts the Location step with the manual panel closed.
     await ensureManualOpen(user);
     fireEvent.change(latInput(), { target: { value: "39.7114" } });

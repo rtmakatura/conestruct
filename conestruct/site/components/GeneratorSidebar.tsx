@@ -450,6 +450,11 @@ export function GeneratorSidebar({
         // the string; it never asks why.
         blockerReason={rail.blocker?.message ?? null}
         handoff={handoff}
+        // Rule 60 / rule 117 — S4.  `generating` is the shell's own
+        // in-flight flag, the one the working band reads, so the lock and
+        // the band's motion are the same fact seen twice rather than two
+        // predicates that can disagree.
+        locked={generating}
         corridorSpecLengths={corridorSpecLengths}
         jurisdictionBlock={jurisdictionBlock}
         jurisdictionLoading={jurisdictionLoading}

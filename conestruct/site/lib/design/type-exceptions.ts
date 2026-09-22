@@ -233,6 +233,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // glyph as TEXT (rules 17 / 18), at role 3's size — the same
       // 12.5 px every symbol on the page takes.
       { selector: ".workbench .status-bar .status-glyph", size: "12.5px" },
+      // Rule 117 — S4's placeholder sentence, at rule 8's body value.
+      { selector: ".workbench .results-placeholder .rp-line", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-lk", size: "9.5px" },
       { selector: ".workbench .act-btn", size: "9.5px" },
     ],
@@ -462,8 +464,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
 export const CENSUS_PINS = {
   // #289 Phase 2 (s2-arc34) — the band stack.
   //
-  // CSS: 91 -> 102 declarations (101 with the column's controls, plus the
-  // verdict strip's text glyph from the 2026-09-22 hand-check).  Ten arrive with the column's controls —
+  // CSS: 91 -> 103 declarations — 101 with the column's controls, plus
+  // the verdict strip's text glyph and rule 117's S4 placeholder
+  // sentence, both from the 2026-09-22 hand-check.  Ten arrive with the column's controls —
   // eight in the new exception (four of #283's tokens, read rather than
   // re-typed) and two in the debt row's 9.5 px mono micro register.
   //
@@ -532,7 +535,7 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 102,
+  cssDeclarations: 103,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

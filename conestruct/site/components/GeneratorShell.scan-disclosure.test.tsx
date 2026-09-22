@@ -2,7 +2,7 @@
 //
 // #224 phase 2 (s2-arc16, commit 5) — the disclosure reaches the panel
 // THROUGH the shell (rule 11: test where the bug lives).  A refused scan,
-// proceed-anyway, the proceeded audit lands → the real SetupStrip prints
+// proceed-anyway, the proceeded audit lands → `SiteNotChecked` prints
 // the NOT-CHECKED system event from the STAMPED audit view; an edit
 // (new input, acknowledgement dropped, scan refused again) blanks it —
 // a prior input's disclosure never renders as current.
@@ -20,15 +20,51 @@ vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
+  GeneratorSidebar: ({
+    onGenerate,
+    scenario,
+    setScenario,
+  }: {
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
+  }) => (
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
+      </button>
+      {/* #289 Phase 2: the stub stands in for the column and carries the
+          one cell these cases edit — the WHAT grid's speed select (the
+          setup strip and its inline editors are deleted, §8.27). */}
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const DISCLOSURE = "SITE CONDITIONS NOT CHECKED — service unavailable at generation.";
 const MESSAGE =
@@ -155,8 +191,7 @@ describe("the NOT-CHECKED disclosure through the shell (#224 phase 2)", () => {
     expect(document.querySelector(".sys-event.scan-refusal")).toBeNull();
     // An inline edit from the real strip: new input → acknowledgement
     // dropped → refused again → the disclosure is NOT carried over.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await settle();
     expect(document.body.textContent).not.toContain(DISCLOSURE);
     expect(document.querySelector(".sys-event.scan-refusal")).not.toBeNull();

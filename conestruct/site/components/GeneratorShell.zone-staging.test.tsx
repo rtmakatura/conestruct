@@ -21,6 +21,17 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BREAKDOWN = {
   devices: [
@@ -148,14 +159,17 @@ describe("zone staging lifecycle", () => {
     // — a strip edit is locked while it is open.
     await flushDebounce();
     await release(1, okBreakdown());
-    expect(document.querySelector(".setup-strip")).not.toBeNull();
+    // #289 Phase 2: the setup strip is deleted (§8.27); post-generate
+    // the setup is ONE fact line in the results stack's reserved first
+    // row (rules 28 and 119).
+    expect(document.querySelector(".setup-strip")).toBeNull();
+    expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
 
-    // A strip edit (speed) refires the breakdown fetch → the subtree
-    // stays mounted, dimmed under the recomputing ribbon, hero holding
-    // the carried previous answer (#192 — no empty-state swap, no
-    // panel-state destruction).
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    // An edit (speed, through CHANGE ONE THING and the WHAT grid)
+    // refires the breakdown fetch → the subtree stays mounted, dimmed
+    // under the recomputing ribbon, hero holding the carried previous
+    // answer (#192 — no empty-state swap, no panel-state destruction).
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     expect(screen.queryByText("Generating…")).toBeNull();
     expect(document.querySelector(".results-stale")).not.toBeNull();
@@ -197,8 +211,7 @@ describe("zone staging lifecycle", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     await release(2, errBreakdown());
 
@@ -206,7 +219,7 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".results-stale")).not.toBeNull();
   });
 
-  it("reopen: Edit full setup returns to the dominant panel and empties results", async () => {
+  it("CHANGE ONE THING re-opens the column and KEEPS the answer on screen", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
@@ -215,18 +228,20 @@ describe("zone staging lifecycle", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     const [setup, results] = zones();
     expect(setup.className).toContain("dominant");
-    // #289 Phase 2: reopening lands on the band stack, not the panel.
-    // The strip and its "Edit full setup" survive THIS ship because the
-    // post-generate surface is the S4/S5 commit's (Ryan's commit order);
-    // what they reopen INTO is the column.
+    // #289 Phase 2: the column is back, and this is where the old
+    // "Edit full setup" and the new verb part company.  Part 1 §5.4:
+    // "The results below dim to 50% under a stale ribbon ... Downloads,
+    // quote and save stay live — that is inherited from the current
+    // corrections block and is not negotiable: staging must stay
+    // abandonable."  So the answer stays on screen.
     expect(setup.querySelector(".band-stack")).not.toBeNull();
-    // #289: the reopened pre-generate state holds no results zone
-    // content either — same rule, same reason.
-    expect(results.textContent).toBe("");
-    expect(document.querySelector(".hero")).toBeNull();
+    expect(document.querySelector(".hero"), "the answer stays").not.toBeNull();
+    // And the results zone is not emptied — the stack is still there,
+    // which is the difference from the panel-era Reopen.
+    expect(results.textContent).not.toBe("");
   });
 
   it("panel schedule entry reaches the POSTed scenario (payload-level, inc-8)", async () => {
@@ -276,8 +291,7 @@ describe("zone staging lifecycle", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
 
     // The refetch carries the edited speed in the POSTed scenario.

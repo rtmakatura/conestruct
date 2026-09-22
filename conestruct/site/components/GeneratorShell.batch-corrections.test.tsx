@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 //
 // #254 (s2-arc26) — corrections are STAGED in the shell and applied as one
-// write.  Mounted through the real shell and the real SetupStrip with
+// write.  Mounted through the real shell and the real band column with
 // fetch stubbed: staging two corrections opens no request (the fetch
 // count is unchanged, no band, the results dimmed behind the "Previous
 // answer — N corrections staged" ribbon while downloads stay live);
@@ -28,15 +28,51 @@ vi.mock("./OutputCards", () => ({
   ),
 }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
+  GeneratorSidebar: ({
+    onGenerate,
+    scenario,
+    setScenario,
+  }: {
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
+  }) => (
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
+      </button>
+      {/* #289 Phase 2: the stub stands in for the column and carries the
+          one cell these cases edit — the WHAT grid's speed select (the
+          setup strip and its inline editors are deleted, §8.27). */}
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BUCKETS = {
   intersections: { detected: true, count: 26, nearest_distance_ft: 34.1, details: ["W Alameda Ave"] },
@@ -265,15 +301,29 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     expect(block().querySelectorAll(".sc-staged")).toHaveLength(0);
   });
 
-  it("Reopen clears the staged set: the next Generate carries no marker", async () => {
+  it("CHANGE ONE THING KEEPS the staged set — one Apply carries both halves", async () => {
+    // #289 Phase 2 — the panel-era Reopen cleared staging, because it
+    // threw the whole answer away and started again.  CHANGE ONE THING
+    // does not: ruling 191 folds "this field plus any staged site
+    // corrections" into ONE write, which is only possible if the
+    // corrections are still there when the field is being edited.
+    //
+    // So the assertion inverts, deliberately.  Part 1 §5.5: "Apply folds
+    // the whole staged set — this field plus any staged site corrections
+    // — into one write, one request, one working-band cycle."
     const user = await generate();
     await stageTwo(user);
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     await settle();
+    // Still staged, still counted, still under its ribbon.
+    expect(within(block()).queryByText(ZERO_STANDING)).toBeNull();
+    expect(ribbon()).not.toBeNull();
+    // And they are still STAGED, not written: only Apply writes (rule
+    // 78, ruling 191), so a Generate in between still carries none.
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(false);
-    expect(within(block()).getByText(ZERO_STANDING)).toBeTruthy();
-    expect(ribbon()).toBeNull();
+    // The staged set outlived the re-open and the generate both.
+    expect(ribbon()).not.toBeNull();
   });
 });

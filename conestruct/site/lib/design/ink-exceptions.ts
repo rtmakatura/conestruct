@@ -188,6 +188,6 @@ export const INK_RESERVED: readonly InkReserved[] = [
     ruling:
       "#281 ruling 181 — approved as decorative-and-labelled; Part 2 rule 12 names it with rule 74's overlay. Nowhere else.",
     owner:
-      "the phase that draws the corridor overlay; SetupStrip.tsx:276 currently records in a comment that this hex is off-palette, and the grid-tokens test asserts it is NOT used — both stay true while it is reserved",
+      "the phase that draws the corridor overlay; the grid-tokens test asserts this hex is NOT used, which stays true while it is reserved (SetupStrip.tsx:276 recorded the same in a comment until #289 Phase 2 deleted the strip)",
   },
 ];

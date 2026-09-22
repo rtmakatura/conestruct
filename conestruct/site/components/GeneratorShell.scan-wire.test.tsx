@@ -28,22 +28,51 @@ vi.mock("./OutputCards", () => ({
   ),
 }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
-  ),
-}));
-vi.mock("./SetupStrip", () => ({
-  SetupStrip: ({ onReopen }: { onReopen: () => void }) => (
-    <button type="button" onClick={onReopen}>
-      Edit full setup
-    </button>
+  GeneratorSidebar: ({
+    onGenerate,
+    scenario,
+    setScenario,
+  }: {
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
+  }) => (
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
+      </button>
+      {/* #289 Phase 2: the stub stands in for the column and carries the
+          one cell these cases edit — the WHAT grid's speed select (the
+          setup strip and its inline editors are deleted, §8.27). */}
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const AUDIT = {
   summary: {},
@@ -231,18 +260,40 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     expect(document.querySelector(".working-band")).toBeNull();
   });
 
-  it("Reopen drops the flag: the next request is scan-free again", async () => {
+  it("an edit under CHANGE ONE THING re-scans, and carries no earlier acknowledgement", async () => {
+    // #289 Phase 2 — this case's SUBJECT is gone and its FACT moved.
+    //
+    // The panel-era Reopen dropped back to "pre" and refired the pair
+    // scan-free, which is what "Reopen drops the flag" watched.  CHANGE
+    // ONE THING does not drop back: Part 1 §5.4 keeps the answer on
+    // screen, so an edit made under it is a re-generation of the plan
+    // that is showing — and a re-generation asks for a scan, exactly as
+    // the Generate click did.
+    //
+    // What must NOT survive is the ACKNOWLEDGEMENT.  A
+    // `proceed_if_unavailable: true` from an earlier "Generate anyway"
+    // is consent for one plan, and the next request asks again from
+    // scratch.  That is the fact this case now pins, and its sibling
+    // below ("an edit drops the acknowledgement") pins the other half.
+    //
+    // The scan-free PRE-generate path is unchanged and still covered:
+    // every request before the first Generate in this suite carries no
+    // `site_scan` at all.
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
     await user.click(screen.getByText("Generate package"));
     await settle();
     calls = [];
-    await user.click(screen.getByText("Edit full setup"));
+    await changeOneThing();
+    await user.selectOptions(
+      document.getElementById("what-speed") as HTMLSelectElement,
+      "35",
+    );
     await settle();
     const audits = bodiesFor("/api/render/audit");
     expect(audits.length).toBe(1);
-    expect(audits[0].site_scan).toBeUndefined();
+    expect(audits[0].site_scan).toEqual({ proceed_if_unavailable: false });
   });
 
   // Hold every SCANNED breakdown so the wait state stays mounted;

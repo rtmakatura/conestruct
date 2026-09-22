@@ -23,6 +23,17 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell, armLandingCheck } from "./GeneratorShell";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BREAKDOWN = {
   devices: [],
@@ -194,21 +205,15 @@ describe("post-generate scroll (#152 E)", () => {
   it("waits for a pending breakdown: scroll fires when generating resolves to post", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await release(0, okBreakdown());
+    // #289 Phase 2: the pending-flight window is the FIRST Generate's.
+    // The panel era reached one by reopening (which refired the pair)
+    // and clicking Generate over it; the column cannot — #252's write
+    // lock disables the CTA for the whole flight, so "Generate with a
+    // request pending" is no longer a state a user can reach by
+    // clicking.  The mount fetch is left unreleased here instead, which
+    // is the same shape: the click arms, the answer has not landed, the
+    // landing waits for it.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await flushDebounce();
-    await release(1, okBreakdown());
-    scrollSpy.mockClear();
-
-    // #252: a strip edit mid-flight is locked; reopen (settled) →
-    // Generate with the pre-generate refire still pending must scroll
-    // only when the generated answer lands.
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    // #192: with prior results the in-flight state dims in place under
-    // the stale ribbon (no "Generating…" empty-state swap; #252 wording).
-    expect(screen.getByText(/Previous answer/)).toBeTruthy();
     expect(scrollSpy).not.toHaveBeenCalled();
 
     await flushDebounce();
@@ -237,8 +242,7 @@ describe("post-generate scroll (#152 E)", () => {
     scrollSpy.mockClear();
 
     // A strip edit refetches and re-lands on post — no new scroll.
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     await release(2, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
@@ -247,16 +251,14 @@ describe("post-generate scroll (#152 E)", () => {
   it("a failed generation disarms the scroll instead of yanking the viewport", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await release(0, okBreakdown());
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await flushDebounce();
-    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    // Reopen (settled) and regenerate; the fetch then FAILS: no scroll
-    // on the error.
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
+    // #289 Phase 2: the failing generation is the first one (see the
+    // pending-breakdown case above — a second Generate over an unedited
+    // scenario opens no flight, so it has none to fail).  The mount
+    // fetch is left unreleased so the click finds no answer to land on:
+    // a first Generate over a READY pre-generate breakdown lands at the
+    // click by design, and would land before the failure arrived.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(breakdownCalls.length - 1, errBreakdown());
@@ -266,20 +268,13 @@ describe("post-generate scroll (#152 E)", () => {
   it("#258 (ruling c2): a declined pair — the audit refused and the breakdown 400s too — lands the results zone once, on the refusal container", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await release(0, okBreakdown());
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    await flushDebounce();
-    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    // The same shape as the "failed generation" case above — Reopen,
-    // Generate with the pre-generate refire pending, so the landing
-    // waits for the generated answer — except the pair is DECLINED: the
-    // audit refuses and the breakdown 400s too.  Before c2 this path
-    // scrolled nowhere (audit F-S5-3); a first Generate with a ready
-    // pre-generate breakdown scrolls at the click regardless (case 1).
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
+    // The same shape as the "failed generation" case above — a first
+    // Generate whose answer has not landed, so the landing waits for it
+    // — except the pair is DECLINED: the audit refuses and the
+    // breakdown 400s too.  Before c2 this path scrolled nowhere (audit
+    // F-S5-3).
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     auditRefuses = true; // the generated wire's audit (dispatched on the debounce) refuses
     await flushDebounce();

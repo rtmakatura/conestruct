@@ -20,13 +20,12 @@
 // `action: null`, so no row renders a button.  That is not an oversight
 // and not a placeholder:
 //   · ACKNOWLEDGE has nothing on the wire to write at all (clause d).
-//   · DISMISS / KEEP and CORRECT IN SETUP are real writes, but they live
-//     in the corrections block in SetupStrip.tsx, which NEEDS YOU absorbs
-//     WHOLE under Part 1 §8.5 — a separate commit that moves the staging
-//     contract, the standing sentence, the disabled-at-zero button and the
-//     dismiss picker verbatim.  Until that absorb lands, a button here
-//     would either write nothing or duplicate a write that already has an
-//     owner.  An honest item without a control beats a control that writes
+//   · DISMISS / KEEP and CORRECT IN SETUP are real writes, and they have
+//     an owner: NeedsYouConditions.tsx, which absorbed the corrections
+//     block WHOLE under Part 1 §8.5 — the staging contract, the standing
+//     sentence, the disabled-at-zero button and the dismiss picker,
+//     verbatim.  A button on THESE rows would duplicate a write that
+//     already has an owner.  An honest item without a control beats a control that writes
 //     nothing.
 // The rows still carry their provenance and citation, which is what makes
 // them worth showing before their actions arrive.

@@ -33,6 +33,17 @@ import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import { StatusBar } from "./StatusBar";
 import type { AuditState } from "../lib/render-types";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BREAKDOWN = {
   devices: [],
@@ -118,8 +129,7 @@ async function generateThenEdit() {
   await flushDebounce();
   await release(bdCalls, 1, okBd());
   await release(auditCalls, 1, okAudit());
-  await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-  await user.selectOptions(screen.getByLabelText("Speed"), "35");
+  await editAfterGenerate("what-speed", "35");
   await flushDebounce();
   return user;
 }

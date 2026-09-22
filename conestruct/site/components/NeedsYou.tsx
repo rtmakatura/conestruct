@@ -9,8 +9,8 @@
 //
 // THE BLOCK, COMPLETE.  The shell landed first; the Phase 1 finish
 // ruling's clause 1 gave it the corrections block's rows and its one
-// write (components/NeedsYouConditions.tsx — the MOVE, verbatim from
-// SetupStrip).  The block now carries, in this order:
+// write (components/NeedsYouConditions.tsx — the MOVE, verbatim from the
+// setup strip, which #289 Phase 2 then deleted).  The block now carries, in this order:
 //   · the ▲/⚠ tier rows, with their citations and — per ruling d — no
 //     buttons, because the wire carries nothing for them to write;
 //   · the five scanned site-condition rows and the two manual keys,

@@ -4292,3 +4292,41 @@ input[type="number"] {
   font-variant-emoji: text;
   flex: 0 0 auto;
 }
+
+/* Rule 28 — the results stack's reserved first row (Issue 289 Phase 2
+   closes Issue 288's recorded deviation by building the occupant).
+   A FLOOR, not a height: the setup fact line grows past it whenever
+   rule 119's scenario string wraps, which it does at both widths with
+   #281's own example.  The gap below it is rule 27's "setup fact line ->
+   NEEDS YOU 16 px". */
+.workbench .results-head-slot {
+  min-height: var(--fact-min-h);
+  margin-bottom: 16px;
+}
+
+/* Rule 117 — S4's results placeholder.  The one surviving use of the
+   zone label (Part 1 SS8.28: "'02 · RESULTS' survives only as the
+   placeholder block's label in S4").  Ground and border are the stack's
+   own shared inks; the sentence takes the body-value register in the
+   muted ink rule 117 names, which is the token the disabled primary's
+   text already uses. */
+.workbench .results-placeholder {
+  border: 1px solid var(--rule);
+  background: var(--da-ground);
+  padding: 22px 16px;
+}
+.workbench .results-placeholder .rp-line {
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  color: var(--pri-off-ink);
+}
+
+/* Rule 28's "released under a decline", and rule 120's "setup fact line
+   unchanged and still changeable" — both at once.  The RESERVE goes,
+   because there is no answer forming below to reserve room for; the LINE
+   stays, because the way back into the input is the only recovery a
+   refusal leaves the operator. */
+.workbench .results-head-slot.is-released {
+  min-height: 0;
+}

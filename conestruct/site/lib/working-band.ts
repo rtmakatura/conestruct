@@ -46,7 +46,9 @@ export interface WorkingBandState {
   named: string | null;
 }
 
-/** The strip's inline editors (SetupStrip), scenario key → the words. */
+/** The setup editors — the WHAT grid's cells since #289 Phase 2, the
+ *  deleted strip's inline editors before it — scenario key → the words.
+ *  The keys are the wire's, so the move did not touch this table. */
 const EDIT_LABELS: ReadonlyArray<readonly [string, string]> = [
   ["speed", "speed"],
   ["laneWidth", "lane width"],

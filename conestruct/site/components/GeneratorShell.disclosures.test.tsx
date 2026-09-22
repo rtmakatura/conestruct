@@ -22,15 +22,43 @@ vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
 vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
+  GeneratorSidebar: ({
+    onGenerate,
+    scenario,
+    setScenario,
+  }: {
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
+  }) => (
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
+      </button>
+      {/* #289 Phase 2: the stub stands in for the column, so it carries
+          the one cell these cases edit — the WHAT grid's speed select,
+          at its own id.  The setup strip and its inline editors are
+          deleted (§8.27); a post-generate edit is CHANGE ONE THING and
+          then this cell. */}
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import { changeOneThing } from "./__fixtures__/band-helpers";
 
 const SECTIONS = {
   taper: {},
@@ -226,7 +254,14 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     // three copies of it would be the noise §8.29 dropped a strip for.
     auditDelay = 5_000;
     const user = userEvent.setup();
-    await user.click(screen.getAllByRole("button", { name: /Speed/i })[0] ?? screen.getByRole("button", { name: "Generate package" }));
+    // #289 Phase 2: an in-flight refetch comes from a WHAT-grid edit
+    // now, not from the strip's inline speed editor — and reaching the
+    // grid post-generate is CHANGE ONE THING on the setup fact line.
+    await changeOneThing();
+    await user.selectOptions(
+      document.getElementById("what-speed") as HTMLSelectElement,
+      "35",
+    );
     await settle(60);
     const cues = screen.queryAllByText("◌ previous answer — refreshing…");
     expect(cues.length, "at most one cue, ever").toBeLessThanOrEqual(1);

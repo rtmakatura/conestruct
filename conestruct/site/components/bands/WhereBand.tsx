@@ -279,6 +279,31 @@ export function WhereBand({
   const [showManual, setShowManual] = useState(!mapboxToken);
   const [wzTouched, setWzTouched] = useState(false);
   const wz = validateWorkZone(scenario);
+  // #252, and this arc re-earned it: the extent commits on blur or
+  // Enter, NOT per keystroke.
+  //
+  // Written per keystroke, each digit wrote the scenario and opened a
+  // request; the request mounts the working band, the band locks the
+  // column (rule 60), and the lock collapses every band to a fact line —
+  // so the field disappeared under the cursor on the first digit.  That
+  // is #252's own sentence about the strip's work-zone editor, and the
+  // band reproduced it exactly.  Caught by the #193 focus suite, which
+  // is the suite that exists for it.
+  //
+  // One edit, one request (declared).  An unchanged or unparsable draft
+  // writes nothing (suggest-never-set).  The same shape rule 95.2 gives
+  // every field in S7.
+  const [wzDraft, setWzDraft] = useState<string | null>(null);
+  const commitWorkLen = () => {
+    setWzTouched(true);
+    if (wzDraft === null) return;
+    const n = parseInt(wzDraft, 10);
+    const next = Number.isFinite(n) ? n : 0;
+    if (next !== scenario.workLen) {
+      setScenario({ ...scenario, workLen: next } as Scenario);
+    }
+    setWzDraft(null);
+  };
 
   return (
     <OpenBand
@@ -393,14 +418,12 @@ export function WhereBand({
               className="a-fld"
               data-write=""
               disabled={locked}
-              value={scenario.workLen || ""}
-              onChange={(e) =>
-                setScenario({
-                  ...scenario,
-                  workLen: +e.target.value || 0,
-                } as Scenario)
-              }
-              onBlur={() => setWzTouched(true)}
+              value={wzDraft ?? (scenario.workLen || "")}
+              onChange={(e) => setWzDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitWorkLen();
+              }}
+              onBlur={commitWorkLen}
             />
             {wzTouched && !wz.ok ? (
               <FieldErrorLine>{wz.message}</FieldErrorLine>

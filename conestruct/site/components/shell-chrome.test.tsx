@@ -157,7 +157,10 @@ describe("#288 — the results stack's reserved first row", () => {
       .slice(1)
       .map((b) => b.slice(0, b.indexOf("\n}\n")));
     expect(blocks.some((b) => /--fact-min-h\s*:/.test(b))).toBe(false);
-    expect(css.replace(/\/\*[\s\S]*?\*\//g, "")).not.toContain(".results-head-slot");
+    // #289 Phase 2: the slot's rule returns with its occupant — the
+    // setup fact line (rule 119) — which is what Phase 1's recorded
+    // deviation said would happen.  Asserted in
+    // components/results-slot-tokens.test.tsx, which owns the slot.
   });
 });
 

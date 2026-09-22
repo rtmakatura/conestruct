@@ -25,6 +25,17 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BREAKDOWN = {
   devices: [],
@@ -181,15 +192,19 @@ describe("focus policy after Generate (#193)", () => {
   it("a failed generation focuses the results zone (it holds the alert) without scrolling", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
-    await release(0, okBreakdown());
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    // #252: settle the generated pair (the lock) before reopening.
-    await flushDebounce();
-    await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    await user.click(screen.getByText(/Edit full setup/));
-    await flushDebounce(); // the pre-generate refire dispatches and stays pending
+    // The mount fetch is deliberately left PENDING: with it resolved the
+    // click lands on a ready breakdown, the lifecycle touches "post" for
+    // a frame and the armed scroll fires — which is right, and not the
+    // state this case is about.
+    //
+    // #289: reaching a failed generation no longer needs a Reopen.  The
+    // panel-era version generated once, pressed "Edit full setup" — which
+    // dropped back to "pre" and refired the pair — and failed the second.
+    // CHANGE ONE THING keeps the answer on screen and fires nothing, so
+    // the shortest honest route to the state this case is about is to
+    // fail the FIRST generate, which is also how an operator meets it.
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(breakdownCalls.length - 1, errBreakdown());
@@ -206,8 +221,11 @@ describe("focus policy after Generate (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByRole("button", { name: /Edit Work zone/i }));
-    const input = screen.getByLabelText("Work zone (ft)");
+    await changeOneThing();
+    // #289: the work-zone length is the WHERE band's extent field
+    // (FLOW.md §5a move 3), not a WHAT cell.
+    await openWhere();
+    const input = screen.getByLabelText("Work zone length (ft)");
     await user.clear(input);
     await user.type(input, "600");
     // #252: typing is a draft — no request opens, so nothing locks the
@@ -234,7 +252,7 @@ describe("focus policy after Generate (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     expect(activeIsSetupZone()).toBe(true);
     // The panel is really back: Tab reaches its controls from here.
     expect(

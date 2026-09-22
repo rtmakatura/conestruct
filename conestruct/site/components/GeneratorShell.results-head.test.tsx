@@ -20,7 +20,7 @@
 // reserve holds whether or not its occupant is built yet, which is the
 // point of reserving by rule rather than by measurement.
 //
-// Mounted through the real shell and the real SetupStrip.
+// Mounted through the real shell and the real band column.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -219,7 +219,7 @@ describe("#288 Phase 1 deviation from rule 28 — the slot renders NOTHING", () 
   // deleted: what the suite guards is that no empty box returns, and
   // that the things which DO belong at the top of the stack are there.
 
-  it("no reserved row at any stage — pre-generate, mid-flight, or settled", async () => {
+  it("#289: the row is RESERVED from the Generate click and released under a decline (rule 28)", async () => {
     served = auditWithScan({ status: "not_run", reason: "not_requested" });
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
@@ -235,56 +235,90 @@ describe("#288 Phase 1 deviation from rule 28 — the slot renders NOTHING", () 
     // waiting beneath the verdict strip for an occupant Phase 1 has not
     // built.
     expect(band(), "band present while the audit is pending").not.toBeNull();
-    expect(slot(), "no reserve mid-flight").toBeNull();
+    // #289 Phase 2 closes Phase 1's recorded deviation: the row is
+    // RESERVED from the click, which is rule 28's own words.  Here the
+    // BREAKDOWN has already landed and only the audit is held, so the
+    // stack is showing its answer and the fact line is part of it — the
+    // occupant follows `resultsVisible`, the same predicate every other
+    // row in the stack follows, rather than a second opinion about when
+    // there is something to show.  The genuinely empty case — nothing
+    // landed yet — is the next one.
+    expect(slot(), "reserved mid-flight").not.toBeNull();
     expect(document.getElementById("site-corrections")).toBeNull();
     await act(async () => {
       held.release();
     });
     await settle();
     expect(band()).toBeNull();
-    expect(slot(), "no reserve at the settle either").toBeNull();
+    // At the settle the occupant forms, in the room already allocated:
+    // rule 119's one fact line for the whole scenario.
+    expect(slot(), "still reserved at the settle").not.toBeNull();
+    expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
     expectNoStrip();
     // What DOES arrive at the settle is the block — the top of the stack
     // is content, not a placeholder.
     expect(document.getElementById("site-corrections")).not.toBeNull();
   });
 
-  it("a pending breakdown keeps the band up and still mounts no empty row", async () => {
+  it("the occupant follows the stack: present with it, absent without it", async () => {
+    // Rule 28 reserves the row from the Generate CLICK; its occupant is
+    // part of the answer, so it appears with the rest of the stack and
+    // not on a predicate of its own.  That is the claim worth pinning —
+    // a second opinion about "is there an answer yet" is exactly how the
+    // row would start disagreeing with the hero above it.
+    //
+    // Note what this suite's harness makes true: the mount fetch has
+    // already answered, so a Generate here is #192's REGENERATE — there
+    // ARE prior results to hold, and holding them is the rule.  A true
+    // S4 (nothing to hold) is the first-ever generate, which the S4
+    // commit's own evidence leg walks on a live page.
     served = audit(BUCKETS_DETECTED);
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await settle();
-    const held = gate(BREAKDOWN);
-    breakdownGate = held;
+    const heldAudit = gate(served);
+    auditGate = heldAudit;
+    const heldBd = gate(BREAKDOWN);
+    breakdownGate = heldBd;
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate package" }));
     await settle();
-    expect(document.getElementById("site-corrections")).not.toBeNull();
-    expect(band()).not.toBeNull();
-    expect(slot()).toBeNull();
+    expect(band(), "the band is the voice").not.toBeNull();
+    expect(slot(), "the row is reserved from the click").not.toBeNull();
+    // The hero is the rest of the stack; the fact line is with it.
+    const heroUp = document.querySelector(".hero") !== null;
+    const factUp =
+      document.querySelector('[data-testid="fact-setup"]') !== null;
+    expect(factUp, "the fact line tracks the stack").toBe(heroUp);
     await act(async () => {
-      held.release();
+      heldBd.release();
+      heldAudit.release();
     });
     await settle();
     expect(band()).toBeNull();
-    expect(slot()).toBeNull();
+    expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
     expectNoStrip();
   });
 
-  it("the shell's post-generate predicate is still wired, so Phase 2 has it", async () => {
-    // The deviation is about what RENDERS, not about unpicking the
-    // plumbing.  ResultsHead still takes the shell's "post-generate and
-    // not declined" predicate; Phase 2 mounts the fact line on exactly
-    // that, and re-deriving it later from scratch is how a working
-    // predicate gets quietly replaced by a subtly different one.
+  it("the predicate that reserved the row is the one that fills it", async () => {
+    // Phase 1 kept `reserve` wired and rendered nothing, so that Phase 2
+    // would mount the fact line on exactly that predicate rather than
+    // re-deriving a subtly different one.  This is that.
     served = audit(BUCKETS_DETECTED);
     await generate();
-    expect(document.querySelectorAll(".results-head-slot")).toHaveLength(0);
-    // And under a decline the stack is the refusal's, as spec 31 says.
+    expect(document.querySelectorAll(".results-head-slot")).toHaveLength(1);
+    // And under a decline the stack is the refusal's, as spec 31 says —
+    // but rule 120 keeps the setup fact line: "Setup fact line unchanged
+    // and still changeable."  So the RESERVE is released (rule 28's own
+    // word; there is no answer forming below to reserve room for) and
+    // the LINE stays, because CHANGE ONE THING is the operator's way
+    // back into the input and a refusal leaves them little else.
     cleanup();
     auditGate = null;
     auditRefuses = true;
     await generate();
     expect(document.querySelector(".scan-refusal")).not.toBeNull();
-    expect(slot()).toBeNull();
+    expect(slot()).not.toBeNull();
+    expect(slot()!.className).toContain("is-released");
+    expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
   });
 });

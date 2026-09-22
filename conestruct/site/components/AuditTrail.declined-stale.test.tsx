@@ -31,6 +31,17 @@ import { GeneratorShell } from "./GeneratorShell";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER } from "./test-fixtures";
 import type { AuditResponse } from "../lib/render-types";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 // Breakdown geometry numbers deliberately differ from the audit's cited
 // values so "183"/"495" can only come from the audit panel.
@@ -152,8 +163,7 @@ async function generateThenEdit(): Promise<ReturnType<typeof userEvent.setup>> {
   // under test here is the ✓ tier's.)
   await user.click(screen.getByRole("button", { name: /checked & passed/i }));
   expect((await screen.findAllByText(/183/)).length).toBeGreaterThan(0); // sanity
-  await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-  await user.selectOptions(screen.getByLabelText("Speed"), "35");
+  await editAfterGenerate("what-speed", "35");
   // #182: the edit's refetch reaches the wire through the 350 ms fetch
   // debounce.  Wait it out so auditCalls[1] deterministically exists —
   // without this the suite was timing-marginal (the refetch fired on the

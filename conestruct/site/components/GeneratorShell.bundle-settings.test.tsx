@@ -54,6 +54,17 @@ vi.mock("./GeneratorSidebar", () => ({
 // real subject below the stubs for readability).
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 type BundleBody = { scenario: unknown; settings: QuoteSettings };
 
@@ -162,7 +173,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // Reopening the setup panel unmounts QuotePanel (Zone 2 empties);
     // regenerating remounts it.  The #74 contract: settings live in the
     // shell, so the remount must NOT reinitialize them to DEFAULT.
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     await user.click(screen.getByText("Generate package"));
     // #252: the generated pair's deferred window locks the rate inputs.
     await act(async () => {
@@ -208,7 +219,7 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // remount reset flaggerSource to "auto" and delivery to "idle", so
     // the auto-flagger effect (-> 0) and the settings reinit (-> 20)
     // re-clobbered the manual entries.
-    await user.click(screen.getByText(/Edit full setup/));
+    await changeOneThing();
     await user.click(screen.getByText("Generate package"));
     // #252: the generated pair's deferred window locks the rate inputs.
     await act(async () => {

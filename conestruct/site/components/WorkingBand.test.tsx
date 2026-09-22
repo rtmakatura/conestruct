@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 //
 // #252 (s2-arc23) — the global working band, mounted through the real
-// shell and the real SetupStrip.  Present iff a request for the
+// shell and the real band column.  Present iff a request for the
 // generated scenario is open (never a timer); the sentence is a true
 // statement of what the flight changes; the refusal container never
 // shares a frame with it; one live region speaks the flight.
@@ -20,16 +20,54 @@ vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./OutputCards", () => ({ OutputCards: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
+  GeneratorSidebar: ({
+    onGenerate,
+    scenario,
+    setScenario,
+  }: {
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
+  }) => (
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
+      </button>
+      {/* #289 Phase 2: the stub stands in for the column, so it carries
+          the one cell these cases edit — the WHAT grid's speed select,
+          at its own id.  The setup strip and its inline editors are
+          deleted (§8.27); a post-generate edit is CHANGE ONE THING and
+          then this cell. */}
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
 import { GeneratorShell } from "./GeneratorShell";
 import { CONTROLS_LOCKED } from "./WorkingBand";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 const BUCKETS = {
   intersections: { detected: true, count: 26, nearest_distance_ft: 34.1, details: ["W Alameda Ave"] },
@@ -250,8 +288,7 @@ describe("#252 — the working band is present iff a request for the generated s
   it("RE-GENERATING · after an edit to speed from the strip's inline editor — up from the deferred debounce window, not only the fetch", async () => {
     const user = await generate();
     holdAudit();
-    await user.click(screen.getByRole("button", { name: /Edit Speed/i }));
-    await user.selectOptions(screen.getByLabelText("Speed"), "35");
+    await editAfterGenerate("what-speed", "35");
     // The edit is on screen; the debounced fetch may not have fired yet —
     // the verdict derivations treat the window as in flight, so does the band.
     expect(band()).not.toBeNull();

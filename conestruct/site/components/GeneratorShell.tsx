@@ -34,7 +34,6 @@ import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems } from "@/lib/needs-you-items";
 import { deriveNeedsYou } from "@/lib/needs-you";
 import { GeneratorSidebar } from "./GeneratorSidebar";
-import { SetupStrip } from "./SetupStrip";
 import { StatusBar } from "./StatusBar";
 import { WorkingBand } from "./WorkingBand";
 import { RenderRequestContext, WriteLockContext } from "./WriteLock";
@@ -54,6 +53,7 @@ import { CheckedDisclosure, PendingDisclosure } from "./ResultsDisclosures";
 import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
+import { SiteNotChecked } from "./SiteNotChecked";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -479,13 +479,34 @@ export function GeneratorShell({
   // landing's ``scrollPendingRef``: a Retry re-announces a recovered
   // plan but never re-lands the viewport (P1).
   const announcePendingRef = useRef(false);
+  // #289 Phase 2 — the click nonce.  Both armings above are REFS, so
+  // arming one changes nothing React watches.  That was invisible while
+  // every arming action also changed the wire scenario: the pair
+  // refired, the lifecycle effects re-ran on the new state, and the
+  // armings were consumed there.  CHANGE ONE THING does not — it keeps
+  // the answer on screen and changes no value (Part 1 §5.4) — so a
+  // repeat Generate over an unedited scenario asks for a wire the
+  // backend has already answered.  No request flies, no settle arrives,
+  // and without this nonce neither effect re-runs at all: the click
+  // would neither land the viewport (#152 E) nor re-announce (#193),
+  // for a click the operator did make.
+  //
+  // The nonce makes the ARMING observable.  The refs still own the
+  // CONSUMPTION, so Retry still announces without re-landing (P1).
+  const [clickArm, setClickArm] = useState(0);
+  const lastAnnounceArmRef = useRef(0);
+  const lastScrollArmRef = useRef(0);
+  const armClick = () => {
+    announcePendingRef.current = true;
+    setClickArm((n) => n + 1);
+  };
 
   // Shared retry: a single click refires BOTH fetches unconditionally.
   // No smart-retry that targets only the failed call — a network
   // failure usually affects both, and a coordinated retry keeps the two
   // panels' "last refresh" timestamps aligned.
   const onRetry = () => {
-    announcePendingRef.current = true;
+    armClick();
     setRetryNonce((n) => n + 1);
   };
 
@@ -686,8 +707,11 @@ export function GeneratorShell({
   const [genAnnouncement, setGenAnnouncement] = useState("");
 
   const onGenerate = () => {
+    // See `revising`: the revision ends at the click, not at a
+    // background flight.
+    setRevising(false);
     scrollPendingRef.current = true;
-    announcePendingRef.current = true;
+    armClick();
     setGenAnnouncement("");
     setLanded(false);
     // #224 phase 2: a proceed-anyway acknowledgement is never remembered
@@ -699,7 +723,7 @@ export function GeneratorShell({
   // The wire scenario's identity changes, so both fetches refire with
   // ``proceed_if_unavailable: true`` (the debounce's leading edge).
   const onProceedWithoutScan = () => {
-    announcePendingRef.current = true;
+    armClick();
     setProceedFor(scenario);
   };
 
@@ -716,6 +740,39 @@ export function GeneratorShell({
     reopenPendingRef.current = true;
     setStaged([]);
     setGenerated(false);
+  };
+
+  // #289 Phase 2 — CHANGE ONE THING, and what separates it from Reopen.
+  //
+  // `onReopen` was the setup strip's "Edit full setup": it drops
+  // `generated`, so the results unmount and the page goes back to its
+  // pre-generate shape.  The fact line's verb is not that.  Part 1 §5.4:
+  // "The results below dim to 50% under a stale ribbon ... Downloads,
+  // quote and save stay live — that is inherited from the current
+  // corrections block and is not negotiable: staging must stay
+  // abandonable."
+  //
+  // So re-opening the column post-generate leaves the answer on screen.
+  // The band stack mounts above it; the results dim through the path
+  // they already dim through (`regenerating` / `stagedDisclose`) as soon
+  // as an edit fires a refetch.
+  //
+  // WHAT THIS IS NOT, YET: S7.  There is no staged field set, no
+  // before/after panel and no APPLY here — a value edited in the
+  // re-opened band writes and re-generates the way it always has.  The
+  // verb and the shape arrive in this commit because deleting the strip
+  // (§8.27) deletes the only post-generate edit path, and shipping
+  // without one would be a regression dressed as a redesign.  The S7
+  // commit gives the re-open its one field and its preview.
+  const [revising, setRevising] = useState(false);
+  const onChangeOneThing = () => {
+    setRevising(true);
+    // Rule 33: "a CHANGE link focuses the band it re-opens."  The zone
+    // is the band stack's home and carries the re-homed Zone 1 target
+    // (ruling 192); `BandStack` moves focus onto the open band itself on
+    // every later transition.  Deferred a frame because the stack mounts
+    // in this same commit.
+    reopenPendingRef.current = true;
   };
 
   // Sandbox/public mode: build the deliverable zip on demand by hitting
@@ -779,6 +836,14 @@ export function GeneratorShell({
   // state and punished the designed post-generate edit path.  The
   // empty-state swap remains only for a first generate with nothing to
   // hold.
+  // Any new GENERATE ends the revision: the answer on screen is the one
+  // that was just asked for.  That flip lives in `onGenerate` (the
+  // click), NOT in an effect on `genState` — `genState` reads
+  // "generating" for every background verification too, including the
+  // one the revision's own edit opens, so an effect here would close the
+  // column under the operator the moment they changed a value.  #252's
+  // lock already greys the controls for that flight; the band stays.
+
   const regenerating =
     genState === "generating" &&
     deviceBreakdown.state === "loading" &&
@@ -802,7 +867,18 @@ export function GeneratorShell({
   // keeps the focus move from double-scrolling; background settles are
   // excluded by the arming, same as the scroll.
   useEffect(() => {
+    // The click nonce, same discipline as the announcement's (see it for
+    // why the nonce exists).  A run caused by the ARMING may serve only
+    // an already-settled "post" — the repeat Generate, whose answer is
+    // already on screen and which therefore lands at the click.  Every
+    // other arming click either changes the wire (a first Generate
+    // stamps the scan flag) or clicks over a settled error (Retry), and
+    // both must wait for the outcome rather than spend the arming on the
+    // state the click found.
+    const armedNow = clickArm !== lastScrollArmRef.current;
+    lastScrollArmRef.current = clickArm;
     if (!scrollPendingRef.current) return;
+    if (armedNow && genState !== "post") return;
     if (genState === "post") {
       scrollPendingRef.current = false;
       const reduceMotion =
@@ -845,18 +921,19 @@ export function GeneratorShell({
       // No status text on failure: the error ribbon is role="alert"
       // and announces itself (assertively, as an error should).
     }
-  }, [genState, deviceBreakdown, auditSettled, auditDeclined]);
+  }, [genState, deviceBreakdown, auditSettled, auditDeclined, clickArm]);
 
-  // #193: the Reopen half — focus the Setup zone once the sidebar is
-  // back.  Armed by onReopen only; ordinary re-renders in "pre" never
-  // re-fire it.
+  // #193: the Reopen half — focus the Setup zone once the column is
+  // back.  Armed by `onReopen` and, since #289 Phase 2, by CHANGE ONE
+  // THING, which is rule 33's "a CHANGE link focuses the band it
+  // re-opens".  Ordinary re-renders never re-fire it.
   useEffect(() => {
     if (!reopenPendingRef.current) return;
-    if (genState === "pre") {
+    if (genState === "pre" || revising) {
       reopenPendingRef.current = false;
       setupRef.current?.focus({ preventScroll: true });
     }
-  }, [genState]);
+  }, [genState, revising]);
 
   // Frontend-engine-removal Decision 2: the verdict strip never presents
   // an answer for an input the backend hasn't seen.  The audit effect
@@ -959,8 +1036,20 @@ export function GeneratorShell({
   // consumes it silently — the refusal container is role=alert and
   // speaks for itself.
   useEffect(() => {
+    // Did THIS run happen because the arming changed, rather than
+    // because the pair did?  Only one case may be served there: an
+    // already-settled, already-clean pair for the very wire the click
+    // asks about — the repeat Generate.  Every other click changes the
+    // wire (a first Generate stamps the scan flag, an edit changes a
+    // value), so `auditSettled` is false at the click and this effect
+    // returns below, exactly as it always has.  A Retry, which clicks
+    // over a SETTLED error, must not consume its arming here or the
+    // recovered plan would never announce (#258).
+    const armedNow = clickArm !== lastAnnounceArmRef.current;
+    lastAnnounceArmRef.current = clickArm;
     if (!announcePendingRef.current) return;
     if (genState === "generating" || !auditSettled) return;
+    if (armedNow && (genState !== "post" || auditDeclined)) return;
     announcePendingRef.current = false;
     // #253: the pair has settled since the click — the strip may render.
     setLanded(true);
@@ -975,7 +1064,7 @@ export function GeneratorShell({
         ? `Plan generated — ${d.total_devices} devices, ${d.unique_types} types.`
         : "Plan generated — MHT package ready.",
     );
-  }, [genState, auditSettled, auditDeclined, deviceBreakdown]);
+  }, [genState, auditSettled, auditDeclined, deviceBreakdown, clickArm]);
 
   // UX-21 / engine-removal PR D: the strip's red input-error state.
   // The client checks cover the schema-bound mirrors only — workLen
@@ -1339,7 +1428,14 @@ export function GeneratorShell({
             locationUnset={!hasLocation(scenario.meta)}
             audit={stripAudit}
             verifySlow={verifySlow}
-            bandVoice={generated}
+            // Rule 117 — S4's verdict slot is "mounted and EMPTY, holding
+            // its height ... The verdict does not speak for an answer that
+            // does not exist yet."  `bandVoice` is #250 f2's mechanism for
+            // exactly that, and it was armed only AFTER the first generate
+            // (`generated`), so the first S4 still showed VERIFYING.  The
+            // working band is mounted for both, so the strip is quiet for
+            // both.
+            bandVoice={generated || genState === "generating"}
           />
 
           {/* ——— Zone 1 · Setup ——— */}
@@ -1348,7 +1444,9 @@ export function GeneratorShell({
           <section
             ref={setupRef}
             tabIndex={-1}
-            className={`zone outline-none${genState === "pre" ? " dominant" : ""}`}
+            className={`zone outline-none${
+              genState === "pre" || revising ? " dominant" : ""
+            }`}
           >
             {/* #289 Phase 2 / §8.28 — THE SETUP ZONE HEADING IS DROPPED.
                 Phase 1 dropped the results heading and left this one,
@@ -1360,11 +1458,32 @@ export function GeneratorShell({
                 `setupRef` stays on this section, which is what the band
                 stack now fills, and `BandStack` carries rule 33's own
                 target inside it. */}
-            {genState === "pre" ? (
+            {/* #289 Phase 2 — the band stack holds the setup zone up to
+                and including the settle, and nothing after it.
+
+                PRE: the column, one band open.
+                GENERATING (S4): the same column, LOCKED — rule 60's fact
+                  lines at .5 with "locked" in place of their links, no
+                  open band, no generate frame.  §2.4: "the two fact lines
+                  held their positions from S3", which is why the stack
+                  stays mounted rather than being swapped for something
+                  else.
+                POST: nothing.  Rule 119 collapses setup to ONE fact line
+                  and rule 28 puts it in the results stack's first row,
+                  which is `ResultsHead` — so the zone is empty and the
+                  answer is one row further down the column, where §2.5's
+                  reading order puts it.
+
+                The SETUP STRIP is deleted with this commit.  §8.27, and
+                #262 "closes by deletion, not by fix": its six inline
+                editors, its commit-on-blur and its ⤢ / ✎ split are gone,
+                and the way back into a value is the fact line's CHANGE
+                ONE THING. */}
+            {genState === "pre" || genState === "generating" || revising ? (
               <GeneratorSidebar
                 scenario={scenario}
                 setScenario={setScenario}
-                generating={false}
+                generating={genState === "generating"}
                 onGenerate={onGenerate}
                 refusal={refusal}
                 refusalPending={refusalPending}
@@ -1384,26 +1503,7 @@ export function GeneratorShell({
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }
               />
-            ) : (
-              <SetupStrip
-                scenario={scenario}
-                setScenario={setScenario}
-                onReopen={onReopen}
-                // #224 phase 2: the STAMPED view — null mid-refetch.
-                siteScan={
-                  stripAudit.state === "ready"
-                    ? (stripAudit.data.sections?.site_scan ?? null)
-                    : null
-                }
-                jurisdiction={jurisdictionBlock}
-                setJurisdictionKey={(k) =>
-                  setScenario({ ...scenario, jurisdiction_key: k })
-                }
-                setStreetClass={(c) =>
-                  setScenario({ ...scenario, street_class: c })
-                }
-              />
-            )}
+            ) : null}
           </section>
 
           {/* #193 — generation-lifecycle announcements (WCAG 4.1.3).
@@ -1479,7 +1579,32 @@ export function GeneratorShell({
                 measurement).  Empty until the stack container places the
                 setup fact line in it.  Slot order is unchanged: this slot
                 → the refusal container → the plan. */}
-            <ResultsHead reserve={genState !== "pre" && !planDeclined} />
+            {/* Rule 28 + rule 119 — the reserved row, and the setup fact
+                line that occupies it at the settle.  `reserve` is rule
+                28's own predicate (mounted from the Generate click,
+                released under a decline); `settled` is what tells the
+                floor from its occupant. */}
+            <ResultsHead
+              reserve={genState !== "pre"}
+              declined={planDeclined}
+              settled={resultsVisible}
+              scenario={scenario}
+              jurisdictionName={jurisdictionBlock?.name ?? null}
+              onReopen={onChangeOneThing}
+            />
+            {/* #289 Phase 2 — the NOT-CHECKED disclosure, which the setup
+                strip carried (§8.27 deletes the strip).  It sits beside
+                the refusal container because they are the two halves of
+                one story: a scan that refused, and a scan the operator
+                proceeded past.  The STAMPED view, so a prior input's
+                disclosure never renders as current. */}
+            <SiteNotChecked
+              siteScan={
+                stripAudit.state === "ready"
+                  ? (stripAudit.data.sections?.site_scan ?? null)
+                  : null
+              }
+            />
             {scanRefusal && (
               <div role="alert" className="sys-event warn scan-refusal">
                 <div className="tr-section mb-1.5">Site scan</div>
@@ -1548,6 +1673,27 @@ export function GeneratorShell({
                 </div>
                 <div className="tr-prov mt-1.5">
                   tries the scan once more · the plan says whether it ran
+                </div>
+              </div>
+            )}
+            {/* Rule 117 — S4's results placeholder.  "A results
+                placeholder block: 1 px #2c3e53, ground #101c29, padding
+                22 px 16 px, quiet section header '02 · RESULTS' plus 'No
+                package yet — the plan is being built.' in body value."
+
+                §8.28 kept exactly one use of the zone label: "'02 ·
+                RESULTS' survives only as the placeholder block's label in
+                S4."  This is that use, and the only one.
+
+                It renders on a FIRST generate only — `resultsVisible` is
+                false just then.  A regenerate keeps the previous answer
+                on screen under the stale dim (#192/#252), which is P16's
+                rule and not something a placeholder should interrupt. */}
+            {genState === "generating" && !resultsVisible && (
+              <div className="results-placeholder" data-testid="results-placeholder">
+                <span className="tr-section">02 · RESULTS</span>
+                <div className="rp-line">
+                  No package yet — the plan is being built.
                 </div>
               </div>
             )}

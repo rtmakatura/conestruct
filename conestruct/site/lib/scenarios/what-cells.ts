@@ -49,8 +49,8 @@ export interface WhatCellTable {
 }
 
 // "Rural — divided hwy" (ShoulderForm.tsx:28) and "Rural — divided"
-// (SetupStrip.tsx:41, the fact strip, the XLSX) were two labels for one
-// enum value.  The strip's is kept: it is the one the deliverables carry,
+// (the deleted SetupStrip's fact strip, and the XLSX) were two labels for
+// one enum value.  The strip's is kept: it is the one the deliverables carry,
 // and #198's discipline is that a name crossing a seam has one spelling.
 const LABEL: Record<RoadType, string> = {
   rural_undivided: "Rural — undivided",
@@ -75,8 +75,8 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
     laneWidthMax: 14,
     laneWidthStep: 0.5,
   },
-  // FlaggerForm.tsx:29-32 (types), :124 (the note), SPEED_MAX in
-  // SetupStrip.tsx:49 (55 — the form's own slider bound).
+  // FlaggerForm.tsx:29-32 (types), :124 (the note), and SPEED_MAX (55 —
+  // the form's own slider bound) as the deleted SetupStrip carried it.
   flagger_lane_closure: {
     roadTypes: opt("rural_undivided", "urban_arterial"),
     roadTypeNote:

@@ -28,7 +28,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { Scenario } from "@/lib/scenarios";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -38,33 +37,44 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./PricingCard", () => ({ PricingCard: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 vi.mock("./GeneratorSidebar", () => ({
-  GeneratorSidebar: ({ onGenerate }: { onGenerate: () => void }) => (
-    <button type="button" onClick={onGenerate}>
-      Generate package
-    </button>
-  ),
-}));
-vi.mock("./SetupStrip", () => ({
-  SetupStrip: ({
-    onReopen,
+  GeneratorSidebar: ({
+    onGenerate,
     scenario,
     setScenario,
   }: {
-    onReopen: () => void;
-    scenario: Scenario;
-    setScenario: (s: Scenario) => void;
+    onGenerate: () => void;
+    scenario: { speed: number };
+    setScenario: (s: unknown) => void;
   }) => (
-    <>
-      <button type="button" onClick={onReopen}>
-        Edit full setup
+    <div data-testid="band-stack" data-open-band="what">
+      <button type="button" onClick={onGenerate}>
+        Generate package
       </button>
+      {/* #289 Phase 2: the stub stands in for the column and carries the
+          one cell these cases edit — the WHAT grid's speed select (the
+          setup strip and its inline editors are deleted, §8.27). */}
+      {/* The suite's own edit trigger, carried across the stub's
+          rewrite: it bumps the speed by 5, which is all these cases need
+          from an edit. */}
       <button
         type="button"
         onClick={() => setScenario({ ...scenario, speed: scenario.speed + 5 })}
       >
         EDIT_SPEED
       </button>
-    </>
+      <label htmlFor="what-speed">Speed limit</label>
+      <select
+        id="what-speed"
+        value={scenario.speed}
+        onChange={(e) => setScenario({ ...scenario, speed: +e.target.value })}
+      >
+        {[25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75].map((s) => (
+          <option key={s} value={s}>
+            {s} mph
+          </option>
+        ))}
+      </select>
+    </div>
   ),
 }));
 
@@ -72,6 +82,17 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
+import {
+  changeOneThing,
+  editAfterGenerate,
+  openWhat,
+  openWhere,
+} from "./__fixtures__/band-helpers";
+
+// #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
+// deletion).  A post-generate edit is CHANGE ONE THING on the setup fact
+// line, then the WHAT grid's own cell: `editAfterGenerate` in
+// components/__fixtures__/band-helpers.ts is those two steps.
 
 // The prod-captured refusal shape (s2-arc15 after-table, 2026-09-03);
 // the sentence as of #258 commit 1 (67bf9a0): it names the input, not
@@ -337,6 +358,11 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     );
     await settle();
     calls = [];
+    // #289 Phase 2: rule 120 keeps the setup fact line under a decline
+    // ("unchanged and still changeable"), so the way to an edit is
+    // CHANGE ONE THING — which is also the only recovery a refusal
+    // leaves the operator besides Retry.
+    await changeOneThing();
     await user.click(screen.getByText("EDIT_SPEED"));
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: false }]);
@@ -350,7 +376,7 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
       within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
-    await user.click(screen.getByText("Edit full setup"));
+    await changeOneThing();
     await settle();
     calls = [];
     await user.click(screen.getByText("Generate package"));

@@ -51,6 +51,47 @@ export async function openWhat(): Promise<void> {
   await openVia("fact-link-what", "what");
 }
 
+/**
+ * A post-generate edit, the way the column offers one.
+ *
+ * #289 Phase 2 / §8.27: the setup strip and its six inline editors are
+ * deleted, and #262 closes by deletion rather than by fix.  Where a suite
+ * used to click "Edit Speed" and pick from the strip's own select, the
+ * operator now presses CHANGE ONE THING on the setup fact line (rule 58's
+ * verb), which re-opens the column, and edits the value in the WHAT
+ * grid's cell.
+ *
+ * Two clicks instead of one, and the trade is ruling 190's: "CHANGE ONE
+ * THING re-opens one field, in place, with its consequence shown."  S7
+ * makes the re-open land on ONE field with a before/after panel; until
+ * then it re-opens the band.
+ */
+export async function changeOneThing(): Promise<void> {
+  const link = document.querySelector('[data-testid="fact-link-setup"]');
+  if (!link) throw new Error("no CHANGE ONE THING on the setup fact line");
+  await act(async () => {
+    fireEvent.click(link);
+  });
+}
+
+/**
+ * CHANGE ONE THING, then set a WHAT-grid cell.  `id` is the cell's own
+ * id (`what-speed`, `what-lanes`, `what-lane-width`, `what-road-type`,
+ * `what-jurisdiction`).
+ */
+export async function editAfterGenerate(
+  id: string,
+  value: string,
+): Promise<void> {
+  await changeOneThing();
+  await openWhat();
+  const el = document.getElementById(id) as HTMLSelectElement | null;
+  if (!el) throw new Error(`no #${id} in the WHAT band`);
+  await act(async () => {
+    fireEvent.change(el, { target: { value } });
+  });
+}
+
 /** The picker opener, wherever the WHERE band is in its two states. */
 export async function clickPicker(): Promise<void> {
   await openWhere();

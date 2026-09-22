@@ -31,9 +31,21 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
   // the suite guards now is that the rule is GONE and the token it read
   // is not, because Phase 2 needs the token back.
 
-  it("the slot rule is deleted — no element, no rule", () => {
+  it("#289: the slot rule is BACK, with its occupant — and it reserves a FLOOR", () => {
+    // Phase 1 deleted the rule because its element was gone and "a rule
+    // whose only element is gone is a rule that rots".  Phase 2 builds
+    // the occupant (rule 119's setup fact line), so the element returns
+    // and the rule with it.
+    //
+    // It reserves `min-height`, not `height`: the line grows past the
+    // floor whenever the scenario string wraps, which it does at both
+    // widths with #281's own example (#289 R9).
     const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
-    expect(code).not.toContain(".results-head-slot");
+    expect(code).toContain(".results-head-slot");
+    expect(code).toMatch(
+      /\.results-head-slot \{[^}]*min-height: var\(--fact-min-h\)/,
+    );
+    expect(code).not.toMatch(/\.results-head-slot \{[^}]*[^-]height:\s*var/);
   });
 
   it("--fact-min-h SURVIVES at 48px: rule 56's row floor, corrected by #289 R9", () => {
@@ -44,22 +56,19 @@ describe("#288 rule 28 — the reserved first row's CSS contract", () => {
     expect(CSS).toMatch(/--fact-min-h:\s*48px/);
   });
 
-  it("nothing else consumed the slot — deleting it left no dangling reference", () => {
+  it("the token has exactly two consumers: the fact line's floor and the reserve", () => {
     const code = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
-    expect(code).not.toMatch(/results-head-slot/);
     // #289 Phase 2 — THE TOKEN NOW HAS ITS CONSUMER, and it is the fact
     // line itself rather than the reserve.
     //
     // Phase 1 asserted the opposite ("declared, unused, waiting"), which
     // was the honest state then: the token existed, the surface did not.
-    // The surface exists now — `.a-fact` takes the floor as its
-    // `min-height` — so the assertion inverts, deliberately, and names
-    // the one rule that is allowed to consume it.  The RESERVE is still
-    // unbuilt: `ResultsHead` renders null until the S4/S5 commit mounts
-    // the setup fact line at the settle, which is what Phase 1's
-    // recorded deviation said would happen.
+    // Both surfaces exist now, and they are the only two allowed to read
+    // it — the fact line's own floor, and the row that reserves room for
+    // one.  A third consumer would be a third opinion about how tall a
+    // fact line is.
     const consumers = (code.match(/var\(--fact-min-h\)/g) ?? []).length;
-    expect(consumers, "exactly one consumer: the fact line's own floor").toBe(1);
+    expect(consumers, "the fact line's floor and the reserve").toBe(2);
     expect(code).toMatch(/\.a-fact \{[^}]*min-height: var\(--fact-min-h\)/);
   });
 
