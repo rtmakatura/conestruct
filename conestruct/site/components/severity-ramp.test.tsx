@@ -10,10 +10,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 
 import { ResultsHero } from "./ResultsHero";
-import {
-  JurisdictionContextBar,
-  JurisdictionControls,
-} from "./JurisdictionSection";
+import { JurisdictionControls } from "./JurisdictionSection";
+import { referenceSummary } from "@/lib/reference-summary";
 import { PricingCard } from "./PricingCard";
 import type { DeviceBreakdownState } from "./DeviceBreakdown";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
@@ -76,20 +74,21 @@ describe("severity-ramp role assignments", () => {
     expect(container.querySelectorAll(".hero button")).toHaveLength(0);
   });
 
-  it("the spec chain's local override is white-bold (.seg.local), no longer orange", () => {
-    const { container } = render(
-      <JurisdictionContextBar
-        jurisdiction={JUR}
-        jurisdictionKey="greeley"
-        streetClass={null}
-      />,
-    );
-    const segs = Array.from(container.querySelectorAll(".chain .seg"));
-    expect(segs.map((s) => s.textContent)).toEqual(JUR.chain);
-    expect(segs[segs.length - 1].className).toContain("local");
-    // Orange belongs to generated numbers; a document name is not one.
-    expect(container.innerHTML).not.toContain("--dim");
-    expect(container.innerHTML).not.toContain("--orange");
+  it("the spec chain is a document name, so it takes no generated-number accent", () => {
+    // #288 · §8.31 (Ryan's hand-check at f44377e): the bar this test
+    // rendered is DELETED, and the chain now rides the Reference row's
+    // summary line.  The CLAIM survives the move and is what matters —
+    // orange belongs to generated numbers, and a document name is not
+    // one — so it is asserted against the line that carries the chain
+    // now.  The `.seg.local` treatment retired with the bar's markup.
+    const line = referenceSummary({ jurisdiction: JUR, streetClass: null });
+    expect(line).toContain("Greeley");
+    for (const link of JUR.chain) {
+      expect(line).toContain(typeof link === "string" ? link : link.display_name);
+    }
+    // The summary is plain text in the row's provenance slot: there is no
+    // element on it to carry an accent at all.
+    expect(line).not.toMatch(/--dim|--orange|<[a-z]/i);
   });
 
   it("street-class pills carry pressed state, not hue alone", () => {

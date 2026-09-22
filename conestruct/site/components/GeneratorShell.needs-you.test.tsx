@@ -188,7 +188,12 @@ describe("#288 step 3 — NEEDS YOU mounted in the results stack", () => {
     // above it ARE counted and do show one — which is the same rule's
     // other half, not a violation of it.
     expect(head.querySelector(".disc-count")).toBeNull();
-    expect(head.textContent).toContain("jurisdiction rules");
+    // §8.31 pulled forward: the row's summary line now carries the
+    // jurisdiction context bar's three facts — which jurisdiction, which
+    // street class, which spec chain — in place of the generic
+    // "jurisdiction rules · permit · audit trail".  Unset reads "Not
+    // set" (rule 14: a value that is not known renders as a word).
+    expect(head.textContent).toContain("Not set · Not set · MUTCD 11th + CO Suppl.");
     // NEEDS YOU sits ABOVE it and is unaffected by the toggle (rule 89:
     // nothing above the header moves).
     const before = document.querySelectorAll(".ny-item").length;

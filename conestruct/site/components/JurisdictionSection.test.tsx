@@ -4,7 +4,6 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import {
-  JurisdictionContextBar,
   JurisdictionControls,
 } from "./JurisdictionSection";
 import { mountTiered } from "./tiered-test-utils";
@@ -190,22 +189,8 @@ describe("JurisdictionControls", () => {
   });
 });
 
-describe("JurisdictionContextBar (read-only summary)", () => {
-  it("Castle Rock context: chain renders with the local override last", () => {
-    render(
-      <JurisdictionContextBar
-        jurisdiction={jur("castle_rock")}
-        jurisdictionKey="castle_rock"
-        streetClass={null}
-      />,
-    );
-    // Compact breadcrumb (inc-9): the authored display_name renders; the
-    // full title (edition included) rides the hover detail.
-    const mutcdSeg = screen.getByText("MUTCD + CO Suppl.");
-    expect(mutcdSeg.getAttribute("title")).toMatch(/most recent edition/i);
-    // class_required with no captured URL → honest look-it-up note, not a dead link.
-    expect(
-      screen.getByText(/classifies via its published map/i),
-    ).toBeTruthy();
-  });
-});
+// #288 · §8.31: the JurisdictionContextBar describe block is DELETED
+// with the component it tested.  Its facts are asserted now on the
+// Reference row's summary line — lib/reference-summary.test.ts for the
+// derivation, GeneratorShell.class-stability.test.tsx for the mounted
+// "never a stale jurisdiction" claim.

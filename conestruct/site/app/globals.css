@@ -1737,18 +1737,8 @@ input[type="number"] {
 
 /* Read-only summary strip: the class value + "not set" tone.  No
    dropdown or pills — those live in .jctl now. */
-.workbench .jbar-readonly .none {
-  color: var(--ink-on-dark-faint);
-}
-.workbench .jbar-readonly .jbar-slot-hint b {
-  color: var(--ink-bright);
-  font-weight: 600;
-}
-.workbench .jbar-readonly .jbar-slot-hint .term {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-on-dark-faint);
-}
+
+
 
 /* spec-chain breadcrumb — single line, no boxes; the local override
    renders last & strongest (white bold — a document name is not a
@@ -2272,7 +2262,6 @@ input[type="number"] {
     width: 100%;
   }
 }
-
 
 /* ─── #288 Phase 1 clause 7 · RULE 15, PAGE-WIDE ───
    Authority: rulings.md, "The Phase 1 finish ruling" clause 7.

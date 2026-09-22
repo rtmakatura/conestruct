@@ -48,6 +48,7 @@ import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tie
 import { settledData } from "./AuditTrail";
 import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
 import { derivePrimaryOwner } from "@/lib/results-primary";
+import { referenceSummary } from "@/lib/reference-summary";
 import { NeedsYou } from "./NeedsYou";
 import { CheckedDisclosure, PendingDisclosure } from "./ResultsDisclosures";
 import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
@@ -64,7 +65,6 @@ import {
 } from "./DebugSnapshotButton";
 import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
-  JurisdictionContextBar,
   JurisdictionControls,
   type SuggestionResolution,
 } from "./JurisdictionSection";
@@ -1898,17 +1898,10 @@ export function GeneratorShell({
             </div>
           </div>
 
-          {/* Persistent jurisdiction summary — READ-ONLY (Surface B).
-              The interactive dropdown, pills, and suggestions live in
-              the Location step (pre-gen) and the strip's inline edit
-              (post-gen), so this strip never reads as a dead control
-              beside the pin it depends on. */}
-          <JurisdictionContextBar
-            jurisdiction={jurisdictionBlock}
-            jurisdictionKey={scenario.jurisdiction_key ?? null}
-            streetClass={scenario.street_class ?? null}
-            loading={jurisdictionLoading}
-          />
+          {/* #288 · §8.31 pulled forward (Ryan's hand-check at f44377e):
+              the jurisdiction context bar is DROPPED.  Its three facts
+              now ride the Reference row's summary line (below), derived
+              once by lib/reference-summary.ts. */}
 
           {/* ——— Zone 3 · Reference ——— */}
           {(jurisdictionBlock ||
@@ -1944,7 +1937,14 @@ export function GeneratorShell({
                   jurisdiction gates NEEDS YOU does not, and the uncounted
                   i tier.  Same producer, same inputs — the split is of
                   containers, never of facts. */}
-              <ReferenceDisclosure defaultOpen={auditState.state === "error"}>
+              <ReferenceDisclosure
+                defaultOpen={auditState.state === "error"}
+                summary={referenceSummary({
+                  jurisdiction: jurisdictionBlock,
+                  streetClass: scenario.street_class ?? null,
+                  loading: jurisdictionLoading,
+                })}
+              >
               <TieredReference
                 {...tierProps}
                 tiers={["changed", "attention", "reference"]}

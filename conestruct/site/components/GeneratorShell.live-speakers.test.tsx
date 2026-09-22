@@ -20,6 +20,11 @@
 //       (the pick CTA) instead of 550 px of preamble (F-S1-1).  DOM order
 //       pinned here; the CTA's bottom is the browser leg's figure.
 //
+//       #288 §8.31 (Ryan's hand-check, 2026-09-22): the JURISDICTION BAR
+//       left the block too, and its three facts ride the Reference row's
+//       summary line.  What remains of the "context block" is the draft
+//       notice alone.
+//
 //       #288 clause 5: the INTRO SENTENCE left the block entirely under
 //       Part 1 §8.30 ("it restates the download cards' captions"), so
 //       the block is now the draft notice and the jurisdiction bar.
@@ -154,6 +159,10 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     // draft notice and the jurisdiction bar, and the reference section is
     // found by its id rather than by a tag that no longer renders.
     const draft = screen.getByText("Draft — not a sealed plan");
+    // §8.31 pulled forward (Ryan's hand-check at f44377e): the
+    // jurisdiction context bar is DROPPED and its facts ride the
+    // Reference row's summary line.  `jbar` is null now, and the checks
+    // below assert its ABSENCE rather than its position.
     const jbar = main.querySelector(".jbar");
     const zones = Array.from(main.querySelectorAll("section.zone"));
     const setup = zones[0];
@@ -162,7 +171,7 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     return { h1: at(h1), draft: at(draft), jbar: at(jbar), setup: at(setup), results: at(results), reference: at(reference) };
   };
 
-  it("pre-generate: h1 → Setup → Results → draft · jurisdiction bar (→ Reference when mounted)", async () => {
+  it("pre-generate: h1 → Setup → Results → draft (→ Reference when mounted)", async () => {
     render(<GeneratorShell mode="sandbox" />);
     await settle();
     const o = order();
@@ -170,9 +179,9 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     expect(o.setup).toBeGreaterThan(o.h1);
     expect(o.results).toBeGreaterThan(o.setup);
     expect(o.draft).toBeGreaterThan(o.results);
-    expect(o.jbar).toBeGreaterThan(o.draft);
+    expect(o.jbar, "the jurisdiction bar is gone (§8.31)").toBe(-1);
     // Nothing of the block precedes the setup zone.
-    expect(Math.min(o.draft, o.jbar)).toBeGreaterThan(o.setup);
+    expect(o.draft).toBeGreaterThan(o.setup);
     // §8.30: the intro is gone from the page entirely, not merely moved.
     expect(screen.queryByText(/Generate a CDOT-compliant MHT package/)).toBeNull();
   });
@@ -186,7 +195,7 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     const o = order();
     expect(o.reference, "the Reference zone mounts with the results").toBeGreaterThan(-1);
     expect(o.draft).toBeGreaterThan(o.results);
-    expect(o.jbar).toBeGreaterThan(o.draft);
-    expect(o.reference).toBeGreaterThan(o.jbar);
+    expect(o.jbar, "the jurisdiction bar is gone (§8.31)").toBe(-1);
+    expect(o.reference).toBeGreaterThan(o.results);
   });
 });

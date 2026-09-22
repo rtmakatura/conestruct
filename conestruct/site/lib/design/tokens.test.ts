@@ -83,10 +83,14 @@ describe("#263 --ink-bright and the confirm-hover ink", () => {
     expect(css.slice(start, end)).toContain("--ink-bright: #ffffff;");
   });
 
-  it("the three workbench sites and the section role read var(--ink-bright), not a literal", () => {
+  it("the workbench sites and the section role read var(--ink-bright), not a literal", () => {
+    // #288 · §8.31 (Ryan's hand-check at f44377e): the jurisdiction
+    // context bar is deleted, so `.jbar-readonly .jbar-slot-hint b` is
+    // gone from this list with the rule it named.  The other two sites
+    // are unchanged, and the CLAIM — the token, never the literal — is
+    // unchanged for them.
     for (const sel of [
       ".workbench .tr-section",
-      ".workbench .jbar-readonly .jbar-slot-hint b",
       ".workbench .chain .seg.local",
     ]) {
       const block = css.match(new RegExp(`${sel.replace(/[.]/g, "\\.")} \\{[^}]*\\}`));

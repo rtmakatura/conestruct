@@ -29,8 +29,20 @@ import { DisclosureRow } from "./DisclosureRow";
 export function ReferenceDisclosure({
   children,
   defaultOpen = false,
+  summary,
 }: {
   children: ReactNode;
+  /** #288 · §8.31 pulled forward (Ryan's hand-check, 2026-09-22): the
+   *  jurisdiction context bar is dropped, and its three facts — which
+   *  jurisdiction, which street class, which spec chain — land on THIS
+   *  line.  §8.31 sends the spec chain here by name ("the reference
+   *  disclosure's first line, which is where S8 shows it"); the other
+   *  two are bound for Phase 2's WHAT band and setup fact line, and the
+   *  hand-check ruled them here meanwhile rather than letting them fall
+   *  on the floor until Phase 2 catches them.
+   *  Derived by lib/reference-summary.ts — one producer, so the row and
+   *  any future fact line cannot disagree about the same three facts. */
+  summary?: string;
   /** RULE 10, and the reason this prop exists.  The verdict strip's
    *  "retry below" points at a Retry that lives INSIDE this panel.  Rule
    *  10 requires that pointer to land on a panel that exists, and a
@@ -65,7 +77,7 @@ export function ReferenceDisclosure({
       symbol="i"
       name="Reference"
       count={null}
-      provenance="jurisdiction rules · permit · audit trail"
+      provenance={summary ?? "jurisdiction rules · permit · audit trail"}
       open={open}
       onToggle={() => setOpen((o) => !o)}
     >

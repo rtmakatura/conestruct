@@ -236,7 +236,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .jbar-auth .term", size: "11px" },
       { selector: ".workbench .classpick button", size: "12px" },
       { selector: ".workbench .mapchip", size: "11px" },
-      { selector: ".workbench .jbar-readonly .jbar-slot-hint .term", size: "11px" },
+      // #288 · §8.31: deleted with the jurisdiction context bar.  92 -> 91.
+      // 11px stays everywhere else in the sheet.
       { selector: ".workbench .chain", size: "11.5px" },
       { selector: ".workbench .chain .sep", size: "12px" },
       { selector: ".workbench .chain-note", size: "9px" },
@@ -468,7 +469,7 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 92,
+  cssDeclarations: 91,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

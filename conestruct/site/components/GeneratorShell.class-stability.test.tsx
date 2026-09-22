@@ -115,12 +115,26 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function chainSkeleton(): Element | null {
-  return document.querySelector(".jbar .chain-skeleton");
-}
-
-function chainSegs(): number {
-  return document.querySelectorAll(".jbar .chain .seg").length;
+// #288 · §8.31 pulled forward (Ryan's hand-check at f44377e): the
+// jurisdiction context bar is DROPPED, so the BAR half of #152 D's
+// contract ("holds bar + section content … no skeleton") retires with
+// the element it described.  There is no `.jbar` and no chain skeleton
+// to hold or to flash.
+//
+// The SECTION half is the substantive claim and is unchanged: through a
+// class refetch the section's content stays mounted, the hours verdict
+// presents as checking rather than stale (rule 10), and a CHANGED
+// jurisdiction key still refuses to render another jurisdiction's block.
+// Those assertions are kept exactly as they were.
+//
+// What replaces the skeleton check: the bar's three facts now ride the
+// Reference row's summary line, so the row is where "no stale answer
+// presented as current" is now observable for them.
+function referenceSummaryLine(): string {
+  const row = Array.from(document.querySelectorAll(".disc")).find(
+    (d) => d.querySelector(".disc-name")?.textContent === "Reference",
+  );
+  return row?.querySelector(".disc-prov")?.textContent ?? "";
 }
 
 async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
@@ -131,12 +145,15 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
     "#jl-jurisdiction",
   ) as HTMLSelectElement;
   await user.selectOptions(select, "parker");
-  // First load of the key: skeleton is CORRECT here (no block to hold).
-  expect(chainSkeleton()).not.toBeNull();
+  // First load of the key: the summary says so in a WORD rather than a
+  // skeleton (#252: no skeletons anywhere; rule 14: a value that is not
+  // known renders as a word).
+  expect(referenceSummaryLine()).toContain("Checking…");
   await flushDebounce();
   await release(1, okBreakdown(true));
-  expect(chainSkeleton()).toBeNull();
-  expect(chainSegs()).toBeGreaterThan(1);
+  // Settled: the row names the jurisdiction and its chain.
+  expect(referenceSummaryLine()).toContain("Parker");
+  expect(referenceSummaryLine()).toMatch(/›/);
   // #288 §8.35: section 03 is now folded behind the reference disclosure,
   // so the section content this suite holds stable sits inside a closed
   // panel until it is opened.  The STABILITY contract is unchanged — only
@@ -159,8 +176,9 @@ describe("class-switch stability (#152 D)", () => {
     await flushDebounce();
     // Refetch pending (index 2) — nothing may flip to skeleton.
     expect(breakdownCalls.length).toBe(3);
-    expect(chainSkeleton()).toBeNull();
-    expect(chainSegs()).toBeGreaterThan(1);
+    // Mid-refetch the summary keeps the settled answer — it does not
+    // flash "Checking…" for a jurisdiction that has not changed.
+    expect(referenceSummaryLine()).toContain("Parker");
     expect(screen.queryByText(/Loading jurisdiction rules/)).toBeNull();
     // The section's content is still mounted mid-refetch.
     expect(screen.getByText(/Parker — jurisdiction rules/)).toBeTruthy();
@@ -195,17 +213,21 @@ describe("class-switch stability (#152 D)", () => {
     expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
   });
 
-  it("a CHANGED jurisdiction key still skeletons — a stale block from another jurisdiction never renders", async () => {
+  it("a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders", async () => {
     const user = await mountWithParker();
     const select = document.querySelector(
       "#jl-jurisdiction",
     ) as HTMLSelectElement;
     await user.selectOptions(select, "denver");
-    // No held content from parker; the chain slot skeletons as before —
-    // already in the deferred window, before the fetch dispatches.
-    expect(chainSkeleton()).not.toBeNull();
+    // No held content from parker.  The bar used to skeleton here; §8.31
+    // dropped the bar, so the same fact is stated in the summary's own
+    // word — and, critically, the summary must NOT still say "Parker"
+    // while Denver is loading.  That is the rule-10 claim this test has
+    // always made; only the surface carrying it changed.
+    expect(referenceSummaryLine()).toContain("Checking…");
+    expect(referenceSummaryLine()).not.toContain("Parker");
     await flushDebounce();
-    expect(chainSkeleton()).not.toBeNull();
+    expect(referenceSummaryLine()).not.toContain("Parker");
     expect(screen.queryByText(/Parker — jurisdiction rules/)).toBeNull();
   });
 
@@ -219,8 +241,8 @@ describe("class-switch stability (#152 D)", () => {
       json: async () => ({}),
       text: async () => "boom",
     } as unknown as Response);
-    // The bar falls back to baseline; no stale parker content claims
-    // to be evaluated output.
+    // The summary falls back to the statewide floor; no stale parker
+    // content claims to be evaluated output.
     expect(screen.queryByText(/Parker — jurisdiction rules/)).toBeNull();
   });
 });

@@ -340,108 +340,17 @@ export function JurisdictionControls({
 // input it depends on.  The reserved-height slots stay: name and chain
 // vary by jurisdiction and the bar must not resize on selection (the
 // 198 px stability gate).
-export function JurisdictionContextBar({
-  jurisdiction,
-  jurisdictionKey,
-  streetClass,
-  loading = false,
-}: {
-  jurisdiction: JurisdictionBlock | null;
-  jurisdictionKey: string | null;
-  streetClass: StreetClass | null;
-  loading?: boolean;
-}) {
-  const chain = (jurisdiction ? jurisdiction.chain : BASELINE_CHAIN).map(
-    normalizeChainLink,
-  );
-  // A selected-but-not-yet-loaded jurisdiction shows the auth skeleton
-  // (same as loading) so the summary never flashes "None" for a chosen
-  // jurisdiction mid-fetch.
-  const pendingName = Boolean(jurisdictionKey) && !jurisdiction;
-  return (
-    <div className="jbar jbar-readonly">
-      <div className="jbar-main">
-        <div className="jbar-cell">
-          <span className="k">Jurisdiction</span>
-          <div className="jbar-auth jbar-slot-auth">
-            {jurisdiction ? (
-              <>
-                <b>{jurisdiction.name}</b> ·{" "}
-                {jurisdiction.authority.replace("_", " & ")} · calls this plan a{" "}
-                <span className="term">{jurisdiction.tcp_term}</span>, the ROW{" "}
-                <span className="term">{jurisdiction.row_term}</span>
-              </>
-            ) : loading || pendingName ? (
-              <span className="jbar-skel-line w-3/4" aria-hidden />
-            ) : (
-              <>
-                <b>Not set</b> · MUTCD + Colorado Supplement only.
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="jbar-cell">
-          <span className="k">Street classification</span>
-          <div className="jbar-auth jbar-slot-hint">
-            {streetClass ? (
-              <b>{classLabel(streetClass)}</b>
-            ) : (
-              <span className="none">◌ Not set — choose it in Setup</span>
-            )}
-            {jurisdiction?.class_required && (
-              <span className="term">
-                {" "}
-                · {jurisdiction.name} classifies via its published map
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="jbar-cell">
-          <span className="k">Governing spec chain</span>
-          <div className="jbar-slot-chain">
-            {loading ? (
-              <div className="chain-skeleton" aria-hidden>
-                <span className="jbar-skel-line w-full" />
-                <span className="jbar-skel-line w-2/3" />
-              </div>
-            ) : (
-              <>
-                <div className="chain">
-                  {chain.map((seg, i) => (
-                    <span key={seg.title} className="contents">
-                      {i > 0 && (
-                        <span className="sep" aria-hidden>
-                          ›
-                        </span>
-                      )}
-                      <span
-                        className={`seg${i === chain.length - 1 && jurisdiction ? " local" : ""}`}
-                        title={seg.title}
-                      >
-                        {seg.display_name}
-                      </span>
-                    </span>
-                  ))}
-                </div>
-                {jurisdiction && (
-                  <span className="chain-note">
-                    local override rendered last &amp; strongest
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// 1c · Street-class suggestion row (#152 Surface C)
-// ---------------------------------------------------------------------------
+// #288 · §8.31 pulled forward (Ryan's hand-check at f44377e):
+// JurisdictionContextBar is DELETED.  §8.31 drops the bar and sends its
+// three cells to the WHAT band's field, the setup fact line and the
+// reference disclosure's first line; the hand-check ruled all three onto
+// the Reference row's summary line for now (lib/reference-summary.ts),
+// because two of those three destinations are Phase 2's.
+//
+// Deleted rather than left unrendered: a component with no importer is
+// not dormant, it is dead code that still compiles, still passes its own
+// tests and still looks alive to the next reader.  That is this arc's
+// own recorded lesson, applied to its own work.
 
 function classLabel(c: StreetClass): string {
   return STREET_CLASSES.find(([v]) => v === c)?.[1] ?? c;
