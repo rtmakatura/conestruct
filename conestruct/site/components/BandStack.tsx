@@ -56,10 +56,13 @@ export interface BandStackProps {
   jurisdictionLoading: boolean;
   jurisdictionErrored: boolean;
   jurisdictionName: string | null;
-  /** The kind's own fields and the schedule body, in the shape they
-   *  already have (see WhatBand's header). */
+  /** The kind's own fields, in the shape they already have (see
+   *  WhatBand's header). */
   kindFields?: ReactNode;
-  scheduleFields?: ReactNode;
+  /** Correction 1 — the dates control's cells, for the second group. */
+  scheduleCells?: ReactNode;
+  /** #227's window reference block, under that group's grid. */
+  scheduleWindows?: ReactNode;
   jurisdictionSuggest?: ReactNode;
   classificationFields?: ReactNode;
 }
@@ -82,7 +85,8 @@ export function BandStack(props: BandStackProps) {
     jurisdictionErrored,
     jurisdictionName,
     kindFields,
-    scheduleFields,
+    scheduleCells,
+    scheduleWindows,
     jurisdictionSuggest,
     classificationFields,
   } = props;
@@ -177,7 +181,8 @@ export function BandStack(props: BandStackProps) {
         jurisdictionErrored={jurisdictionErrored}
         stepIndex={model.stepIndex}
         kindFields={kindFields}
-        scheduleFields={scheduleFields}
+        scheduleCells={scheduleCells}
+        scheduleWindows={scheduleWindows}
         jurisdictionSuggest={jurisdictionSuggest}
         classificationFields={classificationFields}
       />

@@ -12,7 +12,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { DEFAULT_SCENARIO, type Scenario } from "@/lib/scenarios";
 import type { HoursEval, JurisdictionBlock } from "@/lib/jurisdiction";
-import { ScheduleField } from "./ScheduleField";
+import { ScheduleWindows } from "./ScheduleField";
 
 afterEach(cleanup);
 
@@ -89,10 +89,8 @@ function rowShapes(): { label: string; glyph: string; value: string }[] {
 describe("#227 schedule window reference block", () => {
   it("no jurisdiction: one honest row, never invented windows", () => {
     render(
-      <ScheduleField
+      <ScheduleWindows
         scenario={scenarioWith({})}
-        setScenario={() => {}}
-        step={5}
         jurisdiction={null}
       />,
     );
@@ -104,13 +102,11 @@ describe("#227 schedule window reference block", () => {
 
   it("unevaluated: real rows, class-scoped first, all ◌ '— set dates to check'", () => {
     render(
-      <ScheduleField
+      <ScheduleWindows
         scenario={scenarioWith({
           jurisdiction_key: "denver",
           street_class: "arterial",
         })}
-        setScenario={() => {}}
-        step={5}
         jurisdiction={block(UNKNOWN)}
       />,
     );
@@ -126,27 +122,23 @@ describe("#227 schedule window reference block", () => {
 
   it("evaluated: same rows, same order, same labels — only glyph and value change", () => {
     const { rerender } = render(
-      <ScheduleField
+      <ScheduleWindows
         scenario={scenarioWith({
           jurisdiction_key: "denver",
           street_class: "arterial",
         })}
-        setScenario={() => {}}
-        step={5}
         jurisdiction={block(UNKNOWN)}
       />,
     );
     const before = rowShapes();
 
     rerender(
-      <ScheduleField
+      <ScheduleWindows
         scenario={scenarioWith({
           jurisdiction_key: "denver",
           street_class: "arterial",
           schedule: CHECKED_SCHEDULE,
         })}
-        setScenario={() => {}}
-        step={5}
         jurisdiction={block(INSIDE)}
       />,
     );
@@ -163,14 +155,12 @@ describe("#227 schedule window reference block", () => {
 
   it("outside: the active row carries the backend's own violation facts", () => {
     render(
-      <ScheduleField
+      <ScheduleWindows
         scenario={scenarioWith({
           jurisdiction_key: "denver",
           street_class: "arterial",
           schedule: CHECKED_SCHEDULE,
         })}
-        setScenario={() => {}}
-        step={5}
         jurisdiction={block(OUTSIDE)}
       />,
     );

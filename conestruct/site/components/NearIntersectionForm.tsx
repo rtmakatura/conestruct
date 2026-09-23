@@ -234,34 +234,12 @@ export function NearIntersectionForm({
           Nothing of this kind's own survives in a Road group, so no Road
           group renders (rule 10). */}
 
-      <FieldGroup label="Work" anchorId="rail-step-work" pending={stepsPending}>
-        <Field>
-          <LabelRow htmlFor="ni-work-type">Work type</LabelRow>
-          <select id="ni-work-type"
-            className="field-input field-select"
-            value={scenario.workType}
-            onChange={(e) =>
-              set("workType", e.target.value as NearIntersectionWorkType)
-            }
-          >
-            {NEAR_INTERSECTION_WORK_TYPES.map((w) => (
-              <option key={w.v} value={w.v}>
-                {w.l}
-              </option>
-            ))}
-          </select>
-        </Field>
-
-        {/* #289 Phase 2: the work-zone length moved to the WHERE band
-            (FLOW.md §5a move 3). */}
-        <CheckRow
-          on={scenario.night}
-          label="Night operation"
-          desc="+ retroreflective"
-          onToggle={() => set("night", !scenario.night)}
-        />
-      </FieldGroup>
-
+      {/* #289 hand-check, 2026-09-23, correction 1: the Work group is
+          gone — work type and night operation are cells in the WHAT
+          band's second group (components/bands/PlanDetails.tsx).  The
+          Cross street group below STAYS: it carries the approach set and
+          the approach-confirm hold, which is a rail blocker (rule 139's
+          chain has to stay visible). */}
       <FieldGroup label="Cross street" anchorId="rail-step-extra" pending={stepsPending}>
         <Field>
           <LabelRow>Cross-street directions</LabelRow>

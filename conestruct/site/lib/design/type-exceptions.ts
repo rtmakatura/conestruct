@@ -174,6 +174,12 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // take rule 68's form, so a move VALUE is the same register as a
       // fact value — the same token, read again rather than re-typed.
       { selector: ".workbench .a-moves .a-move .a-val", size: "var(--fs-body-value)" },
+      // #289 hand-check, 2026-09-23, correction 1: the second group's
+      // two-state answers are the kind chips' control at cell width, so
+      // the chip's own label register (rule 17's --fs-field-label, which
+      // this sheet already carries for every field label and symbol) is
+      // read once more rather than a new size being introduced.
+      { selector: ".workbench .a-chip-flat", size: "var(--fs-field-label)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
@@ -542,7 +548,9 @@ export const CENSUS_PINS = {
   // 68's form, so the ledger's VALUE declares the body-value register
   // the fact line already declares — one declaration, 103 -> 104, and no
   // new size (the token was already in the sheet).
-  cssDeclarations: 104,
+  // Correction 1: the second group's chip label — one declaration, and
+  // a register already in the sheet.  104 -> 105.
+  cssDeclarations: 105,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

@@ -24,14 +24,13 @@ import type { RoadClassification } from "@/lib/road-detection/types";
 import { approachesFromCrossStreet } from "@/lib/road-detection/cross-street";
 import type { CorridorSpecLengths, Refusal } from "@/lib/render-types";
 import { Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
-import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
 import { LaneClosureForm } from "./LaneClosureForm";
 import { WorkBeyondShoulderForm } from "./WorkBeyondShoulderForm";
 import { MobileOp2LaneForm } from "./MobileOp2LaneForm";
 import { MobileOpMultilaneForm } from "./MobileOpMultilaneForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { ScheduleField } from "./ScheduleField";
+import { ScheduleField, ScheduleWindows } from "./ScheduleField";
 import {
   LocationPickerModal,
   type LocationPickerResult,
@@ -380,13 +379,10 @@ export function GeneratorSidebar({
   // confirms, its per-kind toggles and its legs are untouched.
   const kindFields = (
     <>
-      {scenario.kind === "shoulder" && (
-        <ShoulderForm
-          scenario={scenario}
-          setScenario={setScenario}
-          stepsPending={stepsPending}
-        />
-      )}
+      {/* #289 hand-check, correction 1: the shoulder kind has no form
+          left.  Its last four controls are the WHAT band's second group
+          (bands/PlanDetails.tsx), so ShoulderForm is deleted rather than
+          kept as an empty shell (#262 closes by deletion). */}
       {scenario.kind === "flagger_lane_closure" && (
         <FlaggerForm
           scenario={scenario}
@@ -468,14 +464,17 @@ export function GeneratorSidebar({
         jurisdictionSuggest={jurisdictionSuggest}
         classificationFields={jurisdictionControls}
         kindFields={kindFields}
-        scheduleFields={
-          <ScheduleField
+        // #289 hand-check, 2026-09-23, correction 1: the schedule is no
+        // longer a SECTION pasted into the band.  Its controls are cells
+        // in the second group's grid and its window block sits under
+        // that grid — "the dates control", in Ryan's list of the inputs
+        // the 3 × 2 grid does not hold.
+        scheduleCells={
+          <ScheduleField scenario={scenario} setScenario={setScenario} />
+        }
+        scheduleWindows={
+          <ScheduleWindows
             scenario={scenario}
-            setScenario={setScenario}
-            // #289 Phase 2: no step number, for the same reason the site
-            // conditions have none — the column counts to four and the
-            // band header carries the index.
-            stepsPending={stepsPending}
             jurisdiction={jurisdictionBlock ?? null}
             verifying={jurisdictionRevalidating}
           />

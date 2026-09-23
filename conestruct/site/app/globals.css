@@ -4080,6 +4080,38 @@ input[type="number"] {
   border-color: var(--raise-hi);
 }
 
+/* ─── #289 hand-check, correction 1 · the second group ───
+   "A second group for the inputs the plan needs that the grid does not
+   hold … laid out as grid fields with provenance lines, under one
+   sub-header."  The sub-header and its line, then the grid itself —
+   which is rule 116's own `.a-grid`, reused rather than re-declared, so
+   the two groups cannot drift apart at 380. */
+.workbench .a-subgroup {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 4px;
+}
+/* A two-state answer inside a cell: the kind chips' control at the
+   cell's own width, one line rather than rule 135's label-plus-citation
+   pair.  44 px is rule 15's floor and is what `.a-chip` already
+   declares — this only stops the flex from stretching it. */
+.workbench .a-chips-inline {
+  margin-top: 0;
+  gap: 6px;
+}
+.workbench .a-chip-flat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-field-label);
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark);
+}
+
 /* ─── Rule 116 · the WHAT grid, and rules 136–138 · the field ───
    Three tracks with a 14 px gap, rows 16 px apart, each cell
    label / 44 px field / provenance at a 6 px gap. */

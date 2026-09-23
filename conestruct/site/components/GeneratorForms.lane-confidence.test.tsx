@@ -17,7 +17,6 @@ import {
 } from "@/lib/scenarios";
 import type { NearIntersectionScenario } from "@/lib/scenarios/types";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { ShoulderForm } from "./ShoulderForm";
 import type { ShoulderScenario } from "@/lib/scenarios/types";
 import { setLanes } from "@/lib/scenarios/what-writes";
 
@@ -106,7 +105,7 @@ describe("NearIntersectionForm — confirm clears the lane relays", () => {
   });
 });
 
-describe("ShoulderForm — lane edit clears the #120 relays with the #136 one", () => {
+describe("the shoulder lane edit clears the #120 relays with the #136 one", () => {
   it("editing the lanes chip clears all four detection relays", () => {
     const next = setLanes(
       { ...DEFAULT_SHOULDER, lanes: 1, ...RELAYS } as ShoulderScenario,

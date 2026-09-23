@@ -352,36 +352,13 @@ export function FlaggerForm({ scenario, setScenario, stepsPending = false }: Pro
         </Field>
       </FieldGroup>
 
-      <FieldGroup label="Work" anchorId="rail-step-work" pending={stepsPending}>
-        <Field>
-          <LabelRow htmlFor="fl-work-type">Work type</LabelRow>
-          <select id="fl-work-type"
-            className="field-input field-select"
-            value={scenario.workType}
-            onChange={(e) =>
-              set("workType", e.target.value as FlaggerWorkType)
-            }
-          >
-            {FLAGGER_WORK_TYPES.map((w) => (
-              <option key={w.v} value={w.v}>
-                {w.l}
-              </option>
-            ))}
-          </select>
-        </Field>
-
-        {/* #289 Phase 2: the work-zone length moved to the WHERE band
-            (FLOW.md §5a move 3).  Its >1500 ft pilot-car note moved with
-            it as the length field's own provenance — the note is about
-            the length, so it belongs beside the length. */}
-        <CheckRow
-          on={scenario.night}
-          label="Night operation"
-          desc="+ retroreflective"
-          onToggle={() => set("night", !scenario.night)}
-        />
-      </FieldGroup>
-
+      {/* #289 hand-check, 2026-09-23, correction 1: the Work group is
+          gone.  Its two controls — work type and night operation — are
+          cells in the WHAT band's second group
+          (components/bands/PlanDetails.tsx), under one sub-header with
+          the other inputs the 3 × 2 grid does not hold.  The four
+          recovery confirms above STAY: they are backend gates' recovery
+          affordances (#136 / #86 / #158 / #173), not plan inputs. */}
       <FieldGroup label="Flagger" anchorId="rail-step-extra" pending={stepsPending}>
         <CheckRow
           on={scenario.afad}

@@ -52,6 +52,7 @@ import {
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
 import { handoffNotesByCell } from "./HandoffNotes";
+import { PlanDetails } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
 import { useWriteLock } from "../WriteLock";
@@ -169,7 +170,8 @@ export function WhatBand({
   jurisdictionErrored,
   stepIndex,
   kindFields,
-  scheduleFields,
+  scheduleCells,
+  scheduleWindows,
   jurisdictionSuggest,
   classificationFields,
   setMeta,
@@ -186,14 +188,30 @@ export function WhatBand({
    *  approach-confirm hold, which is a rail blocker, so it is never put
    *  behind a disclosure (rule 139's chain has to stay visible). */
   kindFields?: ReactNode;
-  /** §8.24 — the hours and the permit windows, which the dates cell
-   *  summarises but does not replace. */
-  scheduleFields?: ReactNode;
+  /** Correction 1 — the dates control's cells, rendered INSIDE the
+   *  second group's grid (bands/PlanDetails), and its window block under
+   *  that grid.  §8.24's "schedule section" is retired: a section
+   *  pasted into a band was the thing the hand-check called out. */
+  scheduleCells?: ReactNode;
+  scheduleWindows?: ReactNode;
   /** #201 — the pin suggestion, inside the jurisdiction cell: proximity
    *  is how a user knows which control a confirm applies to. */
   jurisdictionSuggest?: ReactNode;
   /** §8.21's other half — the street-class field and its own suggestion
-   *  slot, which the 3 × 2 grid has no cell for. */
+   *  slot.
+   *
+   *  #289 hand-check, 2026-09-23, correction 1: "The street-class
+   *  suggestion is the road-type field's own suggestion record (#198
+   *  strings byte-identical in the new container)."  So it rides the
+   *  ROAD-TYPE cell, exactly as the pin suggestion rides the
+   *  jurisdiction cell (#201: a confirm sits beside the control it
+   *  applies to) — rather than as a row of its own below the grid,
+   *  which is what a band with no cell for it had to do.
+   *
+   *  The component is unchanged, which is what keeps the strings
+   *  byte-identical: `JurisdictionControls` with `omitJurisdictionField`
+   *  renders the same chips, the same map chip and the same
+   *  `ClassSuggestSlot` it always did.  Only its container moved. */
   classificationFields?: ReactNode;
   /** The title-block metadata, as grid cells (see the third row). */
   setMeta: (m: ScenarioMeta) => void;
@@ -398,6 +416,9 @@ export function WhatBand({
               </option>
             ))}
           </select>
+          {/* Correction 1: the street-class field and its suggestion
+              record, in the cell they belong to. */}
+          {classificationFields}
         </Cell>
 
         <Cell
@@ -568,17 +589,18 @@ export function WhatBand({
         </div>
       )}
 
-      {/* §8.21's other half: street classification, with its own
-          suggestion slot.  The 3 × 2 grid has no cell for it — rule 116
-          fixes the six — so it rides the band below the grid rather than
-          being dropped or crammed in. */}
-      {classificationFields && (
-        <div className="a-kindrow">{classificationFields}</div>
-      )}
 
-      {/* §8.24 — the hours and the permit windows (#215, #206, #227),
-          in the shape they already have. */}
-      {scheduleFields && <div className="a-kindrow">{scheduleFields}</div>}
+      {/* Correction 1 — THE SECOND GROUP: the inputs the 3 × 2 grid does
+          not hold, as grid cells under one sub-header.  It replaces the
+          old SCHEDULE / ROAD / WORK sections, which carried the setup
+          panel's palette and its own section headers into a column that
+          counts to four. */}
+      <PlanDetails
+        scenario={scenario}
+        setScenario={setScenario}
+        scheduleCells={scheduleCells}
+        windows={scheduleWindows}
+      />
 
       {/* R1 — the kind's own fields.  Never behind a disclosure: the
           near-intersection hold is a rail blocker and rule 139 keeps the

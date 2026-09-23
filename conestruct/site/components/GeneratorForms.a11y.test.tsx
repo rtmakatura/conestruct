@@ -28,8 +28,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
-import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
+import { PlanDetails } from "./bands/PlanDetails";
 import { WhatBand } from "./bands/WhatBand";
 import { WhereBand } from "./bands/WhereBand";
 
@@ -113,13 +113,19 @@ describe("the WHERE band's extent field carries its visible label", () => {
 });
 
 describe("the per-kind forms' own controls carry their visible labels", () => {
-  it("ShoulderForm: the work type stayed here", () => {
-    render(<ShoulderForm scenario={DEFAULT_SHOULDER} setScenario={() => {}} />);
+  // #289 hand-check, 2026-09-23, correction 1: the shoulder kind has no
+  // form left — its work type is a cell in the WHAT band's second group,
+  // and it still carries a visible label bound to its control, which is
+  // what this suite is about.
+  it("the shoulder's work type carries its label in the second group", () => {
+    render(
+      <PlanDetails scenario={DEFAULT_SHOULDER} setScenario={() => {}} />,
+    );
     expect(byLabel(/^Work type/).tagName).toBe("SELECT");
   });
 
-  it("FlaggerForm: the work type stayed here", () => {
-    render(<FlaggerForm scenario={DEFAULT_FLAGGER} setScenario={() => {}} />);
+  it("the flagger's work type carries its label in the second group", () => {
+    render(<PlanDetails scenario={DEFAULT_FLAGGER} setScenario={() => {}} />);
     expect(byLabel(/^Work type/).tagName).toBe("SELECT");
   });
 });

@@ -23,7 +23,71 @@
 // offer outside, which is the same job the sliders did.
 
 import { MAX_LANES_PER_DIRECTION } from "./validation";
+import {
+  FLAGGER_WORK_TYPES,
+  NEAR_INTERSECTION_WORK_TYPES,
+  SHOULDER_WORK_TYPES,
+} from "./index";
 import type { RoadType, ScenarioKind } from "./types";
+
+/**
+ * #289 hand-check, 2026-09-23, correction 1 — the second group's table.
+ *
+ * "A second group for the inputs the plan needs that the grid does not
+ * hold — work type, night operation, speed reduction, divided, and the
+ * dates control."  Which of those a kind actually has is a fact about
+ * the kind, and it is written here beside the grid's own table rather
+ * than discovered by reading three form components.
+ *
+ * Only the three LIVE kinds have an entry.  The four gated kinds' forms
+ * still hold their own fields — including road type, speed and lane
+ * width, which were never migrated for them — and giving those values a
+ * second home is exactly the defect this arc keeps removing.  A kind
+ * with no entry renders no group and keeps its form untouched (rule 8:
+ * a gated scenario is never enabled on faith, and this is not the arc
+ * that enables one).
+ */
+export interface PlanDetailsTable {
+  /** The kind's own work types, from `lib/scenarios/index.ts` — the same
+   *  arrays the forms mapped over, read rather than re-typed. */
+  workTypes: ReadonlyArray<{ v: string; l: string }>;
+  /** Does the kind carry a work-zone speed reduction?  Only the shoulder
+   *  does (`workZoneSpeed` on ShoulderScenario). */
+  speedReduction: boolean;
+  /** Does the kind carry an EXPLICIT divided toggle?  Only the shoulder,
+   *  and only on urban_arterial — every other road type derives
+   *  `divided` from itself (#85), which is why the cell appears and
+   *  disappears with the road type rather than living in the grid. */
+  dividedToggle: boolean;
+}
+
+export const PLAN_DETAILS: Partial<Record<ScenarioKind, PlanDetailsTable>> = {
+  // The deleted ShoulderForm's Work group (work type, night, the
+  // reduction and its conditional limit) and its Road group's one
+  // control (divided, urban_arterial only) — components/ShoulderForm.tsx
+  // :51-137 at ccef2ee, the commit before the file was deleted.
+  shoulder: {
+    workTypes: SHOULDER_WORK_TYPES,
+    speedReduction: true,
+    dividedToggle: true,
+  },
+  // FlaggerForm's retired Work group — work type and night.  Its Road group is
+  // four backend-gate recovery confirms, which are not plan inputs and
+  // stay where they are.
+  flagger_lane_closure: {
+    workTypes: FLAGGER_WORK_TYPES,
+    speedReduction: false,
+    dividedToggle: false,
+  },
+  // NearIntersectionForm's retired Work group — work type and night.  Its Cross
+  // street group carries the approach set and the approach-confirm hold
+  // (a rail blocker), which stay where they are.
+  near_intersection: {
+    workTypes: NEAR_INTERSECTION_WORK_TYPES,
+    speedReduction: false,
+    dividedToggle: false,
+  },
+};
 
 export interface WhatCellTable {
   /** Road-type options, in the kind's own order. */
@@ -48,7 +112,7 @@ export interface WhatCellTable {
   laneWidthStep: number;
 }
 
-// "Rural — divided hwy" (ShoulderForm.tsx:28) and "Rural — divided"
+// "Rural — divided hwy" (the deleted ShoulderForm's own label) and "Rural — divided"
 // (the deleted SetupStrip's fact strip, and the XLSX) were two labels for
 // one enum value.  The strip's is kept: it is the one the deliverables carry,
 // and #198's discipline is that a name crossing a seam has one spelling.
@@ -62,8 +126,8 @@ const LABEL: Record<RoadType, string> = {
 const opt = (...vs: RoadType[]) => vs.map((v) => ({ v, l: LABEL[v] }));
 
 export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
-  // ShoulderForm.tsx:26-31 (types), :119 (speed 25-75 step 5),
-  // :133 (lanes 1-4), :192 (lane width 9-14 step .5).
+  // Carried from the deleted ShoulderForm: its road types, its speed
+  // domain (25-75, step 5), lanes 1-4 and lane width 9-14 step 0.5.
   shoulder: {
     roadTypes: opt("rural_undivided", "rural_divided", "urban_arterial", "freeway"),
     roadTypeNote: null,
@@ -75,8 +139,9 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
     laneWidthMax: 14,
     laneWidthStep: 0.5,
   },
-  // FlaggerForm.tsx:29-32 (types), :124 (the note), and SPEED_MAX (55 —
-  // the form's own slider bound) as the deleted SetupStrip carried it.
+  // Carried from FlaggerForm's own domain: its road types, TA-10's
+  // one-through-lane note, and SPEED_MAX (55 — the form's own slider
+  // bound) as the deleted SetupStrip carried it.
   flagger_lane_closure: {
     roadTypes: opt("rural_undivided", "urban_arterial"),
     roadTypeNote:
@@ -94,8 +159,10 @@ export const WHAT_CELLS: Record<ScenarioKind, WhatCellTable> = {
     laneWidthMax: 14,
     laneWidthStep: 0.5,
   },
-  // NearIntersectionForm.tsx:42-45 (types), :247 (the note), :256
-  // (speed 25-55), :270 (lanes 2-4, "needs 2+"), :285 (width 9-14).
+  // Carried from NearIntersectionForm's own domain: its road types and
+  // their note, speed 25-55, lanes 2-4 ("needs 2+") and width 9-14.
+  // Named rather than line-cited: correction 1 removed that form's Work
+  // group, so any line number here would be stale the moment it moved.
   near_intersection: {
     roadTypes: opt("rural_undivided", "urban_arterial"),
     roadTypeNote: "CDOT Cases 18/19 cover undivided and arterial roads",

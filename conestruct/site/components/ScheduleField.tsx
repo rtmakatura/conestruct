@@ -1,6 +1,16 @@
 "use client";
 
-// Schedule entry — a first-class Setup step (gen2 inc-8).  The
+// Schedule entry — a first-class Setup step (gen2 inc-8).
+//
+// #289 hand-check, 2026-09-23, correction 1: the SECTION is gone.  Its
+// controls are cells in the WHAT band's second group (bands/PlanDetails)
+// and its window block sits under that group, because "the dates
+// control" is one of the inputs the 3 × 2 grid does not hold.  What
+// moved is the container and the register; the LOGIC is untouched, and
+// deliberately so — #199's display-only "Not set" default, #188's
+// overnight wrap (every half hour offered, `(next day)` labels, `end ==
+// start` excluded as ambiguous at the wire) and the stranded-end clear
+// are all behaviours a rewrite would have quietly dropped.  The
 // design-phase move of schedule inputs onto the jurisdiction hours card
 // left pre-generation with no visible way to set a time at all; entry
 // now lives here.  The post-generation strip inline-edits the SAME
@@ -17,7 +27,6 @@ import {
   type JurisdictionBlock,
 } from "@/lib/jurisdiction";
 import type { Scenario } from "@/lib/scenarios";
-import { ChipRow, Field, FieldGroup, LabelRow } from "./GeneratorFormPrimitives";
 
 type Sched = NonNullable<Scenario["schedule"]>;
 type DateMode = Sched["date_mode"];
@@ -27,12 +36,11 @@ const HALF_HOURS = Array.from({ length: 48 }, (_, i) => i * 0.5);
 interface Props {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
-  // #289 Phase 2: OPTIONAL — the panel's numbering retired with the
-  // panel (ruling 198's four steps; the band header carries the index).
-  step?: number;
-  /** #222: pre-pin, this kind's steps render pending (dim + inert +
-   *  focusable summary) until a location exists. */
-  stepsPending?: boolean;
+  // #289 correction 1: `step` and `stepsPending` retired with the
+  // section.  The band header carries the index (ruling 198's four
+  // steps), and the pre-pin gate is the COLUMN's now — the WHAT band
+  // does not open before there is a pin, so a per-section pending state
+  // has nothing left to describe.
   /** #227: the selected jurisdiction's evaluated block (device-breakdown
    *  response) — the reference block renders its REAL window set.  Null
    *  when none is selected or the block is in flight. */
@@ -51,8 +59,6 @@ interface Props {
 export function ScheduleField({
   scenario,
   setScenario,
-  step,
-  stepsPending = false,
   jurisdiction = null,
   verifying = false,
 }: Props) {
@@ -72,126 +78,165 @@ export function ScheduleField({
     } as Scenario);
 
   return (
-    <FieldGroup label="Schedule" step={step} anchorId="rail-step-schedule" pending={stepsPending}>
-      <Field>
-        <LabelRow>Work dates</LabelRow>
-        <ChipRow<DateMode>
-          options={[
-            { v: "single", l: "Single day" },
-            { v: "range", l: "Date range" },
-            { v: "tbd", l: "Not set" },
-          ]}
-          value={mode}
-          onChange={(v) => patch({ date_mode: v })}
-        />
-      </Field>
+    <>
+      {/* Correction 1: three cells in the band's own register, inside the
+          second group's grid.  The chips are rule 135's control (44 px,
+          `aria-pressed`), so #199's assertions read the same way they
+          always have — a default that is DISPLAY-ONLY until the operator
+          picks a mode. */}
+      <div className="a-cell" data-testid="cell-date-mode">
+        <span className="tr-field">Work dates</span>
+        <div className="a-chips a-chips-inline" role="group" aria-label="Work dates">
+          {[
+            { v: "single" as DateMode, l: "Single day" },
+            { v: "range" as DateMode, l: "Date range" },
+            { v: "tbd" as DateMode, l: "Not set" },
+          ].map((o) => (
+            <button
+              key={o.v}
+              type="button"
+              className="a-chip a-chip-flat"
+              data-write=""
+              aria-pressed={mode === o.v}
+              onClick={() => {
+                if (mode !== o.v) patch({ date_mode: o.v });
+              }}
+            >
+              {o.l}
+            </button>
+          ))}
+        </div>
+        <span className="tr-prov" data-testid="prov-date-mode">
+          jurisdiction work windows &amp; permit lead times compute from this
+        </span>
+      </div>
 
-      {mode !== "tbd" ? (
+      {mode !== "tbd" && (
         <>
-          <Field>
-            <LabelRow htmlFor="sched-date">
+          <div className="a-cell" data-testid="cell-work-date">
+            <label className="tr-field" htmlFor="sched-date">
               {mode === "range" ? "First work day" : "Work date"}
-            </LabelRow>
+            </label>
             <input
               id="sched-date"
               type="date"
-              className="field-input"
+              className="a-fld"
+              data-write=""
               value={sched?.work_date ?? ""}
-              onChange={(e) =>
-                patch({ work_date: e.target.value || undefined })
-              }
+              onChange={(e) => patch({ work_date: e.target.value || undefined })}
             />
-            <div className="tr-prov mt-1.5">
-              Jurisdiction work windows &amp; permit lead times compute from
-              this
-            </div>
-          </Field>
+            <span className="tr-prov">operator-set · the day the plan is for</span>
+          </div>
+
           {mode === "range" && (
-            <Field>
-              <LabelRow htmlFor="sched-date-end">Last work day</LabelRow>
+            <div className="a-cell" data-testid="cell-work-date-end">
+              <label className="tr-field" htmlFor="sched-date-end">
+                Last work day
+              </label>
               <input
                 id="sched-date-end"
                 type="date"
-                className="field-input"
+                className="a-fld"
+                data-write=""
                 value={sched?.work_date_end ?? ""}
                 onChange={(e) =>
                   patch({ work_date_end: e.target.value || undefined })
                 }
               />
-            </Field>
+              <span className="tr-prov">operator-set · the range&apos;s last day</span>
+            </div>
           )}
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <LabelRow htmlFor="sched-start">Start time</LabelRow>
-              <select
-                id="sched-start"
-                className="field-input w-full"
-                value={sched?.start_time ?? ""}
-                onChange={(e) => {
-                  const v =
-                    e.target.value === "" ? undefined : +e.target.value;
-                  // end == start is rejected at the wire (ambiguous:
-                  // zero-length vs 24 h wrap) — clear the end in the same
-                  // patch rather than POSTing a value the select can no
-                  // longer display (#188's stranded-end bug).
-                  patch(
-                    v != null && sched?.end_time === v
-                      ? { start_time: v, end_time: undefined }
-                      : { start_time: v },
-                  );
-                }}
-              >
-                <option value="">—</option>
-                {HALF_HOURS.map((h) => (
-                  <option key={h} value={h}>
-                    {hhmm(h)}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field>
-              <LabelRow htmlFor="sched-end">End time</LabelRow>
-              <select
-                id="sched-end"
-                className="field-input w-full"
-                value={sched?.end_time ?? ""}
-                onChange={(e) =>
-                  patch({
-                    end_time:
-                      e.target.value === "" ? undefined : +e.target.value,
-                  })
-                }
-              >
-                <option value="">—</option>
-                {/* An end at/before the start wraps past midnight (#188):
-                    every half hour stays selectable, labeled "(next day)"
-                    when it lands after midnight.  Only end == start is
-                    excluded (rejected at the wire as ambiguous). */}
-                {HALF_HOURS.filter((h) => h !== sched?.start_time).map((h) => (
-                  <option key={h} value={h}>
-                    {sched?.start_time != null && h < sched.start_time
-                      ? `${hhmm(h)} (next day)`
-                      : hhmm(h)}
-                  </option>
-                ))}
-              </select>
-            </Field>
+
+          <div className="a-cell" data-testid="cell-start-time">
+            <label className="tr-field" htmlFor="sched-start">
+              Start time
+            </label>
+            <select
+              id="sched-start"
+              className="a-fld"
+              data-write=""
+              value={sched?.start_time ?? ""}
+              onChange={(e) => {
+                const v = e.target.value === "" ? undefined : +e.target.value;
+                // #188: end == start is rejected at the wire (ambiguous:
+                // zero-length vs 24 h wrap) — clear the end in the same
+                // patch rather than POSTing a value the select can no
+                // longer display (the stranded-end bug).
+                patch(
+                  v != null && sched?.end_time === v
+                    ? { start_time: v, end_time: undefined }
+                    : { start_time: v },
+                );
+              }}
+            >
+              <option value="">—</option>
+              {HALF_HOURS.map((h) => (
+                <option key={h} value={h}>
+                  {hhmm(h)}
+                </option>
+              ))}
+            </select>
+            <span className="tr-prov">operator-set · local time</span>
+          </div>
+
+          <div className="a-cell" data-testid="cell-end-time">
+            <label className="tr-field" htmlFor="sched-end">
+              End time
+            </label>
+            <select
+              id="sched-end"
+              className="a-fld"
+              data-write=""
+              value={sched?.end_time ?? ""}
+              onChange={(e) =>
+                patch({
+                  end_time:
+                    e.target.value === "" ? undefined : +e.target.value,
+                })
+              }
+            >
+              <option value="">—</option>
+              {/* #188: an end at/before the start wraps past midnight —
+                  every half hour stays selectable, labeled "(next day)"
+                  when it lands after midnight.  Only end == start is
+                  excluded (rejected at the wire as ambiguous). */}
+              {HALF_HOURS.filter((h) => h !== sched?.start_time).map((h) => (
+                <option key={h} value={h}>
+                  {sched?.start_time != null && h < sched.start_time
+                    ? `${hhmm(h)} (next day)`
+                    : hhmm(h)}
+                </option>
+              ))}
+            </select>
+            <span className="tr-prov">
+              crosses midnight when it is earlier than the start
+            </span>
           </div>
         </>
-      ) : null}
+      )}
+    </>
+  );
+}
 
-      {/* #227: the jurisdiction-window reference block — the answer to
-          "what happens when I do set dates", rendered at final widths
-          so nothing reflows when data lands (PDF p.2).  Real rows from
-          the #206 class-scoped window data, never invented (rule 10 —
-          the PDF's four rows were the designer's placeholder). */}
-      <ScheduleWindowsBlock
-        scenario={scenario}
-        jurisdiction={jurisdiction}
-        scheduleMode={mode}
-        verifying={verifying}
-      />
-    </FieldGroup>
+/** #227's window reference block — a reference table, not a field, so it
+ *  sits under the second group's grid rather than inside it. */
+export function ScheduleWindows({
+  scenario,
+  jurisdiction = null,
+  verifying = false,
+}: {
+  scenario: Scenario;
+  jurisdiction?: JurisdictionBlock | null;
+  verifying?: boolean;
+}) {
+  const mode: DateMode = scenario.schedule?.date_mode ?? "tbd";
+  return (
+    <ScheduleWindowsBlock
+      scenario={scenario}
+      jurisdiction={jurisdiction}
+      scheduleMode={mode}
+      verifying={verifying}
+    />
   );
 }
 

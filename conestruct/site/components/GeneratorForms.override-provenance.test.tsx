@@ -29,7 +29,6 @@ import {
 } from "@/lib/scenarios/auto-apply";
 import { FlaggerForm } from "./FlaggerForm";
 import { NearIntersectionForm } from "./NearIntersectionForm";
-import { ShoulderForm } from "./ShoulderForm";
 import { setLanes } from "@/lib/scenarios/what-writes";
 
 // #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
@@ -147,7 +146,7 @@ describe("FlaggerForm confirms record what they erase (#177)", () => {
   });
 });
 
-describe("ShoulderForm lane edit — disputed-only recording (#177)", () => {
+describe("the shoulder lane edit — disputed-only recording (#177)", () => {
   it("a mismatch-disputed edit records the erased relays and the entered value", () => {
     const next = setLanes({ ...DEFAULT_SHOULDER, lanes: 1, ...MISMATCH_RELAYS } as ShoulderScenario, 3) as ShoulderScenario;
     expect(next.detectedLanesTotal).toBeUndefined();

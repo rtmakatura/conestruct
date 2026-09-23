@@ -317,7 +317,11 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
     await openWhat();
-    await user.click(screen.getByText("Night operation"));
+    // #289 hand-check, 2026-09-23, correction 1: night operation is a
+    // cell in the WHAT band's second group, and its answer is a chip —
+    // "Night operation" is now the cell's LABEL, not the control.  The
+    // claim is unchanged: a manual toggle survives two kind switches.
+    await user.click(screen.getByRole("button", { name: "Night" }));
 
     await openWhere();
 

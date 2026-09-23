@@ -17,7 +17,7 @@ afterEach(cleanup);
 function mountFresh() {
   const scenario = { ...DEFAULT_SCENARIO, schedule: undefined } as Scenario;
   const setScenario = vi.fn();
-  render(<ScheduleField scenario={scenario} setScenario={setScenario} step={4} />);
+  render(<ScheduleField scenario={scenario} setScenario={setScenario} />);
   return setScenario;
 }
 

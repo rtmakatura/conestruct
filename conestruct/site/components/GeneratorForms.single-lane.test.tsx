@@ -11,7 +11,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "@/lib/scenarios";
-import { ShoulderForm } from "./ShoulderForm";
 import { FlaggerForm } from "./FlaggerForm";
 import type { ShoulderScenario } from "@/lib/scenarios/types";
 import { setLanes } from "@/lib/scenarios/what-writes";
@@ -24,7 +23,7 @@ import { setLanes } from "@/lib/scenarios/what-writes";
 
 afterEach(cleanup);
 
-describe("ShoulderForm lane-count edit clears the single-lane signal", () => {
+describe("the shoulder lane-count edit clears the single-lane signal", () => {
   it("editing the lanes chip sets the count and clears detectedLanesTotal", () => {
     const next = setLanes(
       { ...DEFAULT_SHOULDER, lanes: 1, detectedLanesTotal: 1 } as ShoulderScenario,

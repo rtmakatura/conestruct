@@ -31,7 +31,6 @@ import {
 import { classifyFromCandidate } from "@/lib/road-detection/classify";
 import type { RoadCandidate } from "@/lib/road-detection/types";
 import { FlaggerForm } from "./FlaggerForm";
-import { ShoulderForm } from "./ShoulderForm";
 import { setLanes } from "@/lib/scenarios/what-writes";
 
 // #289 Phase 2 — the lanes CELL moved into the WHAT band's grid (§8.22)
@@ -60,14 +59,14 @@ function FlaggerHarness({ initial }: { initial: FlaggerLaneClosureScenario }) {
   );
 }
 
+// #289 hand-check, correction 1: ShoulderForm is deleted (its last
+// controls are the WHAT band's second group).  This harness never
+// exercised the form — it renders the scenario and the case drives
+// `setLanes` directly — so it keeps the payload readout and drops the
+// surface it no longer needs.
 function ShoulderHarness({ initial }: { initial: ShoulderScenario }) {
-  const [s, setS] = useState<ShoulderScenario>(initial);
-  return (
-    <>
-      <ShoulderForm scenario={s} setScenario={setS} />
-      <output data-testid="payload">{JSON.stringify(s)}</output>
-    </>
-  );
+  const [s] = useState<ShoulderScenario>(initial);
+  return <output data-testid="payload">{JSON.stringify(s)}</output>;
 }
 
 const payload = () => screen.getByTestId("payload").textContent!;
