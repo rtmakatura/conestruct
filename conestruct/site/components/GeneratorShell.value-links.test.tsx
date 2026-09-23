@@ -248,6 +248,31 @@ describe("defect 2 — kind, location, extent and dates open the band that owns 
     });
   }
 
+  it("CHANGE SOMETHING ELSE is retired — S7 offers DISCARD only", async () => {
+    await generated();
+    await changeOneThing("speed");
+    expect(document.querySelector('[data-testid="revise-open-column"]')).toBeNull();
+    expect(document.body.textContent).not.toContain("CHANGE SOMETHING ELSE");
+    expect(screen.getByTestId("revise-discard")).toBeTruthy();
+  });
+
+  it("from S7, a value link is the way out — and the staged set survives it, as the retired link's did", async () => {
+    await generated();
+    await changeOneThing("speed");
+    await pick("revise-speed", "55");
+    calls = [];
+    await changeOneThing("location");
+    await settle();
+    expect(openBand()).toBe("where");
+    expect(document.body.textContent).not.toContain("REVISING ·");
+    // Nothing was written, nothing was asked.
+    expect(calls).toHaveLength(0);
+    // Back into S7 on speed: the 55 is still staged.
+    await changeOneThing("speed");
+    expect((document.getElementById("revise-speed") as HTMLSelectElement).value).toBe("55");
+    expect(screen.getByTestId("revise-sentence").textContent).toContain("1 field");
+  });
+
   it("the kind link lands on the chips, the kind still pressed (already confirmed)", async () => {
     await generated();
     await changeOneThing("kind");

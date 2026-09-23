@@ -969,9 +969,11 @@ export function GeneratorShell({
    *  · kind, location, extent → the column with WHERE open;
    *  · dates → the column with WHAT open.
    *
-   * The last two rows are the ruled CHANGE SOMETHING ELSE route landing
-   * on the band that owns the value — none of the four has a staged
-   * writer (the deviation rulings.md flags).
+   * The last two rows open the band that owns the value — none of the
+   * four has a staged writer; ruled 2026-09-23, "accepted until Phase 3
+   * rebuilds them".  Since the same day these links are ALSO the route
+   * away from S7 that CHANGE SOMETHING ELSE was (retired: "the value
+   * links replace it") — the staged set survives, as it did there.
    */
   const onChangeValue = (key: SetupSegmentKey) => {
     setRevising(true);
@@ -979,6 +981,9 @@ export function GeneratorShell({
     setRevisingField(field ?? null);
     const band: BandId = key === "dates" ? "what" : "where";
     setColumnOpenOn(field ? null : { band, n: ++openPresses.current });
+    // Any preview in flight is for the field being left; its answer is
+    // nobody's now (the duty the retired link's handler carried).
+    previewSeq.current += 1;
     setPreview({ kind: "idle" });
     // Rule 33: "a CHANGE link focuses the band it re-opens."  The zone
     // is the band stack's home and carries the re-homed Zone 1 target
@@ -1750,18 +1755,9 @@ export function GeneratorShell({
                   )
                 }
                 onDiscard={discardStaged}
-                // The way back to the whole column — see the prop's own
-                // note in bands/RevisionBand.tsx.  The staged set
-                // SURVIVES it: ruling 191 folds fields and corrections
-                // into one Apply, and abandoning a route is not
-                // abandoning a change.
-                onOpenColumn={() => {
-                  previewSeq.current += 1;
-                  setPreview({ kind: "idle" });
-                  setRevisingField(null);
-                  // The column decides which band — the ruled route.
-                  setColumnOpenOn(null);
-                }}
+                // CHANGE SOMETHING ELSE is retired (Ryan, 2026-09-23):
+                // the setup line's value links are the way to the column,
+                // and `onChangeValue` keeps the staged set as it did.
                 stepIndex="REVISING"
                 panel={
                   <RevisionPanel

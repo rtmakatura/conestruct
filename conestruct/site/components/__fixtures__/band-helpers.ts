@@ -150,16 +150,12 @@ export async function applyRevision(): Promise<void> {
   });
 }
 
-/** The way back to the whole column from S7 — for a suite whose subject
- *  is a band the revision does not render (the pin, the extent, the
- *  kind).  See the prop's note in bands/RevisionBand.tsx. */
-export async function openColumnFromRevision(): Promise<void> {
-  await changeOneThing();
-  const link = document.querySelector('[data-testid="revise-open-column"]');
-  if (!link) throw new Error("no CHANGE SOMETHING ELSE on the revision band");
-  await act(async () => {
-    fireEvent.click(link);
-  });
+/** The way to the pin after a generate — for a suite whose subject is a
+ *  band the revision does not render.  CHANGE SOMETHING ELSE is retired
+ *  (Ryan, 2026-09-23: "the value links replace it"), so this is the
+ *  setup line's LOCATION value, which opens the column on WHERE. */
+export async function openWhereAfterGenerate(): Promise<void> {
+  await changeOneThing("location");
 }
 
 /** DISCARD — un-stages and fires zero requests (Part 1 §5.6). */

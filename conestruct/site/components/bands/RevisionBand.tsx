@@ -140,7 +140,6 @@ export function RevisionBand({
   stagedTo,
   onStage,
   onDiscard,
-  onOpenColumn,
   stepIndex,
   panel,
 }: {
@@ -151,25 +150,14 @@ export function RevisionBand({
   stagedTo: string | number | boolean | undefined;
   onStage: (to: string | number) => void;
   onDiscard: () => void;
-  /** #289 S7 — the way back to the whole column.
-   *
-   *  Rule 190 re-opens ONE field, and rule 119 collapses setup to ONE
-   *  fact line, so between them the pin, the extent and the kind have no
-   *  post-generate route: every one of them lives in a band this state
-   *  does not render.  Part 1 §5.6 says DISCARD re-collapses the band,
-   *  so DISCARD is not that route either.
-   *
-   *  This link is, and it is named rather than inferred: a revision is
-   *  "change one thing", and changing something else is a different
-   *  request.  Flagged in the ship report — if the design wants the
-   *  fact line to grow a CHANGE per value instead, this link retires.
-   *
-   *  #289 hand-check, 2026-09-23, defect 2: the fact line DID grow a
-   *  link per value — kind, location and extent now have their own
-   *  route.  The link is KEPT, not retired, because Ryan approved it by
-   *  ruling the same day; whether it retires now is his to rule
-   *  (rulings.md, "Open for a ruling"). */
-  onOpenColumn: () => void;
+  // #289 — CHANGE SOMETHING ELSE, RETIRED (Ryan, 2026-09-23: "retire it,
+  // the value links replace it").  It was the post-generate route to the
+  // pin, the extent and the kind, which rule 190's one field and rule
+  // 119's one fact line left with none.  The setup line's values are now
+  // each a link (defect 2), and they stay on screen under this band —
+  // kind, location and extent open the column on WHERE, keeping the
+  // staged set exactly as this link did.  One route per value; the
+  // second route to the same place is gone.
   stepIndex: string;
   /** The before/after panel, built by the shell (it owns the preview
    *  state and the staged list). */
@@ -236,14 +224,6 @@ export function RevisionBand({
           onClick={onDiscard}
         >
           DISCARD
-        </button>
-        <button
-          type="button"
-          className="a-lk"
-          data-testid="revise-open-column"
-          onClick={onOpenColumn}
-        >
-          CHANGE SOMETHING ELSE
         </button>
       </div>
     </OpenBand>
