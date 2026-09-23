@@ -143,6 +143,18 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(rule(".workbench .needs-you .act:focus-visible")).toMatch(/outline:\s*2px solid var\(--act\)/);
   });
 
+  it("#289 fidelity F8 — rule 167 at 380: 18 / 1fr items, the citation in the body track, the actions on their own row", () => {
+    const at = css.indexOf("#289 fidelity F8 — rule 167");
+    expect(at).toBeGreaterThan(-1);
+    const q = css.slice(css.indexOf("@media (max-width: 480px)", at), css.indexOf("\n}\n", at) + 2);
+    expect(q).toMatch(/\.workbench \.ny-item \{\s*grid-template-columns: 18px minmax\(0, 1fr\);/);
+    expect(q).toMatch(/\.workbench \.ny-right \{\s*display: contents;/);
+    expect(q).toMatch(/\.workbench \.ny-cite \{\s*grid-column: 2;[^}]*text-align: left;[^}]*white-space: normal;/);
+    expect(q).toMatch(/\.workbench \.ny-acts \{\s*grid-column: 1 \/ -1;/);
+    // It must come AFTER the desk's three-track rule, or the desk wins.
+    expect(at).toBeGreaterThan(css.indexOf(".workbench .ny-item {"));
+  });
+
   it("rule 15 at 380: every control in the block clears 44px, and the note takes the full line", () => {
     const at480 = css.indexOf("@media (max-width: 480px)", css.indexOf("Rule 133 — LEDGER ACTION"));
     expect(at480).toBeGreaterThan(-1);

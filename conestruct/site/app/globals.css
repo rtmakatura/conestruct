@@ -3859,6 +3859,39 @@ input[type="number"] {
   display: flex;
   gap: 8px;
 }
+/* #289 fidelity F8 — rule 167, the 380 arc for NEEDS YOU (ruled Q7:
+   rule 167 in this pass; 168–169 to Phase 4).  "NEEDS YOU items become
+   2-track (18 px / 1fr); the citation moves into the provenance line;
+   the action buttons take their own full-width row at 44 px."
+   Audit rows 32–34 measured the desk's three tracks at 380 — the body
+   track 152.8, 0 and 180.6 px — which squeezed it a word per line.
+   CSS only (rule 173: nothing restructures): the right column dissolves
+   (display: contents), so its citation joins the provenance stack in
+   the body track — left-aligned, allowed to wrap — and its actions take
+   a row of their own across both tracks, each button sharing it at the
+   44 px floor the ≤480 sweep above already sets. */
+@media (max-width: 480px) {
+  .workbench .ny-item {
+    grid-template-columns: 18px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+  .workbench .ny-right {
+    display: contents;
+  }
+  .workbench .ny-cite {
+    grid-column: 2;
+    margin-top: 2px;
+    text-align: left;
+    white-space: normal;
+  }
+  .workbench .ny-acts {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+  }
+  .workbench .ny-acts > * {
+    flex: 1 1 0;
+  }
+}
 
 /* ── #288 Phase 1 · DISCLOSURE ROW (spec #281 comment 1, rules 87–89) ──
    Authority: rulings.md clause b — "the disclosure row" is NEW.
