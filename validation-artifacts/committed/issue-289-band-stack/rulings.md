@@ -212,3 +212,39 @@ screen. The ribbon is the voice that says which plan that is; nothing collapses 
 
 Consequence for the build: S7 needs **no** collapse behaviour for NEEDS YOU, which removes a
 component state rather than adding one.
+
+## The 2026-09-23 rulings — the S7 ship
+
+Ryan, on the S7 report.
+
+### CHANGE SOMETHING ELSE — approved, and what it is for
+
+> CHANGE SOMETHING ELSE approved (record it in rulings.md as the post-generate route to
+> pin/extent/kind)
+
+**The gap it fills.** Rule 190 re-opens ONE field and rule 119 collapses setup to ONE fact
+line; between them the pin, the extent and the kind — the WHERE band's three answers — have no
+post-generate route at all. Part 1 §5.6 makes DISCARD re-collapse the band, so DISCARD is not
+that route either. Ruling e is silent on it, which is why the link was built and flagged rather
+than assumed.
+
+**What it is, exactly:** the revision band's second link. It returns to the full column and
+**keeps the staged set** — abandoning a route is not abandoning a change, and ruling 191 folds
+whatever is staged into one APPLY whenever that APPLY happens. It fires no request.
+
+**What it is not:** a second way to edit the field S7 opened on. That field is the revision's
+subject and its editor is the band's own.
+
+### R7 — `--nav-h` stays 52
+
+> --nav-h stays 52, rule 21's 48 noted as the design's figure
+
+Ruled, and the arc's stated assumption is now the ruling. `--nav-h` is **52 px**; every arc-28
+landing leg and every `scroll-margin-top` in `globals.css` is measured against it, and the
+prototype's landing probe measured against it for the same reason. **Rule 21's 48 px is the
+design's figure and is noted as such** — not a defect to fix and not a number the build derives
+from.
+
+### The dimmed-results contrast issue
+
+Filed as **#295**. The draft this arc carried retires with it; nothing further to post.

@@ -1,0 +1,320 @@
+{
+  "site": "https://www.conestruct.com/sandbox",
+  "at": "2026-09-23T17:41:17.606Z",
+  "runs": {
+    "380": {
+      "width": 380,
+      "shots": {
+        "7a": "380-7a-idle.png",
+        "7b": "380-7b-loading.png",
+        "7c": "380-7c-ready.png",
+        "7d": "380-7d-error.png",
+        "discard": "380-after-discard.png",
+        "column": "380-change-something-else.png",
+        "staged": "380-staged-both.png",
+        "applied": "380-after-apply.png"
+      },
+      "checks": {
+        "7a_state": "idle",
+        "7a_status": "change the value to see what it does",
+        "7a_rows": 6,
+        "preview_request": {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 35
+        },
+        "7b_state": "loading",
+        "7b_status": "computing…",
+        "7b_footer": "1 field staged · preview still computing — Apply re-generates the full plan either way",
+        "7c_state": "ready",
+        "7c_status": "computed for 35 mph · taper, buffer, spacing and counts only",
+        "7c_note": "for 35 mph · before site conditions",
+        "7c_taper": "Taper L50 ft68 ft",
+        "7c_verdict": "Verdicton screenrecomputes on apply",
+        "7c_needs_you": "Needs you2recomputes on apply",
+        "preview_requests_only_breakdown": true,
+        "7d_state": "error",
+        "7d_status": "preview unavailable — the plan on screen is unchanged",
+        "7d_footer": "1 field staged · preview failed — Apply re-generates the full plan without a preview",
+        "7d_apply_enabled": true,
+        "discard_requests": 0,
+        "discard_closed_panel": true,
+        "column_back": true,
+        "else_requests": 0,
+        "apply_sentence": "1 field · 1 correction staged · not yet applied",
+        "staged_correction": true,
+        "apply_writes": [
+          {
+            "url": "/api/render/device-breakdown",
+            "speed": 40,
+            "siteConditions": null,
+            "overrides": [
+              "adjacent_interchange:assert"
+            ]
+          },
+          {
+            "url": "/api/render/audit",
+            "speed": 40,
+            "siteConditions": null,
+            "overrides": [
+              "adjacent_interchange:assert"
+            ]
+          }
+        ],
+        "apply_breakdown_count": 1
+      },
+      "requests": [
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 65,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 65,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/corridor-spec",
+          "preview": false,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/corridor-spec",
+          "preview": false,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 35,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 45,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": [
+            "adjacent_interchange:assert"
+          ]
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": [
+            "adjacent_interchange:assert"
+          ]
+        }
+      ]
+    },
+    "1440": {
+      "width": 1440,
+      "shots": {
+        "7a": "1440-7a-idle.png",
+        "7b": "1440-7b-loading.png",
+        "7c": "1440-7c-ready.png",
+        "7d": "1440-7d-error.png",
+        "discard": "1440-after-discard.png",
+        "column": "1440-change-something-else.png",
+        "staged": "1440-staged-both.png",
+        "applied": "1440-after-apply.png"
+      },
+      "checks": {
+        "7a_state": "idle",
+        "7a_status": "change the value to see what it does",
+        "7a_rows": 6,
+        "preview_request": {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 35
+        },
+        "7b_state": "loading",
+        "7b_status": "computing…",
+        "7b_footer": "1 field staged · preview still computing — Apply re-generates the full plan either way",
+        "7c_state": "ready",
+        "7c_status": "computed for 35 mph · taper, buffer, spacing and counts only",
+        "7c_note": "for 35 mph · before site conditions",
+        "7c_taper": "Taper L50 ft68 ft",
+        "7c_verdict": "Verdicton screenrecomputes on apply",
+        "7c_needs_you": "Needs you2recomputes on apply",
+        "preview_requests_only_breakdown": true,
+        "7d_state": "error",
+        "7d_status": "preview unavailable — the plan on screen is unchanged",
+        "7d_footer": "1 field staged · preview failed — Apply re-generates the full plan without a preview",
+        "7d_apply_enabled": true,
+        "discard_requests": 0,
+        "discard_closed_panel": true,
+        "column_back": true,
+        "else_requests": 0,
+        "apply_sentence": "1 field · 1 correction staged · not yet applied",
+        "staged_correction": true,
+        "apply_writes": [
+          {
+            "url": "/api/render/device-breakdown",
+            "speed": 40,
+            "siteConditions": null,
+            "overrides": [
+              "adjacent_interchange:assert"
+            ]
+          },
+          {
+            "url": "/api/render/audit",
+            "speed": 40,
+            "siteConditions": null,
+            "overrides": [
+              "adjacent_interchange:assert"
+            ]
+          }
+        ],
+        "apply_breakdown_count": 1
+      },
+      "requests": [
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 65,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 65,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/corridor-spec",
+          "preview": false,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/corridor-spec",
+          "preview": false,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 30,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 35,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 45,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": true,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": []
+        },
+        {
+          "url": "/api/render/device-breakdown",
+          "preview": false,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": [
+            "adjacent_interchange:assert"
+          ]
+        },
+        {
+          "url": "/api/render/audit",
+          "preview": false,
+          "speed": 40,
+          "siteConditions": null,
+          "overrides": [
+            "adjacent_interchange:assert"
+          ]
+        }
+      ]
+    }
+  }
+}
