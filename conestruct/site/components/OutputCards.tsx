@@ -256,7 +256,9 @@ export function OutputCards({
   const zipLabel = `${BUNDLE_PART_KINDS.length} files`;
   const zipIsPrimary = primary === "download-all";
   return (
-    <div className="mb-4">
+    // #289 fidelity F3 — Part 2 rule 27: "downloads → quote 12 px" (mb-3;
+    // was mb-4, 16).
+    <div className="mb-3">
       <div className="flex items-center justify-between gap-4 px-1 pb-3">
         <div>
           {/* #253 (GO 2026-09-09 ruling 2, one voice): the file count is

@@ -1638,7 +1638,13 @@ export function GeneratorShell({
       />
 
       <div>
-        <main className="px-10 pt-8 pb-20 max-w-[1180px] mx-auto max-md:px-6 max-md:pt-6">
+        {/* #289 fidelity F3 — Part 2 rule 24: "Column. Width 880 px, margin
+            0 auto. Page padding 26 px 40 px 0; when the column is the last
+            thing on the page, 30 px bottom."  880 + 2 × 40 = 960 outer.
+            Rule 160 at the phone width: "page padding 16 px 14 px, column
+            width 100%".  It was a 1,100 px column in a 1,180 px shell with
+            32 / 40 / 80 padding (24 at the phone). */}
+        <main className="px-10 pt-[26px] pb-[30px] max-w-[960px] mx-auto max-md:px-[14px] max-md:py-4">
           <div className="mb-6">
             <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block">
               02 · GENERATOR

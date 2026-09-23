@@ -24,7 +24,7 @@
 //   section    var(--ink-bright)       "brightest ink" (ruling 3; #ffffff,
 //                                      tokenised in #263)
 //   step       var(--ink-on-dark-faint) "dim"  (#93a0b0 — 6.19:1 on
-//                                      --canvas, 5.61:1 on --canvas-tint)
+//                                      --canvas, 6.00:1 on --canvas-tint — #16232f since #289 F3; 5.61 on the former #1b2838)
 //   field      var(--ink-on-dark)       "mid"  (#c8d1dd — 10.68:1 / 9.68:1)
 //   provenance var(--ink-on-dark-faint) "dim"
 // Ratios measured (probes/contrast-measure.py in the arc evidence),
@@ -50,10 +50,13 @@
 //   field      rule 5: Inter 12.5 / 1.4, 500, #eaf0f7 (was 12 px, #c8d1dd)
 //   provenance rule 6: mono 10.5 / 1.5, 400, #93a0b0, sentence case,
 //              NO decoration (was 10 px with a dotted underline)
-// #226's two-axis rule still holds over Part 2's values and is still
-// asserted: section ↔ step differ on tracking and colour, every other
-// pair on three or more.  Provenance's tracking stays .04em — rule 6
-// states none, so the existing value is kept rather than invented.
+// #226's two-axis rule is still asserted over Part 2's values, with ONE
+// named exception: field ↔ question differ only in size (and weight,
+// which is not an axis) — Part 2's own design, recorded in rulings.md
+// and in type-roles.test.ts.  Section ↔ step differ on tracking and
+// colour; the other pairs on more.  Provenance's tracking stays .04em —
+// rule 6 states none, so the existing value is kept rather than
+// invented.
 
 export const TYPE_AXES = [
   "family",

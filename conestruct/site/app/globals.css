@@ -806,7 +806,14 @@ body {
 
   /* dark canvas (fix-spec-02 surface set) */
   --canvas: #14202e;
-  --canvas-tint: #1b2838;
+  /* #289 fidelity F3 — Part 2 rule 1's --panel2, "#16232f raised cell /
+     nav ground", which is this token's job: the nav, the fact lines, the
+     fields, the raised cards.  It was #1b2838 (the pre-dark --navy),
+     outside rule 1's palette ("do not introduce hexes outside them").
+     Re-valued here rather than renamed, so every consumer — including the
+     footer and the picker modal, which share the token — lands on the
+     palette at once.  Rule 5: those two shift one step darker too. */
+  --canvas-tint: #16232f;
   --rule: #2c3e53;
   --rule-soft: #223244;
   --raise: #22344a;
@@ -927,7 +934,8 @@ body {
 /* fix-spec-02 P1·05·01 — visible keyboard focus (WCAG 2.4.7).  One
    ring for every interactive control in the workbench; mouse focus
    stays ringless via :focus:not(:focus-visible).  Ring-vs-surface
-   contrast (measured): 7.74:1 on --canvas, 7.01:1 on --canvas-tint,
+   contrast (measured): 7.74:1 on --canvas, 7.50:1 on --canvas-tint
+   (#16232f since #289 F3; 7.01 on the former #1b2838),
    5.96:1 on the slate --paper cards (floor is 3:1). */
 .workbench :focus-visible {
   outline: 2px solid var(--act-bright);
@@ -1131,6 +1139,19 @@ body {
 .workbench .status-slot > .status-bar,
 .workbench .status-slot > .status-details {
   margin-bottom: 0;
+}
+/* #289 fidelity F3 — Part 2 rule 27's first gap: "verdict → setup fact
+   line 14 px".  Post-generate the setup zone renders NOTHING (rule 119
+   puts the setup line in the results stack), but it kept .zone's 24 px
+   bottom margin, which collapsed with the slot's 18 px into the 24 px
+   the audit measured.  The empty zone gives up its margin, and the slot
+   takes rule 27's 14 when the zone after it is empty; while a band is
+   open there (S7) rule 26's 18 stands. */
+.workbench .zone:empty {
+  margin-bottom: 0;
+}
+.workbench .status-slot:has(+ .zone:empty) {
+  margin-bottom: 14px;
 }
 .workbench .status-bar {
   /* #260 (3): one height across AWAITING → VERIFYING → INVALID →
@@ -1970,7 +1991,8 @@ input[type="number"] {
   color: var(--warn);
   letter-spacing: 0.02em;
 }
-/* #263 P9: no dimmer — the token's #93a0b0 on --canvas-tint is 5.61:1;
+/* #263 P9: no dimmer — the token's #93a0b0 on --canvas-tint is 6.00:1
+   (#289 F3; 5.61 on the former #1b2838);
    the former opacity: 0.85 composited to 4.47:1 (F-S1-7).  Measured in
    quiet-band-contrast.test.tsx, not asserted. */
 .workbench .jbar-suggest .honesty {
@@ -2507,7 +2529,8 @@ input[type="number"] {
    design's own rule 0.12 bars orange from this block.  ⚠ already means
    what the design wanted and already owns the colour it asked for, so
    nothing in the vocabulary had to change.  Contrast on this block's
-   background, measured: --pass 8.1:1, --warn 8.82:1, --none 5.61:1.
+   background, measured: --pass 8.67:1, --warn 9.43:1, --none 6.00:1
+   (#289 F3 re-measure on #16232f; 8.1 / 8.82 / 5.61 on the former #1b2838).
    The size is a glyph cell, not text — declared with the other control
    glyphs in the #263 census. */
 .workbench .dva .dva-glyph {
@@ -3052,7 +3075,8 @@ input[type="number"] {
   gap: 0;
   border: 1px solid var(--rule);
   background: var(--da-ground);
-  margin-bottom: 16px;
+  /* #289 fidelity F3 — rule 27: "hero → downloads 12 px" (was 16). */
+  margin-bottom: 12px;
 }
 .workbench .hero-cell {
   /* Rule 80. */
@@ -3647,7 +3671,10 @@ input[type="number"] {
   font-size: var(--fs-body-value);
   line-height: 1.45;
   padding: 11px 14px;
-  margin-bottom: 16px;
+  /* #289 fidelity F3: the ribbon sits between NEEDS YOU and the dimmed
+     hero in S7, so the hero keeps rule 27's 14 px from what is above it
+     (was 16). */
+  margin-bottom: 14px;
   font-weight: 400;
 }
 
@@ -3784,6 +3811,9 @@ input[type="number"] {
   border: 1px solid var(--rule);
   border-left: 2px solid var(--warn);
   background: var(--da-ground);
+  /* #289 fidelity F3 — rule 27: "NEEDS YOU → counts hero 14 px".  It
+     had no margin, so the hero sat flush against it (0 px measured). */
+  margin-bottom: 14px;
 }
 .workbench .ny-head {
   /* Rule 73. */

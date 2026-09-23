@@ -118,9 +118,12 @@ describe("the .honesty caveat meets the AA floor on --canvas-tint (#263)", () =>
 
     // #93a0b0 on #1b2838 = 5.61:1 at alpha 1; the 0.85 dimmer measured
     // 4.47:1 (the audit finding this fixture pins closed).
+    // #289 fidelity F3: --canvas-tint is Part 2 rule 1's --panel2,
+    // #16232f — one step darker — and the pair measures 6.00:1 (computed
+    // here, not asserted).  The floor claim is unchanged and still holds.
     const ratio = contrast(effective, surface);
     expect(ratio).toBeGreaterThanOrEqual(4.5);
-    expect(ratio).toBeCloseTo(5.61, 1);
+    expect(ratio).toBeCloseTo(6.0, 1);
   });
 
   it("`.honesty` binds to the boundary caveat in the mounted suggestion slot", () => {
