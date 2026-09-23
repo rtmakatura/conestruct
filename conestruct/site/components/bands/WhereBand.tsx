@@ -538,7 +538,7 @@ export function WhereBand({
               reachable (#252's convention for a write control). */}
           <button
             type="button"
-            className="a-pri"
+            className="a-pri a-confirm"
             aria-disabled={locked || !kindPicked || undefined}
             aria-describedby={kindPicked ? undefined : "where-confirm-reason"}
             onClick={() => {

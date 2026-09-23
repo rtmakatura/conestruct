@@ -214,20 +214,24 @@ export function GenerateButton({
         {generating ? (
           <>
             {/* #263 P11: Tailwind's /40 alpha needs literal channels, so the
-                spinner ring carries #06222F — it MUST equal --on-act (pinned
+                spinner ring carries #0C1622 — it MUST equal --on-act (pinned
                 by value in ink-literals.test.ts). */}
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[#06222F]/40 border-t-[#06222F] animate-spin" />
+            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[#0C1622]/40 border-t-[#0C1622] animate-spin" />
             Generating plan…
           </>
         ) : (
           <>Generate plan</>
         )}
       </button>
+      {/* #289 fidelity F6 (rule 116's "centred provenance caption"): the
+          reason reads in the provenance role — mono 10.5, #93a0b0,
+          sentence case — not red uppercase.  A blocker is not an error;
+          #260's one live speaker (role="alert") is unchanged. */}
       {!generating && disabled && disabledReason && (
         <div
           role="alert"
           data-testid="cta-reason"
-          className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-[color:var(--fail)] text-center"
+          className="cta-reason tr-prov mt-2 text-center"
         >
           {disabledReason}
         </div>

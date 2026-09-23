@@ -2278,18 +2278,15 @@ export function GeneratorShell({
               RECORDED: rule 29 also specifies the provenance role, 18 px
               above, and a slightly different wording ("...licensed PE..."
               against §8.12's "same two sentences", which are today's).
-              The wording conflict is left to §8.12, which the ruling
-              names; the role and spacing wait for the phase that owns
-              this block's type. */}
-          <div className="mb-6 pl-4 py-3 border-l-2 border-[color:var(--warn)]">
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--warn)] mb-1">
-              Draft — not a sealed plan
-            </div>
-            <div className="text-[13px] text-[color:var(--ink-on-dark-faint)] leading-snug max-w-[620px]">
-              Output is engineering reference. Requires review and seal by a
-              licensed Professional Engineer prior to field use.
-            </div>
-          </div>
+              #289 fidelity F6 (X12, ruled Q6 2026-09-23): rule 29 whole —
+              the provenance role, 18 px above, and rule 29's own words.
+              The amber rule and heading were a callout Direction A does
+              not draw.  The PDF's draft lines are their own strings
+              (src/rendering/plan_sheet.py), untouched by this. */}
+          <p className="tr-prov draft-notice mb-6" data-testid="draft-notice">
+            Draft — not a sealed plan. Output is engineering reference;
+            requires review and seal by a licensed PE prior to field use.
+          </p>
         </main>
       </div>
 

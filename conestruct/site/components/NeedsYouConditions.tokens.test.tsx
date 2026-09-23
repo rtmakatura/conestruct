@@ -117,19 +117,23 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(css).not.toMatch(/rgba\(224, 166, 60/);
   });
 
-  it("rule 133: .act is ONE treatment, rule 15's floor is its min-height, the filled pair is the wash + --act-bright", () => {
+  it("rule 133: .act is ONE treatment, rule 15's floor is its min-height, 'on' is border and text --act on the wash", () => {
     const act = rule(".workbench .needs-you .act");
     expect(act).toMatch(/min-height:\s*32px/);
     expect(act).toMatch(/padding:\s*7px 11px/);
     expect(act).toMatch(/border:\s*1px solid var\(--rule\)/);
     expect(act).toMatch(/background:\s*transparent/);
-    // Rule 133 "on" — the row's recommended action, the block's one
-    // filled control (6.15:1 measured on the retired Confirm).  #288
+    // #289 fidelity F6: rule 133's own 9.5 px, not .tr-step's 10.
+    expect(act).toMatch(/font-size:\s*9\.5px/);
+    // Rule 133 "on" — "border and text #34a9e8", the row's recommended
+    // action.  #289 fidelity F6 (audit row 58): the text is --act, not
+    // --act-bright — 5.19:1 on the wash over NEEDS YOU's --da-ground
+    // (#34a9e8 on #153044, measured; --act-bright was 6.42), AA.  #288
     // clause 3 SCOPED it to the block that owns the results primary, so
     // no state can show two: the selector carries `.owns-primary`.
     const on = rule(".workbench .needs-you.owns-primary .act.is-on");
     expect(on).toMatch(/background:\s*var\(--sc-act-wash\)/);
-    expect(on).toMatch(/color:\s*var\(--act-bright\)/);
+    expect(on).toMatch(/color:\s*var\(--act\)/);
     expect(on).toMatch(/border-color:\s*var\(--act\)/);
     // The same filled pair on the picker's chosen chip.
     const chosen = rule(".workbench .needs-you .sc-picker .reason-chip.chosen");

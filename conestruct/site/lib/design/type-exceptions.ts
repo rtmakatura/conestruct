@@ -189,9 +189,7 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
-      { selector: ".workbench .a-findrow .a-pri", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-genframe .generate-btn", size: "var(--fs-primary-xl)" },
-      { selector: ".workbench .a-genframe .generate-btn", size: "var(--fs-primary)" },
     ],
     tsx: [],
   },
@@ -244,7 +242,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".check-list-item .check-list-src", size: "10px" },
       { selector: ".workbench .dl-card .fmt", size: "10.5px" },
       { selector: ".workbench .dl-card .desc", size: "10.5px" },
-      { selector: ".workbench .dl-btn", size: "12.5px" },
+      { selector: ".workbench .dl-btn", size: "13px" }, // #289 F6: rule 132 ghost (was 12.5)
       { selector: ".workbench .ref-group-label", size: "9.5px" },
       { selector: ".workbench .ref-group-label .ix", size: "11px" },
       { selector: ".workbench .refchip .chip-sum .gl", size: "13px" },
@@ -289,6 +287,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // replace the workbench round's 13 / 11 rows below.
       { selector: ".workbench .status-bar", size: "11px" },
       { selector: ".workbench .status-bar .pill", size: "9.5px" },
+      // #289 fidelity F6 — rule 133's ledger action states its own 9.5 px
+      // (audit rows 51, 55, 57); .tr-step's 10 had stood in for it.
+      { selector: ".workbench .needs-you .act", size: "9.5px" },
+      { selector: ".workbench .dl-all .act", size: "9.5px" },
     ],
     tsx: [],
   },
@@ -345,7 +347,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     css: [
       { selector: ".workbench .jbar-suggest", size: "10.5px" },
       { selector: ".workbench .jbar-suggest .sugg-row", size: "10.5px" },
-      { selector: ".workbench .jbar-suggest button.confirm, .workbench .jbar-suggest button.ghost", size: "10px" },
+      { selector: ".workbench .jbar-suggest button.confirm, .workbench .jbar-suggest button.ghost", size: "9.5px" }, // #289 F6: rule 133 (was 10)
       { selector: ".workbench .jbar-suggest .honesty", size: "10.5px" },
       // #288 clause 1: the block moved into NEEDS YOU, so these three
       // re-scoped .jbar-suggest → .needs-you (same values).  The other
@@ -441,12 +443,10 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // #289 Phase 2: FlaggerForm's 10px site was the >1500 ft pilot-car
       // note, which moved to the WHERE band with the work-zone length it
       // is about (FLOW.md §5a move 3).  Row DELETED.
-      { file: "components/GeneratorFormPrimitives.tsx", cls: "text-[10px]", count: 2 },
-      { file: "components/GeneratorShell.tsx", cls: "text-[10px]", count: 1 },
+      { file: "components/GeneratorFormPrimitives.tsx", cls: "text-[10px]", count: 1 }, // #289 F6: cta-reason took .tr-prov
       // #289 fidelity F4: the "02 · GENERATOR" eyebrow and its one
       // text-[11px] are removed (ruled Q2).
       { file: "components/GeneratorShell.tsx", cls: "text-[12px]", count: 1 },
-      { file: "components/GeneratorShell.tsx", cls: "text-[13px]", count: 1 },
       // #289 Phase 2 — the setup panel's section components are deleted
       // (§8.16-§8.19) and ALL 22 of the sidebar's utility uses go with
       // them: the last one was the project-details disclosure's toggle,
@@ -609,6 +609,10 @@ export const CENSUS_PINS = {
   // #289 fidelity F5: 113 -> 112 — the strip glyph's own 12.5 px goes
   // (the symbol block carries it); the word and pill re-size to rules
   // 51-52's 11 / 9.5, both already in the sheet.  Sizes stay 25.
+  // #289 fidelity F6: two out (FIND's 13.5 override — rule 130's 15.5
+  // now reaches it; the generate frame's 380 step-down — rule 131 keeps
+  // XL at 380), two in (rule 133's 9.5 on .needs-you .act and .dl-all
+  // .act).  112 stays; sizes stay 25.
   cssDeclarations: 112,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
@@ -629,7 +633,10 @@ export const CENSUS_PINS = {
   // now, no size), the eyebrow's text-[11px], the MHT PACKAGE heading's
   // text-[10px] — and the nav's wordmark row changes class (16 → 14.5),
   // which is one site out and one in.  98 -> 95.
-  tsxSites: 95,
+  // #289 fidelity F6: the draft notice's callout (text-[10px] heading,
+  // text-[13px] paragraph) becomes one .tr-prov line — two sites leave
+  // GeneratorShell.  95 -> 93.
+  tsxSites: 93,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -639,6 +646,8 @@ export const CENSUS_PINS = {
   // leaves: each file keeps other uses of the same class.  295 -> 290.
   // #289 fidelity F4: the three sites above (3 uses) and two of AppNav's
   // text-[10px] (v0.4, the TA / sheet cell) leave.  290 -> 285.
-  tsxUses: 285,
+  // #289 fidelity F6: the draft notice's two and the cta-reason's one
+  // (it reads .tr-prov now).  285 -> 282.
+  tsxUses: 282,
   tsxFiles: 35,
 } as const;

@@ -866,7 +866,7 @@ body {
   --act-bright: #56bcf2;
   --act-deep: #1f7bb0;
   --act-glow: rgba(52, 169, 232, 0.32);
-  --on-act: #06222f;
+  --on-act: #0c1622; /* #289 fidelity F6 — Part 2 rule 130 "text #0c1622" (was #06222f) */
 
   --dim: #ff8a2e;
   --dim-deep: #e8710a;
@@ -1885,19 +1885,23 @@ input[type="number"] {
   color: var(--ink-on-dark);
   font-weight: 400;
 }
+/* #289 fidelity F6 — the suggestion row's two writes are rule 133
+   ledger actions (audit rows 51–54): min-height 32, padding 7 11, a
+   1 px #2c3e53 border, transparent, mono 9.5 .14em uppercase #c8d1dd.
+   Confirm was act-blue and Ghost faint; at rest they are one control.
+   Their hovers are unchanged (not measured; Confirm's is pinned). */
 .workbench .jbar-suggest button.confirm,
 .workbench .jbar-suggest button.ghost {
+  min-height: 32px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9.5px;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 3px 10px;
+  letter-spacing: 0.14em;
+  padding: 7px 11px;
+  border: 1px solid var(--rule);
   background: transparent;
+  color: var(--ink-on-dark);
   cursor: pointer;
-}
-.workbench .jbar-suggest button.confirm {
-  border: 1px solid var(--act);
-  color: var(--act);
 }
 .workbench .jbar-suggest button.confirm:hover,
 .workbench .jbar-suggest button.confirm:focus-visible {
@@ -1906,10 +1910,6 @@ input[type="number"] {
      --act (the former literal measured 7.04:1; declared change,
      still AA; pinned in tokens.test.ts). */
   color: var(--on-act);
-}
-.workbench .jbar-suggest button.ghost {
-  border: 1px solid var(--rule);
-  color: var(--ink-on-dark-faint);
 }
 .workbench .jbar-suggest button.ghost:hover,
 .workbench .jbar-suggest button.ghost:focus-visible {
@@ -2147,6 +2147,9 @@ input[type="number"] {
      uppercase off the step role — so the control states them itself. */
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  /* #289 fidelity F6: rule 133's own 9.5 px (audit rows 51, 55, 57) —
+     .tr-step's 10 had been standing in for it. */
+  font-size: 9.5px;
   color: var(--ink-on-dark);
   cursor: pointer;
   white-space: nowrap;
@@ -2156,13 +2159,14 @@ input[type="number"] {
   border-color: var(--ink-on-dark-faint);
   color: var(--ink-bright);
 }
-/* Rule 133 "on": the row's recommended action — the block's one filled
-   treatment, kept from the retired Confirm (the wash + --act-bright,
-   6.15:1 measured). */
+/* Rule 133 "on": the row's recommended action — "border and text
+   #34a9e8".  #289 fidelity F6 (audit row 58): the text is --act, not
+   --act-bright, on the block's own ground; the wash stays as the one
+   filled cue the retired Confirm carried. */
 .workbench .needs-you.owns-primary .act.is-on {
   background: var(--sc-act-wash);
   border-color: var(--act);
-  color: var(--act-bright);
+  color: var(--act);
 }
 .workbench .needs-you.owns-primary .act.is-on:hover,
 .workbench .needs-you.owns-primary .act.is-on:focus-visible {
@@ -2176,12 +2180,17 @@ input[type="number"] {
 /* Disabled (spec 34/43) — last so it wins every hover above.  #252: only
    OUTSIDE the lock — under it every write control takes the one uniform
    dim below; this ink remains for the incomplete-Confirm state alone. */
+/* #289 fidelity F6 — rule 133 disabled: "opacity .45, reason on title";
+   the ink stays the control's own #c8d1dd (audit row 56 measured
+   --sc-disabled at .35).  Declared after .is-on at equal specificity,
+   so a disabled recommended action takes this resting treatment too. */
 .workbench:not(.ws-locked) .needs-you .act:disabled,
 .workbench:not(.ws-locked) .needs-you .act:disabled:hover {
-  color: var(--sc-disabled);
-  border-color: var(--sc-disabled);
+  opacity: 0.45;
+  color: var(--ink-on-dark);
+  border-color: var(--rule);
   background: transparent;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 /* Fix 4 (Ryan's hand-check at f44377e) — the condition rows' sub-header.
@@ -3237,9 +3246,10 @@ input[type="number"] {
   border: 1px solid var(--rule);
   background: transparent;
   /* #289 F2: rule 133's casing and tracking, stated here (see the NEEDS
-     YOU .act above). */
+     YOU .act above).  F6: and its 9.5 px. */
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  font-size: 9.5px;
   color: var(--ink-on-dark);
   cursor: pointer;
   white-space: nowrap;
@@ -3278,14 +3288,20 @@ input[type="number"] {
     min-height: 44px;
   }
 }
+/* #289 fidelity F6 — rule 132's GHOST (audit rows 150–153): height 44,
+   padding 0 16, 1 px #2c3e53, transparent, Inter 500 13 #eaf0f7; hover
+   ground rgba(255,255,255,.03); disabled "as rule 130" (#1d2c3c /
+   #6e7c8e).  Was a 40 px act-blue outline at 12.5 / 600. */
 .workbench .dl-btn {
   margin-top: auto;
-  font-size: 12.5px;
-  font-weight: 600;
-  background: var(--canvas);
-  border: 1px solid var(--act-deep);
-  color: var(--act-bright);
-  padding: 9px;
+  min-height: 44px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  padding: 0 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -3293,16 +3309,19 @@ input[type="number"] {
   gap: 8px;
 }
 .workbench .dl-btn:hover {
-  background: var(--act-glow);
+  border-color: var(--raise-hi);
+  background: rgba(255, 255, 255, 0.03);
 }
-.workbench .dl-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  border-color: var(--rule);
-  color: var(--ink-on-dark-faint);
+.workbench .dl-btn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
 }
+.workbench .dl-btn:disabled,
 .workbench .dl-btn:disabled:hover {
-  background: var(--canvas);
+  cursor: not-allowed;
+  border-color: var(--pri-off);
+  background: var(--pri-off);
+  color: var(--pri-off-ink);
 }
 /* #261 (P4): one bottom-anchored action row per card — the crew card's
    PDF and .md share it side by side — so the first button of every card
@@ -4206,10 +4225,14 @@ input[type="number"] {
   align-items: center;
   justify-content: center;
   padding: 10px 12px;
-  font-family: var(--font-mono);
+  /* #289 fidelity F6 — rule 135's chip speaks in its field-label role
+     (rule 5: Inter 500 12.5 #eaf0f7), audit rows 59–61; was mono 400 in
+     #c8d1dd. */
+  font-family: var(--font-sans);
   font-size: var(--fs-field-label);
-  letter-spacing: 0.04em;
-  color: var(--ink-on-dark);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
 }
 
 /* ─── #289 S7 · the before/after panel (rules 90–95.15) ───
@@ -4369,10 +4392,25 @@ input[type="number"] {
 .workbench .a-pri:active:not(:disabled) {
   background: var(--act-deep);
 }
-.workbench .a-pri:disabled {
+/* #289 fidelity F6: the aria-disabled primaries (WHERE's Confirm before
+   a chip, rule 118's in-flight controls) take rule 130's disabled pair
+   too — they rendered the live #34a9e8 fill while refusing the click. */
+.workbench .a-pri:disabled,
+.workbench .a-pri[aria-disabled="true"] {
   background: var(--pri-off);
   color: var(--pri-off-ink);
   cursor: not-allowed;
+}
+.workbench .a-pri[aria-disabled="true"]:hover {
+  background: var(--pri-off);
+}
+/* Rule 29: the draft notice — provenance role (.tr-prov), 18 px above. */
+.workbench .draft-notice {
+  margin-top: 18px;
+}
+/* Rule 115: S2's confirm primary sits 14 px under the chips. */
+.workbench .a-pri.a-confirm {
+  margin-top: 14px;
 }
 /* Rule 131 — the XL primary, GENERATE PLAN only. */
 .workbench .a-pri.is-xl {
@@ -4386,9 +4424,10 @@ input[type="number"] {
   gap: 12px;
   align-items: start;
 }
+/* Rule 114 sizes FIND's box (44 × 132) and nothing else, so its label is
+   rule 130's 15.5 — #289 fidelity F6, audit row 49 (was 13.5). */
 .workbench .a-findrow .a-pri {
   height: 44px;
-  font-size: var(--fs-body-value);
 }
 
 /* ─── Rules 160–174 · the 380 arc ───
@@ -4442,17 +4481,38 @@ input[type="number"] {
    button: the control, its disabled `title` contract, its busy label and
    its `cta-reason` alert are unchanged, and only its size is the band's
    business (#289, rules 116/130/131). */
+/* #289 fidelity F6: rule 130's label is "Generate plan" as written —
+   Inter 600, no CSS uppercase (audit rows 147).  Rule 131 names "the
+   generate frame at 380" as an XL site, so 66 px / 17.5 holds at both
+   widths (audit rows 145, 148); rule 163's 48 px is the floor it clears.
+   The legacy .generate-btn's padding, margin and glow are rule 130's
+   "no border" primary's business, so they go. */
 .workbench .a-genframe .generate-btn {
   height: 66px;
+  margin-top: 0;
+  padding: 0 16px;
   font-size: var(--fs-primary-xl);
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+  gap: 10px;
+  box-shadow: none;
 }
-@media (max-width: 480px) {
-  .workbench .a-genframe .generate-btn {
-    height: 48px;
-    font-size: var(--fs-primary);
-  }
+.workbench .a-genframe .generate-btn:hover:not(:disabled) {
+  background: var(--act-bright);
+  transform: none;
+}
+.workbench .a-genframe .generate-btn:active:not(:disabled) {
+  background: var(--act-deep);
+  transform: none;
+}
+.workbench .a-genframe .generate-btn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+/* Rule 130 disabled: ground #1d2c3c, text #6e7c8e — the grey is the
+   disabled state's alone (audit row 146 measured #93a0b0 on --rule). */
+.workbench .a-genframe .generate-btn:disabled {
+  background: var(--pri-off);
+  color: var(--pri-off-ink);
+  cursor: not-allowed;
 }
 
 /* Rule 15's floor for the three carried controls the band stack inherits

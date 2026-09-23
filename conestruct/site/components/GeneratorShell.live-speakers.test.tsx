@@ -175,7 +175,7 @@ describe("#260 (1) — the context block sits below Results, above Reference, at
     // with the zone headings (§8.28).  The context block is now the
     // draft notice and the jurisdiction bar, and the reference section is
     // found by its id rather than by a tag that no longer renders.
-    const draft = screen.getByText("Draft — not a sealed plan");
+    const draft = screen.getByTestId("draft-notice");
     // §8.31 pulled forward (Ryan's hand-check at f44377e): the
     // jurisdiction context bar is DROPPED and its facts ride the
     // Reference row's summary line.  `jbar` is null now, and the checks

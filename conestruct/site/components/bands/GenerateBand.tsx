@@ -67,8 +67,9 @@ export function GenerateFrame({
           a title (rule 142).  A new button would have had to re-earn all
           of that, and the first thing it would have lost is the string —
           "Generate plan" is what every caller, every suite and every
-          screen reader knows this control by, and the design's caps are
-          a text-transform. */}
+          screen reader knows this control by.  (#289 fidelity F6: rule
+          130 renders it as written — the CSS caps it once wore are
+          gone.) */}
       <div className="a-genframe mt-4" data-testid="generate-frame">
         <GenerateButton
           generating={generating}

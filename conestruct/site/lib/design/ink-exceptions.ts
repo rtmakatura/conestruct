@@ -118,11 +118,11 @@ export const CODE_LITERALS: readonly FileLiterals[] = [
   },
   {
     file: "components/GeneratorFormPrimitives.tsx",
-    hexes: ["#06222F"],
+    hexes: ["#0C1622"],
     count: 2,
     disposition: "token mirror",
     reason:
-      "the Generate button's spinner ring: border-[#06222F]/40 + border-t-[#06222F] — Tailwind's /40 alpha needs literal channels; #06222F === --on-act, pinned by value",
+      "the Generate button's spinner ring: border-[#0C1622]/40 + border-t-[#0C1622] — Tailwind's /40 alpha needs literal channels; #0C1622 === --on-act (rule 130; #289 fidelity F6, was #06222F), pinned by value",
   },
   {
     file: "lib/corridor-zones.ts",

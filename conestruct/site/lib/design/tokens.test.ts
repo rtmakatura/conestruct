@@ -102,7 +102,9 @@ describe("#263 --ink-bright and the confirm-hover ink", () => {
     expect(TYPE_ROLES.section.color).toBe("var(--ink)");
   });
 
-  it("confirm hover/focus ink is var(--on-act) on --act — 6.25:1 measured (declared change from #0b1420's 7.04:1)", () => {
+  // #289 fidelity F6: --on-act re-valued to Part 2 rule 130's #0c1622
+  // (was #06222f, 6.25:1) — 6.92:1 on --act, a darker ink, still AA.
+  it("confirm hover/focus ink is var(--on-act) on --act — 6.92:1 measured (rule 130's #0c1622; was 6.25 at #06222f)", () => {
     const block = css.match(
       /\.workbench \.jbar-suggest button\.confirm:hover,\s*\.workbench \.jbar-suggest button\.confirm:focus-visible \{[^}]*\}/,
     );
@@ -112,7 +114,7 @@ describe("#263 --ink-bright and the confirm-hover ink", () => {
     expect(block![0]).not.toContain("#0b1420");
     const ratio = contrast(token("--on-act"), token("--act"));
     expect(ratio).toBeGreaterThanOrEqual(4.5);
-    expect(ratio).toBeCloseTo(6.25, 1);
+    expect(ratio).toBeCloseTo(6.92, 1);
   });
 });
 

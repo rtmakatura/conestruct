@@ -152,14 +152,17 @@ describe("#288 clause 5 — §8.30: the intro is dropped, the draft notice kept"
     expect(document.body.textContent).toContain("Plan sheet");
   });
 
-  it("§8.12: the draft notice is UNCHANGED — both sentences, last in the column", async () => {
+  // #289 fidelity F6 (X12, ruled Q6 2026-09-23): rule 29 whole — the
+  // provenance role and rule 29's two sentences verbatim, replacing
+  // §8.12's "same two sentences" and the amber callout.
+  it("rule 29: the draft notice is one provenance line in rule 29's words", async () => {
     await generate();
-    expect(screen.getByText("Draft — not a sealed plan")).toBeTruthy();
-    expect(
-      screen.getByText(
-        /Output is engineering reference\. Requires review and seal by a licensed Professional Engineer prior to field use\./,
-      ),
-    ).toBeTruthy();
+    const draft = screen.getByTestId("draft-notice");
+    expect(draft.classList.contains("tr-prov")).toBe(true);
+    expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
+      "Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
+    );
+    expect(document.body.textContent).not.toContain("licensed Professional Engineer prior to field use");
   });
 
   it("the announcement region is untouched — the ruling's 'unchanged' set", async () => {

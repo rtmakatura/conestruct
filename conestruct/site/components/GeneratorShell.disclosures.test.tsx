@@ -166,15 +166,12 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     await generate();
     const main = document.querySelector("main")!;
     const all = Array.from(main.querySelectorAll("*"));
-    const draft = screen.getByText("Draft — not a sealed plan");
+    const draft = screen.getByTestId("draft-notice");
     const group = document.querySelector(".results-disc")!;
     expect(all.indexOf(draft)).toBeGreaterThan(all.indexOf(group));
-    // Its two sentences are UNCHANGED — the finish ruling lists the
-    // draft notice in its untouched set, so fix 3 moves it and does not
-    // reword it (rule 29 specifies slightly different wording; §8.12
-    // says "same two sentences", and §8.12 is what the ruling names).
-    expect(main.textContent).toContain(
-      "Output is engineering reference. Requires review and seal by a licensed Professional Engineer prior to field use.",
+    // #289 fidelity F6 (ruled Q6, 2026-09-23): rule 29's words, verbatim.
+    expect(draft.textContent?.replace(/\s+/g, " ").trim()).toBe(
+      "Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.",
     );
   });
 
