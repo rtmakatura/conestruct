@@ -395,7 +395,26 @@ export function GeneratorShell({
   const auditDeclined =
     stripAudit.state === "error" && stripAudit.httpStatus === 400;
 
+  // #289 hand-check, 2026-09-23, finding 1 (Rule 10): "the live checks
+  // send no kind ... until the kind is confirmed — no verdict for a kind
+  // nobody picked."  `scenario.kind` always holds a value, so the only way
+  // to send no kind is to send nothing: the audit and the breakdown do not
+  // fire until a person has confirmed the kind, and fire the moment they
+  // have (the flag is in both effects' deps).  The strip says why in the
+  // meantime (StatusBar's kind branch), and the WHERE band's corridor rows
+  // say they wait on it (`corridorSpecLengths` below).
+  //
+  // EVERY SENDER OF THE SCENARIO, enumerated: the breakdown and the audit
+  // (gated here); the S7 preview (gated in `firePreview`); the picker's
+  // corridor-spec (gated in the modal via `initial.kindConfirmed`); the
+  // bundle, the per-file downloads, save and the quote are post-generate
+  // and Generate is gated on the same flag (`deriveRail`).  The
+  // jurisdiction suggest sends lat/lng only.  The debug snapshot
+  // (?debug=1 only, on click) is not a check and is left as is.
+  const checksArmed = kindState === "confirmed";
+
   useEffect(() => {
+    if (!checksArmed) return;
     const controller = new AbortController();
     // #192: carry the previous breakdown through the refetch so the
     // results zone dims in place instead of unmounting (presented only
@@ -452,9 +471,11 @@ export function GeneratorShell({
       }
     })();
     return () => controller.abort();
-  }, [fetchScenario, retryNonce]);
+  }, [fetchScenario, retryNonce, checksArmed]);
 
   useEffect(() => {
+    // Finding 1 — see `checksArmed`.
+    if (!checksArmed) return;
     const controller = new AbortController();
     setVerifySlow(false);
     const slowTimer = setTimeout(() => setVerifySlow(true), SLOW_VERIFY_MS);
@@ -536,7 +557,7 @@ export function GeneratorShell({
       controller.abort();
       clearTimeout(slowTimer);
     };
-  }, [fetchScenario, retryNonce]);
+  }, [fetchScenario, retryNonce, checksArmed]);
 
   // #258 (#193): the package announcement's own arming — set by the
   // operator's actions (Generate, Retry, proceed-anyway), never by an
@@ -578,6 +599,9 @@ export function GeneratorShell({
    * memo, and the field stays editable while it is in flight.
    */
   const firePreview = (next: Scenario, forValue: string) => {
+    // Finding 1: a preview is a live check too.  A kind picked from the
+    // column's WHERE band but not yet confirmed must not ride one.
+    if (!checksArmed) return;
     const seq = ++previewSeq.current;
     setPreview({ kind: "loading" });
     (async () => {
@@ -1438,7 +1462,14 @@ export function GeneratorShell({
   // stale); null before the first audit resolves or when the field is
   // absent (deploy window), in which case the preview shows an explicit
   // unavailable note instead of computing anything locally.
-  const corridorSpecLengths = currentAudit?.sections?.corridor_spec ?? null;
+  //
+  // #289 finding 1: and null while the kind is unconfirmed.  The lengths
+  // are the kind's, and a held answer is the PREVIOUS kind's (a chip
+  // re-picked after a confirmation) — showing it would be the stale
+  // answer rule 10 forbids.  The WHERE rows say what they wait on.
+  const corridorSpecLengths = checksArmed
+    ? (currentAudit?.sections?.corridor_spec ?? null)
+    : null;
 
   // Surface B (#152): the interactive jurisdiction + street-class
   // controls, built once here (so the suggestion state and the single
@@ -1635,6 +1666,10 @@ export function GeneratorShell({
             inputError={inputError}
             refusal={refusal}
             locationUnset={!hasLocation(scenario.meta)}
+            // #289 finding 1: a pin with no confirmed kind — the strip
+            // says only "choose the kind of work" (no verdict for a kind
+            // nobody picked; the checks behind it are not fired).
+            kindUnconfirmed={hasLocation(scenario.meta) && !checksArmed}
             audit={stripAudit}
             verifySlow={verifySlow}
             // Rule 117 — S4's verdict slot is "mounted and EMPTY, holding

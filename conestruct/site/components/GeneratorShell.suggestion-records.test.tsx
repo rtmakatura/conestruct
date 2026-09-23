@@ -13,6 +13,12 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
+// #289 finding 1: no live check fires until a person confirms the kind,
+// and this suite stubs the whole column — so no chip exists to confirm
+// one.  It mounts as a saved plan does (`initialScenario` starts
+// confirmed) with the same unpinned default the fresh mount used.  The
+// kind's own contract is GeneratorShell.kind-confirm's.
+import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -161,7 +167,7 @@ function lastScenario(): Record<string, unknown> {
 describe("#227 resolved-state records — confirm, then undo", () => {
   it("Confirm leaves a ✓-record with evidence and undo; undo restores the prior null exactly", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(
@@ -206,7 +212,7 @@ describe("#227 resolved-state records — confirm, then undo", () => {
 
   it("records never reach the wire — no resolution fields in any payload", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(

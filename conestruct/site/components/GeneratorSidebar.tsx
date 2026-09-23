@@ -514,6 +514,9 @@ export function GeneratorSidebar({
             bearingDeg: scenario.meta.bearingDeg,
             workZoneFt: scenario.workLen,
             scenarioKind: scenario.kind,
+            // #289 finding 1: the picker's corridor-spec request waits on
+            // a confirmed kind, like every other live check.
+            kindConfirmed: kindState === "confirmed",
             speedMph: scenario.speed,
             confirmedRoad: scenario.meta.confirmedRoad ?? null,
           }}

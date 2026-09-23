@@ -11,6 +11,12 @@ import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
+// #289 finding 1: no live check fires until a person confirms the kind,
+// and this suite stubs the whole column — so no chip exists to confirm
+// one.  It mounts as a saved plan does (`initialScenario` starts
+// confirmed) with the same unpinned default the fresh mount used.  The
+// kind's own contract is GeneratorShell.kind-confirm's.
+import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
 vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
@@ -180,7 +186,7 @@ function wireKeys(): (string | null | undefined)[] {
 describe("pin suggestion contract: suggest never sets", () => {
   it("a suggestion round-trip never places jurisdiction_key on the wire", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(
@@ -201,7 +207,7 @@ describe("pin suggestion contract: suggest never sets", () => {
 
   it("Confirm is the only writer — clicking it sets jurisdiction_key", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(
@@ -230,7 +236,7 @@ describe("pin suggestion contract: suggest never sets", () => {
     // container as a dismissed record (× + evidence + undo); undo
     // re-arms the live proposal; only a pin move clears everything.
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(
@@ -272,7 +278,7 @@ describe("pin suggestion contract: suggest never sets", () => {
 
   it("a differing manual pick demotes the suggestion to a passive notice", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     const select = document.querySelector(
       "#what-jurisdiction",
@@ -296,7 +302,7 @@ describe("pin suggestion contract: suggest never sets", () => {
   it("endpoint failure: slot goes quiet, picker works exactly as today", async () => {
     suggestResponse = () => jsonResponse(500, { detail: "boom" });
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-drop-pin-denver"));
     await waitFor(() => expect(suggestCalls).toBe(1), { timeout: 3000 });
@@ -321,7 +327,7 @@ describe("pin suggestion contract: suggest never sets", () => {
   });
 
   it("no pin (default 0/0): no suggest call ever fires", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     // Give the debounce window ample time to (not) fire.
     await act(async () => {
       await new Promise((r) => setTimeout(r, 600));

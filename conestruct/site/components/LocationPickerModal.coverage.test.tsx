@@ -167,3 +167,45 @@ describe("the Centerline provenance row (#211)", () => {
     ).toBeTruthy();
   });
 });
+
+const fetchedUrls = () =>
+  (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.map((c) =>
+    String(c[0]),
+  );
+
+describe("#289 finding 1 — the corridor spec waits on a confirmed kind (Rule 10)", () => {
+  it("unconfirmed: no corridor-spec request, no corridor, and the note says why", async () => {
+    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
+    render(
+      <LocationPickerModal
+        open
+        initial={{
+          scenarioKind: "shoulder",
+          kindConfirmed: false,
+          speedMph: 65,
+          workZoneFt: 400,
+        }}
+        onCancel={() => {}}
+        onSave={vi.fn()}
+      />,
+    );
+    typeCoords();
+    // Detection runs (it sends lat/lng — no kind); the spec does not.
+    expect(
+      await screen.findByText(/Corridor lengths wait on the kind of work/i, undefined, {
+        timeout: 3000,
+      }),
+    ).toBeTruthy();
+    expect(fetchedUrls().some((u) => u.includes("/api/road-bearing"))).toBe(true);
+    expect(fetchedUrls().some((u) => u.includes("/api/render/corridor-spec"))).toBe(false);
+    expect(screen.queryByText(/OSM, full corridor/i)).toBeNull();
+  });
+
+  it("confirmed (the default for a caller that does not say): the spec is asked, as before", async () => {
+    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
+    mountModal();
+    typeCoords();
+    await screen.findByText(/OSM, full corridor/i, undefined, { timeout: 3000 });
+    expect(fetchedUrls().some((u) => u.includes("/api/render/corridor-spec"))).toBe(true);
+  });
+});

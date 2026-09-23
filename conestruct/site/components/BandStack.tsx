@@ -202,6 +202,7 @@ export function BandStack(props: BandStackProps) {
             onKindPicked?.();
           }}
           kindPicked={kindState !== "none"}
+          kindConfirmed={kindState === "confirmed"}
           onConfirm={() => {
             onKindConfirmed?.();
             setOpenOverride("what");

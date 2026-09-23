@@ -364,3 +364,63 @@ exception; the #288 hit-target contract refused it ("rule 15 admits no exemption
   correction staged", while the panel correctly says "1 field staged". Both count the shared
   staged list's length (`NeedsYouConditions.tsx`, the #254 ribbon). Ruling 191's enumeration
   (`stagedEnumeration`) is the producer they should read.
+
+## The 2026-09-23 rulings on the hand-check ship (`b80bdeb`)
+
+Ryan, verbatim:
+
+> Shipped. Rulings: (1) chips on the manual-entry path — approved; (2) CHANGE SOMETHING ELSE —
+> retire it, the value links replace it; (3) kind/location/extent/dates open their band —
+> accepted until Phase 3 rebuilds them. Record all three in rulings.md.
+>
+> Fix both findings, one commit each on a branch off main: the live checks send no kind and
+> the verdict strip says only "choose the kind of work" until the kind is confirmed — no
+> verdict for a kind nobody picked (Rule 10); and the staged sentence in NEEDS YOU and the
+> ribbon enumerates what is actually staged ("1 field", "1 correction", "1 field · 1
+> correction") from the one staging list. Plus the CHANGE SOMETHING ELSE retirement. Verify,
+> stop with the ship line.
+
+What each open question above now is:
+
+1. **The chip row's widened gate — RULED, approved.** The row renders for a confirmed road
+   (including a no-road picker save) and for a pin no picker save touched. Stale hides it.
+2. **CHANGE SOMETHING ELSE — RULED, retire.** "The value links replace it." Its 2026-09-23
+   approval above is superseded; the retirement is its own commit on this branch.
+3. **The four band-opening values — RULED, accepted until Phase 3.** Kind, location, extent
+   and dates open the band that owns them; Phase 3 (#290) rebuilds them. No staged writers.
+
+### Finding 1, as built — "the live checks send no kind"
+
+`scenario.kind` always holds a value, so sending "no kind" means sending no check. Every
+sender of the scenario, enumerated:
+
+| sender | before a confirmed kind |
+|---|---|
+| audit, device breakdown (`GeneratorShell`) | **not fired**; fire the moment the kind is confirmed (`checksArmed` in both effects' deps) |
+| S7 preview (`firePreview`) | not fired |
+| picker corridor-spec (`LocationPickerModal`, `initial.kindConfirmed`) | not fired; the panel says "Corridor lengths wait on the kind of work — choose it after you save." |
+| bundle, per-file downloads, save, quote | post-generate; Generate is gated on the same confirmation |
+| jurisdiction suggest | sends lat/lng only — no kind; unchanged |
+| debug snapshot (`?debug=1`, on click) | not a check; unchanged |
+
+The strip: a new first-ranked state, true only with a pin and no confirmed kind, rendering
+`◌ choose the kind of work` in the chromeless no-verdict register — ranked above INVALID INPUT,
+because those client bounds are the placeholder kind's and the ruling is "says only".
+
+**Rule 5, stated — three consequences:**
+- **#260 P2 has one exception now.** P2 kept the strip to the state and left the instruction to
+  the CTA reason, "the one live speaker". In this one state the strip says Ryan's instruction by
+  ruling, so the strip and the CTA reason both carry it.
+- **The picker's corridor preview does not draw on a first pass.** The picker opens before the
+  chips exist (they render once a road is saved), so on a fresh session it says the lengths wait
+  on the kind; the WHERE band's corridor rows show them once the kind is confirmed. A re-opened
+  picker after confirmation draws as before.
+- **A kind re-picked after confirmation pauses the checks** and the WHERE corridor rows drop the
+  held lengths — they were the previous kind's (rule 10: a stale answer is not presented as
+  current). The held audit and breakdown stay in state for the results on screen, which are the
+  confirmed kind's plan.
+
+Test mounts: four suites that stub the whole column (bundle-settings, suggest-contract,
+class-suggest, suggestion-records) can render no chip, so they now mount as a saved plan does
+(`initialScenario={DEFAULT_SCENARIO}`, confirmed) — the same unpinned default they mounted
+fresh. Their subjects are not the kind; `GeneratorShell.kind-confirm` owns it.

@@ -1,4 +1,5 @@
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
+import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 
 // ---------------------------------------------------------------------------
 // PR 7 (UX audit findings UX-21 + UX-22): this strip used to be
@@ -164,6 +165,16 @@ interface Props {
    * above everything else.
    */
   locationUnset?: boolean;
+  /**
+   * #289 hand-check, 2026-09-23, finding 1 (Rule 10): a pin is down but
+   * no person has confirmed the kind.  The strip "says only 'choose the
+   * kind of work'" (Ryan's ruling) — no verdict, and no input-error or
+   * refusal state either, because every check behind those is for a kind
+   * nobody picked (the shell does not fire them).  Ranked FIRST: it is
+   * only ever true with a pin, so it never competes with AWAITING
+   * LOCATION.
+   */
+  kindUnconfirmed?: boolean;
   audit: AuditState;
   /**
    * Cold-start honesty (Refs #122, rule 10): true once the in-flight
@@ -213,11 +224,33 @@ function StatusBarState({
   inputError,
   refusal = null,
   locationUnset = false,
+  kindUnconfirmed = false,
   audit,
   verifySlow,
   bandVoice = false,
   preGenerate = false,
 }: Props) {
+  // #289 finding 1 — ranked above INVALID INPUT on purpose: the client
+  // bounds it checks (lanes per kind, the approach mirrors) are the
+  // placeholder kind's, and Ryan's ruling is that the strip says ONLY
+  // this until the kind is confirmed.  Same chromeless no-verdict
+  // treatment as AWAITING LOCATION (rule 13), same ◌ glyph (rule 18).
+  //
+  // RULE 5, stated: #260 P2 kept the strip to the STATE and left the
+  // instruction to the CTA reason ("the one live speaker").  This line is
+  // Ryan's instruction text by ruling, so for this one state the strip
+  // and the CTA reason both say it.  Recorded in rulings.md.
+  if (kindUnconfirmed) {
+    return (
+      <div className="status-bar idle unavail" data-testid="strip-kind-unconfirmed">
+        <span className="status-glyph" aria-hidden>
+          ◌
+        </span>
+        <span>{KIND_BLOCKER.toLowerCase()}</span>
+      </div>
+    );
+  }
+
   if (inputError) {
     return (
       <div className="status-bar fail">

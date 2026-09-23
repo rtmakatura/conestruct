@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { QuoteSettings } from "@/lib/quote-settings";
+import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 
 // Pins the two regressions surfaced in PR-1 smoke testing (issue #74), both
 // rooted in the quote settings living in QuotePanel's local state:
@@ -124,7 +125,12 @@ afterEach(() => {
 });
 
 async function mountSandbox() {
-  render(<GeneratorShell mode="sandbox" />);
+  // #289 finding 1: no live check fires until a person confirms the kind,
+  // and this suite stubs the whole column — so no chip exists to confirm
+  // one.  It mounts as a saved plan does (`initialScenario` starts
+  // confirmed) with the same unpinned default the fresh mount used.  The
+  // kind's own contract is GeneratorShell.kind-confirm's.
+  render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
   // Flush the device-breakdown + audit fetches fired on mount so their state
   // updates settle inside act() before we interact (two ticks: the fetch
   // promise, then res.json()).

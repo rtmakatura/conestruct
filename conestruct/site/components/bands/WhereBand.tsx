@@ -235,6 +235,7 @@ export function WhereBand({
   onOpenPicker,
   onKindChange,
   kindPicked = true,
+  kindConfirmed = true,
   onConfirm,
   handoff,
   stepIndex,
@@ -250,6 +251,9 @@ export function WhereBand({
   /** Has a person clicked a chip?  False renders the chips with none
    *  pressed and the primary disabled with the rail's reason. */
   kindPicked?: boolean;
+  /** Finding 1: is the kind CONFIRMED (not just picked)?  The corridor
+   *  rows' note says they wait on it — the shell fires no check before. */
+  kindConfirmed?: boolean;
   /** Rule 115's primary: confirming the kind closes the band and opens
    *  WHAT.  It writes nothing to the scenario — the chip already wrote
    *  the kind — but it IS the confirmation #289's defect 1 requires: the
@@ -492,13 +496,17 @@ export function WhereBand({
                 </span>
               ))
             ) : (
-              <span className="tr-prov">
-                {scenario.workLen > 0
-                  ? // Rule 3 / rule 10: an audit response without the
-                    // lengths degrades to an honest note, never a
-                    // locally-computed extent.
-                    "corridor extent unavailable — awaiting verification"
-                  : "set the work-zone length to compute"}
+              <span className="tr-prov" data-testid="corridor-extent-note">
+                {scenario.workLen <= 0
+                  ? "set the work-zone length to compute"
+                  : !kindConfirmed
+                    ? // #289 finding 1: the lengths are the kind's, and
+                      // no check is fired for a kind nobody confirmed.
+                      "corridor lengths wait on the kind of work"
+                    : // Rule 3 / rule 10: an audit response without the
+                      // lengths degrades to an honest note, never a
+                      // locally-computed extent.
+                      "corridor extent unavailable — awaiting verification"}
               </span>
             )}
           </div>

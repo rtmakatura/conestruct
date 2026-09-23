@@ -216,6 +216,16 @@ const generateBtn = () =>
 const openBand = () =>
   document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band");
 const bundles = () => calls.filter((c) => c.url.includes("/api/render/bundle"));
+/** Every request that carries the scenario's kind to the backend before
+ *  a generate: the audit, the breakdown, and the picker's corridor spec
+ *  (the picker is mocked here, so that one is pinned in its own case). */
+const liveChecks = () =>
+  calls.filter(
+    (c) =>
+      c.url.includes("/api/render/audit") ||
+      c.url.includes("/api/render/device-breakdown") ||
+      c.url.includes("/api/render/corridor-spec"),
+  );
 
 describe("defect 1 — the kind is confirmed, never inferred", () => {
   it("after a road is confirmed: three chips, NONE pressed; the primary disabled with the reason", async () => {
@@ -267,6 +277,40 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(document.querySelector('[data-testid="results-head-slot"]')).toBeNull();
   });
 
+  it("FINDING 1, PAYLOAD: no live check is sent until the kind is confirmed", async () => {
+    // Ryan, 2026-09-23: "the live checks send no kind ... until the kind
+    // is confirmed — no verdict for a kind nobody picked (Rule 10)."
+    // `scenario.kind` always holds a value, so "send no kind" is "send
+    // nothing": from the mount, through the pin and the road, the audit
+    // and the breakdown never fire.
+    await freshWithRoad();
+    expect(liveChecks()).toHaveLength(0);
+    // The WHERE band's corridor rows say what they wait on instead of
+    // showing lengths for the placeholder kind.
+    expect(screen.getByTestId("corridor-extent-note").textContent).toBe(
+      "corridor lengths wait on the kind of work",
+    );
+  });
+
+  it("FINDING 1: a kind re-picked after a confirmation pauses the checks and drops the held lengths", async () => {
+    const user = await freshWithRoad();
+    await user.click(chip("shoulder"));
+    await confirmKind();
+    await settle();
+    expect(liveChecks().length).toBeGreaterThan(0);
+
+    await user.click(screen.getByTestId("fact-link-where"));
+    calls = [];
+    await user.click(chip("flagger_lane_closure"));
+    await settle();
+    // Picked again, not confirmed: nothing is asked about flagger yet.
+    expect(liveChecks()).toHaveLength(0);
+    // And the shoulder answer is not shown as flagger's.
+    expect(screen.getByTestId("corridor-extent-note").textContent).toBe(
+      "corridor lengths wait on the kind of work",
+    );
+  });
+
   it("the primary does nothing while disabled — pressing it is not a confirmation", async () => {
     const user = await freshWithRoad();
     await user.click(screen.getByTestId("where-confirm"));
@@ -302,12 +346,18 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
 
     await user.click(chip("flagger_lane_closure"));
     await settle();
-    // The chip is the writer: the next verification request carries the
-    // clicked kind.
-    const last = calls.filter((c) => c.url.includes("/api/render/audit")).at(-1)!;
-    expect((last.body.scenario as { kind: string }).kind).toBe("flagger_lane_closure");
+    // Picked is not confirmed: still no live check (finding 1).
+    expect(liveChecks()).toHaveLength(0);
 
     await confirmKind();
+    await settle();
+    // The confirmation arms the checks, and the first of them carries the
+    // kind the operator clicked.
+    const audit = calls.filter((c) => c.url.includes("/api/render/audit"));
+    expect(audit.length).toBeGreaterThan(0);
+    expect((audit[0].body.scenario as { kind: string }).kind).toBe(
+      "flagger_lane_closure",
+    );
     await user.click(generateBtn());
     await settle();
     await user.click(screen.getByText("ALL_ZIP"));

@@ -13,6 +13,12 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import type { Scenario } from "@/lib/scenarios";
+// #289 finding 1: no live check fires until a person confirms the kind,
+// and this suite stubs the whole column — so no chip exists to confirm
+// one.  It mounts as a saved plan does (`initialScenario` starts
+// confirmed) with the same unpinned default the fresh mount used.  The
+// kind's own contract is GeneratorShell.kind-confirm's.
+import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import { classifyFromOsmTags } from "@/lib/road-detection/classify";
@@ -230,7 +236,7 @@ function wireClasses(): (string | null | undefined)[] {
 describe("street-class suggestion contract (#152 C): suggest never sets", () => {
   it("a confirmed primary road renders an Arterial suggestion; street_class never reaches the wire until Confirm", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
@@ -259,7 +265,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
   });
 
   it("absent when no road is confirmed", async () => {
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
     expect(
       screen.queryByText(/Detected road suggests street class:/),
     ).toBeNull();
@@ -267,7 +273,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
 
   it("a pin move away from the confirmed road's pin removes the suggestion (stale road never suggests)", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
@@ -283,7 +289,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
 
   it("a differing manual class demotes the suggestion to a passive notice — no Confirm offered", async () => {
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
@@ -303,7 +309,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
     // record — same container, × + evidence + undo; undo re-arms the
     // live proposal.  Nothing writes to the wire either way.
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
@@ -333,7 +339,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
     (globalThis as { __road?: ConfirmedRoad }).__road =
       confirmedRoad("tertiary");
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     await user.click(screen.getByText("stub-confirm-road"));
     await waitFor(() =>
@@ -347,7 +353,7 @@ describe("street-class suggestion contract (#152 C): suggest never sets", () => 
       classification_map_url: "https://example.gov/classification-map",
     };
     const user = userEvent.setup();
-    render(<GeneratorShell mode="sandbox" />);
+    render(<GeneratorShell mode="sandbox" initialScenario={DEFAULT_SCENARIO} />);
 
     const select = document.querySelector(
       "#what-jurisdiction",

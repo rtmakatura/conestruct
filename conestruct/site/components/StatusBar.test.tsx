@@ -260,6 +260,32 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("INVALID INPUT");
   });
 
+  // #289 hand-check, 2026-09-23, finding 1 — the strip "says only
+  // 'choose the kind of work'" until the kind is confirmed.
+  it("kindUnconfirmed says ONLY 'choose the kind of work' — no verdict, even over a clean held audit", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar inputError={null} kindUnconfirmed audit={ready(makeAudit())} />,
+    );
+    expect(html).toContain(">choose the kind of work<");
+    expect(html).toContain("status-bar idle unavail");
+    expect(html).not.toContain("READY FOR TCS REVIEW");
+    expect(html).not.toContain("VERIFIED");
+    expect(html).not.toContain("VERIFYING");
+  });
+
+  it("kindUnconfirmed outranks an input error — that check is the placeholder kind's", () => {
+    const html = renderToStaticMarkup(
+      <StatusBar
+        inputError="Work zone length is required"
+        kindUnconfirmed
+        audit={{ state: "loading", lastReady: null }}
+      />,
+    );
+    expect(html).toContain(">choose the kind of work<");
+    expect(html).not.toContain("INVALID INPUT");
+    expect(html).not.toContain("status-bar fail");
+  });
+
   it("locationUnset outranks a pending verification — no verdict, no VERIFYING, for a site nobody chose", () => {
     const html = renderToStaticMarkup(
       <StatusBar

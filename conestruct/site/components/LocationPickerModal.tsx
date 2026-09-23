@@ -67,6 +67,15 @@ export interface LocationPickerInitial {
   // Pre-existing scenario kind so the corridor preview knows the
   // closure type (shoulder vs lane vs shifting) for taper math.
   scenarioKind: ScenarioKind;
+  /**
+   * #289 hand-check, 2026-09-23 finding 1 (Rule 10): has a PERSON
+   * confirmed `scenarioKind`?  Until they have, it is the discriminant's
+   * placeholder, and the corridor-spec request below would ask the
+   * backend about a kind nobody chose.  False → that request does not
+   * fire and the panel says what it is waiting for.  Defaults to true
+   * for callers that do not track it.
+   */
+  kindConfirmed?: boolean;
   // Speed limit fallback for advance-warning / buffer / taper math
   // before the in-modal classify resolves.  Mirrors whatever the
   // scenario currently carries.
@@ -565,9 +574,8 @@ export function LocationPickerModal({
   const [specLengths, setSpecLengths] = useState<CorridorSpecLengths | null>(
     null,
   );
-  const [specStatus, setSpecStatus] = useState<
-    "idle" | "loading" | "ready" | "error"
-  >("idle");
+  const [specStatus, setSpecStatus] = useState<SpecStatus>("idle");
+  const kindConfirmed = initial.kindConfirmed ?? true;
   const specLengthsRef = useRef<CorridorSpecLengths | null>(null);
   specLengthsRef.current = specLengths;
   const specTokenRef = useRef(0);
@@ -575,6 +583,13 @@ export function LocationPickerModal({
   useEffect(() => {
     if (!open) return;
     const myToken = ++specTokenRef.current;
+    // Finding 1: no live check for a kind nobody chose.  The lengths are
+    // cleared rather than kept, so no earlier answer draws as this one.
+    if (!kindConfirmed) {
+      setSpecLengths(null);
+      setSpecStatus("kind");
+      return;
+    }
     setSpecStatus("loading");
     const timer = setTimeout(async () => {
       try {
@@ -601,7 +616,7 @@ export function LocationPickerModal({
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [open, initial.scenarioKind, previewSpeed, effectiveRoadType]);
+  }, [open, initial.scenarioKind, previewSpeed, effectiveRoadType, kindConfirmed]);
 
   // ---- Corridor projection ----------------------------------------------
   // Geometry only — anchor, bearing, typed work-zone length; the zone
@@ -3135,6 +3150,10 @@ function CandidatePicker({
 
 // ---- CorridorPreviewPanel -------------------------------------------------
 
+/** The corridor-spec request's state.  "kind" (#289 finding 1): not
+ *  asked, because the kind is not confirmed. */
+type SpecStatus = "idle" | "loading" | "ready" | "error" | "kind";
+
 function CorridorPreviewPanel({
   corridor,
   hasPin,
@@ -3146,7 +3165,7 @@ function CorridorPreviewPanel({
   // Backend corridor-spec fetch state (engine-removal PR D).  The zone
   // lengths are server-computed; this panel names the wait/failure
   // instead of ever drawing a locally-derived extent.
-  specStatus: "idle" | "loading" | "ready" | "error";
+  specStatus: SpecStatus;
   // Detection resolving / multi-candidate pick pending: the map draws
   // no corridor (#186) and the Centerline row stays absent — no
   // geometry claim exists yet to disclose (#211).
@@ -3177,8 +3196,21 @@ function CorridorPreviewPanel({
           </div>
         )}
         {hasPin && !corridor && specStatus !== "loading" && specStatus !== "error" && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1">
-            Enter a work-zone length to compute the corridor.
+          <div
+            className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--ink-on-dark-faint)] py-1"
+            data-testid="picker-corridor-note"
+          >
+            {/* #289 finding 1: the lengths depend on the kind, and the
+                kind is not chosen yet — say so rather than draw a
+                corridor for the placeholder.  Rule 5, stated: on a first
+                pass the picker opens before the chips exist, so this is
+                what it shows then; the lengths appear in the WHERE band
+                once the kind is confirmed.  One element, two sentences —
+                the #263 type census counts elements, and this is the
+                same note in the same register. */}
+            {specStatus === "kind"
+              ? "Corridor lengths wait on the kind of work — choose it after you save."
+              : "Enter a work-zone length to compute the corridor."}
           </div>
         )}
         {corridor && (

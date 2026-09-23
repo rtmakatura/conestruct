@@ -233,13 +233,20 @@ describe("no location, no certification (#186)", () => {
 
     const text = document.body.textContent ?? "";
     expect(text).not.toContain("AWAITING LOCATION");
-    expect(text).toContain("READY FOR TCS REVIEW");
+    // #289 finding 1 (Rule 10): with the pin down and no kind confirmed,
+    // the strip says ONLY "choose the kind of work" — no verdict.  This
+    // line used to read READY FOR TCS REVIEW here: a verdict for the
+    // placeholder kind nobody picked, which is the finding.
+    expect(text).not.toContain("READY FOR TCS REVIEW");
+    expect(screen.getByTestId("strip-kind-unconfirmed").textContent).toBe(
+      "◌choose the kind of work",
+    );
     const btn = () =>
       screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement;
     // #289 hand-check, 2026-09-23, defect 1: a pin is no longer enough.
     // The kind is owed first — and on THIS path (no token, no picker
     // save, `confirmedRoad` undefined) the chips must still render, or
-    // the operator could never answer it (the widening WhereBand records).
+    // the operator could never answer it (ruled 2026-09-23).
     expect(btn().disabled).toBe(true);
     expect(
       document.querySelector('[data-testid="cta-reason"]')?.textContent,
@@ -248,7 +255,12 @@ describe("no location, no certification (#186)", () => {
       fireEvent.click(screen.getByTestId("kind-chip-shoulder"));
     });
     await confirmKind();
+    await flushDebounce();
+    await settle();
     expect(btn().disabled).toBe(false);
+    // Confirmed: the checks fire, and the verdict the strip used to show
+    // too early is now the answer for a kind a person chose.
+    expect(document.body.textContent).toContain("READY FOR TCS REVIEW");
   });
 
   it("a genuine input error outranks the missing pin (INVALID INPUT wins)", async () => {
