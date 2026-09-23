@@ -248,3 +248,119 @@ from.
 ### The dimmed-results contrast issue
 
 Filed as **#295**. The draft this arc carried retires with it; nothing further to post.
+
+## The 2026-09-23 hand-check — two defects and one gap
+
+Ryan, verbatim:
+
+> Ryan's hand-check found two defects and one gap. Stop new work.
+>
+> Defect 1 — the kind is never chosen. Shoulder work arrives pre-selected and the confirm only
+> appears under CHANGE. That violates the ruled guardrail "the kind is confirmed, never
+> inferred" (FLOW.md §5a, #281 §4.4, P21). Fix: after a road is confirmed, the WHERE band shows
+> the three kind chips with NONE selected and the primary disabled with the reason "choose the
+> kind of work"; only an explicit chip click selects, and the WHAT band stays pending until the
+> kind is confirmed. Test it at payload level: no scenario kind is set without a click.
+>
+> Defect 2 — CHANGE ONE THING opens speed without asking. The user picks the field. Fix: the
+> setup fact line's values each become their own link (speed, lanes, width, road type,
+> jurisdiction, dates, kind, location) and clicking one opens that field in revision; or CHANGE
+> ONE THING opens a picker of the fields first. Recommend one, build it, record the choice.
+>
+> Then stop. Gap 3 — visual fidelity against the Direction A mock-up — is its own pass, next,
+> once Ryan provides the frames as images.
+
+### D1 — what "confirmed" is, as built
+
+`scenario.kind` is a discriminant: the type admits no scenario without one, so
+`DEFAULT_SCENARIO` carries `shoulder` before anyone has chosen anything. That is the
+pre-selection the hand-check found. The fix therefore cannot be "leave the kind unset" — it is
+a SECOND fact, held by the shell and never sent on the wire, that says whether a person chose
+it:
+
+| state | reached by | chips | WHERE primary | WHAT band | Generate |
+|---|---|---|---|---|---|
+| `none` | a fresh sandbox session | none pressed | disabled · "choose the kind of work" | pending · "choose the kind of work" | blocked, same sentence (`deriveRail`) |
+| `picked` | a chip click — the only writer | the clicked one pressed | enabled · "Confirm — <kind>" | pending | blocked |
+| `confirmed` | the primary press | pressed | — | opens | per the rest of the chain |
+
+- A chip click moves the state to `picked` even when it re-picks the kind already on the
+  scenario (the default's own chip) — the click is the choice; the value being equal is not.
+- A chip click after confirmation returns the state to `picked`: a changed kind is confirmed
+  again, by the press.
+- `initialScenario` (production: `app/app/plans/[id]` only — a saved plan) starts
+  `confirmed`. The plan's kind was chosen when it was made.
+
+### D2 — the choice, recorded
+
+**Chosen: the per-value links.** Recommended over the field picker because:
+
+1. P22's own sentence is "pick the field, change it, see what it did" — and the fact line
+   already prints every value. The value IS the field; a picker would list the same values a
+   second time, one click further away.
+2. P18 (one question per step): a picker asks "which field?" before the question the user
+   came with. The link answers it by being pressed.
+3. Rule 33's "a CHANGE link focuses the band it re-opens" already describes a link per target.
+
+The setup fact line becomes linked values, in rule 119's order with Ryan's additions slotted
+in: **kind · location · extent · speed · lanes · width · road type · jurisdiction · dates**.
+The trailing CHANGE ONE THING link retires (rule 5: stated); the row's right track carries a
+provenance word instead (rule 134: a row offers a link or a word).
+
+| value | opens | why |
+|---|---|---|
+| speed, lanes, width, road type, jurisdiction | S7 **on that field** — `REVISING · <FIELD>` | the five `StagedFieldKey`s; each has its writer in `what-writes.ts` |
+| kind, location, extent | the column, **WHERE band open** | no staged writer exists — see below |
+| dates | the column, **WHAT band open** (its second group) | as above |
+
+**The four that do not open "in revision" — a deviation, flagged for a ruling.** Ryan's text
+says a click "opens that field in revision". `StagedFieldKey` is a closed set on purpose
+(types.ts: "a field with no writer would be a silent set"), and kind, location, extent and
+dates have no staged writer: the kind switch carries the carry-across and three re-apply guards
+(GeneratorSidebar `onKindChange`), the pin is the picker's save through `withPin` and the scan's
+invalidation, and the dates write through `setWorkDates`. Minting four staged writers is its
+own arc. Until then these four open the column on the band that owns them — the ruled CHANGE
+SOMETHING ELSE route (above), landing on the right band instead of the natural one. The staged
+set survives it, as that ruling requires.
+
+`lanes` has no link for a kind with no lane count (flagger: TA-10's definition, #209) — the
+value is not on the line, so there is nothing to press.
+
+Rule 15 holds on the new links: each value is an inline-flex box with the 32 px floor (44 px in
+the ≤480 block), the `.tr-signpost` pattern. The first draft leaned on WCAG 2.5.8's inline
+exception; the #288 hit-target contract refused it ("rule 15 admits no exemption"), correctly.
+
+### Open for a ruling — three things this fix raised and did not decide
+
+1. **The chip row's gate, widened by one case.** The 2026-09-22 hand-check ruled the chips
+   render "only once a road is confirmed". With the kind now owed before Generate, a pin that
+   no picker save ever touched — the no-token manual path, `confirmedRoad === undefined` —
+   would have no chips and no way to answer, and could never generate. Before this fix that
+   pin generated on the silent default. Built: the row also renders for that case. (A picker
+   save that resolved NO road writes `confirmedRoad: null` and already rendered the chips
+   under the old predicate — `null !== undefined`.) A stale road still hides the row.
+   Rule it, or say the manual path should reach the kind some other way.
+2. **CHANGE SOMETHING ELSE, now redundant.** It was approved (above) as the post-generate route
+   to pin, extent and kind. The kind, location and extent links are now direct routes to the
+   same band. Kept, because it was ruled; its own prop note said it retires if the line grows a
+   link per value. Retire, or keep as the "somewhere else" route?
+3. **The four values that open a band, not S7** (the deviation above). Mint staged writers for
+   kind / location / extent / dates in their own arc, or accept band-opening as their revision.
+
+### Findings, recorded and NOT fixed ("stop new work")
+
+- **Pre-generate verification still sends the placeholder kind.** Before any chip is clicked,
+  the audit and breakdown fetches (the live verdict strip, the corridor extent rows, the
+  jurisdiction cell) carry `kind: "shoulder"` — the discriminant's placeholder. Generate and
+  every deliverable are gated, so no PLAN is built on it, and the mounted suite proves that at
+  payload level. But the strip's pre-generate verdict (e.g. "READY FOR TCS REVIEW" in
+  `GeneratorShell.no-location.test.tsx` at a fresh pin) speaks for a kind nobody chose. Rule 10
+  question: suppress the pair until the kind is confirmed, or have the strip say it is
+  awaiting the kind. Needs a ruling; it touches the corridor extent rows in WHERE, which read
+  the audit.
+- **S7's field edits are counted as "corrections" outside the panel** (pre-existing since
+  `fd86079`). With one FIELD staged, the NEEDS YOU conditions block reads "1 correction staged
+  · not yet applied · Apply 1 correction" and the stale ribbon reads "Previous answer — 1
+  correction staged", while the panel correctly says "1 field staged". Both count the shared
+  staged list's length (`NeedsYouConditions.tsx`, the #254 ribbon). Ruling 191's enumeration
+  (`stagedEnumeration`) is the producer they should read.

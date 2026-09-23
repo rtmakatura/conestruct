@@ -154,6 +154,9 @@ const FLOORED = [
   "act-btn",
   "a-chip",
   "a-fld",
+  // #289 hand-check, 2026-09-23, defect 2 — the setup line's value links:
+  // 32 px on the class, 44 px in the ≤480 block (asserted below).
+  "a-val-lk",
 ];
 /** Tailwind-floored controls (the footer's links). */
 const TW_FLOOR = /min-h-\[(32|44)px\]/;
@@ -314,7 +317,7 @@ describe("#288 clause 7 — the ≤480 sweep is declared in one place", () => {
     expect(i, "the clause 7 block exists").toBeGreaterThan(-1);
     const block = css.slice(i, css.indexOf("\n}\n", i));
     expect(block).toMatch(/@media \(max-width: 480px\)/);
-    for (const sel of ["tr-signpost", "chip-sum", "audit-head", "disc-head", "dl-btn", "strip-edit-all"]) {
+    for (const sel of ["tr-signpost", "chip-sum", "audit-head", "disc-head", "dl-btn", "strip-edit-all", "a-val-lk"]) {
       expect(block, sel).toContain(`.${sel}`);
     }
     expect(block).toMatch(/min-height:\s*44px/);

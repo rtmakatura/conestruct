@@ -60,6 +60,7 @@ import {
   whereProvenance,
 } from "@/lib/scenarios/band-facts";
 import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
+import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 import { hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
 import { ManualFallback } from "./ManualFallback";
@@ -179,13 +180,18 @@ function MoveLedgerRows({
  * Suggest-never-set: a chip CONFIRMS the kind.  Nothing proposes one —
  * the "✓ proposed" citation suffix has no producer this phase (#281's own
  * audit ruling), so no chip carries it.
+ *
+ * #289 hand-check, 2026-09-23, defect 1: `value` is null until a person
+ * clicks a chip, and then NO chip is pressed.  `scenario.kind` is not
+ * passed here raw, because it always holds a value — the default's
+ * included — and pressing that chip for the operator was the defect.
  */
 function KindChips({
   value,
   onChange,
   locked,
 }: {
-  value: ScenarioKind;
+  value: ScenarioKind | null;
   onChange: (k: ScenarioKind) => void;
   locked: boolean;
 }) {
@@ -228,6 +234,7 @@ export function WhereBand({
   setMeta,
   onOpenPicker,
   onKindChange,
+  kindPicked = true,
   onConfirm,
   handoff,
   stepIndex,
@@ -238,11 +245,15 @@ export function WhereBand({
   setScenario: (next: Scenario) => void;
   setMeta: (m: ScenarioMeta) => void;
   onOpenPicker: () => void;
+  /** A chip click — the ONLY writer of the kind choice (defect 1). */
   onKindChange: (k: ScenarioKind) => void;
+  /** Has a person clicked a chip?  False renders the chips with none
+   *  pressed and the primary disabled with the rail's reason. */
+  kindPicked?: boolean;
   /** Rule 115's primary: confirming the kind closes the band and opens
-   *  WHAT.  It writes nothing on its own — the chips already wrote the
-   *  kind — so it is navigation, and the only thing it confirms is that
-   *  the user is done here. */
+   *  WHAT.  It writes nothing to the scenario — the chip already wrote
+   *  the kind — but it IS the confirmation #289's defect 1 requires: the
+   *  WHAT band and Generate wait on it. */
   onConfirm: () => void;
   handoff: HandoffEvent[];
   stepIndex: string;
@@ -266,6 +277,12 @@ export function WhereBand({
   // confirmation of anything here (the #149 failure class), so it does
   // not arm the chips either.
   const roadConfirmed = scenario.meta.confirmedRoad !== undefined && !stale;
+  // Defect 1's widening — see the chip row below.  NB `roadConfirmed`
+  // above is already true for a picker save that resolved NO road: that
+  // save writes `confirmedRoad: null`, and null !== undefined.  What it
+  // excludes is `undefined` — a pin no picker save ever touched, which is
+  // the manual-entry path.  The widening adds exactly that case.
+  const chipsShown = roadConfirmed || (located && scenario.meta.confirmedRoad === undefined);
   // #289 hand-check, 2026-09-22, correction 2: the manual-entry toggle
   // comes off the WHERE band.
   //
@@ -403,10 +420,22 @@ export function WhereBand({
               kind is now: open the picker, save a road, pick the chip,
               reopen the picker.  Recorded in the arc README as the one
               flow this correction lengthens. */}
-          {roadConfirmed && (
+          {/* #289 hand-check, 2026-09-23, defect 1 — AND A STATED
+              WIDENING OF THE GATE ABOVE.  The kind is now owed before
+              Generate, so a pin no picker save ever touched — the
+              manual-entry path, which has no detection at all — would
+              have no chips and no way to answer the question the column
+              is waiting on.  Until this fix that pin generated on the
+              silent default, which is the defect.  So the row renders
+              for a confirmed road (the ruled case, which already
+              included a save that resolved no road) AND for a pin with
+              no picker save on record.  A STALE road still hides it:
+              that pin has a road to re-confirm, and the warning above
+              says so.  Flagged for a ruling in rulings.md. */}
+          {chipsShown && (
             <div className="mt-4">
               <KindChips
-                value={scenario.kind}
+                value={kindPicked ? scenario.kind : null}
                 onChange={onKindChange}
                 locked={locked}
               />
@@ -482,19 +511,37 @@ export function WhereBand({
               the cell the operator would change to undo it. */}
 
           {/* Rule 115's primary, naming the choice.  It confirms; it
-              never infers (suggest-never-set), and it writes nothing —
-              the chip already did. */}
+              never infers (suggest-never-set), and it writes nothing to
+              the scenario — the chip already did.
+
+              Defect 1: until a chip is clicked there is no choice to
+              name, so the primary is DISABLED and says why, in the
+              rail's own words (rule 139).  `aria-disabled`, not
+              `disabled`, so it stays focusable and the reason stays
+              reachable (#252's convention for a write control). */}
           <button
             type="button"
             className="a-pri"
-            aria-disabled={locked || undefined}
+            aria-disabled={locked || !kindPicked || undefined}
+            aria-describedby={kindPicked ? undefined : "where-confirm-reason"}
             onClick={() => {
-              if (!locked) onConfirm();
+              if (!locked && kindPicked) onConfirm();
             }}
             data-testid="where-confirm"
           >
-            Confirm — {kindLabel(scenario.kind).toLowerCase()}
+            {kindPicked
+              ? `Confirm — ${kindLabel(scenario.kind).toLowerCase()}`
+              : "Confirm"}
           </button>
+          {!kindPicked && (
+            <div
+              id="where-confirm-reason"
+              className="tr-prov mt-2"
+              data-testid="where-confirm-reason"
+            >
+              {KIND_BLOCKER.toLowerCase()}
+            </div>
+          )}
         </>
       )}
 

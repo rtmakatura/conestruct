@@ -1,0 +1,342 @@
+// @vitest-environment happy-dom
+//
+// #289 hand-check, 2026-09-23, DEFECT 1 — "the kind is confirmed, never
+// inferred" (FLOW.md §5a, #281 §4.4, P21).
+//
+// Ryan: "Shoulder work arrives pre-selected and the confirm only appears
+// under CHANGE ... Test it at payload level: no scenario kind is set
+// without a click."
+//
+// Rule 11: the claim is about what reaches the WIRE, so this suite reads
+// request bodies, not component props.  `scenario.kind` is a discriminant
+// and always holds a value — DEFAULT_SCENARIO's `shoulder` included — so
+// "no kind is set without a click" is asserted where it can be true:
+//
+//   · with no chip clicked, nothing the operator can press produces a
+//     GENERATE-path request (the Generate primary is disabled, and
+//     pressing it fires nothing);
+//   · the generated payload's kind is the one the operator CLICKED, and a
+//     generate exists only after the chip AND the WHERE primary;
+//   · the chips arrive with NONE pressed, and re-picking the default's
+//     own chip is the choice (the record moves; the value does not).
+//
+// Fresh sandbox session throughout — no `initialScenario`, which is the
+// production /sandbox path (app/sandbox/page.tsx) — except the last case,
+// which pins the one path that legitimately starts confirmed.
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import type {
+  RoadCandidate,
+  RoadClassification,
+} from "@/lib/road-detection/types";
+
+vi.mock("./AppNav", () => ({ AppNav: () => null }));
+vi.mock("./AppSheetMeta", () => ({ AppSheetMeta: () => null }));
+vi.mock("./AppFooter", () => ({ AppFooter: () => null }));
+vi.mock("./StatusBar", () => ({ StatusBar: () => null }));
+vi.mock("./OutputCards", () => ({
+  OutputCards: ({ onDownloadAll }: { onDownloadAll?: () => void }) => (
+    <button type="button" onClick={onDownloadAll}>
+      ALL_ZIP
+    </button>
+  ),
+}));
+vi.mock("./TieredReference", () => ({ TieredReference: () => null }));
+vi.mock("./DeviceBreakdown", () => ({ DeviceBreakdown: () => null }));
+
+// A two-lane-each-way urban arterial.  Consistent relays (2 + 2, no
+// both-ways lane), so no gate relay arms and nothing but the kind can
+// block Generate — the suite's subject is the kind and only the kind.
+const ROAD: RoadClassification = {
+  roadType: "urban_arterial",
+  divided: false,
+  laneWidthFt: 12,
+  speedLimitMph: 35,
+  lanesPerDirection: 1,
+  detectedLanesTotal: 2,
+  detectedLanesForward: 1,
+  detectedLanesBackward: 1,
+  confidence: "high",
+  source: "osm-tags",
+  raw: {
+    class: "secondary",
+    oneway: false,
+    roadName: "East 17th Avenue",
+    placeName: "Denver",
+    osmLanesTag: "2",
+    osmMaxspeedTag: "30 mph",
+  },
+  fields: {
+    speed: { value: 35, confidence: "high", source: "OSM maxspeed tag", method: "measured" },
+    lanes: { value: 1, confidence: "high", source: "OSM lanes tag", method: "measured" },
+    roadType: { value: "urban_arterial", confidence: "high", source: "class", method: "measured" },
+    divided: { value: false, confidence: "high", source: "oneway", method: "measured" },
+  },
+} as RoadClassification;
+
+const CANDIDATE: RoadCandidate = {
+  way_id: "778899",
+  highway_class: "secondary",
+  name: "East 17th Avenue",
+  ref: null,
+  bearing: 90,
+  snap_distance_m: 3.2,
+  snapped_lat: 39.7436,
+  snapped_lng: -104.9707,
+  tags: {
+    oneway: null,
+    maxspeed: "30 mph",
+    lanes: "2",
+    lanes_forward: null,
+    lanes_backward: null,
+    lanes_both_ways: null,
+    turn_lanes: null,
+    turn_lanes_forward: null,
+    turn_lanes_backward: null,
+  },
+  signal_distance_m: null,
+} as RoadCandidate;
+
+const PICKER_RESULT = {
+  address: "E 17th Ave & Clarkson St, Denver",
+  lat: 39.7436,
+  lng: -104.9707,
+  bearingDeg: 90,
+  workZoneFt: 500,
+  classification: ROAD,
+  overrides: {},
+  crossStreet: null,
+  confirmedRoad: {
+    candidate: CANDIDATE,
+    classification: ROAD,
+    method: "auto_single" as const,
+    overrides: {},
+    isUrban: true,
+    placeName: "Denver",
+    pinLat: 39.7436,
+    pinLng: -104.9707,
+  },
+};
+
+vi.mock("./LocationPickerModal", () => ({
+  LocationPickerModal: ({ onSave }: { onSave: (r: unknown) => void }) => (
+    <button type="button" onClick={() => onSave(PICKER_RESULT)}>
+      SAVE_ROAD
+    </button>
+  ),
+}));
+
+import { GeneratorShell } from "./GeneratorShell";
+import { MIN_AUDIT, PINNED_SHOULDER } from "./test-fixtures";
+import { confirmKind } from "./__fixtures__/band-helpers";
+
+type Call = { url: string; body: Record<string, unknown> };
+let calls: Call[] = [];
+
+const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+  const url = String(input);
+  let body: Record<string, unknown> = {};
+  try {
+    body = JSON.parse(String(init?.body ?? "{}"));
+  } catch {
+    body = {};
+  }
+  calls.push({ url, body });
+  if (url.includes("/api/render/bundle")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      blob: async () => new Blob(["zip"]),
+    } as unknown as Response);
+  }
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => MIN_AUDIT,
+    } as unknown as Response);
+  }
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: async () => ({}),
+  } as unknown as Response);
+});
+
+beforeEach(() => {
+  calls = [];
+  fetchMock.mockClear();
+  vi.stubGlobal("fetch", fetchMock);
+  Element.prototype.scrollIntoView = vi.fn() as never;
+  Object.defineProperty(URL, "createObjectURL", {
+    value: () => "blob:mock",
+    configurable: true,
+  });
+  Object.defineProperty(URL, "revokeObjectURL", {
+    value: () => {},
+    configurable: true,
+  });
+  vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+});
+
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
+async function settle() {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 400));
+    await Promise.resolve();
+  });
+}
+
+/** A fresh /sandbox session with a road confirmed through the picker —
+ *  the state Ryan's hand-check starts from. */
+async function freshWithRoad() {
+  const user = userEvent.setup();
+  render(<GeneratorShell mode="sandbox" />);
+  await settle();
+  await user.click(screen.getByTestId("where-open-picker"));
+  await user.click(screen.getByText("SAVE_ROAD"));
+  await settle();
+  return user;
+}
+
+const chip = (k: string) => screen.getByTestId(`kind-chip-${k}`);
+const pressed = () =>
+  Array.from(document.querySelectorAll('.a-chips [aria-pressed="true"]')).map(
+    (el) => el.getAttribute("data-testid"),
+  );
+const generateBtn = () =>
+  screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement;
+const openBand = () =>
+  document.querySelector('[data-testid="band-stack"]')?.getAttribute("data-open-band");
+const bundles = () => calls.filter((c) => c.url.includes("/api/render/bundle"));
+
+describe("defect 1 — the kind is confirmed, never inferred", () => {
+  it("after a road is confirmed: three chips, NONE pressed; the primary disabled with the reason", async () => {
+    await freshWithRoad();
+
+    // The WHERE band stays open — the pin no longer skips the question.
+    expect(openBand()).toBe("where");
+    expect(chip("shoulder")).toBeTruthy();
+    expect(chip("flagger_lane_closure")).toBeTruthy();
+    expect(chip("near_intersection")).toBeTruthy();
+    expect(pressed()).toEqual([]);
+
+    const confirm = screen.getByTestId("where-confirm");
+    expect(confirm.getAttribute("aria-disabled")).toBe("true");
+    // The confirm names no kind, because none was chosen.
+    expect(confirm.textContent).toBe("Confirm");
+    expect(screen.getByTestId("where-confirm-reason").textContent).toBe(
+      "choose the kind of work",
+    );
+    expect(confirm.getAttribute("aria-describedby")).toBe("where-confirm-reason");
+
+    // WHAT is a pending line with the same reason; no link into it.
+    const what = document.querySelector('[data-testid="fact-what"]')!;
+    expect(what.getAttribute("data-fact-state")).toBe("pending");
+    expect(what.textContent).toContain("choose the kind of work");
+    expect(what.querySelector("button")).toBeNull();
+    // (The WHERE line's own value string drops the placeholder kind until
+    // it is confirmed — lib/scenarios/band-facts.test.ts, where the
+    // string is produced.)
+  });
+
+  it("PAYLOAD: with no chip clicked, Generate is refused and fires nothing", async () => {
+    const user = await freshWithRoad();
+
+    expect(generateBtn().disabled).toBe(true);
+    expect(
+      document.querySelector('[data-testid="cta-reason"]')?.textContent,
+    ).toContain("Choose the kind of work");
+
+    const before = calls.length;
+    await user.click(generateBtn());
+    await settle();
+    // No request of any kind — so no generate-path payload exists for a
+    // kind nobody chose.
+    expect(calls.length).toBe(before);
+    expect(bundles()).toHaveLength(0);
+    // And the column did not move on: still the WHERE band, no results.
+    expect(openBand()).toBe("where");
+    expect(document.querySelector('[data-testid="results-head-slot"]')).toBeNull();
+  });
+
+  it("the primary does nothing while disabled — pressing it is not a confirmation", async () => {
+    const user = await freshWithRoad();
+    await user.click(screen.getByTestId("where-confirm"));
+    await settle();
+    expect(openBand()).toBe("where");
+    expect(generateBtn().disabled).toBe(true);
+  });
+
+  it("only a click selects — and re-picking the default's own chip IS the choice", async () => {
+    const user = await freshWithRoad();
+    // `shoulder` is already the scenario's kind (the discriminant's
+    // placeholder).  Clicking its chip changes no value; it records that
+    // a person chose it.
+    await user.click(chip("shoulder"));
+    expect(pressed()).toEqual(["kind-chip-shoulder"]);
+    const confirm = screen.getByTestId("where-confirm");
+    expect(confirm.getAttribute("aria-disabled")).toBeNull();
+    expect(confirm.textContent).toBe("Confirm — shoulder work");
+    expect(document.querySelector('[data-testid="where-confirm-reason"]')).toBeNull();
+
+    // Selected is not confirmed: WHAT stays pending and Generate blocked
+    // until the primary is pressed.
+    expect(openBand()).toBe("where");
+    expect(generateBtn().disabled).toBe(true);
+
+    await confirmKind();
+    expect(openBand()).toBe("what");
+    expect(generateBtn().disabled).toBe(false);
+  });
+
+  it("PAYLOAD: the generated plan carries the kind the operator clicked", async () => {
+    const user = await freshWithRoad();
+
+    await user.click(chip("flagger_lane_closure"));
+    await settle();
+    // The chip is the writer: the next verification request carries the
+    // clicked kind.
+    const last = calls.filter((c) => c.url.includes("/api/render/audit")).at(-1)!;
+    expect((last.body.scenario as { kind: string }).kind).toBe("flagger_lane_closure");
+
+    await confirmKind();
+    await user.click(generateBtn());
+    await settle();
+    await user.click(screen.getByText("ALL_ZIP"));
+    await waitFor(() => expect(bundles()).toHaveLength(1));
+    expect((bundles()[0].body.scenario as { kind: string }).kind).toBe(
+      "flagger_lane_closure",
+    );
+  });
+
+  it("changing the kind after confirming asks for the confirm again", async () => {
+    const user = await freshWithRoad();
+    await user.click(chip("shoulder"));
+    await confirmKind();
+    expect(generateBtn().disabled).toBe(false);
+
+    // Back into WHERE through its fact line, and a different chip.
+    await user.click(screen.getByTestId("fact-link-where"));
+    await user.click(chip("flagger_lane_closure"));
+    expect(pressed()).toEqual(["kind-chip-flagger_lane_closure"]);
+    expect(generateBtn().disabled).toBe(true);
+    expect(
+      document.querySelector('[data-testid="fact-what"]')?.getAttribute("data-fact-state"),
+    ).toBe("pending");
+  });
+
+  it("a saved plan (initialScenario) is not re-asked — its kind was chosen when it was made", async () => {
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    await settle();
+    expect(openBand()).toBe("what");
+    expect(generateBtn().disabled).toBe(false);
+  });
+});

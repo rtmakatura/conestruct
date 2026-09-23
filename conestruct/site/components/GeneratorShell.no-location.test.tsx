@@ -24,6 +24,7 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 // the progress rail's trailing "Generate" jump entry is a second
 // /generate/i button on every mount now.
 import { GeneratorShell } from "./GeneratorShell";
+import { confirmKind } from "./__fixtures__/band-helpers";
 import { DEFAULT_SHOULDER, hasLocation } from "@/lib/scenarios";
 import type { ShoulderScenario } from "@/lib/scenarios";
 
@@ -233,10 +234,21 @@ describe("no location, no certification (#186)", () => {
     const text = document.body.textContent ?? "";
     expect(text).not.toContain("AWAITING LOCATION");
     expect(text).toContain("READY FOR TCS REVIEW");
-    const btn = screen.getByRole("button", {
-      name: /Generate plan/,
-    }) as HTMLButtonElement;
-    expect(btn.disabled).toBe(false);
+    const btn = () =>
+      screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement;
+    // #289 hand-check, 2026-09-23, defect 1: a pin is no longer enough.
+    // The kind is owed first — and on THIS path (no token, no picker
+    // save, `confirmedRoad` undefined) the chips must still render, or
+    // the operator could never answer it (the widening WhereBand records).
+    expect(btn().disabled).toBe(true);
+    expect(
+      document.querySelector('[data-testid="cta-reason"]')?.textContent,
+    ).toContain("Choose the kind of work");
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("kind-chip-shoulder"));
+    });
+    await confirmKind();
+    expect(btn().disabled).toBe(false);
   });
 
   it("a genuine input error outranks the missing pin (INVALID INPUT wins)", async () => {

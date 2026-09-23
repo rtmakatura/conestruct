@@ -77,8 +77,16 @@ import { RevisionPanel } from "./bands/RevisionPanel";
 import {
   FIELD_LABEL,
   RevisionBand,
+  STAGED_FIELD_OF,
+  fieldCurrentValue,
   fieldValueLabel,
 } from "./bands/RevisionBand";
+import type {
+  BandId,
+  KindState,
+  SetupSegmentKey,
+} from "@/lib/scenarios/band-facts";
+import type { OpenRequest } from "./BandStack";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -186,6 +194,20 @@ export function GeneratorShell({
 }: Props = {}) {
   const [scenario, setScenario] = useState<Scenario>(
     initialScenario ?? DEFAULT_SCENARIO,
+  );
+  // #289 hand-check, 2026-09-23, defect 1 — "the kind is confirmed, never
+  // inferred" (FLOW.md §5a, #281 §4.4, P21).  `scenario.kind` cannot
+  // carry that: it is a discriminant, so DEFAULT_SCENARIO arrives holding
+  // `shoulder` before anyone chose anything.  This is the separate fact —
+  // did a person choose it — and it lives HERE, not in the sidebar,
+  // because the sidebar unmounts post-generate and a re-opened column
+  // must not ask again for a kind already confirmed.
+  //
+  // A saved plan (`initialScenario`; production passes it only from
+  // app/app/plans/[id]) starts confirmed: its kind was chosen when the
+  // plan was made.  A fresh session starts at `none`.  Never on the wire.
+  const [kindState, setKindState] = useState<KindState>(
+    initialScenario ? "confirmed" : "none",
   );
   // Generator restage (Endeavor A): the page runs a real staged
   // lifecycle again — ``generated`` flips on the Generate click and the
@@ -906,15 +928,33 @@ export function GeneratorShell({
   // without one would be a regression dressed as a redesign.  The S7
   // commit gives the re-open its one field and its preview.
   const [revising, setRevising] = useState(false);
-  const onChangeOneThing = () => {
+  /** Which band the re-opened column should land on, when a setup-line
+   *  value asked for one that is not a staged field (defect 2's kind,
+   *  location, extent and dates).  Null = the column decides. */
+  const [columnOpenOn, setColumnOpenOn] = useState<OpenRequest | null>(null);
+  const openPresses = useRef(0);
+  /**
+   * #289 hand-check, 2026-09-23, defect 2: "The user picks the field."
+   *
+   * This replaced `onChangeOneThing`, which opened S7 on SPEED for every
+   * press — a choice made for the operator, which is the defect.  Each
+   * value on the setup fact line is now its own link (rulings.md, "D2 —
+   * the choice, recorded") and names what it opens:
+   *
+   *  · the five staged fields → S7 on THAT field (rule 190's one field);
+   *  · kind, location, extent → the column with WHERE open;
+   *  · dates → the column with WHAT open.
+   *
+   * The last two rows are the ruled CHANGE SOMETHING ELSE route landing
+   * on the band that owns the value — none of the four has a staged
+   * writer (the deviation rulings.md flags).
+   */
+  const onChangeValue = (key: SetupSegmentKey) => {
     setRevising(true);
-    // #289 S7, rule 190: "CHANGE ONE THING re-opens ONE field, in place,
-    // with its consequence shown."  Speed is the field the verb opens
-    // on — it is the one every kind carries, it is what the setup fact
-    // line leads with, and it is the value the design's own worked
-    // example changes.  The other four are reachable from the grid in
-    // the same re-opened band, and each stages the same way.
-    setRevisingField("speed");
+    const field = STAGED_FIELD_OF[key];
+    setRevisingField(field ?? null);
+    const band: BandId = key === "dates" ? "what" : "where";
+    setColumnOpenOn(field ? null : { band, n: ++openPresses.current });
     setPreview({ kind: "idle" });
     // Rule 33: "a CHANGE link focuses the band it re-opens."  The zone
     // is the band stack's home and carries the re-homed Zone 1 target
@@ -1666,7 +1706,9 @@ export function GeneratorShell({
                     {
                       field: revisingField,
                       label: FIELD_LABEL[revisingField],
-                      from: scenario.speed,
+                      // Defect 2: the field the operator picked, not
+                      // speed's value under another field's name.
+                      from: fieldCurrentValue(scenario, revisingField),
                       to,
                     },
                     fieldValueLabel(revisingField, to),
@@ -1682,6 +1724,8 @@ export function GeneratorShell({
                   previewSeq.current += 1;
                   setPreview({ kind: "idle" });
                   setRevisingField(null);
+                  // The column decides which band — the ruled route.
+                  setColumnOpenOn(null);
                 }}
                 stepIndex="REVISING"
                 panel={
@@ -1697,7 +1741,8 @@ export function GeneratorShell({
                     fieldLabel={FIELD_LABEL[revisingField]}
                     stagedValue={fieldValueLabel(
                       revisingField,
-                      stagedFieldValue ?? scenario.speed,
+                      stagedFieldValue ??
+                        fieldCurrentValue(scenario, revisingField),
                     )}
                     verdict={stripVerdictWord}
                     needsYou={needsYouModel.count}
@@ -1757,6 +1802,14 @@ export function GeneratorShell({
                 onClassification={(c, at) =>
                   setLastDetection(c ? { classification: c, ...at } : null)
                 }
+                // #289 hand-check, 2026-09-23, defect 1: the kind choice
+                // as a person made it.  A chip returns it to `picked` even
+                // after a confirmation — a changed kind is confirmed again.
+                kindState={kindState}
+                onKindPicked={() => setKindState("picked")}
+                onKindConfirmed={() => setKindState("confirmed")}
+                // Defect 2: the band a setup-line value asked for.
+                openRequest={columnOpenOn}
               />
             ) : null}
           </section>
@@ -1845,7 +1898,7 @@ export function GeneratorShell({
               settled={resultsVisible}
               scenario={scenario}
               jurisdictionName={jurisdictionBlock?.name ?? null}
-              onReopen={onChangeOneThing}
+              onChangeValue={onChangeValue}
             />
             {/* #289 Phase 2 — the NOT-CHECKED disclosure, which the setup
                 strip carried (§8.27 deletes the strip).  It sits beside

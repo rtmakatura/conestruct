@@ -25,7 +25,11 @@ import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
-import { deriveBands, type BandId } from "@/lib/scenarios/band-facts";
+import {
+  deriveBands,
+  type BandId,
+  type KindState,
+} from "@/lib/scenarios/band-facts";
 import { FactLine } from "./bands/BandPrimitives";
 import { WhereBand } from "./bands/WhereBand";
 import { WhatBand } from "./bands/WhatBand";
@@ -65,6 +69,24 @@ export interface BandStackProps {
   scheduleWindows?: ReactNode;
   jurisdictionSuggest?: ReactNode;
   classificationFields?: ReactNode;
+  /** #289 hand-check, 2026-09-23, defect 1 — the shell's record of the
+   *  kind choice.  Defaults to "confirmed" for a caller that does not
+   *  track it. */
+  kindState?: KindState;
+  /** A chip click happened — the only way to `picked`. */
+  onKindPicked?: () => void;
+  /** The WHERE primary was pressed — the only way to `confirmed`. */
+  onKindConfirmed?: () => void;
+  /** Defect 2: the band a setup-line value link asked for.  `n` counts
+   *  presses, so a second press on a value whose band is already asked
+   *  for still re-opens it after the user has steered elsewhere.  Null =
+   *  the column decides. */
+  openRequest?: OpenRequest | null;
+}
+
+export interface OpenRequest {
+  band: BandId;
+  n: number;
 }
 
 export function BandStack(props: BandStackProps) {
@@ -89,17 +111,33 @@ export function BandStack(props: BandStackProps) {
     scheduleWindows,
     jurisdictionSuggest,
     classificationFields,
+    kindState = "confirmed",
+    onKindPicked,
+    onKindConfirmed,
+    openRequest = null,
   } = props;
 
   // Rule 65: ONE id.  `null` hands the choice back to the column, which
   // is the load path and what every confirm does — the user stops
   // steering and the column moves on.
-  const [openOverride, setOpenOverride] = useState<BandId | null>(null);
+  const [openOverride, setOpenOverride] = useState<BandId | null>(
+    openRequest?.band ?? null,
+  );
+  // Defect 2: a value link pressed while the stack is already mounted.
+  // Keyed on the press count, not the band, so the same band asked for
+  // twice is two requests.  The mount-time request is already in the
+  // initial state above; re-applying it here is a no-op.
+  const requestN = openRequest?.n ?? 0;
+  useEffect(() => {
+    if (openRequest) setOpenOverride(openRequest.band);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestN]);
   const model = deriveBands({
     scenario,
     jurisdictionName,
     openOverride,
     blockerReason,
+    kindConfirmed: kindState === "confirmed",
   });
 
   const stackRef = useRef<HTMLDivElement | null>(null);
@@ -154,8 +192,20 @@ export function BandStack(props: BandStackProps) {
           setScenario={setScenario}
           setMeta={setMeta}
           onOpenPicker={onOpenPicker}
-          onKindChange={onKindChange}
-          onConfirm={() => setOpenOverride("what")}
+          // Defect 1: the chip writes the kind AND records that a person
+          // chose it.  Re-picking the kind already on the scenario (the
+          // default's own chip) is a choice too — `onKindChange` returns
+          // early for an unchanged kind, so the record is a separate call
+          // rather than a side effect of the write.
+          onKindChange={(k) => {
+            onKindChange(k);
+            onKindPicked?.();
+          }}
+          kindPicked={kindState !== "none"}
+          onConfirm={() => {
+            onKindConfirmed?.();
+            setOpenOverride("what");
+          }}
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
           stepIndex={model.stepIndex}

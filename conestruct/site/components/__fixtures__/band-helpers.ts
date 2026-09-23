@@ -66,13 +66,29 @@ export async function openWhat(): Promise<void> {
  * makes the re-open land on ONE field with a before/after panel; until
  * then it re-opens the band.
  */
-export async function changeOneThing(): Promise<void> {
-  const link = document.querySelector('[data-testid="fact-link-setup"]');
-  if (!link) throw new Error("no CHANGE ONE THING on the setup fact line");
+export async function changeOneThing(key: string = "speed"): Promise<void> {
+  // #289 hand-check, 2026-09-23, defect 2: there is no single CHANGE ONE
+  // THING link any more — each value on the setup line is its own link,
+  // and the operator presses the one they mean.  The helper keeps its
+  // name because the suites' claim is unchanged ("a post-generate edit is
+  // one field"); it now says WHICH field, defaulting to the speed the old
+  // link always opened.
+  const link = document.querySelector(`[data-testid="setup-link-${key}"]`);
+  if (!link) throw new Error(`no ${key} value link on the setup fact line`);
   await act(async () => {
     fireEvent.click(link);
   });
 }
+
+/** The WHAT-grid cell id a suite names → the setup-line value that opens
+ *  the same field in S7. */
+const REVISE_KEY: Record<string, { key: string; editor: string }> = {
+  "what-speed": { key: "speed", editor: "revise-speed" },
+  "what-lanes": { key: "lanes", editor: "revise-lanes" },
+  "what-lane-width": { key: "laneWidth", editor: "revise-laneWidth" },
+  "what-road-type": { key: "roadType", editor: "revise-roadType" },
+  "what-jurisdiction": { key: "jurisdiction", editor: "revise-jurisdiction_key" },
+};
 
 /**
  * CHANGE ONE THING, then set a WHAT-grid cell.  `id` is the cell's own
@@ -93,17 +109,13 @@ export async function editAfterGenerate(
   // refetch of the pair, because that is what APPLY does.  What changed
   // is that the write now happens at a moment the operator chose.
   //
-  // `id` is kept in the signature because the suites name the field they
-  // mean, and because S7 opens on speed today: a caller asking for
-  // another field should fail loudly here rather than silently edit the
-  // wrong one.
-  if (id !== "what-speed") {
-    throw new Error(
-      `editAfterGenerate: S7 re-opens the speed field; asked for ${id}`,
-    );
-  }
-  await changeOneThing();
-  const el = document.getElementById("revise-speed") as HTMLSelectElement | null;
+  // Defect 2: the suite names the field, and the field's own value link
+  // opens it.  An unknown id still fails loudly rather than editing the
+  // wrong field.
+  const target = REVISE_KEY[id];
+  if (!target) throw new Error(`editAfterGenerate: no S7 field for ${id}`);
+  await changeOneThing(target.key);
+  const el = document.getElementById(target.editor) as HTMLSelectElement | null;
   if (!el) throw new Error("no revision editor on screen");
   await act(async () => {
     fireEvent.change(el, { target: { value } });
@@ -115,9 +127,14 @@ export async function editAfterGenerate(
  *  value.  This is the half that writes nothing (§1.1) and fires only a
  *  preview (a read) — the half a suite wants when its claim is about
  *  what an edit does NOT do. */
-export async function stageRevision(value: string): Promise<void> {
-  await changeOneThing();
-  const el = document.getElementById("revise-speed") as HTMLSelectElement | null;
+export async function stageRevision(
+  value: string,
+  id: string = "what-speed",
+): Promise<void> {
+  const target = REVISE_KEY[id];
+  if (!target) throw new Error(`stageRevision: no S7 field for ${id}`);
+  await changeOneThing(target.key);
+  const el = document.getElementById(target.editor) as HTMLSelectElement | null;
   if (!el) throw new Error("no revision editor on screen");
   await act(async () => {
     fireEvent.change(el, { target: { value } });
@@ -151,6 +168,24 @@ export async function discardRevision(): Promise<void> {
   if (!discard) throw new Error("no DISCARD on the revision band");
   await act(async () => {
     fireEvent.click(discard);
+  });
+}
+
+/**
+ * #289 hand-check, 2026-09-23, defect 1 — the WHERE primary, pressed
+ * after a chip.  A chip click only SELECTS; the WHAT band and Generate
+ * wait on this press.  Fails loudly if the primary is still disabled
+ * (no chip clicked), because a suite pressing it then is asserting a
+ * confirmation that did not happen.
+ */
+export async function confirmKind(): Promise<void> {
+  const btn = document.querySelector('[data-testid="where-confirm"]');
+  if (!btn) throw new Error("no WHERE confirm on screen");
+  if (btn.getAttribute("aria-disabled") === "true") {
+    throw new Error("WHERE confirm is disabled — no kind chip was clicked");
+  }
+  await act(async () => {
+    fireEvent.click(btn);
   });
 }
 

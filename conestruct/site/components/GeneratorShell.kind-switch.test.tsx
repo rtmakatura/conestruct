@@ -169,7 +169,7 @@ vi.mock("./LocationPickerModal", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
-import { openWhere, openWhat } from "./__fixtures__/band-helpers";
+import { confirmKind, openWhere, openWhat } from "./__fixtures__/band-helpers";
 
 // #289 rule 135 — the kind is three CHIPS in the WHERE band now (§8.18),
 // not a vertical list of seven.  Selecting by test id rather than by the
@@ -297,6 +297,9 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     await user.click(screen.getByText("APPLY_COLFAX"));
     await openWhere();
     await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
+    // #289 defect 1: the chip selects; the WHERE primary confirms, and
+    // WHAT stays pending until it does.
+    await confirmKind();
 
     // Re-armed relays arm their affordances: the #86 multilane confirm
     // and the #158 two-way confirm both render (rule 10's other half —

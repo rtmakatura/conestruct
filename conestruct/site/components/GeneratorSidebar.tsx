@@ -35,7 +35,8 @@ import {
   LocationPickerModal,
   type LocationPickerResult,
 } from "./LocationPickerModal";
-import { BandStack } from "./BandStack";
+import { BandStack, type OpenRequest } from "./BandStack";
+import type { KindState } from "@/lib/scenarios/band-facts";
 
 interface Props {
   scenario: Scenario;
@@ -101,6 +102,14 @@ interface Props {
     c: RoadClassification | null,
     at: { lat: number; lng: number },
   ) => void;
+  /** #289 hand-check, 2026-09-23, defect 1 — the kind choice, owned by
+   *  the shell so it survives this component unmounting post-generate.
+   *  Defaults to "confirmed" for a caller that does not track it. */
+  kindState?: KindState;
+  onKindPicked?: () => void;
+  onKindConfirmed?: () => void;
+  /** Defect 2 — which band a setup-line value link asked for. */
+  openRequest?: OpenRequest | null;
 }
 
 // Schedule then Site conditions close the panel, so their indices
@@ -147,6 +156,10 @@ export function GeneratorSidebar({
   jurisdictionSuggest,
   pendingSuggestions = 0,
   onClassification,
+  kindState = "confirmed",
+  onKindPicked,
+  onKindConfirmed,
+  openRequest = null,
 }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
   // #193: focus target for the picker's close-restore when the opener
@@ -178,6 +191,8 @@ export function GeneratorSidebar({
     refusal,
     refusalPending,
     pendingSuggestions,
+    // Defect 1: Generate waits on a person's confirmation of the kind.
+    kindConfirmed: kindState === "confirmed",
   });
   // #222: pre-pin, every step after Location renders pending (dim +
   // inert + focusable summary) -- detection fills road facts from the
@@ -444,6 +459,10 @@ export function GeneratorSidebar({
         setMeta={setMeta}
         onOpenPicker={() => setPickerOpen(true)}
         onKindChange={onKindChange}
+        kindState={kindState}
+        onKindPicked={onKindPicked}
+        onKindConfirmed={onKindConfirmed}
+        openRequest={openRequest}
         onGenerate={onGenerate}
         generating={generating}
         // Rule 139: one derivation feeds the verdict strip, the disabled

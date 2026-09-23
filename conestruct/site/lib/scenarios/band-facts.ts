@@ -24,6 +24,7 @@
 
 import { candidateLabel } from "../road-detection/labels";
 import { SCENARIO_KINDS, hasLocation } from "./index";
+import { KIND_BLOCKER } from "./rail";
 import type { Scenario, ScenarioKind } from "./types";
 
 /** The two bands, plus the GENERATE slot's id.
@@ -33,6 +34,12 @@ import type { Scenario, ScenarioKind } from "./types";
  *  never `open`: it asks no question, so it carries no step question and
  *  has nothing to open.  See `components/bands/GenerateBand.tsx`. */
 export type BandId = "where" | "what" | "generate";
+
+/** #289 hand-check, 2026-09-23, defect 1: the kind choice as a person
+ *  made it — separate from `scenario.kind`, which always holds a value.
+ *  `none` → a chip click → `picked` → the WHERE primary → `confirmed`.
+ *  Shell state only; it never rides the wire.  See rulings.md, "D1". */
+export type KindState = "none" | "picked" | "confirmed";
 
 /** Rule 58's verbs.  "MOVE" is Part 1 §7.14's — a map position is a drag,
  *  not a field edit.  "SET" marks an unset optional. */
@@ -144,15 +151,23 @@ const ft = (n: number) => `${n.toLocaleString("en-US")} ft`;
  *    The kind is what the column can say today, and it says the kind.
  *
  * Rule 10: what is absent is absent.  Nothing here invents a clause.
+ *
+ * #289 hand-check, 2026-09-23, defect 1: the kind clause prints only once
+ * a person has confirmed it.  Before that `scenario.kind` holds the
+ * default, and printing it would be the pre-selection the hand-check
+ * found, restated as a fact.
  */
-export function whereValue(scenario: Scenario): string | null {
+export function whereValue(
+  scenario: Scenario,
+  kindConfirmed = true,
+): string | null {
   if (!hasLocation(scenario.meta)) return null;
   const parts: string[] = [];
   const road = confirmedRoadLabel(scenario);
   if (road) parts.push(road);
   else if (scenario.meta.address) parts.push(scenario.meta.address);
   if (scenario.workLen > 0) parts.push(ft(scenario.workLen));
-  parts.push(kindLabel(scenario.kind).toLowerCase());
+  if (kindConfirmed) parts.push(kindLabel(scenario.kind).toLowerCase());
   return parts.join(" · ");
 }
 
@@ -226,16 +241,100 @@ export function setupValue(
   scenario: Scenario,
   jurisdictionName: string | null,
 ): string {
-  const parts: string[] = [kindLabel(scenario.kind)];
+  return setupSegments(scenario, jurisdictionName)
+    .map((s) => s.text)
+    .join(" · ");
+}
+
+/**
+ * The setup fact line's values, one per thing the operator can change.
+ *
+ * #289 hand-check, 2026-09-23, defect 2: "the setup fact line's values
+ * each become their own link (speed, lanes, width, road type,
+ * jurisdiction, dates, kind, location)".  Chosen over a field picker —
+ * rulings.md, "D2 — the choice, recorded".
+ *
+ * Rule 119's order, with the hand-check's additions slotted where the
+ * WHAT band's own order puts them: kind · location · extent · speed ·
+ * lanes · width · road type · jurisdiction · dates.  `side` is still
+ * Phase 3's and is still omitted rather than guessed.
+ *
+ * Rule 10, per segment: `lanes` is absent for a kind that has no lane
+ * count (TA-10's definition, #209), because a link to change a number
+ * nobody set would be a control about nothing.  Every other segment is
+ * always present — an unset jurisdiction or date reads "Not set", which
+ * is exactly the value a person would press to set.
+ */
+export type SetupSegmentKey =
+  | "kind"
+  | "location"
+  | "extent"
+  | "speed"
+  | "lanes"
+  | "laneWidth"
+  | "roadType"
+  | "jurisdiction"
+  | "dates";
+
+export interface SetupSegment {
+  key: SetupSegmentKey;
+  text: string;
+  /** What the link says to a screen reader: the field and its value,
+   *  because "35 mph" alone does not say it is the speed. */
+  label: string;
+}
+
+/** The work dates as the line prints them.  The mode is derived from
+ *  the dates (what-writes.ts `setWorkDates`), so this reads the dates and
+ *  not the mode.  Dates are printed as stored (ISO), never re-formatted
+ *  into a locale the backend did not see. */
+export function datesText(scenario: Scenario): string {
+  const s = scenario.schedule;
+  if (!s?.work_date) return "dates not set";
+  return s.work_date_end ? `${s.work_date} – ${s.work_date_end}` : s.work_date;
+}
+
+export function setupSegments(
+  scenario: Scenario,
+  jurisdictionName: string | null,
+): SetupSegment[] {
+  const seg = (key: SetupSegmentKey, field: string, text: string) => ({
+    key,
+    text,
+    label: `${field}: ${text} — change`,
+  });
+  const out: SetupSegment[] = [seg("kind", "Kind of work", kindLabel(scenario.kind))];
   const road = confirmedRoadLabel(scenario);
-  if (road) parts.push(road);
-  else if (scenario.meta.address) parts.push(scenario.meta.address);
-  if (scenario.workLen > 0) parts.push(ft(scenario.workLen));
-  parts.push(`${scenario.speed} mph`);
-  parts.push(
-    scenario.jurisdiction_key ? (jurisdictionName ?? scenario.jurisdiction_key) : "Not set",
+  out.push(
+    seg(
+      "location",
+      "Location",
+      road ??
+        (scenario.meta.address ||
+          `pin at ${scenario.meta.lat.toFixed(5)}, ${scenario.meta.lng.toFixed(5)}`),
+    ),
   );
-  return parts.join(" · ");
+  if (scenario.workLen > 0) out.push(seg("extent", "Work zone length", ft(scenario.workLen)));
+  out.push(seg("speed", "Speed limit", `${scenario.speed} mph`));
+  if ("lanes" in scenario) {
+    const n = scenario.lanes as number;
+    out.push(seg("lanes", "Lanes per direction", `${n} lane${n === 1 ? "" : "s"}`));
+  }
+  if ("laneWidth" in scenario) {
+    out.push(seg("laneWidth", "Lane width", `${scenario.laneWidth} ft lanes`));
+  }
+  out.push(seg("roadType", "Road type", roadTypeLabel(scenario.roadType as string)));
+  out.push(
+    seg(
+      "jurisdiction",
+      "Jurisdiction",
+      scenario.jurisdiction_key
+        ? (jurisdictionName ?? scenario.jurisdiction_key)
+        : "Not set",
+    ),
+  );
+  out.push(seg("dates", "Work dates", datesText(scenario)));
+  return out;
 }
 
 export interface BandInput {
@@ -257,6 +356,11 @@ export interface BandInput {
    *  the reason Generate cannot run is the only thing worth saying in
    *  that slot. */
   blockerReason?: string | null;
+  /** #289 hand-check, 2026-09-23, defect 1: has a person confirmed the
+   *  kind (a chip click, then the WHERE primary)?  The shell owns it;
+   *  `scenario.kind` cannot say, because it always holds a value.
+   *  Defaults to true for callers that do not ask. */
+  kindConfirmed?: boolean;
 }
 
 /**
@@ -269,36 +373,39 @@ export function deriveBands({
   jurisdictionName,
   openOverride,
   blockerReason = null,
+  kindConfirmed = true,
 }: BandInput): BandModel {
   const located = hasLocation(scenario.meta);
-  const where = whereValue(scenario);
+  const where = whereValue(scenario, kindConfirmed);
+  // WHAT is reachable once the pin is down AND a person has confirmed the
+  // kind.  Before that it is a pending line, and its reason is the one
+  // thing still owed.
+  const whatReady = located && kindConfirmed;
 
   // The column's own reading of "which question is live".
   //
-  // The column's own reading of "which question is live".
+  // #289 hand-check, 2026-09-23, defect 1 — THIS REVERSES A RECORDED
+  // PHASE 2 DEVIATION.  The column used to open WHAT the moment a pin
+  // existed, on the reasoning that with no proposal producer a mandatory
+  // confirm would confirm "a decision nobody made".  But the decision
+  // WAS made — by the default, silently: shoulder work arrived
+  // pre-selected and the operator was never asked.  The guardrail is
+  // "the kind is confirmed, never inferred" (FLOW.md §5a, #281 §4.4,
+  // P21), and #281's own audit ruling says the chips render UNSELECTED,
+  // which only means something if nothing is selected for them.
   //
-  // A PIN answers "where is the work?".  Everything else the WHERE band
-  // holds — which road, which direction, how long, which kind — is detail
-  // about a place that has been chosen, and FLOW.md §3 puts it in step 2
-  // ("what's the job?") rather than step 1.  So the pin opens WHAT, and
-  // the WHERE fact line's CHANGE link is the way back in.
-  //
-  // Part 1's frames put the collapse on the CONFIRM press instead (§2.3:
-  // "Disappeared: the Where band's aerial, move ledger, kind chips and
-  // confirm button"), because in Part 1 that press confirms a kind the
-  // system PROPOSED.  This phase has no proposal producer (#281's own
-  // audit ruling: "the chips render unselected with no '✓ proposed'"), so
-  // a mandatory Confirm here would be a confirmation of a decision nobody
-  // made — ceremony wearing the clothes of a decision, which is the shape
-  // rule 10 exists to refuse.  The button stays, because the band still
-  // has one thing to confirm, and Phase 3 gives it back the proposal that
-  // makes it a decision again.
-  //
-  // Recorded as a Phase 2 deviation from §2.2's own reading, with its
-  // reason, in the arc README.
-  const natural: BandId = located ? "what" : "where";
+  // So Part 1 §2.3's reading comes back: the WHERE band stays open until
+  // the confirm press, and the press is what collapses it.  The chips
+  // start with none pressed (components/bands/WhereBand.tsx), so the
+  // confirm is now a decision again rather than ceremony.
+  const natural: BandId = whatReady ? "what" : "where";
+  // An override onto WHAT before the kind is confirmed is refused here
+  // rather than trusted: WHAT is pending, and a pending line has no band
+  // to open (rule 59).
   const open: BandId =
-    openOverride && openOverride !== "generate" ? openOverride : natural;
+    openOverride && openOverride !== "generate" && (openOverride !== "what" || whatReady)
+      ? openOverride
+      : natural;
 
   const facts: BandFact[] = [
     {
@@ -312,15 +419,20 @@ export function deriveBands({
     {
       id: "what",
       label: "What's the job?",
-      value: located ? whatValue(scenario, jurisdictionName) : null,
-      verb: located ? "CHANGE" : null,
-      pending: located
+      value: whatReady ? whatValue(scenario, jurisdictionName) : null,
+      verb: whatReady ? "CHANGE" : null,
+      pending: whatReady
         ? null
-        : // Part 1 §2.2's own string once a road exists; §2.1's before.
-          scenario.meta.confirmedRoad
-          ? `road facts prefill from ${confirmedRoadLabel(scenario)}`
-          : "kind of work, extent, side · pending — find the work first",
-      glyph: located ? "✓" : "○",
+        : located
+          ? // Defect 1: the pin is down and the kind is not confirmed.
+            // The reason is the rail's own string (rule 139), in the
+            // pending line's lower case.
+            `pending — ${KIND_BLOCKER.toLowerCase()}`
+          : // Part 1 §2.2's own string once a road exists; §2.1's before.
+            scenario.meta.confirmedRoad
+            ? `road facts prefill from ${confirmedRoadLabel(scenario)}`
+            : "kind of work, extent, side · pending — find the work first",
+      glyph: whatReady ? "✓" : "○",
     },
     {
       id: "generate",

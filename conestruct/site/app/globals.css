@@ -2336,7 +2336,10 @@ input[type="number"] {
      "unchanged" and #288 answered "rule 15 admits no exemption".
      Unchanged in CONTENT is not a claim about the tappable area, and a
      min-height moves no type.  axe flagged the same element. */
-  .workbench .setup-strip .strip-edit-all {
+  .workbench .setup-strip .strip-edit-all,
+  /* #289 hand-check, 2026-09-23, defect 2: the setup line's value links
+     (the 32 px floor is on the class, beside its own rules). */
+  .workbench .a-val-lk {
     min-height: 44px;
   }
 }
@@ -3941,6 +3944,41 @@ input[type="number"] {
 .workbench .a-lk:hover {
   color: var(--act-bright);
   border-bottom-color: var(--act-bright);
+}
+
+/* #289 hand-check, 2026-09-23, defect 2 — the setup line's values ARE
+   its links.  Each one keeps the value's own type (rule 8's body value,
+   inherited from .a-val) so the line still reads as one sentence; the
+   act-coloured underline is what says it can be pressed — a shape
+   channel beside the hue (rule 13).
+   Rule 15 admits no exemption (#288's body forecloses WCAG's inline
+   one), so each value is an inline-flex box with the 32 px floor — the
+   .tr-signpost pattern: the hit box grows, the text does not move — and
+   44 px in the ≤480 block below.  The line gets taller where it wraps;
+   that is the rule's price, and the reserve under it is a floor (R9). */
+.workbench .a-val-lk {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(52, 169, 232, 0.45);
+  padding: 0;
+  margin: 0;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: inherit;
+}
+.workbench .a-val-lk:hover,
+.workbench .a-val-lk:focus-visible {
+  color: var(--act-bright);
+  border-bottom-color: var(--act-bright);
+}
+.workbench .a-val-lk[aria-disabled="true"] {
+  cursor: default;
+  border-bottom-color: transparent;
 }
 
 /* ─── C3 · the open band (rules 61–66) ───

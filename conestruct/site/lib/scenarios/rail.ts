@@ -126,6 +126,13 @@ export interface RailInput {
    *  ``info`` subline and nothing else — never a state, never the
    *  blocker (suggestions never gate). */
   pendingSuggestions: number;
+  /** #289 hand-check, 2026-09-23, defect 1: has a PERSON chosen the
+   *  kind?  `scenario.kind` cannot answer that — it is a discriminant and
+   *  always holds a value, the default's included.  The shell owns the
+   *  answer (a chip click, then the WHERE primary) and it never rides the
+   *  wire.  Defaults to true so a caller with no such question — the
+   *  rail's own unit suite — reads the chain it always read. */
+  kindConfirmed?: boolean;
 }
 
 // The CTA-chain literals, moved here from GeneratorSidebar (#221
@@ -138,6 +145,10 @@ export const RECHECK_BLOCKER =
   "Re-checking the declined input — Generate re-enables when the verdict settles.";
 export const LOCATION_BLOCKER =
   "Set a location first — pick on map or enter manually.";
+/** #289 hand-check, 2026-09-23, defect 1 — Ryan's words for the reason.
+ *  One string on the WHERE primary, the WHAT pending line and the
+ *  Generate frame (rule 139: one derivation, every surface). */
+export const KIND_BLOCKER = "Choose the kind of work";
 
 export const RAIL_ANCHOR_PREFIX = "rail-step-";
 
@@ -226,6 +237,7 @@ export function deriveRail({
   refusal,
   refusalPending,
   pendingSuggestions,
+  kindConfirmed = true,
 }: RailInput): Rail {
   const wz = validateWorkZone(scenario);
   const lanes = validateLanes(scenario);
@@ -265,6 +277,15 @@ export function deriveRail({
   // extraction; the pre-existing CTA suites are the proof).
   let blocker: RailBlocker | null = null;
   if (!wz.ok && wz.message) blocker = { message: wz.message, entryId: "work" };
+  // #289 defect 1, RULE 5 (stated): a new rank in the chain.  After the
+  // extent, because both are WHERE-band answers and the extent sits
+  // above the chips; before everything the WHAT band holds, because that
+  // band is pending until the kind is confirmed and its reasons would
+  // point at controls that are not on screen.  Only once there is a pin:
+  // before one there are no chips, and the location's sentence is the
+  // true reason.
+  else if (located && !kindConfirmed)
+    blocker = { message: KIND_BLOCKER, entryId: "location" };
   else if (!lanes.ok && lanes.message)
     blocker = { message: lanes.message, entryId: "road" };
   else if (!approaches.ok && approaches.message)

@@ -48,12 +48,26 @@
 // the results would still have shifted at the settle, which is the defect
 // rule 28 exists to prevent.
 //
-// THE VERB IS "CHANGE ONE THING" (rule 58), not "CHANGE": post-generate
-// the line is one row standing for a whole scenario, and the verb says
-// what pressing it does.
+// THE VALUES ARE THE LINKS (#289 hand-check, 2026-09-23, defect 2).  The
+// row used to end in one "CHANGE ONE THING" link (rule 58's verb), and
+// that link opened S7 on SPEED whatever the operator meant to change —
+// the product picking the field.  "The user picks the field": each value
+// in the line is now its own link, and pressing one opens THAT field
+// (rulings.md, "D2 — the choice, recorded", which also records why this
+// was chosen over a field picker).
+//
+// RULE 5, stated: the trailing CHANGE ONE THING link is retired.  Rule
+// 134 gives a fact line a link OR a provenance word, so the right track
+// now carries the word that says how the row works.  The values stay in
+// one line, joined by the same " · " they always were, so the row reads
+// the same sentence it did — `setupValue()` is still that sentence, and
+// it is composed from the same segments rendered here.
 
 import type { Scenario } from "@/lib/scenarios";
-import { setupValue } from "@/lib/scenarios/band-facts";
+import {
+  setupSegments,
+  type SetupSegmentKey,
+} from "@/lib/scenarios/band-facts";
 import { useWriteLock } from "./WriteLock";
 
 export function ResultsHead({
@@ -62,7 +76,7 @@ export function ResultsHead({
   jurisdictionName = null,
   settled = false,
   declined = false,
-  onReopen,
+  onChangeValue,
 }: {
   /** The shell's "post-generate and not declined" predicate.  It mounts
    *  the slot from the Generate click onward and releases it under a
@@ -80,11 +94,9 @@ export function ResultsHead({
    *  stays, because the operator's way back into the input is the only
    *  recovery a refusal leaves them. */
   declined?: boolean;
-  /** Rule 58's "CHANGE ONE THING".  Until S7 exists this re-opens the
-   *  band stack — the same thing "Edit full setup" did, under the name
-   *  and the shape the design gives it.  S7 makes it re-open ONE band
-   *  with one field, in place. */
-  onReopen?: () => void;
+  /** Defect 2: a value on the line was pressed.  The shell decides what
+   *  it opens (S7 on that field, or the band that owns it). */
+  onChangeValue?: (key: SetupSegmentKey) => void;
 }) {
   // #252 (ruling b) / rule 118: the link is a write control — it leads
   // to one — so it declares itself and goes quiet under the lock.
@@ -107,23 +119,41 @@ export function ResultsHead({
           <div className="a-mid">
             <span className="tr-field">Setup</span>
             <span className="a-lead" aria-hidden />
-            <span className="a-val">
-              {setupValue(scenario, jurisdictionName)}
+            <span className="a-val" data-testid="setup-values">
+              {setupSegments(scenario, jurisdictionName).map((s, i) => (
+                <span key={s.key}>
+                  {i > 0 && " · "}
+                  {onChangeValue ? (
+                    // #252 (ruling b) / rule 118: each link leads to a
+                    // write, so it declares itself and goes quiet under
+                    // the lock — `aria-disabled`, not `disabled`, so it
+                    // stays focusable while the working band is up.
+                    <button
+                      type="button"
+                      className="a-val-lk"
+                      data-write=""
+                      aria-disabled={locked || undefined}
+                      aria-label={s.label}
+                      onClick={() => {
+                        if (!locked) onChangeValue(s.key);
+                      }}
+                      data-testid={`setup-link-${s.key}`}
+                    >
+                      {s.text}
+                    </button>
+                  ) : (
+                    s.text
+                  )}
+                </span>
+              ))}
             </span>
           </div>
-          {onReopen && (
-            <button
-              type="button"
-              className="a-lk"
-              data-write=""
-              aria-disabled={locked || undefined}
-              onClick={() => {
-                if (!locked) onReopen();
-              }}
-              data-testid="fact-link-setup"
-            >
-              CHANGE ONE THING
-            </button>
+          {onChangeValue && (
+            // Rule 134: a link OR a provenance word.  The links are the
+            // values; the word says so.
+            <span className="tr-prov" data-testid="setup-links-hint">
+              pick a value to change it
+            </span>
           )}
         </div>
       )}
