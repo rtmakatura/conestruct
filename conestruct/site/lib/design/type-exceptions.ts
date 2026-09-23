@@ -127,7 +127,7 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       { selector: ".audit-body", size: "14px" },
       { selector: ".check-list-item .check-list-lbl", size: "14px" },
       { selector: ".empty-state .arrow", size: "14px" },
-      { selector: ".workbench .dl-card h3", size: "14px" },
+      // #289 fidelity F2: the download card title left for rule 5 (12.5 px) — its row moved to the fidelity pass's debt row.
     ],
     tsx: [
       { file: "app/onboarding/page.tsx", cls: "text-[14px]", count: 1 },
@@ -249,8 +249,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".audit-body table th", size: "10px" },
       { selector: ".check-list-item .ck", size: "11px" },
       { selector: ".check-list-item .check-list-src", size: "10px" },
-      { selector: ".workbench .dl-card .fmt", size: "9.5px" },
-      { selector: ".workbench .dl-card .desc", size: "11.5px" },
+      { selector: ".workbench .dl-card .fmt", size: "10.5px" },
+      { selector: ".workbench .dl-card .desc", size: "10.5px" },
       { selector: ".workbench .dl-btn", size: "12.5px" },
       { selector: ".workbench .ref-group-label", size: "9.5px" },
       { selector: ".workbench .ref-group-label .ix", size: "11px" },
@@ -281,6 +281,17 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // exactly as .disc-name's rule-88 13 px is above.
       { selector: ".workbench", size: "13px" },
       { selector: ".workbench .disc-caret", size: "12px" },
+      // #289 fidelity F2 — surfaces that rode a LABEL role that was never
+      // theirs, now stating their own Part 2 figures: the download card
+      // title (rule 85 → role 3, 12.5), NEEDS YOU's count (rule 73, 11),
+      // the item body (rule 9, the body-value token), the citation (rule
+      // 11, 9.5) and the disclosure count (rule 88, 11).  Every size is
+      // already in the sheet.
+      { selector: ".workbench .dl-card h3", size: "12.5px" },
+      { selector: ".workbench .ny-count", size: "11px" },
+      { selector: ".workbench .ny-body", size: "var(--fs-body-value)" },
+      { selector: ".workbench .ny-cite", size: "9.5px" },
+      { selector: ".workbench .disc-count", size: "11px" },
     ],
     tsx: [],
   },
@@ -303,7 +314,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // the type now.  26px leaves the sheet with them; 9px, 10px and
       // 13px all remain elsewhere.
       { selector: ".workbench .device-table .jr-tag", size: "8.5px" },
-      { selector: ".workbench .stale-ribbon", size: "12.5px" },
+      { selector: ".workbench .stale-ribbon", size: "var(--fs-body-value)" },
       { selector: ".workbench .wb-glyph", size: "13px" },
       { selector: ".workbench .wb-verb", size: "10px" },
       { selector: ".workbench .wb-object", size: "12.5px" },
@@ -338,9 +349,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "A — the corrections block (#254/#255)",
     css: [
       { selector: ".workbench .jbar-suggest", size: "10.5px" },
-      { selector: ".workbench .jbar-suggest .sugg-row", size: "11.5px" },
+      { selector: ".workbench .jbar-suggest .sugg-row", size: "10.5px" },
       { selector: ".workbench .jbar-suggest button.confirm, .workbench .jbar-suggest button.ghost", size: "10px" },
-      { selector: ".workbench .jbar-suggest .honesty", size: "9.5px" },
+      { selector: ".workbench .jbar-suggest .honesty", size: "10.5px" },
       // #288 clause 1: the block moved into NEEDS YOU, so these three
       // re-scoped .jbar-suggest → .needs-you (same values).  The other
       // SEVEN rows here are DELETED, not moved: the ledger's glyph,
@@ -451,7 +462,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/MobileOpMultilaneForm.tsx", cls: "text-[10px]", count: 3 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[12px]", count: 2 },
-      { file: "components/OutputCards.tsx", cls: "text-[10px]", count: 2 },
+      { file: "components/OutputCards.tsx", cls: "text-[10px]", count: 1 },
       // #288 clause 3: 3 -> 2.  The "↓ All (.zip)" control stopped
       // carrying its own Tailwind size — it now takes rule 130's .pri or
       // rule 133's .act, whose sizes live in the sheet.
@@ -465,7 +476,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/QuotePanel.tsx", cls: "text-[13px]", count: 7 },
       { file: "components/QuotePanel.tsx", cls: "text-[16px]", count: 1 },
       { file: "components/QuotePanel.tsx", cls: "text-[28px]", count: 1 },
-      { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 5 },
+      { file: "components/ScheduleField.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/SheetMeta.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/TieredReference.tsx", cls: "text-[11px]", count: 3 },
       { file: "components/TieredReference.tsx", cls: "text-[12px]", count: 4 },
@@ -477,7 +488,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — jurisdiction section (Tailwind literals beside the .jbar rules)",
     css: [],
     tsx: [
-      { file: "components/JurisdictionSection.tsx", cls: "text-[10px]", count: 10 },
+      { file: "components/JurisdictionSection.tsx", cls: "text-[10px]", count: 9 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[11px]", count: 7 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[12px]", count: 25 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[13px]", count: 2 },
@@ -590,7 +601,12 @@ export const CENSUS_PINS = {
   // rule 20's workbench base, rule 88's caret, rules 17–18's symbol
   // treatment.  106 -> 109.  No new size: 13px, 12px and the token are
   // each already in the sheet.
-  cssDeclarations: 109,
+  // #289 fidelity F2: four declarations where surfaces rode a label role
+  // that was not theirs (.ny-count, .ny-body, .ny-cite, .disc-count), and
+  // six resized in place to Part 2's figures (the card title / format /
+  // caption, the ribbon, two suggestion lines).  109 -> 113.  Sizes stay
+  // 25: every value the pass writes is already in the sheet.
+  cssDeclarations: 113,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -610,6 +626,10 @@ export const CENSUS_PINS = {
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
-  tsxUses: 295,
+  // #289 fidelity F2: five uses leave for the provenance role (the card
+  // spec line's text-[10px], the suggestion's "(OSM tier)" text-[10px],
+  // ScheduleField's three faint text-[11px] notes).  No site or file
+  // leaves: each file keeps other uses of the same class.  295 -> 290.
+  tsxUses: 290,
   tsxFiles: 35,
 } as const;

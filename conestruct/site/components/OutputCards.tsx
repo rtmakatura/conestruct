@@ -457,7 +457,7 @@ function DlCard({
         <span className="fmt">{card.format}</span>
       </div>
       <div className="desc">
-        <span className="font-mono text-[10px] uppercase tracking-[0.08em]">
+        <span>
           {card.spec}
         </span>
         {/* The quantity line is always present at its own height (P1):

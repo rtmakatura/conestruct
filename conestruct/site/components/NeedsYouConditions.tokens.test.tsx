@@ -85,7 +85,9 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     // "a symbol never changes hue by context" — superseding --dim here.
     expect(rule(".workbench .needs-you .ny-cond .ny-glyph.sc-detected")).toMatch(/color:\s*var\(--warn\)/);
     expect(rule(".workbench .needs-you .ny-cond .ny-glyph.sc-absent")).toMatch(/color:\s*var\(--pass\)/);
-    expect(rule(".workbench .needs-you .sc-result.sc-detected")).toMatch(/color:\s*var\(--dim\)/);
+    // #289 fidelity F2: the detected WORD is provenance ink (rule 6) — no
+    // rule colours it; the tier's hue is the ▲'s alone (rule 18).
+    expect(css).not.toMatch(/\.sc-result\.sc-detected\s*\{/);
     // The absent row's WORD is never green: green lives in the glyph, so
     // five clear rows are not five green claims (spec 24 / K78).
     expect(css).not.toMatch(/\.sc-result\.sc-absent/);
@@ -169,13 +171,28 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(rule(".workbench .needs-you .ny-foot .sc-time")).toMatch(/underline dotted/);
   });
 
-  it("the band's shared rules are byte-identical to their arc-18 text", () => {
-    expect(rule(".workbench .jbar-suggest .sugg-row")).toBe(
-      "\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex-wrap: wrap;\n  font-size: 11.5px;\n  color: var(--ink-on-dark);\n",
-    );
+  it("the band's shared rules: .sys-event byte-identical to arc 18; the suggestion line on Part 2 rule 6 (#289 fidelity F2)", () => {
+    // #289 fidelity F2 changed two of these three rules ON PURPOSE: the
+    // suggestion line is a provenance line (rule 6: mono 10.5 / 1.5
+    // #93a0b0) and its <b> is rule 6's emphasis (#c8d1dd, never bold).
+    // The byte check stays on the one rule the pass did not touch.
+    const row = rule(".workbench .jbar-suggest .sugg-row");
+    for (const d of [
+      "display: flex;",
+      "align-items: center;",
+      "gap: 10px;",
+      "flex-wrap: wrap;",
+      "font-family: var(--font-mono);",
+      "font-size: 10.5px;",
+      "line-height: 1.5;",
+      "color: var(--ink-on-dark-faint);",
+    ])
+      expect(row).toContain(d);
     expect(rule(".workbench .jbar-suggest .sys-event")).toBe(
       "\n  align-self: stretch;\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n",
     );
-    expect(rule(".workbench .jbar-suggest .sugg-name")).toBe("\n  color: var(--ink-on-dark);\n");
+    const name = rule(".workbench .jbar-suggest .sugg-name");
+    expect(name).toContain("color: var(--ink-on-dark);");
+    expect(name).toContain("font-weight: 400;");
   });
 });

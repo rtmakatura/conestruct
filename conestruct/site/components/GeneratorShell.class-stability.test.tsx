@@ -252,7 +252,7 @@ describe("class-switch stability (#152 D)", () => {
   it("a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max", async () => {
     const user = await mountWithParker();
     // Settled: the hours verdict renders (parker fixture is "outside").
-    expect(windowsBlock()).toContain("Parker windows");
+    expect(windowsBlock()).toContain("PARKER WINDOWS");
     expect(windowsBlock()).toContain(
       "1 h outside the permitted 9:00 AM–3:30 PM window",
     );
@@ -267,7 +267,7 @@ describe("class-switch stability (#152 D)", () => {
     expect(jurisdictionState()).toBe("evaluated");
     expect(screen.queryByText(/Loading jurisdiction rules/)).toBeNull();
     // The content is still mounted mid-refetch.
-    expect(windowsBlock()).toContain("Parker windows");
+    expect(windowsBlock()).toContain("PARKER WINDOWS");
 
     await releaseNext(okBreakdown(true));
     expect(windowsBlock()).toContain(
@@ -314,10 +314,10 @@ describe("class-switch stability (#152 D)", () => {
     // made; only the surface carrying it changed.
     expect(jurisdictionState()).toBe("evaluating");
     expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
-    expect(windowsBlock()).not.toContain("Parker windows");
+    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
     await flushDebounce();
     expect(jurisdictionState()).toBe("evaluating");
-    expect(windowsBlock()).not.toContain("Parker windows");
+    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
   });
 
   it("a breakdown ERROR clears the held block rather than presenting it as live", async () => {
@@ -334,6 +334,6 @@ describe("class-switch stability (#152 D)", () => {
     // says exactly that instead of holding Parker's block as current.
     expect(jurisdictionState()).toBe("not-evaluated");
     expect(jurisdictionProv()).toContain("the check did not answer");
-    expect(windowsBlock()).not.toContain("Parker windows");
+    expect(windowsBlock()).not.toContain("PARKER WINDOWS");
   });
 });

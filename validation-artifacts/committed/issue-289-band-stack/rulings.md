@@ -477,6 +477,26 @@ What each ruling resolves to in the build:
 | **Q7** | **rule 167 now**; 168–169 to Phase 4 | NEEDS YOU items go 18 / 1fr at ≤480 with the citation moved into the provenance line and the actions on their own full-width row. The 380 download cards and hero geometry cell **stay** until Phase 4. |
 | — | WHAT's pending line reads **"pending — kind of work not chosen"** | a state, not an instruction: the instruction lives only on the disabled primaries (the 2026-09-23 strip ruling) |
 
+**Two consequences of Q1 found while building F2, recorded rather than decided silently:**
+
+1. **#226's two-axis rule and role 5.** Under Part 2's values the field label (rule 5) and the
+   step question (rule 7) share family, casing, tracking and colour and differ only in size (and
+   in weight, which #226's rule does not count). That is Part 2's own design. #226's rule was
+   written for the four LABEL roles; the question joined the table at #283 and is not a label.
+   `type-roles.test.ts` now names field ↔ question as the one pair allowed a single axis, and
+   still fails if it loses its size difference, or if any other pair collapses. **If the rule
+   should hold for role 5 too, Part 2's rule 5 or rule 7 has to move — a ruling.**
+2. **The step index's caps are written, not transformed** (rule 4). Every `.tr-step` consumer
+   was checked: step indices, counts and the NEEDS YOU result tags are already written in caps;
+   `.act` states rule 133's own uppercase; citations take rule 11 (no uppercase — they print as
+   authored); the schedule windows heading writes its caps into the string.
+
+**Finding, not fixed in F2:** `var(--fs-provenance)` is read by `.a-panel-status` and counted
+by the type census, but **no `--fs-provenance` token is declared anywhere** (`:root` carries
+#283's nine, and `tokens.test.ts` pins exactly those nine). The S7 status row therefore
+inherited its size, which is the audit's 16 px row. F7 fixes that row; the census comment that
+says the token "has been on every provenance line since #283 declared it" is corrected there.
+
 **The build:** F1–F8 per `fidelity-audit.md`'s fix plan, one diff-verified commit each, on
 `issue-289-fidelity`. That branch is stacked on `issue-289-fidelity-audit`'s tip (`85c865c`):
 the audit ships as a fast-forward, after which `main` is that tip, so this branch is "off main

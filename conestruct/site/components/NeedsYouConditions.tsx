@@ -264,7 +264,7 @@ export function SiteConditionRows({
         {glyph}
       </span>
       <div className="ny-mid">
-        <span className="ny-body tr-field sc-name">{label}</span>
+        <span className="ny-body sc-name">{label}</span>
         {/* The evidence span is ALWAYS present, empty when the wire
             carried none — the separator is what is conditional.  Same
             contract as the ledger it replaces, so "an absent row's
@@ -276,7 +276,7 @@ export function SiteConditionRows({
         </p>
       </div>
       <div className="ny-right">
-        <span className="ny-cite tr-step">{cite}</span>
+        <span className="ny-cite">{cite}</span>
         <span className="ny-acts">{action}</span>
       </div>
     </li>
@@ -317,12 +317,12 @@ export function SiteConditionRows({
           {/* #255: the clause alone — the advisory prints once in the
               footer.  ``disclosure`` (the whole sentence) is the wire
               before the split shipped; never a fabricated value. */}
-          <span className="ny-body tr-field sc-disclosure">
+          <span className="ny-body sc-disclosure">
             {c.record_clause ?? c.disclosure}
           </span>
         </div>
         <div className="ny-right">
-          <span className="ny-cite tr-step">OPERATOR</span>
+          <span className="ny-cite">OPERATOR</span>
           <span className="ny-acts">{actBtn("Undo", () => undo(flag))}</span>
         </div>
       </li>

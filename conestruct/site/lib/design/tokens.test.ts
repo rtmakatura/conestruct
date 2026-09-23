@@ -89,16 +89,17 @@ describe("#263 --ink-bright and the confirm-hover ink", () => {
     // gone from this list with the rule it named.  The other two sites
     // are unchanged, and the CLAIM — the token, never the literal — is
     // unchanged for them.
-    for (const sel of [
-      ".workbench .tr-section",
-      ".workbench .chain .seg.local",
-    ]) {
+    // #289 fidelity F2 (ruled Q1): the section role takes Part 2 rule 3's
+    // #eaf0f7 — `var(--ink)` — so it leaves this list.  The claim holds
+    // for the site that remains (the token, never the literal), and the
+    // role's own claim moves with it: a token, never a literal.
+    for (const sel of [".workbench .chain .seg.local"]) {
       const block = css.match(new RegExp(`${sel.replace(/[.]/g, "\\.")} \\{[^}]*\\}`));
       expect(block, sel).not.toBeNull();
       expect(block![0], sel).toContain("color: var(--ink-bright)");
       expect(block![0], sel).not.toMatch(/color:\s*#fff/i);
     }
-    expect(TYPE_ROLES.section.color).toBe("var(--ink-bright)");
+    expect(TYPE_ROLES.section.color).toBe("var(--ink)");
   });
 
   it("confirm hover/focus ink is var(--on-act) on --act — 6.25:1 measured (declared change from #0b1420's 7.04:1)", () => {

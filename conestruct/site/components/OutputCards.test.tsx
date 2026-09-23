@@ -473,7 +473,8 @@ describe("the action row (#261a)", () => {
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-left: 4px");
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("padding-right: 4px");
     expect(rule(".workbench .dl-actions .dl-btn:not(:only-child)")).toContain("gap: 4px");
-    expect(rule(".workbench .dl-card h3")).toContain("font-size: 14px");
+    // #289 fidelity F2: rule 85's title is role 3 — 12.5 px (was 14).
+    expect(rule(".workbench .dl-card h3")).toContain("font-size: 12.5px");
     expect(css).not.toMatch(/\.dl-card h4/);
     const phone = css.slice(css.indexOf(".workbench .dl-actions {"));
     const q = phone.slice(phone.indexOf("@media (max-width: 480px)"));

@@ -150,7 +150,9 @@ describe("#263 type census — globals.css font-sizes", () => {
     expect(observedCss.map(cssKey)).toEqual(
       expect.arrayContaining([
         ".workbench .tr-section → 10px",
-        ".workbench .tr-field → 12px",
+        // #289 fidelity F2: Part 2 rule 5 (ruled Q1) — the field label
+        // is 12.5 px, superseding #226's 12.
+        ".workbench .tr-field → 12.5px",
         // #288 clause 2: the counts hero reads rule 81's ruled 62px from
         // the :root token #283 declared for it, so the anchor is the
         // token's name — a literal here would go stale on the next

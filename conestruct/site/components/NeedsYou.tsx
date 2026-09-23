@@ -100,7 +100,7 @@ export function NeedsYou({
         </p>
         {/* Ruling 185: the header number is the SUM.  The decomposition
             above is provenance and is never a second numeral here. */}
-        <span className="ny-count tr-step">{model.count}</span>
+        <span className="ny-count">{model.count}</span>
       </div>
       <ul className="ny-items">
         {model.items.map((item) => (
@@ -120,14 +120,14 @@ function Item({ item }: { item: NeedsYouItem }) {
         {TIER_GLYPH[item.tier]}
       </span>
       <div className="ny-mid">
-        <span className="ny-body tr-field">{item.title}</span>{" "}
+        <span className="ny-body">{item.title}</span>{" "}
         <span className="ny-result tr-step">{item.result}</span>
         {/* Rule 75: the provenance names the tier in words, then the
             evidence the wire carried — and nothing it did not. */}
         <p className="ny-prov tr-prov">{itemProvenance(item)}</p>
       </div>
       <div className="ny-right">
-        <span className="ny-cite tr-step">{item.cite}</span>
+        <span className="ny-cite">{item.cite}</span>
         {/* Ruling d: an action that would write nothing does not render
             as a button.  The row still shows — an honest item without a
             control beats a control that writes nothing. */}

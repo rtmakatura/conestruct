@@ -95,7 +95,7 @@ export function DisclosureRow({
         {/* Rule 89: a number only where the tier is counted.  The
             uncounted reference tier renders no numeral at all rather
             than a zero — a zero would read as "nothing in here". */}
-        {count !== null && <span className="disc-count tr-step">{count}</span>}
+        {count !== null && <span className="disc-count">{count}</span>}
         {provenance ? <span className="disc-prov tr-prov">{provenance}</span> : null}
         <span className="disc-caret" aria-hidden="true">
           ›

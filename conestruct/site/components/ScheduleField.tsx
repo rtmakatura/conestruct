@@ -268,7 +268,7 @@ function ScheduleWindowsBlock({
           <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
             ◌
           </span>
-          <span className="text-[11px] text-[color:var(--ink-on-dark-faint)]">
+          <span className="tr-prov">
             Select a jurisdiction to see its windows
           </span>
         </div>
@@ -282,7 +282,7 @@ function ScheduleWindowsBlock({
           <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
             ◌
           </span>
-          <span className="text-[11px] text-[color:var(--ink-on-dark-faint)]">
+          <span className="tr-prov">
             Loading window data…
           </span>
         </div>
@@ -298,7 +298,7 @@ function ScheduleWindowsBlock({
           <span className="sw-glyph text-[color:var(--none)]" aria-hidden>
             ◌
           </span>
-          <span className="text-[11px] text-[color:var(--ink-on-dark-faint)]">
+          <span className="tr-prov">
             {jurisdiction.name} publishes no work-hour windows — none on
             record, not none existing
           </span>
@@ -314,7 +314,10 @@ function ScheduleWindowsBlock({
 
   return (
     <div className="sched-windows">
-      <div className="tr-step mb-1">{jurisdiction.name} windows</div>
+      {/* #289 fidelity F2: Part 2 rule 4 takes the CSS uppercase off the
+          step role ("write the string in caps"), so the caps this heading
+          always displayed are written into it. */}
+      <div className="tr-step mb-1">{`${jurisdiction.name.toUpperCase()} WINDOWS`}</div>
       {rows.map((r) => {
         const v = rowVerdict(
           r,

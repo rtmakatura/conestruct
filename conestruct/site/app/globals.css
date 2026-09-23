@@ -1912,14 +1912,22 @@ input[type="number"] {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  font-size: 11.5px;
-  color: var(--ink-on-dark);
+  /* #289 fidelity F2: the suggestion is a provenance line in the cell it
+     belongs to (§8.21; #201/#227) — rule 6's register, mono 10.5 / 1.5
+     #93a0b0.  It was 11.5 px at body ink. */
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-on-dark-faint);
 }
 .workbench .jbar-suggest .sugg-row.passive {
   color: var(--ink-on-dark-faint);
 }
 .workbench .jbar-suggest .sugg-name {
+  /* Rule 6: "Emphasis inside it is #c8d1dd at the same weight — never
+     bold".  The <b> carried the browser's 700. */
   color: var(--ink-on-dark);
+  font-weight: 400;
 }
 .workbench .jbar-suggest button.confirm,
 .workbench .jbar-suggest button.ghost {
@@ -1955,6 +1963,8 @@ input[type="number"] {
 .workbench .jbar-suggest .sugg-reason {
   color: var(--ink-on-dark-faint);
   letter-spacing: 0.02em;
+  /* #289 F2: rule 6's leading. */
+  line-height: 1.5;
 }
 .workbench .jbar-suggest .warnrow {
   color: var(--warn);
@@ -1964,7 +1974,9 @@ input[type="number"] {
    the former opacity: 0.85 composited to 4.47:1 (F-S1-7).  Measured in
    quiet-band-contrast.test.tsx, not asserted. */
 .workbench .jbar-suggest .honesty {
-  font-size: 9.5px;
+  /* #289 F2: rule 6's size and leading (was 9.5 px). */
+  font-size: 10.5px;
+  line-height: 1.5;
   color: var(--ink-on-dark-faint);
 }
 /* #245 — the dismiss reason picker.  A native <select> under the
@@ -2120,9 +2132,10 @@ input[type="number"] {
    (rule 13: the word rides the glyph, never the hue alone).  The none
    word stays provenance ink (spec 24 / K78): green lives in the glyph,
    so five clear rows are not five green claims. */
-.workbench .needs-you .sc-result.sc-detected {
-  color: var(--dim);
-}
+/* #289 fidelity F2: the "detected" WORD rides the provenance role's
+   #93a0b0 (rule 6).  It carried --dim, the generated-number orange,
+   which rule 10 reserves for generated numerals; the tier's hue is the
+   ▲'s job (rule 18), and the word is the second channel beside it. */
 .workbench .needs-you .sc-result.sc-staged,
 .workbench .needs-you .sc-result.sc-unset {
   color: var(--none);
@@ -2172,6 +2185,11 @@ input[type="number"] {
   padding: 7px 11px;
   border: 1px solid var(--rule);
   background: transparent;
+  /* #289 fidelity F2: rule 133's own casing and tracking ("mono 9.5 px
+     .14em uppercase").  They rode .tr-step, and rule 4 takes the CSS
+     uppercase off the step role — so the control states them itself. */
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   color: var(--ink-on-dark);
   cursor: pointer;
   white-space: nowrap;
@@ -2649,41 +2667,47 @@ input[type="number"] {
    ruling 2); the section/step/field/provenance treatments are PDF p. 3.
    Provenance carries NO text-transform by ruling (GO ruling 1, Rule 9:
    "lowercase" is authored voice; MUTCD / S-630-1 / OSM keep canonical
-   casing — do not re-add a transform here).  text-decoration, not
-   border-bottom, so multi-line provenance underlines per line. */
+   casing — do not re-add a transform here).
+   #289 FIDELITY F2 (ruled 2026-09-23, Q1): the four roles take Part 2
+   rules 3–6's values, which supersede #226's — see type-roles.ts's
+   header for each old value.  The step index is no longer uppercased
+   by CSS (rule 4: its strings are written in caps), and provenance has
+   no underline (rule 6; the ruling dropped it explicitly). */
 .workbench .tr-section {
   font-family: var(--font-mono);
   font-weight: 500;
   font-size: 10px;
-  letter-spacing: 0.20em;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ink-bright);
+  color: var(--ink);
 }
 .workbench .tr-step {
   font-family: var(--font-mono);
   font-weight: 400;
   font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: none;
   color: var(--ink-on-dark-faint);
 }
 .workbench .tr-field {
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 12.5px;
+  line-height: 1.4;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--ink-on-dark);
+  color: var(--ink);
 }
 .workbench .tr-prov {
   font-family: var(--font-mono);
   font-weight: 400;
-  font-size: 10px;
+  font-size: 10.5px;
+  line-height: 1.5;
   letter-spacing: 0.04em;
   text-transform: none;
   color: var(--ink-on-dark-faint);
-  text-decoration: underline dotted;
-  text-underline-offset: 2px;
 }
 /* #283 / #281 ruling 180 — role 5, the step question.  Part 2 rule 7.
    NOTHING CONSUMES THIS CLASS YET: the band stack that mounts it is
@@ -3041,6 +3065,8 @@ input[type="number"] {
      labels are named for in rule 3 itself. */
   font-family: var(--font-mono);
   font-size: 10px;
+  /* #289 F2: rule 3's 1.2 leading (it inherited the base's). */
+  line-height: 1.2;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -3157,27 +3183,38 @@ input[type="number"] {
 }
 /* #261: the card title is an h3 under the zone's h2 (axe heading-order).
    Ink is D's token (#263 ruling 3, folded at C's rebase). */
+/* #289 fidelity F2 — rule 85: "a title row (field label left, format in
+   provenance right), then a provenance caption".  The title is role 3
+   (Inter 12.5 / 1.4 / 500 / #eaf0f7; it was 14 px 600 #ffffff), and the
+   format and caption take role 6 (mono 10.5 / 1.5 #93a0b0; they were
+   9.5 px uppercase and 11.5 px sans).  The format strings and the spec
+   line are WRITTEN in capitals, so dropping the CSS uppercase shows the
+   same words. */
 .workbench .dl-card h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-bright);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0;
 }
 .workbench .dl-card .fmt {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 10.5px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
   color: var(--ink-on-dark-faint);
 }
 .workbench .dl-card .desc {
-  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
   color: var(--ink-on-dark-faint);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .workbench .dl-card .desc b {
+  /* Rule 10: generated numerals are mono, weight 500, #ff8a2e. */
   color: var(--dim);
-  font-weight: 600;
+  font-weight: 500;
 }
 /* #261 (P1/P16): the quantity line keeps its height when it has nothing
    honest to say (no settled count) — an empty line, not a placeholder. */
@@ -3236,6 +3273,10 @@ input[type="number"] {
   padding: 7px 11px;
   border: 1px solid var(--rule);
   background: transparent;
+  /* #289 F2: rule 133's casing and tracking, stated here (see the NEEDS
+     YOU .act above). */
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   color: var(--ink-on-dark);
   cursor: pointer;
   white-space: nowrap;
@@ -3601,10 +3642,13 @@ input[type="number"] {
      whole defect.  The composited figure is the prod leg's to take —
      acceptance line 6 — not a number this comment may assert. */
   color: var(--ink-on-dark);
-  font-size: 12.5px;
+  /* #289 fidelity F2: rule 100's text is "body value" — rule 8, Inter
+     13.5 px / 1.45 weight 400.  It was 12.5 px 500. */
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
   padding: 11px 14px;
   margin-bottom: 16px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ─── #252 — the working band (spec A "docked band", as ruled) ───
@@ -3750,10 +3794,36 @@ input[type="number"] {
   border-bottom: 1px solid var(--da-hair);
 }
 .workbench .ny-count {
-  /* Rule 73: pushed right.  Mono and its size come from .tr-step. */
+  /* Rule 73: pushed right, "mono 11 px weight 500 #eaf0f7".  #289
+     fidelity F2: it rode .tr-step (10 px) — the count is not a step
+     index, so it states rule 73's own figures. */
   margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
   color: var(--ink);
+}
+/* #289 fidelity F2 — rule 9, the ITEM BODY: "Inter 13.5 px / 1.5,
+   #eaf0f7; the leading clause in weight 600, the rest 400".  It rode
+   .tr-field (the field LABEL role, 12 px #c8d1dd).  The record sentence
+   (.sc-disclosure, prose) keeps its own 400 below. */
+.workbench .ny-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* #289 fidelity F2 — rule 11, the CITATION: "mono 9.5 px, letter-spacing
+   .06em, #93a0b0, right-aligned, white-space nowrap".  It rode .tr-step
+   (10 px .14em, uppercased by CSS); a citation is printed as authored. */
+.workbench .ny-cite {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-on-dark-faint);
+  text-align: right;
+  white-space: nowrap;
 }
 .workbench .ny-items {
   list-style: none;
@@ -3823,6 +3893,13 @@ input[type="number"] {
   text-align: left;
   cursor: pointer;
   color: var(--ink);
+}
+/* #289 fidelity F2 — rule 88's count: "mono 11 px #c8d1dd".  It rode
+   .tr-step (10 px #93a0b0); a tier's count is not a step index. */
+.workbench .disc-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-on-dark);
 }
 .workbench .disc-name {
   /* Rule 88: the name is Inter 500 13px on --ink.  13px is not one of

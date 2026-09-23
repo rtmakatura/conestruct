@@ -556,7 +556,7 @@ function ClassSuggestSlot({
             Detected road suggests street class:{" "}
             <b className="sugg-name">{classLabel(classSuggest)}</b>
             {tier && (
-              <span className="font-mono text-[10px]"> (OSM {tier})</span>
+              <span> (OSM {tier})</span>
             )}
           </span>
           <button

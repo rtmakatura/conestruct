@@ -36,6 +36,24 @@
 // lowercase voice with acronyms and edition names in canonical casing
 // ("MUTCD", "S-630-1", "OSM" — Rule 9 governs).  Nobody re-adds the
 // transform.
+//
+// ─── #289 FIDELITY F2 — PART 2 RULES 3–6 SUPERSEDE #226's VALUES ───
+// Ruled by Ryan, 2026-09-23 (fidelity Q1): "Part 2 rules 3–6 replace
+// #226's values, dotted underline dropped."  #281 is the design
+// authority; the four label roles take its figures, each TRACED to the
+// rule that states it, where #226's colours were CHOSEN:
+//   section    rule 3: mono 10 / 1.2, 500, .18em, uppercase, #eaf0f7
+//              (was .20em, #ffffff — GO rulings 2-3)
+//   step       rule 4: mono 10 / 1.2, 400, .12em, #93a0b0, "Not
+//              uppercased by CSS; write the string in caps" — hence
+//              casing "caps-voice" (was .14em, CSS uppercase)
+//   field      rule 5: Inter 12.5 / 1.4, 500, #eaf0f7 (was 12 px, #c8d1dd)
+//   provenance rule 6: mono 10.5 / 1.5, 400, #93a0b0, sentence case,
+//              NO decoration (was 10 px with a dotted underline)
+// #226's two-axis rule still holds over Part 2's values and is still
+// asserted: section ↔ step differ on tracking and colour, every other
+// pair on three or more.  Provenance's tracking stays .04em — rule 6
+// states none, so the existing value is kept rather than invented.
 
 export const TYPE_AXES = [
   "family",
@@ -55,8 +73,13 @@ export interface TypeRole {
   /** Not an axis — see the header comment.  600 arrives with role 5
    *  (#283): the step question is the column's one heavy register. */
   weight: 400 | 500 | 600;
-  casing: "uppercase" | "sentence" | "lowercase-voice";
+  /** "caps-voice" (#289 F2, Part 2 rule 4): displays in capitals because
+   *  the strings are WRITTEN in capitals — no CSS transform.  The
+   *  lowercase-voice twin of the provenance role, for the step index. */
+  casing: "uppercase" | "sentence" | "lowercase-voice" | "caps-voice";
   size: string;
+  /** #289 F2: Part 2 states a line-height for every role (rules 3–7). */
+  lineHeight: string;
   /** #283 — a role that switches size below 520 px declares the variant
    *  here, so the census can tell a ruled second declaration on the same
    *  selector from an undeclared one.  Same idiom as the hero numeral's
@@ -76,8 +99,9 @@ export const TYPE_ROLES = {
     weight: 500,
     casing: "uppercase",
     size: "10px",
-    tracking: "0.20em",
-    color: "var(--ink-bright)", // CHOSEN — "brightest ink" (GO rulings 2-3; tokenised #263)
+    lineHeight: "1.2",
+    tracking: "0.18em",
+    color: "var(--ink)", // TRACED — Part 2 rule 3, #eaf0f7 (#289 F2; was --ink-bright, GO rulings 2-3)
     decoration: "none",
   },
   /** The step number and nothing else — right edge of the section
@@ -87,10 +111,11 @@ export const TYPE_ROLES = {
     cssClass: "tr-step",
     family: "mono",
     weight: 400,
-    casing: "uppercase",
+    casing: "caps-voice", // Part 2 rule 4: "Not uppercased by CSS; write the string in caps"
     size: "10px",
-    tracking: "0.14em",
-    color: "var(--ink-on-dark-faint)", // CHOSEN — "dim" (GO ruling 2)
+    lineHeight: "1.2",
+    tracking: "0.12em",
+    color: "var(--ink-on-dark-faint)", // TRACED — Part 2 rule 4, #93a0b0
     decoration: "none",
   },
   /** Names one input.  Sentence case is the tell: if it labels a
@@ -100,23 +125,26 @@ export const TYPE_ROLES = {
     family: "sans",
     weight: 500,
     casing: "sentence",
-    size: "12px",
+    size: "12.5px",
+    lineHeight: "1.4",
     tracking: "0",
-    color: "var(--ink-on-dark)", // CHOSEN — "mid" (GO ruling 2)
+    color: "var(--ink)", // TRACED — Part 2 rule 5, #eaf0f7 (#289 F2; was --ink-on-dark)
     decoration: "none",
   },
-  /** Where a value came from, and code citations.  The dotted
-   *  underline marks it inspectable (echoes the .chain .seg[title]
-   *  there's-more idiom, not a fork of it). */
+  /** Where a value came from, and code citations.  #289 F2: no
+   *  underline — Part 2 rule 6 gives the role no decoration ("never
+   *  bold, never uppercase"), and the fidelity ruling dropped #226's
+   *  dotted underline explicitly (Q1). */
   provenance: {
     cssClass: "tr-prov",
     family: "mono",
     weight: 400,
     casing: "lowercase-voice", // voice, not CSS — GO ruling 1
-    size: "10px",
+    size: "10.5px",
+    lineHeight: "1.5",
     tracking: "0.04em",
-    color: "var(--ink-on-dark-faint)", // CHOSEN — "dim" (GO ruling 2)
-    decoration: "dotted-underline",
+    color: "var(--ink-on-dark-faint)", // TRACED — Part 2 rule 6, #93a0b0
+    decoration: "none",
   },
   /** #283 / #281 ruling 180 — role 5, THE STEP QUESTION.  The four roles
    *  above are a LABEL vocabulary; this one is a question the operator
@@ -133,6 +161,7 @@ export const TYPE_ROLES = {
     casing: "sentence",
     size: "var(--fs-step-question)",
     sizeBelow520: "var(--fs-step-question-520)",
+    lineHeight: "1.25",
     tracking: "0",
     color: "var(--ink)", // TRACED — Part 2 rule 7 names `--ink` (#eaf0f7 in workbench scope)
     decoration: "none",
@@ -148,6 +177,7 @@ export function expectedDeclarations(role: TypeRole): string[] {
     `font-family: var(--font-${role.family})`,
     `font-weight: ${role.weight}`,
     `font-size: ${role.size}`,
+    `line-height: ${role.lineHeight}`,
     `letter-spacing: ${role.tracking}`,
     `color: ${role.color}`,
     role.casing === "uppercase"
