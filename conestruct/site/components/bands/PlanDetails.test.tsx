@@ -207,3 +207,78 @@ describe("the street-class record rides the road-type cell", () => {
     expect(screen.getAllByTestId("class-fields")).toHaveLength(1);
   });
 });
+
+// #289 hand-check, 2026-09-23 — the three fixes, at the surfaces they
+// changed.
+describe("fix 1 — work dates is ONE control", () => {
+  it("the second group holds no date control at all", async () => {
+    const { ScheduleField } = await import("../ScheduleField");
+    render(
+      <ScheduleField
+        scenario={
+          {
+            ...DEFAULT_SHOULDER,
+            schedule: { date_mode: "single", work_date: "2026-08-04" },
+          } as Scenario
+        }
+        setScenario={() => {}}
+      />,
+    );
+    // The duplicate: this cell wrote `work_date`, and so did the grid's.
+    expect(document.querySelector('[data-testid="cell-work-date"]')).toBeNull();
+    expect(document.querySelector('[data-testid="cell-date-mode"]')).toBeNull();
+    expect(document.getElementById("sched-date")).toBeNull();
+    // What is left here is the TIMES — a different question, a different
+    // field, and #188's whole contract.
+    expect(document.querySelector('[data-testid="cell-start-time"]')).not.toBeNull();
+    expect(document.querySelector('[data-testid="cell-end-time"]')).not.toBeNull();
+  });
+
+  it("the mode chips are gone from the page", async () => {
+    const { ScheduleField } = await import("../ScheduleField");
+    render(
+      <ScheduleField
+        scenario={
+          { ...DEFAULT_SHOULDER, schedule: { date_mode: "single" } } as Scenario
+        }
+        setScenario={() => {}}
+      />,
+    );
+    for (const name of ["Single day", "Date range", "Not set"]) {
+      expect(screen.queryByRole("button", { name })).toBeNull();
+    }
+  });
+});
+
+describe("fix 3 — divided's detection line sits under its control", () => {
+  it("renders the line the WHAT band hands it, in the divided cell", () => {
+    render(
+      <PlanDetails
+        scenario={
+          { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
+        }
+        setScenario={() => {}}
+        dividedLine={{ key: "divided", text: "Divided no · OSM · no", amber: false }}
+      />,
+    );
+    const cell = screen.getByTestId("cell-divided");
+    expect(cell.querySelector('[data-testid="detect-divided"]')?.textContent).toBe(
+      "Divided no · OSM · no",
+    );
+  });
+
+  it("an amber clause keeps rule 13's second channel", () => {
+    render(
+      <PlanDetails
+        scenario={
+          { ...DEFAULT_SHOULDER, roadType: "urban_arterial" } as Scenario
+        }
+        setScenario={() => {}}
+        dividedLine={{ key: "divided", text: "Divided no · assumed", amber: true }}
+      />,
+    );
+    const line = screen.getByTestId("detect-divided");
+    expect(line.textContent).toBe("⚠ Divided no · assumed");
+    expect(line.className).toContain("is-amber");
+  });
+});

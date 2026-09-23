@@ -163,6 +163,11 @@ interface ContextBarProps {
    *  beside the control it applies to — is preserved rather than broken
    *  by the move. */
   omitJurisdictionField?: boolean;
+  /** #289 hand-check, 2026-09-23, fix 2: render the field's CONTENTS
+   *  with no `.jctl` box and no `.jctl-field` inset — the setup panel's
+   *  framing has no place inside a WHAT-grid cell.  Strings, handlers
+   *  and the suggestion record are untouched (#198). */
+  bare?: boolean;
   onConfirmSuggestion?: (key: string) => void;
   onDismissSuggestion?: () => void;
   onUndoSuggestion?: () => void;
@@ -269,12 +274,28 @@ export function JurisdictionControls({
   onDismissClassSuggestion,
   onUndoClassSuggestion,
   omitJurisdictionField = false,
+  bare = false,
 }: ContextBarProps) {
-  return (
-    <div className="jctl">
-      {!omitJurisdictionField && (
-      <div className="jctl-field">
-        <label htmlFor="jl-jurisdiction" className="k">
+  // #289 hand-check, 2026-09-23, fix 2: "The street-class suggestion
+  // takes the same suggestion-record shape as the jurisdiction field's
+  // … under the road-type field — no boxed panel."
+  //
+  // The RECORD already had that shape — `ClassSuggestSlot` and
+  // `SuggestSlot` render the same `.jbar-suggest` container, the same ⌁
+  // glyph and the same Confirm / Dismiss pair.  What made it read as a
+  // panel was this component's own box: `.jctl` is a 1 px rule on
+  // `--canvas` and `.jctl-field` adds an inset and a divider, which is
+  // the setup panel's framing carried into a grid cell.
+  //
+  // `bare` drops the two wrappers and nothing else.  Every string, every
+  // handler and the slot itself are untouched, which is what keeps #198
+  // byte-identical — the jurisdiction cell already renders its own
+  // suggestion this way (the shell passes `SuggestSlot` straight into
+  // the cell), so this makes the two fields the same shape rather than
+  // inventing a third.
+  const jurisdictionField = (
+    <>
+      <label htmlFor="jl-jurisdiction" className="k">
           Jurisdiction
         </label>
         <select
@@ -320,11 +341,12 @@ export function JurisdictionControls({
           onDismiss={onDismissSuggestion}
           onUndo={onUndoSuggestion}
         />
-      </div>
-      )}
+    </>
+  );
 
-      <div className="jctl-field">
-        <span className="k">Street classification</span>
+  const classField = (
+    <>
+      <span className={bare ? "tr-field" : "k"}>Street classification</span>
         <div
           role="group"
           aria-label="Street classification"
@@ -370,17 +392,29 @@ export function JurisdictionControls({
             suggestion in the field above.  Absent when no road is
             confirmed at the pin.  Rendered inside the classification
             field (#201), directly under the chips it confirms. */}
-        <ClassSuggestSlot
-          classSuggest={classSuggest}
-          tier={classSuggestTier}
-          streetClass={streetClass}
-          jurisdiction={jurisdiction}
-          resolution={classResolution}
-          onConfirm={onConfirmClassSuggestion}
-          onDismiss={onDismissClassSuggestion}
-          onUndo={onUndoClassSuggestion}
-        />
+      <ClassSuggestSlot
+        classSuggest={classSuggest}
+        tier={classSuggestTier}
+        streetClass={streetClass}
+        jurisdiction={jurisdiction}
+        resolution={classResolution}
+        onConfirm={onConfirmClassSuggestion}
+        onDismiss={onDismissClassSuggestion}
+        onUndo={onUndoClassSuggestion}
+      />
+    </>
+  );
+
+  if (bare) return classField;
+
+  return (
+    <div className="jctl">
+      {!omitJurisdictionField && (
+      <div className="jctl-field">
+        {jurisdictionField}
       </div>
+      )}
+      <div className="jctl-field">{classField}</div>
     </div>
   );
 }

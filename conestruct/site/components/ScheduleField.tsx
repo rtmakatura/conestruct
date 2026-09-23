@@ -79,74 +79,15 @@ export function ScheduleField({
 
   return (
     <>
-      {/* Correction 1: three cells in the band's own register, inside the
-          second group's grid.  The chips are rule 135's control (44 px,
-          `aria-pressed`), so #199's assertions read the same way they
-          always have — a default that is DISPLAY-ONLY until the operator
-          picks a mode. */}
-      <div className="a-cell" data-testid="cell-date-mode">
-        <span className="tr-field">Work dates</span>
-        <div className="a-chips a-chips-inline" role="group" aria-label="Work dates">
-          {[
-            { v: "single" as DateMode, l: "Single day" },
-            { v: "range" as DateMode, l: "Date range" },
-            { v: "tbd" as DateMode, l: "Not set" },
-          ].map((o) => (
-            <button
-              key={o.v}
-              type="button"
-              className="a-chip a-chip-flat"
-              data-write=""
-              aria-pressed={mode === o.v}
-              onClick={() => {
-                if (mode !== o.v) patch({ date_mode: o.v });
-              }}
-            >
-              {o.l}
-            </button>
-          ))}
-        </div>
-        <span className="tr-prov" data-testid="prov-date-mode">
-          jurisdiction work windows &amp; permit lead times compute from this
-        </span>
-      </div>
-
+      {/* #289 hand-check, 2026-09-23, fix 1: the DATES are gone from
+          here.  They were the duplicate — the WHAT grid's own cell wrote
+          `work_date`, and so did this one, behind three chips that wrote
+          `date_mode` for the same answer.  The grid's cell is the one
+          control now (bands/WhatBand.tsx) and the mode derives from what
+          is in it; what is left here is the TIMES, which are a different
+          question with a different field, and #188's whole contract. */}
       {mode !== "tbd" && (
         <>
-          <div className="a-cell" data-testid="cell-work-date">
-            <label className="tr-field" htmlFor="sched-date">
-              {mode === "range" ? "First work day" : "Work date"}
-            </label>
-            <input
-              id="sched-date"
-              type="date"
-              className="a-fld"
-              data-write=""
-              value={sched?.work_date ?? ""}
-              onChange={(e) => patch({ work_date: e.target.value || undefined })}
-            />
-            <span className="tr-prov">operator-set · the day the plan is for</span>
-          </div>
-
-          {mode === "range" && (
-            <div className="a-cell" data-testid="cell-work-date-end">
-              <label className="tr-field" htmlFor="sched-date-end">
-                Last work day
-              </label>
-              <input
-                id="sched-date-end"
-                type="date"
-                className="a-fld"
-                data-write=""
-                value={sched?.work_date_end ?? ""}
-                onChange={(e) =>
-                  patch({ work_date_end: e.target.value || undefined })
-                }
-              />
-              <span className="tr-prov">operator-set · the range&apos;s last day</span>
-            </div>
-          )}
-
           <div className="a-cell" data-testid="cell-start-time">
             <label className="tr-field" htmlFor="sched-start">
               Start time

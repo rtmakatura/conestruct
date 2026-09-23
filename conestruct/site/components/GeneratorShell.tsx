@@ -1334,6 +1334,9 @@ export function GeneratorShell({
       // where ruling 196 gives it three states and rule 14 takes its
       // skeleton away.  What is left here is the street-class half.
       omitJurisdictionField
+      // #289 hand-check, 2026-09-23, fix 2: no boxed panel inside the
+      // road-type cell — the record keeps its shape, the box goes.
+      bare
       suggest={suggestState.status !== "ready" ? null : suggestState.data}
       suggestLoading={suggestState.status === "loading"}
       suggestResolution={suggestResolution}

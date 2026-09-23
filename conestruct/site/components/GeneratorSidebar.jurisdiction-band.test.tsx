@@ -110,9 +110,15 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     expect(document.querySelector("#what-road-type")).not.toBeNull();
     expect(document.querySelector('[data-testid="prov-jurisdiction"]')).not.toBeNull();
     expect(document.querySelector('[data-testid="prov-road-type"]')).not.toBeNull();
-    // The street-class half has no cell in rule 116's six, so it rides
-    // the band below the grid — present, not dropped.
-    expect(document.querySelector(".jctl")).not.toBeNull();
+    // #289 hand-check, 2026-09-23, fix 2: the street-class half rides
+    // the ROAD-TYPE cell, and it does so with no boxed panel — `.jctl`
+    // is a 1 px rule on `--canvas` and `.jctl-field` an inset, which is
+    // the setup panel's framing and has no place in a grid cell.  It is
+    // present, not dropped: the chips and their suggestion record are
+    // inside the cell.
+    expect(document.querySelector(".jctl")).toBeNull();
+    const roadTypeCell = document.querySelector('[data-testid="cell-road-type"]')!;
+    expect(roadTypeCell.querySelector(".classpick")).not.toBeNull();
     // And the section that used to hold them is gone with the panel.
     expect(document.querySelector(".jctl-band")).toBeNull();
   });

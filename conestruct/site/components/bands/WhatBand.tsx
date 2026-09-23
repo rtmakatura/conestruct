@@ -36,7 +36,12 @@ import type { ReactNode } from "react";
 import type { Scenario, ScenarioMeta, RoadType } from "@/lib/scenarios";
 import { JURISDICTION_OPTIONS, type JurisdictionBlock } from "@/lib/jurisdiction";
 import { validateLanes } from "@/lib/scenarios/validation";
-import { setLanes, setRoadType, setSpeed } from "@/lib/scenarios/what-writes";
+import {
+  setLanes,
+  setRoadType,
+  setSpeed,
+  setWorkDates,
+} from "@/lib/scenarios/what-writes";
 import {
   WHAT_CELLS,
   laneWidthOptions,
@@ -52,7 +57,7 @@ import {
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
 import { handoffNotesByCell } from "./HandoffNotes";
-import { PlanDetails } from "./PlanDetails";
+import { PlanDetails, showsDividedToggle } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
 import { useWriteLock } from "../WriteLock";
@@ -89,6 +94,7 @@ function Cell({
   amber = false,
   error = false,
   notes = [],
+  lines = [],
   children,
   testid,
 }: {
@@ -102,6 +108,12 @@ function Cell({
    *  field's own — one text node per sentence, which is #198's
    *  byte-identity contract carried across the container change. */
   notes?: string[];
+  /** #289 hand-check, 2026-09-23, fix 3: detection facts that describe
+   *  THIS field, which used to sit in a loose block under the grid
+   *  describing nothing in particular.  Plain provenance lines — a
+   *  detected bearing is a fact, not a warning, so it carries no glyph
+   *  unless its own clause is amber. */
+  lines?: Array<{ key: string; text: string; amber: boolean }>;
   children: ReactNode;
   testid: string;
 }) {
@@ -123,6 +135,15 @@ function Cell({
             border — a guess is not an error. */}
         {amber ? `⚠ ${provenance}` : provenance}
       </span>
+      {lines.map((l) => (
+        <span
+          key={l.key}
+          className={`tr-prov${l.amber ? " is-amber" : ""}`}
+          data-testid={`detect-${l.key}`}
+        >
+          {l.amber ? `⚠ ${l.text}` : l.text}
+        </span>
+      ))}
       {notes.map((n, i) => (
         <span
           key={i}
@@ -228,6 +249,47 @@ export function WhatBand({
   // strings are unchanged (#198).
   const notes = handoffNotesByCell(scenario, handoff);
 
+  // #289 hand-check, 2026-09-23, fix 3: "the four loose provenance lines
+  // move under the fields they describe … bearing and the #214 sentence
+  // under road type; divided under the Divided control."
+  //
+  // The rows are `deriveDetectedRows`' own and their clause is
+  // `provenanceClause`'s — the same producers the block used, so the
+  // words do not change with the container (the same discipline
+  // correction 3 applied to the picker's notes).  One-way rides the
+  // road-type cell with divided when there is no Divided control to sit
+  // under: it is the fact that MAKES a road divided or not in detection,
+  // and rule 10 says a fact with no home renders somewhere true rather
+  // than nowhere.
+  const detectLine = (label: DetectedRowLabel) => {
+    const r = detectedRow(detected, label);
+    if (!r) return null;
+    return {
+      key: label.toLowerCase().replace(/\s+/g, "-"),
+      text: `${r.label} ${r.applied ?? "—"} · ${provenanceClause({
+        detectedValue: r.detected,
+        detectedToken: r.detectedToken,
+        appliedToken: r.appliedToken,
+      })}`,
+      amber: clauseIsAmber(r),
+    };
+  };
+  const dividedLine = detectLine("Divided");
+  const showsDivided = showsDividedToggle(scenario);
+  const roadTypeLines = [
+    detectLine("Bearing"),
+    detectLine("One-way"),
+    showsDivided ? null : dividedLine,
+    detected
+      ? {
+          key: "bearing-caveat",
+          // #214's sentence, verbatim — the caveat that never drops.
+          text: bearingCaveat(detected.geomDrives),
+          amber: false,
+        }
+      : null,
+  ].filter((l): l is { key: string; text: string; amber: boolean } => l !== null);
+
   const jState = jurisdictionCellState({
     key: scenario.jurisdiction_key ?? null,
     block: jurisdictionBlock,
@@ -255,8 +317,9 @@ export function WhatBand({
           : "not evaluated — the check did not answer; the option you picked stands";
 
   const schedule = scenario.schedule ?? null;
-  const workDate =
-    schedule && schedule.date_mode !== "tbd" ? (schedule.work_date ?? "") : "";
+  // Fix 1: the dates ARE the mode, so the cell reads them directly.
+  const workDate = schedule?.work_date ?? "";
+  const workDateEnd = schedule?.work_date_end ?? "";
 
   const speedClause = clauseFor(detected, "Speed limit");
   const lanesClause = clauseFor(detected, "Lanes per direction");
@@ -398,6 +461,7 @@ export function WhatBand({
           }
           amber={roadTypeClause.amber}
           notes={notes["road-type"]}
+          lines={roadTypeLines}
           testid="road-type"
         >
           <select
@@ -460,13 +524,22 @@ export function WhatBand({
           {jurisdictionSuggest}
         </Cell>
 
+        {/* #289 hand-check, 2026-09-23, fix 1: ONE control for one
+            answer.  The mode chips are gone and the mode is derived from
+            the dates (lib/scenarios/what-writes.ts:setWorkDates) — a
+            schedule nobody entered reads "Not set" because there is no
+            date, which is #199's point stated by the field itself rather
+            than by a chip beside it.  The end date appears once a start
+            stands, because a range with no beginning is not a range. */}
         <Cell
           label="Work dates"
           htmlFor="what-date"
           provenance={
             workDate
-              ? "operator-set · permit lead times read this"
-              : "optional · permit lead times need it"
+              ? workDateEnd
+                ? "operator-set · a range · permit lead times read this"
+                : "operator-set · one day · permit lead times read this"
+              : "not set · windows and permit lead times need a date"
           }
           testid="work-dates"
         >
@@ -476,18 +549,27 @@ export function WhatBand({
             className={`a-fld${workDate ? "" : " is-unset"}`}
             data-write=""
             disabled={locked}
+            aria-label="Work date, or the first day of a range"
             value={workDate}
             onChange={(e) =>
-              setScenario({
-                ...scenario,
-                schedule: {
-                  date_mode: "single",
-                  ...(schedule ?? {}),
-                  work_date: e.target.value,
-                },
-              } as Scenario)
+              setScenario(setWorkDates(scenario, { start: e.target.value }))
             }
           />
+          {workDate && (
+            <input
+              id="what-date-end"
+              type="date"
+              className={`a-fld${workDateEnd ? "" : " is-unset"}`}
+              data-write=""
+              disabled={locked}
+              aria-label="Last work day, for a range"
+              min={workDate}
+              value={workDateEnd}
+              onChange={(e) =>
+                setScenario(setWorkDates(scenario, { end: e.target.value }))
+              }
+            />
+          )}
         </Cell>
       </div>
 
@@ -556,40 +638,14 @@ export function WhatBand({
         </Cell>
       </div>
 
-      {/* §8.23's remainder: the detection facts with no cell of their own.
-          "The separate block is gone; nothing it said is gone."  #214's
-          caveat is the last line — restyled, never deleted. */}
-      {detected && (
-        <div className="a-detect" data-testid="what-detection">
-          <span className="tr-prov">
-            OSM detection · {detected.roadName} · way {detected.wayId} ·{" "}
-            {detected.method === "auto_single"
-              ? "sole match auto-adopted"
-              : "operator pick"}
-          </span>
-          {detected.rows
-            .filter((r) => r.label === "Bearing" || r.label === "Divided" || r.label === "One-way")
-            .map((r) => (
-              <span
-                key={r.label}
-                className={`tr-prov${clauseIsAmber(r) ? " is-amber" : ""}`}
-                data-testid={`detect-${r.label.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                {r.label} {r.applied ?? "—"} ·{" "}
-                {provenanceClause({
-                  detectedValue: r.detected,
-                  detectedToken: r.detectedToken,
-                  appliedToken: r.appliedToken,
-                })}
-              </span>
-            ))}
-          <span className="tr-prov" data-testid="bearing-caveat">
-            {bearingCaveat(detected.geomDrives)}
-          </span>
-        </div>
-      )}
-
-
+      {/* #289 hand-check, 2026-09-23, fix 3: §8.23's remainder — the
+          loose detection block — is GONE.  Every line it carried is now
+          under the field it describes: the source and way id on the
+          WHERE band's provenance (lib/scenarios/band-facts.ts), bearing,
+          one-way and #214's caveat on the road-type cell, and divided on
+          the Divided control when there is one.  "The separate block is
+          gone; nothing it said is gone" — this is the second half of
+          that sentence finally landing. */}
       {/* Correction 1 — THE SECOND GROUP: the inputs the 3 × 2 grid does
           not hold, as grid cells under one sub-header.  It replaces the
           old SCHEDULE / ROAD / WORK sections, which carried the setup
@@ -598,6 +654,7 @@ export function WhatBand({
       <PlanDetails
         scenario={scenario}
         setScenario={setScenario}
+        dividedLine={showsDivided ? dividedLine : null}
         scheduleCells={scheduleCells}
         windows={scheduleWindows}
       />

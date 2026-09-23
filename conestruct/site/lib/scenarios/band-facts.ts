@@ -173,7 +173,15 @@ export function whereProvenance(scenario: Scenario): string {
   if (!road) return `pin at ${coords}`;
   const l = candidateLabel(road.candidate);
   const place = road.placeName ? ` · ${road.placeName}` : "";
-  return `${l.primary} ${l.direction.toLowerCase()}${place} · ${coords}`;
+  // #289 hand-check, 2026-09-23, fix 3: "detection source and way id
+  // under the WHERE fact line's provenance".  They were two clauses of a
+  // loose block under the WHAT grid, describing no field there — where
+  // the road CAME FROM is a fact about the pin, and this is the pin's
+  // own line.  The words are the block's, unchanged.
+  const source = `OSM detection · way ${road.candidate.way_id} · ${
+    road.method === "auto_single" ? "sole match auto-adopted" : "operator pick"
+  }`;
+  return `${l.primary} ${l.direction.toLowerCase()}${place} · ${coords} · ${source}`;
 }
 
 /**

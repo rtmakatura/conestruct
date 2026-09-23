@@ -26,6 +26,7 @@ import { DEFAULT_SHOULDER, DEFAULT_FLAGGER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
 import type { ConfirmedRoad } from "@/lib/road-detection/types";
 import { WhatBand } from "./bands/WhatBand";
+import { whereProvenance } from "@/lib/scenarios/band-facts";
 
 afterEach(cleanup);
 
@@ -144,9 +145,10 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
 
   it("#214 repro: typed 90 over detected 85 — both values render, and the role sentence stands before any typing", () => {
     mount(pinnedShoulder());
-    // The plan's value and detection's, in the bearing's own line —
-    // which is the detection footer now, because the 3 × 2 grid has no
-    // bearing cell and §8.23 says nothing it said is gone.
+    // The plan's value and detection's, in the bearing's own line.
+    // #289 hand-check, 2026-09-23, fix 3: that line now sits UNDER THE
+    // ROAD-TYPE CELL rather than in a loose block below the grid — "the
+    // four loose provenance lines move under the fields they describe."
     const bearing = document.querySelector(
       '[data-testid="detect-bearing"]',
     )!.textContent!;
@@ -158,10 +160,17 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
         /road geometry governs the drawing — the typed bearing sets the travel-direction sign only/,
       ),
     ).toBeTruthy();
-    // Source line: OSM detection with the road's identity.
+    // Fix 3: the bearing and #214's sentence are the road-type cell's.
     expect(
-      screen.getByText(/OSM detection · E Bayaud Ave · way 1042/),
-    ).toBeTruthy();
+      document.querySelector('[data-testid="cell-road-type"]')!.textContent,
+    ).toMatch(/road geometry governs the drawing/);
+    // The SOURCE line went to the WHERE band's own provenance — where
+    // the road came from is a fact about the pin, not about a WHAT
+    // field.  `whereProvenance` composes it (band-facts), and this suite
+    // mounts WhatBand alone, so the string is asserted at its producer.
+    expect(whereProvenance(pinnedShoulder())).toMatch(
+      /OSM detection · way 1042 · sole match auto-adopted/,
+    );
   });
 
   it("no geometry on file: the honest inverse sentence (typed bearing drives)", () => {
@@ -191,7 +200,12 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     // two the ledger never had a row for say so in words rather than
     // being left blank.
     expect(prov("lane-width")).toBe("your change · operator-set from here on");
-    expect(prov("work-dates")).toBe("optional · permit lead times need it");
+    // Fix 1: the dates are ONE control and the mode derives from them,
+    // so an unset date says so in its own line rather than calling
+    // itself optional under a caption that promises lead times.
+    expect(prov("work-dates")).toBe(
+      "not set · windows and permit lead times need a date",
+    );
   });
 
   it("every provenance line rides the provenance role, not a new one", () => {
@@ -217,6 +231,12 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     mount(flagger);
     expect(document.querySelector('[data-testid="detect-divided"]')).toBeNull();
     expect(document.querySelector('[data-testid="detect-bearing"]')).not.toBeNull();
+    // Fix 3: both live under the road-type cell now, so "no divided line
+    // for a kind that has no divided" is still the claim, just read in
+    // the cell rather than in a footer.
+    expect(
+      document.querySelector('[data-testid="cell-road-type"] [data-testid="detect-bearing"]'),
+    ).not.toBeNull();
     // #209, and it is a DELIBERATE change from the ledger's behaviour:
     // the ledger rendered no lanes ROW for a kind with no lane count, and
     // the grid renders the CELL read-only with the reason instead — rule
@@ -226,5 +246,55 @@ describe("#289 §8.23 — the clauses under the fields they are about", () => {
     expect(
       document.querySelector('[data-testid="cell-lanes"] input'),
     ).toHaveProperty("readOnly", true);
+  });
+});
+
+// #289 hand-check, 2026-09-23, fix 2 — the street-class record takes the
+// jurisdiction field's shape, with no boxed panel.
+describe("fix 2 — the street-class record, bare", () => {
+  it("renders the record's own shape and none of the panel's framing", async () => {
+    const { JurisdictionControls } = await import("./JurisdictionSection");
+    render(
+      <JurisdictionControls
+        jurisdiction={null}
+        jurisdictionKey={null}
+        setJurisdictionKey={() => {}}
+        streetClass={null}
+        setStreetClass={() => {}}
+        classSuggest="arterial"
+        classSuggestTier="secondary"
+        omitJurisdictionField
+        bare
+      />,
+    );
+    // The panel's framing: `.jctl` is a 1 px rule on `--canvas`,
+    // `.jctl-field` an inset and a divider.  Neither belongs in a cell.
+    expect(document.querySelector(".jctl")).toBeNull();
+    expect(document.querySelector(".jctl-field")).toBeNull();
+    // The RECORD is untouched — the same container, glyph and pair the
+    // jurisdiction field's suggestion uses (#198: byte-identical).
+    const slot = document.querySelector(".jbar-suggest")!;
+    expect(slot).not.toBeNull();
+    expect(slot.textContent).toMatch(/Detected road suggests street class:/);
+    expect(slot.textContent).toMatch(/⌁/);
+    expect(screen.getByRole("button", { name: /^Confirm Arterial$/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Dismiss" })).toBeTruthy();
+  });
+
+  it("without `bare` the box is still there — nothing else changed", async () => {
+    const { JurisdictionControls } = await import("./JurisdictionSection");
+    render(
+      <JurisdictionControls
+        jurisdiction={null}
+        jurisdictionKey={null}
+        setJurisdictionKey={() => {}}
+        streetClass={null}
+        setStreetClass={() => {}}
+        classSuggest="arterial"
+        classSuggestTier="secondary"
+      />,
+    );
+    expect(document.querySelector(".jctl")).not.toBeNull();
+    expect(document.querySelectorAll(".jctl-field").length).toBe(2);
   });
 });

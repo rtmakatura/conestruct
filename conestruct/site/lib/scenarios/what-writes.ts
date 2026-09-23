@@ -148,3 +148,45 @@ export function setLanes(scenario: Scenario, n: number): Scenario {
       : s.detectionOverrides,
   } as Scenario;
 }
+
+/**
+ * The work dates — ONE write for one control.
+ *
+ * #289 hand-check, 2026-09-23: "Work dates is one control in the WHAT
+ * grid — the Single day / Date range / Not set buttons write the same
+ * field as the date input; keep one, drop the duplicate."
+ *
+ * They did.  The grid's cell wrote `work_date` (stamping `date_mode:
+ * "single"` as it went) and the second group's cell wrote `work_date`
+ * again behind three chips that wrote `date_mode` — two controls and a
+ * mode selector for one answer, which is exactly the two-writers defect
+ * this arc keeps removing.
+ *
+ * The dates are now the control and the MODE IS DERIVED from them, which
+ * is also the honest reading of #199: a schedule nobody entered is "Not
+ * set" because there is no date, not because a chip says so.  No date →
+ * `tbd`; a start and an end → `range`; a start alone → `single`.  The
+ * times are a separate question and keep their own cells.
+ */
+export function setWorkDates(
+  scenario: Scenario,
+  dates: { start?: string; end?: string },
+): Scenario {
+  const prior = scenario.schedule ?? null;
+  const start = "start" in dates ? dates.start || undefined : prior?.work_date;
+  const end = "end" in dates ? dates.end || undefined : prior?.work_date_end;
+  // An end with no start is not a range anybody can act on, and the
+  // backend reads the pair — so the end only counts while a start
+  // stands.  Rule 10: what is not set is not sent.
+  const keptEnd = start ? end : undefined;
+  const date_mode = !start ? "tbd" : keptEnd ? "range" : "single";
+  return {
+    ...scenario,
+    schedule: {
+      ...(prior ?? {}),
+      date_mode,
+      work_date: start,
+      work_date_end: keptEnd,
+    },
+  } as Scenario;
+}

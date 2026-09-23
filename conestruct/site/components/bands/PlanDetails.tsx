@@ -58,12 +58,15 @@ function Cell({
   label,
   htmlFor,
   provenance,
+  line = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
+  /** A detection fact about THIS field (fix 3). */
+  line?: { key: string; text: string; amber: boolean } | null;
   children: ReactNode;
   testid: string;
 }) {
@@ -80,6 +83,14 @@ function Cell({
       <span className="tr-prov" data-testid={`prov-${testid}`}>
         {provenance}
       </span>
+      {line && (
+        <span
+          className={`tr-prov${line.amber ? " is-amber" : ""}`}
+          data-testid={`detect-${line.key}`}
+        >
+          {line.amber ? `⚠ ${line.text}` : line.text}
+        </span>
+      )}
     </div>
   );
 }
@@ -132,9 +143,16 @@ export function PlanDetails({
   setScenario,
   scheduleCells,
   windows,
+  dividedLine = null,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
+  /** #289 hand-check, 2026-09-23, fix 3: "divided under the Divided
+   *  control."  Detection's own row for the field, derived by the WHAT
+   *  band (one producer) and rendered here, under the control it is
+   *  about.  Null when detection has nothing to say, or when there is no
+   *  Divided control to sit under — the road-type cell takes it then. */
+  dividedLine?: { key: string; text: string; amber: boolean } | null;
   /** The dates control's own cells — ScheduleField's, rendered into this
    *  grid rather than pasted below it as a section. */
   scheduleCells?: ReactNode;
@@ -261,6 +279,7 @@ export function PlanDetails({
           <Cell
             label="Divided highway"
             provenance="median present · every other road type sets this itself (#85)"
+            line={dividedLine}
             testid="divided"
           >
             <TwoWay

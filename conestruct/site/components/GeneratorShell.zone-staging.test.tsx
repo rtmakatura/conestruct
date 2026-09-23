@@ -7,7 +7,7 @@
 // are exactly the ones a fake-timer prototype can't exercise.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
@@ -249,19 +249,19 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
 
-    // The Setup panel's Schedule step: pick "Single day" (the #199
-    // default is now "Not set", so the date input mounts on the choice),
-    // choose a work date, then flip back to the deliberate "Not set" —
-    // every edit must ride the same scenario.schedule the strip and
-    // hours chip read.
-    await user.click(screen.getByRole("button", { name: "Single day" }));
+    // #289 hand-check, 2026-09-23, fix 1: the dates are ONE control in
+    // the WHAT grid and the mode DERIVES from them — the Single day /
+    // Date range / Not set chips are gone, because they wrote the same
+    // answer as the date input.  #199's claim is unchanged and now made
+    // by the field itself: a schedule nobody entered is "Not set"
+    // because there is no date.  Every edit still rides the same
+    // scenario.schedule the strip and the hours chip read.
+    await openWhat();
+    const dateInput = document.getElementById("what-date") as HTMLInputElement;
+    expect(dateInput).not.toBeNull();
+    fireEvent.change(dateInput, { target: { value: "2026-08-04" } });
     await flushDebounce();
     await release(1, okBreakdown());
-    const dateInput = document.getElementById("sched-date") as HTMLInputElement;
-    expect(dateInput).not.toBeNull();
-    await user.type(dateInput, "2026-08-04");
-    await flushDebounce();
-    await release(2, okBreakdown());
 
     let bodies = fetchMock.mock.calls
       .filter(([u]) => String(u).includes("device-breakdown"))
@@ -272,7 +272,8 @@ describe("zone staging lifecycle", () => {
     expect(last.scenario.schedule?.work_date).toBe("2026-08-04");
     expect(last.scenario.schedule?.date_mode).toBe("single");
 
-    await user.click(screen.getByRole("button", { name: "Not set" }));
+    // Clearing the date is the deliberate "Not set": no date, no mode.
+    fireEvent.change(dateInput, { target: { value: "" } });
     await flushDebounce();
     bodies = fetchMock.mock.calls
       .filter(([u]) => String(u).includes("device-breakdown"))
