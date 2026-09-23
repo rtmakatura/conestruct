@@ -260,13 +260,15 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("INVALID INPUT");
   });
 
-  // #289 hand-check, 2026-09-23, finding 1 — the strip "says only
-  // 'choose the kind of work'" until the kind is confirmed.
-  it("kindUnconfirmed says ONLY 'choose the kind of work' — no verdict, even over a clean held audit", () => {
+  // #289 hand-check, 2026-09-23, finding 1 — no verdict until the kind is
+  // confirmed; the strip names the STATE ("◌ AWAITING KIND OF WORK") and
+  // the instruction is the disabled primary's (#260 P2).
+  it("kindUnconfirmed reads AWAITING KIND OF WORK — no verdict, no instruction, even over a clean held audit", () => {
     const html = renderToStaticMarkup(
       <StatusBar inputError={null} kindUnconfirmed audit={ready(makeAudit())} />,
     );
-    expect(html).toContain(">choose the kind of work<");
+    expect(html).toContain(">AWAITING KIND OF WORK<");
+    expect(html).not.toContain("choose the kind of work");
     expect(html).toContain("status-bar idle unavail");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("VERIFIED");
@@ -281,7 +283,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
         audit={{ state: "loading", lastReady: null }}
       />,
     );
-    expect(html).toContain(">choose the kind of work<");
+    expect(html).toContain(">AWAITING KIND OF WORK<");
     expect(html).not.toContain("INVALID INPUT");
     expect(html).not.toContain("status-bar fail");
   });

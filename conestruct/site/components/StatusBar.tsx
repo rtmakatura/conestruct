@@ -1,5 +1,4 @@
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
-import { KIND_BLOCKER } from "@/lib/scenarios/rail";
 
 // ---------------------------------------------------------------------------
 // PR 7 (UX audit findings UX-21 + UX-22): this strip used to be
@@ -167,10 +166,11 @@ interface Props {
   locationUnset?: boolean;
   /**
    * #289 hand-check, 2026-09-23, finding 1 (Rule 10): a pin is down but
-   * no person has confirmed the kind.  The strip "says only 'choose the
-   * kind of work'" (Ryan's ruling) — no verdict, and no input-error or
-   * refusal state either, because every check behind those is for a kind
-   * nobody picked (the shell does not fire them).  Ranked FIRST: it is
+   * no person has confirmed the kind.  The strip reads "◌ AWAITING KIND
+   * OF WORK" — the state; the instruction is the disabled primary's —
+   * and nothing else: no verdict, no input-error or refusal state,
+   * because every check behind those is for a kind nobody picked (the
+   * shell does not fire them).  Ranked FIRST: it is
    * only ever true with a pin, so it never competes with AWAITING
    * LOCATION.
    */
@@ -232,21 +232,23 @@ function StatusBarState({
 }: Props) {
   // #289 finding 1 — ranked above INVALID INPUT on purpose: the client
   // bounds it checks (lanes per kind, the approach mirrors) are the
-  // placeholder kind's, and Ryan's ruling is that the strip says ONLY
-  // this until the kind is confirmed.  Same chromeless no-verdict
-  // treatment as AWAITING LOCATION (rule 13), same ◌ glyph (rule 18).
+  // placeholder kind's, so no verdict and no input error speak until the
+  // kind is confirmed.  Same chromeless no-verdict treatment as AWAITING
+  // LOCATION (rule 13), same ◌ glyph (rule 18).
   //
-  // RULE 5, stated: #260 P2 kept the strip to the STATE and left the
-  // instruction to the CTA reason ("the one live speaker").  This line is
-  // Ryan's instruction text by ruling, so for this one state the strip
-  // and the CTA reason both say it.  Recorded in rulings.md.
+  // THE WORDS NAME THE STATE (2026-09-23, after the prod check): the strip
+  // reads "◌ AWAITING KIND OF WORK", and "choose the kind of work" lives
+  // only on the disabled primary.  That restores #260 P2 for this state —
+  // the strip names the state, the CTA reason is the one live speaker of
+  // the instruction — which the first build of finding 1 had broken by
+  // putting the instruction here too.
   if (kindUnconfirmed) {
     return (
       <div className="status-bar idle unavail" data-testid="strip-kind-unconfirmed">
         <span className="status-glyph" aria-hidden>
           ◌
         </span>
-        <span>{KIND_BLOCKER.toLowerCase()}</span>
+        <span>AWAITING KIND OF WORK</span>
       </div>
     );
   }

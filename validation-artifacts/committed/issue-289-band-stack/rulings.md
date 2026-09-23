@@ -424,3 +424,25 @@ Test mounts: four suites that stub the whole column (bundle-settings, suggest-co
 class-suggest, suggestion-records) can render no chip, so they now mount as a saved plan does
 (`initialScenario={DEFAULT_SCENARIO}`, confirmed) — the same unpinned default they mounted
 fresh. Their subjects are not the kind; `GeneratorShell.kind-confirm` owns it.
+
+## The strip's wording in the kind-unconfirmed state — after the prod check, 2026-09-23
+
+Relayed with Ryan's confirmation of the kind gate on prod, verbatim:
+
+> Ship the pending strip-wording commit if it isn't shipped ("◌ AWAITING KIND OF WORK" on the
+> strip, "choose the kind of work" only on the disabled primary).
+
+No such commit existed on any branch, stash or working copy when this was checked (origin/main =
+`193faab`), so it was built as its own commit and is NOT shipped by this session — the go named a
+commit that did not exist.
+
+What it changes: the strip reads **`◌ AWAITING KIND OF WORK`** — the state, in AWAITING LOCATION's
+register — and the instruction "choose the kind of work" is the disabled primaries' alone (the
+WHERE confirm's reason and the Generate frame's CTA reason, which is rule 139's one string). This
+**supersedes** finding 1's Rule 5 note above ("#260 P2 has one exception now"): there is no
+exception any more; the strip names the state and the CTA reason is the one live speaker of the
+instruction, as #260 P2 ruled.
+
+**Open for a ruling:** the WHAT band's pending line still reads "pending — choose the kind of
+work" (rule 59: a pending line states why). It is a fact line, not a primary. Keep it, or
+reword it to a state ("pending — kind of work not chosen")?

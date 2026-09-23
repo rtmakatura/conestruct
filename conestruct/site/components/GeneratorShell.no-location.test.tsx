@@ -234,13 +234,14 @@ describe("no location, no certification (#186)", () => {
     const text = document.body.textContent ?? "";
     expect(text).not.toContain("AWAITING LOCATION");
     // #289 finding 1 (Rule 10): with the pin down and no kind confirmed,
-    // the strip says ONLY "choose the kind of work" — no verdict.  This
-    // line used to read READY FOR TCS REVIEW here: a verdict for the
-    // placeholder kind nobody picked, which is the finding.
+    // the strip names the state — no verdict.  This line used to read
+    // READY FOR TCS REVIEW here: a verdict for the placeholder kind nobody
+    // picked, which is the finding.  The instruction is the disabled
+    // primary's alone (#260 P2), asserted just below.
     expect(text).not.toContain("READY FOR TCS REVIEW");
-    expect(screen.getByTestId("strip-kind-unconfirmed").textContent).toBe(
-      "◌choose the kind of work",
-    );
+    const strip = screen.getByTestId("strip-kind-unconfirmed");
+    expect(strip.textContent).toBe("◌AWAITING KIND OF WORK");
+    expect(strip.textContent).not.toContain("choose");
     const btn = () =>
       screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement;
     // #289 hand-check, 2026-09-23, defect 1: a pin is no longer enough.
