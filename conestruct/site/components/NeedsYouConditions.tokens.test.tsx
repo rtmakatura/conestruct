@@ -80,8 +80,10 @@ describe("#245 — the reason picker's tokens (moved by #288 clause 1)", () => {
 });
 
 describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
-  it("the tier tokens ride symbol and word (▲ --dim, ✓ --pass, ◌ --none; the none word stays provenance ink)", () => {
-    expect(rule(".workbench .needs-you .ny-cond .ny-glyph.sc-detected")).toMatch(/color:\s*var\(--dim\)/);
+  it("the tier tokens ride symbol and word (▲ --warn, ✓ --pass, ◌ --none; the none word stays provenance ink)", () => {
+    // #289 fidelity F1: Part 2 rule 18 fixes ▲ at #f4c020 (--warn) —
+    // "a symbol never changes hue by context" — superseding --dim here.
+    expect(rule(".workbench .needs-you .ny-cond .ny-glyph.sc-detected")).toMatch(/color:\s*var\(--warn\)/);
     expect(rule(".workbench .needs-you .ny-cond .ny-glyph.sc-absent")).toMatch(/color:\s*var\(--pass\)/);
     expect(rule(".workbench .needs-you .sc-result.sc-detected")).toMatch(/color:\s*var\(--dim\)/);
     // The absent row's WORD is never green: green lives in the glyph, so

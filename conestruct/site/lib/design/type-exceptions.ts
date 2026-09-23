@@ -202,6 +202,20 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
+  {
+    name: "the fidelity pass (#289, fidelity-audit.md F1–F8)",
+    sizes: ["var(--fs-field-label)"],
+    reason:
+      "Rules 17–18's one symbol treatment (mono 12.5 px), for symbols the audit measured on prod with NO declared size — they inherited the root's 16 px.  The --fs-field-label token is read, not re-typed: its owner already names 'field label, symbols'.  The pass's two pixel figures (rule 20's 13 px base, rule 88's 12 px caret) are not #283 sizes and are declared as debt, beside .disc-name's 13 px",
+    css: [
+      {
+        selector:
+          ".workbench .a-sym, .workbench .ny-glyph, .workbench .disc-glyph, .workbench .status-glyph, .workbench .sw-glyph, .workbench .sugg-glyph, .workbench .wb-glyph",
+        size: "var(--fs-field-label)",
+      },
+    ],
+    tsx: [],
+  },
 ];
 
 export const TYPE_DEBT: readonly TypeDebt[] = [
@@ -260,6 +274,13 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .results-placeholder .rp-line", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-lk", size: "9.5px" },
       { selector: ".workbench .act-btn", size: "9.5px" },
+      // #289 fidelity F1 — Part 2's own pixel figures where the audit
+      // measured no declared size (16 px inherited from the root):
+      // rule 20's base on the workbench itself, and rule 88's caret.
+      // Neither is one of #283's nine, so both are debt with an owner,
+      // exactly as .disc-name's rule-88 13 px is above.
+      { selector: ".workbench", size: "13px" },
+      { selector: ".workbench .disc-caret", size: "12px" },
     ],
     tsx: [],
   },
@@ -565,7 +586,11 @@ export const CENSUS_PINS = {
   // a register already in the sheet.  104 -> 105.
   // #289 S7: the panel's status row — one declaration, at a register the
   // sheet already carries.  105 -> 106.
-  cssDeclarations: 106,
+  // #289 fidelity F1: three declarations where the audit measured none —
+  // rule 20's workbench base, rule 88's caret, rules 17–18's symbol
+  // treatment.  106 -> 109.  No new size: 13px, 12px and the token are
+  // each already in the sheet.
+  cssDeclarations: 109,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

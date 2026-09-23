@@ -268,6 +268,11 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // (#288's results primary and #289's band primary), and each
         // exception declares the sizes its own selectors use.
         "var(--fs-primary)",
+        // #289 fidelity F1: rules 17–18's symbol treatment reads the
+        // field-label token again (its owner names "field label,
+        // symbols"), carried by the fidelity pass's own row — the
+        // same one-value-two-surfaces reason --fs-primary appears twice.
+        "var(--fs-field-label)",
         "28px",
         "20px",
         "17px",

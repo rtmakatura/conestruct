@@ -21,6 +21,7 @@
 // the half of section 03 that clause b transfers intact.
 
 import type { ReactNode } from "react";
+import { symClass } from "@/lib/design/symbols";
 
 export interface DisclosureRowProps {
   /** Rule 17's text symbol — ✓ ◌ i ▲ ⚠, never an icon. */
@@ -83,7 +84,11 @@ export function DisclosureRow({
         aria-controls={panelId}
         onClick={onToggle}
       >
-        <span className="disc-glyph tr-field" aria-hidden="true">
+        {/* #289 fidelity F1: rules 17–18 — the symbol treatment and the
+            glyph's own fixed hue.  It rode .tr-field (a LABEL role, Inter
+            12 px, one ink for every glyph), so ✓, ◌ and i all rendered
+            the same #c8d1dd sans character. */}
+        <span className={`disc-glyph ${symClass(symbol)}`.trim()} aria-hidden="true">
           {symbol}
         </span>
         <span className="disc-name">{name}</span>

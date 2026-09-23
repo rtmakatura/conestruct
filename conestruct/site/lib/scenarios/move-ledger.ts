@@ -63,7 +63,7 @@ export interface MoveRow {
 const GLYPH: Record<MoveState, string> = {
   done: "✓",
   attention: "⚠",
-  pending: "○",
+  pending: "◌",
 };
 
 export interface MoveLedger {

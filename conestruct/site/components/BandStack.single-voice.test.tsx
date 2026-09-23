@@ -70,12 +70,12 @@ describe("#228 single voice, inherited — the fact line renders, never derives"
           value: null,
           verb: null,
           pending: "__WHY__",
-          glyph: "○",
+          glyph: "◌",
         }}
       />,
     );
     const row = screen.getByTestId("fact-generate");
-    expect(row.textContent).toBe("○__L____WHY__");
+    expect(row.textContent).toBe("◌__L____WHY__");
     // Rule 134: a fact line offers a link OR a provenance word, never a
     // disabled link.
     expect(row.querySelector("button")).toBeNull();
@@ -117,7 +117,7 @@ describe("#228 single voice, inherited — the derivations own the vocabulary", 
         (f.verb === null) !== (f.pending === null),
         `${f.id}: exactly one of verb / pending`,
       ).toBe(true);
-      expect(["✓", "○"]).toContain(f.glyph);
+      expect(["✓", "◌"]).toContain(f.glyph);
     }
   });
 
@@ -136,7 +136,7 @@ describe("#228 single voice, inherited — the derivations own the vocabulary", 
     const ledger = deriveMoveLedger(PINNED);
     expect(ledger.rows).toHaveLength(5);
     for (const r of ledger.rows) {
-      expect(["✓", "⚠", "○"]).toContain(r.glyph);
+      expect(["✓", "⚠", "◌"]).toContain(r.glyph);
       // Rule 68: the right track is a link verb or a provenance word.
       expect((r.verb === null) !== (r.word === null)).toBe(true);
     }

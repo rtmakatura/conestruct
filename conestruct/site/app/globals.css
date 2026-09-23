@@ -914,6 +914,14 @@ body {
   background: var(--canvas);
   color: var(--ink-on-dark);
   font-family: var(--font-sans);
+  /* #289 fidelity F1 — Part 2 rule 20: "base font-size 13 px / 1.5,
+     colour #c8d1dd".  The colour was already here; the size and leading
+     were not, so every element with no declared size inherited the
+     ROOT's 16 px / 25.6 px (the pre-dark paper theme's body) — measured
+     on prod as the move-ledger symbols, the disclosure carets and the S7
+     panel's figures and status row (fidelity-audit.md, group C). */
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 /* fix-spec-02 P1·05·01 — visible keyboard focus (WCAG 2.4.7).  One
@@ -2092,11 +2100,14 @@ input[type="number"] {
   --sc-act-wash: rgba(52, 169, 232, 0.14);
   --sc-disabled: rgba(147, 160, 176, 0.35);
 }
-/* Symbols mirror section 03's tiers: ▲ detected = the "changed this
-   plan" delta (--dim, 7.00:1 on --canvas); ✓ none = checked & passed
-   (--pass, 8.94:1); ◌ staged / unasserted = --none (6.60:1). */
+/* Symbols mirror section 03's tiers: ✓ none = checked & passed
+   (--pass, 8.94:1); ◌ staged / unasserted = --none (6.60:1).
+   #289 fidelity F1: ▲ detected is --warn, not --dim.  Part 2 rule 18:
+   "▲ #f4c020 … A symbol never changes hue by context" — the --dim
+   choice (the "changed this plan" delta's orange) predates Direction A
+   and is superseded by it. */
 .workbench .needs-you .ny-cond .ny-glyph.sc-detected {
-  color: var(--dim);
+  color: var(--warn);
 }
 .workbench .needs-you .ny-cond .ny-glyph.sc-absent {
   color: var(--pass);
@@ -3825,7 +3836,12 @@ input[type="number"] {
   color: var(--ink);
 }
 .workbench .disc-caret {
-  /* Rule 88: the caret is pushed right, and turns on open. */
+  /* Rule 88: the caret is pushed right, and turns on open.  #289
+     fidelity F1: "caret '›' (mono 12 px #93a0b0)" — it had no family or
+     size and inherited Inter 16 px. */
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
   margin-left: auto;
   color: var(--none, var(--ink-on-dark-faint));
   transition: transform 120ms ease;
@@ -4482,4 +4498,51 @@ input[type="number"] {
    refusal leaves the operator. */
 .workbench .results-head-slot.is-released {
   min-height: 0;
+}
+
+/* ─── #289 fidelity F1 · Part 2 rules 17–18 — every symbol, one treatment ───
+   Rule 17: "Symbols are text, not icons: ✓ ▲ ⚠ ◌ × i, mono 12.5 px / 1,
+   rendered with font-variant-emoji: text."  The fact line's .a-sym and
+   the strip's .status-glyph already carried it; the move ledger's, NEEDS
+   YOU's, the disclosures', the schedule windows', the suggestion rows'
+   and the working band's did not, and rendered Inter 12–16 px.  Declared
+   LAST so it wins the ties with the label roles some of these spans also
+   carry.  Size only — each symbol's hue is rule 18's, below.
+   ⌁ (the suggestion rows) is DESIGN-SPACING's "proposed"; Part 2 rule
+   17's list omitted it (ruled 2026-09-23, fidelity Q5). */
+.workbench .a-sym,
+.workbench .ny-glyph,
+.workbench .disc-glyph,
+.workbench .status-glyph,
+.workbench .sw-glyph,
+.workbench .sugg-glyph,
+.workbench .wb-glyph {
+  font-family: var(--font-mono);
+  font-size: var(--fs-field-label);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-emoji: text;
+}
+/* Rule 18: "Symbol colours, fixed across the whole page … A symbol never
+   changes hue by context."  The class comes from lib/design/symbols.ts
+   `symClass(glyph)`, so the hue follows from the glyph alone. */
+.workbench .sym-pass {
+  color: var(--pass);
+}
+.workbench .sym-warn {
+  color: var(--warn);
+}
+.workbench .sym-none {
+  color: var(--none);
+}
+.workbench .sym-fail {
+  color: var(--fail);
+}
+.workbench .sym-info {
+  color: var(--act);
+}
+.workbench .sym-proposed {
+  color: var(--ink-on-dark);
 }

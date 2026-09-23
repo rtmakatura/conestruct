@@ -57,8 +57,10 @@ export interface BandFact {
   verb: FactVerb | null;
   /** Rule 59's reason, present exactly when `verb` is null. */
   pending: string | null;
-  /** Rule 18's fixed symbols: done, or not reached. */
-  glyph: "✓" | "○";
+  /** Rule 18's fixed symbols: done, or not reached.  #289 fidelity F1:
+   *  the pending glyph is rule 17's ◌ (U+25CC, dotted circle); it was ○
+   *  (U+25CB, white circle), a character outside the vocabulary. */
+  glyph: "✓" | "◌";
 }
 
 export interface BandModel {
@@ -414,7 +416,7 @@ export function deriveBands({
       value: where,
       verb: located ? "CHANGE" : null,
       pending: located ? null : "pending — find the work first",
-      glyph: located ? "✓" : "○",
+      glyph: located ? "✓" : "◌",
     },
     {
       id: "what",
@@ -432,7 +434,7 @@ export function deriveBands({
             scenario.meta.confirmedRoad
             ? `road facts prefill from ${confirmedRoadLabel(scenario)}`
             : "kind of work, extent, side · pending — find the work first",
-      glyph: whatReady ? "✓" : "○",
+      glyph: whatReady ? "✓" : "◌",
     },
     {
       id: "generate",
@@ -448,7 +450,7 @@ export function deriveBands({
       // where the generate frame is not: the alternative is a column that
       // says "pending" and never says why.
       pending: blockerReason ?? "pending",
-      glyph: "○",
+      glyph: "◌",
     },
   ];
 
