@@ -213,11 +213,25 @@ describe("site-condition correction markers (#224 phase 4)", () => {
     expect(deriveCorrectionsStanding(moot, [])).toMatchObject({ applied: 0, open: 1 });
   });
 
-  it("#254 stagedSentence: the count in words the block and the chip share; zero says so", () => {
-    expect(stagedSentence(0)).toBe("no corrections staged");
-    expect(stagedSentence(1)).toBe("1 correction staged · not yet applied");
-    expect(stagedSentence(2)).toBe("2 corrections staged · not yet applied");
-    expect(stagedSentence(5)).toBe("5 corrections staged · not yet applied");
+  it("#254 / #289 finding 2 stagedSentence: what is staged, enumerated from the one list; zero says so", () => {
+    const corr = (flag: string): StagedCorrection =>
+      ({ flag, marker: null }) as unknown as StagedCorrection;
+    const field: StagedCorrection = {
+      field: "speed",
+      label: "Speed limit",
+      from: 65,
+      to: 55,
+    };
+    expect(stagedSentence([])).toBe("no corrections staged");
+    expect(stagedSentence([corr("a")])).toBe("1 correction staged · not yet applied");
+    expect(stagedSentence([corr("a"), corr("b")])).toBe(
+      "2 corrections staged · not yet applied",
+    );
+    // The finding: one staged FIELD used to read "1 correction staged".
+    expect(stagedSentence([field])).toBe("1 field staged · not yet applied");
+    expect(stagedSentence([field, corr("a")])).toBe(
+      "1 field · 1 correction staged · not yet applied",
+    );
   });
 
   it("#254 a staged marker for a flag the scan never keyed (assert under not_run) still folds — the backend decides moot/applied", () => {

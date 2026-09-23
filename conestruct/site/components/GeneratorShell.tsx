@@ -2112,8 +2112,10 @@ export function GeneratorShell({
                 action.  Never alongside the flight's ribbon. */}
             {stagedDisclose && !planDeclined && !regenerating && (
               <div className="stale-ribbon">
-                Previous answer — {staged.length} correction{staged.length === 1 ? "" : "s"} staged, not yet
-                applied.
+                {/* #289 finding 2: what is staged, in ruling 191's
+                    words, from the one list — "1 field", "1 correction",
+                    "1 field · 1 correction". */}
+                Previous answer — {stagedEnumeration(staged)} staged, not yet applied.
               </div>
             )}
             {

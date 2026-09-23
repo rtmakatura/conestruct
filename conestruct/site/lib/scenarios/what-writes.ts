@@ -241,21 +241,8 @@ export function applyStagedFields(
   return next;
 }
 
-/**
- * Ruling 191's sentence: "the staged sentence enumerating what is staged
- * ('1 field · 2 corrections') so one Apply is known to carry both."
- *
- * Counted from the one list, so the sentence cannot disagree with what
- * APPLY will write.  A half that is empty is not named — "0 corrections"
- * would be a clause about nothing (rule 10).
- */
-export function stagedEnumeration(staged: readonly StagedCorrection[]): string {
-  const fields = staged.filter(isFieldStaged).length;
-  const corrections = staged.length - fields;
-  const parts: string[] = [];
-  if (fields > 0) parts.push(`${fields} field${fields === 1 ? "" : "s"}`);
-  if (corrections > 0) {
-    parts.push(`${corrections} correction${corrections === 1 ? "" : "s"}`);
-  }
-  return parts.join(" · ");
-}
+/** Ruling 191's enumeration — MOVED to site-corrections.ts (#289 finding
+ *  2) so the NEEDS YOU sentence and the ribbon, which live on that side
+ *  of the import graph, read the same producer as the S7 panel.
+ *  Re-exported here so the panel's import is unchanged. */
+export { stagedEnumeration } from "./site-corrections";

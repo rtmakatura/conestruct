@@ -307,11 +307,42 @@ export function deriveCorrectionsStanding(
   return out;
 }
 
-/** The staged count in words — the Apply row's label and the chip's
- *  suffix share it (one voice). */
-export function stagedSentence(n: number): string {
-  if (n === 0) return "no corrections staged";
-  return `${n} correction${n === 1 ? "" : "s"} staged · not yet applied`;
+/**
+ * Ruling 191's sentence: "the staged sentence enumerating what is staged
+ * ('1 field · 2 corrections') so one Apply is known to carry both."
+ *
+ * Counted from the one list, so the sentence cannot disagree with what
+ * APPLY will write.  A half that is empty is not named — "0 corrections"
+ * would be a clause about nothing (rule 10).
+ *
+ * #289 finding 2 (Ryan, 2026-09-23): the ONE producer of the staged
+ * count's words — the S7 panel, the NEEDS YOU Apply row and button, and
+ * the stale ribbon all read it: "1 field", "1 correction", "1 field · 1
+ * correction".  Moved here from what-writes.ts (which re-exports it)
+ * because this module is the one the NEEDS YOU side imports, and
+ * what-writes already imports this one.
+ */
+export function stagedEnumeration(staged: readonly StagedCorrection[]): string {
+  const fields = staged.filter(isFieldStaged).length;
+  const corrections = staged.length - fields;
+  const parts: string[] = [];
+  if (fields > 0) parts.push(`${fields} field${fields === 1 ? "" : "s"}`);
+  if (corrections > 0) {
+    parts.push(`${corrections} correction${corrections === 1 ? "" : "s"}`);
+  }
+  return parts.join(" · ");
+}
+
+/** The staged set in words — the Apply row's label and the chip's
+ *  suffix share it (one voice).
+ *
+ *  #289 finding 2: it took a COUNT and called every entry a correction,
+ *  so one staged speed read "1 correction staged".  It takes the list now
+ *  and says what is in it.  The empty sentence is unchanged: nothing is
+ *  staged, so there is nothing to enumerate. */
+export function stagedSentence(staged: readonly StagedCorrection[]): string {
+  if (staged.length === 0) return "no corrections staged";
+  return `${stagedEnumeration(staged)} staged · not yet applied`;
 }
 
 const MONTHS_LOWER = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];

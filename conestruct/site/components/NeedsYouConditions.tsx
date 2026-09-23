@@ -99,9 +99,11 @@ import {
   isManualStaged,
   isScannedFlag,
   stage,
+  stagedEnumeration,
   stagedSentence,
   unstage,
 } from "@/lib/scenarios/site-corrections";
+import { applyStagedFields } from "@/lib/scenarios/what-writes";
 import type {
   ManualSiteFlag,
   ScannedSiteFlag,
@@ -212,7 +214,19 @@ export function SiteConditionRows({
   const applyAll = () => {
     if (staged.length === 0) return;
     closePicker();
-    setScenario({ ...scenario, meta: applyStaged(scenario.meta, staged) } as Scenario);
+    // #289 finding 2 — AND A DEFECT IT EXPOSED.  This Apply folded only
+    // the corrections (`applyStaged` writes meta) and then cleared the
+    // WHOLE list, so a field staged in S7 was silently dropped when the
+    // operator applied from here.  Once the sentence below enumerates "1
+    // field · 1 correction", a button that wrote only the correction
+    // would be a promise it breaks.  So it folds both halves, through the
+    // same two producers S7's APPLY uses (ruling e: "APPLY folds staged
+    // fields and corrections into one write").
+    const withFields = applyStagedFields(scenario, staged);
+    setScenario({
+      ...withFields,
+      meta: applyStaged(withFields.meta, staged),
+    } as Scenario);
     setStaged([]);
   };
   // The staged row's evidence cell: the intent in the vocabulary's words.
@@ -557,7 +571,9 @@ export function SiteConditionRows({
       <span className="ny-glyph" aria-hidden />
       <div className="ny-mid">
         <span className="sc-apply-text tr-prov">
-          {stagedSentence(n)}
+          {/* #289 finding 2: the list, not the count — "1 field", "1
+              correction", "1 field · 1 correction". */}
+          {stagedSentence(staged)}
           {n === 0 ? " · staging costs nothing, Apply re-generates once" : ""}
         </span>
       </div>
@@ -579,7 +595,10 @@ export function SiteConditionRows({
             title={n === 0 ? "stage a correction first" : undefined}
             onClick={applyAll}
           >
-            Apply {n} correction{n === 1 ? "" : "s"}
+            {/* Finding 2: the button names what it writes, from the
+                same producer as the sentence beside it.  At zero it
+                keeps its recorded label (rule 78's divergence above). */}
+            {n === 0 ? "Apply 0 corrections" : `Apply ${stagedEnumeration(staged)}`}
           </button>
         </span>
       </div>

@@ -68,6 +68,7 @@ import {
   editAfterGenerate,
   openWhat,
   openWhere,
+  stageRevision,
 } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
@@ -329,6 +330,57 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     await settle();
     // One write, both halves: the corrections land on the meta.
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(true);
+    expect(ribbon()).toBeNull();
+  });
+});
+
+describe("#289 finding 2 — the staged sentence says what is staged, from the one list", () => {
+  it("one FIELD reads '1 field' — in NEEDS YOU, on its Apply, and on the ribbon", async () => {
+    await generate();
+    await stageRevision("55");
+    await settle();
+    // Was "1 correction staged" / "Apply 1 correction" — a speed is not
+    // a site correction.
+    expect(within(block()).getByText("1 field staged · not yet applied")).toBeTruthy();
+    expect(apply("Apply 1 field").disabled).toBe(false);
+    expect(ribbon()!.textContent).toBe("Previous answer — 1 field staged, not yet applied.");
+  });
+
+  it("a field and a correction read '1 field · 1 correction' everywhere the set is named", async () => {
+    const user = await generate();
+    await stageRevision("55");
+    await settle();
+    await user.click(within(row("School zone")).getByRole("button", { name: "Assert" }));
+    await settle();
+    expect(
+      within(block()).getByText("1 field · 1 correction staged · not yet applied"),
+    ).toBeTruthy();
+    expect(apply("Apply 1 field · 1 correction").disabled).toBe(false);
+    expect(ribbon()!.textContent).toBe(
+      "Previous answer — 1 field · 1 correction staged, not yet applied.",
+    );
+    // The S7 panel's own sentence is the same producer's.
+    expect(screen.getByTestId("revise-sentence").textContent).toBe(
+      "1 field · 1 correction staged · not yet applied",
+    );
+  });
+
+  it("PAYLOAD: NEEDS YOU's Apply writes BOTH halves — a staged field is no longer dropped", async () => {
+    const user = await generate();
+    await stageRevision("55");
+    await settle();
+    await user.click(within(row("School zone")).getByRole("button", { name: "Assert" }));
+    await settle();
+    await user.click(apply("Apply 1 field · 1 correction"));
+    await settle();
+    const wrote = lastBody("audit") as unknown as {
+      speed: number;
+      meta: { siteConditionOverrides?: unknown[] };
+    };
+    // Before finding 2 the button folded meta only and cleared the list,
+    // so the 55 vanished.  Now the one write carries it.
+    expect(wrote.speed).toBe(55);
+    expect("siteConditionOverrides" in wrote.meta).toBe(true);
     expect(ribbon()).toBeNull();
   });
 });
