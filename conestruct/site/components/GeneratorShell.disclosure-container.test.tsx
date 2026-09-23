@@ -123,45 +123,58 @@ async function mountWithNote(initial: Scenario) {
   await user.click(screen.getByText("APPLY_SNAP"));
 }
 
-describe("#227 disclosure container — the #198 notes' new clothes", () => {
-  it("the note sentence renders as one text node inside .sys-event.warn", async () => {
+describe("#227 → #289 correction 3 — the #198 notes' new clothes", () => {
+  // The notes used to live in a `.sys-event.warn` box titled "Applied
+  // from picker", in the WHERE band.  #289 hand-check, 2026-09-23,
+  // correction 3: "'Applied from picker' is not a box — its two ⚠ lines
+  // become provenance under the fields they describe in WHAT."
+  //
+  // What has to remain true, and is what these cases still check:
+  //   · the SENTENCE is one text node (#198 byte-identity — `getByText`
+  //     proves it by construction, since the default matcher reads only
+  //     direct text-node children of one element);
+  //   · the ⚠ mark is #227's reconciled vocabulary, aria-hidden, and its
+  //     own node, so it never joins the sentence;
+  //   · the note sits under the FIELD it is about — a speed clamp under
+  //     the speed cell — which is the whole point of the move.
+  it("the note sentence renders as one text node, under the field it describes", async () => {
     await mountWithNote(DEFAULT_SHOULDER);
-    // getByText proves single-text-node by construction: the default
-    // matcher reads only direct text-node children of one element.
-    await openWhere();
+    await openWhat();
     const note = screen.getByText(
       /Speed 60 mph \(snapped from 62 mph OSM detection to the 5-mph grid\)\./,
     );
-    const container = note.closest(".sys-event");
-    expect(container).not.toBeNull();
-    expect(container!.classList.contains("warn")).toBe(true);
+    // The speed cell, not a box of its own.
+    expect(note.closest('[data-testid="cell-speed"]')).not.toBeNull();
+    expect(note.closest(".sys-event")).toBeNull();
+    expect(document.body.textContent).not.toContain("Applied from picker");
   });
 
-  it("the container carries the ⚠ glyph (aria-hidden) and no bare '!' glyph", async () => {
+  it("the line carries the ⚠ mark (aria-hidden) and no bare '!' glyph", async () => {
     await mountWithNote(DEFAULT_SHOULDER);
-    await openWhere();
+    await openWhat();
     const note = screen.getByText(/snapped from 62 mph OSM detection/);
-    const container = note.closest(".sys-event")!;
-    const glyph = container.querySelector(".sys-glyph");
+    const glyph = note.querySelector("[aria-hidden]");
     expect(glyph).not.toBeNull();
-    expect(glyph!.textContent).toBe("⚠");
-    expect(glyph!.getAttribute("aria-hidden")).not.toBeNull();
-    // The pre-#227 "!" mark is retired from this surface (the
-    // reconciled vocabulary maps "changed" to ⚠).
-    const bare = Array.from(container.querySelectorAll("span")).filter(
-      (s) => s.textContent === "!",
+    expect(glyph!.textContent).toBe("⚠ ");
+    const bare = Array.from(note.querySelectorAll("span")).filter(
+      (x) => x.textContent === "!",
     );
     expect(bare.length).toBe(0);
   });
 
-  it("provenance rides a second line in the provenance role", async () => {
+  it("the note takes the provenance role, below the field's own provenance line", async () => {
     await mountWithNote(DEFAULT_SHOULDER);
-    await openWhere();
+    await openWhat();
     const note = screen.getByText(/snapped from 62 mph OSM detection/);
-    const container = note.closest(".sys-event")!;
-    const prov = container.querySelector(".tr-prov");
-    expect(prov).not.toBeNull();
-    expect(prov!.textContent).toMatch(/picker → form handoff/);
+    expect(note.classList.contains("tr-prov")).toBe(true);
+    expect(note.classList.contains("is-amber")).toBe(true);
+    // Rule 137's own line is still there and still first: the field says
+    // where its value came from, then the handoff says what happened to
+    // it on the way in.
+    const cell = note.closest('[data-testid="cell-speed"]')!;
+    const lines = Array.from(cell.querySelectorAll(".tr-prov"));
+    expect(lines[0]).toBe(cell.querySelector('[data-testid="prov-speed"]'));
+    expect(lines).toContain(note);
   });
 });
 

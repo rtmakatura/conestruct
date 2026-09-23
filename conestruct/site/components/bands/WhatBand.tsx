@@ -51,6 +51,8 @@ import {
   type DetectedRowLabel,
 } from "@/lib/road-detection/detected-rows";
 import { provenanceClause } from "@/lib/road-detection/provenance";
+import { handoffNotesByCell } from "./HandoffNotes";
+import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
 import { useWriteLock } from "../WriteLock";
 
@@ -85,6 +87,7 @@ function Cell({
   provenance,
   amber = false,
   error = false,
+  notes = [],
   children,
   testid,
 }: {
@@ -93,6 +96,11 @@ function Cell({
   provenance: string;
   amber?: boolean;
   error?: boolean;
+  /** #289 hand-check, correction 3: the picker's handoff sentences for
+   *  THIS field.  Each renders as its own ⚠ provenance line under the
+   *  field's own — one text node per sentence, which is #198's
+   *  byte-identity contract carried across the container change. */
+  notes?: string[];
   children: ReactNode;
   testid: string;
 }) {
@@ -114,6 +122,19 @@ function Cell({
             border — a guess is not an error. */}
         {amber ? `⚠ ${provenance}` : provenance}
       </span>
+      {notes.map((n, i) => (
+        <span
+          key={i}
+          className="tr-prov is-amber"
+          data-testid={`handoff-${testid}`}
+        >
+          {/* Rule 13's second channel, and #227's reconciled mark for a
+              value the user did not set: the glyph is its own node so
+              the SENTENCE stays exactly one text node. */}
+          <span aria-hidden>⚠ </span>
+          {n}
+        </span>
+      ))}
     </div>
   );
 }
@@ -152,6 +173,7 @@ export function WhatBand({
   jurisdictionSuggest,
   classificationFields,
   setMeta,
+  handoff = [],
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -175,11 +197,18 @@ export function WhatBand({
   classificationFields?: ReactNode;
   /** The title-block metadata, as grid cells (see the third row). */
   setMeta: (m: ScenarioMeta) => void;
+  /** The picker → form handoff events.  Correction 3 retires their box
+   *  in WHERE; the sentences ride the cells they describe. */
+  handoff?: HandoffEvent[];
 }): ReactNode {
   const locked = useWriteLock();
   const table = WHAT_CELLS[scenario.kind];
   const detected = deriveDetectedRows(scenario);
   const lanesValidation = validateLanes(scenario);
+  // Correction 3: which cell each surviving handoff sentence belongs
+  // under.  The producer is the one that used to feed the box, so the
+  // strings are unchanged (#198).
+  const notes = handoffNotesByCell(scenario, handoff);
 
   const jState = jurisdictionCellState({
     key: scenario.jurisdiction_key ?? null,
@@ -238,6 +267,7 @@ export function WhatBand({
           htmlFor="what-speed"
           provenance={speedClause.text}
           amber={speedClause.amber}
+          notes={notes["speed"]}
           testid="speed"
         >
           <select
@@ -265,7 +295,8 @@ export function WhatBand({
             }
             amber={lanesValidation.ok && lanesClause.amber}
             error={!lanesValidation.ok}
-            testid="lanes"
+            notes={notes["lanes"]}
+          testid="lanes"
           >
             <select
               id="what-lanes"
@@ -290,7 +321,8 @@ export function WhatBand({
           <Cell
             label="Lanes per direction"
             provenance={table.lanesReason ?? "not taken by this kind"}
-            testid="lanes"
+            notes={notes["lanes"]}
+          testid="lanes"
           >
             <input
               className="a-fld"
@@ -311,6 +343,7 @@ export function WhatBand({
           // ledger never had a row for it.  Rule 137's own operator-set
           // clause is the honest line here.
           provenance="your change · operator-set from here on"
+          notes={notes["lane-width"]}
           testid="lane-width"
         >
           <select
@@ -346,6 +379,7 @@ export function WhatBand({
               : roadTypeClause.text
           }
           amber={roadTypeClause.amber}
+          notes={notes["road-type"]}
           testid="road-type"
         >
           <select

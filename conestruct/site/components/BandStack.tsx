@@ -155,6 +155,11 @@ export function BandStack(props: BandStackProps) {
           handoff={handoff}
           corridorSpecLengths={corridorSpecLengths}
           stepIndex={model.stepIndex}
+          // Correction 3: "Found the spot" names road + direction +
+          // jurisdiction, and the jurisdiction is the EVALUATED name the
+          // stack already holds for the fact lines — one string, one
+          // source, never a second lookup.
+          jurisdictionName={jurisdictionName}
         />
       );
     }
@@ -163,6 +168,10 @@ export function BandStack(props: BandStackProps) {
         scenario={scenario}
         setScenario={setScenario}
         setMeta={setMeta}
+        // Correction 3: the picker's handoff sentences ride the cells
+        // they describe, so the WHAT band takes the same events the
+        // WHERE band's retired box used to hold.
+        handoff={handoff}
         jurisdictionBlock={jurisdictionBlock}
         jurisdictionLoading={jurisdictionLoading}
         jurisdictionErrored={jurisdictionErrored}

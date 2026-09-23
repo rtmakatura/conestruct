@@ -170,6 +170,10 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     css: [
       { selector: ".workbench .a-fact .a-sym", size: "var(--fs-field-label)" },
       { selector: ".workbench .a-fact .a-val", size: "var(--fs-body-value)" },
+      // #289 hand-check, 2026-09-23, correction 3: the move ledger's rows
+      // take rule 68's form, so a move VALUE is the same register as a
+      // fact value — the same token, read again rather than re-typed.
+      { selector: ".workbench .a-moves .a-move .a-val", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
@@ -401,7 +405,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // now).  The file leaves the Tailwind census entirely.  Two uses
       // MOVED rather than died, and are declared here in their new
       // files, at the sizes they already had.
-      { file: "components/bands/HandoffNotes.tsx", cls: "text-[12px]", count: 1 },
       { file: "components/bands/WhereBand.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/LaneClosureForm.tsx", cls: "text-[10px]", count: 3 },
       { file: "components/MobileOp2LaneForm.tsx", cls: "text-[10px]", count: 2 },
@@ -535,16 +538,24 @@ export const CENSUS_PINS = {
   // those five now ride the .tr-* roles and the two overrode a scope
   // that no longer exists.  105 -> 98.  Sizes stay 21: 11px and 10.5px
   // both remain elsewhere in the sheet, so no size left the census.
-  cssDeclarations: 103,
+  // #289 hand-check, 2026-09-23, correction 3: the move rows take rule
+  // 68's form, so the ledger's VALUE declares the body-value register
+  // the fact line already declares — one declaration, 103 -> 104, and no
+  // new size (the token was already in the sheet).
+  cssDeclarations: 104,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
   // it dropped (9, 10, 13) all remain elsewhere.
   cssSizes: 24,
-  tsxSites: 99,
+  // Correction 3 again: the "Applied from picker" BOX is deleted (its
+  // sentences are now provenance lines under the WHAT cells they
+  // describe), and its one text-[12px] goes with it — one use, one site
+  // and one file leave the Tailwind census.
+  tsxSites: 98,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
-  tsxUses: 296,
-  tsxFiles: 36,
+  tsxUses: 295,
+  tsxFiles: 35,
 } as const;

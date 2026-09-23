@@ -4003,6 +4003,33 @@ input[type="number"] {
   grid-column: 2 / 4;
   margin-top: 3px;
 }
+/* #289 hand-check, 2026-09-23, correction 3: "The move ledger rows take
+   rule 68's form: symbol · label · dotted leader · value · link."  The
+   rows always carried the markup; the LEADER was styled for `.a-fact`
+   only, so a move row printed label and value with a bare gap between
+   them and the row read as a list item rather than as a ledger line.
+   Same three declarations as the fact line's leader, and deliberately
+   not a shared selector: the two rows have different grids, and one
+   rule that has to be true of both is how the fact line's 48 px floor
+   would end up on a move row. */
+.workbench .a-moves .a-move .a-mid {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.workbench .a-moves .a-move .a-lead {
+  flex: 1 1 18px;
+  min-width: 14px;
+  border-bottom: 1px dotted var(--rule-soft);
+  transform: translateY(-4px);
+}
+.workbench .a-moves .a-move .a-val {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-value);
+  line-height: 1.45;
+  color: var(--ink-on-dark);
+}
 
 /* Rule 133 — the ledger action.  32 px at 1440, 44 at 380, which rule
    133's own last line requires. */
@@ -4209,7 +4236,8 @@ input[type="number"] {
   .workbench .a-fact .a-mid {
     flex-wrap: wrap;
   }
-  .workbench .a-fact .a-lead {
+  .workbench .a-fact .a-lead,
+  .workbench .a-moves .a-move .a-lead {
     display: none;
   }
   .workbench .a-fact .a-lk,

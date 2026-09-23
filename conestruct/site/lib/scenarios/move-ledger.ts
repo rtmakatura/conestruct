@@ -73,7 +73,36 @@ export interface MoveLedger {
   currentId: MoveId | null;
 }
 
-export function deriveMoveLedger(scenario: Scenario): MoveLedger {
+/**
+ * "Found the spot" — road + direction + jurisdiction (#289 hand-check,
+ * 2026-09-23, correction 3).
+ *
+ * `confirmedRoadLabel` already carries road AND direction, single-sourced
+ * from the picker's own `candidateLabel` (#234), so this only adds the
+ * third clause.  The jurisdiction is the EVALUATED name the shell holds
+ * — the same string the WHAT band's cell shows and the setup fact line
+ * prints — never the picked option's label dressed up as an evaluation
+ * (ruling 196), and never `placeName`, which is the picker's place and a
+ * different fact.  Absent when it has not been evaluated: rule 10, the
+ * clause is simply not there.
+ */
+function spotValue(
+  scenario: Scenario,
+  road: string | null,
+  jurisdictionName: string | null,
+): string | null {
+  const head = road ?? (scenario.meta.address || null);
+  if (!head) return null;
+  return jurisdictionName ? `${head} · ${jurisdictionName}` : head;
+}
+
+export function deriveMoveLedger(
+  scenario: Scenario,
+  /** The evaluated jurisdiction's name, or null while it is unset, in
+   *  flight, or unanswered.  Handed in rather than re-derived: the shell
+   *  owns the breakdown fetch that carries it. */
+  jurisdictionName: string | null = null,
+): MoveLedger {
   const located = hasLocation(scenario.meta);
   const road = confirmedRoadLabel(scenario);
   const extent = scenario.workLen > 0;
@@ -84,7 +113,7 @@ export function deriveMoveLedger(scenario: Scenario): MoveLedger {
       label: "Found the spot",
       state: road ? "done" : located ? "attention" : "pending",
       glyph: GLYPH[road ? "done" : located ? "attention" : "pending"],
-      value: road ?? (located ? (scenario.meta.address || null) : null),
+      value: located ? spotValue(scenario, road, jurisdictionName) : null,
       verb: located ? "CHANGE" : null,
       word: located ? null : "pending",
       subline: null,
@@ -94,11 +123,16 @@ export function deriveMoveLedger(scenario: Scenario): MoveLedger {
       label: "Work starts",
       state: located ? "done" : "pending",
       glyph: GLYPH[located ? "done" : "pending"],
-      // The lesser value, deliberately: the road name is what the tag
-      // can honestly carry until the nearest-intersection producer
-      // exists.  The coordinates ride the band's provenance (Part 1
-      // §7.15 reserves the lat/lng for provenance lines).
-      value: located ? (road ?? (scenario.meta.address || "pin set")) : null,
+      // The ruled interim, formatted as a FACT (correction 3): the road
+      // name is what the tag can honestly carry until the
+      // nearest-intersection producer exists, so the row prints the road
+      // — not "pin set", which names the act rather than the answer.
+      // With no road and no address there is no fact to print, and the
+      // row says so in a word rather than inventing one (rule 10).  The
+      // coordinates ride the band's provenance (Part 1 §7.15 reserves
+      // the lat/lng for provenance lines).
+      value: located ? (road ?? (scenario.meta.address || null)) : null,
+      // MOVE stays the verb: the pin is what a re-open changes.
       verb: located ? "MOVE" : null,
       word: located ? null : "pending",
       subline: null,
@@ -110,7 +144,11 @@ export function deriveMoveLedger(scenario: Scenario): MoveLedger {
       glyph: GLYPH[extent ? "done" : located ? "attention" : "pending"],
       // "typed" states which producer set it — the word is Part 1
       // §4.3's, and it is the only producer this phase has.
-      value: extent ? `${scenario.workLen.toLocaleString("en-US")} ft, typed` : null,
+      // Correction 3: "1,000 ft · typed" — the middle dot is the
+      // column's own separator between a value and the producer that set
+      // it, the same one the fact lines use.  A comma read as part of
+      // the number.
+      value: extent ? `${scenario.workLen.toLocaleString("en-US")} ft · typed` : null,
       // Rule 68's invariant, caught by this arc's own sentinel: a row
       // offers a link OR a word, never neither.  A set extent offers
       // CHANGE — the picker carries `workZoneFt`, so the same control

@@ -1,7 +1,14 @@
 "use client";
 
-// #289 Phase 2 — the picker → form handoff notes, moved out of the setup
-// panel and into the WHERE band.
+// #289 Phase 2 — the picker → form handoff notes.
+//
+// #289 hand-check, 2026-09-23, correction 3: "'Applied from picker' is
+// not a box — its two ⚠ lines become provenance under the fields they
+// describe in WHAT."  The container is deleted with this commit (#262
+// closes by deletion); what is left is the SENTENCES and the mapping
+// that says which field each one is about.  A note that a value was
+// clamped, snapped or not applied is a fact about that value, and rule
+// 137 already gives every value a line to say such things on.
 //
 // Authority: validation-artifacts/committed/issue-289-band-stack/rulings.md
 // · #281 Part 1 §8.16 (the setup panel dissolves into the band stack).
@@ -95,55 +102,42 @@ export function handoffNoteText(
   return "";
 }
 
-function HandoffNote({
-  event,
-  kind,
-}: {
-  event: HandoffEvent;
-  kind: Scenario["kind"];
-}) {
-  return (
-    <div className="flex items-baseline gap-2">
-      {/* #227 reconciled vocabulary: the "changed" mark is ⚠ (the
-          PDF's ! maps to ⚠); the sentence beside it is the second
-          channel (rule 13). */}
-      <span className="sys-glyph font-mono" aria-hidden>
-        ⚠
-      </span>
-      <span className="text-[12px] text-[color:var(--ink-on-dark)] leading-snug">
-        {handoffNoteText(event, kind)}
-      </span>
-    </div>
-  );
-}
+/** The WHAT cell each handoff note is about — the cell's own `testid`,
+ *  so the mapping and the grid cannot drift apart silently.
+ *
+ *  `divided` and `workZoneSpeed` have no cell of their own in the 3 × 2
+ *  grid: divided is a consequence of road type everywhere but
+ *  urban_arterial (#85, single-sourced), and the work-zone reduction is
+ *  a consequence of the posted speed (#198 family 4 — the note exists
+ *  because a lowered posted speed dragged the reduction with it).  Each
+ *  note therefore lands on the cell whose value CAUSED it, which is the
+ *  cell the operator would change to undo it. */
+const NOTE_CELL: Record<HandoffEvent["field"], string> = {
+  speed: "speed",
+  workZoneSpeed: "speed",
+  roadType: "road-type",
+  divided: "road-type",
+  lanes: "lanes",
+  laneWidth: "lane-width",
+};
 
 /**
- * The container, unchanged from the sidebar's: the #227 system-event
- * shape — amber rule, border, ⚠ glyph, provenance on line 2 — because a
- * value the user did not set is a system event, not a field annotation.
+ * The notes that still describe the current scenario, grouped by the
+ * cell they belong under.
  *
- * Renders nothing when no note still describes the current scenario (a
- * manual speed edit after the handoff hides its now-stale clamp note), so
- * a clean high-confidence handoff grows no empty block.
+ * `handoffEventIsCurrent` is unchanged and still the filter: a manual
+ * speed edit after the handoff hides its now-stale clamp note, so a cell
+ * never carries a line about a value it no longer holds (rule 10).
  */
-export function HandoffNotes({
-  scenario,
-  handoff,
-}: {
-  scenario: Scenario;
-  handoff: HandoffEvent[];
-}) {
-  const notes = handoff.filter((e) => handoffEventIsCurrent(e, scenario));
-  if (notes.length === 0) return null;
-  return (
-    <div className="sys-event warn">
-      <div className="tr-section mb-1.5">Applied from picker</div>
-      <div className="flex flex-col gap-1.5">
-        {notes.map((e, i) => (
-          <HandoffNote key={i} event={e} kind={scenario.kind} />
-        ))}
-      </div>
-      <div className="tr-prov mt-1.5">picker → form handoff</div>
-    </div>
-  );
+export function handoffNotesByCell(
+  scenario: Scenario,
+  handoff: HandoffEvent[],
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const e of handoff) {
+    if (!handoffEventIsCurrent(e, scenario)) continue;
+    const cell = NOTE_CELL[e.field];
+    (out[cell] ??= []).push(handoffNoteText(e, scenario.kind));
+  }
+  return out;
 }

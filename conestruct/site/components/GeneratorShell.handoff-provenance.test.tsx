@@ -246,7 +246,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await user.click(screen.getByText(/Edit Location & Corridor/));
     await user.click(screen.getByText("APPLY_PIN_B_ONE_LANE"));
 
-    await openWhere();
+    // #289 hand-check, 2026-09-23, correction 3: the "Applied from
+    // picker" box is retired; each sentence is a provenance line under
+    // the WHAT cell whose value it is about.  The STRINGS are unchanged
+    // (#198 byte-identity), so these matchers are too — only the band
+    // the reader opens to see them moved.
+    await openWhat();
 
     expect(
       screen.getByText(/Lanes set to 1\/direction \(OSM detection — was 3\)\./),
@@ -262,7 +267,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_OVERRIDES_LANES_DIVIDED"));
 
-    await openWhere();
+    // #289 hand-check, 2026-09-23, correction 3: the "Applied from
+    // picker" box is retired; each sentence is a provenance line under
+    // the WHAT cell whose value it is about.  The STRINGS are unchanged
+    // (#198 byte-identity), so these matchers are too — only the band
+    // the reader opens to see them moved.
+    await openWhat();
 
     expect(
       screen.getByText(/Lanes setting 2\/direction from the picker not applied — flagger plans don't take a lane count\./),
@@ -281,7 +291,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_FIVE_LANES"));
 
-    await openWhere();
+    // #289 hand-check, 2026-09-23, correction 3: the "Applied from
+    // picker" box is retired; each sentence is a provenance line under
+    // the WHAT cell whose value it is about.  The STRINGS are unchanged
+    // (#198 byte-identity), so these matchers are too — only the band
+    // the reader opens to see them moved.
+    await openWhat();
 
     expect(
       screen.getByText(/Lanes 4\/direction \(clamped from 5 OSM detection — plans draw at most 4 lanes per direction\)\./),
@@ -297,7 +312,12 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     await user.click(screen.getByText("Pick Location on Map"));
     await user.click(screen.getByText("APPLY_PIN_SLOW"));
 
-    await openWhere();
+    // #289 hand-check, 2026-09-23, correction 3: the "Applied from
+    // picker" box is retired; each sentence is a provenance line under
+    // the WHAT cell whose value it is about.  The STRINGS are unchanged
+    // (#198 byte-identity), so these matchers are too — only the band
+    // the reader opens to see them moved.
+    await openWhat();
 
     expect(
       screen.getByText(/Work-zone speed reduction removed \(was 55 mph — the posted speed is now 35 mph, at or below it\)\./),

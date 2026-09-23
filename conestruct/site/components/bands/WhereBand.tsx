@@ -62,7 +62,6 @@ import {
 import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
 import { hasLocation } from "@/lib/scenarios";
 import { OpenBand } from "./BandPrimitives";
-import { HandoffNotes } from "./HandoffNotes";
 import { ManualFallback } from "./ManualFallback";
 import { FieldErrorLine } from "../GeneratorFormPrimitives";
 import { useWriteLock } from "../WriteLock";
@@ -104,14 +103,16 @@ function zoneFt(
  *  rows and decides nothing (rule 71). */
 function MoveLedgerRows({
   scenario,
+  jurisdictionName,
   onOpenPicker,
   locked,
 }: {
   scenario: Scenario;
+  jurisdictionName: string | null;
   onOpenPicker: () => void;
   locked: boolean;
 }) {
-  const ledger = deriveMoveLedger(scenario);
+  const ledger = deriveMoveLedger(scenario, jurisdictionName);
   const row = (r: MoveRow) => (
     <div
       key={r.id}
@@ -231,6 +232,7 @@ export function WhereBand({
   handoff,
   stepIndex,
   corridorSpecLengths = null,
+  jurisdictionName = null,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -252,6 +254,10 @@ export function WhereBand({
   /** §8.16's demoted project metadata — title-block fields, not part of
    *  the required path, so they stay a disclosure. */
   projectDetails?: ReactNode;
+  /** The EVALUATED jurisdiction name — the third clause of "Found the
+   *  spot" (#289 hand-check, correction 3).  Null until the check
+   *  answers, and then the clause is simply absent (rule 10). */
+  jurisdictionName?: string | null;
 }): ReactNode {
   const locked = useWriteLock();
   const located = hasLocation(scenario.meta);
@@ -367,6 +373,7 @@ export function WhereBand({
         <>
           <MoveLedgerRows
             scenario={scenario}
+            jurisdictionName={jurisdictionName}
             onOpenPicker={onOpenPicker}
             locked={locked}
           />
@@ -467,7 +474,12 @@ export function WhereBand({
             )}
           </div>
 
-          <HandoffNotes scenario={scenario} handoff={handoff} />
+          {/* #289 hand-check, 2026-09-23, correction 3: the "Applied
+              from picker" box is gone.  Its sentences did not go with it
+              — every one of them is now a provenance line under the WHAT
+              cell whose value it is about (handoffNotesByCell), which is
+              where rule 137 already says a field explains itself, and is
+              the cell the operator would change to undo it. */}
 
           {/* Rule 115's primary, naming the choice.  It confirms; it
               never infers (suggest-never-set), and it writes nothing —
