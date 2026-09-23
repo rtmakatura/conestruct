@@ -8,6 +8,8 @@
 // predicted, and one reserved live region that makes 7a → 7b → 7c move
 // nothing below it.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import type { DeviceBreakdownData } from "../DeviceBreakdown";
@@ -165,22 +167,98 @@ describe("rule 95.4 / 95.14 — the reserved status row", () => {
 
   it("7c's line is ruling 201's, naming the value and the scope", () => {
     mount({ kind: "ready", data: PREVIEWED, forValue: "35 mph" });
-    expect(screen.getByTestId("panel-status").textContent).toBe(
+    expect(screen.getByTestId("panel-status-line").textContent).toBe(
       "computed for 35 mph · taper, buffer, spacing and counts only",
     );
   });
 
   it("7a is quiet — nothing is wrong in it (ruling 203)", () => {
     mount({ kind: "idle" });
-    const line = screen.getByTestId("panel-status").textContent ?? "";
+    const line = screen.getByTestId("panel-status-line").textContent ?? "";
     expect(line).not.toMatch(/fail|error|unavailable/i);
   });
 
   it("7d says the plan on screen is unchanged, which is the honest half", () => {
     mount({ kind: "error" });
-    expect(screen.getByTestId("panel-status").textContent).toContain(
+    expect(screen.getByTestId("panel-status-line").textContent).toContain(
       "the plan on screen is unchanged",
     );
+  });
+});
+
+// #289 fidelity F7 — the panel at Part 2's figures (audit rows 159–165
+// and the F7 plan row).  The DOM order and the per-state glyph are read
+// off the render; the figures off the sheet.
+describe("#289 fidelity F7 — rules 90–95.4 and 121", () => {
+  const css = readFileSync(join(__dirname, "..", "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
+  const rule = (selector: string): string => {
+    const i = css.indexOf(selector + " {");
+    expect(i, `rule not found: ${selector}`).toBeGreaterThan(-1);
+    return css.slice(i + selector.length + 2, css.indexOf("}", i));
+  };
+
+  it("rule 90's order: six rows, THEN the status row, then the footer", () => {
+    render(
+      <RevisionPanel
+        state={{ kind: "idle" }}
+        settled={SETTLED}
+        stagedValue="35 mph"
+        verdict="on screen"
+        needsYou={3}
+        footer={<div data-testid="foot" />}
+      />,
+    );
+    const panel = screen.getByTestId("revision-panel");
+    const kids = Array.from(panel.children);
+    const at = (el: Element) => kids.indexOf(el);
+    const rows = panel.querySelector(".a-panel-rows")!;
+    expect(at(rows)).toBeLessThan(at(screen.getByTestId("panel-status")));
+    expect(at(screen.getByTestId("panel-status"))).toBeLessThan(at(screen.getByTestId("foot")));
+  });
+
+  it("rule 92's four tracks: label · was · → · now", () => {
+    mount({ kind: "ready", data: PREVIEWED, forValue: "35 mph" });
+    const row = screen.getByTestId("panel-row-taper");
+    expect(row.children).toHaveLength(4);
+    expect(row.children[1].textContent).toBe("183 ft");
+    expect(row.children[2].textContent?.trim()).toBe("→");
+    expect(row.children[3].textContent).toBe("105 ft");
+  });
+
+  for (const [name, state, glyph, cls] of [
+    ["7a", { kind: "idle" }, "◌", "sym-none"],
+    ["7b", { kind: "loading" }, "◌", "sym-none"],
+    ["7c", { kind: "ready", data: PREVIEWED, forValue: "35 mph" }, "✓", "sym-pass"],
+    ["7d", { kind: "error" }, "⚠", "sym-warn"],
+  ] as Array<[string, PreviewState, string, string]>) {
+    it(`rule 95.4: ${name}'s status row leads with ${glyph} in rule 18's hue`, () => {
+      mount(state);
+      const g = screen.getByTestId("panel-status").querySelector(".status-glyph")!;
+      expect(g.textContent).toBe(glyph);
+      expect(g.classList.contains(cls)).toBe(true);
+      cleanup();
+    });
+  }
+
+  it("the figures: shell, rows, status row, footer, S7's body grid", () => {
+    expect(rule(".workbench .a-panel")).toMatch(/border:\s*1px solid var\(--act\)/);
+    expect(rule(".workbench .a-panel")).toMatch(/background:\s*var\(--panel-ground\)/);
+    expect(css).toMatch(/--panel-ground:\s*#0f1c29;/);
+    expect(rule(".workbench .a-panel-row")).toMatch(
+      /grid-template-columns:\s*minmax\(0, 1fr\) 92px 22px 92px/,
+    );
+    expect(rule(".workbench .a-panel-row")).toMatch(/padding:\s*10px 16px/);
+    const status = rule(".workbench .a-panel-status");
+    expect(status).toMatch(/padding:\s*11px 16px/);
+    expect(status).toMatch(/min-height:\s*44px/);
+    expect(status).toMatch(/font-size:\s*10\.5px/);
+    const apply = rule(".workbench .a-panel-foot .a-apply");
+    expect(apply).toMatch(/width:\s*200px/);
+    expect(apply).toMatch(/height:\s*44px/);
+    const body = rule(".workbench .a-open.is-revising .a-body");
+    expect(body).toMatch(/grid-template-columns:\s*240px minmax\(0, 1fr\)/);
+    expect(body).toMatch(/column-gap:\s*26px/);
+    expect(rule(".workbench .a-open.is-revising")).toMatch(/border-color:\s*var\(--act\)/);
   });
 });
 

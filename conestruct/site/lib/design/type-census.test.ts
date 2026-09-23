@@ -264,11 +264,10 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         "var(--fs-field-label)",
         "var(--fs-body-value)",
         "var(--fs-primary-xl)",
-        // #289 S7: the before/after panel's reserved status row reads
-        // the provenance register (rule 95.4 reserves a HEIGHT, which is
-        // why it declares rather than sharing `.tr-prov`).  A fifth of
-        // #283's nine tokens, and no new pixel value.
-        "var(--fs-provenance)",
+        // (#289 fidelity F7: "var(--fs-provenance)" is gone.  The S7 note
+        // called it "a fifth of #283's nine tokens" — it was not one of
+        // them and was never declared, so the status row rendered the
+        // inherited size.  The row states rule 95.4's 10.5 px now.)
         // Twice: rule 130's size is one ruled value with two surfaces
         // (#288's results primary and #289's band primary), and each
         // exception declares the sizes its own selectors use.

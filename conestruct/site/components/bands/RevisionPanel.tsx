@@ -32,12 +32,15 @@ import {
   previewStatusLine,
   type PreviewState,
 } from "@/lib/scenarios/preview";
+import { symClass } from "@/lib/design/symbols";
 
 /** One row's two columns.  `now` is null for a deferred row, which
  *  reads rule 95.5's sentence instead of a number. */
 interface PanelRow {
   key: string;
   label: string;
+  /** Rule 95.15's 380 px label ("Spacing", "Devices"). */
+  short: string;
   was: string;
   now: string | null;
 }
@@ -63,24 +66,28 @@ export function panelRows(opts: {
     {
       key: "taper",
       label: "Taper L",
+      short: "Taper L",
       was: ft(w?.taper_l_ft),
       now: previewed ? ft(n?.taper_l_ft) : null,
     },
     {
       key: "buffer",
       label: "Buffer B",
+      short: "Buffer B",
       was: ft(w?.buffer_b_ft),
       now: previewed ? ft(n?.buffer_b_ft) : null,
     },
     {
       key: "spacing",
       label: "Device spacing",
+      short: "Spacing",
       was: ft(w?.device_spacing_ft),
       now: previewed ? ft(n?.device_spacing_ft) : null,
     },
     {
       key: "devices",
       label: "Total devices",
+      short: "Devices",
       was: opts.settled ? String(opts.settled.total_devices) : "—",
       now: previewed ? String(opts.preview?.total_devices ?? "—") : null,
     },
@@ -88,8 +95,8 @@ export function panelRows(opts: {
     // number IS on hand for the rows above.  A verdict is the backend's
     // audit answer and NEEDS YOU counts its tiers; neither is in the
     // breakdown response, so neither is predicted (rulings 195, 204).
-    { key: "verdict", label: "Verdict", was: opts.verdict, now: null },
-    { key: "needs-you", label: "Needs you", was: String(opts.needsYou), now: null },
+    { key: "verdict", label: "Verdict", short: "Verdict", was: opts.verdict, now: null },
+    { key: "needs-you", label: "Needs you", short: "Needs you", was: String(opts.needsYou), now: null },
   ];
 }
 
@@ -125,6 +132,8 @@ export function RevisionPanel({
         : state.kind === "ready"
           ? previewStatusLine(stagedValue)
           : "change the value to see what it does";
+  const statusGlyph =
+    state.kind === "ready" ? "✓" : state.kind === "error" ? "⚠" : "◌";
 
   return (
     <div className="a-panel" data-testid="revision-panel" data-preview={state.kind}>
@@ -135,20 +144,9 @@ export function RevisionPanel({
         {/* Rule 91 + R3: which VALUE the figures are for, and which
             COMPUTATION produced them.  One string, true in all four
             situations. */}
-        <span className="tr-prov" data-testid="panel-note">
+        <span className="tr-prov a-panel-note" data-testid="panel-note">
           {previewHeaderNote(stagedValue)}
         </span>
-      </div>
-
-      {/* Rule 95.4 / 95.14: mounted in every situation, holding its
-          height, and the panel's only live region. */}
-      <div
-        className="a-panel-status"
-        data-testid="panel-status"
-        role="status"
-        aria-live="polite"
-      >
-        {status}
       </div>
 
       <div className="a-panel-rows">
@@ -162,9 +160,20 @@ export function RevisionPanel({
             className={`a-panel-row${r.now === null ? " is-deferred" : ""}`}
             data-testid={`panel-row-${r.key}`}
           >
-            <span className="tr-field">{r.label}</span>
-            <span className="a-val">{r.was}</span>
-            <span className={r.now === null ? "tr-prov" : "a-val"}>
+            {/* #289 fidelity F7 — rule 92's four tracks: label · was · →
+                · now.  Rule 95.15's short label is what 380 shows; the
+                full one stays for assistive technology there. */}
+            <span className="tr-field">
+              <span className="lbl-long">{r.label}</span>
+              <span className="lbl-short" aria-hidden>
+                {r.short}
+              </span>
+            </span>
+            <span className="a-val a-was">{r.was}</span>
+            <span className="a-arrow" aria-hidden>
+              →
+            </span>
+            <span className={r.now === null ? "tr-prov a-deferred" : "a-val a-now"}>
               {/* Rule 95.5's sentence for a row nobody can preview — the
                   same words in all four situations, so the row never
                   changes treatment for a reason the reader cannot see. */}
@@ -172,6 +181,23 @@ export function RevisionPanel({
             </span>
           </div>
         ))}
+      </div>
+
+      {/* Rule 95.4 / 95.14: mounted in every situation, holding its
+          height, and the panel's only live region.  #289 fidelity F7:
+          rule 90's order — six rows, THEN this row, then the footer (it
+          sat above the rows) — and rule 95.4's symbol before the
+          sentence, in rule 18's hue (◌ none, ✓ computed, ⚠ failed). */}
+      <div
+        className="a-panel-status"
+        data-testid="panel-status"
+        role="status"
+        aria-live="polite"
+      >
+        <span className={`status-glyph ${symClass(statusGlyph)}`} aria-hidden>
+          {statusGlyph}
+        </span>
+        <span data-testid="panel-status-line">{status}</span>
       </div>
 
       {footer}

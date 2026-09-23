@@ -139,7 +139,6 @@ export function RevisionBand({
   field,
   stagedTo,
   onStage,
-  onDiscard,
   stepIndex,
   panel,
 }: {
@@ -149,7 +148,6 @@ export function RevisionBand({
    *  operator asked for, not what the plan still says. */
   stagedTo: string | number | boolean | undefined;
   onStage: (to: string | number) => void;
-  onDiscard: () => void;
   // #289 — CHANGE SOMETHING ELSE, RETIRED (Ryan, 2026-09-23: "retire it,
   // the value links replace it").  It was the post-generate route to the
   // pin, the extent and the kind, which rule 190's one field and rule
@@ -217,19 +215,10 @@ export function RevisionBand({
         </div>
       </div>
 
+      {/* #289 fidelity F7: DISCARD is rule 94's — the panel footer's
+          ghost, beside APPLY — so it lives in the footer the shell
+          builds, not under the panel as a link. */}
       {panel}
-
-      <div className="a-revise-foot">
-        {/* Part 1 §5.6: DISCARD un-stages and asks nothing.  No dialog. */}
-        <button
-          type="button"
-          className="a-lk"
-          data-testid="revise-discard"
-          onClick={onDiscard}
-        >
-          DISCARD
-        </button>
-      </div>
     </OpenBand>
   );
 }

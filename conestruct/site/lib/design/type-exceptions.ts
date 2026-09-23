@@ -157,12 +157,10 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // each row declares the sizes ITS selectors use.
       "var(--fs-primary)",
       "var(--fs-primary-xl)",
-      // #289 S7: the panel's reserved status row reads the provenance
-      // register.  The TOKEN is not new to the sheet — every provenance
-      // line in the column already reads it — but this group had not
-      // carried it before, and a group declares the sizes ITS selectors
-      // use.
-      "var(--fs-provenance)",
+      // #289 fidelity F7: "var(--fs-provenance)" is DELETED.  The token
+      // was never declared (no `--fs-provenance:` anywhere in the sheet),
+      // so the status row that read it fell through to the inherited
+      // size; it now states rule 95.4's 10.5 px (a debt row, below).
     ],
     reason:
       "Part 2's own control sizes, each traced to the rule that states it: the fact line's symbol (rules 17/56, 12.5) and value (rule 8, 13.5), the fact link (rule 134, 9.5), the ledger action (rule 133, 9.5), the field (rule 136, 13.5), the primary (rule 130, 15.5) and the XL primary (rule 131, 17.5) — which the generate frame applies to GenerateButton's own element rather than to a second button, so the control keeps its string, its disabled title and its cta-reason alert.  Every size is already a register in this sheet; what is new is the selector",
@@ -179,13 +177,15 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // this sheet already carries for every field label and symbol) is
       // read once more rather than a new size being introduced.
       { selector: ".workbench .a-chip-flat", size: "var(--fs-field-label)" },
-      // #289 S7: the panel's reserved status row (rule 95.4) declares
-      // the provenance register — the same token every provenance line
-      // in the column already reads, so no size joins the sheet.  It is
-      // declared here rather than riding `.tr-prov` because the row
-      // reserves a HEIGHT, and a shared class would put that reserve on
-      // every provenance line in the build.
-      { selector: ".workbench .a-panel-status", size: "var(--fs-provenance)" },
+      // #289 fidelity F7 — rule 93's was / → / now at role 3's 12.5 (the
+      // symbols' and field labels' token), and rule 94's APPLY at 13.5
+      // (rule 8's body-value token).
+      {
+        selector:
+          ".workbench .a-panel-row .a-was, .workbench .a-panel-row .a-arrow, .workbench .a-panel-row .a-now",
+        size: "var(--fs-field-label)",
+      },
+      { selector: ".workbench .a-panel-foot .a-apply", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
@@ -291,6 +291,19 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // (audit rows 51, 55, 57); .tr-step's 10 had stood in for it.
       { selector: ".workbench .needs-you .act", size: "9.5px" },
       { selector: ".workbench .dl-all .act", size: "9.5px" },
+      // #289 fidelity F7 — S7's panel at Part 2's pixel figures: rule
+      // 95.4's status row (10.5 — it read the undeclared --fs-provenance
+      // and rendered the inherited size, audit row 161), rule 94's
+      // DISCARD ghost (rule 132's 13), and rule 95.15's 380 rows (11.5)
+      // and deferred phrase (9.5).  Each size is already in the sheet.
+      { selector: ".workbench .a-panel-status", size: "10.5px" },
+      { selector: ".workbench .a-panel-foot .a-discard", size: "13px" },
+      {
+        selector:
+          ".workbench .a-panel-row .a-was, .workbench .a-panel-row .a-arrow, .workbench .a-panel-row .a-now",
+        size: "11.5px",
+      },
+      { selector: ".workbench .a-panel-row .a-deferred", size: "9.5px" },
     ],
     tsx: [],
   },
@@ -613,7 +626,10 @@ export const CENSUS_PINS = {
   // now reaches it; the generate frame's 380 step-down — rule 131 keeps
   // XL at 380), two in (rule 133's 9.5 on .needs-you .act and .dl-all
   // .act).  112 stays; sizes stay 25.
-  cssDeclarations: 112,
+  // #289 fidelity F7: S7's panel — the status row re-sized in place
+  // (10.5), five in: was / → / now at 12.5 and at 380's 11.5, APPLY's
+  // 13.5, DISCARD's 13, the deferred phrase's 9.5 at 380.  112 -> 117.
+  cssDeclarations: 117,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
@@ -624,7 +640,11 @@ export const CENSUS_PINS = {
   // counted declaration.  The panel's status row is the first one
   // outside the role table to read it, because it reserves a height and
   // a shared class would have put that reserve on every provenance line.
-  cssSizes: 25,
+  // #289 fidelity F7: 25 -> 24.  That token was never DECLARED — it is
+  // not one of #283's nine — so the row rendered the inherited size (the
+  // audit's row 161).  The row states rule 95.4's 10.5 px, and the
+  // undeclared name leaves the sheet.
+  cssSizes: 24,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site

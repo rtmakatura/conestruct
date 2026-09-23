@@ -908,6 +908,10 @@ body {
   --vd-flag-ground: #221e10;
   --vd-bad-line: var(--fld-invalid);
   --vd-bad-ground: #231416;
+  /* #289 fidelity F7 — rule 90's panel ground (#0f1c29), and the accent
+     hairline rules 62 / 91 / 94 name as rgba(52,169,232,.3). */
+  --panel-ground: #0f1c29;
+  --act-hair: rgba(52, 169, 232, 0.3);
 
   /* confidence speaks its own achromatic language (P1·04) */
   --conf-fill: #c6d2e0;
@@ -4236,58 +4240,208 @@ input[type="number"] {
 }
 
 /* ─── #289 S7 · the before/after panel (rules 90–95.15) ───
-   Six rows in all four situations, a reserved status row that holds its
-   height so 7a → 7b → 7c moves nothing below it (rule 95.4), and the
-   deferred pair reading their sentence in the provenance register. */
+   #289 fidelity F7 (audit rows 159–165 and the F7 plan row): the panel
+   at Part 2's own figures.  Rule 90: shell 1 px #34a9e8, ground #0f1c29,
+   six rows → the reserved status row → the footer, in that order.  The
+   panel's parts carry their own padding, so the shell has none. */
 .workbench .a-panel {
-  margin-top: 18px;
-  border: 1px solid var(--rule);
-  padding: 14px;
+  border: 1px solid var(--act);
+  background: var(--panel-ground);
   display: grid;
-  gap: 10px;
 }
+/* Rule 91: flex, baseline, gap 12, padding 12 16, a rgba(52,169,232,.3)
+   hairline under it; the note right-aligned in mono 10.5 (.tr-prov). */
 .workbench .a-panel-head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
   gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--act-hair);
 }
-/* Rule 95.4: the row is mounted in every situation and reserves its own
-   height, which is what stops the rows below it moving as the preview
-   lands.  22px is the provenance line's box at rule 8's scale. */
-.workbench .a-panel-status {
-  min-height: 22px;
+.workbench .a-panel-head .a-panel-note {
+  margin-left: auto;
+  text-align: right;
+}
+/* Rule 92: four tracks — label / was / arrow / now — gap 10, padding
+   10 16, a dotted #223345 rule under each.  The deferred rows' "now"
+   track widens to 130 px so the phrase never wraps. */
+.workbench .a-panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px 22px 92px;
+  gap: 10px;
+  align-items: baseline;
+  padding: 10px 16px;
+  border-bottom: 1px dotted var(--da-hair);
+}
+.workbench .a-panel-row.is-deferred {
+  grid-template-columns: minmax(0, 1fr) 92px 22px 130px;
+}
+/* Rule 93: was — mono 12.5 #93a0b0 right; → — mono 12.5 #93a0b0
+   centred; now — right-aligned, at rest in rule 95.5's "unchanged"
+   (mono 12.5 400 #c8d1dd); the deferred phrase in mono 10.5 #93a0b0. */
+.workbench .a-panel-row .a-was,
+.workbench .a-panel-row .a-arrow,
+.workbench .a-panel-row .a-now {
   font-family: var(--font-mono);
-  font-size: var(--fs-provenance);
+  font-size: var(--fs-field-label);
+  font-weight: 400;
+}
+.workbench .a-panel-row .a-was {
+  color: var(--ink-on-dark-faint);
+  text-align: right;
+}
+.workbench .a-panel-row .a-arrow {
+  color: var(--ink-on-dark-faint);
+  text-align: center;
+}
+.workbench .a-panel-row .a-now {
+  color: var(--ink-on-dark);
+  text-align: right;
+}
+/* The deferred phrase: .tr-prov carries rule 95.5's mono 10.5 #93a0b0. */
+.workbench .a-panel-row .a-deferred {
+  text-align: right;
+}
+.workbench .a-panel-row .lbl-short {
+  display: none;
+}
+/* Rule 95.4: always mounted, after the last data row — flex, centre,
+   gap 10, padding 11 16, min-height 44, a dotted #223345 rule above; a
+   symbol and one sentence in provenance type (mono 10.5). */
+.workbench .a-panel-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  min-height: 44px;
+  border-top: 1px dotted var(--da-hair);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.5;
   letter-spacing: 0.04em;
   color: var(--ink-on-dark-faint);
 }
-.workbench .a-panel-rows {
-  display: grid;
-  gap: 2px;
-}
-.workbench .a-panel-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  align-items: baseline;
-  padding: 7px 0;
-  border-bottom: 1px dotted var(--da-hair);
-}
-.workbench .a-panel-row:last-child {
-  border-bottom: 0;
-}
+/* Rule 94: flex, centre, gap 14, padding 14 16, the accent hairline
+   above: the sentence, DISCARD (ghost), APPLY (primary 200 × 44, 13.5,
+   margin-left auto). */
 .workbench .a-panel-foot {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 4px;
+  gap: 14px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--act-hair);
 }
-.workbench .a-revise-foot {
-  display: flex;
-  gap: 16px;
-  margin-top: 14px;
+.workbench .a-panel-foot .a-apply {
+  width: 200px;
+  height: 44px;
+  font-size: var(--fs-body-value);
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.workbench .a-panel-foot .a-discard {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.workbench .a-panel-foot .a-discard:hover {
+  border-color: var(--raise-hi);
+  background: rgba(255, 255, 255, 0.03);
+}
+.workbench .a-panel-foot .a-discard:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 2px;
+}
+/* Rule 61: the revision variant's border is #34a9e8; rule 62: its head's
+   hairline is rgba(52,169,232,.3). */
+.workbench .a-open.is-revising {
+  border-color: var(--act);
+}
+.workbench .a-open.is-revising .a-head {
+  border-bottom-color: var(--act-hair);
+}
+/* Rule 121: the body is a 2-track grid, 240 px / minmax(0,1fr), gap 26,
+   align start — the field column left, the panel right.  The question
+   and its provenance span both tracks (rule 64's order is kept). */
+.workbench .a-open.is-revising .a-body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  column-gap: 26px;
+  align-items: start;
+}
+.workbench .a-open.is-revising .a-body > .a-question,
+.workbench .a-open.is-revising .a-body > .a-question-prov {
+  grid-column: 1 / -1;
+}
+.workbench .a-open.is-revising .a-body > .a-grid {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 0;
+}
+/* Rule 95.15 — 380 px.  Rows 1fr / 58 / 16 / 96 at 11.5; the deferred
+   phrase 9.5 in the 96 track; the short labels; the header note under
+   the header; the status row aligns to the start so the sentence can
+   run to two lines; the footer stacks sentence, APPLY at 48, DISCARD
+   full width.  Rule 121's two tracks stack (rule 173). */
+@media (max-width: 480px) {
+  .workbench .a-open.is-revising .a-body {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 18px;
+  }
+  .workbench .a-panel-head {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .workbench .a-panel-head .a-panel-note {
+    margin-left: 0;
+    text-align: left;
+    flex-basis: 100%;
+  }
+  .workbench .a-panel-row,
+  .workbench .a-panel-row.is-deferred {
+    grid-template-columns: minmax(0, 1fr) 58px 16px 96px;
+  }
+  .workbench .a-panel-row .a-was,
+  .workbench .a-panel-row .a-arrow,
+  .workbench .a-panel-row .a-now {
+    font-size: 11.5px;
+  }
+  .workbench .a-panel-row .a-deferred {
+    font-size: 9.5px;
+  }
+  .workbench .a-panel-row .lbl-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .workbench .a-panel-row .lbl-short {
+    display: inline;
+  }
+  .workbench .a-panel-status {
+    align-items: flex-start;
+  }
+  .workbench .a-panel-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .workbench .a-panel-foot .a-apply {
+    width: 100%;
+    height: 48px;
+    margin-left: 0;
+    order: 1;
+  }
+  .workbench .a-panel-foot .a-discard {
+    width: 100%;
+    order: 2;
+  }
 }
 
 /* ─── Rule 116 · the WHAT grid, and rules 136–138 · the field ───

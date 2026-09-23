@@ -142,7 +142,7 @@ describe("a preview is a read (#282, ruling e)", () => {
     expect(screen.getByTestId("panel-note").textContent).toBe(
       "for 35 mph · before site conditions",
     );
-    expect(screen.getByTestId("panel-status").textContent).toBe(
+    expect(screen.getByTestId("panel-status-line").textContent).toBe(
       "computed for 35 mph · taper, buffer, spacing and counts only",
     );
   });

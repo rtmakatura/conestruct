@@ -1768,7 +1768,6 @@ export function GeneratorShell({
                     fieldValueLabel(revisingField, to),
                   )
                 }
-                onDiscard={discardStaged}
                 // CHANGE SOMETHING ELSE is retired (Ryan, 2026-09-23):
                 // the setup line's value links are the way to the column,
                 // and `onChangeValue` keeps the staged set as it did.
@@ -1791,16 +1790,11 @@ export function GeneratorShell({
                     verdict={stripVerdictWord}
                     needsYou={needsYouModel.count}
                     footer={
+                      // #289 fidelity F7 — rule 94's order: the staged
+                      // sentence, DISCARD (ghost), APPLY (primary, 200 × 44,
+                      // margin-left auto).  DISCARD moved here from under the
+                      // panel, where it was a fact link.
                       <div className="a-panel-foot">
-                        <button
-                          type="button"
-                          className="a-pri"
-                          data-testid="revise-apply"
-                          onClick={applyStagedAll}
-                          disabled={staged.length === 0}
-                        >
-                          APPLY
-                        </button>
                         <span className="tr-prov" data-testid="revise-sentence">
                           {/* Ruling 191's enumeration, and ruling 202's
                               two blind-apply sentences in 7b and 7d —
@@ -1814,6 +1808,25 @@ export function GeneratorShell({
                               ? `${stagedEnumeration(staged)} staged · not yet applied`
                               : "nothing staged")}
                         </span>
+                        {/* Part 1 §5.6: DISCARD un-stages and asks
+                            nothing.  No dialog. */}
+                        <button
+                          type="button"
+                          className="a-discard"
+                          data-testid="revise-discard"
+                          onClick={discardStaged}
+                        >
+                          DISCARD
+                        </button>
+                        <button
+                          type="button"
+                          className="a-pri a-apply"
+                          data-testid="revise-apply"
+                          onClick={applyStagedAll}
+                          disabled={staged.length === 0}
+                        >
+                          APPLY
+                        </button>
                       </div>
                     }
                   />
