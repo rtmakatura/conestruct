@@ -4112,6 +4112,61 @@ input[type="number"] {
   color: var(--ink-on-dark);
 }
 
+/* ─── #289 S7 · the before/after panel (rules 90–95.15) ───
+   Six rows in all four situations, a reserved status row that holds its
+   height so 7a → 7b → 7c moves nothing below it (rule 95.4), and the
+   deferred pair reading their sentence in the provenance register. */
+.workbench .a-panel {
+  margin-top: 18px;
+  border: 1px solid var(--rule);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+.workbench .a-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+/* Rule 95.4: the row is mounted in every situation and reserves its own
+   height, which is what stops the rows below it moving as the preview
+   lands.  22px is the provenance line's box at rule 8's scale. */
+.workbench .a-panel-status {
+  min-height: 22px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-provenance);
+  letter-spacing: 0.04em;
+  color: var(--ink-on-dark-faint);
+}
+.workbench .a-panel-rows {
+  display: grid;
+  gap: 2px;
+}
+.workbench .a-panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--da-hair);
+}
+.workbench .a-panel-row:last-child {
+  border-bottom: 0;
+}
+.workbench .a-panel-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.workbench .a-revise-foot {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+}
+
 /* ─── Rule 116 · the WHAT grid, and rules 136–138 · the field ───
    Three tracks with a 14 px gap, rows 16 px apart, each cell
    label / 44 px field / provenance at a 6 px gap. */

@@ -63,6 +63,7 @@ vi.mock("./GeneratorSidebar", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import {
+  applyRevision,
   changeOneThing,
   editAfterGenerate,
   openWhat,
@@ -318,12 +319,16 @@ describe("#254 — corrections stage in the shell and apply as one write", () =>
     // Still staged, still counted, still under its ribbon.
     expect(within(block()).queryByText(ZERO_STANDING)).toBeNull();
     expect(ribbon()).not.toBeNull();
-    // And they are still STAGED, not written: only Apply writes (rule
-    // 78, ruling 191), so a Generate in between still carries none.
-    await user.click(screen.getByRole("button", { name: "Generate package" }));
-    await settle();
+    // And they are still STAGED, not written: only APPLY writes (rule
+    // 78, ruling 191).  #289 S7 makes that literal — in revision there
+    // is no second Generate to press, because APPLY *is* the generate
+    // (ruling e), so the staged set can only leave through the one
+    // write that carries both halves.
     expect("siteConditionOverrides" in lastBody("audit").meta).toBe(false);
-    // The staged set outlived the re-open and the generate both.
-    expect(ribbon()).not.toBeNull();
+    await applyRevision();
+    await settle();
+    // One write, both halves: the corrections land on the meta.
+    expect("siteConditionOverrides" in lastBody("audit").meta).toBe(true);
+    expect(ribbon()).toBeNull();
   });
 });

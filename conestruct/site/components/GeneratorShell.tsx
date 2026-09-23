@@ -45,7 +45,26 @@ import { ResultsHero } from "./ResultsHero";
 import { TieredReference } from "./TieredReference";
 import { SCAN_BUCKET_TO_FLAG, assignTiers, type ScanBucketWire } from "@/lib/tiering";
 import { settledData } from "./AuditTrail";
-import { fmtScanStamp } from "@/lib/scenarios/site-corrections";
+import {
+  applyStaged,
+  fmtScanStamp,
+  stage,
+} from "@/lib/scenarios/site-corrections";
+// #289 Phase 2, S7 (ruling e) — revision's producers.  The fold and the
+// enumerating sentence live with the other writes that are more than a
+// set; the preview's states and strings live with the flag they carry.
+import {
+  applyStagedFields,
+  stagedEnumeration,
+} from "@/lib/scenarios/what-writes";
+import {
+  blindApplySentence,
+  type PreviewState,
+} from "@/lib/scenarios/preview";
+import type {
+  StagedFieldEdit,
+  StagedFieldKey,
+} from "@/lib/scenarios/types";
 import { derivePrimaryOwner } from "@/lib/results-primary";
 import { referenceSummary } from "@/lib/reference-summary";
 import { NeedsYou } from "./NeedsYou";
@@ -54,6 +73,12 @@ import { SiteConditionRows, hasConditionRows } from "./NeedsYouConditions";
 import { ReferenceDisclosure } from "./ReferenceDisclosure";
 import { ResultsHead } from "./ResultsHead";
 import { SiteNotChecked } from "./SiteNotChecked";
+import { RevisionPanel } from "./bands/RevisionPanel";
+import {
+  FIELD_LABEL,
+  RevisionBand,
+  fieldValueLabel,
+} from "./bands/RevisionBand";
 import type {
   DeviceBreakdownData,
   DeviceBreakdownState,
@@ -296,6 +321,24 @@ export function GeneratorShell({
   // staging opens no request; Apply folds the set into one setScenario.
   // Reopen clears it (the block unmounts; the intents' subject is gone).
   const [staged, setStaged] = useState<StagedCorrection[]>([]);
+  // #289 Phase 2, S7 (ruling e) — revision.  The staged FIELD edits live
+  // in the list above, beside #254's staged corrections: one staging
+  // mechanism, never per editor, so APPLY is one write and the sentence
+  // enumerates what is in it (ruling 191).
+  //
+  // What lives here instead is the PREVIEW — which is a read, not a
+  // stage.  It is the answer to "what would this value do", fired on
+  // commit and never on a keystroke, and it is deliberately NOT in the
+  // staged list: nothing about it is applied, and discarding it costs
+  // nothing.
+  const [preview, setPreview] = useState<PreviewState>({ kind: "idle" });
+  const previewSeq = useRef(0);
+  /** Which field the column re-opened on, or null when it is not in S7.
+   *  Rule 190: "CHANGE ONE THING re-opens one field, in place, with its
+   *  consequence shown." */
+  const [revisingField, setRevisingField] = useState<StagedFieldKey | null>(
+    null,
+  );
   // #253: an answer for the GENERATED scenario has settled since the
   // Generate click — the next-steps strip renders only after it (rule
   // 10: the pre-generate answer is never shown as this plan's).  Cleared
@@ -499,6 +542,104 @@ export function GeneratorShell({
   const armClick = () => {
     announcePendingRef.current = true;
     setClickArm((n) => n + 1);
+  };
+
+  /**
+   * #289 S7 — fire the preview.  Called on BLUR or ENTER only (rule
+   * 95.2), never per keystroke: the one editor in the build already
+   * doing the right thing is #252's commit-on-blur, and this is that
+   * pattern generalised.
+   *
+   * It carries #282's `preview: true` and hits the breakdown path only —
+   * never the audit, the scan or the PDFs, which the backend refuses for
+   * a preview with a named 400.  It writes nothing: no band, no lock, no
+   * memo, and the field stays editable while it is in flight.
+   */
+  const firePreview = (next: Scenario, forValue: string) => {
+    const seq = ++previewSeq.current;
+    setPreview({ kind: "loading" });
+    (async () => {
+      try {
+        const res = await fetch("/api/render/device-breakdown", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          // #282: the flag rides the SCENARIO, where the mixin defines
+          // it.  A preview asks the cheap question about a value that is
+          // not on the plan yet, so the scenario is the staged one.
+          body: JSON.stringify({ scenario: { ...next, preview: true } }),
+        });
+        if (seq !== previewSeq.current) return; // superseded by a newer commit
+        if (!res.ok) {
+          setPreview({ kind: "error" });
+          return;
+        }
+        const data = (await res.json()) as DeviceBreakdownData;
+        if (seq !== previewSeq.current) return;
+        setPreview({ kind: "ready", data, forValue });
+      } catch {
+        if (seq === previewSeq.current) setPreview({ kind: "error" });
+      }
+    })();
+  };
+
+  /** Stage a field edit and ask what it would do.  The scenario is NOT
+   *  written — §1.1: "nothing is written until APPLY". */
+  const stageField = (entry: StagedFieldEdit, forValue: string) => {
+    setStaged((prev) => stage(prev, entry));
+    firePreview(applyStagedFields(scenario, [entry]), forValue);
+  };
+
+  /** DISCARD (Part 1 §5.6, and Escape).  Un-stages everything and fires
+   *  ZERO requests — the preview is the only request in the
+   *  neighbourhood and it is already fired only on commit, so this holds
+   *  by construction.  No dialog. */
+  /** The staged value for the field S7 re-opened, or undefined when
+   *  nothing is staged for it — the editor shows what the operator asked
+   *  for, the plan still says what it said. */
+  const stagedFieldValue =
+    revisingField === null
+      ? undefined
+      : staged.find(
+          (x): x is StagedFieldEdit =>
+            "field" in x && x.field === revisingField,
+        )?.to;
+
+  /** The verdict the panel's deferred row carries — ruling 195: "verdict
+   *  is for the plan on screen, not the staged change."  One word, off
+   *  the settled audit; never predicted for the staged value. */
+  const stripVerdictWord =
+    auditState.state === "error"
+      ? "unavailable"
+      : auditDeclined
+        ? "declined"
+        : auditSettled
+          ? "on screen"
+          : "checking";
+
+  const discardStaged = () => {
+    previewSeq.current += 1; // any in-flight answer is now nobody's
+    setStaged([]);
+    setPreview({ kind: "idle" });
+    setRevisingField(null);
+    setRevising(false);
+  };
+
+  /** APPLY — ruling e's fold: the staged fields into the scenario and
+   *  the staged corrections into the meta, in ONE `setScenario`, then
+   *  one generate.  Ruling 191: one Apply is known to carry both because
+   *  the sentence enumerated both. */
+  const applyStagedAll = () => {
+    if (staged.length === 0) return;
+    const withFields = applyStagedFields(scenario, staged);
+    setScenario({
+      ...withFields,
+      meta: applyStaged(withFields.meta, staged),
+    } as Scenario);
+    setStaged([]);
+    setPreview({ kind: "idle" });
+    setRevisingField(null);
+    setRevising(false);
+    onGenerate();
   };
 
   // Shared retry: a single click refires BOTH fetches unconditionally.
@@ -767,6 +908,14 @@ export function GeneratorShell({
   const [revising, setRevising] = useState(false);
   const onChangeOneThing = () => {
     setRevising(true);
+    // #289 S7, rule 190: "CHANGE ONE THING re-opens ONE field, in place,
+    // with its consequence shown."  Speed is the field the verb opens
+    // on — it is the one every kind carries, it is what the setup fact
+    // line leads with, and it is the value the design's own worked
+    // example changes.  The other four are reachable from the grid in
+    // the same re-opened band, and each stages the same way.
+    setRevisingField("speed");
+    setPreview({ kind: "idle" });
     // Rule 33: "a CHANGE link focuses the band it re-opens."  The zone
     // is the band stack's home and carries the re-homed Zone 1 target
     // (ruling 192); `BandStack` moves focus onto the open band itself on
@@ -1503,7 +1652,85 @@ export function GeneratorShell({
                 editors, its commit-on-blur and its ⤢ / ✎ split are gone,
                 and the way back into a value is the fact line's CHANGE
                 ONE THING. */}
-            {genState === "pre" || genState === "generating" || revising ? (
+            {/* #289 Phase 2, S7 — revision.  The re-opened field and its
+                consequence replace the column here: rule 190 re-opens
+                ONE field, so the other three bands are not the question
+                being asked. */}
+            {revisingField !== null ? (
+              <RevisionBand
+                scenario={scenario}
+                field={revisingField}
+                stagedTo={stagedFieldValue}
+                onStage={(to) =>
+                  stageField(
+                    {
+                      field: revisingField,
+                      label: FIELD_LABEL[revisingField],
+                      from: scenario.speed,
+                      to,
+                    },
+                    fieldValueLabel(revisingField, to),
+                  )
+                }
+                onDiscard={discardStaged}
+                // The way back to the whole column — see the prop's own
+                // note in bands/RevisionBand.tsx.  The staged set
+                // SURVIVES it: ruling 191 folds fields and corrections
+                // into one Apply, and abandoning a route is not
+                // abandoning a change.
+                onOpenColumn={() => {
+                  previewSeq.current += 1;
+                  setPreview({ kind: "idle" });
+                  setRevisingField(null);
+                }}
+                stepIndex="REVISING"
+                panel={
+                  <RevisionPanel
+                    state={preview}
+                    settled={
+                      deviceBreakdown.state === "ready"
+                        ? deviceBreakdown.data
+                        : deviceBreakdown.state === "loading"
+                          ? (deviceBreakdown.lastReady ?? null)
+                          : null
+                    }
+                    fieldLabel={FIELD_LABEL[revisingField]}
+                    stagedValue={fieldValueLabel(
+                      revisingField,
+                      stagedFieldValue ?? scenario.speed,
+                    )}
+                    verdict={stripVerdictWord}
+                    needsYou={needsYouModel.count}
+                    footer={
+                      <div className="a-panel-foot">
+                        <button
+                          type="button"
+                          className="a-pri"
+                          data-testid="revise-apply"
+                          onClick={applyStagedAll}
+                          disabled={staged.length === 0}
+                        >
+                          APPLY
+                        </button>
+                        <span className="tr-prov" data-testid="revise-sentence">
+                          {/* Ruling 191's enumeration, and ruling 202's
+                              two blind-apply sentences in 7b and 7d —
+                              the button works; the sentence says you are
+                              applying blind. */}
+                          {blindApplySentence(
+                            preview,
+                            stagedEnumeration(staged),
+                          ) ??
+                            (staged.length > 0
+                              ? `${stagedEnumeration(staged)} staged · not yet applied`
+                              : "nothing staged")}
+                        </span>
+                      </div>
+                    }
+                  />
+                }
+              />
+            ) : genState === "pre" || genState === "generating" || revising ? (
               <GeneratorSidebar
                 scenario={scenario}
                 setScenario={setScenario}

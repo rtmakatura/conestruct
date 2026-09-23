@@ -17,6 +17,7 @@ import {
   applyStaged,
   deriveCorrectionsStanding,
   stage,
+  stagedKey,
   stagedSentence,
   unstage,
   type StagedCorrection,
@@ -131,7 +132,9 @@ describe("site-condition correction markers (#224 phase 4)", () => {
     const one = stage([], a);
     expect(one).toEqual([a]);
     const two = stage(one, d);
-    expect(two.map((s) => s.flag)).toEqual(["school_zone", "pedestrian_facility"]);
+    // #289 S7: the staged list also carries field edits now, so its
+    // identity is `stagedKey` rather than a bare `.flag`.
+    expect(two.map(stagedKey)).toEqual(["school_zone", "pedestrian_facility"]);
     // Same flag again: replaced in place (order kept), never a duplicate
     // (the backend refuses duplicate flags with an honest 400).
     const undoIntent: StagedCorrection = { flag: "school_zone", marker: null };

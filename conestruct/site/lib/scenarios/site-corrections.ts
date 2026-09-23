@@ -13,6 +13,7 @@
 // corridor's scan, no longer exists.
 
 import type {
+  StagedFieldEdit,
   ManualSiteFlag,
   ScannedSiteFlag,
   ScenarioMeta,
@@ -25,13 +26,34 @@ import type {
 import type { SiteScanProvenance } from "@/lib/render-types";
 import { SCAN_BUCKET_TO_FLAG, type ScanBucketWire } from "@/lib/tiering";
 
-export type { StagedCorrection, StagedManualCondition } from "./types";
+export type {
+  StagedCorrection,
+  StagedFieldEdit,
+  StagedManualCondition,
+} from "./types";
 
 /** #288 Phase 1 clause 1 — the staged union's discriminator, written
  *  once so no reader re-invents it.  The scanned variant carries a
  *  ``marker`` (the wire's SiteConditionOverride); the manual variant
  *  carries ``on`` (the meta.siteConditions boolean). */
+/** #289 S7: is this staged entry a FIELD edit?  The union's third
+ *  member has no `flag`, which is also how `stagedKey` tells them
+ *  apart. */
+export function isFieldStaged(s: StagedCorrection): s is StagedFieldEdit {
+  return "field" in s;
+}
+
+/** The identity `stage` / `unstage` key on.  Corrections are one per
+ *  flag (the backend refuses duplicates); field edits are one per field,
+ *  so a second edit of the same field replaces the first rather than
+ *  stacking — the staged set is the DIFFERENCE from the plan on screen,
+ *  never a history of typing. */
+export function stagedKey(s: StagedCorrection): string {
+  return isFieldStaged(s) ? `field:${s.field}` : s.flag;
+}
+
 export function isManualStaged(s: StagedCorrection): s is StagedManualCondition {
+  if (isFieldStaged(s)) return false;
   return "on" in s;
 }
 
@@ -209,7 +231,7 @@ export function dismissAllowed(
 /** Stage an intent: one entry per flag — a new intent for a flag
  *  replaces the old one in place (the backend refuses duplicate flags). */
 export function stage(staged: readonly StagedCorrection[], entry: StagedCorrection): StagedCorrection[] {
-  const i = staged.findIndex((s) => s.flag === entry.flag);
+  const i = staged.findIndex((s) => stagedKey(s) === stagedKey(entry));
   if (i === -1) return [...staged, entry];
   const next = staged.slice();
   next[i] = entry;
@@ -219,9 +241,9 @@ export function stage(staged: readonly StagedCorrection[], entry: StagedCorrecti
 /** Undo on a staged row: the intent leaves the set — no request. */
 export function unstage(
   staged: readonly StagedCorrection[],
-  flag: ScannedSiteFlag | ManualSiteFlag,
+  key: ScannedSiteFlag | ManualSiteFlag | `field:${string}`,
 ): StagedCorrection[] {
-  return staged.filter((s) => s.flag !== flag);
+  return staged.filter((s) => stagedKey(s) !== key);
 }
 
 /** Apply: fold the staged set through withSiteCorrection /
@@ -231,6 +253,10 @@ export function unstage(
 export function applyStaged(meta: ScenarioMeta, staged: readonly StagedCorrection[]): ScenarioMeta {
   let next = meta;
   for (const s of staged) {
+    // #289 S7: a staged FIELD edit writes the scenario, not the meta —
+    // `applyStagedFields` (what-writes.ts) folds those, and APPLY calls
+    // both in one `setScenario` so the two halves land together.
+    if (isFieldStaged(s)) continue;
     if (isManualStaged(s)) {
       next = withManualCondition(next, s.flag, s.on);
       continue;

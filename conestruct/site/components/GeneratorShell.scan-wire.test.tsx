@@ -285,11 +285,11 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     await user.click(screen.getByText("Generate package"));
     await settle();
     calls = [];
-    await changeOneThing();
-    await user.selectOptions(
-      document.getElementById("what-speed") as HTMLSelectElement,
-      "35",
-    );
+    // #289 S7: the edit STAGES and APPLY is the re-generation (ruling
+    // e), so the request this case is about is APPLY's.  The fact is
+    // unchanged: a re-generation asks for a scan, and it asks from
+    // scratch — no earlier acknowledgement rides along.
+    await editAfterGenerate("what-speed", "35");
     await settle();
     const audits = bodiesFor("/api/render/audit");
     expect(audits.length).toBe(1);

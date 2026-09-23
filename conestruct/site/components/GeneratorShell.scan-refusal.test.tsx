@@ -83,7 +83,9 @@ import { join } from "node:path";
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
 import {
+  applyRevision,
   changeOneThing,
+  stageRevision,
   editAfterGenerate,
   openWhat,
   openWhere,
@@ -362,8 +364,9 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
     // ("unchanged and still changeable"), so the way to an edit is
     // CHANGE ONE THING — which is also the only recovery a refusal
     // leaves the operator besides Retry.
-    await changeOneThing();
-    await user.click(screen.getByText("EDIT_SPEED"));
+    // #289 S7: the edit stages and APPLY re-generates (ruling e), so
+    // the request that must ask again from scratch is APPLY's.
+    await editAfterGenerate("what-speed", "35");
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: false }]);
     // Overpass still down → refused again, honestly.
@@ -376,10 +379,14 @@ describe("the code-keyed scan refusal (#224 phase 2)", () => {
       within(container()).getByRole("button", { name: /Generate anyway/ }),
     );
     await settle();
-    await changeOneThing();
+    // #289 S7: in revision the fresh generate is APPLY (ruling e) — the
+    // column's Generate is not on screen, because the question being
+    // asked is one field's.  The claim is untouched: the next request
+    // asks from scratch, and a proceed-anyway is never remembered.
+    await stageRevision("35");
     await settle();
     calls = [];
-    await user.click(screen.getByText("Generate package"));
+    await applyRevision();
     await settle();
     expect(scanned("/api/render/audit")).toEqual([{ proceed_if_unavailable: false }]);
   });

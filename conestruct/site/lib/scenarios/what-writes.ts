@@ -25,7 +25,13 @@ import {
   lanesArithmeticMismatch,
 } from "./auto-apply";
 import { applyRoadTypeOverride, dividedForShoulderRoadType } from "./overrides";
-import type { DetectionOverride, RoadType, Scenario } from "./types";
+import { isFieldStaged } from "./site-corrections";
+import type {
+  DetectionOverride,
+  RoadType,
+  Scenario,
+  StagedCorrection,
+} from "./types";
 
 /** The lane relays and the override log, as the kinds that carry them
  *  declare them.  Naming exactly the fields these writers touch keeps a
@@ -189,4 +195,67 @@ export function setWorkDates(
       work_date_end: keptEnd,
     },
   } as Scenario;
+}
+
+/**
+ * #289 Phase 2, S7 — APPLY's field half.
+ *
+ * Ruling e: "APPLY folds staged fields and corrections into one write."
+ * The corrections half is `applyStaged` (site-corrections.ts), which
+ * folds meta; this folds the SCENARIO, through the same writers the
+ * grid's cells use — so a staged speed still drags the work-zone
+ * reduction with it, a staged road type still single-sources `divided`
+ * (#85), and a staged lane count still clears the relays and records the
+ * #177 override.  A staged edit that wrote the field directly would be a
+ * fourth copy of that bookkeeping, which is the defect this module was
+ * built to end.
+ */
+export function applyStagedFields(
+  scenario: Scenario,
+  staged: readonly StagedCorrection[],
+): Scenario {
+  let next = scenario;
+  for (const s of staged) {
+    if (!isFieldStaged(s)) continue;
+    switch (s.field) {
+      case "speed":
+        next = setSpeed(next, Number(s.to));
+        break;
+      case "lanes":
+        next = setLanes(next, Number(s.to));
+        break;
+      case "roadType":
+        next = setRoadType(next, s.to as RoadType);
+        break;
+      case "laneWidth":
+        next = { ...next, laneWidth: Number(s.to) } as Scenario;
+        break;
+      case "jurisdiction_key":
+        next = {
+          ...next,
+          jurisdiction_key: (s.to as string) || null,
+        } as Scenario;
+        break;
+    }
+  }
+  return next;
+}
+
+/**
+ * Ruling 191's sentence: "the staged sentence enumerating what is staged
+ * ('1 field · 2 corrections') so one Apply is known to carry both."
+ *
+ * Counted from the one list, so the sentence cannot disagree with what
+ * APPLY will write.  A half that is empty is not named — "0 corrections"
+ * would be a clause about nothing (rule 10).
+ */
+export function stagedEnumeration(staged: readonly StagedCorrection[]): string {
+  const fields = staged.filter(isFieldStaged).length;
+  const corrections = staged.length - fields;
+  const parts: string[] = [];
+  if (fields > 0) parts.push(`${fields} field${fields === 1 ? "" : "s"}`);
+  if (corrections > 0) {
+    parts.push(`${corrections} correction${corrections === 1 ? "" : "s"}`);
+  }
+  return parts.join(" · ");
 }

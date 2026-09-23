@@ -55,7 +55,9 @@ vi.mock("./GeneratorSidebar", () => ({
 import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
 import {
+  applyRevision,
   changeOneThing,
+  stageRevision,
   editAfterGenerate,
   openWhat,
   openWhere,
@@ -173,8 +175,12 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // Reopening the setup panel unmounts QuotePanel (Zone 2 empties);
     // regenerating remounts it.  The #74 contract: settings live in the
     // shell, so the remount must NOT reinitialize them to DEFAULT.
-    await changeOneThing();
-    await user.click(screen.getByText("Generate package"));
+    // #289 S7: the cycle is CHANGE ONE THING → stage → APPLY, and APPLY
+    // is the re-generation (ruling e).  The #74 contract is unchanged
+    // and is what this case is about: the settings live in the shell, so
+    // the remount must not reinitialise them.
+    await stageRevision("35");
+    await applyRevision();
     // #252: the generated pair's deferred window locks the rate inputs.
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));
@@ -219,8 +225,12 @@ describe("GeneratorShell bundle download — live quote settings (#74)", () => {
     // remount reset flaggerSource to "auto" and delivery to "idle", so
     // the auto-flagger effect (-> 0) and the settings reinit (-> 20)
     // re-clobbered the manual entries.
-    await changeOneThing();
-    await user.click(screen.getByText("Generate package"));
+    // #289 S7: the cycle is CHANGE ONE THING → stage → APPLY, and APPLY
+    // is the re-generation (ruling e).  The #74 contract is unchanged
+    // and is what this case is about: the settings live in the shell, so
+    // the remount must not reinitialise them.
+    await stageRevision("35");
+    await applyRevision();
     // #252: the generated pair's deferred window locks the rate inputs.
     await act(async () => {
       await new Promise((r) => setTimeout(r, 400));

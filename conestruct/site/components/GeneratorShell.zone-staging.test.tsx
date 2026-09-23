@@ -165,10 +165,12 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".setup-strip")).toBeNull();
     expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
 
-    // An edit (speed, through CHANGE ONE THING and the WHAT grid)
-    // refires the breakdown fetch → the subtree stays mounted, dimmed
-    // under the recomputing ribbon, hero holding the carried previous
-    // answer (#192 — no empty-state swap, no panel-state destruction).
+    // #289 S7: a post-generate edit is a REVISION — it stages, and
+    // APPLY is the write that refires the pair.  `editAfterGenerate`
+    // does both (components/__fixtures__/band-helpers.ts), so the claim
+    // is unchanged: the subtree stays mounted, dimmed under the
+    // recomputing ribbon, hero holding the carried previous answer
+    // (#192 — no empty-state swap, no panel-state destruction).
     await editAfterGenerate("what-speed", "35");
     await flushDebounce();
     expect(screen.queryByText("Generating…")).toBeNull();
@@ -176,8 +178,14 @@ describe("zone staging lifecycle", () => {
     expect(screen.getByText(/Previous answer/)).toBeTruthy();
     expect(document.querySelector(".hero")).not.toBeNull();
 
-    // Resolve → back to post, ribbon and dim gone.
-    await release(2, okBreakdown());
+    // Resolve → back to post, ribbon and dim gone.  The preview fired
+    // by the staged edit is answered first: it is a read on the same
+    // route, and leaving it open would hold the page in flight.
+    // Two are open: the staged edit's PREVIEW (a read, #282's flag) and
+    // APPLY's generate.  Both are answered, oldest first.
+    for (let i = 2; i < breakdownCalls.length; i += 1) {
+      await release(i, okBreakdown());
+    }
     expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(document.querySelector(".hero")).not.toBeNull();
@@ -219,7 +227,7 @@ describe("zone staging lifecycle", () => {
     expect(document.querySelector(".results-stale")).not.toBeNull();
   });
 
-  it("CHANGE ONE THING re-opens the column and KEEPS the answer on screen", async () => {
+  it("CHANGE ONE THING re-opens ONE FIELD and KEEPS the answer on screen", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
@@ -231,13 +239,16 @@ describe("zone staging lifecycle", () => {
     await changeOneThing();
     const [setup, results] = zones();
     expect(setup.className).toContain("dominant");
-    // #289 Phase 2: the column is back, and this is where the old
-    // "Edit full setup" and the new verb part company.  Part 1 §5.4:
+    // #289 Phase 2, S7 (rule 190): the verb re-opens ONE FIELD, in
+    // place, with its consequence shown — not the whole column, which is
+    // what it did between the S4 commit and this one.  This is where the
+    // old "Edit full setup" and the new verb part company.  Part 1 §5.4:
     // "The results below dim to 50% under a stale ribbon ... Downloads,
     // quote and save stay live — that is inherited from the current
     // corrections block and is not negotiable: staging must stay
     // abandonable."  So the answer stays on screen.
-    expect(setup.querySelector(".band-stack")).not.toBeNull();
+    expect(document.querySelector('[data-testid="revision-panel"]')).not.toBeNull();
+    expect(document.getElementById("revise-speed")).not.toBeNull();
     expect(document.querySelector(".hero"), "the answer stays").not.toBeNull();
     // And the results zone is not emptied — the stack is still there,
     // which is the difference from the panel-era Reopen.

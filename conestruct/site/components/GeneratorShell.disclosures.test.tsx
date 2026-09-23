@@ -58,7 +58,11 @@ vi.mock("./GeneratorSidebar", () => ({
 
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER } from "./test-fixtures";
-import { changeOneThing } from "./__fixtures__/band-helpers";
+import {
+  applyRevision,
+  changeOneThing,
+  stageRevision,
+} from "./__fixtures__/band-helpers";
 
 const SECTIONS = {
   taper: {},
@@ -254,14 +258,12 @@ describe("#288 clause 4 — the stack's disclosure rows", () => {
     // three copies of it would be the noise §8.29 dropped a strip for.
     auditDelay = 5_000;
     const user = userEvent.setup();
-    // #289 Phase 2: an in-flight refetch comes from a WHAT-grid edit
-    // now, not from the strip's inline speed editor — and reaching the
-    // grid post-generate is CHANGE ONE THING on the setup fact line.
-    await changeOneThing();
-    await user.selectOptions(
-      document.getElementById("what-speed") as HTMLSelectElement,
-      "35",
-    );
+    // #289 S7: an in-flight refetch post-generate is APPLY's generate —
+    // an edit stages and previews (a read), and APPLY is the write
+    // (ruling e).  The cue is about the values on screen being the
+    // previous answer, which is exactly what APPLY's flight makes true.
+    await stageRevision("35");
+    await applyRevision();
     await settle(60);
     const cues = screen.queryAllByText("◌ previous answer — refreshing…");
     expect(cues.length, "at most one cue, ever").toBeLessThanOrEqual(1);

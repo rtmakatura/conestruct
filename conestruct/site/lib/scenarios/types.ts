@@ -282,7 +282,45 @@ export interface StagedManualCondition {
   on: boolean;
 }
 
-export type StagedCorrection = StagedScanCorrection | StagedManualCondition;
+/**
+ * #289 Phase 2, S7 (ruling e) — a staged FIELD edit.
+ *
+ * "Staged field edits live in the shell beside #254's staged corrections
+ * — one staging mechanism, never per editor."  So the third member of
+ * the same union, in the same list, applied by the same APPLY.  That is
+ * ruling 191's whole point: one Apply carries both, and the sentence
+ * enumerates what is in it.
+ *
+ * `from` and `to` are the field's own values, kept for the sentence and
+ * for the before/after panel's `was` column.  `label` is how the field
+ * calls itself on screen, so the enumerating sentence and the revising
+ * header can name it without a second table.
+ *
+ * NOTHING HERE IS ON THE SCENARIO until APPLY — that is §1.1, and it is
+ * what makes Escape free (Part 1 §5.6: DISCARD fires zero requests).
+ */
+export interface StagedFieldEdit {
+  field: StagedFieldKey;
+  label: string;
+  from: string | number | boolean | undefined;
+  to: string | number | boolean | undefined;
+}
+
+/** The fields revision can stage.  A closed set on purpose: each one has
+ *  a writer in lib/scenarios/what-writes.ts that carries its bookkeeping
+ *  (the work-zone clamp, #85's divided single-sourcing, #136/#177's lane
+ *  relays), and a field with no writer would be a silent set. */
+export type StagedFieldKey =
+  | "speed"
+  | "lanes"
+  | "laneWidth"
+  | "roadType"
+  | "jurisdiction_key";
+
+export type StagedCorrection =
+  | StagedScanCorrection
+  | StagedManualCondition
+  | StagedFieldEdit;
 
 export interface ScenarioMeta {
   project: string;

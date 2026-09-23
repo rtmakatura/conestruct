@@ -12,7 +12,7 @@
 //     clicked unmounts with the strip).
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 vi.mock("./AppNav", () => ({ AppNav: () => null }));
@@ -134,7 +134,12 @@ function activeIsSetupZone(): boolean {
     // panel (§8.16).  The focus TARGET is unchanged — ruling 192 re-homed
     // the Zone 1 target onto the band stack and `setupRef` stays on this
     // section — so only what it contains has changed.
-    el.querySelector(".band-stack") !== null
+    // #289 S7: in revision the zone holds ONE field and its panel
+    // instead of the column (rule 190), so the predicate asks for either
+    // — the TARGET is the section, which ruling 192 re-homed and which
+    // has not moved.
+    (el.querySelector(".band-stack") !== null ||
+      el.querySelector('[data-testid="revision-panel"]') !== null)
   );
 }
 
@@ -221,29 +226,32 @@ describe("focus policy after Generate (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
+    // #289 S7: the post-generate editor is the revision band's own
+    // field.  The claim is the one #252 established and is unchanged:
+    // typing opens no request, so nothing locks the control under the
+    // cursor and focus stays put.  The extent field's own version of it
+    // is asserted pre-generate, where that field lives.
     await changeOneThing();
-    // #289: the work-zone length is the WHERE band's extent field
-    // (FLOW.md §5a move 3), not a WHAT cell.
-    await openWhere();
-    const input = screen.getByLabelText("Work zone length (ft)");
-    await user.clear(input);
-    await user.type(input, "600");
-    // #252: typing is a draft — no request opens, so nothing locks the
-    // field under the cursor; focus stays put through the whole entry.
+    const input = document.getElementById("revise-speed") as HTMLSelectElement;
+    input.focus();
     const calls = breakdownCalls.length;
     await flushDebounce();
     expect(document.activeElement).toBe(input);
     expect(breakdownCalls.length).toBe(calls);
-    // Commit (blur): one request, the lock, then the settle — which
-    // never moves focus to the results zone (the #193 contract).
-    await user.tab();
-    await flushDebounce();
+    // Commit: the select's choice IS the commit (a select has no
+    // keystroke window to protect — see bands/RevisionBand.tsx), and it
+    // fires exactly ONE request: the preview, which is a read.  Its
+    // settle never moves focus to the results zone, which is the #193
+    // contract and the whole point of this case.
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "35" } });
+    });
     expect(breakdownCalls.length).toBe(calls + 1);
     await release(breakdownCalls.length - 1, okBreakdown());
     expect(activeIsResultsZone()).toBe(false);
   });
 
-  it("Reopen lands focus on the Setup zone", async () => {
+  it("CHANGE ONE THING lands focus on the zone the revision opens in", async () => {
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
@@ -254,9 +262,10 @@ describe("focus policy after Generate (#193)", () => {
 
     await changeOneThing();
     expect(activeIsSetupZone()).toBe(true);
-    // The panel is really back: Tab reaches its controls from here.
-    expect(
-      screen.getByRole("button", { name: /Generate plan/ }),
-    ).toBeTruthy();
+    // #289 S7 (rule 190): what is really back is ONE FIELD and its
+    // consequence — not the column, and not a second Generate.  APPLY is
+    // the write now (ruling e), so that is the control Tab reaches.
+    expect(document.getElementById("revise-speed")).not.toBeNull();
+    expect(document.querySelector('[data-testid="revise-apply"]')).not.toBeNull();
   });
 });

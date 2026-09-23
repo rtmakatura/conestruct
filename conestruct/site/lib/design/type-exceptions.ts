@@ -164,6 +164,12 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // each row declares the sizes ITS selectors use.
       "var(--fs-primary)",
       "var(--fs-primary-xl)",
+      // #289 S7: the panel's reserved status row reads the provenance
+      // register.  The TOKEN is not new to the sheet — every provenance
+      // line in the column already reads it — but this group had not
+      // carried it before, and a group declares the sizes ITS selectors
+      // use.
+      "var(--fs-provenance)",
     ],
     reason:
       "Part 2's own control sizes, each traced to the rule that states it: the fact line's symbol (rules 17/56, 12.5) and value (rule 8, 13.5), the fact link (rule 134, 9.5), the ledger action (rule 133, 9.5), the field (rule 136, 13.5), the primary (rule 130, 15.5) and the XL primary (rule 131, 17.5) — which the generate frame applies to GenerateButton's own element rather than to a second button, so the control keeps its string, its disabled title and its cta-reason alert.  Every size is already a register in this sheet; what is new is the selector",
@@ -180,6 +186,13 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       // this sheet already carries for every field label and symbol) is
       // read once more rather than a new size being introduced.
       { selector: ".workbench .a-chip-flat", size: "var(--fs-field-label)" },
+      // #289 S7: the panel's reserved status row (rule 95.4) declares
+      // the provenance register — the same token every provenance line
+      // in the column already reads, so no size joins the sheet.  It is
+      // declared here rather than riding `.tr-prov` because the row
+      // reserves a HEIGHT, and a shared class would put that reserve on
+      // every provenance line in the build.
+      { selector: ".workbench .a-panel-status", size: "var(--fs-provenance)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
@@ -550,12 +563,20 @@ export const CENSUS_PINS = {
   // new size (the token was already in the sheet).
   // Correction 1: the second group's chip label — one declaration, and
   // a register already in the sheet.  104 -> 105.
-  cssDeclarations: 105,
+  // #289 S7: the panel's status row — one declaration, at a register the
+  // sheet already carries.  105 -> 106.
+  cssDeclarations: 106,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes
   // it dropped (9, 10, 13) all remain elsewhere.
-  cssSizes: 24,
+  // #289 S7: 24 -> 25.  `var(--fs-provenance)` is new to the CENSUS,
+  // not to the sheet — the token has been on every provenance line since
+  // #283 declared it, and the parser counts token NAMES that appear in a
+  // counted declaration.  The panel's status row is the first one
+  // outside the role table to read it, because it reserves a height and
+  // a shared class would have put that reserve on every provenance line.
+  cssSizes: 25,
   // Correction 3 again: the "Applied from picker" BOX is deleted (its
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site

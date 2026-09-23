@@ -24,10 +24,12 @@ import { GeneratorShell, armLandingCheck } from "./GeneratorShell";
 // #186: mounts assert a verdict / enabled Generate — start located.
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
 import {
+  applyRevision,
   changeOneThing,
   editAfterGenerate,
   openWhat,
   openWhere,
+  stageRevision,
 } from "./__fixtures__/band-helpers";
 
 // #289 Phase 2 — the setup strip is deleted (§8.27; #262 closes by
@@ -241,11 +243,20 @@ describe("post-generate scroll (#152 E)", () => {
     await release(1, okBreakdown());
     scrollSpy.mockClear();
 
-    // A strip edit refetches and re-lands on post — no new scroll.
-    await editAfterGenerate("what-speed", "35");
-    await flushDebounce();
-    await release(2, okBreakdown());
+    // #289 S7: an edit STAGES and fires a preview, which is a read.  It
+    // writes nothing and it lands nothing — the claim this case has
+    // always made, now with a name for the half that does the editing.
+    await stageRevision("35");
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(scrollSpy).not.toHaveBeenCalled();
+
+    // APPLY is a GENERATE (ruling e), and a generate lands the viewport
+    // (#152 E).  So the arming is unchanged: a click arms it, an edit
+    // never does.
+    await applyRevision();
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
   });
 
   it("a failed generation disarms the scroll instead of yanking the viewport", async () => {

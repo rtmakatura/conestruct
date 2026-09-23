@@ -27,7 +27,9 @@ vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 import { GeneratorShell } from "./GeneratorShell";
 import { PINNED_SHOULDER, MIN_AUDIT } from "./test-fixtures";
 import {
+  applyRevision,
   changeOneThing,
+  stageRevision,
   editAfterGenerate,
   openWhat,
   openWhere,
@@ -148,7 +150,14 @@ function statusRegion(): HTMLElement {
   // request is open — a different speaker for a different event (the
   // flight, never the package).  The package region is the sr-only one,
   // and there is exactly one of it.
-  const regions = document.querySelectorAll('[role="status"]:not(.wb-row)');
+  // #289 S7: the revision panel's reserved row is a third role=status
+  // and is the PANEL's only live region (rule 95.14) — a different
+  // speaker for a different event, exactly as the working band's row is.
+  // The package region is still the sr-only one, and still the only one
+  // that speaks for the plan.
+  const regions = document.querySelectorAll(
+    '[role="status"]:not(.wb-row):not(.a-panel-status)',
+  );
   expect(regions.length).toBe(1);
   return regions[0] as HTMLElement;
 }
@@ -207,15 +216,12 @@ describe("generation announcements (#193)", () => {
     await flushDebounce();
     await release(1, okBreakdown());
 
-    // #289 Phase 2.  The panel era reached a second Generate through
-    // Reopen, which dropped to "pre" and refired the pair, so the clear
-    // and the re-announcement sat either side of a network round trip
-    // and a snapshot between them saw "".  CHANGE ONE THING keeps the
-    // answer on screen and changes nothing by itself (Part 1 §5.4), so
-    // a repeat Generate over an unedited scenario asks for a wire the
-    // backend has already answered: no request flies, and the clear and
-    // the re-announcement land in two successive COMMITS of the same
-    // click.
+    // #289 Phase 2, then S7.  The panel era reached a second Generate
+    // through Reopen, which dropped to "pre" and refired the pair.  The
+    // column's repeat is APPLY (ruling e): a staged change, applied,
+    // which re-generates and re-announces.  Identical counts are the
+    // point — the region must be CLEARED at the write or aria-live has
+    // nothing to report.
     //
     // aria-live reads DOM WRITES, not snapshots, so that is still two
     // announcements — and this case has to watch the way a screen
@@ -249,12 +255,18 @@ describe("generation announcements (#193)", () => {
       }
     });
     obs.observe(region, { childList: true, subtree: true });
-    await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // The repeat: stage again and APPLY again, for the same counts.
+    await stageRevision("40");
+    await applyRevision();
+    await flushDebounce();
+    for (let i = 0; i < breakdownCalls.length; i += 1) {
+      await release(i, okBreakdown()).catch(() => {});
+    }
     await flushDebounce();
     obs.disconnect();
 
-    // Cleared at the click — the write that makes an identical
-    // announcement announce again — then written back.
+    // Cleared at the write — what makes an identical announcement
+    // announce again — then written back.
     expect(writes).toEqual(["", "Plan generated — 42 devices, 6 types."]);
     expect(statusRegion().textContent).toBe(
       "Plan generated — 42 devices, 6 types.",
@@ -270,10 +282,12 @@ describe("generation announcements (#193)", () => {
     await release(1, okBreakdown());
     const announced = statusRegion().textContent;
 
-    await editAfterGenerate("what-speed", "35");
-    await flushDebounce();
-    await release(2, okBreakdown());
-    // Unchanged — same text, no re-announcement for an edit settle.
+    // #289 S7: the clearest background settle there is — the staged
+    // edit's PREVIEW, which is a read (#282's flag) and is armed by
+    // nothing.  It lands, and the region still says what the plan on
+    // screen said.
+    await stageRevision("35");
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(statusRegion().textContent).toBe(announced);
   });
 

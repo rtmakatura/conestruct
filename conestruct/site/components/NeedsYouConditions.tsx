@@ -79,6 +79,7 @@
 
 import { useRef, useState, type ReactNode } from "react";
 
+import type { StagedFieldEdit } from "@/lib/scenarios/types";
 import type { Scenario } from "@/lib/scenarios";
 import type { SiteScanCorrection, SiteScanProvenance } from "@/lib/render-types";
 import { SCAN_BUCKET_TO_FLAG, scanEvidence, type ScanBucketWire } from "@/lib/tiering";
@@ -94,6 +95,7 @@ import {
   dismissMarker,
   fmtScanDuration,
   fmtScanStamp,
+  isFieldStaged,
   isManualStaged,
   isScannedFlag,
   stage,
@@ -171,7 +173,15 @@ export function SiteConditionRows({
       : null;
   const corrections = (siteScan.corrections ?? []).filter((c) => isScannedFlag(c.flag));
   const byFlag = new Map<string, SiteScanCorrection>(corrections.map((c) => [c.flag, c]));
-  const stagedFor = new Map<string, StagedCorrection>(staged.map((s) => [s.flag, s]));
+  // #289 S7: the staged list now also carries FIELD edits (ruling e —
+  // one staging mechanism).  This block is about site conditions, so it
+  // indexes the entries that have a flag and ignores the rest; APPLY
+  // still carries the whole list, which is ruling 191's point.
+  const stagedFor = new Map<string, Exclude<StagedCorrection, StagedFieldEdit>>(
+    staged
+      .filter((s): s is Exclude<StagedCorrection, StagedFieldEdit> => !isFieldStaged(s))
+      .map((s) => [s.flag, s]),
+  );
   if (buckets === null && corrections.length === 0) return null;
 
   // #254: every click on a row is an INTENT held in the shell; the one
@@ -207,6 +217,10 @@ export function SiteConditionRows({
   };
   // The staged row's evidence cell: the intent in the vocabulary's words.
   const intentText = (s: StagedCorrection): string => {
+    // A field edit never reaches a condition row; the guard is for the
+    // type, and it names the value so a stray one would be legible
+    // rather than a crash.
+    if (isFieldStaged(s)) return `${s.label} → ${String(s.to)}`;
     if (isManualStaged(s)) return s.on ? "assert" : "undo";
     if (s.marker === null) return "undo";
     if (s.marker.action === "assert") return "assert";
@@ -303,7 +317,7 @@ export function SiteConditionRows({
 
   // #254: a STAGED row — ◌ (--none) + the condition + "staged — not yet
   // applied" + the intent, Undo un-stages (no request).
-  const stagedRow = (s: StagedCorrection) =>
+  const stagedRow = (s: Exclude<StagedCorrection, StagedFieldEdit>) =>
     row(
       `staged-${s.flag}`,
       "sc-staged site-correction-staged",

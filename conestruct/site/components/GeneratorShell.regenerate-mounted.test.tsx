@@ -129,7 +129,14 @@ async function generateThenEdit() {
   await flushDebounce();
   await release(bdCalls, 1, okBd());
   await release(auditCalls, 1, okAudit());
+  // #289 S7: the post-generate edit stages and APPLY writes — one
+  // generate, which is the refetch this suite is about.  The preview
+  // fired by the staged value is a read on the same route and is
+  // answered first so the page is not left holding it.
   await editAfterGenerate("what-speed", "35");
+  for (let i = 2; i < bdCalls.length - 1; i += 1) {
+    await release(bdCalls, i, okBd());
+  }
   await flushDebounce();
   return user;
 }
@@ -159,7 +166,7 @@ describe("results stay mounted through regeneration (#192)", () => {
     expect(screen.getByText(/183 ft/)).toBeTruthy();
 
     // Settling clears the ribbon and the dim.
-    await release(bdCalls, 2, okBd());
+    await release(bdCalls, bdCalls.length - 1, okBd());
     expect(screen.queryByText(/Previous answer/)).toBeNull();
     expect(document.querySelector(".results-stale")).toBeNull();
     expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
@@ -195,7 +202,10 @@ describe("results stay mounted through regeneration (#192)", () => {
     expect(stripText()).toContain("PLAN DECLINED");
     expect(stripText()).not.toContain("COMPUTING");
     expect(document.querySelector(".working-band")).not.toBeNull();
-    await release(bdCalls, 2, okBd());
+    // #289 S7: the breakdown still open is APPLY's generate — the
+    // staged edit's preview was answered in `generateThenEdit`.  The
+    // band leaves in the frame that request settles, which is the claim.
+    await release(bdCalls, bdCalls.length - 1, okBd());
     expect(document.querySelector(".working-band")).toBeNull();
     expect(stripText()).toContain("PLAN DECLINED");
   });

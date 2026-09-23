@@ -83,12 +83,74 @@ export async function editAfterGenerate(
   id: string,
   value: string,
 ): Promise<void> {
+  // #289 Phase 2, S7 (ruling e): a post-generate edit IS a revision now.
+  // CHANGE ONE THING re-opens ONE field (rule 190), the edit STAGES —
+  // "nothing is written until APPLY" (§1.1) — and APPLY folds the staged
+  // set into one write and one generate.
+  //
+  // So the helper is three steps instead of two, and the suites that
+  // call it keep their claim: an edit after a generate still ends in one
+  // refetch of the pair, because that is what APPLY does.  What changed
+  // is that the write now happens at a moment the operator chose.
+  //
+  // `id` is kept in the signature because the suites name the field they
+  // mean, and because S7 opens on speed today: a caller asking for
+  // another field should fail loudly here rather than silently edit the
+  // wrong one.
+  if (id !== "what-speed") {
+    throw new Error(
+      `editAfterGenerate: S7 re-opens the speed field; asked for ${id}`,
+    );
+  }
   await changeOneThing();
-  await openWhat();
-  const el = document.getElementById(id) as HTMLSelectElement | null;
-  if (!el) throw new Error(`no #${id} in the WHAT band`);
+  const el = document.getElementById("revise-speed") as HTMLSelectElement | null;
+  if (!el) throw new Error("no revision editor on screen");
   await act(async () => {
     fireEvent.change(el, { target: { value } });
+  });
+  await applyRevision();
+}
+
+/** Stage a revision WITHOUT applying it: CHANGE ONE THING, then commit a
+ *  value.  This is the half that writes nothing (§1.1) and fires only a
+ *  preview (a read) — the half a suite wants when its claim is about
+ *  what an edit does NOT do. */
+export async function stageRevision(value: string): Promise<void> {
+  await changeOneThing();
+  const el = document.getElementById("revise-speed") as HTMLSelectElement | null;
+  if (!el) throw new Error("no revision editor on screen");
+  await act(async () => {
+    fireEvent.change(el, { target: { value } });
+  });
+}
+
+/** APPLY — the one write, and the one generate (ruling e). */
+export async function applyRevision(): Promise<void> {
+  const apply = document.querySelector('[data-testid="revise-apply"]');
+  if (!apply) throw new Error("no APPLY on the revision panel");
+  await act(async () => {
+    fireEvent.click(apply);
+  });
+}
+
+/** The way back to the whole column from S7 — for a suite whose subject
+ *  is a band the revision does not render (the pin, the extent, the
+ *  kind).  See the prop's note in bands/RevisionBand.tsx. */
+export async function openColumnFromRevision(): Promise<void> {
+  await changeOneThing();
+  const link = document.querySelector('[data-testid="revise-open-column"]');
+  if (!link) throw new Error("no CHANGE SOMETHING ELSE on the revision band");
+  await act(async () => {
+    fireEvent.click(link);
+  });
+}
+
+/** DISCARD — un-stages and fires zero requests (Part 1 §5.6). */
+export async function discardRevision(): Promise<void> {
+  const discard = document.querySelector('[data-testid="revise-discard"]');
+  if (!discard) throw new Error("no DISCARD on the revision band");
+  await act(async () => {
+    fireEvent.click(discard);
   });
 }
 

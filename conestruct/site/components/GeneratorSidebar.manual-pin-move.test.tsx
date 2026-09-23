@@ -33,6 +33,7 @@ import { GeneratorShell } from "./GeneratorShell";
 import { MIN_AUDIT } from "./test-fixtures";
 import {
   changeOneThing,
+  openColumnFromRevision,
   editAfterGenerate,
   openWhere,
   openWhat,
@@ -156,8 +157,10 @@ describe("manual coordinate entry is a pin move (fix-224-manual-pin-move)", () =
     let sent = await generate(user);
     expect(sent.meta.lat).toBe(39.7113);
     expect(sent.meta.siteConditionOverrides).toEqual(CORRECTIONS);
-    // The move.
-    await changeOneThing();
+    // The move.  #289 S7: CHANGE ONE THING re-opens ONE field (rule
+    // 190), and the pin is not that field — it is the WHERE band's, and
+    // the way back to the whole column is the revision band's own link.
+    await openColumnFromRevision();
     // Reopen remounts the Location step with the manual panel closed.
     await ensureManualOpen(user);
     fireEvent.change(latInput(), { target: { value: "39.7114" } });
