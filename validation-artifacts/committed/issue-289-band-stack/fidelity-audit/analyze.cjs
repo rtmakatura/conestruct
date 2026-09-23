@@ -167,7 +167,8 @@ function diffText(x, spec, w) {
 const B = [];
 const b = (rule, name, match, spec, cause) => B.push({ rule, name, match, spec, cause });
 b("24", "column width", (x) => /^main\b/.test(x.el), { contentW: 880, contentW380: "100% (16/14 pad)" }, "old");
-b("24", "page padding", (x) => /^main\b/.test(x.el), { padding: "26px 40px 0px 40px", padding380: "16px 14px 16px 14px" }, "old");
+// Rule 24 states the 1440 padding; the 380 value is rule 160's.
+b("24 / 160", "page padding", (x) => /^main\b/.test(x.el), { padding: "26px 40px 0px 40px", padding380: "16px 14px 16px 14px" }, "old");
 b("21 / R7", "nav height", (x) => /^nav\b/.test(x.el), { h: 52, bg: "#16232f" }, "old");
 b("50 / 53 none", "verdict strip — none", (x) => /status-bar\.idle/.test(x.el),
   { padding: "13px 16px 13px 16px", colGap: 12, borderT: "1px solid #223345", borderL: "1px solid #223345", bg: "#101c29" }, "old");
