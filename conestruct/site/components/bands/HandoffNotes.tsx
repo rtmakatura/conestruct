@@ -28,7 +28,10 @@
 
 import type { Scenario } from "@/lib/scenarios";
 import type { RoadType } from "@/lib/scenarios";
-import { MAX_LANES_PER_DIRECTION } from "@/lib/scenarios/validation";
+import {
+  MAX_DRAWABLE_HALF_ROAD_FT,
+  MAX_LANES_PER_DIRECTION,
+} from "@/lib/scenarios/validation";
 import {
   type HandoffEvent,
   handoffEventIsCurrent,
@@ -93,6 +96,13 @@ export function handoffNoteText(
       return `Divided setting from the picker not applied — ${scenarioNoun(kind)} plans don't take a divided toggle.`;
     }
     case "laneWidth":
+      if (event.kind === "narrowed_to_fit") {
+        // #289 hand-check correction 4.  The sentence names the
+        // arithmetic the backend would have refused with, in the same
+        // order, so the operator can check it: lanes x width + shoulder
+        // against the sheet's 52 ft.
+        return `Lane width ${event.toFt} ft (narrowed from ${event.fromFt} ft — ${event.lanes} lanes × ${event.fromFt} ft + ${event.shoulderFt} ft shoulder is wider than the plan sheet can draw at ${MAX_DRAWABLE_HALF_ROAD_FT} ft per direction).`;
+      }
       return `Lane width set to ${event.toFt} ft (OSM detection — was ${event.fromFt} ft).`;
     // #198 family 4: the reduction cleared by a lowered posted speed.
     case "workZoneSpeed":

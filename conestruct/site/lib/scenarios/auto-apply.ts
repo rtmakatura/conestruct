@@ -11,7 +11,7 @@
 // road property. Q6 of V1-Wide Item 1 review (2026-06-06).
 
 import type { RoadClassification } from "../road-detection/types";
-import { clampLanesToDomain } from "./validation";
+import { clampLanesToDomain, laneWidthCeilingFt } from "./validation";
 import type {
   DetectionOverride,
   Scenario,
@@ -387,6 +387,34 @@ export function snapSpeedToDomain(
   return Math.min(max, Math.max(min, snapped));
 }
 
+/**
+ * #289 hand-check, 2026-09-23, correction 4 — the width the sheet can
+ * actually draw at the lane count this apply just wrote.
+ *
+ * The defect: the picker's classification writes `lanes` (clamped into
+ * the 1..4 domain) and `laneWidth` in the SAME patch, and nothing checked
+ * the pair against the plan sheet's drawable half-road.  A 5-lane OSM way
+ * with a 12-ft width clamped to 4 lanes and landed the operator on
+ * GENERATION BLOCKED for a combination they never chose — 4 × 12 + 10 =
+ * 58 ft against the sheet's 52 (P3; rule 10 in reverse, a red state the
+ * user did not cause).
+ *
+ * The fix is not a new rule: `laneWidthCeilingFt` is the backend's own
+ * arithmetic, and the apply takes the widest lane that FITS rather than
+ * the widest lane OSM reported.  It is never silent — the caller records
+ * the narrowing as a handoff note, the same way every other value the
+ * app changed on the user's behalf is named (#198).
+ */
+function fitLaneWidth(
+  kind: Scenario["kind"],
+  lanes: number,
+  divided: boolean,
+  widthFt: number,
+): number {
+  const ceiling = laneWidthCeilingFt(kind, lanes, divided);
+  return widthFt > ceiling ? ceiling : widthFt;
+}
+
 export interface AutoApplyDelta {
   roadTypeApplied: boolean;
   roadTypeApplicable: boolean;
@@ -446,12 +474,24 @@ export function applyClassification(
         scenario.workZoneSpeed >= nextSpeed
           ? { workZoneSpeed: undefined }
           : {};
+      // Correction 4: lanes and width are written in ONE patch, so the
+      // pair is checked here rather than left for the backend to refuse.
+      const nextLanes =
+        lanesApplied && c.lanesPerDirection !== undefined
+          ? clampLanesToDomain(c.lanesPerDirection)
+          : (scenario.lanes as number);
+      const nextLaneWidth = fitLaneWidth(
+        scenario.kind,
+        nextLanes,
+        c.divided,
+        c.laneWidthFt,
+      );
       return {
         scenario: {
           ...scenario,
           roadType: c.roadType,
           divided: c.divided,
-          laneWidth: c.laneWidthFt,
+          laneWidth: nextLaneWidth,
           // Relay the raw OSM total for the backend single-lane gate
           // (issue #136).  Pure fact; drives no geometry here.
           detectedLanesTotal: c.detectedLanesTotal,
@@ -561,7 +601,20 @@ export function applyClassification(
       // lanes per direction and OSM lane counts are turn-lane-inflated
       // near intersections (the parked mainline-confidence issue stays
       // parked; the user sets the count).
-      const next = { ...scenario, laneWidth: c.laneWidthFt, ...speedPatch };
+      // Correction 4: this kind does not auto-apply lanes, but it DOES
+      // apply a width over the count the operator set — so the same pair
+      // can exceed the sheet, and the same fit applies.  Mainline only,
+      // 8-ft shoulder (src/api/schemas.py:720-726).
+      const next = {
+        ...scenario,
+        laneWidth: fitLaneWidth(
+          scenario.kind,
+          scenario.lanes as number,
+          false,
+          c.laneWidthFt,
+        ),
+        ...speedPatch,
+      };
       const delta = baseDelta(speedApplied, speedApplicable);
       if (FLAGGER_TYPES.has(c.roadType as FlaggerRoadType)) {
         next.roadType = c.roadType as FlaggerRoadType;

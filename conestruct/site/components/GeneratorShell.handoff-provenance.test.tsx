@@ -303,6 +303,49 @@ describe("#198 handoff provenance — the four families produce visible notes", 
     ).toBeTruthy();
   });
 
+  it("family 6 (correction 4): the clamp's width fits the sheet, and says it was narrowed", async () => {
+    const user = userEvent.setup();
+    await mount(DEFAULT_SHOULDER);
+
+    await openWhere();
+
+    await user.click(screen.getByText("Pick Location on Map"));
+    // The same fixture as family 3 — a 5-lane divided way at 12 ft.  The
+    // clamp lands 4 lanes, and 4 x 12 + 10 = 58 ft is wider than the
+    // plan sheet's 52 (src/api/schemas.py:57), so BEFORE this correction
+    // the picker handed back a scenario the backend refuses: the
+    // operator landed on GENERATION BLOCKED for a combination they never
+    // chose (P3; rule 10 in reverse).
+    await user.click(screen.getByText("APPLY_PIN_FIVE_LANES"));
+
+    await openWhat();
+
+    // The width is the widest lane the sheet CAN draw at 4 divided
+    // lanes, which is the backend's own arithmetic read backwards.
+    expect(
+      (document.getElementById("what-lane-width") as HTMLSelectElement).value,
+    ).toBe("10.5");
+
+    // And it is not silent: the narrowing is named under the field it
+    // happened to, with the arithmetic in the order the backend states
+    // it (#198's sixth family).
+    expect(
+      screen.getByText(
+        /Lane width 10\.5 ft \(narrowed from 12 ft — 4 lanes × 12 ft \+ 10 ft shoulder is wider than the plan sheet can draw at 52 ft per direction\)\./,
+      ),
+    ).toBeTruthy();
+
+    // The point of the whole correction: no red state the user did not
+    // cause.  The lanes cell carries no error and Generate is live.
+    expect(
+      document.querySelector('[data-testid="prov-lanes"]')?.className,
+    ).not.toContain("is-error");
+    expect(
+      (screen.getByRole("button", { name: /Generate plan/ }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(false);
+  });
+
   it("family 4: the cleared reduction is named AND the payload ships valid", async () => {
     const user = userEvent.setup();
     await mount({ ...DEFAULT_SHOULDER, workZoneSpeed: 55 } as Scenario);

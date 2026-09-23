@@ -6,9 +6,15 @@
 // no client-side floor quietly returns.
 
 import { describe, expect, it } from "vitest";
-import { DEFAULT_FLAGGER, DEFAULT_SHOULDER } from "./index";
+import {
+  DEFAULT_FLAGGER,
+  DEFAULT_NEAR_INTERSECTION,
+  DEFAULT_SHOULDER,
+} from "./index";
 import {
   clampLanesToDomain,
+  laneWidthCeilingFt,
+  shoulderWidthFt,
   MAX_DRAWABLE_HALF_ROAD_FT,
   MAX_LANES_PER_DIRECTION,
   MAX_WORK_LEN_FT,
@@ -128,6 +134,47 @@ describe("validateLanes — drawable half-road mirror", () => {
 
   it("is a no-op for kinds without a lanes field", () => {
     expect(validateLanes(DEFAULT_FLAGGER).ok).toBe(true);
+  });
+});
+
+// #289 hand-check, 2026-09-23, correction 4.
+describe("laneWidthCeilingFt — the inverse of the drawable check", () => {
+  it("answers the width the validator would accept, at every lane count", () => {
+    // The pairs the validator itself accepts / rejects above, read from
+    // the other end: whatever the ceiling says, validateLanes agrees.
+    for (const [kind, divided] of [
+      ["shoulder", true],
+      ["shoulder", false],
+      ["near_intersection", false],
+    ] as const) {
+      for (const lanes of [1, 2, 3, 4]) {
+        const w = laneWidthCeilingFt(kind, lanes, divided);
+        const base =
+          kind === "shoulder"
+            ? { ...DEFAULT_SHOULDER, divided, lanes }
+            : { ...DEFAULT_NEAR_INTERSECTION, lanes: Math.max(2, lanes) };
+        if (kind === "near_intersection" && lanes < 2) continue;
+        expect(validateLanes({ ...base, laneWidth: w }).ok).toBe(true);
+        expect(validateLanes({ ...base, laneWidth: w + 0.5 }).ok).toBe(false);
+      }
+    }
+  });
+
+  it("the 4-lane answers are 11 ft undivided and 10.5 ft divided", () => {
+    // The two the picker's clamp can actually land on, named because
+    // they are the numbers the correction is about.
+    expect(laneWidthCeilingFt("shoulder", 4, false)).toBe(11);
+    expect(laneWidthCeilingFt("shoulder", 4, true)).toBe(10.5);
+  });
+
+  it("the schemas' own example fits exactly: 3 lanes x 14 ft + 10 ft = 52", () => {
+    expect(laneWidthCeilingFt("shoulder", 3, true)).toBe(14);
+  });
+
+  it("near_intersection is mainline-only, so its shoulder is always 8 ft", () => {
+    expect(shoulderWidthFt("near_intersection", true)).toBe(8);
+    expect(shoulderWidthFt("shoulder", true)).toBe(10);
+    expect(shoulderWidthFt("shoulder", false)).toBe(8);
   });
 });
 

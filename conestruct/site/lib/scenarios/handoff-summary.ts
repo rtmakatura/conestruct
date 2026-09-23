@@ -20,7 +20,11 @@
 
 import { snapSpeedToDomain } from "./auto-apply";
 import type { AutoApplyDelta } from "./auto-apply";
-import { clampLanesToDomain } from "./validation";
+import {
+  clampLanesToDomain,
+  laneWidthCeilingFt,
+  shoulderWidthFt,
+} from "./validation";
 import type { RoadClassification } from "../road-detection/types";
 import type { RoadFieldOverrides } from "./overrides";
 import type { RoadType, Scenario } from "./types";
@@ -113,6 +117,19 @@ export type HandoffEvent =
       kind: "applied";
       fromFt: number;
       toFt: number;
+    }
+  // #289 hand-check, 2026-09-23, correction 4: the detected width did not
+  // fit the plan sheet at the lane count this handoff applied, so the
+  // apply narrowed it to the widest lane the sheet can draw.  A sixth
+  // #198 family, and it exists for the same reason the other five do —
+  // the app changed a value the user did not, so the app says so.
+  | {
+      field: "laneWidth";
+      kind: "narrowed_to_fit";
+      fromFt: number;
+      toFt: number;
+      lanes: number;
+      shoulderFt: number;
     }
   // #198 family 3: the lane count was clamped into the schema domain
   // (1..MAX_LANES_PER_DIRECTION) — the lanes twin of the speed "clamped"
@@ -390,6 +407,35 @@ export function summarizeHandoff(args: SummarizeHandoffArgs): HandoffEvent[] {
       kind: "applied",
       fromFt: prior.laneWidth,
       toFt: final.laneWidth,
+    });
+  } else if (
+    // #289 hand-check correction 4 (#198 family 6): the apply did NOT
+    // land the detected width, and what it landed instead is exactly the
+    // widest lane the sheet can draw at the count that landed with it.
+    // Recognised by the arithmetic rather than by a flag, for the same
+    // reason every other family is: the summary reads the before and
+    // after, so it cannot claim a narrowing that did not happen.
+    classification !== null &&
+    final.laneWidth !== classification.laneWidthFt &&
+    classification.laneWidthFt > final.laneWidth &&
+    "lanes" in final &&
+    final.laneWidth ===
+      laneWidthCeilingFt(
+        final.kind,
+        final.lanes as number,
+        "divided" in final ? Boolean(final.divided) : false,
+      )
+  ) {
+    events.push({
+      field: "laneWidth",
+      kind: "narrowed_to_fit",
+      fromFt: classification.laneWidthFt,
+      toFt: final.laneWidth,
+      lanes: final.lanes as number,
+      shoulderFt: shoulderWidthFt(
+        final.kind,
+        "divided" in final ? Boolean(final.divided) : false,
+      ),
     });
   }
 

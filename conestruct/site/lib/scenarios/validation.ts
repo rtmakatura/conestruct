@@ -27,6 +27,43 @@ export const MAX_WORK_LEN_FT = 20000;
 export const MAX_LANES_PER_DIRECTION = 4;
 export const MAX_DRAWABLE_HALF_ROAD_FT = 52;
 
+/** The shoulder width the drawable check adds to the lanes, as both
+ *  validators derive it: 10 ft behind a divided SHOULDER plan, 8 ft
+ *  otherwise (`src/api/schemas.py:410`); near_intersection is
+ *  mainline-only and always 8 (`src/api/schemas.py:722-726`: "under
+ *  Option C the cross street is never drawn … so the drawable bound does
+ *  not apply to approaches"). */
+export function shoulderWidthFt(kind: Scenario["kind"], divided: boolean): number {
+  return kind === "shoulder" && divided ? 10 : 8;
+}
+
+/**
+ * The widest lane the sheet can draw at this lane count — the inverse of
+ * the drawable-half-road check, at the 0.5-ft step the width control
+ * offers.
+ *
+ * TRACED, not chosen (Rule 12).  `MAX_DRAWABLE_HALF_ROAD_FT` is 52 ft:
+ * "the widest half-road (work-direction lanes + shoulder) the plan sheet
+ * can draw at its fixed 3.5 pt/ft vertical scale.  Verified empirically:
+ * at 52 ft (e.g. 3 lanes x 14 ft + 10 ft shoulder) the sheet renders
+ * cleanly; beyond it the road collides with the title block and
+ * dimension callouts" (src/api/schemas.py:50-57).  The backend publishes
+ * the same arithmetic in its own refusal — "use a lane width of
+ * {max_width:.1f} ft or less" — so this is a mirror of a stated bound,
+ * not a second rule (Rule 3).
+ *
+ * At the 4-lane ceiling that works out to 11 ft undivided and 10.5 ft
+ * divided, both of which the 9–14 ft control offers.
+ */
+export function laneWidthCeilingFt(
+  kind: Scenario["kind"],
+  lanes: number,
+  divided: boolean,
+): number {
+  const shoulder = shoulderWidthFt(kind, divided);
+  return Math.floor(((MAX_DRAWABLE_HALF_ROAD_FT - shoulder) / lanes) * 2) / 2;
+}
+
 /** Clamp an OSM-detected or user-override lane count into the schema
  * domain (1..MAX_LANES_PER_DIRECTION). */
 export function clampLanesToDomain(lanes: number): number {
