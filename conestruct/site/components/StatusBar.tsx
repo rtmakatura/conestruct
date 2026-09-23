@@ -1,4 +1,5 @@
 import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
+import { symClass } from "@/lib/design/symbols";
 
 // ---------------------------------------------------------------------------
 // PR 7 (UX audit findings UX-21 + UX-22): this strip used to be
@@ -58,10 +59,14 @@ import type { AuditResponse, AuditState, Refusal } from "@/lib/render-types";
 //                            voice) — still never the stale verdict.
 //   5. plan_flags absent   → VERIFICATION UNAVAILABLE (a response with
 //                            no verdict gets no derived one)
-//   6. warnings > 0        → amber CAUTION, expandable disclosure
-//                            listing each warning with rule ID +
-//                            citation (UX-22: a count the user can't
-//                            inspect is worse than none)
+//   6. warnings > 0        → amber CAUTION with the count in its word.
+//                            UX-22's point stands — a count the user
+//                            can't inspect is worse than none — but since
+//                            #289 fidelity F5 (ruled Q4) the rows are
+//                            inspected in the results stack (NEEDS YOU's
+//                            ⚠ items, the pending disclosure), not in a
+//                            disclosure on the strip (rules 50–55 give
+//                            the strip nothing that opens).
 //   7. warnings == 0       → green PASS · READY FOR TCS REVIEW
 //
 // "GENERATED" became "VERIFIED" (the audit/breakdown are live-computed
@@ -220,6 +225,20 @@ export function StatusBar(props: Props) {
   );
 }
 
+/** #289 fidelity F5 — Part 2 rule 51: "Symbol to its left per rule 18".
+ *  Every state leads with rule 17's TEXT symbol in rule 18's fixed hue
+ *  (symClass): ✓ ready, ⚠ flag, × bad, ◌ none.  It replaces the 8 px
+ *  `.indicator` square — a shape with no name, animated as a spinner while
+ *  verifying, which rule 14 bans ("no indeterminate progress, anywhere").
+ *  aria-hidden: the word beside it says the same thing (the house idiom). */
+function Sym({ g }: { g: string }) {
+  return (
+    <span className={`status-glyph ${symClass(g)}`} aria-hidden>
+      {g}
+    </span>
+  );
+}
+
 function StatusBarState({
   inputError,
   refusal = null,
@@ -245,9 +264,7 @@ function StatusBarState({
   if (kindUnconfirmed) {
     return (
       <div className="status-bar idle unavail" data-testid="strip-kind-unconfirmed">
-        <span className="status-glyph" aria-hidden>
-          ◌
-        </span>
+        <Sym g="◌" />
         <span>AWAITING KIND OF WORK</span>
       </div>
     );
@@ -256,7 +273,7 @@ function StatusBarState({
   if (inputError) {
     return (
       <div className="status-bar fail">
-        <span className="indicator" />
+        <Sym g="×" />
         <span>INVALID INPUT · {inputError}</span>
         <span className="pill fail">GENERATION BLOCKED</span>
       </div>
@@ -273,7 +290,7 @@ function StatusBarState({
   if (refusal) {
     return (
       <div className="status-bar fail">
-        <span className="indicator" />
+        <Sym g="×" />
         <span>PLAN DECLINED · {refusal.pointer ?? refusal.message}</span>
         {/* #224 phase 2 (ruling 2): a refused site scan is neither a
             review of the user's input nor missing input — the service
@@ -312,17 +329,17 @@ function StatusBarState({
             no name: a reader could not say what it meant, and a screen
             reader was told nothing at all.  aria-hidden because the
             words beside it say the same thing (the house idiom). */}
-        <span className="status-glyph" aria-hidden>
-          ◌
-        </span>
+        <Sym g="◌" />
         <span>AWAITING LOCATION · no site chosen</span>
       </div>
     );
   }
 
-  // fix-spec-02 P1·02: ``verifying`` / ``unavail`` are additive style
-  // modifiers on the ``idle`` base (spinner vs. chromaless hollow dot);
-  // the derivation order and every string of copy are unchanged.
+  // fix-spec-02 P1·02: ``verifying`` / ``unavail`` are additive modifiers
+  // on the ``idle`` base; since #289 fidelity F5 both draw rule 53's
+  // "none" variant with the ◌ glyph (the spinner is gone, rule 14).  The
+  // classes stay as the states' names; the derivation order and every
+  // string of copy are unchanged.
   if (audit.state === "error") {
     // #182 — a 429 is the app's own rate limiter, not an outage: name
     // the actual cause.  Retrying helps once the minute rolls, so the
@@ -330,7 +347,7 @@ function StatusBarState({
     if (audit.httpStatus === 429) {
       return (
         <div className="status-bar idle unavail">
-          <span className="indicator" />
+          <Sym g="◌" />
           <span>
             VERIFICATION PAUSED · too many updates in the last minute —
             {preGenerate
@@ -342,7 +359,7 @@ function StatusBarState({
     }
     return (
       <div className="status-bar idle unavail">
-        <span className="indicator" />
+        <Sym g="◌" />
         <span>
           VERIFICATION UNAVAILABLE ·
           {preGenerate
@@ -367,7 +384,7 @@ function StatusBarState({
     if (bandVoice) return null;
     return (
       <div className="status-bar idle verifying">
-        <span className="indicator" />
+        <Sym g="◌" />
         <span>
           {verifySlow
             ? "VERIFYING · waking the verification server — the first check can take a few extra seconds"
@@ -392,7 +409,7 @@ function StatusBarState({
   if (!flags) {
     return (
       <div className="status-bar idle unavail">
-        <span className="indicator" />
+        <Sym g="◌" />
         <span>
           VERIFICATION UNAVAILABLE · this response carries no plan verdict —
           retry from the audit trail panel below
@@ -405,7 +422,7 @@ function StatusBarState({
   if (isClean) {
     return (
       <div className="status-bar pass">
-        <span className="indicator" />
+        <Sym g="✓" />
         <span>VERIFIED · 0 validation warnings</span>
         <span className="pill pass">READY FOR TCS REVIEW</span>
       </div>
@@ -419,115 +436,40 @@ function StatusBarState({
   const hasOtherCategories =
     flags.compliance_fails > 0 || flags.v1_limitations > 0;
 
+  // #289 fidelity F5 (ruled Q4): THE STRIP NO LONGER OPENS.  Part 2 rules
+  // 50–55 give it a symbol, a word and a pill — nothing that expands — and
+  // the expanding check list restated what the results stack already
+  // shows: every validation warning and geometry violation is an
+  // ATTENTION fact (lib/tiering.ts), and §8.9 lifts ⚠ into NEEDS YOU;
+  // compliance fails render there as ⚠ rows; V1 limitations are the
+  // "Pending / not verified" disclosure.  The count stays in the word.
   if (!hasOtherCategories) {
     return (
-      <details className="status-details">
-        <summary className="status-bar caution">
-          <span className="indicator" />
-          <span>
-            VERIFIED · {warnings.length} validation warning
-            {warnings.length === 1 ? "" : "s"}
-            <span className="disclosure-caret" aria-hidden>
-              {" "}
-              ▸
-            </span>
-          </span>
-          <span className="pill caution">REVIEW WARNINGS</span>
-        </summary>
-        <div className="status-warnings">
-          <div className="check-list">
-            {warnings.map((w, i) => (
-              <div className="check-list-item" key={`${w.ruleId}-${i}`}>
-                <span className="ck warn">!</span>
-                <span className="check-list-lbl">
-                  <strong>{w.ruleId.replace(/_/g, " ").toUpperCase()}</strong> —{" "}
-                  {w.message}
-                </span>
-                <span className="check-list-src">{w.citation}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </details>
+      <div className="status-bar caution">
+        <Sym g="⚠" />
+        <span>
+          VERIFIED · {warnings.length} validation warning
+          {warnings.length === 1 ? "" : "s"}
+        </span>
+        <span className="pill caution">REVIEW WARNINGS</span>
+      </div>
     );
   }
 
-  // Generalized plan-flags breakdown (#60 option b/c): one amber strip,
-  // count broken down by category in the disclosure so "fix your input"
-  // (validation warnings) stays separate from "Conestruct doesn't do X
-  // yet" (V1 limitations) and "a compliance check failed".  Counts come
-  // from the authoritative rollup; the validation-warning detail rows
-  // reuse collectValidationWarnings for their text/citations.  Compliance
-  // fails and V1 limitations carry their full detail in the audit panel
-  // below (single-source — the strip points there rather than restating).
+  // Generalized plan-flags count (#60 option b/c): one amber strip whose
+  // word carries the rollup's total.  The per-category breakdown used to
+  // open under it; #289 fidelity F5 (Q4) removed the disclosure — each
+  // category is on screen in the results stack (see the note above), so
+  // the strip states the count and the stack shows the rows.
   const total =
     flags.validation_warnings + flags.compliance_fails + flags.v1_limitations;
   return (
-    <details className="status-details">
-      <summary className="status-bar caution">
-        <span className="indicator" />
-        <span>
-          VERIFIED · {total} plan flag{total === 1 ? "" : "s"}
-          <span className="disclosure-caret" aria-hidden>
-            {" "}
-            ▸
-          </span>
-        </span>
-        <span className="pill caution">REVIEW FLAGS</span>
-      </summary>
-      <div className="status-warnings">
-        <div className="check-list">
-          {flags.validation_warnings > 0 && (
-            <div className="check-list-item">
-              <span className="ck warn">!</span>
-              <span className="check-list-lbl">
-                <strong>
-                  {flags.validation_warnings} validation warning
-                  {flags.validation_warnings === 1 ? "" : "s"}
-                </strong>{" "}
-                — inputs to review
-              </span>
-              <span className="check-list-src">FIX INPUTS</span>
-            </div>
-          )}
-          {warnings.map((w, i) => (
-            <div className="check-list-item" key={`${w.ruleId}-${i}`}>
-              <span className="ck warn">!</span>
-              <span className="check-list-lbl">
-                <strong>{w.ruleId.replace(/_/g, " ").toUpperCase()}</strong> —{" "}
-                {w.message}
-              </span>
-              <span className="check-list-src">{w.citation}</span>
-            </div>
-          ))}
-          {flags.compliance_fails > 0 && (
-            <div className="check-list-item">
-              <span className="ck fail">✕</span>
-              <span className="check-list-lbl">
-                <strong>
-                  {flags.compliance_fails} compliance check
-                  {flags.compliance_fails === 1 ? "" : "s"} failed
-                </strong>{" "}
-                — see the audit trail below for details
-              </span>
-              <span className="check-list-src">CDOT S-630-1</span>
-            </div>
-          )}
-          {flags.v1_limitations > 0 && (
-            <div className="check-list-item">
-              <span className="ck">ℹ</span>
-              <span className="check-list-lbl">
-                <strong>
-                  {flags.v1_limitations} V1 limitation
-                  {flags.v1_limitations === 1 ? "" : "s"}
-                </strong>{" "}
-                — known capability gap; see the audit trail below
-              </span>
-              <span className="check-list-src">MANUAL HANDLING</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </details>
+    <div className="status-bar caution">
+      <Sym g="⚠" />
+      <span>
+        VERIFIED · {total} plan flag{total === 1 ? "" : "s"}
+      </span>
+      <span className="pill caution">REVIEW FLAGS</span>
+    </div>
   );
 }

@@ -259,10 +259,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // #283's nine ruled sizes, and it already sits on .dl-card .fmt
       // and .ref-group-label in this same row.  Declared with its owner
       // rather than snapped to a role it does not belong to.
-      // #289 hand-check, 2026-09-22: the verdict strip's null-state
-      // glyph as TEXT (rules 17 / 18), at role 3's size — the same
-      // 12.5 px every symbol on the page takes.
-      { selector: ".workbench .status-bar .status-glyph", size: "12.5px" },
+      // (#289 fidelity F5: the strip glyph's own 12.5 px row is deleted —
+      // the F1 symbol block's --fs-field-label carries it.)
       // Rule 117 — S4's placeholder sentence, at rule 8's body value.
       { selector: ".workbench .results-placeholder .rp-line", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-lk", size: "9.5px" },
@@ -285,6 +283,12 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { selector: ".workbench .ny-body", size: "var(--fs-body-value)" },
       { selector: ".workbench .ny-cite", size: "9.5px" },
       { selector: ".workbench .disc-count", size: "11px" },
+      // #289 fidelity F5 — the verdict strip at Part 2's figures: the
+      // word at rule 51's 11 px, the pill at rule 52's 9.5.  Both sizes
+      // are already in the sheet; neither is one of #283's nine.  They
+      // replace the workbench round's 13 / 11 rows below.
+      { selector: ".workbench .status-bar", size: "11px" },
+      { selector: ".workbench .status-bar .pill", size: "9.5px" },
     ],
     tsx: [],
   },
@@ -293,8 +297,6 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     css: [
       { selector: ".workbench .chip", size: "12px" },
       { selector: ".workbench .field-label-row", size: "12px" },
-      { selector: ".workbench .status-bar", size: "13px" },
-      { selector: ".workbench .status-bar .pill, .workbench .status-bar .pill.pass", size: "11px" },
       { selector: ".workbench .empty-state", size: "13px" },
       { selector: ".workbench .site-jump", size: "10.5px" },
       { selector: ".workbench .tr-signpost", size: "10px" },
@@ -604,7 +606,10 @@ export const CENSUS_PINS = {
   // six resized in place to Part 2's figures (the card title / format /
   // caption, the ribbon, two suggestion lines).  109 -> 113.  Sizes stay
   // 25: every value the pass writes is already in the sheet.
-  cssDeclarations: 113,
+  // #289 fidelity F5: 113 -> 112 — the strip glyph's own 12.5 px goes
+  // (the symbol block carries it); the word and pill re-size to rules
+  // 51-52's 11 / 9.5, both already in the sheet.  Sizes stay 25.
+  cssDeclarations: 112,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

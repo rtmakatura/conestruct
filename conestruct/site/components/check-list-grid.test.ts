@@ -2,10 +2,11 @@
 //
 // #225 (P6/P4) — the shared audit-row grid.  Two halves, paired (the
 // spacing-scale idiom): the static half pins the globals.css rules; the
-// markup half proves BOTH renderers that wear the class — the strip's
-// hand-rolled plan-flags rows (StatusBar) and section 03's CheckRow
-// (AuditTrail) — still emit the three-cell row the rule lays out, so
-// the static guard cannot rot into pinning a rule nothing matches.
+// markup half proves the renderer that wears the class — section 03's
+// CheckRow (AuditTrail) — still emits the three-cell row the rule lays
+// out, so the static guard cannot rot into pinning a rule nothing
+// matches.  (The strip's hand-rolled plan-flags rows were the second
+// renderer until #289 fidelity F5 removed the strip's disclosure.)
 //
 // Root cause of #225: `.check-list { max-width: 600px }` sized the row
 // by something other than its container (P6), and the annotation
@@ -138,15 +139,18 @@ function rows(html: string): string[] {
   });
 }
 
-describe("#225 — both renderers emit the three-cell row the grid lays out (markup half)", () => {
-  it("the strip's plan-flags dropdown: symbol · label · annotation, the soft-check annotation among them", () => {
+describe("#225 — the renderer emits the three-cell row the grid lays out (markup half)", () => {
+  // #289 fidelity F5 (ruled Q4, X7): the strip's plan-flags dropdown was
+  // the second renderer and left with the disclosure.  Its absence is
+  // pinned so a check list cannot quietly return to the strip.  NOTE: it
+  // carried the gutter's sizing case ("OSM GROUND-TRUTH (SOFT CHECK)");
+  // the 197 px pin stands as ruled until a ruling re-sizes it.
+  it("the verdict strip no longer emits check-list rows", () => {
     const html = renderToStaticMarkup(
       createElement(StatusBar, { inputError: null, audit: ready(auditWithWarning()) }),
     );
-    const src = rows(html);
-    expect(src.length).toBeGreaterThanOrEqual(2);
-    expect(src).toContain("MUTCD § 6C.06");
-    expect(src).toContain("OSM GROUND-TRUTH (SOFT CHECK)"); // the longest annotation — the gutter's sizing case
+    expect(rows(html)).toEqual([]);
+    expect(html).toContain("VERIFIED · 2 validation warnings");
   });
 
   it("section 03's CheckRow: the same three cells, the tag in the annotation cell", () => {

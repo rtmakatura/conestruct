@@ -129,7 +129,14 @@ const declaredCss = [...CSS_DECORATIVE, ...CSS_OWNER_SWAPS];
 
 describe("#263 ink literals — globals.css outside :root / .workbench", () => {
   it("the parser reads the sheet and skips the token blocks", () => {
-    expect(observedCss.length).toBeGreaterThan(0);
+    // #289 fidelity F5 took the last hex outside the token blocks (the
+    // caution hatch's #1a1200), so the real sheet now yields none.  The
+    // parser's liveness is proven on a probe instead: it finds a literal
+    // in an ordinary rule and skips the same literal in a token block.
+    expect(
+      cssHexLiterals(":root { --a: #123456; }\n.x { color: #abcdef; }").map((r) => r.hex),
+    ).toEqual(["#abcdef"]);
+    expect(observedCss).toEqual([]);
     expect(observedCss.map((r) => r.selector)).not.toContain(":root");
     expect(observedCss.map((r) => r.selector)).not.toContain(".workbench");
     // The tokens exist (so the skip is a skip, not an absence).
@@ -153,8 +160,11 @@ describe("#263 ink literals — globals.css outside :root / .workbench", () => {
   it("the decorative set is exactly the ruled sites and the owner swaps are #fff only", () => {
     // #288 clause 1: --sc-leader (#4a6280) retired with the #249 ledger
     // — the leader it drew has no column to run to inside rule 74's
-    // tracks — so the decorative set is one site, not two.
-    expect(CSS_DECORATIVE.map((r) => r.hex)).toEqual(["#1a1200"]);
+    // tracks — so the decorative set is one site, not two.  #289 fidelity
+    // F5: that one site, the caution hatch's #1a1200, left with the
+    // .indicator square (rule 51's ⚠ replaces it) — the set is empty, and
+    // a new decorative hex fails above with no row to hide behind.
+    expect(CSS_DECORATIVE).toHaveLength(0);
     for (const s of CSS_OWNER_SWAPS) expect(s.hex).toBe("#fff");
     // 5 at D's slice; 4 once C folded `.dl-card h3` (#261, ruling 3); 3 once B swapped
     // `.zone-title` (#253); 0 once A's three took --ink-bright (s2-arc27) — every

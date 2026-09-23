@@ -895,6 +895,19 @@ body {
   --pri-off: #1d2c3c;
   --pri-off-ink: #6e7c8e;
   --fld-invalid: #6b2a2a;
+  /* #289 fidelity F5 — Part 2 rule 53's verdict-strip variants, TRACED:
+       ready  border #2d6b4d, ground #112620
+       flag   border #6b5a18, ground #221e10
+       bad    border #6b2a2a (the same hex as rule 136's --fld-invalid),
+              ground #231416
+       none   border #223345 (--da-hair), ground #101c29 (--da-ground)
+     Declared here because #263's ink gate keeps hexes in this block. */
+  --vd-ready-line: #2d6b4d;
+  --vd-ready-ground: #112620;
+  --vd-flag-line: #6b5a18;
+  --vd-flag-ground: #221e10;
+  --vd-bad-line: var(--fld-invalid);
+  --vd-bad-ground: #231416;
 
   /* confidence speaks its own achromatic language (P1·04) */
   --conf-fill: #c6d2e0;
@@ -1125,121 +1138,71 @@ body {
 .workbench .status-slot:has(+ .zone:empty) {
   margin-bottom: 14px;
 }
+/* #289 fidelity F5 — the verdict strip, Part 2 rules 50–53.
+   50: flex, centre, gap 12, padding 13 16, a 1 px border on all four
+       sides (the paper-era 3 px left rule is gone), ground per variant.
+       min-height stays #260's --status-h: rule 50's "height is reserved
+       in every state".
+   51: the word — mono 11 / 500 / .14em / uppercase / #eaf0f7; the
+       symbol to its left is .status-glyph (rule 18), which replaces the
+       8 px .indicator square, its spinner and its hazard hatch.
+   53: ready / flag / bad / none, each a border and a ground; "none"
+       (idle, unavail, verifying) sets the word in --none. */
 .workbench .status-bar {
-  /* #260 (3): one height across AWAITING → VERIFYING → INVALID →
-     VERIFIED — the pill's height in every state (47 → 52 before,
-     F-S1-4).  The token is the measured pill-state height (#250 f2). */
   min-height: var(--status-h);
-  background: rgba(0, 0, 0, 0.25);
-  border-color: var(--rule);
-  color: var(--ink-on-dark);
-  font-family: var(--font-sans);
-  font-size: 13px;
-  text-transform: none;
-  letter-spacing: normal;
-}
-.workbench .status-bar .indicator {
-  background: var(--ink-on-dark-faint);
+  gap: 12px;
+  padding: 13px 16px;
+  border: 1px solid var(--da-hair);
+  background: var(--da-ground);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .workbench .status-bar.idle {
-  border-left-color: var(--rule);
-}
-.workbench .status-bar.warn {
-  border-left-color: var(--act);
-}
-.workbench .status-bar.warn .indicator {
-  background: var(--act);
-  animation: sb-pulse 1.2s ease-in-out infinite;
+  border: 1px solid var(--da-hair);
+  background: var(--da-ground);
+  color: var(--none);
 }
 .workbench .status-bar.pass {
-  border-left-color: var(--pass);
+  border: 1px solid var(--vd-ready-line);
+  background: var(--vd-ready-ground);
 }
-.workbench .status-bar.pass .indicator {
-  background: var(--pass);
-}
-.workbench .status-bar .pill,
-.workbench .status-bar .pill.pass {
-  background: var(--pass-soft);
-  color: var(--pass);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 11px;
-  padding: 4px 8px;
-  margin-left: auto;
-}
-/* PR 7 (UX-21/22) + fix-spec-02 P1·02: derived strip states on the dark
-   theme.  The base ``warn`` class stays the in-progress style (act cyan,
-   pulsing) — amber belongs to ``caution`` and red to ``fail``.  The
-   caution indicator is a hazard hatch, not a flat swatch, so the warning
-   state never reads by hue alone. */
 .workbench .status-bar.caution {
-  border-left-color: var(--warn);
-}
-.workbench .status-bar.caution .indicator {
-  background: repeating-linear-gradient(
-    45deg,
-    var(--warn) 0 3px,
-    #1a1200 3px 6px
-  );
+  border: 1px solid var(--vd-flag-line);
+  background: var(--vd-flag-ground);
 }
 .workbench .status-bar.fail {
-  border-left-color: var(--fail);
+  border: 1px solid var(--vd-bad-line);
+  background: var(--vd-bad-ground);
 }
-.workbench .status-bar.fail .indicator {
-  background: var(--fail);
+/* Rule 52 — the pill: margin-left auto, mono 9.5 / 500 / .14em /
+   uppercase, padding 6 10, a 1 px border, no fill; the text and border
+   per rule 53's variant. */
+.workbench .status-bar .pill {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border: 1px solid var(--da-hair);
+  background: transparent;
+}
+.workbench .status-bar .pill.pass {
+  color: var(--pass);
+  border-color: var(--vd-ready-line);
 }
 .workbench .status-bar .pill.caution {
-  background: var(--warn-soft);
   color: var(--warn);
+  border-color: var(--vd-flag-line);
 }
 .workbench .status-bar .pill.fail {
-  background: var(--fail-soft);
   color: var(--fail);
-}
-/* fix-spec-02 P1·02 — the two engine-removal states get their own
-   treatments (both previously rendered as bare ``idle``).  Additive
-   modifier classes on top of ``idle``; the pinned class names and copy
-   are untouched.
-   ``verifying``: in-flight check — act-cyan spinner, distinct from a
-   verdict.  ``unavail``: deliberately chromaless (--none) hollow dot —
-   the absence of a verdict is not an error and gets no verdict hue. */
-.workbench .status-bar.verifying {
-  border-left-color: var(--act);
-}
-.workbench .status-bar.verifying .indicator {
-  background: transparent;
-  border: 1.5px solid var(--rule);
-  border-top-color: var(--act);
-  border-radius: 50%;
-  animation: sb-spin 0.7s linear infinite;
-}
-.workbench .status-bar.unavail {
-  border-left-color: var(--none);
-  background: var(--none-soft);
-  color: var(--ink-mute);
-}
-.workbench .status-bar.unavail .indicator {
-  background: var(--none);
-  box-shadow: inset 0 0 0 2px var(--canvas);
-}
-@keyframes sb-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-@keyframes sb-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.workbench .status-warnings {
-  background: rgba(0, 0, 0, 0.25);
-  border-color: var(--rule);
+  border-color: var(--vd-bad-line);
 }
 
 /* Output cards: dark-native (fix-spec-02 P1·03 — no paper-era tokens
@@ -4521,24 +4484,12 @@ input[type="number"] {
   }
 }
 
-/* Rule 17 / rule 18 — the verdict strip's text glyph.
-   Issue 289 hand-check, 2026-09-22: the null state is the one variant
-   Part 1 SS2.1 prints with a symbol, and rule 17 makes symbols text.
-   Mono 12.5 px / 1 (rules 17 and 5's size), --none (rule 18's colour for
-   the hollow dot), font-variant-emoji: text so the glyph never renders
-   as a colour emoji.  It takes the .indicator's place in the flex row,
-   so the strip's height and gap are unchanged.
-
-   The strip's OTHER variants still carry the 8 px .indicator square.
-   They are Phase 1's surface -- the verdict strip is SS8.33's "renamed,
-   no behaviour change" and rules 50-55 are its spec -- and changing them
-   is a ruling of its own, not a side effect of this one. */
+/* Rule 51 — the verdict strip's symbol, left of the word, in every
+   state (#289 fidelity F5: ✓ ⚠ × ◌ replace the 8 px .indicator square
+   the non-null variants carried).  Type is the rules 17 block below;
+   the hue is rule 18's .sym-* class from symClass(glyph) — this rule
+   sets no colour, so the class is never overridden by context. */
 .workbench .status-bar .status-glyph {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  line-height: 1;
-  color: var(--none);
-  font-variant-emoji: text;
   flex: 0 0 auto;
 }
 

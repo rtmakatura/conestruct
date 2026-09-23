@@ -52,12 +52,8 @@ export interface FileLiterals {
  *  decorative set (issue #263 acceptance: "grep … outside :root /
  *  .workbench = the declared decorative set"). */
 export const CSS_DECORATIVE: readonly CssLiteral[] = [
-  {
-    selector: ".workbench .status-bar.caution .indicator",
-    hex: "#1a1200",
-    reason:
-      "the caution stripe's dark band in a repeating-linear-gradient — chrome, no state meaning (the word CAUTION carries the state)",
-  },
+  // The one row — the caution strip's #1a1200 hazard hatch — left with
+  // the .indicator square in #289 fidelity F5 (rule 51's ⚠ replaces it).
 ];
 
 /** `#fff` literals inside other buckets' globals.css ranges.  Not D's

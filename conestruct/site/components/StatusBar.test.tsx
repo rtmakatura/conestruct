@@ -361,7 +361,7 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).not.toContain("all CDOT supplement checks pass");
   });
 
-  it("warnings present is amber with an expandable list — never green READY", () => {
+  it("warnings present is amber, one row that does not open — never green READY", () => {
     const html = renderToStaticMarkup(
       <StatusBar
         inputError={null}
@@ -379,15 +379,17 @@ describe("StatusBar (UX-21/22 derived states)", () => {
     expect(html).toContain("REVIEW WARNINGS");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("status-bar pass");
-    // UX-22: each warning enumerated with rule ID + citation.
-    expect(html).toContain("WORK ZONE SHORT VS BUFFER");
-    expect(html).toContain("unusually short relative to the required");
-    expect(html).toContain("MUTCD § 6C.06");
-    expect(html).toContain("BEARING CONFLICT");
-    expect(html).toContain("OSM GROUND-TRUTH (SOFT CHECK)");
-    // Disclosure semantics: summary inside details.
-    expect(html).toContain("<details");
-    expect(html).toContain("<summary");
+    // #289 fidelity F5 (ruled Q4, X7): the strip no longer carries the
+    // UX-22 check list.  Each warning's rule and citation render in the
+    // results stack — the AuditTrail geometry / corridor items that
+    // lib/tiering.ts tiers ATTENTION and NEEDS YOU lifts — so here the
+    // strip must NOT restate them, and must not open.
+    expect(html).not.toContain("<details");
+    expect(html).not.toContain("<summary");
+    expect(html).not.toContain("WORK ZONE SHORT VS BUFFER");
+    expect(html).not.toContain("MUTCD § 6C.06");
+    // Rule 51: the symbol, left of the word, in rule 18's flag hue.
+    expect(html).toMatch(/class="status-glyph sym-warn"[^>]*>⚠</);
   });
 
   it("singular count reads '1 validation warning'", () => {
@@ -447,9 +449,9 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
       />,
     );
     expect(html).toContain("status-bar caution");
-    expect(html).toContain("1 plan flag");
+    expect(html).toContain("VERIFIED · 1 plan flag");
+    expect(html).not.toContain("1 plan flags");
     expect(html).toContain("REVIEW FLAGS");
-    expect(html).toContain("1 compliance check failed");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("status-bar pass");
   });
@@ -462,13 +464,17 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
       />,
     );
     expect(html).toContain("status-bar caution");
-    expect(html).toContain("1 plan flag");
-    expect(html).toContain("1 V1 limitation");
+    expect(html).toContain("VERIFIED · 1 plan flag");
     expect(html).not.toContain("READY FOR TCS REVIEW");
     expect(html).not.toContain("status-bar pass");
   });
 
-  it("breaks a mixed flag set down by category — input vs compliance vs V1", () => {
+  // #289 fidelity F5 (ruled Q4, X7): the per-category breakdown was the
+  // strip's disclosure and left with it.  The categories stay distinct on
+  // screen — compliance fails are ATTENTION rows (NEEDS YOU), V1
+  // limitations are the pending disclosure (lib/tiering.ts) — so the
+  // strip states the rollup's TOTAL, the backend's sum, and restates no row.
+  it("a mixed flag set states the rollup's total — the categories are the stack's rows, not the strip's", () => {
     const html = renderToStaticMarkup(
       <StatusBar
         inputError={null}
@@ -482,15 +488,12 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
       />,
     );
     // 1 validation warning + 1 compliance fail + 1 V1 limitation = 3.
-    expect(html).toContain("3 plan flags");
+    expect(html).toContain("VERIFIED · 3 plan flags");
     expect(html).toContain("REVIEW FLAGS");
-    // Each category surfaced distinctly (no conflated single number).
-    expect(html).toContain("1 validation warning");
-    expect(html).toContain("1 compliance check failed");
-    expect(html).toContain("1 V1 limitation");
-    // The validation-warning detail row still carries its rule + citation.
-    expect(html).toContain("WORK ZONE SHORT VS BUFFER");
-    expect(html).toContain("MUTCD § 6C.06");
+    expect(html).not.toContain("compliance check failed");
+    expect(html).not.toContain("V1 limitation");
+    expect(html).not.toContain("WORK ZONE SHORT VS BUFFER");
+    expect(html).not.toContain("<details");
     expect(html).not.toContain("READY FOR TCS REVIEW");
   });
 
@@ -556,15 +559,19 @@ describe("StatusBar (#60 plan-flags rollup)", () => {
 // COLORADO checks (backend fail_count of the CDOT S-630-1 checks) —
 // its source tag must attribute them to the standard plan, not the
 // Colorado Supplement (which contains none of the cited sections).
-describe("arc12 coda — compliance-fails source tag cites CDOT S-630-1", () => {
-  it("src tag reads CDOT S-630-1; no Supplement attribution", () => {
+// #289 fidelity F5 (Q4): that row was the strip disclosure's and left
+// with it; the S-630-1 attribution lives on the AuditTrail colorado
+// items (coloradoItem(audit, "S-630-1")).  What survives here is the
+// negative half: the strip never attributes to the Supplement.
+describe("arc12 coda — the strip never attributes compliance fails to the Supplement", () => {
+  it("no Supplement attribution on the strip", () => {
     const html = renderToStaticMarkup(
       <StatusBar
         inputError={null}
         audit={ready(makeAudit({ coloradoFails: 2 }))}
       />,
     );
-    expect(html).toContain("CDOT S-630-1");
+    expect(html).toContain("VERIFIED · 2 plan flags");
     expect(html).not.toMatch(/colorado supplement/i);
   });
 });
