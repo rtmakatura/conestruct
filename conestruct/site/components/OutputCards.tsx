@@ -259,40 +259,35 @@ export function OutputCards({
     // #289 fidelity F3 — Part 2 rule 27: "downloads → quote 12 px" (mb-3;
     // was mb-4, 16).
     <div className="mb-3">
-      <div className="flex items-center justify-between gap-4 px-1 pb-3">
-        <div>
-          {/* #253 (GO 2026-09-09 ruling 2, one voice): the file count is
-              stated ONCE, and this caption deliberately does not repeat
-              the numeral — the zip control beside it carries the one
-              statement now (see zipLabel above).  The count's history:
-              the next-steps strip's chip 3 held it until Part 1 §8.29
-              dropped the strip and kept the rule, leaving it stated
-              nowhere from f81daa6 until #288 clause 3. */}
-          <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-            MHT PACKAGE
-          </div>
-        </div>
+      {/* #289 fidelity F4 (X8, ruled Q4): the "MHT PACKAGE" heading is
+          gone — rules 84–86 make the download row the four cards, and the
+          heading was the old results head's.  The file count is still
+          stated ONCE (ruling 193, #253's one voice), and on the download
+          row: inline beside the zip it counts, not stacked under it.  The
+          line renders only when there is a zip to hold — an empty padded
+          row would be a gap standing in for nothing. */}
+      {mode.kind === "public" && onDownloadAll && (
+      <div className="flex items-center justify-end gap-4 px-1 pb-3">
         {/* Ruling 183, settled by clause 3: the zip renders at BOTH
             widths — rule 86 dropped it at 1440 and rule 168 made it the
             phone's primary unconditionally; clause 3 supersedes both with
             one width-blind derivation.  It is the PRIMARY when nothing
             needs the operator, and a ghost beside NEEDS YOU's actions
             when something does.  The file count rides it, once. */}
-        {mode.kind === "public" && onDownloadAll && (
-          <div className={`dl-all${zipIsPrimary ? " is-primary" : ""}`}>
-            <button
-              type="button"
-              data-write=""
-              onClick={onDownloadAll}
-              disabled={bundling || locked}
-              className={zipIsPrimary ? "pri" : "act tr-step"}
-            >
-              <span className="font-mono">↓</span> All (.zip)
-            </button>
-            <span className="dl-all-count tr-prov">{zipLabel}</span>
-          </div>
-        )}
+        <div className={`dl-all${zipIsPrimary ? " is-primary" : ""}`}>
+          <span className="dl-all-count tr-prov">{zipLabel}</span>
+          <button
+            type="button"
+            data-write=""
+            onClick={onDownloadAll}
+            disabled={bundling || locked}
+            className={zipIsPrimary ? "pri" : "act tr-step"}
+          >
+            <span className="font-mono">↓</span> All (.zip)
+          </button>
+        </div>
       </div>
+      )}
       <div className="dls">
         {cards.map((card) => (
           <DlCard

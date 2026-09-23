@@ -250,7 +250,7 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     // WHAT is a pending line with the same reason; no link into it.
     const what = document.querySelector('[data-testid="fact-what"]')!;
     expect(what.getAttribute("data-fact-state")).toBe("pending");
-    expect(what.textContent).toContain("choose the kind of work");
+    expect(what.textContent).toContain("kind of work not chosen");
     expect(what.querySelector("button")).toBeNull();
     // (The WHERE line's own value string drops the placeholder kind until
     // it is confirmed — lib/scenarios/band-facts.test.ts, where the

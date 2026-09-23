@@ -958,36 +958,8 @@ body {
   pointer-events: none;
   z-index: var(--z-frame);
 }
-.workbench-frame .ftick {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--dim);
-}
-.workbench-frame .ftick.tl {
-  top: -1px;
-  left: -1px;
-  border-right: none;
-  border-bottom: none;
-}
-.workbench-frame .ftick.tr {
-  top: -1px;
-  right: -1px;
-  border-left: none;
-  border-bottom: none;
-}
-.workbench-frame .ftick.bl {
-  bottom: -1px;
-  left: -1px;
-  border-right: none;
-  border-top: none;
-}
-.workbench-frame .ftick.br {
-  bottom: -1px;
-  right: -1px;
-  border-left: none;
-  border-top: none;
-}
+/* #289 fidelity F4 (ruled Q2): the four orange corner ticks (.ftick) are
+   deleted with their markup — rule 20's frame is its 1 px rule alone. */
 
 /* Lanes / chips: cyan active, divided cells */
 .workbench .chip-row {
@@ -3285,10 +3257,14 @@ input[type="number"] {
 /* The zip control and the ONE statement of the file count (Part 1 §8.29,
    which kept that rule when it dropped the strip that carried it). */
 .workbench .dl-all {
+  /* #289 fidelity F4 (X8): the count sits INLINE, beside the zip it
+     counts, on the download row's line — it was stacked under the
+     button (flex-direction: column). */
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
   min-width: 150px;
 }
 .workbench .dl-all .act {
@@ -4381,15 +4357,12 @@ input[type="number"] {
   color: var(--fail);
 }
 
-/* The detection facts with no cell of their own (Bearing, Divided,
-   One-way) and #214's caveat — section 8.23's "nothing it said is gone",
-   restyled under the grid rather than deleted with the block. */
-.workbench .a-detect {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px dotted var(--da-hair);
+/* #289 fidelity F4 (ruled Q3): the corridor's zone rows are the extent
+   field's own provenance lines — a plain stack inside the cell.  The
+   .a-detect block that held them (16 px margin, a dotted top rule, its
+   own header) is deleted; its last consumer was that block. */
+.workbench .a-extent {
   display: grid;
-  gap: 4px;
 }
 
 /* The kind's own fields (R1): a third grid row, rendered only for kinds

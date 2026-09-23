@@ -159,8 +159,12 @@ describe("defect 2 — a staged field opens S7 on THAT field", () => {
     await generated();
     await changeOneThing("lanes");
 
-    // The band names the field the operator picked.
-    expect(document.body.textContent).toContain("REVISING · LANES PER DIRECTION");
+    // The band names the field the operator picked.  #289 fidelity F4:
+    // the step index says REVISING and the head is the field — the word
+    // is never doubled ("REVISING · LANES PER DIRECTION" after a
+    // "REVISING" index was the pre-fidelity head).
+    expect(document.body.textContent).toContain("LANES PER DIRECTION");
+    expect(document.body.textContent).not.toContain("REVISING · ");
     expect(document.getElementById("revise-lanes")).toBeTruthy();
     expect(document.getElementById("revise-speed")).toBeNull();
 
@@ -185,11 +189,11 @@ describe("defect 2 — a staged field opens S7 on THAT field", () => {
 
   it("PAYLOAD: road type, lane width and jurisdiction each stage themselves", async () => {
     const cases: Array<[string, string, string, string, unknown]> = [
-      ["roadType", "REVISING · ROAD TYPE", "revise-roadType", "freeway", "freeway"],
-      ["laneWidth", "REVISING · LANE WIDTH", "revise-laneWidth", "11", 11],
+      ["roadType", "ROAD TYPE", "revise-roadType", "freeway", "freeway"],
+      ["laneWidth", "LANE WIDTH", "revise-laneWidth", "11", 11],
       [
         "jurisdiction",
-        "REVISING · JURISDICTION",
+        "JURISDICTION",
         "revise-jurisdiction_key",
         "denver",
         "denver",
@@ -215,7 +219,7 @@ describe("defect 2 — a staged field opens S7 on THAT field", () => {
     await changeOneThing("speed");
     await pick("revise-speed", "55");
     await changeOneThing("lanes");
-    expect(document.body.textContent).toContain("REVISING · LANES PER DIRECTION");
+    expect(document.body.textContent).toContain("LANES PER DIRECTION");
     await pick("revise-lanes", "3");
     // Ruling 191: one APPLY carries both, and the sentence says so.
     expect(screen.getByTestId("revise-sentence").textContent).toContain("2 fields");

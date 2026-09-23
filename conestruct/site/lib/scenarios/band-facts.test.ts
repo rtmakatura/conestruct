@@ -44,7 +44,7 @@ describe("defect 1 — an unconfirmed kind is not printed, not opened, not gener
     const what = m.facts.find((f) => f.id === "what")!;
     expect(what.value).toBeNull();
     expect(what.verb).toBeNull();
-    expect(what.pending).toBe("pending — choose the kind of work");
+    expect(what.pending).toBe("pending — kind of work not chosen");
   });
 
   it("an override onto WHAT is refused while the kind is unconfirmed", () => {

@@ -376,9 +376,12 @@ export function WhereBand({
           {located ? "Edit Location & Corridor →" : "Pick Location on Map"}
         </button>
       </div>
-      <div className="tr-prov mt-2">
-        map · road detect · work zone in one step
-      </div>
+      {/* #289 fidelity F4 (X5): the "map · road detect · work zone in one
+          step" caption is gone.  Rule 64's body order is question →
+          provenance → producers → primary, with no caption slot, and rule
+          114's S1 is the field and FIND alone; the caption described the
+          picker modal (ruling 189 keeps it), which the button already
+          names. */}
 
       {/* #288's finding class, applied here: a stale road is a fact the
           band states rather than a silence.  `deriveRail()` owns the
@@ -470,7 +473,6 @@ export function WhereBand({
             ) : (
               <span className="tr-prov">typed · the extent the plan is built for</span>
             )}
-          </div>
 
           {/* The corridor's zone lengths — §8.19 folds them into the
               aerial, and this phase has no aerial (see the deviation at
@@ -479,12 +481,18 @@ export function WhereBand({
               field they describe, rather than disappearing with the
               surface that used to draw them.
 
+              #289 fidelity F4 (ruled Q3): they ARE the field's provenance
+              now — lines in the extent cell's own stack (rule 137: a field
+              explains itself under itself).  The block that held them — a
+              "CORRIDOR EXTENT" section header and a dotted top rule, a
+              form inside a band — is gone; the rows, their words and their
+              honest notes are unchanged.
+
               The BAR retires: it drew a proportion, which is a picture of
               these numbers and not a fact of its own.  The rows are the
               record — which is what the bar's own test said when it
               called the bar aria-hidden. */}
-          <div className="a-detect" data-testid="corridor-extent">
-            <span className="tr-section">Corridor extent</span>
+          <div className="a-extent" data-testid="corridor-extent">
             {corridorSpecLengths && scenario.workLen > 0 ? (
               CORRIDOR_ROWS.map(([zone, label]) => (
                 <span key={zone} className="tr-prov" data-testid={`zone-${zone}`}>
@@ -509,6 +517,7 @@ export function WhereBand({
                       "corridor extent unavailable — awaiting verification"}
               </span>
             )}
+          </div>
           </div>
 
           {/* #289 hand-check, 2026-09-23, correction 3: the "Applied

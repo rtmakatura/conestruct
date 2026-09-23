@@ -14,28 +14,32 @@ import {
 
 interface Props {
   mode: "sandbox" | "workbench";
-  ta: string;
-  cdotSheet: string;
+  /** #289 fidelity F4 — Part 2 rule 23: the TA / sheet citation that
+   *  joins the right slot POST-GENERATE ("TA-3 · S-630-1 · MUTCD 2023 ·
+   *  CDOT"), or null before a plan exists.  It was its own middle cell,
+   *  rendered pre-generate as a bare "·" between two empty strings. */
+  citation: string | null;
   scenario: Scenario;
   planId: string | null;
   planName: string | null;
   onSaved: (id: string, name: string, saved: Scenario) => void;
 }
 
-export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSaved }: Props) {
+export function AppNav({ mode, citation, scenario, planId, planName, onSaved }: Props) {
   const isSandbox = mode === "sandbox";
   return (
     <nav className="sticky top-0 z-[var(--z-nav)] flex items-stretch justify-between h-[var(--nav-h)] border-b border-[color:var(--rule)] bg-[color:var(--canvas-tint)]">
       <div className="flex items-stretch">
+        {/* #289 fidelity F4 — Part 2 rule 22: the wordmark "conestruct."
+            is Inter 600 14.5 px #eaf0f7, letter-spacing −.01em, the period
+            #ff8a2e (it was 700 / 16 px / #ffffff).  The v0.4 tag is gone
+            (ruled Q2): rule 22 lists the wordmark, then nav items. */}
         <Link
           href="/"
-          className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-bold text-[16px] tracking-[-0.01em] text-white hover:text-[color:var(--act)] transition-colors"
+          className="flex items-center gap-3 px-5 border-r border-[color:var(--rule)] font-sans font-semibold text-[14.5px] tracking-[-0.01em] text-[color:var(--ink)] hover:text-[color:var(--act)] transition-colors"
         >
           <span>
             conestruct<span className="text-[color:var(--dim)]">.</span>
-          </span>
-          <span className="font-mono text-[10px] tracking-[0.08em] uppercase text-[color:var(--ink-on-dark-faint)]">
-            v0.4
           </span>
         </Link>
         {AUTH_UI_ENABLED && !isSandbox && (
@@ -49,24 +53,23 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
             </Link>
           </SignedIn>
         )}
+        {/* Rule 22's nav items: mono 10 px .16em uppercase #93a0b0.
+            #289 fidelity F4 (ruled Q2): DEMO stays, in those normal
+            colours — it was the generated-number orange, which rule 10
+            reserves for generated numerals. */}
         {isSandbox || !AUTH_UI_ENABLED ? (
-          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em]">
-            <span className="text-[color:var(--dim)]">Demo</span>
-            <span className="text-[color:var(--ink-on-dark-faint)]">/</span>
-            <span className="text-[color:var(--ink-on-dark-faint)]">MUTCD plan generator</span>
+          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)]">
+            <span>Demo</span>
+            <span>/</span>
+            <span>MUTCD plan generator</span>
           </span>
         ) : (
-          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
+          <span className="hidden md:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)]">
             <span>Workbench</span>
             <span>/</span>
             <span className="text-[color:var(--act)]">{planName ?? "New MHT"}</span>
           </span>
         )}
-        <span className="hidden lg:flex items-center gap-2 px-5 border-r border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          <span className="text-[color:var(--dim)]">{ta}</span>
-          <span>·</span>
-          <span>{cdotSheet}</span>
-        </span>
       </div>
       <div className="flex items-stretch">
         {/* Deliberately no status dot here (#132): the green pulse that
@@ -75,8 +78,15 @@ export function AppNav({ mode, ta, cdotSheet, scenario, planId, planName, onSave
             is absence.  The edition text is the badge; if a real nav
             status ever exists, it derives from real verification state
             and carries a non-hue second channel. */}
-        <span className="hidden md:flex items-center px-5 border-l border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--ink-on-dark-faint)]">
-          MUTCD 2023 · CDOT
+        {/* Rule 23: "Pre-generate: 'MUTCD 2023 · CDOT'.  Post-generate:
+            'TA-3 · S-630-1 · MUTCD 2023 · CDOT'.  Static strings only — no
+            date, no clock" (Part 1 §8.32: the sheet meta's citation moves
+            here; its hydration defect must not follow it). */}
+        <span
+          className="hidden md:flex items-center px-5 border-l border-[color:var(--rule)] font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--ink-on-dark-faint)]"
+          data-testid="nav-citation"
+        >
+          {citation ? `${citation} · MUTCD 2023 · CDOT` : "MUTCD 2023 · CDOT"}
         </span>
         {AUTH_UI_ENABLED && (
           <>

@@ -89,13 +89,18 @@ describe("OutputCards download cards", () => {
     expect(audit.textContent).toContain("checks");
   });
 
-  it("#253 (GO ruling 2): the caption is MHT PACKAGE — the file count is the next-steps strip's chip 3 (one voice); the zip still carries 4 parts", () => {
-    renderPublic();
+  it("#289 fidelity F4 (X8): no MHT PACKAGE heading — the file count is stated ONCE, beside the zip (ruling 193); the zip still carries 4 parts", () => {
+    // The zip (and the count riding it) renders only in public mode with
+    // a download-all handler — pass one so the count is on the page.
+    renderPublic({ onDownloadAll: () => {} });
     // The zip carries quote.xlsx in addition to the three cards; the
-    // count is stated ONCE, by chip 3 ("4 FILES READY", from
-    // BUNDLE_PART_KINDS) — the caption no longer repeats it.
+    // count is stated ONCE (#253 / ruling 193).  The "MHT PACKAGE"
+    // heading was the old results head's — rules 84–86 make the row the
+    // four cards — so it is gone, and the count sits beside the zip it
+    // counts.
     expect(BUNDLE_PART_KINDS.length).toBe(4);
-    expect(screen.getByText("MHT PACKAGE")).toBeTruthy();
+    expect(screen.queryByText("MHT PACKAGE")).toBeNull();
+    expect(screen.getAllByText(`${BUNDLE_PART_KINDS.length} files`)).toHaveLength(1);
     expect(screen.queryByText(/\d (FILES|SHEETS)/)).toBeNull();
   });
 

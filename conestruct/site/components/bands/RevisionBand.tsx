@@ -175,7 +175,11 @@ export function RevisionBand({
     <OpenBand
       stepIndex={stepIndex}
       // Rule 190's header: the band says which field it re-opened.
-      head={`REVISING · ${FIELD_LABEL[field].toUpperCase()}`}
+      // #289 fidelity F4 (X10): the step index is "REVISING" (rule 4 —
+      // the shell passes it), so the section header (rule 62, role 1) is
+      // the FIELD.  It read "REVISING · SPEED LIMIT" after a "REVISING"
+      // index: the word twice in one line.
+      head={FIELD_LABEL[field].toUpperCase()}
       provenance="nothing is written until you apply"
       question="What should it be?"
       questionProvenance="The plan below is unchanged until you apply this."

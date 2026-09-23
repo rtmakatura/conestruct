@@ -214,8 +214,11 @@ describe("#263 type census — globals.css font-sizes", () => {
 describe("#263 type census — Tailwind size classes in components/ and app/", () => {
   it("the scanner reads the tree", () => {
     expect(observedTsx.length).toBeGreaterThan(50);
+    // #289 fidelity F4: the anchor was the H1's text-[28px], which left
+    // the screen (sr-only now).  The nav wordmark's rule-22 size is the
+    // anchor instead — a real site with a spec-traced value.
     expect(observedTsx.map(tsxKey)).toContain(
-      "components/GeneratorShell.tsx text-[28px] ×1",
+      "components/AppNav.tsx text-[14.5px] ×1",
     );
   });
 
@@ -275,7 +278,7 @@ describe("#263 type census — the exceptions are the ruled set and the pins are
         // symbols"), carried by the fidelity pass's own row — the
         // same one-value-two-surfaces reason --fs-primary appears twice.
         "var(--fs-field-label)",
-        "28px",
+        // "28px" (the page h1) left at #289 fidelity F4: the H1 is sr-only.
         "20px",
         "17px",
         "16px",

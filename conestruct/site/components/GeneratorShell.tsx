@@ -28,7 +28,6 @@ import {
   type QuoteSettings,
 } from "@/lib/quote-settings";
 import { AppNav } from "./AppNav";
-import { AppSheetMeta } from "./AppSheetMeta";
 import { SITE_ADJUSTMENT_DETAIL } from "./AuditTrail";
 import { deriveTierSources } from "@/lib/tier-sources";
 import { buildNeedsYouItems } from "@/lib/needs-you-items";
@@ -698,7 +697,7 @@ export function GeneratorShell({
   };
 
   // Derive the current "best known" audit summary for components that
-  // need scalar fields (AppNav, AppSheetMeta, OutputCards).  Reads from
+  // need scalar fields (AppNav, OutputCards).  Reads from
   // ``state.data`` when ready, falls back to ``state.lastReady`` during
   // refetch/error so those headers don't flash empty mid-edit.  Null
   // only on the very first load before any audit has resolved.
@@ -1615,27 +1614,32 @@ export function GeneratorShell({
       className={`workbench min-h-screen${inFlight ? " ws-locked" : ""}`}
       data-stage={genState}
     >
-      <div className="workbench-frame" aria-hidden>
-        <span className="ftick tl" />
-        <span className="ftick tr" />
-        <span className="ftick bl" />
-        <span className="ftick br" />
-      </div>
+      {/* #289 fidelity F4 (ruled Q2): the orange corner ticks are gone —
+          Part 2 rule 20's frame is "1 px #2c3e53 border", and no Part 1
+          §8 line keeps the ticks.  The frame's rule stays. */}
+      <div className="workbench-frame" aria-hidden />
 
       <AppNav
         mode={mode}
-        ta={summary?.ta ?? ""}
-        cdotSheet={summary?.cdot_sheet ?? ""}
+        // #289 fidelity F4 — rule 23: the TA / sheet citation joins the
+        // nav's right slot POST-generate only.  Before a Generate there is
+        // no plan to cite, so the slot reads its pre-generate string.
+        citation={
+          genState !== "pre" && summary?.ta && summary?.cdot_sheet
+            ? `${summary.ta} · ${summary.cdot_sheet}`
+            : null
+        }
         scenario={scenario}
         planId={planId}
         planName={planName}
         onSaved={onSaved}
       />
-      <AppSheetMeta
-        project={scenario.meta.project}
-        address={scenario.meta.address}
-        cdotSheet={summary?.cdot_sheet ?? ""}
-      />
+      {/* #289 fidelity F4 — Part 1 §8.32: "Sheet meta — DROPPED from the
+          screen; the TA/sheet citation it carried moves to the nav's right
+          edge post-generate."  The MHT / PROJECT / LOCATION / SCALE row is
+          gone (its MHT cell was empty before a Generate, and at 380 it ran
+          off the right edge).  The project name and location are still the
+          WHAT band's fields. */}
 
       <div>
         {/* #289 fidelity F3 — Part 2 rule 24: "Column. Width 880 px, margin
@@ -1645,11 +1649,15 @@ export function GeneratorShell({
             width 100%".  It was a 1,100 px column in a 1,180 px shell with
             32 / 40 / 80 padding (24 at the phone). */}
         <main className="px-10 pt-[26px] pb-[30px] max-w-[960px] mx-auto max-md:px-[14px] max-md:py-4">
-          <div className="mb-6">
-            <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--act)] inline-flex items-center gap-2.5 mb-3 before:content-[''] before:w-6 before:h-px before:bg-[color:var(--act)] before:inline-block">
-              02 · GENERATOR
-            </div>
-            <h1 className="text-[28px] font-bold tracking-tighter text-white m-0 mb-1.5 leading-[1.1]">
+          {/* #289 fidelity F4 (ruled Q2): the "02 · GENERATOR" eyebrow and
+              the visible H1 are removed — Part 1 §1.2's order is nav →
+              verdict strip → band stack, and rule 25 leaves no slot for a
+              page title.  The H1 STAYS IN THE DOM, visually hidden: it is
+              the page's only top-level heading, and removing it would
+              leave assistive technology no document title to land on — a
+              removal from the SCREEN, not from the page's outline. */}
+          <div>
+            <h1 className="sr-only">
               Method of Handling Traffic — plan generator
             </h1>
             {/* #260 (1): the intro sentence, the draft notice and the
@@ -1775,7 +1783,6 @@ export function GeneratorShell({
                           ? (deviceBreakdown.lastReady ?? null)
                           : null
                     }
-                    fieldLabel={FIELD_LABEL[revisingField]}
                     stagedValue={fieldValueLabel(
                       revisingField,
                       stagedFieldValue ??

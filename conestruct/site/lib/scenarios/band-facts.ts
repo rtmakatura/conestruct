@@ -24,7 +24,6 @@
 
 import { candidateLabel } from "../road-detection/labels";
 import { SCENARIO_KINDS, hasLocation } from "./index";
-import { KIND_BLOCKER } from "./rail";
 import type { Scenario, ScenarioKind } from "./types";
 
 /** The two bands, plus the GENERATE slot's id.
@@ -427,9 +426,11 @@ export function deriveBands({
         ? null
         : located
           ? // Defect 1: the pin is down and the kind is not confirmed.
-            // The reason is the rail's own string (rule 139), in the
-            // pending line's lower case.
-            `pending — ${KIND_BLOCKER.toLowerCase()}`
+            // Ruled 2026-09-23: "WHAT's pending line reads 'pending —
+            // kind of work not chosen'" — a STATE, not the instruction.
+            // The instruction ("choose the kind of work") lives only on
+            // the disabled primaries (the strip-wording ruling, a04bd73).
+            "pending — kind of work not chosen"
           : // Part 1 §2.2's own string once a road exists; §2.1's before.
             scenario.meta.confirmedRoad
             ? `road facts prefill from ${confirmedRoadLabel(scenario)}`

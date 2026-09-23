@@ -96,7 +96,6 @@ export function panelRows(opts: {
 export function RevisionPanel({
   state,
   settled,
-  fieldLabel,
   stagedValue,
   verdict,
   needsYou,
@@ -104,7 +103,6 @@ export function RevisionPanel({
 }: {
   state: PreviewState;
   settled: DeviceBreakdownData | null;
-  fieldLabel: string;
   /** The staged value, as the field says it — "35 mph", "3 lanes". */
   stagedValue: string;
   verdict: string;
@@ -131,7 +129,9 @@ export function RevisionPanel({
   return (
     <div className="a-panel" data-testid="revision-panel" data-preview={state.kind}>
       <div className="a-panel-head">
-        <span className="tr-section">If you apply this</span>
+        {/* #289 fidelity F4 (X10): rule 91's section header is "WHAT THIS
+            CHANGES" (the role uppercases).  It read "If you apply this". */}
+        <span className="tr-section">What this changes</span>
         {/* Rule 91 + R3: which VALUE the figures are for, and which
             COMPUTATION produced them.  One string, true in all four
             situations. */}
@@ -152,11 +152,10 @@ export function RevisionPanel({
       </div>
 
       <div className="a-panel-rows">
-        <div className="a-panel-row a-panel-head-row" aria-hidden>
-          <span className="tr-field">{fieldLabel}</span>
-          <span className="tr-field">was</span>
-          <span className="tr-field">now</span>
-        </div>
+        {/* #289 fidelity F4 (X10): the column-header row ("<field> · was ·
+            now") is gone — rules 92–93 specify the six data rows only; the
+            header note (rule 91) already names which value the figures are
+            for, and the band's own head names the field. */}
         {rows.map((r) => (
           <div
             key={r.key}

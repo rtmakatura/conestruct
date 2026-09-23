@@ -73,16 +73,9 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
     ],
     tsx: [],
   },
-  {
-    name: "page h1",
-    sizes: ["28px"],
-    reason:
-      "the generator page's one h1 (GeneratorShell.tsx)",
-    css: [],
-    tsx: [
-      { file: "components/GeneratorShell.tsx", cls: "text-[28px]", count: 1 },
-    ],
-  },
+  // "page h1" (28px) is DELETED — #289 fidelity F4 (ruled Q2): the visible
+  // H1 is removed from the screen; it stays in the DOM as `sr-only`, which
+  // carries no size, so the exception has no site left.
   // "results-head figure" (24px) left with the #249 lockup — #253 conflict
   // 1 ruled the next-steps strip REPLACES it (one field, one surface).
   {
@@ -396,8 +389,11 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "app/terms/page.tsx", cls: "text-[15px]", count: 1 },
       { file: "app/terms/page.tsx", cls: "text-[36px]", count: 1 },
       { file: "components/AppFooter.tsx", cls: "text-[10px]", count: 1 },
-      { file: "components/AppNav.tsx", cls: "text-[10px]", count: 6 },
-      { file: "components/AppNav.tsx", cls: "text-[16px]", count: 1 },
+      // #289 fidelity F4: the v0.4 tag and the TA / sheet middle cell left
+      // the nav (rules 22–23 — the citation joined the right slot's one
+      // string), and the wordmark took rule 22's 14.5 px (was 16).
+      { file: "components/AppNav.tsx", cls: "text-[10px]", count: 4 },
+      { file: "components/AppNav.tsx", cls: "text-[14.5px]", count: 1 },
       { file: "components/AppSheetMeta.tsx", cls: "text-[10px]", count: 1 },
       { file: "components/FinalCTA.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/FinalCTA.tsx", cls: "text-[17px]", count: 1 },
@@ -445,7 +441,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       // is about (FLOW.md §5a move 3).  Row DELETED.
       { file: "components/GeneratorFormPrimitives.tsx", cls: "text-[10px]", count: 2 },
       { file: "components/GeneratorShell.tsx", cls: "text-[10px]", count: 1 },
-      { file: "components/GeneratorShell.tsx", cls: "text-[11px]", count: 1 },
+      // #289 fidelity F4: the "02 · GENERATOR" eyebrow and its one
+      // text-[11px] are removed (ruled Q2).
       { file: "components/GeneratorShell.tsx", cls: "text-[12px]", count: 1 },
       { file: "components/GeneratorShell.tsx", cls: "text-[13px]", count: 1 },
       // #289 Phase 2 — the setup panel's section components are deleted
@@ -462,7 +459,8 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/MobileOpMultilaneForm.tsx", cls: "text-[10px]", count: 3 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[11px]", count: 2 },
       { file: "components/NearIntersectionForm.tsx", cls: "text-[12px]", count: 2 },
-      { file: "components/OutputCards.tsx", cls: "text-[10px]", count: 1 },
+      // #289 fidelity F4 (X8): the "MHT PACKAGE" heading — OutputCards' last
+      // text-[10px] — is removed.
       // #288 clause 3: 3 -> 2.  The "↓ All (.zip)" control stopped
       // carrying its own Tailwind size — it now takes rule 130's .pri or
       // rule 133's .act, whose sizes live in the sheet.
@@ -622,7 +620,11 @@ export const CENSUS_PINS = {
   // sentences are now provenance lines under the WHAT cells they
   // describe), and its one text-[12px] goes with it — one use, one site
   // and one file leave the Tailwind census.
-  tsxSites: 98,
+  // #289 fidelity F4: three sites leave — the H1's text-[28px] (sr-only
+  // now, no size), the eyebrow's text-[11px], the MHT PACKAGE heading's
+  // text-[10px] — and the nav's wordmark row changes class (16 → 14.5),
+  // which is one site out and one in.  98 -> 95.
+  tsxSites: 95,
   // 320 -> 319 at clause 3 (the zip gave up its own text-[12px] for
   // .pri/.act), then 319 -> 318 at clause 5 (the intro paragraph, and
   // its one text-[14px], dropped under §8.30).
@@ -630,6 +632,8 @@ export const CENSUS_PINS = {
   // spec line's text-[10px], the suggestion's "(OSM tier)" text-[10px],
   // ScheduleField's three faint text-[11px] notes).  No site or file
   // leaves: each file keeps other uses of the same class.  295 -> 290.
-  tsxUses: 290,
+  // #289 fidelity F4: the three sites above (3 uses) and two of AppNav's
+  // text-[10px] (v0.4, the TA / sheet cell) leave.  290 -> 285.
+  tsxUses: 285,
   tsxFiles: 35,
 } as const;

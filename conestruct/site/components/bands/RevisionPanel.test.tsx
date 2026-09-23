@@ -52,7 +52,6 @@ function mount(state: PreviewState) {
     <RevisionPanel
       state={state}
       settled={SETTLED}
-      fieldLabel="Speed limit"
       stagedValue="35 mph"
       verdict="on screen"
       needsYou={3}

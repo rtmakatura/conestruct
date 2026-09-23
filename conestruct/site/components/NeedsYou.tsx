@@ -120,10 +120,15 @@ function Item({ item }: { item: NeedsYouItem }) {
         {TIER_GLYPH[item.tier]}
       </span>
       <div className="ny-mid">
-        <span className="ny-body">{item.title}</span>{" "}
-        <span className="ny-result tr-step">{item.result}</span>
+        <span className="ny-body">{item.title}</span>
         {/* Rule 75: the provenance names the tier in words, then the
-            evidence the wire carried — and nothing it did not. */}
+            evidence the wire carried — and nothing it did not.
+            #289 fidelity F4 (X9): the uppercase result tag that sat after
+            the title (APPLIED / FAIL) is gone — it said the tier a second
+            time, in a third vocabulary, beside the provenance line that
+            already says it in words ("changed this plan", "needs
+            attention").  Only the render is removed: `item.result` stays
+            on the model (lib/needs-you-items.ts), unchanged. */}
         <p className="ny-prov tr-prov">{itemProvenance(item)}</p>
       </div>
       <div className="ny-right">
