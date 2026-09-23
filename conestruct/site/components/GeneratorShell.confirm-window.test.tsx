@@ -212,11 +212,17 @@ describe("confirm-tick window: CTA stays gated after a refusal (#196)", () => {
     expect(
       screen.queryByText(/unavailable while generation is declined/),
     ).toBeNull();
-    // Settle 400: both surfaces show declined together.
+    // Settle 400: the strip shows declined.
     await release(auditCalls, 1, refusal400());
+    // #289 hand-check, 2026-09-23, correction 2: the audit trail panel is
+    // a RESULTS-zone panel and Part 1 §2.1 gives the page no results zone
+    // before Generate, so pre-generate its line is not on screen and its
+    // Retry is not either.  The panel's own declined / paused lines are
+    // covered where the panel lives (AuditTrail.declined-stale.test.tsx);
+    // what this suite is about — the STRIP's vocabulary — is unchanged.
     expect(
-      screen.getByText(/unavailable while generation is declined/),
-    ).toBeTruthy();
+      screen.queryByText(/unavailable while generation is declined/),
+    ).toBeNull();
     expect(document.body.textContent).toContain("PLAN DECLINED");
   });
 });

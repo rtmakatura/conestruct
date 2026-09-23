@@ -166,12 +166,20 @@ describe("one refusal, one voice (#180)", () => {
         ),
     ).toBe(true);
 
-    // The audit trail neither quotes the refusal nor offers a Retry.
+    // #289 hand-check, 2026-09-23, correction 2: the audit trail panel
+    // is a RESULTS-zone panel, and Part 1 §2.1 gives the page no results
+    // zone before Generate — so pre-generate it does not render at all,
+    // and its declined line renders zero times rather than once.  The
+    // #180 claim is untouched and in fact strengthened: with one fewer
+    // surface on screen, the refusal still has exactly one voice.  The
+    // panel's own declined line is covered where the panel lives, in
+    // AuditTrail.declined-stale.test.tsx.
     expect(
       occurrences(
         "Audit trail unavailable while generation is declined — see the notice above.",
       ),
-    ).toBe(1);
+    ).toBe(0);
+    expect(document.querySelector("section.zone.results")?.textContent).toBe("");
     expect(occurrences("Audit trail failed")).toBe(0);
     expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
@@ -189,11 +197,20 @@ describe("one refusal, one voice (#180)", () => {
     // trail's declined line and the under-Generate pointer don't quote.
     expect(occurrences(FLOOR_400)).toBe(1);
     expect(occurrences("Audit trail failed")).toBe(0);
+    // #289 hand-check, 2026-09-23, correction 2: the audit trail panel
+    // is a RESULTS-zone panel, and Part 1 §2.1 gives the page no results
+    // zone before Generate — so pre-generate it does not render at all,
+    // and its declined line renders zero times rather than once.  The
+    // #180 claim is untouched and in fact strengthened: with one fewer
+    // surface on screen, the refusal still has exactly one voice.  The
+    // panel's own declined line is covered where the panel lives, in
+    // AuditTrail.declined-stale.test.tsx.
     expect(
       occurrences(
         "Audit trail unavailable while generation is declined — see the notice above.",
       ),
-    ).toBe(1);
+    ).toBe(0);
+    expect(document.querySelector("section.zone.results")?.textContent).toBe("");
     expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
 
@@ -203,7 +220,12 @@ describe("one refusal, one voice (#180)", () => {
 
     expect(strip()).toContain("VERIFICATION UNAVAILABLE");
     expect(strip()).not.toContain("PLAN DECLINED");
-    expect(occurrences("Audit trail failed")).toBe(1);
-    expect(screen.queryByRole("button", { name: "Retry" })).not.toBeNull();
+    // Correction 2: pre-generate the panel that carries "Audit trail
+    // failed" and its Retry is not on the page, so the strip's pointer
+    // names the control that IS — Generate, which refires both fetches
+    // (rule 10: a pointer must land on something that exists).
+    expect(occurrences("Audit trail failed")).toBe(0);
+    expect(strip()).toContain("Generate to check again");
+    expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
   });
 });

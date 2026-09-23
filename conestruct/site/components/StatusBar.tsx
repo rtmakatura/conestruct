@@ -179,6 +179,16 @@ interface Props {
    * nothing instead of VERIFYING.  Every verdict branch is unchanged.
    */
   bandVoice?: boolean;
+  /**
+   * #289 hand-check, 2026-09-23, correction 2: true while no plan has
+   * been generated, when Part 1 §2.1 gives the page no results zone at
+   * all.  Read by the two VERIFICATION UNAVAILABLE branches ONLY, and
+   * only to re-aim their pointer: "the audit trail panel below" is a
+   * true instruction after a Generate and a lie before one (rule 10 —
+   * a pointer must land on something that exists).  The verdict, the
+   * ranking and every other branch are untouched.
+   */
+  preGenerate?: boolean;
 }
 
 // fix-spec-02 P1·05 (spec'd under P1·02): the strip is the product's
@@ -206,6 +216,7 @@ function StatusBarState({
   audit,
   verifySlow,
   bandVoice = false,
+  preGenerate = false,
 }: Props) {
   if (inputError) {
     return (
@@ -287,7 +298,9 @@ function StatusBarState({
           <span className="indicator" />
           <span>
             VERIFICATION PAUSED · too many updates in the last minute —
-            retry from the audit trail panel in a moment
+            {preGenerate
+              ? " Generate in a moment to check again"
+              : " retry from the audit trail panel in a moment"}
           </span>
         </div>
       );
@@ -296,7 +309,10 @@ function StatusBarState({
       <div className="status-bar idle unavail">
         <span className="indicator" />
         <span>
-          VERIFICATION UNAVAILABLE · retry from the audit trail panel below
+          VERIFICATION UNAVAILABLE ·
+          {preGenerate
+            ? " Generate to check again"
+            : " retry from the audit trail panel below"}
         </span>
       </div>
     );

@@ -82,6 +82,10 @@ interface Props {
   // tell "not yet" from "did not answer", and only the shell knows which
   // — it owns the breakdown fetch.  Passed rather than re-derived.
   jurisdictionLoading?: boolean;
+  /** #152 D / correction 2: a same-key refetch is in flight.  The held
+   *  block stays as CONTENT; its hours verdict may not render as
+   *  current (rule 10).  Passed straight through to ScheduleField. */
+  jurisdictionRevalidating?: boolean;
   jurisdictionErrored?: boolean;
   // #201: the pin suggestion, rendered INSIDE the WHAT grid's
   // jurisdiction cell so a confirm sits beside the control it applies to.
@@ -139,6 +143,7 @@ export function GeneratorSidebar({
   jurisdictionName = null,
   jurisdictionBlock = null,
   jurisdictionLoading = false,
+  jurisdictionRevalidating = false,
   jurisdictionErrored = false,
   jurisdictionSuggest,
   pendingSuggestions = 0,
@@ -472,6 +477,7 @@ export function GeneratorSidebar({
             // band header carries the index.
             stepsPending={stepsPending}
             jurisdiction={jurisdictionBlock ?? null}
+            verifying={jurisdictionRevalidating}
           />
         }
       />

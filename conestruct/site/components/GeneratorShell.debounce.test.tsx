@@ -27,6 +27,11 @@ import { GeneratorShell } from "./GeneratorShell";
 import { DEFAULT_FLAGGER } from "@/lib/scenarios";
 // #186: located — the suite asserts verdict states around the debounce.
 import { pinned } from "./test-fixtures";
+// A real audit answer (the prod capture committed under
+// validation-artifacts/committed/issue-256-scan-chain/acceptance/): the
+// generated page renders the audit's own sections, and a partial fixture
+// throws there (lib/tier-sources.ts).
+import auditFull from "./__fixtures__/audit-shoulder-full.json";
 
 const PINNED_FLAGGER = pinned(DEFAULT_FLAGGER);
 
@@ -132,8 +137,32 @@ describe("fetch debounce (#182)", () => {
 
   it("Retry bypasses the debounce", async () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_FLAGGER} />);
+    // #289 hand-check, 2026-09-23, correction 2: Retry lives INSIDE the
+    // audit trail panel, and Part 1 §2.1 gives the page no results zone
+    // before Generate — so the panel that owns the button only exists
+    // after one.  The claim is unchanged (a Retry fires immediately,
+    // without waiting out the #182 window); the click just has to happen
+    // where the button is.
     await act(async () => {
       auditCalls[0].resolve({
+        ok: true,
+        status: 200,
+        json: async () => auditFull,
+      } as unknown as Response);
+      bdCalls[0].resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({ devices: [], total_devices: 0, unique_types: 0 }),
+      } as unknown as Response);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: /Generate plan/ }));
+    });
+    await advance(400);
+    await act(async () => {
+      auditCalls[auditCalls.length - 1].resolve({
         ok: false,
         status: 502,
         json: async () => {
@@ -142,6 +171,13 @@ describe("fetch debounce (#182)", () => {
         text: async () => {
           throw new Error("consumed");
         },
+      } as unknown as Response);
+      // The pair's other half has to land too: Retry is a write control
+      // and stays disabled while a request is open (#252).
+      bdCalls[bdCalls.length - 1].resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({ devices: [], total_devices: 0, unique_types: 0 }),
       } as unknown as Response);
       await Promise.resolve();
       await Promise.resolve();

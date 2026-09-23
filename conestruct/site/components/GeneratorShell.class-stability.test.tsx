@@ -30,6 +30,14 @@ vi.mock("./QuotePanel", () => ({ QuotePanel: () => null }));
 vi.mock("./LocationPickerModal", () => ({ LocationPickerModal: () => null }));
 
 import { GeneratorShell } from "./GeneratorShell";
+import { changeOneThing, openWhat } from "./__fixtures__/band-helpers";
+// A REAL audit answer, not a hand-built one: the prod capture committed
+// at validation-artifacts/committed/issue-256-scan-chain/acceptance/
+// run1-crashed-5d569d7/audit-denver-cold-01.json (TA-3, S-630-1,
+// shoulder).  The reference panel walks the whole per-kind trace
+// (lib/tier-sources.ts: "it throws on a partial fixture"), so a suite
+// that opens that panel needs an answer the backend actually produced.
+import auditFull from "./__fixtures__/audit-shoulder-full.json";
 import { DEFAULT_SCENARIO } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios";
 
@@ -48,9 +56,22 @@ const parker = (demo as { jurisdictions: Record<string, unknown> })
 // This suite's subject is stale-while-revalidate, not gating — mount
 // pinned so the controls are live, exactly as a user switching classes
 // would be.
+// #289 hand-check, 2026-09-23, correction 2: the schedule is part of the
+// mount now.  Pre-generate the hours VERDICT lives in the WHAT band's
+// windows block, and that block reports "set dates to check" for a
+// schedule nobody entered (#199) — an honest answer, and not the one
+// this suite is about.  8:00–16:00 on a weekday straddles Parker's
+// 9:00–15:30 window, which is what makes the fixture's `outside` verdict
+// the right one to assert.
 const PINNED: Scenario = {
   ...DEFAULT_SCENARIO,
   meta: { ...DEFAULT_SCENARIO.meta, lat: 39.5186, lng: -104.7614 },
+  schedule: {
+    date_mode: "single",
+    work_date: "2026-10-07",
+    start_time: 8,
+    end_time: 16,
+  },
 } as Scenario;
 
 const BREAKDOWN_BASE = {
@@ -76,6 +97,17 @@ const fetchMock = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
     return new Promise<Response>((resolve) => {
       breakdownCalls.push({ resolve, body });
     });
+  }
+  // Correction 2: this suite generates before it reads the Reference
+  // row, so the audit answer has to be wire-shaped — the results stack
+  // renders the audit's sections.  The jurisdiction story under test is
+  // the BREAKDOWN's, which the deferred calls above still own.
+  if (url.includes("/api/render/audit")) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: async () => auditFull,
+    } as unknown as Response);
   }
   return Promise.resolve({
     ok: true,
@@ -111,8 +143,36 @@ async function release(index: number, response: Response) {
   });
 }
 
+// #289 hand-check, 2026-09-23, correction 2: the fetches are released in
+// ORDER rather than by a hard-coded index — the numbers were never the
+// claim, and re-homing the assertions changed how many there are.
+let cursor = 0;
+async function releaseNext(response: Response) {
+  await release(cursor++, response);
+}
+/** Fetches dispatched but not yet answered. */
+function pending(): number {
+  return breakdownCalls.length - cursor;
+}
+
+/** Answer every dispatched fetch, and the ones the debounce's trailing
+ *  edge dispatches in response, until the page is quiet.  A verdict
+ *  presents as CHECKING while any breakdown is in flight (rule 10), so a
+ *  suite that asserts a SETTLED verdict has to start from a settled
+ *  page. */
+async function quiesce(): Promise<void> {
+  for (let i = 0; i < 6; i += 1) {
+    await flushDebounce();
+    if (pending() === 0) return;
+    while (pending() > 0) {
+      await releaseNext(okBreakdown(true));
+    }
+  }
+}
+
 beforeEach(() => {
   breakdownCalls = [];
+  cursor = 0;
   fetchMock.mockClear();
   vi.stubGlobal("fetch", fetchMock);
 });
@@ -137,87 +197,107 @@ afterEach(() => {
 // What replaces the skeleton check: the bar's three facts now ride the
 // Reference row's summary line, so the row is where "no stale answer
 // presented as current" is now observable for them.
-function referenceSummaryLine(): string {
-  const row = Array.from(document.querySelectorAll(".disc")).find(
-    (d) => d.querySelector(".disc-name")?.textContent === "Reference",
+function jurisdictionCell(): HTMLElement | null {
+  return document.querySelector('[data-testid="cell-jurisdiction"]');
+}
+
+/** Ruling 196's three states, as the cell declares them: `unset`,
+ *  `evaluating`, `evaluated`, `not-evaluated`.  This is the pre-generate
+ *  home of "which answer is on screen, and is it current". */
+function jurisdictionState(): string | null {
+  return (
+    document
+      .querySelector("#what-jurisdiction")
+      ?.getAttribute("data-jurisdiction-state") ?? null
   );
-  return row?.querySelector(".disc-prov")?.textContent ?? "";
+}
+
+/** The cell's provenance line — rule 137's, and the words that say
+ *  whether the value was evaluated or merely picked. */
+function jurisdictionProv(): string {
+  return document.querySelector('[data-testid="prov-jurisdiction"]')?.textContent ?? "";
+}
+
+/** The WHAT band's schedule windows block — the pre-generate home of
+ *  the one class-dependent VERDICT (hours_eval). */
+function windowsBlock(): string {
+  return document.querySelector(".sched-windows")?.textContent ?? "";
 }
 
 async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   const user = userEvent.setup();
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
-  await release(0, okBreakdown(false));
+  await releaseNext(okBreakdown(false));
   const select = document.querySelector(
     "#what-jurisdiction",
   ) as HTMLSelectElement;
   await user.selectOptions(select, "parker");
-  // First load of the key: the summary says so in a WORD rather than a
+  // First load of the key: the cell says so in a WORD rather than a
   // skeleton (#252: no skeletons anywhere; rule 14: a value that is not
-  // known renders as a word).
-  expect(referenceSummaryLine()).toContain("Checking…");
+  // known renders as a word).  Ruling 196 named this state.
+  expect(jurisdictionState()).toBe("evaluating");
+  expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
   await flushDebounce();
-  await release(1, okBreakdown(true));
-  // Settled: the row names the jurisdiction and its chain.
-  expect(referenceSummaryLine()).toContain("Parker");
-  expect(referenceSummaryLine()).toMatch(/›/);
-  // #288 §8.35: section 03 is now folded behind the reference disclosure,
-  // so the section content this suite holds stable sits inside a closed
-  // panel until it is opened.  The STABILITY contract is unchanged — only
-  // the default visibility moved (rule 125's S5/S8 split).
-  const refHead = document.querySelector(".disc-head") as HTMLButtonElement | null;
-  if (refHead && refHead.getAttribute("aria-expanded") === "false") {
-    await user.click(refHead);
-  }
+  await releaseNext(okBreakdown(true));
+  // Settled: the cell carries the EVALUATED answer and says which of the
+  // two it is.
+  expect(jurisdictionState()).toBe("evaluated");
+  expect(jurisdictionCell()?.textContent).toContain("Parker");
+  expect(jurisdictionProv()).toContain("evaluated");
+  await quiesce();
   return user;
 }
 
 describe("class-switch stability (#152 D)", () => {
-  it("a class switch holds bar + section content while the refetch is in flight — no skeleton, one reflow max", async () => {
+  it("a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max", async () => {
     const user = await mountWithParker();
-    // Settled: the hours verdict renders (parker fixture is "outside")
-    // — #219: in the auto-open ⚠ tier, off the same hours_eval.
-    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
+    // Settled: the hours verdict renders (parker fixture is "outside").
+    expect(windowsBlock()).toContain("Parker windows");
+    expect(windowsBlock()).toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
     await flushDebounce();
-    // Refetch pending (index 2) — nothing may flip to skeleton.
-    expect(breakdownCalls.length).toBe(3);
-    // Mid-refetch the summary keeps the settled answer — it does not
-    // flash "Checking…" for a jurisdiction that has not changed.
-    expect(referenceSummaryLine()).toContain("Parker");
+    // Refetch pending — nothing may flip to skeleton.
+    expect(pending()).toBe(1);
+    // Mid-refetch the cell keeps the settled answer — it does not flash
+    // "Checking…" for a jurisdiction that has not changed.
+    expect(jurisdictionCell()?.textContent).toContain("Parker");
+    expect(jurisdictionState()).toBe("evaluated");
     expect(screen.queryByText(/Loading jurisdiction rules/)).toBeNull();
-    // The section's content is still mounted mid-refetch.
-    expect(screen.getByText(/Parker — jurisdiction rules/)).toBeTruthy();
+    // The content is still mounted mid-refetch.
+    expect(windowsBlock()).toContain("Parker windows");
 
-    await release(2, okBreakdown(true));
-    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
+    await releaseNext(okBreakdown(true));
+    expect(windowsBlock()).toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
   });
 
   it("the hours VERDICT presents as checking while the class refetch is in flight — never the stale answer (rule 10)", async () => {
     const user = await mountWithParker();
-    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
+    expect(windowsBlock()).toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
 
     await user.click(screen.getByRole("button", { name: "Arterial" }));
     // The stale "outside" verdict may not display as current — including
     // DURING the #182 debounce's deferred window, before the fetch has
-    // even dispatched.
-    expect(
-      screen.queryByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/),
-    ).toBeNull();
-    expect(
-      screen.getByText(/windows for the updated inputs/),
-    ).toBeTruthy();
+    // even dispatched.  The row keeps its shape and loses its claim.
+    expect(windowsBlock()).not.toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
+    expect(windowsBlock()).toContain("checking these inputs");
 
     await flushDebounce();
-    expect(
-      screen.getByText(/windows for the updated inputs/),
-    ).toBeTruthy();
-    await release(2, okBreakdown(true));
-    expect(
-      screen.queryByText(/windows for the updated inputs/),
-    ).toBeNull();
-    expect(screen.getByText(/1 h falls outside the permitted 9:00 AM–3:30 PM window/)).toBeTruthy();
+    expect(windowsBlock()).not.toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
+    await releaseNext(okBreakdown(true));
+    expect(windowsBlock()).toContain(
+      "1 h outside the permitted 9:00 AM–3:30 PM window",
+    );
   });
 
   it("a CHANGED jurisdiction key says CHECKING — a stale block from another jurisdiction never renders", async () => {
@@ -226,30 +306,34 @@ describe("class-switch stability (#152 D)", () => {
       "#what-jurisdiction",
     ) as HTMLSelectElement;
     await user.selectOptions(select, "denver");
-    // No held content from parker.  The bar used to skeleton here; §8.31
-    // dropped the bar, so the same fact is stated in the summary's own
-    // word — and, critically, the summary must NOT still say "Parker"
-    // while Denver is loading.  That is the rule-10 claim this test has
-    // always made; only the surface carrying it changed.
-    expect(referenceSummaryLine()).toContain("Checking…");
-    expect(referenceSummaryLine()).not.toContain("Parker");
+    // No held content from Parker.  The bar used to skeleton here; §8.31
+    // dropped the bar and §8.21 moved the field into the WHAT grid, so
+    // the same fact is stated in the cell's own word — and, critically,
+    // the cell must NOT still present Parker's evaluated block while
+    // Denver is loading.  That is the rule-10 claim this test has always
+    // made; only the surface carrying it changed.
+    expect(jurisdictionState()).toBe("evaluating");
+    expect(jurisdictionProv()).toContain("not yet confirmed for this plan");
+    expect(windowsBlock()).not.toContain("Parker windows");
     await flushDebounce();
-    expect(referenceSummaryLine()).not.toContain("Parker");
-    expect(screen.queryByText(/Parker — jurisdiction rules/)).toBeNull();
+    expect(jurisdictionState()).toBe("evaluating");
+    expect(windowsBlock()).not.toContain("Parker windows");
   });
 
   it("a breakdown ERROR clears the held block rather than presenting it as live", async () => {
     const user = await mountWithParker();
     await user.click(screen.getByRole("button", { name: "Collector" }));
     await flushDebounce();
-    await release(2, {
+    await releaseNext({
       ok: false,
       status: 500,
       json: async () => ({}),
       text: async () => "boom",
     } as unknown as Response);
-    // The summary falls back to the statewide floor; no stale parker
-    // content claims to be evaluated output.
-    expect(screen.queryByText(/Parker — jurisdiction rules/)).toBeNull();
+    // Ruling 196's fourth state: the check did not answer, and the cell
+    // says exactly that instead of holding Parker's block as current.
+    expect(jurisdictionState()).toBe("not-evaluated");
+    expect(jurisdictionProv()).toContain("the check did not answer");
+    expect(windowsBlock()).not.toContain("Parker windows");
   });
 });

@@ -153,10 +153,16 @@ describe("strip error honesty (#184)", () => {
       "VERIFICATION UNAVAILABLE",
     );
     expect(document.body.textContent).not.toContain("INVALID INPUT");
-    // The audit panel shows its declined line and offers no Retry.
+    // #289 hand-check, 2026-09-23, correction 2: the audit trail panel is
+    // a RESULTS-zone panel and Part 1 §2.1 gives the page no results zone
+    // before Generate, so pre-generate its line is not on screen and its
+    // Retry is not either.  The panel's own declined / paused lines are
+    // covered where the panel lives (AuditTrail.declined-stale.test.tsx);
+    // what this suite is about — the STRIP's vocabulary — is unchanged.
     expect(
-      screen.getByText(/unavailable while generation is declined/),
-    ).toBeTruthy();
+      screen.queryByText(/unavailable while generation is declined/),
+    ).toBeNull();
+    expect(document.querySelector("section.zone.results")?.textContent).toBe("");
     expect(screen.queryByRole("button", { name: /^Retry$/ })).toBeNull();
   });
 
@@ -183,9 +189,15 @@ describe("strip error honesty (#184)", () => {
     expect(document.body.textContent).not.toContain(
       "VERIFICATION UNAVAILABLE",
     );
-    expect(screen.getByText(/Audit trail paused/)).toBeTruthy();
-    // Retry stays — it genuinely helps once the minute rolls.
-    expect(screen.getByRole("button", { name: /^Retry$/ })).toBeTruthy();
+    // Correction 2: pre-generate the panel is not on screen, so the
+    // strip carries the whole message — including where the retry is.
+    // Retrying still genuinely helps once the minute rolls, and
+    // pre-generate the control that retries is Generate.
+    expect(screen.queryByText(/Audit trail paused/)).toBeNull();
+    expect(document.body.textContent).toContain(
+      "Generate in a moment to check again",
+    );
+    expect(screen.queryByRole("button", { name: /^Retry$/ })).toBeNull();
   });
 
   it("clearing the invalid combination returns the strip to the verifying path", async () => {

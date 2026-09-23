@@ -37,6 +37,15 @@ interface Props {
    *  response) — the reference block renders its REAL window set.  Null
    *  when none is selected or the block is in flight. */
   jurisdiction?: JurisdictionBlock | null;
+  /** #152 D, re-earned for this surface (#289 hand-check 2026-09-23,
+   *  correction 2).  True while a breakdown for the SAME jurisdiction is
+   *  in flight — the held block is content, which may stay on screen,
+   *  but `hours_eval` is a VERDICT, and a verdict for inputs the backend
+   *  has not answered yet may not render as current (rule 10).  The
+   *  reference panel's own HoursVerdictBlock has taken this flag since
+   *  #152 D; pre-generate the window rows are the only surface carrying
+   *  the verdict, so they take it too. */
+  verifying?: boolean;
 }
 
 export function ScheduleField({
@@ -45,6 +54,7 @@ export function ScheduleField({
   step,
   stepsPending = false,
   jurisdiction = null,
+  verifying = false,
 }: Props) {
   const sched = scenario.schedule ?? null;
   // Untouched scenario: present "Not set" (#199) — the honest default
@@ -179,6 +189,7 @@ export function ScheduleField({
         scenario={scenario}
         jurisdiction={jurisdiction}
         scheduleMode={mode}
+        verifying={verifying}
       />
     </FieldGroup>
   );
@@ -196,7 +207,18 @@ function rowVerdict(
   active: BandRow | null,
   hoursEval: HoursEval,
   scheduleChecked: boolean,
+  verifying: boolean,
 ): { glyph: string; text: string; tone: string } {
+  // #152 D (correction 2): a refetch is in flight for these inputs, so
+  // the last answer is not an answer to THIS question yet.  Chromeless
+  // and in a word — never the previous verdict, never a skeleton.
+  if (verifying) {
+    return {
+      glyph: "◌",
+      text: "— checking these inputs",
+      tone: "text-[color:var(--none)]",
+    };
+  }
   if (!scheduleChecked || hoursEval.status === "unknown") {
     return {
       glyph: "◌",
@@ -242,10 +264,12 @@ function ScheduleWindowsBlock({
   scenario,
   jurisdiction,
   scheduleMode,
+  verifying,
 }: {
   scenario: Scenario;
   jurisdiction: JurisdictionBlock | null;
   scheduleMode: DateMode;
+  verifying: boolean;
 }) {
   const keyNamed = Boolean(scenario.jurisdiction_key);
 
@@ -306,7 +330,13 @@ function ScheduleWindowsBlock({
     <div className="sched-windows">
       <div className="tr-step mb-1">{jurisdiction.name} windows</div>
       {rows.map((r) => {
-        const v = rowVerdict(r, active, jurisdiction.hours_eval, scheduleChecked);
+        const v = rowVerdict(
+          r,
+          active,
+          jurisdiction.hours_eval,
+          scheduleChecked,
+          verifying,
+        );
         return (
           <div key={`${r.scope}-${r.days}`} className="sched-window-row">
             <span className={`sw-glyph ${v.tone}`} aria-hidden>

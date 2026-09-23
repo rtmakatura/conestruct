@@ -1163,11 +1163,28 @@ export function GeneratorShell({
   // below", and the Retry lives inside this panel, so the panel must
   // exist whenever the strip can say it.  Lifted to a named predicate
   // because the disclosure group now reads it too.
+  //
+  // #289 hand-check, 2026-09-23, correction 2 (Rule 5 — STATED BEHAVIOUR
+  // CHANGE): "Pre-generate renders no results zone (Part 1 §2.1) —
+  // including under INVALID INPUT."  Before this, a jurisdiction pick
+  // alone mounted the reference disclosure in the results stack with no
+  // plan on screen, and an audit error mounted it at a pin.  Part 1 §2.1
+  // gives the pre-generate column four bands and nothing else.
+  //
+  // WHERE THE PRE-GENERATE READER GOES INSTEAD, because this must not be
+  // a deletion: the jurisdiction's evaluated facts are the WHAT band's
+  // jurisdiction cell and its provenance line (authority, tcp_term —
+  // ruling 196), and the audit-error recovery is the Generate click
+  // itself, which refires both fetches.  The strip's pointer says so in
+  // as many words (`preGenerate` on StatusBar) rather than pointing at a
+  // panel that is no longer there (rule 10).
+  const preGenerate = genState === "pre";
   const referenceMounts =
-    Boolean(jurisdictionBlock) ||
-    Boolean(scenario.jurisdiction_key) ||
-    showResults ||
-    auditState.state === "error";
+    !preGenerate &&
+    (Boolean(jurisdictionBlock) ||
+      Boolean(scenario.jurisdiction_key) ||
+      showResults ||
+      auditState.state === "error");
   const tiersRefreshing =
     jurisdictionRevalidating || (stripAudit.state === "loading" && stripAudit.lastReady !== null);
   const tierProps = {
@@ -1436,6 +1453,10 @@ export function GeneratorShell({
             // working band is mounted for both, so the strip is quiet for
             // both.
             bandVoice={generated || genState === "generating"}
+            // Correction 2: with no results zone before Generate, the
+            // "retry from the panel below" pointer would name a panel
+            // that does not exist.  Pre-generate the retry IS Generate.
+            preGenerate={preGenerate}
           />
 
           {/* ——— Zone 1 · Setup ——— */}
@@ -1496,6 +1517,10 @@ export function GeneratorShell({
                 // the WHAT grid's jurisdiction cell is handed both rather
                 // than re-deriving either.
                 jurisdictionLoading={jurisdictionLoading}
+                // #152 D, one derivation: the same flag the reference
+                // panel's hours verdict reads.  Correction 2 made the
+                // band the only pre-generate home for that verdict.
+                jurisdictionRevalidating={jurisdictionRevalidating}
                 jurisdictionErrored={deviceBreakdown.state === "error"}
                 jurisdictionSuggest={jurisdictionSuggestSlot}
                 pendingSuggestions={pendingSuggestions}
