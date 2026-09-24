@@ -30,6 +30,10 @@ import { PINNED_FLAGGER, PINNED_SHOULDER } from "./test-fixtures";
 import type { Scenario } from "@/lib/scenarios";
 import auditFull from "./__fixtures__/audit-shoulder-full.json";
 import { applyRevision, changeOneThing } from "./__fixtures__/band-helpers";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8").replace(/\r\n/g, "\n");
 
 const BREAKDOWN = {
   devices: [],
@@ -135,6 +139,15 @@ describe("defect 2 — the setup line's values are the links", () => {
     // Rule 134: the row's right track is a word, not a second link.
     expect(screen.getByTestId("setup-links-hint").textContent).toBe(
       "pick a value to change it",
+    );
+    // s4-prod/ at 380: the hint broke one word per line.  At ≤480 the
+    // fact line is 2-track (rule 166) and only `.a-fact-prov` / `.a-lk`
+    // are placed in column 2; a bare `.tr-prov` auto-placed into the
+    // 18 px symbol track.  The hint is every fact line's provenance word.
+    expect(screen.getByTestId("setup-links-hint").classList.contains("a-fact-prov")).toBe(true);
+    const narrow = css.slice(css.indexOf("Rule 166 — fact lines become 2-track"));
+    expect(narrow).toMatch(
+      /\.workbench \.a-fact \.a-lk,\s*\.workbench \.a-fact \.a-fact-prov \{\s*grid-column: 2;/,
     );
     // The line still reads as one sentence.
     expect(screen.getByTestId("setup-values").textContent).toContain(" · 65 mph · ");

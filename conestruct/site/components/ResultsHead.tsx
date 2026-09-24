@@ -150,8 +150,11 @@ export function ResultsHead({
           </div>
           {onChangeValue && (
             // Rule 134: a link OR a provenance word.  The links are the
-            // values; the word says so.
-            <span className="tr-prov" data-testid="setup-links-hint">
+            // values; the word says so.  `a-fact-prov` is every fact
+            // line's provenance word: at ≤480 rule 166 puts it in column
+            // 2 under the value.  Without it the 2-track grid auto-placed
+            // it into the 18 px symbol track, one word per line.
+            <span className="tr-prov a-fact-prov" data-testid="setup-links-hint">
               pick a value to change it
             </span>
           )}
