@@ -39,6 +39,8 @@ import type { ReactNode } from "react";
 import type { Scenario, ScenarioKind } from "@/lib/scenarios";
 import { PLAN_DETAILS } from "@/lib/scenarios/what-cells";
 import { useWriteLock } from "../WriteLock";
+import { FieldCell } from "./FieldCell";
+import type { SectionSlot } from "../JurisdictionSection";
 
 /** Does this scenario show the explicit divided toggle?  #85: every road
  *  type but `urban_arterial` derives `divided` from itself, so the
@@ -59,39 +61,55 @@ function Cell({
   htmlFor,
   provenance,
   line = null,
+  action = null,
+  detail = null,
   children,
   testid,
 }: {
   label: string;
   htmlFor?: string;
   provenance: string;
-  /** A detection fact about THIS field (fix 3). */
+  /** A detection fact about THIS field (fix 3).  #289 WHAT density: it
+   *  is detail, behind the field's toggle — "the divided clause". */
   line?: { key: string; text: string; amber: boolean } | null;
+  /** The suggestion needing action (street classification's). */
+  action?: ReactNode;
+  /** Anything else about the field (street classification's map chip
+   *  and its suggestion's evidence). */
+  detail?: ReactNode;
   children: ReactNode;
   testid: string;
 }) {
+  const hasDetail = line !== null || (detail !== null && detail !== undefined);
   return (
-    <div className="a-cell" data-testid={`cell-${testid}`}>
-      {htmlFor ? (
-        <label className="tr-field" htmlFor={htmlFor}>
-          {label}
-        </label>
-      ) : (
-        <span className="tr-field">{label}</span>
-      )}
-      {children}
-      <span className="tr-prov" data-testid={`prov-${testid}`}>
-        {provenance}
-      </span>
-      {line && (
-        <span
-          className={`tr-prov${line.amber ? " is-amber" : ""}`}
-          data-testid={`detect-${line.key}`}
-        >
-          {line.amber ? `⚠ ${line.text}` : line.text}
+    <FieldCell
+      label={label}
+      htmlFor={htmlFor}
+      testid={testid}
+      action={action}
+      provenance={
+        <span className="tr-prov" data-testid={`prov-${testid}`}>
+          {provenance}
         </span>
-      )}
-    </div>
+      }
+      info={
+        hasDetail ? (
+          <>
+            {line && (
+              <span
+                className={`tr-prov${line.amber ? " is-amber" : ""}`}
+                data-testid={`detect-${line.key}`}
+              >
+                {line.amber ? `⚠ ${line.text}` : line.text}
+              </span>
+            )}
+            {detail}
+          </>
+        ) : null
+      }
+    >
+      {children}
+    </FieldCell>
   );
 }
 
@@ -144,6 +162,7 @@ export function PlanDetails({
   scheduleCells,
   windows,
   dividedLine = null,
+  streetClass,
 }: {
   scenario: Scenario;
   setScenario: (next: Scenario) => void;
@@ -159,6 +178,10 @@ export function PlanDetails({
   /** #227's window reference block, which is a reference table and not a
    *  field, so it sits under the grid rather than in it. */
   windows?: ReactNode;
+  /** #289 WHAT density (Ryan, 2026-09-24): "Street classification
+   *  becomes its own cell in the second group, out of the road-type
+   *  cell."  The shell's slot, asked for in parts. */
+  streetClass?: SectionSlot;
 }): ReactNode {
   const locked = useWriteLock();
   const table = PLAN_DETAILS[scenario.kind as ScenarioKind];
@@ -300,6 +323,25 @@ export function PlanDetails({
               }
               locked={locked}
             />
+          </Cell>
+        )}
+
+        {streetClass && (
+          <Cell
+            label="Street classification"
+            // Rule 137: a line always.  The chips are the operator's —
+            // the suggestion's Confirm is the operator's click too — so
+            // a picked class is rule 137's own operator-set clause.
+            provenance={
+              scenario.street_class
+                ? "your change · operator-set from here on"
+                : "not set · operator-set when picked"
+            }
+            action={streetClass("action")}
+            detail={streetClass("detail")}
+            testid="street-class"
+          >
+            {streetClass("control")}
           </Cell>
         )}
 

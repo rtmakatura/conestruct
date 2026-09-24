@@ -170,6 +170,9 @@ interface ContextBarProps {
    *  framing has no place inside a WHAT-grid cell.  Strings, handlers
    *  and the suggestion record are untouched (#198). */
   bare?: boolean;
+  /** #289 WHAT density — with `bare`, which part of the street-class
+   *  field to render (see `SuggestSection`).  Default: all of it. */
+  section?: SuggestSection;
   onConfirmSuggestion?: (key: string) => void;
   onDismissSuggestion?: () => void;
   onUndoSuggestion?: () => void;
@@ -234,6 +237,7 @@ export function JurisdictionSuggestSlot({
   onConfirm,
   onDismiss,
   onUndo,
+  section = "all",
 }: {
   suggest?: JurisdictionSuggestion | null;
   loading?: boolean;
@@ -242,6 +246,7 @@ export function JurisdictionSuggestSlot({
   onConfirm?: (key: string) => void;
   onDismiss?: () => void;
   onUndo?: () => void;
+  section?: SuggestSection;
 }) {
   return (
     <SuggestSlot
@@ -252,9 +257,23 @@ export function JurisdictionSuggestSlot({
       onConfirm={onConfirm}
       onDismiss={onDismiss}
       onUndo={onUndo}
+      section={section}
     />
   );
 }
+
+/** #289 WHAT density (rulings.md, "After the S4 prod run"): a field shows
+ *  "any suggestion needing action as one line + Confirm/Dismiss", and
+ *  everything else behind its details toggle.  The slots render the SAME
+ *  nodes either way (#198 byte-identity); `section` only picks which:
+ *    all     — everything, in the order it always had (the default)
+ *    action  — the proposal row, or a standing record's decision + Undo
+ *              (#227); null when nothing asks for action
+ *    detail  — the rest: passive agree / differ rows, evidence, caveats
+ *    control — JurisdictionControls only: the class chips alone */
+export type SuggestSection = "all" | "action" | "detail" | "control";
+/** A slot the shell builds and a cell asks for in parts. */
+export type SectionSlot = (section?: SuggestSection) => ReactNode;
 
 export function JurisdictionControls({
   jurisdiction,
@@ -277,6 +296,7 @@ export function JurisdictionControls({
   onUndoClassSuggestion,
   omitJurisdictionField = false,
   bare = false,
+  section = "all",
 }: ContextBarProps) {
   // #289 hand-check, 2026-09-23, fix 2: "The street-class suggestion
   // takes the same suggestion-record shape as the jurisdiction field's
@@ -349,9 +369,7 @@ export function JurisdictionControls({
     </>
   );
 
-  const classField = (
-    <>
-      <span className={bare ? "tr-field" : "k"}>Street classification</span>
+  const classPick = (
         <div
           role="group"
           aria-label="Street classification"
@@ -369,6 +387,8 @@ export function JurisdictionControls({
             </button>
           ))}
         </div>
+  );
+  const mapChip = (
         <span className="mapchip">
           {jurisdiction?.class_required ? (
             jurisdiction.classification_map_url ? (
@@ -392,11 +412,13 @@ export function JurisdictionControls({
             " "
           )}
         </span>
-        {/* #152 C: street-class suggestion off the confirmed road's OSM
-            tier — same confirm-only contract as the jurisdiction
-            suggestion in the field above.  Absent when no road is
-            confirmed at the pin.  Rendered inside the classification
-            field (#201), directly under the chips it confirms. */}
+  );
+  const classSlot = (s: SuggestSection) => (
+        // #152 C: street-class suggestion off the confirmed road's OSM
+        // tier — same confirm-only contract as the jurisdiction
+        // suggestion in the field above.  Absent when no road is
+        // confirmed at the pin.  Rendered inside the classification
+        // field (#201), directly under the chips it confirms.
       <ClassSuggestSlot
         classSuggest={classSuggest}
         tier={classSuggestTier}
@@ -406,11 +428,44 @@ export function JurisdictionControls({
         onConfirm={onConfirmClassSuggestion}
         onDismiss={onDismissClassSuggestion}
         onUndo={onUndoClassSuggestion}
+        section={s}
       />
+  );
+  const classField = (
+    <>
+      <span className={bare ? "tr-field" : "k"}>Street classification</span>
+      {classPick}
+      {mapChip}
+      {classSlot("all")}
     </>
   );
 
-  if (bare) return classField;
+  if (bare) {
+    // #289 WHAT density: street classification is its own WHAT cell, so
+    // the cell asks for its parts — the chips as the control, the
+    // proposal as the action line, the map chip and the rest as detail.
+    // The label is the cell's own.
+    if (section === "control") return classPick;
+    if (section === "action") return classSlot("action");
+    if (section === "detail") {
+      const detail = classSlot("detail");
+      // The map chip says something only where the jurisdiction
+      // classifies by map; otherwise it is the " " spacer.
+      const hasChip = Boolean(jurisdiction?.class_required);
+      const hasSlot =
+        classSuggest !== null &&
+        (streetClass !== null ||
+          Boolean(jurisdiction?.classification_map_url) ||
+          (classResolution !== null && classSuggestTier !== null));
+      return hasChip || hasSlot ? (
+        <>
+          {hasChip && mapChip}
+          {detail}
+        </>
+      ) : null;
+    }
+    return classField;
+  }
 
   return (
     <div className="jctl">
@@ -456,6 +511,7 @@ function ClassSuggestSlot({
   onConfirm,
   onDismiss,
   onUndo,
+  section = "all",
 }: {
   classSuggest: StreetClass | null;
   tier: string | null;
@@ -465,6 +521,7 @@ function ClassSuggestSlot({
   onConfirm?: (c: StreetClass) => void;
   onDismiss?: () => void;
   onUndo?: () => void;
+  section?: SuggestSection;
 }) {
   // No confirmed road at the current pin: nothing to say.  The
   // classpick above is exactly as functional either way — this row is
@@ -496,9 +553,7 @@ function ClassSuggestSlot({
     const priorLabel = resolution.prior
       ? classLabel(resolution.prior)
       : "Not set";
-    return (
-      <div className="jbar-suggest live" aria-live="polite">
-        <div className={`sys-event ${resolution.resolution}`}>
+    const decision = (
           <div className="sugg-row">
             <span className="sys-glyph" aria-hidden>
               {resolution.resolution === "confirmed" ? "✓" : "×"}
@@ -523,6 +578,9 @@ function ClassSuggestSlot({
               Undo
             </button>
           </div>
+    );
+    const rest = (
+      <>
           {agrees && (
             <div className="sugg-row passive">
               <span aria-hidden>✓ </span>
@@ -540,14 +598,34 @@ function ClassSuggestSlot({
             <div className="sugg-reason">detected road tier: OSM {tier}</div>
           )}
           {mapCaveat}
+      </>
+    );
+    // WHAT density: decision + Undo is the one line; the rest is detail.
+    if (section === "action") {
+      return (
+        <div className="jbar-suggest live" aria-live="polite">
+          <div className={`sys-event ${resolution.resolution}`}>{decision}</div>
+        </div>
+      );
+    }
+    if (section === "detail") {
+      return agrees || differs || tier || mapCaveat ? (
+        <div className="jbar-suggest">
+          <div className={`sys-event ${resolution.resolution}`}>{rest}</div>
+        </div>
+      ) : null;
+    }
+    return (
+      <div className="jbar-suggest live" aria-live="polite">
+        <div className={`sys-event ${resolution.resolution}`}>
+          {decision}
+          {rest}
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="jbar-suggest live" aria-live="polite">
-      {!streetClass && (
+  const proposal = !streetClass && (
         <div className="sugg-row">
           {/* ⌁ = proposed (the one glyph vocabulary, #227).
               #228 rule 3 mirror: this render condition (classSuggest
@@ -575,7 +653,9 @@ function ClassSuggestSlot({
             Dismiss
           </button>
         </div>
-      )}
+  );
+  const passive = (
+    <>
       {agrees && (
         <div className="sugg-row passive">
           <span aria-hidden>✓ </span>
@@ -589,6 +669,27 @@ function ClassSuggestSlot({
           {classLabel(streetClass as StreetClass)} selected.
         </div>
       )}
+    </>
+  );
+  if (section === "action") {
+    return proposal ? (
+      <div className="jbar-suggest live" aria-live="polite">
+        {proposal}
+      </div>
+    ) : null;
+  }
+  if (section === "detail") {
+    return agrees || differs || mapCaveat ? (
+      <div className="jbar-suggest">
+        {passive}
+        {mapCaveat}
+      </div>
+    ) : null;
+  }
+  return (
+    <div className="jbar-suggest live" aria-live="polite">
+      {proposal}
+      {passive}
       {mapCaveat}
     </div>
   );
@@ -610,6 +711,7 @@ function SuggestSlot({
   onConfirm,
   onDismiss,
   onUndo,
+  section = "all",
 }: {
   suggest: JurisdictionSuggestion | null;
   loading: boolean;
@@ -618,6 +720,7 @@ function SuggestSlot({
   onConfirm?: (key: string) => void;
   onDismiss?: () => void;
   onUndo?: () => void;
+  section?: SuggestSection;
 }) {
   // Quiet state: no pin yet, endpoint failed, or dismissed.  The bar
   // keeps its band (fixed min-height) so the slot appearing later never
@@ -626,6 +729,8 @@ function SuggestSlot({
   // #260 (P2): no live attribute on the empty state — nothing changed,
   // nothing to announce (it was one of four regions mounted pre-pin).
   // The loading state below keeps its: the boundary lookup IS a change.
+  // The quiet and checking states ask nothing of anyone: no action line.
+  if (section === "action" && (!suggest || loading)) return null;
   if (!suggest && !loading) {
     return (
       <div className="jbar-suggest quiet">
@@ -673,9 +778,7 @@ function SuggestSlot({
     const priorLabel = resolution.prior
       ? jurisdictionLabel(resolution.prior)
       : "Not set"; // #260: the #257 fold's word for an unset jurisdiction
-    return (
-      <div className="jbar-suggest live" aria-live="polite">
-        <div className={`sys-event ${resolution.resolution}`}>
+    const decision = (
           <div className="sugg-row">
             <span className="sys-glyph" aria-hidden>
               {resolution.resolution === "confirmed" ? "✓" : "×"}
@@ -700,6 +803,9 @@ function SuggestSlot({
               Undo
             </button>
           </div>
+    );
+    const rest = (
+      <>
           {agrees && (
             <div className="sugg-row passive">
               <span aria-hidden>✓ </span>
@@ -713,14 +819,36 @@ function SuggestSlot({
             </div>
           )}
           {evidence}
+      </>
+    );
+    // WHAT density (rulings.md, "After the S4 prod run"): the record's
+    // decision line and its Undo are the field's one suggestion line; the
+    // rest rides the field's details panel.  Same nodes, split in two.
+    if (section === "action") {
+      return (
+        <div className="jbar-suggest live" aria-live="polite">
+          <div className={`sys-event ${resolution.resolution}`}>{decision}</div>
+        </div>
+      );
+    }
+    if (section === "detail") {
+      return (
+        <div className="jbar-suggest">
+          <div className={`sys-event ${resolution.resolution}`}>{rest}</div>
+        </div>
+      );
+    }
+    return (
+      <div className="jbar-suggest live" aria-live="polite">
+        <div className={`sys-event ${resolution.resolution}`}>
+          {decision}
+          {rest}
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="jbar-suggest live" aria-live="polite">
-      {key && !jurisdictionKey && (
+  const proposal = key && !jurisdictionKey && (
         <div className="sugg-row">
           {/* ⌁ = proposed (the one glyph vocabulary, #227) — the
               sentence and two buttons carry the meaning (rule 13).
@@ -746,7 +874,9 @@ function SuggestSlot({
             Dismiss
           </button>
         </div>
-      )}
+  );
+  const passive = (
+    <>
       {key && manualDiffers && (
         <div className="sugg-row passive">
           Pin appears to be in {jurisdictionLabel(key)} — you have{" "}
@@ -759,6 +889,27 @@ function SuggestSlot({
           Pin agrees with your selection ({jurisdictionLabel(key)}).
         </div>
       )}
+    </>
+  );
+  if (section === "action") {
+    return proposal ? (
+      <div className="jbar-suggest live" aria-live="polite">
+        {proposal}
+      </div>
+    ) : null;
+  }
+  if (section === "detail") {
+    return (
+      <div className="jbar-suggest">
+        {passive}
+        {evidence}
+      </div>
+    );
+  }
+  return (
+    <div className="jbar-suggest live" aria-live="polite">
+      {proposal}
+      {passive}
       {evidence}
     </div>
   );

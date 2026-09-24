@@ -4575,6 +4575,44 @@ input[type="number"] {
   gap: 6px;
   align-content: start;
 }
+/* #289 WHAT density (Ryan, 2026-09-24, P19): the label and the field's
+   details toggle share one row, so the toggle costs no height.  The toggle
+   is `.a-lk` (rule 134's type, rule 15's hit box); the panel is the cell's
+   own stack, and it opens on click / tap only (rule 141). */
+.workbench .a-cell-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.workbench .a-info-toggle {
+  gap: 6px;
+  flex: 0 0 auto;
+  /* Rule 15's 32 px box without a taller label row: the box overhangs
+     the row by 8 px each way, so a cell with a toggle puts its control
+     at the same height as its neighbours'. */
+  margin-block: -8px;
+}
+@media (max-width: 480px) {
+  /* Rule 163's 44 px (the .a-lk rule), overhanging by 14 each way. */
+  .workbench .a-info-toggle {
+    margin-block: -14px;
+  }
+}
+.workbench .a-info {
+  display: grid;
+  gap: 6px;
+}
+.workbench .a-info[hidden] {
+  display: none;
+}
+/* A slot the shell builds can render nothing (street classification with
+   no map on record and no suggestion evidence); an empty panel offers no
+   toggle. */
+.workbench .a-cell:has(> .a-info:empty) .a-info-toggle {
+  display: none;
+}
 .workbench .a-fld {
   height: 44px;
   width: 100%;

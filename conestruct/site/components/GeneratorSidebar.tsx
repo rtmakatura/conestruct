@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
+import type { SectionSlot } from "./JurisdictionSection";
 import {
   applyClassification,
   carryAcrossKinds,
@@ -69,7 +70,7 @@ interface Props {
   // below the Location step so the causality still reads pin ->
   // suggestions -> confirm.  Built by the shell (which owns the
   // suggestion state); this component only places it.
-  jurisdictionControls?: ReactNode;
+  jurisdictionControls?: SectionSlot;
   // #227 fact strip: the evaluated jurisdiction's display name (the
   // device-breakdown block's ``name``), null before it loads or when no
   // jurisdiction is named.  The strip falls back to the option label /
@@ -89,7 +90,8 @@ interface Props {
   jurisdictionErrored?: boolean;
   // #201: the pin suggestion, rendered INSIDE the WHAT grid's
   // jurisdiction cell so a confirm sits beside the control it applies to.
-  jurisdictionSuggest?: ReactNode;
+  // #289 WHAT density: a render function of the section the cell asks for.
+  jurisdictionSuggest?: SectionSlot;
   // #228: how many suggestion proposals await Confirm/Dismiss (0–2),
   // computed by the shell from the slots' own render expressions —
   // feeds the rail's Location info subline and nothing else.

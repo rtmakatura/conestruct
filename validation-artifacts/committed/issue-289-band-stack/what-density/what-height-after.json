@@ -1,0 +1,29 @@
+{
+  "site": "http://localhost:3100/sandbox",
+  "tag": "after",
+  "ranAt": "2026-09-24T18:57:45.360Z",
+  "settled": true,
+  "band": 1059.75,
+  "grids": [
+    89.25,
+    205.5,
+    105,
+    305.5
+  ],
+  "cells": {
+    "cell-speed": 89.25,
+    "cell-lanes": 89.25,
+    "cell-lane-width": 89.25,
+    "cell-road-type": 205.5,
+    "cell-jurisdiction": 205.5,
+    "cell-work-dates": 205.5,
+    "cell-project": 105,
+    "cell-location-description": 105,
+    "cell-work-type": 89.25,
+    "cell-night": 89.25,
+    "cell-reduction": 89.25,
+    "cell-divided": 202.25,
+    "cell-street-class": 202.25
+  },
+  "toggles": 4
+}

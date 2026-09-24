@@ -98,8 +98,8 @@ vi.mock("./GeneratorSidebar", () => ({
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
-    jurisdictionControls?: ReactNode;
-    jurisdictionSuggest?: ReactNode;
+    jurisdictionControls?: (section?: string) => ReactNode;
+    jurisdictionSuggest?: (section?: string) => ReactNode;
   }) => (
     <div>
       {/* #289 §8.21 — the jurisdiction FIELD is a cell in the WHAT band
@@ -126,8 +126,8 @@ vi.mock("./GeneratorSidebar", () => ({
         <option value="parker">Parker</option>
         <option value="aurora">Aurora</option>
       </select>
-      {jurisdictionControls}
-      {jurisdictionSuggest}
+      {jurisdictionControls?.()}
+      {jurisdictionSuggest?.()}
       <button
         type="button"
         onClick={() =>

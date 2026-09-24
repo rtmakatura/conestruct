@@ -100,6 +100,7 @@ import { suggestStreetClass } from "@/lib/road-detection/classify";
 import {
   JurisdictionControls,
   JurisdictionSuggestSlot,
+  type SuggestSection,
   type SuggestionResolution,
 } from "./JurisdictionSection";
 import type {
@@ -1585,8 +1586,13 @@ export function GeneratorShell({
   };
 
   // #201 — the slot itself, for the WHAT grid's jurisdiction cell.
-  const jurisdictionSuggestSlot = (
+  // #289 WHAT density (rulings.md, "After the S4 prod run"): both slots
+  // are render functions of a `SuggestSection`, so the WHAT cell can put
+  // the actionable line under its field and the rest behind its details
+  // toggle — the same component, the same nodes, asked for in parts.
+  const jurisdictionSuggestSlot = (section: SuggestSection = "all") => (
     <JurisdictionSuggestSlot
+      section={section}
       suggest={suggestState.status !== "ready" ? null : suggestState.data}
       loading={suggestState.status === "loading"}
       jurisdictionKey={scenario.jurisdiction_key ?? null}
@@ -1597,8 +1603,9 @@ export function GeneratorShell({
     />
   );
 
-  const jurisdictionControls = (
+  const jurisdictionControls = (section: SuggestSection = "all") => (
     <JurisdictionControls
+      section={section}
       jurisdiction={jurisdictionBlock}
       jurisdictionKey={scenario.jurisdiction_key ?? null}
       setJurisdictionKey={(k) =>

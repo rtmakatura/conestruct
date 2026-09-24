@@ -21,6 +21,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import type { SectionSlot } from "./JurisdictionSection";
 import type { JurisdictionBlock } from "@/lib/jurisdiction";
 import type { CorridorSpecLengths } from "@/lib/render-types";
 import type { Scenario, ScenarioKind, ScenarioMeta } from "@/lib/scenarios";
@@ -67,8 +68,8 @@ export interface BandStackProps {
   scheduleCells?: ReactNode;
   /** #227's window reference block, under that group's grid. */
   scheduleWindows?: ReactNode;
-  jurisdictionSuggest?: ReactNode;
-  classificationFields?: ReactNode;
+  jurisdictionSuggest?: SectionSlot;
+  classificationFields?: SectionSlot;
   /** #289 hand-check, 2026-09-23, defect 1 — the shell's record of the
    *  kind choice.  Defaults to "confirmed" for a caller that does not
    *  track it. */

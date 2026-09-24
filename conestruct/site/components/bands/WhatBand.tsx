@@ -60,6 +60,8 @@ import { handoffNotesByCell } from "./HandoffNotes";
 import { PlanDetails, showsDividedToggle } from "./PlanDetails";
 import type { HandoffEvent } from "@/lib/scenarios/handoff-summary";
 import { OpenBand } from "./BandPrimitives";
+import { FieldCell } from "./FieldCell";
+import type { SectionSlot } from "../JurisdictionSection";
 import { useWriteLock } from "../WriteLock";
 
 /** The three states ruling 196 gives the jurisdiction field, plus the
@@ -86,7 +88,13 @@ export function jurisdictionCellState(opts: {
 
 /** One cell: label, control, provenance.  The provenance slot is never
  *  empty (rule 137) — a caller with nothing to say is a defect, so the
- *  prop is required rather than optional. */
+ *  prop is required rather than optional.
+ *
+ *  #289 WHAT density (rulings.md, "After the S4 prod run"): ONE
+ *  provenance line and the suggestion's one actionable line stay under
+ *  the field; the detection lines, the handoff sentences and anything
+ *  else about the field (`detail`) move behind its details toggle
+ *  (FieldCell).  Same nodes, same test ids — only the container moved. */
 function Cell({
   label,
   htmlFor,
@@ -95,6 +103,8 @@ function Cell({
   error = false,
   notes = [],
   lines = [],
+  action = null,
+  detail = null,
   children,
   testid,
 }: {
@@ -114,50 +124,63 @@ function Cell({
    *  detected bearing is a fact, not a warning, so it carries no glyph
    *  unless its own clause is amber. */
   lines?: Array<{ key: string; text: string; amber: boolean }>;
+  /** The suggestion needing action — one line + Confirm / Dismiss. */
+  action?: ReactNode;
+  /** Anything else about this field, ahead of its lines and notes. */
+  detail?: ReactNode;
   children: ReactNode;
   testid: string;
 }) {
+  const hasDetail =
+    lines.length > 0 || notes.length > 0 || (detail !== null && detail !== undefined);
   return (
-    <div className="a-cell" data-testid={`cell-${testid}`}>
-      {htmlFor ? (
-        <label className="tr-field" htmlFor={htmlFor}>
-          {label}
-        </label>
-      ) : (
-        <span className="tr-field">{label}</span>
-      )}
+    <FieldCell
+      label={label}
+      htmlFor={htmlFor}
+      testid={testid}
+      action={action}
+      provenance={
+        <span
+          className={`tr-prov${amber ? " is-amber" : ""}${error ? " is-error" : ""}`}
+          data-testid={`prov-${testid}`}
+        >
+          {/* Rule 138: the amber lives on this line, never on the field's
+              border — a guess is not an error. */}
+          {amber ? `⚠ ${provenance}` : provenance}
+        </span>
+      }
+      info={
+        hasDetail ? (
+          <>
+            {detail}
+            {lines.map((l) => (
+              <span
+                key={l.key}
+                className={`tr-prov${l.amber ? " is-amber" : ""}`}
+                data-testid={`detect-${l.key}`}
+              >
+                {l.amber ? `⚠ ${l.text}` : l.text}
+              </span>
+            ))}
+            {notes.map((n, i) => (
+              <span
+                key={i}
+                className="tr-prov is-amber"
+                data-testid={`handoff-${testid}`}
+              >
+                {/* Rule 13's second channel, and #227's reconciled mark for a
+                    value the user did not set: the glyph is its own node so
+                    the SENTENCE stays exactly one text node. */}
+                <span aria-hidden>⚠ </span>
+                {n}
+              </span>
+            ))}
+          </>
+        ) : null
+      }
+    >
       {children}
-      <span
-        className={`tr-prov${amber ? " is-amber" : ""}${error ? " is-error" : ""}`}
-        data-testid={`prov-${testid}`}
-      >
-        {/* Rule 138: the amber lives on this line, never on the field's
-            border — a guess is not an error. */}
-        {amber ? `⚠ ${provenance}` : provenance}
-      </span>
-      {lines.map((l) => (
-        <span
-          key={l.key}
-          className={`tr-prov${l.amber ? " is-amber" : ""}`}
-          data-testid={`detect-${l.key}`}
-        >
-          {l.amber ? `⚠ ${l.text}` : l.text}
-        </span>
-      ))}
-      {notes.map((n, i) => (
-        <span
-          key={i}
-          className="tr-prov is-amber"
-          data-testid={`handoff-${testid}`}
-        >
-          {/* Rule 13's second channel, and #227's reconciled mark for a
-              value the user did not set: the glyph is its own node so
-              the SENTENCE stays exactly one text node. */}
-          <span aria-hidden>⚠ </span>
-          {n}
-        </span>
-      ))}
-    </div>
+    </FieldCell>
   );
 }
 
@@ -216,8 +239,10 @@ export function WhatBand({
   scheduleCells?: ReactNode;
   scheduleWindows?: ReactNode;
   /** #201 — the pin suggestion, inside the jurisdiction cell: proximity
-   *  is how a user knows which control a confirm applies to. */
-  jurisdictionSuggest?: ReactNode;
+   *  is how a user knows which control a confirm applies to.  #289 WHAT
+   *  density: asked for in parts — the action line under the field, the
+   *  evidence and the TIGER caveat behind its details toggle. */
+  jurisdictionSuggest?: SectionSlot;
   /** §8.21's other half — the street-class field and its own suggestion
    *  slot.
    *
@@ -232,8 +257,13 @@ export function WhatBand({
    *  The component is unchanged, which is what keeps the strings
    *  byte-identical: `JurisdictionControls` with `omitJurisdictionField`
    *  renders the same chips, the same map chip and the same
-   *  `ClassSuggestSlot` it always did.  Only its container moved. */
-  classificationFields?: ReactNode;
+   *  `ClassSuggestSlot` it always did.  Only its container moved.
+   *
+   *  #289 WHAT density (Ryan, 2026-09-24) moves it again: "Street
+   *  classification becomes its own cell in the second group, out of the
+   *  road-type cell."  Passed on to PlanDetails, which asks for the chips,
+   *  the action line and the detail separately. */
+  classificationFields?: SectionSlot;
   /** The title-block metadata, as grid cells (see the third row). */
   setMeta: (m: ScenarioMeta) => void;
   /** The picker → form handoff events.  Correction 3 retires their box
@@ -454,14 +484,19 @@ export function WhatBand({
         <Cell
           label="Road type"
           htmlFor="what-road-type"
-          provenance={
-            table.roadTypeNote
-              ? `${roadTypeClause.text} · ${table.roadTypeNote}`
-              : roadTypeClause.text
-          }
+          // WHAT density: one provenance line — source · value · method.
+          // The kind's case note (e.g. "CDOT Cases 18/19 …") is detail.
+          provenance={roadTypeClause.text}
           amber={roadTypeClause.amber}
           notes={notes["road-type"]}
           lines={roadTypeLines}
+          detail={
+            table.roadTypeNote ? (
+              <span className="tr-prov" data-testid="road-type-note">
+                {table.roadTypeNote}
+              </span>
+            ) : null
+          }
           testid="road-type"
         >
           <select
@@ -480,9 +515,6 @@ export function WhatBand({
               </option>
             ))}
           </select>
-          {/* Correction 1: the street-class field and its suggestion
-              record, in the cell they belong to. */}
-          {classificationFields}
         </Cell>
 
         <Cell
@@ -490,6 +522,22 @@ export function WhatBand({
           htmlFor="what-jurisdiction"
           provenance={jurisdictionProv}
           error={jState === "not-evaluated"}
+          action={jurisdictionSuggest?.("action")}
+          detail={
+            jurisdictionSuggest ||
+            (jState === "evaluated" && jurisdictionValue !== pickedLabel) ? (
+              <>
+                {/* The evaluated name, when it differs from the option
+                    label — so a reader sees what the check actually
+                    returned and never has to infer it from the picker's
+                    wording. */}
+                {jState === "evaluated" && jurisdictionValue !== pickedLabel && (
+                  <span className="tr-prov">evaluated as {jurisdictionValue}</span>
+                )}
+                {jurisdictionSuggest?.("detail")}
+              </>
+            ) : null
+          }
           testid="jurisdiction"
         >
           <select
@@ -515,13 +563,6 @@ export function WhatBand({
               </option>
             ))}
           </select>
-          {/* The evaluated name, when it differs from the option label —
-              so a reader sees what the check actually returned and never
-              has to infer it from the picker's wording. */}
-          {jState === "evaluated" && jurisdictionValue !== pickedLabel && (
-            <span className="tr-prov">evaluated as {jurisdictionValue}</span>
-          )}
-          {jurisdictionSuggest}
         </Cell>
 
         {/* #289 hand-check, 2026-09-23, fix 1: ONE control for one
@@ -655,6 +696,7 @@ export function WhatBand({
         scenario={scenario}
         setScenario={setScenario}
         dividedLine={showsDivided ? dividedLine : null}
+        streetClass={classificationFields}
         scheduleCells={scheduleCells}
         windows={scheduleWindows}
       />

@@ -183,8 +183,13 @@ describe("the writes are the forms' own", () => {
 // and its pin suggestion: a confirm sits beside the control it applies
 // to.  The container is all that moves, which is what keeps the strings
 // identical, and that is what this case checks.
-describe("the street-class record rides the road-type cell", () => {
-  it("renders inside the cell, with its strings unchanged", async () => {
+//
+// #289 WHAT density (Ryan, 2026-09-24) moves it once more: "Street
+// classification becomes its own cell in the second group, out of the
+// road-type cell."  The slot is asked for in parts — the chips as the
+// control, the proposal as the action line, the rest as detail.
+describe("street classification is its own cell in the second group", () => {
+  it("the chips, the action line and the detail each land once, in their places", async () => {
     const { WhatBand } = await import("./WhatBand");
     render(
       <WhatBand
@@ -195,16 +200,35 @@ describe("the street-class record rides the road-type cell", () => {
         jurisdictionLoading={false}
         jurisdictionErrored={false}
         stepIndex="STEP 2 OF 4"
-        classificationFields={
-          <div data-testid="class-fields">Street classification</div>
-        }
+        classificationFields={(section) => (
+          <div data-testid={`class-${section}`}>Street classification</div>
+        )}
       />,
     );
-    const cell = screen.getByTestId("cell-road-type");
-    expect(cell.querySelector('[data-testid="class-fields"]')).not.toBeNull();
-    // And nowhere else: a second home for one control is the thing this
+    const cell = screen.getByTestId("cell-street-class");
+    expect(screen.getByTestId("plan-details").contains(cell)).toBe(true);
+    expect(cell.querySelector(".tr-field")!.textContent).toBe("Street classification");
+    // Out of the road-type cell.
+    expect(
+      screen.getByTestId("cell-road-type").querySelector('[data-testid^="class-"]'),
+    ).toBeNull();
+    // The control and the action line sit in the cell; the detail sits in
+    // the cell's details panel, closed.
+    expect(cell.querySelector('[data-testid="class-control"]')).not.toBeNull();
+    const action = cell.querySelector('[data-testid="class-action"]')!;
+    expect(action.closest(".a-info")).toBeNull();
+    const detail = cell.querySelector('[data-testid="class-detail"]')!;
+    expect(detail.closest('[data-testid="info-street-class"]')!.hasAttribute("hidden")).toBe(true);
+    // Rule 137: a provenance line, always.
+    expect(screen.getByTestId("prov-street-class").textContent).toBe(
+      "not set · operator-set when picked",
+    );
+    // One home each: a second home for one control is the thing this
     // arc keeps removing.
-    expect(screen.getAllByTestId("class-fields")).toHaveLength(1);
+    for (const s of ["control", "action", "detail"]) {
+      expect(screen.getAllByTestId(`class-${s}`), s).toHaveLength(1);
+    }
+    expect(screen.queryByTestId("class-all")).toBeNull();
   });
 });
 

@@ -44,8 +44,8 @@ vi.mock("./GeneratorSidebar", () => ({
   }: {
     scenario: Scenario;
     setScenario: (s: Scenario) => void;
-    jurisdictionControls?: ReactNode;
-    jurisdictionSuggest?: ReactNode;
+    jurisdictionControls?: (section?: string) => ReactNode;
+    jurisdictionSuggest?: (section?: string) => ReactNode;
   }) => (
     <div>
       <button
@@ -83,8 +83,8 @@ vi.mock("./GeneratorSidebar", () => ({
         <option value="parker">Parker</option>
         <option value="aurora">Aurora</option>
       </select>
-      {jurisdictionControls}
-      {jurisdictionSuggest}
+      {jurisdictionControls?.()}
+      {jurisdictionSuggest?.()}
     </div>
   ),
 }));

@@ -110,15 +110,21 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     expect(document.querySelector("#what-road-type")).not.toBeNull();
     expect(document.querySelector('[data-testid="prov-jurisdiction"]')).not.toBeNull();
     expect(document.querySelector('[data-testid="prov-road-type"]')).not.toBeNull();
-    // #289 hand-check, 2026-09-23, fix 2: the street-class half rides
-    // the ROAD-TYPE cell, and it does so with no boxed panel — `.jctl`
-    // is a 1 px rule on `--canvas` and `.jctl-field` an inset, which is
-    // the setup panel's framing and has no place in a grid cell.  It is
-    // present, not dropped: the chips and their suggestion record are
-    // inside the cell.
+    // #289 hand-check, 2026-09-23, fix 2: the street-class half carries
+    // no boxed panel — `.jctl` is a 1 px rule on `--canvas` and
+    // `.jctl-field` an inset, which is the setup panel's framing and has
+    // no place in a grid cell.  #289 WHAT density (Ryan, 2026-09-24):
+    // "Street classification becomes its own cell in the second group,
+    // out of the road-type cell."  Present, not dropped: the chips are in
+    // that cell, and in no other.
     expect(document.querySelector(".jctl")).toBeNull();
-    const roadTypeCell = document.querySelector('[data-testid="cell-road-type"]')!;
-    expect(roadTypeCell.querySelector(".classpick")).not.toBeNull();
+    const classCell = document.querySelector('[data-testid="cell-street-class"]')!;
+    expect(classCell.querySelector(".classpick")).not.toBeNull();
+    expect(document.querySelector('[data-testid="plan-details"]')!.contains(classCell)).toBe(true);
+    expect(
+      document.querySelector('[data-testid="cell-road-type"]')!.querySelector(".classpick"),
+    ).toBeNull();
+    expect(document.querySelectorAll(".classpick")).toHaveLength(1);
     // And the section that used to hold them is gone with the panel.
     expect(document.querySelector(".jctl-band")).toBeNull();
   });
