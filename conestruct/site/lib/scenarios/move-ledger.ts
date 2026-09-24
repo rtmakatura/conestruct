@@ -23,12 +23,15 @@
 //   · Move 4's proposal, "Your tap looks like a right-shoulder closure",
 //     has no derivation.  #281: "the chips render unselected with no
 //     '✓ proposed'".  The row asks the question; it proposes nothing.
+//     Since the post-fidelity hand-check (2026-09-24) the question it asks
+//     is the KIND, which the chips below answer; left/right side is Phase
+//     3's and returns with #290.
 //   · Move 5, "See the plan grow", is Phase 3's approaches.  It is
 //     `pending` with the design's own subline.
 
 import { hasLocation } from "./index";
 import type { Scenario } from "./types";
-import { confirmedRoadLabel } from "./band-facts";
+import { confirmedRoadLabel, kindLabel } from "./band-facts";
 
 /** Rule 70's states, inherited from the rail's derived entries
  *  unchanged.  `notset` and `stale` are not reachable here: no move is
@@ -36,7 +39,7 @@ import { confirmedRoadLabel } from "./band-facts";
  *  band's provenance rather than by a move. */
 export type MoveState = "done" | "attention" | "pending";
 
-export type MoveId = "spot" | "start" | "extent" | "side" | "grow";
+export type MoveId = "spot" | "start" | "extent" | "kind" | "grow";
 
 /** Rule 68's right track: a link verb, or a provenance word. */
 export type MoveVerb = "CHANGE" | "MOVE";
@@ -102,6 +105,9 @@ export function deriveMoveLedger(
    *  flight, or unanswered.  Handed in rather than re-derived: the shell
    *  owns the breakdown fetch that carries it. */
   jurisdictionName: string | null = null,
+  /** A person confirmed the kind (the shell's `kindState === "confirmed"`)
+   *  — move 4's answer.  Handed in: the ledger never infers it. */
+  kindConfirmed = false,
 ): MoveLedger {
   const located = hasLocation(scenario.meta);
   const road = confirmedRoadLabel(scenario);
@@ -158,24 +164,26 @@ export function deriveMoveLedger(
       subline: null,
     },
     {
-      id: "side",
-      label: "Which side is occupied?",
-      // Move 4 is THE ONE MOVE THE USER MUST MAKE (Part 1 §4.4), and
-      // this phase cannot propose an answer — so it is attention from
-      // the moment there is a pin, and it never reads as done: the kind
-      // chips below it are where it is answered, and the chip selection
-      // is a confirmation, never an inference.
-      state: located ? "attention" : "pending",
-      glyph: GLYPH[located ? "attention" : "pending"],
-      value: null,
+      // #289 post-fidelity hand-check, finding 2 (Ryan, 2026-09-24): "The
+      // move-ledger row 'Which side is occupied?' shows needs-you with no
+      // control to answer it. Today the kind chips are its answer;
+      // left/right side is Phase 3's. The row reads 'Kind of work —
+      // choose below' (⚠, needs you) and resolves to ✓ with the confirmed
+      // kind as its value once confirmed. Side proper returns with #290."
+      // So move 4 asks the question this phase CAN answer: the kind, with
+      // the chips below as its control.  It resolves only on a person's
+      // confirmation (suggest-never-set) — a picked-but-unconfirmed chip
+      // is still "needs you".
+      id: "kind",
+      label: kindConfirmed ? "Kind of work" : "Kind of work — choose below",
+      state: !located ? "pending" : kindConfirmed ? "done" : "attention",
+      glyph: GLYPH[!located ? "pending" : kindConfirmed ? "done" : "attention"],
+      value: located && kindConfirmed ? kindLabel(scenario.kind) : null,
+      // Rule 68: a link OR a word.  Confirmed, the row's control is still
+      // the chips below it, so it carries the producer word, not a verb.
       verb: null,
-      word: located ? "needs you" : "pending",
-      subline: located
-        ? // The design's sentence, minus its proposal clause, which has
-          // no producer.  What survives is the part that is true today
-          // and is the whole point of the row.
-          "Conestruct never sets the kind for you — confirm it below."
-        : null,
+      word: !located ? "pending" : kindConfirmed ? "confirmed" : "needs you",
+      subline: null,
     },
     {
       id: "grow",

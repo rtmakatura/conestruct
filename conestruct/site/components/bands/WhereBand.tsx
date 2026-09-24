@@ -105,15 +105,17 @@ function zoneFt(
 function MoveLedgerRows({
   scenario,
   jurisdictionName,
+  kindConfirmed,
   onOpenPicker,
   locked,
 }: {
   scenario: Scenario;
   jurisdictionName: string | null;
+  kindConfirmed: boolean;
   onOpenPicker: () => void;
   locked: boolean;
 }) {
-  const ledger = deriveMoveLedger(scenario, jurisdictionName);
+  const ledger = deriveMoveLedger(scenario, jurisdictionName, kindConfirmed);
   const row = (r: MoveRow) => (
     <div
       key={r.id}
@@ -401,6 +403,7 @@ export function WhereBand({
           <MoveLedgerRows
             scenario={scenario}
             jurisdictionName={jurisdictionName}
+            kindConfirmed={kindConfirmed}
             onOpenPicker={onOpenPicker}
             locked={locked}
           />

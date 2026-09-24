@@ -341,6 +341,31 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(generateBtn().disabled).toBe(false);
   });
 
+  // #289 post-fidelity hand-check, finding 2 — the move ledger's row 4 is
+  // the kind, answered by the chips, resolved only by the confirm.
+  it("the move ledger asks for the kind, and resolves to ✓ with it only once confirmed", async () => {
+    const user = await freshWithRoad();
+    const move = () => screen.getByTestId("move-kind");
+    expect(move().getAttribute("data-move-state")).toBe("attention");
+    expect(move().textContent).toContain("Kind of work — choose below");
+    expect(move().textContent).toContain("needs you");
+    expect(move().textContent).toContain("⚠");
+    expect(document.body.textContent).not.toContain("Which side is occupied?");
+
+    // A click is a selection, not the answer.
+    await user.click(chip("shoulder"));
+    expect(move().getAttribute("data-move-state")).toBe("attention");
+
+    await confirmKind();
+    // WHERE collapsed on the confirm; re-open it to read the ledger.
+    await user.click(screen.getByTestId("fact-link-where"));
+    await settle();
+    expect(move().getAttribute("data-move-state")).toBe("done");
+    expect(move().textContent).toContain("✓");
+    expect(move().textContent).toContain("Shoulder work");
+    expect(move().textContent).not.toContain("needs you");
+  });
+
   it("PAYLOAD: the generated plan carries the kind the operator clicked", async () => {
     const user = await freshWithRoad();
 

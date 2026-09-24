@@ -24,6 +24,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_SHOULDER } from "@/lib/scenarios";
 import type { Scenario } from "@/lib/scenarios/types";
 import { deriveMoveLedger, type MoveRow } from "@/lib/scenarios/move-ledger";
+import { kindLabel } from "@/lib/scenarios/band-facts";
 
 const PIN = { lat: 39.73997, lng: -104.96632 };
 
@@ -59,6 +60,47 @@ const row = (s: Scenario, id: MoveRow["id"], jurisdiction: string | null = null)
   if (!found) throw new Error(`no ${id} row`);
   return found;
 };
+
+// #289 post-fidelity hand-check, finding 2 (Ryan, 2026-09-24): move 4
+// asks for the KIND — the chips below answer it — and resolves only on a
+// person's confirmation.  Side proper returns with #290.
+describe("move 4 is the kind of work (post-fidelity hand-check, finding 2)", () => {
+  const kind = (s: Scenario, confirmed: boolean) => {
+    const found = deriveMoveLedger(s, null, confirmed).rows.find((r) => r.id === "kind");
+    if (!found) throw new Error("no kind row");
+    return found;
+  };
+
+  it("unconfirmed: 'Kind of work — choose below', ⚠, needs you — no answer invented", () => {
+    const r = kind(CONFIRMED, false);
+    expect(r.label).toBe("Kind of work — choose below");
+    expect(r.state).toBe("attention");
+    expect(r.glyph).toBe("⚠");
+    expect(r.word).toBe("needs you");
+    expect(r.value).toBeNull();
+  });
+
+  it("confirmed: ✓ with the confirmed kind as its value", () => {
+    const r = kind(CONFIRMED, true);
+    expect(r.label).toBe("Kind of work");
+    expect(r.state).toBe("done");
+    expect(r.glyph).toBe("✓");
+    expect(r.value).toBe(kindLabel(CONFIRMED.kind));
+  });
+
+  it("no row asks 'Which side is occupied?' any more", () => {
+    for (const confirmed of [false, true]) {
+      const labels = deriveMoveLedger(CONFIRMED, null, confirmed).rows.map((r) => r.label);
+      expect(labels.join(" | ")).not.toContain("Which side");
+    }
+  });
+
+  it("before a pin it is pending, like the rows above it", () => {
+    const r = kind({ ...CONFIRMED, meta: { ...CONFIRMED.meta, lat: 0, lng: 0 } } as Scenario, true);
+    expect(r.state).toBe("pending");
+    expect(r.value).toBeNull();
+  });
+});
 
 describe("rule 68's values (correction 3)", () => {
   it("'Found the spot' is road + direction + jurisdiction", () => {
