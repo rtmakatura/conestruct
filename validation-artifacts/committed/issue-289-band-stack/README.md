@@ -12,14 +12,46 @@
 | 1 | `rulings.md` — the carried rulings, filed first | **done** `8f843e3` |
 | 2 | `checkpoint.md` + the landing probe | **done** `1c130b4` |
 | — | Ryan's ruling: GO, rule 124 overridden, R1–R9 resolved | **done** `97d790f` |
-| 3 | **WHERE + WHAT + the generate frame (S1–S3)** — the first visible ship | **done** (this commit) |
-| 4 | S4's lock states + the fact-line mount at the settle | not started |
-| 5 | S7 revision | not started |
-| 6 | evidence — prod legs at both widths | not started |
+| 3 | **WHERE + WHAT + the generate frame (S1–S3)** — the first visible ship | **done** `b5de343` (+ fixes `5d198af`…`7b22aac`) |
+| 4 | S4's lock states + the fact-line mount at the settle | **done** `6724c7f` (+ fixes `4e314aa`…`3647c06`) |
+| 5 | S7 revision | **done** `fd86079` |
+| 6 | evidence — prod legs at both widths | **done** S7: `9ddbea3` (`s7-prod/`); S1–S3, S5, S7: `74d96b7` (`fidelity-after/`); **S4: after the closing ship** (rig: `0cd8e1f`) |
+| — | hand-check 2026-09-23 — two defects, one gap | **done** `b80bdeb`, `17b419b`, `67156f8`, `193faab`, `a04bd73` |
+| — | the fidelity audit (165 deltas) and pass F1–F8 | **done** `7137a6f`, `85c865c`, `9e8c7bb`, `9dc1a14`…`403b482`; measured `74d96b7` (18 left, triaged) |
+| — | the fidelity follow-up (S7 details, spinner, rule 165, gutter) | **done** `19076b3` |
+| — | the strip reserve re-measured (80 / 57, landing 141 / 164) | **done** `9e28383`, `d41d410` |
+| — | post-fidelity hand-check on `19076b3` — passes, two findings | **done** `d41d410` (recorded), `1d5cd58`, `7b88507` |
+| — | #289's remaining acceptance and absorbed issues | **done** — see below |
 
 Ryan's commit order, verbatim from the ruling: "rulings.md + checkpoint.md → WHERE + WHAT +
 the generate frame (S1–S3, the first visible ship) → S4 lock states + the fact-line mount at
 the settle → S7 revision → evidence. STOP after S1–S3."
+
+### #289's acceptance, item by item
+
+| acceptance | where it is met |
+|---|---|
+| Every S1–S4 and S7 state measured on prod at both widths | S1–S3, S5, S7: `fidelity-after/`; S7's four situations: `s7-prod/`; **S4: the post-ship run** of `fidelity-audit/probe.cjs` (`0cd8e1f`) |
+| Exactly one band open; the rest fact or pending lines | `BandStack.one-open.test.tsx` (`3a2502b`) |
+| A preview writes nothing — no band, no lock, no memo — payload level | `GeneratorShell.revision.test.tsx` (`dcb8ab4`, and the one-request cases) |
+| Escape cancels with zero requests; APPLY the only writer; the sentence enumerates | Escape `39dd7ec`; enumeration `67156f8`; APPLY `fd86079` |
+| 7b/7d blind-apply sentences; 7a quiet | `revision.test.ts`, `s7-prod/` |
+| Jurisdiction field: three states, no skeleton, no height change | `3333846` (#276) |
+| Every collapse/re-open lands counted; focus targets re-homed | `BandStack.landing.test.tsx` (`ce661e7`) |
+| The picker modal still works; each moved piece named (§8.40) | WhatBand / WhereBand headers; picker suites green |
+| #214 survives; #198 byte-identical; suggest-never-set green; live checks re-pointed | `WhatBand.detection.test.tsx`; `b5de343`; the suggest suites; #237 `a0f9753` |
+| Ryan hand-check | 2026-09-23 (`rulings.md`), and post-fidelity on `19076b3`: passes (`d41d410`) |
+
+| absorbed | disposition |
+|---|---|
+| #276 | built `3333846` — the words, no skeleton, the reserved line |
+| #209 | WHAT grid with Phase 2; picker `43938a7` — 1–4, refusal not clamp |
+| #215 | built `496ab0b` — every boundary labelled; markup tested at desk and ≤md |
+| #234 | built `71d892c` — the intersection persists; fact line and picker read one label |
+| #267 | built `db7571f` — widths relayed, the backend derives the plan's shoulder width |
+| #277 | tested `7cf3743` — the grid mounts for every live kind |
+| #235 A/B/C | superseded — #214's disclosure survives, restyled |
+| #237 | built `a0f9753` — the zero-match throw, hooks, CI guard |
 
 ---
 
