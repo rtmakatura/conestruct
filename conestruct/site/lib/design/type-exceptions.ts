@@ -510,7 +510,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
       { file: "components/JurisdictionSection.tsx", cls: "text-[13px]", count: 2 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[15px]", count: 1 },
       { file: "components/JurisdictionSection.tsx", cls: "text-[8px]", count: 1 },
-      { file: "components/JurisdictionSection.tsx", cls: "text-[9px]", count: 5 },
+      { file: "components/JurisdictionSection.tsx", cls: "text-[9px]", count: 6 }, // #215: +1, the boundary labels (the axis ticks' own size)
     ],
   },
   {
@@ -672,6 +672,8 @@ export const CENSUS_PINS = {
   // text-[10px] (v0.4, the TA / sheet cell) leave.  290 -> 285.
   // #289 fidelity F6: the draft notice's two and the cta-reason's one
   // (it reads .tr-prov now).  285 -> 282.
-  tsxUses: 282,
+  // #215: the hours bar's boundary labels take the axis ticks' text-[9px]
+  // (one site already in the census, one more use).  282 -> 283.
+  tsxUses: 283,
   tsxFiles: 35,
 } as const;

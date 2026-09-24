@@ -24,6 +24,8 @@ import {
   dollars,
   fmtDate,
   hhmm,
+  hourTick,
+  rowBoundaries,
   leadNoticeLabel,
   meterRateLabel,
   normalizeChainLink,
@@ -924,6 +926,39 @@ export function HoursVerdictBlock({
   );
 }
 
+/**
+ * #215 — the boundary labels under one hours row.  Each sits at its
+ * hour's own position on the 24-h bar.  Even-indexed labels take the
+ * first line and odd-indexed the second, so two adjacent boundaries are
+ * never on the same line; a label within an hour of either end is pinned
+ * inside the bar instead of centred off its edge.  The row renders no
+ * strip when it has no interior boundary (a whole-day window).
+ */
+export function BoundaryLabels({ hours }: { hours: number[] }) {
+  if (hours.length === 0) return null;
+  return (
+    <div
+      className={`relative ${hours.length > 1 ? "h-[22px]" : "h-[11px]"} font-mono text-[9px] leading-[11px] text-[color:var(--ink-faint)]`}
+      data-testid="hours-boundaries"
+    >
+      {hours.map((h, i) => {
+        const pin = h < 1 ? "translateX(0)" : h > 23 ? "translateX(-100%)" : "translateX(-50%)";
+        return (
+          <span
+            key={h}
+            className="absolute whitespace-nowrap"
+            data-boundary-hour={h}
+            data-boundary-line={i % 2}
+            style={{ left: `${(h / 24) * 100}%`, top: i % 2 ? "11px" : "0", transform: pin }}
+          >
+            {hourTick(h)}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 export function WorkHoursCard({
   jurisdiction,
   streetClass,
@@ -1027,7 +1062,10 @@ export function WorkHoursCard({
             return (
               <div
                 key={`${r.scope}-${r.days}`}
-                className="grid grid-cols-[130px_1fr] gap-2 items-center mb-1"
+                // #215: at phone width the scope stacks above its bar, so
+                // the bar — and its boundary labels — get the column.
+                className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2 items-center mb-1"
+                data-testid="hours-row"
               >
                 <div
                   className={`text-[11px] leading-tight ${
@@ -1041,6 +1079,7 @@ export function WorkHoursCard({
                     {dayLabel(r.days)}
                   </span>
                 </div>
+                <div>
                 <div
                   className={`relative flex h-6 overflow-hidden ${
                     isActive ? "outline outline-1 outline-[color:var(--act)]" : ""
@@ -1080,10 +1119,19 @@ export function WorkHoursCard({
                       />
                     ))}
                 </div>
+                {/* #215: every window boundary labelled where it falls, so
+                    no end time is inferred from an unlabeled gap.  The
+                    hours are the data's (rowBoundaries), formatted as the
+                    axis formats them (hourTick).  Labels alternate between
+                    two lines, so neighbouring boundaries never sit on top
+                    of each other at the column's width or at 380; the
+                    first and last are pinned inside the bar's edges. */}
+                <BoundaryLabels hours={rowBoundaries(r)} />
+                </div>
               </div>
             );
           })}
-          <div className="grid grid-cols-[130px_1fr] gap-2">
+          <div className="grid grid-cols-[130px_1fr] max-md:grid-cols-1 gap-2">
             <div />
             <div className="flex justify-between font-mono text-[9px] text-[color:var(--ink-faint)]">
               <span>12a</span>

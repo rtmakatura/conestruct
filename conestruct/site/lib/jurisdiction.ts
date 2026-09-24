@@ -362,6 +362,28 @@ export function hhmm(h: number): string {
   return `${h12}:${m.toString().padStart(2, "0")} ${ap}`;
 }
 
+/** #215 — the compact tick form the timeline's own axis already uses
+ *  ("12a", "4p"), with minutes when a boundary has them ("3:30p").
+ *  Display only: the hour is the jurisdiction data's, formatted. */
+export function hourTick(h: number): string {
+  const hr = Math.floor(h);
+  const m = Math.round((h - hr) * 60);
+  const ap = hr < 12 || hr === 24 ? "a" : "p";
+  const h12 = ((hr + 11) % 12) + 1;
+  return m === 0 ? `${h12}${ap}` : `${h12}:${m.toString().padStart(2, "0")}${ap}`;
+}
+
+/** #215 — a row's interior window boundaries: every hour where one
+ *  segment ends and the next begins (0 and 24 are the axis's own ends,
+ *  already labelled).  Read off the segments deriveBandRows produced. */
+export function rowBoundaries(row: BandRow): number[] {
+  const out = new Set<number>();
+  for (const s of row.segments) {
+    if (s.startH > 0 && s.startH < 24) out.add(s.startH);
+  }
+  return [...out].sort((a, b) => a - b);
+}
+
 export function dollars(cents: number): string {
   const d = cents / 100;
   return d % 1 === 0
