@@ -237,7 +237,9 @@ export function WhereBand({
   onOpenPicker,
   onKindChange,
   kindPicked = true,
-  kindConfirmed = true,
+  // Rule 10: the safe default is "not chosen" — an omitted prop must not
+  // read as a confirmed kind.  BandStack passes the real value.
+  kindConfirmed = false,
   onConfirm,
   handoff,
   stepIndex,
