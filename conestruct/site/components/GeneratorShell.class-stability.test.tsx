@@ -15,6 +15,8 @@
 // The geometric layer (pixel heights across class switches) lives in
 // scripts/verify-jbar-stability.mjs, run against the dev server.
 
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -247,6 +249,46 @@ async function mountWithParker(): Promise<ReturnType<typeof userEvent.setup>> {
   await quiesce();
   return user;
 }
+
+// #276 — "three states, no skeleton, no height change".  The words are
+// ruling 196's (asserted in mountWithParker above); what this adds is the
+// other two clauses at the surface: through unset → evaluating →
+// evaluated the provenance is ONE element, never swapped for a
+// placeholder, no skeleton appears anywhere, and the sheet reserves the
+// line's tallest state so the WHAT row does not re-flow (layout itself
+// is the hand-check's — the suite has none).
+describe("#276 — the jurisdiction cell's states: no skeleton, one reserved line", () => {
+  it("the provenance element survives every state, no skeleton at any point, and its height is reserved", async () => {
+    const user = userEvent.setup();
+    render(<GeneratorShell mode="sandbox" initialScenario={PINNED} />);
+    await releaseNext(okBreakdown(false));
+    const prov = document.querySelector('[data-testid="prov-jurisdiction"]');
+    expect(jurisdictionState()).toBe("unset");
+    expect(prov?.textContent).toBe("MUTCD + Colorado Supplement only");
+
+    const noSkeleton = () =>
+      expect(document.querySelector(".jbar-skel-line, [class*='skel'], .animate-pulse")).toBeNull();
+    noSkeleton();
+
+    await user.selectOptions(document.querySelector("#what-jurisdiction") as HTMLSelectElement, "parker");
+    expect(jurisdictionState()).toBe("evaluating");
+    expect(document.querySelector('[data-testid="prov-jurisdiction"]')).toBe(prov);
+    noSkeleton();
+
+    await flushDebounce();
+    await releaseNext(okBreakdown(true));
+    expect(jurisdictionState()).toBe("evaluated");
+    expect(document.querySelector('[data-testid="prov-jurisdiction"]')).toBe(prov);
+    noSkeleton();
+
+    const css = readFileSync(join(__dirname, "..", "app", "globals.css"), "utf-8");
+    expect(css).toMatch(
+      /\.workbench \.a-cell \.tr-prov\[data-testid="prov-jurisdiction"\] \{\s*min-height: 4\.5em;/,
+    );
+    expect(css).not.toMatch(/\.jbar-skel-line \{/);
+    await quiesce();
+  });
+});
 
 describe("class-switch stability (#152 D)", () => {
   it("a class switch holds the jurisdiction's content while the refetch is in flight — no skeleton, one reflow max", async () => {

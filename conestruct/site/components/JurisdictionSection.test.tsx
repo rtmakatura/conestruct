@@ -169,6 +169,25 @@ describe("JurisdictionControls", () => {
     expect(picked).toBe("englewood");
   });
 
+  // #276 / ruling 196 / rule 14: the loading state is a word, never a
+  // skeleton.
+  it("#276: while the evaluation is in flight it says so in words — no skeleton", () => {
+    const { container } = render(
+      <JurisdictionControls
+        jurisdiction={null}
+        jurisdictionKey="parker"
+        setJurisdictionKey={noop}
+        streetClass={null}
+        setStreetClass={noop}
+        loading
+      />,
+    );
+    expect(container.querySelector(".jbar-skel-line, [class*='skel'], .animate-pulse")).toBeNull();
+    expect(container.querySelector(".jbar-auth")!.textContent).toBe(
+      "evaluating — the option you picked, not yet confirmed for this plan",
+    );
+  });
+
   it("street-class pills expose pressed state (no hue-alone signal)", async () => {
     let cls: string | null = null;
     render(

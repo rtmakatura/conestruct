@@ -1841,25 +1841,8 @@ input[type="number"] {
   height: 108px; /* Englewood's 5-link breadcrumb + note at 1100px (105px
                     measured) — the tallest; every chain fits, no scroll */
 }
-.workbench .jbar-skel-line {
-  display: block;
-  height: 10px;
-  margin: 6px 0;
-  background: var(--rule-soft);
-  animation: sb-pulse 1.6s ease-in-out infinite;
-}
-.workbench .jbar-skel-line.w-full {
-  width: 100%;
-}
-.workbench .jbar-skel-line.w-5\/6 {
-  width: 83%;
-}
-.workbench .jbar-skel-line.w-3\/4 {
-  width: 75%;
-}
-.workbench .jbar-skel-line.w-2\/3 {
-  width: 66%;
-}
+/* #276: the .jbar-skel-line skeleton is deleted with its last consumer —
+   the loading state is a word (ruling 196, rule 14). */
 
 /* reserved suggestion slot (Endeavor B) — deliberate inert space */
 .workbench .jbar-suggest {
@@ -4626,6 +4609,16 @@ input[type="number"] {
    line, never only in the verdict strip. */
 .workbench .a-fld[aria-invalid="true"] {
   border-color: var(--fld-invalid);
+}
+/* #276 — "three states, no skeleton, no height change": the jurisdiction
+   cell's provenance line reserves its tallest state, so unset (one line)
+   → evaluating → evaluated / not evaluated (two, at the grid's cell
+   widths) never re-flows the row.  CHOSEN at three lines (4.5em at rule
+   6's line-height 1.5), one above the longest sentence's estimate, so a
+   long tcp_term cannot outgrow it; not measured here (no layout in the
+   suite) — the post-ship hand-check sees it. */
+.workbench .a-cell .tr-prov[data-testid="prov-jurisdiction"] {
+  min-height: 4.5em;
 }
 .workbench .a-cell .tr-prov.is-error {
   color: var(--fail);

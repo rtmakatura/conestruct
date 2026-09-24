@@ -323,7 +323,10 @@ export function JurisdictionControls({
               <span className="term">{jurisdiction.row_term}</span>
             </>
           ) : loading ? (
-            <span className="jbar-skel-line w-3/4" aria-hidden />
+            // #276 / ruling 196 / rule 14: no skeleton — the state in
+            // words, the same words the WHAT cell's "evaluating" state
+            // uses (a grey bar said nothing a reader could act on).
+            <>evaluating — the option you picked, not yet confirmed for this plan</>
           ) : (
             <>Statewide baseline — MUTCD + Colorado Supplement only.</>
           )}
