@@ -92,7 +92,13 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
 // (a non-zero min-height stops the child margin collapsing through, so
 // the gap would otherwise double).
 describe("#250 f2 — the verdict strip's reserved slot", () => {
-  it("the workbench defines --status-h: 52px and pins 70px in the ≤480 query", () => {
+  // #289: the ≤480 pin is RE-MEASURED at 80 — rule 165 (shipped 19076b3)
+  // wraps the strip and puts the pill on its own line: 79.25 with the
+  // pill on prod, 2026-09-24 (issue-289-band-stack/strip-reserve/).  The
+  // 380 landing follows by ruling 4 of the s2-arc26 landing rulings (the
+  // formula's figure): 164.  1440's 52 is unchanged here — see the
+  // strip-reserve README for why it waits on a ruling.
+  it("the workbench defines --status-h: 52px and pins 80px in the ≤480 query", () => {
     expect(rule(".workbench")).toMatch(/--status-h:\s*52px/);
     // The sheet carries several ≤480 queries (bucket C added two, #225 /
     // #261); the pin is that ONE of them re-declares --status-h on .workbench.
@@ -101,7 +107,7 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
       .slice(1)
       .map((b) => b.slice(0, b.indexOf("\n}\n")));
     expect(blocks.length).toBeGreaterThan(0);
-    expect(blocks.some((b) => /\.workbench \{[^}]*--status-h:\s*70px/.test(b))).toBe(true);
+    expect(blocks.some((b) => /\.workbench \{[^}]*--status-h:\s*80px/.test(b))).toBe(true);
   });
   // #260 (3): the strip itself takes the token too — one height across
   // AWAITING → VERIFYING → INVALID → VERIFIED (47 → 52 at 1440 before;

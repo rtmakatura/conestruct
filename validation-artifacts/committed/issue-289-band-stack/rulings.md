@@ -502,3 +502,34 @@ says the token "has been on every provenance line since #283 declared it" is cor
 the audit ships as a fast-forward, after which `main` is that tip, so this branch is "off main
 after the audit ships" without waiting on the ship. It ships only after the audit, and only
 once, at the end.
+
+## The in-flight opacity — a measured departure from rule 95.5 (Ryan, 2026-09-24)
+
+Ryan, verbatim: "Ruling: 60% opacity for in-flight figures stands — 42% measures 3.04:1, under
+the 4.5:1 floor; record it in rulings.md as a measured departure from rule 95.5."
+
+- **Rule 95.5**, "in flight — the cell's resting treatment at opacity .42 — the value stays
+  readable and is visibly not current".
+- **Measured:** the in-flight "now" cell is always the resting `#c8d1dd` (never the changed
+  orange), over the panel's `#0f1c29`. At .42 the composite is `#5d6875`, **3.04:1**, under the
+  4.5:1 floor project rule 13 holds; `.58` is the least opacity that clears; **`.6` measures
+  4.84:1** (composite `#7e8995`). Rule 122 says the same of S7's own dim: text inside it "must
+  still clear 4.5:1 after the dim".
+- **Built:** `.workbench .a-panel-row .a-now.is-inflight { opacity: 0.6 }` in `19076b3`
+  (shipped). `RevisionPanel.test.tsx` computes the ratio from the sheet's tokens on every run
+  and fails under 4.5.
+- **Status:** RULED — the departure stands. Rule 95.5's `.42` is superseded here by `.6`.
+
+## The verdict strip's reserved height, re-measured after rule 165 (2026-09-24)
+
+Ryan: "Re-measure the verdict strip's reserved height at 380 now that it wraps and correct the
+70 px if it's wrong." Measured on prod at `19076b3` (`strip-reserve/`): the tallest natural
+strip at 380 is **79.25 px** (the pill states, wrapped), against the 70 reserve — **corrected
+to 80** on `issue-289-strip-reserve`. By ruling 4 of the s2-arc26 landing rulings (the 380
+landing is the formula's), the 380 post-generate landing moves with it: **164** (was 154).
+
+**Open for a ruling — 1440.** The same run measures the pill states at **56.25 px** at 1440
+against the 52 reserve (F5's rules 50–52: 13 + 28.25 + 13 + 2), so the first verdict still
+pushes the stack 4.25 px. The measured fix is 57, but ruling 1 of the same file fixes the
+1440 landing at **"136 ±1"** and 57 would land it at 141. Not changed: raising the reserve,
+or holding it at 52 and accepting the 4.25 px shift, is a choice between two ruled figures.

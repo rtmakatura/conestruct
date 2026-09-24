@@ -3424,12 +3424,19 @@ input[type="number"] {
        a byte range without stripping comments, and "#288" is valid hex.
        The neighbouring Issue 253 / Issue 250 comments follow the same
        convention for the same reason. */
-    /* Issue 250, option f2: the strip's pill-state height at 380 — measured 69.19
-       (two text lines + the pill); pinned at the next whole pixel so
-       the min-height governs every state.  Residual: the cold-start
-       VERIFYING copy wraps to three lines (88.39) and exceeds the slot
-       for the seconds it shows. */
-    --status-h: 70px;
+    /* Issue 250, option f2: the strip's pill-state height at 380, pinned
+       at the next whole pixel so the min-height governs every state.
+       Was 70 (69.19 measured before Part 2's strip).  RE-MEASURED on prod
+       at 19076b3, 2026-09-24, after rule 165 made the strip wrap (the
+       pill on its own line): 79.25 with the pill (VERIFIED + READY FOR
+       TCS REVIEW, and VERIFIED · 2 plan flags + REVIEW FLAGS), 61 for
+       AWAITING LOCATION and VERIFYING, 44.5 for AWAITING KIND OF WORK
+       (validation-artifacts/committed/issue-289-band-stack/
+       strip-reserve/strip.json).  So 80.  By ruling 4 of the s2-arc26
+       landing rulings the 380 landing is the formula's, so it moves
+       with this: 164 (was 154).  Residual: the cold-start VERIFYING copy
+       was not sampled by this run. */
+    --status-h: 80px;
   }
 }
 

@@ -1,0 +1,90 @@
+{
+ "site": "https://www.conestruct.com/sandbox",
+ "ranAt": "2026-09-24T04:55:47.505Z",
+ "widths": {
+  "380": [
+   {
+    "text": "✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW",
+    "cls": "status-bar pass",
+    "natural": 79.25,
+    "rendered": 79.25,
+    "reserve": "70px",
+    "stage": "S3"
+   },
+   {
+    "text": "⚠VERIFIED · 2 plan flagsREVIEW FLAGS",
+    "cls": "status-bar caution",
+    "natural": 79.25,
+    "rendered": 79.25,
+    "reserve": "70px",
+    "stage": "S4-S5"
+   },
+   {
+    "text": "◌AWAITING LOCATION · no site chosen",
+    "cls": "status-bar idle unavail",
+    "natural": 61,
+    "rendered": 70,
+    "reserve": "70px",
+    "stage": "S1"
+   },
+   {
+    "text": "◌VERIFYING · taper · buffer · spacing · sign placement",
+    "cls": "status-bar idle verifying",
+    "natural": 61,
+    "rendered": 70,
+    "reserve": "70px",
+    "stage": "S3"
+   },
+   {
+    "text": "◌AWAITING KIND OF WORK",
+    "cls": "status-bar idle unavail",
+    "natural": 44.5,
+    "rendered": 70,
+    "reserve": "70px",
+    "stage": "S2"
+   }
+  ],
+  "1440": [
+   {
+    "text": "✓VERIFIED · 0 validation warningsREADY FOR TCS REVIEW",
+    "cls": "status-bar pass",
+    "natural": 56.25,
+    "rendered": 56.25,
+    "reserve": "52px",
+    "stage": "S3"
+   },
+   {
+    "text": "⚠VERIFIED · 2 plan flagsREVIEW FLAGS",
+    "cls": "status-bar caution",
+    "natural": 56.25,
+    "rendered": 56.25,
+    "reserve": "52px",
+    "stage": "S4-S5"
+   },
+   {
+    "text": "◌AWAITING LOCATION · no site chosen",
+    "cls": "status-bar idle unavail",
+    "natural": 44.5,
+    "rendered": 52,
+    "reserve": "52px",
+    "stage": "S1"
+   },
+   {
+    "text": "◌AWAITING KIND OF WORK",
+    "cls": "status-bar idle unavail",
+    "natural": 44.5,
+    "rendered": 52,
+    "reserve": "52px",
+    "stage": "S2"
+   },
+   {
+    "text": "◌VERIFYING · taper · buffer · spacing · sign placement",
+    "cls": "status-bar idle verifying",
+    "natural": 44.5,
+    "rendered": 52,
+    "reserve": "52px",
+    "stage": "S3"
+   }
+  ]
+ }
+}
