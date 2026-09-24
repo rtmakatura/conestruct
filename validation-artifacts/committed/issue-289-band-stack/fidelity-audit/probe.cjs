@@ -212,7 +212,7 @@ async function run(width, height, tag) {
 
   // S2 — road confirmed, kind unchosen.  The picker's manual-coordinates
   // route, then the first detected candidate, then Save & Close.
-  await page.getByRole("button", { name: /Pick Location on Map/ }).click();
+  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);

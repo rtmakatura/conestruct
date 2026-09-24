@@ -285,7 +285,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     // Pin drop + apply, then the user picks 3 lanes in the form.
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await selectLanes(user, "3");
     await expectLanes("3");
@@ -294,7 +294,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     // without changing anything: the unchanged detection must NOT
     // re-impose its lanes=2 over the user's 3.
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await expectLanes("3");
 
@@ -310,7 +310,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await selectLanes(user, "3");
 
@@ -353,7 +353,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     // Picker sets speed 40 (an override), saved and applied.
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
 
     // The operator refines to 25 in the form.
@@ -368,7 +368,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     // Reopen just to look; Save & Close with nothing changed re-emits
     // the restored {speedMph: 40} — it must NOT reapply.
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
 
     await generate(user);
@@ -381,7 +381,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED40"));
     // #289: the speed control is the WHAT grid's cell (`#what-speed`),
     // a select rather than the form's old `#sh-speed` range slider.
@@ -393,7 +393,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A_SPEED45"));
 
     await generate(user);
@@ -406,7 +406,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await selectLanes(user, "3");
 
@@ -414,7 +414,7 @@ describe("picker re-apply preserves manual form edits (lanes bug)", () => {
     // 65 mph) is new information and must apply — the skip is scoped to
     // UNCHANGED detections only.
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_B"));
 
     await generate(user);
@@ -446,7 +446,7 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
     const user = userEvent.setup();
     await mountSandbox();
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
     await generate(user);
     expect(wireScenario().detectedLanesTotal).toBe(4);
@@ -457,12 +457,12 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
     const user = userEvent.setup();
     await mountSandbox();
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
 
     await generate(user);
@@ -485,16 +485,16 @@ describe("settled-null save clears the prior pin's relays (#189-3)", () => {
     const user = userEvent.setup();
     await mountSandbox();
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
 
     // Same road re-detected: after a clear this IS new information and
     // must re-apply (the apply-guard resets with the clear).
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A_RELAYS"));
 
     await generate(user);
@@ -545,7 +545,7 @@ describe("pin move clears site-condition corrections (#224 phase 4)", () => {
     await mountCorrected();
     await openWhere();
     await user.click(
-      screen.getByText(/Edit Location & Corridor|Pick Location on Map/),
+      screen.getByText(/^(Edit|Pick) on map$/),
     );
     await user.click(screen.getByText("APPLY_PIN_A"));
     await generate(user);
@@ -557,7 +557,7 @@ describe("pin move clears site-condition corrections (#224 phase 4)", () => {
     await mountCorrected();
     await openWhere();
     await user.click(
-      screen.getByText(/Edit Location & Corridor|Pick Location on Map/),
+      screen.getByText(/^(Edit|Pick) on map$/),
     );
     await user.click(screen.getByText("SAVE_NULL_PIN_C"));
     await generate(user);

@@ -33,6 +33,19 @@ describe("rule 130 — the primary", () => {
     expect(rule(".workbench .a-pri")).toMatch(/font-size:\s*var\(--fs-primary\)/);
   });
 
+  it("rule 114's box: 1fr / 132 px, 44 px, and the label never wraps (post-fidelity hand-check, finding 1)", () => {
+    expect(rule(".workbench .a-findrow")).toMatch(/grid-template-columns:\s*1fr 132px/);
+    const find = rule(".workbench .a-findrow .a-pri");
+    expect(find).toMatch(/height:\s*44px/);
+    expect(find).toMatch(/white-space:\s*nowrap/);
+    // The source strings: the ruled "Pick on map", and its located pair.
+    const where = readFileSync(join(__dirname, "bands", "WhereBand.tsx"), "utf-8");
+    expect(where).toContain('located ? "Edit on map" : "Pick on map"');
+    // (The comment above the expression quotes the retired label; the
+    // expression is what renders.)
+    expect(where).not.toMatch(/: *"Pick Location on Map"|\? *"Edit Location & Corridor/);
+  });
+
   it("an aria-disabled primary takes the disabled pair, not the live fill", () => {
     const off = rule(".workbench .a-pri:disabled,\n.workbench .a-pri[aria-disabled=\"true\"]");
     expect(off).toMatch(/background:\s*var\(--pri-off\)/);

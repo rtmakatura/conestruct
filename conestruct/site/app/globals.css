@@ -4716,6 +4716,8 @@ input[type="number"] {
    rule 130's 15.5 — #289 fidelity F6, audit row 49 (was 13.5). */
 .workbench .a-findrow .a-pri {
   height: 44px;
+  /* #289 post-fidelity hand-check, finding 1: "one line, nowrap". */
+  white-space: nowrap;
 }
 
 /* ─── Rules 160–174 · the 380 arc ───

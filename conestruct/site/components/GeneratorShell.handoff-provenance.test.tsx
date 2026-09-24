@@ -237,13 +237,13 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await selectLanes(user, "3");
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_B_ONE_LANE"));
 
     // #289 hand-check, 2026-09-23, correction 3: the "Applied from
@@ -264,7 +264,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_OVERRIDES_LANES_DIVIDED"));
 
     // #289 hand-check, 2026-09-23, correction 3: the "Applied from
@@ -288,7 +288,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_FIVE_LANES"));
 
     // #289 hand-check, 2026-09-23, correction 3: the "Applied from
@@ -309,7 +309,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     // The same fixture as family 3 — a 5-lane divided way at 12 ft.  The
     // clamp lands 4 lanes, and 4 x 12 + 10 = 58 ft is wider than the
     // plan sheet's 52 (src/api/schemas.py:57), so BEFORE this correction
@@ -352,7 +352,7 @@ describe("#198 handoff provenance — the four families produce visible notes", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_SLOW"));
 
     // #289 hand-check, 2026-09-23, correction 3: the "Applied from

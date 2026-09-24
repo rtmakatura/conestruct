@@ -111,7 +111,7 @@ async function mountPinned(initial: Scenario) {
     await Promise.resolve();
   });
   await openWhere();
-  await user.click(screen.getByText("Pick Location on Map"));
+  await user.click(screen.getByText("Pick on map"));
   await user.click(screen.getByText("APPLY_PIN"));
   // A pin answers WHERE, so the column moves on to WHAT; the corridor
   // rows sit under the extent field, so this case goes back.

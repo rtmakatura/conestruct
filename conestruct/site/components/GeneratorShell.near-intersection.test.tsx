@@ -219,7 +219,7 @@ describe("near_intersection picker → form → payload", () => {
 
     // Detected cross street pre-fills the approaches.
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
 
     // The detection-filled lane count needs confirmation; a manual
@@ -230,7 +230,7 @@ describe("near_intersection picker → form → payload", () => {
     // Re-apply the same pin: the unchanged candidate must NOT clobber
     // the edit (#112's failure class at the approaches seam).
     await openWhere();
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await openWhat();
     expect(chipIn("Cross-street lanes — direction A", "1").className).toContain(
@@ -273,7 +273,7 @@ describe("near_intersection picker → form → payload", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
 
     // Needs-confirmation hold: the turn-lane-suspect copy shows and
@@ -299,7 +299,7 @@ describe("near_intersection picker → form → payload", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_NOTAG"));
 
     // #174 ruling (option d): the substituted count holds for
@@ -324,14 +324,14 @@ describe("near_intersection picker → form → payload", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN_A"));
     await openWhat();
     await user.click(chipIn("Cross-street lanes — direction A", "1"));
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     await user.click(screen.getByText("APPLY_PIN_B"));
 
     // PIN_B's candidate is different content → it re-fills, and its

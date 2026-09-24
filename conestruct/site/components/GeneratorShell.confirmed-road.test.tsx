@@ -166,14 +166,14 @@ describe("confirmed road persists on scenario.meta across picker close/reopen", 
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     expect(capturedInitials[0].confirmedRoad ?? null).toBeNull();
 
     await user.click(screen.getByText("SAVE_WITH_ROAD"));
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     const reopened = capturedInitials[capturedInitials.length - 1];
     expect(reopened.confirmedRoad?.candidate.way_id).toBe("111001");
     expect(reopened.confirmedRoad?.method).toBe("operator_pick");
@@ -200,7 +200,7 @@ describe("confirmed road persists on scenario.meta across picker close/reopen", 
 
     await openWhere();
 
-    await user.click(screen.getByText(/Edit Location & Corridor/));
+    await user.click(screen.getByText("Edit on map"));
     expect(
       capturedInitials[capturedInitials.length - 1].confirmedRoad?.candidate
         .way_id,

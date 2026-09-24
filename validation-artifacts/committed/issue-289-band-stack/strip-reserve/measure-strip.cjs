@@ -57,7 +57,7 @@ async function run(width, height) {
   const seen = new Map();
   await page.goto(SITE, { waitUntil: "domcontentloaded" });
   await watch(page, seen, "S1", 4000);
-  await page.getByRole("button", { name: /Pick Location on Map/ }).click();
+  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);

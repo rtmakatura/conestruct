@@ -92,7 +92,7 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
   it("pre-pin: no strip; the pick CTA is unchanged (GO ruling 1)", async () => {
     await mount(DEFAULT_SHOULDER);
     expect(document.querySelector(".fact-strip")).toBeNull();
-    expect(screen.getByText("Pick Location on Map")).toBeTruthy();
+    expect(screen.getByText("Pick on map")).toBeTruthy();
   });
 
   // #289 Phase 2 — THE STRIP RETIRES; ITS FIVE FACTS TRANSFER.
@@ -113,7 +113,7 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
 
     // Lat / lng, in the band's provenance rather than in cells.
@@ -139,7 +139,7 @@ describe("#227 fact strip — pin readout as labeled cells", () => {
     const user = userEvent.setup();
     await mount({ ...DEFAULT_SHOULDER, jurisdiction_key: "denver" } as Scenario);
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
     await openWhat();
     // The stubbed fetch returns {} — no evaluated block.  #276, ruled

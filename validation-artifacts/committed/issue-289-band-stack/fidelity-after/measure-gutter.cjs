@@ -22,7 +22,7 @@ const PIN = { lat: "39.74020", lng: "-104.95600" };
 async function toS5(page) {
   await page.goto(SITE, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(4000);
-  await page.getByRole("button", { name: /Pick Location on Map/ }).click();
+  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);

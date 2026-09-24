@@ -369,11 +369,14 @@ export function WhereBand({
           }}
           data-testid="where-open-picker"
         >
-          {/* The existing strings, unchanged.  Rule 5: renaming a
-              control is a behaviour change and there is no reason for
-              one here — the design asks for caps, and caps are a
-              text-transform. */}
-          {located ? "Edit Location & Corridor →" : "Pick Location on Map"}
+          {/* #289 post-fidelity hand-check, finding 1 (Ryan, 2026-09-24):
+              "Pick Location on Map" wrapped to two lines in rule 114's
+              132 px.  RULED: "Pick on map", one line, nowrap, in rule
+              130's type.  The located label had the same box and would
+              overflow it once the box refuses to wrap, so it takes the
+              ruling's form too — "Edit on map" is this build's choice,
+              flagged, not a ruled string. */}
+          {located ? "Edit on map" : "Pick on map"}
         </button>
       </div>
       {/* #289 fidelity F4 (X5): the "map · road detect · work zone in one

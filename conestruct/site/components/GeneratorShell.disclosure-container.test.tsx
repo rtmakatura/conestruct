@@ -119,7 +119,7 @@ async function mountWithNote(initial: Scenario) {
     await Promise.resolve();
   });
   await openWhere();
-  await user.click(screen.getByText("Pick Location on Map"));
+  await user.click(screen.getByText("Pick on map"));
   await user.click(screen.getByText("APPLY_SNAP"));
 }
 

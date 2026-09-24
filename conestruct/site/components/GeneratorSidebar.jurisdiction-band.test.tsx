@@ -101,7 +101,7 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
     await openWhat();
     // The two fields §8.21 names, each in the grid, each with a
@@ -139,7 +139,7 @@ describe("#227 jurisdiction band — a full-width sibling of Location", () => {
     const user = userEvent.setup();
     await mount(DEFAULT_SHOULDER);
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_PIN"));
     await openWhat();
     const select = screen.getByLabelText<HTMLSelectElement>(/^Jurisdiction/);

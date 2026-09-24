@@ -261,7 +261,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
 
     await openWhere();
@@ -293,7 +293,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
     await openWhere();
     await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
@@ -317,7 +317,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
 
     await openWhere();
 
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_COLFAX"));
     await openWhat();
     // #289 hand-check, 2026-09-23, correction 1: night operation is a
@@ -358,7 +358,7 @@ describe("kind-switch preserves the safety relays (#181)", () => {
     // reaches this state (#189-3's own path) — and the switch happens
     // with the chips armed and nothing behind them.
     await openWhere();
-    await user.click(screen.getByText("Pick Location on Map"));
+    await user.click(screen.getByText("Pick on map"));
     await user.click(screen.getByText("APPLY_NO_ROAD"));
     await openWhere();
     await user.click(screen.getByTestId(kindChip("Flagger lane closure")));
