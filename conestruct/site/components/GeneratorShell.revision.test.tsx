@@ -243,6 +243,86 @@ describe("Escape cancels S7 with zero requests (#289 acceptance)", () => {
   });
 });
 
+// #289 acceptance: "A preview writes nothing — no band, no lock, no memo —
+// asserted at payload level."  #281's ruling, as preview.ts quotes it: "A
+// preview is a read.  No band, no lock, never memoised, never written."
+// The one-request / not-written half is above; this is the rest, at the
+// surface and on the wire.
+describe("a preview writes nothing — no band, no lock, no memo (#289 acceptance)", () => {
+  it("in flight AND landed: no working band, no lock, the editor and every write control live", async () => {
+    await generated();
+    // Hold the preview open so the in-flight state is observable.
+    let release: (r: Response) => void = () => {};
+    fetchMock.mockImplementationOnce(
+      () => new Promise<Response>((r) => {
+        release = r;
+      }),
+    );
+    await stageRevision("35");
+    await act(async () => {
+      await Promise.resolve();
+    });
+    const assertNothingWritten = () => {
+      // No band: the working band is apply's, never a preview's (rule 95.1).
+      expect(document.querySelector(".working-band")).toBeNull();
+      // No lock: the root never takes the write lock for a read.
+      expect(document.querySelector(".workbench")!.classList.contains("ws-locked")).toBe(false);
+      // The field stays editable while its preview is in flight.
+      expect((document.getElementById("revise-speed") as HTMLSelectElement).disabled).toBe(false);
+      const writers = Array.from(document.querySelectorAll<HTMLElement>("[data-write]"));
+      expect(writers.length).toBeGreaterThan(0);
+      for (const w of writers) {
+        expect((w as HTMLButtonElement).disabled ?? false, w.outerHTML.slice(0, 80)).toBe(false);
+        expect(w.getAttribute("aria-disabled")).not.toBe("true");
+      }
+    };
+    expect(screen.getByTestId("revision-panel").getAttribute("data-preview")).toBe("loading");
+    assertNothingWritten();
+
+    await act(async () => {
+      release({ ok: true, status: 200, json: async () => BREAKDOWN } as unknown as Response);
+    });
+    await settle();
+    expect(screen.getByTestId("revision-panel").getAttribute("data-preview")).toBe("ready");
+    assertNothingWritten();
+  });
+
+  it("PAYLOAD, no memo: the preview's answer never becomes the plan's — the results keep the settled count, and APPLY asks afresh", async () => {
+    await generated();
+    const settledTotal = document.querySelector(".hero .hero-cell .num")?.textContent;
+    expect(settledTotal).toBe(String(BREAKDOWN.total_devices));
+
+    // The preview answers with a different plan.  (A once-mock replaces
+    // the recorder too, so it records the call itself.)
+    fetchMock.mockImplementationOnce((input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({ url: String(input), body: JSON.parse(String(init?.body ?? "{}")) });
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({ ...BREAKDOWN, total_devices: BREAKDOWN.total_devices + 7 }),
+      } as unknown as Response);
+    });
+    await stageRevision("35");
+    await settle();
+    // On the wire: the read is flagged, so the backend skips the scan and
+    // its memo (src/api/schemas.py, the #282 preview mixin).
+    expect(scenarioOf(breakdowns()[0]).preview).toBe(true);
+    // On screen: the panel shows the preview; the results do not.
+    expect(screen.getByTestId("panel-row-devices").textContent).toContain(
+      String(BREAKDOWN.total_devices + 7),
+    );
+    expect(document.querySelector(".hero .hero-cell .num")?.textContent).toBe(settledTotal);
+
+    // APPLY does not reuse the preview's answer: a fresh, unflagged request.
+    calls = [];
+    await applyRevision();
+    await settle();
+    const applied = breakdowns().map(scenarioOf);
+    expect(applied.length).toBeGreaterThan(0);
+    expect(applied.every((s) => s.preview !== true)).toBe(true);
+  });
+});
+
 describe("DISCARD fires zero requests (#289 acceptance)", () => {
   it("un-stages, and asks for nothing", async () => {
     await generated();
