@@ -29,6 +29,7 @@ import {
 import {
   bearingToDirectionLabel as bearingToDirectionLabelImpl,
   candidateLabel,
+  crossStreetLabel,
 } from "@/lib/road-detection/labels";
 import type { RoadType, ScenarioKind } from "@/lib/scenarios";
 import { snapSpeedToDomain } from "@/lib/scenarios";
@@ -90,6 +91,13 @@ export interface LocationPickerInitial {
   laneWidth?: number;
   divided?: boolean;
   /**
+   * #234 — the intersection marked at the last Save & Close, from
+   * ``scenario.meta.intersection`` (near_intersection only).  The picker
+   * restores its marker and names the crossing from it without firing
+   * detection; moving the pin looks it up again.
+   */
+  intersection?: { lat: number; lng: number; name: string | null } | null;
+  /**
    * The road confirmed at the last Save & Close, from
    * ``scenario.meta.confirmedRoad``.  When present AND its pin matches
    * (lat, lng) exactly, the modal restores that selection as-is and
@@ -122,6 +130,12 @@ export interface LocationPickerResult {
    * re-apply never clobbers user-edited approach fields (#112).
    */
   crossStreet: CrossStreetCandidate | null;
+  /**
+   * #234 — the intersection as marked at Save (near_intersection only):
+   * the second pin and the cross street's name.  The parent persists it
+   * on ``scenario.meta.intersection``; null when no pin is marked.
+   */
+  intersection: { lat: number; lng: number; name: string | null } | null;
   /**
    * The road choice as committed at Save: candidate identity,
    * classification, determination method, and the pin it was confirmed
@@ -497,12 +511,17 @@ export function LocationPickerModal({
   const [intersectionMode, setIntersectionMode] = useState(false);
   const intersectionModeRef = useRef(false);
   intersectionModeRef.current = intersectionMode;
+  // #234: a saved intersection restores the pin and its name — no
+  // detection fires on open (the confirmedRoad rehydration's rule);
+  // moving the pin looks the crossing up again.
+  const restoredCross =
+    isNearIntersectionKind && initial.intersection ? initial.intersection : null;
   const [crossPin, setCrossPin] = useState<{ lat: number; lng: number } | null>(
-    null,
+    restoredCross ? { lat: restoredCross.lat, lng: restoredCross.lng } : null,
   );
   const [crossStatus, setCrossStatus] = useState<
-    "idle" | "resolving" | "detected" | "none" | "error"
-  >("idle");
+    "idle" | "resolving" | "detected" | "none" | "error" | "restored"
+  >(restoredCross ? "restored" : "idle");
   const [crossStreet, setCrossStreet] = useState<CrossStreetCandidate | null>(
     null,
   );
@@ -1373,6 +1392,14 @@ export function LocationPickerModal({
           // explicit "Re-detect roads" affordance for a fresh look).
           void detectAt(initial.lat!, initial.lng!);
         }
+        // #234: the saved intersection's marker, restored — the defect
+        // #234 filed ("Intersection marker not restored when the picker
+        // is reopened").
+        if (restoredCross && !crossMarkerRef.current) {
+          crossMarkerRef.current = new mapbox.Marker({ color: CROSS_PIN_COLOR })
+            .setLngLat([restoredCross.lng, restoredCross.lat])
+            .addTo(map);
+        }
       } else {
         const initialAddress = (initial.address ?? "").trim();
         if (initialAddress.length > 0) {
@@ -1782,6 +1809,19 @@ export function LocationPickerModal({
       classification: classify.state === "detected" ? classify.result : null,
       overrides,
       crossStreet: isNearIntersectionKind ? crossStreet : null,
+      // #234: the pin and its name, as the picker shows them — a fresh
+      // detection's name, or the restored one when the pin was not moved.
+      intersection:
+        isNearIntersectionKind && crossPin
+          ? {
+              lat: crossPin.lat,
+              lng: crossPin.lng,
+              name:
+                crossStatus === "restored"
+                  ? (restoredCross?.name ?? null)
+                  : (crossStreet?.name ?? null),
+            }
+          : null,
       confirmedRoad,
     });
   };
@@ -2102,6 +2142,7 @@ export function LocationPickerModal({
                     crossPin={crossPin}
                     crossStatus={crossStatus}
                     crossStreet={crossStreet}
+                    restoredName={restoredCross?.name ?? null}
                     onClear={clearCrossPin}
                   />
                 )}
@@ -2166,14 +2207,17 @@ function CrossStreetPanel({
   crossPin,
   crossStatus,
   crossStreet,
+  restoredName,
   onClear,
 }: {
   hasPin: boolean;
   intersectionMode: boolean;
   onToggleMode: () => void;
   crossPin: { lat: number; lng: number } | null;
-  crossStatus: "idle" | "resolving" | "detected" | "none" | "error";
+  crossStatus: "idle" | "resolving" | "detected" | "none" | "error" | "restored";
   crossStreet: CrossStreetCandidate | null;
+  /** #234: the name saved with a restored intersection. */
+  restoredName: string | null;
   onClear: () => void;
 }) {
   return (
@@ -2231,9 +2275,17 @@ function CrossStreetPanel({
           approaches by hand in the form.
         </p>
       )}
+      {crossStatus === "restored" && (
+        <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0" data-testid="cross-restored">
+          {/* #234: the saved crossing, named by the one producer the WHERE
+              fact line reads — no detection fires on open. */}
+          {crossStreetLabel(restoredName)} — marked at your last save. Move
+          the intersection pin to look it up again.
+        </p>
+      )}
       {crossStatus === "detected" && crossStreet && (
         <p className="text-[11px] text-[color:var(--ink-on-dark)] mt-2 m-0">
-          {crossStreet.name ?? "Unnamed road"} —{" "}
+          {crossStreetLabel(crossStreet.name)} —{" "}
           {crossStreet.legCount === 1 ? "one-way" : "two-way"}
           {crossStreet.signalized ? ", signal detected" : ""}. Crossing
           about {Math.abs(crossStreet.alongStationFt).toLocaleString("en-US")}{" "}

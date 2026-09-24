@@ -301,6 +301,11 @@ export function GeneratorSidebar({
         // saved plan verbatim).  Null overwrites deliberately: a save
         // with no resolved road invalidates a stale confirmation.
         confirmedRoad: r.confirmedRoad,
+        // #234: the intersection as the picker saved it — persisted the
+        // same way, so a reopen restores its marker and the WHERE fact
+        // line names the same crossing.  Null overwrites deliberately:
+        // a cleared pin clears the record.
+        intersection: r.intersection ?? null,
       },
     } as Scenario;
     if (r.workZoneFt > 0) {
@@ -522,6 +527,8 @@ export function GeneratorSidebar({
             laneWidth: "laneWidth" in scenario ? (scenario.laneWidth as number) : undefined,
             divided: "divided" in scenario ? (scenario.divided as boolean) : undefined,
             confirmedRoad: scenario.meta.confirmedRoad ?? null,
+            // #234: handed back so the picker restores the marker.
+            intersection: scenario.meta.intersection ?? null,
           }}
           onCancel={() => setPickerOpen(false)}
           onSave={onPickerSave}

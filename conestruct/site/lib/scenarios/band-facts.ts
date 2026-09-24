@@ -22,7 +22,7 @@
 // chain and the Generate gate; this module owns presentation only, and
 // imports `hasLocation` rather than re-deriving "is there a pin".
 
-import { candidateLabel } from "../road-detection/labels";
+import { candidateLabel, crossStreetLabel } from "../road-detection/labels";
 import { SCENARIO_KINDS, hasLocation } from "./index";
 import type { Scenario, ScenarioKind } from "./types";
 
@@ -167,6 +167,11 @@ export function whereValue(
   const road = confirmedRoadLabel(scenario);
   if (road) parts.push(road);
   else if (scenario.meta.address) parts.push(scenario.meta.address);
+  // #234: the marked intersection, named by the picker's own producer
+  // (crossStreetLabel) — near_intersection only, the one kind that
+  // marks one.  "Fact line <-> modal agree on the intersection."
+  const x = scenario.meta.intersection;
+  if (scenario.kind === "near_intersection" && x) parts.push(`at ${crossStreetLabel(x.name)}`);
   if (scenario.workLen > 0) parts.push(ft(scenario.workLen));
   if (kindConfirmed) parts.push(kindLabel(scenario.kind).toLowerCase());
   return parts.join(" · ");

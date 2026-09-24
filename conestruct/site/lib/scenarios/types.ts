@@ -361,6 +361,17 @@ export interface ScenarioMeta {
    */
   confirmedRoad?: ConfirmedRoad | null;
   /**
+   * #234 — the intersection the operator marked in the picker
+   * (near_intersection only): the second pin and the cross street's name
+   * as detected there.  Persisted like `confirmedRoad` so the reopened
+   * picker restores its marker and the WHERE fact line and the picker
+   * name the same crossing (both read `crossStreetLabel`).  Provenance
+   * metadata only: the backend drops the key (extra meta keys are
+   * ignored by the Pydantic schema) and no plan math reads it — the
+   * approaches the plan uses are the scenario's own fields.
+   */
+  intersection?: { lat: number; lng: number; name: string | null } | null;
+  /**
    * Road centerline as [lat, lng] vertices (#140) — a WIRE-ONLY field
    * materialized by ``withRelayedCenterline`` at serialization time
    * from ``confirmedRoad.candidate.geometry`` (behind the same exact

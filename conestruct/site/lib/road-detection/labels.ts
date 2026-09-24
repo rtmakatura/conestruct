@@ -56,3 +56,11 @@ export function candidateLabel(c: RoadCandidate): CandidateLabel {
   const primary = c.name ?? c.ref ?? `Unnamed ${sub.toLowerCase()}`;
   return { primary, sub, direction };
 }
+
+/** #234 — the cross street as every surface names it: the picker's
+ *  cross-street summary and the WHERE fact line both read this, so the
+ *  two cannot name one crossing two ways (the confirmedRoadLabel idiom).
+ *  The fallback is the picker's own existing words. */
+export function crossStreetLabel(name: string | null | undefined): string {
+  return name ?? "Unnamed road";
+}

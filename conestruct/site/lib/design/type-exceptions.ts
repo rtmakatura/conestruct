@@ -518,7 +518,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     css: [],
     tsx: [
       { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 48 }, // #209: +1, the numeric editor's range alert
-      { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 7 },
+      { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 8 }, // #234: +1, the restored-intersection line
       { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 8 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 6 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[15px]", count: 1 },
@@ -676,6 +676,8 @@ export const CENSUS_PINS = {
   // (one site already in the census, one more use).  282 -> 283.
   // #209: the picker numeric editor's refusal note ("1–4") takes the file's own
   // text-[10px].  283 -> 284.
-  tsxUses: 284,
+  // #234: the picker's restored-intersection line takes the panel's own
+  // text-[11px].  284 -> 285.
+  tsxUses: 285,
   tsxFiles: 35,
 } as const;
