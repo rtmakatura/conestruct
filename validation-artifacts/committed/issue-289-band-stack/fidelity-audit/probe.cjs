@@ -260,6 +260,18 @@ async function run(width, height, tag) {
   // S5 — Generate, the results stack at the settle (the scan can take
   // ~17 s; the working band is the in-flight voice, so its absence is the
   // settle).
+  // S4 is genState "generating": the plan's device-breakdown request in
+  // flight.  On prod it can answer before a full-page capture finishes
+  // (the first run read 380's facts after the verdict landed), so the rig
+  // HOLDS that one request until S4 is read and shot, then releases it.
+  // Nothing on the page changes — the request is only answered later.
+  let release;
+  const held = new Promise((r) => (release = r));
+  let holding = true;
+  await page.route("**/api/render/device-breakdown", async (route) => {
+    if (holding) await held;
+    await route.continue();
+  });
   await (await hook(page, "generate-plan")).click();
 
   // S4 — in flight (#289 acceptance: "Every S1–S4 and S7 state measured on
@@ -268,11 +280,8 @@ async function run(width, height, tag) {
   // taken while it is present, never waited out.  Rule 117's own facts
   // are recorded beside the capture (s4Facts) rather than inferred later.
   await page.waitForSelector(".working-band", { timeout: 15000 });
-  await snap(page, tag, "S4", result, 0);
-  // S4 is captured IN FLIGHT by design: "settled" does not apply to it.
-  result.states.S4.settled = false;
-  result.states.S4.inFlight = true;
-  result.states.S4.s4Facts = await page.evaluate(() => {
+  // Facts first, the full capture second — both while the request is held.
+  const s4Facts = await page.evaluate(() => {
     const slot = document.querySelector(".status-slot");
     const facts = [...document.querySelectorAll(".a-fact")];
     const ph = document.querySelector(".results-placeholder");
@@ -308,8 +317,41 @@ async function run(width, height, tag) {
       // "A results placeholder block … 'No package yet — the plan is
       // being built.'"
       placeholder: ph ? (ph.textContent || "").replace(/\s+/g, " ").trim() : null,
+      // "1 px #2c3e53, ground #101c29, padding 22 px 16 px … body value
+      // #6e7c8e" — measured off the block and its line.
+      placeholderBox: ph
+        ? (() => {
+            const cs = getComputedStyle(ph);
+            const line = ph.querySelector(".rp-line");
+            return {
+              border: `${cs.borderTopWidth} ${cs.borderTopStyle} ${cs.borderTopColor}`,
+              ground: cs.backgroundColor,
+              padding: cs.padding,
+              lineColor: line ? getComputedStyle(line).color : null,
+            };
+          })()
+        : null,
+      // "No primary." — visible primary actions on the page.
+      primaries: [...document.querySelectorAll(".a-pri")].filter(
+        (e) => getComputedStyle(e).display !== "none" && e.getBoundingClientRect().height > 0,
+      ).length,
     };
   });
+  await snap(page, tag, "S4", result, 0);
+  // S4 is captured IN FLIGHT by design: "settled" does not apply to it.
+  result.states.S4.settled = false;
+  result.states.S4.inFlight = true;
+  result.states.S4.s4Facts = s4Facts;
+  // The working band must still be up after the full capture, or the
+  // capture is not S4.
+  result.states.S4.workingBandAfterCapture = await page.evaluate(
+    () => !!document.querySelector(".working-band"),
+  );
+  // Released, not unrouted: unroute hands the held request on itself and
+  // the handler's continue then throws.  From here the handler passes
+  // every call straight through.
+  holding = false;
+  release();
 
   await page.waitForSelector('[data-testid="fact-setup"]', { timeout: 120000 });
   await snap(page, tag, "S5", result, 150000);
