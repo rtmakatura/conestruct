@@ -674,6 +674,34 @@ export function GeneratorShell({
     setRevising(false);
   };
 
+  // #289 acceptance, Part 1 §5.6: "Escape cancels with zero requests".
+  // While S7 is open, Escape is DISCARD — the same function, so the same
+  // zero requests and no dialog.  Three keys it does not treat as a
+  // discard: one a control already handled (defaultPrevented), one pressed
+  // inside an open dialog (the picker owns its own Escape), and one on a
+  // <select> (below).
+  const discardRef = useRef(discardStaged);
+  discardRef.current = discardStaged;
+  useEffect(() => {
+    if (revisingField === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      const t = e.target as Element | null;
+      if (t && typeof t.closest === "function" && t.closest('[role="dialog"]')) return;
+      // S7's editor is a native <select>: an Escape aimed at its open
+      // option list must not cost the staged edit (the page cannot tell an
+      // open list from a closed one).  So Escape on a <select> only leaves
+      // it; the next Escape discards.
+      if (t instanceof HTMLSelectElement) {
+        t.blur();
+        return;
+      }
+      discardRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [revisingField]);
+
   /** APPLY — ruling e's fold: the staged fields into the scenario and
    *  the staged corrections into the meta, in ONE `setScenario`, then
    *  one generate.  Ruling 191: one Apply is known to carry both because

@@ -181,6 +181,68 @@ describe("7d's RETRY PREVIEW re-asks the same read; APPLY names the write", () =
   });
 });
 
+// #289 acceptance: "Escape cancels with zero requests" (Part 1 §5.6).
+describe("Escape cancels S7 with zero requests (#289 acceptance)", () => {
+  it("PAYLOAD: Escape un-stages, closes S7 and asks for nothing — the plan keeps its value", async () => {
+    const user = await generated();
+    await stageRevision("35");
+    await settle();
+    expect(screen.getByTestId("revision-panel")).toBeTruthy();
+    calls = [];
+
+    await user.keyboard("{Escape}");
+    await settle();
+    expect(calls).toHaveLength(0);
+    expect(document.querySelector('[data-testid="revision-panel"]')).toBeNull();
+    // Nothing was written: the setup line still reads the plan's speed.
+    expect(document.querySelector('[data-testid="fact-setup"]')?.textContent).toContain("65 mph");
+  });
+
+  it("Escape on the S7 <select> only leaves it — the staged edit survives; the next Escape discards", async () => {
+    const user = await generated();
+    await stageRevision("35");
+    await settle();
+    const editor = document.getElementById("revise-speed") as HTMLSelectElement;
+    editor.focus();
+    expect(document.activeElement).toBe(editor);
+    calls = [];
+
+    // An Escape aimed at the select (its option list) must not cost the edit.
+    await user.keyboard("{Escape}");
+    await settle();
+    expect(screen.getByTestId("revision-panel")).toBeTruthy();
+    expect(editor.value).toBe("35");
+    expect(document.activeElement).not.toBe(editor);
+
+    // The next Escape is the discard — still zero requests.
+    await user.keyboard("{Escape}");
+    await settle();
+    expect(document.querySelector('[data-testid="revision-panel"]')).toBeNull();
+    expect(calls).toHaveLength(0);
+  });
+
+  it("Escape with nothing staged still closes S7, with zero requests", async () => {
+    const user = await generated();
+    await changeOneThing("speed");
+    await settle();
+    expect(screen.getByTestId("revision-panel")).toBeTruthy();
+    calls = [];
+    await user.keyboard("{Escape}");
+    await settle();
+    expect(calls).toHaveLength(0);
+    expect(document.querySelector('[data-testid="revision-panel"]')).toBeNull();
+  });
+
+  it("outside S7 Escape does nothing to the plan and asks for nothing", async () => {
+    const user = await generated();
+    calls = [];
+    await user.keyboard("{Escape}");
+    await settle();
+    expect(calls).toHaveLength(0);
+    expect(document.querySelector('[data-testid="fact-setup"]')).not.toBeNull();
+  });
+});
+
 describe("DISCARD fires zero requests (#289 acceptance)", () => {
   it("un-stages, and asks for nothing", async () => {
     await generated();
