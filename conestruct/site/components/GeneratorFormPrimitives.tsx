@@ -211,17 +211,12 @@ export function GenerateButton({
         disabled={generating || disabled}
         title={!generating && disabled ? disabledReason : undefined}
       >
-        {generating ? (
-          <>
-            {/* #263 P11: Tailwind's /40 alpha needs literal channels, so the
-                spinner ring carries #0C1622 — it MUST equal --on-act (pinned
-                by value in ink-literals.test.ts). */}
-            <span className="inline-block w-3 h-3 rounded-full border-[1.5px] border-[#0C1622]/40 border-t-[#0C1622] animate-spin" />
-            Generating plan…
-          </>
-        ) : (
-          <>Generate plan</>
-        )}
+        {/* Rule 130 busy: "disabled treatment plus the label swapped to
+            the present participle; the working band carries the motion,
+            never the button".  #289 fidelity follow-up: the spinner ring
+            that sat here is gone (and with it the component's one hex
+            literal) — the working band's track is the page's motion. */}
+        {generating ? "Generating plan…" : "Generate plan"}
       </button>
       {/* #289 fidelity F6 (rule 116's "centred provenance caption"): the
           reason reads in the provenance role — mono 10.5, #93a0b0,

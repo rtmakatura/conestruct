@@ -58,6 +58,7 @@ import {
 } from "@/lib/scenarios/what-writes";
 import {
   blindApplySentence,
+  loadingFrom,
   type PreviewState,
 } from "@/lib/scenarios/preview";
 import type {
@@ -354,6 +355,7 @@ export function GeneratorShell({
   // nothing.
   const [preview, setPreview] = useState<PreviewState>({ kind: "idle" });
   const previewSeq = useRef(0);
+  const lastPreviewAsk = useRef<{ next: Scenario; forValue: string } | null>(null);
   /** Which field the column re-opened on, or null when it is not in S7.
    *  Rule 190: "CHANGE ONE THING re-opens one field, in place, with its
    *  consequence shown." */
@@ -602,7 +604,10 @@ export function GeneratorShell({
     // column's WHERE band but not yet confirmed must not ride one.
     if (!checksArmed) return;
     const seq = ++previewSeq.current;
-    setPreview({ kind: "loading" });
+    // RETRY PREVIEW (rule 95.4, 7d) re-asks exactly this question.
+    lastPreviewAsk.current = { next, forValue };
+    // Rule 95.9: in flight, the last computed set stays on screen, dimmed.
+    setPreview(loadingFrom);
     (async () => {
       try {
         const res = await fetch("/api/render/device-breakdown", {
@@ -1789,6 +1794,11 @@ export function GeneratorShell({
                     )}
                     verdict={stripVerdictWord}
                     needsYou={needsYouModel.count}
+                    // Rule 95.4 7d's RETRY PREVIEW: the same read, again.
+                    onRetry={() => {
+                      const ask = lastPreviewAsk.current;
+                      if (ask) firePreview(ask.next, ask.forValue);
+                    }}
                     footer={
                       // #289 fidelity F7 — rule 94's order: the staged
                       // sentence, DISCARD (ghost), APPLY (primary, 200 × 44,
@@ -1825,7 +1835,9 @@ export function GeneratorShell({
                           onClick={applyStagedAll}
                           disabled={staged.length === 0}
                         >
-                          APPLY
+                          {/* Rule 94's label: the write re-generates the
+                              whole plan, and the button says so. */}
+                          APPLY — RE-GENERATE
                         </button>
                       </div>
                     }

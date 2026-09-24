@@ -28,7 +28,9 @@ describe("GenerateButton (UX-17 CTA labels)", () => {
     expect(html).toContain("Generating plan…");
     expect(html).not.toContain("Building bundle");
     expect(html).toContain("disabled");
-    expect(html).toContain("animate-spin");
+    // Rule 130 busy: the working band carries the motion, never the
+    // button (#289 fidelity follow-up removed the spinner ring).
+    expect(html).not.toContain("animate-spin");
   });
 });
 

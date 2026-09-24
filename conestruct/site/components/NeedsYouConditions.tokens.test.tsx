@@ -184,7 +184,11 @@ describe("#288 clause 1 — the condition rows inside NEEDS YOU", () => {
     expect(foot).toMatch(/border-top:\s*1px solid var\(--da-hair\)/);
     // The provenance line has no action track: it is not a data line.
     expect(foot).toMatch(/grid-template-columns:\s*20px minmax\(0, 1fr\)/);
-    expect(rule(".workbench .needs-you .ny-foot .sc-time")).toMatch(/underline dotted/);
+    // #289 fidelity follow-up (after-audit rows 1 and 6): the scan time
+    // is provenance — Q1 dropped the dotted underline — and the Apply
+    // row takes rule 78's own "padding 13 px 16 px".
+    expect(rule(".workbench .needs-you .ny-foot .sc-time")).toMatch(/text-decoration:\s*none/);
+    expect(rule(".workbench .needs-you .ny-apply")).toMatch(/padding:\s*13px 16px/);
   });
 
   it("the band's shared rules: .sys-event byte-identical to arc 18; the suggestion line on Part 2 rule 6 (#289 fidelity F2)", () => {

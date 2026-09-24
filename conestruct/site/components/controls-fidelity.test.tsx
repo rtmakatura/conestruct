@@ -120,6 +120,25 @@ describe("rule 135 / rule 5 — the flat chip speaks in the field-label role", (
   });
 });
 
+describe("rule 165 — the verdict strip at 380 (#289 fidelity follow-up)", () => {
+  it("wraps; the word claims the first line so the pill drops to a second, at 8.5 px, without margin-left auto", () => {
+    const at = css.indexOf("Rule 165 — at 380");
+    expect(at).toBeGreaterThan(-1);
+    const q = css.slice(css.indexOf("@media (max-width: 480px)", at), css.indexOf("\n}\n", at) + 2);
+    expect(q).toMatch(/\.workbench \.status-bar \{\s*flex-wrap: wrap;/);
+    expect(q).toMatch(/min-width: calc\(100% - 24px\)/);
+    expect(q).toMatch(/\.workbench \.status-bar \.pill \{\s*margin-left: 0;\s*font-size: 8\.5px;/);
+  });
+});
+
+describe("rule 130 busy — the motion is the working band's, never the button's", () => {
+  it("the busy Generate carries no spinner, only the present participle", () => {
+    const html = renderToStaticMarkup(<GenerateButton generating onGenerate={() => {}} />);
+    expect(html).toContain("Generating plan…");
+    expect(html).not.toMatch(/animate-spin|rounded-full/);
+  });
+});
+
 describe("rule 29 — the draft notice", () => {
   it("18 px above it", () => {
     expect(rule(".workbench .draft-notice")).toMatch(/margin-top:\s*18px/);

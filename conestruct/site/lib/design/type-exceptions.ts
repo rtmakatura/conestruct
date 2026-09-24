@@ -304,6 +304,9 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
         size: "11.5px",
       },
       { selector: ".workbench .a-panel-row .a-deferred", size: "9.5px" },
+      // #289 fidelity follow-up — rule 165: at 380 "the pill drops to a
+      // second line at 8.5 px".  8.5 is already in the sheet (.jr-tag).
+      { selector: ".workbench .status-bar .pill", size: "8.5px" },
     ],
     tsx: [],
   },
@@ -629,7 +632,8 @@ export const CENSUS_PINS = {
   // #289 fidelity F7: S7's panel — the status row re-sized in place
   // (10.5), five in: was / → / now at 12.5 and at 380's 11.5, APPLY's
   // 13.5, DISCARD's 13, the deferred phrase's 9.5 at 380.  112 -> 117.
-  cssDeclarations: 117,
+  // #289 fidelity follow-up: rule 165's 380 pill at 8.5.  117 -> 118.
+  cssDeclarations: 118,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

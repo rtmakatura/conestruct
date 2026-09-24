@@ -228,13 +228,8 @@ describe("#263 ink literals — the token mirrors equal their tokens", () => {
     expect(constant("CROSS_PIN_COLOR")).toBe(ZONE_COLOR.work_zone);
   });
 
-  it("the Generate spinner's #0C1622 === --on-act", () => {
-    const prim = readFileSync(
-      join(SITE_ROOT, "components", "GeneratorFormPrimitives.tsx"),
-      "utf-8",
-    );
-    expect(prim).toContain("border-[#0C1622]/40 border-t-[#0C1622]");
-    expect("#0C1622".toLowerCase()).toBe(token("--on-act"));
+  it("the Generate button carries no literal (rule 130: its spinner mirror left with the spinner)", () => {
+    expect(observedCode.has("components/GeneratorFormPrimitives.tsx")).toBe(false);
   });
 
   it("Mapbox label paint is the only place #ffffff / #000000 appear in the picker", () => {

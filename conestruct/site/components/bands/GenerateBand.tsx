@@ -61,8 +61,9 @@ export function GenerateFrame({
 
           Reused rather than rebuilt ON PURPOSE.  It already carries
           every clause rule 130 asks for: the disabled reason on `title`,
-          the busy label swapped to the present participle with the
-          motion on the spinner and not on the label, and the
+          the busy label swapped to the present participle (the motion is
+          the working band's — the button's spinner went in the #289
+          fidelity follow-up, rule 130), and the
           `cta-reason` alert that puts the blocker in text as well as on
           a title (rule 142).  A new button would have had to re-earn all
           of that, and the first thing it would have lost is the string —

@@ -19,6 +19,15 @@
 // measured scrollWidth, 197 px at 10 px mono — s2-arc26-cards-rows/outLocal
 // at e363d98, C6 "longest annotation", both viewports — by ruling
 // (2026-09-09, the rebase fold).
+//
+// #289 fidelity follow-up — RE-MEASURED, same method.  The strip's
+// dropdown that carried the soft-check row is gone (F5, ruled Q4), so the
+// longest annotation on the page is now section 03's "CDOT S-630-1 (July
+// 2026) Sheet 2, General Note 22": 333.2 px natural at 10 px mono, prod
+// 403b482, 14 annotations measured
+// (validation-artifacts/committed/issue-289-band-stack/fidelity-after/
+// gutter.json).  Five S-630-1 cites (326–333 px) had been wrapping inside
+// 197.  The gutter is the measurement: 334 px.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -48,9 +57,9 @@ describe("#225 — the audit-row grid (static half)", () => {
     expect(block(".check-list")).not.toContain("600px");
   });
 
-  it("three tracks: 24px symbol · minmax(0, 1fr) message · the measured 197px annotation gutter", () => {
+  it("three tracks: 24px symbol · minmax(0, 1fr) message · the measured 334px annotation gutter", () => {
     expect(block(".check-list-item")).toContain(
-      "grid-template-columns: 24px minmax(0, 1fr) 197px",
+      "grid-template-columns: 24px minmax(0, 1fr) 334px",
     );
   });
 
@@ -144,7 +153,7 @@ describe("#225 — the renderer emits the three-cell row the grid lays out (mark
   // the second renderer and left with the disclosure.  Its absence is
   // pinned so a check list cannot quietly return to the strip.  NOTE: it
   // carried the gutter's sizing case ("OSM GROUND-TRUTH (SOFT CHECK)");
-  // the 197 px pin stands as ruled until a ruling re-sizes it.
+  // the follow-up re-measured the gutter on prod (334 px, header above).
   it("the verdict strip no longer emits check-list rows", () => {
     const html = renderToStaticMarkup(
       createElement(StatusBar, { inputError: null, audit: ready(auditWithWarning()) }),

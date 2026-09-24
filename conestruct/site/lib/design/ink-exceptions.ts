@@ -116,14 +116,10 @@ export const CODE_LITERALS: readonly FileLiterals[] = [
     reason:
       "PIN_COLOR #E8710A === --dim-deep and CROSS_PIN_COLOR #1EC8A5 === ZONE_COLOR.work_zone (both pinned by value); #ffffff / #000000 are Mapbox zone-label paint inside a style-JSON expression, where var() is impossible — decorative",
   },
-  {
-    file: "components/GeneratorFormPrimitives.tsx",
-    hexes: ["#0C1622"],
-    count: 2,
-    disposition: "token mirror",
-    reason:
-      "the Generate button's spinner ring: border-[#0C1622]/40 + border-t-[#0C1622] — Tailwind's /40 alpha needs literal channels; #0C1622 === --on-act (rule 130; #289 fidelity F6, was #06222F), pinned by value",
-  },
+  // components/GeneratorFormPrimitives.tsx's row (the Generate spinner
+  // ring's #0C1622 mirror of --on-act) is DELETED: rule 130 takes the
+  // motion off the button, and the literal left with the ring (#289
+  // fidelity follow-up).
   {
     file: "lib/corridor-zones.ts",
     hexes: ["#1EC8A5", "#8A8A8A", "#F3722C", "#FF7A00", "#FFD166"],

@@ -114,38 +114,86 @@ describe("the previewed four", () => {
     expect(screen.getByTestId("panel-row-devices").textContent).toContain("31");
   });
 
-  it("7a / 7b / 7d: `now` says what it does not know, and never a number", () => {
-    for (const state of [
-      { kind: "idle" } as const,
-      { kind: "loading" } as const,
-      { kind: "error" } as const,
-    ]) {
-      mount(state);
-      const taper = screen.getByTestId("panel-row-taper").textContent ?? "";
-      expect(taper).toContain("183 ft");
-      expect(taper).toContain("recomputes on apply");
-      expect(taper).not.toContain("105");
-      cleanup();
+  // #289 fidelity follow-up — rule 95.5's treatments replace the old
+  // "the four read `recomputes on apply` outside 7c".  That phrase is the
+  // DEFERRED pair's (rule 95.6); the previewed four always carry a
+  // server's figure or an em dash, and say which by treatment.
+  const now = (key: string) =>
+    screen.getByTestId(`panel-row-${key}`).querySelector(".a-now")!;
+
+  it("7a: the value on file's own figures, NOT dimmed and NOT changed (rule 95.7)", () => {
+    mount({ kind: "idle" });
+    expect(now("taper").textContent).toBe("183 ft");
+    expect(now("taper").getAttribute("data-treatment")).toBe("unchanged");
+    expect(screen.getByTestId("panel-row-taper").textContent).not.toContain("recomputes");
+  });
+
+  it("7b: the last computed set, in flight — never blanked (rule 95.9)", () => {
+    mount({ kind: "loading", last: PREVIEWED });
+    expect(now("taper").textContent).toBe("105 ft");
+    expect(now("taper").getAttribute("data-treatment")).toBe("inflight");
+    cleanup();
+    // No earlier preview: the value on file's figures, in flight.
+    mount({ kind: "loading" });
+    expect(now("taper").textContent).toBe("183 ft");
+    expect(now("taper").getAttribute("data-treatment")).toBe("inflight");
+  });
+
+  it("7c: changed where the preview differs from `was`, unchanged where it does not (rule 95.10)", () => {
+    const same: DeviceBreakdownData = {
+      ...PREVIEWED,
+      zone_geometry: { ...PREVIEWED.zone_geometry!, buffer_b_ft: 495 },
+    };
+    mount({ kind: "ready", data: same, forValue: "35 mph" });
+    expect(now("taper").getAttribute("data-treatment")).toBe("changed");
+    expect(now("taper").classList.contains("is-changed")).toBe(true);
+    expect(now("buffer").textContent).toBe("495 ft");
+    expect(now("buffer").getAttribute("data-treatment")).toBe("unchanged");
+  });
+
+  it("7d: every previewed cell is an em dash — old numbers are never left in place (rule 95.11)", () => {
+    mount({ kind: "error" });
+    for (const key of ["taper", "buffer", "spacing", "devices"]) {
+      expect(now(key).textContent, key).toBe("—");
+      expect(now(key).getAttribute("data-treatment"), key).toBe("absent");
     }
   });
 
   it("the row set is derivable without a DOM (rule 90 is a producer claim)", () => {
-    const rows = panelRows({
-      settled: SETTLED,
-      preview: null,
-      verdict: "on screen",
-      needsYou: 3,
-    });
-    expect(rows).toHaveLength(6);
-    expect(rows.filter((r) => r.now === null)).toHaveLength(6);
-    const previewed = panelRows({
-      settled: SETTLED,
-      preview: PREVIEWED,
-      verdict: "on screen",
-      needsYou: 3,
-    });
-    // Four previewed, two deferred — in every situation.
-    expect(previewed.filter((r) => r.now === null)).toHaveLength(2);
+    for (const [, state] of STATES) {
+      const rows = panelRows({ settled: SETTLED, state, verdict: "on screen", needsYou: 3 });
+      expect(rows).toHaveLength(6);
+      // Four previewed, two deferred — in every situation.
+      expect(rows.filter((r) => r.now === null)).toHaveLength(2);
+      expect(rows.filter((r) => r.treatment === "deferred")).toHaveLength(2);
+    }
+  });
+});
+
+describe("rule 95.4 7d — RETRY PREVIEW", () => {
+  it("renders only in 7d, as a rule 133 ghost, and re-asks", () => {
+    let asked = 0;
+    const panel = (state: PreviewState) => (
+      <RevisionPanel
+        state={state}
+        settled={SETTLED}
+        stagedValue="35 mph"
+        verdict="on screen"
+        needsYou={3}
+        onRetry={() => {
+          asked += 1;
+        }}
+      />
+    );
+    const { rerender } = render(panel({ kind: "idle" }));
+    expect(screen.queryByTestId("panel-retry")).toBeNull();
+    rerender(panel({ kind: "error" }));
+    const retry = screen.getByTestId("panel-retry");
+    expect(retry.classList.contains("act-btn")).toBe(true);
+    // Inside the status row, after the sentence.
+    expect(retry.closest('[data-testid="panel-status"]')).not.toBeNull();
+    retry.click();
+    expect(asked).toBe(1);
   });
 });
 
@@ -259,6 +307,52 @@ describe("#289 fidelity F7 — rules 90–95.4 and 121", () => {
     expect(body).toMatch(/grid-template-columns:\s*240px minmax\(0, 1fr\)/);
     expect(body).toMatch(/column-gap:\s*26px/);
     expect(rule(".workbench .a-open.is-revising")).toMatch(/border-color:\s*var\(--act\)/);
+  });
+
+  // #289 fidelity follow-up — rules 91, 95.4 (7d) and 95.5, off the sheet.
+  it("rule 95.5: changed is --dim 500; absent --none; in flight dimmed — at an AA-clearing .6, measured", () => {
+    expect(rule(".workbench .a-panel-row .a-now.is-changed")).toMatch(/color:\s*var\(--dim\)/);
+    expect(rule(".workbench .a-panel-row .a-now.is-changed")).toMatch(/font-weight:\s*500/);
+    expect(rule(".workbench .a-panel-row .a-now.is-absent")).toMatch(
+      /color:\s*var\(--ink-on-dark-faint\)/,
+    );
+    const op = Number(rule(".workbench .a-panel-row .a-now.is-inflight").match(/opacity:\s*([\d.]+)/)![1]);
+    // The measured claim: #c8d1dd at this opacity over the panel ground
+    // clears 4.5:1 (rule 95.5's .42 measures 3.04 — the stated departure).
+    const hex = (name: string) => css.match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`))![1];
+    const lum = (h: string) => {
+      const [r, g, b] = [1, 3, 5]
+        .map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
+        .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const mix = (fg: string, a: number, bg: string) =>
+      "#" +
+      [1, 3, 5]
+        .map((i) =>
+          Math.round(parseInt(fg.slice(i, i + 2), 16) * a + parseInt(bg.slice(i, i + 2), 16) * (1 - a))
+            .toString(16)
+            .padStart(2, "0"),
+        )
+        .join("");
+    const ground = hex("--panel-ground");
+    const ink = hex("--ink-on-dark");
+    const composite = mix(ink, op, ground);
+    const ratio = (lum(composite) + 0.05) / (lum(ground) + 0.05);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(ratio).toBeCloseTo(4.84, 1);
+  });
+
+  it("rule 91: the note is --act-bright in 7b and --warn in 7d; rule 95.4's 7d row takes the flag line and #1b1a12", () => {
+    expect(
+      rule('.workbench .a-panel[data-preview="loading"] .a-panel-note,\n.workbench .a-panel[data-preview="loading"] .a-panel-status'),
+    ).toMatch(/color:\s*var\(--act-bright\)/);
+    expect(rule('.workbench .a-panel[data-preview="error"] .a-panel-note')).toMatch(/color:\s*var\(--warn\)/);
+    const failed = rule('.workbench .a-panel[data-preview="error"] .a-panel-status');
+    expect(failed).toMatch(/border-top:\s*1px solid var\(--vd-flag-line\)/);
+    expect(failed).toMatch(/background:\s*var\(--panel-fail-ground\)/);
+    expect(css).toMatch(/--panel-fail-ground:\s*#1b1a12;/);
+    expect(rule(".workbench .a-panel-status .a-retry")).toMatch(/margin-left:\s*auto/);
   });
 });
 

@@ -148,6 +148,39 @@ describe("a preview is a read (#282, ruling e)", () => {
   });
 });
 
+// #289 fidelity follow-up — rule 95.4 7d and rule 94, mounted.
+describe("7d's RETRY PREVIEW re-asks the same read; APPLY names the write", () => {
+  it("PAYLOAD: a failed preview offers RETRY PREVIEW, and it fires one breakdown with preview: true for the staged value", async () => {
+    await generated();
+    fetchMock.mockImplementationOnce(() =>
+      Promise.resolve({ ok: false, status: 503, json: async () => ({}) } as unknown as Response),
+    );
+    await stageRevision("35");
+    await settle();
+    expect(screen.getByTestId("revision-panel").getAttribute("data-preview")).toBe("error");
+    calls = [];
+
+    await act(async () => {
+      screen.getByTestId("panel-retry").click();
+    });
+    await settle();
+    expect(breakdowns()).toHaveLength(1);
+    expect(scenarioOf(breakdowns()[0]).preview).toBe(true);
+    expect(scenarioOf(breakdowns()[0]).speed).toBe(35);
+    expect(audits()).toHaveLength(0);
+    // Answered: 7c, and the retry control is gone with 7d.
+    expect(screen.getByTestId("revision-panel").getAttribute("data-preview")).toBe("ready");
+    expect(screen.queryByTestId("panel-retry")).toBeNull();
+  });
+
+  it("rule 94: the write is labelled APPLY — RE-GENERATE", async () => {
+    await generated();
+    await stageRevision("35");
+    await settle();
+    expect(screen.getByTestId("revise-apply").textContent?.trim()).toBe("APPLY — RE-GENERATE");
+  });
+});
+
 describe("DISCARD fires zero requests (#289 acceptance)", () => {
   it("un-stages, and asks for nothing", async () => {
     await generated();

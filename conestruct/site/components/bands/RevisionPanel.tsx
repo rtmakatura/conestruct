@@ -34,6 +34,15 @@ import {
 } from "@/lib/scenarios/preview";
 import { symClass } from "@/lib/design/symbols";
 
+/** Rule 95.5's five "now" treatments.  #289 fidelity follow-up: each is
+ *  a property of the row's value in the situation, never a guess —
+ *    changed    the landed preview differs from "was"    (7c)
+ *    unchanged  it does not, or no preview has asked yet  (7a, 7c)
+ *    inflight   the last computed set, visibly not current (7b)
+ *    deferred   verdict / needs you, "recomputes on apply" (all four)
+ *    absent     the preview failed: an em dash, never the old number (7d) */
+export type NowTreatment = "changed" | "unchanged" | "inflight" | "deferred" | "absent";
+
 /** One row's two columns.  `now` is null for a deferred row, which
  *  reads rule 95.5's sentence instead of a number. */
 interface PanelRow {
@@ -43,60 +52,93 @@ interface PanelRow {
   short: string;
   was: string;
   now: string | null;
+  treatment: NowTreatment;
 }
 
 const ft = (n: number | undefined): string =>
   n == null ? "—" : `${Math.round(n).toLocaleString("en-US")} ft`;
 
+const PREVIEWED: Array<{
+  key: string;
+  label: string;
+  short: string;
+  read: (d: DeviceBreakdownData | null | undefined) => string;
+}> = [
+  { key: "taper", label: "Taper L", short: "Taper L", read: (d) => ft(d?.zone_geometry?.taper_l_ft) },
+  { key: "buffer", label: "Buffer B", short: "Buffer B", read: (d) => ft(d?.zone_geometry?.buffer_b_ft) },
+  {
+    key: "spacing",
+    label: "Device spacing",
+    short: "Spacing",
+    read: (d) => ft(d?.zone_geometry?.device_spacing_ft),
+  },
+  {
+    key: "devices",
+    label: "Total devices",
+    short: "Devices",
+    read: (d) => (d ? String(d.total_devices ?? "—") : "—"),
+  },
+];
+
 /**
- * The six rows, from the settled answer on screen and (when there is
- * one) the preview's.  Exported for the suite: the row set is rule 90's
- * claim, and it must be provable without a DOM.
+ * The six rows in one situation.  Exported for the suite: the row set is
+ * rule 90's claim and the treatments rule 95.5's, both provable without
+ * a DOM.
+ *
+ * Where each "now" comes from — every figure is a server's (rule 95):
+ *   7a  the settled answer's own figures, "true for the value on file"
+ *       (rule 95.7 — "NOT dimmed and NOT changed")
+ *   7b  the last computed set (the previous landed preview, else the
+ *       settled figures), in flight (rule 95.9)
+ *   7c  the preview's; changed where it differs from "was" (rule 95.10)
+ *   7d  an em dash — "Old numbers are never left in place" (rule 95.11)
+ * "Changed" compares two strings the server's numbers already format to:
+ * a rendering decision, not a computation (rule 3).
  */
 export function panelRows(opts: {
   settled: DeviceBreakdownData | null;
-  preview: DeviceBreakdownData | null;
+  state: PreviewState;
   verdict: string;
   needsYou: number;
 }): PanelRow[] {
-  const w = opts.settled?.zone_geometry;
-  const n = opts.preview?.zone_geometry;
-  const previewed = opts.preview !== null;
+  const { settled, state } = opts;
+  const rows: PanelRow[] = PREVIEWED.map((p) => {
+    const was = p.read(settled);
+    switch (state.kind) {
+      case "ready": {
+        const now = p.read(state.data);
+        return { ...p, was, now, treatment: now === was ? "unchanged" : "changed" };
+      }
+      case "loading":
+        return { ...p, was, now: p.read(state.last ?? settled), treatment: "inflight" };
+      case "error":
+        return { ...p, was, now: "—", treatment: "absent" };
+      default:
+        return { ...p, was, now: was, treatment: "unchanged" };
+    }
+  });
   return [
-    {
-      key: "taper",
-      label: "Taper L",
-      short: "Taper L",
-      was: ft(w?.taper_l_ft),
-      now: previewed ? ft(n?.taper_l_ft) : null,
-    },
-    {
-      key: "buffer",
-      label: "Buffer B",
-      short: "Buffer B",
-      was: ft(w?.buffer_b_ft),
-      now: previewed ? ft(n?.buffer_b_ft) : null,
-    },
-    {
-      key: "spacing",
-      label: "Device spacing",
-      short: "Spacing",
-      was: ft(w?.device_spacing_ft),
-      now: previewed ? ft(n?.device_spacing_ft) : null,
-    },
-    {
-      key: "devices",
-      label: "Total devices",
-      short: "Devices",
-      was: opts.settled ? String(opts.settled.total_devices) : "—",
-      now: previewed ? String(opts.preview?.total_devices ?? "—") : null,
-    },
+    ...rows.map(({ key, label, short, was, now, treatment }) => ({
+      key,
+      label,
+      short,
+      was,
+      now,
+      treatment,
+    })),
     // Rule 95.6's two, in all four situations — including 7c, where a
     // number IS on hand for the rows above.  A verdict is the backend's
     // audit answer and NEEDS YOU counts its tiers; neither is in the
     // breakdown response, so neither is predicted (rulings 195, 204).
-    { key: "verdict", label: "Verdict", short: "Verdict", was: opts.verdict, now: null },
-    { key: "needs-you", label: "Needs you", short: "Needs you", was: String(opts.needsYou), now: null },
+    { key: "verdict", label: "Verdict", short: "Verdict", was: opts.verdict, now: null, treatment: "deferred" },
+    {
+      key: "needs-you",
+      label: "Needs you",
+      short: "Needs you",
+      was: String(opts.needsYou),
+      now: null,
+      treatment: "deferred",
+    },
   ];
 }
 
@@ -107,6 +149,7 @@ export function RevisionPanel({
   verdict,
   needsYou,
   footer,
+  onRetry,
 }: {
   state: PreviewState;
   settled: DeviceBreakdownData | null;
@@ -118,9 +161,10 @@ export function RevisionPanel({
    *  staged set and the write live there (ruling e: one staging
    *  mechanism, never per editor). */
   footer?: ReactNode;
+  /** Rule 95.4 7d's RETRY PREVIEW — the shell re-fires the same read. */
+  onRetry?: () => void;
 }): ReactNode {
-  const preview = state.kind === "ready" ? state.data : null;
-  const rows = panelRows({ settled, preview, verdict, needsYou });
+  const rows = panelRows({ settled, state, verdict, needsYou });
 
   // Rule 95.4's reserved row, in its four situations.  7a is quiet on
   // purpose (ruling 203: "Nothing is wrong in 7a").
@@ -144,6 +188,9 @@ export function RevisionPanel({
         {/* Rule 91 + R3: which VALUE the figures are for, and which
             COMPUTATION produced them.  One string, true in all four
             situations. */}
+        {/* Rule 91's note colour per situation (#289 fidelity follow-up):
+            7a / 7c #93a0b0, 7b the recomputing blue, 7d #f4c020 — keyed
+            off the panel's data-preview in CSS. */}
         <span className="tr-prov a-panel-note" data-testid="panel-note">
           {previewHeaderNote(stagedValue)}
         </span>
@@ -173,7 +220,12 @@ export function RevisionPanel({
             <span className="a-arrow" aria-hidden>
               →
             </span>
-            <span className={r.now === null ? "tr-prov a-deferred" : "a-val a-now"}>
+            <span
+              className={
+                r.now === null ? "tr-prov a-deferred" : `a-val a-now is-${r.treatment}`
+              }
+              data-treatment={r.treatment}
+            >
               {/* Rule 95.5's sentence for a row nobody can preview — the
                   same words in all four situations, so the row never
                   changes treatment for a reason the reader cannot see. */}
@@ -198,6 +250,19 @@ export function RevisionPanel({
           {statusGlyph}
         </span>
         <span data-testid="panel-status-line">{status}</span>
+        {/* Rule 95.4 7d: "plus a RETRY PREVIEW ghost (.act, rule 133 — this sheet's .act-btn),
+            margin-left auto".  The same read again — it writes nothing,
+            so it is not a data-write control. */}
+        {state.kind === "error" && onRetry ? (
+          <button
+            type="button"
+            className="act-btn a-retry"
+            data-testid="panel-retry"
+            onClick={onRetry}
+          >
+            Retry preview
+          </button>
+        ) : null}
       </div>
 
       {footer}

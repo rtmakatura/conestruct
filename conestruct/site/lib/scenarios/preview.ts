@@ -38,9 +38,21 @@ import type { DeviceBreakdownData } from "@/components/DeviceBreakdown";
  */
 export type PreviewState =
   | { kind: "idle" }
-  | { kind: "loading" }
+  /** `last` — rule 95.9 / 95.4 7b: "figures at right are the last
+   *  computed set".  The previous landed preview, when there was one;
+   *  absent, the panel shows the value on file's figures (rule 95.7). */
+  | { kind: "loading"; last?: DeviceBreakdownData }
   | { kind: "ready"; data: DeviceBreakdownData; forValue: string }
   | { kind: "error" };
+
+/** The in-flight state, carrying the last computed set forward (rule
+ *  95.9: "Nothing blanks, no skeleton") — a landed answer, or the one a
+ *  still-in-flight state was already carrying. */
+export function loadingFrom(prev: PreviewState): PreviewState {
+  const last =
+    prev.kind === "ready" ? prev.data : prev.kind === "loading" ? prev.last : undefined;
+  return last ? { kind: "loading", last } : { kind: "loading" };
+}
 
 /** Rule 201's status row, verbatim: "computed for 35 mph · taper,
  *  buffer, spacing and counts only".  The value is the STAGED one,
