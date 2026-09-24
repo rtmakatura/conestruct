@@ -272,3 +272,72 @@ def test_corridor_spec_endpoint_unknown_kind_422(client: TestClient) -> None:
 def test_corridor_spec_endpoint_requires_auth(client: TestClient) -> None:
     res = client.post("/render/corridor-spec", json={"kind": "shoulder", "speed": 45})
     assert res.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# #267 — "preview must equal applied": the picker's preview relays the raw
+# facts (kind, speed, laneWidth, divided, roadType) and the backend derives
+# the shoulder width with the PLAN's own producer.
+# ---------------------------------------------------------------------------
+
+
+def test_plan_shoulder_width_is_the_branches_own_table() -> None:
+    from src.api.schemas import plan_shoulder_width_ft
+
+    assert plan_shoulder_width_ft("shoulder", True, "rural_divided") == 10.0
+    assert plan_shoulder_width_ft("shoulder", False, "rural_undivided") == 8.0
+    assert plan_shoulder_width_ft("work_beyond_shoulder", None, "freeway") == 10.0
+    assert plan_shoulder_width_ft("work_beyond_shoulder", None, "rural_divided") == 10.0
+    assert plan_shoulder_width_ft("work_beyond_shoulder", None, "urban_arterial") == 8.0
+    assert plan_shoulder_width_ft("lane_closure_divided", True, None) == 10.0
+    assert plan_shoulder_width_ft("mobile_op_multilane", True, None) == 10.0
+    for kind in ("flagger_lane_closure", "mobile_op_2lane", "near_intersection"):
+        assert plan_shoulder_width_ft(kind, False, None) == 8.0
+
+
+@pytest.mark.parametrize(
+    ("divided", "road_type", "speed"),
+    [
+        (True, "rural_divided", 55),
+        (False, "rural_undivided", 55),
+        (False, "urban_arterial", 35),
+        (True, "freeway", 65),
+    ],
+)
+def test_corridor_spec_preview_equals_the_plans_taper(
+    client: TestClient, divided: bool, road_type: str, speed: int
+) -> None:
+    """The picker preview, fed the same raw facts the plan is built from,
+    returns the taper the plan's audit states — undivided included (the
+    preview used to default to 10 ft where the plan builds 8)."""
+    plan = client.post(
+        "/render/audit",
+        headers=_auth_headers(),
+        json=_shoulder_body(divided=divided, roadType=road_type, speed=speed),
+    )
+    assert plan.status_code == 200, plan.text
+    applied = plan.json()["sections"]["corridor_spec"]["taper_ft"]
+
+    preview = client.post(
+        "/render/corridor-spec",
+        headers=_auth_headers(),
+        json={
+            "kind": "shoulder",
+            "speed": speed,
+            "laneWidth": 12.0,
+            "divided": divided,
+            "roadType": road_type,
+        },
+    )
+    assert preview.status_code == 200, preview.text
+    assert preview.json()["taper_ft"] == applied
+
+
+def test_corridor_spec_explicit_shoulder_width_still_wins(client: TestClient) -> None:
+    res = client.post(
+        "/render/corridor-spec",
+        headers=_auth_headers(),
+        json={"kind": "shoulder", "speed": 65, "shoulderWidth": 10.0, "divided": False},
+    )
+    assert res.status_code == 200, res.text
+    assert res.json()["taper_ft"] == round(10.0 * 65 / 3)

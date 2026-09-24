@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
     kind?: unknown;
     speed?: unknown;
     roadType?: unknown;
+    laneWidth?: unknown;
+    divided?: unknown;
   };
   if (typeof b.kind !== "string" || typeof b.speed !== "number") {
     return new Response("Invalid request", { status: 400 });
@@ -40,10 +42,19 @@ export async function POST(req: NextRequest) {
   if (b.roadType !== undefined && b.roadType !== null && typeof b.roadType !== "string") {
     return new Response("Invalid request", { status: 400 });
   }
+  // #267: the relayed width facts — typed here, ranged by the backend.
+  if (b.laneWidth !== undefined && typeof b.laneWidth !== "number") {
+    return new Response("Invalid request", { status: 400 });
+  }
+  if (b.divided !== undefined && typeof b.divided !== "boolean") {
+    return new Response("Invalid request", { status: 400 });
+  }
 
   return fetchCorridorSpec({
     kind: b.kind,
     speed: b.speed,
     roadType: (b.roadType as string | null | undefined) ?? undefined,
+    ...(b.laneWidth !== undefined ? { laneWidth: b.laneWidth } : {}),
+    ...(b.divided !== undefined ? { divided: b.divided } : {}),
   });
 }

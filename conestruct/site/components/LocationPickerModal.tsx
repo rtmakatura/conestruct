@@ -81,6 +81,15 @@ export interface LocationPickerInitial {
   // scenario currently carries.
   speedMph: number;
   /**
+   * #267 — the scenario's raw width facts, relayed to the corridor-spec
+   * preview so its taper is the plan's ("preview must equal applied").
+   * The backend derives the shoulder width from kind + divided + road
+   * type with the plan's own producer; this side never computes it.
+   * Absent on kinds that carry no such field.
+   */
+  laneWidth?: number;
+  divided?: boolean;
+  /**
    * The road confirmed at the last Save & Close, from
    * ``scenario.meta.confirmedRoad``.  When present AND its pin matches
    * (lat, lng) exactly, the modal restores that selection as-is and
@@ -600,6 +609,9 @@ export function LocationPickerModal({
             kind: initial.scenarioKind,
             speed: previewSpeed,
             roadType: effectiveRoadType,
+            // #267: the widths the plan will use — relayed, not derived.
+            laneWidth: initial.laneWidth,
+            divided: initial.divided,
           }),
         });
         if (specTokenRef.current !== myToken) return;
@@ -616,7 +628,15 @@ export function LocationPickerModal({
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [open, initial.scenarioKind, previewSpeed, effectiveRoadType, kindConfirmed]);
+  }, [
+    open,
+    initial.scenarioKind,
+    previewSpeed,
+    effectiveRoadType,
+    kindConfirmed,
+    initial.laneWidth,
+    initial.divided,
+  ]);
 
   // ---- Corridor projection ----------------------------------------------
   // Geometry only — anchor, bearing, typed work-zone length; the zone

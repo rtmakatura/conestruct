@@ -201,6 +201,38 @@ describe("#289 finding 1 — the corridor spec waits on a confirmed kind (Rule 1
     expect(screen.queryByText(/OSM, full corridor/i)).toBeNull();
   });
 
+  // #267 — "preview must equal applied": the picker relays the plan's own
+  // width facts; the backend derives the shoulder width from them.
+  it("PAYLOAD (#267): the corridor-spec request carries the scenario's laneWidth and divided", async () => {
+    stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
+    render(
+      <LocationPickerModal
+        open
+        initial={{
+          scenarioKind: "shoulder",
+          speedMph: 65,
+          workZoneFt: 400,
+          laneWidth: 11,
+          divided: false,
+        }}
+        onCancel={() => {}}
+        onSave={vi.fn()}
+      />,
+    );
+    typeCoords();
+    await screen.findByText(/OSM, full corridor/i, undefined, { timeout: 3000 });
+    const calls = (fetch as unknown as { mock: { calls: unknown[][] } }).mock.calls.filter((c) =>
+      String(c[0]).includes("/api/render/corridor-spec"),
+    );
+    expect(calls.length).toBeGreaterThan(0);
+    const body = JSON.parse(String((calls.at(-1)![1] as RequestInit).body));
+    expect(body.kind).toBe("shoulder");
+    expect(body.laneWidth).toBe(11);
+    expect(body.divided).toBe(false);
+    // The shoulder width is never computed here — the backend derives it.
+    expect(body).not.toHaveProperty("shoulderWidth");
+  });
+
   it("confirmed (the default for a caller that does not say): the spec is asked, as before", async () => {
     stubFetches(detection([candidate({ geometry: eastGeometry(2000) })]));
     mountModal();

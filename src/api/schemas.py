@@ -940,6 +940,27 @@ def _jurisdiction_name(scenario: Scenario) -> str | None:
     return str(load_jurisdiction(key)["name"])
 
 
+def plan_shoulder_width_ft(kind: str, divided: bool | None, road_type: str | None) -> float:
+    """The shoulder width the PLAN builds for a scenario kind — one producer.
+
+    Every ``scenario_to_call`` branch reads it, and so does the picker's
+    corridor preview (``POST /render/corridor-spec``), so the preview's
+    shoulder taper is the plan's by construction (#267: "preview must equal
+    applied").  The values are the branches' own, unchanged: 10 ft on a
+    divided road, 8 ft on an undivided one; the lane-closure kinds carry
+    the width their fixed geometry assumes.  Only the shoulder-family
+    kinds (shoulder, work_beyond_shoulder) feed it to a taper.
+    """
+    if kind == "shoulder":
+        return 10.0 if divided else 8.0
+    if kind == "work_beyond_shoulder":
+        return 10.0 if road_type in ("rural_divided", "freeway") else 8.0
+    if kind in ("lane_closure_divided", "mobile_op_multilane"):
+        return 10.0
+    # flagger_lane_closure, mobile_op_2lane, near_intersection
+    return 8.0
+
+
 def scenario_to_call(scenario: Scenario) -> GeneratorCall:
     """Translate a parsed Scenario into a generator invocation.
 
@@ -964,7 +985,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=10.0 if scenario.divided else 8.0,
+            shoulder_width_ft=plan_shoulder_width_ft(
+                "shoulder", scenario.divided, scenario.roadType
+            ),
             is_night=scenario.night,
             is_divided=scenario.divided,
             jurisdiction="CDOT",
@@ -988,7 +1011,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=8.0,
+            shoulder_width_ft=plan_shoulder_width_ft(
+                "flagger_lane_closure", False, scenario.roadType
+            ),
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",
@@ -1013,7 +1038,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=10.0,
+            shoulder_width_ft=plan_shoulder_width_ft(
+                "lane_closure_divided", True, scenario.roadType
+            ),
             is_night=scenario.night,
             is_divided=True,
             jurisdiction="CDOT",
@@ -1034,7 +1061,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=10.0 if wbs_divided else 8.0,
+            shoulder_width_ft=plan_shoulder_width_ft(
+                "work_beyond_shoulder", wbs_divided, scenario.roadType
+            ),
             is_night=scenario.night,
             is_divided=wbs_divided,
             jurisdiction="CDOT",
@@ -1054,7 +1083,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=8.0,
+            shoulder_width_ft=plan_shoulder_width_ft("mobile_op_2lane", False, scenario.roadType),
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",
@@ -1075,7 +1104,9 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=10.0,
+            shoulder_width_ft=plan_shoulder_width_ft(
+                "mobile_op_multilane", True, scenario.roadType
+            ),
             is_night=scenario.night,
             is_divided=True,
             jurisdiction="CDOT",
@@ -1102,7 +1133,7 @@ def scenario_to_call(scenario: Scenario) -> GeneratorCall:
             road_type=_map_road_type(scenario.roadType, scenario.speed),
             work_zone_length_ft=scenario.workLen,
             lane_width_ft=scenario.laneWidth,
-            shoulder_width_ft=8.0,
+            shoulder_width_ft=plan_shoulder_width_ft("near_intersection", False, scenario.roadType),
             is_night=scenario.night,
             is_divided=False,
             jurisdiction="CDOT",

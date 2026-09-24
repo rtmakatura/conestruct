@@ -39,6 +39,7 @@ from src.api.schemas import (
     _map_road_type,
     flagger_lane_ineligible_high,
     lanes_arithmetic_mismatch,
+    plan_shoulder_width_ft,
     scenario_to_call,
 )
 from src.api.site_scan import (
@@ -933,7 +934,12 @@ class CorridorSpecRequest(BaseModel):
     kind: str
     speed: int = Field(ge=20, le=75, multiple_of=5)
     laneWidth: float = Field(default=12.0, ge=8.0, le=20.0)
-    shoulderWidth: float = Field(default=10.0, ge=0.0, le=20.0)
+    # #267 ("preview must equal applied"): the shoulder width is the
+    # PLAN's, derived here by ``plan_shoulder_width_ft`` from the relayed
+    # raw facts (kind, divided, roadType) — the frontend never computes
+    # it.  An explicit value still wins, for callers that pass one.
+    shoulderWidth: float | None = Field(default=None, ge=0.0, le=20.0)
+    divided: bool | None = None
     roadType: str | None = None
 
 
@@ -973,7 +979,12 @@ def render_corridor_spec(req: CorridorSpecRequest) -> JSONResponse:
             detail=f"Unknown scenario kind {req.kind!r} for corridor preview.",
         )
     if family == "shoulder":
-        taper_ft = shoulder_taper_length(req.speed, req.shoulderWidth)
+        shoulder_ft = (
+            req.shoulderWidth
+            if req.shoulderWidth is not None
+            else plan_shoulder_width_ft(req.kind, req.divided, req.roadType)
+        )
+        taper_ft = shoulder_taper_length(req.speed, shoulder_ft)
     elif family == "one_lane_two_way":
         taper_ft = one_lane_two_way_taper_length()
     else:
