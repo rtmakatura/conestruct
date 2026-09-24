@@ -2472,7 +2472,7 @@ function DetectedRows({
           value={lanesValue}
           step={1}
           min={1}
-          max={6}
+          max={MAX_LANES_PER_DIRECTION}
           onChange={(v) =>
             setOverrides({
               ...overrides,
@@ -2658,6 +2658,13 @@ function NumericFieldEditor({
   onClear: () => void;
   hasOverride: boolean;
 }) {
+  // #209: `min` / `max` are the DOMAIN's bounds, and the input's own
+  // attributes do not enforce them on typing.  An entry outside them is
+  // refused, not clamped (rule 10: honest refusal beats silent
+  // substitution) — it stays on screen, marked invalid with the range
+  // beside it, and nothing is committed until it is in bounds.
+  const [draft, setDraft] = useState<string | null>(null);
+  const invalid = draft !== null;
   return (
     <>
       <input
@@ -2665,18 +2672,30 @@ function NumericFieldEditor({
         step={step}
         min={min}
         max={max}
-        value={value ?? ""}
+        value={draft ?? value ?? ""}
+        aria-invalid={invalid || undefined}
         onChange={(e) => {
           const raw = e.target.value;
           if (raw === "") {
+            setDraft(null);
             onChange(null);
             return;
           }
           const n = parseInt(raw, 10);
-          if (Number.isFinite(n)) onChange(n);
+          if (Number.isFinite(n) && n >= min && n <= max) {
+            setDraft(null);
+            onChange(n);
+          } else {
+            setDraft(raw);
+          }
         }}
         className="field-input flex-1 min-w-0 text-right"
       />
+      {invalid && (
+        <span role="alert" className="font-mono text-[10px] text-[color:var(--fail)] flex-shrink-0">
+          {min}–{max}
+        </span>
+      )}
       {hasOverride && <RevertButton onClear={onClear} />}
     </>
   );

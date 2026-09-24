@@ -100,6 +100,44 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// #209 — "lanes input allows 6 vs domain max 4".  #289: `max={4}`.
+describe("#209 — the picker's lanes editor holds the domain's 1–4", () => {
+  const lanesInput = () => {
+    const labelEl = screen
+      .getAllByText("Lanes per direction")
+      .find((el) => el.tagName === "SPAN" && el.className.includes("font-medium")) as HTMLElement;
+    return (labelEl.closest("div.grid") as HTMLElement).querySelector(
+      'input[type="number"]',
+    ) as HTMLInputElement;
+  };
+
+  it("declares max 4 — MAX_LANES_PER_DIRECTION, not 6", async () => {
+    mountModal();
+    typeCoords();
+    await screen.findByText("Lanes per direction");
+    expect(lanesInput().getAttribute("max")).toBe("4");
+    expect(lanesInput().getAttribute("min")).toBe("1");
+  });
+
+  it("refuses 6: shown invalid with its range, and NOT committed; 3 commits", async () => {
+    mountModal();
+    typeCoords();
+    await screen.findByText("Lanes per direction");
+
+    fireEvent.change(lanesInput(), { target: { value: "6" } });
+    expect(lanesInput().getAttribute("aria-invalid")).toBe("true");
+    expect(lanesInput().value).toBe("6");
+    expect(screen.getByRole("alert").textContent).toBe("1–4");
+    // Nothing committed: the row is still the detection's, not an override.
+    expect(caption("Lanes per direction").textContent).toMatch(/^OSM · measured$/);
+
+    fireEvent.change(lanesInput(), { target: { value: "3" } });
+    expect(lanesInput().getAttribute("aria-invalid")).toBeNull();
+    expect(lanesInput().value).toBe("3");
+    expect(caption("Lanes per direction").textContent).toBe("operator-set");
+  });
+});
+
 describe("road-property provenance lines (#152 follow-up)", () => {
   it("measured fields read 'OSM · MEASURED' in the neutral tone", async () => {
     mountModal();

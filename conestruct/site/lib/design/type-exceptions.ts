@@ -517,7 +517,7 @@ export const TYPE_DEBT: readonly TypeDebt[] = [
     owner: "later round — the picker modal (#166 sizing)",
     css: [],
     tsx: [
-      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 47 },
+      { file: "components/LocationPickerModal.tsx", cls: "text-[10px]", count: 48 }, // #209: +1, the numeric editor's range alert
       { file: "components/LocationPickerModal.tsx", cls: "text-[11px]", count: 7 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[12px]", count: 8 },
       { file: "components/LocationPickerModal.tsx", cls: "text-[13px]", count: 6 },
@@ -674,6 +674,8 @@ export const CENSUS_PINS = {
   // (it reads .tr-prov now).  285 -> 282.
   // #215: the hours bar's boundary labels take the axis ticks' text-[9px]
   // (one site already in the census, one more use).  282 -> 283.
-  tsxUses: 283,
+  // #209: the picker numeric editor's refusal note ("1–4") takes the file's own
+  // text-[10px].  283 -> 284.
+  tsxUses: 284,
   tsxFiles: 35,
 } as const;
