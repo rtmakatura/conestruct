@@ -1,7 +1,8 @@
 // #289 fidelity audit — the prod capture.
 //
 // Drives the REAL deployed /sandbox through S1, S2 (road confirmed, kind
-// unchosen), S3, S5 and S7 at 1440x1000 and 380x800, and for every state
+// unchosen), S3, S4 (in flight — added after the fidelity pass), S5 and S7
+// at 1440x1000 and 380x800, and for every state
 // records, off getComputedStyle — measured, not read from source:
 //
 //   texts: every visible element with a direct text node — family, size,
@@ -260,6 +261,56 @@ async function run(width, height, tag) {
   // ~17 s; the working band is the in-flight voice, so its absence is the
   // settle).
   await (await hook(page, "generate-plan")).click();
+
+  // S4 — in flight (#289 acceptance: "Every S1–S4 and S7 state measured on
+  // prod at both widths"; S4 was the one never captured).  The working
+  // band is S4's voice; the scan keeps it up ~17 s, so the capture is
+  // taken while it is present, never waited out.  Rule 117's own facts
+  // are recorded beside the capture (s4Facts) rather than inferred later.
+  await page.waitForSelector(".working-band", { timeout: 15000 });
+  await snap(page, tag, "S4", result, 0);
+  // S4 is captured IN FLIGHT by design: "settled" does not apply to it.
+  result.states.S4.settled = false;
+  result.states.S4.inFlight = true;
+  result.states.S4.s4Facts = await page.evaluate(() => {
+    const slot = document.querySelector(".status-slot");
+    const facts = [...document.querySelectorAll(".a-fact")];
+    const ph = document.querySelector(".results-placeholder");
+    const eff = (el) => {
+      let o = 1;
+      for (let e = el; e; e = e.parentElement) o *= parseFloat(getComputedStyle(e).opacity) || 1;
+      return Math.round(o * 100) / 100;
+    };
+    return {
+      workingBand: !!document.querySelector(".working-band"),
+      // Rule 117: "Verdict slot mounted and empty, holding its height —
+      // visibility hidden, not display none."
+      verdictSlot: slot
+        ? {
+            mounted: true,
+            visibility: getComputedStyle(slot).visibility,
+            display: getComputedStyle(slot).display,
+            height: Math.round(slot.getBoundingClientRect().height * 100) / 100,
+            text: (slot.textContent || "").trim(),
+          }
+        : { mounted: false },
+      // "Both fact lines at opacity .5 with 'locked'."
+      factLines: facts.map((f) => ({
+        opacity: eff(f),
+        locked: /locked/.test(f.textContent || ""),
+        text: (f.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80),
+      })),
+      // "The aerial NOT dimmed."
+      aerialOpacity: (() => {
+        const a = document.querySelector("[data-testid='where-aerial'], .a-aerial");
+        return a ? eff(a) : null;
+      })(),
+      // "A results placeholder block … 'No package yet — the plan is
+      // being built.'"
+      placeholder: ph ? (ph.textContent || "").replace(/\s+/g, " ").trim() : null,
+    };
+  });
+
   await page.waitForSelector('[data-testid="fact-setup"]', { timeout: 120000 });
   await snap(page, tag, "S5", result, 150000);
 

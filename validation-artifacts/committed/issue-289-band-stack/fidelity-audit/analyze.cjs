@@ -303,7 +303,7 @@ const add = (_key, row) => {
   rows.get(key).where.add(row.at);
 };
 // States, compacted: "S1–S7 @1440+380" when every capture shows it.
-const ALL = ["S1", "S2", "S3", "S5", "S7"];
+const ALL = ["S1", "S2", "S3", "S4", "S5", "S7"];
 const compact = (set) => {
   const by = { 1440: [], 380: [] };
   for (const a of set) {
