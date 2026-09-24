@@ -1,0 +1,98 @@
+{
+ "site": "https://www.conestruct.com/sandbox",
+ "ranAt": "2026-09-24T04:12:26.107Z",
+ "widths": {
+  "1440": [
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 4",
+    "natural": 326.41,
+    "rendered": 197,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 3",
+    "natural": 326.41,
+    "rendered": 197,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+    "natural": 333.2,
+    "rendered": 197,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 23, Case 38 Note 1",
+    "natural": 333.2,
+    "rendered": 197,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "natural": 88.41,
+    "rendered": 88.41,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "MUTCD § 6N.12 p. 848",
+    "natural": 136,
+    "rendered": 136,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "natural": 88.41,
+    "rendered": 88.41,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "natural": 88.41,
+    "rendered": 88.41,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "OPENSTREETMAP",
+    "natural": 88.41,
+    "rendered": 88.41,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "MUTCD § 6C.02",
+    "natural": 88.41,
+    "rendered": 88.41,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 8",
+    "natural": 326.41,
+    "rendered": 197,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "REFERENCE",
+    "natural": 61.2,
+    "rendered": 61.2,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "REFERENCE",
+    "natural": 61.2,
+    "rendered": 61.2,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   },
+   {
+    "text": "REFERENCE",
+    "natural": 61.2,
+    "rendered": 61.2,
+    "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+   }
+  ]
+ },
+ "longest": {
+  "text": "CDOT S-630-1 (July 2026) Sheet 2, General Note 22",
+  "natural": 333.2,
+  "rendered": 197,
+  "font": "__JetBrains_Mono_e896d9 10px 0.8px"
+ }
+}

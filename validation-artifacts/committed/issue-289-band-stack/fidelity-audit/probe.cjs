@@ -20,7 +20,7 @@ const { chromium } = require(
   "C:/Users/rtmak/Documents/traffic-control-tool/node_modules/playwright",
 );
 
-const SITE = "https://www.conestruct.com/sandbox";
+const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT || __dirname;
 // E Colfax mid-block — the arc's standing test spot (s7-prod/README.md).
 const PIN = { lat: "39.74020", lng: "-104.95600" };

@@ -7,7 +7,7 @@
 // does not state is not diffed.
 
 const fs = require("fs");
-const cap = JSON.parse(fs.readFileSync(__dirname + "/capture.json", "utf8"));
+const cap = JSON.parse(fs.readFileSync((process.env.AUDIT_IN || __dirname) + "/capture.json", "utf8"));
 
 const hex = (c) => {
   const m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(c || "");
@@ -407,7 +407,7 @@ for (const c of order) {
 out += `\n### Unmapped text nodes — no Part 2 rule names them (${unmapped.size})\n\n| element | text | measured | where |\n|---|---|---|---|\n`;
 for (const u of [...unmapped.values()].sort((a, z) => a.el.localeCompare(z.el)))
   out += `| ${u.el} | ${u.text.slice(0, 50).replace(/\|/g, "/")} | ${u.style} | ${compact(u.where)} |\n`;
-fs.writeFileSync(__dirname + "/deltas.md", out);
+fs.writeFileSync((process.env.AUDIT_IN || __dirname) + "/deltas.md", out);
 const counts = order.map((c) => `${c}=${[...rows.values()].filter((r) => r.cause === c).length}`).join(" ");
 console.log(`deltas: ${rows.size} (${counts}); unmapped texts: ${unmapped.size}`);
 for (const [w, wd] of Object.entries(cap.widths))
