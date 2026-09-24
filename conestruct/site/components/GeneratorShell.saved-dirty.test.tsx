@@ -107,6 +107,11 @@ async function mountSavedPlan() {
   });
   const user = userEvent.setup();
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+  // S4 (s4-prod/): the results mount on the generated wire's own answer,
+  // past the 350 ms fetch debounce — not on the pre-Generate one.
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 400));
+  });
   return user;
 }
 

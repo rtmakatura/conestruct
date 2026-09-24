@@ -179,6 +179,12 @@ describe("post-generate scroll (#152 E)", () => {
     expect(scrollSpy).not.toHaveBeenCalled();
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // S4 (s4-prod/): the answer READY at the click is the pre-Generate
+    // one — never on screen as this plan's, so nothing lands on it.  The
+    // landing waits for the generated wire's own answer.
+    expect(scrollSpy).not.toHaveBeenCalled();
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(scrollSpy).toHaveBeenCalledTimes(1);
     expect(scrollSpy.mock.calls[0][0]).toMatchObject({
       behavior: "smooth",
@@ -190,12 +196,8 @@ describe("post-generate scroll (#152 E)", () => {
     // #250 (c): the zone carries the class the post-generate landing rule
     // keys on, and the root's data-stage has left "pre" (the rail is gone,
     // so --pin-h is 0 and the results rule budgets the strip instead).
-    // The click also refires the breakdown for the generated wire, so the
-    // stage read here is "generating" or "post" — never "pre".
     expect(target.classList.contains("results")).toBe(true);
-    expect(["generating", "post"]).toContain(
-      document.querySelector(".workbench")?.getAttribute("data-stage"),
-    );
+    expect(document.querySelector(".workbench")?.getAttribute("data-stage")).toBe("post");
   });
 
   it("#250 (c): the root carries data-stage=pre before Generate", async () => {
@@ -230,6 +232,8 @@ describe("post-generate scroll (#152 E)", () => {
     await release(0, okBreakdown());
 
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
     expect(scrollSpy).toHaveBeenCalledTimes(1);
     expect(scrollSpy.mock.calls[0][0]).toMatchObject({ behavior: "auto" });
   });
@@ -267,9 +271,9 @@ describe("post-generate scroll (#152 E)", () => {
     // #289 Phase 2: the failing generation is the first one (see the
     // pending-breakdown case above — a second Generate over an unedited
     // scenario opens no flight, so it has none to fail).  The mount
-    // fetch is left unreleased so the click finds no answer to land on:
-    // a first Generate over a READY pre-generate breakdown lands at the
-    // click by design, and would land before the failure arrived.
+    // fetch is left unreleased so the click finds no answer at all (a
+    // READY pre-generate answer is no longer landed on either — S4,
+    // s4-prod/ — but this case keeps its original shape).
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
     await flushDebounce();
     await release(breakdownCalls.length - 1, errBreakdown());

@@ -196,6 +196,10 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
+    // S4 (s4-prod/): the pre-Generate answer is not this plan's; the
+    // results mount on the generated wire's own answer.
+    await flushDebounce();
+    await release(1, okBreakdown());
 
     const [setup, results] = zones();
     expect(results.className).toContain("dominant");
@@ -232,9 +236,9 @@ describe("zone staging lifecycle", () => {
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
     await release(0, okBreakdown());
     await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-    expect(document.querySelector(".hero")).not.toBeNull();
     await flushDebounce();
     await release(1, okBreakdown());
+    expect(document.querySelector(".hero")).not.toBeNull();
 
     await changeOneThing();
     const [setup, results] = zones();

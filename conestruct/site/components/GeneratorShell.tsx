@@ -367,6 +367,15 @@ export function GeneratorShell({
   // 10: the pre-generate answer is never shown as this plan's).  Cleared
   // at the click, set at the pair's settle (the announcement effect).
   const [landed, setLanded] = useState(false);
+  // S4 on prod (validation-artifacts/.../s4-prod/): has a plan been
+  // PRESENTED since the results last unmounted?  Checks arm at
+  // kind-confirm, so a breakdown is answered before Generate; #192's
+  // carry held that unseen answer as the "previous answer" and a first
+  // Generate showed it under the ribbon instead of rule 117's
+  // placeholder.  The carry applies to a previous answer the person saw.
+  // Set at the pair's settle when the plan is shown (not declined, #258);
+  // cleared by Reopen, which unmounts the results.
+  const [planPresented, setPlanPresented] = useState(false);
   const wireScenario = useMemo(
     () =>
       generated ? withSiteScan(scenario, proceedFor === scenario) : scenario,
@@ -959,6 +968,7 @@ export function GeneratorShell({
     reopenPendingRef.current = true;
     setStaged([]);
     setGenerated(false);
+    setPlanPresented(false);
   };
 
   // #289 Phase 2 — CHANGE ONE THING, and what separates it from Reopen.
@@ -1094,12 +1104,19 @@ export function GeneratorShell({
   // column under the operator the moment they changed a value.  #252's
   // lock already greys the controls for that flight; the band stays.
 
+  // A first Generate — no plan presented yet, none landed since the
+  // click.  Whatever the breakdown holds is the pre-Generate answer
+  // (rule 10: never shown as this plan's), so the results stay down and
+  // rule 117's placeholder stands until the generated pair settles.
+  const awaitingFirstPlan = generated && !planPresented && !landed;
   const regenerating =
     genState === "generating" &&
     deviceBreakdown.state === "loading" &&
-    (deviceBreakdown.lastReady ?? null) !== null;
+    (deviceBreakdown.lastReady ?? null) !== null &&
+    planPresented;
   const showResults =
-    genState === "post" || genState === "error" || regenerating;
+    !awaitingFirstPlan &&
+    (genState === "post" || genState === "error" || regenerating);
 
   // #152 E: on successful generation, land the viewport on the Zone-2
   // hero.  Armed per Generate click (never on ordinary edits), fired
@@ -1128,6 +1145,10 @@ export function GeneratorShell({
     const armedNow = clickArm !== lastScrollArmRef.current;
     lastScrollArmRef.current = clickArm;
     if (!scrollPendingRef.current) return;
+    // S4 (s4-prod/): a first Generate lands with its own plan.  The
+    // "post" read at the click is the pre-Generate answer, which is not
+    // on screen (`awaitingFirstPlan`); the pair's settle re-runs this.
+    if (awaitingFirstPlan) return;
     if (armedNow && genState !== "post") return;
     if (genState === "post") {
       scrollPendingRef.current = false;
@@ -1171,7 +1192,7 @@ export function GeneratorShell({
       // No status text on failure: the error ribbon is role="alert"
       // and announces itself (assertively, as an error should).
     }
-  }, [genState, deviceBreakdown, auditSettled, auditDeclined, clickArm]);
+  }, [genState, deviceBreakdown, auditSettled, auditDeclined, clickArm, awaitingFirstPlan]);
 
   // #193: the Reopen half — focus the Setup zone once the column is
   // back.  Armed by `onReopen` and, since #289 Phase 2, by CHANGE ONE
@@ -1308,6 +1329,7 @@ export function GeneratorShell({
     landingRef.current?.settle();
     landingRef.current = null;
     if (genState !== "post" || auditDeclined) return;
+    setPlanPresented(true);
     const d = deviceBreakdown.state === "ready" ? deviceBreakdown.data : null;
     setGenAnnouncement(
       d && d.total_devices != null && d.unique_types != null
@@ -2094,7 +2116,7 @@ export function GeneratorShell({
                 false just then.  A regenerate keeps the previous answer
                 on screen under the stale dim (#192/#252), which is P16's
                 rule and not something a placeholder should interrupt. */}
-            {genState === "generating" && !resultsVisible && (
+            {(genState === "generating" || awaitingFirstPlan) && !resultsVisible && (
               <div className="results-placeholder" data-testid="results-placeholder">
                 <span className="tr-section">02 · RESULTS</span>
                 <div className="rp-line">

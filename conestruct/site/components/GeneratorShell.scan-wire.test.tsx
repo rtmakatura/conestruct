@@ -298,8 +298,8 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
 
   // Hold every SCANNED breakdown so the wait state stays mounted;
   // ``preGenerate`` decides whether the pre-generate breakdown succeeds
-  // (the normal path — a last-known-good exists, the #192 ribbon shows)
-  // or fails (no carry — the empty state shows).
+  // (the normal path — an answer exists, but it was never presented, so
+  // S4's placeholder shows, not the #192 ribbon) or fails.
   function holdScannedBreakdown(preGenerate: "ok" | "fail"): () => void {
     let release: (() => void) | null = null;
     fetchMock.mockImplementation((input: RequestInfo | URL, init?: RequestInit) => {
@@ -336,16 +336,26 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
     };
   }
 
-  it("#252: a first Generate raises the band naming the new plan; the ribbon says only that the values are the previous answer", async () => {
+  it("#252 + S4: a first Generate after kind-confirm raises the band naming the new plan and shows rule 117's placeholder — never the 'Previous answer' ribbon", async () => {
     const release = holdScannedBreakdown("ok");
     const user = userEvent.setup();
     render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
+    // The kind is confirmed (a pinned initial scenario starts confirmed),
+    // so the checks are armed and the pre-Generate breakdown ANSWERS here
+    // — the answer prod carried into the first Generate (s4-prod/).
     await settle();
     await user.click(screen.getByText("Generate package"));
     await settle();
-    // Not the empty state: the pre-generate breakdown is the carry.
+    // S4, rule 117: "No package yet — the plan is being built."  The
+    // pre-Generate answer was never presented, so it is not a previous
+    // answer (#192's carry applies to one the person saw).
     expect(screen.queryByText("Generating…")).toBeNull();
-    expect(screen.getByText("Previous answer — values below predate the request in flight.")).toBeTruthy();
+    const ph = document.querySelector('[data-testid="results-placeholder"]');
+    expect(ph).not.toBeNull();
+    expect(ph!.textContent).toContain("02 · RESULTS");
+    expect(ph!.textContent).toContain("No package yet — the plan is being built.");
+    expect(document.body.textContent).not.toContain("Previous answer");
+    expect(document.querySelector(".hero")).toBeNull();
     expect(document.body.textContent).not.toContain("Recomputing");
     const band = document.querySelector(".working-band")!;
     expect(band.querySelector(".wb-verb")!.textContent).toBe("GENERATING");
@@ -356,6 +366,12 @@ describe("Generate sets site_scan on the wire (#224 phase 2)", () => {
       release();
       await Promise.resolve();
     });
+    await settle();
+    // The generated plan's own answer lands: the placeholder yields to
+    // it, and at no point was a ribbon shown.
+    expect(document.querySelector('[data-testid="results-placeholder"]')).toBeNull();
+    expect(document.querySelector(".hero")).not.toBeNull();
+    expect(document.body.textContent).not.toContain("Previous answer");
   });
 
   it("#252: with no prior breakdown to hold there is no 'Generating…' placeholder either — the band alone speaks", async () => {

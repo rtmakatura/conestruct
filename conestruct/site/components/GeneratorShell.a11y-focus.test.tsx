@@ -176,6 +176,10 @@ describe("focus policy after Generate (#193)", () => {
     const btn = screen.getByRole("button", { name: /Generate plan/ });
     btn.focus();
     await user.keyboard("{Enter}");
+    // S4 (s4-prod/): the landing waits for the generated wire's own
+    // answer — the pre-Generate one READY at the keypress is not shown.
+    await flushDebounce();
+    await release(breakdownCalls.length - 1, okBreakdown());
 
     expect(activeIsResultsZone()).toBe(true);
     expect(scrollSpy).toHaveBeenCalledTimes(1);

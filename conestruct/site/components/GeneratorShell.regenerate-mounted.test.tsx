@@ -124,11 +124,15 @@ async function generateThenEdit() {
   render(<GeneratorShell mode="sandbox" initialScenario={PINNED_SHOULDER} />);
   await release(bdCalls, 0, okBd());
   await user.click(screen.getByRole("button", { name: /Generate plan/ }));
-  expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
+  // S4 (s4-prod/): a first Generate shows rule 117's placeholder until
+  // its own answer lands — the pre-Generate answer is not presented.
+  expect(screen.queryByText("QUOTE_PANEL_MOUNTED")).toBeNull();
+  expect(document.querySelector('[data-testid="results-placeholder"]')).not.toBeNull();
   // #252: settle the generated pair — the strip is locked while it is open.
   await flushDebounce();
   await release(bdCalls, 1, okBd());
   await release(auditCalls, 1, okAudit());
+  expect(screen.getByText("QUOTE_PANEL_MOUNTED")).toBeTruthy();
   // #289 S7: the post-generate edit stages and APPLY writes — one
   // generate, which is the refetch this suite is about.  The preview
   // fired by the staged value is a read on the same route and is
