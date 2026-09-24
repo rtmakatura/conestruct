@@ -37,9 +37,9 @@ The 380 post-generate landing is `calc(var(--nav-h) + 8px + var(--status-h) + 24
 ruling 4 of `s2-arc26-landing/GO-rulings.md` restated as "the formula's 154" *because* the
 reserve was the measured 70; with the measured 80 it is **164**.
 
-## Open — 1440
+## 1440 — ruled
 
-The measured fix at 1440 is **57** (56.25).  But ruling 1 of the same file fixes the 1440
-landing at **"136 ±1"**, and 57 would land it at 141.  Not changed: either raise the reserve
-and restate ruling 1 to 141 (the ruling-4 pattern), or hold 52 and accept a 4.25 px shift
-at the first verdict.  That is a choice between two ruled figures.
+The measured fix at 1440 is **57** (56.25).  Ruling 1 of the same file fixed the 1440 landing
+at "136 ±1", and 57 lands it at 141.  Ryan, 2026-09-24: "raise the reserve to 57 and restate
+the landing target as 141 — the formula governs the landing (the s2-arc26 rule), not the
+number."  **Done: 52 → 57**; the landing targets are 141 at 1440 and 164 at 380.

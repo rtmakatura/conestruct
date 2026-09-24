@@ -756,8 +756,13 @@ body {
      1440 (69.19 / 67.59 at 380; the ≤480 query pins 70).  The slot
      (.status-slot) and the strip itself take it as min-height so the
      strip's re-mount at the pair's settle, and the first verdict's
-     pill, move nothing below them (P1; audit F-S1-4, F-S2-3). */
-  --status-h: 52px;
+     pill, move nothing below them (P1; audit F-S1-4, F-S2-3).
+     #289: RE-MEASURED on prod at 19076b3 after Part 2's strip (rules
+     50–52: padding 13 16, the bordered 9.5 px pill) — 56.25 with the
+     pill (issue-289-band-stack/strip-reserve/strip.json).  Ruled
+     2026-09-24 (Ryan): "raise the reserve to 57 and restate the landing
+     target as 141 — the formula governs the landing". */
+  --status-h: 57px;
   /* #250 (c): the pinned-chrome budget every scroll target adds to the
      nav.  The rail's height while the rail is mounted (pre-generate);
      0 once the lifecycle leaves "pre" — the rail unmounts with the
@@ -1493,7 +1498,10 @@ input[type="number"] {
    (calc(var(--nav-h) + 8px + var(--status-h) + 24px)), not 98.  Reason:
    98 puts the verdict strip at 22..74, under the nav."  The strip sits
    above the results zone in the DOM, so the zone's margin budgets it:
-   52 + 8 + 52 + 24 = 136 — the strip lands at 60..112, in view. */
+   52 + 8 + 52 + 24 = 136 — the strip lands at 60..112, in view.
+   RESTATED 2026-09-24 (Ryan, #289): "the formula governs the landing
+   (the s2-arc26 rule), not the number" — with the re-measured reserve
+   (57 at 1440, 80 at 380) the targets are 141 at 1440 and 164 at 380. */
 .workbench:not([data-stage="pre"]) .zone.results {
   scroll-margin-top: calc(var(--nav-h) + 8px + var(--status-h) + 24px);
 }

@@ -66,7 +66,9 @@ describe("#231 — one nav-height token drives the scroll targets", () => {
   // Reason: 98 puts the verdict strip at 22..74, under the nav."  The
   // strip sits ABOVE the results zone in the DOM, so the zone's own
   // scroll-margin budgets it: 52 + 8 + 52 + 24 = 136, the strip at 60..112.
-  it("post-generate the results zone lands at nav + 8 + status-h + 24 (= 136, ruling 1)", () => {
+  // Restated 2026-09-24 (Ryan, #289): "the formula governs the landing …
+  // not the number" — 52 + 8 + 57 + 24 = 141 at 1440, 164 at 380.
+  it("post-generate the results zone lands at nav + 8 + status-h + 24 (= 141 / 164, ruling 1 restated)", () => {
     expect(rule('.workbench:not([data-stage="pre"]) .zone.results')).toMatch(
       /scroll-margin-top:\s*calc\(var\(--nav-h\)\s*\+\s*8px\s*\+\s*var\(--status-h\)\s*\+\s*24px\)/,
     );
@@ -96,10 +98,10 @@ describe("#250 f2 — the verdict strip's reserved slot", () => {
   // wraps the strip and puts the pill on its own line: 79.25 with the
   // pill on prod, 2026-09-24 (issue-289-band-stack/strip-reserve/).  The
   // 380 landing follows by ruling 4 of the s2-arc26 landing rulings (the
-  // formula's figure): 164.  1440's 52 is unchanged here — see the
-  // strip-reserve README for why it waits on a ruling.
-  it("the workbench defines --status-h: 52px and pins 80px in the ≤480 query", () => {
-    expect(rule(".workbench")).toMatch(/--status-h:\s*52px/);
+  // formula's figure): 164.  1440: 56.25 with Part 2's pill, so 57 —
+  // ruled 2026-09-24 with the landing restated to 141.
+  it("the workbench defines --status-h: 57px and pins 80px in the ≤480 query", () => {
+    expect(rule(".workbench")).toMatch(/--status-h:\s*57px/);
     // The sheet carries several ≤480 queries (bucket C added two, #225 /
     // #261); the pin is that ONE of them re-declares --status-h on .workbench.
     const blocks = css

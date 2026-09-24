@@ -528,8 +528,30 @@ strip at 380 is **79.25 px** (the pill states, wrapped), against the 70 reserve 
 to 80** on `issue-289-strip-reserve`. By ruling 4 of the s2-arc26 landing rulings (the 380
 landing is the formula's), the 380 post-generate landing moves with it: **164** (was 154).
 
-**Open for a ruling — 1440.** The same run measures the pill states at **56.25 px** at 1440
+**1440 — was open, now RULED.** The same run measures the pill states at **56.25 px** at 1440
 against the 52 reserve (F5's rules 50–52: 13 + 28.25 + 13 + 2), so the first verdict still
-pushes the stack 4.25 px. The measured fix is 57, but ruling 1 of the same file fixes the
-1440 landing at **"136 ±1"** and 57 would land it at 141. Not changed: raising the reserve,
-or holding it at 52 and accepting the 4.25 px shift, is a choice between two ruled figures.
+pushed the stack 4.25 px; the measured fix, 57, lands the page at 141 against ruling 1's
+"136 ±1". Ryan, 2026-09-24, verbatim: "Ruling on the 1440 strip: raise the reserve to 57 and
+restate the landing target as 141 — the formula governs the landing (the s2-arc26 rule), not
+the number. Record both."
+
+- **The reserve:** `--status-h` is **57 px** at 1440 (80 at ≤480, above).
+- **The landing:** s2-arc26 ruling 1's `calc(var(--nav-h) + 8px + var(--status-h) + 24px)`
+  governs; its figures are restated as **141 at 1440 and 164 at 380** (52 + 8 + 57 + 24;
+  52 + 8 + 80 + 24). The number follows the formula whenever the measured reserve moves.
+
+## The post-fidelity hand-check — Ryan, on prod `19076b3`, 2026-09-24
+
+Ryan's hand-check after the fidelity pass (F1–F8 and the follow-up): **passes, except two
+findings.** Relayed verbatim:
+
+1. "'Pick Location on Map' wraps to two lines and doesn't match the page's type. Label
+   becomes 'Pick on map', one line, nowrap, the button role Part 2 gives S1's primary (rule
+   114, 132 px beside the field, 44 px, rule 130's type)."
+2. "The move-ledger row 'Which side is occupied?' shows needs-you with no control to answer
+   it. Today the kind chips are its answer; left/right side is Phase 3's. The row reads 'Kind
+   of work — choose below' (⚠, needs you) and resolves to ✓ with the confirmed kind as its
+   value once confirmed. Side proper returns with #290."
+
+Both are fixed on `issue-289-strip-reserve`, which also carries the remaining #289 items
+(one commit each) so the arc ships on one line. "Do NOT ship issue-289-strip-reserve alone."
