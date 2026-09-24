@@ -207,6 +207,10 @@ export function GenerateButton({
       <button
         type="button"
         className="generate-btn"
+        // #237: a declared hook for the live checks, so a probe selects
+        // this control by identity — never by a name the rail's entry once
+        // shared (#237's false "0 checked").
+        data-testid="generate-plan"
         onClick={onGenerate}
         disabled={generating || disabled}
         title={!generating && disabled ? disabledReason : undefined}

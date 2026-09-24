@@ -14,6 +14,8 @@ const fs = require("fs");
 const { chromium } = require(
   "C:/Users/rtmak/Documents/traffic-control-tool/node_modules/playwright",
 );
+// #237: every band selection goes through the helper — zero matches throw.
+const { hook, nonEmpty } = require("../live-check.cjs");
 
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT || __dirname;
@@ -22,7 +24,7 @@ const PIN = { lat: "39.74020", lng: "-104.95600" };
 async function toS5(page) {
   await page.goto(SITE, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(4000);
-  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
+  await (await hook(page, "where-open-picker")).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);
@@ -51,10 +53,10 @@ async function toS5(page) {
     await len.blur();
   }
   await page.waitForTimeout(1500);
-  await page.locator('[data-testid="kind-chip-shoulder"]').click();
-  await page.locator('[data-testid="where-confirm"]').click();
+  await (await hook(page, "kind-chip-shoulder")).click();
+  await (await hook(page, "where-confirm")).click();
   await page.waitForTimeout(3000);
-  await page.getByRole("button", { name: /Generate plan/ }).click();
+  await (await hook(page, "generate-plan")).click();
   await page.waitForSelector('[data-testid="fact-setup"]', { timeout: 120000 });
   // The working band's absence is the settle.
   for (let i = 0; i < 150; i += 1) {
@@ -112,7 +114,7 @@ async function run(width, height) {
     }),
   );
   await browser.close();
-  return rows;
+  return nonEmpty(rows, "audit-row annotations (.check-list-src)");
 }
 
 (async () => {

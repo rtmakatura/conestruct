@@ -134,3 +134,27 @@ the suite went 134 failures → 0 (1227 tests, 152 files).
 | ~20 mounted suites | **re-pointed** through `components/__fixtures__/band-helpers.ts` — the column keeps one band open, so reaching a control in another is a click on its fact line, exactly as a user does it |
 
 `lib/scenarios/rail.test.ts` needed no edit. That was the prediction and it held.
+
+---
+
+## Live checks (#237) — zero matches fail loudly
+
+#237's defect was a helper that selected the rail's Generate entry by name
+(`.first()`) and, when its real target was absent, read an empty list as "0 checked". As
+checkpoint.md §G.2 scoped it, the fix is this phase's, once, here:
+
+- **`live-check.cjs`** — `one` (exactly one, or throw), `some` (one or more), `hook`
+  (`[data-testid="…"]`, exactly one), `nonEmpty` (an in-page list that came back empty
+  throws). `node --test live-check.test.cjs` proves the throws against a fake page.
+- **The three live rigs** — `fidelity-audit/probe.cjs`, `strip-reserve/measure-strip.cjs`,
+  `fidelity-after/measure-gutter.cjs` — select the band controls through `hook()`
+  (`where-open-picker`, `kind-chip-shoulder`, `where-confirm`, `generate-plan`,
+  `setup-link-speed`) and pass their collected lists through `nonEmpty()`. The picker's
+  own controls stay by accessible name: a click on a missing control already times out
+  loudly, and the modal is ruling 189's to migrate.
+- **A declared hook for Generate** — `data-testid="generate-plan"` on `GenerateButton`, so no
+  probe finds it by a name another control could share.
+- **The older legs stay as they are.** The 85 files under `validation-artifacts/committed/`
+  that select the setup panel, rail, strip or zone headings (arc-1 … arc-32, s2-arc1 …
+  s2-arc32) are committed evidence of finished runs against a surface that no longer
+  exists; they are not re-pointed.

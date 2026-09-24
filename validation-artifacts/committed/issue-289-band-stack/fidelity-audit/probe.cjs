@@ -19,6 +19,8 @@ const fs = require("fs");
 const { chromium } = require(
   "C:/Users/rtmak/Documents/traffic-control-tool/node_modules/playwright",
 );
+// #237: every band selection goes through the helper — zero matches throw.
+const { hook, nonEmpty } = require("../live-check.cjs");
 
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT || __dirname;
@@ -193,6 +195,8 @@ async function snap(page, tag, state, result, ms = 0, extra = null) {
   await page.evaluate(() => window.scrollTo(0, 0));
   const data = await page.evaluate(capture);
   data.settled = ok;
+  nonEmpty(data.texts, `${tag} ${state} texts`);
+  nonEmpty(data.boxes, `${tag} ${state} boxes`);
   result.states[state] = data;
   await page.screenshot({ path: path.join(OUT, `${tag}-${state}.png`), fullPage: true });
   console.log(
@@ -212,7 +216,7 @@ async function run(width, height, tag) {
 
   // S2 — road confirmed, kind unchosen.  The picker's manual-coordinates
   // route, then the first detected candidate, then Save & Close.
-  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
+  await (await hook(page, "where-open-picker")).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);
@@ -247,20 +251,20 @@ async function run(width, height, tag) {
   await snap(page, tag, "S2", result);
 
   // S3 — a chip, the confirm, the WHAT band open; checks settle.
-  await page.locator('[data-testid="kind-chip-shoulder"]').click();
-  await page.locator('[data-testid="where-confirm"]').click();
+  await (await hook(page, "kind-chip-shoulder")).click();
+  await (await hook(page, "where-confirm")).click();
   await page.waitForTimeout(3000);
   await snap(page, tag, "S3", result, 90000);
 
   // S5 — Generate, the results stack at the settle (the scan can take
   // ~17 s; the working band is the in-flight voice, so its absence is the
   // settle).
-  await page.getByRole("button", { name: /Generate plan/ }).click();
+  await (await hook(page, "generate-plan")).click();
   await page.waitForSelector('[data-testid="fact-setup"]', { timeout: 120000 });
   await snap(page, tag, "S5", result, 150000);
 
   // S7 — the speed value opens revision; stage 35 → 7c.
-  await page.locator('[data-testid="setup-link-speed"]').click();
+  await (await hook(page, "setup-link-speed")).click();
   await page.waitForSelector('[data-testid="revision-panel"]', { timeout: 15000 });
   await page.selectOption("#revise-speed", "35");
   await snap(page, tag, "S7", result, 60000, "preview");

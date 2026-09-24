@@ -14,6 +14,8 @@ const fs = require("fs");
 const { chromium } = require(
   "C:/Users/rtmak/Documents/traffic-control-tool/node_modules/playwright",
 );
+// #237: every band selection goes through the helper — zero matches throw.
+const { hook, nonEmpty } = require("../live-check.cjs");
 
 const SITE = process.env.AUDIT_SITE || "https://www.conestruct.com/sandbox";
 const OUT = process.env.AUDIT_OUT || __dirname;
@@ -57,7 +59,7 @@ async function run(width, height) {
   const seen = new Map();
   await page.goto(SITE, { waitUntil: "domcontentloaded" });
   await watch(page, seen, "S1", 4000);
-  await page.getByRole("button", { name: /Pick on map|Pick Location on Map/ }).click();
+  await (await hook(page, "where-open-picker")).click();
   await page.waitForTimeout(3500);
   await page.getByRole("button", { name: /enter coordinates manually/i }).click();
   await page.waitForTimeout(1200);
@@ -86,17 +88,17 @@ async function run(width, height) {
     await len.blur();
   }
   await watch(page, seen, "S2", 1500);
-  await page.locator('[data-testid="kind-chip-shoulder"]').click();
-  await page.locator('[data-testid="where-confirm"]').click();
+  await (await hook(page, "kind-chip-shoulder")).click();
+  await (await hook(page, "where-confirm")).click();
   await watch(page, seen, "S3", 20000);
-  await page.getByRole("button", { name: /Generate plan/ }).click();
+  await (await hook(page, "generate-plan")).click();
   await watch(page, seen, "S4-S5", 45000);
-  await page.locator('[data-testid="setup-link-speed"]').click();
+  await (await hook(page, "setup-link-speed")).click();
   await page.waitForSelector('[data-testid="revision-panel"]', { timeout: 15000 });
   await page.selectOption("#revise-speed", "35");
   await watch(page, seen, "S7", 6000);
   await browser.close();
-  return [...seen.values()].sort((a, z) => z.natural - a.natural);
+  return nonEmpty([...seen.values()], "strip samples").sort((a, z) => z.natural - a.natural);
 }
 
 (async () => {
