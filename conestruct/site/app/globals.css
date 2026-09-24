@@ -4705,10 +4705,13 @@ input[type="number"] {
   gap: 12px;
   align-items: start;
 }
-/* Rule 114 sizes FIND's box (44 × 132) and nothing else, so its label is
-   rule 130's 15.5 — #289 fidelity F6, audit row 49 (was 13.5). */
+/* Rule 114 sizes FIND's box (44 × 132).  Its label is rule 8's body value,
+   13.5 — Ryan, 2026-09-24 ("'Pick on map' / 'Edit on map' text drops to
+   the body value size (rule 8, 13.5 px) — too large"), overriding fidelity
+   F6's 15.5 (audit row 49).  rulings.md, "After the S4 prod run". */
 .workbench .a-findrow .a-pri {
   height: 44px;
+  font-size: var(--fs-body-value);
   /* #289 post-fidelity hand-check, finding 1: "one line, nowrap". */
   white-space: nowrap;
 }

@@ -187,6 +187,11 @@ export const TYPE_EXCEPTIONS: readonly TypeException[] = [
       },
       { selector: ".workbench .a-panel-foot .a-apply", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-fld", size: "var(--fs-body-value)" },
+      // Ryan, 2026-09-24: "'Pick on map' / 'Edit on map' text drops to
+      // the body value size (rule 8, 13.5 px) — too large."  FIND's box
+      // is rule 114's; its label reads rule 8's token again (rulings.md,
+      // "After the S4 prod run"), overriding F6's 15.5.
+      { selector: ".workbench .a-findrow .a-pri", size: "var(--fs-body-value)" },
       { selector: ".workbench .a-pri", size: "var(--fs-primary)" },
       { selector: ".workbench .a-pri.is-xl", size: "var(--fs-primary-xl)" },
       { selector: ".workbench .a-genframe .generate-btn", size: "var(--fs-primary-xl)" },
@@ -633,7 +638,9 @@ export const CENSUS_PINS = {
   // (10.5), five in: was / → / now at 12.5 and at 380's 11.5, APPLY's
   // 13.5, DISCARD's 13, the deferred phrase's 9.5 at 380.  112 -> 117.
   // #289 fidelity follow-up: rule 165's 380 pill at 8.5.  117 -> 118.
-  cssDeclarations: 118,
+  // After the S4 prod run (Ryan, 2026-09-24): FIND's label back to rule
+  // 8's 13.5 token.  118 -> 119; sizes unchanged (the token is in use).
+  cssDeclarations: 119,
   // 21 -> 22 at clause 3 (rule 130's var(--fs-primary), new to the
   // sheet), then 22 -> 21 at clause 4: the retired pricing head took
   // 26px with it, and 26px had exactly one site.  The other three sizes

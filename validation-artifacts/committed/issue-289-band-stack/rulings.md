@@ -555,3 +555,26 @@ findings.** Relayed verbatim:
 
 Both are fixed on `issue-289-strip-reserve`, which also carries the remaining #289 items
 (one commit each) so the arc ships on one line. "Do NOT ship issue-289-strip-reserve alone."
+
+## After the S4 prod run — Ryan, 2026-09-24
+
+The S4 measure (`s4-prod/`) and the density hand-check.  Relayed verbatim, stacked on
+`issue-289-s4-prod` ("Do not ship issue-289-s4-prod yet — stack these on it so Ryan runs one
+ship line"):
+
+1. "S4 first-Generate gap: carry a prior breakdown into a Generate only if a plan was actually
+   presented (#192's carry applies to a previous answer the user saw). A first Generate renders
+   the rule-117 placeholder."
+2. "The Setup line's 'pick a value to change it' must not wrap one word per line at 380."
+3. "'Pick on map' / 'Edit on map' text drops to the body value size (rule 8, 13.5 px) — Ryan:
+   too large."  This **overrides** fidelity F6's reading (audit row 49) that FIND's label takes
+   rule 130's 15.5 because rule 114 sizes only its box.
+4. "WHAT density (Ryan: 'WAY too busy', P19). Each field shows exactly: the control, ONE
+   provenance line (source · value · method), and any suggestion needing action as one line +
+   Confirm/Dismiss. Everything else attached to that field — bearing, the CDOT case note, the
+   divided clause, the #214 road-geometry sentence, the TIGER boundary caveats and vintage, the
+   suggestion's explanatory paragraphs — moves behind an ⓘ toggle on that field that expands
+   inline on click/tap. Never hover-only (rules 141, 142). #214's disclosure stays standing and
+   inspectable behind the toggle, text byte-identical (#198). Street classification becomes its
+   own cell in the second group, out of the road-type cell. Measure the WHAT band's height at
+   1440 before and after."

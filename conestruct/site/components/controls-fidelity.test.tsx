@@ -28,8 +28,11 @@ describe("rule 130 — the primary", () => {
     expect(rule(".workbench .a-pri")).toMatch(/color:\s*var\(--on-act\)/);
   });
 
-  it("FIND takes the primary's 15.5 — rule 114 sizes its box, not its label", () => {
-    expect(rule(".workbench .a-findrow .a-pri")).not.toMatch(/font-size/);
+  it("FIND's label is rule 8's body value, 13.5 — Ryan, 2026-09-24, over F6's 15.5", () => {
+    // "'Pick on map' / 'Edit on map' text drops to the body value size
+    // (rule 8, 13.5 px) — too large."  The other primaries keep 15.5.
+    expect(rule(".workbench .a-findrow .a-pri")).toMatch(/font-size:\s*var\(--fs-body-value\)/);
+    expect(css).toMatch(/--fs-body-value:\s*13\.5px;/);
     expect(rule(".workbench .a-pri")).toMatch(/font-size:\s*var\(--fs-primary\)/);
   });
 
