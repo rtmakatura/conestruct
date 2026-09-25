@@ -351,31 +351,44 @@ describe("defect 1 — the kind is confirmed, never inferred", () => {
     expect(generateBtn().disabled).toBe(false);
   });
 
-  // #290 (RULE 5, stated): move 4 is "Which side is occupied?" again —
-  // the side from the plain control, the kind from the chips and Confirm
-  // (Part 1 §4.4).  The #289 interim row "Kind of work" is retired.
-  it("the move ledger asks which side is occupied, and resolves only once side AND kind are answered", async () => {
+  // #290 hand-check (RULE 5, stated — this case asserted one row answered
+  // by side AND kind, which kept saying needs-you with "Choose the kind of
+  // work" under it after the side was picked).  Ryan, 2026-09-25: "once
+  // the side is chosen, the ledger's 'Which side is occupied?' row ticks
+  // with the side as its value; the kind question gets its own row ('Kind
+  // of work — confirm below')."
+  it("the side row ticks with the side once it is chosen; the kind has its own row until Confirm", async () => {
     const user = await freshWithRoad({ side: false });
-    const move = () => screen.getByTestId("move-side");
-    expect(document.querySelector('[data-testid="move-kind"]')).toBeNull();
-    expect(move().getAttribute("data-move-state")).toBe("attention");
-    expect(move().textContent).toContain("Which side is occupied?");
-    expect(move().textContent).toContain("needs you");
-    expect(move().textContent).toContain("Say which side is occupied to lay out the work");
+    const side = () => screen.getByTestId("move-side");
+    const kind = () => screen.getByTestId("move-kind");
+    expect(side().getAttribute("data-move-state")).toBe("attention");
+    expect(side().textContent).toContain("Which side is occupied?");
+    expect(side().textContent).toContain("needs you");
+    expect(side().textContent).toContain("Say which side is occupied to lay out the work");
+    expect(kind().getAttribute("data-move-state")).toBe("attention");
+    expect(kind().textContent).toContain("Kind of work — confirm below");
 
     await answerSide();
     await settle();
-    // The side is answered; the kind is still open — the row says so.
-    expect(move().getAttribute("data-move-state")).toBe("attention");
-    expect(move().textContent).toContain("Choose the kind of work");
+    // The side is answered: its row ticks, with the side as its value, and
+    // does not speak for the kind.
+    expect(side().getAttribute("data-move-state")).toBe("done");
+    expect(side().textContent).toContain("East side · traffic heads north");
+    expect(side().textContent).not.toContain("needs you");
+    expect(side().textContent).not.toContain("Choose the kind of work");
+    // The kind is still owed, on its own row.
+    expect(kind().getAttribute("data-move-state")).toBe("attention");
+    expect(kind().textContent).toContain("Kind of work — confirm below");
+    expect(kind().textContent).toContain("needs you");
 
     await user.click(chip("shoulder"));
     await confirmKind();
     await user.click(screen.getByTestId("fact-link-where"));
     await settle();
-    expect(move().getAttribute("data-move-state")).toBe("done");
-    expect(move().textContent).toContain("East side · traffic heads north");
-    expect(move().textContent).toContain("Shoulder work");
+    expect(kind().getAttribute("data-move-state")).toBe("done");
+    expect(kind().textContent).toContain("Shoulder work");
+    expect(kind().textContent).not.toContain("confirm below");
+    expect(side().getAttribute("data-move-state")).toBe("done");
     expect(screen.getByTestId("move-grow").getAttribute("data-move-state")).toBe("done");
   });
 

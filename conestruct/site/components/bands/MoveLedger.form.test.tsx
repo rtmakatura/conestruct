@@ -61,13 +61,12 @@ const row = (s: Scenario, id: MoveRow["id"], jurisdiction: string | null = null)
   return found;
 };
 
-// #290 (RULE 5, stated): move 4 is "Which side is occupied?" again — the
-// #289 hand-check's interim ("Kind of work — choose below", Ryan
-// 2026-09-24: "Side proper returns with #290") ends here.  Part 1 §4.4
-// asks the side and the kind together, so the row is answered only when
-// both are: the side from the plain control (ruling 8, in the backend's
-// words), the kind from the chips and Confirm (suggest-never-set).
-describe("move 4 is the occupied side, with the kind (#290)", () => {
+// #290: move 4 is "Which side is occupied?" again.  #290 hand-check (RULE
+// 5, stated — these cases asserted one row answered by side AND kind):
+// Ryan, 2026-09-25, "once the side is chosen, the ledger's 'Which side is
+// occupied?' row ticks with the side as its value; the kind question gets
+// its own row ('Kind of work — confirm below')."
+describe("move 4 is the occupied side; the kind is its own row (#290)", () => {
   const SIDED = {
     ...CONFIRMED,
     meta: { ...CONFIRMED.meta, work: { side: "right", travel: "with_geometry" } },
@@ -90,22 +89,47 @@ describe("move 4 is the occupied side, with the kind (#290)", () => {
     expect(r.subline).toBe("Say which side is occupied to lay out the work");
   });
 
-  it("sided but the kind unconfirmed: still needs you, and the subline names the kind", () => {
+  it("sided, kind unconfirmed: the side row ticks with the side as its value", () => {
     const r = side(SIDED, false, "East side · northbound traffic");
-    expect(r.state).toBe("attention");
-    expect(r.value).toBeNull();
-    expect(r.subline).toBe("Choose the kind of work");
-  });
-
-  it("both answered: ✓ with the side in the backend's words and the kind", () => {
-    const r = side(SIDED, true, "East side · northbound traffic");
     expect(r.state).toBe("done");
     expect(r.glyph).toBe("✓");
-    expect(r.value).toBe(`East side · northbound traffic · ${kindLabel(SIDED.kind)}`);
+    expect(r.word).toBe("confirmed");
+    expect(r.value).toBe("East side · northbound traffic");
     expect(r.subline).toBeNull();
   });
 
-  it("move 5 lays out only once move 4 is answered", () => {
+  const kind = (s: Scenario, kindConfirmed: boolean) => {
+    const found = deriveMoveLedger(s, null, kindConfirmed, null).rows.find((r) => r.id === "kind");
+    if (!found) throw new Error("no kind row");
+    return found;
+  };
+
+  it("the kind's own row: 'Kind of work — confirm below', needs you, until a person confirms", () => {
+    const r = kind(SIDED, false);
+    expect(r.label).toBe("Kind of work — confirm below");
+    expect(r.state).toBe("attention");
+    expect(r.glyph).toBe("⚠");
+    expect(r.word).toBe("needs you");
+    expect(r.value).toBeNull();
+    // The label is the instruction; no second voice under it (P2).
+    expect(r.subline).toBeNull();
+  });
+
+  it("confirmed: 'Kind of work', ✓, the kind as its value", () => {
+    const r = kind(SIDED, true);
+    expect(r.label).toBe("Kind of work");
+    expect(r.state).toBe("done");
+    expect(r.value).toBe(kindLabel(SIDED.kind));
+    expect(r.word).toBe("confirmed");
+  });
+
+  it("the rows run spot, start, extent, side, kind, grow — the washed row is the first owed", () => {
+    const ledger = deriveMoveLedger(SIDED, null, false, "East side · northbound traffic");
+    expect(ledger.rows.map((r) => r.id)).toEqual(["spot", "start", "extent", "side", "kind", "grow"]);
+    expect(ledger.currentId).toBe("kind");
+  });
+
+  it("'See the plan grow' lays out only once the side AND the kind are answered", () => {
     const grow = (s: Scenario, k: boolean) =>
       deriveMoveLedger(s, null, k, "East side · northbound traffic").rows.find(
         (r) => r.id === "grow",
@@ -117,15 +141,13 @@ describe("move 4 is the occupied side, with the kind (#290)", () => {
     expect(done?.value).toBe("approaches laid out");
   });
 
-  it("before a pin it is pending, like the rows above it", () => {
-    const r = side({ ...SIDED, meta: { ...SIDED.meta, lat: 0, lng: 0 } } as Scenario, true);
+  it("before a pin both are pending, like the rows above them", () => {
+    const unpinned = { ...SIDED, meta: { ...SIDED.meta, lat: 0, lng: 0 } } as Scenario;
+    const r = side(unpinned, true);
     expect(r.state).toBe("pending");
     expect(r.value).toBeNull();
-  });
-
-  it("no row asks for the kind by itself any more", () => {
-    const labels = deriveMoveLedger(CONFIRMED, null, false).rows.map((r) => r.label);
-    expect(labels.join(" | ")).not.toContain("Kind of work");
+    expect(kind(unpinned, true).state).toBe("pending");
+    expect(kind(unpinned, true).value).toBeNull();
   });
 });
 

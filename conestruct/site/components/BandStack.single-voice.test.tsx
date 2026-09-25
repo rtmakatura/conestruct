@@ -134,7 +134,9 @@ describe("#228 single voice, inherited — the derivations own the vocabulary", 
 
   it("every move row's glyph and word come from deriveMoveLedger", () => {
     const ledger = deriveMoveLedger(PINNED);
-    expect(ledger.rows).toHaveLength(5);
+    // #290 hand-check (RULE 5, stated): six rows — the kind has its own
+    // row after the side ("Kind of work — confirm below", Ryan 2026-09-25).
+    expect(ledger.rows).toHaveLength(6);
     for (const r of ledger.rows) {
       expect(["✓", "⚠", "◌"]).toContain(r.glyph);
       // Rule 68: the right track is a link verb or a provenance word.
