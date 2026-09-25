@@ -308,5 +308,31 @@ def test_near_intersection_answers_before_the_side_is_chosen(client: TestClient)
     assert len(g["side_options"]) == 4
 
 
+def test_footage_past_the_road_geometry_is_flagged_extended(client: TestClient) -> None:
+    """#211 carried into the backend's geometry: the road here ends 100 m
+    (328 ft) south of the pin, short of the approach's first sign (~604 ft
+    upstream at 35 mph), so the advance warning is drawn on the end
+    tangent, flagged ``extended`` — never a tangent posing as the road."""
+    short_south = [
+        list(_destination_point(*PIN, 180.0, 100.0)),
+        list(_destination_point(*PIN, 0.0, 800.0)),
+    ]
+    g = geometry(
+        client,
+        shoulder(
+            {
+                "pinModel": "work_start",
+                "centerline": short_south,
+                "work": {"side": "right", "travel": "with_geometry"},
+            }
+        ),
+    )
+    (primary,) = g["approaches"]
+    advance = zone(primary, "advance_warning")
+    assert [p["extended"] for p in advance["parts"]] in ([True], [False, True])
+    assert any(p["extended"] for p in advance["parts"])
+    assert [p["extended"] for p in g["work"]["parts"]] == [False]
+
+
 def test_corridor_end_offers_no_side_control(client: TestClient) -> None:
     assert geometry(client, shoulder({"bearingDeg": 0.0}))["side_options"] == []

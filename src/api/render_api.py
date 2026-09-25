@@ -1262,6 +1262,22 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     def points(c: Any, a: float, b: float) -> list[list[float]]:
         return [[round(lat, 7), round(lng, 7)] for lat, lng in station_path(c, a, b)]
 
+    def parts(c: Any, a: float, b: float) -> list[dict[str, Any]]:
+        # #211 carried over: footage past the relayed road geometry (drawn
+        # on the end tangent) is flagged ``extended`` so the overlay can
+        # draw it visibly different from road-backed footage — never a
+        # tangent posing as the road (Rule 10).  Split at THIS corridor's
+        # coverage station; no centerline or full coverage: one part.
+        coverage = c.centerline_coverage_ft()
+        if coverage is None or coverage >= b:
+            return [{"points": points(c, a, b), "extended": False}]
+        if coverage <= a:
+            return [{"points": points(c, a, b), "extended": True}]
+        return [
+            {"points": points(c, a, coverage), "extended": False},
+            {"points": points(c, coverage, b), "extended": True},
+        ]
+
     travel = (
         params.bearing_deg
         if pin_model == "work_start"
@@ -1272,6 +1288,7 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
     out["work"] = {
         "length_ft": round(primary.work_zone_ft, 1),
         "points": points(primary, work_span[1], work_span[2]),
+        "parts": parts(primary, work_span[1], work_span[2]),
     }
     for approach_id, c in corridors:
         far_end = c.point_at_station_ft(c.downstream_taper_ft + c.work_zone_ft)
@@ -1281,7 +1298,12 @@ def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
                 "id": approach_id,
                 "travel_bearing_deg": round(_initial_bearing_deg(*far_end, *near), 2),
                 "zones": [
-                    {"zone": name, "length_ft": round(b - a, 1), "points": points(c, a, b)}
+                    {
+                        "zone": name,
+                        "length_ft": round(b - a, 1),
+                        "points": points(c, a, b),
+                        "parts": parts(c, a, b),
+                    }
                     for name, a, b in _zone_spans(c)
                     if name != "work_zone"
                 ],
