@@ -1,0 +1,14 @@
+# ANCHOR_SHIFT=0 (baseline)
+2115 passed, 2 skipped in 39.57s
+# ANCHOR_SHIFT=1 (pin = work upstream edge: shift D+W)
+FAILED tests/test_classification_frame.py::TestLookoutMountainAgreement::test_chord_twin_still_reproduces_the_defect - AssertionError: assert 'work_zone' == 'lateral'
+FAILED tests/test_classification_frame.py::TestCorridorBboxSuperset::test_chord_twin_box_actually_leaks_here - assert 5 >= 10
+FAILED tests/test_corridor_centerline.py::TestLookoutMountainFixture::test_work_zone_end_leaves_the_chord - assert (34.206290573519766 * 3.280839895013123) > 500.0
+FAILED tests/test_plan_sheet_location.py::TestPageTwoCaption::test_address_first_coordinates_beneath - AssertionError: assert '39.73890, -104.98620' in ' 39.73794, -104.98620\r\n...
+4 failed, 2111 passed, 2 skipped in 39.57s
+# ANCHOR_SHIFT=2 (shift A+T+B)
+FAILED tests/test_classification_frame.py::TestLookoutMountainAgreement::test_chord_twin_still_reproduces_the_defect - AssertionError: assert 'work_zone' == 'lateral'
+FAILED tests/test_classification_frame.py::TestCorridorBboxSuperset::test_chord_twin_box_actually_leaks_here - assert 0 >= 10
+FAILED tests/test_corridor_centerline.py::TestLookoutMountainFixture::test_work_zone_end_leaves_the_chord - assert (24.66751962571122 * 3.280839895013123) > 500.0
+FAILED tests/test_plan_sheet_location.py::TestPageTwoCaption::test_address_first_coordinates_beneath - AssertionError: assert '39.73890, -104.98620' in ' 39.73726, -104.98620\r\n...
+4 failed, 2111 passed, 2 skipped in 24.37s

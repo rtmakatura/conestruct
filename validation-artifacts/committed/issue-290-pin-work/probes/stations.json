@@ -1,0 +1,338 @@
+[
+  {
+    "case": "E Colfax EB (arc standing spot)",
+    "use_max": false,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 50.0,
+      "buffer": 200.0,
+      "work": 1000.0,
+      "downstream": 50.0,
+      "total": 1600.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        50.0
+      ],
+      "work_zone": [
+        50.0,
+        1050.0
+      ],
+      "buffer": [
+        1050.0,
+        1250.0
+      ],
+      "transition": [
+        1250.0,
+        1300.0
+      ],
+      "advance_warning": [
+        1300.0,
+        1600.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1600.0,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 50.0,
+    "work_upstream_edge_ft_from_pin": 1050.0
+  },
+  {
+    "case": "E Colfax EB (arc standing spot)",
+    "use_max": true,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 50.0,
+      "buffer": 200.0,
+      "work": 1000.0,
+      "downstream": 100.0,
+      "total": 1650.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        100.0
+      ],
+      "work_zone": [
+        100.0,
+        1100.0
+      ],
+      "buffer": [
+        1100.0,
+        1300.0
+      ],
+      "transition": [
+        1300.0,
+        1350.0
+      ],
+      "advance_warning": [
+        1350.0,
+        1650.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1650.0,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 100.0,
+    "work_upstream_edge_ft_from_pin": 1100.0
+  },
+  {
+    "case": "E Colfax EB, 35 mph",
+    "use_max": false,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 68.05555555555556,
+      "buffer": 250.0,
+      "work": 1000.0,
+      "downstream": 50.0,
+      "total": 1668.0555555555557
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        50.0
+      ],
+      "work_zone": [
+        50.0,
+        1050.0
+      ],
+      "buffer": [
+        1050.0,
+        1300.0
+      ],
+      "transition": [
+        1300.0,
+        1368.0555555555557
+      ],
+      "advance_warning": [
+        1368.0555555555557,
+        1668.0555555555557
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1668.1,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 50.0,
+    "work_upstream_edge_ft_from_pin": 1050.0
+  },
+  {
+    "case": "E Colfax EB, 35 mph",
+    "use_max": true,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 68.05555555555556,
+      "buffer": 250.0,
+      "work": 1000.0,
+      "downstream": 100.0,
+      "total": 1718.0555555555557
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        100.0
+      ],
+      "work_zone": [
+        100.0,
+        1100.0
+      ],
+      "buffer": [
+        1100.0,
+        1350.0
+      ],
+      "transition": [
+        1350.0,
+        1418.0555555555557
+      ],
+      "advance_warning": [
+        1418.0555555555557,
+        1718.0555555555557
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1718.1,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 100.0,
+    "work_upstream_edge_ft_from_pin": 1100.0
+  },
+  {
+    "case": "N Broadway SB",
+    "use_max": false,
+    "bearing_sent": 180.49,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 50.0,
+      "buffer": 200.0,
+      "work": 1000.0,
+      "downstream": 50.0,
+      "total": 1600.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        50.0
+      ],
+      "work_zone": [
+        50.0,
+        1050.0
+      ],
+      "buffer": [
+        1050.0,
+        1250.0
+      ],
+      "transition": [
+        1250.0,
+        1300.0
+      ],
+      "advance_warning": [
+        1300.0,
+        1600.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1600.0,
+      "compass_deg": 180.49
+    },
+    "work_near_edge_ft_from_pin": 50.0,
+    "work_upstream_edge_ft_from_pin": 1050.0
+  },
+  {
+    "case": "N Broadway SB",
+    "use_max": true,
+    "bearing_sent": 180.49,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 50.0,
+      "buffer": 200.0,
+      "work": 1000.0,
+      "downstream": 100.0,
+      "total": 1650.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        100.0
+      ],
+      "work_zone": [
+        100.0,
+        1100.0
+      ],
+      "buffer": [
+        1100.0,
+        1300.0
+      ],
+      "transition": [
+        1300.0,
+        1350.0
+      ],
+      "advance_warning": [
+        1350.0,
+        1650.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1650.0,
+      "compass_deg": 180.49
+    },
+    "work_near_edge_ft_from_pin": 100.0,
+    "work_upstream_edge_ft_from_pin": 1100.0
+  },
+  {
+    "case": "E Colfax EB, flagger 400",
+    "use_max": false,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 100.0,
+      "buffer": 200.0,
+      "work": 400.0,
+      "downstream": 50.0,
+      "total": 1050.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        50.0
+      ],
+      "work_zone": [
+        50.0,
+        450.0
+      ],
+      "buffer": [
+        450.0,
+        650.0
+      ],
+      "transition": [
+        650.0,
+        750.0
+      ],
+      "advance_warning": [
+        750.0,
+        1050.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1050.0,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 50.0,
+    "work_upstream_edge_ft_from_pin": 450.0
+  },
+  {
+    "case": "E Colfax EB, flagger 400",
+    "use_max": true,
+    "bearing_sent": 90.02,
+    "osm_oneway": "yes",
+    "lengths_ft": {
+      "advance": 300.0,
+      "taper": 100.0,
+      "buffer": 200.0,
+      "work": 400.0,
+      "downstream": 100.0,
+      "total": 1100.0
+    },
+    "stations_from_pin_ft": {
+      "downstream": [
+        0.0,
+        100.0
+      ],
+      "work_zone": [
+        100.0,
+        500.0
+      ],
+      "buffer": [
+        500.0,
+        700.0
+      ],
+      "transition": [
+        700.0,
+        800.0
+      ],
+      "advance_warning": [
+        800.0,
+        1100.0
+      ]
+    },
+    "first_sign_from_pin": {
+      "ft": 1100.0,
+      "compass_deg": 90.02
+    },
+    "work_near_edge_ft_from_pin": 100.0,
+    "work_upstream_edge_ft_from_pin": 500.0
+  }
+]

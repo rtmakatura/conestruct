@@ -1,0 +1,11 @@
+site https://www.conestruct.com/sandbox
+pin 39.73370,-104.98753
+ranAt 2026-09-25T14:33:31.713Z
+picked candidate: DETECTED FROM OSM: 180° (NORTH BROADWAY SOUTHBOUND, PRIMARY) · WAY 131232822
+detected direction field after 9 ms: 180
+after save buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm","Generate plan"]
+after kind buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm — shoulder work","Generate plan"]
+after confirm buttons: ["CHANGE","idetails","idetails","idetails","idetails","Confirm Denver","Dismiss","Daytime","Night","No reduction","Reduced","idetails","Undivided","Divided","Local","Collector","Arterial","Confirm Arterial","Dismiss","Generate plan"]
+after CHANGE buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm — shoulder work","CHANGE","Generate plan"]
+reopen count 1
+reopened direction field: 180

@@ -1,0 +1,11 @@
+site https://www.conestruct.com/sandbox
+pin 39.74020,-104.95600
+ranAt 2026-09-25T14:34:08.532Z
+picked candidate: DETECTED FROM OSM: 270° (EAST COLFAX AVENUE WESTBOUND, PRIMARY) · WAY 1547338997
+detected direction field after 7 ms: 270
+after save buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm","Generate plan"]
+after kind buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm — shoulder work","Generate plan"]
+after confirm buttons: ["CHANGE","idetails","idetails","Confirm Denver","Dismiss","Daytime","Night","No reduction","Reduced","idetails","Undivided","Divided","Local","Collector","Arterial","Confirm Arterial","Dismiss","Generate plan"]
+after CHANGE buttons: ["Edit on map","CHANGE","MOVE","CHANGE","Shoulder workTA-3/TA-5 · S-630-1","Flagger lane closureTA-10 · S-630-1","Lane closure near intersectionCases 18/19 · S-630-1","Confirm — shoulder work","CHANGE","Generate plan"]
+reopen count 1
+reopened direction field: 270
