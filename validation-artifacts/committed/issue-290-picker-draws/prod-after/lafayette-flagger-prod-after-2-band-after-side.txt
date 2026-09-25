@@ -1,0 +1,73 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+MUTCD 2023 · CDOT
+Method of Handling Traffic — plan generator
+⚠
+VERIFIED · 1 VALIDATION WARNING
+REVIEW WARNINGS
+STEP 1 OF 4
+WHERE
+Lafayette Street northbound · City Park West · 39.74362, -104.97070 · OSM detection · way 581254411 · sole match auto-adopted
+
+Where is the work?
+
+The segment below is what the plan is built from. Change what is wrong; the map is in the picker.
+
+Edit on map
+✓
+Found the spot
+Lafayette Street Northbound
+CHANGE
+✓
+Work starts
+Lafayette Street Northbound
+MOVE
+✓
+Extent
+1,000 ft · typed
+CHANGE
+✓
+Which side is occupied?
+East side · northbound traffic
+confirmed
+✓
+Kind of work
+Flagger lane closure
+confirmed
+✓
+See the plan grow
+approaches laid out
+laid out
+Occupied side
+✓ East side · northbound traffic
+West side · southbound traffic
+Shoulder work
+TA-3/TA-5 · S-630-1
+Flagger lane closure
+TA-10 · S-630-1
+Lane closure near intersection
+Cases 18/19 · S-630-1
+4 more kinds are not enabled — each waits on its typical sheet being validated against the generator.
+Work zone length (ft)
+typed · the extent the plan is built for
+Advance warning · 1,050 ft
+Taper · 100 ft
+Buffer · 495 ft
+Work zone · 1,000 ft
+Downstream · 50 ft
+Confirm — flagger lane closure
+✓
+What's the job?
+flagger lane closure · 55 mph · 12 ft · Urban arterial · Not set
+CHANGE
+Generate plan
+Output requires TCS review · every dimension cited to MUTCD or CDOT
+
+Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT

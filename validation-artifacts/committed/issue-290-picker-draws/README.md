@@ -42,6 +42,19 @@ the exact request replayed offline.
 The prod screenshot of the fix is taken after the ship (the fix is in the
 Modal backend, which only a deploy puts on prod).
 
+## prod-after/ — the fix on prod (main ddc142c, 2026-09-25)
+
+Same probe, same pins, against https://www.conestruct.com/sandbox after the ship.
+
+- `broadway-prod-after-*`: N Broadway SB (way 131232822).  `laid_out`: the work runs 1,000 ft
+  SOUTH from the pin with the traffic, and the advance warning is NORTH of it
+  (`broadway-prod-after-3-picker-after-side.png`).  The side control offers the one buildable
+  side, "West side · southbound traffic" (hand-check item 2), and the subtitle reads "Drop a pin
+  where the work starts" (item 4).
+- `lafayette-flagger-prod-after-*`: the flagger at 39.74362, -104.97070 (Lafayette St, way
+  581254411).  `laid_out` with BOTH approaches: primary northbound 359.9°, opposing southbound
+  180.3° (`lafayette-flagger-prod-after-3-picker-after-side.png`).
+
 ## The flagger case ("check the flagger case draws both approaches on prod")
 
 Same probe with `AUDIT_KIND=flagger`.

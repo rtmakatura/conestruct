@@ -1,0 +1,67 @@
+conestruct.
+DEMO
+/
+MUTCD PLAN GENERATOR
+MUTCD 2023 · CDOT
+Method of Handling Traffic — plan generator
+◌
+VERIFYING · WAKING THE VERIFICATION SERVER — THE FIRST CHECK CAN TAKE A FEW EXTRA SECONDS
+STEP 1 OF 4
+WHERE
+North Broadway southbound · Sherman Street Historic District · 39.73370, -104.98753 · OSM detection · way 131232822 · operator pick
+
+Where is the work?
+
+The segment below is what the plan is built from. Change what is wrong; the map is in the picker.
+
+Edit on map
+✓
+Found the spot
+North Broadway Southbound
+CHANGE
+✓
+Work starts
+North Broadway Southbound
+MOVE
+✓
+Extent
+1,000 ft · typed
+CHANGE
+✓
+Which side is occupied?
+West side · southbound traffic
+confirmed
+✓
+Kind of work
+Shoulder work
+confirmed
+✓
+See the plan grow
+approaches laid out
+laid out
+Occupied side
+✓ West side · southbound traffic
+Shoulder work
+TA-3/TA-5 · S-630-1
+Flagger lane closure
+TA-10 · S-630-1
+Lane closure near intersection
+Cases 18/19 · S-630-1
+4 more kinds are not enabled — each waits on its typical sheet being validated against the generator.
+Work zone length (ft)
+typed · the extent the plan is built for
+corridor extent unavailable — awaiting verification
+Confirm — shoulder work
+✓
+What's the job?
+shoulder work · 30 mph · 4 lanes · 10.5 ft · Urban arterial · Not set
+CHANGE
+Generate plan
+Output requires TCS review · every dimension cited to MUTCD or CDOT
+
+Draft — not a sealed plan. Output is engineering reference; requires review and seal by a licensed PE prior to field use.
+
+© 2026 CONESTRUCT · BUILT IN COLORADO
+TERMS
+PRIVACY
+OUTPUT REQUIRES TCS REVIEW · NOT A SUBSTITUTE FOR LICENSED JUDGMENT
