@@ -373,7 +373,7 @@ class SiteScanInputs(BaseModel):
     bbox: tuple[float, float, float, float]
     # #290 — what the pin meant ("corridor_end" | "work_start"), and the
     # flagger's second approach's box (the open-points ruling 4: one box
-    # per approach, in today's shape).  ``lat``/``lng`` above stay the pin.
+    # per approach, in today's north-up shape, #299).  ``lat``/``lng`` above stay the pin.
     pin_model: str = "corridor_end"
     opposing_bbox: tuple[float, float, float, float] | None = None
 

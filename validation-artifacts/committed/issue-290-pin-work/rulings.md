@@ -230,3 +230,31 @@ Visible change: none.
 - Then the fixtures' v2 twins, with the single-leaf proof first.
 
 Visible change: none. Nothing sends `work_start` until the frontend ship.
+
+---
+
+## The ruling on the pre-side picker, verbatim (Ryan, 2026-09-25, after the second ship `aab8caa`)
+
+> Shipped. The bbox issue is #299 — cite it where the north-up box is referenced. Ruling on the
+> one question: before the side is confirmed, the picker draws the pin and the sentence "Say which
+> side is occupied to lay out the work" — no segment, and no direction-free circle, because a
+> shape without a direction is a guess at the plan (P16, Rule 10). Record it and build the
+> visible frontend ship. Stop there with the verdict, the file table, what I'll see on the
+> screen, and the ship line.
+
+**On the record:**
+- **The north-up scan box is #299.** It is referenced in checkpoint (e), ruling 5 and the
+  open-points ruling 4, and is not this arc's.
+- **Before the side is confirmed, the picker draws the pin and exactly:**
+
+  > Say which side is occupied to lay out the work
+
+  Nothing directional is drawn, which matches the backend's `/render/corridor-geometry` status
+  `side_not_confirmed` (no work segment, no approach).
+
+**The visible ship = checkpoint (k) commit 6:**
+- the pin marks the work;
+- the side control on the band;
+- the typed direction retired;
+- the overlay drawn from the backend's geometry;
+- the pre-change plans opening with the side unset.

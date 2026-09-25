@@ -537,7 +537,7 @@ def _extra_box_selectors(boxes: list[tuple[float, float, float, float]]) -> str:
     """The scan set's selectors again, once per additional box (#290).
 
     The open-points ruling 4: the flagger's second approach is scanned by
-    combining one box per approach, in today's shape.  The extra boxes join
+    combining one box per approach, in today's (north-up, #299) shape.  The extra boxes join
     the SAME union, so it is still one round trip (the 2-per-IP rate limit
     is untouched) and Overpass de-duplicates an element two boxes share.
     Empty for a single corridor, so that query stays byte-identical.

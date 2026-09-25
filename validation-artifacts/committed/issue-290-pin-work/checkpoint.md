@@ -299,7 +299,7 @@ For scale, arc 31's Denver box was 0.273 km².
 - **Prediction, not measured:** a 2.19 km² diagonal flagger box is about 3,200 elements / 640 KB,
   so about 2 s of transfer alone on mirror 3 against about 6 s of headroom. **Yes, a diagonal
   flagger corridor pushes toward refusal.** A N–S or E–W one (×1.2–1.6) probably does not.
-- **The shaping finding: the north-up box is the waste, not the approaches.** At 45° the box pays
+- **The shaping finding: the north-up box is the waste, not the approaches (filed as #299).** At 45° the box pays
   about 3× the corridor's real area, today, for every kind. A road-following strip (Overpass
   `around:R, lat1,lon1, …` along the centerline, or `poly:`) is constant in any bearing: the
   rural-45 flagger drops from 2.188 to **0.378 km²** at 45°. Two boxes, one per approach, are
