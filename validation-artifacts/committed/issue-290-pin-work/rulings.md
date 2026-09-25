@@ -121,3 +121,83 @@ And FLOW.md §7's decision (line 86), verbatim:
 [the bearing field] or moves — say which". FLOW.md §5a already rules it: it **retires with**
 the typed bearing field, together with its byte-identity pin. The checkpoint treats this as
 ruled and does not re-open it.
+
+---
+
+## The ruling, verbatim (Ryan, 2026-09-25, on `checkpoint.md` at `1f6a3b4`)
+
+> Checkpoint shipped; the backwards-corridor defect is filed (I'll give you its number).
+> Rulings, all as recommended:
+> 1. Corrected premise accepted: today's pin is corridor_end, measured on prod.
+> 2. No interim flip; this arc fixes the defect behind the version field.
+> 3. Version field old value = corridor_end.
+> 4. The nearest-intersection tag gets its own lookup in its own arc; #290 no longer waits on
+>    the pre-scan. Re-scope #285 by comment (draft it for me as text).
+> 5. The north-up scan box (~3× waste on diagonals) is its own issue — draft it for me as text.
+>    Not this arc.
+> 6. The "Work starts" label shipped in #289 over the unchanged model is recorded as a P21
+>    violation that this arc makes true.
+> 7. Cut (a): anchor moved in build_corridor; each approach's geometry returned by the backend,
+>    never sent on the request.
+> 8. Side control: the road's two edges in compass words ("East side · northbound traffic");
+>    backend derives direction from the confirmed road + side, honouring the one-way tag. It is
+>    the plain control phones use; the aerial tap comes later.
+> 9. Flagger "start" = the upstream end for the closed lane's traffic.
+> 10. Pre-change plans and fixtures open with side unset, marked needs-you; never silently
+>     re-read. Lookout Mountain re-records on the centerline.
+> If any of your nine questions isn't answered by the above, list it before building. Record
+> all of it in rulings.md. Then build per the checkpoint's sequence, version field first,
+> backend-first, each ship naming its visible change. Stop at the first ship.
+
+### How the ruling maps onto the checkpoint's nine questions
+
+| checkpoint question | ruled by |
+|---|---|
+| 1 premise (pin = corridor end; version literal) | rulings 1, 3 |
+| 2 file the mirror, no interim flip | ruling 2 (filed; **number to come**) |
+| 3 option (a), per-approach geometry in the response | ruling 7 |
+| 4 side control (two enums, compass words) | ruling 8. **Two parts not ruled**, listed below. |
+| 5 flagger "start" | ruling 9 |
+| 6 v1 under v2 | ruling 10 |
+| 7 gate re-scope, #285 its own lookup | ruling 4 |
+| 8 aerial stays in the modal this arc | **not ruled**, listed below |
+| 9 bbox: union of per-approach hulls; box vs strip measured | ruling 5 takes the north-up box out of the arc. **The flagger envelope is not ruled**, listed below. |
+
+Ruling 6 records a violation that none of the nine questions asked about. The P21 "Work starts"
+violation (`move-ledger.ts:129`, `band-facts.ts:191`, shipped in #289) is on the record here, and
+the arc's visible ship is what makes the label true.
+
+### Open, listed before building (none of them touches the first ship)
+
+1. **Manual mode's direction.** With no confirmed road there is no geometry to derive from.
+   - Recommended: ManualFallback's typed "Bearing (° from N)" (`ManualFallback.tsx:78-97`) is
+     replaced by a coarse four-way choice ("traffic heads N / E / S / W"), labelled coarse.
+   - Needed by the visible ship.
+2. **The left edge.** The layout models only the right side (`layout.py:118-152, 224-230`).
+   - Recommended: the side control offers only the edges whose occupied side is the right side
+     of that traffic. A left-side / median choice renders gated (Rule 8), named, not built.
+   - Needed by the visible ship.
+3. **The aerial.** Recommended: it stays in the picker modal this arc, redrawn work-first with
+   the approaches after the side is confirmed (rules 110–112). Its migration onto the band is
+   the next arc. Needed by the visible ship.
+4. **The flagger's scan envelope.** Ruling 5 takes the north-up box out of this arc. The
+   flagger's second approach still has to be scanned: today about 1,150 ft of it is unscanned
+   at 45 mph (checkpoint (c)).
+   - Recommended: the scan bbox becomes the union of the per-approach hulls, in today's box
+     shape.
+   - The box-vs-strip measurement (checkpoint (k) commit 5) moves to ruling 5's issue.
+   - Needed by the backend corridor commit (checkpoint (k) commit 3).
+
+### The build order under this ruling
+
+The checkpoint's (k) sequence holds, with two changes:
+- commit 5 (the box-vs-strip measurement) leaves this arc under ruling 5;
+- #285's lookup is its own arc under ruling 4.
+
+**First ship = checkpoint (k) commits 1 + 2: the version field, backend then senders.**
+- `ScenarioMeta.pinModel`, where an absent value is `corridor_end` (ruling 3).
+- Read first; `work_start` is refused honestly until the v2 corridor lands.
+- Echoed in the audit and the replication snapshot.
+- Every sender carries it.
+
+Visible change: none.
