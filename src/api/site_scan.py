@@ -56,7 +56,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from src.rules.corridor import _initial_bearing_deg, build_corridor
+from src.rules.corridor import build_corridor, opposing_work_start
 from src.rules.site_detection import (
     _VALIDATION_SEARCH_RADIUS_M,
     detect_along_corridor,
@@ -722,13 +722,12 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
     # open-points ruling 4: its box joins the scan beside the first.
     opposing = None
     if flagger:
-        far_end = corridor.point_at_station_ft(corridor.downstream_taper_ft)
-        toward_pin = corridor.point_at_station_ft(corridor.downstream_taper_ft + 1.0)
+        far_end, opposing_travel = opposing_work_start(corridor)
         try:
             opposing = build_corridor(
                 lat=far_end[0],
                 lng=far_end[1],
-                bearing_deg=_initial_bearing_deg(*far_end, *toward_pin),
+                bearing_deg=opposing_travel,
                 speed_mph=int(params.speed_mph),
                 work_zone_ft=float(params.work_zone_length_ft),
                 closure_type=closure_type,

@@ -59,6 +59,7 @@ from src.narrative.crew_narrative import (
 )
 from src.rendering.audit_blocks import render_audit_pdf
 from src.rendering.plan_sheet import render_plan_sheet
+from src.rules.corridor import _initial_bearing_deg
 from src.rules.device_aggregation import AggregatedDeviceRow, aggregate_device_rows
 from src.rules.devices import DeviceType, cone_display_name
 from src.rules.jurisdiction import (
@@ -91,6 +92,7 @@ from src.rules.spacing import (
 from src.rules.validators import (
     DevicePlacement,
     ScenarioParams,
+    _is_flagger_scenario,
     validate_corridor_geometry,
     validate_layout,
 )
@@ -1049,6 +1051,164 @@ _CORRIDOR_TAPER_FAMILY: dict[str, str] = {
     "mobile_op_multilane": "lane",
     "near_intersection": "lane",
 }
+
+
+_CORRIDOR_ZONES: tuple[str, ...] = (
+    "downstream",
+    "work_zone",
+    "buffer",
+    "transition",
+    "advance_warning",
+)
+
+
+def _zone_spans(c: Any) -> list[tuple[str, float, float]]:
+    """Each zone's station span, from the anchor, in corridor order."""
+    lengths = (
+        c.downstream_taper_ft,
+        c.work_zone_ft,
+        c.buffer_ft,
+        c.taper_ft,
+        c.advance_warning_ft,
+    )
+    spans: list[tuple[str, float, float]] = []
+    cursor = 0.0
+    for name, length in zip(_CORRIDOR_ZONES, lengths, strict=True):
+        spans.append((name, cursor, cursor + length))
+        cursor += length
+    return spans
+
+
+@app.post("/render/corridor-geometry")
+def render_corridor_geometry(scenario: Scenario) -> JSONResponse:
+    """The laid-out corridor as geometry, per approach (#290, ruling 7).
+
+    "Each approach's geometry returned by the backend, never sent on the
+    request."  The picker's overlay draws from this instead of walking the
+    pin along a bearing itself (lib/centerline.ts, lib/corridor-polyline.ts
+    — a documented frontend mirror of corridor math, Rule 3).
+
+    A read: no scan, no generator, no memo, no lock.  Lengths are the
+    params-only figures ``/render/corridor-spec`` returns (the downstream
+    taper at the §6B.08 floor the plan builds, #257).
+
+    Response::
+
+        {"status": "laid_out" | "no_pin" | "side_not_confirmed" | "no_bearing"
+                   | "corridor_unbuildable",
+         "pin_model": ..., "pin": [lat, lng] | null,
+         "travel_bearing_deg": float | null,
+         "work": {"length_ft", "points"} | null,
+         "approaches": [{"id": "primary" | "opposing", "travel_bearing_deg",
+                         "zones": [{"zone", "length_ft", "points"}]}],
+         "coverage_ft": float | null, "message": str | null}
+
+    Before the side is confirmed there is no direction, so there is no work
+    segment and no approach: rule 112's "nothing upstream is drawn
+    speculatively", and a typed length has no direction to run in.
+    """
+    _ensure_scenario_enabled(scenario)
+    try:
+        params, _generator, _kwargs = scenario_to_call(scenario)
+    except CrossStreetStationError as exc:
+        raise HTTPException(
+            status_code=400, detail={"error": "generator_rejected", "message": str(exc)}
+        ) from exc
+    except UnknownJurisdictionError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    from src.rules.corridor import build_corridor, opposing_work_start, station_path
+
+    meta = scenario.meta
+    pin_model = params.pin_model
+    located = bool(meta.lat and meta.lng)
+    out: dict[str, Any] = {
+        "status": "laid_out",
+        "pin_model": pin_model,
+        "pin": [meta.lat, meta.lng] if located else None,
+        "travel_bearing_deg": None,
+        "work": None,
+        "approaches": [],
+        "coverage_ft": None,
+        "message": None,
+    }
+    if not located:
+        out["status"] = "no_pin"
+        return JSONResponse(out)
+    if params.bearing_deg is None:
+        out["status"] = "side_not_confirmed" if pin_model == "work_start" else "no_bearing"
+        return JSONResponse(out)
+
+    flagger = _is_flagger_scenario(params)
+    corridor_kwargs: dict[str, Any] = {
+        "speed_mph": params.speed_mph,
+        "work_zone_ft": params.work_zone_length_ft,
+        "closure_type": "flagger_alternating_2lane" if flagger else params.closure_type,
+        "road_type": params.road_type,
+        "lane_width_ft": params.lane_width_ft,
+        "shoulder_width_ft": params.shoulder_width_ft,
+        "jurisdiction": params.jurisdiction,
+        "centerline": params.centerline,
+    }
+    try:
+        primary = build_corridor(
+            lat=meta.lat,
+            lng=meta.lng,
+            bearing_deg=params.bearing_deg,
+            pin_model=pin_model,
+            **corridor_kwargs,
+        )
+        corridors = [("primary", primary)]
+        if flagger and pin_model == "work_start":
+            far_end, opposing_travel = opposing_work_start(primary)
+            corridors.append(
+                (
+                    "opposing",
+                    build_corridor(
+                        lat=far_end[0],
+                        lng=far_end[1],
+                        bearing_deg=opposing_travel,
+                        pin_model="work_start",
+                        **corridor_kwargs,
+                    ),
+                )
+            )
+    except ValueError as exc:
+        out["status"] = "corridor_unbuildable"
+        out["message"] = f"{type(exc).__name__}: {exc}"
+        return JSONResponse(out)
+
+    def points(c: Any, a: float, b: float) -> list[list[float]]:
+        return [[round(lat, 7), round(lng, 7)] for lat, lng in station_path(c, a, b)]
+
+    travel = (
+        params.bearing_deg
+        if pin_model == "work_start"
+        else (float(params.bearing_deg) + 180.0) % 360.0
+    )
+    out["travel_bearing_deg"] = round(float(travel), 2)
+    work_span = next(s for s in _zone_spans(primary) if s[0] == "work_zone")
+    out["work"] = {
+        "length_ft": round(primary.work_zone_ft, 1),
+        "points": points(primary, work_span[1], work_span[2]),
+    }
+    for approach_id, c in corridors:
+        far_end = c.point_at_station_ft(c.downstream_taper_ft + c.work_zone_ft)
+        near = c.point_at_station_ft(c.downstream_taper_ft + c.work_zone_ft - 1.0)
+        out["approaches"].append(
+            {
+                "id": approach_id,
+                "travel_bearing_deg": round(_initial_bearing_deg(*far_end, *near), 2),
+                "zones": [
+                    {"zone": name, "length_ft": round(b - a, 1), "points": points(c, a, b)}
+                    for name, a, b in _zone_spans(c)
+                    if name != "work_zone"
+                ],
+            }
+        )
+    coverage = primary.centerline_coverage_ft()
+    out["coverage_ft"] = round(coverage, 1) if coverage is not None else None
+    return JSONResponse(out)
 
 
 @app.post("/render/corridor-spec")

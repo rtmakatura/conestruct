@@ -960,6 +960,54 @@ def against_legal_direction(
     return delta > 90.0
 
 
+def opposing_work_start(primary: WorkCorridor) -> tuple[tuple[float, float], float]:
+    """Where the opposing traffic reaches the work, and its direction there (#290).
+
+    Ruling 9: the pin is the upstream end for the CLOSED lane's traffic, so
+    on a two-way one-lane job the other traffic reaches the work at its far
+    end — the primary corridor's work-zone downstream edge (station
+    ``downstream_taper_ft``) — travelling back toward the pin, which is the
+    primary frame's +station direction.  Build the opposing approach as a
+    work-start corridor from here.  One producer for the scan and the
+    corridor-geometry response (P2).
+    """
+    far_end = primary.point_at_station_ft(primary.downstream_taper_ft)
+    toward_pin = primary.point_at_station_ft(primary.downstream_taper_ft + 1.0)
+    return far_end, _initial_bearing_deg(*far_end, *toward_pin)
+
+
+def station_path(
+    corridor: WorkCorridor, from_ft: float, to_ft: float, max_points: int = 100
+) -> list[tuple[float, float]]:
+    """Road-following vertices between two corridor stations (#290).
+
+    The same construction as :meth:`WorkCorridor.work_zone_path_points`,
+    for any span: both endpoints exact, plus every centerline vertex whose
+    station falls strictly inside, uniformly decimated to ``max_points``
+    (CHOSEN there for Mapbox URL limits; kept the same here so a drawn zone
+    and the drawn work zone are equally fine-grained).  Without a
+    centerline: the two endpoints — the straight frame is the model.
+    """
+    lo, hi = (from_ft, to_ft) if from_ft <= to_ft else (to_ft, from_ft)
+    start = corridor.point_at_station_ft(lo)
+    end = corridor.point_at_station_ft(hi)
+    frame = corridor._centerline_frame()
+    if frame is None or corridor.centerline is None:
+        return [start, end]
+    cum_m, anchor_arc_m, sign = frame
+    interior: list[tuple[float, tuple[float, float]]] = []
+    for i, pt in enumerate(corridor.centerline):
+        station_ft = sign * (cum_m[i] - anchor_arc_m) * FT_PER_M
+        if lo < station_ft < hi:
+            interior.append((station_ft, pt))
+    interior.sort(key=lambda item: item[0])
+    pts = [pt for _, pt in interior]
+    if len(pts) > max_points - 2:
+        stride = len(pts) / float(max_points - 2)
+        pts = [pts[int(i * stride)] for i in range(max_points - 2)]
+    return [start, *pts, end]
+
+
 # Round-trip tolerance for the work-start translation, in meters.  CHOSEN
 # (#290): an invariant check, not a design distance — the translated
 # corridor must put its work zone's upstream edge back on the pin.  The
