@@ -201,3 +201,32 @@ The checkpoint's (k) sequence holds, with two changes:
 - Every sender carries it.
 
 Visible change: none.
+
+---
+
+## The ruling on the four open points, verbatim (Ryan, 2026-09-25, after the first ship `f47d3b7`)
+
+> Shipped. The backwards-corridor issue is #298 — cite it. The #285 comment is posted and the
+> bbox issue is filed (number to follow). Rulings on the four open points, all as recommended:
+> (1) manual mode's direction is a four-way choice, "traffic heads N / E / S / W", replacing
+> typed degrees; (2) left and median edges show greyed out, named but not built; (3) the aerial
+> stays in the picker modal this arc, redrawn work-first with approaches after the side is
+> confirmed; (4) the flagger's second approach is scanned by combining one box per approach in
+> today's shape. Record in rulings.md, then continue the build sequence. Stop at the next ship.
+
+**Now on the record:**
+- **The shipped mirror is #298.** Every commit that fixes part of it cites it.
+- **The #285 re-scope comment is posted**, and the north-up box issue is filed (number to come).
+- **All four open points are closed:**
+  - manual mode: a four-way heading;
+  - left and median: gated, named, not built;
+  - the aerial: stays in the modal, redrawn;
+  - the flagger scan: a union of per-approach boxes.
+
+**Next ship = checkpoint (k) commits 3 + 4, backend-only.**
+- The work-start corridor behind `pinModel == "work_start"`: the work start, the side and travel
+  fields, the backend-derived direction, the approach list, the per-approach scan boxes, and the
+  per-approach geometry in a response.
+- Then the fixtures' v2 twins, with the single-leaf proof first.
+
+Visible change: none. Nothing sends `work_start` until the frontend ship.
