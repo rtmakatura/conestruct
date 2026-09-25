@@ -214,7 +214,13 @@ function SideControl({
             : "reading the road's sides…"}
         </div>
       ) : (
-        <div className="a-chips mt-2" role="radiogroup" aria-label="Occupied side">
+        // #290 hand-check item 3: rule 135's chip, not the segmented
+        // `.chip` — whose `is-on` no rule styled (the choice was invisible)
+        // and whose row set the options edge to edge.  `.a-chip` gives the
+        // 10 px gap and the 44 px target; checked takes the pressed kind
+        // chip's accent border and wash, and a leading ✓ (rule 17's glyph,
+        // as text, aria-hidden — `aria-checked` is what is announced).
+        <div className="a-chips a-chips-side" role="radiogroup" aria-label="Occupied side">
           {options.map((o) => {
             const on = selected === o;
             return (
@@ -224,7 +230,7 @@ function SideControl({
                 role="radio"
                 aria-checked={on}
                 aria-disabled={locked || undefined}
-                className={`chip${on ? " is-on" : ""}`}
+                className="a-chip a-chip-side"
                 data-write=""
                 data-testid="side-option"
                 onClick={() => {
@@ -232,7 +238,14 @@ function SideControl({
                   setMeta({ ...scenario.meta, work: { ...o.work } });
                 }}
               >
-                <span>{o.label}</span>
+                <span className="tr-field">
+                  {on && (
+                    <span className="a-chip-check" aria-hidden="true">
+                      ✓{" "}
+                    </span>
+                  )}
+                  {o.label}
+                </span>
               </button>
             );
           })}

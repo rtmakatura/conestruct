@@ -1,0 +1,52 @@
+WORK ZONE · DEFINE
+Define Work Zone
+
+Drop a pin where the work starts, and review the detected road properties.
+
+SEARCH
++ OR ENTER COORDINATES MANUALLY
+STREETS
+© Mapbox © OpenStreetMap Improve this map © Maxar
+RECENTER
+ADVANCE WARNING
+TAPER
+BUFFER
+WORK ZONE
+DOWNSTREAM
+✓ ROAD DETECTED · 1 MATCH
+NORTH BROADWAY SOUTHBOUND (PRIMARY, 180°)
+11 M FROM PIN · WAY 131232822
+ROAD PROPERTIES
+↻ RE-DETECT ROADS
+Speed limit (mph)
+OSM · MEASURED
+Lanes per direction
+OSM · MEASURED
+5 lanes/direction detected (OSM) — plans draw at most 4 lanes per direction. Plan will use 4.
+Road type
+OSM · INFERRED
+Rural — undivided
+Rural — divided
+Urban arterial
+Freeway / interstate
+Divided
+OSM · INFERRED
+DIVIDED
+UNDIVIDED
+CORRIDOR EXTENT
+TOTAL
+1,600 ft
+Advance warning
+300 ft
+Taper
+50 ft
+Buffer
+200 ft
+Work zone
+1,000 ft
+Downstream
+50 ft
+CENTERLINE
+OSM, FULL CORRIDOR
+Cancel
+Save & Close

@@ -4261,9 +4261,26 @@ input[type="number"] {
   text-align: left;
   cursor: pointer;
 }
-.workbench .a-chip[aria-pressed="true"] {
+.workbench .a-chip[aria-pressed="true"],
+.workbench .a-chip[role="radio"][aria-checked="true"] {
   border-color: var(--act);
   background: rgba(52, 169, 232, 0.1);
+}
+/* #290 hand-check item 3 — the occupied-side control takes the kind
+   chip's treatment: a radio, so the checked state keys on aria-checked
+   (above), with a leading ✓ in the accent.  Two sides share a row; the
+   no-road case's four headings wrap two by two rather than squeezing
+   four 44 px targets into the band.  At 480 the rule-173 stack below
+   turns every .a-chips into a column. */
+.workbench .a-chips-side {
+  flex-wrap: wrap;
+}
+.workbench .a-chips-side .a-chip {
+  flex: 1 1 calc(50% - 5px);
+  align-content: center;
+}
+.workbench .a-chip-check {
+  color: var(--act);
 }
 .workbench .a-chip:hover {
   border-color: var(--raise-hi);
