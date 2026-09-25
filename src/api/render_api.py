@@ -280,10 +280,6 @@ def _ensure_pin_model_complete(scenario: Scenario) -> None:
                 "meta.work.travel runs against this one-way road's legal direction "
                 f"(oneway={road.oneway!r}): no traffic arrives from that side."
             )
-    # The corridor readers (scan, plan sheet) are converted in the next
-    # commit of this ship; until then a complete work_start pin would be
-    # laid by readers that still read it as a corridor end.
-    raise _pin_model_refusal("pinModel 'work_start' is not wired to the corridor readers yet.")
 
 
 def _ensure_preview_allowed(scenario: Scenario) -> None:

@@ -56,11 +56,12 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from src.rules.corridor import build_corridor
+from src.rules.corridor import _initial_bearing_deg, build_corridor
 from src.rules.site_detection import (
     _VALIDATION_SEARCH_RADIUS_M,
     detect_along_corridor,
 )
+from src.rules.validators import _is_flagger_scenario
 
 # CHOSEN (ruling 4, s2-arc15): wall-clock budget for one scan.  The
 # Overpass query itself declares [timeout:10]; each mirror gets
@@ -98,7 +99,10 @@ MEMO_TTL_S = 120.0
 # memo stores the RAW bearing measurement, never the verdict, so the
 # threshold is re-applied on every read.  Keying on it would invalidate
 # entries whose cached content it cannot affect.
-MEMO_KEY_VERSION = 2
+# 3 (#290): the inputs gained the pin model and the opposing approach's
+# box, and a work-start corridor is a different corridor at the same pin —
+# an entry written before the field existed must miss.
+MEMO_KEY_VERSION = 3
 
 # Detection buckets → site-condition flags (the button's DETECTION_TO_FLAG,
 # SiteConditionsField.tsx, now owned here — Rule 3).  Buckets with no
@@ -334,7 +338,9 @@ SITE_SCAN_UNAVAILABLE_MESSAGE = (
 SITE_SCAN_UNAVAILABLE_ERROR = "site_scan_unavailable"
 
 SiteScanStatus = Literal["ok", "unavailable", "not_run"]
-SiteScanReason = Literal["not_requested", "no_coords", "no_bearing", "corridor_unbuildable"]
+SiteScanReason = Literal[
+    "not_requested", "no_coords", "no_bearing", "side_not_confirmed", "corridor_unbuildable"
+]
 
 
 class SiteScanRequest(BaseModel):
@@ -365,6 +371,11 @@ class SiteScanInputs(BaseModel):
     shoulder_width_ft: float
     centerline_vertices: int
     bbox: tuple[float, float, float, float]
+    # #290 — what the pin meant ("corridor_end" | "work_start"), and the
+    # flagger's second approach's box (the open-points ruling 4: one box
+    # per approach, in today's shape).  ``lat``/``lng`` above stay the pin.
+    pin_model: str = "corridor_end"
+    opposing_bbox: tuple[float, float, float, float] | None = None
 
 
 class SiteScanBucket(BaseModel):
@@ -657,8 +668,20 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
     if lat is None or lng is None:
         return _unscanned(not_run_provenance("no_coords"))
     bearing = getattr(params, "bearing_deg", None)
+    pin_model = str(getattr(params, "pin_model", "corridor_end"))
+    work_start = pin_model == "work_start"
     if bearing is None:
-        return _unscanned(not_run_provenance("no_bearing"))
+        # #290 ruling 10: a work-start pin whose side is not confirmed has
+        # no direction yet, and scanning a guessed corridor is the defect
+        # this arc removes (#298).  Named for what is missing.
+        return _unscanned(not_run_provenance("side_not_confirmed" if work_start else "no_bearing"))
+    # #290: under the work-start model the flagger frame takes the flagger's
+    # own one-lane two-way taper (plan_sheet.py already maps it the same
+    # way); the corridor_end path keeps its frame byte-identical.
+    closure_type = str(params.closure_type)
+    flagger = work_start and _is_flagger_scenario(params)
+    if flagger:
+        closure_type = "flagger_alternating_2lane"
 
     centerline = getattr(params, "centerline", None)
     try:
@@ -668,12 +691,13 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
             bearing_deg=float(bearing),
             speed_mph=int(params.speed_mph),
             work_zone_ft=float(params.work_zone_length_ft),
-            closure_type=str(params.closure_type),
+            closure_type=closure_type,
             road_type=str(params.road_type),
             lane_width_ft=float(params.lane_width_ft),
             shoulder_width_ft=float(params.shoulder_width_ft),
             jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
             centerline=centerline,
+            pin_model=pin_model,
             # CHOSEN (#257): this corridor is the scan's search FRAME, not
             # a printed length — it takes the MUTCD §6B.08 ceiling (100 ft
             # per lane closed) so the detection bbox reaches past the
@@ -690,6 +714,36 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         return _unscanned(
             not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}")
         )
+
+    # #290 — the flagger's second approach (ruling 9 fixes "start" as the
+    # closed lane's upstream end, so the OTHER traffic reaches the work at
+    # its far end).  It is its own work-start corridor: starting at the
+    # work's far end, travelling back along the road toward the pin.  The
+    # open-points ruling 4: its box joins the scan beside the first.
+    opposing = None
+    if flagger:
+        far_end = corridor.point_at_station_ft(corridor.downstream_taper_ft)
+        toward_pin = corridor.point_at_station_ft(corridor.downstream_taper_ft + 1.0)
+        try:
+            opposing = build_corridor(
+                lat=far_end[0],
+                lng=far_end[1],
+                bearing_deg=_initial_bearing_deg(*far_end, *toward_pin),
+                speed_mph=int(params.speed_mph),
+                work_zone_ft=float(params.work_zone_length_ft),
+                closure_type=closure_type,
+                road_type=str(params.road_type),
+                lane_width_ft=float(params.lane_width_ft),
+                shoulder_width_ft=float(params.shoulder_width_ft),
+                jurisdiction=str(getattr(params, "jurisdiction", "CDOT")),
+                centerline=centerline,
+                downstream_taper_use_max=True,
+                pin_model="work_start",
+            )
+        except ValueError as exc:
+            return _unscanned(
+                not_run_provenance("corridor_unbuildable", f"{type(exc).__name__}: {exc}")
+            )
 
     from src.rules.site_detection import (
         _CORRIDOR_LATERAL_BUFFER_M,
@@ -712,6 +766,15 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
         shoulder_width_ft=float(params.shoulder_width_ft),
         centerline_vertices=len(centerline) if centerline else 0,
         bbox=(bbox[0], bbox[1], bbox[2], bbox[3]),
+        pin_model=pin_model,
+        opposing_bbox=(
+            opposing.corridor_bbox(
+                lateral_buffer_m=_CORRIDOR_LATERAL_BUFFER_M,
+                longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
+            )
+            if opposing is not None
+            else None
+        ),
     )
 
     key = _memo_key(inputs, centerline)
@@ -731,6 +794,10 @@ def run_site_scan(scenario: Any, params: Any) -> SiteScanResult:
             corridor,
             budget_s=SCAN_BUDGET_S,
             bearing_anchor=(inputs.lat, inputs.lng, _VALIDATION_SEARCH_RADIUS_M),
+            # #290: the flagger's opposing approach, and distances measured
+            # from the pin the operator marked, never the moved anchor.
+            approaches=[("opposing", opposing)] if opposing is not None else None,
+            distance_origin=(inputs.lat, inputs.lng) if work_start else None,
         )
         duration_ms = int(round((time.monotonic() - t0) * 1000))
 

@@ -3673,6 +3673,8 @@ def _draw_corridor_details_box(
     box_y: float,
     box_w: float,
     box_h: float,
+    work_start: tuple[float, float] | None = None,
+    travel_bearing_deg: float | None = None,
 ) -> None:
     """Bordered metadata panel summarizing the corridor geometry.
 
@@ -3705,9 +3707,23 @@ def _draw_corridor_details_box(
     )
     total_ft = corridor.total_length_ft
     total_mi = total_ft / 5280.0
+    # #290: a work-start pin names what the operator marked — where the
+    # work starts, and the direction of travel the backend derived from
+    # the road and the side — never the corridor anchor the math moved to
+    # (a point nobody chose).  Same two slots, so the panel keeps its row
+    # count; a corridor_end sheet is byte-identical.
+    if work_start is not None:
+        location_row = ("Work starts", _format_latlng(work_start[0], work_start[1]))
+        direction_row = (
+            "Direction of travel",
+            f"{travel_bearing_deg:.0f}°" if travel_bearing_deg is not None else "Not specified",
+        )
+    else:
+        location_row = ("Anchor", _format_latlng(corridor.anchor_lat, corridor.anchor_lng))
+        direction_row = ("Bearing", bearing_str)
     rows: list[tuple[str, str]] = [
-        ("Anchor", _format_latlng(corridor.anchor_lat, corridor.anchor_lng)),
-        ("Bearing", bearing_str),
+        location_row,
+        direction_row,
         ("Total corridor", f"{total_ft:,.0f} ft ({total_mi:.2f} mi)"),
         ("Advance warning", f"{corridor.advance_warning_ft:,.0f} ft"),
         ("Taper", f"{corridor.taper_ft:,.0f} ft"),
@@ -3900,8 +3916,16 @@ def _render_aerial_page(
         details_w = PAGE_W * AERIAL_PAGE_DETAILS_FRAC
         details_x = (PAGE_W - details_w) / 2.0
         details_y = MARGIN + AERIAL_PAGE_FOOTER_H
+        work_start_pin = getattr(params, "pin_model", "corridor_end") == "work_start"
         _draw_corridor_details_box(
-            c, corridor, details_x, details_y, details_w, AERIAL_PAGE_DETAILS_BLOCK_H
+            c,
+            corridor,
+            details_x,
+            details_y,
+            details_w,
+            AERIAL_PAGE_DETAILS_BLOCK_H,
+            work_start=(lat, lng) if work_start_pin else None,
+            travel_bearing_deg=getattr(params, "bearing_deg", None) if work_start_pin else None,
         )
 
     # 6. Footer.
@@ -4063,6 +4087,11 @@ def render_plan_sheet(
                         # taper the plan BUILT — the placed run every
                         # surface reads — never the scan frame's ceiling.
                         downstream_taper_ft=placed_downstream_taper_ft(placements),
+                        # #290: what the pin means.  Under "work_start" the
+                        # pin is the work zone's upstream edge and the
+                        # bearing the derived direction of travel;
+                        # build_corridor moves the anchor (ruling 7).
+                        pin_model=getattr(params, "pin_model", "corridor_end"),
                     )
                 except Exception as exc:  # noqa: BLE001
                     print(

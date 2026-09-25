@@ -512,6 +512,43 @@ def _is_feature_relevant(
     return False
 
 
+# The scan set's selectors, one box at a time (#290) — the same fifteen,
+# in the same order, as the templates below spell out inline.
+_SCAN_SELECTORS: tuple[str, ...] = (
+    'node({box})["highway"="traffic_signals"];',
+    'node({box})["highway"="crossing"];',
+    'way({box})["highway"="footway"];',
+    'way({box})["footway"="sidewalk"];',
+    'way({box})["highway"="cycleway"];',
+    'way({box})["cycleway"];',
+    'node({box})["amenity"="school"];',
+    'way({box})["amenity"="school"];',
+    'node({box})["railway"="level_crossing"];',
+    'node({box})["amenity"="hospital"];',
+    'way({box})["amenity"="hospital"];',
+    'node({box})["highway"="motorway_junction"];',
+    'way({box})["highway"="motorway_link"];',
+    'way({box})["highway"="trunk_link"];',
+    'way({box})["bridge"="yes"];',
+)
+
+
+def _extra_box_selectors(boxes: list[tuple[float, float, float, float]]) -> str:
+    """The scan set's selectors again, once per additional box (#290).
+
+    The open-points ruling 4: the flagger's second approach is scanned by
+    combining one box per approach, in today's shape.  The extra boxes join
+    the SAME union, so it is still one round trip (the 2-per-IP rate limit
+    is untouched) and Overpass de-duplicates an element two boxes share.
+    Empty for a single corridor, so that query stays byte-identical.
+    """
+    lines: list[str] = []
+    for south, west, north, east in boxes:
+        box = f"{south:.6f},{west:.6f},{north:.6f},{east:.6f}"
+        lines.extend(f"  {sel.format(box=box)}\n" for sel in _SCAN_SELECTORS)
+    return "".join(lines)
+
+
 def _build_bbox_query(bbox: tuple[float, float, float, float]) -> str:
     """Same feature buckets as :func:`_build_query` but scoped to a bbox."""
     south, west, north, east = bbox
@@ -614,11 +651,30 @@ def _empty_corridor_bucket(detail_msg: str = "") -> dict[str, Any]:
     return out
 
 
+def _classified(
+    bucket_name: str, corridor: WorkCorridor, coord: tuple[float, float]
+) -> dict[str, Any]:
+    """One feature's zone, stations and relevance against one corridor."""
+    zone = corridor.classify_distance(coord[0], coord[1])
+    along_ft = corridor.along_station_ft(coord[0], coord[1])
+    lateral_ft = corridor.lateral_offset_ft(coord[0], coord[1])
+    return {
+        "zone": zone,
+        "relevant": _is_feature_relevant(
+            bucket_name, zone, along_ft, lateral_ft, corridor.total_length_ft
+        ),
+        "along_station_ft": round(along_ft, 1),
+        "lateral_offset_ft": round(lateral_ft, 1),
+    }
+
+
 def detect_along_corridor(
     corridor: WorkCorridor,
     lateral_buffer_m: float = _CORRIDOR_LATERAL_BUFFER_M,
     budget_s: float | None = None,
     bearing_anchor: tuple[float, float, float] | None = None,
+    approaches: list[tuple[str, WorkCorridor]] | None = None,
+    distance_origin: tuple[float, float] | None = None,
 ) -> dict[str, Any]:
     """Query Overpass over the corridor's bounding box and bucket detections.
 
@@ -654,6 +710,16 @@ def detect_along_corridor(
     so :func:`validate_corridor_against_osm` can derive the check without
     a second trip and without a second budget.  Omit it and this function
     behaves exactly as before: same query, same buckets, one set.
+
+    #290: ``approaches`` names further approach corridors reaching the same
+    work — the flagger's opposing traffic — as ``(id, corridor)``.  Each
+    adds its own box to the same union (the open-points ruling 4), and a
+    feature the first corridor does not count is classified against each
+    in turn; the first that counts it tags the feature with its ``approach``
+    id and the detail line names it.  ``distance_origin`` measures
+    ``distance_to_anchor_m`` from the pin the operator marked instead of
+    the corridor anchor (under the work-start model the anchor is a point
+    the math moved to).  Both omitted: byte-identical to before.
     """
     buckets: dict[str, Any] = {
         "intersections": _empty_corridor_bucket(),
@@ -690,6 +756,18 @@ def detect_along_corridor(
         query = _build_folded_query(bbox, anchor_lat, anchor_lng, road_radius_m)
     else:
         query = _build_bbox_query(bbox)
+    extra = [
+        c.corridor_bbox(
+            lateral_buffer_m=lateral_buffer_m,
+            longitudinal_buffer_m=_CORRIDOR_LONGITUDINAL_BUFFER_M,
+        )
+        for _id, c in (approaches or [])
+    ]
+    if extra:
+        # Insert before the scan set's closing paren — the first line that
+        # begins with ")", in both query shapes.
+        head, sep, tail = query.partition("\n)")
+        query = head + "\n" + _extra_box_selectors(extra).rstrip("\n") + sep + tail
     # Positional call when unbudgeted so the pre-phase-1 stubs
     # (``lambda q: ...``) keep working unchanged.
     if budget_s is None:
@@ -743,18 +821,20 @@ def detect_along_corridor(
                 "distance_to_anchor_m": None,
             }
         else:
-            zone = corridor.classify_distance(coord[0], coord[1])
-            along_ft = corridor.along_station_ft(coord[0], coord[1])
-            lateral_ft = corridor.lateral_offset_ft(coord[0], coord[1])
-            anchor_dist_m = _haversine(corridor.anchor_lat, corridor.anchor_lng, coord[0], coord[1])
+            origin = distance_origin or (corridor.anchor_lat, corridor.anchor_lng)
+            anchor_dist_m = _haversine(origin[0], origin[1], coord[0], coord[1])
+            classified = _classified(bucket_name, corridor, coord)
+            if approaches:
+                classified["approach"] = "primary"
+                if not classified["relevant"]:
+                    for approach_id, other in approaches:
+                        candidate = _classified(bucket_name, other, coord)
+                        if candidate["relevant"]:
+                            classified = {**candidate, "approach": approach_id}
+                            break
             feature = {
                 "label": label,
-                "zone": zone,
-                "relevant": _is_feature_relevant(
-                    bucket_name, zone, along_ft, lateral_ft, corridor.total_length_ft
-                ),
-                "along_station_ft": round(along_ft, 1),
-                "lateral_offset_ft": round(lateral_ft, 1),
+                **classified,
                 "distance_to_anchor_m": round(anchor_dist_m, 1),
             }
 
@@ -772,6 +852,10 @@ def detect_along_corridor(
                 display = f"{label} [lateral {feature['lateral_offset_ft']:.0f} ft off centerline]"
             else:
                 display = f"{label} [{feature['zone']} @ {feature['along_station_ft']:.0f} ft]"
+            if feature.get("approach") not in (None, "primary"):
+                # #290: say which approach counted it — its station is in
+                # that approach's own frame, not the first one's.
+                display = display[:-1] + f", {feature['approach']} approach]"
             if len(bucket["details"]) < 5:
                 bucket["details"].append(display)
             anchor_dist_m = feature["distance_to_anchor_m"]
