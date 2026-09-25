@@ -267,6 +267,28 @@ describe("the details toggle — click / tap, never hover (rules 141, 142)", () 
     }
   });
 
+  it("the toggle's hit box overhangs upward only, and its underline is on the word (prod, 380)", () => {
+    // b81c722 on prod at 380: the 44 px box overhung its row by 14 px
+    // both ways, so its lower 8 px sat on the control below and `.a-lk`'s
+    // box-edge underline was drawn across the Divided chips.
+    const block = (sel: string, from = 0) => {
+      const i = css.indexOf(`${sel} {`, from);
+      expect(i, sel).toBeGreaterThan(-1);
+      return css.slice(i, css.indexOf("}", i));
+    };
+    const t = block(".workbench .a-info-toggle");
+    expect(t).toMatch(/align-items:\s*flex-end/);
+    expect(t).toMatch(/margin-top:\s*-16px/);
+    expect(t).toMatch(/margin-bottom:\s*0/);
+    expect(t).toMatch(/border-bottom-color:\s*transparent/);
+    expect(t).not.toMatch(/margin-block/);
+    expect(block(".workbench .a-info-toggle > span:last-child")).toMatch(/text-decoration:\s*underline/);
+    // ≤480: the 44 px box (rule 163) sits 28 px above the row, 0 below.
+    const narrow = css.indexOf("Rule 163's 44 px (the .a-lk rule): 28 px above the row.");
+    expect(narrow).toBeGreaterThan(-1);
+    expect(block(".workbench .a-info-toggle", narrow)).toMatch(/margin-top:\s*-28px/);
+  });
+
   it("a field with nothing more to say has no toggle", () => {
     mount();
     expect(toggle("project")).toBeNull();

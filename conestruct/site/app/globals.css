@@ -4589,15 +4589,30 @@ input[type="number"] {
 .workbench .a-info-toggle {
   gap: 6px;
   flex: 0 0 auto;
-  /* Rule 15's 32 px box without a taller label row: the box overhangs
-     the row by 8 px each way, so a cell with a toggle puts its control
-     at the same height as its neighbours'. */
-  margin-block: -8px;
+  /* Rule 15's 32 px box without a taller label row.  The box overhangs
+     UPWARD only — into the grid gap and the previous row's provenance
+     text, which is not interactive — with its text on the box's bottom
+     edge, level with the label.  (b81c722 overhung both ways; on prod at
+     380 the box's lower 8 px sat on the control below, and `.a-lk`'s
+     box-edge underline was drawn across the Divided chips.) */
+  align-items: flex-end;
+  margin-top: -16px;
+  margin-bottom: 0;
+  /* The underline belongs under the word, not at the box's edge. */
+  border-bottom-color: transparent;
+}
+.workbench .a-info-toggle:hover {
+  border-bottom-color: transparent;
+}
+.workbench .a-info-toggle > span:last-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 @media (max-width: 480px) {
-  /* Rule 163's 44 px (the .a-lk rule), overhanging by 14 each way. */
+  /* Rule 163's 44 px (the .a-lk rule): 28 px above the row. */
   .workbench .a-info-toggle {
-    margin-block: -14px;
+    margin-top: -28px;
   }
 }
 .workbench .a-info {
