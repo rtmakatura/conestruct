@@ -94,6 +94,42 @@ class SiteConditionOverride(BaseModel):
     recorded_at: str = Field(max_length=32)
 
 
+class WorkPlacement(BaseModel):
+    """#290 — where the work is, beyond the pin (``pinModel="work_start"``).
+
+    The pin (``meta.lat``/``meta.lng``) is where the work starts; the
+    extent is ``workLen``; this says which side is occupied and which way
+    that side's traffic runs.  The frontend's side control writes it as
+    one choice worded in compass terms ("East side · northbound traffic",
+    ruling 8); the backend derives the direction from it (Rule 3).
+
+    * ``side`` — the occupied edge relative to that traffic.  Only
+      ``"right"`` is built; ``"left"`` and ``"median"`` are named so the
+      control can show them greyed out, and are refused (Rule 8; the
+      open-points ruling 2).  Absent ⇒ not yet confirmed (ruling 10:
+      needs-you) — nothing directional is computed.
+    * ``travel`` — with a confirmed road (``meta.centerline``): the
+      traffic runs with or against the relayed polyline's vertex order.
+    * ``heading`` — with no confirmed road: the ruled four-way choice,
+      "traffic heads N / E / S / W" (the open-points ruling 1).
+    """
+
+    side: Literal["right", "left", "median"] | None = None
+    travel: Literal["with_geometry", "against_geometry"] | None = None
+    heading: Literal["N", "E", "S", "W"] | None = None
+
+
+class RoadDirection(BaseModel):
+    """#290 — the confirmed road's raw direction facts at the pin, relayed
+    from detection: its bearing in OSM vertex order (the candidate's own
+    ``bearing``) and its raw ``oneway`` tag.  The backend decides from
+    them whether the derived direction runs against a one-way road
+    (``corridor.against_legal_direction``; ruling 8, #298)."""
+
+    osmBearingDeg: float = Field(ge=0.0, lt=360.0)
+    oneway: str | None = Field(default=None, max_length=8)
+
+
 class ScenarioMeta(BaseModel):
     project: str = ""
     address: str = ""
@@ -108,18 +144,22 @@ class ScenarioMeta(BaseModel):
     lat: float = 0.0
     lng: float = 0.0
     # #290 — what the pin MEANS: the scenario version field, read before
-    # anything reads the pin (render_api._ensure_pin_model_built).
+    # anything reads the pin (render_api._ensure_pin_model_complete).
     #   "corridor_end" — the pin is the corridor's downstream-most point
     #     and ``bearingDeg`` points from it toward the first sign
     #     (src/rules/corridor.py:22-30).  Every plan, fixture and sender
     #     to date means this (rulings.md, ruling 1: measured on prod).
     #   "work_start" — the pin marks where the work starts (FLOW.md §5a).
-    #     Declared now so the contract has a name; refused until the
-    #     work-start corridor lands.
+    #     Its side and direction ride ``work`` (and ``roadDirection``);
+    #     it never carries ``bearingDeg`` — the direction is derived.
     # Absent ⇒ "corridor_end" (ruling 3): a sender or saved plan that
     # predates the field keeps meaning exactly what it meant — never
     # silently re-read (Rule 10, ruling 10).
     pinModel: Literal["corridor_end", "work_start"] = "corridor_end"
+    # #290 — the work-start model's side and direction inputs; see
+    # ``WorkPlacement`` / ``RoadDirection``.  Only read under "work_start".
+    work: WorkPlacement | None = None
+    roadDirection: RoadDirection | None = None
     # Engineering-style location text shown on the title block (e.g.
     # "I-25 NB, MP 144.5–146, Colorado Springs").  Distinct from
     # ``address`` — that's a geocodable street address used for the
@@ -925,13 +965,40 @@ def _meta_params(meta: ScenarioMeta) -> dict:
     ScenarioParams.  ``project_name`` defaults to "Untitled Project"
     when the UI sends an empty string so the title block always carries
     a non-empty PROJECT row."""
+    centerline = tuple(tuple(p) for p in meta.centerline) if meta.centerline else None
     return {
         "project_name": meta.project or "Untitled Project",
         "location_description": meta.locationDescription or meta.address or "",
-        "bearing_deg": meta.bearingDeg,
+        "bearing_deg": _corridor_bearing(meta, centerline),
         # Tuple-of-tuples so it can live on the frozen ScenarioParams.
-        "centerline": tuple(tuple(p) for p in meta.centerline) if meta.centerline else None,
+        "centerline": centerline,
+        "pin_model": meta.pinModel,
     }
+
+
+def _corridor_bearing(
+    meta: ScenarioMeta, centerline: tuple[tuple[float, float], ...] | None
+) -> float | None:
+    """The bearing every corridor reader receives, per the pin model (#290).
+
+    ``corridor_end``: the relayed ``bearingDeg``, exactly as before.
+    ``work_start``: the occupied lane's direction of travel, derived here
+    on the backend from the road and the side (Rule 3; ruling 8) — and
+    None, honestly, until there is a pin and a confirmed built side
+    (ruling 10: side unset is needs-you; nothing directional is laid).
+    The request gate (``render_api._ensure_pin_model_complete``) has
+    already refused every contradictory or unbuilt combination.
+    """
+    if meta.pinModel != "work_start":
+        return meta.bearingDeg
+    work = meta.work
+    if work is None or work.side != "right" or not (meta.lat and meta.lng):
+        return None
+    from src.rules.corridor import travel_bearing_at
+
+    return travel_bearing_at(
+        meta.lat, meta.lng, centerline=centerline, travel=work.travel, heading=work.heading
+    )
 
 
 def _jurisdiction_name(scenario: Scenario) -> str | None:

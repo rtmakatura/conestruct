@@ -227,6 +227,15 @@ class ScenarioParams:
     # A None prints "Not set" (Rule 10), never the switch.  Appended with
     # a default so every existing constructor is untouched.
     jurisdiction_name: str | None = None
+    # #290 — what the pin means (``ScenarioMeta.pinModel``), bridged by
+    # ``scenario_to_call``.  It decides how ``bearing_deg`` reads: under
+    # "corridor_end" it points from the pin toward the first sign; under
+    # "work_start" it is the occupied lane's direction of travel, derived
+    # on the backend (``corridor.travel_bearing_at``), and None until the
+    # side is confirmed.  Every corridor reader passes it to
+    # ``build_corridor``.  Appended with a default so every existing
+    # constructor is untouched.
+    pin_model: str = "corridor_end"
 
 
 @dataclass(frozen=True)

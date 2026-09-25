@@ -180,7 +180,7 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
     """
     # #290: the pin model is read FIRST, before any gate or reader touches
     # the pin — its meaning decides what every later step computes.
-    _ensure_pin_model_built(scenario)
+    _ensure_pin_model_complete(scenario)
     # #282: one chokepoint, because every endpoint already funnels through
     # here.  ``allow_preview`` is opt-IN, so a new endpoint added later
     # refuses the flag by default rather than silently honouring it.
@@ -197,27 +197,93 @@ def _ensure_scenario_enabled(scenario: Scenario, *, allow_preview: bool = False)
         )
 
 
-def _ensure_pin_model_built(scenario: Scenario) -> None:
-    """Refuse a pin model this backend cannot compute yet (#290).
+def _pin_model_refusal(message: str) -> HTTPException:
+    return HTTPException(status_code=400, detail={"error": "pin_model_input", "message": message})
 
-    ``meta.pinModel`` names what the pin means.  Only ``corridor_end`` —
-    the meaning every plan to date carries — has a corridor behind it.
-    ``work_start`` is declared on the wire so the contract exists before
-    anything sends it, and refused here until the work-start corridor
-    lands: computing a ``work_start`` pin as a ``corridor_end`` one would
-    lay the corridor from the wrong point and call it the plan (Rule 10).
-    Honest 400 naming the field, at the chokepoint every scenario endpoint
-    already funnels through.
+
+def _ensure_pin_model_complete(scenario: Scenario) -> None:
+    """Refuse a pin model whose inputs contradict or are not built (#290).
+
+    ``meta.pinModel`` names what the pin means, and it is read FIRST: its
+    meaning decides what every later step computes.  Honest 400s, each
+    naming its field, at the chokepoint every scenario endpoint funnels
+    through (rulings.md, 2026-09-25):
+
+    * ``corridor_end`` never carries the work-start inputs.
+    * ``work_start`` never carries ``bearingDeg`` — the direction is
+      derived from the road and the side, never typed (ruling 8).
+    * ``side`` ``left`` / ``median`` are named and not built (Rule 8; the
+      open-points ruling 2).
+    * With a pin and the right side, the input that decides the direction
+      must be the right one: ``travel`` against a confirmed road's
+      geometry, ``heading`` without one — never both, never neither.
+    * The derived direction may not run against a one-way road's legal
+      direction (ruling 8, #298).
+
+    ``side`` absent is NOT refused: it is the needs-you state (ruling 10).
+    Nothing directional is derived (``schemas._corridor_bearing`` gives
+    None) and the corridor readers report their honest not-run, while the
+    device counts — which no side moves — still answer.
     """
-    if scenario.meta.pinModel != "corridor_end":
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"meta.pinModel {scenario.meta.pinModel!r} is not built yet: this backend "
-                "lays out a corridor only from a pin that marks the corridor's downstream "
-                "end ('corridor_end'). Send 'corridor_end', or omit the field."
-            ),
+    meta = scenario.meta
+    work = meta.work
+    if meta.pinModel == "corridor_end":
+        if work is not None or meta.roadDirection is not None:
+            raise _pin_model_refusal(
+                "meta.work and meta.roadDirection belong to pinModel 'work_start'; "
+                "a 'corridor_end' pin keeps its bearingDeg."
+            )
+        return
+    if meta.bearingDeg is not None:
+        raise _pin_model_refusal(
+            "pinModel 'work_start' derives the direction from the road and the side; "
+            "drop meta.bearingDeg."
         )
+    if scenario.kind == "near_intersection":
+        raise _pin_model_refusal(
+            "pinModel 'work_start' is not built for near_intersection yet: its cross-street "
+            "station is still computed from a 'corridor_end' pin."
+        )
+    if work is None or work.side is None:
+        return
+    if work.side != "right":
+        raise _pin_model_refusal(
+            f"meta.work.side {work.side!r} is not built yet: only right-side work is laid out."
+        )
+    if not (meta.lat and meta.lng):
+        return
+    has_road = bool(meta.centerline) and len(meta.centerline or []) >= 2
+    if has_road:
+        if work.travel is None or work.heading is not None:
+            raise _pin_model_refusal(
+                "a confirmed road (meta.centerline) sets the direction with meta.work.travel "
+                "only; meta.work.heading is for a pin with no confirmed road."
+            )
+    elif work.heading is None or work.travel is not None:
+        raise _pin_model_refusal(
+            "with no confirmed road the direction is meta.work.heading (N / E / S / W); "
+            "meta.work.travel needs meta.centerline."
+        )
+    road = meta.roadDirection
+    if has_road and road is not None:
+        from src.rules.corridor import against_legal_direction, travel_bearing_at
+
+        travel = travel_bearing_at(
+            meta.lat,
+            meta.lng,
+            centerline=tuple(tuple(p) for p in meta.centerline or []),
+            travel=work.travel,
+            heading=None,
+        )
+        if against_legal_direction(travel, road.osmBearingDeg, road.oneway):
+            raise _pin_model_refusal(
+                "meta.work.travel runs against this one-way road's legal direction "
+                f"(oneway={road.oneway!r}): no traffic arrives from that side."
+            )
+    # The corridor readers (scan, plan sheet) are converted in the next
+    # commit of this ship; until then a complete work_start pin would be
+    # laid by readers that still read it as a corridor end.
+    raise _pin_model_refusal("pinModel 'work_start' is not wired to the corridor readers yet.")
 
 
 def _ensure_preview_allowed(scenario: Scenario) -> None:
